@@ -1,0 +1,40 @@
+name: Build
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install CMake (if needed)
+        run: |
+          brew install cmake || true
+
+      - name: Configure (CMake)
+        run: |
+          cmake -B build -G "Unix Makefiles" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13
+
+      - name: Build
+        run: |
+          cmake --build build --config Release -- -j 3
+
+      - name: Collect VST3 Artefact
+        run: |
+          mkdir -p artifacts
+          find build -name "LevelScope.vst3" -print -exec cp -R {} artifacts/ \;
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LevelScope-macOS
+          path: artifacts
