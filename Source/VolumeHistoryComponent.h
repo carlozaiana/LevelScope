@@ -7,6 +7,7 @@ class LevelScopeAudioProcessor;
 
 //==============================================================================
 // Displays incoming audio volume as a scrolling, zoomable history curve.
+// Using sample-based spacing on the X axis.
 //==============================================================================
 
 class VolumeHistoryComponent : public juce::Component,
@@ -30,7 +31,7 @@ private:
     void drainProcessorFifo();
     void pushRmsBatchToHistory (const float* values, int numValues);
 
-    float sampleIndexToDb (double sampleIndex) const noexcept;
+    float sampleIndexToDbNearest (juce::int64 sampleIndex) const noexcept;
     float dbToY (float db, float height) const noexcept;
 
     void applyHorizontalZoom (float wheelDelta, float mouseX);
@@ -43,22 +44,29 @@ private:
 
     const float minDb;                   // bottom of world dB range
     const float maxDb;                   // top of world dB range (0 dB)
-    const float baseDbRange;             // maxDb - minDb (absolute dB span)
+    const float baseDbRange;             // |minDb| (absolute full dB span)
 
     const int historyCapacitySamples;    // number of RMS samples we store
 
     std::vector<float> historyDb;        // ring buffer of dB values
 
-    juce::int64 historySampleCount = 0;  // total RMS samples written so far
-    double      viewOffsetSamples  = 0;  // how many RMS samples behind "now" the right edge is
+    // Total number of RMS samples written so far (monotonic)
+    juce::int64 historySampleCount = 0;
 
-    // X-axis zoom (time)
-    double visibleDurationSeconds;       // currently visible time window (seconds)
-    double minVisibleSeconds;
-    double maxVisibleSeconds;
+    // X-axis offset in samples behind "now" (newest sample)
+    // 0 = right edge shows the newest sample,
+    // >0 = right edge shows an older sample.
+    double viewOffsetSamples  = 0.0;
+
+    // X-axis zoom (sample spacing)
+    // zoomX = pixels per RMS sample.
+    double zoomX      = 1.0;
+    double minZoomX   = 0.01;
+    double maxZoomX   = 50.0;
+    bool   hasCustomZoomX = false;   // to keep "initial ~10s" default until user changes zoom
 
     // Y-axis zoom (amplitude)
-    double yZoom      = 1.0;             // >1 = zoom in (smaller dB span)
+    double yZoom      = 1.0;   // >1 = zoom in (smaller dB span)
     double minYZoom   = 0.25;
     double maxYZoom   = 4.0;
 

@@ -9,15 +9,12 @@
 VolumeHistoryComponent::VolumeHistoryComponent (LevelScopeAudioProcessor& proc)
     : processor (proc),
       visualSampleRate (proc.getVisualSampleRate()),
-      historyLengthSeconds (180.0),       // spec: 180 s total history
+      historyLengthSeconds (180.0),       // 180 s total history
       minDb (-90.0f),
       maxDb (  0.0f),
       baseDbRange (std::abs (minDb)),     // 90 dB
       historyCapacitySamples ((int) std::ceil (historyLengthSeconds * visualSampleRate)),
-      historyDb ((size_t) historyCapacitySamples, minDb),
-      visibleDurationSeconds (10.0),      // spec: default 10 s window
-      minVisibleSeconds (0.1),
-      maxVisibleSeconds (historyLengthSeconds)
+      historyDb ((size_t) historyCapacitySamples, minDb)
 {
     jassert (visualSampleRate > 0.0);
     jassert (historyCapacitySamples > 0);
@@ -35,7 +32,19 @@ VolumeHistoryComponent::~VolumeHistoryComponent()
 
 void VolumeHistoryComponent::resized()
 {
-    // No special layout: fills entire editor.
+    // Initialise X zoom so that, roughly, 10 seconds are visible by default.
+    // visibleSeconds ≈ (width / zoomX) / visualSampleRate
+    // => zoomX ≈ width / (visibleSeconds * visualSampleRate)
+    if (! hasCustomZoomX)
+    {
+        const int w = getWidth();
+        if (w > 0)
+        {
+            const double desiredVisibleSeconds = 10.0;
+            zoomX = (double) w / (desiredVisibleSeconds * visualSampleRate);
+            zoomX = juce::jlimit (minZoomX, maxZoomX, zoomX);
+        }
+    }
 }
 
 //==============================================================================
@@ -81,13 +90,13 @@ void VolumeHistoryComponent::pushRmsBatchToHistory (const float* values, int num
         ++historySampleCount;
     }
 
-    // "Now" has advanced by numValues samples; keep the same offset behind now.
-    // (viewOffsetSamples is in samples from now, so it stays the same)
+    // viewOffsetSamples stays the same; "now" has moved,
+    // but our offset behind "now" remains constant.
 }
 
 //==============================================================================
 
-float VolumeHistoryComponent::sampleIndexToDb (double sampleIndex) const noexcept
+float VolumeHistoryComponent::sampleIndexToDbNearest (juce::int64 sampleIndex) const noexcept
 {
     if (historySampleCount <= 0)
         return minDb;
@@ -98,24 +107,11 @@ float VolumeHistoryComponent::sampleIndexToDb (double sampleIndex) const noexcep
             ? historySampleCount - (juce::int64) historyCapacitySamples
             : 0);
 
-    if (sampleIndex < (double) earliestIndex || sampleIndex > (double) latestIndex)
+    if (sampleIndex < earliestIndex || sampleIndex > latestIndex)
         return minDb;
 
-    const juce::int64 index0 = (juce::int64) std::floor (sampleIndex);
-    juce::int64 index1       = (juce::int64) std::ceil (sampleIndex);
-
-    if (index1 > latestIndex)
-        index1 = latestIndex;
-
-    const double frac = sampleIndex - (double) index0;
-
-    const int ringIndex0 = (int) (index0 % (juce::int64) historyCapacitySamples);
-    const int ringIndex1 = (int) (index1 % (juce::int64) historyCapacitySamples);
-
-    const float v0 = historyDb[(size_t) ringIndex0];
-    const float v1 = historyDb[(size_t) ringIndex1];
-
-    return v0 + (float) ((v1 - v0) * frac);
+    const int ringIndex = (int) (sampleIndex % (juce::int64) historyCapacitySamples);
+    return historyDb[(size_t) ringIndex];
 }
 
 float VolumeHistoryComponent::dbToY (float db, float height) const noexcept
@@ -125,8 +121,8 @@ float VolumeHistoryComponent::dbToY (float db, float height) const noexcept
 
     // Visible dB range shrinks as yZoom increases (zoom in)
     const float effectiveRange = (float) (baseDbRange / yZoom);
-    const float topDb = maxDb;
-    const float bottomDb = topDb - effectiveRange;
+    const float topDb          = maxDb;
+    const float bottomDb       = topDb - effectiveRange;
 
     const float clamped = juce::jlimit (bottomDb, topDb, db);
 
@@ -144,7 +140,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
     g.fillAll (juce::Colours::black);
 
-    const int width  = (int) bounds.getWidth();
+    const int width   = (int) bounds.getWidth();
     const float height = bounds.getHeight();
 
     if (width <= 1 || height <= 0.0f)
@@ -163,86 +159,117 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     if (historySampleCount < 2)
         return;
 
-    const double nowIndex      = (double) historySampleCount;
-    const double viewEndSample = nowIndex - viewOffsetSamples;
-    const double visibleSamples = visibleDurationSeconds * visualSampleRate;
+    // Clamp zoom and offset to valid ranges (defensive)
+    const juce::int64 latestIndex = historySampleCount - 1;
+    const juce::int64 earliestIndex =
+        (historySampleCount > (juce::int64) historyCapacitySamples
+            ? historySampleCount - (juce::int64) historyCapacitySamples
+            : 0);
 
+    const double maxOffsetSamples = (double) (latestIndex - earliestIndex);
+    viewOffsetSamples = juce::jlimit (0.0, maxOffsetSamples, viewOffsetSamples);
+    zoomX             = juce::jlimit (minZoomX, maxZoomX, zoomX);
+
+    // Right edge: which sample index does it show?
+    const double rightIndexDouble = (double) latestIndex - viewOffsetSamples;
+
+    // Start at the integer sample at/just before the right edge
+    juce::int64 currentIndex = (juce::int64) std::floor (rightIndexDouble);
+
+    if (currentIndex < earliestIndex || currentIndex > latestIndex)
+        return;
+
+    const int rightPixel = width - 1;
+
+    // Build path: newest (or offset) at the right, older samples to the left
     juce::Path path;
     bool started = false;
 
     g.setColour (juce::Colours::limegreen);
 
-    for (int x = 0; x < width; ++x)
+    int sampleStep = 0;
+    for (;;)
     {
-        const double fracX = (width > 1 ? (double) x / (double) (width - 1) : 0.0);
+        if (currentIndex < earliestIndex)
+            break;
 
-        // Right edge is viewEndSample, left edge is viewEndSample - visibleSamples
-        const double sampleIndex = viewEndSample - (1.0 - fracX) * visibleSamples;
+        const double xPos = (double) rightPixel - (double) sampleStep * zoomX;
 
-        const float db = sampleIndexToDb (sampleIndex);
+        // Optimization: stop if we are far off the left edge
+        if (xPos < -50.0)
+            break;
+
+        const float db = sampleIndexToDbNearest (currentIndex);
         const float y  = dbToY (db, height);
 
         if (! started)
         {
-            path.startNewSubPath ((float) x + 0.5f, y);
+            path.startNewSubPath ((float) xPos + 0.5f, y);
             started = true;
         }
         else
         {
-            path.lineTo ((float) x + 0.5f, y);
+            path.lineTo ((float) xPos + 0.5f, y);
         }
+
+        --currentIndex;
+        ++sampleStep;
     }
 
-    g.strokePath (path, juce::PathStrokeType (1.5f));
+    if (started)
+        g.strokePath (path, juce::PathStrokeType (1.5f));
 }
 
 //==============================================================================
 
 void VolumeHistoryComponent::applyHorizontalZoom (float wheelDelta, float mouseX)
 {
-    if (historySampleCount <= 0 || getWidth() <= 1 || wheelDelta == 0.0f)
+    if (historySampleCount <= 1 || getWidth() <= 1 || wheelDelta == 0.0f)
         return;
 
-    const double nowIndex = (double) historySampleCount;
-    const double viewEndSample = nowIndex - viewOffsetSamples;
+    const int w = getWidth();
+    const double widthPixels = (double) (w - 1);
 
-    double visibleSamples = visibleDurationSeconds * visualSampleRate;
+    const double clampedMouseX = juce::jlimit (0.0, widthPixels, (double) mouseX);
+    const double dxFromRight   = widthPixels - clampedMouseX; // pixels from right edge
 
-    const double mouseRatio =
-        juce::jlimit (0.0, 1.0, (double) mouseX / (double) (getWidth() - 1));
+    const juce::int64 latestIndex = historySampleCount - 1;
+    const juce::int64 earliestIndex =
+        (historySampleCount > (juce::int64) historyCapacitySamples
+            ? historySampleCount - (juce::int64) historyCapacitySamples
+            : 0);
 
-    // Current sample under the mouse cursor
-    const double sampleAtMouse = viewEndSample - (1.0 - mouseRatio) * visibleSamples;
+    const double maxOffsetSamples = (double) (latestIndex - earliestIndex);
 
-    // Zoom factor: positive deltaY = zoom in (shorter window)
+    // Ensure current offset is valid
+    viewOffsetSamples = juce::jlimit (0.0, maxOffsetSamples, viewOffsetSamples);
+
+    // Current right-edge sample index
+    const double rightIndex = (double) latestIndex - viewOffsetSamples;
+
+    // How many samples from right edge to mouse (in sample steps)?
+    const double k = dxFromRight / zoomX;
+
+    // Sample index currently under the mouse cursor
+    double sampleAtMouse = rightIndex - k;
+    sampleAtMouse = juce::jlimit ((double) earliestIndex, (double) latestIndex, sampleAtMouse);
+
+    // Zoom factor: positive deltaY = zoom in (larger zoomX => more pixels per sample)
     const double zoomBase   = 1.1;
     const double zoomFactor = std::pow (zoomBase, (double) wheelDelta);
 
-    visibleSamples /= zoomFactor;
+    zoomX *= zoomFactor;
+    zoomX = juce::jlimit (minZoomX, maxZoomX, zoomX);
 
-    const double minVisibleSamples = minVisibleSeconds * visualSampleRate;
-    const double maxVisibleSamples = maxVisibleSeconds * visualSampleRate;
+    // Recompute how many sample steps from right edge to that same sample under new zoom
+    const double kNew          = dxFromRight / zoomX;
+    const double rightIndexNew = sampleAtMouse + kNew;
 
-    visibleSamples = juce::jlimit (minVisibleSamples, maxVisibleSamples, visibleSamples);
-    visibleDurationSeconds = visibleSamples / visualSampleRate;
-
-    // New end sample so that the sample at mouse stays under the cursor
-    double newViewEndSample = sampleAtMouse + (1.0 - mouseRatio) * visibleSamples;
-
-    // Enforce that we don't look into the future
-    if (newViewEndSample > nowIndex)
-        newViewEndSample = nowIndex;
-
-    // Convert changed end-sample into offset (in samples) behind "now"
-    double newOffset = nowIndex - newViewEndSample;
-    if (newOffset < 0.0)
-        newOffset = 0.0;
-
-    // Don't allow offset to exceed the total number of samples (can't go before zero)
-    if (newOffset > nowIndex)
-        newOffset = nowIndex;
+    double newOffset = (double) latestIndex - rightIndexNew;
+    newOffset = juce::jlimit (0.0, maxOffsetSamples, newOffset);
 
     viewOffsetSamples = newOffset;
+    hasCustomZoomX    = true;
 }
 
 void VolumeHistoryComponent::applyVerticalZoom (float wheelDelta)
