@@ -10,8 +10,8 @@ LevelScopeAudioProcessor::LevelScopeAudioProcessor()
     : AudioProcessor (BusesProperties()
                         .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
                         .withOutput ("Output", juce::AudioChannelSet::stereo(), true)),
-      rmsFifo (rmsFifoSize),
-      rmsBuffer ((size_t) rmsFifoSize, 0.0f)
+      envelopeFifo (envelopeFifoSize),
+      envelopeBuffer ((size_t) envelopeFifoSize)
 {
 }
 
@@ -25,22 +25,24 @@ void LevelScopeAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
 
     currentSampleRate = (sampleRate > 0.0 ? sampleRate : 44100.0);
 
-    // Number of audio frames per visual RMS sample
-    rmsWindowSamples = juce::jmax (1, (int) std::round (currentSampleRate / visualSampleRate));
+    // Number of audio frames per visual envelope sample
+    windowSamples = juce::jmax (1, (int) std::round (currentSampleRate / visualSampleRate));
 
-    resetRmsCollector();
+    resetEnvelopeCollector();
 }
 
 void LevelScopeAudioProcessor::releaseResources()
 {
-    resetRmsCollector();
+    resetEnvelopeCollector();
 }
 
-void LevelScopeAudioProcessor::resetRmsCollector() noexcept
+void LevelScopeAudioProcessor::resetEnvelopeCollector() noexcept
 {
-    rmsSumSquares = 0.0;
-    rmsFramesAccumulated = 0;
-    rmsFifo.reset();
+    rmsSumSquares     = 0.0;
+    framesAccumulated = 0;
+    peakAccumulator   = 0.0f;
+
+    envelopeFifo.reset();
 }
 
 //==============================================================================
@@ -88,28 +90,41 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 
     for (int i = 0; i < numSamples; ++i)
     {
-        // Average energy across all input channels for this frame
+        // Average energy across all input channels for this frame (for RMS)
         double energy = 0.0;
+
+        // For peak: track max absolute across channels at this frame
+        float framePeakAbs = 0.0f;
+
         for (int ch = 0; ch < numChannels; ++ch)
         {
             const float s = channelData[ch][i];
             energy += (double) s * (double) s;
+
+            const float absS = std::abs (s);
+            if (absS > framePeakAbs)
+                framePeakAbs = absS;
         }
 
         energy /= (double) numChannels;
 
         rmsSumSquares += energy;
-        ++rmsFramesAccumulated;
+        ++framesAccumulated;
 
-        if (rmsFramesAccumulated >= rmsWindowSamples)
+        if (framePeakAbs > peakAccumulator)
+            peakAccumulator = framePeakAbs;
+
+        if (framesAccumulated >= windowSamples)
         {
-            const double meanSq = rmsSumSquares / (double) rmsFramesAccumulated;
-            const float rms     = (float) std::sqrt (meanSq);
+            const double meanSq = rmsSumSquares / (double) framesAccumulated;
+            const float  rms    = (float) std::sqrt (meanSq);
+            const float  peak   = peakAccumulator;
 
-            pushRmsIntoFifo (rms);
+            pushEnvelopeIntoFifo (rms, peak);
 
-            rmsSumSquares       = 0.0;
-            rmsFramesAccumulated = 0;
+            rmsSumSquares     = 0.0;
+            framesAccumulated = 0;
+            peakAccumulator   = 0.0f;
         }
     }
 
@@ -118,49 +133,66 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 
 //==============================================================================
 
-void LevelScopeAudioProcessor::pushRmsIntoFifo (float rms) noexcept
+void LevelScopeAudioProcessor::pushEnvelopeIntoFifo (float rms, float peak) noexcept
 {
     int start1 = 0, size1 = 0, start2 = 0, size2 = 0;
-    rmsFifo.prepareToWrite (1, start1, size1, start2, size2);
+    envelopeFifo.prepareToWrite (1, start1, size1, start2, size2);
 
     const int writable = size1 + size2;
     if (writable > 0)
     {
-        if (size1 > 0)
-            rmsBuffer[(size_t) start1] = rms;
-        else if (size2 > 0)
-            rmsBuffer[(size_t) start2] = rms;
+        // We only ever write in one contiguous block for count=1
+        const int index = (size1 > 0 ? start1 : start2);
 
-        rmsFifo.finishedWrite (1);
+        envelopeBuffer[(size_t) index].rms  = rms;
+        envelopeBuffer[(size_t) index].peak = peak;
+
+        envelopeFifo.finishedWrite (1);
     }
     else
     {
         // No space: drop sample (rare with large FIFO and low visual rate)
-        rmsFifo.finishedWrite (0);
+        envelopeFifo.finishedWrite (0);
     }
 }
 
-int LevelScopeAudioProcessor::readRmsFromFifo (float* dest, int maxNumToRead) noexcept
+int LevelScopeAudioProcessor::readEnvelopeFromFifo (float* rmsDest,
+                                                    float* peakDest,
+                                                    int maxNumToRead) noexcept
 {
-    if (dest == nullptr || maxNumToRead <= 0)
+    if (rmsDest == nullptr || peakDest == nullptr || maxNumToRead <= 0)
         return 0;
 
     int start1 = 0, size1 = 0, start2 = 0, size2 = 0;
-    rmsFifo.prepareToRead (maxNumToRead, start1, size1, start2, size2);
+    envelopeFifo.prepareToRead (maxNumToRead, start1, size1, start2, size2);
 
     const int totalToRead = size1 + size2;
 
+    int destIndex = 0;
+
     if (size1 > 0)
-        std::copy (rmsBuffer.data() + start1,
-                   rmsBuffer.data() + start1 + size1,
-                   dest);
+    {
+        for (int i = 0; i < size1; ++i)
+        {
+            const auto& s = envelopeBuffer[(size_t) (start1 + i)];
+            rmsDest [destIndex] = s.rms;
+            peakDest[destIndex] = s.peak;
+            ++destIndex;
+        }
+    }
 
     if (size2 > 0)
-        std::copy (rmsBuffer.data() + start2,
-                   rmsBuffer.data() + start2 + size2,
-                   dest + size1);
+    {
+        for (int i = 0; i < size2; ++i)
+        {
+            const auto& s = envelopeBuffer[(size_t) (start2 + i)];
+            rmsDest [destIndex] = s.rms;
+            peakDest[destIndex] = s.peak;
+            ++destIndex;
+        }
+    }
 
-    rmsFifo.finishedRead (totalToRead);
+    envelopeFifo.finishedRead (totalToRead);
 
     return totalToRead;
 }
@@ -170,7 +202,7 @@ int LevelScopeAudioProcessor::readRmsFromFifo (float* dest, int maxNumToRead) no
 void LevelScopeAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
     juce::ignoreUnused (destData);
-    // No parameters yet; could store zoom state here later if desired.
+    // No parameters yet; could store zoom/mode state here later if desired.
 }
 
 void LevelScopeAudioProcessor::setStateInformation (const void* data, int sizeInBytes)

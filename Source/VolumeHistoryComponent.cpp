@@ -14,7 +14,8 @@ VolumeHistoryComponent::VolumeHistoryComponent (LevelScopeAudioProcessor& proc)
       maxDb (  0.0f),
       baseDbRange (std::abs (minDb)),     // 90 dB
       historyCapacitySamples ((int) std::ceil (historyLengthSeconds * visualSampleRate)),
-      historyDb ((size_t) historyCapacitySamples, minDb)
+      historyDbRms  ((size_t) historyCapacitySamples, minDb),
+      historyDbPeak ((size_t) historyCapacitySamples, minDb)
 {
     jassert (visualSampleRate > 0.0);
     jassert (historyCapacitySamples > 0);
@@ -57,36 +58,43 @@ void VolumeHistoryComponent::timerCallback()
 
 void VolumeHistoryComponent::drainProcessorFifo()
 {
-    // Drain all available RMS values from the processor into our history buffer
+    // Drain all available envelope values (RMS+Peak) from the processor
     constexpr int chunkSize = 2048;
-    float temp[chunkSize];
+    float rmsValues [chunkSize];
+    float peakValues[chunkSize];
 
     for (;;)
     {
-        const int numRead = processor.readRmsFromFifo (temp, chunkSize);
+        const int numRead = processor.readEnvelopeFromFifo (rmsValues, peakValues, chunkSize);
         if (numRead <= 0)
             break;
 
-        pushRmsBatchToHistory (temp, numRead);
+        pushEnvelopeBatchToHistory (rmsValues, peakValues, numRead);
     }
 }
 
-void VolumeHistoryComponent::pushRmsBatchToHistory (const float* values, int numValues)
+void VolumeHistoryComponent::pushEnvelopeBatchToHistory (const float* rmsValues,
+                                                         const float* peakValues,
+                                                         int numValues)
 {
     if (numValues <= 0)
         return;
 
     for (int i = 0; i < numValues; ++i)
     {
-        const float rms = values[i];
+        const float rms  = rmsValues[i];
+        const float peak = peakValues[i];
 
-        // Convert RMS (linear) to dB, clamped to minDb
-        const float db = juce::Decibels::gainToDecibels (rms, minDb);
+        // Convert to dB, clamped to minDb
+        const float dbRms  = juce::Decibels::gainToDecibels (rms,  minDb);
+        const float dbPeak = juce::Decibels::gainToDecibels (peak, minDb);
 
         const juce::int64 writeIndex = historySampleCount;
         const int ringIndex = (int) (writeIndex % (juce::int64) historyCapacitySamples);
 
-        historyDb[(size_t) ringIndex] = db;
+        historyDbRms [(size_t) ringIndex] = dbRms;
+        historyDbPeak[(size_t) ringIndex] = dbPeak;
+
         ++historySampleCount;
     }
 
@@ -111,7 +119,11 @@ float VolumeHistoryComponent::sampleIndexToDbNearest (juce::int64 sampleIndex) c
         return minDb;
 
     const int ringIndex = (int) (sampleIndex % (juce::int64) historyCapacitySamples);
-    return historyDb[(size_t) ringIndex];
+
+    if (envelopeMode == EnvelopeMode::RMS)
+        return historyDbRms[(size_t) ringIndex];
+
+    return historyDbPeak[(size_t) ringIndex];
 }
 
 float VolumeHistoryComponent::dbToY (float db, float height) const noexcept
@@ -140,7 +152,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
     g.fillAll (juce::Colours::black);
 
-    const int width   = (int) bounds.getWidth();
+    const int width    = (int) bounds.getWidth();
     const float height = bounds.getHeight();
 
     if (width <= 1 || height <= 0.0f)
@@ -185,7 +197,11 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     juce::Path path;
     bool started = false;
 
-    g.setColour (juce::Colours::limegreen);
+    // Different colours for RMS vs Peak
+    const auto curveColour = (envelopeMode == EnvelopeMode::RMS
+                                ? juce::Colours::limegreen
+                                : juce::Colours::orange);
+    g.setColour (curveColour);
 
     int sampleStep = 0;
     for (;;)
@@ -218,6 +234,17 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
     if (started)
         g.strokePath (path, juce::PathStrokeType (1.5f));
+
+    // Overlay info: mode + zooms
+    g.setColour (juce::Colours::white);
+    g.setFont (14.0f);
+
+    juce::String modeText = (envelopeMode == EnvelopeMode::RMS ? "Mode: RMS" : "Mode: Peak");
+    juce::String zoomInfo = "ZoomX: " + juce::String (zoomX, 2)
+                          + "  ZoomY: " + juce::String (yZoom, 2);
+
+    g.drawText (modeText,  8,  8, 160, 20, juce::Justification::topLeft);
+    g.drawText (zoomInfo,  8, 28, 220, 20, juce::Justification::topLeft);
 }
 
 //==============================================================================
@@ -297,6 +324,18 @@ void VolumeHistoryComponent::mouseWheelMove (const juce::MouseEvent& event,
         applyVerticalZoom (wheel.deltaY);
     else
         applyHorizontalZoom (wheel.deltaY, event.position.x);
+
+    repaint();
+}
+
+void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
+{
+    juce::ignoreUnused (event);
+
+    // Toggle between RMS and Peak mode on mouse click
+    envelopeMode = (envelopeMode == EnvelopeMode::RMS
+                      ? EnvelopeMode::Peak
+                      : EnvelopeMode::RMS);
 
     repaint();
 }
