@@ -11,7 +11,7 @@ class LevelScopeAudioProcessor : public juce::AudioProcessor
 {
 public:
     // Loudness "frame" rate for visualization (frames per second)
-    static constexpr double loudnessFrameRate       = 10.0;  // 10 Hz
+    static constexpr double loudnessFrameRate       = 60.0;  // 60 Hz
     static constexpr double momentaryWindowSeconds  = 0.4;   // 400 ms
     static constexpr double shortTermWindowSeconds  = 3.0;   // 3 s
 

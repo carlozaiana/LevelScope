@@ -241,8 +241,8 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     };
 
     // Draw short-term first (smoother curve), then momentary on top
-    drawCurve (CurveKind::ShortTerm, juce::Colours::cyan.withMultipliedAlpha (0.8f), 1.2f);
-    drawCurve (CurveKind::Momentary, juce::Colours::limegreen,                    1.5f);
+    drawCurve (CurveKind::ShortTerm, juce::Colours::cyan.withMultipliedAlpha (0.8f), 2.4f);
+    drawCurve (CurveKind::Momentary, juce::Colours::limegreen,                    3.0f);
 
     // Overlay info: mode + zooms
     g.setColour (juce::Colours::white);
