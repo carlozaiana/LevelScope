@@ -10,8 +10,8 @@ LevelScopeAudioProcessor::LevelScopeAudioProcessor()
     : AudioProcessor (BusesProperties()
                         .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
                         .withOutput ("Output", juce::AudioChannelSet::stereo(), true)),
-      envelopeFifo (envelopeFifoSize),
-      envelopeBuffer ((size_t) envelopeFifoSize)
+      loudnessFifo (loudnessFifoSize),
+      loudnessBuffer ((size_t) loudnessFifoSize)
 {
 }
 
@@ -19,37 +19,52 @@ LevelScopeAudioProcessor::~LevelScopeAudioProcessor() = default;
 
 //==============================================================================
 
-void LevelScopeAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlockExpected)
+void LevelScopeAudioProcessor::prepareToPlay (double sampleRate,
+                                              int /*samplesPerBlockExpected*/)
 {
-    juce::ignoreUnused (samplesPerBlockExpected);
-
     currentSampleRate = (sampleRate > 0.0 ? sampleRate : 44100.0);
 
-    // Number of audio frames per visual envelope sample
-    windowSamples = juce::jmax (1, (int) std::round (currentSampleRate / visualSampleRate));
+    momentaryWindowSamples = juce::jmax (1,
+        (int) std::round (momentaryWindowSeconds * currentSampleRate));
 
-    resetEnvelopeCollector();
+    shortTermWindowSamples = juce::jmax (1,
+        (int) std::round (shortTermWindowSeconds * currentSampleRate));
+
+    frameSamples = juce::jmax (1,
+        (int) std::round (currentSampleRate / loudnessFrameRate));
+
+    momentaryEnergyBuffer.assign ((size_t) momentaryWindowSamples, 0.0);
+    shortTermEnergyBuffer.assign ((size_t) shortTermWindowSamples, 0.0);
+
+    resetLoudnessState();
 }
 
 void LevelScopeAudioProcessor::releaseResources()
 {
-    resetEnvelopeCollector();
+    resetLoudnessState();
 }
 
-void LevelScopeAudioProcessor::resetEnvelopeCollector() noexcept
+void LevelScopeAudioProcessor::resetLoudnessState() noexcept
 {
-    rmsSumSquares     = 0.0;
-    framesAccumulated = 0;
-    peakAccumulator   = 0.0f;
+    momentaryIndex   = 0;
+    shortTermIndex   = 0;
+    momentarySum     = 0.0;
+    shortTermSum     = 0.0;
+    totalSamplesProcessed = 0;
 
-    envelopeFifo.reset();
+    samplesUntilNextFrame = frameSamples;
+
+    std::fill (momentaryEnergyBuffer.begin(), momentaryEnergyBuffer.end(), 0.0);
+    std::fill (shortTermEnergyBuffer.begin(), shortTermEnergyBuffer.end(), 0.0);
+
+    loudnessFifo.reset();
 }
 
 //==============================================================================
 
 bool LevelScopeAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
-    // Only support mono or stereo on main bus
+    // Only support mono or stereo on main bus for this prototype
     const auto& mainIn  = layouts.getMainInputChannelSet();
     const auto& mainOut = layouts.getMainOutputChannelSet();
 
@@ -59,7 +74,6 @@ bool LevelScopeAudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
     if (mainIn.size() > 2 || mainOut.size() > 2)
         return false;
 
-    // Require same channel count in/out (typical for metering effect)
     if (mainIn != mainOut)
         return false;
 
@@ -67,6 +81,72 @@ bool LevelScopeAudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
 }
 
 //==============================================================================
+
+void LevelScopeAudioProcessor::processSampleForLoudness (const float* const* channelData,
+                                                         int numChannels,
+                                                         int sampleIndex) noexcept
+{
+    // Simple energy across channels for now (no K-weighting yet).
+    double energy = 0.0;
+
+    for (int ch = 0; ch < numChannels; ++ch)
+    {
+        const float s = channelData[ch][sampleIndex];
+        energy += (double) s * (double) s;
+    }
+
+    if (numChannels > 0)
+        energy /= (double) numChannels;
+
+    // Update momentary sliding window
+    if (momentaryWindowSamples > 0)
+    {
+        const double old = momentaryEnergyBuffer[(size_t) momentaryIndex];
+        momentarySum     -= old;
+        momentaryEnergyBuffer[(size_t) momentaryIndex] = energy;
+        momentarySum     += energy;
+
+        if (++momentaryIndex >= momentaryWindowSamples)
+            momentaryIndex = 0;
+    }
+
+    // Update short-term sliding window
+    if (shortTermWindowSamples > 0)
+    {
+        const double old = shortTermEnergyBuffer[(size_t) shortTermIndex];
+        shortTermSum     -= old;
+        shortTermEnergyBuffer[(size_t) shortTermIndex] = energy;
+        shortTermSum     += energy;
+
+        if (++shortTermIndex >= shortTermWindowSamples)
+            shortTermIndex = 0;
+    }
+
+    ++totalSamplesProcessed;
+
+    // Frame scheduling (10 Hz)
+    if (--samplesUntilNextFrame <= 0)
+    {
+        samplesUntilNextFrame += frameSamples;
+
+        // Handle startup before windows are fully "warmed up"
+        const double momentaryDenom = (totalSamplesProcessed < (juce::int64) momentaryWindowSamples
+                                         ? (double) juce::jmax<juce::int64> (1, totalSamplesProcessed)
+                                         : (double) momentaryWindowSamples);
+
+        const double shortTermDenom = (totalSamplesProcessed < (juce::int64) shortTermWindowSamples
+                                         ? (double) juce::jmax<juce::int64> (1, totalSamplesProcessed)
+                                         : (double) shortTermWindowSamples);
+
+        const double meanMomentary = momentarySum / momentaryDenom;
+        const double meanShortTerm = shortTermSum / shortTermDenom;
+
+        const float rmsMomentary = (float) std::sqrt (juce::jmax (0.0, meanMomentary));
+        const float rmsShortTerm = (float) std::sqrt (juce::jmax (0.0, meanShortTerm));
+
+        pushLoudnessFrame (rmsMomentary, rmsShortTerm);
+    }
+}
 
 void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                                              juce::MidiBuffer& midiMessages)
@@ -89,82 +169,44 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         channelData[ch] = buffer.getReadPointer (ch);
 
     for (int i = 0; i < numSamples; ++i)
-    {
-        // Average energy across all input channels for this frame (for RMS)
-        double energy = 0.0;
+        processSampleForLoudness (channelData.getData(), numChannels, i);
 
-        // For peak: track max absolute across channels at this frame
-        float framePeakAbs = 0.0f;
-
-        for (int ch = 0; ch < numChannels; ++ch)
-        {
-            const float s = channelData[ch][i];
-            energy += (double) s * (double) s;
-
-            const float absS = std::abs (s);
-            if (absS > framePeakAbs)
-                framePeakAbs = absS;
-        }
-
-        energy /= (double) numChannels;
-
-        rmsSumSquares += energy;
-        ++framesAccumulated;
-
-        if (framePeakAbs > peakAccumulator)
-            peakAccumulator = framePeakAbs;
-
-        if (framesAccumulated >= windowSamples)
-        {
-            const double meanSq = rmsSumSquares / (double) framesAccumulated;
-            const float  rms    = (float) std::sqrt (meanSq);
-            const float  peak   = peakAccumulator;
-
-            pushEnvelopeIntoFifo (rms, peak);
-
-            rmsSumSquares     = 0.0;
-            framesAccumulated = 0;
-            peakAccumulator   = 0.0f;
-        }
-    }
-
-    // Audio is passed through unchanged (we don't touch buffer data)
+    // Audio is passed through unchanged.
 }
 
 //==============================================================================
 
-void LevelScopeAudioProcessor::pushEnvelopeIntoFifo (float rms, float peak) noexcept
+void LevelScopeAudioProcessor::pushLoudnessFrame (float momentaryRms,
+                                                  float shortTermRms) noexcept
 {
     int start1 = 0, size1 = 0, start2 = 0, size2 = 0;
-    envelopeFifo.prepareToWrite (1, start1, size1, start2, size2);
+    loudnessFifo.prepareToWrite (1, start1, size1, start2, size2);
 
     const int writable = size1 + size2;
     if (writable > 0)
     {
-        // We only ever write in one contiguous block for count=1
         const int index = (size1 > 0 ? start1 : start2);
 
-        envelopeBuffer[(size_t) index].rms  = rms;
-        envelopeBuffer[(size_t) index].peak = peak;
+        loudnessBuffer[(size_t) index].momentaryRms = momentaryRms;
+        loudnessBuffer[(size_t) index].shortTermRms = shortTermRms;
 
-        envelopeFifo.finishedWrite (1);
+        loudnessFifo.finishedWrite (1);
     }
     else
     {
-        // No space: drop sample (rare with large FIFO and low visual rate)
-        envelopeFifo.finishedWrite (0);
+        loudnessFifo.finishedWrite (0); // FIFO full, drop frame.
     }
 }
 
-int LevelScopeAudioProcessor::readEnvelopeFromFifo (float* rmsDest,
-                                                    float* peakDest,
+int LevelScopeAudioProcessor::readLoudnessFromFifo (float* momentaryDest,
+                                                    float* shortTermDest,
                                                     int maxNumToRead) noexcept
 {
-    if (rmsDest == nullptr || peakDest == nullptr || maxNumToRead <= 0)
+    if (momentaryDest == nullptr || shortTermDest == nullptr || maxNumToRead <= 0)
         return 0;
 
     int start1 = 0, size1 = 0, start2 = 0, size2 = 0;
-    envelopeFifo.prepareToRead (maxNumToRead, start1, size1, start2, size2);
+    loudnessFifo.prepareToRead (maxNumToRead, start1, size1, start2, size2);
 
     const int totalToRead = size1 + size2;
 
@@ -174,9 +216,9 @@ int LevelScopeAudioProcessor::readEnvelopeFromFifo (float* rmsDest,
     {
         for (int i = 0; i < size1; ++i)
         {
-            const auto& s = envelopeBuffer[(size_t) (start1 + i)];
-            rmsDest [destIndex] = s.rms;
-            peakDest[destIndex] = s.peak;
+            const auto& f = loudnessBuffer[(size_t) (start1 + i)];
+            momentaryDest[destIndex] = f.momentaryRms;
+            shortTermDest[destIndex] = f.shortTermRms;
             ++destIndex;
         }
     }
@@ -185,14 +227,14 @@ int LevelScopeAudioProcessor::readEnvelopeFromFifo (float* rmsDest,
     {
         for (int i = 0; i < size2; ++i)
         {
-            const auto& s = envelopeBuffer[(size_t) (start2 + i)];
-            rmsDest [destIndex] = s.rms;
-            peakDest[destIndex] = s.peak;
+            const auto& f = loudnessBuffer[(size_t) (start2 + i)];
+            momentaryDest[destIndex] = f.momentaryRms;
+            shortTermDest[destIndex] = f.shortTermRms;
             ++destIndex;
         }
     }
 
-    envelopeFifo.finishedRead (totalToRead);
+    loudnessFifo.finishedRead (totalToRead);
 
     return totalToRead;
 }
@@ -202,7 +244,7 @@ int LevelScopeAudioProcessor::readEnvelopeFromFifo (float* rmsDest,
 void LevelScopeAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
     juce::ignoreUnused (destData);
-    // No parameters yet; could store zoom/mode state here later if desired.
+    // No parameters yet.
 }
 
 void LevelScopeAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
@@ -220,7 +262,6 @@ juce::AudioProcessorEditor* LevelScopeAudioProcessor::createEditor()
 
 //==============================================================================
 
-// Factory function required by JUCE
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new LevelScopeAudioProcessor();

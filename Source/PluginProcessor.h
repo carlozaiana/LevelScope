@@ -4,14 +4,16 @@
 #include <vector>
 
 //==============================================================================
-// Main audio processor for LevelScope
+// Main audio processor for LevelScope (prototype loudness display)
 //==============================================================================
 
 class LevelScopeAudioProcessor : public juce::AudioProcessor
 {
 public:
-    // Visual envelope sampling rate (envelope "frames" per second)
-    static constexpr double visualSampleRate = 2000.0; // Hz
+    // Loudness "frame" rate for visualization (frames per second)
+    static constexpr double loudnessFrameRate       = 10.0;  // 10 Hz
+    static constexpr double momentaryWindowSeconds  = 0.4;   // 400 ms
+    static constexpr double shortTermWindowSeconds  = 3.0;   // 3 s
 
     LevelScopeAudioProcessor();
     ~LevelScopeAudioProcessor() override;
@@ -53,39 +55,56 @@ public:
     //==============================================================================
     // GUI access helpers
 
-    // Read up to maxNumToRead envelope samples from the FIFO into dest arrays.
+    // Read up to maxNumToRead loudness frames from the FIFO into dest arrays.
     // Returns the number actually read (non-blocking).
-    // Each sample has both RMS and Peak values.
-    int readEnvelopeFromFifo (float* rmsDest,
-                              float* peakDest,
+    // Each frame has both momentary and short-term RMS values (linear).
+    int readLoudnessFromFifo (float* momentaryDest,
+                              float* shortTermDest,
                               int maxNumToRead) noexcept;
 
-    // Visual sample rate accessor (used by GUI)
-    double getVisualSampleRate() const noexcept { return visualSampleRate; }
+    // Visual loudness frame rate accessor (used by GUI)
+    double getLoudnessFrameRate() const noexcept { return loudnessFrameRate; }
 
 private:
     //==============================================================================
-    // Envelope aggregation for visualization (RMS + Peak per window)
+    // Loudness / envelope aggregation (momentary + short-term)
 
-    double currentSampleRate = 44100.0;
-    int    windowSamples     = 0;     // how many audio frames per envelope chunk (RMS+Peak)
+    double currentSampleRate      = 44100.0;
+    int    momentaryWindowSamples = 0;   // samples in 400 ms window
+    int    shortTermWindowSamples = 0;   // samples in 3 s window
 
-    double rmsSumSquares        = 0.0; // accumulated mean-square energy
-    int    framesAccumulated    = 0;   // frames so far in current window
-    float  peakAccumulator      = 0.0f; // max abs across all channels and samples in window
+    int    frameSamples           = 0;   // samples between loudness frames (for 10 Hz)
+    int    samplesUntilNextFrame  = 0;   // countdown to next frame
 
-    struct EnvelopeSample
+    // Sliding energy windows for momentary and short-term (per-sample energy)
+    std::vector<double> momentaryEnergyBuffer;
+    std::vector<double> shortTermEnergyBuffer;
+
+    int    momentaryIndex   = 0;
+    int    shortTermIndex   = 0;
+    double momentarySum     = 0.0;
+    double shortTermSum     = 0.0;
+
+    juce::int64 totalSamplesProcessed = 0; // for startup warm-up
+
+    struct LoudnessFrame
     {
-        float rms  = 0.0f;
-        float peak = 0.0f;
+        float momentaryRms = 0.0f;
+        float shortTermRms = 0.0f;
     };
 
-    static constexpr int envelopeFifoSize = 16384; // plenty for UI latency
-    juce::AbstractFifo              envelopeFifo;
-    std::vector<EnvelopeSample>     envelopeBuffer;
+    static constexpr int loudnessFifoSize = 4096;
+    juce::AbstractFifo              loudnessFifo;
+    std::vector<LoudnessFrame>      loudnessBuffer;
 
-    void resetEnvelopeCollector() noexcept;
-    void pushEnvelopeIntoFifo (float rms, float peak) noexcept;
+    void resetLoudnessState() noexcept;
+
+    void processSampleForLoudness (const float* const* channelData,
+                                   int numChannels,
+                                   int sampleIndex) noexcept;
+
+    void pushLoudnessFrame (float momentaryRms,
+                            float shortTermRms) noexcept;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LevelScopeAudioProcessor)
