@@ -164,6 +164,14 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     if (width <= 1 || height <= 0.0f)
         return;
 
+    // Draw auto-fit toggle bar on the left
+    {
+        juce::Rectangle<float> bar (0.0f, 0.0f, (float) autoFitBarWidth, height);
+        g.setColour (autoFitEnabled ? juce::Colours::red.withAlpha (0.7f)
+                                    : juce::Colours::darkgrey.withAlpha (0.4f));
+        g.fillRect (bar);
+    }
+
     // Optional horizontal reference lines (e.g. -90, -60, -30, 0 dB)
     g.setColour (juce::Colours::darkgrey.withMultipliedAlpha (0.6f));
     const int numLines = 4;
@@ -184,8 +192,28 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             : 0);
 
     const double maxOffsetFrames = (double) (latestIndex - earliestIndex);
-    viewOffsetFrames = juce::jlimit (0.0, maxOffsetFrames, viewOffsetFrames);
-    zoomX            = juce::jlimit (minZoomX, maxZoomX, zoomX);
+
+    if (autoFitEnabled && width > autoFitBarWidth)
+    {
+        // Auto-fit: keep the entire history visible from earliest to latest
+        const double widthPixels     = (double) (width - autoFitBarWidth);
+        const double framesInHistory = (double) (latestIndex - earliestIndex + 1);
+
+        if (framesInHistory > 1.0 && widthPixels > 1.0)
+        {
+            zoomX = widthPixels / framesInHistory;
+            zoomX = juce::jmin (zoomX, maxZoomX);  // clamp only to max; allow small zoomX
+
+            viewOffsetFrames = 0.0;   // newest frame at the right edge
+            hasCustomZoomX   = true;
+        }
+    }
+    else
+    {
+        // Manual mode: clamp existing offset/zoom as before
+        viewOffsetFrames = juce::jlimit (0.0, maxOffsetFrames, viewOffsetFrames);
+        zoomX            = juce::jlimit (minZoomX, maxZoomX, zoomX);
+    }
 
     // Right edge: which frame index does it show?
     const double rightIndexDouble = (double) latestIndex - viewOffsetFrames;
@@ -323,6 +351,19 @@ void VolumeHistoryComponent::applyVerticalZoom (float wheelDelta)
 
 //==============================================================================
 
+void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
+{
+    // Toggle auto-fit when clicking inside the left bar
+    if (event.position.x <= (float) autoFitBarWidth)
+    {
+        autoFitEnabled = ! autoFitEnabled;
+        repaint();
+        return;
+    }
+
+    // Otherwise, default behavior (if any) can go here
+}
+
 void VolumeHistoryComponent::mouseWheelMove (const juce::MouseEvent& event,
                                              const juce::MouseWheelDetails& wheel)
 {
@@ -335,4 +376,16 @@ void VolumeHistoryComponent::mouseWheelMove (const juce::MouseEvent& event,
         applyHorizontalZoom (wheel.deltaY, event.position.x);
 
     repaint();
+}
+void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
+{
+    // Toggle auto-fit when clicking inside the left bar
+    if (event.position.x <= (float) autoFitBarWidth)
+    {
+        autoFitEnabled = ! autoFitEnabled;
+        repaint();
+        return;
+    }
+
+    // Otherwise, default behavior (if any) can go here
 }

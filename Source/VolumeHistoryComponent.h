@@ -23,6 +23,8 @@ public:
     void mouseWheelMove (const juce::MouseEvent& event,
                          const juce::MouseWheelDetails& wheel) override;
 
+    void mouseDown (const juce::MouseEvent& event) override;
+
 private:
     // juce::Timer
     void timerCallback() override;
@@ -79,6 +81,10 @@ private:
     double yZoom      = 1.0;   // >1 = zoom in (smaller dB span)
     double minYZoom   = 0.25;
     double maxYZoom   = 4.0;
+
+    // Auto-fit mode: keep entire history visible horizontally
+    bool  autoFitEnabled   = false;
+    int   autoFitBarWidth  = 5;   // pixels on the left side
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VolumeHistoryComponent)
 };
