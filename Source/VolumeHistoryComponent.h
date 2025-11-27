@@ -84,7 +84,7 @@ private:
 
     // Auto-fit mode: keep entire history visible horizontally
     bool  autoFitEnabled   = false;
-    int   autoFitBarWidth  = 5;   // pixels on the left side
+    int   autoFitBarWidth  = 10;   // pixels on the left side
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VolumeHistoryComponent)
 };

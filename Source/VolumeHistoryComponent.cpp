@@ -166,10 +166,10 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
     // Draw auto-fit toggle bar on the left
     {
-        juce::Rectangle<float> bar (0.0f, 0.0f, (float) autoFitBarWidth, height);
-        g.setColour (autoFitEnabled ? juce::Colours::red.withAlpha (0.7f)
-                                    : juce::Colours::blue.withAlpha (0.4f));
-        g.fillRect (bar);
+    juce::Rectangle<float> bar (0.0f, 0.0f, (float) autoFitBarWidth, height);
+    g.setColour (autoFitEnabled ? juce::Colours::red.withAlpha (0.7f)
+                                : juce::Colours::blue.withAlpha (0.6f));
+    g.fillRect (bar);
     }
 
     // Optional horizontal reference lines (e.g. -90, -60, -30, 0 dB)
@@ -353,12 +353,21 @@ void VolumeHistoryComponent::applyVerticalZoom (float wheelDelta)
 
 void VolumeHistoryComponent::mouseWheelMove (const juce::MouseEvent& event,
                                              const juce::MouseWheelDetails& wheel)
-    if (autoFitEnabled)
-    {
-        autoFitEnabled = false;
-        repaint();
+{
+    if (wheel.deltaY == 0.0f)
         return;
-    }
+
+    // Any manual zoom disables auto-fit mode
+    if (autoFitEnabled)
+        autoFitEnabled = false;
+
+    if (event.mods.isShiftDown())
+        applyVerticalZoom (wheel.deltaY);
+    else
+        applyHorizontalZoom (wheel.deltaY, event.position.x);
+
+    repaint();
+}
 
 void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
 {
