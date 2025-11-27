@@ -168,7 +168,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     {
         juce::Rectangle<float> bar (0.0f, 0.0f, (float) autoFitBarWidth, height);
         g.setColour (autoFitEnabled ? juce::Colours::red.withAlpha (0.7f)
-                                    : juce::Colours::darkgrey.withAlpha (0.4f));
+                                    : juce::Colours::blue.withAlpha (0.4f));
         g.fillRect (bar);
     }
 
@@ -353,20 +353,12 @@ void VolumeHistoryComponent::applyVerticalZoom (float wheelDelta)
 
 void VolumeHistoryComponent::mouseWheelMove (const juce::MouseEvent& event,
                                              const juce::MouseWheelDetails& wheel)
-{
     if (autoFitEnabled)
-        return; // ignore manual zoom when auto-fit is on
-
-    if (wheel.deltaY == 0.0f)
+    {
+        autoFitEnabled = false;
+        repaint();
         return;
-
-    if (event.mods.isShiftDown())
-        applyVerticalZoom (wheel.deltaY);
-    else
-        applyHorizontalZoom (wheel.deltaY, event.position.x);
-
-    repaint();
-}
+    }
 
 void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
 {
