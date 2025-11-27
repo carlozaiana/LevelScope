@@ -202,7 +202,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         if (framesInHistory > 1.0 && widthPixels > 1.0)
         {
             zoomX = widthPixels / framesInHistory;
-            zoomX = juce::jmin (zoomX, maxZoomX);  // clamp only to max; allow small zoomX
+            zoomX = juce::jmin (zoomX, maxZoomX);  // clamp only to max; allow very small zoomX
 
             viewOffsetFrames = 0.0;   // newest frame at the right edge
             hasCustomZoomX   = true;
@@ -272,7 +272,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     drawCurve (CurveKind::ShortTerm, juce::Colours::cyan.withMultipliedAlpha (0.8f), 2.4f);
     drawCurve (CurveKind::Momentary, juce::Colours::limegreen,                    3.0f);
 
-    // Overlay info: mode + zooms
+    // Overlay info: curves + zooms
     g.setColour (juce::Colours::white);
     g.setFont (14.0f);
 
@@ -351,22 +351,12 @@ void VolumeHistoryComponent::applyVerticalZoom (float wheelDelta)
 
 //==============================================================================
 
-void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
-{
-    // Toggle auto-fit when clicking inside the left bar
-    if (event.position.x <= (float) autoFitBarWidth)
-    {
-        autoFitEnabled = ! autoFitEnabled;
-        repaint();
-        return;
-    }
-
-    // Otherwise, default behavior (if any) can go here
-}
-
 void VolumeHistoryComponent::mouseWheelMove (const juce::MouseEvent& event,
                                              const juce::MouseWheelDetails& wheel)
 {
+    if (autoFitEnabled)
+        return; // ignore manual zoom when auto-fit is on
+
     if (wheel.deltaY == 0.0f)
         return;
 
@@ -377,6 +367,7 @@ void VolumeHistoryComponent::mouseWheelMove (const juce::MouseEvent& event,
 
     repaint();
 }
+
 void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
 {
     // Toggle auto-fit when clicking inside the left bar
