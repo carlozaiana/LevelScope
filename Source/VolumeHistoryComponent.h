@@ -68,14 +68,22 @@ private:
     juce::int64 historyFrameCount = 0;
 
     // X-axis offset in frames behind "now" (newest frame)
+    // 0 = right edge shows newest frame,
+    // >0 = right edge shows an older frame.
     double viewOffsetFrames  = 0.0;
 
     // X-axis zoom (frame spacing)
     // zoomX = pixels per loudness frame.
     double zoomX      = 1.0;
-    double minZoomX   = 0.05;
+    double minZoomX   = 0.05;   // base minimum zoom (for very early history)
     double maxZoomX   = 50.0;
-    bool   hasCustomZoomX = false;   // to keep "initial ~10s" default until user changes zoom
+    bool   hasCustomZoomX = false;
+
+    // Dynamic minimum zoom-out:
+    // - Starts at minZoomX.
+    // - When auto-fit is activated, updated to the auto-fit zoomX.
+    // - In manual mode, zoomX cannot go below minAllowedZoomX.
+    double minAllowedZoomX = minZoomX;
 
     // Y-axis zoom (amplitude)
     double yZoom      = 1.0;   // >1 = zoom in (smaller dB span)
@@ -85,6 +93,13 @@ private:
     // Auto-fit mode: keep entire history visible horizontally
     bool  autoFitEnabled   = false;
     int   autoFitBarWidth  = 10;   // pixels on the left side
+
+    // Stored manual state for toggling:
+    // When entering auto-fit, we save the current manual zoomX and viewOffsetFrames.
+    // When leaving auto-fit, we restore them (if available).
+    double savedManualZoomX          = 1.0;
+    double savedManualViewOffset     = 0.0;
+    bool   hasSavedManualState       = false;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VolumeHistoryComponent)
 };

@@ -101,7 +101,7 @@ void VolumeHistoryComponent::pushLoudnessBatchToHistory (const float* momentaryV
     }
 
     // viewOffsetFrames stays the same; "now" has moved,
-    // but our offset behind "now" remains constant.
+    // but our offset behind "now" remains constant (follow behavior).
 }
 
 //==============================================================================
@@ -206,13 +206,16 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
             viewOffsetFrames = 0.0;   // newest frame at the right edge
             hasCustomZoomX   = true;
+
+            // Auto-fit defines the minimum allowed zoom-out from now on:
+            minAllowedZoomX = juce::jmax (minZoomX, zoomX);
         }
     }
     else
     {
-        // Manual mode: clamp existing offset/zoom as before
+        // Manual mode: clamp existing offset/zoom.
         viewOffsetFrames = juce::jlimit (0.0, maxOffsetFrames, viewOffsetFrames);
-        zoomX            = juce::jlimit (minZoomX, maxZoomX, zoomX);
+        zoomX            = juce::jlimit (minAllowedZoomX, maxZoomX, zoomX);
     }
 
     // Right edge: which frame index does it show?
@@ -230,6 +233,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     // When auto-fit is enabled, we aggregate multiple frames into one
     // drawn point, to keep the number of path segments ~ O(screen width)
     // instead of O(history length). This avoids UI lag for long histories.
+    // In manual mode, frameStepSize stays at 1 (full resolution).
     // ----------------------------------------------------------------------
     int frameStepSize = 1;
 
@@ -361,7 +365,7 @@ void VolumeHistoryComponent::applyHorizontalZoom (float wheelDelta, float mouseX
     const double zoomFactor = std::pow (zoomBase, (double) wheelDelta);
 
     zoomX *= zoomFactor;
-    zoomX = juce::jlimit (minZoomX, maxZoomX, zoomX);
+    zoomX = juce::jlimit (minAllowedZoomX, maxZoomX, zoomX);
 
     // Recompute how many frame steps from right edge to that same frame under new zoom
     const double kNew          = dxFromRight / zoomX;
@@ -395,9 +399,17 @@ void VolumeHistoryComponent::mouseWheelMove (const juce::MouseEvent& event,
     if (wheel.deltaY == 0.0f)
         return;
 
-    // Any manual zoom disables auto-fit mode
+    // Any manual zoom disables auto-fit mode and restores saved manual state if needed.
     if (autoFitEnabled)
+    {
         autoFitEnabled = false;
+
+        if (hasSavedManualState)
+        {
+            zoomX          = juce::jlimit (minAllowedZoomX, maxZoomX, savedManualZoomX);
+            viewOffsetFrames = savedManualViewOffset;
+        }
+    }
 
     if (event.mods.isShiftDown())
         applyVerticalZoom (wheel.deltaY);
@@ -412,7 +424,27 @@ void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
     // Toggle auto-fit when clicking inside the left bar
     if (event.position.x <= (float) autoFitBarWidth)
     {
-        autoFitEnabled = ! autoFitEnabled;
+        if (! autoFitEnabled)
+        {
+            // Enter auto-fit: save current manual state
+            savedManualZoomX      = zoomX;
+            savedManualViewOffset = viewOffsetFrames;
+            hasSavedManualState   = true;
+
+            autoFitEnabled = true;
+        }
+        else
+        {
+            // Leave auto-fit: restore last manual state if available
+            autoFitEnabled = false;
+
+            if (hasSavedManualState)
+            {
+                zoomX          = juce::jlimit (minAllowedZoomX, maxZoomX, savedManualZoomX);
+                viewOffsetFrames = savedManualViewOffset;
+            }
+        }
+
         repaint();
         return;
     }
