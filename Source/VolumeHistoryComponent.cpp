@@ -166,10 +166,10 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
     // Draw auto-fit toggle bar on the left
     {
-    juce::Rectangle<float> bar (0.0f, 0.0f, (float) autoFitBarWidth, height);
-    g.setColour (autoFitEnabled ? juce::Colours::red.withAlpha (0.7f)
-                                : juce::Colours::blue.withAlpha (0.6f));
-    g.fillRect (bar);
+        juce::Rectangle<float> bar (0.0f, 0.0f, (float) autoFitBarWidth, height);
+        g.setColour (autoFitEnabled ? juce::Colours::red.withAlpha (0.7f)
+                                    : juce::Colours::blue.withAlpha (0.6f));
+        g.fillRect (bar);
     }
 
     // Optional horizontal reference lines (e.g. -90, -60, -30, 0 dB)
@@ -226,6 +226,22 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
     const int rightPixel = width - 1;
 
+    // ----------------------------------------------------------------------
+    // When auto-fit is enabled, we aggregate multiple frames into one
+    // drawn point, to keep the number of path segments ~ O(screen width)
+    // instead of O(history length). This avoids UI lag for long histories.
+    // ----------------------------------------------------------------------
+    int frameStepSize = 1;
+
+    if (autoFitEnabled)
+    {
+        const double framesInHistory = (double) (latestIndex - earliestIndex + 1);
+        const int    maxPoints       = juce::jmax (1, width - autoFitBarWidth);
+
+        if (framesInHistory > (double) maxPoints)
+            frameStepSize = (int) std::ceil (framesInHistory / (double) maxPoints);
+    }
+
     auto drawCurve = [&] (CurveKind kind, juce::Colour colour, float strokeWidth)
     {
         juce::Path path;
@@ -247,8 +263,29 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             if (xPos < -50.0)
                 break;
 
-            const float db = getDbAtFrame (kind, idx);
-            const float y  = dbToY (db, height);
+            // Aggregate up to frameStepSize frames for this visible point.
+            // To preserve peaks as much as possible when downsampling,
+            // we use the maximum dB value within the group.
+            float dbGroup = getDbAtFrame (kind, idx);
+
+            if (frameStepSize > 1)
+            {
+                float maxDb = dbGroup;
+
+                const juce::int64 groupEnd =
+                    juce::jmax<juce::int64> (earliestIndex, idx - (juce::int64) (frameStepSize - 1));
+
+                for (juce::int64 j = idx - 1; j >= groupEnd; --j)
+                {
+                    const float v = getDbAtFrame (kind, j);
+                    if (v > maxDb)
+                        maxDb = v;
+                }
+
+                dbGroup = maxDb;
+            }
+
+            const float y = dbToY (dbGroup, height);
 
             if (! started)
             {
@@ -260,8 +297,9 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
                 path.lineTo ((float) xPos + 0.5f, y);
             }
 
-            --idx;
-            ++frameStep;
+            // Move to the next group
+            idx       -= (juce::int64) frameStepSize;
+            frameStep += frameStepSize;
         }
 
         if (started)
