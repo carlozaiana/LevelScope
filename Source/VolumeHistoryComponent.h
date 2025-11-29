@@ -68,8 +68,7 @@ private:
     juce::int64 historyFrameCount = 0;
 
     // X-axis offset in frames behind "now" (newest frame)
-    // 0 = right edge shows newest frame,
-    // >0 = right edge shows an older frame.
+    // Used only in auto-fit/follow mode.
     double viewOffsetFrames  = 0.0;
 
     // X-axis zoom (frame spacing)
@@ -90,16 +89,20 @@ private:
     double minYZoom   = 0.25;
     double maxYZoom   = 4.0;
 
-    // Auto-fit mode: keep entire history visible horizontally
+    // Auto-fit/follow mode: keep entire history visible horizontally and follow "now"
     bool  autoFitEnabled   = false;
     int   autoFitBarWidth  = 10;   // pixels on the left side
 
-    // Stored manual state for toggling:
-    // When entering auto-fit, we save the current manual zoomX and viewOffsetFrames.
-    // When leaving auto-fit, we restore them (if available).
-    double savedManualZoomX          = 1.0;
-    double savedManualViewOffset     = 0.0;
-    bool   hasSavedManualState       = false;
+    // Manual view: index of the frame currently shown at the right edge.
+    // Only used when autoFitEnabled == false.
+    juce::int64 manualRightFrame = 0;
+
+    // Stored manual state for toggling via sidebar:
+    // When entering auto-fit via sidebar, we save the current manual zoomX and manualRightFrame.
+    // When leaving auto-fit via sidebar, we restore them.
+    double      savedManualZoomX      = 1.0;
+    juce::int64 savedManualRightFrame = 0;
+    bool        hasSavedManualState   = false;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VolumeHistoryComponent)
 };
