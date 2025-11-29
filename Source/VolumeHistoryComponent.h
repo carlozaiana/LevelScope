@@ -46,7 +46,7 @@ private:
 
     float dbToY (float db, float height) const noexcept;
 
-    void applyHorizontalZoom (float wheelDelta, float mouseX);
+    void applyHorizontalZoom (float wheelDelta);
     void applyVerticalZoom (float wheelDelta);
 
     LevelScopeAudioProcessor& processor;
@@ -66,10 +66,6 @@ private:
 
     // Total number of frames written so far (monotonic)
     juce::int64 historyFrameCount = 0;
-
-    // X-axis offset in frames behind "now" (newest frame)
-    // Used only in auto-fit/follow mode.
-    double viewOffsetFrames  = 0.0;
 
     // X-axis zoom (frame spacing)
     // zoomX = pixels per loudness frame.
@@ -93,16 +89,11 @@ private:
     bool  autoFitEnabled   = false;
     int   autoFitBarWidth  = 10;   // pixels on the left side
 
-    // Manual view: index of the frame currently shown at the right edge.
-    // Only used when autoFitEnabled == false.
-    juce::int64 manualRightFrame = 0;
-
-    // Stored manual state for toggling via sidebar:
-    // When entering auto-fit via sidebar, we save the current manual zoomX and manualRightFrame.
-    // When leaving auto-fit via sidebar, we restore them.
-    double      savedManualZoomX      = 1.0;
-    juce::int64 savedManualRightFrame = 0;
-    bool        hasSavedManualState   = false;
+    // Stored manual zoom for toggling via sidebar:
+    // When entering auto-fit via sidebar, save current manual zoomX.
+    // When leaving auto-fit via sidebar, restore it.
+    double savedManualZoomX    = 1.0;
+    bool   hasSavedManualZoomX = false;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VolumeHistoryComponent)
 };

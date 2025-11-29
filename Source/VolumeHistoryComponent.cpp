@@ -202,6 +202,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             ? historyFrameCount - (juce::int64) historyCapacityFrames
             : 0);
 
+    // Auto-fit: force zoomX so entire history fits; manual: clamp zoomX.
     if (autoFitEnabled && width > autoFitBarWidth)
     {
         const double widthPixels     = (double) (width - autoFitBarWidth);
@@ -212,37 +213,17 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             zoomX = widthPixels / framesInHistory;
             zoomX = juce::jmin (zoomX, maxZoomX);  // clamp only to max; allow very small zoomX
 
-            viewOffsetFrames = 0.0;   // newest frame at the right edge in auto-fit
             hasCustomZoomX   = true;
-
-            // Auto-fit defines the minimum allowed zoom-out from now on:
-            minAllowedZoomX = juce::jmax (minZoomX, zoomX);
+            minAllowedZoomX  = juce::jmax (minZoomX, zoomX);  // auto-fit defines minimum zoom-out
         }
     }
     else
     {
-        // Manual mode: clamp existing zoom but do not auto-follow.
         zoomX = juce::jlimit (minAllowedZoomX, maxZoomX, zoomX);
-
-        // If manualRightFrame hasn't been initialised yet, start at newest.
-        if (manualRightFrame < earliestIndex || manualRightFrame > latestIndex)
-            manualRightFrame = latestIndex;
     }
 
-    // Determine which frame index is at the right edge (for drawing curves)
-    double rightIndexDouble = 0.0;
-
-    if (autoFitEnabled)
-    {
-        // Follow newest
-        rightIndexDouble = (double) historyFrameCount - 1;
-    }
-    else
-    {
-        // Static manual view
-        rightIndexDouble = (double) manualRightFrame;
-    }
-
+    // Right edge always follows "now"
+    const double rightIndexDouble = (double) latestIndex;
     const juce::int64 currentIndex0 = (juce::int64) std::floor (rightIndexDouble);
 
     if (currentIndex0 < earliestIndex || currentIndex0 > latestIndex)
@@ -251,10 +232,8 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     const int rightPixel = width - 1;
 
     // ----------------------------------------------------------------------
-    // When auto-fit is enabled, we aggregate multiple frames into one
-    // drawn point, to keep the number of path segments ~ O(screen width)
-    // instead of O(history length). This avoids UI lag for long histories.
-    // In manual mode, frameStepSize stays at 1 (full resolution).
+    // Aggregation (decimation) only in auto-fit to avoid lag for long history.
+    // In manual mode, frameStepSize = 1 (full resolution).
     // ----------------------------------------------------------------------
     int frameStepSize = 1;
 
@@ -288,7 +267,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             if (xPos < -50.0)
                 break;
 
-            // Aggregate up to frameStepSize frames for this visible point.
             float dbGroup = getDbAtFrame (kind, idx);
 
             if (frameStepSize > 1)
@@ -320,7 +298,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
                 path.lineTo ((float) xPos + 0.5f, y);
             }
 
-            // Move to the next group
             idx       -= (juce::int64) frameStepSize;
             frameStep += frameStepSize;
         }
@@ -353,24 +330,21 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     const float tickTopY      = rulerBaseY - 6.0f;
     const float textTopY      = rulerBaseY - 14.0f;
     const float leftPixel     = (float) autoFitBarWidth;
-    const float rightPixelF   = (float) width;
 
     const double widthPixelsForTime = (double) (width - autoFitBarWidth);
 
     if (widthPixelsForTime > 1.0 && zoomX > 0.0 && visualFrameRate > 0.0)
     {
         double visibleFramesApprox = 0.0;
-        double rightIndexForTime   = 0.0;
+        double rightIndexForTime   = (double) latestIndex;
 
         if (autoFitEnabled)
         {
             visibleFramesApprox = (double) (latestIndex - earliestIndex + 1);
-            rightIndexForTime   = (double) latestIndex;
         }
         else
         {
             visibleFramesApprox = widthPixelsForTime / zoomX;
-            rightIndexForTime   = (double) manualRightFrame;
         }
 
         if (visibleFramesApprox > 1.0)
@@ -435,33 +409,10 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
 //==============================================================================
 
-void VolumeHistoryComponent::applyHorizontalZoom (float wheelDelta, float mouseX)
+void VolumeHistoryComponent::applyHorizontalZoom (float wheelDelta)
 {
     if (historyFrameCount <= 1 || getWidth() <= 1 || wheelDelta == 0.0f)
         return;
-
-    const int w = getWidth();
-    const double widthPixels = (double) (w - 1);
-
-    const double clampedMouseX = juce::jlimit (0.0, widthPixels, (double) mouseX);
-    const double dxFromRight   = widthPixels - clampedMouseX; // pixels from right edge
-
-    const juce::int64 latestIndex = historyFrameCount - 1;
-    const juce::int64 earliestIndex =
-        (historyFrameCount > (juce::int64) historyCapacityFrames
-            ? historyFrameCount - (juce::int64) historyCapacityFrames
-            : 0);
-
-    // Manual base index: current right-edge frame
-    double baseIndex = (double) manualRightFrame;
-    baseIndex = juce::jlimit ((double) earliestIndex, (double) latestIndex, baseIndex);
-
-    // How many frames from right edge to mouse (in frame steps)?
-    const double k = dxFromRight / zoomX;
-
-    // Frame index currently under the mouse cursor
-    double frameAtMouse = baseIndex - k;
-    frameAtMouse = juce::jlimit ((double) earliestIndex, (double) latestIndex, frameAtMouse);
 
     // Zoom factor: positive deltaY = zoom in (larger zoomX => more pixels per frame)
     const double zoomBase   = 1.1;
@@ -470,13 +421,7 @@ void VolumeHistoryComponent::applyHorizontalZoom (float wheelDelta, float mouseX
     zoomX *= zoomFactor;
     zoomX = juce::jlimit (minAllowedZoomX, maxZoomX, zoomX);
 
-    // Recompute how many frame steps from right edge to that same frame under new zoom
-    const double kNew       = dxFromRight / zoomX;
-    double       baseIndexNew = frameAtMouse + kNew;
-    baseIndexNew = juce::jlimit ((double) earliestIndex, (double) latestIndex, baseIndexNew);
-
-    manualRightFrame = (juce::int64) std::round (baseIndexNew);
-    hasCustomZoomX   = true;
+    hasCustomZoomX = true;
 }
 
 void VolumeHistoryComponent::applyVerticalZoom (float wheelDelta)
@@ -500,32 +445,23 @@ void VolumeHistoryComponent::mouseWheelMove (const juce::MouseEvent& event,
     if (wheel.deltaY == 0.0f)
         return;
 
-    const juce::int64 latestIndex = (historyFrameCount > 0 ? historyFrameCount - 1 : 0);
-    const juce::int64 earliestIndex =
-        (historyFrameCount > (juce::int64) historyCapacityFrames
-            ? historyFrameCount - (juce::int64) historyCapacityFrames
-            : 0);
-
     if (autoFitEnabled)
     {
         // In auto-fit:
         // - wheel down (deltaY < 0): ignore (already fully zoomed out)
-        // - wheel up (deltaY > 0): exit auto-fit, freeze view, and zoom in from "now"
+        // - wheel up (deltaY > 0): exit auto-fit, keep following, and zoom in from current view
         if (wheel.deltaY < 0.0f)
             return;
 
-        // Exit auto-fit: do NOT restore old manual state here.
+        // Exit auto-fit. We do NOT restore old manual zoom here.
         autoFitEnabled = false;
-
-        // Start from "now" as the right edge in manual mode.
-        manualRightFrame = latestIndex;
     }
 
-    // Manual mode (autoFitEnabled == false)
+    // Manual mode (always following "now")
     if (event.mods.isShiftDown())
         applyVerticalZoom (wheel.deltaY);
     else
-        applyHorizontalZoom (wheel.deltaY, event.position.x);
+        applyHorizontalZoom (wheel.deltaY);
 
     repaint();
 }
@@ -535,39 +471,21 @@ void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
     // Toggle auto-fit when clicking inside the left bar
     if (event.position.x <= (float) autoFitBarWidth)
     {
-        const juce::int64 latestIndex = (historyFrameCount > 0 ? historyFrameCount - 1 : 0);
-        const juce::int64 earliestIndex =
-            (historyFrameCount > (juce::int64) historyCapacityFrames
-                ? historyFrameCount - (juce::int64) historyCapacityFrames
-                : 0);
-
         if (! autoFitEnabled)
         {
-            // Enter auto-fit: save current manual state
-            juce::int64 currentRight = manualRightFrame;
-            if (currentRight < earliestIndex || currentRight > latestIndex)
-                currentRight = latestIndex;
-
-            savedManualZoomX      = zoomX;
-            savedManualRightFrame = currentRight;
-            hasSavedManualState   = true;
+            // Enter auto-fit: save current manual zoom
+            savedManualZoomX    = zoomX;
+            hasSavedManualZoomX = true;
 
             autoFitEnabled = true;
         }
         else
         {
-            // Leave auto-fit: restore last manual state if available
+            // Leave auto-fit: restore last manual zoom if available
             autoFitEnabled = false;
 
-            if (hasSavedManualState)
-            {
-                zoomX           = juce::jlimit (minAllowedZoomX, maxZoomX, savedManualZoomX);
-                manualRightFrame = juce::jlimit (earliestIndex, latestIndex, savedManualRightFrame);
-            }
-            else
-            {
-                manualRightFrame = latestIndex;
-            }
+            if (hasSavedManualZoomX)
+                zoomX = juce::jlimit (minAllowedZoomX, maxZoomX, savedManualZoomX);
         }
 
         repaint();
