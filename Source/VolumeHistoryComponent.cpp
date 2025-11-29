@@ -4,6 +4,20 @@
 #include <cmath>
 #include <algorithm>
 
+// Helper: format seconds as HH:MM:SS
+static juce::String formatTimeHMS (double seconds)
+{
+    if (seconds < 0.0)
+        seconds = 0.0;
+
+    const int total = (int) std::floor (seconds + 0.5);
+    const int h = total / 3600;
+    const int m = (total % 3600) / 60;
+    const int s = total % 60;
+
+    return juce::String::formatted ("%02d:%02d:%02d", h, m, s);
+}
+
 //==============================================================================
 
 VolumeHistoryComponent::VolumeHistoryComponent (LevelScopeAudioProcessor& proc)
@@ -215,7 +229,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             manualRightFrame = latestIndex;
     }
 
-    // Determine which frame index is at the right edge
+    // Determine which frame index is at the right edge (for drawing curves)
     double rightIndexDouble = 0.0;
 
     if (autoFitEnabled)
@@ -229,7 +243,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         rightIndexDouble = (double) manualRightFrame;
     }
 
-    // Start at the integer frame at/just before the right edge
     const juce::int64 currentIndex0 = (juce::int64) std::floor (rightIndexDouble);
 
     if (currentIndex0 < earliestIndex || currentIndex0 > latestIndex)
@@ -276,8 +289,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
                 break;
 
             // Aggregate up to frameStepSize frames for this visible point.
-            // To preserve peaks as much as possible when downsampling,
-            // we use the maximum dB value within the group.
             float dbGroup = getDbAtFrame (kind, idx);
 
             if (frameStepSize > 1)
@@ -332,6 +343,94 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
     g.drawText (info1,  8,  8, 260, 20, juce::Justification::topLeft);
     g.drawText (info2,  8, 28, 260, 20, juce::Justification::topLeft);
+
+    //==========================================================================
+    // Time ruler at bottom: HH:MM:SS, auto-adjusted spacing
+    //==========================================================================
+
+    const float rulerHeight   = 16.0f;
+    const float rulerBaseY    = height - 2.0f;
+    const float tickTopY      = rulerBaseY - 6.0f;
+    const float textTopY      = rulerBaseY - 14.0f;
+    const float leftPixel     = (float) autoFitBarWidth;
+    const float rightPixelF   = (float) width;
+
+    const double widthPixelsForTime = (double) (width - autoFitBarWidth);
+
+    if (widthPixelsForTime > 1.0 && zoomX > 0.0 && visualFrameRate > 0.0)
+    {
+        double visibleFramesApprox = 0.0;
+        double rightIndexForTime   = 0.0;
+
+        if (autoFitEnabled)
+        {
+            visibleFramesApprox = (double) (latestIndex - earliestIndex + 1);
+            rightIndexForTime   = (double) latestIndex;
+        }
+        else
+        {
+            visibleFramesApprox = widthPixelsForTime / zoomX;
+            rightIndexForTime   = (double) manualRightFrame;
+        }
+
+        if (visibleFramesApprox > 1.0)
+        {
+            const double visibleSeconds = visibleFramesApprox / visualFrameRate;
+            double tRight = rightIndexForTime / visualFrameRate;
+            double tLeft  = tRight - visibleSeconds;
+            if (tLeft < 0.0) tLeft = 0.0;
+
+            // Choose tick spacing so that we have at most ~20 labels.
+            const double maxLabels = 20.0;
+            const double tickSteps[] = {
+                0.5, 1.0, 2.0, 5.0,
+                10.0, 15.0, 30.0,
+                60.0, 120.0, 300.0, 600.0, 1200.0, 3600.0
+            };
+
+            double tickStep = tickSteps[sizeof(tickSteps)/sizeof(tickSteps[0]) - 1];
+
+            for (double s : tickSteps)
+            {
+                const double count = visibleSeconds / s;
+                if (count <= maxLabels)
+                {
+                    tickStep = s;
+                    break;
+                }
+            }
+
+            const double firstTick = std::ceil (tLeft / tickStep) * tickStep;
+
+            // Draw baseline for the ruler
+            g.setColour (juce::Colours::darkgrey.withMultipliedAlpha (0.8f));
+            g.drawHorizontalLine ((int) std::round (rulerBaseY), 0.0f, (float) width);
+
+            // Draw ticks and labels
+            g.setColour (juce::Colours::white);
+            g.setFont (10.0f);
+
+            for (double t = firstTick; t <= tRight + 1e-9; t += tickStep)
+            {
+                const double norm = (t - tLeft) / visibleSeconds;
+                if (norm < 0.0 || norm > 1.0)
+                    continue;
+
+                const float x = leftPixel + (float) (norm * widthPixelsForTime);
+
+                g.drawVerticalLine ((int) std::round (x), tickTopY, rulerBaseY);
+
+                auto label = formatTimeHMS (t);
+                const float textWidth = 52.0f;
+                g.drawText (label,
+                            x - textWidth * 0.5f,
+                            textTopY,
+                            textWidth,
+                            rulerHeight,
+                            juce::Justification::centred);
+            }
+        }
+    }
 }
 
 //==============================================================================
