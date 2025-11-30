@@ -26,15 +26,19 @@ VolumeHistoryComponent::VolumeHistoryComponent (LevelScopeAudioProcessor& proc)
       historyLengthSeconds (1800.0),      // 30 minutes
       minDb (-90.0f),
       maxDb (  0.0f),
-      baseDbRange (std::abs (minDb)),
-      rawCapacityFrames ((int) std::ceil (historyLengthSeconds * visualFrameRate)),
-      overviewCapacityFrames (juce::jmax (1, rawCapacityFrames / decimationFactor)),
-      rawHistory ((size_t) rawCapacityFrames),
-      overviewHistory ((size_t) overviewCapacityFrames)
+      baseDbRange (std::abs (minDb))
 {
     jassert (visualFrameRate > 0.0);
-    jassert (rawCapacityFrames > 0);
-    jassert (overviewCapacityFrames > 0);
+
+    // Compute capacities and allocate buffers
+    rawCapacityFrames = (int) std::ceil (historyLengthSeconds * visualFrameRate);
+    if (rawCapacityFrames < 1)
+        rawCapacityFrames = 1;
+
+    overviewCapacityFrames = juce::jmax (1, rawCapacityFrames / decimationFactor);
+
+    rawHistory.assign ((size_t) rawCapacityFrames, Frame{ minDb, minDb });
+    overviewHistory.assign ((size_t) overviewCapacityFrames, Frame{ minDb, minDb });
 
     currentOverviewMax.momentaryDb = minDb;
     currentOverviewMax.shortTermDb = minDb;
@@ -140,7 +144,7 @@ VolumeHistoryComponent::Frame VolumeHistoryComponent::getRawFrameAgo (int frames
     out.momentaryDb = minDb;
     out.shortTermDb = minDb;
 
-    const juce::int64 available = std::min<juce::int64> (rawCapacityFrames, totalRawFrames);
+    const juce::int64 available = std::min<juce::int64> ((juce::int64) rawCapacityFrames, totalRawFrames);
     if (framesAgo < 0 || (juce::int64) framesAgo >= available)
         return out;
 
@@ -157,7 +161,7 @@ VolumeHistoryComponent::Frame VolumeHistoryComponent::getOverviewFrameAgo (int g
     out.momentaryDb = minDb;
     out.shortTermDb = minDb;
 
-    const juce::int64 available = std::min<juce::int64> (overviewCapacityFrames, totalOverviewFrames);
+    const juce::int64 available = std::min<juce::int64> ((juce::int64) overviewCapacityFrames, totalOverviewFrames);
     if (groupsAgo < 0 || (juce::int64) groupsAgo >= available)
         return out;
 
@@ -211,16 +215,15 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         g.drawHorizontalLine ((int) std::round (y), 0.0f, bounds.getWidth());
     }
 
-    const juce::int64 availableRaw = std::min<juce::int64> (rawCapacityFrames, totalRawFrames);
+    const juce::int64 availableRaw = std::min<juce::int64> ((juce::int64) rawCapacityFrames, totalRawFrames);
     if (availableRaw < 2)
         return;
 
     const float w = bounds.getWidth();
     const float h = bounds.getHeight();
-    const float midY = h * 0.5f;
 
     // Decide whether to use RAW or OVERVIEW based on zoomX (pixels per raw frame)
-    const bool useOverview = (zoomX < 0.05); // heuristic threshold, like SmoothScope
+    const bool useOverview = (zoomX < 0.05); // heuristic threshold, as in SmoothScope
 
     juce::Path pathMomentary;
     juce::Path pathShortTerm;
@@ -230,7 +233,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     if (useOverview)
     {
         // OVERVIEW mode: decimated data, 1 point per group of decimationFactor frames
-        const int groupsAvailable = (int) std::min<juce::int64> (overviewCapacityFrames, totalOverviewFrames);
+        const int groupsAvailable = (int) std::min<juce::int64> ((juce::int64) overviewCapacityFrames, totalOverviewFrames);
         if (groupsAvailable <= 0)
             return;
 
@@ -306,8 +309,8 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
     if (widthPixelsForTime > 1.0 && zoomX > 0.0 && visualFrameRate > 0.0)
     {
-        const double totalTimeSeconds = (double) totalRawFrames / visualFrameRate;
-        const double maxHistorySeconds = (double) rawCapacityFrames / visualFrameRate;
+        const double totalTimeSeconds   = (double) totalRawFrames / visualFrameRate;
+        const double maxHistorySeconds  = (double) rawCapacityFrames / visualFrameRate;
 
         // Approx visible frames in RAW units
         double visibleFramesApprox = widthPixelsForTime / zoomX;
@@ -388,7 +391,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
 void VolumeHistoryComponent::applyHorizontalZoom (float wheelDelta)
 {
-    if (historyFrameCount <= 1 || getWidth() <= 1 || wheelDelta == 0.0f)
+    if (totalRawFrames <= 1 || getWidth() <= 1 || wheelDelta == 0.0f)
         return;
 
     const double zoomBase   = 1.1;

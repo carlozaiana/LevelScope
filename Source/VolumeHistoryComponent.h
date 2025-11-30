@@ -62,17 +62,18 @@ private:
     const float baseDbRange;
 
     // RAW history
-    const int rawCapacityFrames;   // number of RAW frames stored (covers historyLengthSeconds)
+    int                rawCapacityFrames = 0;   // number of RAW frames stored
     std::vector<Frame> rawHistory;
     int                rawWriteIndex   = 0;
-    juce::int64        totalRawFrames  = 0;  // total RAW frames written since start
+    juce::int64        totalRawFrames  = 0;     // total RAW frames written since start
 
     // OVERVIEW history (decimated)
     static constexpr int decimationFactor = 64;   // RAW->OVERVIEW grouping size
-    const int overviewCapacityFrames;            // rawCapacityFrames / decimationFactor
+
+    int                overviewCapacityFrames = 0; // rawCapacityFrames / decimationFactor
     std::vector<Frame> overviewHistory;
     int                overviewWriteIndex  = 0;
-    juce::int64        totalOverviewFrames = 0;  // total OVERVIEW frames written
+    juce::int64        totalOverviewFrames = 0;   // total OVERVIEW frames written
 
     // Accumulator for current overview group
     Frame currentOverviewMax;
