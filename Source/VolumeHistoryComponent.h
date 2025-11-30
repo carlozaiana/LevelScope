@@ -8,6 +8,7 @@ class LevelScopeAudioProcessor;
 //==============================================================================
 // Displays momentary & short-term loudness as a scrolling, zoomable history.
 // Uses a RAW history and an OVERVIEW history (decimated) with fixed grouping.
+// OVERVIEW stores per-group min+max to preserve both peaks and valleys.
 //==============================================================================
 
 class VolumeHistoryComponent : public juce::Component,
@@ -41,8 +42,10 @@ private:
     // Data access helpers
     struct Frame
     {
-        float momentaryDb = -90.0f;
-        float shortTermDb = -90.0f;
+        float momentaryMinDb = -90.0f;
+        float momentaryMaxDb = -90.0f;
+        float shortTermMinDb = -90.0f;
+        float shortTermMaxDb = -90.0f;
     };
 
     Frame getRawFrameAgo (int framesAgo) const noexcept;
@@ -76,7 +79,7 @@ private:
     juce::int64        totalOverviewFrames = 0;   // total OVERVIEW frames written
 
     // Accumulator for current overview group
-    Frame currentOverviewMax;
+    Frame currentOverview;
     int   currentOverviewCount = 0;
 
     // Zoom parameters
