@@ -6,8 +6,8 @@
 class LevelScopeAudioProcessor;
 
 //==============================================================================
-// Displays momentary & short-term "loudness" as a scrolling, zoomable history.
-// Using sample-based spacing on the X axis (frames from newest).
+// Displays momentary & short-term loudness as a scrolling, zoomable history.
+// Uses a RAW history and an OVERVIEW history (decimated) with fixed grouping.
 //==============================================================================
 
 class VolumeHistoryComponent : public juce::Component,
@@ -23,8 +23,6 @@ public:
     void mouseWheelMove (const juce::MouseEvent& event,
                          const juce::MouseWheelDetails& wheel) override;
 
-    void mouseDown (const juce::MouseEvent& event) override;
-
 private:
     // juce::Timer
     void timerCallback() override;
@@ -35,65 +33,60 @@ private:
                                      const float* shortTermValues,
                                      int numValues);
 
-    enum class CurveKind
-    {
-        Momentary,
-        ShortTerm
-    };
-
-    float getDbAtFrame (CurveKind kind,
-                        juce::int64 frameIndex) const noexcept;
-
     float dbToY (float db, float height) const noexcept;
 
     void applyHorizontalZoom (float wheelDelta);
     void applyVerticalZoom (float wheelDelta);
 
+    // Data access helpers
+    struct Frame
+    {
+        float momentaryDb = -90.0f;
+        float shortTermDb = -90.0f;
+    };
+
+    Frame getRawFrameAgo (int framesAgo) const noexcept;
+    Frame getOverviewFrameAgo (int groupsAgo) const noexcept;
+
     LevelScopeAudioProcessor& processor;
 
-    const double visualFrameRate;        // loudness frames per second
-    const double historyLengthSeconds;   // total history buffer length (seconds)
+    // Loudness frame rate (frames per second)
+    const double visualFrameRate;
 
-    const float minDb;                   // bottom of world dB range
-    const float maxDb;                   // top of world dB range (0 dB)
-    const float baseDbRange;             // |minDb| (absolute full dB span)
+    // Total history length in seconds (RAW buffer capacity)
+    const double historyLengthSeconds;
 
-    const int historyCapacityFrames;     // number of loudness frames we store
+    // dB range
+    const float minDb;
+    const float maxDb;
+    const float baseDbRange;
 
-    // Histories for momentary & short-term, in dB
-    std::vector<float> historyDbMomentary;
-    std::vector<float> historyDbShortTerm;
+    // RAW history
+    const int rawCapacityFrames;   // number of RAW frames stored (covers historyLengthSeconds)
+    std::vector<Frame> rawHistory;
+    int                rawWriteIndex   = 0;
+    juce::int64        totalRawFrames  = 0;  // total RAW frames written since start
 
-    // Total number of frames written so far (monotonic)
-    juce::int64 historyFrameCount = 0;
+    // OVERVIEW history (decimated)
+    static constexpr int decimationFactor = 64;   // RAW->OVERVIEW grouping size
+    const int overviewCapacityFrames;            // rawCapacityFrames / decimationFactor
+    std::vector<Frame> overviewHistory;
+    int                overviewWriteIndex  = 0;
+    juce::int64        totalOverviewFrames = 0;  // total OVERVIEW frames written
 
-    // X-axis zoom (frame spacing)
-    // zoomX = pixels per loudness frame.
-    double zoomX      = 1.0;
-    double minZoomX   = 0.05;   // base minimum zoom (for very early history)
+    // Accumulator for current overview group
+    Frame currentOverviewMax;
+    int   currentOverviewCount = 0;
+
+    // Zoom parameters
+    double zoomX      = 5.0;   // pixels per RAW frame
+    double minZoomX   = 0.0005;
     double maxZoomX   = 50.0;
+    double zoomY      = 1.0;   // vertical zoom in dB
+    double minZoomY   = 0.25;
+    double maxZoomY   = 4.0;
+
     bool   hasCustomZoomX = false;
-
-    // Dynamic minimum zoom-out:
-    // - Starts at minZoomX.
-    // - When auto-fit is activated, updated to the auto-fit zoomX.
-    // - In manual mode, zoomX cannot go below minAllowedZoomX.
-    double minAllowedZoomX = minZoomX;
-
-    // Y-axis zoom (amplitude)
-    double yZoom      = 1.0;   // >1 = zoom in (smaller dB span)
-    double minYZoom   = 0.25;
-    double maxYZoom   = 4.0;
-
-    // Auto-fit/follow mode: keep entire history visible horizontally and follow "now"
-    bool  autoFitEnabled   = false;
-    int   autoFitBarWidth  = 10;   // pixels on the left side
-
-    // Stored manual zoom for toggling via sidebar:
-    // When entering auto-fit via sidebar, save current manual zoomX.
-    // When leaving auto-fit via sidebar, restore it.
-    double savedManualZoomX    = 1.0;
-    bool   hasSavedManualZoomX = false;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VolumeHistoryComponent)
 };

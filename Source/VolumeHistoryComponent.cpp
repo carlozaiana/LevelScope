@@ -23,16 +23,21 @@ static juce::String formatTimeHMS (double seconds)
 VolumeHistoryComponent::VolumeHistoryComponent (LevelScopeAudioProcessor& proc)
     : processor (proc),
       visualFrameRate (proc.getLoudnessFrameRate()),
-      historyLengthSeconds (1800.0),      // 30 minutes = 1800 s
+      historyLengthSeconds (1800.0),      // 30 minutes
       minDb (-90.0f),
       maxDb (  0.0f),
-      baseDbRange (std::abs (minDb)),     // 90 dB
-      historyCapacityFrames ((int) std::ceil (historyLengthSeconds * visualFrameRate)),
-      historyDbMomentary  ((size_t) historyCapacityFrames, minDb),
-      historyDbShortTerm  ((size_t) historyCapacityFrames, minDb)
+      baseDbRange (std::abs (minDb)),
+      rawCapacityFrames ((int) std::ceil (historyLengthSeconds * visualFrameRate)),
+      overviewCapacityFrames (juce::jmax (1, rawCapacityFrames / decimationFactor)),
+      rawHistory ((size_t) rawCapacityFrames),
+      overviewHistory ((size_t) overviewCapacityFrames)
 {
     jassert (visualFrameRate > 0.0);
-    jassert (historyCapacityFrames > 0);
+    jassert (rawCapacityFrames > 0);
+    jassert (overviewCapacityFrames > 0);
+
+    currentOverviewMax.momentaryDb = minDb;
+    currentOverviewMax.shortTermDb = minDb;
 
     setOpaque (true);
     startTimerHz (60); // UI update rate
@@ -48,8 +53,6 @@ VolumeHistoryComponent::~VolumeHistoryComponent()
 void VolumeHistoryComponent::resized()
 {
     // Initialise X zoom so that, roughly, 10 seconds are visible by default.
-    // visibleSeconds ≈ (width / zoomX) / visualFrameRate
-    // => zoomX ≈ width / (visibleSeconds * visualFrameRate)
     if (! hasCustomZoomX)
     {
         const int w = getWidth();
@@ -72,7 +75,6 @@ void VolumeHistoryComponent::timerCallback()
 
 void VolumeHistoryComponent::drainProcessorFifo()
 {
-    // Drain all available loudness frames from the processor
     constexpr int chunkSize = 512;
     float momentaryValues [chunkSize];
     float shortTermValues [chunkSize];
@@ -102,54 +104,78 @@ void VolumeHistoryComponent::pushLoudnessBatchToHistory (const float* momentaryV
         const float rmsS = shortTermValues[i];
 
         // Convert RMS (linear) to dB, clamped to minDb
-        const float dbM  = juce::Decibels::gainToDecibels (rmsM, minDb);
-        const float dbS  = juce::Decibels::gainToDecibels (rmsS, minDb);
+        Frame f;
+        f.momentaryDb = juce::Decibels::gainToDecibels (rmsM, minDb);
+        f.shortTermDb = juce::Decibels::gainToDecibels (rmsS, minDb);
 
-        const juce::int64 writeIndex = historyFrameCount;
-        const int ringIndex = (int) (writeIndex % (juce::int64) historyCapacityFrames);
+        // RAW history (ring buffer)
+        rawHistory[(size_t) rawWriteIndex] = f;
+        rawWriteIndex = (rawWriteIndex + 1) % rawCapacityFrames;
+        ++totalRawFrames;
 
-        historyDbMomentary[(size_t) ringIndex] = dbM;
-        historyDbShortTerm[(size_t) ringIndex] = dbS;
+        // OVERVIEW accumulation (fixed decimationFactor)
+        if (f.momentaryDb > currentOverviewMax.momentaryDb) currentOverviewMax.momentaryDb = f.momentaryDb;
+        if (f.shortTermDb > currentOverviewMax.shortTermDb) currentOverviewMax.shortTermDb = f.shortTermDb;
 
-        ++historyFrameCount;
+        ++currentOverviewCount;
+
+        if (currentOverviewCount >= decimationFactor)
+        {
+            overviewHistory[(size_t) overviewWriteIndex] = currentOverviewMax;
+            overviewWriteIndex = (overviewWriteIndex + 1) % overviewCapacityFrames;
+            ++totalOverviewFrames;
+
+            currentOverviewMax.momentaryDb = minDb;
+            currentOverviewMax.shortTermDb = minDb;
+            currentOverviewCount = 0;
+        }
     }
 }
 
 //==============================================================================
 
-float VolumeHistoryComponent::getDbAtFrame (CurveKind kind,
-                                            juce::int64 frameIndex) const noexcept
+VolumeHistoryComponent::Frame VolumeHistoryComponent::getRawFrameAgo (int framesAgo) const noexcept
 {
-    if (historyFrameCount <= 0)
-        return minDb;
+    Frame out;
+    out.momentaryDb = minDb;
+    out.shortTermDb = minDb;
 
-    const juce::int64 latestIndex = historyFrameCount - 1;
-    const juce::int64 earliestIndex =
-        (historyFrameCount > (juce::int64) historyCapacityFrames
-            ? historyFrameCount - (juce::int64) historyCapacityFrames
-            : 0);
+    const juce::int64 available = std::min<juce::int64> (rawCapacityFrames, totalRawFrames);
+    if (framesAgo < 0 || (juce::int64) framesAgo >= available)
+        return out;
 
-    if (frameIndex < earliestIndex || frameIndex > latestIndex)
-        return minDb;
+    const int latestIndexInRing = (rawWriteIndex - 1 + rawCapacityFrames) % rawCapacityFrames;
+    int idx = latestIndexInRing - framesAgo;
+    if (idx < 0) idx += rawCapacityFrames;
 
-    const int ringIndex = (int) (frameIndex % (juce::int64) historyCapacityFrames);
-
-    switch (kind)
-    {
-        case CurveKind::Momentary: return historyDbMomentary[(size_t) ringIndex];
-        case CurveKind::ShortTerm: return historyDbShortTerm[(size_t) ringIndex];
-    }
-
-    return minDb;
+    return rawHistory[(size_t) idx];
 }
+
+VolumeHistoryComponent::Frame VolumeHistoryComponent::getOverviewFrameAgo (int groupsAgo) const noexcept
+{
+    Frame out;
+    out.momentaryDb = minDb;
+    out.shortTermDb = minDb;
+
+    const juce::int64 available = std::min<juce::int64> (overviewCapacityFrames, totalOverviewFrames);
+    if (groupsAgo < 0 || (juce::int64) groupsAgo >= available)
+        return out;
+
+    const int latestIndexInRing = (overviewWriteIndex - 1 + overviewCapacityFrames) % overviewCapacityFrames;
+    int idx = latestIndexInRing - groupsAgo;
+    if (idx < 0) idx += overviewCapacityFrames;
+
+    return overviewHistory[(size_t) idx];
+}
+
+//==============================================================================
 
 float VolumeHistoryComponent::dbToY (float db, float height) const noexcept
 {
     if (height <= 0.0f)
         return 0.0f;
 
-    // Visible dB range shrinks as yZoom increases (zoom in)
-    const float effectiveRange = (float) (baseDbRange / yZoom);
+    const float effectiveRange = (float) (baseDbRange / zoomY);
     const float topDb          = maxDb;
     const float bottomDb       = topDb - effectiveRange;
 
@@ -175,15 +201,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     if (width <= 1 || height <= 0.0f)
         return;
 
-    // Draw auto-fit toggle bar on the left
-    {
-        juce::Rectangle<float> bar (0.0f, 0.0f, (float) autoFitBarWidth, height);
-        g.setColour (autoFitEnabled ? juce::Colours::red.withAlpha (0.7f)
-                                    : juce::Colours::blue.withAlpha (0.6f));
-        g.fillRect (bar);
-    }
-
-    // Optional horizontal reference lines (e.g. -90, -60, -30, 0 dB)
+    // Horizontal reference lines (e.g. -90, -60, -30, 0 dB)
     g.setColour (juce::Colours::darkgrey.withMultipliedAlpha (0.6f));
     const int numLines = 4;
     for (int i = 0; i <= numLines; ++i)
@@ -193,133 +211,86 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         g.drawHorizontalLine ((int) std::round (y), 0.0f, bounds.getWidth());
     }
 
-    if (historyFrameCount < 2)
+    const juce::int64 availableRaw = std::min<juce::int64> (rawCapacityFrames, totalRawFrames);
+    if (availableRaw < 2)
         return;
 
-    const juce::int64 latestIndex = historyFrameCount - 1;
-    const juce::int64 earliestIndex =
-        (historyFrameCount > (juce::int64) historyCapacityFrames
-            ? historyFrameCount - (juce::int64) historyCapacityFrames
-            : 0);
+    const float w = bounds.getWidth();
+    const float h = bounds.getHeight();
+    const float midY = h * 0.5f;
 
-    // Auto-fit: force zoomX so entire history fits; manual: clamp zoomX.
-    if (autoFitEnabled && width > autoFitBarWidth)
+    // Decide whether to use RAW or OVERVIEW based on zoomX (pixels per raw frame)
+    const bool useOverview = (zoomX < 0.05); // heuristic threshold, like SmoothScope
+
+    juce::Path pathMomentary;
+    juce::Path pathShortTerm;
+    bool startedM = false;
+    bool startedS = false;
+
+    if (useOverview)
     {
-        const double widthPixels     = (double) (width - autoFitBarWidth);
-        const double framesInHistory = (double) (latestIndex - earliestIndex + 1);
+        // OVERVIEW mode: decimated data, 1 point per group of decimationFactor frames
+        const int groupsAvailable = (int) std::min<juce::int64> (overviewCapacityFrames, totalOverviewFrames);
+        if (groupsAvailable <= 0)
+            return;
 
-        if (framesInHistory > 1.0 && widthPixels > 1.0)
+        const float pointSpacing = (float) (zoomX * decimationFactor);
+
+        for (int i = 0; i < groupsAvailable; ++i)
         {
-            zoomX = widthPixels / framesInHistory;
-            zoomX = juce::jmin (zoomX, maxZoomX);  // clamp only to max; allow very small zoomX
+            const float x = w - ((float) i * pointSpacing);
+            if (x < -10.0f)
+                break;
 
-            hasCustomZoomX   = true;
-            minAllowedZoomX  = juce::jmax (minZoomX, zoomX);  // auto-fit defines minimum zoom-out
+            const Frame f = getOverviewFrameAgo (i);
+
+            const float yM = dbToY (f.momentaryDb, h);
+            const float yS = dbToY (f.shortTermDb, h);
+
+            if (! startedM) { pathMomentary.startNewSubPath (x, yM); startedM = true; }
+            else            { pathMomentary.lineTo          (x, yM); }
+
+            if (! startedS) { pathShortTerm.startNewSubPath (x, yS); startedS = true; }
+            else            { pathShortTerm.lineTo          (x, yS); }
         }
     }
     else
     {
-        zoomX = juce::jlimit (minAllowedZoomX, maxZoomX, zoomX);
-    }
+        // RAW mode: full resolution, iterate RAW frames with step = 1
+        const int samplesToDraw = (int) std::min<juce::int64> (
+            (juce::int64) std::ceil (w / zoomX) + 2, availableRaw);
 
-    // Right edge always follows "now"
-    const double rightIndexDouble = (double) latestIndex;
-    const juce::int64 currentIndex0 = (juce::int64) std::floor (rightIndexDouble);
-
-    if (currentIndex0 < earliestIndex || currentIndex0 > latestIndex)
-        return;
-
-    const int rightPixel = width - 1;
-
-    // ----------------------------------------------------------------------
-    // Aggregation (decimation) only in auto-fit to avoid lag for long history.
-    // In manual mode, frameStepSize = 1 (full resolution).
-    // ----------------------------------------------------------------------
-    int frameStepSize = 1;
-
-    if (autoFitEnabled)
-    {
-        const double framesInHistory = (double) (latestIndex - earliestIndex + 1);
-        const int    maxPoints       = juce::jmax (1, width - autoFitBarWidth);
-
-        if (framesInHistory > (double) maxPoints)
-            frameStepSize = (int) std::ceil (framesInHistory / (double) maxPoints);
-    }
-
-    auto drawCurve = [&] (CurveKind kind, juce::Colour colour, float strokeWidth)
-    {
-        juce::Path path;
-        bool started = false;
-
-        g.setColour (colour);
-
-        int frameStep = 0;
-        juce::int64 idx = currentIndex0;
-
-        for (;;)
+        for (int i = 0; i < samplesToDraw; ++i)
         {
-            if (idx < earliestIndex)
+            const float x = w - ((float) i * (float) zoomX);
+            if (x < -10.0f)
                 break;
 
-            const double xPos = (double) rightPixel - (double) frameStep * zoomX;
+            const Frame f = getRawFrameAgo (i);
 
-            // Optimization: stop if we are far off the left edge
-            if (xPos < -50.0)
-                break;
+            const float yM = dbToY (f.momentaryDb, h);
+            const float yS = dbToY (f.shortTermDb, h);
 
-            float dbGroup = getDbAtFrame (kind, idx);
+            if (! startedM) { pathMomentary.startNewSubPath (x, yM); startedM = true; }
+            else            { pathMomentary.lineTo          (x, yM); }
 
-            if (frameStepSize > 1)
-            {
-                float maxDb = dbGroup;
-
-                const juce::int64 groupEnd =
-                    juce::jmax<juce::int64> (earliestIndex, idx - (juce::int64) (frameStepSize - 1));
-
-                for (juce::int64 j = idx - 1; j >= groupEnd; --j)
-                {
-                    const float v = getDbAtFrame (kind, j);
-                    if (v > maxDb)
-                        maxDb = v;
-                }
-
-                dbGroup = maxDb;
-            }
-
-            const float y = dbToY (dbGroup, height);
-
-            if (! started)
-            {
-                path.startNewSubPath ((float) xPos + 0.5f, y);
-                started = true;
-            }
-            else
-            {
-                path.lineTo ((float) xPos + 0.5f, y);
-            }
-
-            idx       -= (juce::int64) frameStepSize;
-            frameStep += frameStepSize;
+            if (! startedS) { pathShortTerm.startNewSubPath (x, yS); startedS = true; }
+            else            { pathShortTerm.lineTo          (x, yS); }
         }
+    }
 
-        if (started)
-            g.strokePath (path, juce::PathStrokeType (strokeWidth));
-    };
+    // Draw curves
+    if (startedS)
+    {
+        g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.8f));
+        g.strokePath (pathShortTerm, juce::PathStrokeType (1.5f));
+    }
 
-    // Draw short-term first (smoother curve), then momentary on top
-    drawCurve (CurveKind::ShortTerm, juce::Colours::cyan.withMultipliedAlpha (0.8f), 2.4f);
-    drawCurve (CurveKind::Momentary, juce::Colours::limegreen,                    3.0f);
-
-    // Overlay info: curves + zooms
-    g.setColour (juce::Colours::white);
-    g.setFont (14.0f);
-
-    juce::String info1 = "Momentary (400 ms)  |  Short-term (3 s)";
-    juce::String info2 = "ZoomX: " + juce::String (zoomX, 2)
-                       + "  ZoomY: " + juce::String (yZoom, 2);
-
-    g.drawText (info1,  8,  8, 260, 20, juce::Justification::topLeft);
-    g.drawText (info2,  8, 28, 260, 20, juce::Justification::topLeft);
+    if (startedM)
+    {
+        g.setColour (juce::Colours::limegreen);
+        g.strokePath (pathMomentary, juce::PathStrokeType (2.0f));
+    }
 
     //==========================================================================
     // Time ruler at bottom: HH:MM:SS, auto-adjusted spacing
@@ -329,30 +300,29 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     const float rulerBaseY    = height - 2.0f;
     const float tickTopY      = rulerBaseY - 6.0f;
     const float textTopY      = rulerBaseY - 14.0f;
-    const float leftPixel     = (float) autoFitBarWidth;
+    const float leftPixel     = 0.0f;
 
-    const double widthPixelsForTime = (double) (width - autoFitBarWidth);
+    const double widthPixelsForTime = (double) width;
 
     if (widthPixelsForTime > 1.0 && zoomX > 0.0 && visualFrameRate > 0.0)
     {
-        double visibleFramesApprox = 0.0;
-        double rightIndexForTime   = (double) latestIndex;
+        const double totalTimeSeconds = (double) totalRawFrames / visualFrameRate;
+        const double maxHistorySeconds = (double) rawCapacityFrames / visualFrameRate;
 
-        if (autoFitEnabled)
-        {
-            visibleFramesApprox = (double) (latestIndex - earliestIndex + 1);
-        }
-        else
-        {
-            visibleFramesApprox = widthPixelsForTime / zoomX;
-        }
+        // Approx visible frames in RAW units
+        double visibleFramesApprox = widthPixelsForTime / zoomX;
+        if (visibleFramesApprox > (double) availableRaw)
+            visibleFramesApprox = (double) availableRaw;
 
         if (visibleFramesApprox > 1.0)
         {
             const double visibleSeconds = visibleFramesApprox / visualFrameRate;
-            double tRight = rightIndexForTime / visualFrameRate;
-            double tLeft  = tRight - visibleSeconds;
-            if (tLeft < 0.0) tLeft = 0.0;
+
+            const double tRight = totalTimeSeconds;
+            const double tLeftLimit = juce::jmax (0.0, tRight - maxHistorySeconds);
+            double tLeft = tRight - visibleSeconds;
+            if (tLeft < tLeftLimit)
+                tLeft = tLeftLimit;
 
             // Choose tick spacing so that we have at most ~20 labels.
             const double maxLabels = 20.0;
@@ -386,7 +356,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
             for (double t = firstTick; t <= tRight + 1e-9; t += tickStep)
             {
-                const double norm = (t - tLeft) / visibleSeconds;
+                const double norm = (t - tLeft) / (visibleSeconds > 1e-9 ? visibleSeconds : 1.0);
                 if (norm < 0.0 || norm > 1.0)
                     continue;
 
@@ -405,6 +375,13 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             }
         }
     }
+
+    // Overlay info
+    g.setColour (juce::Colours::white);
+    g.setFont (14.0f);
+    juce::String mode = useOverview ? "OVERVIEW" : "RAW";
+    g.drawText (mode + " | ZoomX: " + juce::String (zoomX, 4) + " | ZoomY: " + juce::String (zoomY, 2),
+                8, 8, 300, 20, juce::Justification::topLeft);
 }
 
 //==============================================================================
@@ -414,12 +391,11 @@ void VolumeHistoryComponent::applyHorizontalZoom (float wheelDelta)
     if (historyFrameCount <= 1 || getWidth() <= 1 || wheelDelta == 0.0f)
         return;
 
-    // Zoom factor: positive deltaY = zoom in (larger zoomX => more pixels per frame)
     const double zoomBase   = 1.1;
     const double zoomFactor = std::pow (zoomBase, (double) wheelDelta);
 
     zoomX *= zoomFactor;
-    zoomX = juce::jlimit (minAllowedZoomX, maxZoomX, zoomX);
+    zoomX = juce::jlimit (minZoomX, maxZoomX, zoomX);
 
     hasCustomZoomX = true;
 }
@@ -429,12 +405,11 @@ void VolumeHistoryComponent::applyVerticalZoom (float wheelDelta)
     if (wheelDelta == 0.0f)
         return;
 
-    // Positive deltaY = zoom in (smaller dB range)
     const double zoomBase   = 1.1;
     const double zoomFactor = std::pow (zoomBase, (double) wheelDelta);
 
-    yZoom *= zoomFactor;
-    yZoom = juce::jlimit (minYZoom, maxYZoom, yZoom);
+    zoomY *= zoomFactor;
+    zoomY = juce::jlimit (minZoomY, maxZoomY, zoomY);
 }
 
 //==============================================================================
@@ -445,52 +420,10 @@ void VolumeHistoryComponent::mouseWheelMove (const juce::MouseEvent& event,
     if (wheel.deltaY == 0.0f)
         return;
 
-    if (autoFitEnabled)
-    {
-        // In auto-fit:
-        // - wheel down (deltaY < 0): ignore (already fully zoomed out)
-        // - wheel up (deltaY > 0): exit auto-fit, keep following, and zoom in from current view
-        if (wheel.deltaY < 0.0f)
-            return;
-
-        // Exit auto-fit. We do NOT restore old manual zoom here.
-        autoFitEnabled = false;
-    }
-
-    // Manual mode (always following "now")
     if (event.mods.isShiftDown())
         applyVerticalZoom (wheel.deltaY);
     else
         applyHorizontalZoom (wheel.deltaY);
 
     repaint();
-}
-
-void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
-{
-    // Toggle auto-fit when clicking inside the left bar
-    if (event.position.x <= (float) autoFitBarWidth)
-    {
-        if (! autoFitEnabled)
-        {
-            // Enter auto-fit: save current manual zoom
-            savedManualZoomX    = zoomX;
-            hasSavedManualZoomX = true;
-
-            autoFitEnabled = true;
-        }
-        else
-        {
-            // Leave auto-fit: restore last manual zoom if available
-            autoFitEnabled = false;
-
-            if (hasSavedManualZoomX)
-                zoomX = juce::jlimit (minAllowedZoomX, maxZoomX, savedManualZoomX);
-        }
-
-        repaint();
-        return;
-    }
-
-    // Otherwise, default behavior (if any) can go here
 }
