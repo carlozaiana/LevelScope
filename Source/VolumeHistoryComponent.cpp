@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <algorithm>
+#include <limits>
 
 // Helper: format seconds as HH:MM:SS
 static juce::String formatTimeHMS (double seconds)
@@ -35,12 +36,19 @@ VolumeHistoryComponent::VolumeHistoryComponent (LevelScopeAudioProcessor& proc)
     if (rawCapacityFrames < 1)
         rawCapacityFrames = 1;
 
-    overviewCapacityFrames = juce::jmax (1, rawCapacityFrames / decimationFactor);
+    midCapacityFrames = juce::jmax (1, rawCapacityFrames / decimationFactorMid);
+    overviewCapacityFrames = juce::jmax (1, rawCapacityFrames / decimationFactorHigh);
 
     rawHistory.assign ((size_t) rawCapacityFrames, Frame{ minDb, minDb, minDb, minDb });
+    midHistory.assign ((size_t) midCapacityFrames, Frame{ minDb, minDb, minDb, minDb });
     overviewHistory.assign ((size_t) overviewCapacityFrames, Frame{ minDb, minDb, minDb, minDb });
 
-    // Initial current overview group is "empty"
+    // Initialise current MID and OVERVIEW groups as "empty"
+    currentMid.momentaryMinDb    =  std::numeric_limits<float>::infinity();
+    currentMid.momentaryMaxDb    = -std::numeric_limits<float>::infinity();
+    currentMid.shortTermMinDb    =  std::numeric_limits<float>::infinity();
+    currentMid.shortTermMaxDb    = -std::numeric_limits<float>::infinity();
+
     currentOverview.momentaryMinDb =  std::numeric_limits<float>::infinity();
     currentOverview.momentaryMaxDb = -std::numeric_limits<float>::infinity();
     currentOverview.shortTermMinDb =  std::numeric_limits<float>::infinity();
@@ -125,15 +133,38 @@ void VolumeHistoryComponent::pushLoudnessBatchToHistory (const float* momentaryV
         rawWriteIndex = (rawWriteIndex + 1) % rawCapacityFrames;
         ++totalRawFrames;
 
-        // OVERVIEW accumulation (fixed decimationFactor):
-        // - If this is the first sample of the group, initialise the group with it.
+        // MID accumulation (factor 8)
+        if (currentMidCount == 0)
+        {
+            currentMid = f;
+        }
+        else
+        {
+            if (dbM < currentMid.momentaryMinDb) currentMid.momentaryMinDb = dbM;
+            if (dbM > currentMid.momentaryMaxDb) currentMid.momentaryMaxDb = dbM;
+
+            if (dbS < currentMid.shortTermMinDb) currentMid.shortTermMinDb = dbS;
+            if (dbS > currentMid.shortTermMaxDb) currentMid.shortTermMaxDb = dbS;
+        }
+
+        ++currentMidCount;
+
+        if (currentMidCount >= decimationFactorMid)
+        {
+            midHistory[(size_t) midWriteIndex] = currentMid;
+            midWriteIndex = (midWriteIndex + 1) % midCapacityFrames;
+            ++totalMidFrames;
+
+            currentMidCount = 0;
+        }
+
+        // OVERVIEW accumulation (factor 64)
         if (currentOverviewCount == 0)
         {
             currentOverview = f;
         }
         else
         {
-            // Update min/max across the group
             if (dbM < currentOverview.momentaryMinDb) currentOverview.momentaryMinDb = dbM;
             if (dbM > currentOverview.momentaryMaxDb) currentOverview.momentaryMaxDb = dbM;
 
@@ -143,7 +174,7 @@ void VolumeHistoryComponent::pushLoudnessBatchToHistory (const float* momentaryV
 
         ++currentOverviewCount;
 
-        if (currentOverviewCount >= decimationFactor)
+        if (currentOverviewCount >= decimationFactorHigh)
         {
             overviewHistory[(size_t) overviewWriteIndex] = currentOverview;
             overviewWriteIndex = (overviewWriteIndex + 1) % overviewCapacityFrames;
@@ -173,6 +204,25 @@ VolumeHistoryComponent::Frame VolumeHistoryComponent::getRawFrameAgo (int frames
     if (idx < 0) idx += rawCapacityFrames;
 
     return rawHistory[(size_t) idx];
+}
+
+VolumeHistoryComponent::Frame VolumeHistoryComponent::getMidFrameAgo (int groupsAgo) const noexcept
+{
+    Frame out;
+    out.momentaryMinDb = minDb;
+    out.momentaryMaxDb = minDb;
+    out.shortTermMinDb = minDb;
+    out.shortTermMaxDb = minDb;
+
+    const juce::int64 available = std::min<juce::int64> ((juce::int64) midCapacityFrames, totalMidFrames);
+    if (groupsAgo < 0 || (juce::int64) groupsAgo >= available)
+        return out;
+
+    const int latestIndexInRing = (midWriteIndex - 1 + midCapacityFrames) % midCapacityFrames;
+    int idx = latestIndexInRing - groupsAgo;
+    if (idx < 0) idx += midCapacityFrames;
+
+    return midHistory[(size_t) idx];
 }
 
 VolumeHistoryComponent::Frame VolumeHistoryComponent::getOverviewFrameAgo (int groupsAgo) const noexcept
@@ -244,8 +294,16 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     const float w = bounds.getWidth();
     const float h = bounds.getHeight();
 
-    // Decide whether to use RAW or OVERVIEW based on zoomX (pixels per raw frame)
-    const bool useOverview = (zoomX < 0.05); // heuristic threshold, as in SmoothScope
+    // Select drawing layer based on zoomX
+    enum class Layer { Raw, Mid, Overview };
+
+    Layer layer;
+    if (zoomX >= 0.26)
+        layer = Layer::Raw;
+    else if (zoomX > 0.05)
+        layer = Layer::Mid;
+    else
+        layer = Layer::Overview;
 
     // Paths: max and min for each curve
     juce::Path pathMomentaryMax, pathMomentaryMin;
@@ -253,44 +311,13 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     bool startedMM = false, startedMm = false;
     bool startedSM = false, startedSm = false;
 
-    if (useOverview)
+    // "Now" is the latest RAW frame index
+    const juce::int64 latestIndex = totalRawFrames - 1;
+    const juce::int64 earliestIndex = juce::jmax<juce::int64> (0, latestIndex - (juce::int64) rawCapacityFrames + 1);
+
+    if (layer == Layer::Raw)
     {
-        // OVERVIEW mode: decimated data, 1 point per group of decimationFactor frames
-        const int groupsAvailable = (int) std::min<juce::int64> ((juce::int64) overviewCapacityFrames, totalOverviewFrames);
-        if (groupsAvailable <= 0)
-            return;
-
-        const float pointSpacing = (float) (zoomX * decimationFactor);
-
-        for (int i = 0; i < groupsAvailable; ++i)
-        {
-            const float x = w - ((float) i * pointSpacing);
-            if (x < -10.0f)
-                break;
-
-            const Frame f = getOverviewFrameAgo (i);
-
-            const float yMM = dbToY (f.momentaryMaxDb, h);
-            const float yMm = dbToY (f.momentaryMinDb, h);
-            const float ySM = dbToY (f.shortTermMaxDb, h);
-            const float ySm = dbToY (f.shortTermMinDb, h);
-
-            if (! startedMM) { pathMomentaryMax.startNewSubPath (x, yMM); startedMM = true; }
-            else             { pathMomentaryMax.lineTo          (x, yMM); }
-
-            if (! startedMm) { pathMomentaryMin.startNewSubPath (x, yMm); startedMm = true; }
-            else             { pathMomentaryMin.lineTo          (x, yMm); }
-
-            if (! startedSM) { pathShortTermMax.startNewSubPath (x, ySM); startedSM = true; }
-            else             { pathShortTermMax.lineTo          (x, ySM); }
-
-            if (! startedSm) { pathShortTermMin.startNewSubPath (x, ySm); startedSm = true; }
-            else             { pathShortTermMin.lineTo          (x, ySm); }
-        }
-    }
-    else
-    {
-        // RAW mode: full resolution, iterate RAW frames with step = 1
+        // RAW mode: full resolution, step = 1 RAW frame
         const int samplesToDraw = (int) std::min<juce::int64> (
             (juce::int64) std::ceil (w / zoomX) + 2, availableRaw);
 
@@ -302,7 +329,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
             const Frame f = getRawFrameAgo (i);
 
-            // RAW frames have min == max, so we use the max fields.
             const float yMM = dbToY (f.momentaryMaxDb, h);
             const float ySM = dbToY (f.shortTermMaxDb, h);
 
@@ -313,11 +339,94 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             else             { pathShortTermMax.lineTo          (x, ySM); }
         }
     }
+    else if (layer == Layer::Mid)
+    {
+        // MID mode: groups of decimationFactorMid frames
+        const int groupsAvailable = (int) std::min<juce::int64> ((juce::int64) midCapacityFrames, totalMidFrames);
+        if (groupsAvailable > 0)
+        {
+            for (int j = 0; j < groupsAvailable; ++j)
+            {
+                // Fractional framesAgo in RAW units
+                const int framesAgo = currentMidCount + j * decimationFactorMid;
+                const float x = w - (float) framesAgo * (float) zoomX;
+                if (x < -10.0f)
+                    break;
+
+                const Frame f = getMidFrameAgo (j);
+
+                const float yMM = dbToY (f.momentaryMaxDb, h);
+                const float yMm = dbToY (f.momentaryMinDb, h);
+                const float ySM = dbToY (f.shortTermMaxDb, h);
+                const float ySm = dbToY (f.shortTermMinDb, h);
+
+                if (! startedMM) { pathMomentaryMax.startNewSubPath (x, yMM); startedMM = true; }
+                else             { pathMomentaryMax.lineTo          (x, yMM); }
+
+                if (! startedMm) { pathMomentaryMin.startNewSubPath (x, yMm); startedMm = true; }
+                else             { pathMomentaryMin.lineTo          (x, yMm); }
+
+                if (! startedSM) { pathShortTermMax.startNewSubPath (x, ySM); startedSM = true; }
+                else             { pathShortTermMax.lineTo          (x, ySM); }
+
+                if (! startedSm) { pathShortTermMin.startNewSubPath (x, ySm); startedSm = true; }
+                else             { pathShortTermMin.lineTo          (x, ySm); }
+            }
+        }
+    }
+    else // Layer::Overview
+    {
+        // OVERVIEW mode: groups of decimationFactorHigh frames
+        const int groupsAvailable = (int) std::min<juce::int64> ((juce::int64) overviewCapacityFrames, totalOverviewFrames);
+        if (groupsAvailable > 0)
+        {
+            for (int j = 0; j < groupsAvailable; ++j)
+            {
+                const int framesAgo = currentOverviewCount + j * decimationFactorHigh;
+                const float x = w - (float) framesAgo * (float) zoomX;
+                if (x < -10.0f)
+                    break;
+
+                const Frame f = getOverviewFrameAgo (j);
+
+                const float yMM = dbToY (f.momentaryMaxDb, h);
+                const float yMm = dbToY (f.momentaryMinDb, h);
+                const float ySM = dbToY (f.shortTermMaxDb, h);
+                const float ySm = dbToY (f.shortTermMinDb, h);
+
+                if (! startedMM) { pathMomentaryMax.startNewSubPath (x, yMM); startedMM = true; }
+                else             { pathMomentaryMax.lineTo          (x, yMM); }
+
+                if (! startedMm) { pathMomentaryMin.startNewSubPath (x, yMm); startedMm = true; }
+                else             { pathMomentaryMin.lineTo          (x, yMm); }
+
+                if (! startedSM) { pathShortTermMax.startNewSubPath (x, ySM); startedSM = true; }
+                else             { pathShortTermMax.lineTo          (x, ySM); }
+
+                if (! startedSm) { pathShortTermMin.startNewSubPath (x, ySm); startedSm = true; }
+                else             { pathShortTermMin.lineTo          (x, ySm); }
+            }
+        }
+    }
 
     // Draw curves
-    if (useOverview)
+    if (layer == Layer::Raw)
     {
-        // Short-term envelopes first
+        if (startedSM)
+        {
+            g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.8f));
+            g.strokePath (pathShortTermMax, juce::PathStrokeType (1.5f));
+        }
+
+        if (startedMM)
+        {
+            g.setColour (juce::Colours::limegreen);
+            g.strokePath (pathMomentaryMax, juce::PathStrokeType (2.0f));
+        }
+    }
+    else
+    {
+        // MID / OVERVIEW: draw envelopes
         if (startedSM)
         {
             g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.9f));
@@ -329,7 +438,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             g.strokePath (pathShortTermMin, juce::PathStrokeType (1.0f));
         }
 
-        // Momentary envelopes on top
         if (startedMM)
         {
             g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.9f));
@@ -339,21 +447,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         {
             g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.4f));
             g.strokePath (pathMomentaryMin, juce::PathStrokeType (1.0f));
-        }
-    }
-    else
-    {
-        // RAW: only max lines are meaningful (min == max).
-        if (startedSM)
-        {
-            g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.8f));
-            g.strokePath (pathShortTermMax, juce::PathStrokeType (1.5f));
-        }
-
-        if (startedMM)
-        {
-            g.setColour (juce::Colours::limegreen);
-            g.strokePath (pathMomentaryMax, juce::PathStrokeType (2.0f));
         }
     }
 
@@ -444,7 +537,14 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     // Overlay info
     g.setColour (juce::Colours::white);
     g.setFont (14.0f);
-    juce::String mode = useOverview ? "OVERVIEW (min/max)" : "RAW";
+    juce::String mode;
+    switch (layer)
+    {
+        case Layer::Raw:      mode = "RAW"; break;
+        case Layer::Mid:      mode = "MID (min/max)"; break;
+        case Layer::Overview: mode = "OVERVIEW (min/max)"; break;
+    }
+
     g.drawText (mode + " | ZoomX: " + juce::String (zoomX, 4) + " | ZoomY: " + juce::String (zoomY, 2),
                 8, 8, 320, 20, juce::Justification::topLeft);
 }

@@ -7,8 +7,16 @@ class LevelScopeAudioProcessor;
 
 //==============================================================================
 // Displays momentary & short-term loudness as a scrolling, zoomable history.
-// Uses a RAW history and an OVERVIEW history (decimated) with fixed grouping.
-// OVERVIEW stores per-group min+max to preserve both peaks and valleys.
+//
+// Data model:
+//   - RAW history at full frame rate.
+//   - MID history at decimationFactorMid (min+max per group).
+//   - OVERVIEW history at decimationFactorHigh (min+max per group).
+//
+// Drawing model:
+//   - Always follows "now" (right edge = newest frame).
+//   - Choose RAW/MID/OVERVIEW layer based on zoomX.
+//   - Use fractional frame offsets so scroll is smooth, not in group-sized jumps.
 //==============================================================================
 
 class VolumeHistoryComponent : public juce::Component,
@@ -49,6 +57,7 @@ private:
     };
 
     Frame getRawFrameAgo (int framesAgo) const noexcept;
+    Frame getMidFrameAgo (int groupsAgo) const noexcept;
     Frame getOverviewFrameAgo (int groupsAgo) const noexcept;
 
     LevelScopeAudioProcessor& processor;
@@ -64,23 +73,29 @@ private:
     const float maxDb;
     const float baseDbRange;
 
-    // RAW history
+    // RAW history (full resolution)
     int                rawCapacityFrames = 0;   // number of RAW frames stored
     std::vector<Frame> rawHistory;
     int                rawWriteIndex   = 0;
     juce::int64        totalRawFrames  = 0;     // total RAW frames written since start
 
-    // OVERVIEW history (decimated)
-    static constexpr int decimationFactor = 64;   // RAW->OVERVIEW grouping size
+    // MID history (decimated, factor 8)
+    static constexpr int decimationFactorMid  = 8;
+    int                midCapacityFrames      = 0;
+    std::vector<Frame> midHistory;
+    int                midWriteIndex   = 0;
+    juce::int64        totalMidFrames  = 0;
+    Frame              currentMid;
+    int                currentMidCount = 0;     // how many RAW frames in current MID group
 
-    int                overviewCapacityFrames = 0; // rawCapacityFrames / decimationFactor
+    // OVERVIEW history (decimated, factor 64)
+    static constexpr int decimationFactorHigh = 64;
+    int                overviewCapacityFrames = 0;
     std::vector<Frame> overviewHistory;
     int                overviewWriteIndex  = 0;
-    juce::int64        totalOverviewFrames = 0;   // total OVERVIEW frames written
-
-    // Accumulator for current overview group
-    Frame currentOverview;
-    int   currentOverviewCount = 0;
+    juce::int64        totalOverviewFrames = 0;
+    Frame              currentOverview;
+    int                currentOverviewCount = 0; // how many RAW frames in current OVERVIEW group
 
     // Zoom parameters
     double zoomX      = 5.0;   // pixels per RAW frame
