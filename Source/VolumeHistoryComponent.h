@@ -81,8 +81,8 @@ private:
     int                rawWriteIndex   = 0;
     juce::int64        totalRawFrames  = 0;     // total RAW frames written since start
 
-    // MID history (decimated, factor 8)
-    static constexpr int decimationFactorMid  = 8;
+    // MID history (decimated, factor 16)
+    static constexpr int decimationFactorMid  = 16;
     int                midCapacityFrames      = 0;
     std::vector<Frame> midHistory;
     int                midWriteIndex   = 0;

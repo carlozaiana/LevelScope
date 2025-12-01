@@ -473,8 +473,8 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         }
         if (startedMm)
         {
-            g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.4f));
-            g.strokePath (pathMomentaryMin, juce::PathStrokeType (1.0f));
+            g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.9f));
+            g.strokePath (pathMomentaryMin, juce::PathStrokeType (2.0f));
         }
     }
 
