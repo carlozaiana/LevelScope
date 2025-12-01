@@ -36,7 +36,7 @@ VolumeHistoryComponent::VolumeHistoryComponent (LevelScopeAudioProcessor& proc)
     if (rawCapacityFrames < 1)
         rawCapacityFrames = 1;
 
-    midCapacityFrames = juce::jmax (1, rawCapacityFrames / decimationFactorMid);
+    midCapacityFrames      = juce::jmax (1, rawCapacityFrames / decimationFactorMid);
     overviewCapacityFrames = juce::jmax (1, rawCapacityFrames / decimationFactorHigh);
 
     rawHistory.assign ((size_t) rawCapacityFrames, Frame{ minDb, minDb, minDb, minDb });
@@ -55,7 +55,7 @@ VolumeHistoryComponent::VolumeHistoryComponent (LevelScopeAudioProcessor& proc)
     currentOverview.shortTermMaxDb = -std::numeric_limits<float>::infinity();
 
     setOpaque (true);
-    startTimerHz (60); // UI update rate
+    startTimerHz (60); // timer runs at 60 Hz; we decimate repaints in MID/OVERVIEW
 }
 
 VolumeHistoryComponent::~VolumeHistoryComponent()
@@ -85,7 +85,33 @@ void VolumeHistoryComponent::resized()
 void VolumeHistoryComponent::timerCallback()
 {
     drainProcessorFifo();
-    repaint();
+
+    // Determine which layer is active based only on zoomX
+    enum class Layer { Raw, Mid, Overview };
+    Layer layer;
+    if (zoomX >= 0.26)
+        layer = Layer::Raw;
+    else if (zoomX > 0.05)
+        layer = Layer::Mid;
+    else
+        layer = Layer::Overview;
+
+    if (layer == Layer::Raw)
+    {
+        // Full-rate repaint in RAW mode
+        repaint();
+        repaintDecimator = 0;
+    }
+    else
+    {
+        // Half-rate repaint in MID/OVERVIEW (~30 Hz if timer is 60 Hz)
+        ++repaintDecimator;
+        if (repaintDecimator >= 2)
+        {
+            repaint();
+            repaintDecimator = 0;
+        }
+    }
 }
 
 void VolumeHistoryComponent::drainProcessorFifo()
@@ -296,7 +322,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
     // Select drawing layer based on zoomX
     enum class Layer { Raw, Mid, Overview };
-
     Layer layer;
     if (zoomX >= 0.26)
         layer = Layer::Raw;
@@ -347,7 +372,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         {
             for (int j = 0; j < groupsAvailable; ++j)
             {
-                // Fractional framesAgo in RAW units
+                // Effective framesAgo relative to RAW: group offset + count of frames in current (partial) MID group
                 const int framesAgo = currentMidCount + j * decimationFactorMid;
                 const float x = w - (float) framesAgo * (float) zoomX;
                 if (x < -10.0f)
@@ -427,6 +452,8 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     else
     {
         // MID / OVERVIEW: draw envelopes
+
+        // Short-term first (cyan)
         if (startedSM)
         {
             g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.9f));
@@ -438,6 +465,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             g.strokePath (pathShortTermMin, juce::PathStrokeType (1.0f));
         }
 
+        // Momentary on top (same lime base colour for max & min, just different alpha/width)
         if (startedMM)
         {
             g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.9f));
@@ -537,16 +565,16 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     // Overlay info
     g.setColour (juce::Colours::white);
     g.setFont (14.0f);
-    juce::String mode;
+    juce::String modeStr;
     switch (layer)
     {
-        case Layer::Raw:      mode = "RAW"; break;
-        case Layer::Mid:      mode = "MID (min/max)"; break;
-        case Layer::Overview: mode = "OVERVIEW (min/max)"; break;
+        case Layer::Raw:      modeStr = "RAW"; break;
+        case Layer::Mid:      modeStr = "MID (min/max)"; break;
+        case Layer::Overview: modeStr = "OVERVIEW (min/max)"; break;
     }
 
-    g.drawText (mode + " | ZoomX: " + juce::String (zoomX, 4) + " | ZoomY: " + juce::String (zoomY, 2),
-                8, 8, 320, 20, juce::Justification::topLeft);
+    g.drawText (modeStr + " | ZoomX: " + juce::String (zoomX, 4) + " | ZoomY: " + juce::String (zoomY, 2),
+                8, 8, 340, 20, juce::Justification::topLeft);
 }
 
 //==============================================================================
@@ -588,7 +616,7 @@ void VolumeHistoryComponent::mouseWheelMove (const juce::MouseEvent& event,
     if (event.mods.isShiftDown())
         applyVerticalZoom (wheel.deltaY);
     else
-        applyHorizontalZoom (wheel.deltaY);
+        applyHorizontalZoom (wheelDelta);
 
     repaint();
 }
