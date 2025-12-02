@@ -16,8 +16,10 @@ class LevelScopeAudioProcessor;
 // Drawing model:
 //   - Always follows "now" (right edge = newest frame).
 //   - Choose RAW/MID/OVERVIEW layer based on zoomX.
-//   - Use fractional frame offsets so scroll is smooth even in MID/OVERVIEW.
+//   - Fractional frame offsets keep scroll smooth even in MID/OVERVIEW.
 //   - 60 Hz repaint in RAW, ~30 Hz in MID/OVERVIEW for performance.
+//   - In MID/OVERVIEW: can show filled bands only, or filled bands + min/max lines
+//     (toggled by clicking anywhere on the component).
 //==============================================================================
 
 class VolumeHistoryComponent : public juce::Component,
@@ -32,6 +34,8 @@ public:
 
     void mouseWheelMove (const juce::MouseEvent& event,
                          const juce::MouseWheelDetails& wheel) override;
+
+    void mouseDown (const juce::MouseEvent& event) override;
 
 private:
     // juce::Timer
@@ -110,6 +114,9 @@ private:
 
     // Repaint decimation for MID/OVERVIEW: keep track of timer ticks
     int repaintDecimator = 0;
+
+    // Toggle: show only filled bands (false) or filled bands + min/max lines (true)
+    bool showEnvelopeLines = false;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VolumeHistoryComponent)
 };

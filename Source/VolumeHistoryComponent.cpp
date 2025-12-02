@@ -86,7 +86,6 @@ void VolumeHistoryComponent::timerCallback()
 {
     drainProcessorFifo();
 
-    // Determine which layer is active based only on zoomX
     enum class Layer { Raw, Mid, Overview };
     Layer layer;
     if (zoomX >= 0.26)
@@ -159,7 +158,7 @@ void VolumeHistoryComponent::pushLoudnessBatchToHistory (const float* momentaryV
         rawWriteIndex = (rawWriteIndex + 1) % rawCapacityFrames;
         ++totalRawFrames;
 
-        // MID accumulation (factor decimationFactorMid)
+        // MID accumulation
         if (currentMidCount == 0)
         {
             currentMid = f;
@@ -184,7 +183,7 @@ void VolumeHistoryComponent::pushLoudnessBatchToHistory (const float* momentaryV
             currentMidCount = 0;
         }
 
-        // OVERVIEW accumulation (factor decimationFactorHigh)
+        // OVERVIEW accumulation
         if (currentOverviewCount == 0)
         {
             currentOverview = f;
@@ -330,7 +329,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     else
         layer = Layer::Overview;
 
-    // "Now" is the latest RAW frame index
     const juce::int64 latestIndex = totalRawFrames - 1;
     const juce::int64 earliestIndex = juce::jmax<juce::int64> (0, latestIndex - (juce::int64) rawCapacityFrames + 1);
 
@@ -345,11 +343,9 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
         for (int i = 0; i < samplesToDraw; ++i)
         {
-            const float xRaw = w - ((float) i * (float) zoomX);
-            if (xRaw < -10.0f)
+            const float x = w - ((float) i * (float) zoomX);
+            if (x < -10.0f)
                 break;
-
-            const float x = std::floor (xRaw) + 0.5f;
 
             const Frame f = getRawFrameAgo (i);
 
@@ -378,9 +374,8 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     }
     else
     {
-        // MID or OVERVIEW: build bands for min/max and fill them.
+        // MID or OVERVIEW: build min/max bands for each curve.
 
-        // Collect points for envelopes
         std::vector<juce::Point<float>> mMaxPts, mMinPts;
         std::vector<juce::Point<float>> sMaxPts, sMinPts;
 
@@ -390,11 +385,9 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             for (int j = 0; j < groupsAvailable; ++j)
             {
                 const int framesAgo = currentMidCount + j * decimationFactorMid;
-                const float xRaw = w - (float) framesAgo * (float) zoomX;
-                if (xRaw < -10.0f)
+                const float x = w - (float) framesAgo * (float) zoomX;
+                if (x < -10.0f)
                     break;
-
-                const float x = std::floor (xRaw) + 0.5f;
 
                 const Frame f = getMidFrameAgo (j);
 
@@ -415,11 +408,9 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             for (int j = 0; j < groupsAvailable; ++j)
             {
                 const int framesAgo = currentOverviewCount + j * decimationFactorHigh;
-                const float xRaw = w - (float) framesAgo * (float) zoomX;
-                if (xRaw < -10.0f)
+                const float x = w - (float) framesAgo * (float) zoomX;
+                if (x < -10.0f)
                     break;
-
-                const float x = std::floor (xRaw) + 0.5f;
 
                 const Frame f = getOverviewFrameAgo (j);
 
@@ -435,7 +426,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             }
         }
 
-        // Build and fill band for short-term (cyan)
+        // Build and fill band for short-term (same cyan base as RAW curve)
         if (! sMaxPts.empty() && sMaxPts.size() == sMinPts.size())
         {
             juce::Path bandShort;
@@ -448,11 +439,28 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
             bandShort.closeSubPath();
 
-            g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.45f));
+            g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.8f));
             g.fillPath (bandShort);
+
+            if (showEnvelopeLines)
+            {
+                juce::Path pathMax, pathMin;
+                pathMax.startNewSubPath (sMaxPts.front());
+                for (size_t i = 1; i < sMaxPts.size(); ++i)
+                    pathMax.lineTo (sMaxPts[i]);
+
+                pathMin.startNewSubPath (sMinPts.front());
+                for (size_t i = 1; i < sMinPts.size(); ++i)
+                    pathMin.lineTo (sMinPts[i]);
+
+                g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.9f));
+                g.strokePath (pathMax, juce::PathStrokeType (1.5f));
+                g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.4f));
+                g.strokePath (pathMin, juce::PathStrokeType (1.0f));
+            }
         }
 
-        // Build and fill band for momentary (lime)
+        // Build and fill band for momentary (same lime base as RAW curve)
         if (! mMaxPts.empty() && mMaxPts.size() == mMinPts.size())
         {
             juce::Path bandMomentary;
@@ -465,8 +473,25 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
             bandMomentary.closeSubPath();
 
-            g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.5f));
+            g.setColour (juce::Colours::limegreen);
             g.fillPath (bandMomentary);
+
+            if (showEnvelopeLines)
+            {
+                juce::Path pathMax, pathMin;
+                pathMax.startNewSubPath (mMaxPts.front());
+                for (size_t i = 1; i < mMaxPts.size(); ++i)
+                    pathMax.lineTo (mMaxPts[i]);
+
+                pathMin.startNewSubPath (mMinPts.front());
+                for (size_t i = 1; i < mMinPts.size(); ++i)
+                    pathMin.lineTo (mMinPts[i]);
+
+                g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.9f));
+                g.strokePath (pathMax, juce::PathStrokeType (2.0f));
+                g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.9f));
+                g.strokePath (pathMin, juce::PathStrokeType (2.0f));
+            }
         }
     }
 
@@ -558,15 +583,16 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     g.setColour (juce::Colours::white);
     g.setFont (14.0f);
     juce::String modeStr;
-    switch (layer)
-    {
-        case Layer::Raw:      modeStr = "RAW"; break;
-        case Layer::Mid:      modeStr = "MID (band)"; break;
-        case Layer::Overview: modeStr = "OVERVIEW (band)"; break;
-    }
+    if (zoomX >= 0.26)      modeStr = "RAW";
+    else if (zoomX > 0.05)  modeStr = "MID (band)";
+    else                    modeStr = "OVERVIEW (band)";
 
-    g.drawText (modeStr + " | ZoomX: " + juce::String (zoomX, 4) + " | ZoomY: " + juce::String (zoomY, 2),
-                8, 8, 340, 20, juce::Justification::topLeft);
+    juce::String linesStr = showEnvelopeLines ? "Lines: ON" : "Lines: OFF";
+
+    g.drawText (modeStr + " | ZoomX: " + juce::String (zoomX, 4) +
+                " | ZoomY: " + juce::String (zoomY, 2) +
+                " | " + linesStr,
+                8, 8, 420, 20, juce::Justification::topLeft);
 }
 
 //==============================================================================
@@ -610,5 +636,14 @@ void VolumeHistoryComponent::mouseWheelMove (const juce::MouseEvent& event,
     else
         applyHorizontalZoom (wheel.deltaY);
 
+    repaint();
+}
+
+void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
+{
+    juce::ignoreUnused (event);
+
+    // Toggle between fill only and fill + min/max lines in MID/OVERVIEW
+    showEnvelopeLines = ! showEnvelopeLines;
     repaint();
 }
