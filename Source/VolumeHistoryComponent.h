@@ -17,8 +17,7 @@ class LevelScopeAudioProcessor;
 //   - Always follows "now" (right edge = newest frame).
 //   - Choose RAW/MID/OVERVIEW layer based on zoomX.
 //   - Use fractional frame offsets so scroll is smooth even in MID/OVERVIEW.
-//   - In RAW mode we effectively redraw at 60 Hz; in MID/OVERVIEW we decimate
-//     repaints to ~30 Hz to keep DAW UI smooth on older hardware.
+//   - 60 Hz repaint in RAW, ~30 Hz in MID/OVERVIEW for performance.
 //==============================================================================
 
 class VolumeHistoryComponent : public juce::Component,
@@ -109,7 +108,7 @@ private:
 
     bool   hasCustomZoomX = false;
 
-    // For repaint decimation: keep track of how many timer ticks since last repaint
+    // Repaint decimation for MID/OVERVIEW: keep track of timer ticks
     int repaintDecimator = 0;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VolumeHistoryComponent)
