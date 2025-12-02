@@ -143,7 +143,6 @@ void VolumeHistoryComponent::pushLoudnessBatchToHistory (const float* momentaryV
         const float rmsM = momentaryValues[i];
         const float rmsS = shortTermValues[i];
 
-        // Convert RMS (linear) to dB, clamped to minDb
         const float dbM = juce::Decibels::gainToDecibels (rmsM, minDb);
         const float dbS = juce::Decibels::gainToDecibels (rmsS, minDb);
 
@@ -214,11 +213,7 @@ void VolumeHistoryComponent::pushLoudnessBatchToHistory (const float* momentaryV
 
 VolumeHistoryComponent::Frame VolumeHistoryComponent::getRawFrameAgo (int framesAgo) const noexcept
 {
-    Frame out;
-    out.momentaryMinDb = minDb;
-    out.momentaryMaxDb = minDb;
-    out.shortTermMinDb = minDb;
-    out.shortTermMaxDb = minDb;
+    Frame out{ minDb, minDb, minDb, minDb };
 
     const juce::int64 available = std::min<juce::int64> ((juce::int64) rawCapacityFrames, totalRawFrames);
     if (framesAgo < 0 || (juce::int64) framesAgo >= available)
@@ -233,11 +228,7 @@ VolumeHistoryComponent::Frame VolumeHistoryComponent::getRawFrameAgo (int frames
 
 VolumeHistoryComponent::Frame VolumeHistoryComponent::getMidFrameAgo (int groupsAgo) const noexcept
 {
-    Frame out;
-    out.momentaryMinDb = minDb;
-    out.momentaryMaxDb = minDb;
-    out.shortTermMinDb = minDb;
-    out.shortTermMaxDb = minDb;
+    Frame out{ minDb, minDb, minDb, minDb };
 
     const juce::int64 available = std::min<juce::int64> ((juce::int64) midCapacityFrames, totalMidFrames);
     if (groupsAgo < 0 || (juce::int64) groupsAgo >= available)
@@ -252,11 +243,7 @@ VolumeHistoryComponent::Frame VolumeHistoryComponent::getMidFrameAgo (int groups
 
 VolumeHistoryComponent::Frame VolumeHistoryComponent::getOverviewFrameAgo (int groupsAgo) const noexcept
 {
-    Frame out;
-    out.momentaryMinDb = minDb;
-    out.momentaryMaxDb = minDb;
-    out.shortTermMinDb = minDb;
-    out.shortTermMaxDb = minDb;
+    Frame out{ minDb, minDb, minDb, minDb };
 
     const juce::int64 available = std::min<juce::int64> ((juce::int64) overviewCapacityFrames, totalOverviewFrames);
     if (groupsAgo < 0 || (juce::int64) groupsAgo >= available)
@@ -294,7 +281,9 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 {
     auto bounds = getLocalBounds().toFloat();
 
-    g.fillAll (juce::Colours::black);
+    // Background: darker variant of the momentary lime
+    auto backgroundColour = juce::Colours::limegreen.darker (3.0f);
+    g.fillAll (backgroundColour);
 
     const int   width  = (int) bounds.getWidth();
     const float height = bounds.getHeight();
@@ -303,7 +292,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         return;
 
     // Horizontal reference lines (e.g. -90, -60, -30, 0 dB)
-    g.setColour (juce::Colours::darkgrey.withMultipliedAlpha (0.6f));
+    g.setColour (juce::Colours::darkgrey.withMultipliedAlpha (0.4f));
     const int numLines = 4;
     for (int i = 0; i <= numLines; ++i)
     {
@@ -426,21 +415,25 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             }
         }
 
-        // Build and fill band for short-term (same cyan base as RAW curve)
+        // Build and fill band for short-term (cyan)
         if (! sMaxPts.empty() && sMaxPts.size() == sMinPts.size())
         {
-            juce::Path bandShort;
-            bandShort.startNewSubPath (sMaxPts.front());
-            for (size_t i = 1; i < sMaxPts.size(); ++i)
-                bandShort.lineTo (sMaxPts[i]);
+            if (showBands)
+            {
+                juce::Path bandShort;
+                bandShort.startNewSubPath (sMaxPts.front());
+                for (size_t i = 1; i < sMaxPts.size(); ++i)
+                    bandShort.lineTo (sMaxPts[i]);
 
-            for (size_t i = sMinPts.size(); i-- > 0; )
-                bandShort.lineTo (sMinPts[i]);
+                for (size_t i = sMinPts.size(); i-- > 0; )
+                    bandShort.lineTo (sMinPts[i]);
 
-            bandShort.closeSubPath();
+                bandShort.closeSubPath();
 
-            g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.8f));
-            g.fillPath (bandShort);
+                // Same base colour as RAW short-term curve
+                g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.8f));
+                g.fillPath (bandShort);
+            }
 
             if (showEnvelopeLines)
             {
@@ -460,21 +453,25 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             }
         }
 
-        // Build and fill band for momentary (same lime base as RAW curve)
+        // Build and fill band for momentary (lime)
         if (! mMaxPts.empty() && mMaxPts.size() == mMinPts.size())
         {
-            juce::Path bandMomentary;
-            bandMomentary.startNewSubPath (mMaxPts.front());
-            for (size_t i = 1; i < mMaxPts.size(); ++i)
-                bandMomentary.lineTo (mMaxPts[i]);
+            if (showBands)
+            {
+                juce::Path bandMomentary;
+                bandMomentary.startNewSubPath (mMaxPts.front());
+                for (size_t i = 1; i < mMaxPts.size(); ++i)
+                    bandMomentary.lineTo (mMaxPts[i]);
 
-            for (size_t i = mMinPts.size(); i-- > 0; )
-                bandMomentary.lineTo (mMinPts[i]);
+                for (size_t i = mMinPts.size(); i-- > 0; )
+                    bandMomentary.lineTo (mMinPts[i]);
 
-            bandMomentary.closeSubPath();
+                bandMomentary.closeSubPath();
 
-            g.setColour (juce::Colours::limegreen);
-            g.fillPath (bandMomentary);
+                // Same base colour as RAW momentary curve
+                g.setColour (juce::Colours::limegreen);
+                g.fillPath (bandMomentary);
+            }
 
             if (showEnvelopeLines)
             {
@@ -512,7 +509,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         const double totalTimeSeconds   = (double) totalRawFrames / visualFrameRate;
         const double maxHistorySeconds  = (double) rawCapacityFrames / visualFrameRate;
 
-        // Approx visible frames in RAW units
         double visibleFramesApprox = widthPixelsForTime / zoomX;
         if (visibleFramesApprox > (double) availableRaw)
             visibleFramesApprox = (double) availableRaw;
@@ -527,7 +523,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             if (tLeft < tLeftLimit)
                 tLeft = tLeftLimit;
 
-            // Choose tick spacing so that we have at most ~20 labels.
             const double maxLabels = 20.0;
             const double tickSteps[] = {
                 0.5, 1.0, 2.0, 5.0,
@@ -549,11 +544,9 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
             const double firstTick = std::ceil (tLeft / tickStep) * tickStep;
 
-            // Draw baseline for the ruler
-            g.setColour (juce::Colours::darkgrey.withMultipliedAlpha (0.8f));
+            g.setColour (juce::Colours::darkgrey.withMultipliedAlpha (0.7f));
             g.drawHorizontalLine ((int) std::round (rulerBaseY), 0.0f, (float) width);
 
-            // Draw ticks and labels
             g.setColour (juce::Colours::white);
             g.setFont (10.0f);
 
@@ -584,15 +577,16 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     g.setFont (14.0f);
     juce::String modeStr;
     if (zoomX >= 0.26)      modeStr = "RAW";
-    else if (zoomX > 0.05)  modeStr = "MID (band)";
-    else                    modeStr = "OVERVIEW (band)";
+    else if (zoomX > 0.05)  modeStr = "MID";
+    else                    modeStr = "OVERVIEW";
 
+    juce::String fillStr  = showBands         ? "Fill: ON"  : "Fill: OFF";
     juce::String linesStr = showEnvelopeLines ? "Lines: ON" : "Lines: OFF";
 
     g.drawText (modeStr + " | ZoomX: " + juce::String (zoomX, 4) +
                 " | ZoomY: " + juce::String (zoomY, 2) +
-                " | " + linesStr,
-                8, 8, 420, 20, juce::Justification::topLeft);
+                " | " + fillStr + " | " + linesStr,
+                8, 8, 460, 20, juce::Justification::topLeft);
 }
 
 //==============================================================================
@@ -641,9 +635,11 @@ void VolumeHistoryComponent::mouseWheelMove (const juce::MouseEvent& event,
 
 void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
 {
-    juce::ignoreUnused (event);
+    // Shift-click toggles fill on/off; plain click toggles lines on/off
+    if (event.mods.isShiftDown())
+        showBands = ! showBands;
+    else
+        showEnvelopeLines = ! showEnvelopeLines;
 
-    // Toggle between fill only and fill + min/max lines in MID/OVERVIEW
-    showEnvelopeLines = ! showEnvelopeLines;
     repaint();
 }
