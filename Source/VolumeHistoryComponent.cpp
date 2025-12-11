@@ -416,7 +416,7 @@ void VolumeHistoryComponent::computeRepresentativeCurves (const std::vector<Fram
     repMomentary.resize (n);
     repShortTerm.resize (n);
 
-    const float epsilonTrend = 0.1f;  // dB threshold to avoid flicker
+    const float epsilonTrend = 0.02f;  // dB threshold to avoid flicker (more sensitive)
 
     float prevCenterM = 0.0f;
     float prevCenterS = 0.0f;
