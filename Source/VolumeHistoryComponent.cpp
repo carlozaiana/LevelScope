@@ -417,7 +417,6 @@ void VolumeHistoryComponent::computeRepresentativeCurves (const std::vector<Fram
     repShortTerm.resize (n);
 
     const float epsilonTrend = 0.1f;  // dB threshold to avoid flicker
-    const float lambdaSmooth = 0.6f;  // smoothing factor (1.0 = no smoothing)
 
     float prevCenterM = 0.0f;
     float prevCenterS = 0.0f;
@@ -458,7 +457,6 @@ void VolumeHistoryComponent::computeRepresentativeCurves (const std::vector<Fram
             float alphaM = 0.5f;
             if (trendM >  epsilonTrend)      alphaM = 1.0f;  // upward -> max
             else if (trendM < -epsilonTrend) alphaM = 0.0f;  // downward -> min
-            // else alphaM stays 0.5 -> center
 
             float alphaS = 0.5f;
             if (trendS >  epsilonTrend)      alphaS = 1.0f;
@@ -476,27 +474,9 @@ void VolumeHistoryComponent::computeRepresentativeCurves (const std::vector<Fram
             prevCenterS = centerS;
         }
 
-        if (i == 0)
-        {
-            // No previous value to smooth with
-            repMomentary[i] = rawRepM;
-            repShortTerm[i] = rawRepS;
-        }
-        else
-        {
-            const float prevRepM = repMomentary[i - 1];
-            const float prevRepS = repShortTerm[i - 1];
-
-            float smM = lambdaSmooth * rawRepM + (1.0f - lambdaSmooth) * prevRepM;
-            float smS = lambdaSmooth * rawRepS + (1.0f - lambdaSmooth) * prevRepS;
-
-            // Keep smoothed value inside the band
-            smM = juce::jlimit (minM, maxM, smM);
-            smS = juce::jlimit (minS, maxS, smS);
-
-            repMomentary[i] = smM;
-            repShortTerm[i] = smS;
-        }
+        // Smoothing disabled: use rawRep directly
+        repMomentary[i] = rawRepM;
+        repShortTerm[i] = rawRepS;
     }
 }
 
