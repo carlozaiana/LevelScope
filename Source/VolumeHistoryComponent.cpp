@@ -416,12 +416,10 @@ void VolumeHistoryComponent::computeRepresentativeCurves (const std::vector<Fram
     repMomentary.resize (n);
     repShortTerm.resize (n);
 
-    const float epsilonTrend = 0.02f;  // dB threshold to avoid flicker (more sensitive)
-
-    float prevCenterM = 0.0f;
-    float prevCenterS = 0.0f;
-
-    bool hasPrev = false;
+    // Threshold for "significant" internal variation within a group.
+    // If the range (max - min) is below this, we treat the group as "flat"
+    // and use the centre; otherwise we bias the representative to the max.
+    const float rangeThresholdDb = 3.0f; // tweakable: 3..6 dB
 
     for (size_t i = 0; i < n; ++i)
     {
@@ -430,53 +428,32 @@ void VolumeHistoryComponent::computeRepresentativeCurves (const std::vector<Fram
         const float minM    = g.momentaryMinDb;
         const float maxM    = g.momentaryMaxDb;
         const float centerM = 0.5f * (minM + maxM);
+        const float rangeM  = maxM - minM;
 
         const float minS    = g.shortTermMinDb;
         const float maxS    = g.shortTermMaxDb;
         const float centerS = 0.5f * (minS + maxS);
+        const float rangeS  = maxS - minS;
 
-        float rawRepM = centerM;
-        float rawRepS = centerS;
+        float repM = centerM;
+        float repS = centerS;
 
-        if (! hasPrev)
-        {
-            // First point: use center
-            hasPrev     = true;
-            prevCenterM = centerM;
-            prevCenterS = centerS;
-        }
+        // Internal-only rule:
+        //   - small internal range  -> rep at centre
+        //   - large internal range  -> rep at max (favour peaks)
+        if (rangeM >= rangeThresholdDb)
+            repM = maxM;
         else
-        {
-            const float trendM = centerM - prevCenterM;
-            const float trendS = centerS - prevCenterS;
+            repM = centerM;
 
-            // Hard version:
-            //   trend > +ε  -> use max
-            //   trend < -ε  -> use min
-            //   otherwise   -> center
-            float alphaM = 0.5f;
-            if (trendM >  epsilonTrend)      alphaM = 1.0f;  // upward -> max
-            else if (trendM < -epsilonTrend) alphaM = 0.0f;  // downward -> min
+        if (rangeS >= rangeThresholdDb)
+            repS = maxS;
+        else
+            repS = centerS;
 
-            float alphaS = 0.5f;
-            if (trendS >  epsilonTrend)      alphaS = 1.0f;
-            else if (trendS < -epsilonTrend) alphaS = 0.0f;
-
-            // Interpolate inside [min, max]
-            rawRepM = minM + alphaM * (maxM - minM);
-            rawRepS = minS + alphaS * (maxS - minS);
-
-            // Clamp to band, just to be safe
-            rawRepM = juce::jlimit (minM, maxM, rawRepM);
-            rawRepS = juce::jlimit (minS, maxS, rawRepS);
-
-            prevCenterM = centerM;
-            prevCenterS = centerS;
-        }
-
-        // Smoothing disabled: use rawRep directly
-        repMomentary[i] = rawRepM;
-        repShortTerm[i] = rawRepS;
+        // (No smoothing; rep is purely from this group's min/max/centre.)
+        repMomentary[i] = repM;
+        repShortTerm[i] = repS;
     }
 }
 
@@ -578,6 +555,15 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     juce::Path pathRepM, pathRepS;
     bool startedRepM = false, startedRepS = false;
 
+    // Determine if we're at a "coarse" level (large time span per group).
+    const auto& Lsel        = levels[(size_t) selectedLevel];
+    const double spanSeconds = (double) Lsel.spanFrames / visualFrameRate;
+
+    // Treat groups that span >= 2 seconds as "coarse".
+    const double coarseSpanSeconds       = 2.0;
+    const bool   useSelectiveBands       = (spanSeconds >= coarseSpanSeconds);
+    const float  bandRangeThresholdDb    = 3.0f; // draw band only if (max - min) >= this
+
     for (size_t i = 0; i < n; ++i)
     {
         const float x = w - (float) framesAgo[i] * (float) zoomX;
@@ -594,15 +580,35 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         const float yRepM = dbToY (repM[i], h);
         const float yRepS = dbToY (repS[i], h);
 
-        if (showBands)
+                if (showBands)
         {
+            // Decide per-group whether to draw bands, especially at coarse levels.
+            const float rangeMM = gGroup.momentaryMaxDb - gGroup.momentaryMinDb;
+            const float rangeSM = gGroup.shortTermMaxDb - gGroup.shortTermMinDb;
+
+            bool drawMomentaryBand = true;
+            bool drawShortTermBand = true;
+
+            if (useSelectiveBands)
+            {
+                // At coarse levels, only draw bands where there's real variation.
+                drawMomentaryBand = (rangeMM >= bandRangeThresholdDb);
+                drawShortTermBand = (rangeSM >= bandRangeThresholdDb);
+            }
+
             // Short-term band (cyan-ish, behind)
-            g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.6f));
-            g.drawLine (x, ySM, x, ySm, 1.0f);
+            if (drawShortTermBand)
+            {
+                g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.6f));
+                g.drawLine (x, ySM, x, ySm, 1.0f);
+            }
 
             // Momentary band (lime-ish, on top)
-            g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.7f));
-            g.drawLine (x, yMM, x, yMm, 1.2f);
+            if (drawMomentaryBand)
+            {
+                g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.7f));
+                g.drawLine (x, yMM, x, yMm, 1.2f);
+            }
         }
 
         if (showLines)
