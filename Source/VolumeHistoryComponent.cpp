@@ -717,9 +717,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     g.setColour (juce::Colours::white);
     g.setFont (14.0f);
 
-    const auto& Lsel = levels[(size_t) selectedLevel];
-    const double spanSeconds = (double) Lsel.spanFrames / visualFrameRate;
-
     juce::String info = "Level: " + juce::String (selectedLevel) +
                         " (span " + juce::String (Lsel.spanFrames) + " frames, " +
                         juce::String (spanSeconds, 3) + " s)" +
