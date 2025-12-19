@@ -566,7 +566,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     std::vector<int>        framesAgo;
     buildVisibleGroupsForLevel (selectedLevel, width, groups, framesAgo);
 
-        const size_t n = groups.size();
+    const size_t n = groups.size();
     if (n < 2)
         return;
 
@@ -574,47 +574,11 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     std::vector<float> repM, repS;
     computeRepresentativeCurves (groups, repM, repS);
 
-    //==========================================================================
-    // [LINE-LOD] Decide how (or if) to draw lines, based on level & group count
-    //==========================================================================
-
-    const size_t maxFullResLinePoints   = 1000;  // up to this: draw every point
-    const size_t maxDecimatedLinePoints = 2000;  // above this: no lines, bands only
-
-    bool drawLinesThisFrame = showLines; // user toggle
-    int  lineDecimation     = 1;         // 1 = no decimation; 2 = every 2nd, etc.
-
-    if (drawLinesThisFrame)
-    {
-        if (selectedLevel >= 4)
-        {
-            // Levels 4 and 5: bands only, no lines.
-            drawLinesThisFrame = false;
-        }
-        else
-        {
-            if (n > maxDecimatedLinePoints)
-            {
-                // Too many groups -> bands only.
-                drawLinesThisFrame = false;
-            }
-            else if (n > maxFullResLinePoints)
-            {
-                // Moderate overload: decimate line points.
-                lineDecimation = 2; // draw every 2nd point
-            }
-        }
-    }
-
-    // Band thickness: at coarse levels, make bands a bit thicker.
-    const float shortTermThickness = (selectedLevel >= 4 ? 1.5f : 1.0f);
-    const float momentaryThickness = (selectedLevel >= 4 ? 2.0f : 1.2f);
-
     // Draw bands and lines
     juce::Path pathRepM, pathRepS;
     bool startedRepM = false, startedRepS = false;
 
-        for (size_t i = 0; i < n; ++i)
+    for (size_t i = 0; i < n; ++i)
     {
         const float x = w - (float) framesAgo[i] * (float) zoomX;
         if (x < -10.0f)
@@ -632,7 +596,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
         //======================================================================
         // Bands (vertical min->max lines)
-        //======================================================================
         //
         // - Level 0: no bands (lines only).
         // - Level >= 1: selective bands:
@@ -641,56 +604,43 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
         if (showBands && selectedLevel > 0) // L0: no bands at all
         {
-            // Per-group dynamic range in dB
             const float rangeMM = gGroup.momentaryMaxDb - gGroup.momentaryMinDb;
             const float rangeSM = gGroup.shortTermMaxDb - gGroup.shortTermMinDb;
 
-            // Default: draw bands for this group
-            bool drawMomentaryBand = true;
-            bool drawShortTermBand = true;
-
-            // At all levels >= 1: only draw bands where there is real variation.
             const float bandRangeThresholdDb = 3.0f; // tweak: 3–6 dB typical
 
-            drawMomentaryBand = (rangeMM >= bandRangeThresholdDb);
-            drawShortTermBand = (rangeSM >= bandRangeThresholdDb);
+            const bool drawMomentaryBand = (rangeMM >= bandRangeThresholdDb);
+            const bool drawShortTermBand = (rangeSM >= bandRangeThresholdDb);
 
             // Short-term band (cyan-ish, behind)
             if (drawShortTermBand)
             {
                 g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.6f));
-                g.drawLine (x, ySM, x, ySm, shortTermThickness);
+                g.drawLine (x, ySM, x, ySm, 1.0f);
             }
 
             // Momentary band (lime-ish, on top)
             if (drawMomentaryBand)
             {
                 g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.7f));
-                g.drawLine (x, yMM, x, yMm, momentaryThickness);
+                g.drawLine (x, yMM, x, yMm, 1.2f);
             }
         }
 
-        //======================================================================
         // Lines (representative curves)
-        //======================================================================
-
-        if (drawLinesThisFrame)
+        if (showLines)
         {
-            // Decimate lines if requested (e.g. every 2nd point).
-            if ((lineDecimation <= 1) || ((i % (size_t) lineDecimation) == 0))
-            {
-                // Short-term representative curve
-                if (! startedRepS) { pathRepS.startNewSubPath (x, yRepS); startedRepS = true; }
-                else              { pathRepS.lineTo         (x, yRepS); }
+            // Short-term representative curve
+            if (! startedRepS) { pathRepS.startNewSubPath (x, yRepS); startedRepS = true; }
+            else              { pathRepS.lineTo         (x, yRepS); }
 
-                // Momentary representative curve
-                if (! startedRepM) { pathRepM.startNewSubPath (x, yRepM); startedRepM = true; }
-                else              { pathRepM.lineTo          (x, yRepM); }
-            }
+            // Momentary representative curve
+            if (! startedRepM) { pathRepM.startNewSubPath (x, yRepM); startedRepM = true; }
+            else              { pathRepM.lineTo          (x, yRepM); }
         }
     }
 
-        if (drawLinesThisFrame)
+    if (showLines)
     {
         // Short-term representative curve
         g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.9f));
