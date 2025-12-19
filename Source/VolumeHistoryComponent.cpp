@@ -75,7 +75,7 @@ void VolumeHistoryComponent::initialiseHistoryLevels()
 
     for (int level = 1; level < maxLevels; ++level)
     {
-        auto& L = levels[level];
+        auto& L = levels[(size_t) level];
 
         L.levelIndex     = level;
         L.groupsPerGroup = groupsPerLevel;
@@ -416,10 +416,12 @@ void VolumeHistoryComponent::computeRepresentativeCurves (const std::vector<Fram
     repMomentary.resize (n);
     repShortTerm.resize (n);
 
-    // Threshold for "significant" internal variation within a group.
-    // If the range (max - min) is below this, we treat the group as "flat"
-    // and use the centre; otherwise we bias the representative to the max.
-    const float rangeThresholdDb = 3.0f; // tweakable: 3..6 dB
+    const float epsilonTrend = 0.1f;  // dB threshold to avoid flicker
+
+    float prevCenterM = 0.0f;
+    float prevCenterS = 0.0f;
+
+    bool hasPrev = false;
 
     for (size_t i = 0; i < n; ++i)
     {
@@ -428,32 +430,53 @@ void VolumeHistoryComponent::computeRepresentativeCurves (const std::vector<Fram
         const float minM    = g.momentaryMinDb;
         const float maxM    = g.momentaryMaxDb;
         const float centerM = 0.5f * (minM + maxM);
-        const float rangeM  = maxM - minM;
 
         const float minS    = g.shortTermMinDb;
         const float maxS    = g.shortTermMaxDb;
         const float centerS = 0.5f * (minS + maxS);
-        const float rangeS  = maxS - minS;
 
-        float repM = centerM;
-        float repS = centerS;
+        float rawRepM = centerM;
+        float rawRepS = centerS;
 
-        // Internal-only rule:
-        //   - small internal range  -> rep at centre
-        //   - large internal range  -> rep at max (favour peaks)
-        if (rangeM >= rangeThresholdDb)
-            repM = maxM;
+        if (! hasPrev)
+        {
+            // First point: use center
+            hasPrev     = true;
+            prevCenterM = centerM;
+            prevCenterS = centerS;
+        }
         else
-            repM = centerM;
+        {
+            const float trendM = centerM - prevCenterM;
+            const float trendS = centerS - prevCenterS;
 
-        if (rangeS >= rangeThresholdDb)
-            repS = maxS;
-        else
-            repS = centerS;
+            // Hard version:
+            //   trend > +ε  -> use max
+            //   trend < -ε  -> use min
+            //   otherwise   -> center
+            float alphaM = 0.5f;
+            if (trendM >  epsilonTrend)      alphaM = 1.0f;  // upward -> max
+            else if (trendM < -epsilonTrend) alphaM = 0.0f;  // downward -> min
 
-        // (No smoothing; rep is purely from this group's min/max/centre.)
-        repMomentary[i] = repM;
-        repShortTerm[i] = repS;
+            float alphaS = 0.5f;
+            if (trendS >  epsilonTrend)      alphaS = 1.0f;
+            else if (trendS < -epsilonTrend) alphaS = 0.0f;
+
+            // Interpolate inside [min, max]
+            rawRepM = minM + alphaM * (maxM - minM);
+            rawRepS = minS + alphaS * (maxS - minS);
+
+            // Clamp to band, just to be safe
+            rawRepM = juce::jlimit (minM, maxM, rawRepM);
+            rawRepS = juce::jlimit (minS, maxS, rawRepS);
+
+            prevCenterM = centerM;
+            prevCenterS = centerS;
+        }
+
+        // Smoothing disabled: use rawRep directly
+        repMomentary[i] = rawRepM;
+        repShortTerm[i] = rawRepS;
     }
 }
 
@@ -526,8 +549,8 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         g.drawHorizontalLine ((int) std::round (y), 0.0f, bounds.getWidth());
     }
 
-    const juce::int64 totalFrames = getTotalFramesL0();
-    const juce::int64 availableRaw = std::min<juce::int64> ((juce::int64) rawCapacityFrames, totalFrames);
+    const juce::int64 totalFrames   = getTotalFramesL0();
+    const juce::int64 availableRaw  = std::min<juce::int64> ((juce::int64) rawCapacityFrames, totalFrames);
 
     if (availableRaw < 2)
         return;
@@ -555,15 +578,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     juce::Path pathRepM, pathRepS;
     bool startedRepM = false, startedRepS = false;
 
-    // Determine if we're at a "coarse" level (large time span per group).
-    const auto& Lsel        = levels[(size_t) selectedLevel];
-    const double spanSeconds = (double) Lsel.spanFrames / visualFrameRate;
-
-    // Treat groups that span >= 2 seconds as "coarse".
-    const double coarseSpanSeconds       = 2.0;
-    const bool   useSelectiveBands       = (spanSeconds >= coarseSpanSeconds);
-    const float  bandRangeThresholdDb    = 3.0f; // draw band only if (max - min) >= this
-
     for (size_t i = 0; i < n; ++i)
     {
         const float x = w - (float) framesAgo[i] * (float) zoomX;
@@ -580,45 +594,40 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         const float yRepM = dbToY (repM[i], h);
         const float yRepS = dbToY (repS[i], h);
 
-                if (showBands)
+            if (showBands)
+    {
+        // Per-group dynamic range in dB
+        const float rangeMM = gGroup.momentaryMaxDb - gGroup.momentaryMinDb;
+        const float rangeSM = gGroup.shortTermMaxDb - gGroup.shortTermMinDb;
+
+        // Default: draw bands for all groups
+        bool drawMomentaryBand = true;
+        bool drawShortTermBand = true;
+
+        // From level 2 upward (span >= 16 frames), only draw bands where there is
+        // real internal variation: (max - min) >= threshold.
+        if (selectedLevel >= 2)
         {
-            // Decide per-group whether to draw bands, especially at coarse levels.
-            const float rangeMM = gGroup.momentaryMaxDb - gGroup.momentaryMinDb;
-            const float rangeSM = gGroup.shortTermMaxDb - gGroup.shortTermMinDb;
+            const float bandRangeThresholdDb = 3.0f; // tweak: 3–6 dB typical
 
-            bool drawMomentaryBand = true;
-            bool drawShortTermBand = true;
-
-            if (useSelectiveBands)
-            {
-                // At coarse levels, only draw bands where there's real variation.
-                drawMomentaryBand = (rangeMM >= bandRangeThresholdDb);
-                drawShortTermBand = (rangeSM >= bandRangeThresholdDb);
-            }
-
-            // Short-term band (cyan-ish, behind)
-            if (drawShortTermBand)
-            {
-                g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.6f));
-                g.drawLine (x, ySM, x, ySm, 1.0f);
-            }
-
-            // Momentary band (lime-ish, on top)
-            if (drawMomentaryBand)
-            {
-                g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.7f));
-                g.drawLine (x, yMM, x, yMm, 1.2f);
-            }
+            drawMomentaryBand = (rangeMM >= bandRangeThresholdDb);
+            drawShortTermBand = (rangeSM >= bandRangeThresholdDb);
         }
 
-        if (showLines)
+        // Short-term band (cyan-ish, behind)
+        if (drawShortTermBand)
         {
-            if (! startedRepS) { pathRepS.startNewSubPath (x, yRepS); startedRepS = true; }
-            else              { pathRepS.lineTo         (x, yRepS); }
-
-            if (! startedRepM) { pathRepM.startNewSubPath (x, yRepM); startedRepM = true; }
-            else              { pathRepM.lineTo          (x, yRepM); }
+            g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.6f));
+            g.drawLine (x, ySM, x, ySm, 1.0f);
         }
+
+        // Momentary band (lime-ish, on top)
+        if (drawMomentaryBand)
+        {
+            g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.7f));
+            g.drawLine (x, yMM, x, yMm, 1.2f);
+        }
+    }
     }
 
     if (showLines)
@@ -716,6 +725,9 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     // Overlay info (debug/feedback)
     g.setColour (juce::Colours::white);
     g.setFont (14.0f);
+
+    const auto& Lsel        = levels[(size_t) selectedLevel];
+    const double spanSeconds = (double) Lsel.spanFrames / visualFrameRate;
 
     juce::String info = "Level: " + juce::String (selectedLevel) +
                         " (span " + juce::String (Lsel.spanFrames) + " frames, " +
