@@ -566,7 +566,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     std::vector<int>        framesAgo;
     buildVisibleGroupsForLevel (selectedLevel, width, groups, framesAgo);
 
-    const size_t n = groups.size();
+        const size_t n = groups.size();
     if (n < 2)
         return;
 
@@ -574,11 +574,47 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     std::vector<float> repM, repS;
     computeRepresentativeCurves (groups, repM, repS);
 
-        // Draw bands and lines
+    //==========================================================================
+    // [LINE-LOD] Decide how (or if) to draw lines, based on level & group count
+    //==========================================================================
+
+    const size_t maxFullResLinePoints   = 1000;  // up to this: draw every point
+    const size_t maxDecimatedLinePoints = 2000;  // above this: no lines, bands only
+
+    bool drawLinesThisFrame = showLines; // user toggle
+    int  lineDecimation     = 1;         // 1 = no decimation; 2 = every 2nd, etc.
+
+    if (drawLinesThisFrame)
+    {
+        if (selectedLevel >= 4)
+        {
+            // Levels 4 and 5: bands only, no lines.
+            drawLinesThisFrame = false;
+        }
+        else
+        {
+            if (n > maxDecimatedLinePoints)
+            {
+                // Too many groups -> bands only.
+                drawLinesThisFrame = false;
+            }
+            else if (n > maxFullResLinePoints)
+            {
+                // Moderate overload: decimate line points.
+                lineDecimation = 2; // draw every 2nd point
+            }
+        }
+    }
+
+    // Band thickness: at coarse levels, make bands a bit thicker.
+    const float shortTermThickness = (selectedLevel >= 4 ? 1.5f : 1.0f);
+    const float momentaryThickness = (selectedLevel >= 4 ? 2.0f : 1.2f);
+
+    // Draw bands and lines
     juce::Path pathRepM, pathRepS;
     bool startedRepM = false, startedRepS = false;
 
-    for (size_t i = 0; i < n; ++i)
+        for (size_t i = 0; i < n; ++i)
     {
         const float x = w - (float) framesAgo[i] * (float) zoomX;
         if (x < -10.0f)
@@ -594,54 +630,67 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         const float yRepM = dbToY (repM[i], h);
         const float yRepS = dbToY (repS[i], h);
 
-        if (showBands)
+        //======================================================================
+        // Bands (vertical min->max lines)
+        //======================================================================
+        //
+        // - Level 0: no bands (lines only).
+        // - Level >= 1: selective bands:
+        //     draw only if internal range (max-min) >= threshold.
+        //======================================================================
+
+        if (showBands && selectedLevel > 0) // L0: no bands at all
         {
             // Per-group dynamic range in dB
             const float rangeMM = gGroup.momentaryMaxDb - gGroup.momentaryMinDb;
             const float rangeSM = gGroup.shortTermMaxDb - gGroup.shortTermMinDb;
 
-            // Default: draw bands for all groups at low levels
+            // Default: draw bands for this group
             bool drawMomentaryBand = true;
             bool drawShortTermBand = true;
 
-            // From level 2 upward, only draw bands where there is real variation
-            // (max - min) >= threshold.
-            if (selectedLevel >= 2)
-            {
-                const float bandRangeThresholdDb = 3.0f; // tweak: 3–6 dB typical
+            // At all levels >= 1: only draw bands where there is real variation.
+            const float bandRangeThresholdDb = 3.0f; // tweak: 3–6 dB typical
 
-                drawMomentaryBand = (rangeMM >= bandRangeThresholdDb);
-                drawShortTermBand = (rangeSM >= bandRangeThresholdDb);
-            }
+            drawMomentaryBand = (rangeMM >= bandRangeThresholdDb);
+            drawShortTermBand = (rangeSM >= bandRangeThresholdDb);
 
             // Short-term band (cyan-ish, behind)
             if (drawShortTermBand)
             {
                 g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.6f));
-                g.drawLine (x, ySM, x, ySm, 1.0f);
+                g.drawLine (x, ySM, x, ySm, shortTermThickness);
             }
 
             // Momentary band (lime-ish, on top)
             if (drawMomentaryBand)
             {
                 g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.7f));
-                g.drawLine (x, yMM, x, yMm, 1.2f);
+                g.drawLine (x, yMM, x, yMm, momentaryThickness);
             }
         }
 
-        if (showLines)
-        {
-            // Short-term representative curve
-            if (! startedRepS) { pathRepS.startNewSubPath (x, yRepS); startedRepS = true; }
-            else              { pathRepS.lineTo         (x, yRepS); }
+        //======================================================================
+        // Lines (representative curves)
+        //======================================================================
 
-            // Momentary representative curve
-            if (! startedRepM) { pathRepM.startNewSubPath (x, yRepM); startedRepM = true; }
-            else              { pathRepM.lineTo          (x, yRepM); }
+        if (drawLinesThisFrame)
+        {
+            // Decimate lines if requested (e.g. every 2nd point).
+            if ((lineDecimation <= 1) || ((i % (size_t) lineDecimation) == 0))
+            {
+                // Short-term representative curve
+                if (! startedRepS) { pathRepS.startNewSubPath (x, yRepS); startedRepS = true; }
+                else              { pathRepS.lineTo         (x, yRepS); }
+
+                // Momentary representative curve
+                if (! startedRepM) { pathRepM.startNewSubPath (x, yRepM); startedRepM = true; }
+                else              { pathRepM.lineTo          (x, yRepM); }
+            }
         }
     }
 
-    if (showLines)
+        if (drawLinesThisFrame)
     {
         // Short-term representative curve
         g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.9f));
