@@ -574,7 +574,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     std::vector<float> repM, repS;
     computeRepresentativeCurves (groups, repM, repS);
 
-    // Draw bands and lines
+        // Draw bands and lines
     juce::Path pathRepM, pathRepS;
     bool startedRepM = false, startedRepS = false;
 
@@ -594,40 +594,51 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         const float yRepM = dbToY (repM[i], h);
         const float yRepS = dbToY (repS[i], h);
 
-            if (showBands)
-    {
-        // Per-group dynamic range in dB
-        const float rangeMM = gGroup.momentaryMaxDb - gGroup.momentaryMinDb;
-        const float rangeSM = gGroup.shortTermMaxDb - gGroup.shortTermMinDb;
-
-        // Default: draw bands for all groups
-        bool drawMomentaryBand = true;
-        bool drawShortTermBand = true;
-
-        // From level 2 upward (span >= 16 frames), only draw bands where there is
-        // real internal variation: (max - min) >= threshold.
-        if (selectedLevel >= 2)
+        if (showBands)
         {
-            const float bandRangeThresholdDb = 3.0f; // tweak: 3–6 dB typical
+            // Per-group dynamic range in dB
+            const float rangeMM = gGroup.momentaryMaxDb - gGroup.momentaryMinDb;
+            const float rangeSM = gGroup.shortTermMaxDb - gGroup.shortTermMinDb;
 
-            drawMomentaryBand = (rangeMM >= bandRangeThresholdDb);
-            drawShortTermBand = (rangeSM >= bandRangeThresholdDb);
+            // Default: draw bands for all groups at low levels
+            bool drawMomentaryBand = true;
+            bool drawShortTermBand = true;
+
+            // From level 2 upward, only draw bands where there is real variation
+            // (max - min) >= threshold.
+            if (selectedLevel >= 2)
+            {
+                const float bandRangeThresholdDb = 3.0f; // tweak: 3–6 dB typical
+
+                drawMomentaryBand = (rangeMM >= bandRangeThresholdDb);
+                drawShortTermBand = (rangeSM >= bandRangeThresholdDb);
+            }
+
+            // Short-term band (cyan-ish, behind)
+            if (drawShortTermBand)
+            {
+                g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.6f));
+                g.drawLine (x, ySM, x, ySm, 1.0f);
+            }
+
+            // Momentary band (lime-ish, on top)
+            if (drawMomentaryBand)
+            {
+                g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.7f));
+                g.drawLine (x, yMM, x, yMm, 1.2f);
+            }
         }
 
-        // Short-term band (cyan-ish, behind)
-        if (drawShortTermBand)
+        if (showLines)
         {
-            g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.6f));
-            g.drawLine (x, ySM, x, ySm, 1.0f);
-        }
+            // Short-term representative curve
+            if (! startedRepS) { pathRepS.startNewSubPath (x, yRepS); startedRepS = true; }
+            else              { pathRepS.lineTo         (x, yRepS); }
 
-        // Momentary band (lime-ish, on top)
-        if (drawMomentaryBand)
-        {
-            g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.7f));
-            g.drawLine (x, yMM, x, yMm, 1.2f);
+            // Momentary representative curve
+            if (! startedRepM) { pathRepM.startNewSubPath (x, yRepM); startedRepM = true; }
+            else              { pathRepM.lineTo          (x, yRepM); }
         }
-    }
     }
 
     if (showLines)
