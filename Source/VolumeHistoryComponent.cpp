@@ -37,7 +37,7 @@ VolumeHistoryComponent::VolumeHistoryComponent (LevelScopeAudioProcessor& proc)
     resetHistoryLevels();
 
     setOpaque (true);
-    startTimerHz (60); // GUI update timer at 60 Hz
+    startTimerHz (60); // GUI tick at 60 Hz, but we will repaint only when new data arrives.
 }
 
 VolumeHistoryComponent::~VolumeHistoryComponent()
@@ -51,7 +51,6 @@ VolumeHistoryComponent::~VolumeHistoryComponent()
 
 void VolumeHistoryComponent::initialiseHistoryLevels()
 {
-    // RAW level capacity: number of frames to cover 3 hours at visualFrameRate.
     rawCapacityFrames = (int) std::ceil (historyLengthSeconds * visualFrameRate);
     if (rawCapacityFrames < 1)
         rawCapacityFrames = 1;
@@ -60,8 +59,8 @@ void VolumeHistoryComponent::initialiseHistoryLevels()
     {
         auto& L0 = levels[0];
         L0.levelIndex     = 0;
-        L0.groupsPerGroup = 1;   // not used at L0
-        L0.spanFrames     = 1;   // 1 RAW frame per group
+        L0.groupsPerGroup = 1;
+        L0.spanFrames     = 1;
         L0.capacity       = rawCapacityFrames;
         L0.groups.assign ((size_t) rawCapacityFrames,
                           FrameGroup { minDb, minDb, minDb, minDb });
@@ -129,19 +128,25 @@ void VolumeHistoryComponent::resetHistoryLevels()
 
 void VolumeHistoryComponent::timerCallback()
 {
-    drainProcessorFifo();
-    repaint();
+    // [STEP1-PERF]
+    // Only repaint when new frames arrived.
+    // This avoids forcing a constant 60 FPS UI load when the FIFO is empty.
+    const bool gotNewData = drainProcessorFifo();
+    if (gotNewData)
+        repaint();
 }
 
 //==============================================================================
 // [HISTORY-UPDATE]
 //==============================================================================
 
-void VolumeHistoryComponent::drainProcessorFifo()
+bool VolumeHistoryComponent::drainProcessorFifo()
 {
     constexpr int chunkSize = 512;
     float momentaryValues [chunkSize];
     float shortTermValues [chunkSize];
+
+    bool readAny = false;
 
     for (;;)
     {
@@ -151,9 +156,13 @@ void VolumeHistoryComponent::drainProcessorFifo()
         if (numRead <= 0)
             break;
 
+        readAny = true;
+
         for (int i = 0; i < numRead; ++i)
             pushFrameToHistory (momentaryValues[i], shortTermValues[i]);
     }
+
+    return readAny;
 }
 
 void VolumeHistoryComponent::pushFrameToHistory (float momentaryRms,
@@ -168,10 +177,7 @@ void VolumeHistoryComponent::pushFrameToHistory (float momentaryRms,
     fg.shortTermMinDb = dbS;
     fg.shortTermMaxDb = dbS;
 
-    // Level 0 (RAW): each frame is a fully-formed group.
     writeGroupToLevel (0, fg);
-
-    // Propagate upwards: each higher level accumulates lower-level groups.
     accumulateToHigherLevels (1, fg);
 }
 
@@ -203,12 +209,10 @@ void VolumeHistoryComponent::accumulateToHigherLevels (int levelIndex,
 
     if (L.pendingCount == 0)
     {
-        // First group in this new aggregate.
         L.pending = sourceGroup;
     }
     else
     {
-        // Expand min/max to include the incoming group's range.
         L.pending.momentaryMinDb = std::min (L.pending.momentaryMinDb, sourceGroup.momentaryMinDb);
         L.pending.momentaryMaxDb = std::max (L.pending.momentaryMaxDb, sourceGroup.momentaryMaxDb);
         L.pending.shortTermMinDb = std::min (L.pending.shortTermMinDb, sourceGroup.shortTermMinDb);
@@ -219,8 +223,6 @@ void VolumeHistoryComponent::accumulateToHigherLevels (int levelIndex,
 
     if (L.pendingCount >= L.groupsPerGroup)
     {
-        // Aggregate is complete: write it to this level, reset pending, and
-        // propagate the finished group to the next higher level.
         FrameGroup finished = L.pending;
 
         L.pendingCount = 0;
@@ -230,8 +232,6 @@ void VolumeHistoryComponent::accumulateToHigherLevels (int levelIndex,
         L.pending.shortTermMaxDb = -std::numeric_limits<float>::infinity();
 
         writeGroupToLevel (levelIndex, finished);
-
-        // Recurse upwards
         accumulateToHigherLevels (levelIndex + 1, finished);
     }
 }
@@ -288,7 +288,6 @@ VolumeHistoryComponent::FrameGroup VolumeHistoryComponent::getGroupAgo (int leve
 
 juce::int64 VolumeHistoryComponent::getTotalFramesL0() const noexcept
 {
-    // Level 0: one group per RAW loudness frame.
     const auto& L0 = levels[0];
     return L0.totalGroups;
 }
@@ -299,7 +298,6 @@ juce::int64 VolumeHistoryComponent::getTotalFramesL0() const noexcept
 
 int VolumeHistoryComponent::selectBestLevelForCurrentZoom() const noexcept
 {
-    // framesPerPixel: how many RAW frames correspond to 1 pixel horizontally.
     const double safeZoomX       = (zoomX > 1.0e-9 ? zoomX : 1.0e-9);
     const double framesPerPixel  = 1.0 / safeZoomX;
 
@@ -312,17 +310,16 @@ int VolumeHistoryComponent::selectBestLevelForCurrentZoom() const noexcept
         const int   available = getAvailableGroups (level);
 
         if (available < 2)
-            continue; // skip empty/inadequate levels
+            continue;
 
         const double span = (double) L.spanFrames;
         if (span <= 0.0)
             continue;
 
-        const double ratio = span / framesPerPixel; // we want ratio ~ 1
+        const double ratio = span / framesPerPixel;
         if (ratio <= 0.0)
             continue;
 
-        // Score: closeness of ratio to 1 in log2 space (so 0.5 and 2 both give score 1).
         const double score = std::abs (std::log2 (ratio));
 
         if (score < bestScore)
@@ -370,7 +367,7 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
         if (numerator >= 0.0)
         {
             const double maxGroupsFloat = numerator / (double) spanFrames;
-            maxGroupsByX = (int) std::floor (maxGroupsFloat) + 1; // +1 for groupsAgo = 0
+            maxGroupsByX = (int) std::floor (maxGroupsFloat) + 1;
         }
     }
 
@@ -384,15 +381,12 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
     outGroups.resize ((size_t) groupsToUse);
     outFramesAgo.resize ((size_t) groupsToUse);
 
-    // We want outGroups in chronological order: index 0 = oldest, last = most recent.
-    // getGroupAgo(0) = most recent, getGroupAgo(1) = just before that, etc.
-
     for (int groupsAgo = 0; groupsAgo < groupsToUse; ++groupsAgo)
     {
         const FrameGroup g = getGroupAgo (levelIndex, groupsAgo);
-        const int        chronologicalIndex = groupsToUse - 1 - groupsAgo;
+        const int chronologicalIndex = groupsToUse - 1 - groupsAgo;
 
-        outGroups[(size_t) chronologicalIndex]     = g;
+        outGroups[(size_t) chronologicalIndex]    = g;
         outFramesAgo[(size_t) chronologicalIndex] = pendingFrames + groupsAgo * spanFrames;
     }
 }
@@ -416,7 +410,7 @@ void VolumeHistoryComponent::computeRepresentativeCurves (const std::vector<Fram
     repMomentary.resize (n);
     repShortTerm.resize (n);
 
-    const float epsilonTrend = 0.1f;  // dB threshold to avoid flicker
+    const float epsilonTrend = 0.1f;
 
     float prevCenterM = 0.0f;
     float prevCenterS = 0.0f;
@@ -440,7 +434,6 @@ void VolumeHistoryComponent::computeRepresentativeCurves (const std::vector<Fram
 
         if (! hasPrev)
         {
-            // First point: use center
             hasPrev     = true;
             prevCenterM = centerM;
             prevCenterS = centerS;
@@ -450,23 +443,17 @@ void VolumeHistoryComponent::computeRepresentativeCurves (const std::vector<Fram
             const float trendM = centerM - prevCenterM;
             const float trendS = centerS - prevCenterS;
 
-            // Hard version:
-            //   trend > +ε  -> use max
-            //   trend < -ε  -> use min
-            //   otherwise   -> center
             float alphaM = 0.5f;
-            if (trendM >  epsilonTrend)      alphaM = 1.0f;  // upward -> max
-            else if (trendM < -epsilonTrend) alphaM = 0.0f;  // downward -> min
+            if (trendM >  epsilonTrend)      alphaM = 1.0f;
+            else if (trendM < -epsilonTrend) alphaM = 0.0f;
 
             float alphaS = 0.5f;
             if (trendS >  epsilonTrend)      alphaS = 1.0f;
             else if (trendS < -epsilonTrend) alphaS = 0.0f;
 
-            // Interpolate inside [min, max]
             rawRepM = minM + alphaM * (maxM - minM);
             rawRepS = minS + alphaS * (maxS - minS);
 
-            // Clamp to band, just to be safe
             rawRepM = juce::jlimit (minM, maxM, rawRepM);
             rawRepS = juce::jlimit (minS, maxS, rawRepS);
 
@@ -474,7 +461,6 @@ void VolumeHistoryComponent::computeRepresentativeCurves (const std::vector<Fram
             prevCenterS = centerS;
         }
 
-        // Smoothing disabled: use rawRep directly
         repMomentary[i] = rawRepM;
         repShortTerm[i] = rawRepS;
     }
@@ -495,7 +481,7 @@ float VolumeHistoryComponent::dbToY (float db, float height) const noexcept
 
     const float clamped = juce::jlimit (bottomDb, topDb, db);
 
-    const float norm = (clamped - bottomDb) / effectiveRange; // 0 at bottom, 1 at top
+    const float norm = (clamped - bottomDb) / effectiveRange;
     const float y    = height * (1.0f - norm);
 
     return y;
@@ -507,8 +493,7 @@ float VolumeHistoryComponent::dbToY (float db, float height) const noexcept
 
 void VolumeHistoryComponent::resized()
 {
-    // Initialise X zoom so that, roughly, 10 seconds are visible by default,
-    // unless the user has already chosen a custom zoom.
+    // Default X zoom: ~10 seconds visible, unless user already zoomed.
     if (! hasCustomZoomX)
     {
         const int w = getWidth();
@@ -518,6 +503,20 @@ void VolumeHistoryComponent::resized()
             zoomX = (double) w / (desiredVisibleSeconds * visualFrameRate);
             zoomX = juce::jlimit (minZoomX, maxZoomX, zoomX);
         }
+    }
+
+    // [STEP1-PERF]
+    // Reserve scratch buffers so paint() doesn't allocate as the session runs.
+    // We size this roughly to screen width (plus overscan). Worst-case visible
+    // groups is typically on the order of pixels, not hours of frames.
+    {
+        const int w = juce::jmax (1, getWidth());
+        const size_t reserveCount = (size_t) juce::jlimit (256, 8192, w + 512);
+
+        scratchVisibleGroups.reserve (reserveCount);
+        scratchVisibleFramesAgo.reserve (reserveCount);
+        scratchRepMomentaryDb.reserve (reserveCount);
+        scratchRepShortTermDb.reserve (reserveCount);
     }
 }
 
@@ -529,7 +528,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 {
     auto bounds = getLocalBounds().toFloat();
 
-    // Background: darker variant of the momentary lime
     auto backgroundColour = juce::Colours::limegreen.darker (3.0f);
     g.fillAll (backgroundColour);
 
@@ -539,7 +537,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     if (width <= 1 || height <= 0.0f)
         return;
 
-    // Horizontal reference lines (e.g. -90, -60, -30, 0 dB)
+    // Reference lines
     g.setColour (juce::Colours::darkgrey.withMultipliedAlpha (0.4f));
     const int numLines = 4;
     for (int i = 0; i <= numLines; ++i)
@@ -558,103 +556,89 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     const float w = bounds.getWidth();
     const float h = bounds.getHeight();
 
-    // Choose best level-of-detail based on current zoom
     const int selectedLevel = selectBestLevelForCurrentZoom();
 
-    // Build visible groups and their framesAgo
-    std::vector<FrameGroup> groups;
-    std::vector<int>        framesAgo;
-    buildVisibleGroupsForLevel (selectedLevel, width, groups, framesAgo);
+    // [STEP1-PERF] Reuse member scratch vectors (no per-frame allocations)
+    buildVisibleGroupsForLevel (selectedLevel, width, scratchVisibleGroups, scratchVisibleFramesAgo);
 
-    const size_t n = groups.size();
+    const size_t n = scratchVisibleGroups.size();
     if (n < 2)
         return;
 
-    // Compute representative curves inside bands
-    std::vector<float> repM, repS;
-    computeRepresentativeCurves (groups, repM, repS);
+    computeRepresentativeCurves (scratchVisibleGroups, scratchRepMomentaryDb, scratchRepShortTermDb);
 
-    // Draw bands and lines
-    juce::Path pathRepM, pathRepS;
+    // [STEP1-PERF] Reuse member paths
+    scratchPathRepM.clear();
+    scratchPathRepS.clear();
+
     bool startedRepM = false, startedRepS = false;
+
+    const auto colBandS = juce::Colours::cyan.withMultipliedAlpha (0.6f);
+    const auto colBandM = juce::Colours::limegreen.withMultipliedAlpha (0.7f);
+    const auto colLineS = juce::Colours::cyan.withMultipliedAlpha (0.9f);
+    const auto colLineM = juce::Colours::limegreen;
 
     for (size_t i = 0; i < n; ++i)
     {
-        const float x = w - (float) framesAgo[i] * (float) zoomX;
+        const float x = w - (float) scratchVisibleFramesAgo[i] * (float) zoomX;
         if (x < -10.0f)
-            continue; // off-screen to the left
+            continue;
 
-        const auto& gGroup = groups[i];
+        const auto& gGroup = scratchVisibleGroups[i];
 
         const float yMM = dbToY (gGroup.momentaryMaxDb, h);
         const float yMm = dbToY (gGroup.momentaryMinDb, h);
         const float ySM = dbToY (gGroup.shortTermMaxDb, h);
         const float ySm = dbToY (gGroup.shortTermMinDb, h);
 
-        const float yRepM = dbToY (repM[i], h);
-        const float yRepS = dbToY (repS[i], h);
+        const float yRepM = dbToY (scratchRepMomentaryDb[i], h);
+        const float yRepS = dbToY (scratchRepShortTermDb[i], h);
 
-        //======================================================================
-        // Bands (vertical min->max lines)
-        //
-        // - Level 0: no bands (lines only).
-        // - Level >= 1: selective bands:
-        //     draw only if internal range (max-min) >= threshold.
-        //======================================================================
-
-        if (showBands && selectedLevel > 0) // L0: no bands at all
+        // Bands
+        if (showBands && selectedLevel > 0)
         {
             const float rangeMM = gGroup.momentaryMaxDb - gGroup.momentaryMinDb;
             const float rangeSM = gGroup.shortTermMaxDb - gGroup.shortTermMinDb;
 
-            const float bandRangeThresholdDb = 3.0f; // tweak: 3–6 dB typical
+            const float bandRangeThresholdDb = 3.0f;
 
             const bool drawMomentaryBand = (rangeMM >= bandRangeThresholdDb);
             const bool drawShortTermBand = (rangeSM >= bandRangeThresholdDb);
 
-            // Short-term band (cyan-ish, behind)
             if (drawShortTermBand)
             {
-                g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.6f));
+                g.setColour (colBandS);
                 g.drawLine (x, ySM, x, ySm, 1.0f);
             }
 
-            // Momentary band (lime-ish, on top)
             if (drawMomentaryBand)
             {
-                g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.7f));
+                g.setColour (colBandM);
                 g.drawLine (x, yMM, x, yMm, 1.2f);
             }
         }
 
-        // Lines (representative curves)
+        // Lines
         if (showLines)
         {
-            // Short-term representative curve
-            if (! startedRepS) { pathRepS.startNewSubPath (x, yRepS); startedRepS = true; }
-            else              { pathRepS.lineTo         (x, yRepS); }
+            if (! startedRepS) { scratchPathRepS.startNewSubPath (x, yRepS); startedRepS = true; }
+            else               { scratchPathRepS.lineTo         (x, yRepS); }
 
-            // Momentary representative curve
-            if (! startedRepM) { pathRepM.startNewSubPath (x, yRepM); startedRepM = true; }
-            else              { pathRepM.lineTo          (x, yRepM); }
+            if (! startedRepM) { scratchPathRepM.startNewSubPath (x, yRepM); startedRepM = true; }
+            else               { scratchPathRepM.lineTo          (x, yRepM); }
         }
     }
 
     if (showLines)
     {
-        // Short-term representative curve
-        g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.9f));
-        g.strokePath (pathRepS, juce::PathStrokeType (1.5f));
+        g.setColour (colLineS);
+        g.strokePath (scratchPathRepS, juce::PathStrokeType (1.5f));
 
-        // Momentary representative curve
-        g.setColour (juce::Colours::limegreen);
-        g.strokePath (pathRepM, juce::PathStrokeType (2.0f));
+        g.setColour (colLineM);
+        g.strokePath (scratchPathRepM, juce::PathStrokeType (2.0f));
     }
 
-    //==========================================================================
-    // Time ruler at bottom: HH:MM:SS, auto-adjusted spacing
-    //==========================================================================
-
+    // Time ruler
     const float rulerHeight   = 16.0f;
     const float rulerBaseY    = height - 2.0f;
     const float tickTopY      = rulerBaseY - 6.0f;
@@ -682,7 +666,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             if (tLeft < tLeftLimit)
                 tLeft = tLeftLimit;
 
-            // Choose tick spacing
             const double maxLabels = 20.0;
             const double tickSteps[] = {
                 0.5, 1.0, 2.0, 5.0,
@@ -732,11 +715,11 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         }
     }
 
-    // Overlay info (debug/feedback)
+    // Overlay info
     g.setColour (juce::Colours::white);
     g.setFont (14.0f);
 
-    const auto& Lsel        = levels[(size_t) selectedLevel];
+    const auto& Lsel         = levels[(size_t) selectedLevel];
     const double spanSeconds = (double) Lsel.spanFrames / visualFrameRate;
 
     juce::String info = "Level: " + juce::String (selectedLevel) +
@@ -800,7 +783,6 @@ void VolumeHistoryComponent::mouseWheelMove (const juce::MouseEvent& event,
 
 void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
 {
-    // Shift-click toggles bands; plain click toggles lines.
     if (event.mods.isShiftDown())
         showBands = ! showBands;
     else
