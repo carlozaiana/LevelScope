@@ -13,24 +13,20 @@ class LevelScopeAudioProcessor;
 //   - Stores multi-level min/max loudness history (3h at 60 Hz).
 //   - Level 0: RAW frames (1 frame per loudness-frame).
 //   - Level N>0: groups of 4 previous-level groups (multi-resolution pyramid).
-//   - For drawing, selects the best level based on zoom, so that the number
-//     of groups to draw is ~ proportional to pixel width (fast).
-//   - At each level, draws:
-//       * vertical bar from min->max (envelope band),
-//       * a representative line that stays inside the band and tends to
-//         hug the top on upward trends and the bottom on downward trends.
+//   - For drawing, selects the best level based on zoom.
 //
 // [SECTION TAGS]
-//   - [HISTORY-STRUCTS]      : data structures for levels & groups
-//   - [HISTORY-INIT]         : initialisation of levels
-//   - [HISTORY-UPDATE]       : pushing new frames into history
-//   - [HISTORY-ACCESS]       : helpers to read from levels
-//   - [LOD-SELECTION]        : choose which level to draw based on zoom
-//   - [REP-LINE]             : compute representative line inside min/max band
-//   - [DRAW]                 : painting logic
-//   - [ZOOM]                 : horizontal/vertical zoom handling
-//   - [MOUSE]                : mouse wheel & clicks
-//   - [STEP1-PERF]           : persistent buffers + repaint only on new data
+//   - [HISTORY-STRUCTS]
+//   - [HISTORY-INIT]
+//   - [HISTORY-UPDATE]
+//   - [HISTORY-ACCESS]
+//   - [LOD-SELECTION]
+//   - [REP-LINE]
+//   - [DRAW]
+//   - [ZOOM]
+//   - [MOUSE]
+//   - [STEP1-PERF]        : persistent buffers + repaint only on new data
+//   - [STEP2-LOD-CAP]     : cap drawable points + improved LOD selection
 //==============================================================================
 
 class VolumeHistoryComponent : public juce::Component,
@@ -40,7 +36,6 @@ public:
     explicit VolumeHistoryComponent (LevelScopeAudioProcessor& processor);
     ~VolumeHistoryComponent() override;
 
-    // juce::Component
     void paint (juce::Graphics& g) override;
     void resized() override;
 
@@ -64,16 +59,16 @@ private:
 
     struct HistoryLevel
     {
-        int                 levelIndex      = 0;   // 0 = RAW
-        int                 groupsPerGroup  = 1;   // N previous-level groups per group at this level (>=1)
-        int                 spanFrames      = 1;   // how many RAW (L0) frames per group at this level
-        int                 capacity        = 0;   // number of groups stored (ring-buffer)
-        std::vector<FrameGroup> groups;           // ring-buffer of groups
-        int                 writeIndex      = 0;   // next write position in ring-buffer
-        juce::int64         totalGroups     = 0;   // total groups ever written (monotonic)
+        int                 levelIndex      = 0;
+        int                 groupsPerGroup  = 1;
+        int                 spanFrames      = 1;   // RAW frames covered by one group at this level
+        int                 capacity        = 0;
+        std::vector<FrameGroup> groups;           // ring-buffer
+        int                 writeIndex      = 0;
+        juce::int64         totalGroups     = 0;
 
-        FrameGroup          pending;              // aggregator for current not-yet-final group
-        int                 pendingCount    = 0;   // how many previous-level groups in 'pending'
+        FrameGroup          pending;
+        int                 pendingCount    = 0;
     };
 
     //==============================================================================
@@ -91,8 +86,6 @@ private:
 
     //==============================================================================
     // [HISTORY-UPDATE]
-    //   - Drain processor FIFO, convert RMS to dB, push as RAW L0 frames.
-    //   - Propagate groups up the multi-resolution pyramid.
     //==============================================================================
 
     // [STEP1-PERF] Return true if we actually read any frames this tick.
@@ -116,8 +109,17 @@ private:
     // [LOD-SELECTION]
     //==============================================================================
 
-    int selectBestLevelForCurrentZoom() const noexcept;
+    // [STEP2-LOD-CAP] Maximum number of drawable "points" we allow for lines/bands.
+    // Keep this roughly proportional to pixel width so work stays bounded.
+    int getMaxDrawablePoints (int widthPixels) const noexcept;
 
+    // [STEP2-LOD-CAP] Choose the lowest (most detailed) level that keeps the
+    // predicted drawable count <= getMaxDrawablePoints(widthPixels).
+    int selectBestLevelForCurrentZoom (int widthPixels) const noexcept;
+
+    // Build visible groups (chronological order) for a given level.
+    // [STEP2-LOD-CAP] If visible group count is too high, this function will
+    // aggregate multiple groups into one to keep output size bounded.
     void buildVisibleGroupsForLevel (int levelIndex,
                                      int widthPixels,
                                      std::vector<FrameGroup>& outGroups,
@@ -159,12 +161,12 @@ private:
 
     int rawCapacityFrames = 0;
 
-    static constexpr int maxLevels              = 6; // L0..L5
-    static constexpr int groupsPerLevel         = 4; // each level groups 4 previous-level groups
+    static constexpr int maxLevels      = 6; // L0..L5
+    static constexpr int groupsPerLevel = 4;
     std::array<HistoryLevel, maxLevels> levels;
 
     // Zoom parameters
-    double zoomX      = 5.0;     // pixels per RAW frame
+    double zoomX      = 5.0;
     double minZoomX   = 0.0005;
     double maxZoomX   = 1.333;
     double zoomY      = 1.0;
@@ -177,9 +179,7 @@ private:
     bool showLines = true;
 
     //==============================================================================
-    // [STEP1-PERF]
-    //   Persistent buffers reused every repaint to avoid heap churn in paint().
-    //   These are scratch buffers only (not state you need to save).
+    // [STEP1-PERF] scratch buffers
     //==============================================================================
 
     mutable std::vector<FrameGroup> scratchVisibleGroups;
