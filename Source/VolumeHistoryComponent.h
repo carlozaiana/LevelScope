@@ -9,12 +9,6 @@ class LevelScopeAudioProcessor;
 //==============================================================================
 // VolumeHistoryComponent
 //
-// [OVERVIEW]
-//   - Stores multi-level min/max loudness history (3h at 60 Hz).
-//   - Level 0: RAW frames (1 frame per loudness-frame).
-//   - Level N>0: groups of 4 previous-level groups (multi-resolution pyramid).
-//   - For drawing, selects the best level based on zoom.
-//
 // [SECTION TAGS]
 //   - [HISTORY-STRUCTS]
 //   - [HISTORY-INIT]
@@ -27,6 +21,8 @@ class LevelScopeAudioProcessor;
 //   - [MOUSE]
 //   - [STEP1-PERF]        : persistent buffers + repaint only on new data
 //   - [STEP2-LOD-CAP]     : cap drawable points + improved LOD selection
+//   - [RULER-XMAP]        : ruler uses same x-mapping as curves
+//   - [CACHE-STATIC]      : cached static background (grid + ruler baseline)
 //==============================================================================
 
 class VolumeHistoryComponent : public juce::Component,
@@ -109,8 +105,7 @@ private:
     // [LOD-SELECTION]
     //==============================================================================
 
-    // [STEP2-LOD-CAP] Maximum number of drawable "points" we allow for lines/bands.
-    // Keep this roughly proportional to pixel width so work stays bounded.
+    // [STEP2-LOD-CAP] Maximum number of drawable x-samples (points/groups).
     int getMaxDrawablePoints (int widthPixels) const noexcept;
 
     // [STEP2-LOD-CAP] Choose the lowest (most detailed) level that keeps the
@@ -118,8 +113,8 @@ private:
     int selectBestLevelForCurrentZoom (int widthPixels) const noexcept;
 
     // Build visible groups (chronological order) for a given level.
-    // [STEP2-LOD-CAP] If visible group count is too high, this function will
-    // aggregate multiple groups into one to keep output size bounded.
+    // [STEP2-LOD-CAP] If visible group count is too high, aggregate multiple
+    // groups into one to keep output size bounded.
     void buildVisibleGroupsForLevel (int levelIndex,
                                      int widthPixels,
                                      std::vector<FrameGroup>& outGroups,
@@ -138,6 +133,13 @@ private:
     //==============================================================================
 
     float dbToY (float db, float height) const noexcept;
+
+    //==============================================================================
+    // [CACHE-STATIC]
+    //==============================================================================
+
+    void markStaticBackgroundDirty() noexcept;
+    void rebuildStaticBackgroundIfNeeded();
 
     //==============================================================================
     // [ZOOM]
@@ -179,7 +181,7 @@ private:
     bool showLines = true;
 
     //==============================================================================
-    // [STEP1-PERF] scratch buffers
+    // [STEP1-PERF] scratch buffers reused every repaint
     //==============================================================================
 
     mutable std::vector<FrameGroup> scratchVisibleGroups;
@@ -190,6 +192,19 @@ private:
 
     mutable juce::Path              scratchPathRepM;
     mutable juce::Path              scratchPathRepS;
+
+    //==============================================================================
+    // [CACHE-STATIC]
+    //   Cached background layer (background fill + horizontal dB grid lines +
+    //   ruler baseline). Rebuilt only on resize or vertical zoom changes.
+    //==============================================================================
+
+    juce::Image cachedStaticBackground;
+    bool        staticBackgroundDirty = true;
+
+    int         cachedBgW = 0;
+    int         cachedBgH = 0;
+    double      cachedBgZoomY = 1.0;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VolumeHistoryComponent)
 };
