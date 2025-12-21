@@ -9,12 +9,6 @@ class LevelScopeAudioProcessor;
 //==============================================================================
 // VolumeHistoryComponent
 //
-// [OVERVIEW]
-//   - Stores multi-level min/max loudness history (3h at 60 Hz).
-//   - Level 0: RAW frames (1 frame per loudness-frame).
-//   - Level N>0: groups of 4 previous-level groups (multi-resolution pyramid).
-//   - For drawing, selects the best level based on zoom.
-//
 // [SECTION TAGS]
 //   - [HISTORY-STRUCTS]
 //   - [HISTORY-INIT]
@@ -27,6 +21,8 @@ class LevelScopeAudioProcessor;
 //   - [MOUSE]
 //   - [STEP1-PERF]        : persistent buffers + repaint only on new data
 //   - [STEP2-LOD-CAP]     : cap drawable points + improved LOD selection
+//   - [STEP3-BUDGET]      : lower point budget (~0.5 pt/px)
+//   - [STEP3-HYST]        : early switching + hysteresis to avoid boundary jitter
 //==============================================================================
 
 class VolumeHistoryComponent : public juce::Component,
@@ -109,17 +105,15 @@ private:
     // [LOD-SELECTION]
     //==============================================================================
 
-    // [STEP2-LOD-CAP] Maximum number of drawable "points" we allow for lines/bands.
-    // Keep this roughly proportional to pixel width so work stays bounded.
+    // [STEP3-BUDGET] Maximum number of drawable x-samples we allow.
     int getMaxDrawablePoints (int widthPixels) const noexcept;
 
-    // [STEP2-LOD-CAP] Choose the lowest (most detailed) level that keeps the
-    // predicted drawable count <= getMaxDrawablePoints(widthPixels).
-    int selectBestLevelForCurrentZoom (int widthPixels) const noexcept;
+    // [STEP3-HYST] Level selection with hysteresis (updates internal state).
+    int selectBestLevelForCurrentZoom (int widthPixels) noexcept;
 
     // Build visible groups (chronological order) for a given level.
-    // [STEP2-LOD-CAP] If visible group count is too high, this function will
-    // aggregate multiple groups into one to keep output size bounded.
+    // If visible group count is too high, this function aggregates multiple groups
+    // into one to keep output size bounded.
     void buildVisibleGroupsForLevel (int levelIndex,
                                      int widthPixels,
                                      std::vector<FrameGroup>& outGroups,
@@ -177,6 +171,10 @@ private:
 
     bool showBands = true;
     bool showLines = true;
+
+    // [STEP3-HYST]
+    // Keep a remembered draw level so we can apply hysteresis when zooming.
+    int currentDrawLevel = 0;
 
     //==============================================================================
     // [STEP1-PERF] scratch buffers
