@@ -38,7 +38,7 @@ VolumeHistoryComponent::VolumeHistoryComponent (LevelScopeAudioProcessor& proc)
 
     setOpaque (true);
 
-    // UI update rate (you already tested this successfully)
+    // UI update rate
     startTimerHz (30);
 
     markStaticBackgroundDirty();
@@ -132,7 +132,6 @@ void VolumeHistoryComponent::resetHistoryLevels()
 
 void VolumeHistoryComponent::timerCallback()
 {
-    // [STEP1-PERF] Only repaint if we got new frames.
     const bool gotNewData = drainProcessorFifo();
     if (gotNewData)
         repaint();
@@ -297,7 +296,7 @@ juce::int64 VolumeHistoryComponent::getTotalFramesL0() const noexcept
 int VolumeHistoryComponent::getMaxDrawablePoints (int widthPixels) const noexcept
 {
     const int w = juce::jmax (1, widthPixels);
-    const int target = (int) std::round ((double) w * 1.10); // +10% margin
+    const int target = (int) std::round ((double) w * 1.10);
     return juce::jlimit (256, 8192, target);
 }
 
@@ -393,7 +392,6 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
     if (groupsToUse <= 0)
         return;
 
-    // Hard cap output size (safety net)
     const int maxDrawablePoints = getMaxDrawablePoints (widthPixels);
 
     const int step = (groupsToUse > maxDrawablePoints
@@ -410,7 +408,6 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
     outGroups.resize ((size_t) outCount);
     outFramesAgo.resize ((size_t) outCount);
 
-    // Output in chronological order (oldest -> newest)
     for (int chunkChronoIndex = 0; chunkChronoIndex < outCount; ++chunkChronoIndex)
     {
         const int baseGroupsAgo = (outCount - 1 - chunkChronoIndex) * step;
@@ -424,15 +421,14 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
 
         for (int ga = baseGroupsAgo; ga <= endGroupsAgo; ++ga)
         {
-            const FrameGroup g = getGroupAgo (levelIndex, ga);
+            const FrameGroup gg = getGroupAgo (levelIndex, ga);
 
-            agg.momentaryMinDb = std::min (agg.momentaryMinDb, g.momentaryMinDb);
-            agg.momentaryMaxDb = std::max (agg.momentaryMaxDb, g.momentaryMaxDb);
-            agg.shortTermMinDb = std::min (agg.shortTermMinDb, g.shortTermMinDb);
-            agg.shortTermMaxDb = std::max (agg.shortTermMaxDb, g.shortTermMaxDb);
+            agg.momentaryMinDb = std::min (agg.momentaryMinDb, gg.momentaryMinDb);
+            agg.momentaryMaxDb = std::max (agg.momentaryMaxDb, gg.momentaryMaxDb);
+            agg.shortTermMinDb = std::min (agg.shortTermMinDb, gg.shortTermMinDb);
+            agg.shortTermMaxDb = std::max (agg.shortTermMaxDb, gg.shortTermMaxDb);
         }
 
-        // Place x at center of aggregated chunk (in "groupsAgo" space).
         const double centerGroupsAgo = 0.5 * (double) (baseGroupsAgo + endGroupsAgo);
         const double framesAgoD = (double) pendingFrames + centerGroupsAgo * (double) spanFrames;
         const int framesAgoI = (int) std::round (framesAgoD);
@@ -564,16 +560,12 @@ void VolumeHistoryComponent::rebuildStaticBackgroundIfNeeded()
     cachedBgZoomY = zoomY;
     staticBackgroundDirty = false;
 
-    // Use RGB: no alpha needed, slightly lighter weight.
     cachedStaticBackground = juce::Image (juce::Image::RGB, w, h, true);
-
     juce::Graphics gg (cachedStaticBackground);
 
-    // Background
     auto backgroundColour = juce::Colours::limegreen.darker (3.0f);
     gg.fillAll (backgroundColour);
 
-    // Horizontal reference lines (depend on zoomY via dbToY())
     gg.setColour (juce::Colours::darkgrey.withMultipliedAlpha (0.4f));
     const int numLines = 4;
     for (int i = 0; i <= numLines; ++i)
@@ -583,7 +575,6 @@ void VolumeHistoryComponent::rebuildStaticBackgroundIfNeeded()
         gg.drawHorizontalLine ((int) std::round (y), 0.0f, (float) w);
     }
 
-    // Ruler baseline (static)
     const float rulerBaseY = (float) h - 2.0f;
     gg.setColour (juce::Colours::darkgrey.withMultipliedAlpha (0.7f));
     gg.drawHorizontalLine ((int) std::round (rulerBaseY), 0.0f, (float) w);
@@ -595,7 +586,6 @@ void VolumeHistoryComponent::rebuildStaticBackgroundIfNeeded()
 
 void VolumeHistoryComponent::resized()
 {
-    // Default X zoom: ~10 seconds visible, unless user already zoomed.
     if (! hasCustomZoomX)
     {
         const int w = getWidth();
@@ -607,7 +597,7 @@ void VolumeHistoryComponent::resized()
         }
     }
 
-    // [STEP1-PERF] reserve scratch buffers
+    // Reserve scratch buffers
     {
         const int w = juce::jmax (1, getWidth());
         const size_t reserveCount = (size_t) juce::jlimit (256, 8192, w + 512);
@@ -618,7 +608,6 @@ void VolumeHistoryComponent::resized()
         scratchRepShortTermDb.reserve (reserveCount);
     }
 
-    // [CACHE-STATIC]
     markStaticBackgroundDirty();
 }
 
@@ -635,7 +624,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     if (width <= 1 || height <= 0)
         return;
 
-    // [CACHE-STATIC] draw cached background (fill + dB grid + ruler baseline)
+    // Cached background (fill + dB grid + ruler baseline)
     rebuildStaticBackgroundIfNeeded();
     if (cachedStaticBackground.isValid())
         g.drawImageAt (cachedStaticBackground, 0, 0);
@@ -643,10 +632,8 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     const juce::int64 totalFrames   = getTotalFramesL0();
     const juce::int64 availableRaw  = std::min<juce::int64> ((juce::int64) rawCapacityFrames, totalFrames);
 
-    // Choose best LOD based on zoom + width
     const int selectedLevel = selectBestLevelForCurrentZoom (width);
 
-    // Build visible groups (bounded size)
     buildVisibleGroupsForLevel (selectedLevel, width, scratchVisibleGroups, scratchVisibleFramesAgo);
 
     const size_t n = scratchVisibleGroups.size();
@@ -658,10 +645,17 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         scratchPathRepM.clear();
         scratchPathRepS.clear();
 
+        // [BAND-PATHS] Clear the batched band paths (we will stroke them once).
+        scratchPathBandM.clear();
+        scratchPathBandS.clear();
+
         bool startedRepM = false, startedRepS = false;
 
         const float w = bounds.getWidth();
         const float h = bounds.getHeight();
+
+        // Band drawing config (kept identical to old behaviour)
+        const float bandRangeThresholdDb = 3.0f;
 
         for (size_t i = 0; i < n; ++i)
         {
@@ -679,28 +673,30 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             const float yRepM = dbToY (scratchRepMomentaryDb[i], h);
             const float yRepS = dbToY (scratchRepShortTermDb[i], h);
 
-            // Bands
+            //==============================================================
+            // [BAND-PATHS]
+            // Instead of thousands of g.drawLine calls, batch vertical band
+            // segments into 2 Paths and stroke each once.
+            //==============================================================
             if (showBands && selectedLevel > 0)
             {
                 const float rangeMM = gGroup.momentaryMaxDb - gGroup.momentaryMinDb;
                 const float rangeSM = gGroup.shortTermMaxDb - gGroup.shortTermMinDb;
 
-                const float bandRangeThresholdDb = 3.0f;
-
                 if (rangeSM >= bandRangeThresholdDb)
                 {
-                    g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.6f));
-                    g.drawLine (x, ySM, x, ySm, 1.0f);
+                    scratchPathBandS.startNewSubPath (x, ySM);
+                    scratchPathBandS.lineTo (x, ySm);
                 }
 
                 if (rangeMM >= bandRangeThresholdDb)
                 {
-                    g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.7f));
-                    g.drawLine (x, yMM, x, yMm, 1.2f);
+                    scratchPathBandM.startNewSubPath (x, yMM);
+                    scratchPathBandM.lineTo (x, yMm);
                 }
             }
 
-            // Lines
+            // Lines (representative curves)
             if (showLines)
             {
                 if (! startedRepS) { scratchPathRepS.startNewSubPath (x, yRepS); startedRepS = true; }
@@ -711,6 +707,17 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             }
         }
 
+        // [BAND-PATHS] Stroke the band paths once each (cheap)
+        if (showBands && selectedLevel > 0)
+        {
+            g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.6f));
+            g.strokePath (scratchPathBandS, juce::PathStrokeType (1.0f));
+
+            g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.7f));
+            g.strokePath (scratchPathBandM, juce::PathStrokeType (1.2f));
+        }
+
+        // Stroke the rep curves
         if (showLines)
         {
             g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.9f));
@@ -722,10 +729,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     }
 
     //==========================================================================
-    // [RULER-XMAP] Time ruler: use SAME x-mapping as curves:
-    //   x = width - (framesAgo + pendingFramesOffset) * zoomX
-    //
-    // This keeps the grid aligned even when the curve doesn't fill the whole width.
+    // [RULER-XMAP] Time ruler: same x-mapping as curves
     //==========================================================================
 
     const float rulerHeight   = 16.0f;
@@ -737,17 +741,11 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     {
         const double tRight = (double) totalFrames / visualFrameRate;
 
-        // How much history do we currently have available (due to ring buffer limit)?
         const double availableSeconds = (double) availableRaw / visualFrameRate;
         const double tEarliest = juce::jmax (0.0, tRight - availableSeconds);
 
-        // IMPORTANT: curves at level>0 are offset by "pending frames".
-        // Use the same offset for tick-to-x mapping so ticks line up with curve x positions.
         const int pendingFramesOffset = getPendingFramesAtLevel (selectedLevel);
-        const double pendingSecondsOffset = (double) pendingFramesOffset / visualFrameRate;
 
-        // Visible frames limited by zoom and width:
-        // left edge (x=0) corresponds to framesAgo + pending = width/zoomX
         const double framesByWidth = (double) width / (zoomX > 1.0e-12 ? zoomX : 1.0e-12);
         const double effectiveFramesByWidth = juce::jmax (0.0, framesByWidth - (double) pendingFramesOffset);
 
@@ -758,7 +756,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         {
             const double tLeft = juce::jmax (tEarliest, tRight - visibleSeconds);
 
-            // Choose tick spacing (same list as before)
             const double maxLabels = 20.0;
             const double tickSteps[] = {
                 0.5, 1.0, 2.0, 5.0,
@@ -784,10 +781,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
             for (double t = firstTick; t <= tRight + 1e-9; t += tickStep)
             {
-                // framesAgo from absolute "now" (tRight)
                 const double framesAgo = (tRight - t) * visualFrameRate;
-
-                // Apply SAME x mapping as curve points (include pending offset)
                 const double framesAgoWithOffset = framesAgo + (double) pendingFramesOffset;
                 const float x = (float) ((double) width - framesAgoWithOffset * zoomX);
 
@@ -805,9 +799,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
                             rulerHeight,
                             juce::Justification::centred);
             }
-
-            // Optional: show that the curve is offset at coarse levels (debug-ish).
-            juce::ignoreUnused (pendingSecondsOffset);
         }
     }
 
@@ -859,7 +850,6 @@ void VolumeHistoryComponent::applyVerticalZoom (float wheelDelta)
     zoomY *= zoomFactor;
     zoomY  = juce::jlimit (minZoomY, maxZoomY, zoomY);
 
-    // [CACHE-STATIC] vertical zoom changes the y mapping, so cached grid is invalid
     markStaticBackgroundDirty();
 }
 

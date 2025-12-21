@@ -23,6 +23,7 @@ class LevelScopeAudioProcessor;
 //   - [STEP2-LOD-CAP]     : cap drawable points + improved LOD selection
 //   - [RULER-XMAP]        : ruler uses same x-mapping as curves
 //   - [CACHE-STATIC]      : cached static background (grid + ruler baseline)
+//   - [BAND-PATHS]        : batch all band segments into 2 paths (cheap draw calls)
 //==============================================================================
 
 class VolumeHistoryComponent : public juce::Component,
@@ -105,16 +106,9 @@ private:
     // [LOD-SELECTION]
     //==============================================================================
 
-    // [STEP2-LOD-CAP] Maximum number of drawable x-samples (points/groups).
     int getMaxDrawablePoints (int widthPixels) const noexcept;
-
-    // [STEP2-LOD-CAP] Choose the lowest (most detailed) level that keeps the
-    // predicted drawable count <= getMaxDrawablePoints(widthPixels).
     int selectBestLevelForCurrentZoom (int widthPixels) const noexcept;
 
-    // Build visible groups (chronological order) for a given level.
-    // [STEP2-LOD-CAP] If visible group count is too high, aggregate multiple
-    // groups into one to keep output size bounded.
     void buildVisibleGroupsForLevel (int levelIndex,
                                      int widthPixels,
                                      std::vector<FrameGroup>& outGroups,
@@ -193,10 +187,12 @@ private:
     mutable juce::Path              scratchPathRepM;
     mutable juce::Path              scratchPathRepS;
 
+    // [BAND-PATHS] Batched band paths (instead of thousands of drawLine calls)
+    mutable juce::Path              scratchPathBandM;
+    mutable juce::Path              scratchPathBandS;
+
     //==============================================================================
     // [CACHE-STATIC]
-    //   Cached background layer (background fill + horizontal dB grid lines +
-    //   ruler baseline). Rebuilt only on resize or vertical zoom changes.
     //==============================================================================
 
     juce::Image cachedStaticBackground;
