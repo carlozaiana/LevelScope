@@ -16,7 +16,6 @@ public:
     void resized() override;
 
 private:
-    LevelScopeAudioProcessor& processor;
     VolumeHistoryComponent    historyComponent;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LevelScopeAudioProcessorEditor)
