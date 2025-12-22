@@ -10,15 +10,15 @@ class LevelScopeAudioProcessor;
 // VolumeHistoryComponent
 //
 // [SECTION TAGS]
-//   - [STEP1-PERF]        : repaint only on new data + reused scratch buffers
-//   - [STEP2-LOD-CAP]     : cap drawable points + improved LOD selection
-//   - [CACHE-STATIC]      : cached static background (grid + ruler baseline)
-//   - [LINE-QUALITY]      : render mode (stroke vs polyline)
-//   - [BAND-PATHS]        : batch band segments into 2 paths
-//   - [POLYLINE-PEAK]     : peak-preserving per-pixel-column selection
-//   - [PIXEL-ADVANCE-FIX] : pixel advance by quantizing X (no wrap/jump-back)
-//   - [RULER-FRAMES]      : ruler ticks computed in integer frames (stable)
-//   - [RULER-HYST-FIX]    : tickStep hysteresis that doesn't thrash while zooming
+//   - [STEP1-PERF]             : repaint only on new data + reused scratch buffers
+//   - [STEP2-LOD-CAP]          : cap drawable points + improved LOD selection
+//   - [CACHE-STATIC]           : cached static background (grid + ruler baseline)
+//   - [LINE-QUALITY]           : render mode (stroke vs polyline)
+//   - [BAND-PATHS]             : batch band segments into 2 paths
+//   - [POLYLINE-PEAK]          : peak-preserving per-pixel-column selection
+//   - [PIXEL-ADVANCE-GLOBAL]   : global pixel-phase for coarse levels (no accordion)
+//   - [ACCORDION-FIX]          : shared phase eliminates per-point stepping mismatch
+//   - [RULER-FLIP-FIX]         : ruler uses same global phase when pixel-advance active
 //==============================================================================
 
 class VolumeHistoryComponent : public juce::Component,
@@ -117,8 +117,14 @@ private:
 
     float dbToY (float db, float height) const noexcept;
 
-    // [PIXEL-ADVANCE-FIX] quantize x to pixel centers in polyline mode
-    float quantizeXToPixelCenter (float x) const noexcept;
+    //==============================================================================
+    // [PIXEL-ADVANCE-GLOBAL]
+    // Returns a global fractional pixel phase in [0,1) based on totalFrames*zoomX.
+    // This is monotonic and stable (does NOT use pendingFramesOffset).
+    //==============================================================================
+    float getGlobalPixelPhase (juce::int64 totalFramesL0) const noexcept;
+
+    float snapToPixelCenter (float x) const noexcept;
 
     //==============================================================================
     // Cached background
@@ -139,11 +145,14 @@ private:
     // Polyline drawing (cheap)
     //==============================================================================
 
-    // [POLYLINE-PEAK] + [PIXEL-ADVANCE-FIX]
+    // [POLYLINE-PEAK] + [ACCORDION-FIX]
+    // Build a polyline bounded to ~one point per pixel column (peak-preserving),
+    // using a shared global phase so columns advance together.
     void buildPolylinePoints (const std::vector<int>& framesAgo,
                               const std::vector<float>& repDb,
                               float width,
                               float height,
+                              float globalPhasePx,
                               std::vector<juce::Point<float>>& outPoints) const;
 
     void drawPolyline (juce::Graphics& g,
@@ -151,8 +160,7 @@ private:
                        float thickness) const;
 
     //==============================================================================
-    // [RULER-HYST-FIX]
-    // Tick step hysteresis based on pixels-per-second (zoom), not visibleSeconds.
+    // Ruler tick step hysteresis (stable, no infinite loops)
     //==============================================================================
 
     double getTickStepSecondsWithHysteresis (int widthPixels) noexcept;
@@ -200,12 +208,12 @@ private:
     int lineRenderMode = 0;              // 0=Auto, 1=Force Stroke, 2=Force Polyline
     int coarseLevelStartForPolyline = 3; // Auto: polyline from this level upward
 
-    // [PIXEL-ADVANCE-FIX]
-    // We quantize X to pixels only when in polyline mode AND level is coarse enough.
+    // [PIXEL-ADVANCE-GLOBAL]
+    // Pixel-advance (phase+snap) is applied at/above this level.
     int coarseLevelStartForPixelAdvance = 3;
 
-    // [RULER-HYST-FIX]
-    int tickStepIndex = -1; // remembered tickStep choice (hysteresis)
+    // Ruler hysteresis
+    int tickStepIndex = -1;
 
     //==============================================================================
     // Scratch buffers
