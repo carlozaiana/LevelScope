@@ -19,11 +19,13 @@ class LevelScopeAudioProcessor;
 //   - [DRAW]
 //   - [ZOOM]
 //   - [MOUSE]
-//   - [STEP1-PERF]        : persistent buffers + repaint only on new data
+//   - [STEP1-PERF]        : repaint only on new data + reused scratch buffers
 //   - [STEP2-LOD-CAP]     : cap drawable points + improved LOD selection
 //   - [RULER-XMAP]        : ruler uses same x-mapping as curves
 //   - [CACHE-STATIC]      : cached static background (grid + ruler baseline)
-//   - [BAND-PATHS]        : batch all band segments into 2 paths (cheap draw calls)
+//   - [BAND-PATHS]        : batch band segments into 2 paths
+//   - [LINE-QUALITY]      : AA-ish toggle via render mode (stroke vs polyline)
+//   - [POLYLINE-DRAW]     : pixel-aligned polyline draw for coarse levels
 //==============================================================================
 
 class VolumeHistoryComponent : public juce::Component,
@@ -58,9 +60,9 @@ private:
     {
         int                 levelIndex      = 0;
         int                 groupsPerGroup  = 1;
-        int                 spanFrames      = 1;   // RAW frames covered by one group at this level
+        int                 spanFrames      = 1;
         int                 capacity        = 0;
-        std::vector<FrameGroup> groups;           // ring-buffer
+        std::vector<FrameGroup> groups;
         int                 writeIndex      = 0;
         juce::int64         totalGroups     = 0;
 
@@ -85,9 +87,7 @@ private:
     // [HISTORY-UPDATE]
     //==============================================================================
 
-    // [STEP1-PERF] Return true if we actually read any frames this tick.
-    bool drainProcessorFifo();
-
+    bool drainProcessorFifo(); // [STEP1-PERF]
     void pushFrameToHistory (float momentaryRms, float shortTermRms);
 
     void writeGroupToLevel (int levelIndex, const FrameGroup& group);
@@ -136,6 +136,34 @@ private:
     void rebuildStaticBackgroundIfNeeded();
 
     //==============================================================================
+    // [LINE-QUALITY]
+    //   Render mode for curves. This is your AA-testing switch.
+    //
+    //   0 = Auto:
+    //       - Levels 0..2: strokePath (prettier)
+    //       - Levels 3..5: polyline (cheaper)
+    //   1 = Force Stroke: always strokePath
+    //   2 = Force Polyline: always polyline
+    //==============================================================================
+
+    bool isModifierForQualityToggle (const juce::ModifierKeys& mods) const noexcept;
+    void cycleLineRenderMode() noexcept;
+
+    bool shouldUsePolylineForLines (int selectedLevel) const noexcept;
+
+    // [POLYLINE-DRAW] Build pixel-aligned polyline points with "one point per x pixel"
+    // compression (keeps representation at pixel resolution, avoids redundant segments).
+    void buildPolylinePoints (const std::vector<int>& framesAgo,
+                              const std::vector<float>& repDb,
+                              float width,
+                              float height,
+                              std::vector<juce::Point<float>>& outPoints) const;
+
+    void drawPolyline (juce::Graphics& g,
+                       const std::vector<juce::Point<float>>& pts,
+                       float thickness) const;
+
+    //==============================================================================
     // [ZOOM]
     //==============================================================================
 
@@ -157,7 +185,7 @@ private:
 
     int rawCapacityFrames = 0;
 
-    static constexpr int maxLevels      = 6; // L0..L5
+    static constexpr int maxLevels      = 6;
     static constexpr int groupsPerLevel = 4;
     std::array<HistoryLevel, maxLevels> levels;
 
@@ -169,13 +197,17 @@ private:
     double minZoomY   = 0.25;
     double maxZoomY   = 4.0;
 
-    bool   hasCustomZoomX = false;
+    bool hasCustomZoomX = false;
 
     bool showBands = true;
     bool showLines = true;
 
+    // [LINE-QUALITY]
+    int lineRenderMode = 0; // 0=Auto, 1=Force Stroke, 2=Force Polyline
+    int coarseLevelStartForPolyline = 3; // in Auto mode, polyline is used from this level upward
+
     //==============================================================================
-    // [STEP1-PERF] scratch buffers reused every repaint
+    // [STEP1-PERF] scratch buffers
     //==============================================================================
 
     mutable std::vector<FrameGroup> scratchVisibleGroups;
@@ -184,12 +216,17 @@ private:
     mutable std::vector<float>      scratchRepMomentaryDb;
     mutable std::vector<float>      scratchRepShortTermDb;
 
+    // Stroke-path mode scratch
     mutable juce::Path              scratchPathRepM;
     mutable juce::Path              scratchPathRepS;
 
-    // [BAND-PATHS] Batched band paths (instead of thousands of drawLine calls)
+    // [BAND-PATHS]
     mutable juce::Path              scratchPathBandM;
     mutable juce::Path              scratchPathBandS;
+
+    // [POLYLINE-DRAW]
+    mutable std::vector<juce::Point<float>> scratchPolylinePtsM;
+    mutable std::vector<juce::Point<float>> scratchPolylinePtsS;
 
     //==============================================================================
     // [CACHE-STATIC]
