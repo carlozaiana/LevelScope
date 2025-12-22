@@ -756,10 +756,11 @@ void VolumeHistoryComponent::drawPolyline (juce::Graphics& g,
 
 double VolumeHistoryComponent::getTickStepSecondsWithHysteresis (int widthPixels) noexcept
 {
-    // We choose tick step based on pixels-per-second so it depends only on zoom.
-    // Then we apply hysteresis so it doesn’t switch back and forth near a boundary.
-    //
-    // Goal: keep label count roughly between 10 and 20.
+    // [RULER-HYST] SAFETY VERSION
+    // Prevents any chance of infinite oscillation by:
+    //  - using a small epsilon margin
+    //  - limiting adjustment iterations
+
     const double pixelsPerSecond = zoomX * visualFrameRate;
     if (pixelsPerSecond <= 1.0e-12 || widthPixels <= 0)
         return 60.0;
@@ -791,26 +792,31 @@ double VolumeHistoryComponent::getTickStepSecondsWithHysteresis (int widthPixels
         return tickSteps[tickStepIndex];
     }
 
-    // Apply hysteresis: only change when spacing leaves [minSpacing, maxSpacing]
-    for (;;)
+    // Epsilon to avoid boundary flip-flop due to floating point rounding
+    const double eps = 1.0e-9;
+
+    // Adjust with a hard limit so we can never freeze
+    for (int guard = 0; guard < numSteps + 2; ++guard)
     {
         const double spacing = tickSteps[tickStepIndex] * pixelsPerSecond;
 
-        if (spacing < minSpacingPx && tickStepIndex < numSteps - 1)
+        if (spacing < (minSpacingPx - eps) && tickStepIndex < numSteps - 1)
         {
-            ++tickStepIndex; // go coarser
+            ++tickStepIndex; // coarser
             continue;
         }
 
-        if (spacing > maxSpacingPx && tickStepIndex > 0)
+        if (spacing > (maxSpacingPx + eps) && tickStepIndex > 0)
         {
-            --tickStepIndex; // go finer
+            --tickStepIndex; // finer
             continue;
         }
 
-        break;
+        break; // within window (or can't move further)
     }
 
+    // Final clamp
+    tickStepIndex = juce::jlimit (0, numSteps - 1, tickStepIndex);
     return tickSteps[tickStepIndex];
 }
 

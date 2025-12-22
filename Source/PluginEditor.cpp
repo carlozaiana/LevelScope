@@ -4,7 +4,6 @@
 
 LevelScopeAudioProcessorEditor::LevelScopeAudioProcessorEditor (LevelScopeAudioProcessor& p)
     : AudioProcessorEditor (&p),
-      processor (p),
       historyComponent (p)
 {
     addAndMakeVisible (historyComponent);
