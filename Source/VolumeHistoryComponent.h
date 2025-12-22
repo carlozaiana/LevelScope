@@ -12,14 +12,12 @@ class LevelScopeAudioProcessor;
 // [SECTION TAGS]
 //   - [STEP1-PERF]        : repaint only on new data + reused scratch buffers
 //   - [STEP2-LOD-CAP]     : cap drawable points + improved LOD selection
-//   - [RULER-XMAP]        : ruler uses same x-mapping as curves
-//   - [RULER-STABLE]      : ruler ticks anchored to tRight (no periodic jump)
 //   - [CACHE-STATIC]      : cached static background (grid + ruler baseline)
-//   - [BAND-PATHS]        : batch band segments into 2 paths
 //   - [LINE-QUALITY]      : render mode (stroke vs polyline)
-//   - [POLYLINE-DRAW]     : polyline draw for coarse levels
 //   - [POLYLINE-PEAK]     : peak-preserving per-pixel-column selection
-//   - [POLYLINE-SNAP]     : snap X only (reduce moiré), keep Y subpixel
+//   - [PIXEL-ADVANCE]     : quantize scroll to whole pixels at coarse levels
+//   - [RULER-HYST]        : tickStep hysteresis (prevents step switching jitter)
+//   - [RULER-STABLE]      : ticks anchored to tRight (no periodic reseed jump)
 //==============================================================================
 
 class VolumeHistoryComponent : public juce::Component,
@@ -39,7 +37,7 @@ public:
 
 private:
     //==============================================================================
-    // History data structures
+    // History structures
     //==============================================================================
 
     struct FrameGroup
@@ -126,30 +124,50 @@ private:
     void rebuildStaticBackgroundIfNeeded();
 
     //==============================================================================
-    // Line quality / render mode
+    // [LINE-QUALITY]
     //==============================================================================
 
     bool isModifierForQualityToggle (const juce::ModifierKeys& mods) const noexcept;
     void cycleLineRenderMode() noexcept;
-
     bool shouldUsePolylineForLines (int selectedLevel) const noexcept;
 
     //==============================================================================
-    // Polyline drawing (cheap)
+    // [PIXEL-ADVANCE]
+    // Compute a sub-pixel phase (0..1) that turns continuous scrolling into
+    // "advance by whole pixels" for coarse levels.
+    //
+    // The trick:
+    //   x = width - framesAgo*zoomX + frac(nowFrames * zoomX)
+    // This replaces "-nowFrames*zoomX" with "-floor(nowFrames*zoomX)".
     //==============================================================================
 
-    // [POLYLINE-PEAK] + [POLYLINE-SNAP]
-    // Build a polyline bounded to ~one point per pixel column, while preserving
-    // peaks that would otherwise disappear under decimation.
+    float getPixelAdvancePhasePx (juce::int64 totalFramesL0,
+                                 int pendingFramesOffset,
+                                 int selectedLevel,
+                                 bool enablePixelAdvance) const noexcept;
+
+    //==============================================================================
+    // [POLYLINE-PEAK] + [PIXEL-ADVANCE]
+    // Build a polyline bounded to ~one point per pixel column, preserving peaks.
+    //==============================================================================
+
     void buildPolylinePoints (const std::vector<int>& framesAgo,
                               const std::vector<float>& repDb,
                               float width,
                               float height,
+                              float pixelAdvancePhasePx,
                               std::vector<juce::Point<float>>& outPoints) const;
 
     void drawPolyline (juce::Graphics& g,
                        const std::vector<juce::Point<float>>& pts,
                        float thickness) const;
+
+    //==============================================================================
+    // [RULER-HYST]
+    // Tick step hysteresis based on pixels-per-second (zoom), not visibleSeconds.
+    //==============================================================================
+
+    double getTickStepSecondsWithHysteresis (int widthPixels) noexcept;
 
     //==============================================================================
     // Zoom
@@ -194,6 +212,13 @@ private:
     int lineRenderMode = 0; // 0=Auto, 1=Force Stroke, 2=Force Polyline
     int coarseLevelStartForPolyline = 3; // Auto: polyline from this level upward
 
+    // [PIXEL-ADVANCE]
+    // Only apply pixel-advance at/above this level (keeps L0..L2 smooth/AA).
+    int coarseLevelStartForPixelAdvance = 3;
+
+    // [RULER-HYST]
+    int tickStepIndex = -1; // remembers current tickStep choice
+
     //==============================================================================
     // Scratch buffers
     //==============================================================================
@@ -208,7 +233,7 @@ private:
     mutable juce::Path              scratchPathRepM;
     mutable juce::Path              scratchPathRepS;
 
-    // [BAND-PATHS]
+    // Bands (batched)
     mutable juce::Path              scratchPathBandM;
     mutable juce::Path              scratchPathBandS;
 
