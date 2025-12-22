@@ -533,6 +533,12 @@ float VolumeHistoryComponent::dbToY (float db, float height) const noexcept
     return height * (1.0f - norm);
 }
 
+float VolumeHistoryComponent::quantizeXToPixelCenter (float x) const noexcept
+{
+    const int xPix = (int) std::floor (x + 0.5f);
+    return (float) xPix + 0.5f;
+}
+
 //==============================================================================
 // Cached background  [CACHE-STATIC]
 //==============================================================================
@@ -607,46 +613,13 @@ bool VolumeHistoryComponent::shouldUsePolylineForLines (int selectedLevel) const
 }
 
 //==============================================================================
-// [PIXEL-ADVANCE]
-//==============================================================================
-
-float VolumeHistoryComponent::getPixelAdvancePhasePx (juce::int64 totalFramesL0,
-                                                      int pendingFramesOffset,
-                                                      int selectedLevel,
-                                                      bool enablePixelAdvance) const noexcept
-{
-    if (! enablePixelAdvance)
-        return 0.0f;
-
-    if (selectedLevel < coarseLevelStartForPixelAdvance)
-        return 0.0f;
-
-    if (zoomX <= 0.0)
-        return 0.0f;
-
-    // Effective "now" for the currently drawn level is slightly behind totalFrames
-    // due to pendingFramesOffset.
-    double nowFrames = (double) totalFramesL0 - (double) pendingFramesOffset;
-    if (nowFrames < 0.0)
-        nowFrames = 0.0;
-
-    const double px = nowFrames * zoomX;
-
-    // Fractional part in [0, 1)
-    const double frac = px - std::floor (px);
-
-    return (float) frac;
-}
-
-//==============================================================================
-// Polyline drawing  [POLYLINE-PEAK] + [PIXEL-ADVANCE]
+// Polyline drawing  [POLYLINE-PEAK] + [PIXEL-ADVANCE-FIX]
 //==============================================================================
 
 void VolumeHistoryComponent::buildPolylinePoints (const std::vector<int>& framesAgo,
                                                   const std::vector<float>& repDb,
                                                   float width,
                                                   float height,
-                                                  float pixelAdvancePhasePx,
                                                   std::vector<juce::Point<float>>& outPoints) const
 {
     outPoints.clear();
@@ -671,23 +644,28 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<int>& frames
         if (! haveCol)
             return;
 
+        const float span = std::abs (colYMax - colYMin);
+
         float yRep = 0.5f * (colYMin + colYMax);
 
         if (havePrev)
         {
-            const float dMin = std::abs (colYMin - prevY);
-            const float dMax = std::abs (colYMax - prevY);
-            const float dBest = std::max (dMin, dMax);
+            // Preserve peaks when the column span is meaningful in pixels.
+            constexpr float spanThresholdPx = 1.0f;
 
-            constexpr float peakThresholdPx = 1.25f;
-
-            if (dBest >= peakThresholdPx)
+            if (span >= spanThresholdPx)
+            {
+                const float dMin = std::abs (colYMin - prevY);
+                const float dMax = std::abs (colYMax - prevY);
                 yRep = (dMin >= dMax ? colYMin : colYMax);
+            }
             else
+            {
+                // For tiny spans, stay stable to reduce shimmer.
                 yRep = juce::jlimit (colYMin, colYMax, prevY);
+            }
         }
 
-        // Snap X only (pixel center). Keep Y subpixel.
         const float xAligned = (float) currentXPix + 0.5f;
         outPoints.emplace_back (xAligned, yRep);
 
@@ -697,12 +675,12 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<int>& frames
 
     for (size_t i = 0; i < n; ++i)
     {
-        // [PIXEL-ADVANCE] apply the phase so motion becomes 1-pixel steps
-        const float x = width - (float) framesAgo[i] * (float) zoomX + pixelAdvancePhasePx;
-        if (x < -10.0f)
+        // [PIXEL-ADVANCE-FIX] true pixel advance: quantize x per point (no wrap).
+        const float xRaw = width - (float) framesAgo[i] * (float) zoomX;
+        if (xRaw < -10.0f)
             continue;
 
-        const int xPix = (int) std::floor (x + 0.5f);
+        const int xPix = (int) std::floor (xRaw + 0.5f);
         if (xPix < 0 || xPix > (int) width)
             continue;
 
@@ -751,22 +729,21 @@ void VolumeHistoryComponent::drawPolyline (juce::Graphics& g,
 }
 
 //==============================================================================
-// [RULER-HYST]
+// Ruler tickStep hysteresis  [RULER-HYST-FIX]
 //==============================================================================
 
 double VolumeHistoryComponent::getTickStepSecondsWithHysteresis (int widthPixels) noexcept
 {
-    // [RULER-HYST] SAFETY VERSION
-    // Prevents any chance of infinite oscillation by:
-    //  - using a small epsilon margin
-    //  - limiting adjustment iterations
-
     const double pixelsPerSecond = zoomX * visualFrameRate;
     if (pixelsPerSecond <= 1.0e-12 || widthPixels <= 0)
         return 60.0;
 
-    const double minSpacingPx = (double) widthPixels / 20.0; // ~20 labels
-    const double maxSpacingPx = (double) widthPixels / 10.0; // ~10 labels
+    // Keep spacing in a band; add margins so we don't thrash near boundaries.
+    const double minSpacingPx = (double) widthPixels / 20.0; // target <= 20 labels
+    const double maxSpacingPx = (double) widthPixels / 10.0; // target >= 10 labels
+
+    const double minSwitchPx = minSpacingPx * 0.95; // go coarser only if clearly too dense
+    const double maxSwitchPx = maxSpacingPx * 1.05; // go finer only if clearly too sparse
 
     static constexpr double tickSteps[] = {
         0.5, 1.0, 2.0, 5.0,
@@ -775,7 +752,7 @@ double VolumeHistoryComponent::getTickStepSecondsWithHysteresis (int widthPixels
     };
     static constexpr int numSteps = (int) (sizeof (tickSteps) / sizeof (tickSteps[0]));
 
-    // Initialize if needed
+    // Initialize once; DO NOT reset on every zoom tick, otherwise hysteresis can't work.
     if (tickStepIndex < 0 || tickStepIndex >= numSteps)
     {
         int idx = numSteps - 1;
@@ -792,30 +769,26 @@ double VolumeHistoryComponent::getTickStepSecondsWithHysteresis (int widthPixels
         return tickSteps[tickStepIndex];
     }
 
-    // Epsilon to avoid boundary flip-flop due to floating point rounding
-    const double eps = 1.0e-9;
-
-    // Adjust with a hard limit so we can never freeze
+    // Adjust with guard (no infinite loops)
     for (int guard = 0; guard < numSteps + 2; ++guard)
     {
         const double spacing = tickSteps[tickStepIndex] * pixelsPerSecond;
 
-        if (spacing < (minSpacingPx - eps) && tickStepIndex < numSteps - 1)
+        if (spacing < minSwitchPx && tickStepIndex < numSteps - 1)
         {
             ++tickStepIndex; // coarser
             continue;
         }
 
-        if (spacing > (maxSpacingPx + eps) && tickStepIndex > 0)
+        if (spacing > maxSwitchPx && tickStepIndex > 0)
         {
             --tickStepIndex; // finer
             continue;
         }
 
-        break; // within window (or can't move further)
+        break;
     }
 
-    // Final clamp
     tickStepIndex = juce::jlimit (0, numSteps - 1, tickStepIndex);
     return tickSteps[tickStepIndex];
 }
@@ -851,9 +824,7 @@ void VolumeHistoryComponent::resized()
         scratchPolylinePtsS.reserve ((size_t) juce::jlimit (256, 4096, w + 64));
     }
 
-    // Resizing changes spacing thresholds, so re-evaluate tickStep smoothly next paint.
-    tickStepIndex = -1;
-
+    // Do NOT reset tickStepIndex here; hysteresis should smoothly adapt.
     markStaticBackgroundDirty();
 }
 
@@ -887,23 +858,15 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     const float h = bounds.getHeight();
 
     const bool usePolylineLines = (showLines && shouldUsePolylineForLines (selectedLevel));
-
-    // [PIXEL-ADVANCE]
-    const bool enablePixelAdvanceForCurves = usePolylineLines;
-    const float pixelPhasePxCurves = getPixelAdvancePhasePx (totalFrames,
-                                                             pendingFramesOffset,
-                                                             selectedLevel,
-                                                             enablePixelAdvanceForCurves);
+    const bool pixelAdvanceActive = (usePolylineLines && selectedLevel >= coarseLevelStartForPixelAdvance);
 
     if (n >= 2)
     {
         computeRepresentativeCurves (scratchVisibleGroups, scratchRepMomentaryDb, scratchRepShortTermDb);
 
-        // Bands (batched)
         scratchPathBandM.clear();
         scratchPathBandS.clear();
 
-        // Stroke paths (only when in stroke mode)
         if (showLines && ! usePolylineLines)
         {
             scratchPathRepM.clear();
@@ -916,17 +879,13 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
         for (size_t i = 0; i < n; ++i)
         {
-            // Use normal smooth x for stroke mode, quantized x for polyline mode bands
-            const float rawX = w - (float) scratchVisibleFramesAgo[i] * (float) zoomX
-                                 + (usePolylineLines ? pixelPhasePxCurves : 0.0f);
-
-            if (rawX < -10.0f)
+            float x = w - (float) scratchVisibleFramesAgo[i] * (float) zoomX;
+            if (x < -10.0f)
                 continue;
 
-            // If polyline mode is active, snap band X to pixel center to match the polyline
-            const float x = (usePolylineLines
-                               ? ((float) std::floor (rawX + 0.5f) + 0.5f)
-                               : rawX);
+            // [PIXEL-ADVANCE-FIX] In coarse polyline mode, quantize X to pixel center
+            if (pixelAdvanceActive)
+                x = quantizeXToPixelCenter (x);
 
             const auto& grp = scratchVisibleGroups[i];
 
@@ -935,7 +894,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             const float ySM = dbToY (grp.shortTermMaxDb, h);
             const float ySm = dbToY (grp.shortTermMinDb, h);
 
-            // Bands (batched)
             if (showBands && selectedLevel > 0)
             {
                 const float rangeMM = grp.momentaryMaxDb - grp.momentaryMinDb;
@@ -954,7 +912,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
                 }
             }
 
-            // Lines in stroke mode only
             if (showLines && ! usePolylineLines)
             {
                 const float yRepM = dbToY (scratchRepMomentaryDb[i], h);
@@ -968,7 +925,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             }
         }
 
-        // Draw bands
+        // Bands
         if (showBands && selectedLevel > 0)
         {
             g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.6f));
@@ -978,7 +935,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             g.strokePath (scratchPathBandM, juce::PathStrokeType (1.2f));
         }
 
-        // Draw lines
+        // Lines
         if (showLines)
         {
             if (usePolylineLines)
@@ -986,8 +943,8 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
                 scratchPolylinePtsM.clear();
                 scratchPolylinePtsS.clear();
 
-                buildPolylinePoints (scratchVisibleFramesAgo, scratchRepShortTermDb, w, h, pixelPhasePxCurves, scratchPolylinePtsS);
-                buildPolylinePoints (scratchVisibleFramesAgo, scratchRepMomentaryDb, w, h, pixelPhasePxCurves, scratchPolylinePtsM);
+                buildPolylinePoints (scratchVisibleFramesAgo, scratchRepShortTermDb, w, h, scratchPolylinePtsS);
+                buildPolylinePoints (scratchVisibleFramesAgo, scratchRepMomentaryDb, w, h, scratchPolylinePtsM);
 
                 g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.9f));
                 drawPolyline (g, scratchPolylinePtsS, 1.0f);
@@ -1007,7 +964,8 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     }
 
     //==========================================================================
-    // Ruler (stable + hysteresis + pixel-advance sync)
+    // [RULER-FRAMES]
+    // Ruler ticks computed in integer frames to eliminate flip-flop and jitter.
     //==========================================================================
     const float rulerHeight   = 16.0f;
     const float rulerBaseY    = (float) height - 2.0f;
@@ -1016,49 +974,38 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
     if (zoomX > 0.0 && visualFrameRate > 0.0 && totalFrames > 0)
     {
-        const double tRight = (double) totalFrames / visualFrameRate;
-
-        const double availableSeconds = (double) availableRaw / visualFrameRate;
-        const double tEarliest = juce::jmax (0.0, tRight - availableSeconds);
-
-        // Visible window based on x mapping
+        // Visible frames based on x-mapping (no fake stretching)
         const double framesByWidth = (double) width / (zoomX > 1.0e-12 ? zoomX : 1.0e-12);
         const double effectiveFramesByWidth = juce::jmax (0.0, framesByWidth - (double) pendingFramesOffset);
 
-        const double visibleFrames = juce::jmin ((double) availableRaw, effectiveFramesByWidth);
-        const double visibleSeconds = visibleFrames / visualFrameRate;
-
-        if (visibleSeconds > 1.0e-6)
+        const juce::int64 visibleFrames = (juce::int64) std::floor (juce::jmin ((double) availableRaw, effectiveFramesByWidth));
+        if (visibleFrames > 1)
         {
-            const double tLeft = juce::jmax (tEarliest, tRight - visibleSeconds);
+            const juce::int64 earliestAvailableFrame = totalFrames - availableRaw;
+            const juce::int64 leftFrame = juce::jmax (earliestAvailableFrame, totalFrames - visibleFrames);
 
-            // [RULER-HYST] choose tickStep from zoom (pixels/sec) with hysteresis
-            const double tickStep = getTickStepSecondsWithHysteresis (width);
+            // Tick step (seconds) from zoom with hysteresis
+            const double tickStepSec = getTickStepSecondsWithHysteresis (width);
 
-            // [RULER-STABLE] anchor ticks to tRight
-            const double eps = 1.0e-9;
-            const double lastTick = std::floor ((tRight + eps) / tickStep) * tickStep;
+            // Convert to integer frames at 60 Hz (stable)
+            const juce::int64 tickStepFrames = (juce::int64) juce::jmax (1.0, std::round (tickStepSec * visualFrameRate));
 
-            // [PIXEL-ADVANCE] keep ruler synced to pixel-advance at coarse levels
-            const bool enablePixelAdvanceForRuler = (selectedLevel >= coarseLevelStartForPixelAdvance);
-            const float pixelPhasePxRuler = getPixelAdvancePhasePx (totalFrames,
-                                                                    pendingFramesOffset,
-                                                                    selectedLevel,
-                                                                    enablePixelAdvanceForRuler);
+            // Anchor ticks to "now" (right edge) in integer frames
+            const juce::int64 lastTickFrame = (totalFrames / tickStepFrames) * tickStepFrames;
 
             g.setColour (juce::Colours::white);
             g.setFont (10.0f);
 
-            for (double t = lastTick; t >= tLeft - eps; t -= tickStep)
+            for (juce::int64 tickFrame = lastTickFrame; tickFrame >= leftFrame; tickFrame -= tickStepFrames)
             {
-                const double framesAgo = (tRight - t) * visualFrameRate;
-                const double framesAgoWithOffset = framesAgo + (double) pendingFramesOffset;
+                const juce::int64 framesAgo = totalFrames - tickFrame;
+                const double framesAgoWithOffset = (double) framesAgo + (double) pendingFramesOffset;
 
-                float x = (float) ((double) width - framesAgoWithOffset * zoomX) + pixelPhasePxRuler;
+                float x = (float) ((double) width - framesAgoWithOffset * zoomX);
 
-                // Snap to pixel center at coarse levels to avoid shimmer/jitter
-                if (enablePixelAdvanceForRuler)
-                    x = (float) std::floor (x + 0.5f) + 0.5f;
+                // In coarse polyline mode, quantize ticks to match curve pixel advance
+                if (pixelAdvanceActive)
+                    x = quantizeXToPixelCenter (x);
 
                 if (x < -2.0f)
                     break;
@@ -1068,7 +1015,9 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
                 g.drawLine (x, tickTopY, x, rulerBaseY, 1.0f);
 
+                const double t = (double) tickFrame / visualFrameRate;
                 const float textWidth = 52.0f;
+
                 g.drawText (formatTimeHMS (t),
                             x - textWidth * 0.5f,
                             textTopY,
@@ -1090,16 +1039,19 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     if (lineRenderMode == 1) modeName = "ForceStroke";
     if (lineRenderMode == 2) modeName = "ForcePolyline";
 
+    const double tickStepNow = getTickStepSecondsWithHysteresis (width);
+
     juce::String info = "Level: " + juce::String (selectedLevel) +
                         " (span " + juce::String (Lsel.spanFrames) + " frames, " +
                         juce::String (spanSeconds, 3) + " s)" +
                         " | ZoomX: " + juce::String (zoomX, 4) +
                         " | ZoomY: " + juce::String (zoomY, 2) +
+                        " | Tick: " + juce::String (tickStepNow, 3) + "s" +
                         " | Bands: " + juce::String (showBands ? "ON" : "OFF") +
                         " | Lines: " + juce::String (showLines ? "ON" : "OFF") +
                         " | LineMode: " + juce::String (modeName);
 
-    g.drawText (info, 8, 8, (int) std::min (bounds.getWidth() - 16.0f, 900.0f), 20, juce::Justification::topLeft);
+    g.drawText (info, 8, 8, (int) std::min (bounds.getWidth() - 16.0f, 980.0f), 20, juce::Justification::topLeft);
 }
 
 //==============================================================================
@@ -1119,8 +1071,7 @@ void VolumeHistoryComponent::applyHorizontalZoom (float wheelDelta)
 
     hasCustomZoomX = true;
 
-    // Zoom change -> allow tickStep to adapt smoothly next paint
-    tickStepIndex = -1;
+    // Do NOT reset tickStepIndex here; hysteresis should do its job.
 }
 
 void VolumeHistoryComponent::applyVerticalZoom (float wheelDelta)

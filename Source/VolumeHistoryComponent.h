@@ -14,10 +14,11 @@ class LevelScopeAudioProcessor;
 //   - [STEP2-LOD-CAP]     : cap drawable points + improved LOD selection
 //   - [CACHE-STATIC]      : cached static background (grid + ruler baseline)
 //   - [LINE-QUALITY]      : render mode (stroke vs polyline)
+//   - [BAND-PATHS]        : batch band segments into 2 paths
 //   - [POLYLINE-PEAK]     : peak-preserving per-pixel-column selection
-//   - [PIXEL-ADVANCE]     : quantize scroll to whole pixels at coarse levels
-//   - [RULER-HYST]        : tickStep hysteresis (prevents step switching jitter)
-//   - [RULER-STABLE]      : ticks anchored to tRight (no periodic reseed jump)
+//   - [PIXEL-ADVANCE-FIX] : pixel advance by quantizing X (no wrap/jump-back)
+//   - [RULER-FRAMES]      : ruler ticks computed in integer frames (stable)
+//   - [RULER-HYST-FIX]    : tickStep hysteresis that doesn't thrash while zooming
 //==============================================================================
 
 class VolumeHistoryComponent : public juce::Component,
@@ -116,6 +117,9 @@ private:
 
     float dbToY (float db, float height) const noexcept;
 
+    // [PIXEL-ADVANCE-FIX] quantize x to pixel centers in polyline mode
+    float quantizeXToPixelCenter (float x) const noexcept;
+
     //==============================================================================
     // Cached background
     //==============================================================================
@@ -132,30 +136,14 @@ private:
     bool shouldUsePolylineForLines (int selectedLevel) const noexcept;
 
     //==============================================================================
-    // [PIXEL-ADVANCE]
-    // Compute a sub-pixel phase (0..1) that turns continuous scrolling into
-    // "advance by whole pixels" for coarse levels.
-    //
-    // The trick:
-    //   x = width - framesAgo*zoomX + frac(nowFrames * zoomX)
-    // This replaces "-nowFrames*zoomX" with "-floor(nowFrames*zoomX)".
+    // Polyline drawing (cheap)
     //==============================================================================
 
-    float getPixelAdvancePhasePx (juce::int64 totalFramesL0,
-                                 int pendingFramesOffset,
-                                 int selectedLevel,
-                                 bool enablePixelAdvance) const noexcept;
-
-    //==============================================================================
-    // [POLYLINE-PEAK] + [PIXEL-ADVANCE]
-    // Build a polyline bounded to ~one point per pixel column, preserving peaks.
-    //==============================================================================
-
+    // [POLYLINE-PEAK] + [PIXEL-ADVANCE-FIX]
     void buildPolylinePoints (const std::vector<int>& framesAgo,
                               const std::vector<float>& repDb,
                               float width,
                               float height,
-                              float pixelAdvancePhasePx,
                               std::vector<juce::Point<float>>& outPoints) const;
 
     void drawPolyline (juce::Graphics& g,
@@ -163,7 +151,7 @@ private:
                        float thickness) const;
 
     //==============================================================================
-    // [RULER-HYST]
+    // [RULER-HYST-FIX]
     // Tick step hysteresis based on pixels-per-second (zoom), not visibleSeconds.
     //==============================================================================
 
@@ -209,15 +197,15 @@ private:
     bool showLines = true;
 
     // [LINE-QUALITY]
-    int lineRenderMode = 0; // 0=Auto, 1=Force Stroke, 2=Force Polyline
+    int lineRenderMode = 0;              // 0=Auto, 1=Force Stroke, 2=Force Polyline
     int coarseLevelStartForPolyline = 3; // Auto: polyline from this level upward
 
-    // [PIXEL-ADVANCE]
-    // Only apply pixel-advance at/above this level (keeps L0..L2 smooth/AA).
+    // [PIXEL-ADVANCE-FIX]
+    // We quantize X to pixels only when in polyline mode AND level is coarse enough.
     int coarseLevelStartForPixelAdvance = 3;
 
-    // [RULER-HYST]
-    int tickStepIndex = -1; // remembers current tickStep choice
+    // [RULER-HYST-FIX]
+    int tickStepIndex = -1; // remembered tickStep choice (hysteresis)
 
     //==============================================================================
     // Scratch buffers
