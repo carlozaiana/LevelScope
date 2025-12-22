@@ -10,22 +10,16 @@ class LevelScopeAudioProcessor;
 // VolumeHistoryComponent
 //
 // [SECTION TAGS]
-//   - [HISTORY-STRUCTS]
-//   - [HISTORY-INIT]
-//   - [HISTORY-UPDATE]
-//   - [HISTORY-ACCESS]
-//   - [LOD-SELECTION]
-//   - [REP-LINE]
-//   - [DRAW]
-//   - [ZOOM]
-//   - [MOUSE]
 //   - [STEP1-PERF]        : repaint only on new data + reused scratch buffers
 //   - [STEP2-LOD-CAP]     : cap drawable points + improved LOD selection
 //   - [RULER-XMAP]        : ruler uses same x-mapping as curves
+//   - [RULER-STABLE]      : ruler ticks anchored to tRight (no periodic jump)
 //   - [CACHE-STATIC]      : cached static background (grid + ruler baseline)
 //   - [BAND-PATHS]        : batch band segments into 2 paths
-//   - [LINE-QUALITY]      : AA-ish toggle via render mode (stroke vs polyline)
-//   - [POLYLINE-DRAW]     : pixel-aligned polyline draw for coarse levels
+//   - [LINE-QUALITY]      : render mode (stroke vs polyline)
+//   - [POLYLINE-DRAW]     : polyline draw for coarse levels
+//   - [POLYLINE-PEAK]     : peak-preserving per-pixel-column selection
+//   - [POLYLINE-SNAP]     : snap X only (reduce moiré), keep Y subpixel
 //==============================================================================
 
 class VolumeHistoryComponent : public juce::Component,
@@ -45,7 +39,7 @@ public:
 
 private:
     //==============================================================================
-    // [HISTORY-STRUCTS]
+    // History data structures
     //==============================================================================
 
     struct FrameGroup
@@ -71,21 +65,17 @@ private:
     };
 
     //==============================================================================
-    // [TIMER]
+    // Timer
     //==============================================================================
 
     void timerCallback() override;
 
     //==============================================================================
-    // [HISTORY-INIT]
+    // History init/update
     //==============================================================================
 
     void initialiseHistoryLevels();
     void resetHistoryLevels();
-
-    //==============================================================================
-    // [HISTORY-UPDATE]
-    //==============================================================================
 
     bool drainProcessorFifo(); // [STEP1-PERF]
     void pushFrameToHistory (float momentaryRms, float shortTermRms);
@@ -94,7 +84,7 @@ private:
     void accumulateToHigherLevels (int levelIndex, const FrameGroup& sourceGroup);
 
     //==============================================================================
-    // [HISTORY-ACCESS]
+    // History access
     //==============================================================================
 
     int getAvailableGroups (int levelIndex) const noexcept;
@@ -103,7 +93,7 @@ private:
     juce::int64 getTotalFramesL0() const noexcept;
 
     //==============================================================================
-    // [LOD-SELECTION]
+    // LOD selection
     //==============================================================================
 
     int getMaxDrawablePoints (int widthPixels) const noexcept;
@@ -115,7 +105,7 @@ private:
                                      std::vector<int>& outFramesAgo) const;
 
     //==============================================================================
-    // [REP-LINE]
+    // Representative curve
     //==============================================================================
 
     void computeRepresentativeCurves (const std::vector<FrameGroup>& groups,
@@ -123,27 +113,20 @@ private:
                                       std::vector<float>& repShortTerm) const;
 
     //==============================================================================
-    // [DRAW]
+    // Drawing helpers
     //==============================================================================
 
     float dbToY (float db, float height) const noexcept;
 
     //==============================================================================
-    // [CACHE-STATIC]
+    // Cached background
     //==============================================================================
 
     void markStaticBackgroundDirty() noexcept;
     void rebuildStaticBackgroundIfNeeded();
 
     //==============================================================================
-    // [LINE-QUALITY]
-    //   Render mode for curves. This is your AA-testing switch.
-    //
-    //   0 = Auto:
-    //       - Levels 0..2: strokePath (prettier)
-    //       - Levels 3..5: polyline (cheaper)
-    //   1 = Force Stroke: always strokePath
-    //   2 = Force Polyline: always polyline
+    // Line quality / render mode
     //==============================================================================
 
     bool isModifierForQualityToggle (const juce::ModifierKeys& mods) const noexcept;
@@ -151,8 +134,13 @@ private:
 
     bool shouldUsePolylineForLines (int selectedLevel) const noexcept;
 
-    // [POLYLINE-DRAW] Build pixel-aligned polyline points with "one point per x pixel"
-    // compression (keeps representation at pixel resolution, avoids redundant segments).
+    //==============================================================================
+    // Polyline drawing (cheap)
+    //==============================================================================
+
+    // [POLYLINE-PEAK] + [POLYLINE-SNAP]
+    // Build a polyline bounded to ~one point per pixel column, while preserving
+    // peaks that would otherwise disappear under decimation.
     void buildPolylinePoints (const std::vector<int>& framesAgo,
                               const std::vector<float>& repDb,
                               float width,
@@ -164,14 +152,14 @@ private:
                        float thickness) const;
 
     //==============================================================================
-    // [ZOOM]
+    // Zoom
     //==============================================================================
 
     void applyHorizontalZoom (float wheelDelta);
     void applyVerticalZoom   (float wheelDelta);
 
     //==============================================================================
-    // Member variables
+    // Members
     //==============================================================================
 
     LevelScopeAudioProcessor& processor;
@@ -204,10 +192,10 @@ private:
 
     // [LINE-QUALITY]
     int lineRenderMode = 0; // 0=Auto, 1=Force Stroke, 2=Force Polyline
-    int coarseLevelStartForPolyline = 3; // in Auto mode, polyline is used from this level upward
+    int coarseLevelStartForPolyline = 3; // Auto: polyline from this level upward
 
     //==============================================================================
-    // [STEP1-PERF] scratch buffers
+    // Scratch buffers
     //==============================================================================
 
     mutable std::vector<FrameGroup> scratchVisibleGroups;
@@ -224,12 +212,12 @@ private:
     mutable juce::Path              scratchPathBandM;
     mutable juce::Path              scratchPathBandS;
 
-    // [POLYLINE-DRAW]
+    // Polyline mode scratch
     mutable std::vector<juce::Point<float>> scratchPolylinePtsM;
     mutable std::vector<juce::Point<float>> scratchPolylinePtsS;
 
     //==============================================================================
-    // [CACHE-STATIC]
+    // Cached background
     //==============================================================================
 
     juce::Image cachedStaticBackground;

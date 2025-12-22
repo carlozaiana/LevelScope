@@ -38,7 +38,7 @@ VolumeHistoryComponent::VolumeHistoryComponent (LevelScopeAudioProcessor& proc)
 
     setOpaque (true);
 
-    // UI update rate: you already tested 30 Hz successfully.
+    // UI update rate
     startTimerHz (30);
 
     markStaticBackgroundDirty();
@@ -50,7 +50,7 @@ VolumeHistoryComponent::~VolumeHistoryComponent()
 }
 
 //==============================================================================
-// [HISTORY-INIT]
+// History init
 //==============================================================================
 
 void VolumeHistoryComponent::initialiseHistoryLevels()
@@ -127,7 +127,7 @@ void VolumeHistoryComponent::resetHistoryLevels()
 }
 
 //==============================================================================
-// [TIMER]
+// Timer
 //==============================================================================
 
 void VolumeHistoryComponent::timerCallback()
@@ -138,7 +138,7 @@ void VolumeHistoryComponent::timerCallback()
 }
 
 //==============================================================================
-// [HISTORY-UPDATE]
+// History update
 //==============================================================================
 
 bool VolumeHistoryComponent::drainProcessorFifo()
@@ -236,7 +236,7 @@ void VolumeHistoryComponent::accumulateToHigherLevels (int levelIndex,
 }
 
 //==============================================================================
-// [HISTORY-ACCESS]
+// History access
 //==============================================================================
 
 int VolumeHistoryComponent::getAvailableGroups (int levelIndex) const noexcept
@@ -290,7 +290,7 @@ juce::int64 VolumeHistoryComponent::getTotalFramesL0() const noexcept
 }
 
 //==============================================================================
-// [LOD-SELECTION]  [STEP2-LOD-CAP]
+// LOD selection  [STEP2-LOD-CAP]
 //==============================================================================
 
 int VolumeHistoryComponent::getMaxDrawablePoints (int widthPixels) const noexcept
@@ -439,7 +439,7 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
 }
 
 //==============================================================================
-// [REP-LINE]
+// Representative curves
 //==============================================================================
 
 void VolumeHistoryComponent::computeRepresentativeCurves (const std::vector<FrameGroup>& groups,
@@ -513,7 +513,7 @@ void VolumeHistoryComponent::computeRepresentativeCurves (const std::vector<Fram
 }
 
 //==============================================================================
-// [GEOMETRY HELPERS]
+// Geometry helpers
 //==============================================================================
 
 float VolumeHistoryComponent::dbToY (float db, float height) const noexcept
@@ -532,7 +532,7 @@ float VolumeHistoryComponent::dbToY (float db, float height) const noexcept
 }
 
 //==============================================================================
-// [CACHE-STATIC]
+// Cached background  [CACHE-STATIC]
 //==============================================================================
 
 void VolumeHistoryComponent::markStaticBackgroundDirty() noexcept
@@ -580,7 +580,7 @@ void VolumeHistoryComponent::rebuildStaticBackgroundIfNeeded()
 }
 
 //==============================================================================
-// [LINE-QUALITY]
+// Line quality / render mode  [LINE-QUALITY]
 //==============================================================================
 
 bool VolumeHistoryComponent::isModifierForQualityToggle (const juce::ModifierKeys& mods) const noexcept
@@ -594,25 +594,18 @@ bool VolumeHistoryComponent::isModifierForQualityToggle (const juce::ModifierKey
 
 void VolumeHistoryComponent::cycleLineRenderMode() noexcept
 {
-    // 0 -> 1 -> 2 -> 0
-    lineRenderMode = (lineRenderMode + 1) % 3;
+    lineRenderMode = (lineRenderMode + 1) % 3; // 0->1->2->0
 }
 
 bool VolumeHistoryComponent::shouldUsePolylineForLines (int selectedLevel) const noexcept
 {
-    // 0 = Auto, 1 = Force Stroke, 2 = Force Polyline
-    if (lineRenderMode == 2)
-        return true;
-
-    if (lineRenderMode == 1)
-        return false;
-
-    // Auto
-    return selectedLevel >= coarseLevelStartForPolyline;
+    if (lineRenderMode == 2) return true;   // Force Polyline
+    if (lineRenderMode == 1) return false;  // Force Stroke
+    return selectedLevel >= coarseLevelStartForPolyline; // Auto
 }
 
 //==============================================================================
-// [POLYLINE-DRAW]
+// Polyline drawing  [POLYLINE-DRAW] + [POLYLINE-PEAK] + [POLYLINE-SNAP]
 //==============================================================================
 
 void VolumeHistoryComponent::buildPolylinePoints (const std::vector<int>& framesAgo,
@@ -624,12 +617,74 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<int>& frames
     outPoints.clear();
 
     const size_t n = juce::jmin (framesAgo.size(), repDb.size());
-    if (n < 2 || zoomX <= 0.0)
+    if (n < 2 || zoomX <= 0.0 || width <= 1.0f)
         return;
 
-    outPoints.reserve (outPoints.capacity()); // no-op, but documents intent
+    // Reserve ~width points (one per pixel column), bounded.
+    const int wInt = (int) std::round (width);
+    outPoints.reserve ((size_t) juce::jlimit (128, 4096, wInt + 64));
 
-    int lastXPix = std::numeric_limits<int>::min();
+    // [POLYLINE-PEAK] We aggregate all samples that fall into the same pixel column
+    // and keep a min/max Y for that column. Then we choose a representative Y that
+    // preserves peaks instead of "latest wins".
+    int   currentXPix = std::numeric_limits<int>::min();
+    float colYMin = 0.0f;
+    float colYMax = 0.0f;
+    bool  haveCol = false;
+
+    int   lastEmittedXPix = std::numeric_limits<int>::min();
+    float prevY = 0.0f;
+    bool  havePrev = false;
+
+    auto emitColumn = [&]()
+    {
+        if (! haveCol)
+            return;
+
+        // Choose representative Y for this pixel column.
+        float yRep = 0.5f * (colYMin + colYMax);
+
+        if (havePrev)
+        {
+            // Preserve peaks: if one extreme is far from prevY, jump to it.
+            const float dMin = std::abs (colYMin - prevY);
+            const float dMax = std::abs (colYMax - prevY);
+            const float dBest = std::max (dMin, dMax);
+
+            // Threshold in pixels: below this, stay close to previous value to avoid
+            // noisy "zig-zag" in dense views. Above it, show the peak.
+            constexpr float peakThresholdPx = 1.25f;
+
+            if (dBest >= peakThresholdPx)
+                yRep = (dMin >= dMax ? colYMin : colYMax);
+            else
+                yRep = juce::jlimit (colYMin, colYMax, prevY);
+        }
+
+        // [POLYLINE-SNAP] Snap X only (to pixel center). Keep Y subpixel to reduce moiré.
+        const float xAligned = (float) currentXPix + 0.5f;
+
+        // Optional: break long gaps (avoid drawing misleading long diagonals).
+        // If the data is sparse and we jump many pixels, we simply start a new segment
+        // by duplicating the point (drawPolyline will still connect, but the visual
+        // effect is much smaller with small typical gaps). We keep it simple here.
+        if (! outPoints.empty())
+        {
+            const int dx = std::abs (currentXPix - lastEmittedXPix);
+            if (dx > 50)
+            {
+                // Start a new segment by inserting a duplicate point at the new x.
+                // (A true segment break would require multi-segment drawing logic.)
+                outPoints.emplace_back (xAligned, yRep);
+            }
+        }
+
+        outPoints.emplace_back (xAligned, yRep);
+
+        lastEmittedXPix = currentXPix;
+        prevY = yRep;
+        havePrev = true;
+    };
 
     for (size_t i = 0; i < n; ++i)
     {
@@ -637,33 +692,40 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<int>& frames
         if (x < -10.0f)
             continue;
 
-        const float y = dbToY (repDb[i], height);
-
-        // Pixel alignment:
-        // - Round x to the nearest pixel column.
-        // - Place at pixel center (x + 0.5).
         const int xPix = (int) std::floor (x + 0.5f);
         if (xPix < 0 || xPix > (int) width)
             continue;
 
-        const float xAligned = (float) xPix + 0.5f;
+        const float y = dbToY (repDb[i], height);
 
-        // Y alignment: for crisp 1px-ish lines, align to pixel center too.
-        const int yPix = (int) std::floor (y + 0.5f);
-        const float yAligned = (float) yPix + 0.5f;
-
-        // Compress: keep only one point per pixel column.
-        // This does NOT lose information at the pixel level, and it reduces redundant
-        // segments when multiple samples map to the same x pixel.
-        if (! outPoints.empty() && xPix == lastXPix)
+        if (! haveCol)
         {
-            outPoints.back().y = yAligned; // latest wins for that pixel column
+            haveCol = true;
+            currentXPix = xPix;
+            colYMin = y;
+            colYMax = y;
             continue;
         }
 
-        outPoints.emplace_back (xAligned, yAligned);
-        lastXPix = xPix;
+        if (xPix != currentXPix)
+        {
+            emitColumn();
+
+            currentXPix = xPix;
+            colYMin = y;
+            colYMax = y;
+        }
+        else
+        {
+            colYMin = std::min (colYMin, y);
+            colYMax = std::max (colYMax, y);
+        }
     }
+
+    emitColumn();
+
+    // If our duplicate-point "gap softener" created a zero-length segment at the end,
+    // it's harmless; no need to clean up.
 }
 
 void VolumeHistoryComponent::drawPolyline (juce::Graphics& g,
@@ -673,19 +735,16 @@ void VolumeHistoryComponent::drawPolyline (juce::Graphics& g,
     if (pts.size() < 2)
         return;
 
-    // Draw segment-by-segment. With the per-pixel compression above, this is
-    // bounded by ~component width, not by history length.
     for (size_t i = 1; i < pts.size(); ++i)
     {
         const auto& a = pts[i - 1];
         const auto& b = pts[i];
-
         g.drawLine (a.x, a.y, b.x, b.y, thickness);
     }
 }
 
 //==============================================================================
-// [COMPONENT LIFECYCLE]
+// Component lifecycle
 //==============================================================================
 
 void VolumeHistoryComponent::resized()
@@ -711,7 +770,6 @@ void VolumeHistoryComponent::resized()
         scratchRepMomentaryDb.reserve (reserveCount);
         scratchRepShortTermDb.reserve (reserveCount);
 
-        // Polyline points: bounded by ~width pixels
         scratchPolylinePtsM.reserve ((size_t) juce::jlimit (256, 4096, w + 64));
         scratchPolylinePtsS.reserve ((size_t) juce::jlimit (256, 4096, w + 64));
     }
@@ -720,7 +778,7 @@ void VolumeHistoryComponent::resized()
 }
 
 //==============================================================================
-// [DRAW]
+// DRAW
 //==============================================================================
 
 void VolumeHistoryComponent::paint (juce::Graphics& g)
@@ -732,7 +790,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     if (width <= 1 || height <= 0)
         return;
 
-    // Cached background
     rebuildStaticBackgroundIfNeeded();
     if (cachedStaticBackground.isValid())
         g.drawImageAt (cachedStaticBackground, 0, 0);
@@ -745,23 +802,21 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     buildVisibleGroupsForLevel (selectedLevel, width, scratchVisibleGroups, scratchVisibleFramesAgo);
 
     const size_t n = scratchVisibleGroups.size();
+    const float w = bounds.getWidth();
+    const float h = bounds.getHeight();
+
+    // Decide line method once per paint
+    const bool usePolylineLines = (showLines && shouldUsePolylineForLines (selectedLevel));
 
     if (n >= 2)
     {
         computeRepresentativeCurves (scratchVisibleGroups, scratchRepMomentaryDb, scratchRepShortTermDb);
 
-        // Bands are always batched into paths (cheap draw calls)
+        // Bands batched
         scratchPathBandM.clear();
         scratchPathBandS.clear();
 
-        const float w = bounds.getWidth();
-        const float h = bounds.getHeight();
-        const float bandRangeThresholdDb = 3.0f;
-
-        // [LINE-QUALITY] Decide line rendering method
-        const bool usePolylineLines = (showLines && shouldUsePolylineForLines (selectedLevel));
-
-        // Prepare containers depending on mode
+        // Lines:
         if (showLines && usePolylineLines)
         {
             scratchPolylinePtsM.clear();
@@ -775,24 +830,26 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
         bool startedRepM = false, startedRepS = false;
 
+        const float bandRangeThresholdDb = 3.0f;
+
         for (size_t i = 0; i < n; ++i)
         {
             const float x = w - (float) scratchVisibleFramesAgo[i] * (float) zoomX;
             if (x < -10.0f)
                 continue;
 
-            const auto& gGroup = scratchVisibleGroups[i];
+            const auto& grp = scratchVisibleGroups[i];
 
-            const float yMM = dbToY (gGroup.momentaryMaxDb, h);
-            const float yMm = dbToY (gGroup.momentaryMinDb, h);
-            const float ySM = dbToY (gGroup.shortTermMaxDb, h);
-            const float ySm = dbToY (gGroup.shortTermMinDb, h);
+            const float yMM = dbToY (grp.momentaryMaxDb, h);
+            const float yMm = dbToY (grp.momentaryMinDb, h);
+            const float ySM = dbToY (grp.shortTermMaxDb, h);
+            const float ySm = dbToY (grp.shortTermMinDb, h);
 
             // [BAND-PATHS]
             if (showBands && selectedLevel > 0)
             {
-                const float rangeMM = gGroup.momentaryMaxDb - gGroup.momentaryMinDb;
-                const float rangeSM = gGroup.shortTermMaxDb - gGroup.shortTermMinDb;
+                const float rangeMM = grp.momentaryMaxDb - grp.momentaryMinDb;
+                const float rangeSM = grp.shortTermMaxDb - grp.shortTermMinDb;
 
                 if (rangeSM >= bandRangeThresholdDb)
                 {
@@ -807,31 +864,21 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
                 }
             }
 
-            // Lines
-            if (showLines)
+            // Lines in stroke mode only (polyline points are built in one pass later)
+            if (showLines && ! usePolylineLines)
             {
                 const float yRepM = dbToY (scratchRepMomentaryDb[i], h);
                 const float yRepS = dbToY (scratchRepShortTermDb[i], h);
 
-                if (usePolylineLines)
-                {
-                    // We will build compressed polylines in a second step (below).
-                    // Do nothing here.
-                    juce::ignoreUnused (yRepM, yRepS);
-                }
-                else
-                {
-                    // Original strokePath method (prettier)
-                    if (! startedRepS) { scratchPathRepS.startNewSubPath (x, yRepS); startedRepS = true; }
-                    else               { scratchPathRepS.lineTo         (x, yRepS); }
+                if (! startedRepS) { scratchPathRepS.startNewSubPath (x, yRepS); startedRepS = true; }
+                else               { scratchPathRepS.lineTo         (x, yRepS); }
 
-                    if (! startedRepM) { scratchPathRepM.startNewSubPath (x, yRepM); startedRepM = true; }
-                    else               { scratchPathRepM.lineTo          (x, yRepM); }
-                }
+                if (! startedRepM) { scratchPathRepM.startNewSubPath (x, yRepM); startedRepM = true; }
+                else               { scratchPathRepM.lineTo          (x, yRepM); }
             }
         }
 
-        // Draw bands (batched)
+        // Draw bands
         if (showBands && selectedLevel > 0)
         {
             g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.6f));
@@ -844,15 +891,12 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         // Draw lines
         if (showLines)
         {
-            const bool usePolylineLines = shouldUsePolylineForLines (selectedLevel);
-
             if (usePolylineLines)
             {
-                // [POLYLINE-DRAW] Build and draw pixel-aligned polylines (cheap)
+                // [POLYLINE-PEAK] + [POLYLINE-SNAP]
                 buildPolylinePoints (scratchVisibleFramesAgo, scratchRepShortTermDb, w, h, scratchPolylinePtsS);
                 buildPolylinePoints (scratchVisibleFramesAgo, scratchRepMomentaryDb, w, h, scratchPolylinePtsM);
 
-                // Use thinner lines in polyline mode to keep it crisp and cheap.
                 g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.9f));
                 drawPolyline (g, scratchPolylinePtsS, 1.0f);
 
@@ -861,7 +905,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             }
             else
             {
-                // Original strokePath rendering
                 g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.9f));
                 g.strokePath (scratchPathRepS, juce::PathStrokeType (1.5f));
 
@@ -872,8 +915,13 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     }
 
     //==========================================================================
-    // [RULER-XMAP] Time ruler: same x-mapping as curves
+    // [RULER-XMAP] + [RULER-STABLE]
+    //
+    // Fix the "move left then jump back" behavior by anchoring ticks to tRight:
+    //   lastTick = floor(tRight / tickStep) * tickStep
+    // and iterating leftwards. This is stable over time.
     //==========================================================================
+
     const float rulerHeight   = 16.0f;
     const float rulerBaseY    = (float) height - 2.0f;
     const float tickTopY      = rulerBaseY - 6.0f;
@@ -883,11 +931,14 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     {
         const double tRight = (double) totalFrames / visualFrameRate;
 
+        // History availability limited by ring buffer
         const double availableSeconds = (double) availableRaw / visualFrameRate;
         const double tEarliest = juce::jmax (0.0, tRight - availableSeconds);
 
+        // Match curve x-mapping offset at coarse levels
         const int pendingFramesOffset = getPendingFramesAtLevel (selectedLevel);
 
+        // Compute visible seconds based on x-mapping (no fake stretching)
         const double framesByWidth = (double) width / (zoomX > 1.0e-12 ? zoomX : 1.0e-12);
         const double effectiveFramesByWidth = juce::jmax (0.0, framesByWidth - (double) pendingFramesOffset);
 
@@ -898,6 +949,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         {
             const double tLeft = juce::jmax (tEarliest, tRight - visibleSeconds);
 
+            // Tick spacing (unchanged policy)
             const double maxLabels = 20.0;
             const double tickSteps[] = {
                 0.5, 1.0, 2.0, 5.0,
@@ -916,21 +968,27 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
                 }
             }
 
-            const double firstTick = std::ceil (tLeft / tickStep) * tickStep;
+            // [RULER-STABLE] Anchor to the right edge ("now")
+            const double eps = 1.0e-9;
+            const double lastTick = std::floor ((tRight + eps) / tickStep) * tickStep;
 
             g.setColour (juce::Colours::white);
             g.setFont (10.0f);
 
-            for (double t = firstTick; t <= tRight + 1e-9; t += tickStep)
+            for (double t = lastTick; t >= tLeft - eps; t -= tickStep)
             {
                 const double framesAgo = (tRight - t) * visualFrameRate;
                 const double framesAgoWithOffset = framesAgo + (double) pendingFramesOffset;
                 const float x = (float) ((double) width - framesAgoWithOffset * zoomX);
 
-                if (x < 0.0f || x > (float) width)
+                if (x < -2.0f)
+                    break; // further ticks will be even more left
+
+                if (x > (float) width + 2.0f)
                     continue;
 
-                g.drawVerticalLine ((int) std::round (x), tickTopY, rulerBaseY);
+                // Draw tick at float x to avoid rounding jitter
+                g.drawLine (x, tickTopY, x, rulerBaseY, 1.0f);
 
                 auto label = formatTimeHMS (t);
                 const float textWidth = 52.0f;
@@ -944,7 +1002,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         }
     }
 
-    // Overlay info (includes line render mode)
+    // Overlay info
     g.setColour (juce::Colours::white);
     g.setFont (14.0f);
 
@@ -969,7 +1027,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 }
 
 //==============================================================================
-// [ZOOM]
+// Zoom
 //==============================================================================
 
 void VolumeHistoryComponent::applyHorizontalZoom (float wheelDelta)
@@ -1001,7 +1059,7 @@ void VolumeHistoryComponent::applyVerticalZoom (float wheelDelta)
 }
 
 //==============================================================================
-// [MOUSE]
+// Mouse
 //==============================================================================
 
 void VolumeHistoryComponent::mouseWheelMove (const juce::MouseEvent& event,
@@ -1020,7 +1078,7 @@ void VolumeHistoryComponent::mouseWheelMove (const juce::MouseEvent& event,
 
 void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
 {
-    // [LINE-QUALITY] Cmd-click (mac) / Ctrl-click (win): cycle line render mode
+    // Cmd-click (mac) / Ctrl-click (win): cycle line render mode
     if (isModifierForQualityToggle (event.mods))
     {
         cycleLineRenderMode();
@@ -1028,9 +1086,7 @@ void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
         return;
     }
 
-    // Existing behavior:
-    // - Shift-click toggles bands
-    // - Plain click toggles lines
+    // Shift-click toggles bands; plain click toggles lines.
     if (event.mods.isShiftDown())
         showBands = ! showBands;
     else
