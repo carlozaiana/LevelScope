@@ -304,7 +304,7 @@ juce::int64 VolumeHistoryComponent::getTotalFramesL0() const noexcept
 }
 
 //==============================================================================
-// LOD selection  [STEP2-LOD-CAP] + [FIX-LINE-DROPOUT]
+// LOD selection  [STEP2-LOD-CAP] + [FIX-OSCILLATION]
 //==============================================================================
 
 int VolumeHistoryComponent::getMaxDrawablePoints (int widthPixels) const noexcept
@@ -314,13 +314,21 @@ int VolumeHistoryComponent::getMaxDrawablePoints (int widthPixels) const noexcep
     return juce::jlimit (256, 8192, target);
 }
 
+//==============================================================================
+// [FIX-OSCILLATION]
+//
+// Level selection now uses totalVisibleFrames (without pendingFrames) to
+// ensure stable level selection. pendingFrames oscillates 0 -> (span-1) -> 0,
+// which could cause level selection to flip at boundary zoom values.
+//==============================================================================
+
 int VolumeHistoryComponent::selectBestLevelForCurrentZoom (int widthPixels) const noexcept
 {
     const int maxPoints = getMaxDrawablePoints (widthPixels);
 
     const double safeZoomX = (zoomX > 1.0e-9 ? zoomX : 1.0e-9);
     const double overscanPixels = 10.0;
-    const double maxFramesVisible = ((double) widthPixels + overscanPixels) / safeZoomX;
+    const double totalVisibleFrames = ((double) widthPixels + overscanPixels) / safeZoomX;
 
     int bestLevel = -1;
 
@@ -335,21 +343,10 @@ int VolumeHistoryComponent::selectBestLevelForCurrentZoom (int widthPixels) cons
         if (spanFrames <= 0)
             continue;
 
-        // ---------------------------------------------------------------------
-        // [FIX-LINE-DROPOUT]
-        // For coarse levels, suppress pendingFrames to stabilize level selection.
-        // This prevents the predicted group count from oscillating, which would
-        // cause the level selection to flip at boundary zoom values.
-        // ---------------------------------------------------------------------
-        const bool suppressPending = (level >= coarseLevelStartForPixelAdvance);
-        const int rawPendingFrames = getPendingFramesAtLevel (level);
-        const int effectivePendingFrames = suppressPending ? 0 : rawPendingFrames;
-
-        double numerator = maxFramesVisible - (double) effectivePendingFrames;
-        if (numerator < 0.0)
-            numerator = 0.0;
-
-        const int predicted = (int) std::floor (numerator / (double) spanFrames) + 1;
+        // [FIX-OSCILLATION]
+        // Use totalVisibleFrames for prediction, NOT adjusted by pendingFrames.
+        // This makes level selection stable regardless of pending frame count.
+        const int predicted = (int) std::floor (totalVisibleFrames / (double) spanFrames) + 1;
         const int predictedClamped = juce::jlimit (1, available, predicted);
 
         if (predictedClamped <= maxPoints)
@@ -370,17 +367,21 @@ int VolumeHistoryComponent::selectBestLevelForCurrentZoom (int widthPixels) cons
 }
 
 //==============================================================================
-// [FIX-ACCORDION] + [FIX-LINE-DROPOUT]
+// [FIX-OSCILLATION]
 //
 // buildVisibleGroupsForLevel
 //
-// For coarse levels (>= coarseLevelStartForPixelAdvance), we suppress the
-// pendingFrames offset CONSISTENTLY in:
-//   1. Computing how many groups fit in the visible area (maxGroupsByX)
-//   2. Computing the framesAgo value for X position calculation
+// Root cause of oscillation: pendingFrames affects maxGroupsByX, which affects
+// step calculation. When pendingFrames oscillates (0 -> span-1 -> 0), step
+// can oscillate near threshold values, causing point spacing to oscillate.
 //
-// This must match the suppression in selectBestLevelForCurrentZoom to ensure
-// the group count and positions are computed identically.
+// Fix: compute step based on TOTAL visible frames (zoom-dependent only).
+// This makes step stable. Point positions can still use pendingFrames for
+// smooth scrolling at fine levels, but the SPACING is always uniform.
+//
+// Additional fix: iterate from groupsAgo=0 with fixed step instead of 
+// computing positions from outCount. This anchors the sampling grid to the
+// right edge and prevents the entire grid from shifting when outCount changes.
 //==============================================================================
 
 void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
@@ -404,63 +405,69 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
     if (spanFrames <= 0 || zoomX <= 0.0)
         return;
 
-    // -------------------------------------------------------------------------
-    // [FIX-LINE-DROPOUT]
-    // For coarse levels, suppress pendingFrames entirely to prevent:
-    //   - Accordion effect (parts of curve advancing at different rates)
-    //   - Line dropout (groups popping in/out due to count fluctuation)
-    //
-    // The key insight: pendingFrames oscillates 0 -> (spanFrames-1) -> 0.
-    // At coarse levels, this oscillation is sub-pixel, so we can safely
-    // ignore it. But we MUST ignore it consistently everywhere.
-    // -------------------------------------------------------------------------
-    const bool suppressPendingOffset = (levelIndex >= coarseLevelStartForPixelAdvance);
     const int rawPendingFrames = getPendingFramesAtLevel (levelIndex);
-    const int effectivePendingFrames = suppressPendingOffset ? 0 : rawPendingFrames;
 
     const double overscanPixels = 10.0;
-    const double maxFramesVisible = ((double) widthPixels + overscanPixels) / zoomX;
-    if (maxFramesVisible <= 0.0)
+    const double totalVisibleFrames = ((double) widthPixels + overscanPixels) / zoomX;
+    if (totalVisibleFrames <= 0.0)
         return;
 
-    int maxGroupsByX = 0;
-    {
-        // [FIX-LINE-DROPOUT] Use effectivePendingFrames here
-        double numerator = maxFramesVisible - (double) effectivePendingFrames;
-        if (numerator < 0.0)
-            numerator = 0.0;
-
-        const double maxGroupsFloat = numerator / (double) spanFrames;
-        maxGroupsByX = (int) std::floor (maxGroupsFloat) + 1;
-    }
-
-    if (maxGroupsByX <= 0)
-        return;
-
-    const int groupsToUse = juce::jlimit (0, availableGroups, maxGroupsByX);
-    if (groupsToUse <= 0)
-        return;
-
+    // -------------------------------------------------------------------------
+    // [FIX-OSCILLATION] STEP 1: Compute step based on total visible frames
+    //
+    // This makes step depend ONLY on zoom level, not on pendingFrames.
+    // pendingFrames oscillates 0 -> (groupsPerGroup * prevSpanFrames - 1) -> 0,
+    // which would cause step to oscillate if used in this calculation.
+    // -------------------------------------------------------------------------
+    const int maxGroupsForStep = (int) std::floor (totalVisibleFrames / (double) spanFrames) + 1;
     const int maxDrawablePoints = getMaxDrawablePoints (widthPixels);
 
-    const int step = (groupsToUse > maxDrawablePoints
-                        ? (int) std::ceil ((double) groupsToUse / (double) maxDrawablePoints)
-                        : 1);
+    const int step = (maxGroupsForStep > maxDrawablePoints)
+                        ? ((maxGroupsForStep + maxDrawablePoints - 1) / maxDrawablePoints)
+                        : 1;
 
-    const int outCount = (step > 1
-                            ? (int) std::ceil ((double) groupsToUse / (double) step)
-                            : groupsToUse);
+    // -------------------------------------------------------------------------
+    // [FIX-OSCILLATION] STEP 2: Decide pendingFrames usage for positions
+    //
+    // Fine levels (< coarseLevelStartForPixelAdvance): use pendingFrames for
+    // smooth scrolling. The spacing is stable (step is stable), only the
+    // absolute positions shift smoothly.
+    //
+    // Coarse levels (>= coarseLevelStartForPixelAdvance): suppress pendingFrames.
+    // Updates happen in discrete group-sized steps (all points move together).
+    // -------------------------------------------------------------------------
+    const bool suppressPendingForPositions = (levelIndex >= coarseLevelStartForPixelAdvance);
+    const int pendingForPositions = suppressPendingForPositions ? 0 : rawPendingFrames;
 
-    if (outCount < 2)
+    // -------------------------------------------------------------------------
+    // [FIX-OSCILLATION] STEP 3: Compute how many groups to use
+    //
+    // For clipping, we need to account for pendingFrames to know what fits.
+    // But use the position-adjusted value, not the raw value.
+    // -------------------------------------------------------------------------
+    const double effectiveVisibleFrames = totalVisibleFrames - (double) pendingForPositions;
+    const int maxGroupsByX = (effectiveVisibleFrames > 0.0)
+                                ? (int) std::floor (effectiveVisibleFrames / (double) spanFrames) + 1
+                                : 0;
+
+    const int groupsToUse = juce::jlimit (0, availableGroups, juce::jmax (0, maxGroupsByX));
+    if (groupsToUse < 2)
         return;
 
-    outGroups.resize ((size_t) outCount);
-    outFramesAgo.resize ((size_t) outCount);
+    // -------------------------------------------------------------------------
+    // [FIX-OSCILLATION] STEP 4: Iterate from groupsAgo=0 with fixed step
+    //
+    // This anchors the sampling grid to the right edge (most recent data).
+    // When new data arrives, old points shift left but spacing stays uniform.
+    // -------------------------------------------------------------------------
+    const int estimatedCount = (groupsToUse / step) + 2;
+    outGroups.reserve ((size_t) estimatedCount);
+    outFramesAgo.reserve ((size_t) estimatedCount);
 
-    for (int chunkChronoIndex = 0; chunkChronoIndex < outCount; ++chunkChronoIndex)
+    for (int groupsAgo = 0; groupsAgo < groupsToUse; groupsAgo += step)
     {
-        const int baseGroupsAgo = (outCount - 1 - chunkChronoIndex) * step;
-        const int endGroupsAgo  = juce::jmin (groupsToUse - 1, baseGroupsAgo + step - 1);
+        // Aggregate over [groupsAgo, groupsAgo + step - 1], clamped to available
+        const int endGroupsAgo = juce::jmin (groupsToUse - 1, groupsAgo + step - 1);
 
         FrameGroup agg;
         agg.momentaryMinDb =  std::numeric_limits<float>::infinity();
@@ -468,7 +475,7 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
         agg.shortTermMinDb =  std::numeric_limits<float>::infinity();
         agg.shortTermMaxDb = -std::numeric_limits<float>::infinity();
 
-        for (int ga = baseGroupsAgo; ga <= endGroupsAgo; ++ga)
+        for (int ga = groupsAgo; ga <= endGroupsAgo; ++ga)
         {
             const FrameGroup gg = getGroupAgo (levelIndex, ga);
 
@@ -478,15 +485,21 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
             agg.shortTermMaxDb = std::max (agg.shortTermMaxDb, gg.shortTermMaxDb);
         }
 
-        const double centerGroupsAgo = 0.5 * (double) (baseGroupsAgo + endGroupsAgo);
-
-        // [FIX-LINE-DROPOUT] Use effectivePendingFrames here too (consistent)
-        const double framesAgoD = (double) effectivePendingFrames + centerGroupsAgo * (double) spanFrames;
+        // Center of the aggregated range for position calculation
+        const double centerGroupsAgo = 0.5 * (double) (groupsAgo + endGroupsAgo);
+        const double framesAgoD = (double) pendingForPositions + centerGroupsAgo * (double) spanFrames;
         const int framesAgoI = (int) std::round (framesAgoD);
 
-        outGroups[(size_t) chunkChronoIndex] = agg;
-        outFramesAgo[(size_t) chunkChronoIndex] = framesAgoI;
+        outGroups.push_back (agg);
+        outFramesAgo.push_back (framesAgoI);
     }
+
+    // -------------------------------------------------------------------------
+    // Reverse to chronological order (oldest first).
+    // computeRepresentativeCurves expects chronological order for trend calc.
+    // -------------------------------------------------------------------------
+    std::reverse (outGroups.begin(), outGroups.end());
+    std::reverse (outFramesAgo.begin(), outFramesAgo.end());
 }
 
 //==============================================================================
