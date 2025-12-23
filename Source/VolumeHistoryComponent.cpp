@@ -1,3 +1,12 @@
+// ============================================================================
+// VolumeHistoryComponent.cpp
+// ============================================================================
+//
+// [FIX-ACCORDION]     : Suppress pendingFrames offset for curve at coarse levels
+// [FIX-RULER-JITTER]  : Suppress pendingFrames offset for ruler at coarse levels
+//
+// ============================================================================
+
 #include "VolumeHistoryComponent.h"
 #include "PluginProcessor.h"
 
@@ -5,7 +14,10 @@
 #include <algorithm>
 #include <limits>
 
+//==============================================================================
 // Helper: format seconds as HH:MM:SS
+//==============================================================================
+
 static juce::String formatTimeHMS (double seconds)
 {
     if (seconds < 0.0)
@@ -251,41 +263,18 @@ int VolumeHistoryComponent::getAvailableGroups (int levelIndex) const noexcept
     return (int) available;
 }
 
-//==============================================================================
-// [FIX-SMOOTH-SCROLL]
-// Returns a CONTINUOUS offset in raw frames that increases by 1 each frame.
-// This replaces the old getPendingFramesAtLevel() which had discontinuous jumps
-// whenever a group was completed (resetting pendingCount from 3 back to 0).
-//
-// The continuous offset is: totalFramesL0 % spanFrames
-// - At level 0: always 0 (every raw frame is its own group)
-// - At level 1 (spanFrames=4): cycles 0,1,2,3,0,1,2,3,...
-// - At level 2 (spanFrames=16): cycles 0,1,2,...,15,0,1,...
-// etc.
-//
-// This ensures all curve points and ruler ticks shift uniformly by the same
-// sub-pixel amount each frame, eliminating the "accordion" effect and ruler jitter.
-//==============================================================================
-
-int VolumeHistoryComponent::getContinuousPendingFramesAtLevel (int levelIndex) const noexcept
+int VolumeHistoryComponent::getPendingFramesAtLevel (int levelIndex) const noexcept
 {
-    // Level 0 has no pending concept - each raw frame is written immediately
-    if (levelIndex <= 0)
-        return 0;
-        
-    if (levelIndex >= maxLevels)
+    if (levelIndex <= 0 || levelIndex >= maxLevels)
         return 0;
 
-    const auto& L = levels[(size_t) levelIndex];
-    
-    if (L.spanFrames <= 0)
+    const auto& L     = levels[(size_t) levelIndex];
+    const auto& Lprev = levels[(size_t) (levelIndex - 1)];
+
+    if (L.pendingCount <= 0)
         return 0;
 
-    const juce::int64 totalFrames = getTotalFramesL0();
-    
-    // Continuous offset: how many raw frames since the last complete group at this level
-    // This value increases by 1 each raw frame, wrapping at spanFrames
-    return (int) (totalFrames % (juce::int64) L.spanFrames);
+    return L.pendingCount * Lprev.spanFrames;
 }
 
 VolumeHistoryComponent::FrameGroup VolumeHistoryComponent::getGroupAgo (int levelIndex,
@@ -346,8 +335,7 @@ int VolumeHistoryComponent::selectBestLevelForCurrentZoom (int widthPixels) cons
         if (spanFrames <= 0)
             continue;
 
-        // [FIX-SMOOTH-SCROLL] Use continuous offset for LOD selection
-        const int pendingFrames = getContinuousPendingFramesAtLevel (level);
+        const int pendingFrames = getPendingFramesAtLevel (level);
 
         double numerator = maxFramesVisible - (double) pendingFrames;
         if (numerator < 0.0)
@@ -373,6 +361,18 @@ int VolumeHistoryComponent::selectBestLevelForCurrentZoom (int widthPixels) cons
     return 0;
 }
 
+//==============================================================================
+// [FIX-ACCORDION] buildVisibleGroupsForLevel
+//
+// For coarse levels (>= coarseLevelStartForPixelAdvance), we suppress the
+// pendingFrames offset when computing framesAgo. This prevents the "accordion"
+// effect where different parts of the curve advance at different times due to
+// the oscillating pendingFrames value (which cycles 0 -> spanFrames-1 -> 0).
+//
+// The curve will now update in discrete "group-sized" steps instead of
+// continuously interpolating with a saw-tooth offset.
+//==============================================================================
+
 void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
                                                          int widthPixels,
                                                          std::vector<FrameGroup>& outGroups,
@@ -394,8 +394,7 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
     if (spanFrames <= 0 || zoomX <= 0.0)
         return;
 
-    // [FIX-SMOOTH-SCROLL] Use continuous offset instead of discontinuous pendingCount
-    const int pendingFrames = getContinuousPendingFramesAtLevel (levelIndex);
+    const int pendingFrames = getPendingFramesAtLevel (levelIndex);
 
     const double overscanPixels = 10.0;
     const double maxFramesVisible = ((double) widthPixels + overscanPixels) / zoomX;
@@ -435,6 +434,14 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
     outGroups.resize ((size_t) outCount);
     outFramesAgo.resize ((size_t) outCount);
 
+    // -------------------------------------------------------------------------
+    // [FIX-ACCORDION]
+    // For coarse levels, suppress the pendingFrames offset to avoid oscillation.
+    // The curve will update in discrete steps (all parts moving together).
+    // -------------------------------------------------------------------------
+    const bool suppressPendingOffset = (levelIndex >= coarseLevelStartForPixelAdvance);
+    const double pendingForOffset = suppressPendingOffset ? 0.0 : (double) pendingFrames;
+
     for (int chunkChronoIndex = 0; chunkChronoIndex < outCount; ++chunkChronoIndex)
     {
         const int baseGroupsAgo = (outCount - 1 - chunkChronoIndex) * step;
@@ -456,12 +463,10 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
             agg.shortTermMaxDb = std::max (agg.shortTermMaxDb, gg.shortTermMaxDb);
         }
 
-        // [FIX-SMOOTH-SCROLL] Use uniform chunk spacing for framesAgo
-        // Instead of centerGroupsAgo which can shift irregularly when step>1,
-        // use the chunk index directly to ensure uniform spacing
-        const double chunksAgo = (double) (outCount - 1 - chunkChronoIndex);
-        const double framesPerChunk = (double) step * (double) spanFrames;
-        const double framesAgoD = (double) pendingFrames + chunksAgo * framesPerChunk;
+        const double centerGroupsAgo = 0.5 * (double) (baseGroupsAgo + endGroupsAgo);
+
+        // [FIX-ACCORDION] Use pendingForOffset (0 for coarse levels) instead of pendingFrames
+        const double framesAgoD = pendingForOffset + centerGroupsAgo * (double) spanFrames;
         const int framesAgoI = (int) std::round (framesAgoD);
 
         outGroups[(size_t) chunkChronoIndex] = agg;
@@ -878,7 +883,15 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     const juce::int64 availableRaw  = std::min<juce::int64> ((juce::int64) rawCapacityFrames, totalFrames);
 
     const int selectedLevel = selectBestLevelForCurrentZoom (width);
-    const int pendingFramesOffset = getPendingFramesAtLevel (selectedLevel);
+
+    // -------------------------------------------------------------------------
+    // [FIX-RULER-JITTER]
+    // For coarse levels, suppress pendingFramesOffset to prevent the ruler
+    // from jumping back-and-forth as the pendingFrames value oscillates.
+    // -------------------------------------------------------------------------
+    const bool suppressPendingOffset = (selectedLevel >= coarseLevelStartForPixelAdvance);
+    const int rawPendingFramesOffset = getPendingFramesAtLevel (selectedLevel);
+    const int pendingFramesOffset = suppressPendingOffset ? 0 : rawPendingFramesOffset;
 
     buildVisibleGroupsForLevel (selectedLevel, width, scratchVisibleGroups, scratchVisibleFramesAgo);
 
@@ -993,8 +1006,9 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     }
 
     //==========================================================================
-    // [RULER-FRAMES]
+    // [RULER-FRAMES] + [FIX-RULER-JITTER]
     // Ruler ticks computed in integer frames to eliminate flip-flop and jitter.
+    // For coarse levels, pendingFramesOffset is suppressed (set to 0 above).
     //==========================================================================
     const float rulerHeight   = 16.0f;
     const float rulerBaseY    = (float) height - 2.0f;
@@ -1028,6 +1042,8 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             for (juce::int64 tickFrame = lastTickFrame; tickFrame >= leftFrame; tickFrame -= tickStepFrames)
             {
                 const juce::int64 framesAgo = totalFrames - tickFrame;
+
+                // [FIX-RULER-JITTER] pendingFramesOffset is 0 for coarse levels
                 const double framesAgoWithOffset = (double) framesAgo + (double) pendingFramesOffset;
 
                 float x = (float) ((double) width - framesAgoWithOffset * zoomX);

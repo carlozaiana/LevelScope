@@ -10,239 +10,236 @@ class LevelScopeAudioProcessor;
 // VolumeHistoryComponent
 //
 // [SECTION TAGS]
-//   - [STEP1-PERF]        : repaint only on new data + reused scratch buffers
-//   - [STEP2-LOD-CAP]     : cap drawable points + improved LOD selection
-//   - [CACHE-STATIC]      : cached static background (grid + ruler baseline)
-//   - [LINE-QUALITY]      : render mode (stroke vs polyline)
-//   - [BAND-PATHS]        : batch band segments into 2 paths
-//   - [POLYLINE-PEAK]     : peak-preserving per-pixel-column selection
-//   - [PIXEL-ADVANCE-FIX] : pixel advance by quantizing X (no wrap/jump-back)
-//   - [RULER-FRAMES]      : ruler ticks computed in integer frames (stable)
-//   - [RULER-HYST-FIX]    : tickStep hysteresis that doesn't thrash while zooming
-//   - [FIX-SMOOTH-SCROLL] : continuous pending offset to fix accordion/ruler jump
+// - [STEP1-PERF] : repaint only on new data + reused scratch buffers
+// - [STEP2-LOD-CAP] : cap drawable points + improved LOD selection
+// - [CACHE-STATIC] : cached static background (grid + ruler baseline)
+// - [LINE-QUALITY] : render mode (stroke vs polyline)
+// - [BAND-PATHS] : batch band segments into 2 paths
+// - [POLYLINE-PEAK] : peak-preserving per-pixel-column selection
+// - [PIXEL-ADVANCE-FIX] : pixel advance by quantizing X (no wrap/jump-back)
+// - [RULER-FRAMES] : ruler ticks computed in integer frames (stable)
+// - [RULER-HYST-FIX] : tickStep hysteresis that doesn't thrash while zooming
 //==============================================================================
 
 class VolumeHistoryComponent : public juce::Component,
-                               private juce::Timer
+private juce::Timer
 {
 public:
-    explicit VolumeHistoryComponent (LevelScopeAudioProcessor& processor);
-    ~VolumeHistoryComponent() override;
+explicit VolumeHistoryComponent (LevelScopeAudioProcessor& processor);
+~VolumeHistoryComponent() override;
 
-    void paint (juce::Graphics& g) override;
-    void resized() override;
+void paint (juce::Graphics& g) override;
+void resized() override;
 
-    void mouseWheelMove (const juce::MouseEvent& event,
-                         const juce::MouseWheelDetails& wheel) override;
+void mouseWheelMove (const juce::MouseEvent& event,
+                     const juce::MouseWheelDetails& wheel) override;
 
-    void mouseDown (const juce::MouseEvent& event) override;
+void mouseDown (const juce::MouseEvent& event) override;
 
 private:
-    //==============================================================================
-    // History structures
-    //==============================================================================
+//==============================================================================
+// History structures
+//==============================================================================
 
-    struct FrameGroup
-    {
-        float momentaryMinDb = -90.0f;
-        float momentaryMaxDb = -90.0f;
-        float shortTermMinDb = -90.0f;
-        float shortTermMaxDb = -90.0f;
-    };
+struct FrameGroup
+{
+    float momentaryMinDb = -90.0f;
+    float momentaryMaxDb = -90.0f;
+    float shortTermMinDb = -90.0f;
+    float shortTermMaxDb = -90.0f;
+};
 
-    struct HistoryLevel
-    {
-        int                 levelIndex      = 0;
-        int                 groupsPerGroup  = 1;
-        int                 spanFrames      = 1;
-        int                 capacity        = 0;
-        std::vector<FrameGroup> groups;
-        int                 writeIndex      = 0;
-        juce::int64         totalGroups     = 0;
+struct HistoryLevel
+{
+    int                 levelIndex      = 0;
+    int                 groupsPerGroup  = 1;
+    int                 spanFrames      = 1;
+    int                 capacity        = 0;
+    std::vector<FrameGroup> groups;
+    int                 writeIndex      = 0;
+    juce::int64         totalGroups     = 0;
 
-        FrameGroup          pending;
-        int                 pendingCount    = 0;
-    };
+    FrameGroup          pending;
+    int                 pendingCount    = 0;
+};
 
-    //==============================================================================
-    // Timer
-    //==============================================================================
+//==============================================================================
+// Timer
+//==============================================================================
 
-    void timerCallback() override;
+void timerCallback() override;
 
-    //==============================================================================
-    // History init/update
-    //==============================================================================
+//==============================================================================
+// History init/update
+//==============================================================================
 
-    void initialiseHistoryLevels();
-    void resetHistoryLevels();
+void initialiseHistoryLevels();
+void resetHistoryLevels();
 
-    bool drainProcessorFifo(); // [STEP1-PERF]
-    void pushFrameToHistory (float momentaryRms, float shortTermRms);
+bool drainProcessorFifo(); // [STEP1-PERF]
+void pushFrameToHistory (float momentaryRms, float shortTermRms);
 
-    void writeGroupToLevel (int levelIndex, const FrameGroup& group);
-    void accumulateToHigherLevels (int levelIndex, const FrameGroup& sourceGroup);
+void writeGroupToLevel (int levelIndex, const FrameGroup& group);
+void accumulateToHigherLevels (int levelIndex, const FrameGroup& sourceGroup);
 
-    //==============================================================================
-    // History access
-    //==============================================================================
+//==============================================================================
+// History access
+//==============================================================================
 
-    int getAvailableGroups (int levelIndex) const noexcept;
-    
-    // [FIX-SMOOTH-SCROLL] Continuous offset that increases by 1 each raw frame
-    int getContinuousPendingFramesAtLevel (int levelIndex) const noexcept;
-    
-    FrameGroup getGroupAgo (int levelIndex, int groupsAgo) const noexcept;
-    juce::int64 getTotalFramesL0() const noexcept;
+int getAvailableGroups (int levelIndex) const noexcept;
+int getPendingFramesAtLevel (int levelIndex) const noexcept;
+FrameGroup getGroupAgo (int levelIndex, int groupsAgo) const noexcept;
+juce::int64 getTotalFramesL0() const noexcept;
 
-    //==============================================================================
-    // LOD selection
-    //==============================================================================
+//==============================================================================
+// LOD selection
+//==============================================================================
 
-    int getMaxDrawablePoints (int widthPixels) const noexcept;
-    int selectBestLevelForCurrentZoom (int widthPixels) const noexcept;
+int getMaxDrawablePoints (int widthPixels) const noexcept;
+int selectBestLevelForCurrentZoom (int widthPixels) const noexcept;
 
-    void buildVisibleGroupsForLevel (int levelIndex,
-                                     int widthPixels,
-                                     std::vector<FrameGroup>& outGroups,
-                                     std::vector<int>& outFramesAgo) const;
+void buildVisibleGroupsForLevel (int levelIndex,
+                                 int widthPixels,
+                                 std::vector<FrameGroup>& outGroups,
+                                 std::vector<int>& outFramesAgo) const;
 
-    //==============================================================================
-    // Representative curve
-    //==============================================================================
+//==============================================================================
+// Representative curve
+//==============================================================================
 
-    void computeRepresentativeCurves (const std::vector<FrameGroup>& groups,
-                                      std::vector<float>& repMomentary,
-                                      std::vector<float>& repShortTerm) const;
+void computeRepresentativeCurves (const std::vector<FrameGroup>& groups,
+                                  std::vector<float>& repMomentary,
+                                  std::vector<float>& repShortTerm) const;
 
-    //==============================================================================
-    // Drawing helpers
-    //==============================================================================
+//==============================================================================
+// Drawing helpers
+//==============================================================================
 
-    float dbToY (float db, float height) const noexcept;
+float dbToY (float db, float height) const noexcept;
 
-    // [PIXEL-ADVANCE-FIX] quantize x to pixel centers in polyline mode
-    float quantizeXToPixelCenter (float x) const noexcept;
+// [PIXEL-ADVANCE-FIX] quantize x to pixel centers in polyline mode
+float quantizeXToPixelCenter (float x) const noexcept;
 
-    //==============================================================================
-    // Cached background
-    //==============================================================================
+//==============================================================================
+// Cached background
+//==============================================================================
 
-    void markStaticBackgroundDirty() noexcept;
-    void rebuildStaticBackgroundIfNeeded();
+void markStaticBackgroundDirty() noexcept;
+void rebuildStaticBackgroundIfNeeded();
 
-    //==============================================================================
-    // [LINE-QUALITY]
-    //==============================================================================
+//==============================================================================
+// [LINE-QUALITY]
+//==============================================================================
 
-    bool isModifierForQualityToggle (const juce::ModifierKeys& mods) const noexcept;
-    void cycleLineRenderMode() noexcept;
-    bool shouldUsePolylineForLines (int selectedLevel) const noexcept;
+bool isModifierForQualityToggle (const juce::ModifierKeys& mods) const noexcept;
+void cycleLineRenderMode() noexcept;
+bool shouldUsePolylineForLines (int selectedLevel) const noexcept;
 
-    //==============================================================================
-    // Polyline drawing (cheap)
-    //==============================================================================
+//==============================================================================
+// Polyline drawing (cheap)
+//==============================================================================
 
-    // [POLYLINE-PEAK] + [PIXEL-ADVANCE-FIX]
-    void buildPolylinePoints (const std::vector<int>& framesAgo,
-                              const std::vector<float>& repDb,
-                              float width,
-                              float height,
-                              std::vector<juce::Point<float>>& outPoints) const;
+// [POLYLINE-PEAK] + [PIXEL-ADVANCE-FIX]
+void buildPolylinePoints (const std::vector<int>& framesAgo,
+                          const std::vector<float>& repDb,
+                          float width,
+                          float height,
+                          std::vector<juce::Point<float>>& outPoints) const;
 
-    void drawPolyline (juce::Graphics& g,
-                       const std::vector<juce::Point<float>>& pts,
-                       float thickness) const;
+void drawPolyline (juce::Graphics& g,
+                   const std::vector<juce::Point<float>>& pts,
+                   float thickness) const;
 
-    //==============================================================================
-    // [RULER-HYST-FIX]
-    // Tick step hysteresis based on pixels-per-second (zoom), not visibleSeconds.
-    //==============================================================================
+//==============================================================================
+// [RULER-HYST-FIX]
+// Tick step hysteresis based on pixels-per-second (zoom), not visibleSeconds.
+//==============================================================================
 
-    double getTickStepSecondsWithHysteresis (int widthPixels) noexcept;
+double getTickStepSecondsWithHysteresis (int widthPixels) noexcept;
 
-    //==============================================================================
-    // Zoom
-    //==============================================================================
+//==============================================================================
+// Zoom
+//==============================================================================
 
-    void applyHorizontalZoom (float wheelDelta);
-    void applyVerticalZoom   (float wheelDelta);
+void applyHorizontalZoom (float wheelDelta);
+void applyVerticalZoom   (float wheelDelta);
 
-    //==============================================================================
-    // Members
-    //==============================================================================
+//==============================================================================
+// Members
+//==============================================================================
 
-    LevelScopeAudioProcessor& processor;
+LevelScopeAudioProcessor& processor;
 
-    const double visualFrameRate;
-    const double historyLengthSeconds;
+const double visualFrameRate;
+const double historyLengthSeconds;
 
-    const float minDb;
-    const float maxDb;
-    const float baseDbRange;
+const float minDb;
+const float maxDb;
+const float baseDbRange;
 
-    int rawCapacityFrames = 0;
+int rawCapacityFrames = 0;
 
-    static constexpr int maxLevels      = 6;
-    static constexpr int groupsPerLevel = 4;
-    std::array<HistoryLevel, maxLevels> levels;
+static constexpr int maxLevels      = 6;
+static constexpr int groupsPerLevel = 4;
+std::array<HistoryLevel, maxLevels> levels;
 
-    // Zoom parameters
-    double zoomX      = 5.0;
-    double minZoomX   = 0.0005;
-    double maxZoomX   = 1.333;
-    double zoomY      = 1.0;
-    double minZoomY   = 0.25;
-    double maxZoomY   = 4.0;
+// Zoom parameters
+double zoomX      = 5.0;
+double minZoomX   = 0.0005;
+double maxZoomX   = 1.333;
+double zoomY      = 1.0;
+double minZoomY   = 0.25;
+double maxZoomY   = 4.0;
 
-    bool hasCustomZoomX = false;
+bool hasCustomZoomX = false;
 
-    bool showBands = true;
-    bool showLines = true;
+bool showBands = true;
+bool showLines = true;
 
-    // [LINE-QUALITY]
-    int lineRenderMode = 0;              // 0=Auto, 1=Force Stroke, 2=Force Polyline
-    int coarseLevelStartForPolyline = 3; // Auto: polyline from this level upward
+// [LINE-QUALITY]
+int lineRenderMode = 0;              // 0=Auto, 1=Force Stroke, 2=Force Polyline
+int coarseLevelStartForPolyline = 3; // Auto: polyline from this level upward
 
-    // [PIXEL-ADVANCE-FIX]
-    // We quantize X to pixels only when in polyline mode AND level is coarse enough.
-    int coarseLevelStartForPixelAdvance = 3;
+// [PIXEL-ADVANCE-FIX]
+// We quantize X to pixels only when in polyline mode AND level is coarse enough.
+int coarseLevelStartForPixelAdvance = 3;
 
-    // [RULER-HYST-FIX]
-    int tickStepIndex = -1; // remembered tickStep choice (hysteresis)
+// [RULER-HYST-FIX]
+int tickStepIndex = -1; // remembered tickStep choice (hysteresis)
 
-    //==============================================================================
-    // Scratch buffers
-    //==============================================================================
+//==============================================================================
+// Scratch buffers
+//==============================================================================
 
-    mutable std::vector<FrameGroup> scratchVisibleGroups;
-    mutable std::vector<int>        scratchVisibleFramesAgo;
+mutable std::vector<FrameGroup> scratchVisibleGroups;
+mutable std::vector<int>        scratchVisibleFramesAgo;
 
-    mutable std::vector<float>      scratchRepMomentaryDb;
-    mutable std::vector<float>      scratchRepShortTermDb;
+mutable std::vector<float>      scratchRepMomentaryDb;
+mutable std::vector<float>      scratchRepShortTermDb;
 
-    // Stroke-path mode scratch
-    mutable juce::Path              scratchPathRepM;
-    mutable juce::Path              scratchPathRepS;
+// Stroke-path mode scratch
+mutable juce::Path              scratchPathRepM;
+mutable juce::Path              scratchPathRepS;
 
-    // Bands (batched)
-    mutable juce::Path              scratchPathBandM;
-    mutable juce::Path              scratchPathBandS;
+// Bands (batched)
+mutable juce::Path              scratchPathBandM;
+mutable juce::Path              scratchPathBandS;
 
-    // Polyline mode scratch
-    mutable std::vector<juce::Point<float>> scratchPolylinePtsM;
-    mutable std::vector<juce::Point<float>> scratchPolylinePtsS;
+// Polyline mode scratch
+mutable std::vector<juce::Point<float>> scratchPolylinePtsM;
+mutable std::vector<juce::Point<float>> scratchPolylinePtsS;
 
-    //==============================================================================
-    // Cached background
-    //==============================================================================
+//==============================================================================
+// Cached background
+//==============================================================================
 
-    juce::Image cachedStaticBackground;
-    bool        staticBackgroundDirty = true;
+juce::Image cachedStaticBackground;
+bool        staticBackgroundDirty = true;
 
-    int         cachedBgW = 0;
-    int         cachedBgH = 0;
-    double      cachedBgZoomY = 1.0;
+int         cachedBgW = 0;
+int         cachedBgH = 0;
+double      cachedBgZoomY = 1.0;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VolumeHistoryComponent)
+JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VolumeHistoryComponent)
+
 };
