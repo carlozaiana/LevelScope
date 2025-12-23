@@ -362,15 +362,17 @@ int VolumeHistoryComponent::selectBestLevelForCurrentZoom (int widthPixels) cons
 }
 
 //==============================================================================
-// [FIX-ACCORDION] buildVisibleGroupsForLevel
+// [FIX-ACCORDION] + [FIX-LINE-DROPOUT]
+//
+// buildVisibleGroupsForLevel
 //
 // For coarse levels (>= coarseLevelStartForPixelAdvance), we suppress the
-// pendingFrames offset when computing framesAgo. This prevents the "accordion"
-// effect where different parts of the curve advance at different times due to
-// the oscillating pendingFrames value (which cycles 0 -> spanFrames-1 -> 0).
+// pendingFrames offset CONSISTENTLY in:
+//   1. Computing how many groups fit in the visible area (maxGroupsByX)
+//   2. Computing the framesAgo value for X position calculation
 //
-// The curve will now update in discrete "group-sized" steps instead of
-// continuously interpolating with a saw-tooth offset.
+// If these are inconsistent, groups will pop in/out of existence as the
+// pendingFrames value oscillates (the "line dropout" bug).
 //==============================================================================
 
 void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
@@ -394,7 +396,19 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
     if (spanFrames <= 0 || zoomX <= 0.0)
         return;
 
-    const int pendingFrames = getPendingFramesAtLevel (levelIndex);
+    // -------------------------------------------------------------------------
+    // [FIX-LINE-DROPOUT]
+    // For coarse levels, suppress pendingFrames entirely to prevent:
+    //   - Accordion effect (parts of curve advancing at different rates)
+    //   - Line dropout (groups popping in/out due to count fluctuation)
+    //
+    // The key insight: pendingFrames oscillates 0 -> (spanFrames-1) -> 0.
+    // At coarse levels, this oscillation is sub-pixel, so we can safely
+    // ignore it. But we MUST ignore it consistently everywhere.
+    // -------------------------------------------------------------------------
+    const bool suppressPendingOffset = (levelIndex >= coarseLevelStartForPixelAdvance);
+    const int rawPendingFrames = getPendingFramesAtLevel (levelIndex);
+    const int effectivePendingFrames = suppressPendingOffset ? 0 : rawPendingFrames;
 
     const double overscanPixels = 10.0;
     const double maxFramesVisible = ((double) widthPixels + overscanPixels) / zoomX;
@@ -403,7 +417,8 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
 
     int maxGroupsByX = 0;
     {
-        double numerator = maxFramesVisible - (double) pendingFrames;
+        // [FIX-LINE-DROPOUT] Use effectivePendingFrames here (was: rawPendingFrames)
+        double numerator = maxFramesVisible - (double) effectivePendingFrames;
         if (numerator < 0.0)
             numerator = 0.0;
 
@@ -434,14 +449,6 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
     outGroups.resize ((size_t) outCount);
     outFramesAgo.resize ((size_t) outCount);
 
-    // -------------------------------------------------------------------------
-    // [FIX-ACCORDION]
-    // For coarse levels, suppress the pendingFrames offset to avoid oscillation.
-    // The curve will update in discrete steps (all parts moving together).
-    // -------------------------------------------------------------------------
-    const bool suppressPendingOffset = (levelIndex >= coarseLevelStartForPixelAdvance);
-    const double pendingForOffset = suppressPendingOffset ? 0.0 : (double) pendingFrames;
-
     for (int chunkChronoIndex = 0; chunkChronoIndex < outCount; ++chunkChronoIndex)
     {
         const int baseGroupsAgo = (outCount - 1 - chunkChronoIndex) * step;
@@ -465,8 +472,8 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
 
         const double centerGroupsAgo = 0.5 * (double) (baseGroupsAgo + endGroupsAgo);
 
-        // [FIX-ACCORDION] Use pendingForOffset (0 for coarse levels) instead of pendingFrames
-        const double framesAgoD = pendingForOffset + centerGroupsAgo * (double) spanFrames;
+        // [FIX-LINE-DROPOUT] Use effectivePendingFrames here too (consistent with maxGroupsByX)
+        const double framesAgoD = (double) effectivePendingFrames + centerGroupsAgo * (double) spanFrames;
         const int framesAgoI = (int) std::round (framesAgoD);
 
         outGroups[(size_t) chunkChronoIndex] = agg;
