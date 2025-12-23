@@ -304,15 +304,12 @@ juce::int64 VolumeHistoryComponent::getTotalFramesL0() const noexcept
 }
 
 //==============================================================================
-// LOD selection  [STEP2-LOD-CAP]
+// LOD selection  [STEP2-LOD-CAP] + [FIX-LINE-DROPOUT]
+//
+// For coarse levels, suppress pendingFrames to prevent:
+//   - Level selection oscillation at boundary zoom values
+//   - Predicted group count fluctuation
 //==============================================================================
-
-int VolumeHistoryComponent::getMaxDrawablePoints (int widthPixels) const noexcept
-{
-    const int w = juce::jmax (1, widthPixels);
-    const int target = (int) std::round ((double) w * 1.10);
-    return juce::jlimit (256, 8192, target);
-}
 
 int VolumeHistoryComponent::selectBestLevelForCurrentZoom (int widthPixels) const noexcept
 {
@@ -335,9 +332,17 @@ int VolumeHistoryComponent::selectBestLevelForCurrentZoom (int widthPixels) cons
         if (spanFrames <= 0)
             continue;
 
-        const int pendingFrames = getPendingFramesAtLevel (level);
+        // ---------------------------------------------------------------------
+        // [FIX-LINE-DROPOUT]
+        // For coarse levels, suppress pendingFrames to stabilize level selection.
+        // This prevents the predicted group count from oscillating, which would
+        // cause the level selection to flip at boundary zoom values.
+        // ---------------------------------------------------------------------
+        const bool suppressPending = (level >= coarseLevelStartForPixelAdvance);
+        const int rawPendingFrames = getPendingFramesAtLevel (level);
+        const int effectivePendingFrames = suppressPending ? 0 : rawPendingFrames;
 
-        double numerator = maxFramesVisible - (double) pendingFrames;
+        double numerator = maxFramesVisible - (double) effectivePendingFrames;
         if (numerator < 0.0)
             numerator = 0.0;
 
@@ -371,8 +376,8 @@ int VolumeHistoryComponent::selectBestLevelForCurrentZoom (int widthPixels) cons
 //   1. Computing how many groups fit in the visible area (maxGroupsByX)
 //   2. Computing the framesAgo value for X position calculation
 //
-// If these are inconsistent, groups will pop in/out of existence as the
-// pendingFrames value oscillates (the "line dropout" bug).
+// This must match the suppression in selectBestLevelForCurrentZoom to ensure
+// the group count and positions are computed identically.
 //==============================================================================
 
 void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
@@ -417,7 +422,7 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
 
     int maxGroupsByX = 0;
     {
-        // [FIX-LINE-DROPOUT] Use effectivePendingFrames here (was: rawPendingFrames)
+        // [FIX-LINE-DROPOUT] Use effectivePendingFrames here
         double numerator = maxFramesVisible - (double) effectivePendingFrames;
         if (numerator < 0.0)
             numerator = 0.0;
@@ -472,7 +477,7 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
 
         const double centerGroupsAgo = 0.5 * (double) (baseGroupsAgo + endGroupsAgo);
 
-        // [FIX-LINE-DROPOUT] Use effectivePendingFrames here too (consistent with maxGroupsByX)
+        // [FIX-LINE-DROPOUT] Use effectivePendingFrames here too (consistent)
         const double framesAgoD = (double) effectivePendingFrames + centerGroupsAgo * (double) spanFrames;
         const int framesAgoI = (int) std::round (framesAgoD);
 
