@@ -305,11 +305,14 @@ juce::int64 VolumeHistoryComponent::getTotalFramesL0() const noexcept
 
 //==============================================================================
 // LOD selection  [STEP2-LOD-CAP] + [FIX-LINE-DROPOUT]
-//
-// For coarse levels, suppress pendingFrames to prevent:
-//   - Level selection oscillation at boundary zoom values
-//   - Predicted group count fluctuation
 //==============================================================================
+
+int VolumeHistoryComponent::getMaxDrawablePoints (int widthPixels) const noexcept
+{
+    const int w = juce::jmax (1, widthPixels);
+    const int target = (int) std::round ((double) w * 1.10);
+    return juce::jlimit (256, 8192, target);
+}
 
 int VolumeHistoryComponent::selectBestLevelForCurrentZoom (int widthPixels) const noexcept
 {
