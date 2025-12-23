@@ -662,7 +662,12 @@ bool VolumeHistoryComponent::shouldUsePolylineForLines (int selectedLevel) const
 }
 
 //==============================================================================
-// Polyline drawing  [POLYLINE-PEAK] + [PIXEL-ADVANCE-FIX]
+// Polyline drawing  [POLYLINE-PEAK] + [PIXEL-ADVANCE-FIX] + [FIX-LINE-DROPOUT]
+//
+// Fixed version: 
+//   1. Extended clipping margins to include off-screen points for proper 
+//      edge connections
+//   2. Ensure we don't lose boundary points due to step-related shifts
 //==============================================================================
 
 void VolumeHistoryComponent::buildPolylinePoints (const std::vector<int>& framesAgo,
@@ -679,6 +684,20 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<int>& frames
 
     const int wInt = (int) std::round (width);
     outPoints.reserve ((size_t) juce::jlimit (128, 4096, wInt + 64));
+
+    // -------------------------------------------------------------------------
+    // [FIX-LINE-DROPOUT]
+    // Extended margins: include points slightly off-screen on both sides.
+    // This ensures:
+    //   1. Lines connect properly at screen edges
+    //   2. Step-related shifts don't push boundary points out of bounds
+    //   3. We always have enough points to draw a continuous line
+    //
+    // The extra off-screen points will be clipped by JUCE's rendering,
+    // but the line segments connecting them to on-screen points will draw.
+    // -------------------------------------------------------------------------
+    const int leftClipMargin  = 50;   // pixels off left edge to include
+    const int rightClipMargin = 10;   // pixels off right edge to include
 
     int   currentXPix = std::numeric_limits<int>::min();
     float colYMin = 0.0f;
@@ -724,13 +743,16 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<int>& frames
 
     for (size_t i = 0; i < n; ++i)
     {
-        // [PIXEL-ADVANCE-FIX] true pixel advance: quantize x per point (no wrap).
         const float xRaw = width - (float) framesAgo[i] * (float) zoomX;
-        if (xRaw < -10.0f)
+
+        // [FIX-LINE-DROPOUT] Extended left margin for early exit
+        if (xRaw < (float) -leftClipMargin)
             continue;
 
         const int xPix = (int) std::floor (xRaw + 0.5f);
-        if (xPix < 0 || xPix > (int) width)
+
+        // [FIX-LINE-DROPOUT] Extended clipping bounds
+        if (xPix < -leftClipMargin || xPix > wInt + rightClipMargin)
             continue;
 
         const float y = dbToY (repDb[i], height);
