@@ -67,11 +67,10 @@ void VolumeHistoryComponent::initialiseHistoryLevels()
         L0.spanFrames     = 1;
         L0.capacity       = rawCapacityFrames;
         L0.groups.assign ((size_t) rawCapacityFrames,
-                          FrameGroup { minDb, minDb, minDb, minDb, -1 });
+                          FrameGroup { minDb, minDb, minDb, minDb });
         L0.writeIndex     = 0;
         L0.totalGroups    = 0;
         L0.pendingCount   = 0;
-        L0.pending        = FrameGroup { minDb, minDb, minDb, minDb, -1 };
     }
 
     // Derived levels
@@ -92,7 +91,7 @@ void VolumeHistoryComponent::initialiseHistoryLevels()
 
         L.capacity     = capacity;
         L.groups.assign ((size_t) capacity,
-                         FrameGroup { minDb, minDb, minDb, minDb, -1 });
+                         FrameGroup { minDb, minDb, minDb, minDb });
         L.writeIndex   = 0;
         L.totalGroups  = 0;
         L.pendingCount = 0;
@@ -101,7 +100,6 @@ void VolumeHistoryComponent::initialiseHistoryLevels()
         L.pending.momentaryMaxDb = -std::numeric_limits<float>::infinity();
         L.pending.shortTermMinDb =  std::numeric_limits<float>::infinity();
         L.pending.shortTermMaxDb = -std::numeric_limits<float>::infinity();
-        L.pending.endFrameIndex  = -1;
     }
 }
 
@@ -119,14 +117,12 @@ void VolumeHistoryComponent::resetHistoryLevels()
             g.momentaryMaxDb = minDb;
             g.shortTermMinDb = minDb;
             g.shortTermMaxDb = minDb;
-            g.endFrameIndex  = -1;
         }
 
         L.pending.momentaryMinDb =  std::numeric_limits<float>::infinity();
         L.pending.momentaryMaxDb = -std::numeric_limits<float>::infinity();
         L.pending.shortTermMinDb =  std::numeric_limits<float>::infinity();
         L.pending.shortTermMaxDb = -std::numeric_limits<float>::infinity();
-        L.pending.endFrameIndex  = -1;
     }
 
     tickStepIndex = -1;
@@ -178,16 +174,11 @@ void VolumeHistoryComponent::pushFrameToHistory (float momentaryRms,
     const float dbM = juce::Decibels::gainToDecibels (momentaryRms, minDb);
     const float dbS = juce::Decibels::gainToDecibels (shortTermRms, minDb);
 
-    // [TIME-STAMP]
-    // Capture the absolute L0 frame index BEFORE writing (totalGroups is "next index").
-    const juce::int64 frameIndex = levels[0].totalGroups;
-
     FrameGroup fg;
     fg.momentaryMinDb = dbM;
     fg.momentaryMaxDb = dbM;
     fg.shortTermMinDb = dbS;
     fg.shortTermMaxDb = dbS;
-    fg.endFrameIndex  = frameIndex;
 
     writeGroupToLevel (0, fg);
     accumulateToHigherLevels (1, fg);
@@ -227,9 +218,6 @@ void VolumeHistoryComponent::accumulateToHigherLevels (int levelIndex,
         L.pending.momentaryMaxDb = std::max (L.pending.momentaryMaxDb, sourceGroup.momentaryMaxDb);
         L.pending.shortTermMinDb = std::min (L.pending.shortTermMinDb, sourceGroup.shortTermMinDb);
         L.pending.shortTermMaxDb = std::max (L.pending.shortTermMaxDb, sourceGroup.shortTermMaxDb);
-
-        // [TIME-STAMP] Keep the newest (largest) endFrameIndex
-        L.pending.endFrameIndex = std::max (L.pending.endFrameIndex, sourceGroup.endFrameIndex);
     }
 
     ++L.pendingCount;
@@ -243,7 +231,6 @@ void VolumeHistoryComponent::accumulateToHigherLevels (int levelIndex,
         L.pending.momentaryMaxDb = -std::numeric_limits<float>::infinity();
         L.pending.shortTermMinDb =  std::numeric_limits<float>::infinity();
         L.pending.shortTermMaxDb = -std::numeric_limits<float>::infinity();
-        L.pending.endFrameIndex  = -1;
 
         writeGroupToLevel (levelIndex, finished);
         accumulateToHigherLevels (levelIndex + 1, finished);
@@ -264,10 +251,24 @@ int VolumeHistoryComponent::getAvailableGroups (int levelIndex) const noexcept
     return (int) available;
 }
 
+int VolumeHistoryComponent::getPendingFramesAtLevel (int levelIndex) const noexcept
+{
+    if (levelIndex <= 0 || levelIndex >= maxLevels)
+        return 0;
+
+    const auto& L     = levels[(size_t) levelIndex];
+    const auto& Lprev = levels[(size_t) (levelIndex - 1)];
+
+    if (L.pendingCount <= 0)
+        return 0;
+
+    return L.pendingCount * Lprev.spanFrames;
+}
+
 VolumeHistoryComponent::FrameGroup VolumeHistoryComponent::getGroupAgo (int levelIndex,
                                                                         int groupsAgo) const noexcept
 {
-    FrameGroup out { minDb, minDb, minDb, minDb, -1 };
+    FrameGroup out { minDb, minDb, minDb, minDb };
 
     if (levelIndex < 0 || levelIndex >= maxLevels)
         return out;
@@ -303,9 +304,6 @@ int VolumeHistoryComponent::getMaxDrawablePoints (int widthPixels) const noexcep
 
 int VolumeHistoryComponent::selectBestLevelForCurrentZoom (int widthPixels) const noexcept
 {
-    // [TIME-STAMP]
-    // We no longer use pending-frame offsets for x-mapping. That also removes
-    // the main source of "jump back/forward" jitter during accumulation resets.
     const int maxPoints = getMaxDrawablePoints (widthPixels);
 
     const double safeZoomX = (zoomX > 1.0e-9 ? zoomX : 1.0e-9);
@@ -325,7 +323,13 @@ int VolumeHistoryComponent::selectBestLevelForCurrentZoom (int widthPixels) cons
         if (spanFrames <= 0)
             continue;
 
-        const int predicted = (int) std::floor (maxFramesVisible / (double) spanFrames) + 1;
+        const int pendingFrames = getPendingFramesAtLevel (level);
+
+        double numerator = maxFramesVisible - (double) pendingFrames;
+        if (numerator < 0.0)
+            numerator = 0.0;
+
+        const int predicted = (int) std::floor (numerator / (double) spanFrames) + 1;
         const int predictedClamped = juce::jlimit (1, available, predicted);
 
         if (predictedClamped <= maxPoints)
@@ -347,9 +351,8 @@ int VolumeHistoryComponent::selectBestLevelForCurrentZoom (int widthPixels) cons
 
 void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
                                                          int widthPixels,
-                                                         juce::int64 nowFrame,
                                                          std::vector<FrameGroup>& outGroups,
-                                                         std::vector<double>& outFramesAgo) const
+                                                         std::vector<int>& outFramesAgo) const
 {
     outGroups.clear();
     outFramesAgo.clear();
@@ -367,21 +370,30 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
     if (spanFrames <= 0 || zoomX <= 0.0)
         return;
 
+    const int pendingFrames = getPendingFramesAtLevel (levelIndex);
+
     const double overscanPixels = 10.0;
     const double maxFramesVisible = ((double) widthPixels + overscanPixels) / zoomX;
     if (maxFramesVisible <= 0.0)
         return;
 
-    // How many groups could fit in the visible time range?
-    const int maxGroupsByX = (int) std::floor (maxFramesVisible / (double) spanFrames) + 2;
+    int maxGroupsByX = 0;
+    {
+        double numerator = maxFramesVisible - (double) pendingFrames;
+        if (numerator < 0.0)
+            numerator = 0.0;
+
+        const double maxGroupsFloat = numerator / (double) spanFrames;
+        maxGroupsByX = (int) std::floor (maxGroupsFloat) + 1;
+    }
+
     if (maxGroupsByX <= 0)
         return;
 
     const int groupsToUse = juce::jlimit (0, availableGroups, maxGroupsByX);
-    if (groupsToUse < 2)
+    if (groupsToUse <= 0)
         return;
 
-    // Cap points so we don't draw more than ~1.1x width (and never > 8192)
     const int maxDrawablePoints = getMaxDrawablePoints (widthPixels);
 
     const int step = (groupsToUse > maxDrawablePoints
@@ -398,8 +410,6 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
     outGroups.resize ((size_t) outCount);
     outFramesAgo.resize ((size_t) outCount);
 
-    const double nowFrameD = (double) juce::jmax<juce::int64> (0, nowFrame);
-
     for (int chunkChronoIndex = 0; chunkChronoIndex < outCount; ++chunkChronoIndex)
     {
         const int baseGroupsAgo = (outCount - 1 - chunkChronoIndex) * step;
@@ -410,10 +420,6 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
         agg.momentaryMaxDb = -std::numeric_limits<float>::infinity();
         agg.shortTermMinDb =  std::numeric_limits<float>::infinity();
         agg.shortTermMaxDb = -std::numeric_limits<float>::infinity();
-        agg.endFrameIndex  = -1;
-
-        juce::int64 minEndFrame = std::numeric_limits<juce::int64>::max();
-        juce::int64 maxEndFrame = std::numeric_limits<juce::int64>::min();
 
         for (int ga = baseGroupsAgo; ga <= endGroupsAgo; ++ga)
         {
@@ -423,35 +429,14 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
             agg.momentaryMaxDb = std::max (agg.momentaryMaxDb, gg.momentaryMaxDb);
             agg.shortTermMinDb = std::min (agg.shortTermMinDb, gg.shortTermMinDb);
             agg.shortTermMaxDb = std::max (agg.shortTermMaxDb, gg.shortTermMaxDb);
-
-            agg.endFrameIndex = std::max (agg.endFrameIndex, gg.endFrameIndex);
-
-            if (gg.endFrameIndex >= 0)
-            {
-                minEndFrame = std::min (minEndFrame, gg.endFrameIndex);
-                maxEndFrame = std::max (maxEndFrame, gg.endFrameIndex);
-            }
         }
 
-        // [TIME-STAMP]
-        // Use the center time of this aggregated chunk (double) to avoid rounding jitter.
-        double centerFrame = 0.0;
-        if (minEndFrame != std::numeric_limits<juce::int64>::max()
-            && maxEndFrame != std::numeric_limits<juce::int64>::min())
-        {
-            centerFrame = 0.5 * ((double) minEndFrame + (double) maxEndFrame);
-        }
-        else if (agg.endFrameIndex >= 0)
-        {
-            centerFrame = (double) agg.endFrameIndex;
-        }
-
-        double framesAgo = nowFrameD - centerFrame;
-        if (framesAgo < 0.0)
-            framesAgo = 0.0;
+        const double centerGroupsAgo = 0.5 * (double) (baseGroupsAgo + endGroupsAgo);
+        const double framesAgoD = (double) pendingFrames + centerGroupsAgo * (double) spanFrames;
+        const int framesAgoI = (int) std::round (framesAgoD);
 
         outGroups[(size_t) chunkChronoIndex] = agg;
-        outFramesAgo[(size_t) chunkChronoIndex] = framesAgo;
+        outFramesAgo[(size_t) chunkChronoIndex] = framesAgoI;
     }
 }
 
@@ -548,6 +533,12 @@ float VolumeHistoryComponent::dbToY (float db, float height) const noexcept
     return height * (1.0f - norm);
 }
 
+float VolumeHistoryComponent::quantizeXToPixelCenter (float x) const noexcept
+{
+    const int xPix = (int) std::floor (x + 0.5f);
+    return (float) xPix + 0.5f;
+}
+
 //==============================================================================
 // Cached background  [CACHE-STATIC]
 //==============================================================================
@@ -622,10 +613,17 @@ bool VolumeHistoryComponent::shouldUsePolylineForLines (int selectedLevel) const
 }
 
 //==============================================================================
-// Polyline drawing  [POLYLINE-STABLE]
+// Polyline drawing  [POLYLINE-PEAK] + [FIX-POLYLINE-ACCORDION]
 //==============================================================================
-
-void VolumeHistoryComponent::buildPolylinePoints (const std::vector<double>& framesAgo,
+//
+// Idea:
+// - We still *bin* samples by pixel column (cheap, peak-preserving).
+// - But we do NOT force the emitted point X to pixel centers (xPix + 0.5).
+//   That snapping is what creates the "accordion" motion when zoomX is fractional.
+// - Instead we emit a subpixel X representative for the column (average xRaw).
+//   This makes the whole polyline advance smoothly/consistently like the stroked path.
+//
+void VolumeHistoryComponent::buildPolylinePoints (const std::vector<int>& framesAgo,
                                                   const std::vector<float>& repDb,
                                                   float width,
                                                   float height,
@@ -637,25 +635,103 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<double>& fra
     if (n < 2 || zoomX <= 0.0 || width <= 1.0f)
         return;
 
-    outPoints.reserve (n);
+    const int wInt = (int) std::round (width);
+    outPoints.reserve ((size_t) juce::jlimit (128, 4096, wInt + 64));
 
-    // [POLYLINE-STABLE]
-    // Important: We do NOT collapse to "one point per pixel column" anymore.
-    // That collapse was the main cause of the "accordion" effect where parts of
-    // the polyline appear to move at different times.
-    //
-    // Point count is already capped upstream (LOD + maxDrawablePoints).
+    int   currentXPix = std::numeric_limits<int>::min();
+    float colYMin = 0.0f;
+    float colYMax = 0.0f;
+
+    double colXSum = 0.0;
+    int    colXCount = 0;
+
+    bool  haveCol = false;
+
+    float prevY = 0.0f;
+    bool  havePrev = false;
+
+    auto emitColumn = [&]()
+    {
+        if (! haveCol || colXCount <= 0)
+            return;
+
+        // Representative X for this pixel column: average of the raw X values.
+        // This keeps subpixel motion stable and avoids "accordion" snapping artifacts.
+        float xRep = (float) (colXSum / (double) colXCount);
+        xRep = juce::jlimit (0.0f, width, xRep);
+
+        // Peak-preserving representative Y (same logic as before)
+        const float span = std::abs (colYMax - colYMin);
+        float yRep = 0.5f * (colYMin + colYMax);
+
+        if (havePrev)
+        {
+            constexpr float spanThresholdPx = 1.0f;
+
+            if (span >= spanThresholdPx)
+            {
+                const float dMin = std::abs (colYMin - prevY);
+                const float dMax = std::abs (colYMax - prevY);
+                yRep = (dMin >= dMax ? colYMin : colYMax);
+            }
+            else
+            {
+                yRep = juce::jlimit (colYMin, colYMax, prevY);
+            }
+        }
+
+        outPoints.emplace_back (xRep, yRep);
+
+        prevY = yRep;
+        havePrev = true;
+    };
+
     for (size_t i = 0; i < n; ++i)
     {
-        const float x = width - (float) (framesAgo[i] * zoomX);
-        if (x < -10.0f)
+        const double xRawD = (double) width - (double) framesAgo[i] * zoomX;
+        const float  xRaw  = (float) xRawD;
+
+        if (xRaw < -10.0f)
             continue;
-        if (x > width + 10.0f)
+
+        // Use nearest pixel column for binning (cheap decimation)
+        const int xPix = (int) std::floor (xRaw + 0.5f);
+        if (xPix < 0 || xPix > (int) width)
             continue;
 
         const float y = dbToY (repDb[i], height);
-        outPoints.emplace_back (x, y);
+
+        if (! haveCol)
+        {
+            haveCol = true;
+            currentXPix = xPix;
+            colYMin = y;
+            colYMax = y;
+            colXSum = (double) xRaw;
+            colXCount = 1;
+            continue;
+        }
+
+        if (xPix != currentXPix)
+        {
+            emitColumn();
+
+            currentXPix = xPix;
+            colYMin = y;
+            colYMax = y;
+            colXSum = (double) xRaw;
+            colXCount = 1;
+        }
+        else
+        {
+            colYMin = std::min (colYMin, y);
+            colYMax = std::max (colYMax, y);
+            colXSum += (double) xRaw;
+            ++colXCount;
+        }
     }
+
+    emitColumn();
 }
 
 void VolumeHistoryComponent::drawPolyline (juce::Graphics& g,
@@ -793,16 +869,9 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     const juce::int64 totalFrames   = getTotalFramesL0();
     const juce::int64 availableRaw  = std::min<juce::int64> ((juce::int64) rawCapacityFrames, totalFrames);
 
-    // [TIME-STAMP] Define "now" as the last completed L0 frame index.
-    const juce::int64 nowFrame = (totalFrames > 0 ? totalFrames - 1 : 0);
-
     const int selectedLevel = selectBestLevelForCurrentZoom (width);
 
-    buildVisibleGroupsForLevel (selectedLevel,
-                                width,
-                                nowFrame,
-                                scratchVisibleGroups,
-                                scratchVisibleFramesAgo);
+    buildVisibleGroupsForLevel (selectedLevel, width, scratchVisibleGroups, scratchVisibleFramesAgo);
 
     const size_t n = scratchVisibleGroups.size();
     const float w = bounds.getWidth();
@@ -829,7 +898,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
         for (size_t i = 0; i < n; ++i)
         {
-            const float x = w - (float) (scratchVisibleFramesAgo[i] * zoomX);
+            float x = w - (float) scratchVisibleFramesAgo[i] * (float) zoomX;
             if (x < -10.0f)
                 continue;
 
@@ -910,63 +979,65 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     }
 
     //==========================================================================
-    // [RULER-STABLE]
-    // Ticks use the same stable frame timebase as curves (no pending offset).
-    //==========================================================================
-    const float rulerHeight   = 16.0f;
-    const float rulerBaseY    = (float) height - 2.0f;
-    const float tickTopY      = rulerBaseY - 6.0f;
-    const float textTopY      = rulerBaseY - 14.0f;
+// [RULER-FRAMES]  [FIX-RULER-NO-PENDING]
+// Ruler ticks must be based on absolute time only.
+// DO NOT add any "pendingFramesOffset" here, otherwise ticks will sawtooth
+// (move left, then jump right) as LOD pending counters reset.
+//==========================================================================
+const float rulerHeight   = 16.0f;
+const float rulerBaseY    = (float) height - 2.0f;
+const float tickTopY      = rulerBaseY - 6.0f;
+const float textTopY      = rulerBaseY - 14.0f;
 
-    if (zoomX > 0.0 && visualFrameRate > 0.0 && totalFrames > 0)
+if (zoomX > 0.0 && visualFrameRate > 0.0 && totalFrames > 0)
+{
+    const double safeZoomX = (zoomX > 1.0e-12 ? zoomX : 1.0e-12);
+
+    // Visible frames purely from geometry
+    const double framesByWidth = (double) width / safeZoomX;
+    const juce::int64 visibleFrames = (juce::int64) std::floor (juce::jmin ((double) availableRaw, framesByWidth));
+
+    if (visibleFrames > 1)
     {
-        const double framesByWidth = (double) width / (zoomX > 1.0e-12 ? zoomX : 1.0e-12);
-        const juce::int64 visibleFrames = (juce::int64) std::floor (juce::jmin ((double) availableRaw, framesByWidth));
+        const juce::int64 earliestAvailableFrame = totalFrames - availableRaw;
+        const juce::int64 leftFrame = juce::jmax (earliestAvailableFrame, totalFrames - visibleFrames);
 
-        if (visibleFrames > 1)
+        const double tickStepSec = getTickStepSecondsWithHysteresis (width);
+        const juce::int64 tickStepFrames = (juce::int64) juce::jmax (1.0, std::round (tickStepSec * visualFrameRate));
+
+        // Anchor to absolute frames
+        const juce::int64 lastTickFrame = (totalFrames / tickStepFrames) * tickStepFrames;
+
+        g.setColour (juce::Colours::white);
+        g.setFont (10.0f);
+
+        for (juce::int64 tickFrame = lastTickFrame; tickFrame >= leftFrame; tickFrame -= tickStepFrames)
         {
-            const juce::int64 earliestAvailableFrame = totalFrames - availableRaw;
+            const juce::int64 framesAgo = totalFrames - tickFrame;
 
-            // Leftmost visible frame index
-            const juce::int64 leftFrame = juce::jmax (earliestAvailableFrame, nowFrame - visibleFrames);
+            const double xD = (double) width - (double) framesAgo * zoomX;
+            const float  x  = (float) xD;
 
-            // Tick step (seconds) from zoom with hysteresis
-            const double tickStepSec = getTickStepSecondsWithHysteresis (width);
+            if (x < -2.0f)
+                break;
 
-            // Convert to integer frames at visualFrameRate
-            const juce::int64 tickStepFrames = (juce::int64) juce::jmax (1.0, std::round (tickStepSec * visualFrameRate));
+            if (x > (float) width + 2.0f)
+                continue;
 
-            // Anchor ticks to "now" (right edge)
-            const juce::int64 lastTickFrame = (nowFrame / tickStepFrames) * tickStepFrames;
+            g.drawLine (x, tickTopY, x, rulerBaseY, 1.0f);
 
-            g.setColour (juce::Colours::white);
-            g.setFont (10.0f);
+            const double tSec = (double) tickFrame / visualFrameRate;
+            const float textWidth = 52.0f;
 
-            for (juce::int64 tickFrame = lastTickFrame; tickFrame >= leftFrame; tickFrame -= tickStepFrames)
-            {
-                const juce::int64 framesAgo = nowFrame - tickFrame;
-                const float x = (float) ((double) width - (double) framesAgo * zoomX);
-
-                if (x < -2.0f)
-                    break;
-
-                if (x > (float) width + 2.0f)
-                    continue;
-
-                g.drawLine (x, tickTopY, x, rulerBaseY, 1.0f);
-
-                const double t = (double) tickFrame / visualFrameRate;
-                const float textWidth = 52.0f;
-
-                g.drawText (formatTimeHMS (t),
-                            x - textWidth * 0.5f,
-                            textTopY,
-                            textWidth,
-                            rulerHeight,
-                            juce::Justification::centred);
-            }
+            g.drawText (formatTimeHMS (tSec),
+                        x - textWidth * 0.5f,
+                        textTopY,
+                        textWidth,
+                        rulerHeight,
+                        juce::Justification::centred);
         }
     }
+}
 
     // Overlay info
     g.setColour (juce::Colours::white);

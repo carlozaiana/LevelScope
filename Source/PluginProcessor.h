@@ -73,7 +73,7 @@ private:
     int    momentaryWindowSamples = 0;   // samples in 400 ms window
     int    shortTermWindowSamples = 0;   // samples in 3 s window
 
-    int    frameSamples           = 0;   // samples between loudness frames (for 10 Hz)
+    int    frameSamples           = 0;   // samples between loudness frames (for 60 Hz)
     int    samplesUntilNextFrame  = 0;   // countdown to next frame
 
     // Sliding energy windows for momentary and short-term (per-sample energy)
