@@ -349,13 +349,18 @@ int VolumeHistoryComponent::selectBestLevelForCurrentZoom (int widthPixels) cons
     return 0;
 }
 
+//==============================================================================
+// Visible groups builder  [TIMEBASE-FIX]
+// Produces groups + an absolute timebase (frame index) per point.
+// This avoids "pendingFrames" sawtooth offsets and makes motion steady.
+//==============================================================================
 void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
                                                          int widthPixels,
                                                          std::vector<FrameGroup>& outGroups,
-                                                         std::vector<int>& outFramesAgo) const
+                                                         std::vector<juce::int64>& outEndFrameIndex) const
 {
     outGroups.clear();
-    outFramesAgo.clear();
+    outEndFrameIndex.clear();
 
     if (levelIndex < 0 || levelIndex >= maxLevels)
         return;
@@ -370,32 +375,23 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
     if (spanFrames <= 0 || zoomX <= 0.0)
         return;
 
-    const int pendingFrames = getPendingFramesAtLevel (levelIndex);
+    // Absolute "now" in frame units (Level 0 frames)
+    const juce::int64 totalFramesNow = getTotalFramesL0();
 
+    // How many frames fit horizontally (plus small overscan)
     const double overscanPixels = 10.0;
     const double maxFramesVisible = ((double) widthPixels + overscanPixels) / zoomX;
     if (maxFramesVisible <= 0.0)
         return;
 
-    int maxGroupsByX = 0;
-    {
-        double numerator = maxFramesVisible - (double) pendingFrames;
-        if (numerator < 0.0)
-            numerator = 0.0;
-
-        const double maxGroupsFloat = numerator / (double) spanFrames;
-        maxGroupsByX = (int) std::floor (maxGroupsFloat) + 1;
-    }
-
-    if (maxGroupsByX <= 0)
+    // How many groups can be visible at this level (no pending sawtooth offset!)
+    const int maxGroupsByX = (int) std::floor (maxFramesVisible / (double) spanFrames) + 1;
+    const int groupsToUse  = juce::jlimit (0, availableGroups, maxGroupsByX);
+    if (groupsToUse < 2)
         return;
 
-    const int groupsToUse = juce::jlimit (0, availableGroups, maxGroupsByX);
-    if (groupsToUse <= 0)
-        return;
-
+    // Extra cap (safety) to keep drawing bounded
     const int maxDrawablePoints = getMaxDrawablePoints (widthPixels);
-
     const int step = (groupsToUse > maxDrawablePoints
                         ? (int) std::ceil ((double) groupsToUse / (double) maxDrawablePoints)
                         : 1);
@@ -408,8 +404,9 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
         return;
 
     outGroups.resize ((size_t) outCount);
-    outFramesAgo.resize ((size_t) outCount);
+    outEndFrameIndex.resize ((size_t) outCount);
 
+    // We fill in chronological order: oldest -> newest
     for (int chunkChronoIndex = 0; chunkChronoIndex < outCount; ++chunkChronoIndex)
     {
         const int baseGroupsAgo = (outCount - 1 - chunkChronoIndex) * step;
@@ -431,12 +428,15 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
             agg.shortTermMaxDb = std::max (agg.shortTermMaxDb, gg.shortTermMaxDb);
         }
 
+        // Use the chunk center as a stable representative timestamp.
         const double centerGroupsAgo = 0.5 * (double) (baseGroupsAgo + endGroupsAgo);
-        const double framesAgoD = (double) pendingFrames + centerGroupsAgo * (double) spanFrames;
-        const int framesAgoI = (int) std::round (framesAgoD);
+        const juce::int64 framesAgoI = (juce::int64) std::llround (centerGroupsAgo * (double) spanFrames);
+
+        // Absolute frame index (timebase): frameIndex = now - framesAgo
+        const juce::int64 frameIndex = totalFramesNow - framesAgoI;
 
         outGroups[(size_t) chunkChronoIndex] = agg;
-        outFramesAgo[(size_t) chunkChronoIndex] = framesAgoI;
+        outEndFrameIndex[(size_t) chunkChronoIndex] = frameIndex;
     }
 }
 
@@ -533,7 +533,6 @@ float VolumeHistoryComponent::dbToY (float db, float height) const noexcept
     return height * (1.0f - norm);
 }
 
-float VolumeHistoryComponent::quantizeXToPixelCenter (float x) const noexcept
 {
     const int xPix = (int) std::floor (x + 0.5f);
     return (float) xPix + 0.5f;
@@ -613,17 +612,11 @@ bool VolumeHistoryComponent::shouldUsePolylineForLines (int selectedLevel) const
 }
 
 //==============================================================================
-// Polyline drawing  [POLYLINE-PEAK] + [FIX-POLYLINE-ACCORDION]
+// Polyline drawing  [POLYLINE-PEAK] + [TIMEBASE-FIX] + [FIX-POLYLINE-ACCORDION]
+// - Bin by pixel column (cheap, peak-preserving)
+// - Use subpixel representative X (average xRaw) to avoid "accordion" snapping
 //==============================================================================
-//
-// Idea:
-// - We still *bin* samples by pixel column (cheap, peak-preserving).
-// - But we do NOT force the emitted point X to pixel centers (xPix + 0.5).
-//   That snapping is what creates the "accordion" motion when zoomX is fractional.
-// - Instead we emit a subpixel X representative for the column (average xRaw).
-//   This makes the whole polyline advance smoothly/consistently like the stroked path.
-//
-void VolumeHistoryComponent::buildPolylinePoints (const std::vector<int>& framesAgo,
+void VolumeHistoryComponent::buildPolylinePoints (const std::vector<juce::int64>& endFrameIndex,
                                                   const std::vector<float>& repDb,
                                                   float width,
                                                   float height,
@@ -631,9 +624,11 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<int>& frames
 {
     outPoints.clear();
 
-    const size_t n = juce::jmin (framesAgo.size(), repDb.size());
+    const size_t n = juce::jmin (endFrameIndex.size(), repDb.size());
     if (n < 2 || zoomX <= 0.0 || width <= 1.0f)
         return;
+
+    const juce::int64 totalFramesNow = getTotalFramesL0();
 
     const int wInt = (int) std::round (width);
     outPoints.reserve ((size_t) juce::jlimit (128, 4096, wInt + 64));
@@ -655,12 +650,11 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<int>& frames
         if (! haveCol || colXCount <= 0)
             return;
 
-        // Representative X for this pixel column: average of the raw X values.
-        // This keeps subpixel motion stable and avoids "accordion" snapping artifacts.
+        // Subpixel representative X for smooth motion
         float xRep = (float) (colXSum / (double) colXCount);
         xRep = juce::jlimit (0.0f, width, xRep);
 
-        // Peak-preserving representative Y (same logic as before)
+        // Peak-preserving representative Y
         const float span = std::abs (colYMax - colYMin);
         float yRep = 0.5f * (colYMin + colYMax);
 
@@ -688,13 +682,13 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<int>& frames
 
     for (size_t i = 0; i < n; ++i)
     {
-        const double xRawD = (double) width - (double) framesAgo[i] * zoomX;
+        const juce::int64 framesAgo = totalFramesNow - endFrameIndex[i];
+        const double xRawD = (double) width - (double) framesAgo * zoomX;
         const float  xRaw  = (float) xRawD;
 
         if (xRaw < -10.0f)
             continue;
 
-        // Use nearest pixel column for binning (cheap decimation)
         const int xPix = (int) std::floor (xRaw + 0.5f);
         if (xPix < 0 || xPix > (int) width)
             continue;
@@ -837,7 +831,7 @@ void VolumeHistoryComponent::resized()
         const size_t reserveCount = (size_t) juce::jlimit (256, 8192, w + 512);
 
         scratchVisibleGroups.reserve (reserveCount);
-        scratchVisibleFramesAgo.reserve (reserveCount);
+        scratchVisibleEndFrameIndex.reserve (reserveCount); // [TIMEBASE-FIX]
         scratchRepMomentaryDb.reserve (reserveCount);
         scratchRepShortTermDb.reserve (reserveCount);
 
@@ -871,7 +865,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
     const int selectedLevel = selectBestLevelForCurrentZoom (width);
 
-    buildVisibleGroupsForLevel (selectedLevel, width, scratchVisibleGroups, scratchVisibleFramesAgo);
+    buildVisibleGroupsForLevel (selectedLevel, width, scratchVisibleGroups, scratchVisibleEndFrameIndex); // [TIMEBASE-FIX]
 
     const size_t n = scratchVisibleGroups.size();
     const float w = bounds.getWidth();
@@ -898,7 +892,8 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
         for (size_t i = 0; i < n; ++i)
         {
-            float x = w - (float) scratchVisibleFramesAgo[i] * (float) zoomX;
+            const juce::int64 framesAgo = totalFrames - scratchVisibleEndFrameIndex[i]; // [TIMEBASE-FIX]
+            float x = w - (float) framesAgo * (float) zoomX;
             if (x < -10.0f)
                 continue;
 
@@ -958,8 +953,8 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
                 scratchPolylinePtsM.clear();
                 scratchPolylinePtsS.clear();
 
-                buildPolylinePoints (scratchVisibleFramesAgo, scratchRepShortTermDb, w, h, scratchPolylinePtsS);
-                buildPolylinePoints (scratchVisibleFramesAgo, scratchRepMomentaryDb, w, h, scratchPolylinePtsM);
+                buildPolylinePoints (scratchVisibleEndFrameIndex, scratchRepShortTermDb, w, h, scratchPolylinePtsS); // [TIMEBASE-FIX]
+                buildPolylinePoints (scratchVisibleEndFrameIndex, scratchRepMomentaryDb, w, h, scratchPolylinePtsM); // [TIMEBASE-FIX]
 
                 g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.9f));
                 drawPolyline (g, scratchPolylinePtsS, 1.0f);
