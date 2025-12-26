@@ -10,16 +10,15 @@ class LevelScopeAudioProcessor;
 // VolumeHistoryComponent
 //
 // [SECTION TAGS]
-// - [STEP1-PERF] : repaint only on new data + reused scratch buffers
-// - [STEP2-LOD-CAP] : cap drawable points + improved LOD selection
-// - [CACHE-STATIC] : cached static background (grid + ruler baseline)
-// - [LINE-QUALITY] : render mode (stroke vs polyline)
-// - [BAND-PATHS] : batch band segments into 2 paths
-// - [POLYLINE-PEAK] : peak-preserving per-pixel-column selection
-// - [TIMEBASE-FIX] : use absolute endFrameIndex (monotonic) instead of pending offset
-// - [POLYLINE-SMOOTH-X] : polyline can emit smooth subpixel x (no accordion)
-// - [RULER-FRAMES] : ruler ticks computed in integer frames (stable)
-// - [RULER-HYST-FIX] : tickStep hysteresis that doesn't thrash while zooming
+//   - [STEP1-PERF]        : repaint only on new data + reused scratch buffers
+//   - [STEP2-LOD-CAP]     : cap drawable points + improved LOD selection
+//   - [CACHE-STATIC]      : cached static background (grid + ruler baseline)
+//   - [LINE-QUALITY]      : render mode (stroke vs polyline)
+//   - [BAND-PATHS]        : batch band segments into 2 paths
+//   - [POLYLINE-PEAK]     : peak-preserving per-pixel-column selection
+//   - [PIXEL-ADVANCE-FIX] : pixel advance by quantizing X (no wrap/jump-back)
+//   - [RULER-FRAMES]      : ruler ticks computed in integer frames (stable)
+//   - [RULER-HYST-FIX]    : tickStep hysteresis that doesn't thrash while zooming
 //==============================================================================
 
 class VolumeHistoryComponent : public juce::Component,
@@ -87,16 +86,10 @@ private:
     // History access
     //==============================================================================
 
-    int         getAvailableGroups (int levelIndex) const noexcept;
-    int         getPendingFramesAtLevel (int levelIndex) const noexcept;
-    FrameGroup  getGroupAgo (int levelIndex, int groupsAgo) const noexcept;
+    int getAvailableGroups (int levelIndex) const noexcept;
+    int getPendingFramesAtLevel (int levelIndex) const noexcept;
+    FrameGroup getGroupAgo (int levelIndex, int groupsAgo) const noexcept;
     juce::int64 getTotalFramesL0() const noexcept;
-
-    // [TIMEBASE-FIX] "now" as an absolute frame index (0-based)
-    juce::int64 getNowFrameIndexL0() const noexcept;
-
-    // [TIMEBASE-FIX] absolute end-frame index (0-based, in L0-frame units)
-    juce::int64 getEndFrameIndexForGroupAgo (int levelIndex, int groupsAgo) const noexcept;
 
     //==============================================================================
     // LOD selection
@@ -105,12 +98,10 @@ private:
     int getMaxDrawablePoints (int widthPixels) const noexcept;
     int selectBestLevelForCurrentZoom (int widthPixels) const noexcept;
 
-    // [TIMEBASE-FIX]
-    // Build visible samples with absolute frame indices (monotonic).
     void buildVisibleGroupsForLevel (int levelIndex,
                                      int widthPixels,
                                      std::vector<FrameGroup>& outGroups,
-                                     std::vector<juce::int64>& outEndFrameIndex) const;
+                                     std::vector<int>& outFramesAgo) const;
 
     //==============================================================================
     // Representative curve
@@ -125,6 +116,9 @@ private:
     //==============================================================================
 
     float dbToY (float db, float height) const noexcept;
+
+    // [PIXEL-ADVANCE-FIX] quantize x to pixel centers in polyline mode
+    float quantizeXToPixelCenter (float x) const noexcept;
 
     //==============================================================================
     // Cached background
@@ -145,18 +139,12 @@ private:
     // Polyline drawing (cheap)
     //==============================================================================
 
-    // [POLYLINE-PEAK] + [TIMEBASE-FIX] + [POLYLINE-SMOOTH-X]
+    // [POLYLINE-PEAK] + [TIMEBASE-FIX]
     void buildPolylinePoints (const std::vector<juce::int64>& endFrameIndex,
-                              juce::int64 nowFrameIndex,
                               const std::vector<float>& repDb,
                               float width,
                               float height,
-                              bool alignToPixelCenters,
                               std::vector<juce::Point<float>>& outPoints) const;
-
-    void drawPolyline (juce::Graphics& g,
-                       const std::vector<juce::Point<float>>& pts,
-                       float thickness) const;
 
     //==============================================================================
     // [RULER-HYST-FIX]
@@ -208,10 +196,9 @@ private:
     int lineRenderMode = 0;              // 0=Auto, 1=Force Stroke, 2=Force Polyline
     int coarseLevelStartForPolyline = 3; // Auto: polyline from this level upward
 
-    // [POLYLINE-SMOOTH-X]
-    // If true, polyline emits x at pixel centers (crisper but chunkier motion).
-    // If false, polyline emits smooth subpixel x (moves like stroked path).
-    int coarseLevelStartForPixelAlignedPolyline = 4;
+    // [PIXEL-ADVANCE-FIX]
+    // We quantize X to pixels only when in polyline mode AND level is coarse enough.
+    int coarseLevelStartForPixelAdvance = 3;
 
     // [RULER-HYST-FIX]
     int tickStepIndex = -1; // remembered tickStep choice (hysteresis)
@@ -220,19 +207,19 @@ private:
     // Scratch buffers
     //==============================================================================
 
-    mutable std::vector<FrameGroup>    scratchVisibleGroups;
-    mutable std::vector<juce::int64>  scratchVisibleEndFrameIndex; // [TIMEBASE-FIX]
+    mutable std::vector<FrameGroup> scratchVisibleGroups;
+    mutable std::vector<int>        scratchVisibleFramesAgo;
 
-    mutable std::vector<float>        scratchRepMomentaryDb;
-    mutable std::vector<float>        scratchRepShortTermDb;
+    mutable std::vector<float>      scratchRepMomentaryDb;
+    mutable std::vector<float>      scratchRepShortTermDb;
 
     // Stroke-path mode scratch
-    mutable juce::Path                scratchPathRepM;
-    mutable juce::Path                scratchPathRepS;
+    mutable juce::Path              scratchPathRepM;
+    mutable juce::Path              scratchPathRepS;
 
     // Bands (batched)
-    mutable juce::Path                scratchPathBandM;
-    mutable juce::Path                scratchPathBandS;
+    mutable juce::Path              scratchPathBandM;
+    mutable juce::Path              scratchPathBandS;
 
     // Polyline mode scratch
     mutable std::vector<juce::Point<float>> scratchPolylinePtsM;

@@ -533,11 +533,6 @@ float VolumeHistoryComponent::dbToY (float db, float height) const noexcept
     return height * (1.0f - norm);
 }
 
-{
-    const int xPix = (int) std::floor (x + 0.5f);
-    return (float) xPix + 0.5f;
-}
-
 //==============================================================================
 // Cached background  [CACHE-STATIC]
 //==============================================================================
