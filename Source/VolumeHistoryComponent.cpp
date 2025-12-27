@@ -723,6 +723,13 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<juce::int64>
     emitColumn();
 }
 
+//==============================================================================
+// Polyline rendering  [FIX-POLYLINE-GAPS]
+//
+// Drawing many individual g.drawLine() segments can produce tiny join gaps
+// (they "blink" when density is ~1 px/vertex). Rendering as ONE stroked path
+// gives stable joins/caps and stops segments from disappearing.
+//==============================================================================
 void VolumeHistoryComponent::drawPolyline (juce::Graphics& g,
                                           const std::vector<juce::Point<float>>& pts,
                                           float thickness) const
@@ -730,12 +737,19 @@ void VolumeHistoryComponent::drawPolyline (juce::Graphics& g,
     if (pts.size() < 2)
         return;
 
+    juce::Path p;
+    // Preallocate to reduce allocations (3 elements-ish per point is a decent heuristic).
+    p.preallocateSpace ((int) pts.size() * 3);
+
+    p.startNewSubPath (pts[0]);
     for (size_t i = 1; i < pts.size(); ++i)
-    {
-        const auto& a = pts[i - 1];
-        const auto& b = pts[i];
-        g.drawLine (a.x, a.y, b.x, b.y, thickness);
-    }
+        p.lineTo (pts[i]);
+
+    juce::PathStrokeType stroke (thickness,
+                                 juce::PathStrokeType::JointStyle::curved,
+                                 juce::PathStrokeType::EndCapStyle::rounded);
+
+    g.strokePath (p, stroke);
 }
 
 //==============================================================================
