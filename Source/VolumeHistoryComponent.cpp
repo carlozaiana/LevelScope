@@ -627,6 +627,7 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<juce::int64>
 
     const int wInt = (int) std::round (width);
     outPoints.reserve ((size_t) juce::jlimit (128, 4096, wInt + 64));
+    constexpr int overscanPx = 2; // [FIX-POLYLINE-DROPOUTS] shared by loop + emitColumn()
 
     int   currentXPix = std::numeric_limits<int>::min();
     float colYMin = 0.0f;
@@ -647,7 +648,8 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<juce::int64>
 
         // Subpixel representative X for smooth motion
         float xRep = (float) (colXSum / (double) colXCount);
-        xRep = juce::jlimit (0.0f, width, xRep);
+        // Match the overscan range so the first/last segments remain stable
+        xRep = juce::jlimit ((float) -overscanPx, width + (float) overscanPx, xRep);
 
         // Peak-preserving representative Y
         const float span = std::abs (colYMax - colYMin);
@@ -685,7 +687,9 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<juce::int64>
             continue;
 
         const int xPix = (int) std::floor (xRaw + 0.5f);
-        if (xPix < 0 || xPix > (int) width)
+
+        // [FIX-POLYLINE-DROPOUTS] small overscan reduces clip-boundary flicker
+        if (xPix < -overscanPx || xPix > (int) width + overscanPx)
             continue;
 
         const float y = dbToY (repDb[i], height);
