@@ -312,6 +312,8 @@ int VolumeHistoryComponent::selectBestLevelForCurrentZoom (int widthPixels) cons
 
     int bestLevel = -1;
 
+    const juce::int64 totalFramesNow = getTotalFramesL0(); // [SCROLL-PHASE-FIX]
+
     for (int level = 0; level < maxLevels; ++level)
     {
         const int available = getAvailableGroups (level);
@@ -322,17 +324,17 @@ int VolumeHistoryComponent::selectBestLevelForCurrentZoom (int widthPixels) cons
         const int spanFrames = L.spanFrames;
         if (spanFrames <= 0)
             continue;
+        const juce::int64 phaseFrames = totalFramesNow % (juce::int64) spanFrames; // [SCROLL-PHASE-FIX]
 
-        const int pendingFrames = getPendingFramesAtLevel (level);
-
-        double numerator = maxFramesVisible - (double) pendingFrames;
+        double numerator = maxFramesVisible - (double) phaseFrames;
         if (numerator < 0.0)
             numerator = 0.0;
 
         const int predicted = (int) std::floor (numerator / (double) spanFrames) + 1;
         const int predictedClamped = juce::jlimit (1, available, predicted);
 
-        if (predictedClamped <= maxPoints)
+        // Don’t pick a level that can’t produce a drawable line
+        if (predictedClamped >= 2 && predictedClamped <= maxPoints)
         {
             bestLevel = level;
             break;
@@ -372,6 +374,9 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
         return;
 
     const int spanFrames = L.spanFrames;
+    // [SCROLL-PHASE-FIX] smooth sub-group scrolling: 0..spanFrames-1
+    const juce::int64 totalFramesNow = getTotalFramesL0();
+    const juce::int64 phaseFrames = (spanFrames > 0 ? (totalFramesNow % (juce::int64) spanFrames) : 0);
     if (spanFrames <= 0 || zoomX <= 0.0)
         return;
 
@@ -433,7 +438,8 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
         const juce::int64 framesAgoI = (juce::int64) std::llround (centerGroupsAgo * (double) spanFrames);
 
         // Absolute frame index (timebase): frameIndex = now - framesAgo
-        const juce::int64 frameIndex = totalFramesNow - framesAgoI;
+        // [SCROLL-PHASE-FIX] shift everything by phaseFrames so the curve scrolls smoothly
+        const juce::int64 frameIndex = totalFramesNow - phaseFrames - framesAgoI;
 
         outGroups[(size_t) chunkChronoIndex] = agg;
         outEndFrameIndex[(size_t) chunkChronoIndex] = frameIndex;
@@ -673,7 +679,7 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<juce::int64>
 
         // [FIX-POLYLINE-DROPOUTS] snap Y to half-pixel for stable 1px-ish strokes
         yRep = std::floor (yRep) + 0.5f;
-        
+
         outPoints.emplace_back (xRep, yRep);
 
         prevY = yRep;
