@@ -671,6 +671,9 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<juce::int64>
             }
         }
 
+        // [FIX-POLYLINE-DROPOUTS] snap Y to half-pixel for stable 1px-ish strokes
+        yRep = std::floor (yRep) + 0.5f;
+        
         outPoints.emplace_back (xRep, yRep);
 
         prevY = yRep;
@@ -679,7 +682,8 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<juce::int64>
 
     for (size_t i = 0; i < n; ++i)
     {
-        const juce::int64 framesAgo = totalFramesNow - endFrameIndex[i];
+        // [FIX-POLYLINE-DROPOUTS] safety: never allow negative framesAgo
+        const juce::int64 framesAgo = juce::jmax<juce::int64> (0, totalFramesNow - endFrameIndex[i]);
         const double xRawD = (double) width - (double) framesAgo * zoomX;
         const float  xRaw  = (float) xRawD;
 
