@@ -98,10 +98,11 @@ private:
     int getMaxDrawablePoints (int widthPixels) const noexcept;
     int selectBestLevelForCurrentZoom (int widthPixels) const noexcept;
 
+    // [TIMEBASE-FIX] build visible groups + absolute frame index per point
     void buildVisibleGroupsForLevel (int levelIndex,
-                                     int widthPixels,
-                                     std::vector<FrameGroup>& outGroups,
-                                     std::vector<int>& outFramesAgo) const;
+                                 int widthPixels,
+                                 std::vector<FrameGroup>& outGroups,
+                                 std::vector<juce::int64>& outEndFrameIndex) const;
 
     //==============================================================================
     // Representative curve
@@ -145,6 +146,9 @@ private:
                               float width,
                               float height,
                               std::vector<juce::Point<float>>& outPoints) const;
+    void drawPolyline (juce::Graphics& g,
+                      const std::vector<juce::Point<float>>& pts,
+                      float thickness) const;
 
     //==============================================================================
     // [RULER-HYST-FIX]
@@ -207,8 +211,8 @@ private:
     // Scratch buffers
     //==============================================================================
 
-    mutable std::vector<FrameGroup> scratchVisibleGroups;
-    mutable std::vector<int>        scratchVisibleFramesAgo;
+    mutable std::vector<FrameGroup>  scratchVisibleGroups;
+    mutable std::vector<juce::int64> scratchVisibleEndFrameIndex; // [TIMEBASE-FIX]
 
     mutable std::vector<float>      scratchRepMomentaryDb;
     mutable std::vector<float>      scratchRepShortTermDb;
