@@ -380,9 +380,6 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
     if (spanFrames <= 0 || zoomX <= 0.0)
         return;
 
-    // Absolute "now" in frame units (Level 0 frames)
-    const juce::int64 totalFramesNow = getTotalFramesL0();
-
     // How many frames fit horizontally (plus small overscan)
     const double overscanPixels = 10.0;
     const double maxFramesVisible = ((double) widthPixels + overscanPixels) / zoomX;
