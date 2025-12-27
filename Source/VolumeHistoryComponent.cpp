@@ -611,8 +611,11 @@ bool VolumeHistoryComponent::shouldUsePolylineForLines (int selectedLevel) const
 
 //==============================================================================
 // Polyline drawing  [POLYLINE-PEAK] + [TIMEBASE-FIX] + [FIX-POLYLINE-ACCORDION]
-// - Bin by pixel column (cheap, peak-preserving)
-// - Use subpixel representative X (average xRaw) to avoid "accordion" snapping
+// Strategy:
+// - If points are already ~1px apart (dense), DO NOT bin into pixel columns.
+//   Binning causes "accordion" and dropouts when points cross column borders.
+// - If points are sparse, bin by pixel column and emit 1 point per column
+//   (cheap + peak-preserving).
 //==============================================================================
 void VolumeHistoryComponent::buildPolylinePoints (const std::vector<juce::int64>& endFrameIndex,
                                                   const std::vector<float>& repDb,
@@ -629,9 +632,67 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<juce::int64>
     const juce::int64 totalFramesNow = getTotalFramesL0();
 
     const int wInt = (int) std::round (width);
-    outPoints.reserve ((size_t) juce::jlimit (128, 4096, wInt + 64));
-    constexpr int overscanPx = 2; // [FIX-POLYLINE-DROPOUTS] shared by loop + emitColumn()
+    outPoints.reserve ((size_t) juce::jlimit (128, 8192, wInt + 64));
 
+    constexpr int overscanPx = 2; // small overscan for stability near edges
+
+    //--------------------------------------------------------------------------
+    // [FIX-POLYLINE-ACCORDION] Detect "dense" regime (about >= 1 px per point)
+    //--------------------------------------------------------------------------
+    double sumDx = 0.0;
+    int dxCount = 0;
+
+    {
+        const size_t probeN = juce::jmin<size_t> (n, 64);
+        float prevX = 0.0f;
+        bool havePrev = false;
+
+        for (size_t i = 0; i < probeN; ++i)
+        {
+            const juce::int64 framesAgo = juce::jmax<juce::int64> (0, totalFramesNow - endFrameIndex[i]);
+            const float x = (float) ((double) width - (double) framesAgo * zoomX);
+
+            if (havePrev)
+            {
+                sumDx += std::abs ((double) (x - prevX));
+                ++dxCount;
+            }
+
+            prevX = x;
+            havePrev = true;
+        }
+    }
+
+    const double avgDxPx = (dxCount > 0 ? (sumDx / (double) dxCount) : 0.0);
+
+    // If points are around 1px apart (or more), binning is harmful (accordion + dropouts).
+    // Use direct mapping: stable, all segments move together.
+    const bool useDirectMapping = (avgDxPx >= 0.75);
+
+    if (useDirectMapping)
+    {
+        for (size_t i = 0; i < n; ++i)
+        {
+            const juce::int64 framesAgo = juce::jmax<juce::int64> (0, totalFramesNow - endFrameIndex[i]);
+            const float x = (float) ((double) width - (double) framesAgo * zoomX);
+
+            if (x < -10.0f || x > width + 10.0f)
+                continue;
+
+            float y = dbToY (repDb[i], height);
+
+            // Optional: snap Y to half pixels for stable thin strokes
+            y = std::floor (y) + 0.5f;
+
+            outPoints.emplace_back (x, y);
+        }
+
+        return;
+    }
+
+    //--------------------------------------------------------------------------
+    // Sparse regime: bin by pixel column and emit one point per column.
+    //--------------------------------------------------------------------------
     int   currentXPix = std::numeric_limits<int>::min();
     float colYMin = 0.0f;
     float colYMax = 0.0f;
@@ -649,12 +710,9 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<juce::int64>
         if (! haveCol || colXCount <= 0)
             return;
 
-        // Subpixel representative X for smooth motion
         float xRep = (float) (colXSum / (double) colXCount);
-        // Match the overscan range so the first/last segments remain stable
         xRep = juce::jlimit ((float) -overscanPx, width + (float) overscanPx, xRep);
 
-        // Peak-preserving representative Y
         const float span = std::abs (colYMax - colYMin);
         float yRep = 0.5f * (colYMin + colYMax);
 
@@ -674,7 +732,7 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<juce::int64>
             }
         }
 
-        // [FIX-POLYLINE-DROPOUTS] snap Y to half-pixel for stable 1px-ish strokes
+        // Snap Y to half pixels for stability
         yRep = std::floor (yRep) + 0.5f;
 
         outPoints.emplace_back (xRep, yRep);
@@ -685,17 +743,13 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<juce::int64>
 
     for (size_t i = 0; i < n; ++i)
     {
-        // [FIX-POLYLINE-DROPOUTS] safety: never allow negative framesAgo
         const juce::int64 framesAgo = juce::jmax<juce::int64> (0, totalFramesNow - endFrameIndex[i]);
-        const double xRawD = (double) width - (double) framesAgo * zoomX;
-        const float  xRaw  = (float) xRawD;
+        const float xRaw = (float) ((double) width - (double) framesAgo * zoomX);
 
         if (xRaw < -10.0f)
             continue;
 
         const int xPix = (int) std::floor (xRaw + 0.5f);
-
-        // [FIX-POLYLINE-DROPOUTS] small overscan reduces clip-boundary flicker
         if (xPix < -overscanPx || xPix > (int) width + overscanPx)
             continue;
 
