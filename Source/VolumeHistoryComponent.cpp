@@ -969,11 +969,24 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
                 buildPolylinePoints (scratchVisibleEndFrameIndex, scratchRepShortTermDb, w, h, scratchPolylinePtsS); // [TIMEBASE-FIX]
                 buildPolylinePoints (scratchVisibleEndFrameIndex, scratchRepMomentaryDb, w, h, scratchPolylinePtsM); // [TIMEBASE-FIX]
 
-                g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.9f));
-                drawPolyline (g, scratchPolylinePtsS, 1.0f);
+                // [FIX-POLYLINE-DROPOUTS]
+                // When pixels-per-group gets near/below ~1px, very dense polylines can show
+                // "missing bits" due to rasterisation/coverage quirks at 1.0px thickness.
+                // We thicken slightly as density increases (still cheap).
+                const double pixelsPerGroup = zoomX * (double) levels[(size_t) selectedLevel].spanFrames;
+
+                // density = 0 at >=1 px/group, ramps up as it goes below 1
+                const double density = (pixelsPerGroup < 1.0 ? (1.0 - pixelsPerGroup) : 0.0);
+
+                // Clamp and scale to a small thickness increase
+                const float thickS = (float) juce::jlimit (1.0, 2.2, 1.15 + density * 1.1);
+                const float thickM = (float) juce::jlimit (1.0, 2.4, thickS + 0.25);
+
+                g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.95f));
+                drawPolyline (g, scratchPolylinePtsS, thickS);
 
                 g.setColour (juce::Colours::limegreen);
-                drawPolyline (g, scratchPolylinePtsM, 1.0f);
+                drawPolyline (g, scratchPolylinePtsM, thickM);
             }
             else
             {
