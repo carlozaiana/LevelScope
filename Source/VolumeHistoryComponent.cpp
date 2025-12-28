@@ -687,25 +687,6 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<juce::int64>
     }
 }
 
-    // Ensure at least 2 points when possible (avoid "nothing to draw")
-    if (outPoints.size() < 2 && n >= 2)
-    {
-        const juce::int64 framesAgo0 = juce::jmax<juce::int64> (0, totalFramesNow - endFrameIndex[0]);
-        const float x0 = (float) ((double) width - (double) framesAgo0 * zoomX);
-        float y0 = dbToY (repDb[0], height);
-        y0 = std::floor (y0) + 0.5f;
-
-        const juce::int64 framesAgo1 = juce::jmax<juce::int64> (0, totalFramesNow - endFrameIndex[n - 1]);
-        const float x1 = (float) ((double) width - (double) framesAgo1 * zoomX);
-        float y1 = dbToY (repDb[n - 1], height);
-        y1 = std::floor (y1) + 0.5f;
-
-        outPoints.clear();
-        outPoints.emplace_back (x0, y0);
-        outPoints.emplace_back (x1, y1);
-    }
-}
-
 //==============================================================================
 // Polyline rendering  [FIX-POLYLINE-GAPS]
 //
