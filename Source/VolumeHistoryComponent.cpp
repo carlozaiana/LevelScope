@@ -408,9 +408,28 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
 
     // Cap output points
     const int maxDrawablePoints = getMaxDrawablePoints (widthPixels);
-    const int step = (groupsToUse > maxDrawablePoints
-                        ? (int) std::ceil ((double) groupsToUse / (double) maxDrawablePoints)
-                        : 1);
+
+    // [DECIMATOR-ZOOM-STABLE]
+    // Enforce a minimum horizontal spacing in pixels BETWEEN OUTPUT POINTS,
+    // derived only from zoomX and spanFrames. This does NOT drift with new audio.
+    const double pxPerGroup = (double) spanFrames * zoomX;
+
+    // Tuneable: bigger = fewer points (more performance), smaller = more detail.
+    // Use slightly larger spacing for very large widths (4K).
+    const double desiredPxPerPoint = (widthPixels >= 2500 ? 1.6 : 1.25);
+
+    // Step required to achieve the desired spacing (stable w.r.t. time)
+    const int stepByZoom = (pxPerGroup > 1.0e-12
+                          ? (int) std::ceil (desiredPxPerPoint / pxPerGroup)
+                          : maxDrawablePoints);
+
+    // Existing safety cap (prevents runaway point counts)
+    const int stepByCap = (groupsToUse > maxDrawablePoints
+                         ? (int) std::ceil ((double) groupsToUse / (double) maxDrawablePoints)
+                         : 1);
+
+    // Final step: take the coarser of the two
+    const int step = juce::jmax (1, juce::jmax (stepByZoom, stepByCap));
 
     const int outCount = (step > 1
                             ? (int) std::ceil ((double) groupsToUse / (double) step)
@@ -649,80 +668,24 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<juce::int64>
 
     const juce::int64 totalFramesNow = getTotalFramesL0();
 
-    // Target point density: fewer points at 4K.
-    // (This is stable: depends only on width, not on time.)
-    const float desiredPxPerPoint = (width >= 2500.0f ? 3.0f : 2.0f);
+    outPoints.reserve (n);
 
-    const int targetPoints = juce::jlimit (128, 4096,
-                                          (int) std::floor (width / desiredPxPerPoint));
-
-    const int stride = juce::jmax (1, (int) std::ceil ((double) n / (double) targetPoints));
-
-    outPoints.reserve ((size_t) juce::jlimit (128, 4096, targetPoints + 32));
-
-    float prevY = 0.0f;
-    bool  havePrev = false;
-
-    constexpr float spanThresholdPx = 1.0f;
-
-    // Process chronological chunks (oldest -> newest)
-    for (size_t chunkStart = 0; chunkStart < n; chunkStart += (size_t) stride)
+    for (size_t i = 0; i < n; ++i)
     {
-        const size_t chunkEnd = juce::jmin (n - 1, chunkStart + (size_t) stride - 1);
+        const juce::int64 framesAgo = juce::jmax<juce::int64> (0, totalFramesNow - endFrameIndex[i]);
 
-        // Use chunk END for X (guarantees monotonic x, avoids backtracking).
-        const juce::int64 framesAgoEnd = juce::jmax<juce::int64> (0, totalFramesNow - endFrameIndex[chunkEnd]);
-        const float xEnd = (float) ((double) width - (double) framesAgoEnd * zoomX);
-
-        // Early clip: if the chunk end is far left, older chunks will be even further left.
-        if (xEnd < -20.0f)
+        const float x = (float) ((double) width - (double) framesAgo * zoomX);
+        if (x < -10.0f || x > width + 10.0f)
             continue;
 
-        if (xEnd > width + 20.0f)
-        {
-            // This can happen for very new data; keep it (will be clipped anyway).
-        }
+        float y = dbToY (repDb[i], height);
 
-        // Compute yMin/yMax over the chunk
-        float yMin =  std::numeric_limits<float>::infinity();
-        float yMax = -std::numeric_limits<float>::infinity();
+        // snap Y to half pixels for stable thin strokes
+        y = std::floor (y) + 0.5f;
 
-        for (size_t i = chunkStart; i <= chunkEnd; ++i)
-        {
-            const float y = dbToY (repDb[i], height);
-            yMin = std::min (yMin, y);
-            yMax = std::max (yMax, y);
-        }
-
-        if (! std::isfinite (yMin) || ! std::isfinite (yMax))
-            continue;
-
-        float yRep = 0.5f * (yMin + yMax);
-
-        if (havePrev)
-        {
-            const float span = std::abs (yMax - yMin);
-
-            if (span >= spanThresholdPx)
-            {
-                const float dMin = std::abs (yMin - prevY);
-                const float dMax = std::abs (yMax - prevY);
-                yRep = (dMin >= dMax ? yMin : yMax);
-            }
-            else
-            {
-                yRep = juce::jlimit (yMin, yMax, prevY);
-            }
-        }
-
-        // Snap Y to half pixels for stability with thin strokes
-        yRep = std::floor (yRep) + 0.5f;
-
-        outPoints.emplace_back (xEnd, yRep);
-
-        prevY = yRep;
-        havePrev = true;
+        outPoints.emplace_back (x, y);
     }
+}
 
     // Ensure at least 2 points when possible (avoid "nothing to draw")
     if (outPoints.size() < 2 && n >= 2)
