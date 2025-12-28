@@ -929,9 +929,7 @@ if (zoomX > 0.0 && visualFrameRate > 0.0 && totalFrames > 0)
                         " | ZoomY: " + juce::String (zoomY, 2) +
                         " | Tick: " + juce::String (tickStepNow, 3) + "s" +
                         " | Bands: " + juce::String (showBands ? "ON" : "OFF") +
-                        " | Lines: " + juce::String (showLines ? "ON" : "OFF") +
-
-    g.drawText (info, 8, 8, (int) std::min (bounds.getWidth() - 16.0f, 980.0f), 20, juce::Justification::topLeft);
+                        " | Lines: " + juce::String (showLines ? "ON" : "OFF");
 }
 
 //==============================================================================
