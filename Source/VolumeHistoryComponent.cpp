@@ -622,15 +622,18 @@ bool VolumeHistoryComponent::shouldUsePolylineForLines (int selectedLevel) const
 }
 
 //==============================================================================
-// Polyline drawing  [TIMEBASE-FIX] + [DECIMATOR-STABLE]
+// Polyline drawing  [TIMEBASE-FIX] + [DECIMATOR-INDEX-STABLE]
 //
-// We decimate by enforcing a minimum X spacing in *continuous pixels*.
-// This is stable (no pixel-column re-bucketing) and greatly reduces vertices
-// at large window sizes (1920/4K), while keeping smooth motion.
+// Stable decimator rule:
+// - We do NOT bucket by pixel columns or by (x - bucketXStart) thresholds.
+//   Those are sensitive to floating-point rounding and cause "accordion"/flicker.
+// - Instead we decimate by a fixed INDEX stride computed from width.
+//   Chunk boundaries are stable (integer), so no re-bucketing as time advances.
 //
-// Note: bands still preserve peaks. For the representative line we pick one
-// value per bucket, biased toward the extreme farthest from the previous point,
-// which keeps the line visually "peaky" without doubling point count.
+// For each chunk we:
+// - compute yMin/yMax in that chunk (in pixels)
+// - emit ONE point at the chunk's END x, with y chosen to preserve peaks
+//   relative to the previous emitted y.
 //==============================================================================
 void VolumeHistoryComponent::buildPolylinePoints (const std::vector<juce::int64>& endFrameIndex,
                                                   const std::vector<float>& repDb,
@@ -646,116 +649,97 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<juce::int64>
 
     const juce::int64 totalFramesNow = getTotalFramesL0();
 
-    // Small overscan: keeps edges stable
-    constexpr float overscanPx = 2.0f;
+    // Target point density: fewer points at 4K.
+    // (This is stable: depends only on width, not on time.)
+    const float desiredPxPerPoint = (width >= 2500.0f ? 3.0f : 2.0f);
 
-    // [DECIMATOR-STABLE] target minimum spacing between emitted points in pixels.
-    // At 4K, make it a bit larger to cut vertex count further.
-    const float minDxPx = (width >= 2500.0f ? 3.0f : 2.0f);
+    const int targetPoints = juce::jlimit (128, 4096,
+                                          (int) std::floor (width / desiredPxPerPoint));
 
-    // Conservative reserve: at most ~width/minDx points (+ some slack)
-    outPoints.reserve ((size_t) juce::jlimit (128, 4096, (int) (width / minDxPx) + 64));
+    const int stride = juce::jmax (1, (int) std::ceil ((double) n / (double) targetPoints));
 
-    // Current bucket state (bucket = range of input points within minDxPx)
-    bool  haveBucket = false;
-    float bucketXStart = 0.0f;
-    float bucketXLast  = 0.0f;
-    float bucketYMin   = 0.0f;
-    float bucketYMax   = 0.0f;
+    outPoints.reserve ((size_t) juce::jlimit (128, 4096, targetPoints + 32));
 
     float prevY = 0.0f;
     bool  havePrev = false;
 
-    auto emitBucket = [&]()
+    constexpr float spanThresholdPx = 1.0f;
+
+    // Process chronological chunks (oldest -> newest)
+    for (size_t chunkStart = 0; chunkStart < n; chunkStart += (size_t) stride)
     {
-        if (! haveBucket)
-            return;
+        const size_t chunkEnd = juce::jmin (n - 1, chunkStart + (size_t) stride - 1);
 
-        const float spanY = std::abs (bucketYMax - bucketYMin);
+        // Use chunk END for X (guarantees monotonic x, avoids backtracking).
+        const juce::int64 framesAgoEnd = juce::jmax<juce::int64> (0, totalFramesNow - endFrameIndex[chunkEnd]);
+        const float xEnd = (float) ((double) width - (double) framesAgoEnd * zoomX);
 
-        float yRep = 0.5f * (bucketYMin + bucketYMax);
+        // Early clip: if the chunk end is far left, older chunks will be even further left.
+        if (xEnd < -20.0f)
+            continue;
+
+        if (xEnd > width + 20.0f)
+        {
+            // This can happen for very new data; keep it (will be clipped anyway).
+        }
+
+        // Compute yMin/yMax over the chunk
+        float yMin =  std::numeric_limits<float>::infinity();
+        float yMax = -std::numeric_limits<float>::infinity();
+
+        for (size_t i = chunkStart; i <= chunkEnd; ++i)
+        {
+            const float y = dbToY (repDb[i], height);
+            yMin = std::min (yMin, y);
+            yMax = std::max (yMax, y);
+        }
+
+        if (! std::isfinite (yMin) || ! std::isfinite (yMax))
+            continue;
+
+        float yRep = 0.5f * (yMin + yMax);
 
         if (havePrev)
         {
-            // Bias toward the extreme that continues from the previous point.
-            // Helps keep the line "peaky" with fewer points.
-            constexpr float spanThresholdPx = 1.0f;
+            const float span = std::abs (yMax - yMin);
 
-            if (spanY >= spanThresholdPx)
+            if (span >= spanThresholdPx)
             {
-                const float dMin = std::abs (bucketYMin - prevY);
-                const float dMax = std::abs (bucketYMax - prevY);
-                yRep = (dMin >= dMax ? bucketYMin : bucketYMax);
+                const float dMin = std::abs (yMin - prevY);
+                const float dMax = std::abs (yMax - prevY);
+                yRep = (dMin >= dMax ? yMin : yMax);
             }
             else
             {
-                yRep = juce::jlimit (bucketYMin, bucketYMax, prevY);
+                yRep = juce::jlimit (yMin, yMax, prevY);
             }
         }
 
-        // Snap Y to half pixels to stabilise thin strokes
+        // Snap Y to half pixels for stability with thin strokes
         yRep = std::floor (yRep) + 0.5f;
 
-        float xOut = bucketXLast;
-        xOut = juce::jlimit (-overscanPx, width + overscanPx, xOut);
-
-        outPoints.emplace_back (xOut, yRep);
+        outPoints.emplace_back (xEnd, yRep);
 
         prevY = yRep;
         havePrev = true;
-
-        haveBucket = false;
-    };
-
-    for (size_t i = 0; i < n; ++i)
-    {
-        const juce::int64 framesAgo = juce::jmax<juce::int64> (0, totalFramesNow - endFrameIndex[i]);
-
-        const float x = (float) ((double) width - (double) framesAgo * zoomX);
-        if (x < -10.0f || x > width + 10.0f)
-            continue;
-
-        const float y = dbToY (repDb[i], height);
-
-        if (! haveBucket)
-        {
-            haveBucket   = true;
-            bucketXStart = x;
-            bucketXLast  = x;
-            bucketYMin   = y;
-            bucketYMax   = y;
-            continue;
-        }
-
-        // Still within bucket: update min/max and remember last X
-        if ((x - bucketXStart) < minDxPx)
-        {
-            bucketXLast = x;
-            bucketYMin  = std::min (bucketYMin, y);
-            bucketYMax  = std::max (bucketYMax, y);
-            continue;
-        }
-
-        // Bucket complete -> emit and start new one at current sample
-        emitBucket();
-
-        haveBucket   = true;
-        bucketXStart = x;
-        bucketXLast  = x;
-        bucketYMin   = y;
-        bucketYMax   = y;
     }
 
-    emitBucket();
-
-    // Ensure at least 2 points if possible (avoids "nothing to draw" edge case)
-    if (outPoints.size() == 1 && n >= 2)
+    // Ensure at least 2 points when possible (avoid "nothing to draw")
+    if (outPoints.size() < 2 && n >= 2)
     {
-        // Add a second point using the last valid input sample if we can
-        const juce::int64 framesAgoLast = juce::jmax<juce::int64> (0, totalFramesNow - endFrameIndex[n - 1]);
-        const float xLast = (float) ((double) width - (double) framesAgoLast * zoomX);
-        const float yLast = std::floor (dbToY (repDb[n - 1], height)) + 0.5f;
-        outPoints.emplace_back (xLast, yLast);
+        const juce::int64 framesAgo0 = juce::jmax<juce::int64> (0, totalFramesNow - endFrameIndex[0]);
+        const float x0 = (float) ((double) width - (double) framesAgo0 * zoomX);
+        float y0 = dbToY (repDb[0], height);
+        y0 = std::floor (y0) + 0.5f;
+
+        const juce::int64 framesAgo1 = juce::jmax<juce::int64> (0, totalFramesNow - endFrameIndex[n - 1]);
+        const float x1 = (float) ((double) width - (double) framesAgo1 * zoomX);
+        float y1 = dbToY (repDb[n - 1], height);
+        y1 = std::floor (y1) + 0.5f;
+
+        outPoints.clear();
+        outPoints.emplace_back (x0, y0);
+        outPoints.emplace_back (x1, y1);
     }
 }
 
