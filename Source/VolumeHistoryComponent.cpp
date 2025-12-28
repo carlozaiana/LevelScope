@@ -312,8 +312,6 @@ int VolumeHistoryComponent::selectBestLevelForCurrentZoom (int widthPixels) cons
 
     int bestLevel = -1;
 
-    const juce::int64 totalFramesNow = getTotalFramesL0(); // [SCROLL-PHASE-FIX]
-
     for (int level = 0; level < maxLevels; ++level)
     {
         const int available = getAvailableGroups (level);
@@ -324,16 +322,12 @@ int VolumeHistoryComponent::selectBestLevelForCurrentZoom (int widthPixels) cons
         const int spanFrames = L.spanFrames;
         if (spanFrames <= 0)
             continue;
-        const juce::int64 phaseFrames = totalFramesNow % (juce::int64) spanFrames; // [SCROLL-PHASE-FIX]
 
-        double numerator = maxFramesVisible - (double) phaseFrames;
-        if (numerator < 0.0)
-            numerator = 0.0;
-
-        const int predicted = (int) std::floor (numerator / (double) spanFrames) + 1;
+        // Predict how many groups fit horizontally at this span.
+        // +2 as a safety/overscan margin.
+        const int predicted = (int) std::floor (maxFramesVisible / (double) spanFrames) + 2;
         const int predictedClamped = juce::jlimit (1, available, predicted);
 
-        // Don’t pick a level that can’t produce a drawable line
         if (predictedClamped >= 2 && predictedClamped <= maxPoints)
         {
             bestLevel = level;
@@ -352,9 +346,9 @@ int VolumeHistoryComponent::selectBestLevelForCurrentZoom (int widthPixels) cons
 }
 
 //==============================================================================
-// Visible groups builder  [TIMEBASE-FIX]
-// Produces groups + an absolute timebase (frame index) per point.
-// This avoids "pendingFrames" sawtooth offsets and makes motion steady.
+// Visible groups builder  [TIMEBASE-FIX]  [NO-PHASE]
+// Build points by ABSOLUTE group index range (time window), not "last N groups".
+// This makes x motion smooth and eliminates accordion/jump-back behavior.
 //==============================================================================
 void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
                                                          int widthPixels,
@@ -370,29 +364,49 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
     const auto& L = levels[(size_t) levelIndex];
 
     const int availableGroups = getAvailableGroups (levelIndex);
-    if (availableGroups <= 0 || widthPixels <= 0)
+    if (availableGroups < 2 || widthPixels <= 0 || zoomX <= 0.0)
         return;
 
     const int spanFrames = L.spanFrames;
-    // [SCROLL-PHASE-FIX] smooth sub-group scrolling: 0..spanFrames-1
+    if (spanFrames <= 0)
+        return;
+
     const juce::int64 totalFramesNow = getTotalFramesL0();
-    const juce::int64 phaseFrames = (spanFrames > 0 ? (totalFramesNow % (juce::int64) spanFrames) : 0);
-    if (spanFrames <= 0 || zoomX <= 0.0)
-        return;
 
-    // How many frames fit horizontally (plus small overscan)
     const double overscanPixels = 10.0;
-    const double maxFramesVisible = ((double) widthPixels + overscanPixels) / zoomX;
-    if (maxFramesVisible <= 0.0)
+    const double maxFramesVisibleD = ((double) widthPixels + overscanPixels) / zoomX;
+    const juce::int64 maxFramesVisible = (juce::int64) std::ceil (juce::jmax (0.0, maxFramesVisibleD));
+
+    // Visible time window in absolute frames (Level 0 frame units)
+    const juce::int64 leftFrame = juce::jmax<juce::int64> (0, totalFramesNow - maxFramesVisible);
+
+    // Absolute group index range available in the ring
+    const juce::int64 latestAbsGroup   = L.totalGroups - 1;
+    const juce::int64 earliestAbsGroup = L.totalGroups - (juce::int64) availableGroups;
+
+    if (latestAbsGroup < earliestAbsGroup)
         return;
 
-    // How many groups can be visible at this level (no pending sawtooth offset!)
-    const int maxGroupsByX = (int) std::floor (maxFramesVisible / (double) spanFrames) + 1;
-    const int groupsToUse  = juce::jlimit (0, availableGroups, maxGroupsByX);
-    if (groupsToUse < 2)
+    // We include groups whose END frame is >= leftFrame.
+    // Group absIndex has endFrame = (absIndex + 1) * spanFrames.
+    const juce::int64 leftFrameClamped = juce::jmax<juce::int64> (0, leftFrame);
+
+    const juce::int64 ceilDiv = (leftFrameClamped + (juce::int64) spanFrames - 1) / (juce::int64) spanFrames;
+    juce::int64 minAbsWanted = ceilDiv - 1;
+
+    // Small overscan: include one extra group to the left
+    minAbsWanted -= 1;
+
+    const juce::int64 minAbs = juce::jmax (earliestAbsGroup, minAbsWanted);
+    const juce::int64 maxAbs = latestAbsGroup;
+
+    const juce::int64 groupsToUse64 = maxAbs - minAbs + 1;
+    if (groupsToUse64 < 2)
         return;
 
-    // Extra cap (safety) to keep drawing bounded
+    const int groupsToUse = (int) juce::jmin<juce::int64> (groupsToUse64, (juce::int64) std::numeric_limits<int>::max());
+
+    // Cap output points
     const int maxDrawablePoints = getMaxDrawablePoints (widthPixels);
     const int step = (groupsToUse > maxDrawablePoints
                         ? (int) std::ceil ((double) groupsToUse / (double) maxDrawablePoints)
@@ -408,11 +422,11 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
     outGroups.resize ((size_t) outCount);
     outEndFrameIndex.resize ((size_t) outCount);
 
-    // We fill in chronological order: oldest -> newest
-    for (int chunkChronoIndex = 0; chunkChronoIndex < outCount; ++chunkChronoIndex)
+    // Chronological order: oldest -> newest
+    for (int i = 0; i < outCount; ++i)
     {
-        const int baseGroupsAgo = (outCount - 1 - chunkChronoIndex) * step;
-        const int endGroupsAgo  = juce::jmin (groupsToUse - 1, baseGroupsAgo + step - 1);
+        const juce::int64 absStart = minAbs + (juce::int64) i * (juce::int64) step;
+        const juce::int64 absEnd   = juce::jmin (maxAbs, absStart + (juce::int64) step - 1);
 
         FrameGroup agg;
         agg.momentaryMinDb =  std::numeric_limits<float>::infinity();
@@ -420,9 +434,10 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
         agg.shortTermMinDb =  std::numeric_limits<float>::infinity();
         agg.shortTermMaxDb = -std::numeric_limits<float>::infinity();
 
-        for (int ga = baseGroupsAgo; ga <= endGroupsAgo; ++ga)
+        for (juce::int64 absIdx = absStart; absIdx <= absEnd; ++absIdx)
         {
-            const FrameGroup gg = getGroupAgo (levelIndex, ga);
+            const int groupsAgo = (int) (latestAbsGroup - absIdx);
+            const FrameGroup gg = getGroupAgo (levelIndex, groupsAgo);
 
             agg.momentaryMinDb = std::min (agg.momentaryMinDb, gg.momentaryMinDb);
             agg.momentaryMaxDb = std::max (agg.momentaryMaxDb, gg.momentaryMaxDb);
@@ -430,16 +445,13 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
             agg.shortTermMaxDb = std::max (agg.shortTermMaxDb, gg.shortTermMaxDb);
         }
 
-        // Use the chunk center as a stable representative timestamp.
-        const double centerGroupsAgo = 0.5 * (double) (baseGroupsAgo + endGroupsAgo);
-        const juce::int64 framesAgoI = (juce::int64) std::llround (centerGroupsAgo * (double) spanFrames);
+        // Timestamp for this chunk: center group’s END frame (absolute timebase)
+        const double centerAbs = 0.5 * ((double) absStart + (double) absEnd);
+        const double endFrameD = (centerAbs + 1.0) * (double) spanFrames;
+        const juce::int64 endFrame = (juce::int64) std::llround (endFrameD);
 
-        // Absolute frame index (timebase): frameIndex = now - framesAgo
-        // [SCROLL-PHASE-FIX] shift everything by phaseFrames so the curve scrolls smoothly
-        const juce::int64 frameIndex = totalFramesNow - phaseFrames - framesAgoI;
-
-        outGroups[(size_t) chunkChronoIndex] = agg;
-        outEndFrameIndex[(size_t) chunkChronoIndex] = frameIndex;
+        outGroups[(size_t) i] = agg;
+        outEndFrameIndex[(size_t) i] = endFrame;
     }
 }
 
@@ -631,161 +643,23 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<juce::int64>
 
     const juce::int64 totalFramesNow = getTotalFramesL0();
 
-    const int wInt = (int) std::round (width);
-    outPoints.reserve ((size_t) juce::jlimit (128, 8192, wInt + 64));
-
-    constexpr int overscanPx = 2; // small overscan for stability near edges
-
-    //--------------------------------------------------------------------------
-    // [FIX-POLYLINE-ACCORDION] Detect "dense" regime (about >= 1 px per point)
-    //--------------------------------------------------------------------------
-    double sumDx = 0.0;
-    int dxCount = 0;
-
-    {
-        const size_t probeN = juce::jmin<size_t> (n, 64);
-        float prevX = 0.0f;
-        bool havePrev = false;
-
-        for (size_t i = 0; i < probeN; ++i)
-        {
-            const juce::int64 framesAgo = juce::jmax<juce::int64> (0, totalFramesNow - endFrameIndex[i]);
-            const float x = (float) ((double) width - (double) framesAgo * zoomX);
-
-            if (havePrev)
-            {
-                sumDx += std::abs ((double) (x - prevX));
-                ++dxCount;
-            }
-
-            prevX = x;
-            havePrev = true;
-        }
-    }
-
-    const double avgDxPx = (dxCount > 0 ? (sumDx / (double) dxCount) : 0.0);
-
-    // If points are around 1px apart (or more), binning is harmful (accordion + dropouts).
-    // Use direct mapping: stable, all segments move together.
-    const bool useDirectMapping = (avgDxPx >= 0.75);
-
-    if (useDirectMapping)
-    {
-        for (size_t i = 0; i < n; ++i)
-        {
-            const juce::int64 framesAgo = juce::jmax<juce::int64> (0, totalFramesNow - endFrameIndex[i]);
-            const float x = (float) ((double) width - (double) framesAgo * zoomX);
-
-            if (x < -10.0f || x > width + 10.0f)
-                continue;
-
-            float y = dbToY (repDb[i], height);
-
-            // Optional: snap Y to half pixels for stable thin strokes
-            y = std::floor (y) + 0.5f;
-
-            outPoints.emplace_back (x, y);
-        }
-
-        return;
-    }
-
-    //--------------------------------------------------------------------------
-    // Sparse regime: bin by pixel column and emit one point per column.
-    //--------------------------------------------------------------------------
-    int   currentXPix = std::numeric_limits<int>::min();
-    float colYMin = 0.0f;
-    float colYMax = 0.0f;
-
-    double colXSum = 0.0;
-    int    colXCount = 0;
-
-    bool  haveCol = false;
-
-    float prevY = 0.0f;
-    bool  havePrev = false;
-
-    auto emitColumn = [&]()
-    {
-        if (! haveCol || colXCount <= 0)
-            return;
-
-        float xRep = (float) (colXSum / (double) colXCount);
-        xRep = juce::jlimit ((float) -overscanPx, width + (float) overscanPx, xRep);
-
-        const float span = std::abs (colYMax - colYMin);
-        float yRep = 0.5f * (colYMin + colYMax);
-
-        if (havePrev)
-        {
-            constexpr float spanThresholdPx = 1.0f;
-
-            if (span >= spanThresholdPx)
-            {
-                const float dMin = std::abs (colYMin - prevY);
-                const float dMax = std::abs (colYMax - prevY);
-                yRep = (dMin >= dMax ? colYMin : colYMax);
-            }
-            else
-            {
-                yRep = juce::jlimit (colYMin, colYMax, prevY);
-            }
-        }
-
-        // Snap Y to half pixels for stability
-        yRep = std::floor (yRep) + 0.5f;
-
-        outPoints.emplace_back (xRep, yRep);
-
-        prevY = yRep;
-        havePrev = true;
-    };
+    outPoints.reserve (n);
 
     for (size_t i = 0; i < n; ++i)
     {
         const juce::int64 framesAgo = juce::jmax<juce::int64> (0, totalFramesNow - endFrameIndex[i]);
-        const float xRaw = (float) ((double) width - (double) framesAgo * zoomX);
 
-        if (xRaw < -10.0f)
+        const float x = (float) ((double) width - (double) framesAgo * zoomX);
+        if (x < -10.0f || x > width + 10.0f)
             continue;
 
-        const int xPix = (int) std::floor (xRaw + 0.5f);
-        if (xPix < -overscanPx || xPix > (int) width + overscanPx)
-            continue;
+        float y = dbToY (repDb[i], height);
 
-        const float y = dbToY (repDb[i], height);
+        // Helps reduce shimmer for thin strokes
+        y = std::floor (y) + 0.5f;
 
-        if (! haveCol)
-        {
-            haveCol = true;
-            currentXPix = xPix;
-            colYMin = y;
-            colYMax = y;
-            colXSum = (double) xRaw;
-            colXCount = 1;
-            continue;
-        }
-
-        if (xPix != currentXPix)
-        {
-            emitColumn();
-
-            currentXPix = xPix;
-            colYMin = y;
-            colYMax = y;
-            colXSum = (double) xRaw;
-            colXCount = 1;
-        }
-        else
-        {
-            colYMin = std::min (colYMin, y);
-            colYMax = std::max (colYMax, y);
-            colXSum += (double) xRaw;
-            ++colXCount;
-        }
+        outPoints.emplace_back (x, y);
     }
-
-    emitColumn();
 }
 
 //==============================================================================
