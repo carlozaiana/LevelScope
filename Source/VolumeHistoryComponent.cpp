@@ -627,7 +627,7 @@ void VolumeHistoryComponent::rebuildStaticBackgroundIfNeeded()
     cachedStaticBackground = juce::Image (juce::Image::RGB, w, h, true);
     juce::Graphics gg (cachedStaticBackground);
 
-    auto backgroundColour = juce::Colours::limegreen.darker (3.0f);
+    auto backgroundColour = juce::Colour::fromRGB (16, 30, 50);
     gg.fillAll (backgroundColour);
 
     gg.setColour (juce::Colours::darkgrey.withMultipliedAlpha (0.4f));
@@ -831,24 +831,26 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             }
         }
 
-        // Bands
-        if (showBands && selectedLevel > 0)
-        {
-            g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.6f));
-            g.strokePath (scratchPathBandS, juce::PathStrokeType (1.0f));
+       // Bands
+       // Draw momentary first, then short-term on top.
+       if (showBands && selectedLevel > 0)
+       {
+           g.setColour (juce::Colour::fromRGB (95, 117, 140).withMultipliedAlpha (0.7f)); // momentary
+           g.strokePath (scratchPathBandM, juce::PathStrokeType (1.2f));
 
-            g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.7f));
-            g.strokePath (scratchPathBandM, juce::PathStrokeType (1.2f));
-        }
+           g.setColour (juce::Colour::fromRGB (0, 80, 180).withMultipliedAlpha (0.6f));   // short-term (on top)
+           g.strokePath (scratchPathBandS, juce::PathStrokeType (1.0f));
+       } 
 
         // Lines (stroked paths only)
+        // Draw momentary first, then short-term on top.
         if (showLines)
         {
-            g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.9f));
-            g.strokePath (scratchPathRepS, juce::PathStrokeType (1.5f));
-
-            g.setColour (juce::Colours::limegreen);
+            g.setColour (juce::Colour::fromRGB (95, 117, 140)); // momentary
             g.strokePath (scratchPathRepM, juce::PathStrokeType (2.0f));
+
+            g.setColour (juce::Colour::fromRGB (0, 80, 180).withMultipliedAlpha (0.95f)); // short-term (on top)
+            g.strokePath (scratchPathRepS, juce::PathStrokeType (1.5f));
         }
     }
 
