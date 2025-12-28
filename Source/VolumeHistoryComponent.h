@@ -129,28 +129,6 @@ private:
     void rebuildStaticBackgroundIfNeeded();
 
     //==============================================================================
-    // [LINE-QUALITY]
-    //==============================================================================
-
-    bool isModifierForQualityToggle (const juce::ModifierKeys& mods) const noexcept;
-    void cycleLineRenderMode() noexcept;
-    bool shouldUsePolylineForLines (int selectedLevel) const noexcept;
-
-    //==============================================================================
-    // Polyline drawing (cheap)
-    //==============================================================================
-
-    // [POLYLINE-PEAK] + [TIMEBASE-FIX]
-    void buildPolylinePoints (const std::vector<juce::int64>& endFrameIndex,
-                              const std::vector<float>& repDb,
-                              float width,
-                              float height,
-                              std::vector<juce::Point<float>>& outPoints) const;
-    void drawPolyline (juce::Graphics& g,
-                      const std::vector<juce::Point<float>>& pts,
-                      float thickness) const;
-
-    //==============================================================================
     // [RULER-HYST-FIX]
     // Tick step hysteresis based on pixels-per-second (zoom), not visibleSeconds.
     //==============================================================================
@@ -196,14 +174,6 @@ private:
     bool showBands = true;
     bool showLines = true;
 
-    // [LINE-QUALITY]
-    int lineRenderMode = 0;              // 0=Auto, 1=Force Stroke, 2=Force Polyline
-    int coarseLevelStartForPolyline = 3; // Auto: polyline from this level upward
-
-    // [PIXEL-ADVANCE-FIX]
-    // We quantize X to pixels only when in polyline mode AND level is coarse enough.
-    int coarseLevelStartForPixelAdvance = 3;
-
     // [RULER-HYST-FIX]
     int tickStepIndex = -1; // remembered tickStep choice (hysteresis)
 
@@ -224,10 +194,6 @@ private:
     // Bands (batched)
     mutable juce::Path              scratchPathBandM;
     mutable juce::Path              scratchPathBandS;
-
-    // Polyline mode scratch
-    mutable std::vector<juce::Point<float>> scratchPolylinePtsM;
-    mutable std::vector<juce::Point<float>> scratchPolylinePtsS;
 
     //==============================================================================
     // Cached background

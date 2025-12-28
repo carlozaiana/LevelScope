@@ -645,107 +645,6 @@ void VolumeHistoryComponent::rebuildStaticBackgroundIfNeeded()
 }
 
 //==============================================================================
-// Line quality / render mode  [LINE-QUALITY]
-//==============================================================================
-
-bool VolumeHistoryComponent::isModifierForQualityToggle (const juce::ModifierKeys& mods) const noexcept
-{
-   #if JUCE_MAC
-    return mods.isCommandDown();
-   #else
-    return mods.isCtrlDown();
-   #endif
-}
-
-void VolumeHistoryComponent::cycleLineRenderMode() noexcept
-{
-    lineRenderMode = (lineRenderMode + 1) % 3;
-}
-
-bool VolumeHistoryComponent::shouldUsePolylineForLines (int selectedLevel) const noexcept
-{
-    if (lineRenderMode == 2) return true;   // Force Polyline
-    if (lineRenderMode == 1) return false;  // Force Stroke
-    return selectedLevel >= coarseLevelStartForPolyline; // Auto
-}
-
-//==============================================================================
-// Polyline drawing  [TIMEBASE-FIX] 
-//
-// Stable decimator rule:
-// - We do NOT bucket by pixel columns or by (x - bucketXStart) thresholds.
-//   Those are sensitive to floating-point rounding and cause "accordion"/flicker.
-// - Instead we decimate by a fixed INDEX stride computed from width.
-//   Chunk boundaries are stable (integer), so no re-bucketing as time advances.
-//
-// For each chunk we:
-// - compute yMin/yMax in that chunk (in pixels)
-// - emit ONE point at the chunk's END x, with y chosen to preserve peaks
-//   relative to the previous emitted y.
-//==============================================================================
-void VolumeHistoryComponent::buildPolylinePoints (const std::vector<juce::int64>& endFrameIndex,
-                                                  const std::vector<float>& repDb,
-                                                  float width,
-                                                  float height,
-                                                  std::vector<juce::Point<float>>& outPoints) const
-{
-    outPoints.clear();
-
-    const size_t n = juce::jmin (endFrameIndex.size(), repDb.size());
-    if (n < 2 || zoomX <= 0.0 || width <= 1.0f)
-        return;
-
-    const juce::int64 totalFramesNow = getTotalFramesL0();
-
-    outPoints.reserve (n);
-
-    for (size_t i = 0; i < n; ++i)
-    {
-        const juce::int64 framesAgo = juce::jmax<juce::int64> (0, totalFramesNow - endFrameIndex[i]);
-
-        const float x = (float) ((double) width - (double) framesAgo * zoomX);
-        if (x < -10.0f || x > width + 10.0f)
-            continue;
-
-        float y = dbToY (repDb[i], height);
-
-        // snap Y to half pixels for stable thin strokes
-        y = std::floor (y) + 0.5f;
-
-        outPoints.emplace_back (x, y);
-    }
-}
-
-//==============================================================================
-// Polyline rendering  [FIX-POLYLINE-GAPS]
-//
-// Drawing many individual g.drawLine() segments can produce tiny join gaps
-// (they "blink" when density is ~1 px/vertex). Rendering as ONE stroked path
-// gives stable joins/caps and stops segments from disappearing.
-//==============================================================================
-void VolumeHistoryComponent::drawPolyline (juce::Graphics& g,
-                                          const std::vector<juce::Point<float>>& pts,
-                                          float thickness) const
-{
-    if (pts.size() < 2)
-        return;
-
-    juce::Path p;
-    // Preallocate to reduce allocations (3 elements-ish per point is a decent heuristic).
-    p.preallocateSpace ((int) pts.size() * 3);
-
-    p.startNewSubPath (pts[0]);
-    for (size_t i = 1; i < pts.size(); ++i)
-        p.lineTo (pts[i]);
-
-    juce::PathStrokeType stroke (thickness,
-                                 juce::PathStrokeType::JointStyle::curved,
-                                 juce::PathStrokeType::EndCapStyle::rounded);
-
-    g.strokePath (p, stroke);
-}
-
-//==============================================================================
 // Ruler tickStep hysteresis  [RULER-HYST-FIX]
 //==============================================================================
 
@@ -836,9 +735,6 @@ void VolumeHistoryComponent::resized()
         scratchVisibleEndFrameIndex.reserve (reserveCount); // [TIMEBASE-FIX]
         scratchRepMomentaryDb.reserve (reserveCount);
         scratchRepShortTermDb.reserve (reserveCount);
-
-        scratchPolylinePtsM.reserve ((size_t) juce::jlimit (256, 4096, w + 64));
-        scratchPolylinePtsS.reserve ((size_t) juce::jlimit (256, 4096, w + 64));
     }
 
     // Do NOT reset tickStepIndex here; hysteresis should smoothly adapt.
@@ -873,8 +769,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     const float w = bounds.getWidth();
     const float h = bounds.getHeight();
 
-    const bool usePolylineLines = (showLines && shouldUsePolylineForLines (selectedLevel));
-
     if (n >= 2)
     {
         computeRepresentativeCurves (scratchVisibleGroups, scratchRepMomentaryDb, scratchRepShortTermDb);
@@ -882,7 +776,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         scratchPathBandM.clear();
         scratchPathBandS.clear();
 
-        if (showLines && ! usePolylineLines)
+        if (showLines)
         {
             scratchPathRepM.clear();
             scratchPathRepS.clear();
@@ -924,7 +818,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
                 }
             }
 
-            if (showLines && ! usePolylineLines)
+            if (showLines)
             {
                 const float yRepM = dbToY (scratchRepMomentaryDb[i], h);
                 const float yRepS = dbToY (scratchRepShortTermDb[i], h);
@@ -947,44 +841,14 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             g.strokePath (scratchPathBandM, juce::PathStrokeType (1.2f));
         }
 
-        // Lines
+        // Lines (stroked paths only)
         if (showLines)
         {
-            if (usePolylineLines)
-            {
-                scratchPolylinePtsM.clear();
-                scratchPolylinePtsS.clear();
+            g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.9f));
+            g.strokePath (scratchPathRepS, juce::PathStrokeType (1.5f));
 
-                buildPolylinePoints (scratchVisibleEndFrameIndex, scratchRepShortTermDb, w, h, scratchPolylinePtsS); // [TIMEBASE-FIX]
-                buildPolylinePoints (scratchVisibleEndFrameIndex, scratchRepMomentaryDb, w, h, scratchPolylinePtsM); // [TIMEBASE-FIX]
-
-                // [FIX-POLYLINE-DROPOUTS]
-                // When pixels-per-group gets near/below ~1px, very dense polylines can show
-                // "missing bits" due to rasterisation/coverage quirks at 1.0px thickness.
-                // We thicken slightly as density increases (still cheap).
-                const double pixelsPerGroup = zoomX * (double) levels[(size_t) selectedLevel].spanFrames;
-
-                // density = 0 at >=1 px/group, ramps up as it goes below 1
-                const double density = (pixelsPerGroup < 1.0 ? (1.0 - pixelsPerGroup) : 0.0);
-
-                // Clamp and scale to a small thickness increase
-                const float thickS = (float) juce::jlimit (1.0, 2.2, 1.15 + density * 1.1);
-                const float thickM = (float) juce::jlimit (1.0, 2.4, thickS + 0.25);
-
-                g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.95f));
-                drawPolyline (g, scratchPolylinePtsS, thickS);
-
-                g.setColour (juce::Colours::limegreen);
-                drawPolyline (g, scratchPolylinePtsM, thickM);
-            }
-            else
-            {
-                g.setColour (juce::Colours::cyan.withMultipliedAlpha (0.9f));
-                g.strokePath (scratchPathRepS, juce::PathStrokeType (1.5f));
-
-                g.setColour (juce::Colours::limegreen);
-                g.strokePath (scratchPathRepM, juce::PathStrokeType (2.0f));
-            }
+            g.setColour (juce::Colours::limegreen);
+            g.strokePath (scratchPathRepM, juce::PathStrokeType (2.0f));
         }
     }
 
@@ -1056,10 +920,6 @@ if (zoomX > 0.0 && visualFrameRate > 0.0 && totalFrames > 0)
     const auto& Lsel         = levels[(size_t) selectedLevel];
     const double spanSeconds = (double) Lsel.spanFrames / visualFrameRate;
 
-    const char* modeName = "Auto";
-    if (lineRenderMode == 1) modeName = "ForceStroke";
-    if (lineRenderMode == 2) modeName = "ForcePolyline";
-
     const double tickStepNow = getTickStepSecondsWithHysteresis (width);
 
     juce::String info = "Level: " + juce::String (selectedLevel) +
@@ -1070,7 +930,6 @@ if (zoomX > 0.0 && visualFrameRate > 0.0 && totalFrames > 0)
                         " | Tick: " + juce::String (tickStepNow, 3) + "s" +
                         " | Bands: " + juce::String (showBands ? "ON" : "OFF") +
                         " | Lines: " + juce::String (showLines ? "ON" : "OFF") +
-                        " | LineMode: " + juce::String (modeName);
 
     g.drawText (info, 8, 8, (int) std::min (bounds.getWidth() - 16.0f, 980.0f), 20, juce::Justification::topLeft);
 }
@@ -1129,14 +988,6 @@ void VolumeHistoryComponent::mouseWheelMove (const juce::MouseEvent& event,
 
 void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
 {
-    // Cmd-click (mac) / Ctrl-click (win): cycle line render mode
-    if (isModifierForQualityToggle (event.mods))
-    {
-        cycleLineRenderMode();
-        repaint();
-        return;
-    }
-
     // Shift-click toggles bands; plain click toggles lines.
     if (event.mods.isShiftDown())
         showBands = ! showBands;
