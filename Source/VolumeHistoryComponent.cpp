@@ -346,9 +346,13 @@ int VolumeHistoryComponent::selectBestLevelForCurrentZoom (int widthPixels) cons
 }
 
 //==============================================================================
-// Visible groups builder  [TIMEBASE-FIX]  [NO-PHASE]
-// Build points by ABSOLUTE group index range (time window), not "last N groups".
-// This makes x motion smooth and eliminates accordion/jump-back behavior.
+// Visible groups builder  [TIMEBASE-FIX]  [DECIMATOR-GRID-ANCHOR]
+//
+// Key idea:
+// - We still cap point count with a step.
+// - But chunk boundaries are ANCHORED to an absolute grid (multiples of step),
+//   not to the moving left edge. This prevents "accordion" for BOTH renderers.
+// - Timestamp uses chunk END (no center/rounding drift).
 //==============================================================================
 void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
                                                          int widthPixels,
@@ -373,6 +377,7 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
 
     const juce::int64 totalFramesNow = getTotalFramesL0();
 
+    // Visible frames (overscanned a bit)
     const double overscanPixels = 10.0;
     const double maxFramesVisibleD = ((double) widthPixels + overscanPixels) / zoomX;
     const juce::int64 maxFramesVisible = (juce::int64) std::ceil (juce::jmax (0.0, maxFramesVisibleD));
@@ -380,21 +385,20 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
     // Visible time window in absolute frames (Level 0 frame units)
     const juce::int64 leftFrame = juce::jmax<juce::int64> (0, totalFramesNow - maxFramesVisible);
 
-    // Absolute group index range available in the ring
+    // Absolute group index range available in the ring (append-only model)
     const juce::int64 latestAbsGroup   = L.totalGroups - 1;
     const juce::int64 earliestAbsGroup = L.totalGroups - (juce::int64) availableGroups;
 
     if (latestAbsGroup < earliestAbsGroup)
         return;
 
-    // We include groups whose END frame is >= leftFrame.
+    // Groups whose END frame is >= leftFrame are potentially visible.
     // Group absIndex has endFrame = (absIndex + 1) * spanFrames.
     const juce::int64 leftFrameClamped = juce::jmax<juce::int64> (0, leftFrame);
-
     const juce::int64 ceilDiv = (leftFrameClamped + (juce::int64) spanFrames - 1) / (juce::int64) spanFrames;
     juce::int64 minAbsWanted = ceilDiv - 1;
 
-    // Small overscan: include one extra group to the left
+    // overscan one group to the left
     minAbsWanted -= 1;
 
     const juce::int64 minAbs = juce::jmax (earliestAbsGroup, minAbsWanted);
@@ -404,48 +408,60 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
     if (groupsToUse64 < 2)
         return;
 
-    const int groupsToUse = (int) juce::jmin<juce::int64> (groupsToUse64, (juce::int64) std::numeric_limits<int>::max());
+    const int groupsToUse = (int) juce::jmin<juce::int64> (groupsToUse64,
+                                                          (juce::int64) std::numeric_limits<int>::max());
 
-    // Cap output points
+    //--------------------------------------------------------------------------
+    // Choose a step for performance
+    //--------------------------------------------------------------------------
     const int maxDrawablePoints = getMaxDrawablePoints (widthPixels);
 
-    // [DECIMATOR-ZOOM-STABLE]
-    // Enforce a minimum horizontal spacing in pixels BETWEEN OUTPUT POINTS,
-    // derived only from zoomX and spanFrames. This does NOT drift with new audio.
+    // [DECIMATOR-GRID-ANCHOR] zoom-based step (controls density by pixels)
     const double pxPerGroup = (double) spanFrames * zoomX;
 
-    // Tuneable: bigger = fewer points (more performance), smaller = more detail.
-    // Use slightly larger spacing for very large widths (4K).
+    // Tuneable: larger => fewer points (more performance)
     const double desiredPxPerPoint = (widthPixels >= 2500 ? 1.6 : 1.25);
 
-    // Step required to achieve the desired spacing (stable w.r.t. time)
     const int stepByZoom = (pxPerGroup > 1.0e-12
-                          ? (int) std::ceil (desiredPxPerPoint / pxPerGroup)
-                          : maxDrawablePoints);
+                              ? (int) std::ceil (desiredPxPerPoint / pxPerGroup)
+                              : maxDrawablePoints);
 
-    // Existing safety cap (prevents runaway point counts)
+    // Safety cap so we never exceed maxDrawablePoints
     const int stepByCap = (groupsToUse > maxDrawablePoints
-                         ? (int) std::ceil ((double) groupsToUse / (double) maxDrawablePoints)
-                         : 1);
+                             ? (int) std::ceil ((double) groupsToUse / (double) maxDrawablePoints)
+                             : 1);
 
-    // Final step: take the coarser of the two
-    const int step = juce::jmax (1, juce::jmax (stepByZoom, stepByCap));
+    const juce::int64 step = (juce::int64) juce::jmax (1, juce::jmax (stepByZoom, stepByCap));
 
-    const int outCount = (step > 1
-                            ? (int) std::ceil ((double) groupsToUse / (double) step)
-                            : groupsToUse);
-
-    if (outCount < 2)
-        return;
-
-    outGroups.resize ((size_t) outCount);
-    outEndFrameIndex.resize ((size_t) outCount);
-
-    // Chronological order: oldest -> newest
-    for (int i = 0; i < outCount; ++i)
+    //--------------------------------------------------------------------------
+    // [DECIMATOR-GRID-ANCHOR] Anchor chunk boundaries to a fixed global grid
+    //--------------------------------------------------------------------------
+    auto floorToGrid = [] (juce::int64 v, juce::int64 grid) -> juce::int64
     {
-        const juce::int64 absStart = minAbs + (juce::int64) i * (juce::int64) step;
-        const juce::int64 absEnd   = juce::jmin (maxAbs, absStart + (juce::int64) step - 1);
+        // v and grid are non-negative in our use; keep it simple and stable.
+        return (grid > 0 ? (v / grid) * grid : v);
+    };
+
+    juce::int64 firstAbs = floorToGrid (minAbs, step);
+    if (firstAbs > minAbs)
+        firstAbs -= step;
+
+    // overscan one chunk to the left (optional but helps continuity at edge)
+    firstAbs = juce::jmax (earliestAbsGroup, firstAbs - step);
+
+    // Reserve approx (not exact)
+    const int approxOut = (int) std::ceil ((double) groupsToUse / (double) step) + 4;
+    outGroups.reserve ((size_t) juce::jlimit (64, 8192, approxOut));
+    outEndFrameIndex.reserve ((size_t) juce::jlimit (64, 8192, approxOut));
+
+    // Emit chunks in chronological order: oldest -> newest
+    for (juce::int64 absStart = firstAbs; absStart <= maxAbs; absStart += step)
+    {
+        const juce::int64 absEnd = juce::jmin (maxAbs, absStart + step - 1);
+
+        // Skip chunks completely to the left of our needed range (except overscan)
+        if (absEnd < minAbs - step)
+            continue;
 
         FrameGroup agg;
         agg.momentaryMinDb =  std::numeric_limits<float>::infinity();
@@ -453,10 +469,16 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
         agg.shortTermMinDb =  std::numeric_limits<float>::infinity();
         agg.shortTermMaxDb = -std::numeric_limits<float>::infinity();
 
+        bool any = false;
+
         for (juce::int64 absIdx = absStart; absIdx <= absEnd; ++absIdx)
         {
             const int groupsAgo = (int) (latestAbsGroup - absIdx);
             const FrameGroup gg = getGroupAgo (levelIndex, groupsAgo);
+
+            // getGroupAgo returns minDb-filled defaults when out of range,
+            // but absIdx is in-range here; still keep "any" for safety.
+            any = true;
 
             agg.momentaryMinDb = std::min (agg.momentaryMinDb, gg.momentaryMinDb);
             agg.momentaryMaxDb = std::max (agg.momentaryMaxDb, gg.momentaryMaxDb);
@@ -464,13 +486,20 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
             agg.shortTermMaxDb = std::max (agg.shortTermMaxDb, gg.shortTermMaxDb);
         }
 
-        // Timestamp for this chunk: center group’s END frame (absolute timebase)
-        const double centerAbs = 0.5 * ((double) absStart + (double) absEnd);
-        const double endFrameD = (centerAbs + 1.0) * (double) spanFrames;
-        const juce::int64 endFrame = (juce::int64) std::llround (endFrameD);
+        if (! any)
+            continue;
 
-        outGroups[(size_t) i] = agg;
-        outEndFrameIndex[(size_t) i] = endFrame;
+        // Timestamp: use CHUNK END (no center rounding drift)
+        const juce::int64 endFrame = (absEnd + 1) * (juce::int64) spanFrames;
+
+        outGroups.push_back (agg);
+        outEndFrameIndex.push_back (endFrame);
+    }
+
+    if (outGroups.size() < 2)
+    {
+        outGroups.clear();
+        outEndFrameIndex.clear();
     }
 }
 
@@ -641,7 +670,7 @@ bool VolumeHistoryComponent::shouldUsePolylineForLines (int selectedLevel) const
 }
 
 //==============================================================================
-// Polyline drawing  [TIMEBASE-FIX] + [DECIMATOR-INDEX-STABLE]
+// Polyline drawing  [TIMEBASE-FIX] 
 //
 // Stable decimator rule:
 // - We do NOT bucket by pixel columns or by (x - bucketXStart) thresholds.
