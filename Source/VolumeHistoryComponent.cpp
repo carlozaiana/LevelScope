@@ -622,12 +622,15 @@ bool VolumeHistoryComponent::shouldUsePolylineForLines (int selectedLevel) const
 }
 
 //==============================================================================
-// Polyline drawing  [POLYLINE-PEAK] + [TIMEBASE-FIX] + [FIX-POLYLINE-ACCORDION]
-// Strategy:
-// - If points are already ~1px apart (dense), DO NOT bin into pixel columns.
-//   Binning causes "accordion" and dropouts when points cross column borders.
-// - If points are sparse, bin by pixel column and emit 1 point per column
-//   (cheap + peak-preserving).
+// Polyline drawing  [TIMEBASE-FIX] + [DECIMATOR-STABLE]
+//
+// We decimate by enforcing a minimum X spacing in *continuous pixels*.
+// This is stable (no pixel-column re-bucketing) and greatly reduces vertices
+// at large window sizes (1920/4K), while keeping smooth motion.
+//
+// Note: bands still preserve peaks. For the representative line we pick one
+// value per bucket, biased toward the extreme farthest from the previous point,
+// which keeps the line visually "peaky" without doubling point count.
 //==============================================================================
 void VolumeHistoryComponent::buildPolylinePoints (const std::vector<juce::int64>& endFrameIndex,
                                                   const std::vector<float>& repDb,
@@ -643,7 +646,66 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<juce::int64>
 
     const juce::int64 totalFramesNow = getTotalFramesL0();
 
-    outPoints.reserve (n);
+    // Small overscan: keeps edges stable
+    constexpr float overscanPx = 2.0f;
+
+    // [DECIMATOR-STABLE] target minimum spacing between emitted points in pixels.
+    // At 4K, make it a bit larger to cut vertex count further.
+    const float minDxPx = (width >= 2500.0f ? 3.0f : 2.0f);
+
+    // Conservative reserve: at most ~width/minDx points (+ some slack)
+    outPoints.reserve ((size_t) juce::jlimit (128, 4096, (int) (width / minDxPx) + 64));
+
+    // Current bucket state (bucket = range of input points within minDxPx)
+    bool  haveBucket = false;
+    float bucketXStart = 0.0f;
+    float bucketXLast  = 0.0f;
+    float bucketYMin   = 0.0f;
+    float bucketYMax   = 0.0f;
+
+    float prevY = 0.0f;
+    bool  havePrev = false;
+
+    auto emitBucket = [&]()
+    {
+        if (! haveBucket)
+            return;
+
+        const float spanY = std::abs (bucketYMax - bucketYMin);
+
+        float yRep = 0.5f * (bucketYMin + bucketYMax);
+
+        if (havePrev)
+        {
+            // Bias toward the extreme that continues from the previous point.
+            // Helps keep the line "peaky" with fewer points.
+            constexpr float spanThresholdPx = 1.0f;
+
+            if (spanY >= spanThresholdPx)
+            {
+                const float dMin = std::abs (bucketYMin - prevY);
+                const float dMax = std::abs (bucketYMax - prevY);
+                yRep = (dMin >= dMax ? bucketYMin : bucketYMax);
+            }
+            else
+            {
+                yRep = juce::jlimit (bucketYMin, bucketYMax, prevY);
+            }
+        }
+
+        // Snap Y to half pixels to stabilise thin strokes
+        yRep = std::floor (yRep) + 0.5f;
+
+        float xOut = bucketXLast;
+        xOut = juce::jlimit (-overscanPx, width + overscanPx, xOut);
+
+        outPoints.emplace_back (xOut, yRep);
+
+        prevY = yRep;
+        havePrev = true;
+
+        haveBucket = false;
+    };
 
     for (size_t i = 0; i < n; ++i)
     {
@@ -653,12 +715,47 @@ void VolumeHistoryComponent::buildPolylinePoints (const std::vector<juce::int64>
         if (x < -10.0f || x > width + 10.0f)
             continue;
 
-        float y = dbToY (repDb[i], height);
+        const float y = dbToY (repDb[i], height);
 
-        // Helps reduce shimmer for thin strokes
-        y = std::floor (y) + 0.5f;
+        if (! haveBucket)
+        {
+            haveBucket   = true;
+            bucketXStart = x;
+            bucketXLast  = x;
+            bucketYMin   = y;
+            bucketYMax   = y;
+            continue;
+        }
 
-        outPoints.emplace_back (x, y);
+        // Still within bucket: update min/max and remember last X
+        if ((x - bucketXStart) < minDxPx)
+        {
+            bucketXLast = x;
+            bucketYMin  = std::min (bucketYMin, y);
+            bucketYMax  = std::max (bucketYMax, y);
+            continue;
+        }
+
+        // Bucket complete -> emit and start new one at current sample
+        emitBucket();
+
+        haveBucket   = true;
+        bucketXStart = x;
+        bucketXLast  = x;
+        bucketYMin   = y;
+        bucketYMax   = y;
+    }
+
+    emitBucket();
+
+    // Ensure at least 2 points if possible (avoids "nothing to draw" edge case)
+    if (outPoints.size() == 1 && n >= 2)
+    {
+        // Add a second point using the last valid input sample if we can
+        const juce::int64 framesAgoLast = juce::jmax<juce::int64> (0, totalFramesNow - endFrameIndex[n - 1]);
+        const float xLast = (float) ((double) width - (double) framesAgoLast * zoomX);
+        const float yLast = std::floor (dbToY (repDb[n - 1], height)) + 0.5f;
+        outPoints.emplace_back (xLast, yLast);
     }
 }
 
