@@ -978,7 +978,7 @@ void VolumeHistoryComponent::mouseWheelMove (const juce::MouseEvent& event,
     if (wheel.deltaY == 0.0f)
         return;
 
-    if (event.mods.isShiftDown())
+    if (event.mods.isAltDown())
         applyVerticalZoom (wheel.deltaY);
     else
         applyHorizontalZoom (wheel.deltaY);
