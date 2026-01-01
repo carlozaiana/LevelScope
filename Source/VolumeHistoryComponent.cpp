@@ -63,14 +63,11 @@ void VolumeHistoryComponent::initialiseHistoryLevels()
     {
         auto& L0 = levels[0];
         L0.levelIndex     = 0;
-        L0.groupsPerGroup = 1;
         L0.spanFrames     = 1;
         L0.capacity       = rawCapacityFrames;
         L0.groups.assign ((size_t) rawCapacityFrames,
                           FrameGroup { minDb, minDb, minDb, minDb });
-        L0.writeIndex     = 0;
-        L0.totalGroups    = 0;
-        L0.pendingCount   = 0;
+        L0.absGroupIndexTag.assign ((size_t) rawCapacityFrames, (juce::int64) -1);
     }
 
     // Derived levels
@@ -81,7 +78,6 @@ void VolumeHistoryComponent::initialiseHistoryLevels()
         auto& L = levels[(size_t) level];
 
         L.levelIndex     = level;
-        L.groupsPerGroup = groupsPerLevel;
         L.spanFrames     = prevSpanFrames * groupsPerLevel;
         prevSpanFrames   = L.spanFrames;
 
@@ -92,14 +88,8 @@ void VolumeHistoryComponent::initialiseHistoryLevels()
         L.capacity     = capacity;
         L.groups.assign ((size_t) capacity,
                          FrameGroup { minDb, minDb, minDb, minDb });
-        L.writeIndex   = 0;
-        L.totalGroups  = 0;
-        L.pendingCount = 0;
+        L.absGroupIndexTag.assign ((size_t) capacity, (juce::int64) -1);
 
-        L.pending.momentaryMinDb =  std::numeric_limits<float>::infinity();
-        L.pending.momentaryMaxDb = -std::numeric_limits<float>::infinity();
-        L.pending.shortTermMinDb =  std::numeric_limits<float>::infinity();
-        L.pending.shortTermMaxDb = -std::numeric_limits<float>::infinity();
     }
 }
 
@@ -107,10 +97,6 @@ void VolumeHistoryComponent::resetHistoryLevels()
 {
     for (auto& L : levels)
     {
-        L.writeIndex   = 0;
-        L.totalGroups  = 0;
-        L.pendingCount = 0;
-
         for (auto& g : L.groups)
         {
             g.momentaryMinDb = minDb;
@@ -118,13 +104,10 @@ void VolumeHistoryComponent::resetHistoryLevels()
             g.shortTermMinDb = minDb;
             g.shortTermMaxDb = minDb;
         }
-
-        L.pending.momentaryMinDb =  std::numeric_limits<float>::infinity();
-        L.pending.momentaryMaxDb = -std::numeric_limits<float>::infinity();
-        L.pending.shortTermMinDb =  std::numeric_limits<float>::infinity();
-        L.pending.shortTermMaxDb = -std::numeric_limits<float>::infinity();
+        std::fill (L.absGroupIndexTag.begin(), L.absGroupIndexTag.end(), (juce::int64) -1);
     }
-
+    haveNowFrameIndex = false;
+    nowFrameIndex = 0;
     tickStepIndex = -1;
 }
 
@@ -145,32 +128,55 @@ void VolumeHistoryComponent::timerCallback()
 
 bool VolumeHistoryComponent::drainProcessorFifo()
 {
+    // [TIMEBASE-PLAYHEAD] cache samples-per-visual-frame (60 Hz) from processor
+    if (frameSamples <= 0)
+    frameSamples = processor.getFrameSamples();
     constexpr int chunkSize = 512;
     float momentaryValues [chunkSize];
     float shortTermValues [chunkSize];
+    juce::int64 projectSamples [chunkSize];
+    int playingFlags [chunkSize];
 
     bool readAny = false;
 
     for (;;)
     {
         const int numRead = processor.readLoudnessFromFifo (momentaryValues,
-                                                            shortTermValues,
-                                                            chunkSize);
+                                                           shortTermValues,
+                                                           projectSamples,
+                                                           playingFlags,
+                                                           chunkSize);
         if (numRead <= 0)
             break;
 
         readAny = true;
 
         for (int i = 0; i < numRead; ++i)
-            pushFrameToHistory (momentaryValues[i], shortTermValues[i]);
+            pushFrameToHistory (momentaryValues[i], shortTermValues[i],
+                                projectSamples[i], playingFlags[i]);
     }
 
     return readAny;
 }
 
 void VolumeHistoryComponent::pushFrameToHistory (float momentaryRms,
-                                                 float shortTermRms)
+                                                 float shortTermRms,
+                                                 juce::int64 projectSamplePos,
+                                                 int isPlaying)
 {
+    // Only write history while transport plays (your requested behavior).
+    // If the host doesn't provide play state reliably in some cases, you can relax this later.
+    if (isPlaying == 0)
+        return;
+
+    if (frameSamples <= 0)
+        return;
+
+    const juce::int64 frameIndex = projectSamplePos / (juce::int64) frameSamples;
+
+    nowFrameIndex = frameIndex;
+    haveNowFrameIndex = true;
+
     const float dbM = juce::Decibels::gainToDecibels (momentaryRms, minDb);
     const float dbS = juce::Decibels::gainToDecibels (shortTermRms, minDb);
 
@@ -180,61 +186,94 @@ void VolumeHistoryComponent::pushFrameToHistory (float momentaryRms,
     fg.shortTermMinDb = dbS;
     fg.shortTermMaxDb = dbS;
 
-    writeGroupToLevel (0, fg);
-    accumulateToHigherLevels (1, fg);
+    // L0 overwrite at absolute frame index
+    writeGroupAbs (0, frameIndex, fg);
+
+    // Recompute parent groups up the pyramid (overwrite-safe)
+    for (int level = 1; level < maxLevels; ++level)
+    {
+        const auto& L = levels[(size_t) level];
+        const juce::int64 absGroupIndex = frameIndex / (juce::int64) L.spanFrames;
+        recomputeGroupAbsFromChildren (level, absGroupIndex);
+    }
 }
 
-void VolumeHistoryComponent::writeGroupToLevel (int levelIndex, const FrameGroup& group)
+void VolumeHistoryComponent::writeGroupAbs (int levelIndex,
+                                            juce::int64 absGroupIndex,
+                                            const FrameGroup& group)
 {
     if (levelIndex < 0 || levelIndex >= maxLevels)
         return;
 
     auto& L = levels[(size_t) levelIndex];
-    if (L.capacity <= 0)
+    if (L.capacity <= 0 || absGroupIndex < 0)
         return;
 
-    L.groups[(size_t) L.writeIndex] = group;
-    L.writeIndex = (L.writeIndex + 1) % L.capacity;
-    ++L.totalGroups;
+    const int slot = (int) (absGroupIndex % (juce::int64) L.capacity);
+    L.groups[(size_t) slot] = group;
+    L.absGroupIndexTag[(size_t) slot] = absGroupIndex;
 }
 
-void VolumeHistoryComponent::accumulateToHigherLevels (int levelIndex,
-                                                       const FrameGroup& sourceGroup)
+bool VolumeHistoryComponent::readGroupAbs (int levelIndex,
+                                           juce::int64 absGroupIndex,
+                                           FrameGroup& out) const noexcept
 {
+    out = FrameGroup { minDb, minDb, minDb, minDb };
+
     if (levelIndex < 0 || levelIndex >= maxLevels)
+        return false;
+
+    const auto& L = levels[(size_t) levelIndex];
+    if (L.capacity <= 0 || absGroupIndex < 0)
+        return false;
+
+    const int slot = (int) (absGroupIndex % (juce::int64) L.capacity);
+    if (L.absGroupIndexTag[(size_t) slot] != absGroupIndex)
+        return false;
+
+    out = L.groups[(size_t) slot];
+    return true;
+}
+
+void VolumeHistoryComponent::recomputeGroupAbsFromChildren (int levelIndex,
+                                                           juce::int64 absGroupIndex)
+{
+    if (levelIndex <= 0 || levelIndex >= maxLevels)
         return;
 
     auto& L = levels[(size_t) levelIndex];
-    if (L.capacity <= 0 || L.groupsPerGroup <= 0)
+    if (L.capacity <= 0 || absGroupIndex < 0)
         return;
 
-    if (L.pendingCount == 0)
+    FrameGroup agg;
+    agg.momentaryMinDb =  std::numeric_limits<float>::infinity();
+    agg.momentaryMaxDb = -std::numeric_limits<float>::infinity();
+    agg.shortTermMinDb =  std::numeric_limits<float>::infinity();
+    agg.shortTermMaxDb = -std::numeric_limits<float>::infinity();
+
+    bool any = false;
+
+    // Children live in levelIndex - 1
+    const int childLevel = levelIndex - 1;
+    const juce::int64 childStart = absGroupIndex * (juce::int64) groupsPerLevel;
+
+    for (int k = 0; k < groupsPerLevel; ++k)
     {
-        L.pending = sourceGroup;
+        FrameGroup child;
+        if (! readGroupAbs (childLevel, childStart + (juce::int64) k, child))
+            continue;
+
+        any = true;
+        agg.momentaryMinDb = std::min (agg.momentaryMinDb, child.momentaryMinDb);
+        agg.momentaryMaxDb = std::max (agg.momentaryMaxDb, child.momentaryMaxDb);
+        agg.shortTermMinDb = std::min (agg.shortTermMinDb, child.shortTermMinDb);
+        agg.shortTermMaxDb = std::max (agg.shortTermMaxDb, child.shortTermMaxDb);
     }
-    else
-    {
-        L.pending.momentaryMinDb = std::min (L.pending.momentaryMinDb, sourceGroup.momentaryMinDb);
-        L.pending.momentaryMaxDb = std::max (L.pending.momentaryMaxDb, sourceGroup.momentaryMaxDb);
-        L.pending.shortTermMinDb = std::min (L.pending.shortTermMinDb, sourceGroup.shortTermMinDb);
-        L.pending.shortTermMaxDb = std::max (L.pending.shortTermMaxDb, sourceGroup.shortTermMaxDb);
-    }
 
-    ++L.pendingCount;
+    if (! any)
+        return; // keep old value/tag (or empty)
 
-    if (L.pendingCount >= L.groupsPerGroup)
-    {
-        FrameGroup finished = L.pending;
-
-        L.pendingCount = 0;
-        L.pending.momentaryMinDb =  std::numeric_limits<float>::infinity();
-        L.pending.momentaryMaxDb = -std::numeric_limits<float>::infinity();
-        L.pending.shortTermMinDb =  std::numeric_limits<float>::infinity();
-        L.pending.shortTermMaxDb = -std::numeric_limits<float>::infinity();
-
-        writeGroupToLevel (levelIndex, finished);
-        accumulateToHigherLevels (levelIndex + 1, finished);
-    }
+    writeGroupAbs (levelIndex, absGroupIndex, agg);
 }
 
 //==============================================================================
@@ -243,52 +282,45 @@ void VolumeHistoryComponent::accumulateToHigherLevels (int levelIndex,
 
 int VolumeHistoryComponent::getAvailableGroups (int levelIndex) const noexcept
 {
-    if (levelIndex < 0 || levelIndex >= maxLevels)
+    if (levelIndex < 0 || levelIndex >= maxLevels || ! haveNowFrameIndex)
         return 0;
 
     const auto& L = levels[(size_t) levelIndex];
-    const auto available = std::min<juce::int64> ((juce::int64) L.capacity, L.totalGroups);
+    if (L.capacity <= 0)
+        return 0;
+
+    const juce::int64 nowGroupIndex = nowFrameIndex / (juce::int64) L.spanFrames;
+    const juce::int64 available = juce::jmin<juce::int64> ((juce::int64) L.capacity, nowGroupIndex + 1);
     return (int) available;
 }
 
-int VolumeHistoryComponent::getPendingFramesAtLevel (int levelIndex) const noexcept
-{
-    if (levelIndex <= 0 || levelIndex >= maxLevels)
-        return 0;
-
-    const auto& L     = levels[(size_t) levelIndex];
-    const auto& Lprev = levels[(size_t) (levelIndex - 1)];
-
-    if (L.pendingCount <= 0)
-        return 0;
-
-    return L.pendingCount * Lprev.spanFrames;
-}
-
-VolumeHistoryComponent::FrameGroup VolumeHistoryComponent::getGroupAgo (int levelIndex,
-                                                                        int groupsAgo) const noexcept
+VolumeHistoryComponent::FrameGroup
+VolumeHistoryComponent::getGroupAgo (int levelIndex, int groupsAgo) const noexcept
 {
     FrameGroup out { minDb, minDb, minDb, minDb };
 
-    if (levelIndex < 0 || levelIndex >= maxLevels)
+    if (levelIndex < 0 || levelIndex >= maxLevels || ! haveNowFrameIndex)
         return out;
 
     const auto& L = levels[(size_t) levelIndex];
-
-    const juce::int64 available = std::min<juce::int64> ((juce::int64) L.capacity, L.totalGroups);
-    if (groupsAgo < 0 || (juce::int64) groupsAgo >= available || L.capacity <= 0)
+    if (L.capacity <= 0 || groupsAgo < 0)
         return out;
 
-    const int latestIndexInRing = (L.writeIndex - 1 + L.capacity) % L.capacity;
-    int idx = latestIndexInRing - groupsAgo;
-    if (idx < 0) idx += L.capacity;
+    const juce::int64 nowGroupIndex = nowFrameIndex / (juce::int64) L.spanFrames;
+    const juce::int64 absIndex = nowGroupIndex - (juce::int64) groupsAgo;
+    if (absIndex < 0)
+        return out;
 
-    return L.groups[(size_t) idx];
+    const int slot = (int) (absIndex % (juce::int64) L.capacity);
+    if (L.absGroupIndexTag[(size_t) slot] != absIndex)
+        return out;
+
+    return L.groups[(size_t) slot];
 }
 
 juce::int64 VolumeHistoryComponent::getTotalFramesL0() const noexcept
 {
-    return levels[0].totalGroups;
+    return (haveNowFrameIndex ? nowFrameIndex : 0);
 }
 
 //==============================================================================
@@ -375,7 +407,11 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
     if (spanFrames <= 0)
         return;
 
-    const juce::int64 totalFramesNow = getTotalFramesL0();
+    // [TIMEBASE-PLAYHEAD] No playhead time yet -> nothing to show
+    if (! haveNowFrameIndex)
+        return;
+
+    const juce::int64 totalFramesNow = nowFrameIndex; // [TIMEBASE-PLAYHEAD]
 
     // Visible frames (overscanned a bit)
     const double overscanPixels = 10.0;
@@ -385,9 +421,13 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
     // Visible time window in absolute frames (Level 0 frame units)
     const juce::int64 leftFrame = juce::jmax<juce::int64> (0, totalFramesNow - maxFramesVisible);
 
-    // Absolute group index range available in the ring (append-only model)
-    const juce::int64 latestAbsGroup   = L.totalGroups - 1;
-    const juce::int64 earliestAbsGroup = L.totalGroups - (juce::int64) availableGroups;
+    // [TIMEBASE-PLAYHEAD] Absolute group index range on the DAW timeline
+    // latest group is "now" at this LOD.
+    const juce::int64 latestAbsGroup = nowFrameIndex / (juce::int64) spanFrames;
+
+    // earliest group that can still be stored in our ring at this level
+    const juce::int64 earliestAbsGroup =
+    juce::jmax<juce::int64> (0, latestAbsGroup - (juce::int64) (L.capacity - 1));
 
     if (latestAbsGroup < earliestAbsGroup)
         return;
@@ -473,11 +513,10 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
 
         for (juce::int64 absIdx = absStart; absIdx <= absEnd; ++absIdx)
         {
-            const int groupsAgo = (int) (latestAbsGroup - absIdx);
-            const FrameGroup gg = getGroupAgo (levelIndex, groupsAgo);
+            FrameGroup gg;
+            if (! readGroupAbs (levelIndex, absIdx, gg))
+                continue; // missing data at this timeline position (not written yet)
 
-            // getGroupAgo returns minDb-filled defaults when out of range,
-            // but absIdx is in-range here; still keep "any" for safety.
             any = true;
 
             agg.momentaryMinDb = std::min (agg.momentaryMinDb, gg.momentaryMinDb);

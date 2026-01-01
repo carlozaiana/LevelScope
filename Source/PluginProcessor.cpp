@@ -124,7 +124,7 @@ void LevelScopeAudioProcessor::processSampleForLoudness (const float* const* cha
 
     ++totalSamplesProcessed;
 
-    // Frame scheduling (10 Hz)
+    // Frame scheduling (loudnessFrameRate, currently 60 Hz)
     if (--samplesUntilNextFrame <= 0)
     {
         samplesUntilNextFrame += frameSamples;
@@ -143,6 +143,14 @@ void LevelScopeAudioProcessor::processSampleForLoudness (const float* const* cha
 
         const float rmsMomentary = (float) std::sqrt (juce::jmax (0.0, meanMomentary));
         const float rmsShortTerm = (float) std::sqrt (juce::jmax (0.0, meanShortTerm));
+
+        // [TIMEBASE-PLAYHEAD]
+        // Use the best-known project sample position for this frame.
+        // If playhead was available, blockStartProjectSample was used in processBlock; otherwise fallback is internal.
+
+        // [TIMEBASE-PLAYHEAD] Timestamp the loudness frame on the DAW timeline.
+        lastFrameProjectSample = currentBlockStartProjectSample + (juce::int64) currentBlockSampleIndex;
+        lastFrameIsPlaying     = currentBlockIsPlaying;
 
         pushLoudnessFrame (rmsMomentary, rmsShortTerm);
     }
@@ -163,13 +171,36 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     if (numChannels <= 0 || numSamples <= 0)
         return;
 
+    // [TIMEBASE-PLAYHEAD] Capture DAW playhead position once per block.
+    // If not available, fall back to our internal sample counter.
+    juce::int64 blockStartProjectSample = totalSamplesProcessed;
+    int blockIsPlaying = 1;
+
+    if (auto* ph = getPlayHead())
+    {
+        juce::AudioPlayHead::CurrentPositionInfo pos;
+        if (ph->getCurrentPosition (pos))
+        {
+            blockStartProjectSample = pos.timeInSamples;
+            blockIsPlaying = (pos.isPlaying ? 1 : 0);
+        }
+    }
+
+    currentBlockStartProjectSample = blockStartProjectSample;
+    currentBlockIsPlaying = blockIsPlaying;
+
     // Prepare read pointers for faster inner loop
     juce::HeapBlock<const float*> channelData ((size_t) numChannels);
     for (int ch = 0; ch < numChannels; ++ch)
         channelData[ch] = buffer.getReadPointer (ch);
 
     for (int i = 0; i < numSamples; ++i)
+    {
+        // [TIMEBASE-PLAYHEAD] allow processSampleForLoudness() to timestamp frames
+        currentBlockSampleIndex = i;
+
         processSampleForLoudness (channelData.getData(), numChannels, i);
+    }
 
     // Audio is passed through unchanged.
 }
@@ -190,6 +221,9 @@ void LevelScopeAudioProcessor::pushLoudnessFrame (float momentaryRms,
         loudnessBuffer[(size_t) index].momentaryRms = momentaryRms;
         loudnessBuffer[(size_t) index].shortTermRms = shortTermRms;
 
+        loudnessBuffer[(size_t) index].projectSample = lastFrameProjectSample;
+        loudnessBuffer[(size_t) index].isPlaying     = lastFrameIsPlaying;
+
         loudnessFifo.finishedWrite (1);
     }
     else
@@ -200,9 +234,13 @@ void LevelScopeAudioProcessor::pushLoudnessFrame (float momentaryRms,
 
 int LevelScopeAudioProcessor::readLoudnessFromFifo (float* momentaryDest,
                                                     float* shortTermDest,
+                                                    juce::int64* projectSampleDest,
+                                                    int* isPlayingDest,
                                                     int maxNumToRead) noexcept
 {
-    if (momentaryDest == nullptr || shortTermDest == nullptr || maxNumToRead <= 0)
+    if (momentaryDest == nullptr || shortTermDest == nullptr
+        || projectSampleDest == nullptr || isPlayingDest == nullptr
+        || maxNumToRead <= 0)
         return 0;
 
     int start1 = 0, size1 = 0, start2 = 0, size2 = 0;
@@ -217,8 +255,10 @@ int LevelScopeAudioProcessor::readLoudnessFromFifo (float* momentaryDest,
         for (int i = 0; i < size1; ++i)
         {
             const auto& f = loudnessBuffer[(size_t) (start1 + i)];
-            momentaryDest[destIndex] = f.momentaryRms;
-            shortTermDest[destIndex] = f.shortTermRms;
+            momentaryDest[destIndex]     = f.momentaryRms;
+            shortTermDest[destIndex]     = f.shortTermRms;
+            projectSampleDest[destIndex] = f.projectSample;
+            isPlayingDest[destIndex]     = f.isPlaying;
             ++destIndex;
         }
     }
@@ -228,14 +268,15 @@ int LevelScopeAudioProcessor::readLoudnessFromFifo (float* momentaryDest,
         for (int i = 0; i < size2; ++i)
         {
             const auto& f = loudnessBuffer[(size_t) (start2 + i)];
-            momentaryDest[destIndex] = f.momentaryRms;
-            shortTermDest[destIndex] = f.shortTermRms;
+            momentaryDest[destIndex]     = f.momentaryRms;
+            shortTermDest[destIndex]     = f.shortTermRms;
+            projectSampleDest[destIndex] = f.projectSample;
+            isPlayingDest[destIndex]     = f.isPlaying;
             ++destIndex;
         }
     }
 
     loudnessFifo.finishedRead (totalToRead);
-
     return totalToRead;
 }
 

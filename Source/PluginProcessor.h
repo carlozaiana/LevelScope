@@ -58,12 +58,17 @@ public:
     // Read up to maxNumToRead loudness frames from the FIFO into dest arrays.
     // Returns the number actually read (non-blocking).
     // Each frame has both momentary and short-term RMS values (linear).
+    // Read up to maxNumToRead loudness frames from the FIFO into dest arrays.
+    // Returns the number actually read (non-blocking).
     int readLoudnessFromFifo (float* momentaryDest,
                               float* shortTermDest,
+                              juce::int64* projectSampleDest,
+                              int* isPlayingDest,
                               int maxNumToRead) noexcept;
 
     // Visual loudness frame rate accessor (used by GUI)
     double getLoudnessFrameRate() const noexcept { return loudnessFrameRate; }
+    int getFrameSamples() const noexcept { return frameSamples; } // samples between 60 Hz loudness frames
 
 private:
     //==============================================================================
@@ -87,10 +92,23 @@ private:
 
     juce::int64 totalSamplesProcessed = 0; // for startup warm-up
 
+    juce::int64 lastFrameProjectSample = 0; // [TIMEBASE-PLAYHEAD]
+    int         lastFrameIsPlaying     = 1; // [TIMEBASE-PLAYHEAD]
+
+    juce::int64 currentBlockStartProjectSample = 0; // [TIMEBASE-PLAYHEAD]
+    int         currentBlockIsPlaying         = 1; // [TIMEBASE-PLAYHEAD]
+    int         currentBlockSampleIndex       = 0; // [TIMEBASE-PLAYHEAD] updated per-sample
+
     struct LoudnessFrame
     {
         float momentaryRms = 0.0f;
         float shortTermRms = 0.0f;
+
+        // [TIMEBASE-PLAYHEAD] project timeline position (in samples) for this loudness frame
+        juce::int64 projectSample = 0;
+
+        // [TIMEBASE-PLAYHEAD] 1 if host transport is playing, 0 otherwise
+        int isPlaying = 1;
     };
 
     static constexpr int loudnessFifoSize = 4096;

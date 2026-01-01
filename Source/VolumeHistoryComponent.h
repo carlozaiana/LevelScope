@@ -51,16 +51,14 @@ private:
 
     struct HistoryLevel
     {
-        int                 levelIndex      = 0;
-        int                 groupsPerGroup  = 1;
-        int                 spanFrames      = 1;
-        int                 capacity        = 0;
-        std::vector<FrameGroup> groups;
-        int                 writeIndex      = 0;
-        juce::int64         totalGroups     = 0;
+        int levelIndex = 0;
+        int spanFrames = 1;   // how many L0 frames one group covers at this level
+        int capacity   = 0;   // number of groups stored at this level (ring)
 
-        FrameGroup          pending;
-        int                 pendingCount    = 0;
+        std::vector<FrameGroup> groups;
+
+        // [TIMEBASE-PLAYHEAD] absolute group index tag per slot; -1 means empty
+        std::vector<juce::int64> absGroupIndexTag;
     };
 
     //==============================================================================
@@ -77,17 +75,20 @@ private:
     void resetHistoryLevels();
 
     bool drainProcessorFifo(); // [STEP1-PERF]
-    void pushFrameToHistory (float momentaryRms, float shortTermRms);
+    // [TIMEBASE-PLAYHEAD] projectSamplePos comes from the host playhead (in samples)
+    void pushFrameToHistory (float momentaryRms, float shortTermRms,
+                             juce::int64 projectSamplePos, int isPlaying);
 
-    void writeGroupToLevel (int levelIndex, const FrameGroup& group);
-    void accumulateToHigherLevels (int levelIndex, const FrameGroup& sourceGroup);
+    // [TIMEBASE-PLAYHEAD] overwrite-safe writing
+    void writeGroupAbs (int levelIndex, juce::int64 absGroupIndex, const FrameGroup& group);
+    bool readGroupAbs (int levelIndex, juce::int64 absGroupIndex, FrameGroup& out) const noexcept;
+    void recomputeGroupAbsFromChildren (int levelIndex, juce::int64 absGroupIndex);
 
     //==============================================================================
     // History access
     //==============================================================================
 
     int getAvailableGroups (int levelIndex) const noexcept;
-    int getPendingFramesAtLevel (int levelIndex) const noexcept;
     FrameGroup getGroupAgo (int levelIndex, int groupsAgo) const noexcept;
     juce::int64 getTotalFramesL0() const noexcept;
 
@@ -173,6 +174,11 @@ private:
 
     bool showBands = true;
     bool showLines = true;
+
+    // [TIMEBASE-PLAYHEAD]
+    int         frameSamples = 0;        // samples per 60 Hz loudness frame (from processor)
+    juce::int64 nowFrameIndex = 0;       // absolute 60 Hz frame index on the DAW timeline
+    bool        haveNowFrameIndex = false;
 
     // [RULER-HYST-FIX]
     int tickStepIndex = -1; // remembered tickStep choice (hysteresis)
