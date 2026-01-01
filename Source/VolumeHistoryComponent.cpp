@@ -174,8 +174,18 @@ void VolumeHistoryComponent::pushFrameToHistory (float momentaryRms,
 
     const juce::int64 frameIndex = projectSamplePos / (juce::int64) frameSamples;
 
-    nowFrameIndex = frameIndex;
-    haveNowFrameIndex = true;
+    // [TIMEBASE-PLAYHEAD] Keep a monotonic "furthest written" cursor.
+    // This prevents loops/rewinds from truncating the available range and making
+    // already-written data after the loop appear "lost".
+    if (! haveNowFrameIndex)
+    {
+        nowFrameIndex = frameIndex;
+        haveNowFrameIndex = true;
+    }
+    else
+    {
+        nowFrameIndex = juce::jmax<juce::int64> (nowFrameIndex, frameIndex);
+    }
 
     const float dbM = juce::Decibels::gainToDecibels (momentaryRms, minDb);
     const float dbS = juce::Decibels::gainToDecibels (shortTermRms, minDb);
