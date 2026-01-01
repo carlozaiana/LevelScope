@@ -909,6 +909,24 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         }
     }
 
+//==============================================================================
+// [PLAYHEAD-LINE] draw DAW playhead position on top of the graph
+// Right edge is "furthest written" (nowFrameIndex). Playhead can be left of it
+// during loop/rewind, which is intended.
+//==============================================================================
+if (haveNowFrameIndex && havePlayheadFrameIndex && zoomX > 1.0e-12)
+{
+    const double framesFromRight = (double) nowFrameIndex - (double) playheadFrameIndex;
+    const float x = (float) ((double) width - framesFromRight * zoomX);
+
+    if (x >= -2.0f && x <= (float) width + 2.0f)
+    {
+        // Thin, slightly transparent so it doesn't dominate
+        g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
+        g.drawLine (x, 0.0f, x, (float) height, 1.0f);
+    }
+}
+
     //==========================================================================
 // [RULER-FRAMES]  [FIX-RULER-NO-PENDING]
 // Ruler ticks must be based on absolute time only.
