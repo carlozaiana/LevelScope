@@ -108,6 +108,8 @@ void VolumeHistoryComponent::resetHistoryLevels()
     }
     haveNowFrameIndex = false;
     nowFrameIndex = 0;
+    havePlayheadFrameIndex = false;
+    playheadFrameIndex = 0;
     tickStepIndex = -1;
 }
 
@@ -173,6 +175,10 @@ void VolumeHistoryComponent::pushFrameToHistory (float momentaryRms,
         return;
 
     const juce::int64 frameIndex = projectSamplePos / (juce::int64) frameSamples;
+
+    // [TIMEBASE-PLAYHEAD] actual DAW playhead position (can go backwards)
+    playheadFrameIndex = frameIndex;
+    havePlayheadFrameIndex = true;
 
     // [TIMEBASE-PLAYHEAD] Keep a monotonic "furthest written" cursor.
     // This prevents loops/rewinds from truncating the available range and making

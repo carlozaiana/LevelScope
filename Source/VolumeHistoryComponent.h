@@ -176,9 +176,16 @@ private:
     bool showLines = true;
 
     // [TIMEBASE-PLAYHEAD]
-    int         frameSamples = 0;        // samples per 60 Hz loudness frame (from processor)
-    juce::int64 nowFrameIndex = 0;       // absolute 60 Hz frame index on the DAW timeline
+    int         frameSamples = 0;            // samples per 60 Hz loudness frame (from processor)
+
+    // Furthest-written timeline frame index (monotonic while running).
+    // Used as "latest" for what data exists, so loops/rewinds don't truncate history.
+    juce::int64 nowFrameIndex = 0;
     bool        haveNowFrameIndex = false;
+
+    // Actual DAW playhead position on the same 60 Hz frame grid (can move backwards on loop/seek).
+    juce::int64 playheadFrameIndex = 0;
+    bool        havePlayheadFrameIndex = false;
 
     // [RULER-HYST-FIX]
     int tickStepIndex = -1; // remembered tickStep choice (hysteresis)
