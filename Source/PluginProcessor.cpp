@@ -186,6 +186,14 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         }
     }
 
+    // [FIX-STOP-DIP]
+    // When the transport is stopped, many hosts keep calling processBlock with silence.
+    // If we keep updating our loudness windows with zeros, the internal state decays
+    // and causes a sharp loudness drop on the next restart.
+    // Freeze loudness analysis while not playing.
+    if (blockIsPlaying == 0)
+        return;
+
     currentBlockStartProjectSample = blockStartProjectSample;
     currentBlockIsPlaying = blockIsPlaying;
 
