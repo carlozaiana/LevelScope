@@ -103,9 +103,9 @@ LevelScopeAudioProcessor::LevelScopeAudioProcessor()
     energyMeanSquare.assign ((size_t) historyCapacityFrames, 0.0f);
     momentaryRmsHist.assign ((size_t) historyCapacityFrames, 0.0f);
     shortTermRmsHist.assign ((size_t) historyCapacityFrames, 0.0f);
-    frameIndexTag.resize ((size_t) historyCapacityFrames);
-    for (auto& t : frameIndexTag)
-        t.store ((juce::int64) -1, std::memory_order_relaxed);
+    frameIndexTag.reset (new std::atomic<juce::int64>[historyCapacityFrames]);
+    for (int i = 0; i < historyCapacityFrames; ++i)
+        frameIndexTag[(size_t) i].store ((juce::int64) -1, std::memory_order_relaxed);
 }
 
 LevelScopeAudioProcessor::~LevelScopeAudioProcessor() = default;
@@ -253,11 +253,13 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 
     if (auto* ph = getPlayHead())
     {
-        juce::AudioPlayHead::CurrentPositionInfo pos;
-        if (ph->getCurrentPosition (pos))
+        if (auto pos = ph->getPosition())
         {
-            blockStartProjectSample = pos.timeInSamples;
-            blockIsPlaying = (pos.isPlaying ? 1 : 0);
+            if (auto t = pos->getTimeInSamples())
+                blockStartProjectSample = *t;
+
+            if (auto p = pos->getIsPlaying())
+                blockIsPlaying = (*p ? 1 : 0);
         }
     }
 
@@ -307,7 +309,8 @@ void LevelScopeAudioProcessor::pushLoudnessFrame (float momentaryRms,
         loudnessBuffer[(size_t) index].frameIndex = floorDivInt64 (lastFrameProjectSample, (juce::int64) frameSamples);
         loudnessBuffer[(size_t) index].isPlaying  = lastFrameIsPlaying;
 
-        loudnessBuffer[(size_t) index].projectSample = lastFrameProjectSample;
+        loudnessBuffer[(size_t) index].frameIndex =
+            floorDivInt64 (lastFrameProjectSample, (juce::int64) frameSamples);
         loudnessBuffer[(size_t) index].isPlaying     = lastFrameIsPlaying;
 
         loudnessFifo.finishedWrite (1);

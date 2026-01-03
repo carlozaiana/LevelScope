@@ -2,6 +2,8 @@
 
 #include <JuceHeader.h>
 #include <vector>
+#include <atomic>
+#include <memory>
 
 //==============================================================================
 // Main audio processor for LevelScope (prototype loudness display)
@@ -108,7 +110,7 @@ private:
     std::vector<float> energyMeanSquare;   // base measure
     std::vector<float> momentaryRmsHist;   // derived
     std::vector<float> shortTermRmsHist;   // derived
-    std::vector<std::atomic<juce::int64>> frameIndexTag; // -1 = empty, else abs frameIndex
+    std::unique_ptr<std::atomic<juce::int64>[]> frameIndexTag; // -1 = empty, else abs frameIndex
 
     std::atomic<juce::int64> maxWrittenFrameIndex { std::numeric_limits<juce::int64>::min() };
 
