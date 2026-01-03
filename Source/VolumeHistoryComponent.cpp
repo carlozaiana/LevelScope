@@ -163,7 +163,7 @@ bool VolumeHistoryComponent::drainProcessorFifo()
 
 void VolumeHistoryComponent::pushFrameToHistory (float momentaryRms,
                                                  float shortTermRms,
-                                                 juce::int64 projectSamplePos,
+                                                 juce::int64 frameIndex60Hz,
                                                  int isPlaying)
 {
     // Only write history while transport plays (your requested behavior).
