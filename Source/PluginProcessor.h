@@ -126,6 +126,14 @@ private:
 
     float computeWindowRmsFromEnergy (juce::int64 endFrameIndex, int windowFrames) const noexcept;
 
+    // [FIX-RESTART-PARTIAL-FRAME]
+    juce::int64 lastBlockEndProjectSample = 0;
+    int         lastBlockIsPlaying = 0;
+    bool        haveLastBlockEnd = false;
+
+    // If playback starts in the middle of a 60 Hz frame, skip writing the first partial frame
+    bool        skipNextPartialFrameWrite = false;
+
     juce::int64 lastFrameProjectSample = 0; // [TIMEBASE-PLAYHEAD]
     int         lastFrameIsPlaying     = 1; // [TIMEBASE-PLAYHEAD]
 

@@ -202,6 +202,15 @@ void LevelScopeAudioProcessor::processSampleForLoudness (const float* const* cha
         const double meanSquare = frameEnergyAccum / (double) juce::jmax (1, frameSamples);
         frameEnergyAccum = 0.0;
 
+        // [FIX-RESTART-PARTIAL-FRAME]
+        // If we started playback mid 60 Hz frame, discard this first partial frame and
+        // keep the previously stored timeline value (prevents short spikes/lines).
+        if (skipNextPartialFrameWrite)
+        {
+            skipNextPartialFrameWrite = false;
+            return;
+        }
+
         // Timestamp this loudness frame on the DAW timeline
         lastFrameProjectSample = currentBlockStartProjectSample + (juce::int64) currentBlockSampleIndex;
         lastFrameIsPlaying     = currentBlockIsPlaying;
@@ -261,6 +270,34 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
             blockIsPlaying = (pos->getIsPlaying() ? 1 : 0);
         }
     }
+
+    // [FIX-RESTART-PARTIAL-FRAME]
+    // Detect discontinuities (stop->play, seek, loop jump, host gaps).
+    const bool discontinuity =
+        (! haveLastBlockEnd) ||
+        (lastBlockIsPlaying == 0) ||
+        (blockStartProjectSample != lastBlockEndProjectSample);
+
+    if (blockIsPlaying == 1 && discontinuity && frameSamples > 0)
+    {
+        frameEnergyAccum = 0.0;
+
+        // Align frame countdown to the global 60 Hz grid anchored at sample 0.
+        juce::int64 mod = blockStartProjectSample % (juce::int64) frameSamples;
+        if (mod < 0) mod += (juce::int64) frameSamples; // keep it positive
+
+        samplesUntilNextFrame = frameSamples - (int) mod;
+        if (samplesUntilNextFrame <= 0)
+            samplesUntilNextFrame += frameSamples;
+
+        // If we start mid-frame, the first computed frame would be partial -> don't overwrite it.
+        skipNextPartialFrameWrite = (mod != 0);
+    }
+
+    // Update "last block" tracking even if we return early.
+    haveLastBlockEnd = true;
+    lastBlockEndProjectSample = blockStartProjectSample + (juce::int64) numSamples;
+    lastBlockIsPlaying = blockIsPlaying;
 
     // [FIX-STOP-DIP]
     // When the transport is stopped, many hosts keep calling processBlock with silence.
