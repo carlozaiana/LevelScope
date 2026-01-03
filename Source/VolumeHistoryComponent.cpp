@@ -927,6 +927,79 @@ if (haveNowFrameIndex && havePlayheadFrameIndex && zoomX > 1.0e-12)
     }
 }
 
+//==============================================================================
+// [DBFS-SCALE] Right-side dBFS scale (overlay)
+// Shows the currently visible dB range (affected by zoomY).
+//==============================================================================
+{
+    // Keep the scale above the time ruler area
+    const float rulerHeightPx = 16.0f;
+    const auto scaleArea = bounds.withTrimmedBottom (rulerHeightPx);
+
+    const float scaleH = scaleArea.getHeight();
+    if (scaleH > 20.0f)
+    {
+        const float topDb = maxDb; // 0 dBFS
+        const float effectiveRange = (float) (baseDbRange / zoomY);
+        const float bottomDb = topDb - effectiveRange;
+
+        // Choose a tick step based on available pixel height
+        static constexpr float candidates[] = { 1.0f, 2.0f, 3.0f, 6.0f, 10.0f, 12.0f, 20.0f, 30.0f };
+        const float desiredTickSpacingPx = 32.0f;
+        const float approxTicks = juce::jmax (1.0f, scaleH / desiredTickSpacingPx);
+        const float approxStepDb = effectiveRange / approxTicks;
+
+        float stepDb = candidates[(int) (sizeof (candidates) / sizeof (candidates[0])) - 1];
+        for (float s : candidates)
+        {
+            if (s >= approxStepDb) { stepDb = s; break; }
+        }
+
+        const float rightX = scaleArea.getRight() - 1.0f;
+        const float tickLen = 6.0f;
+        const float labelWidth = 44.0f;
+        const float labelHeight = 12.0f;
+
+        g.setFont (10.0f);
+
+        // Optional header
+        g.setColour (juce::Colours::white.withMultipliedAlpha (0.6f));
+        g.drawText ("dBFS",
+                    (int) (rightX - labelWidth - 2.0f),
+                    (int) (scaleArea.getY() + 2.0f),
+                    (int) labelWidth,
+                    12,
+                    juce::Justification::right);
+
+        // Major ticks: from first tick >= bottomDb up to topDb
+        const float firstTick = std::ceil (bottomDb / stepDb) * stepDb;
+
+        g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
+
+        for (float db = firstTick; db <= topDb + 0.001f; db += stepDb)
+        {
+            const float yLocal = dbToY (db, scaleH);
+            const float y = scaleArea.getY() + yLocal;
+
+            // Tick
+            g.drawLine (rightX - tickLen, y, rightX, y, 1.0f);
+
+            // Label (integer dB)
+            const int dbInt = (int) std::round (db);
+            g.drawText (juce::String (dbInt),
+                        (int) (rightX - tickLen - labelWidth - 2.0f),
+                        (int) (y - labelHeight * 0.5f),
+                        (int) labelWidth,
+                        (int) labelHeight,
+                        juce::Justification::right);
+        }
+
+        // A faint vertical line to separate the scale
+        g.setColour (juce::Colours::white.withMultipliedAlpha (0.18f));
+        g.drawLine (rightX, scaleArea.getY(), rightX, scaleArea.getBottom(), 1.0f);
+    }
+}
+
     //==========================================================================
 // [RULER-FRAMES]  [FIX-RULER-NO-PENDING]
 // Ruler ticks must be based on absolute time only.
