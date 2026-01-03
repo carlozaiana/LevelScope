@@ -136,7 +136,7 @@ bool VolumeHistoryComponent::drainProcessorFifo()
     constexpr int chunkSize = 512;
     float momentaryValues [chunkSize];
     float shortTermValues [chunkSize];
-    juce::int64 projectSamples [chunkSize];
+    juce::int64 frameIndex60Hz [chunkSize];
     int playingFlags [chunkSize];
 
     bool readAny = false;
@@ -145,7 +145,7 @@ bool VolumeHistoryComponent::drainProcessorFifo()
     {
         const int numRead = processor.readLoudnessFromFifo (momentaryValues,
                                                            shortTermValues,
-                                                           projectSamples,
+                                                           frameIndex60Hz,
                                                            playingFlags,
                                                            chunkSize);
         if (numRead <= 0)
@@ -155,7 +155,7 @@ bool VolumeHistoryComponent::drainProcessorFifo()
 
         for (int i = 0; i < numRead; ++i)
             pushFrameToHistory (momentaryValues[i], shortTermValues[i],
-                                projectSamples[i], playingFlags[i]);
+                                frameIndex60Hz[i], playingFlags[i]);
     }
 
     return readAny;
@@ -174,7 +174,7 @@ void VolumeHistoryComponent::pushFrameToHistory (float momentaryRms,
     if (frameSamples <= 0)
         return;
 
-    const juce::int64 frameIndex = projectSamplePos / (juce::int64) frameSamples;
+    const juce::int64 frameIndex = frameIndex60Hz;
 
     // [TIMEBASE-PLAYHEAD] actual DAW playhead position (can go backwards)
     playheadFrameIndex = frameIndex;

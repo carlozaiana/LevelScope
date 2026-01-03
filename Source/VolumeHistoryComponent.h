@@ -77,7 +77,7 @@ private:
     bool drainProcessorFifo(); // [STEP1-PERF]
     // [TIMEBASE-PLAYHEAD] projectSamplePos comes from the host playhead (in samples)
     void pushFrameToHistory (float momentaryRms, float shortTermRms,
-                             juce::int64 projectSamplePos, int isPlaying);
+                             juce::int64 frameIndex60Hz, int isPlaying);
 
     // [TIMEBASE-PLAYHEAD] overwrite-safe writing
     void writeGroupAbs (int levelIndex, juce::int64 absGroupIndex, const FrameGroup& group);

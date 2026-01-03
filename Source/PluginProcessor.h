@@ -62,13 +62,15 @@ public:
     // Returns the number actually read (non-blocking).
     int readLoudnessFromFifo (float* momentaryDest,
                               float* shortTermDest,
-                              juce::int64* projectSampleDest,
+                              juce::int64* frameIndexDest,
                               int* isPlayingDest,
                               int maxNumToRead) noexcept;
 
     // Visual loudness frame rate accessor (used by GUI)
     double getLoudnessFrameRate() const noexcept { return loudnessFrameRate; }
     int getFrameSamples() const noexcept { return frameSamples; } // samples between 60 Hz loudness frames
+
+    juce::int64 getMaxWrittenFrameIndex() const noexcept { return maxWrittenFrameIndex.load(); }
 
 private:
     //==============================================================================
@@ -92,6 +94,36 @@ private:
 
     juce::int64 totalSamplesProcessed = 0; // for startup warm-up
 
+    //==============================================================================
+    // [TIMELINE-ENERGY] timeline-truth storage at 60 Hz
+    // Store mean-square energy per 60 Hz frame, keyed by absolute frameIndex.
+    // Derived momentary/short-term are computed from this stored energy.
+    //==============================================================================
+
+    static constexpr double historyLengthSeconds = 3.0 * 3600.0;
+    static constexpr int historyCapacityFrames =
+        (int) (historyLengthSeconds * loudnessFrameRate + 0.5); // ~648000
+
+    // Published-by-tag ring (single writer: audio thread; readers: GUI thread for snapshots later)
+    std::vector<float> energyMeanSquare;   // base measure
+    std::vector<float> momentaryRmsHist;   // derived
+    std::vector<float> shortTermRmsHist;   // derived
+    std::vector<std::atomic<juce::int64>> frameIndexTag; // -1 = empty, else abs frameIndex
+
+    std::atomic<juce::int64> maxWrittenFrameIndex { std::numeric_limits<juce::int64>::min() };
+
+    // Per-frame energy accumulator (audio thread)
+    double frameEnergyAccum = 0.0;
+
+    // Helpers
+    static juce::int64 floorDivInt64 (juce::int64 a, juce::int64 b) noexcept; // b>0
+    static int wrapSlot (juce::int64 absIndex, int capacity) noexcept;
+
+    bool readEnergyAbs (juce::int64 absFrameIndex, float& outEnergy) const noexcept;
+    void writeFrameAbs (juce::int64 absFrameIndex, float energyMS, float mRms, float sRms) noexcept;
+
+    float computeWindowRmsFromEnergy (juce::int64 endFrameIndex, int windowFrames) const noexcept;
+
     juce::int64 lastFrameProjectSample = 0; // [TIMEBASE-PLAYHEAD]
     int         lastFrameIsPlaying     = 1; // [TIMEBASE-PLAYHEAD]
 
@@ -104,10 +136,10 @@ private:
         float momentaryRms = 0.0f;
         float shortTermRms = 0.0f;
 
-        // [TIMEBASE-PLAYHEAD] project timeline position (in samples) for this loudness frame
-        juce::int64 projectSample = 0;
+        // [TIMELINE-ENERGY] absolute 60 Hz timeline frame index (can be negative)
+        juce::int64 frameIndex = 0;
 
-        // [TIMEBASE-PLAYHEAD] 1 if host transport is playing, 0 otherwise
+        // [TIMEBASE-PLAYHEAD]
         int isPlaying = 1;
     };
 

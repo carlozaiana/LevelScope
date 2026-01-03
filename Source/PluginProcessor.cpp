@@ -4,6 +4,92 @@
 #include <cmath>
 #include <algorithm>
 
+juce::int64 LevelScopeAudioProcessor::floorDivInt64 (juce::int64 a, juce::int64 b) noexcept
+{
+    // b must be > 0
+    if (b <= 0) return 0;
+
+    if (a >= 0)
+        return a / b;
+
+    // floor division for negatives
+    return - ( ( -a + b - 1 ) / b );
+}
+
+int LevelScopeAudioProcessor::wrapSlot (juce::int64 absIndex, int capacity) noexcept
+{
+    if (capacity <= 0) return 0;
+    juce::int64 m = absIndex % (juce::int64) capacity;
+    if (m < 0) m += (juce::int64) capacity;
+    return (int) m;
+}
+
+bool LevelScopeAudioProcessor::readEnergyAbs (juce::int64 absFrameIndex, float& outEnergy) const noexcept
+{
+    outEnergy = 0.0f;
+    if (absFrameIndex == (juce::int64) -1)
+        return false;
+
+    const int slot = wrapSlot (absFrameIndex, historyCapacityFrames);
+
+    const juce::int64 tag1 = frameIndexTag[(size_t) slot].load (std::memory_order_acquire);
+    if (tag1 != absFrameIndex)
+        return false;
+
+    const float e = energyMeanSquare[(size_t) slot];
+
+    const juce::int64 tag2 = frameIndexTag[(size_t) slot].load (std::memory_order_acquire);
+    if (tag2 != absFrameIndex)
+        return false;
+
+    outEnergy = e;
+    return true;
+}
+
+void LevelScopeAudioProcessor::writeFrameAbs (juce::int64 absFrameIndex, float energyMS, float mRms, float sRms) noexcept
+{
+    const int slot = wrapSlot (absFrameIndex, historyCapacityFrames);
+
+    // Write data first, publish tag last
+    energyMeanSquare[(size_t) slot] = energyMS;
+    momentaryRmsHist[(size_t) slot] = mRms;
+    shortTermRmsHist[(size_t) slot] = sRms;
+
+    frameIndexTag[(size_t) slot].store (absFrameIndex, std::memory_order_release);
+
+    // Maintain monotonic max written (do not shrink on loops)
+    juce::int64 cur = maxWrittenFrameIndex.load (std::memory_order_relaxed);
+    while (absFrameIndex > cur && ! maxWrittenFrameIndex.compare_exchange_weak (cur, absFrameIndex))
+    {}
+}
+
+float LevelScopeAudioProcessor::computeWindowRmsFromEnergy (juce::int64 endFrameIndex, int windowFrames) const noexcept
+{
+    if (windowFrames <= 0)
+        return 0.0f;
+
+    double sum = 0.0;
+    int count = 0;
+
+    const juce::int64 start = endFrameIndex - (juce::int64) (windowFrames - 1);
+
+    for (juce::int64 fi = start; fi <= endFrameIndex; ++fi)
+    {
+        float e = 0.0f;
+        if (! readEnergyAbs (fi, e))
+            continue;
+
+        sum += (double) e;
+        ++count;
+    }
+
+    if (count <= 0)
+        return 0.0f;
+
+    const double mean = sum / (double) count;
+    return (float) std::sqrt (juce::jmax (0.0, mean));
+}
+
 //==============================================================================
 
 LevelScopeAudioProcessor::LevelScopeAudioProcessor()
@@ -13,6 +99,13 @@ LevelScopeAudioProcessor::LevelScopeAudioProcessor()
       loudnessFifo (loudnessFifoSize),
       loudnessBuffer ((size_t) loudnessFifoSize)
 {
+    // [TIMELINE-ENERGY] allocate history storage (done once, not on audio thread)
+    energyMeanSquare.assign ((size_t) historyCapacityFrames, 0.0f);
+    momentaryRmsHist.assign ((size_t) historyCapacityFrames, 0.0f);
+    shortTermRmsHist.assign ((size_t) historyCapacityFrames, 0.0f);
+    frameIndexTag.resize ((size_t) historyCapacityFrames);
+    for (auto& t : frameIndexTag)
+        t.store ((juce::int64) -1, std::memory_order_relaxed);
 }
 
 LevelScopeAudioProcessor::~LevelScopeAudioProcessor() = default;
@@ -58,6 +151,7 @@ void LevelScopeAudioProcessor::resetLoudnessState() noexcept
     std::fill (shortTermEnergyBuffer.begin(), shortTermEnergyBuffer.end(), 0.0);
 
     loudnessFifo.reset();
+    frameEnergyAccum = 0.0;
 }
 
 //==============================================================================
@@ -86,72 +180,53 @@ void LevelScopeAudioProcessor::processSampleForLoudness (const float* const* cha
                                                          int numChannels,
                                                          int sampleIndex) noexcept
 {
-    // Simple energy across channels for now (no K-weighting yet).
-    double energy = 0.0;
-
+    // Mean-square energy across channels
+    double e = 0.0;
     for (int ch = 0; ch < numChannels; ++ch)
     {
         const float s = channelData[ch][sampleIndex];
-        energy += (double) s * (double) s;
+        e += (double) s * (double) s;
     }
-
     if (numChannels > 0)
-        energy /= (double) numChannels;
+        e /= (double) numChannels;
 
-    // Update momentary sliding window
-    if (momentaryWindowSamples > 0)
-    {
-        const double old = momentaryEnergyBuffer[(size_t) momentaryIndex];
-        momentarySum     -= old;
-        momentaryEnergyBuffer[(size_t) momentaryIndex] = energy;
-        momentarySum     += energy;
-
-        if (++momentaryIndex >= momentaryWindowSamples)
-            momentaryIndex = 0;
-    }
-
-    // Update short-term sliding window
-    if (shortTermWindowSamples > 0)
-    {
-        const double old = shortTermEnergyBuffer[(size_t) shortTermIndex];
-        shortTermSum     -= old;
-        shortTermEnergyBuffer[(size_t) shortTermIndex] = energy;
-        shortTermSum     += energy;
-
-        if (++shortTermIndex >= shortTermWindowSamples)
-            shortTermIndex = 0;
-    }
+    frameEnergyAccum += e;
 
     ++totalSamplesProcessed;
 
-    // Frame scheduling (loudnessFrameRate, currently 60 Hz)
+    // 60 Hz frame scheduling
     if (--samplesUntilNextFrame <= 0)
     {
         samplesUntilNextFrame += frameSamples;
 
-        // Handle startup before windows are fully "warmed up"
-        const double momentaryDenom = (totalSamplesProcessed < (juce::int64) momentaryWindowSamples
-                                         ? (double) juce::jmax<juce::int64> (1, totalSamplesProcessed)
-                                         : (double) momentaryWindowSamples);
+        const double meanSquare = frameEnergyAccum / (double) juce::jmax (1, frameSamples);
+        frameEnergyAccum = 0.0;
 
-        const double shortTermDenom = (totalSamplesProcessed < (juce::int64) shortTermWindowSamples
-                                         ? (double) juce::jmax<juce::int64> (1, totalSamplesProcessed)
-                                         : (double) shortTermWindowSamples);
-
-        const double meanMomentary = momentarySum / momentaryDenom;
-        const double meanShortTerm = shortTermSum / shortTermDenom;
-
-        const float rmsMomentary = (float) std::sqrt (juce::jmax (0.0, meanMomentary));
-        const float rmsShortTerm = (float) std::sqrt (juce::jmax (0.0, meanShortTerm));
-
-        // [TIMEBASE-PLAYHEAD]
-        // Use the best-known project sample position for this frame.
-        // If playhead was available, blockStartProjectSample was used in processBlock; otherwise fallback is internal.
-
-        // [TIMEBASE-PLAYHEAD] Timestamp the loudness frame on the DAW timeline.
+        // Timestamp this loudness frame on the DAW timeline
         lastFrameProjectSample = currentBlockStartProjectSample + (juce::int64) currentBlockSampleIndex;
         lastFrameIsPlaying     = currentBlockIsPlaying;
 
+        // Quantize to our 60 Hz frame grid using floor division (supports negative time)
+        const juce::int64 frameIndex = floorDivInt64 (lastFrameProjectSample, (juce::int64) frameSamples);
+
+        // Store base energy first (publish via tag later in writeFrameAbs)
+        const float energyMS = (float) juce::jmax (0.0, meanSquare);
+
+        // Fixed windows in 60 Hz frames
+        const int momentaryFrames = (int) std::round (momentaryWindowSeconds * loudnessFrameRate); // 0.4s -> 24
+        const int shortTermFrames = (int) std::round (shortTermWindowSeconds * loudnessFrameRate); // 3s -> 180
+
+        // Make current frame's energy visible before computing windows
+        // (we store it with provisional RMS=0, then overwrite with final RMS)
+        writeFrameAbs (frameIndex, energyMS, 0.0f, 0.0f);
+
+        const float rmsMomentary = computeWindowRmsFromEnergy (frameIndex, juce::jmax (1, momentaryFrames));
+        const float rmsShortTerm = computeWindowRmsFromEnergy (frameIndex, juce::jmax (1, shortTermFrames));
+
+        // Store final derived values (same abs index, overwrite-safe)
+        writeFrameAbs (frameIndex, energyMS, rmsMomentary, rmsShortTerm);
+
+        // Push to GUI FIFO
         pushLoudnessFrame (rmsMomentary, rmsShortTerm);
     }
 }
@@ -229,6 +304,9 @@ void LevelScopeAudioProcessor::pushLoudnessFrame (float momentaryRms,
         loudnessBuffer[(size_t) index].momentaryRms = momentaryRms;
         loudnessBuffer[(size_t) index].shortTermRms = shortTermRms;
 
+        loudnessBuffer[(size_t) index].frameIndex = floorDivInt64 (lastFrameProjectSample, (juce::int64) frameSamples);
+        loudnessBuffer[(size_t) index].isPlaying  = lastFrameIsPlaying;
+
         loudnessBuffer[(size_t) index].projectSample = lastFrameProjectSample;
         loudnessBuffer[(size_t) index].isPlaying     = lastFrameIsPlaying;
 
@@ -242,12 +320,12 @@ void LevelScopeAudioProcessor::pushLoudnessFrame (float momentaryRms,
 
 int LevelScopeAudioProcessor::readLoudnessFromFifo (float* momentaryDest,
                                                     float* shortTermDest,
-                                                    juce::int64* projectSampleDest,
+                                                    juce::int64* frameIndexDest,
                                                     int* isPlayingDest,
                                                     int maxNumToRead) noexcept
 {
     if (momentaryDest == nullptr || shortTermDest == nullptr
-        || projectSampleDest == nullptr || isPlayingDest == nullptr
+        || frameIndexDest == nullptr || isPlayingDest == nullptr
         || maxNumToRead <= 0)
         return 0;
 
@@ -255,7 +333,6 @@ int LevelScopeAudioProcessor::readLoudnessFromFifo (float* momentaryDest,
     loudnessFifo.prepareToRead (maxNumToRead, start1, size1, start2, size2);
 
     const int totalToRead = size1 + size2;
-
     int destIndex = 0;
 
     if (size1 > 0)
@@ -263,10 +340,10 @@ int LevelScopeAudioProcessor::readLoudnessFromFifo (float* momentaryDest,
         for (int i = 0; i < size1; ++i)
         {
             const auto& f = loudnessBuffer[(size_t) (start1 + i)];
-            momentaryDest[destIndex]     = f.momentaryRms;
-            shortTermDest[destIndex]     = f.shortTermRms;
-            projectSampleDest[destIndex] = f.projectSample;
-            isPlayingDest[destIndex]     = f.isPlaying;
+            momentaryDest[destIndex]  = f.momentaryRms;
+            shortTermDest[destIndex]  = f.shortTermRms;
+            frameIndexDest[destIndex] = f.frameIndex;
+            isPlayingDest[destIndex]  = f.isPlaying;
             ++destIndex;
         }
     }
@@ -276,10 +353,10 @@ int LevelScopeAudioProcessor::readLoudnessFromFifo (float* momentaryDest,
         for (int i = 0; i < size2; ++i)
         {
             const auto& f = loudnessBuffer[(size_t) (start2 + i)];
-            momentaryDest[destIndex]     = f.momentaryRms;
-            shortTermDest[destIndex]     = f.shortTermRms;
-            projectSampleDest[destIndex] = f.projectSample;
-            isPlayingDest[destIndex]     = f.isPlaying;
+            momentaryDest[destIndex]  = f.momentaryRms;
+            shortTermDest[destIndex]  = f.shortTermRms;
+            frameIndexDest[destIndex] = f.frameIndex;
+            isPlayingDest[destIndex]  = f.isPlaying;
             ++destIndex;
         }
     }
