@@ -255,21 +255,27 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     if (numChannels <= 0 || numSamples <= 0)
         return;
 
-    // [TIMEBASE-PLAYHEAD] Capture DAW playhead position once per block.
-    // If not available, fall back to our internal sample counter.
-    juce::int64 blockStartProjectSample = totalSamplesProcessed;
-    int blockIsPlaying = 1;
+    // [TIMEBASE-PLAYHEAD]
+    juce::int64 blockStartProjectSample = 0;
+    int blockIsPlaying = 0;
+    bool haveTimeInSamples = false;
 
     if (auto* ph = getPlayHead())
     {
         if (auto pos = ph->getPosition())
         {
             if (auto t = pos->getTimeInSamples())
+            {
                 blockStartProjectSample = *t;
+                haveTimeInSamples = true;
+            }
 
             blockIsPlaying = (pos->getIsPlaying() ? 1 : 0);
         }
     }
+
+    // [TIMEBASE-PLAYHEAD] only analyze when host provides a real timeline position
+    const bool shouldAnalyse = (blockIsPlaying == 1 && haveTimeInSamples);
 
     // [FIX-RESTART-PARTIAL-FRAME]
     // Detect discontinuities (stop->play, seek, loop jump, host gaps).
@@ -278,7 +284,7 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         (lastBlockIsPlaying == 0) ||
         (blockStartProjectSample != lastBlockEndProjectSample);
 
-    if (blockIsPlaying == 1 && discontinuity && frameSamples > 0)
+    if (shouldAnalyse && discontinuity && frameSamples > 0)
     {
         frameEnergyAccum = 0.0;
 
@@ -304,7 +310,7 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     // If we keep updating our loudness windows with zeros, the internal state decays
     // and causes a sharp loudness drop on the next restart.
     // Freeze loudness analysis while not playing.
-    if (blockIsPlaying == 0)
+    if (! shouldAnalyse)
         return;
 
     currentBlockStartProjectSample = blockStartProjectSample;
