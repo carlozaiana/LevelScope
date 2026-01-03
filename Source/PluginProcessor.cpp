@@ -258,8 +258,7 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
             if (auto t = pos->getTimeInSamples())
                 blockStartProjectSample = *t;
 
-            if (auto p = pos->getIsPlaying())
-                blockIsPlaying = (*p ? 1 : 0);
+            blockIsPlaying = (pos->getIsPlaying() ? 1 : 0);
         }
     }
 
