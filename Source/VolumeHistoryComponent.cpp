@@ -1138,8 +1138,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
             for (juce::int64 tickFrame = lastTickFrame; tickFrame >= leftFrame; tickFrame -= tickStepFrames)
             {
-                const juce::int64 framesAgo = totalFrames - tickFrame;
-
                 const double xD = (double) width - (viewRightFrame - (double) tickFrame) * zoomX;
                 const float x = (float) xD;
 
@@ -1309,40 +1307,6 @@ void VolumeHistoryComponent::applyVerticalZoom (float wheelDelta, float anchorY)
 
     topNew = juce::jlimit (topMin, topMax, topNew);
     viewTopDb = topNew;
-
-    markStaticBackgroundDirty();
-}
-
-//==============================================================================
-// Zoom
-//==============================================================================
-
-void VolumeHistoryComponent::applyHorizontalZoom (float wheelDelta)
-{
-    if (getWidth() <= 1 || wheelDelta == 0.0f)
-        return;
-
-    const double zoomBase   = 1.1;
-    const double zoomFactor = std::pow (zoomBase, (double) wheelDelta);
-
-    zoomX *= zoomFactor;
-    zoomX  = juce::jlimit (minZoomX, maxZoomX, zoomX);
-
-    hasCustomZoomX = true;
-
-    // Do NOT reset tickStepIndex here; hysteresis should do its job.
-}
-
-void VolumeHistoryComponent::applyVerticalZoom (float wheelDelta)
-{
-    if (wheelDelta == 0.0f)
-        return;
-
-    const double zoomBase   = 1.1;
-    const double zoomFactor = std::pow (zoomBase, (double) wheelDelta);
-
-    zoomY *= zoomFactor;
-    zoomY  = juce::jlimit (minZoomY, maxZoomY, zoomY);
 
     markStaticBackgroundDirty();
 }
