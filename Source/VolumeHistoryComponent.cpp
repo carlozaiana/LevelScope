@@ -36,6 +36,8 @@ VolumeHistoryComponent::VolumeHistoryComponent (LevelScopeAudioProcessor& proc)
     initialiseHistoryLevels();
     resetHistoryLevels();
 
+    bootstrapHistoryFromProcessorIfNeeded(); // [STATE-PERSIST]
+
     setOpaque (true);
 
     // UI update rate
@@ -127,6 +129,63 @@ void VolumeHistoryComponent::timerCallback()
 //==============================================================================
 // History update
 //==============================================================================
+
+juce::int64 VolumeHistoryComponent::floorDivInt64 (juce::int64 a, juce::int64 b) noexcept
+{
+    if (b <= 0) return 0;
+    if (a >= 0) return a / b;
+    return - ((-a + b - 1) / b);
+}
+
+void VolumeHistoryComponent::bootstrapHistoryFromProcessorIfNeeded()
+{
+    if (bootstrappedFromProcessor)
+        return;
+
+    const juce::int64 maxWritten = processor.getMaxWrittenFrameIndex();
+    if (maxWritten == std::numeric_limits<juce::int64>::min())
+        return;
+
+    // Fill L0 for the last rawCapacityFrames (3 hours @ 60 Hz)
+    const juce::int64 startFrame = maxWritten - (juce::int64) (rawCapacityFrames - 1);
+
+    for (juce::int64 fi = startFrame; fi <= maxWritten; ++fi)
+    {
+        float mRms = 0.0f, sRms = 0.0f;
+        if (! processor.getDerivedRmsAtFrameIndex (fi, mRms, sRms))
+            continue;
+
+        const float dbM = juce::Decibels::gainToDecibels (mRms, minDb);
+        const float dbS = juce::Decibels::gainToDecibels (sRms, minDb);
+
+        FrameGroup fg;
+        fg.momentaryMinDb = dbM;
+        fg.momentaryMaxDb = dbM;
+        fg.shortTermMinDb = dbS;
+        fg.shortTermMaxDb = dbS;
+
+        writeGroupAbs (0, fi, fg);
+    }
+
+    // Rebuild higher levels over the same time range
+    for (int level = 1; level < maxLevels; ++level)
+    {
+        const int span = levels[(size_t) level].spanFrames;
+        const juce::int64 minAbs = floorDivInt64 (startFrame, (juce::int64) span);
+        const juce::int64 maxAbs = floorDivInt64 (maxWritten, (juce::int64) span);
+
+        for (juce::int64 absIdx = minAbs; absIdx <= maxAbs; ++absIdx)
+            recomputeGroupAbsFromChildren (level, absIdx);
+    }
+
+    haveNowFrameIndex = true;
+    nowFrameIndex = maxWritten;
+
+    havePlayheadFrameIndex = true;
+    playheadFrameIndex = maxWritten;
+
+    bootstrappedFromProcessor = true;
+}
 
 bool VolumeHistoryComponent::drainProcessorFifo()
 {
@@ -225,7 +284,9 @@ void VolumeHistoryComponent::writeGroupAbs (int levelIndex,
     if (L.capacity <= 0 || absGroupIndex < 0)
         return;
 
-    const int slot = (int) (absGroupIndex % (juce::int64) L.capacity);
+    juce::int64 m = absGroupIndex % (juce::int64) L.capacity;
+    if (m < 0) m += (juce::int64) L.capacity;
+    const int slot = (int) m;
     L.groups[(size_t) slot] = group;
     L.absGroupIndexTag[(size_t) slot] = absGroupIndex;
 }
@@ -243,7 +304,9 @@ bool VolumeHistoryComponent::readGroupAbs (int levelIndex,
     if (L.capacity <= 0 || absGroupIndex < 0)
         return false;
 
-    const int slot = (int) (absGroupIndex % (juce::int64) L.capacity);
+    juce::int64 m = absGroupIndex % (juce::int64) L.capacity;
+    if (m < 0) m += (juce::int64) L.capacity;
+    const int slot = (int) m;
     if (L.absGroupIndexTag[(size_t) slot] != absGroupIndex)
         return false;
 

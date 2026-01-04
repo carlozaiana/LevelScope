@@ -72,6 +72,11 @@ public:
     double getLoudnessFrameRate() const noexcept { return loudnessFrameRate; }
     int getFrameSamples() const noexcept { return frameSamples; } // samples between 60 Hz loudness frames
 
+    // [STATE-PERSIST] GUI bootstrap: query derived curves already stored in processor timeline
+    bool getDerivedRmsAtFrameIndex (juce::int64 frameIndex,
+                                   float& momentaryRms,
+                                   float& shortTermRms) const noexcept;
+
     juce::int64 getMaxWrittenFrameIndex() const noexcept { return maxWrittenFrameIndex.load(); }
 
 private:

@@ -174,6 +174,31 @@ bool LevelScopeAudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
     return true;
 }
 
+bool LevelScopeAudioProcessor::getDerivedRmsAtFrameIndex (juce::int64 frameIndex,
+                                                         float& momentaryRms,
+                                                         float& shortTermRms) const noexcept
+{
+    momentaryRms = 0.0f;
+    shortTermRms = 0.0f;
+
+    const int slot = wrapSlot (frameIndex, historyCapacityFrames);
+
+    const juce::int64 tag1 = frameIndexTag[(size_t) slot].load (std::memory_order_acquire);
+    if (tag1 != frameIndex)
+        return false;
+
+    const float m = momentaryRmsHist[(size_t) slot];
+    const float s = shortTermRmsHist[(size_t) slot];
+
+    const juce::int64 tag2 = frameIndexTag[(size_t) slot].load (std::memory_order_acquire);
+    if (tag2 != frameIndex)
+        return false;
+
+    momentaryRms = m;
+    shortTermRms = s;
+    return true;
+}
+
 //==============================================================================
 
 void LevelScopeAudioProcessor::processSampleForLoudness (const float* const* channelData,
@@ -433,17 +458,254 @@ int LevelScopeAudioProcessor::readLoudnessFromFifo (float* momentaryDest,
 }
 
 //==============================================================================
+// [STATE-PERSIST] Binary, versioned, chunked state
+// - Stores base timeline energy + valid mask (compressed)
+// - Rebuilds derived momentary/short-term on load
+// - Designed to add more chunks later (params, markers, regions, etc.)
+//==============================================================================
+
+static constexpr juce::uint32 fourcc (char a, char b, char c, char d) noexcept
+{
+    return (juce::uint32) (juce::uint8) a
+        | ((juce::uint32) (juce::uint8) b << 8)
+        | ((juce::uint32) (juce::uint8) c << 16)
+        | ((juce::uint32) (juce::uint8) d << 24);
+}
 
 void LevelScopeAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    juce::ignoreUnused (destData);
-    // No parameters yet.
+    juce::MemoryOutputStream out (destData, true);
+
+    const juce::uint32 kMagic   = fourcc ('L','S','C','P');
+    const juce::uint32 kVersion = 1;
+
+    out.writeInt ((int) kMagic);
+    out.writeInt ((int) kVersion);
+
+    // chunk count (we write exactly 1 chunk for now)
+    out.writeInt (1);
+
+    //--------------------------------------------------------------------------
+    // Chunk: HIST
+    //--------------------------------------------------------------------------
+    juce::MemoryOutputStream chunk (4096);
+
+    // Chunk version
+    chunk.writeInt (1);
+
+    // Metadata needed to interpret the history
+    chunk.writeInt (historyCapacityFrames);
+    chunk.writeInt (frameSamples);
+
+    const int momentaryFrames = (int) std::round (momentaryWindowSeconds * loudnessFrameRate); // 24
+    const int shortTermFrames = (int) std::round (shortTermWindowSeconds * loudnessFrameRate); // 180
+    chunk.writeInt (momentaryFrames);
+    chunk.writeInt (shortTermFrames);
+
+    const juce::int64 maxWritten = maxWrittenFrameIndex.load (std::memory_order_relaxed);
+    chunk.writeInt64 (maxWritten);
+
+    // If we have no history, store numFrames = 0
+    if (maxWritten == std::numeric_limits<juce::int64>::min())
+    {
+        chunk.writeInt64 (0);   // startFrameIndex (unused)
+        chunk.writeInt (0);     // numFrames
+        chunk.writeInt (0);     // compressedBytes
+    }
+    else
+    {
+        const juce::int64 startFrameIndex = maxWritten - (juce::int64) (historyCapacityFrames - 1);
+        const int numFrames = historyCapacityFrames;
+
+        chunk.writeInt64 (startFrameIndex);
+        chunk.writeInt (numFrames);
+
+        // Build (validMask + energy) for this contiguous window
+        juce::MemoryOutputStream uncompressed (numFrames * (1 + 4));
+
+        for (int i = 0; i < numFrames; ++i)
+        {
+            const juce::int64 fi = startFrameIndex + (juce::int64) i;
+            const int slot = wrapSlot (fi, historyCapacityFrames);
+
+            const juce::int64 tag = frameIndexTag[(size_t) slot].load (std::memory_order_acquire);
+            if (tag == fi)
+            {
+                const float e = energyMeanSquare[(size_t) slot];
+                uncompressed.writeByte ((char) 1);
+                uncompressed.writeFloat (e);
+            }
+            else
+            {
+                uncompressed.writeByte ((char) 0);
+                uncompressed.writeFloat (0.0f);
+            }
+        }
+
+        // Compress the payload
+        juce::MemoryOutputStream compressed;
+        {
+            juce::GZIPCompressorOutputStream gz (compressed);
+            gz.write (uncompressed.getData(), uncompressed.getDataSize());
+            gz.flush();
+        }
+
+        chunk.writeInt ((int) compressed.getDataSize());
+        chunk.write (compressed.getData(), compressed.getDataSize());
+    }
+
+    // Write chunk header to main stream
+    const juce::uint32 chunkId = fourcc ('H','I','S','T');
+    out.writeInt ((int) chunkId);
+    out.writeInt ((int) chunk.getDataSize());
+    out.write (chunk.getData(), chunk.getDataSize());
 }
 
 void LevelScopeAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    juce::ignoreUnused (data, sizeInBytes);
-    // No parameters yet.
+    if (data == nullptr || sizeInBytes <= 0)
+        return;
+
+    juce::MemoryInputStream in (data, (size_t) sizeInBytes, false);
+
+    const juce::uint32 kMagicExpected = fourcc ('L','S','C','P');
+    const int magic = in.readInt();
+    const int version = in.readInt();
+
+    if ((juce::uint32) magic != kMagicExpected || version != 1)
+        return;
+
+    const int numChunks = in.readInt();
+    if (numChunks <= 0)
+        return;
+
+    // Reset tags (do NOT clear stored arrays necessarily, but tags define validity)
+    for (int i = 0; i < historyCapacityFrames; ++i)
+        frameIndexTag[(size_t) i].store ((juce::int64) -1, std::memory_order_relaxed);
+
+    maxWrittenFrameIndex.store (std::numeric_limits<juce::int64>::min(), std::memory_order_relaxed);
+
+    for (int ci = 0; ci < numChunks; ++ci)
+    {
+        const juce::uint32 chunkId = (juce::uint32) in.readInt();
+        const int chunkBytes = in.readInt();
+        if (chunkBytes <= 0 || in.getNumBytesRemaining() < (size_t) chunkBytes)
+        {
+            in.skipNextBytes (juce::jmax (0, chunkBytes));
+            continue;
+        }
+
+        juce::MemoryBlock chunkData ((size_t) chunkBytes);
+        in.read (chunkData.getData(), (size_t) chunkBytes);
+
+        if (chunkId != fourcc ('H','I','S','T'))
+            continue;
+
+        juce::MemoryInputStream ch (chunkData.getData(), chunkData.getSize(), false);
+
+        const int chunkVer = ch.readInt();
+        if (chunkVer != 1)
+            continue;
+
+        const int capStored = ch.readInt();
+        const int frameSamplesStored = ch.readInt();
+        const int momentaryFramesStored = ch.readInt();
+        const int shortTermFramesStored = ch.readInt();
+
+        const juce::int64 maxWrittenStored = ch.readInt64();
+        const juce::int64 startFrameIndex = ch.readInt64();
+        const int numFrames = ch.readInt();
+        const int compressedBytes = ch.readInt();
+
+        juce::ignoreUnused (capStored, frameSamplesStored);
+
+        if (maxWrittenStored == std::numeric_limits<juce::int64>::min() || numFrames <= 0 || compressedBytes <= 0)
+        {
+            maxWrittenFrameIndex.store (maxWrittenStored, std::memory_order_relaxed);
+            continue;
+        }
+
+        if ((int) ch.getNumBytesRemaining() < compressedBytes)
+            continue;
+
+        juce::MemoryInputStream compIn (ch.readBytesAsMemoryBlock ((size_t) compressedBytes), false);
+        juce::GZIPDecompressorInputStream gzIn (compIn);
+
+        // Rolling window sums with "valid count" to match timeline-truth semantics
+        const int mWin = juce::jmax (1, momentaryFramesStored);
+        const int sWin = juce::jmax (1, shortTermFramesStored);
+
+        std::vector<float> mBuf ((size_t) mWin, 0.0f);
+        std::vector<juce::uint8> mValid ((size_t) mWin, 0);
+        int mPos = 0;
+        double mSum = 0.0;
+        int mCount = 0;
+
+        std::vector<float> sBuf ((size_t) sWin, 0.0f);
+        std::vector<juce::uint8> sValid ((size_t) sWin, 0);
+        int sPos = 0;
+        double sSum = 0.0;
+        int sCount = 0;
+
+        for (int i = 0; i < numFrames; ++i)
+        {
+            const juce::int64 fi = startFrameIndex + (juce::int64) i;
+
+            const int v = (int) gzIn.readByte();
+            const float e = gzIn.readFloat();
+
+            // Update momentary window
+            if (mValid[(size_t) mPos])
+            {
+                mSum -= (double) mBuf[(size_t) mPos];
+                --mCount;
+            }
+            if (v != 0)
+            {
+                mBuf[(size_t) mPos] = e;
+                mValid[(size_t) mPos] = 1;
+                mSum += (double) e;
+                ++mCount;
+            }
+            else
+            {
+                mBuf[(size_t) mPos] = 0.0f;
+                mValid[(size_t) mPos] = 0;
+            }
+            mPos = (mPos + 1) % mWin;
+
+            // Update short-term window
+            if (sValid[(size_t) sPos])
+            {
+                sSum -= (double) sBuf[(size_t) sPos];
+                --sCount;
+            }
+            if (v != 0)
+            {
+                sBuf[(size_t) sPos] = e;
+                sValid[(size_t) sPos] = 1;
+                sSum += (double) e;
+                ++sCount;
+            }
+            else
+            {
+                sBuf[(size_t) sPos] = 0.0f;
+                sValid[(size_t) sPos] = 0;
+            }
+            sPos = (sPos + 1) % sWin;
+
+            if (v == 0)
+                continue;
+
+            const float mRms = (mCount > 0 ? (float) std::sqrt (juce::jmax (0.0, mSum / (double) mCount)) : 0.0f);
+            const float sRms = (sCount > 0 ? (float) std::sqrt (juce::jmax (0.0, sSum / (double) sCount)) : 0.0f);
+
+            writeFrameAbs (fi, e, mRms, sRms);
+        }
+
+        maxWrittenFrameIndex.store (maxWrittenStored, std::memory_order_relaxed);
+        loudnessFifo.reset(); // avoid stale GUI frames from before load
+    }
 }
 
 //==============================================================================

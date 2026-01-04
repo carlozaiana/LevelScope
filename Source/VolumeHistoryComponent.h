@@ -66,6 +66,12 @@ private:
     //==============================================================================
 
     void timerCallback() override;
+    
+    //==============================================================================
+    // [STATE-PERSIST] bootstrap GUI history from processor timeline after project load
+    void bootstrapHistoryFromProcessorIfNeeded();
+    static juce::int64 floorDivInt64 (juce::int64 a, juce::int64 b) noexcept;
+    bool bootstrappedFromProcessor = false;
 
     //==============================================================================
     // History init/update
