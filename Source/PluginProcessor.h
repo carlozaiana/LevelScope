@@ -96,6 +96,11 @@ private:
 
     juce::int64 totalSamplesProcessed = 0; // for startup warm-up
 
+    // [FIX-START-RAMP]
+    // Many hosts apply a short fade/ramp at transport start. To avoid corrupting
+    // existing timeline truth, we temporarily skip overwriting frames that already exist.
+    int transportStartOverwriteGuardFrames = 0;
+
     //==============================================================================
     // [TIMELINE-ENERGY] timeline-truth storage at 60 Hz
     // Store mean-square energy per 60 Hz frame, keyed by absolute frameIndex.

@@ -218,6 +218,21 @@ void LevelScopeAudioProcessor::processSampleForLoudness (const float* const* cha
         // Quantize to our 60 Hz frame grid using floor division (supports negative time)
         const juce::int64 frameIndex = floorDivInt64 (lastFrameProjectSample, (juce::int64) frameSamples);
 
+        // [FIX-START-RAMP]
+        // If this frame already exists in the timeline, and we're within the short
+        // transport-start guard period, do NOT overwrite it (prevents 2–4 dB edges).
+        // But if it does NOT exist yet, we still write it to avoid gaps.
+        if (transportStartOverwriteGuardFrames > 0)
+        {
+            float existingEnergy = 0.0f;
+            const bool alreadyExists = readEnergyAbs (frameIndex, existingEnergy);
+
+            --transportStartOverwriteGuardFrames;
+
+            if (alreadyExists)
+                return; // keep prior timeline truth, skip FIFO push too
+        }
+
         // Store base energy first (publish via tag later in writeFrameAbs)
         const float energyMS = (float) juce::jmax (0.0, meanSquare);
 
@@ -299,6 +314,13 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         // If we start mid-frame, the first computed frame would be partial -> don't overwrite it.
         skipNextPartialFrameWrite = (mod != 0);
     }
+
+    // [FIX-START-RAMP] Detect a transport start (stop -> play)
+    const bool transportStart = (blockIsPlaying == 1 && lastBlockIsPlaying == 0);
+
+    // Guard duration in 60 Hz frames (0.1s ~= 6 frames)
+    if (transportStart)
+        transportStartOverwriteGuardFrames = 6;
 
     // Update "last block" tracking even if we return early.
     haveLastBlockEnd = true;
