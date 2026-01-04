@@ -1240,9 +1240,8 @@ void VolumeHistoryComponent::panDb (float wheelDelta)
 
     viewTopDb += panDbAmount;
 
-    const double topMin = (double) minDb + effectiveRange; // ensures bottom >= minDb
-    const double topMax = 12.0;
-
+    const double topMin = viewMinDbLimit + effectiveRange;
+    const double topMax = viewMaxDbLimit;
     viewTopDb = juce::jlimit (topMin, topMax, viewTopDb);
 
     markStaticBackgroundDirty();
@@ -1294,6 +1293,13 @@ void VolumeHistoryComponent::applyVerticalZoom (float wheelDelta, float anchorY)
     zoomY *= zoomFactor;
     zoomY  = juce::jlimit (minZoomY, maxZoomY, zoomY);
 
+    // [VIEW-NAV-Y-LIMITS]
+    // Prevent impossible states where the visible range exceeds the allowed view limits.
+    // effectiveRange = baseDbRange / zoomY must be <= (viewMaxDbLimit - viewMinDbLimit)
+    const double maxVisibleRange = viewMaxDbLimit - viewMinDbLimit;
+    const double minZoomYByLimits = (double) baseDbRange / maxVisibleRange;
+    zoomY = juce::jmax (zoomY, minZoomYByLimits);
+
     // Keep the dB under the mouse fixed while zooming
     const double ay = juce::jlimit (0.0, (double) h, (double) anchorY);
     const double norm = 1.0 - (ay / (double) h);
@@ -1306,11 +1312,10 @@ void VolumeHistoryComponent::applyVerticalZoom (float wheelDelta, float anchorY)
     const double bottomNew = dbAtCursor - norm * effectiveNew;
     double topNew = bottomNew + effectiveNew;
 
-    const double topMin = (double) minDb + effectiveNew;
-    // Allow showing positive dBFS above 0 (clipping/overs)
-    const double topMax = 12.0;
-
+    const double topMin = viewMinDbLimit + effectiveNew; // ensures bottom >= viewMinDbLimit
+    const double topMax = viewMaxDbLimit;                // allows positive dBFS
     topNew = juce::jlimit (topMin, topMax, topNew);
+    
     viewTopDb = topNew;
 
     markStaticBackgroundDirty();

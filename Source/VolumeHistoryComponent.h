@@ -180,6 +180,10 @@ private:
     double minZoomY   = 0.25;
     double maxZoomY   = 4.0;
 
+    // [VIEW-NAV-Y-LIMITS] allow positive dBFS and extra space below -90
+    static constexpr double viewMinDbLimit = -180.0; // lowest visible dB label allowed
+    static constexpr double viewMaxDbLimit =  24.0; // highest visible dB label allowed
+
     bool hasCustomZoomX = false;
 
     bool showBands = true;
