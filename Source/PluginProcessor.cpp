@@ -589,7 +589,7 @@ void LevelScopeAudioProcessor::setStateInformation (const void* data, int sizeIn
     {
         const juce::uint32 chunkId = (juce::uint32) in.readInt();
         const int chunkBytes = in.readInt();
-        if (chunkBytes <= 0 || in.getNumBytesRemaining() < (size_t) chunkBytes)
+        if (chunkBytes <= 0 || (juce::int64) in.getNumBytesRemaining() < (juce::int64) chunkBytes)
         {
             in.skipNextBytes (juce::jmax (0, chunkBytes));
             continue;
@@ -628,7 +628,10 @@ void LevelScopeAudioProcessor::setStateInformation (const void* data, int sizeIn
         if ((int) ch.getNumBytesRemaining() < compressedBytes)
             continue;
 
-        juce::MemoryInputStream compIn (ch.readBytesAsMemoryBlock ((size_t) compressedBytes), false);
+        juce::MemoryBlock compressed ((size_t) compressedBytes);
+        ch.read (compressed.getData(), (size_t) compressedBytes);
+
+        juce::MemoryInputStream compIn (compressed.getData(), compressed.getSize(), false);
         juce::GZIPDecompressorInputStream gzIn (compIn);
 
         // Rolling window sums with "valid count" to match timeline-truth semantics
