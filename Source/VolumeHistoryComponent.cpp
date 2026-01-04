@@ -1042,7 +1042,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         const float scaleH = scaleArea.getHeight();
         if (scaleH > 20.0f)
         {
-            const float topDb = maxDb; // 0 dBFS
+            const float topDb = (float) viewTopDb;
             const float effectiveRange = (float) (baseDbRange / zoomY);
             const float bottomDb = topDb - effectiveRange;
 
@@ -1104,61 +1104,65 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     }
 
     //==========================================================================
-    // [RULER-FRAMES]  [FIX-RULER-NO-PENDING]
-    // Ruler ticks must be based on absolute time only.
-    // DO NOT add any "pendingFramesOffset" here, otherwise ticks will sawtooth
-    // (move left, then jump right) as LOD pending counters reset.
+    // [RULER-FRAMES]  [VIEW-NAV]
+    // Ruler must use the SAME x-mapping as the curves:
+    // x = width - (viewRightFrame - tickFrame) * zoomX
     //==========================================================================
     const float rulerHeight   = 16.0f;
     const float rulerBaseY    = (float) height - 2.0f;
     const float tickTopY      = rulerBaseY - 6.0f;
     const float textTopY      = rulerBaseY - 14.0f;
 
-    if (zoomX > 0.0 && visualFrameRate > 0.0 && totalFrames > 0)
+    if (zoomX > 1.0e-12 && visualFrameRate > 0.0 && haveNowFrameIndex)
     {
-        const double safeZoomX = (zoomX > 1.0e-12 ? zoomX : 1.0e-12);
+        const juce::int64 rightFrameI = (juce::int64) std::floor (viewRightFrame);
+        const double safeZoomX = zoomX;
 
-        // Visible frames purely from geometry
         const double framesByWidth = (double) width / safeZoomX;
-        const juce::int64 visibleFrames = (juce::int64) std::floor (juce::jmin ((double) availableRaw, framesByWidth));
+        const juce::int64 visibleFrames = (juce::int64) std::ceil (juce::jmax (1.0, framesByWidth));
 
-        if (visibleFrames > 1)
+        // Earliest frame we can possibly still have in our history window
+        const juce::int64 earliestStoredFrame = nowFrameIndex - (juce::int64) rawCapacityFrames + 1;
+
+        const juce::int64 leftFrame = juce::jmax (earliestStoredFrame, rightFrameI - visibleFrames);
+
+        const double tickStepSec = getTickStepSecondsWithHysteresis (width);
+        const juce::int64 tickStepFrames = (juce::int64) juce::jmax (1.0, std::round (tickStepSec * visualFrameRate));
+
+        // Negative-safe floor-to-multiple
+        auto floorDivInt64 = [] (juce::int64 a, juce::int64 b) -> juce::int64
         {
-            const juce::int64 earliestAvailableFrame = totalFrames - availableRaw;
-            const juce::int64 leftFrame = juce::jmax (earliestAvailableFrame, totalFrames - visibleFrames);
+            if (b <= 0) return 0;
+            if (a >= 0) return a / b;
+            return - ((-a + b - 1) / b);
+        };
 
-            const double tickStepSec = getTickStepSecondsWithHysteresis (width);
-            const juce::int64 tickStepFrames = (juce::int64) juce::jmax (1.0, std::round (tickStepSec * visualFrameRate));
+        const juce::int64 lastTickFrame = floorDivInt64 (rightFrameI, tickStepFrames) * tickStepFrames;
 
-            // Anchor to absolute frames
-            const juce::int64 lastTickFrame = (totalFrames / tickStepFrames) * tickStepFrames;
+        g.setColour (juce::Colours::white);
+        g.setFont (10.0f);
 
-            g.setColour (juce::Colours::white);
-            g.setFont (10.0f);
+        for (juce::int64 tickFrame = lastTickFrame; tickFrame >= leftFrame; tickFrame -= tickStepFrames)
+        {
+            const float x = (float) ((double) width - (viewRightFrame - (double) tickFrame) * zoomX);
 
-            for (juce::int64 tickFrame = lastTickFrame; tickFrame >= leftFrame; tickFrame -= tickStepFrames)
-            {
-                const double xD = (double) width - (viewRightFrame - (double) tickFrame) * zoomX;
-                const float x = (float) xD;
+            if (x < -2.0f)
+                break;
 
-                if (x < -2.0f)
-                    break;
+            if (x > (float) width + 2.0f)
+                continue;
 
-                if (x > (float) width + 2.0f)
-                    continue;
+            g.drawLine (x, tickTopY, x, rulerBaseY, 1.0f);
 
-                g.drawLine (x, tickTopY, x, rulerBaseY, 1.0f);
+            const double tSec = (double) tickFrame / visualFrameRate;
+            const float textWidth = 62.0f;
 
-                const double tSec = (double) tickFrame / visualFrameRate;
-                const float textWidth = 52.0f;
-
-                g.drawText (formatTimeHMS (tSec),
-                            x - textWidth * 0.5f,
-                            textTopY,
-                            textWidth,
-                            rulerHeight,
-                            juce::Justification::centred);
-            }
+            g.drawText (formatTimeHMS (tSec),
+                        x - textWidth * 0.5f,
+                        textTopY,
+                        textWidth,
+                        rulerHeight,
+                        juce::Justification::centred);
         }
     }
 
@@ -1237,7 +1241,7 @@ void VolumeHistoryComponent::panDb (float wheelDelta)
     viewTopDb += panDbAmount;
 
     const double topMin = (double) minDb + effectiveRange; // ensures bottom >= minDb
-    const double topMax = (double) maxDb;
+    const double topMax = 12.0;
 
     viewTopDb = juce::jlimit (topMin, topMax, viewTopDb);
 
@@ -1303,7 +1307,8 @@ void VolumeHistoryComponent::applyVerticalZoom (float wheelDelta, float anchorY)
     double topNew = bottomNew + effectiveNew;
 
     const double topMin = (double) minDb + effectiveNew;
-    const double topMax = (double) maxDb;
+    // Allow showing positive dBFS above 0 (clipping/overs)
+    const double topMax = 12.0;
 
     topNew = juce::jlimit (topMin, topMax, topNew);
     viewTopDb = topNew;
@@ -1332,7 +1337,13 @@ void VolumeHistoryComponent::mouseWheelMove (const juce::MouseEvent& event,
         panTime (wheelDelta);
     else if (event.mods.isAltDown())
         applyVerticalZoom (wheelDelta, event.position.y);
-    else if (event.mods.isCtrlDown())
+    else if (
+       #if JUCE_MAC
+            event.mods.isCommandDown()
+   #else
+        event.mods.isCtrlDown()
+   #endif
+    )
         panDb (wheelDelta);
     else
         applyHorizontalZoom (wheelDelta, event.position.x);
