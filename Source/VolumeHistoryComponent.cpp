@@ -8,15 +8,16 @@
 // Helper: format seconds as HH:MM:SS
 static juce::String formatTimeHMS (double seconds)
 {
-    if (seconds < 0.0)
-        seconds = 0.0;
+    const bool neg = (seconds < 0.0);
+    seconds = std::abs (seconds);
 
     const int total = (int) std::floor (seconds + 0.5);
     const int h = total / 3600;
     const int m = (total % 3600) / 60;
     const int s = total % 60;
 
-    return juce::String::formatted ("%02d:%02d:%02d", h, m, s);
+    const juce::String core = juce::String::formatted ("%02d:%02d:%02d", h, m, s);
+    return neg ? "-" + core : core;
 }
 
 //==============================================================================
@@ -35,6 +36,11 @@ VolumeHistoryComponent::VolumeHistoryComponent (LevelScopeAudioProcessor& proc)
 
     initialiseHistoryLevels();
     resetHistoryLevels();
+
+    // [VIEW-NAV]
+    viewTopDb = (double) maxDb;     // top starts at 0 dBFS
+    viewRightFrame = 0.0;           // will follow right edge once we have data
+    followRightEdge = true;
 
     bootstrapHistoryFromProcessorIfNeeded(); // [STATE-PERSIST]
 
@@ -490,7 +496,7 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
     if (! haveNowFrameIndex)
         return;
 
-    const juce::int64 totalFramesNow = nowFrameIndex; // [TIMEBASE-PLAYHEAD]
+    const juce::int64 totalFramesNow = (juce::int64) std::floor (viewRightFrame); // [VIEW-NAV]
 
     // Visible frames (overscanned a bit)
     const double overscanPixels = 10.0;
@@ -498,24 +504,46 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
     const juce::int64 maxFramesVisible = (juce::int64) std::ceil (juce::jmax (0.0, maxFramesVisibleD));
 
     // Visible time window in absolute frames (Level 0 frame units)
-    const juce::int64 leftFrame = juce::jmax<juce::int64> (0, totalFramesNow - maxFramesVisible);
+    const juce::int64 leftFrame = totalFramesNow - maxFramesVisible;
 
     // [TIMEBASE-PLAYHEAD] Absolute group index range on the DAW timeline
-    // latest group is "now" at this LOD.
-    const juce::int64 latestAbsGroup = nowFrameIndex / (juce::int64) spanFrames;
+    // [VIEW-NAV] Separate "data availability" from "view right edge".
+    const juce::int64 latestWrittenAbsGroup = nowFrameIndex / (juce::int64) spanFrames;
 
-    // earliest group that can still be stored in our ring at this level
+    const juce::int64 viewRightFrameI = (juce::int64) std::floor (viewRightFrame);
+    const juce::int64 latestViewAbsGroup = viewRightFrameI / (juce::int64) spanFrames;
+
+    // What we will actually draw up to (cannot exceed what is written).
+    const juce::int64 latestAbsGroup = juce::jmin (latestWrittenAbsGroup, latestViewAbsGroup);
+
+    // Earliest group that can still be stored in our ring depends on latest WRITTEN, not the view.
     const juce::int64 earliestAbsGroup =
-    juce::jmax<juce::int64> (0, latestAbsGroup - (juce::int64) (L.capacity - 1));
+        latestWrittenAbsGroup - (juce::int64) (L.capacity - 1);
 
     if (latestAbsGroup < earliestAbsGroup)
         return;
 
     // Groups whose END frame is >= leftFrame are potentially visible.
     // Group absIndex has endFrame = (absIndex + 1) * spanFrames.
-    const juce::int64 leftFrameClamped = juce::jmax<juce::int64> (0, leftFrame);
-    const juce::int64 ceilDiv = (leftFrameClamped + (juce::int64) spanFrames - 1) / (juce::int64) spanFrames;
-    juce::int64 minAbsWanted = ceilDiv - 1;
+    // We need: (abs+1)*spanFrames >= leftFrame  =>  abs >= ceil(leftFrame/spanFrames) - 1
+    // [NEG-TIME-FIX] make ceil division correct for negative leftFrame.
+    auto floorDivInt64 = [] (juce::int64 a, juce::int64 b) -> juce::int64
+    {
+        // b must be > 0
+        if (b <= 0) return 0;
+        if (a >= 0) return a / b;
+        return - ((-a + b - 1) / b); // floor division for negatives
+    };
+
+    auto ceilDivInt64 = [&] (juce::int64 a, juce::int64 b) -> juce::int64
+    {
+        // ceil(a/b) = -floor((-a)/b)
+        return -floorDivInt64 (-a, b);
+    };
+
+    const juce::int64 span64 = (juce::int64) spanFrames;
+
+    juce::int64 minAbsWanted = ceilDivInt64 (leftFrame, span64) - 1;
 
     // overscan one group to the left
     minAbsWanted -= 1;
@@ -555,10 +583,11 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
     //--------------------------------------------------------------------------
     // [DECIMATOR-GRID-ANCHOR] Anchor chunk boundaries to a fixed global grid
     //--------------------------------------------------------------------------
-    auto floorToGrid = [] (juce::int64 v, juce::int64 grid) -> juce::int64
+    auto floorToGrid = [&] (juce::int64 v, juce::int64 grid) -> juce::int64
     {
-        // v and grid are non-negative in our use; keep it simple and stable.
-        return (grid > 0 ? (v / grid) * grid : v);
+        // [NEG-TIME-FIX] floor-to-grid for negative values too
+        if (grid <= 0) return v;
+        return floorDivInt64 (v, grid) * grid;
     };
 
     juce::int64 firstAbs = floorToGrid (minAbs, step);
@@ -705,7 +734,7 @@ float VolumeHistoryComponent::dbToY (float db, float height) const noexcept
         return 0.0f;
 
     const float effectiveRange = (float) (baseDbRange / zoomY);
-    const float topDb          = maxDb;
+    const float topDb          = (float) viewTopDb; // [VIEW-NAV]
     const float bottomDb       = topDb - effectiveRange;
 
     const float clamped = juce::jlimit (bottomDb, topDb, db);
@@ -734,12 +763,16 @@ void VolumeHistoryComponent::rebuildStaticBackgroundIfNeeded()
     const bool sizeChanged  = (w != cachedBgW || h != cachedBgH);
     const bool zoomYChanged = (std::abs (zoomY - cachedBgZoomY) > 1.0e-12);
 
-    if (! staticBackgroundDirty && ! sizeChanged && ! zoomYChanged && cachedStaticBackground.isValid())
+    const bool topDbChanged = (std::abs (viewTopDb - cachedBgTopDb) > 1.0e-12); // [VIEW-NAV]
+
+    if (! staticBackgroundDirty && ! sizeChanged && ! zoomYChanged && ! topDbChanged
+        && cachedStaticBackground.isValid())
         return;
 
     cachedBgW = w;
     cachedBgH = h;
     cachedBgZoomY = zoomY;
+    cachedBgTopDb = viewTopDb; // [VIEW-NAV]
     staticBackgroundDirty = false;
 
     cachedStaticBackground = juce::Image (juce::Image::RGB, w, h, true);
@@ -750,9 +783,10 @@ void VolumeHistoryComponent::rebuildStaticBackgroundIfNeeded()
 
     gg.setColour (juce::Colours::darkgrey.withMultipliedAlpha (0.4f));
     const int numLines = 4;
+    const float effectiveRange = (float) (baseDbRange / zoomY);
     for (int i = 0; i <= numLines; ++i)
     {
-        const float db = maxDb - (baseDbRange / (float) numLines) * (float) i;
+        const float db = (float) viewTopDb - (effectiveRange / (float) numLines) * (float) i;
         const float y  = dbToY (db, (float) h);
         gg.drawHorizontalLine ((int) std::round (y), 0.0f, (float) w);
     }
@@ -869,6 +903,12 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     const int width  = (int) bounds.getWidth();
     const int height = (int) bounds.getHeight();
 
+    // [VIEW-NAV] follow the right edge by default
+    if (followRightEdge && haveNowFrameIndex)
+        viewRightFrame = (double) nowFrameIndex;
+
+    clampViewRightFrame (width);
+
     if (width <= 1 || height <= 0)
         return;
 
@@ -906,8 +946,8 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
         for (size_t i = 0; i < n; ++i)
         {
-            const juce::int64 framesAgo = totalFrames - scratchVisibleEndFrameIndex[i]; // [TIMEBASE-FIX]
-            float x = w - (float) framesAgo * (float) zoomX;
+            const double xD = (double) w - (viewRightFrame - (double) scratchVisibleEndFrameIndex[i]) * zoomX;
+            float x = (float) xD;
             if (x < -10.0f)
                 continue;
 
@@ -972,157 +1012,157 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         }
     }
 
-//==============================================================================
-// [PLAYHEAD-LINE] draw DAW playhead position on top of the graph
-// Right edge is "furthest written" (nowFrameIndex). Playhead can be left of it
-// during loop/rewind, which is intended.
-//==============================================================================
-if (haveNowFrameIndex && havePlayheadFrameIndex && zoomX > 1.0e-12)
-{
-    const double framesFromRight = (double) nowFrameIndex - (double) playheadFrameIndex;
-    const float x = (float) ((double) width - framesFromRight * zoomX);
-
-    if (x >= -2.0f && x <= (float) width + 2.0f)
+    //==============================================================================
+    // [PLAYHEAD-LINE] draw DAW playhead position on top of the graph
+    // Right edge is "furthest written" (nowFrameIndex). Playhead can be left of it
+    // during loop/rewind, which is intended.
+    //==============================================================================
+    if (haveNowFrameIndex && havePlayheadFrameIndex && zoomX > 1.0e-12)
     {
-        // Thin, slightly transparent so it doesn't dominate
-        g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
-        g.drawLine (x, 0.0f, x, (float) height, 1.0f);
-    }
-}
+        const double framesFromRight = viewRightFrame - (double) playheadFrameIndex;
+        const float x = (float) ((double) width - framesFromRight * zoomX);
 
-//==============================================================================
-// [DBFS-SCALE] Right-side dBFS scale (overlay)
-// Shows the currently visible dB range (affected by zoomY).
-//==============================================================================
-{
-    // Keep the scale above the time ruler area
-    const float rulerHeightPx = 16.0f;
-    const auto scaleArea = bounds.withTrimmedBottom (rulerHeightPx);
-
-    const float scaleH = scaleArea.getHeight();
-    if (scaleH > 20.0f)
-    {
-        const float topDb = maxDb; // 0 dBFS
-        const float effectiveRange = (float) (baseDbRange / zoomY);
-        const float bottomDb = topDb - effectiveRange;
-
-        // Choose a tick step based on available pixel height
-        static constexpr float candidates[] = { 1.0f, 2.0f, 3.0f, 6.0f, 10.0f, 12.0f, 20.0f, 30.0f };
-        const float desiredTickSpacingPx = 32.0f;
-        const float approxTicks = juce::jmax (1.0f, scaleH / desiredTickSpacingPx);
-        const float approxStepDb = effectiveRange / approxTicks;
-
-        float stepDb = candidates[(int) (sizeof (candidates) / sizeof (candidates[0])) - 1];
-        for (float s : candidates)
+        if (x >= -2.0f && x <= (float) width + 2.0f)
         {
+            // Thin, slightly transparent so it doesn't dominate
+            g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
+            g.drawLine (x, 0.0f, x, (float) height, 1.0f);
+        }
+    }
+
+    //==============================================================================
+    // [DBFS-SCALE] Right-side dBFS scale (overlay)
+    // Shows the currently visible dB range (affected by zoomY).
+    //==============================================================================
+    {
+        // Keep the scale above the time ruler area
+        const float rulerHeightPx = 16.0f;
+        const auto scaleArea = bounds.withTrimmedBottom (rulerHeightPx);
+
+        const float scaleH = scaleArea.getHeight();
+        if (scaleH > 20.0f)
+        {
+            const float topDb = maxDb; // 0 dBFS
+            const float effectiveRange = (float) (baseDbRange / zoomY);
+            const float bottomDb = topDb - effectiveRange;
+
+            // Choose a tick step based on available pixel height
+            static constexpr float candidates[] = { 1.0f, 2.0f, 3.0f, 6.0f, 10.0f, 12.0f, 20.0f, 30.0f };
+            const float desiredTickSpacingPx = 32.0f;
+            const float approxTicks = juce::jmax (1.0f, scaleH / desiredTickSpacingPx);
+            const float approxStepDb = effectiveRange / approxTicks;
+
+            float stepDb = candidates[(int) (sizeof (candidates) / sizeof (candidates[0])) - 1];
+            for (float s : candidates)
+            {
             if (s >= approxStepDb) { stepDb = s; break; }
-        }
+            }
 
-        const float rightX = scaleArea.getRight() - 1.0f;
-        const float tickLen = 6.0f;
-        const float labelWidth = 44.0f;
-        const float labelHeight = 12.0f;
+            const float rightX = scaleArea.getRight() - 1.0f;
+            const float tickLen = 6.0f;
+            const float labelWidth = 44.0f;
+            const float labelHeight = 12.0f;
 
-        g.setFont (10.0f);
+            g.setFont (10.0f);
 
-        // Optional header
-        g.setColour (juce::Colours::white.withMultipliedAlpha (0.6f));
-        g.drawText ("dBFS",
-                    (int) (rightX - labelWidth - 2.0f),
-                    (int) (scaleArea.getY() + 2.0f),
-                    (int) labelWidth,
-                    12,
-                    juce::Justification::right);
-
-        // Major ticks: from first tick >= bottomDb up to topDb
-        const float firstTick = std::ceil (bottomDb / stepDb) * stepDb;
-
-        g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
-
-        for (float db = firstTick; db <= topDb + 0.001f; db += stepDb)
-        {
-            const float yLocal = dbToY (db, scaleH);
-            const float y = scaleArea.getY() + yLocal;
-
-            // Tick
-            g.drawLine (rightX - tickLen, y, rightX, y, 1.0f);
-
-            // Label (integer dB)
-            const int dbInt = (int) std::round (db);
-            g.drawText (juce::String (dbInt),
-                        (int) (rightX - tickLen - labelWidth - 2.0f),
-                        (int) (y - labelHeight * 0.5f),
+            // Optional header
+            g.setColour (juce::Colours::white.withMultipliedAlpha (0.6f));
+            g.drawText ("dBFS",
+                        (int) (rightX - labelWidth - 2.0f),
+                        (int) (scaleArea.getY() + 2.0f),
                         (int) labelWidth,
-                        (int) labelHeight,
+                        12,
                         juce::Justification::right);
-        }
 
-        // A faint vertical line to separate the scale
-        g.setColour (juce::Colours::white.withMultipliedAlpha (0.18f));
-        g.drawLine (rightX, scaleArea.getY(), rightX, scaleArea.getBottom(), 1.0f);
+            // Major ticks: from first tick >= bottomDb up to topDb
+            const float firstTick = std::ceil (bottomDb / stepDb) * stepDb;
+
+            g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
+
+            for (float db = firstTick; db <= topDb + 0.001f; db += stepDb)
+            {
+                const float yLocal = dbToY (db, scaleH);
+                const float y = scaleArea.getY() + yLocal;
+
+                // Tick
+                g.drawLine (rightX - tickLen, y, rightX, y, 1.0f);
+
+                // Label (integer dB)
+                const int dbInt = (int) std::round (db);
+                g.drawText (juce::String (dbInt),
+                            (int) (rightX - tickLen - labelWidth - 2.0f),
+                            (int) (y - labelHeight * 0.5f),
+                            (int) labelWidth,
+                            (int) labelHeight,
+                            juce::Justification::right);
+            }
+
+            // A faint vertical line to separate the scale
+            g.setColour (juce::Colours::white.withMultipliedAlpha (0.18f));
+            g.drawLine (rightX, scaleArea.getY(), rightX, scaleArea.getBottom(), 1.0f);
+        }
     }
-}
 
     //==========================================================================
-// [RULER-FRAMES]  [FIX-RULER-NO-PENDING]
-// Ruler ticks must be based on absolute time only.
-// DO NOT add any "pendingFramesOffset" here, otherwise ticks will sawtooth
-// (move left, then jump right) as LOD pending counters reset.
-//==========================================================================
-const float rulerHeight   = 16.0f;
-const float rulerBaseY    = (float) height - 2.0f;
-const float tickTopY      = rulerBaseY - 6.0f;
-const float textTopY      = rulerBaseY - 14.0f;
+    // [RULER-FRAMES]  [FIX-RULER-NO-PENDING]
+    // Ruler ticks must be based on absolute time only.
+    // DO NOT add any "pendingFramesOffset" here, otherwise ticks will sawtooth
+    // (move left, then jump right) as LOD pending counters reset.
+    //==========================================================================
+    const float rulerHeight   = 16.0f;
+    const float rulerBaseY    = (float) height - 2.0f;
+    const float tickTopY      = rulerBaseY - 6.0f;
+    const float textTopY      = rulerBaseY - 14.0f;
 
-if (zoomX > 0.0 && visualFrameRate > 0.0 && totalFrames > 0)
-{
-    const double safeZoomX = (zoomX > 1.0e-12 ? zoomX : 1.0e-12);
-
-    // Visible frames purely from geometry
-    const double framesByWidth = (double) width / safeZoomX;
-    const juce::int64 visibleFrames = (juce::int64) std::floor (juce::jmin ((double) availableRaw, framesByWidth));
-
-    if (visibleFrames > 1)
+    if (zoomX > 0.0 && visualFrameRate > 0.0 && totalFrames > 0)
     {
-        const juce::int64 earliestAvailableFrame = totalFrames - availableRaw;
-        const juce::int64 leftFrame = juce::jmax (earliestAvailableFrame, totalFrames - visibleFrames);
+        const double safeZoomX = (zoomX > 1.0e-12 ? zoomX : 1.0e-12);
 
-        const double tickStepSec = getTickStepSecondsWithHysteresis (width);
-        const juce::int64 tickStepFrames = (juce::int64) juce::jmax (1.0, std::round (tickStepSec * visualFrameRate));
+        // Visible frames purely from geometry
+        const double framesByWidth = (double) width / safeZoomX;
+        const juce::int64 visibleFrames = (juce::int64) std::floor (juce::jmin ((double) availableRaw, framesByWidth));
 
-        // Anchor to absolute frames
-        const juce::int64 lastTickFrame = (totalFrames / tickStepFrames) * tickStepFrames;
-
-        g.setColour (juce::Colours::white);
-        g.setFont (10.0f);
-
-        for (juce::int64 tickFrame = lastTickFrame; tickFrame >= leftFrame; tickFrame -= tickStepFrames)
+        if (visibleFrames > 1)
         {
-            const juce::int64 framesAgo = totalFrames - tickFrame;
+            const juce::int64 earliestAvailableFrame = totalFrames - availableRaw;
+            const juce::int64 leftFrame = juce::jmax (earliestAvailableFrame, totalFrames - visibleFrames);
 
-            const double xD = (double) width - (double) framesAgo * zoomX;
-            const float  x  = (float) xD;
+            const double tickStepSec = getTickStepSecondsWithHysteresis (width);
+            const juce::int64 tickStepFrames = (juce::int64) juce::jmax (1.0, std::round (tickStepSec * visualFrameRate));
 
-            if (x < -2.0f)
-                break;
+            // Anchor to absolute frames
+            const juce::int64 lastTickFrame = (totalFrames / tickStepFrames) * tickStepFrames;
 
-            if (x > (float) width + 2.0f)
-                continue;
+            g.setColour (juce::Colours::white);
+            g.setFont (10.0f);
 
-            g.drawLine (x, tickTopY, x, rulerBaseY, 1.0f);
+            for (juce::int64 tickFrame = lastTickFrame; tickFrame >= leftFrame; tickFrame -= tickStepFrames)
+            {
+                const juce::int64 framesAgo = totalFrames - tickFrame;
 
-            const double tSec = (double) tickFrame / visualFrameRate;
-            const float textWidth = 52.0f;
+                const double xD = (double) width - (viewRightFrame - (double) tickFrame) * zoomX;
+                const float x = (float) xD;
 
-            g.drawText (formatTimeHMS (tSec),
-                        x - textWidth * 0.5f,
-                        textTopY,
-                        textWidth,
-                        rulerHeight,
-                        juce::Justification::centred);
+                if (x < -2.0f)
+                    break;
+
+                if (x > (float) width + 2.0f)
+                    continue;
+
+                g.drawLine (x, tickTopY, x, rulerBaseY, 1.0f);
+
+                const double tSec = (double) tickFrame / visualFrameRate;
+                const float textWidth = 52.0f;
+
+                g.drawText (formatTimeHMS (tSec),
+                            x - textWidth * 0.5f,
+                            textTopY,
+                            textWidth,
+                            rulerHeight,
+                            juce::Justification::centred);
+            }
         }
     }
-}
 
     // Overlay info
     g.setColour (juce::Colours::white);
@@ -1141,6 +1181,136 @@ if (zoomX > 0.0 && visualFrameRate > 0.0 && totalFrames > 0)
                         " | Tick: " + juce::String (tickStepNow, 3) + "s" +
                         " | Bands: " + juce::String (showBands ? "ON" : "OFF") +
                         " | Lines: " + juce::String (showLines ? "ON" : "OFF");
+}
+
+//==============================================================================
+// [VIEW-NAV] clamp + pan/zoom
+//==============================================================================
+
+void VolumeHistoryComponent::clampViewRightFrame (int widthPixels) noexcept
+{
+    if (! haveNowFrameIndex || zoomX <= 1.0e-12 || widthPixels <= 1)
+        return;
+
+    const double visibleFrames = (double) widthPixels / zoomX;
+
+    const double maxRight = (double) nowFrameIndex;
+    const double earliest = (double) nowFrameIndex - (double) rawCapacityFrames + 1.0;
+
+    double minRight = earliest + visibleFrames;
+    if (minRight > maxRight)
+        minRight = maxRight;
+
+    viewRightFrame = juce::jlimit (minRight, maxRight, viewRightFrame);
+}
+
+void VolumeHistoryComponent::panTime (float wheelDelta)
+{
+    const int w = getWidth();
+    if (w <= 1 || wheelDelta == 0.0f || zoomX <= 1.0e-12)
+        return;
+
+    if (followRightEdge)
+        viewRightFrame = (double) nowFrameIndex;
+
+    const double visibleFrames = (double) w / zoomX;
+
+    // Pan by ~15% of the visible range per wheel "unit"
+    const double panFrames = (double) wheelDelta * visibleFrames * 0.15;
+
+    // Wheel up (positive) moves to earlier time (left)
+    viewRightFrame -= panFrames;
+
+    followRightEdge = false;
+    clampViewRightFrame (w);
+}
+
+void VolumeHistoryComponent::panDb (float wheelDelta)
+{
+    const int h = getHeight();
+    if (h <= 1 || wheelDelta == 0.0f)
+        return;
+
+    const double effectiveRange = (double) baseDbRange / zoomY;
+
+    // Pan by ~10% of visible range per wheel "unit"
+    const double panDbAmount = (double) wheelDelta * effectiveRange * 0.10;
+
+    viewTopDb += panDbAmount;
+
+    const double topMin = (double) minDb + effectiveRange; // ensures bottom >= minDb
+    const double topMax = (double) maxDb;
+
+    viewTopDb = juce::jlimit (topMin, topMax, viewTopDb);
+
+    markStaticBackgroundDirty();
+}
+
+void VolumeHistoryComponent::applyHorizontalZoom (float wheelDelta, float anchorX)
+{
+    const int w = getWidth();
+    if (w <= 1 || wheelDelta == 0.0f)
+        return;
+
+    if (! haveNowFrameIndex)
+        return;
+
+    if (followRightEdge)
+        viewRightFrame = (double) nowFrameIndex;
+
+    const double oldZoom = zoomX;
+
+    const double zoomBase   = 1.1;
+    const double zoomFactor = std::pow (zoomBase, (double) wheelDelta);
+
+    zoomX *= zoomFactor;
+    zoomX  = juce::jlimit (minZoomX, maxZoomX, zoomX);
+
+    // Keep the timeline frame under the mouse fixed
+    const double ax = juce::jlimit (0.0, (double) w, (double) anchorX);
+    const double frameAtCursor = viewRightFrame - ((double) w - ax) / (oldZoom > 1.0e-12 ? oldZoom : 1.0e-12);
+
+    viewRightFrame = frameAtCursor + ((double) w - ax) / (zoomX > 1.0e-12 ? zoomX : 1.0e-12);
+
+    followRightEdge = false;
+    hasCustomZoomX = true;
+
+    clampViewRightFrame (w);
+}
+
+void VolumeHistoryComponent::applyVerticalZoom (float wheelDelta, float anchorY)
+{
+    const int h = getHeight();
+    if (h <= 1 || wheelDelta == 0.0f)
+        return;
+
+    const double oldZoomY = zoomY;
+
+    const double zoomBase   = 1.1;
+    const double zoomFactor = std::pow (zoomBase, (double) wheelDelta);
+
+    zoomY *= zoomFactor;
+    zoomY  = juce::jlimit (minZoomY, maxZoomY, zoomY);
+
+    // Keep the dB under the mouse fixed while zooming
+    const double ay = juce::jlimit (0.0, (double) h, (double) anchorY);
+    const double norm = 1.0 - (ay / (double) h);
+
+    const double effectiveOld = (double) baseDbRange / oldZoomY;
+    const double bottomOld = viewTopDb - effectiveOld;
+    const double dbAtCursor = bottomOld + norm * effectiveOld;
+
+    const double effectiveNew = (double) baseDbRange / zoomY;
+    const double bottomNew = dbAtCursor - norm * effectiveNew;
+    double topNew = bottomNew + effectiveNew;
+
+    const double topMin = (double) minDb + effectiveNew;
+    const double topMax = (double) maxDb;
+
+    topNew = juce::jlimit (topMin, topMax, topNew);
+    viewTopDb = topNew;
+
+    markStaticBackgroundDirty();
 }
 
 //==============================================================================
@@ -1184,13 +1354,24 @@ void VolumeHistoryComponent::applyVerticalZoom (float wheelDelta)
 void VolumeHistoryComponent::mouseWheelMove (const juce::MouseEvent& event,
                                              const juce::MouseWheelDetails& wheel)
 {
-    if (wheel.deltaY == 0.0f)
+    // Use deltaY when available, otherwise fall back to deltaX
+    const float wheelDelta = (wheel.deltaY != 0.0f ? wheel.deltaY : wheel.deltaX);
+    if (wheelDelta == 0.0f)
         return;
 
-    if (event.mods.isAltDown())
-        applyVerticalZoom (wheel.deltaY);
+    // Gesture map:
+    // - Shift + wheel: pan time
+    // - Alt   + wheel: zoom Y at mouse
+    // - Ctrl  + wheel: pan Y
+    // - wheel: zoom X at mouse
+    if (event.mods.isShiftDown())
+        panTime (wheelDelta);
+    else if (event.mods.isAltDown())
+        applyVerticalZoom (wheelDelta, event.position.y);
+    else if (event.mods.isCtrlDown())
+        panDb (wheelDelta);
     else
-        applyHorizontalZoom (wheel.deltaY);
+        applyHorizontalZoom (wheelDelta, event.position.x);
 
     repaint();
 }

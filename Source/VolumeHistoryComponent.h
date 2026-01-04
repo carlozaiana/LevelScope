@@ -146,8 +146,12 @@ private:
     // Zoom
     //==============================================================================
 
-    void applyHorizontalZoom (float wheelDelta);
-    void applyVerticalZoom   (float wheelDelta);
+    // [VIEW-NAV] zoom/pan tied to mouse
+    void applyHorizontalZoom (float wheelDelta, float anchorX);
+    void applyVerticalZoom   (float wheelDelta, float anchorY);
+    void panTime             (float wheelDelta);
+    void panDb               (float wheelDelta);
+    void clampViewRightFrame (int widthPixels) noexcept;
 
     //==============================================================================
     // Members
@@ -180,6 +184,19 @@ private:
 
     bool showBands = true;
     bool showLines = true;
+
+    //==============================================================================
+    // [VIEW-NAV] View state
+    //==============================================================================
+
+    // Right edge of the visible window in 60 Hz timeline frames (can be fractional).
+    double viewRightFrame = 0.0;
+
+    // If true, view follows furthest-written (nowFrameIndex) automatically.
+    bool followRightEdge = true;
+
+    // Vertical view: top of the visible dB range (allows Y-zoom/pan)
+    double viewTopDb = 0.0;
 
     // [TIMEBASE-PLAYHEAD]
     int         frameSamples = 0;            // samples per 60 Hz loudness frame (from processor)
@@ -224,6 +241,7 @@ private:
     int         cachedBgW = 0;
     int         cachedBgH = 0;
     double      cachedBgZoomY = 1.0;
+    double      cachedBgTopDb = 0.0; // [VIEW-NAV]
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (VolumeHistoryComponent)
 };
