@@ -49,6 +49,23 @@ VolumeHistoryComponent::VolumeHistoryComponent (LevelScopeAudioProcessor& proc)
     // UI update rate
     startTimerHz (30);
 
+    // [FOLLOW-BUTTON]
+    followButton.setButtonText ("Follow");
+    followButton.setToggleState (followRightEdge, juce::dontSendNotification);
+    followButton.onClick = [this]
+    {
+        followRightEdge = followButton.getToggleState();
+
+        if (followRightEdge && haveNowFrameIndex)
+        {
+            viewRightFrame = (double) nowFrameIndex;
+            clampViewRightFrame (getWidth());
+            repaint();
+        }
+    };
+
+    addAndMakeVisible (followButton);
+
     markStaticBackgroundDirty();
 }
 
@@ -891,6 +908,9 @@ void VolumeHistoryComponent::resized()
 
     // Do NOT reset tickStepIndex here; hysteresis should smoothly adapt.
     markStaticBackgroundDirty();
+
+    // [FOLLOW-BUTTON] small toggle in the top-right
+    followButton.setBounds (getWidth() - 88, 6, 80, 22);
 }
 
 //==============================================================================
@@ -906,6 +926,8 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     // [VIEW-NAV] follow the right edge by default
     if (followRightEdge && haveNowFrameIndex)
         viewRightFrame = (double) nowFrameIndex;
+
+    followButton.setToggleState (followRightEdge, juce::dontSendNotification);
 
     clampViewRightFrame (width);
 
@@ -1060,10 +1082,10 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
             const float rightX = scaleArea.getRight() - 1.0f;
             const float tickLen = 6.0f;
-            const float labelWidth = 44.0f;
-            const float labelHeight = 12.0f;
+            const float labelWidth = 56.0f;
+            const float labelHeight = 16.0f;
 
-            g.setFont (10.0f);
+            g.setFont (14.0f); // [UI-FONTS]
 
             // Optional header
             g.setColour (juce::Colours::white.withMultipliedAlpha (0.6f));
@@ -1108,7 +1130,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     // Ruler must use the SAME x-mapping as the curves:
     // x = width - (viewRightFrame - tickFrame) * zoomX
     //==========================================================================
-    const float rulerHeight   = 16.0f;
+    const float rulerHeight   = 22.0f;   // [UI-FONTS] bigger
     const float rulerBaseY    = (float) height - 2.0f;
     const float tickTopY      = rulerBaseY - 6.0f;
     const float textTopY      = rulerBaseY - 14.0f;
@@ -1140,7 +1162,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         const juce::int64 lastTickFrame = floorDivInt64 (rightFrameI, tickStepFrames) * tickStepFrames;
 
         g.setColour (juce::Colours::white);
-        g.setFont (10.0f);
+        g.setFont (14.0f);                   // [UI-FONTS] bigger
 
         for (juce::int64 tickFrame = lastTickFrame; tickFrame >= leftFrame; tickFrame -= tickStepFrames)
         {
@@ -1155,7 +1177,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             g.drawLine (x, tickTopY, x, rulerBaseY, 1.0f);
 
             const double tSec = (double) tickFrame / visualFrameRate;
-            const float textWidth = 62.0f;
+            const float textWidth = 84.0f;
 
             g.drawText (formatTimeHMS (tSec),
                         x - textWidth * 0.5f,
@@ -1322,6 +1344,65 @@ void VolumeHistoryComponent::applyVerticalZoom (float wheelDelta, float anchorY)
 }
 
 //==============================================================================
+// [UI-RULERS] Areas + resets
+//==============================================================================
+
+juce::Rectangle<int> VolumeHistoryComponent::getTimeRulerArea() const
+{
+    // Keep consistent with paint() ruler height
+    const int rulerH = 22; // [UI-FONTS] 150% bigger than before
+    return { 0, getHeight() - rulerH, getWidth(), rulerH };
+}
+
+juce::Rectangle<int> VolumeHistoryComponent::getDbRulerArea() const
+{
+    // Right-side strip used for dB scale interaction
+    const int rulerW = 72; // room for bigger labels
+    const int timeRulerH = getTimeRulerArea().getHeight();
+
+    return { getWidth() - rulerW, 0, rulerW, getHeight() - timeRulerH };
+}
+
+void VolumeHistoryComponent::resetXViewDefault()
+{
+    if (getWidth() <= 1 || visualFrameRate <= 0.0)
+        return;
+
+    const double desiredVisibleSeconds = 10.0;
+    zoomX = (double) getWidth() / (desiredVisibleSeconds * visualFrameRate);
+    zoomX = juce::jlimit (minZoomX, maxZoomX, zoomX);
+
+    followRightEdge = true;
+    if (haveNowFrameIndex)
+        viewRightFrame = (double) nowFrameIndex;
+
+    clampViewRightFrame (getWidth());
+}
+
+void VolumeHistoryComponent::fitXViewMaxZoomOut()
+{
+    if (getWidth() <= 1 || ! haveNowFrameIndex)
+        return;
+
+    // Fit the whole stored history window (3h) into the current width
+    const double visibleFrames = (double) rawCapacityFrames;
+    zoomX = (double) getWidth() / juce::jmax (1.0, visibleFrames);
+    zoomX = juce::jlimit (minZoomX, maxZoomX, zoomX);
+
+    followRightEdge = true;
+    viewRightFrame = (double) nowFrameIndex;
+
+    clampViewRightFrame (getWidth());
+}
+
+void VolumeHistoryComponent::resetYViewDefault()
+{
+    zoomY = 1.0;
+    viewTopDb = (double) maxDb; // default top at 0 dBFS
+    markStaticBackgroundDirty();
+}
+
+//==============================================================================
 // Mouse
 //==============================================================================
 
@@ -1356,13 +1437,105 @@ void VolumeHistoryComponent::mouseWheelMove (const juce::MouseEvent& event,
     repaint();
 }
 
+void VolumeHistoryComponent::mouseDoubleClick (const juce::MouseEvent& event)
+{
+    const auto p = event.getPosition();
+
+    // Double-click dB ruler resets Y view
+    if (getDbRulerArea().contains (p))
+    {
+        resetYViewDefault();
+        repaint();
+        return;
+    }
+
+    // Double-click time ruler resets X view
+    // Shift + double-click: fit/max zoom out
+    if (getTimeRulerArea().contains (p))
+    {
+        if (event.mods.isShiftDown())
+            fitXViewMaxZoomOut();
+        else
+            resetXViewDefault();
+
+        followButton.setToggleState (followRightEdge, juce::dontSendNotification);
+        repaint();
+        return;
+    }
+}
+
 void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
 {
-    // Shift-click toggles bands; plain click toggles lines.
+    const auto p = event.getPosition();
+
+    // [UI-RULERS] Drag time ruler to pan time
+    if (getTimeRulerArea().contains (p))
+    {
+        dragMode = DragMode::timeRuler;
+        dragStartPos = p;
+        dragStartViewRightFrame = viewRightFrame;
+        followRightEdge = false;
+        followButton.setToggleState (false, juce::dontSendNotification);
+        return;
+    }
+
+    // [UI-RULERS] Drag dB ruler to pan dB
+    if (getDbRulerArea().contains (p))
+    {
+        dragMode = DragMode::dbRuler;
+        dragStartPos = p;
+        dragStartViewTopDb = viewTopDb;
+        return;
+    }
+
+    // Existing behavior: Shift-click toggles bands; plain click toggles lines.
     if (event.mods.isShiftDown())
         showBands = ! showBands;
     else
         showLines = ! showLines;
 
     repaint();
+}
+
+void VolumeHistoryComponent::mouseDrag (const juce::MouseEvent& event)
+{
+    if (dragMode == DragMode::none)
+        return;
+
+    const auto p = event.getPosition();
+
+    if (dragMode == DragMode::timeRuler)
+    {
+        const int dx = p.x - dragStartPos.x;
+
+        // "Grab" behavior: drag right -> earlier time (content moves right)
+        viewRightFrame = dragStartViewRightFrame - (double) dx / (zoomX > 1.0e-12 ? zoomX : 1.0e-12);
+        clampViewRightFrame (getWidth());
+        repaint();
+        return;
+    }
+
+    if (dragMode == DragMode::dbRuler)
+    {
+        const int dy = p.y - dragStartPos.y;
+
+        const double effectiveRange = (double) baseDbRange / zoomY;
+        const double dbPerPixel = effectiveRange / (double) juce::jmax (1, getHeight());
+
+        // "Grab" behavior: drag down -> show lower values (topDb decreases)
+        viewTopDb = dragStartViewTopDb - (double) dy * dbPerPixel;
+
+        const double topMin = viewMinDbLimit + effectiveRange;
+        const double topMax = viewMaxDbLimit;
+        viewTopDb = juce::jlimit (topMin, topMax, viewTopDb);
+
+        markStaticBackgroundDirty();
+        repaint();
+        return;
+    }
+}
+
+void VolumeHistoryComponent::mouseUp (const juce::MouseEvent&)
+{
+    dragMode = DragMode::none;
 }

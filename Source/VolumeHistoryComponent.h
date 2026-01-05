@@ -35,6 +35,9 @@ public:
                          const juce::MouseWheelDetails& wheel) override;
 
     void mouseDown (const juce::MouseEvent& event) override;
+    void mouseDrag (const juce::MouseEvent& event) override;
+    void mouseUp (const juce::MouseEvent& event) override;
+    void mouseDoubleClick (const juce::MouseEvent& event) override;
 
 private:
     //==============================================================================
@@ -201,6 +204,28 @@ private:
 
     // Vertical view: top of the visible dB range (allows Y-zoom/pan)
     double viewTopDb = 0.0;
+
+    //==============================================================================
+    // [UI-RULERS] Ruler hit zones + interactions
+    //==============================================================================
+
+    juce::Rectangle<int> getTimeRulerArea() const;
+    juce::Rectangle<int> getDbRulerArea() const;
+
+    void resetXViewDefault();
+    void fitXViewMaxZoomOut();
+    void resetYViewDefault();
+
+    // Dragging rulers
+    enum class DragMode { none, timeRuler, dbRuler };
+    DragMode dragMode = DragMode::none;
+
+    juce::Point<int> dragStartPos;
+    double dragStartViewRightFrame = 0.0;
+    double dragStartViewTopDb = 0.0;
+
+    // Follow toggle UI
+    juce::ToggleButton followButton;
 
     // [TIMEBASE-PLAYHEAD]
     int         frameSamples = 0;            // samples per 60 Hz loudness frame (from processor)
