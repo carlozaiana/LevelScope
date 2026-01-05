@@ -56,10 +56,22 @@ VolumeHistoryComponent::VolumeHistoryComponent (LevelScopeAudioProcessor& proc)
     {
         followRightEdge = followButton.getToggleState();
 
-        if (followRightEdge && haveNowFrameIndex)
+        if (followRightEdge)
         {
-            viewRightFrame = (double) nowFrameIndex;
-            clampViewRightFrame (getWidth());
+            const int w = getWidth();
+
+            if (havePlayheadFrameIndex && zoomX > 1.0e-12 && w > 1)
+            {
+                const double visibleFrames = (double) w / zoomX;
+                constexpr double playheadXFrac = 0.5; // center
+                viewRightFrame = (double) playheadFrameIndex + visibleFrames * (1.0 - playheadXFrac);
+            }
+            else if (haveNowFrameIndex)
+            {
+                viewRightFrame = (double) nowFrameIndex;
+            }
+
+            clampViewRightFrame (w);
             repaint();
         }
     };
@@ -923,13 +935,26 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     const int width  = (int) bounds.getWidth();
     const int height = (int) bounds.getHeight();
 
-    // [VIEW-NAV] follow the right edge by default
-    if (followRightEdge && haveNowFrameIndex)
-        viewRightFrame = (double) nowFrameIndex;
+    // [VIEW-NAV] Follow mode: follow playhead (so overwrite outside view jumps to that section)
+    // Keep playhead at center while following.
+    if (followRightEdge)
+    {
+        if (havePlayheadFrameIndex && zoomX > 1.0e-12)
+        {
+            const double visibleFrames = (double) width / zoomX;
+            constexpr double playheadXFrac = 0.5; // 0.5 = center
+            viewRightFrame = (double) playheadFrameIndex + visibleFrames * (1.0 - playheadXFrac);
+        }
+        else if (haveNowFrameIndex)
+        {
+            // fallback if playhead is unknown
+            viewRightFrame = (double) nowFrameIndex;
+        }
+    }
 
-    followButton.setToggleState (followRightEdge, juce::dontSendNotification);
+followButton.setToggleState (followRightEdge, juce::dontSendNotification);
 
-    clampViewRightFrame (width);
+clampViewRightFrame (width);
 
     if (width <= 1 || height <= 0)
         return;
@@ -1384,14 +1409,33 @@ void VolumeHistoryComponent::fitXViewMaxZoomOut()
     if (getWidth() <= 1 || ! haveNowFrameIndex)
         return;
 
-    // Fit the whole stored history window (3h) into the current width
-    const double visibleFrames = (double) rawCapacityFrames;
+    // [FIT-FIRST-WRITTEN]
+    // Find earliest written L0 frame index currently present in the GUI ring.
+    // This avoids fitting the full 3h window when only a few minutes exist.
+    const auto& tags = levels[0].absGroupIndexTag;
+
+    juce::int64 minWritten = std::numeric_limits<juce::int64>::max();
+    bool haveMin = false;
+
+    for (const auto& t : tags)
+    {
+        if (t != (juce::int64) -1)
+        {
+            minWritten = juce::jmin (minWritten, t);
+            haveMin = true;
+        }
+    }
+
+    const juce::int64 right = nowFrameIndex;
+    const juce::int64 left  = (haveMin ? minWritten : (right - (juce::int64) rawCapacityFrames + 1));
+
+    const double visibleFrames = (double) (right - left + 1);
     zoomX = (double) getWidth() / juce::jmax (1.0, visibleFrames);
     zoomX = juce::jlimit (minZoomX, maxZoomX, zoomX);
 
-    followRightEdge = true;
-    viewRightFrame = (double) nowFrameIndex;
-
+    // Fit view to [left..right] and keep it there (do not force follow)
+    followRightEdge = false;
+    viewRightFrame = (double) right;
     clampViewRightFrame (getWidth());
 }
 
@@ -1522,8 +1566,8 @@ void VolumeHistoryComponent::mouseDrag (const juce::MouseEvent& event)
         const double effectiveRange = (double) baseDbRange / zoomY;
         const double dbPerPixel = effectiveRange / (double) juce::jmax (1, getHeight());
 
-        // "Grab" behavior: drag down -> show lower values (topDb decreases)
-        viewTopDb = dragStartViewTopDb - (double) dy * dbPerPixel;
+        // [DB-DRAG-DIRECTION] drag down -> curves go down (topDb increases)
+        viewTopDb = dragStartViewTopDb + (double) dy * dbPerPixel;
 
         const double topMin = viewMinDbLimit + effectiveRange;
         const double topMax = viewMaxDbLimit;
