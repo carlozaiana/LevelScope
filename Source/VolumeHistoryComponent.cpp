@@ -20,6 +20,46 @@ static juce::String formatTimeHMS (double seconds)
     return neg ? "-" + core : core;
 }
 
+// [TIMECODE-USER] parse either seconds (e.g. -2.0) or HH:MM:SS (e.g. -00:00:02)
+static bool parseUserOffsetSeconds (juce::String text, double& outSeconds)
+{
+    text = text.trim();
+
+    if (text.isEmpty())
+        return false;
+
+    // If it contains ':' parse as HH:MM:SS
+    if (text.containsChar (':'))
+    {
+        bool neg = false;
+        if (text.startsWithChar ('-'))
+        {
+            neg = true;
+            text = text.substring (1).trim();
+        }
+
+        auto parts = juce::StringArray::fromTokens (text, ":", "");
+        parts.removeEmptyStrings();
+
+        if (parts.size() != 3)
+            return false;
+
+        const int hh = parts[0].getIntValue();
+        const int mm = parts[1].getIntValue();
+        const int ss = parts[2].getIntValue();
+
+        double sec = (double) hh * 3600.0 + (double) mm * 60.0 + (double) ss;
+        if (neg) sec = -sec;
+
+        outSeconds = sec;
+        return true;
+    }
+
+    // Otherwise treat as seconds
+    outSeconds = text.getDoubleValue();
+    return true;
+}
+
 //==============================================================================
 // Constructor / Destructor
 //==============================================================================
@@ -1202,7 +1242,8 @@ clampViewRightFrame (width);
             g.drawLine (x, tickTopY, x, rulerBaseY, 1.0f);
 
             const double tSec = (double) tickFrame / visualFrameRate
-                              + processor.getTimecodeOffsetSeconds(); // [TIMECODE-OFFSET]
+                              + processor.getTimecodeOffsetSeconds()
+                              + processor.getUserTimecodeOffsetSeconds();
             const float textWidth = 84.0f;
 
             g.drawText (formatTimeHMS (tSec),
@@ -1240,7 +1281,15 @@ clampViewRightFrame (width);
                         if (havePlayheadFrameIndex)
                             info += " | playhead: " + juce::String (playheadFrameIndex);
 
-                        info += " | TCoff: " + juce::String (processor.getTimecodeOffsetSeconds(), 3) + "s";
+                        info += " | TCoff: " + juce::String (processor.getTimecodeOffsetSeconds(), 3) + "s"
+                         +  " | TCu: "   + juce::String (processor.getUserTimecodeOffsetSeconds(), 3) + "s"
+                         +  " | hostSamp: " + juce::String (processor.hostHasTimeInSamples() ? "Y" : "N")
+                         +  " | hostSec: "  + juce::String (processor.hostHasTimeInSeconds() ? "Y" : "N");
+
+                        if (processor.hostHasTimeInSamples())
+                            info += " | S: " + juce::String (processor.getLastHostTimeInSamples());
+                        if (processor.hostHasTimeInSeconds())
+                            info += " | s: " + juce::String (processor.getLastHostTimeInSeconds(), 3);
 
                         // Draw it
                         g.drawText (info,
@@ -1529,6 +1578,47 @@ void VolumeHistoryComponent::mouseDoubleClick (const juce::MouseEvent& event)
 void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
 {
     const auto p = event.getPosition();
+
+    // [TIMECODE-USER] Right-click on time ruler to set/reset user timecode offset
+    if (getTimeRulerArea().contains (p) && event.mods.isPopupMenu())
+    {
+        juce::PopupMenu m;
+        m.addItem (1, "Set timecode offset (seconds or HH:MM:SS)...");
+        m.addItem (2, "Reset timecode offset to 0");
+
+        const int r = m.show();
+        if (r == 2)
+        {
+            processor.setUserTimecodeOffsetSeconds (0.0);
+            repaint();
+            return;
+        }
+
+        if (r == 1)
+        {
+            juce::AlertWindow w ("Timecode offset",
+                                 "Enter an offset that will be added to the displayed time ruler.\n"
+                                 "Examples:\n"
+                                 "  -2\n"
+                                 "  -00:00:02\n",
+                                 juce::AlertWindow::NoIcon);
+
+            const double current = processor.getUserTimecodeOffsetSeconds();
+            w.addTextEditor ("tc", juce::String (current, 3), "Offset:");
+            w.addButton ("OK", 1, juce::KeyPress (juce::KeyPress::returnKey));
+            w.addButton ("Cancel", 0, juce::KeyPress (juce::KeyPress::escapeKey));
+
+            if (w.runModalLoop() == 1)
+            {
+                double sec = 0.0;
+                if (parseUserOffsetSeconds (w.getTextEditorContents ("tc"), sec))
+                    processor.setUserTimecodeOffsetSeconds (sec);
+            }
+
+            repaint();
+            return;
+        }
+    }
 
     // [UI-RULERS] Drag time ruler to pan time
     if (getTimeRulerArea().contains (p))

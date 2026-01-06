@@ -70,6 +70,14 @@ public:
 
     double getTimecodeOffsetSeconds() const noexcept { return timecodeOffsetSeconds.load (std::memory_order_relaxed); }
 
+    double getUserTimecodeOffsetSeconds() const noexcept { return userTimecodeOffsetSeconds.load (std::memory_order_relaxed); }
+    void   setUserTimecodeOffsetSeconds (double s) noexcept { userTimecodeOffsetSeconds.store (s, std::memory_order_relaxed); }
+
+    juce::int64 getLastHostTimeInSamples() const noexcept { return lastHostTimeSamples.load (std::memory_order_relaxed); }
+    double      getLastHostTimeInSeconds() const noexcept { return lastHostTimeSeconds.load (std::memory_order_relaxed); }
+    bool        hostHasTimeInSamples() const noexcept { return haveHostTimeSamples.load (std::memory_order_relaxed) != 0; }
+    bool        hostHasTimeInSeconds() const noexcept { return haveHostTimeSeconds.load (std::memory_order_relaxed) != 0; }
+
     // Visual loudness frame rate accessor (used by GUI)
     double getLoudnessFrameRate() const noexcept { return loudnessFrameRate; }
     int getFrameSamples() const noexcept { return frameSamples; } // samples between 60 Hz loudness frames
@@ -111,6 +119,15 @@ private:
     // [TIMECODE-OFFSET] Display-only offset so our ruler can match the DAW timecode.
     // offsetSeconds = hostTimeSeconds - (hostTimeSamples / sampleRate)
     std::atomic<double> timecodeOffsetSeconds { 0.0 };
+
+    // [TIMECODE-OFFSET] User/manual display offset (project-saved)
+    std::atomic<double> userTimecodeOffsetSeconds { 0.0 };
+
+    // [TIMECODE-DEBUG] last raw host values (for debug overlay)
+    std::atomic<juce::int64> lastHostTimeSamples { 0 };
+    std::atomic<double>      lastHostTimeSeconds { 0.0 };
+    std::atomic<int>         haveHostTimeSamples { 0 };
+    std::atomic<int>         haveHostTimeSeconds { 0 };
 
     //==============================================================================
     // [TIMELINE-ENERGY] timeline-truth storage at 60 Hz

@@ -349,6 +349,13 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                 blockIsPlaying = (optValue (pl) ? 1 : 0);
 
             // [TIMECODE-OFFSET] display-only offset
+            // [TIMECODE-DEBUG] publish last host values for UI debug
+            haveHostTimeSamples.store (haveTimeInSamples ? 1 : 0, std::memory_order_relaxed);
+            haveHostTimeSeconds.store (haveTimeInSeconds ? 1 : 0, std::memory_order_relaxed);
+            if (haveTimeInSamples)
+                lastHostTimeSamples.store (hostSamplesValue, std::memory_order_relaxed);
+            if (haveTimeInSeconds)
+                lastHostTimeSeconds.store (hostSecondsValue, std::memory_order_relaxed);
             if (haveTimeInSamples && haveTimeInSeconds && currentSampleRate > 1.0e-12)
             {
                 const double sampleSeconds = (double) hostSamplesValue / currentSampleRate;
@@ -525,8 +532,8 @@ void LevelScopeAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
     out.writeInt ((int) kMagic);
     out.writeInt ((int) kVersion);
 
-    // chunk count (we write exactly 1 chunk for now)
-    out.writeInt (1);
+    // chunk count (HIST + TCOF)
+    out.writeInt (2);
 
     //--------------------------------------------------------------------------
     // Chunk: HIST
@@ -602,6 +609,20 @@ void LevelScopeAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
     out.writeInt ((int) chunkId);
     out.writeInt ((int) chunk.getDataSize());
     out.write (chunk.getData(), chunk.getDataSize());
+
+    //------------------------------------------------------------------------------
+    // Chunk: TCOF (user timecode offset)
+    //------------------------------------------------------------------------------
+    {
+    juce::MemoryOutputStream tc (64);
+        tc.writeInt (1); // chunk version
+        tc.writeDouble (userTimecodeOffsetSeconds.load (std::memory_order_relaxed));
+
+        const juce::uint32 tcId = fourcc ('T','C','O','F');
+        out.writeInt ((int) tcId);
+        out.writeInt ((int) tc.getDataSize());
+        out.write (tc.getData(), tc.getDataSize());
+    }
 }
 
 void LevelScopeAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
@@ -640,6 +661,18 @@ void LevelScopeAudioProcessor::setStateInformation (const void* data, int sizeIn
 
         juce::MemoryBlock chunkData ((size_t) chunkBytes);
         in.read (chunkData.getData(), (size_t) chunkBytes);
+
+        if (chunkId == fourcc ('T','C','O','F'))
+        {
+            juce::MemoryInputStream tc (chunkData.getData(), chunkData.getSize(), false);
+            const int tcVer = tc.readInt();
+            if (tcVer == 1)
+            {
+                const double userOff = tc.readDouble();
+                userTimecodeOffsetSeconds.store (userOff, std::memory_order_relaxed);
+            }
+            continue;
+        }
 
         if (chunkId != fourcc ('H','I','S','T'))
             continue;
