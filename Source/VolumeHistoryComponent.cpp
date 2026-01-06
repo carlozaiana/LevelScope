@@ -1004,7 +1004,6 @@ clampViewRightFrame (width);
         g.drawImageAt (cachedStaticBackground, 0, 0);
 
     const juce::int64 totalFrames   = getTotalFramesL0();
-    const juce::int64 availableRaw  = std::min<juce::int64> ((juce::int64) rawCapacityFrames, totalFrames);
 
     const int selectedLevel = selectBestLevelForCurrentZoom (width);
 
@@ -1583,41 +1582,32 @@ void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
     if (getTimeRulerArea().contains (p) && event.mods.isPopupMenu())
     {
         juce::PopupMenu m;
-        m.addItem (1, "Set timecode offset (seconds or HH:MM:SS)...");
-        m.addItem (2, "Reset timecode offset to 0");
+        m.addItem (1, "Timecode offset: -2.0 s (Cubase common preroll)");
+        m.addItem (2, "Timecode offset: 0.0 s (reset)");
+        m.addSeparator();
+        m.addItem (3, "Offset -1.0 s");
+        m.addItem (4, "Offset +1.0 s");
+        m.addItem (5, "Offset -0.1 s");
+        m.addItem (6, "Offset +0.1 s");
 
-        const int r = m.show();
-        if (r == 2)
+        const int r = m.showMenu (juce::PopupMenu::Options());
+
+        auto setOff = [this] (double s)
         {
-            processor.setUserTimecodeOffsetSeconds (0.0);
-            repaint();
-            return;
-        }
+            processor.setUserTimecodeOffsetSeconds (s);
+        };
 
-        if (r == 1)
+        auto addOff = [this] (double ds)
         {
-            juce::AlertWindow w ("Timecode offset",
-                                 "Enter an offset that will be added to the displayed time ruler.\n"
-                                 "Examples:\n"
-                                 "  -2\n"
-                                 "  -00:00:02\n",
-                                 juce::AlertWindow::NoIcon);
+            processor.setUserTimecodeOffsetSeconds (processor.getUserTimecodeOffsetSeconds() + ds);
+        };
 
-            const double current = processor.getUserTimecodeOffsetSeconds();
-            w.addTextEditor ("tc", juce::String (current, 3), "Offset:");
-            w.addButton ("OK", 1, juce::KeyPress (juce::KeyPress::returnKey));
-            w.addButton ("Cancel", 0, juce::KeyPress (juce::KeyPress::escapeKey));
-
-            if (w.runModalLoop() == 1)
-            {
-                double sec = 0.0;
-                if (parseUserOffsetSeconds (w.getTextEditorContents ("tc"), sec))
-                    processor.setUserTimecodeOffsetSeconds (sec);
-            }
-
-            repaint();
-            return;
-        }
+        if (r == 1) { setOff (-2.0); repaint(); return; }
+        if (r == 2) { setOff ( 0.0); repaint(); return; }
+        if (r == 3) { addOff (-1.0); repaint(); return; }
+        if (r == 4) { addOff (+1.0); repaint(); return; }
+        if (r == 5) { addOff (-0.1); repaint(); return; }
+        if (r == 6) { addOff (+0.1); repaint(); return; }
     }
 
     // [UI-RULERS] Drag time ruler to pan time
