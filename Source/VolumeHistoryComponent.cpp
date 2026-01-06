@@ -1269,31 +1269,40 @@ clampViewRightFrame (width);
                         " | Tick: " + juce::String (tickStepNow, 3) + "s" +
                         " | Bands: " + juce::String (showBands ? "ON" : "OFF") +
                         " | Lines: " + juce::String (showLines ? "ON" : "OFF");
-                        // [DEBUG-OVERLAY]
-                        info += " | Follow: " + juce::String (followRightEdge ? "ON" : "OFF")
-                             +  " | viewRight: " + juce::String (viewRightFrame, 1);
+                        // [DEBUG-OVERLAY] Put debug fields on a second line so they don't get clipped
+                        juce::String info2;
+
+                        info2 += "Follow:" + juce::String (followRightEdge ? "ON" : "OFF")
+                              +  " viewRight:" + juce::String (viewRightFrame, 1);
 
                         if (haveNowFrameIndex)
-                            info += " | now: " + juce::String (nowFrameIndex);
+                            info2 += " now:" + juce::String (nowFrameIndex);
                         if (havePlayheadFrameIndex)
-                            info += " | playhead: " + juce::String (playheadFrameIndex);
+                            info2 += " play:" + juce::String (playheadFrameIndex);
 
-                        info += " | TCoff: " + juce::String (processor.getTimecodeOffsetSeconds(), 3) + "s"
-                         +  " | TCu: "   + juce::String (processor.getUserTimecodeOffsetSeconds(), 3) + "s"
-                         +  " | hostSamp: " + juce::String (processor.hostHasTimeInSamples() ? "Y" : "N")
-                         +  " | hostSec: "  + juce::String (processor.hostHasTimeInSeconds() ? "Y" : "N");
+                        info2 += " TCoff:" + juce::String (processor.getTimecodeOffsetSeconds(), 3) + "s"
+                              +  " TCu:"   + juce::String (processor.getUserTimecodeOffsetSeconds(), 3) + "s"
+                              +  " hostSamp:" + juce::String (processor.hostHasTimeInSamples() ? "Y" : "N")
+                              +  " hostSec:"  + juce::String (processor.hostHasTimeInSeconds() ? "Y" : "N");
 
                         if (processor.hostHasTimeInSamples())
-                            info += " | S: " + juce::String (processor.getLastHostTimeInSamples());
+                            info2 += " S:" + juce::String (processor.getLastHostTimeInSamples());
                         if (processor.hostHasTimeInSeconds())
-                            info += " | s: " + juce::String (processor.getLastHostTimeInSeconds(), 3);
+                            info2 += " s:" + juce::String (processor.getLastHostTimeInSeconds(), 3);
 
                         // Draw it
-                        g.drawText (info,
-                                    8, 8,
-                                    (int) std::min (bounds.getWidth() - 16.0f, 1400.0f),
-                                    22,
-                                    juce::Justification::topLeft);
+                        const int overlayX = 8;
+                        const int overlayW = (int) std::min (bounds.getWidth() - 16.0f, 1600.0f);
+
+                        // Main line
+                        g.setColour (juce::Colours::white);
+                        g.setFont (14.0f);
+                        g.drawFittedText (info, overlayX, 6, overlayW, 18, juce::Justification::topLeft, 1);
+
+                        // Debug line
+                        g.setColour (juce::Colours::white.withMultipliedAlpha (0.85f));
+                        g.setFont (12.0f);
+                        g.drawFittedText (info2, overlayX, 24, overlayW, 16, juce::Justification::topLeft, 1);
 }
 
 //==============================================================================
