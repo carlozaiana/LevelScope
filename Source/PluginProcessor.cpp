@@ -304,13 +304,26 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     {
         if (auto pos = ph->getPosition())
         {
+            std::optional<juce::int64> hostSamples;
+            std::optional<double> hostSeconds;
+
             if (auto t = pos->getTimeInSamples())
-            {
-                blockStartProjectSample = *t;
-                haveTimeInSamples = true;
-            }
+                hostSamples = *t;
+
+            if (auto s = pos->getTimeInSeconds())
+                hostSeconds = *s;
+
+            if (hostSamples.has_value())
+                blockStartProjectSample = *hostSamples;
 
             blockIsPlaying = (pos->getIsPlaying() ? 1 : 0);
+
+            // [TIMECODE-OFFSET] If host provides both, compute display offset.
+            if (hostSamples.has_value() && hostSeconds.has_value() && currentSampleRate > 1.0e-12)
+            {
+                const double sampleSeconds = (double) *hostSamples / currentSampleRate;
+                timecodeOffsetSeconds.store (*hostSeconds - sampleSeconds, std::memory_order_relaxed);
+            }
         }
     }
 

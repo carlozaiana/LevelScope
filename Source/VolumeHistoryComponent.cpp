@@ -1201,7 +1201,8 @@ clampViewRightFrame (width);
 
             g.drawLine (x, tickTopY, x, rulerBaseY, 1.0f);
 
-            const double tSec = (double) tickFrame / visualFrameRate;
+            const double tSec = (double) tickFrame / visualFrameRate
+                              + processor.getTimecodeOffsetSeconds(); // [TIMECODE-OFFSET]
             const float textWidth = 84.0f;
 
             g.drawText (formatTimeHMS (tSec),

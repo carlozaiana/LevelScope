@@ -68,6 +68,8 @@ public:
                               int* isPlayingDest,
                               int maxNumToRead) noexcept;
 
+    double getTimecodeOffsetSeconds() const noexcept { return timecodeOffsetSeconds.load (std::memory_order_relaxed); }
+
     // Visual loudness frame rate accessor (used by GUI)
     double getLoudnessFrameRate() const noexcept { return loudnessFrameRate; }
     int getFrameSamples() const noexcept { return frameSamples; } // samples between 60 Hz loudness frames
@@ -105,6 +107,10 @@ private:
     // Many hosts apply a short fade/ramp at transport start. To avoid corrupting
     // existing timeline truth, we temporarily skip overwriting frames that already exist.
     int transportStartOverwriteGuardFrames = 0;
+
+    // [TIMECODE-OFFSET] Display-only offset so our ruler can match the DAW timecode.
+    // offsetSeconds = hostTimeSeconds - (hostTimeSamples / sampleRate)
+    std::atomic<double> timecodeOffsetSeconds { 0.0 };
 
     //==============================================================================
     // [TIMELINE-ENERGY] timeline-truth storage at 60 Hz
