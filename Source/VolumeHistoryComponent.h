@@ -205,6 +205,8 @@ private:
     // Vertical view: top of the visible dB range (allows Y-zoom/pan)
     double viewTopDb = 0.0;
 
+    bool autoRefollowArmed = true; // [AUTO-FOLLOW-HYST]
+
     //==============================================================================
     // [UI-RULERS] Ruler hit zones + interactions
     //==============================================================================

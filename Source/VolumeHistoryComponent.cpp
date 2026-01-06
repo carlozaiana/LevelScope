@@ -992,10 +992,44 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         }
     }
 
-followButton.setToggleState (followRightEdge, juce::dontSendNotification);
+    followButton.setToggleState (followRightEdge, juce::dontSendNotification);
 
-clampViewRightFrame (width);
+    clampViewRightFrame (width);
 
+    //==============================================================================
+    // [AUTO-FOLLOW-HYST] Auto re-follow when playhead reaches right edge
+    // - Only triggers when Follow is OFF
+    // - Requires playhead to be sufficiently left first (arm), then near right edge (trigger)
+    //==============================================================================
+    if (! followRightEdge && havePlayheadFrameIndex && zoomX > 1.0e-12 && width > 1)
+    {
+        const double playheadX =
+            (double) width - (viewRightFrame - (double) playheadFrameIndex) * zoomX;
+
+        constexpr double enterPx = 10.0;  // trigger when within 10px of right edge
+        constexpr double exitPx  = 80.0;  // re-arm only after playhead is at least 80px left
+
+        if (playheadX <= (double) width - exitPx)
+            autoRefollowArmed = true;
+
+        // Only trigger if playhead is close to the right edge (not far offscreen)
+        if (autoRefollowArmed
+            && playheadX >= (double) width - enterPx
+            && playheadX <= (double) width + enterPx)
+        {
+            followRightEdge = true;
+            autoRefollowArmed = false;
+            followButton.setToggleState (true, juce::dontSendNotification);
+
+            // Immediately compute the followed view so it takes effect now
+            const double visibleFrames = (double) width / zoomX;
+            constexpr double playheadXFrac = 0.5; // keep playhead centered while following
+            viewRightFrame = (double) playheadFrameIndex + visibleFrames * (1.0 - playheadXFrac);
+
+            clampViewRightFrame (width);
+        }
+    }
+    
     if (width <= 1 || height <= 0)
         return;
 
@@ -1344,6 +1378,7 @@ void VolumeHistoryComponent::panTime (float wheelDelta)
     viewRightFrame -= panFrames;
 
     followRightEdge = false;
+    autoRefollowArmed = true; // [AUTO-FOLLOW-HYST]
     clampViewRightFrame (w);
 }
 
@@ -1394,6 +1429,7 @@ void VolumeHistoryComponent::applyHorizontalZoom (float wheelDelta, float anchor
     viewRightFrame = frameAtCursor + ((double) w - ax) / (zoomX > 1.0e-12 ? zoomX : 1.0e-12);
 
     followRightEdge = false;
+    autoRefollowArmed = true; // [AUTO-FOLLOW-HYST]
     hasCustomZoomX = true;
 
     clampViewRightFrame (w);
@@ -1627,6 +1663,7 @@ void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
         dragStartPos = p;
         dragStartViewRightFrame = viewRightFrame;
         followRightEdge = false;
+        autoRefollowArmed = true; // [AUTO-FOLLOW-HYST]
         followButton.setToggleState (false, juce::dontSendNotification);
         return;
     }
