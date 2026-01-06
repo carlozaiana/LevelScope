@@ -1003,8 +1003,6 @@ clampViewRightFrame (width);
     if (cachedStaticBackground.isValid())
         g.drawImageAt (cachedStaticBackground, 0, 0);
 
-    const juce::int64 totalFrames   = getTotalFramesL0();
-
     const int selectedLevel = selectBestLevelForCurrentZoom (width);
 
     buildVisibleGroupsForLevel (selectedLevel, width, scratchVisibleGroups, scratchVisibleEndFrameIndex); // [TIMEBASE-FIX]
@@ -1590,24 +1588,27 @@ void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
         m.addItem (5, "Offset -0.1 s");
         m.addItem (6, "Offset +0.1 s");
 
-        const int r = m.showMenu (juce::PopupMenu::Options());
+        m.showMenuAsync (juce::PopupMenu::Options(),
+                         [this] (int r)
+                         {
+                             auto setOff = [this] (double s)
+                             {
+                                 processor.setUserTimecodeOffsetSeconds (s);
+                             };
 
-        auto setOff = [this] (double s)
-        {
-            processor.setUserTimecodeOffsetSeconds (s);
-        };
+                             auto addOff = [this] (double ds)
+                             {
+                                 processor.setUserTimecodeOffsetSeconds (processor.getUserTimecodeOffsetSeconds() + ds);
+                             };
 
-        auto addOff = [this] (double ds)
-        {
-            processor.setUserTimecodeOffsetSeconds (processor.getUserTimecodeOffsetSeconds() + ds);
-        };
-
-        if (r == 1) { setOff (-2.0); repaint(); return; }
-        if (r == 2) { setOff ( 0.0); repaint(); return; }
-        if (r == 3) { addOff (-1.0); repaint(); return; }
-        if (r == 4) { addOff (+1.0); repaint(); return; }
-        if (r == 5) { addOff (-0.1); repaint(); return; }
-        if (r == 6) { addOff (+0.1); repaint(); return; }
+                             if (r == 1) { setOff (-2.0); repaint(); return; }
+                             if (r == 2) { setOff ( 0.0); repaint(); return; }
+                                     if (r == 3) { addOff (-1.0); repaint(); return; }
+                             if (r == 4) { addOff (+1.0); repaint(); return; }
+                             if (r == 5) { addOff (-0.1); repaint(); return; }
+                             if (r == 6) { addOff (+0.1); repaint(); return; }
+                         });
+        return;
     }
 
     // [UI-RULERS] Drag time ruler to pan time
