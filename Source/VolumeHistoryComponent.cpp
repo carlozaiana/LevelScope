@@ -1231,6 +1231,23 @@ clampViewRightFrame (width);
                         " | Tick: " + juce::String (tickStepNow, 3) + "s" +
                         " | Bands: " + juce::String (showBands ? "ON" : "OFF") +
                         " | Lines: " + juce::String (showLines ? "ON" : "OFF");
+                        // [DEBUG-OVERLAY]
+                        info += " | Follow: " + juce::String (followRightEdge ? "ON" : "OFF")
+                             +  " | viewRight: " + juce::String (viewRightFrame, 1);
+
+                        if (haveNowFrameIndex)
+                            info += " | now: " + juce::String (nowFrameIndex);
+                        if (havePlayheadFrameIndex)
+                            info += " | playhead: " + juce::String (playheadFrameIndex);
+
+                        info += " | TCoff: " + juce::String (processor.getTimecodeOffsetSeconds(), 3) + "s";
+
+                        // Draw it
+                        g.drawText (info,
+                                    8, 8,
+                                    (int) std::min (bounds.getWidth() - 16.0f, 1400.0f),
+                                    22,
+                                    juce::Justification::topLeft);
 }
 
 //==============================================================================

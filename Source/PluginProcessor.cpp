@@ -3,6 +3,24 @@
 
 #include <cmath>
 #include <algorithm>
+#include <type_traits>
+
+namespace
+{
+    // Treat arithmetic types (int, int64, bool, double) as always "present".
+    template <typename T, std::enable_if_t<std::is_arithmetic_v<std::decay_t<T>>, int> = 0>
+    bool optHasValue (T) noexcept { return true; }
+
+    template <typename T, std::enable_if_t<std::is_arithmetic_v<std::decay_t<T>>, int> = 0>
+    T optValue (T v) noexcept { return v; }
+
+    // Treat optional-like types (std::optional, juce::Optional, etc.) as "present" if bool(o) is true.
+    template <typename Opt, std::enable_if_t<!std::is_arithmetic_v<std::decay_t<Opt>>, int> = 0>
+    bool optHasValue (const Opt& o) noexcept { return (bool) o; }
+
+    template <typename Opt, std::enable_if_t<!std::is_arithmetic_v<std::decay_t<Opt>>, int> = 0>
+    auto optValue (const Opt& o) noexcept -> decltype(*o) { return *o; }
+}
 
 juce::int64 LevelScopeAudioProcessor::floorDivInt64 (juce::int64 a, juce::int64 b) noexcept
 {
@@ -299,30 +317,42 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     juce::int64 blockStartProjectSample = 0;
     int blockIsPlaying = 0;
     bool haveTimeInSamples = false;
+    bool haveTimeInSeconds = false;
+
+    juce::int64 hostSamplesValue = 0;
+    double hostSecondsValue = 0.0;
 
     if (auto* ph = getPlayHead())
     {
         if (auto pos = ph->getPosition())
         {
-            std::optional<juce::int64> hostSamples;
-            std::optional<double> hostSeconds;
-
-            if (auto t = pos->getTimeInSamples())
-                hostSamples = *t;
-
-            if (auto s = pos->getTimeInSeconds())
-                hostSeconds = *s;
-
-            if (hostSamples.has_value())
-                blockStartProjectSample = *hostSamples;
-
-            blockIsPlaying = (pos->getIsPlaying() ? 1 : 0);
-
-            // [TIMECODE-OFFSET] If host provides both, compute display offset.
-            if (hostSamples.has_value() && hostSeconds.has_value() && currentSampleRate > 1.0e-12)
+            // time in samples
+            const auto tSamp = pos->getTimeInSamples();
+            if (optHasValue (tSamp))
             {
-                const double sampleSeconds = (double) *hostSamples / currentSampleRate;
-                timecodeOffsetSeconds.store (*hostSeconds - sampleSeconds, std::memory_order_relaxed);
+                hostSamplesValue = (juce::int64) optValue (tSamp);
+                haveTimeInSamples = true;
+                blockStartProjectSample = hostSamplesValue;
+            }
+
+            // time in seconds (for timecode offset)
+            const auto tSec = pos->getTimeInSeconds();
+            if (optHasValue (tSec))
+            {
+                hostSecondsValue = (double) optValue (tSec);
+                haveTimeInSeconds = true;
+            }
+
+            // isPlaying
+            const auto pl = pos->getIsPlaying();
+            if (optHasValue (pl))
+                blockIsPlaying = (optValue (pl) ? 1 : 0);
+
+            // [TIMECODE-OFFSET] display-only offset
+            if (haveTimeInSamples && haveTimeInSeconds && currentSampleRate > 1.0e-12)
+            {
+                const double sampleSeconds = (double) hostSamplesValue / currentSampleRate;
+                timecodeOffsetSeconds.store (hostSecondsValue - sampleSeconds, std::memory_order_relaxed);
             }
         }
     }
