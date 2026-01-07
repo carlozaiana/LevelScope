@@ -95,6 +95,8 @@ VolumeHistoryComponent::VolumeHistoryComponent (LevelScopeAudioProcessor& proc)
     followButton.onClick = [this]
     {
         followRightEdge = followButton.getToggleState();
+        if (! followRightEdge)
+           autoRefollowArmed = false; // [AUTO-FOLLOW-HYST] prevent instant re-follow
 
         if (followRightEdge)
         {
@@ -1001,7 +1003,8 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     // - Only triggers when Follow is OFF
     // - Requires playhead to be sufficiently left first (arm), then near right edge (trigger)
     //==============================================================================
-    if (! followRightEdge && havePlayheadFrameIndex && zoomX > 1.0e-12 && width > 1)
+    if (! followRightEdge && dragMode == DragMode::none
+       && havePlayheadFrameIndex && zoomX > 1.0e-12 && width > 1)
     {
         const double playheadX =
             (double) width - (viewRightFrame - (double) playheadFrameIndex) * zoomX;
@@ -1378,7 +1381,7 @@ void VolumeHistoryComponent::panTime (float wheelDelta)
     viewRightFrame -= panFrames;
 
     followRightEdge = false;
-    autoRefollowArmed = true; // [AUTO-FOLLOW-HYST]
+    autoRefollowArmed = false; // [AUTO-FOLLOW-HYST] disarm until playhead moves away from edge
     clampViewRightFrame (w);
 }
 
@@ -1429,7 +1432,7 @@ void VolumeHistoryComponent::applyHorizontalZoom (float wheelDelta, float anchor
     viewRightFrame = frameAtCursor + ((double) w - ax) / (zoomX > 1.0e-12 ? zoomX : 1.0e-12);
 
     followRightEdge = false;
-    autoRefollowArmed = true; // [AUTO-FOLLOW-HYST]
+    autoRefollowArmed = false; // [AUTO-FOLLOW-HYST] disarm until playhead moves away from edge
     hasCustomZoomX = true;
 
     clampViewRightFrame (w);
@@ -1663,7 +1666,7 @@ void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
         dragStartPos = p;
         dragStartViewRightFrame = viewRightFrame;
         followRightEdge = false;
-        autoRefollowArmed = true; // [AUTO-FOLLOW-HYST]
+        autoRefollowArmed = false; // [AUTO-FOLLOW-HYST] disarm until playhead moves away from edge
         followButton.setToggleState (false, juce::dontSendNotification);
         return;
     }
