@@ -68,7 +68,7 @@ VolumeHistoryComponent::VolumeHistoryComponent (LevelScopeAudioProcessor& proc)
     : processor (proc),
       visualFrameRate (proc.getLoudnessFrameRate()),
       historyLengthSeconds (3.0 * 3600.0),
-      minDb (-90.0f),
+      minDb (-110.0f),
       maxDb (  0.0f),
       baseDbRange (std::abs (minDb))
 {
