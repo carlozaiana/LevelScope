@@ -1141,7 +1141,10 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     if (haveNowFrameIndex && havePlayheadFrameIndex && zoomX > 1.0e-12)
     {
         const double framesFromRight = viewRightFrame - (double) playheadFrameIndex;
-        const float x = (float) ((double) width - framesFromRight * zoomX);
+        float x = (float) ((double) width - framesFromRight * zoomX);
+
+        // [PLAYHEAD-LINE] snap to pixel center to reduce AA shimmer/flicker while scrolling
+        x = std::floor (x) + 0.5f;
 
         if (x >= -2.0f && x <= (float) width + 2.0f)
         {
