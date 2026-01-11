@@ -61,6 +61,9 @@ target_sources(LevelScope
         Source/PluginEditor.h
         Source/VolumeHistoryComponent.cpp
         Source/VolumeHistoryComponent.h
+        Source/VolumeHistoryComponent_History.cpp
+        Source/VolumeHistoryComponent_ViewNav.cpp
+        Source/VolumeHistoryComponent_Render.cpp
 )
 
 target_compile_definitions(LevelScope
