@@ -10,6 +10,21 @@
 // - debug overlay rendering
 //==============================================================================
 
+// Helper: format seconds as HH:MM:SS (supports negative)
+static juce::String formatTimeHMS (double seconds)
+{
+    const bool neg = (seconds < 0.0);
+    seconds = std::abs (seconds);
+
+    const int total = (int) std::floor (seconds + 0.5);
+    const int h = total / 3600;
+    const int m = (total % 3600) / 60;
+    const int s = total % 60;
+
+    const juce::String core = juce::String::formatted ("%02d:%02d:%02d", h, m, s);
+    return neg ? "-" + core : core;
+}
+
 //==============================================================================
 // DRAW
 //==============================================================================
