@@ -3,16 +3,18 @@
 #include <JuceHeader.h>
 #include <vector>
 #include <atomic>
-#include <memory>
+
+#include "Core/LevelScopeHistoryModel.h"
 
 //==============================================================================
-// Main audio processor for LevelScope (prototype loudness display)
+// Main audio processor for LevelScope
+// Phase 1 refactor: timeline truth + FIFO + persistence moved to Core model.
+// Timebase/discontinuity detection remains here for now.
 //==============================================================================
 
 class LevelScopeAudioProcessor : public juce::AudioProcessor
 {
 public:
-    // Loudness "frame" rate for visualization (frames per second)
     static constexpr double loudnessFrameRate       = 60.0;  // 60 Hz
     static constexpr double momentaryWindowSeconds  = 0.4;   // 400 ms
     static constexpr double shortTermWindowSeconds  = 3.0;   // 3 s
@@ -29,7 +31,6 @@ public:
    #endif
 
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
-
     void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
 
     //==============================================================================
@@ -55,13 +56,8 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     //==============================================================================
-    // GUI access helpers
+    // GUI access helpers (UI API unchanged; forwarded to core model)
 
-    // Read up to maxNumToRead loudness frames from the FIFO into dest arrays.
-    // Returns the number actually read (non-blocking).
-    // Each frame has both momentary and short-term RMS values (linear).
-    // Read up to maxNumToRead loudness frames from the FIFO into dest arrays.
-    // Returns the number actually read (non-blocking).
     int readLoudnessFromFifo (float* momentaryDest,
                               float* shortTermDest,
                               juce::int64* frameIndexDest,
@@ -70,134 +66,74 @@ public:
 
     double getTimecodeOffsetSeconds() const noexcept { return timecodeOffsetSeconds.load (std::memory_order_relaxed); }
 
-    double getUserTimecodeOffsetSeconds() const noexcept { return userTimecodeOffsetSeconds.load (std::memory_order_relaxed); }
-    void   setUserTimecodeOffsetSeconds (double s) noexcept { userTimecodeOffsetSeconds.store (s, std::memory_order_relaxed); }
+    double getUserTimecodeOffsetSeconds() const noexcept { return historyModel.getUserTimecodeOffsetSeconds(); }
+    void   setUserTimecodeOffsetSeconds (double s) noexcept { historyModel.setUserTimecodeOffsetSeconds (s); }
 
     juce::int64 getLastHostTimeInSamples() const noexcept { return lastHostTimeSamples.load (std::memory_order_relaxed); }
     double      getLastHostTimeInSeconds() const noexcept { return lastHostTimeSeconds.load (std::memory_order_relaxed); }
     bool        hostHasTimeInSamples() const noexcept { return haveHostTimeSamples.load (std::memory_order_relaxed) != 0; }
     bool        hostHasTimeInSeconds() const noexcept { return haveHostTimeSeconds.load (std::memory_order_relaxed) != 0; }
 
-    // Visual loudness frame rate accessor (used by GUI)
     double getLoudnessFrameRate() const noexcept { return loudnessFrameRate; }
-    int getFrameSamples() const noexcept { return frameSamples; } // samples between 60 Hz loudness frames
+    int getFrameSamples() const noexcept { return frameSamples; }
 
-    // [STATE-PERSIST] GUI bootstrap: query derived curves already stored in processor timeline
     bool getDerivedRmsAtFrameIndex (juce::int64 frameIndex,
-                                   float& momentaryRms,
-                                   float& shortTermRms) const noexcept;
+                                    float& momentaryRms,
+                                    float& shortTermRms) const noexcept
+    {
+        return historyModel.getDerivedRmsAtFrameIndex (frameIndex, momentaryRms, shortTermRms);
+    }
 
-    juce::int64 getMaxWrittenFrameIndex() const noexcept { return maxWrittenFrameIndex.load(); }
+    juce::int64 getMaxWrittenFrameIndex() const noexcept
+    {
+        return historyModel.getMaxWrittenFrameIndex();
+    }
 
 private:
     //==============================================================================
-    // Loudness / envelope aggregation (momentary + short-term)
+    // Analysis state (still owned by plugin wrapper for Phase 1)
 
-    double currentSampleRate      = 44100.0;
-    int    momentaryWindowSamples = 0;   // samples in 400 ms window
-    int    shortTermWindowSamples = 0;   // samples in 3 s window
+    double currentSampleRate     = 44100.0;
+    int    frameSamples          = 0;   // samples between 60 Hz frames
+    int    samplesUntilNextFrame = 0;
 
-    int    frameSamples           = 0;   // samples between loudness frames (for 60 Hz)
-    int    samplesUntilNextFrame  = 0;   // countdown to next frame
-
-    // Sliding energy windows for momentary and short-term (per-sample energy)
-    std::vector<double> momentaryEnergyBuffer;
-    std::vector<double> shortTermEnergyBuffer;
-
-    int    momentaryIndex   = 0;
-    int    shortTermIndex   = 0;
-    double momentarySum     = 0.0;
-    double shortTermSum     = 0.0;
-
-    juce::int64 totalSamplesProcessed = 0; // for startup warm-up
-
-    // [FIX-START-RAMP]
-    // Many hosts apply a short fade/ramp at transport start. To avoid corrupting
-    // existing timeline truth, we temporarily skip overwriting frames that already exist.
-    int transportStartOverwriteGuardFrames = 0;
-
-    // [TIMECODE-OFFSET] Display-only offset so our ruler can match the DAW timecode.
-    // offsetSeconds = hostTimeSeconds - (hostTimeSamples / sampleRate)
-    std::atomic<double> timecodeOffsetSeconds { 0.0 };
-
-    // [TIMECODE-OFFSET] User/manual display offset (project-saved)
-    std::atomic<double> userTimecodeOffsetSeconds { 0.0 };
-
-    // [TIMECODE-DEBUG] last raw host values (for debug overlay)
-    std::atomic<juce::int64> lastHostTimeSamples { 0 };
-    std::atomic<double>      lastHostTimeSeconds { 0.0 };
-    std::atomic<int>         haveHostTimeSamples { 0 };
-    std::atomic<int>         haveHostTimeSeconds { 0 };
-
-    //==============================================================================
-    // [TIMELINE-ENERGY] timeline-truth storage at 60 Hz
-    // Store mean-square energy per 60 Hz frame, keyed by absolute frameIndex.
-    // Derived momentary/short-term are computed from this stored energy.
-    //==============================================================================
-
-    static constexpr double historyLengthSeconds = 3.0 * 3600.0;
-    static constexpr int historyCapacityFrames =
-        (int) (historyLengthSeconds * loudnessFrameRate + 0.5); // ~648000
-
-    // Published-by-tag ring (single writer: audio thread; readers: GUI thread for snapshots later)
-    std::vector<float> energyMeanSquare;   // base measure
-    std::vector<float> momentaryRmsHist;   // derived
-    std::vector<float> shortTermRmsHist;   // derived
-    std::unique_ptr<std::atomic<juce::int64>[]> frameIndexTag; // -1 = empty, else abs frameIndex
-
-    std::atomic<juce::int64> maxWrittenFrameIndex { std::numeric_limits<juce::int64>::min() };
+    // timeline truth (Core)
+    LevelScopeHistoryModel historyModel;
 
     // Per-frame energy accumulator (audio thread)
     double frameEnergyAccum = 0.0;
 
-    // Helpers
-    static juce::int64 floorDivInt64 (juce::int64 a, juce::int64 b) noexcept; // b>0
-    static int wrapSlot (juce::int64 absIndex, int capacity) noexcept;
+    // [FIX-START-RAMP] guard against host start ramp overwriting existing truth
+    int transportStartOverwriteGuardFrames = 0;
 
-    bool readEnergyAbs (juce::int64 absFrameIndex, float& outEnergy) const noexcept;
-    void writeFrameAbs (juce::int64 absFrameIndex, float energyMS, float mRms, float sRms) noexcept;
+    // [TIMECODE-OFFSET] display-only offset so our ruler can match DAW timecode
+    std::atomic<double> timecodeOffsetSeconds { 0.0 };
 
-    float computeWindowRmsFromEnergy (juce::int64 endFrameIndex, int windowFrames) const noexcept;
+    // [TIMECODE-DEBUG] last raw host values
+    std::atomic<juce::int64> lastHostTimeSamples { 0 };
+    std::atomic<double>      lastHostTimeSeconds { 0.0 };
+    std::atomic<int>         haveHostTimeSamples { 0 };
+    std::atomic<int>         haveHostTimeSeconds { 0 };
 
     // [FIX-RESTART-PARTIAL-FRAME]
     juce::int64 lastBlockEndProjectSample = 0;
     int         lastBlockIsPlaying = 0;
     bool        haveLastBlockEnd = false;
 
-    // If playback starts in the middle of a 60 Hz frame, skip writing the first partial frame
     bool        skipNextPartialFrameWrite = false;
 
-    juce::int64 lastFrameProjectSample = 0; // [TIMEBASE-PLAYHEAD]
-    int         lastFrameIsPlaying     = 1; // [TIMEBASE-PLAYHEAD]
+    juce::int64 currentBlockStartProjectSample = 0;
+    int         currentBlockIsPlaying         = 1;
+    int         currentBlockSampleIndex       = 0;
 
-    juce::int64 currentBlockStartProjectSample = 0; // [TIMEBASE-PLAYHEAD]
-    int         currentBlockIsPlaying         = 1; // [TIMEBASE-PLAYHEAD]
-    int         currentBlockSampleIndex       = 0; // [TIMEBASE-PLAYHEAD] updated per-sample
-
-    struct LoudnessFrame
-    {
-        float momentaryRms = 0.0f;
-        float shortTermRms = 0.0f;
-
-        // [TIMELINE-ENERGY] absolute 60 Hz timeline frame index (can be negative)
-        juce::int64 frameIndex = 0;
-
-        // [TIMEBASE-PLAYHEAD]
-        int isPlaying = 1;
-    };
-
-    static constexpr int loudnessFifoSize = 4096;
-    juce::AbstractFifo              loudnessFifo;
-    std::vector<LoudnessFrame>      loudnessBuffer;
+    // Helpers (negative-safe)
+    static juce::int64 floorDivInt64 (juce::int64 a, juce::int64 b) noexcept;
 
     void resetLoudnessState() noexcept;
 
     void processSampleForLoudness (const float* const* channelData,
                                    int numChannels,
                                    int sampleIndex) noexcept;
-
-    void pushLoudnessFrame (float momentaryRms,
-                            float shortTermRms) noexcept;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LevelScopeAudioProcessor)
