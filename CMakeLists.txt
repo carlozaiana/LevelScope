@@ -32,6 +32,24 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(juce)
 
+#==============================
+# Core static library (no GUI)
+#==============================
+add_library(LevelScopeCore STATIC
+    Source/Core/LevelScopeHistoryModel.cpp
+    Source/Core/LevelScopeHistoryModel.h
+)
+
+target_include_directories(LevelScopeCore
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/Source
+)
+
+target_link_libraries(LevelScopeCore
+    PUBLIC
+        juce::juce_core
+)
+
 # The plugin target
 juce_add_plugin(LevelScope
     PRODUCT_NAME "LevelScope"
@@ -76,6 +94,7 @@ target_compile_definitions(LevelScope
 
 target_link_libraries(LevelScope
     PRIVATE
+        LevelScopeCore
         juce::juce_audio_utils
         juce::juce_audio_processors
         juce::juce_audio_formats
