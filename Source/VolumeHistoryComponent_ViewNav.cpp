@@ -8,13 +8,19 @@
 // - ruler hit test
 // - mouse drag/double click interactions
 //==============================================================================
-
-// Paste/move the VIEW-NAV + mouse interaction member function definitions here.
+//==============================================================================
+// [EDIT-BLOCKS]
+//   - [BEGIN VHC-VNAV-RULER-AREAS-RESETS] ... [END VHC-VNAV-RULER-AREAS-RESETS]
+//   - [BEGIN VHC-VNAV-CLAMP-PAN-ZOOM]     ... [END VHC-VNAV-CLAMP-PAN-ZOOM]
+//   - [BEGIN VHC-VNAV-RESIZED]            ... [END VHC-VNAV-RESIZED]
+//   - [BEGIN VHC-VNAV-MOUSE]              ... [END VHC-VNAV-MOUSE]
+//==============================================================================
 
 //==============================================================================
 // [UI-RULERS] Areas + resets
 //==============================================================================
 
+// [BEGIN VHC-VNAV-RULER-AREAS-RESETS]
 juce::Rectangle<int> VolumeHistoryComponent::getTimeRulerArea() const
 {
     // Keep consistent with paint() ruler height
@@ -88,11 +94,13 @@ void VolumeHistoryComponent::resetYViewDefault()
     viewTopDb = (double) maxDb; // default top at 0 dBFS
     markStaticBackgroundDirty();
 }
+// [END VHC-VNAV-RULER-AREAS-RESETS]
 
 //==============================================================================
 // [VIEW-NAV] clamp + pan/zoom
 //==============================================================================
 
+// [BEGIN VHC-VNAV-CLAMP-PAN-ZOOM]
 void VolumeHistoryComponent::clampViewRightFrame (int widthPixels) noexcept
 {
     if (! haveNowFrameIndex || zoomX <= 1.0e-12 || widthPixels <= 1)
@@ -226,11 +234,13 @@ void VolumeHistoryComponent::applyVerticalZoom (float wheelDelta, float anchorY)
 
     markStaticBackgroundDirty();
 }
+// [END VHC-VNAV-CLAMP-PAN-ZOOM]
 
 //==============================================================================
 // Component lifecycle
 //==============================================================================
 
+// [BEGIN VHC-VNAV-RESIZED]
 void VolumeHistoryComponent::resized()
 {
     if (! hasCustomZoomX)
@@ -261,11 +271,13 @@ void VolumeHistoryComponent::resized()
     // [FOLLOW-BUTTON] small toggle in the top-right
     followButton.setBounds (getWidth() - 88, 6, 80, 22);
 }
+// [END VHC-VNAV-RESIZED]
 
 //==============================================================================
 // Mouse
 //==============================================================================
 
+// [BEGIN VHC-VNAV-MOUSE]
 void VolumeHistoryComponent::mouseWheelMove (const juce::MouseEvent& event,
                                              const juce::MouseWheelDetails& wheel)
 {
@@ -435,3 +447,4 @@ void VolumeHistoryComponent::mouseUp (const juce::MouseEvent&)
 {
     dragMode = DragMode::none;
 }
+// [END VHC-VNAV-MOUSE]

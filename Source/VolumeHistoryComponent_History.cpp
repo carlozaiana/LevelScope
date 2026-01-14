@@ -8,13 +8,24 @@
 // - visible group building
 // - persistence bootstrap from processor
 //==============================================================================
-
-// Paste/move the HISTORY-related member function definitions here.
+//==============================================================================
+// [EDIT-BLOCKS]
+//   - [BEGIN VHC-HIST-TIMER-AND-DRAIN]   ... [END VHC-HIST-TIMER-AND-DRAIN]
+//   - [BEGIN VHC-HIST-PUSH-FRAME]        ... [END VHC-HIST-PUSH-FRAME]
+//   - [BEGIN VHC-HIST-RING-HELPERS]      ... [END VHC-HIST-RING-HELPERS]
+//   - [BEGIN VHC-HIST-INIT-RESET]        ... [END VHC-HIST-INIT-RESET]
+//   - [BEGIN VHC-HIST-ACCESS]            ... [END VHC-HIST-ACCESS]
+//   - [BEGIN VHC-HIST-LOD]               ... [END VHC-HIST-LOD]
+//   - [BEGIN VHC-HIST-VISIBLE-BUILDER]   ... [END VHC-HIST-VISIBLE-BUILDER]
+//   - [BEGIN VHC-HIST-BOOTSTRAP]         ... [END VHC-HIST-BOOTSTRAP]
+//   - [BEGIN VHC-HIST-HELPERS]           ... [END VHC-HIST-HELPERS]
+//==============================================================================
 
 //==============================================================================
 // Timer
 //==============================================================================
 
+// [BEGIN VHC-HIST-TIMER-AND-DRAIN]
 void VolumeHistoryComponent::timerCallback()
 {
     const bool gotNewData = drainProcessorFifo(); // [STEP1-PERF]
@@ -54,11 +65,13 @@ bool VolumeHistoryComponent::drainProcessorFifo()
 
     return readAny;
 }
+// [END VHC-HIST-TIMER-AND-DRAIN]
 
 //==============================================================================
 // Timeline write path
 //==============================================================================
 
+// [BEGIN VHC-HIST-PUSH-FRAME]
 void VolumeHistoryComponent::pushFrameToHistory (float momentaryRms,
                                                  float shortTermRms,
                                                  juce::int64 frameIndex60Hz,
@@ -111,11 +124,13 @@ void VolumeHistoryComponent::pushFrameToHistory (float momentaryRms,
         recomputeGroupAbsFromChildren (level, absGroupIndex);
     }
 }
+// [END VHC-HIST-PUSH-FRAME]
 
 //==============================================================================
 // Overwrite-safe ring helpers
 //==============================================================================
 
+// [BEGIN VHC-HIST-RING-HELPERS]
 void VolumeHistoryComponent::writeGroupAbs (int levelIndex,
                                             juce::int64 absGroupIndex,
                                             const FrameGroup& group)
@@ -197,11 +212,13 @@ void VolumeHistoryComponent::recomputeGroupAbsFromChildren (int levelIndex,
 
     writeGroupAbs (levelIndex, absGroupIndex, agg);
 }
+// [END VHC-HIST-RING-HELPERS]
 
 //==============================================================================
 // History init/reset
 //==============================================================================
 
+// [BEGIN VHC-HIST-INIT-RESET]
 void VolumeHistoryComponent::initialiseHistoryLevels()
 {
     rawCapacityFrames = (int) std::ceil (historyLengthSeconds * visualFrameRate);
@@ -261,11 +278,13 @@ void VolumeHistoryComponent::resetHistoryLevels()
     playheadFrameIndex = 0;
     tickStepIndex = -1;
 }
+// [END VHC-HIST-INIT-RESET]
 
 //==============================================================================
 // History access
 //==============================================================================
 
+// [BEGIN VHC-HIST-ACCESS]
 int VolumeHistoryComponent::getAvailableGroups (int levelIndex) const noexcept
 {
     if (levelIndex < 0 || levelIndex >= maxLevels || ! haveNowFrameIndex)
@@ -308,11 +327,13 @@ juce::int64 VolumeHistoryComponent::getTotalFramesL0() const noexcept
 {
     return (haveNowFrameIndex ? nowFrameIndex : 0);
 }
+// [END VHC-HIST-ACCESS]
 
 //==============================================================================
 // LOD selection  [STEP2-LOD-CAP]
 //==============================================================================
 
+// [BEGIN VHC-HIST-LOD]
 int VolumeHistoryComponent::getMaxDrawablePoints (int widthPixels) const noexcept
 {
     const int w = juce::jmax (1, widthPixels);
@@ -362,6 +383,7 @@ int VolumeHistoryComponent::selectBestLevelForCurrentZoom (int widthPixels) cons
 
     return 0;
 }
+// [END VHC-HIST-LOD]
 
 //==============================================================================
 // Visible groups builder  [TIMEBASE-FIX]  [DECIMATOR-GRID-ANCHOR]
@@ -372,6 +394,8 @@ int VolumeHistoryComponent::selectBestLevelForCurrentZoom (int widthPixels) cons
 //   not to the moving left edge. This prevents "accordion" for BOTH renderers.
 // - Timestamp uses chunk END (no center/rounding drift).
 //==============================================================================
+
+// [BEGIN VHC-HIST-VISIBLE-BUILDER]
 void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
                                                          int widthPixels,
                                                          std::vector<FrameGroup>& outGroups,
@@ -550,11 +574,13 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
         outEndFrameIndex.clear();
     }
 }
+// [END VHC-HIST-VISIBLE-BUILDER]
 
 //==============================================================================
 // Bootstrap from processor (persistence)
 //==============================================================================
 
+// [BEGIN VHC-HIST-BOOTSTRAP]
 void VolumeHistoryComponent::bootstrapHistoryFromProcessorIfNeeded()
 {
     if (bootstrappedFromProcessor)
@@ -604,14 +630,17 @@ void VolumeHistoryComponent::bootstrapHistoryFromProcessorIfNeeded()
 
     bootstrappedFromProcessor = true;
 }
+// [END VHC-HIST-BOOTSTRAP]
 
 //==============================================================================
 // History update
 //==============================================================================
 
+// [BEGIN VHC-HIST-HELPERS]
 juce::int64 VolumeHistoryComponent::floorDivInt64 (juce::int64 a, juce::int64 b) noexcept
 {
     if (b <= 0) return 0;
     if (a >= 0) return a / b;
     return - ((-a + b - 1) / b);
 }
+// [END VHC-HIST-HELPERS]

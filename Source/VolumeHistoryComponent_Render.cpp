@@ -9,7 +9,18 @@
 // - time ruler + dB ruler drawing
 // - debug overlay rendering
 //==============================================================================
+//==============================================================================
+// [EDIT-BLOCKS] (token-efficient patch anchors for future chats)
+//   - [BEGIN VHC-RENDER-HELPER-FORMAT-TIME] ... [END VHC-RENDER-HELPER-FORMAT-TIME]
+//   - [BEGIN VHC-RENDER-PAINT]             ... [END VHC-RENDER-PAINT]
+//   - [BEGIN VHC-RENDER-CACHED-BG]         ... [END VHC-RENDER-CACHED-BG]
+//   - [BEGIN VHC-RENDER-GEOMETRY]          ... [END VHC-RENDER-GEOMETRY]
+//   - [BEGIN VHC-RENDER-RULER-HYST]        ... [END VHC-RENDER-RULER-HYST]
+//   - [BEGIN VHC-RENDER-REP-CURVES]        ... [END VHC-RENDER-REP-CURVES]
+//   - [BEGIN VHC-RENDER-PARSE-USER-OFFSET] ... [END VHC-RENDER-PARSE-USER-OFFSET]
+//==============================================================================
 
+// [BEGIN VHC-RENDER-HELPER-FORMAT-TIME]
 // Helper: format seconds as HH:MM:SS (supports negative)
 static juce::String formatTimeHMS (double seconds)
 {
@@ -24,11 +35,13 @@ static juce::String formatTimeHMS (double seconds)
     const juce::String core = juce::String::formatted ("%02d:%02d:%02d", h, m, s);
     return neg ? "-" + core : core;
 }
+// [END VHC-RENDER-HELPER-FORMAT-TIME]
 
 //==============================================================================
 // DRAW
 //==============================================================================
 
+// [BEGIN VHC-RENDER-PAINT]
 void VolumeHistoryComponent::paint (juce::Graphics& g)
 {
     auto bounds = getLocalBounds().toFloat();
@@ -402,11 +415,12 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
                         g.setFont (12.0f);
                         g.drawFittedText (info2, overlayX, 24, overlayW, 16, juce::Justification::topLeft, 1);
 }
+// [END VHC-RENDER-PAINT]
 
 //==============================================================================
 // Cached background  [CACHE-STATIC]
 //==============================================================================
-
+// [BEGIN VHC-RENDER-CACHED-BG]
 void VolumeHistoryComponent::markStaticBackgroundDirty() noexcept
 {
     staticBackgroundDirty = true;
@@ -455,11 +469,13 @@ void VolumeHistoryComponent::rebuildStaticBackgroundIfNeeded()
     gg.setColour (juce::Colours::darkgrey.withMultipliedAlpha (0.7f));
     gg.drawHorizontalLine ((int) std::round (rulerBaseY), 0.0f, (float) w);
 }
+// [END VHC-RENDER-CACHED-BG]
 
 //==============================================================================
 // Geometry helpers
 //==============================================================================
 
+// [BEGIN VHC-RENDER-GEOMETRY]
 float VolumeHistoryComponent::dbToY (float db, float height) const noexcept
 {
     if (height <= 0.0f)
@@ -474,11 +490,13 @@ float VolumeHistoryComponent::dbToY (float db, float height) const noexcept
 
     return height * (1.0f - norm);
 }
+// [END VHC-RENDER-GEOMETRY]
 
 //==============================================================================
 // Ruler tickStep hysteresis  [RULER-HYST-FIX]
 //==============================================================================
 
+// [BEGIN VHC-RENDER-RULER-HYST]
 double VolumeHistoryComponent::getTickStepSecondsWithHysteresis (int widthPixels) noexcept
 {
     const double pixelsPerSecond = zoomX * visualFrameRate;
@@ -539,11 +557,13 @@ double VolumeHistoryComponent::getTickStepSecondsWithHysteresis (int widthPixels
     tickStepIndex = juce::jlimit (0, numSteps - 1, tickStepIndex);
     return tickSteps[tickStepIndex];
 }
+// [END VHC-RENDER-RULER-HYST]
 
 //==============================================================================
 // Representative curves
 //==============================================================================
 
+// [BEGIN VHC-RENDER-REP-CURVES]
 void VolumeHistoryComponent::computeRepresentativeCurves (const std::vector<FrameGroup>& groups,
                                                           std::vector<float>& repMomentary,
                                                           std::vector<float>& repShortTerm) const
@@ -613,8 +633,11 @@ void VolumeHistoryComponent::computeRepresentativeCurves (const std::vector<Fram
         repShortTerm[i] = rawRepS;
     }
 }
+// [END VHC-RENDER-REP-CURVES]
 
 // [TIMECODE-USER] parse either seconds (e.g. -2.0) or HH:MM:SS (e.g. -00:00:02)
+
+// [BEGIN VHC-RENDER-PARSE-USER-OFFSET]
 static bool parseUserOffsetSeconds (juce::String text, double& outSeconds)
 {
     text = text.trim();
@@ -653,3 +676,4 @@ static bool parseUserOffsetSeconds (juce::String text, double& outSeconds)
     outSeconds = text.getDoubleValue();
     return true;
 }
+// [END VHC-RENDER-PARSE-USER-OFFSET]

@@ -5,6 +5,7 @@
 #include <atomic>
 
 #include "Core/LevelScopeHistoryModel.h"
+#include "Core/BS1770KWeighting.h"
 
 //==============================================================================
 // Main audio processor for LevelScope
@@ -102,6 +103,12 @@ private:
 
     // Per-frame energy accumulator (audio thread)
     double frameEnergyAccum = 0.0;
+
+    // [BS1770] K-weighting filter state (per channel)
+    BS1770KWeighting kWeight;
+
+    // [BS1770] Per-channel weights (LFE=0, all others=1). For now mono/stereo only.
+    std::vector<float> bs1770ChannelWeights;
 
     // [FIX-START-RAMP] guard against host start ramp overwriting existing truth
     int transportStartOverwriteGuardFrames = 0;

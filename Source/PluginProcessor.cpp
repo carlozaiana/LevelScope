@@ -34,6 +34,10 @@ LevelScopeAudioProcessor::LevelScopeAudioProcessor()
                         .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
                         .withOutput ("Output", juce::AudioChannelSet::stereo(), true))
 {
+    // [BS1770] We want the core model to interpret stored energies as BS.1770 energies
+    // and publish momentary/short-term as LUFS (dB).
+    // NOTE: UI will be updated in Phase 2B to display LUFS correctly.
+    historyModel.setOutputMode (LevelScopeHistoryModel::OutputMode::lufs);
 }
 
 LevelScopeAudioProcessor::~LevelScopeAudioProcessor() = default;
@@ -53,6 +57,20 @@ void LevelScopeAudioProcessor::prepareToPlay (double sampleRate,
     resetLoudnessState();
 }
 
+    // [BS1770] Prepare K-weighting filter state for current channel count
+    const int numCh = juce::jmax (1, getTotalNumInputChannels());
+    kWeight.prepare (currentSampleRate, numCh);
+
+    // [BS1770] Build channel weights (LFE=0, all others=1)
+    bs1770ChannelWeights.assign ((size_t) numCh, 1.0f);
+
+    const auto layout = getBusesLayout().getMainInputChannelSet();
+    for (int ch = 0; ch < numCh; ++ch)
+    {
+        if (layout.getTypeOfChannel (ch) == juce::AudioChannelSet::LFE)
+            bs1770ChannelWeights[(size_t) ch] = 0.0f;
+    }
+
 void LevelScopeAudioProcessor::releaseResources()
 {
     resetLoudnessState();
@@ -63,6 +81,7 @@ void LevelScopeAudioProcessor::resetLoudnessState() noexcept
     samplesUntilNextFrame = frameSamples;
     frameEnergyAccum = 0.0;
     historyModel.resetRealtimeFifo();
+    kWeight.reset();
 }
 
 //==============================================================================
@@ -90,15 +109,20 @@ void LevelScopeAudioProcessor::processSampleForLoudness (const float* const* cha
                                                         int numChannels,
                                                         int sampleIndex) noexcept
 {
-    // Mean-square energy across channels (prototype; Phase 2 will replace with BS.1770 K-weighting)
+    // [BS1770] K-weighted mean-square energy (summed across channels, LFE excluded)
     double e = 0.0;
+
     for (int ch = 0; ch < numChannels; ++ch)
     {
-        const float s = channelData[ch][sampleIndex];
-        e += (double) s * (double) s;
+        const float w = (ch < (int) bs1770ChannelWeights.size() ? bs1770ChannelWeights[(size_t) ch] : 1.0f);
+        if (w <= 0.0f)
+            continue;
+
+        const float x = channelData[ch][sampleIndex];
+        const float y = kWeight.processSample (ch, x);
+
+        e += (double) w * (double) y * (double) y;
     }
-    if (numChannels > 0)
-        e /= (double) numChannels;
 
     frameEnergyAccum += e;
 
@@ -149,6 +173,7 @@ void LevelScopeAudioProcessor::processSampleForLoudness (const float* const* cha
 void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                                             juce::MidiBuffer& midiMessages)
 {
+    juce::ScopedNoDenormals noDenormals;
     juce::ignoreUnused (midiMessages);
 
     const int numChannels = getTotalNumInputChannels();
@@ -218,6 +243,7 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     if (shouldAnalyse && discontinuity && frameSamples > 0)
     {
         frameEnergyAccum = 0.0;
+        kWeight.reset();
 
         juce::int64 mod = blockStartProjectSample % (juce::int64) frameSamples;
         if (mod < 0) mod += (juce::int64) frameSamples;
