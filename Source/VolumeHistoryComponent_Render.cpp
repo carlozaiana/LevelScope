@@ -262,7 +262,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
             // Optional header
             g.setColour (juce::Colours::white.withMultipliedAlpha (0.6f));
-            g.drawText ("dBFS",
+            g.drawText ("LUFS",
                         (int) (rightX - labelWidth - 2.0f),
                         (int) (scaleArea.getY() + 2.0f),
                         (int) labelWidth,

@@ -104,14 +104,15 @@ void VolumeHistoryComponent::pushFrameToHistory (float momentaryRms,
         nowFrameIndex = juce::jmax<juce::int64> (nowFrameIndex, frameIndex);
     }
 
-    const float dbM = juce::Decibels::gainToDecibels (momentaryRms, minDb);
-    const float dbS = juce::Decibels::gainToDecibels (shortTermRms, minDb);
+    // Phase 2: processor FIFO already delivers LUFS (dB), so do NOT convert.
+    const float lufsM = momentaryRms;
+    const float lufsS = shortTermRms;
 
     FrameGroup fg;
-    fg.momentaryMinDb = dbM;
-    fg.momentaryMaxDb = dbM;
-    fg.shortTermMinDb = dbS;
-    fg.shortTermMaxDb = dbS;
+    fg.momentaryMinDb = lufsM;
+    fg.momentaryMaxDb = lufsM;
+    fg.shortTermMinDb = lufsS;
+    fg.shortTermMaxDb = lufsS;
 
     // L0 overwrite at absolute frame index
     writeGroupAbs (0, frameIndex, fg);
@@ -599,14 +600,15 @@ void VolumeHistoryComponent::bootstrapHistoryFromProcessorIfNeeded()
         if (! processor.getDerivedRmsAtFrameIndex (fi, mRms, sRms))
             continue;
 
-        const float dbM = juce::Decibels::gainToDecibels (mRms, minDb);
-        const float dbS = juce::Decibels::gainToDecibels (sRms, minDb);
+        // Phase 2: processor accessor returns LUFS (dB) already.
+        const float lufsM = mRms;
+        const float lufsS = sRms;
 
         FrameGroup fg;
-        fg.momentaryMinDb = dbM;
-        fg.momentaryMaxDb = dbM;
-        fg.shortTermMinDb = dbS;
-        fg.shortTermMaxDb = dbS;
+        fg.momentaryMinDb = lufsM;
+        fg.momentaryMaxDb = lufsM;
+        fg.shortTermMinDb = lufsS;
+        fg.shortTermMaxDb = lufsS;
 
         writeGroupAbs (0, fi, fg);
     }
