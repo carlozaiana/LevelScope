@@ -7,11 +7,23 @@
 // [CORE] Helpers
 //==============================================================================
 
+float LevelScopeHistoryModel::rmsToLufs (float rms) noexcept
+{
+    const double r = (double) rms;
+    if (r <= 0.0)
+        return -200.0f; // effectively -inf for display purposes
+
+    // BS.1770 loudness: LUFS = -0.691 + 10*log10(meanSquare)
+    // meanSquare = rms^2  =>  10*log10(rms^2) = 20*log10(rms)
+    const double lufs = -0.691 + 20.0 * std::log10 (r);
+    return (float) lufs;
+}
+
 juce::int64 LevelScopeHistoryModel::floorDivInt64 (juce::int64 a, juce::int64 b) noexcept
 {
     if (b <= 0) return 0;
     if (a >= 0) return a / b;
-    return - ( ( -a + b - 1 ) / b ); // floor division for negatives
+    return - ( ( -a + b - 1 ) / b );
 }
 
 int LevelScopeHistoryModel::wrapSlot (juce::int64 absIndex, int capacity) noexcept
@@ -22,16 +34,26 @@ int LevelScopeHistoryModel::wrapSlot (juce::int64 absIndex, int capacity) noexce
     return (int) m;
 }
 
+float LevelScopeHistoryModel::energyToLufs (float meanSquareEnergy) noexcept
+{
+    // ITU-R BS.1770: LKFS/LUFS = -0.691 + 10*log10( mean_square_energy )
+    // (Momentary/Short-term are ungated.)
+    constexpr float kOffset = -0.691f;
+    constexpr float kEps    = 1.0e-12f; // avoid -inf
+
+    const float e = juce::jmax (kEps, meanSquareEnergy);
+    return kOffset + 10.0f * (float) std::log10 ((double) e);
+}
+
 //==============================================================================
 
 LevelScopeHistoryModel::LevelScopeHistoryModel()
     : loudnessFifo (loudnessFifoSize),
       loudnessBuffer ((size_t) loudnessFifoSize)
 {
-    // Allocate once (NOT on audio thread)
     energyMeanSquare.assign ((size_t) historyCapacityFrames, 0.0f);
-    momentaryRmsHist.assign ((size_t) historyCapacityFrames, 0.0f);
-    shortTermRmsHist.assign ((size_t) historyCapacityFrames, 0.0f);
+    momentaryLufsHist.assign ((size_t) historyCapacityFrames, -120.0f);
+    shortTermLufsHist.assign ((size_t) historyCapacityFrames, -120.0f);
 
     frameIndexTag.reset (new std::atomic<juce::int64>[historyCapacityFrames]);
     for (int i = 0; i < historyCapacityFrames; ++i)
@@ -64,24 +86,22 @@ bool LevelScopeHistoryModel::readEnergyAbs (juce::int64 absFrameIndex, float& ou
     return true;
 }
 
-void LevelScopeHistoryModel::writeFrameAbs (juce::int64 absFrameIndex, float energyMS, float mRms, float sRms) noexcept
+void LevelScopeHistoryModel::writeFrameAbs (juce::int64 absFrameIndex, float energyMS, float mLufs, float sLufs) noexcept
 {
     const int slot = wrapSlot (absFrameIndex, historyCapacityFrames);
 
-    // Write payload first, publish tag last
-    energyMeanSquare[(size_t) slot] = energyMS;
-    momentaryRmsHist[(size_t) slot] = mRms;
-    shortTermRmsHist[(size_t) slot] = sRms;
+    energyMeanSquare[(size_t) slot]  = energyMS;
+    momentaryLufsHist[(size_t) slot] = mLufs;
+    shortTermLufsHist[(size_t) slot] = sLufs;
 
     frameIndexTag[(size_t) slot].store (absFrameIndex, std::memory_order_release);
 
-    // Maintain monotonic max written
     juce::int64 cur = maxWrittenFrameIndex.load (std::memory_order_relaxed);
     while (absFrameIndex > cur && ! maxWrittenFrameIndex.compare_exchange_weak (cur, absFrameIndex))
     {}
 }
 
-float LevelScopeHistoryModel::computeWindowRmsFromEnergy (juce::int64 endFrameIndex, int windowFrames) const noexcept
+float LevelScopeHistoryModel::computeWindowMeanEnergy (juce::int64 endFrameIndex, int windowFrames) const noexcept
 {
     if (windowFrames <= 0)
         return 0.0f;
@@ -104,8 +124,7 @@ float LevelScopeHistoryModel::computeWindowRmsFromEnergy (juce::int64 endFrameIn
     if (count <= 0)
         return 0.0f;
 
-    const double mean = sum / (double) count;
-    return (float) std::sqrt (juce::jmax (0.0, mean));
+    return (float) (sum / (double) count);
 }
 
 bool LevelScopeHistoryModel::frameExists (juce::int64 absFrameIndex) const noexcept
@@ -116,15 +135,15 @@ bool LevelScopeHistoryModel::frameExists (juce::int64 absFrameIndex) const noexc
 }
 
 //==============================================================================
-// [CORE->UI] Derived RMS query
+// [CORE->UI] Derived LUFS query
 //==============================================================================
 
-bool LevelScopeHistoryModel::getDerivedRmsAtFrameIndex (juce::int64 frameIndex,
-                                                       float& momentaryRms,
-                                                       float& shortTermRms) const noexcept
+bool LevelScopeHistoryModel::getDerivedLufsAtFrameIndex (juce::int64 frameIndex,
+                                                        float& momentaryLufs,
+                                                        float& shortTermLufs) const noexcept
 {
-    momentaryRms = 0.0f;
-    shortTermRms = 0.0f;
+    momentaryLufs = -120.0f;
+    shortTermLufs = -120.0f;
 
     const int slot = wrapSlot (frameIndex, historyCapacityFrames);
 
@@ -132,15 +151,15 @@ bool LevelScopeHistoryModel::getDerivedRmsAtFrameIndex (juce::int64 frameIndex,
     if (tag1 != frameIndex)
         return false;
 
-    const float m = momentaryRmsHist[(size_t) slot];
-    const float s = shortTermRmsHist[(size_t) slot];
+    const float m = momentaryLufsHist[(size_t) slot];
+    const float s = shortTermLufsHist[(size_t) slot];
 
     const juce::int64 tag2 = frameIndexTag[(size_t) slot].load (std::memory_order_acquire);
     if (tag2 != frameIndex)
         return false;
 
-    momentaryRms = m;
-    shortTermRms = s;
+    momentaryLufs = m;
+    shortTermLufs = s;
     return true;
 }
 
@@ -154,8 +173,8 @@ void LevelScopeHistoryModel::resetRealtimeFifo() noexcept
 }
 
 void LevelScopeHistoryModel::pushToFifo (juce::int64 absFrameIndex,
-                                        float momentaryRms,
-                                        float shortTermRms,
+                                        float momentaryLufs,
+                                        float shortTermLufs,
                                         int isPlaying) noexcept
 {
     int start1 = 0, size1 = 0, start2 = 0, size2 = 0;
@@ -167,16 +186,16 @@ void LevelScopeHistoryModel::pushToFifo (juce::int64 absFrameIndex,
         const int index = (size1 > 0 ? start1 : start2);
 
         auto& f = loudnessBuffer[(size_t) index];
-        f.momentaryRms = momentaryRms;
-        f.shortTermRms = shortTermRms;
-        f.frameIndex   = absFrameIndex;
-        f.isPlaying    = isPlaying;
+        f.momentaryLufs = momentaryLufs;
+        f.shortTermLufs = shortTermLufs;
+        f.frameIndex    = absFrameIndex;
+        f.isPlaying     = isPlaying;
 
         loudnessFifo.finishedWrite (1);
     }
     else
     {
-        loudnessFifo.finishedWrite (0); // FIFO full, drop
+        loudnessFifo.finishedWrite (0);
     }
 }
 
@@ -202,8 +221,8 @@ int LevelScopeHistoryModel::readLoudnessFromFifo (float* momentaryDest,
         for (int i = 0; i < size1; ++i)
         {
             const auto& f = loudnessBuffer[(size_t) (start1 + i)];
-            momentaryDest[destIndex]  = f.momentaryRms;
-            shortTermDest[destIndex]  = f.shortTermRms;
+            momentaryDest[destIndex]  = f.momentaryLufs;
+            shortTermDest[destIndex]  = f.shortTermLufs;
             frameIndexDest[destIndex] = f.frameIndex;
             isPlayingDest[destIndex]  = f.isPlaying;
             ++destIndex;
@@ -215,8 +234,8 @@ int LevelScopeHistoryModel::readLoudnessFromFifo (float* momentaryDest,
         for (int i = 0; i < size2; ++i)
         {
             const auto& f = loudnessBuffer[(size_t) (start2 + i)];
-            momentaryDest[destIndex]  = f.momentaryRms;
-            shortTermDest[destIndex]  = f.shortTermRms;
+            momentaryDest[destIndex]  = f.momentaryLufs;
+            shortTermDest[destIndex]  = f.shortTermLufs;
             frameIndexDest[destIndex] = f.frameIndex;
             isPlayingDest[destIndex]  = f.isPlaying;
             ++destIndex;
@@ -239,21 +258,39 @@ void LevelScopeHistoryModel::pushEnergyFrame (juce::int64 absFrameIndex,
 {
     energyMS = (float) juce::jmax (0.0, (double) energyMS);
 
-    // Make energy visible first (provisional RMS = 0)
-    writeFrameAbs (absFrameIndex, energyMS, 0.0f, 0.0f);
+    const auto mode = getOutputMode();
 
-    const float rmsMomentary = computeWindowRmsFromEnergy (absFrameIndex, juce::jmax (1, momentaryFrames));
-    const float rmsShortTerm = computeWindowRmsFromEnergy (absFrameIndex, juce::jmax (1, shortTermFrames));
+    // Make energy visible first (derived values are placeholders)
+    // (Derived placeholders do not affect the energy-window computation.)
+    if (mode == OutputMode::lufs)
+        writeFrameAbs (absFrameIndex, energyMS, -120.0f, -120.0f);
+    else
+        writeFrameAbs (absFrameIndex, energyMS, 0.0f, 0.0f);
 
-    // Store final derived values
-    writeFrameAbs (absFrameIndex, energyMS, rmsMomentary, rmsShortTerm);
+    const float meanE_M = computeWindowMeanEnergy (absFrameIndex, juce::jmax (1, momentaryFrames));
+    const float meanE_S = computeWindowMeanEnergy (absFrameIndex, juce::jmax (1, shortTermFrames));
 
-    // Push to GUI FIFO
-    pushToFifo (absFrameIndex, rmsMomentary, rmsShortTerm, isPlaying);
+    float outM = 0.0f;
+    float outS = 0.0f;
+
+    if (mode == OutputMode::lufs)
+    {
+        outM = energyToLufs (meanE_M);
+        outS = energyToLufs (meanE_S);
+    }
+    else
+    {
+        // Legacy mode: publish RMS (linear). UI will convert to dB.
+        outM = (float) std::sqrt (juce::jmax (0.0f, meanE_M));
+        outS = (float) std::sqrt (juce::jmax (0.0f, meanE_S));
+    }
+
+    writeFrameAbs (absFrameIndex, energyMS, outM, outS);
+    pushToFifo (absFrameIndex, outM, outS, isPlaying);
 }
 
 //==============================================================================
-// [CORE-STATE] save/load (keeps existing LSCP v1 format)
+// [CORE-STATE] save/load
 //==============================================================================
 
 void LevelScopeHistoryModel::saveState (juce::MemoryBlock& destData) const
@@ -266,21 +303,21 @@ void LevelScopeHistoryModel::saveState (juce::MemoryBlock& destData) const
     out.writeInt ((int) kMagic);
     out.writeInt ((int) kVersion);
 
-    // chunk count (HIST + TCOF)
-    out.writeInt (2);
+    out.writeInt (2); // chunk count (HIST + TCOF)
 
     //--------------------------------------------------------------------------
     // Chunk: HIST
     //--------------------------------------------------------------------------
     juce::MemoryOutputStream chunk (4096);
 
-    chunk.writeInt (1); // chunk version
+    chunk.writeInt (2); // chunk version (was 1)
+    chunk.writeInt ((int) storedEnergyKind); // new in v2
 
     chunk.writeInt (historyCapacityFrames);
     chunk.writeInt (frameSamplesForMetadata);
 
-    const int momentaryFrames = (int) std::round (0.4 * loudnessFrameRate); // 24
-    const int shortTermFrames = (int) std::round (3.0 * loudnessFrameRate); // 180
+    const int momentaryFrames = (int) std::round (0.4 * loudnessFrameRate);
+    const int shortTermFrames = (int) std::round (3.0 * loudnessFrameRate);
     chunk.writeInt (momentaryFrames);
     chunk.writeInt (shortTermFrames);
 
@@ -289,9 +326,9 @@ void LevelScopeHistoryModel::saveState (juce::MemoryBlock& destData) const
 
     if (maxWritten == std::numeric_limits<juce::int64>::min())
     {
-        chunk.writeInt64 (0);  // startFrameIndex
-        chunk.writeInt (0);    // numFrames
-        chunk.writeInt (0);    // compressedBytes
+        chunk.writeInt64 (0);
+        chunk.writeInt (0);
+        chunk.writeInt (0);
     }
     else
     {
@@ -336,11 +373,11 @@ void LevelScopeHistoryModel::saveState (juce::MemoryBlock& destData) const
     out.write (chunk.getData(), chunk.getDataSize());
 
     //--------------------------------------------------------------------------
-    // Chunk: TCOF (user timecode offset)
+    // Chunk: TCOF
     //--------------------------------------------------------------------------
     {
         juce::MemoryOutputStream tc (64);
-        tc.writeInt (1); // chunk version
+        tc.writeInt (1);
         tc.writeDouble (userTimecodeOffsetSeconds.load (std::memory_order_relaxed));
 
         const juce::uint32 tcId = fourcc ('T','C','O','F');
@@ -368,7 +405,6 @@ void LevelScopeHistoryModel::loadState (const void* data, int sizeInBytes)
     if (numChunks <= 0)
         return;
 
-    // Reset tags (tags define validity)
     for (int i = 0; i < historyCapacityFrames; ++i)
         frameIndexTag[(size_t) i].store ((juce::int64) -1, std::memory_order_relaxed);
 
@@ -378,6 +414,7 @@ void LevelScopeHistoryModel::loadState (const void* data, int sizeInBytes)
     {
         const juce::uint32 chunkId = (juce::uint32) in.readInt();
         const int chunkBytes = in.readInt();
+
         if (chunkBytes <= 0 || (juce::int64) in.getNumBytesRemaining() < (juce::int64) chunkBytes)
         {
             in.skipNextBytes (juce::jmax (0, chunkBytes));
@@ -390,8 +427,7 @@ void LevelScopeHistoryModel::loadState (const void* data, int sizeInBytes)
         if (chunkId == fourcc ('T','C','O','F'))
         {
             juce::MemoryInputStream tc (chunkData.getData(), chunkData.getSize(), false);
-            const int tcVer = tc.readInt();
-            if (tcVer == 1)
+            if (tc.readInt() == 1)
                 userTimecodeOffsetSeconds.store (tc.readDouble(), std::memory_order_relaxed);
             continue;
         }
@@ -402,8 +438,15 @@ void LevelScopeHistoryModel::loadState (const void* data, int sizeInBytes)
         juce::MemoryInputStream ch (chunkData.getData(), chunkData.getSize(), false);
 
         const int chunkVer = ch.readInt();
-        if (chunkVer != 1)
+
+        int energyKindInt = (int) EnergyKind::unknownOrLegacy;
+
+        if (chunkVer == 2)
+            energyKindInt = ch.readInt();
+        else if (chunkVer != 1)
             continue;
+
+        storedEnergyKind = (EnergyKind) energyKindInt;
 
         const int capStored = ch.readInt();
         const int frameSamplesStored = ch.readInt();
@@ -432,6 +475,7 @@ void LevelScopeHistoryModel::loadState (const void* data, int sizeInBytes)
         juce::MemoryInputStream compIn (compressed.getData(), compressed.getSize(), false);
         juce::GZIPDecompressorInputStream gzIn (compIn);
 
+        // Rolling sums for mean energy
         const int mWin = juce::jmax (1, momentaryFramesStored);
         const int sWin = juce::jmax (1, shortTermFramesStored);
 
@@ -469,13 +513,27 @@ void LevelScopeHistoryModel::loadState (const void* data, int sizeInBytes)
             if (v == 0)
                 continue;
 
-            const float mRms = (mCount > 0 ? (float) std::sqrt (juce::jmax (0.0, mSum / (double) mCount)) : 0.0f);
-            const float sRms = (sCount > 0 ? (float) std::sqrt (juce::jmax (0.0, sSum / (double) sCount)) : 0.0f);
+            const float meanE_M = (mCount > 0 ? (float) (mSum / (double) mCount) : 0.0f);
+            const float meanE_S = (sCount > 0 ? (float) (sSum / (double) sCount) : 0.0f);
 
-            writeFrameAbs (fi, e, mRms, sRms);
+            float outM = 0.0f;
+            float outS = 0.0f;
+
+            if (getOutputMode() == OutputMode::lufs)
+            {
+                outM = energyToLufs (meanE_M);
+                outS = energyToLufs (meanE_S);
+            }
+            else
+            {
+                outM = (float) std::sqrt (juce::jmax (0.0f, meanE_M));
+                outS = (float) std::sqrt (juce::jmax (0.0f, meanE_S));
+            }
+
+            writeFrameAbs (fi, e, outM, outS);
         }
 
         maxWrittenFrameIndex.store (maxWrittenStored, std::memory_order_relaxed);
-        loudnessFifo.reset(); // avoid stale GUI frames after load
+        loudnessFifo.reset();
     }
 }
