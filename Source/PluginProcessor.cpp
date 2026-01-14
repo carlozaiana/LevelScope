@@ -7,12 +7,14 @@
 
 namespace
 {
+    // Treat arithmetic types (int, int64, bool, double) as always "present".
     template <typename T, std::enable_if_t<std::is_arithmetic_v<std::decay_t<T>>, int> = 0>
     bool optHasValue (T) noexcept { return true; }
 
     template <typename T, std::enable_if_t<std::is_arithmetic_v<std::decay_t<T>>, int> = 0>
     T optValue (T v) noexcept { return v; }
 
+    // Treat optional-like types (std::optional, juce::Optional, etc.) as "present" if bool(o) is true.
     template <typename Opt, std::enable_if_t<!std::is_arithmetic_v<std::decay_t<Opt>>, int> = 0>
     bool optHasValue (const Opt& o) noexcept { return (bool) o; }
 
@@ -34,9 +36,7 @@ LevelScopeAudioProcessor::LevelScopeAudioProcessor()
                         .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
                         .withOutput ("Output", juce::AudioChannelSet::stereo(), true))
 {
-    // [BS1770] We want the core model to interpret stored energies as BS.1770 energies
-    // and publish momentary/short-term as LUFS (dB).
-    // NOTE: UI will be updated in Phase 2B to display LUFS correctly.
+    // Phase 2A: core publishes LUFS (UI will be updated in Phase 2B)
     historyModel.setOutputMode (LevelScopeHistoryModel::OutputMode::lufs);
 }
 
@@ -45,7 +45,7 @@ LevelScopeAudioProcessor::~LevelScopeAudioProcessor() = default;
 //==============================================================================
 
 void LevelScopeAudioProcessor::prepareToPlay (double sampleRate,
-                                              int /*samplesPerBlockExpected*/)
+                                             int /*samplesPerBlockExpected*/)
 {
     currentSampleRate = (sampleRate > 0.0 ? sampleRate : 44100.0);
 
@@ -54,22 +54,19 @@ void LevelScopeAudioProcessor::prepareToPlay (double sampleRate,
 
     historyModel.setFrameSamplesForMetadata (frameSamples);
 
-    resetLoudnessState();
-}
-
-    // [BS1770] Prepare K-weighting filter state for current channel count
+    // [BS1770] prepare K-weighting for current channel count
     const int numCh = juce::jmax (1, getTotalNumInputChannels());
     kWeight.prepare (currentSampleRate, numCh);
 
-    // [BS1770] Build channel weights (LFE=0, all others=1)
+    // [BS1770] channel weights (LFE = 0, everything else = 1)
     bs1770ChannelWeights.assign ((size_t) numCh, 1.0f);
-
     const auto layout = getBusesLayout().getMainInputChannelSet();
     for (int ch = 0; ch < numCh; ++ch)
-    {
         if (layout.getTypeOfChannel (ch) == juce::AudioChannelSet::LFE)
             bs1770ChannelWeights[(size_t) ch] = 0.0f;
-    }
+
+    resetLoudnessState();
+}
 
 void LevelScopeAudioProcessor::releaseResources()
 {
@@ -94,6 +91,7 @@ bool LevelScopeAudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
     if (mainIn.isDisabled() || mainOut.isDisabled())
         return false;
 
+    // Prototype: mono or stereo only
     if (mainIn.size() > 2 || mainOut.size() > 2)
         return false;
 
@@ -109,7 +107,7 @@ void LevelScopeAudioProcessor::processSampleForLoudness (const float* const* cha
                                                         int numChannels,
                                                         int sampleIndex) noexcept
 {
-    // [BS1770] K-weighted mean-square energy (summed across channels, LFE excluded)
+    // [BS1770] K-weighted mean-square energy (sum over channels; LFE weight=0)
     double e = 0.0;
 
     for (int ch = 0; ch < numChannels; ++ch)
@@ -140,7 +138,6 @@ void LevelScopeAudioProcessor::processSampleForLoudness (const float* const* cha
             return;
         }
 
-        // Timestamp this loudness frame on the DAW timeline
         const juce::int64 frameProjectSample =
             currentBlockStartProjectSample + (juce::int64) currentBlockSampleIndex;
 
@@ -234,7 +231,7 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 
     const bool shouldAnalyse = (blockIsPlaying == 1 && haveTimeInSamples);
 
-    // [FIX-RESTART-PARTIAL-FRAME] discontinuity detection remains in plugin wrapper
+    // [FIX-RESTART-PARTIAL-FRAME]
     const bool discontinuity =
         (! haveLastBlockEnd) ||
         (lastBlockIsPlaying == 0) ||
@@ -279,7 +276,7 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         processSampleForLoudness (channelData.getData(), numChannels, i);
     }
 
-    // audio passthrough unchanged
+    // Audio passthrough unchanged
 }
 
 //==============================================================================

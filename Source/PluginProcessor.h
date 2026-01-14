@@ -82,7 +82,7 @@ public:
                                     float& momentaryRms,
                                     float& shortTermRms) const noexcept
     {
-        return historyModel.getDerivedRmsAtFrameIndex (frameIndex, momentaryRms, shortTermRms);
+        return historyModel.getDerivedLufsAtFrameIndex (frameIndex, momentaryRms, shortTermRms);
     }
 
     juce::int64 getMaxWrittenFrameIndex() const noexcept
