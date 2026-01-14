@@ -7,18 +7,6 @@
 // [CORE] Helpers
 //==============================================================================
 
-float LevelScopeHistoryModel::rmsToLufs (float rms) noexcept
-{
-    const double r = (double) rms;
-    if (r <= 0.0)
-        return -200.0f; // effectively -inf for display purposes
-
-    // BS.1770 loudness: LUFS = -0.691 + 10*log10(meanSquare)
-    // meanSquare = rms^2  =>  10*log10(rms^2) = 20*log10(rms)
-    const double lufs = -0.691 + 20.0 * std::log10 (r);
-    return (float) lufs;
-}
-
 juce::int64 LevelScopeHistoryModel::floorDivInt64 (juce::int64 a, juce::int64 b) noexcept
 {
     if (b <= 0) return 0;
