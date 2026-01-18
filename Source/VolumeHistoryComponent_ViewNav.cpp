@@ -169,10 +169,29 @@ void VolumeHistoryComponent::applyHorizontalZoom (float wheelDelta, float anchor
     if (! haveNowFrameIndex)
         return;
 
-    if (followRightEdge)
-        viewRightFrame = (double) nowFrameIndex;
-
     const double oldZoom = zoomX;
+
+    //--------------------------------------------------------------------------
+    // [FOLLOW-ZOOM-FIX]
+    // If Follow is ON, we must base the zoom anchor on the *currently followed*
+    // viewRightFrame (playhead-centered), NOT on nowFrameIndex (furthest written).
+    // Otherwise, when overwriting earlier material, zoom snaps to the far-right
+    // prior written region.
+    //--------------------------------------------------------------------------
+    if (followRightEdge)
+    {
+        if (havePlayheadFrameIndex && oldZoom > 1.0e-12)
+        {
+            const double visibleFrames = (double) w / oldZoom;
+            constexpr double playheadXFrac = 0.5; // keep playhead centered while following
+            viewRightFrame = (double) playheadFrameIndex + visibleFrames * (1.0 - playheadXFrac);
+        }
+        else if (haveNowFrameIndex)
+        {
+            // Fallback only if playhead is unknown
+            viewRightFrame = (double) nowFrameIndex;
+        }
+    }
 
     const double zoomBase   = 1.1;
     const double zoomFactor = std::pow (zoomBase, (double) wheelDelta);
@@ -182,12 +201,16 @@ void VolumeHistoryComponent::applyHorizontalZoom (float wheelDelta, float anchor
 
     // Keep the timeline frame under the mouse fixed
     const double ax = juce::jlimit (0.0, (double) w, (double) anchorX);
-    const double frameAtCursor = viewRightFrame - ((double) w - ax) / (oldZoom > 1.0e-12 ? oldZoom : 1.0e-12);
 
-    viewRightFrame = frameAtCursor + ((double) w - ax) / (zoomX > 1.0e-12 ? zoomX : 1.0e-12);
+    const double safeOld = (oldZoom > 1.0e-12 ? oldZoom : 1.0e-12);
+    const double safeNew = (zoomX   > 1.0e-12 ? zoomX   : 1.0e-12);
 
+    const double frameAtCursor = viewRightFrame - ((double) w - ax) / safeOld;
+    viewRightFrame = frameAtCursor + ((double) w - ax) / safeNew;
+
+    // Manual zoom disables follow (consistent with existing pan behavior)
     followRightEdge = false;
-    autoRefollowArmed = false; // [AUTO-FOLLOW-HYST] disarm until playhead moves away from edge
+    autoRefollowArmed = false; // [AUTO-FOLLOW-HYST]
     hasCustomZoomX = true;
 
     clampViewRightFrame (w);
