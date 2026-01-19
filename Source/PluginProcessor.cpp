@@ -160,14 +160,18 @@ void LevelScopeAudioProcessor::processSampleForLoudness (const float* const* cha
         const int momentaryFrames = (int) std::round (momentaryWindowSeconds * loudnessFrameRate); // 24
         const int shortTermFrames = (int) std::round (shortTermWindowSeconds * loudnessFrameRate); // 180
 
-        // [LOUDNESS-STATS] update running integrated/LRA
+        // Update running stats first (integrated + LRA, etc.)
         runningStats.pushFrameEnergy (energyMS);
+
+        // LRA "relative gate" curve value (integratedRunning - 20 LU)
+        const float gateLufs = runningStats.getLraGateLufs();
 
         historyModel.pushEnergyFrame (frameIndex,
                                      energyMS,
                                      momentaryFrames,
                                      shortTermFrames,
-                                     currentBlockIsPlaying);
+                                     currentBlockIsPlaying,
+                                     gateLufs);
     }
 }
 
@@ -288,12 +292,28 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 // [CORE->UI] forwarding
 //==============================================================================
 
+int LevelScopeAudioProcessor::readLoudnessFromFifoEx (float* momentaryDest,
+                                                     float* shortTermDest,
+                                                     float* lraGateDest,
+                                                     juce::int64* frameIndexDest,
+                                                     int* isPlayingDest,
+                                                     int maxNumToRead) noexcept
+{
+    return historyModel.readLoudnessFromFifo (momentaryDest,
+                                             shortTermDest,
+                                             lraGateDest,
+                                             frameIndexDest,
+                                             isPlayingDest,
+                                             maxNumToRead);
+}
+
 int LevelScopeAudioProcessor::readLoudnessFromFifo (float* momentaryDest,
                                                    float* shortTermDest,
                                                    juce::int64* frameIndexDest,
                                                    int* isPlayingDest,
                                                    int maxNumToRead) noexcept
 {
+    // Backward-compatible wrapper (no gate)
     return historyModel.readLoudnessFromFifo (momentaryDest,
                                              shortTermDest,
                                              frameIndexDest,

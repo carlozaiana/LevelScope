@@ -66,6 +66,15 @@ public:
                               int* isPlayingDest,
                               int maxNumToRead) noexcept;
 
+    // Extended FIFO read: also returns LRA gate (LUFS) per frame (can be nullptr in the core call).
+    
+    int readLoudnessFromFifoEx (float* momentaryDest,
+                                float* shortTermDest,
+                                float* lraGateDest,
+                                juce::int64* frameIndexDest,
+                                int* isPlayingDest,
+                                int maxNumToRead) noexcept;
+
     double getTimecodeOffsetSeconds() const noexcept { return timecodeOffsetSeconds.load (std::memory_order_relaxed); }
 
     double getUserTimecodeOffsetSeconds() const noexcept { return historyModel.getUserTimecodeOffsetSeconds(); }
@@ -84,6 +93,11 @@ public:
                                     float& shortTermRms) const noexcept
     {
         return historyModel.getDerivedLufsAtFrameIndex (frameIndex, momentaryRms, shortTermRms);
+    }
+
+    bool getLraGateLufsAtFrameIndex (juce::int64 frameIndex, float& gateLufs) const noexcept
+    {
+        return historyModel.getLraGateLufsAtFrameIndex (frameIndex, gateLufs);
     }
 
     juce::int64 getMaxWrittenFrameIndex() const noexcept
