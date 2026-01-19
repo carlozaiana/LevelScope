@@ -85,6 +85,8 @@ target_sources(LevelScope
         Source/VolumeHistoryComponent_History.cpp
         Source/VolumeHistoryComponent_ViewNav.cpp
         Source/VolumeHistoryComponent_Render.cpp
+        Source/LoudnessStatsComponent.cpp
+        Source/LoudnessStatsComponent.h
 )
 
 target_compile_definitions(LevelScope
