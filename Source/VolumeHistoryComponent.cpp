@@ -65,6 +65,16 @@ VolumeHistoryComponent::VolumeHistoryComponent (LevelScopeAudioProcessor& proc)
 
     addAndMakeVisible (followButton);
 
+    // [LRAG] Gate toggle
+    gateButton.setButtonText ("Gate");
+    gateButton.setToggleState (showGate, juce::dontSendNotification);
+    gateButton.onClick = [this]
+    {
+        showGate = gateButton.getToggleState();
+        repaint();
+    };
+    addAndMakeVisible (gateButton);
+
     markStaticBackgroundDirty();
 }
 

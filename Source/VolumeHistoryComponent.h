@@ -48,8 +48,13 @@ private:
     {
         float momentaryMinDb = -90.0f;
         float momentaryMaxDb = -90.0f;
+
         float shortTermMinDb = -90.0f;
         float shortTermMaxDb = -90.0f;
+
+        // [LRAG] LRA relative gate curve (LUFS): typically IntegratedRunning - 20 LU
+        float gateMinDb = -200.0f;
+        float gateMaxDb = -200.0f;
     };
 
     struct HistoryLevel
@@ -85,7 +90,7 @@ private:
 
     bool drainProcessorFifo(); // [STEP1-PERF]
     // [TIMEBASE-PLAYHEAD] projectSamplePos comes from the host playhead (in samples)
-    void pushFrameToHistory (float momentaryRms, float shortTermRms,
+    void pushFrameToHistory (float momentaryVal, float shortTermVal, float gateLufs,
                              juce::int64 frameIndex60Hz, int isPlaying);
 
     // [TIMEBASE-PLAYHEAD] overwrite-safe writing
@@ -229,6 +234,9 @@ private:
     // Follow toggle UI
     juce::ToggleButton followButton;
 
+    juce::ToggleButton gateButton;   // [LRAG] show/hide LRA gate curve
+    bool showGate = false;
+
     // [TIMEBASE-PLAYHEAD]
     int         frameSamples = 0;            // samples per 60 Hz loudness frame (from processor)
 
@@ -257,6 +265,8 @@ private:
     // Stroke-path mode scratch
     mutable juce::Path              scratchPathRepM;
     mutable juce::Path              scratchPathRepS;
+
+    mutable juce::Path scratchPathGate; // [LRAG]
 
     // Bands (batched)
     mutable juce::Path              scratchPathBandM;

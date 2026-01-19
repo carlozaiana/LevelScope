@@ -41,6 +41,7 @@ bool VolumeHistoryComponent::drainProcessorFifo()
     constexpr int chunkSize = 512;
     float momentaryValues [chunkSize];
     float shortTermValues [chunkSize];
+    float gateValues [chunkSize]; // [LRAG]
     juce::int64 frameIndex60Hz [chunkSize];
     int playingFlags [chunkSize];
 
@@ -48,18 +49,19 @@ bool VolumeHistoryComponent::drainProcessorFifo()
 
     for (;;)
     {
-        const int numRead = processor.readLoudnessFromFifo (momentaryValues,
-                                                           shortTermValues,
-                                                           frameIndex60Hz,
-                                                           playingFlags,
-                                                           chunkSize);
+        const int numRead = processor.readLoudnessFromFifoEx (momentaryValues,
+                                                             shortTermValues,
+                                                             gateValues,
+                                                             frameIndex60Hz,
+                                                             playingFlags,
+                                                             chunkSize);
         if (numRead <= 0)
             break;
 
         readAny = true;
 
         for (int i = 0; i < numRead; ++i)
-            pushFrameToHistory (momentaryValues[i], shortTermValues[i],
+            pushFrameToHistory (momentaryValues[i], shortTermValues[i], gateValues[i],
                                 frameIndex60Hz[i], playingFlags[i]);
     }
 
@@ -72,8 +74,9 @@ bool VolumeHistoryComponent::drainProcessorFifo()
 //==============================================================================
 
 // [BEGIN VHC-HIST-PUSH-FRAME]
-void VolumeHistoryComponent::pushFrameToHistory (float momentaryRms,
-                                                 float shortTermRms,
+void VolumeHistoryComponent::pushFrameToHistory (float momentaryVal,
+                                                 float shortTermVal,
+                                                 float gateLufs,
                                                  juce::int64 frameIndex60Hz,
                                                  int isPlaying)
 {
@@ -105,14 +108,19 @@ void VolumeHistoryComponent::pushFrameToHistory (float momentaryRms,
     }
 
     // Phase 2: processor FIFO already delivers LUFS (dB), so do NOT convert.
-    const float lufsM = momentaryRms;
-    const float lufsS = shortTermRms;
+    const float lufsM = momentaryVal;
+    const float lufsS = shortTermVal;
+    const float lufsG = gateLufs;
 
     FrameGroup fg;
     fg.momentaryMinDb = lufsM;
     fg.momentaryMaxDb = lufsM;
     fg.shortTermMinDb = lufsS;
     fg.shortTermMaxDb = lufsS;
+
+    // [LRAG]
+    fg.gateMinDb = lufsG;
+    fg.gateMaxDb = lufsG;
 
     // L0 overwrite at absolute frame index
     writeGroupAbs (0, frameIndex, fg);
@@ -600,6 +608,9 @@ void VolumeHistoryComponent::bootstrapHistoryFromProcessorIfNeeded()
         if (! processor.getDerivedRmsAtFrameIndex (fi, mRms, sRms))
             continue;
 
+        float gate = -200.0f;
+        processor.getLraGateLufsAtFrameIndex (fi, gate); // ok if missing
+
         // Phase 2: processor accessor returns LUFS (dB) already.
         const float lufsM = mRms;
         const float lufsS = sRms;
@@ -609,6 +620,8 @@ void VolumeHistoryComponent::bootstrapHistoryFromProcessorIfNeeded()
         fg.momentaryMaxDb = lufsM;
         fg.shortTermMinDb = lufsS;
         fg.shortTermMaxDb = lufsS;
+        fg.gateMinDb = gate;
+        fg.gateMaxDb = gate;
 
         writeGroupAbs (0, fi, fg);
     }

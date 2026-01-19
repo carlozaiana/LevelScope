@@ -130,6 +130,9 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         {
             scratchPathRepM.clear();
             scratchPathRepS.clear();
+
+            if (showGate)
+                scratchPathGate.clear(); // [LRAG]
         }
 
         const float bandRangeThresholdDb = 3.0f;
@@ -179,6 +182,15 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
                 if (! startedRepM) { scratchPathRepM.startNewSubPath (x, yRepM); startedRepM = true; }
                 else               { scratchPathRepM.lineTo          (x, yRepM); }
             }
+
+            if (showGate)
+            {
+                const float yGate = dbToY (grp.gateMaxDb, h); // min=max at L0; max is fine
+                if (i == 0 || scratchPathGate.isEmpty())
+                    scratchPathGate.startNewSubPath (x, yGate);
+                else
+                    scratchPathGate.lineTo (x, yGate);
+            }
         }
 
        // Bands
@@ -201,6 +213,13 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
             g.setColour (juce::Colour::fromRGB (0, 80, 180).withMultipliedAlpha (0.95f)); // short-term (on top)
             g.strokePath (scratchPathRepS, juce::PathStrokeType (1.5f));
+        }
+
+        // [LRAG] Gate line (drawn on top)
+        if (showGate && showLines)
+        {
+            g.setColour (juce::Colours::yellow.withMultipliedAlpha (0.9f));
+            g.strokePath (scratchPathGate, juce::PathStrokeType (1.5f));
         }
     }
 
