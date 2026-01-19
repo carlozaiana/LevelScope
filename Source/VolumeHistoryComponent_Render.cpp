@@ -130,14 +130,15 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         {
             scratchPathRepM.clear();
             scratchPathRepS.clear();
-
-            if (showGate)
-                scratchPathGate.clear(); // [LRAG]
         }
+
+        if (showGate)
+            scratchPathGate.clear(); // [LRAG]
 
         const float bandRangeThresholdDb = 3.0f;
 
         bool startedRepM = false, startedRepS = false;
+        bool startedGate = false; // [LRAG]
 
         for (size_t i = 0; i < n; ++i)
         {
@@ -183,13 +184,20 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
                 else               { scratchPathRepM.lineTo          (x, yRepM); }
             }
 
+            // [LRAG] Gate curve path
             if (showGate)
             {
-                const float yGate = dbToY (grp.gateMaxDb, h); // min=max at L0; max is fine
-                if (i == 0 || scratchPathGate.isEmpty())
+                const float yGate = dbToY (grp.gateMaxDb, h);
+
+                if (! startedGate)
+                {
                     scratchPathGate.startNewSubPath (x, yGate);
+                    startedGate = true;
+                }
                 else
+                {
                     scratchPathGate.lineTo (x, yGate);
+                }
             }
         }
 
@@ -216,7 +224,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         }
 
         // [LRAG] Gate line (drawn on top)
-        if (showGate && showLines)
+        if (showGate && startedGate)
         {
             g.setColour (juce::Colours::yellow.withMultipliedAlpha (0.9f));
             g.strokePath (scratchPathGate, juce::PathStrokeType (1.5f));
