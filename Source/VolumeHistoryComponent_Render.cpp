@@ -187,7 +187,8 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             // [LRAG] Gate curve path
             if (showGate)
             {
-                const float yGate = dbToY (grp.gateMaxDb, h);
+                const float gateCenter = 0.5f * (grp.gateMinDb + grp.gateMaxDb);
+                const float yGate = dbToY (gateCenter, h);
 
                 if (! startedGate)
                 {

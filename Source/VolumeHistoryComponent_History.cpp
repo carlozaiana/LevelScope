@@ -197,6 +197,10 @@ void VolumeHistoryComponent::recomputeGroupAbsFromChildren (int levelIndex,
     agg.shortTermMinDb =  std::numeric_limits<float>::infinity();
     agg.shortTermMaxDb = -std::numeric_limits<float>::infinity();
 
+    // [LRAG]
+    agg.gateMinDb =  std::numeric_limits<float>::infinity();
+    agg.gateMaxDb = -std::numeric_limits<float>::infinity();
+
     bool any = false;
 
     // Children live in levelIndex - 1
@@ -214,6 +218,8 @@ void VolumeHistoryComponent::recomputeGroupAbsFromChildren (int levelIndex,
         agg.momentaryMaxDb = std::max (agg.momentaryMaxDb, child.momentaryMaxDb);
         agg.shortTermMinDb = std::min (agg.shortTermMinDb, child.shortTermMinDb);
         agg.shortTermMaxDb = std::max (agg.shortTermMaxDb, child.shortTermMaxDb);
+        agg.gateMinDb = std::min (agg.gateMinDb, child.gateMinDb);
+        agg.gateMaxDb = std::max (agg.gateMaxDb, child.gateMaxDb);
     }
 
     if (! any)
@@ -551,6 +557,10 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
         agg.shortTermMinDb =  std::numeric_limits<float>::infinity();
         agg.shortTermMaxDb = -std::numeric_limits<float>::infinity();
 
+        // [LRAG]
+        agg.gateMinDb =  std::numeric_limits<float>::infinity();
+        agg.gateMaxDb = -std::numeric_limits<float>::infinity();
+
         bool any = false;
 
         for (juce::int64 absIdx = absStart; absIdx <= absEnd; ++absIdx)
@@ -565,6 +575,8 @@ void VolumeHistoryComponent::buildVisibleGroupsForLevel (int levelIndex,
             agg.momentaryMaxDb = std::max (agg.momentaryMaxDb, gg.momentaryMaxDb);
             agg.shortTermMinDb = std::min (agg.shortTermMinDb, gg.shortTermMinDb);
             agg.shortTermMaxDb = std::max (agg.shortTermMaxDb, gg.shortTermMaxDb);
+            agg.gateMinDb = std::min (agg.gateMinDb, gg.gateMinDb);
+            agg.gateMaxDb = std::max (agg.gateMaxDb, gg.gateMaxDb);
         }
 
         if (! any)
