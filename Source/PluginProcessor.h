@@ -6,6 +6,7 @@
 
 #include "Core/LevelScopeHistoryModel.h"
 #include "Core/BS1770KWeighting.h"
+#include "Core/RunningLoudnessStats.h"
 
 //==============================================================================
 // Main audio processor for LevelScope
@@ -90,6 +91,10 @@ public:
         return historyModel.getMaxWrittenFrameIndex();
     }
 
+    float getRunningIntegratedLufs() const noexcept { return runningStats.getIntegratedLufs(); }
+    float getRunningLraLu() const noexcept          { return runningStats.getLraLu(); }
+    float getRunningLraGateLufs() const noexcept    { return runningStats.getLraGateLufs(); }
+
 private:
     //==============================================================================
     // Analysis state (still owned by plugin wrapper for Phase 1)
@@ -109,6 +114,9 @@ private:
 
     // [BS1770] Per-channel weights (LFE=0, all others=1). For now mono/stereo only.
     std::vector<float> bs1770ChannelWeights;
+    
+    // Member RunningLoudnessStats
+    RunningLoudnessStats runningStats;
 
     // [FIX-START-RAMP] guard against host start ramp overwriting existing truth
     int transportStartOverwriteGuardFrames = 0;

@@ -79,6 +79,7 @@ void LevelScopeAudioProcessor::resetLoudnessState() noexcept
     frameEnergyAccum = 0.0;
     historyModel.resetRealtimeFifo();
     kWeight.reset();
+    runningStats.reset();
 }
 
 //==============================================================================
@@ -158,6 +159,9 @@ void LevelScopeAudioProcessor::processSampleForLoudness (const float* const* cha
 
         const int momentaryFrames = (int) std::round (momentaryWindowSeconds * loudnessFrameRate); // 24
         const int shortTermFrames = (int) std::round (shortTermWindowSeconds * loudnessFrameRate); // 180
+
+        // [LOUDNESS-STATS] update running integrated/LRA
+        runningStats.pushFrameEnergy (energyMS);
 
         historyModel.pushEnergyFrame (frameIndex,
                                      energyMS,
@@ -241,6 +245,7 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     {
         frameEnergyAccum = 0.0;
         kWeight.reset();
+        runningStats.reset();
 
         juce::int64 mod = blockStartProjectSample % (juce::int64) frameSamples;
         if (mod < 0) mod += (juce::int64) frameSamples;

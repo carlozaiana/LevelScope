@@ -2,6 +2,7 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "LoudnessStatsComponent.h"
 #include "VolumeHistoryComponent.h"
 
 //==============================================================================
@@ -16,6 +17,7 @@ public:
     void resized() override;
 
 private:
+    LoudnessStatsComponent statsComponent;
     VolumeHistoryComponent    historyComponent;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LevelScopeAudioProcessorEditor)

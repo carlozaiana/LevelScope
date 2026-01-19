@@ -5,7 +5,10 @@
 LevelScopeAudioProcessorEditor::LevelScopeAudioProcessorEditor (LevelScopeAudioProcessor& p)
     : AudioProcessorEditor (&p),
       historyComponent (p)
+      statsComponent (p)
 {
+    addAndMakeVisible (historyComponent);
+    addAndMakeVisible (statsComponent);
     addAndMakeVisible (historyComponent);
 
     // Initial size; user can resize freely
@@ -25,5 +28,9 @@ void LevelScopeAudioProcessorEditor::paint (juce::Graphics& g)
 
 void LevelScopeAudioProcessorEditor::resized()
 {
-    historyComponent.setBounds (getLocalBounds());
+    auto r = getLocalBounds();
+    const int statsH = 28;
+
+    statsComponent.setBounds (r.removeFromTop (statsH));
+    historyComponent.setBounds (r);
 }
