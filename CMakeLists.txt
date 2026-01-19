@@ -38,6 +38,9 @@ FetchContent_MakeAvailable(juce)
 add_library(LevelScopeCore STATIC
     Source/Core/LevelScopeHistoryModel.cpp
     Source/Core/LevelScopeHistoryModel.h
+    Source/Core/BS1770KWeighting.h
+    Source/Core/RunningLoudnessStats.cpp
+    Source/Core/RunningLoudnessStats.h
 )
 
 target_include_directories(LevelScopeCore
