@@ -294,6 +294,7 @@ void VolumeHistoryComponent::resized()
     // [FOLLOW-BUTTON] small toggle in the top-right
     followButton.setBounds (getWidth() - 88, 6, 80, 22);
     gateButton.setBounds   (getWidth() - 172, 6, 76, 22);
+    rollingLraButton.setBounds (getWidth() - 256, 6, 76, 22);
 }
 // [END VHC-VNAV-RESIZED]
 

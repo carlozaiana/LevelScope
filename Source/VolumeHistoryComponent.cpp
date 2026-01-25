@@ -22,6 +22,18 @@ VolumeHistoryComponent::VolumeHistoryComponent (LevelScopeAudioProcessor& proc)
     initialiseHistoryLevels();
     resetHistoryLevels();
 
+    // [ROLLING-LRA] allocate per-second buffers (3 hours)
+    secondsCapacity = (int) std::ceil (historyLengthSeconds);
+    secondsCapacity = juce::jmax (1, secondsCapacity);
+
+    secShortTermLufs.assign ((size_t) secondsCapacity, -200.0f);
+    secGateLufs.assign      ((size_t) secondsCapacity, -200.0f);
+    secRollingLraLu.assign  ((size_t) secondsCapacity, 0.0f);
+    secAbsIndexTag.assign   ((size_t) secondsCapacity, (juce::int64) -1);
+
+    // Cache current rolling window selection from processor (default is 60)
+    rollingWindowSecondsCached = processor.getRollingLraWindowSeconds();
+
     // [VIEW-NAV]
     viewTopDb = (double) maxDb;     // top starts at 0 dBFS
     viewRightFrame = 0.0;           // will follow right edge once we have data
@@ -74,6 +86,16 @@ VolumeHistoryComponent::VolumeHistoryComponent (LevelScopeAudioProcessor& proc)
         repaint();
     };
     addAndMakeVisible (gateButton);
+
+    // [ROLLING-LRA] Rolling LRA toggle
+    rollingLraButton.setButtonText ("rLRA");
+    rollingLraButton.setToggleState (showRollingLra, juce::dontSendNotification);
+    ollingLraButton.onClick = [this]
+    {
+        showRollingLra = rollingLraButton.getToggleState();
+        repaint();
+    };
+    addAndMakeVisible (rollingLraButton);
 
     markStaticBackgroundDirty();
 }

@@ -28,8 +28,14 @@
 // [BEGIN VHC-HIST-TIMER-AND-DRAIN]
 void VolumeHistoryComponent::timerCallback()
 {
-    const bool gotNewData = drainProcessorFifo(); // [STEP1-PERF]
-    if (gotNewData)
+    const bool gotNewData = drainProcessorFifo();
+
+    // [ROLLING-LRA] if window selection changed, start rebuild; then do small chunks per tick
+    startRollingRebuildIfWindowChanged();
+    if (rollingRebuildInProgress)
+        rebuildRollingLraStep (200); // process up to 200 seconds per timer tick
+
+    if (gotNewData || rollingRebuildInProgress)
         repaint();
 }
 
@@ -124,6 +130,15 @@ void VolumeHistoryComponent::pushFrameToHistory (float momentaryVal,
 
     // L0 overwrite at absolute frame index
     writeGroupAbs (0, frameIndex, fg);
+
+    // [ROLLING-LRA] sample once per second from the 60 Hz stream
+    const juce::int64 absSecondIndex = floorDivInt64 (frameIndex, 60);
+
+    if (absSecondIndex != lastSecondPushed)
+    {
+        lastSecondPushed = absSecondIndex;
+        pushSecondSample (absSecondIndex, lufsS, lufsG);
+    }
 
     // Recompute parent groups up the pyramid (overwrite-safe)
     for (int level = 1; level < maxLevels; ++level)
@@ -611,21 +626,23 @@ void VolumeHistoryComponent::bootstrapHistoryFromProcessorIfNeeded()
     if (maxWritten == std::numeric_limits<juce::int64>::min())
         return;
 
-    // Fill L0 for the last rawCapacityFrames (3 hours @ 60 Hz)
     const juce::int64 startFrame = maxWritten - (juce::int64) (rawCapacityFrames - 1);
+
+    // [ROLLING-LRA] reset so the first valid second will be pushed
+    lastSecondPushed = std::numeric_limits<juce::int64>::min();
 
     for (juce::int64 fi = startFrame; fi <= maxWritten; ++fi)
     {
-        float mRms = 0.0f, sRms = 0.0f;
-        if (! processor.getDerivedRmsAtFrameIndex (fi, mRms, sRms))
+        float mVal = 0.0f, sVal = 0.0f;
+        if (! processor.getDerivedRmsAtFrameIndex (fi, mVal, sVal))
             continue;
 
         float gate = -200.0f;
         processor.getLraGateLufsAtFrameIndex (fi, gate); // ok if missing
 
         // Phase 2: processor accessor returns LUFS (dB) already.
-        const float lufsM = mRms;
-        const float lufsS = sRms;
+        const float lufsM = mVal;
+        const float lufsS = sVal;
 
         FrameGroup fg;
         fg.momentaryMinDb = lufsM;
@@ -636,9 +653,18 @@ void VolumeHistoryComponent::bootstrapHistoryFromProcessorIfNeeded()
         fg.gateMaxDb = gate;
 
         writeGroupAbs (0, fi, fg);
+
+        // [ROLLING-LRA] sample once per second from the 60 Hz timeline (fi is a 60 Hz frame index)
+        const juce::int64 absSecondIndex = floorDivInt64 (fi, 60);
+
+        if (absSecondIndex != lastSecondPushed)
+        {
+            lastSecondPushed = absSecondIndex;
+            pushSecondSample (absSecondIndex, lufsS, gate);
+        }
     }
 
-    // Rebuild higher levels over the same time range
+    // Rebuild higher LOD levels over the same time range
     for (int level = 1; level < maxLevels; ++level)
     {
         const int span = levels[(size_t) level].spanFrames;
@@ -656,6 +682,26 @@ void VolumeHistoryComponent::bootstrapHistoryFromProcessorIfNeeded()
     playheadFrameIndex = maxWritten;
 
     bootstrappedFromProcessor = true;
+
+    // [ROLLING-LRA] after bootstrap, rebuild rolling curve over all stored seconds (chunked in timerCallback)
+    rollingRebuildInProgress = true;
+    rollingRebuildMinSecond = std::numeric_limits<juce::int64>::max();
+    rollingRebuildMaxSecond = std::numeric_limits<juce::int64>::min();
+
+    for (int i = 0; i < secondsCapacity; ++i)
+    {
+        const auto t = secAbsIndexTag[(size_t) i];
+        if (t != (juce::int64) -1)
+        {
+            rollingRebuildMinSecond = juce::jmin (rollingRebuildMinSecond, t);
+            rollingRebuildMaxSecond = juce::jmax (rollingRebuildMaxSecond, t);
+        }
+    }
+
+    if (rollingRebuildMinSecond <= rollingRebuildMaxSecond)
+        rollingRebuildNextSecond = rollingRebuildMinSecond;
+    else
+        rollingRebuildInProgress = false;
 }
 // [END VHC-HIST-BOOTSTRAP]
 
@@ -671,3 +717,137 @@ juce::int64 VolumeHistoryComponent::floorDivInt64 (juce::int64 a, juce::int64 b)
     return - ((-a + b - 1) / b);
 }
 // [END VHC-HIST-HELPERS]
+
+//==============================================================================
+// [ROLLING-LRA] Helpers
+//==============================================================================
+
+int VolumeHistoryComponent::wrapSecondSlot (juce::int64 absSecondIndex) const noexcept
+{
+    if (secondsCapacity <= 0)
+        return 0;
+
+    juce::int64 m = absSecondIndex % (juce::int64) secondsCapacity;
+    if (m < 0) m += (juce::int64) secondsCapacity;
+    return (int) m;
+}
+
+void VolumeHistoryComponent::pushSecondSample (juce::int64 absSecondIndex,
+                                              float shortTermLufs,
+                                              float gateLufs)
+{
+    if (secondsCapacity <= 0)
+        return;
+
+    const int slot = wrapSecondSlot (absSecondIndex);
+
+    secShortTermLufs[(size_t) slot] = shortTermLufs;
+    secGateLufs[(size_t) slot]      = gateLufs;
+
+    secAbsIndexTag[(size_t) slot] = absSecondIndex;
+
+    // Compute rolling LRA for this second immediately (cheap)
+    recomputeRollingLraForSecond (absSecondIndex);
+}
+
+void VolumeHistoryComponent::recomputeRollingLraForSecond (juce::int64 absSecondIndex)
+{
+    if (secondsCapacity <= 0)
+        return;
+
+    const int slotNow = wrapSecondSlot (absSecondIndex);
+    if (secAbsIndexTag[(size_t) slotNow] != absSecondIndex)
+        return;
+
+    const int windowSeconds = rollingWindowSecondsCached;
+    const int N = juce::jlimit (1, 120, windowSeconds);
+
+    const float gateHere = secGateLufs[(size_t) slotNow];
+    const float gate = juce::jmax (-70.0f, gateHere);
+
+    // Collect gated samples from last N seconds (including current)
+    std::array<float, 120> tmp {};
+    int count = 0;
+
+    for (int k = 0; k < N; ++k)
+    {
+        const juce::int64 sIdx = absSecondIndex - (juce::int64) k;
+        const int slot = wrapSecondSlot (sIdx);
+
+        if (secAbsIndexTag[(size_t) slot] != sIdx)
+            continue;
+
+        const float v = secShortTermLufs[(size_t) slot];
+        if (v >= gate)
+            tmp[(size_t) count++] = v;
+    }
+
+    float out = 0.0f;
+
+    if (count >= 4)
+    {
+        std::sort (tmp.begin(), tmp.begin() + count);
+
+        const int rank10 = (int) std::ceil (0.10 * (double) count);
+        const int rank95 = (int) std::ceil (0.95 * (double) count);
+
+        const int i10 = juce::jlimit (0, count - 1, rank10 - 1);
+        const int i95 = juce::jlimit (0, count - 1, rank95 - 1);
+
+        out = juce::jmax (0.0f, tmp[(size_t) i95] - tmp[(size_t) i10]);
+    }
+
+    secRollingLraLu[(size_t) slotNow] = out;
+}
+
+void VolumeHistoryComponent::startRollingRebuildIfWindowChanged()
+{
+    const int current = processor.getRollingLraWindowSeconds();
+    if (current == rollingWindowSecondsCached)
+        return;
+
+    rollingWindowSecondsCached = current;
+
+    // Start a rebuild over all known seconds (chunked)
+    rollingRebuildInProgress = true;
+    rollingRebuildMinSecond = std::numeric_limits<juce::int64>::max();
+    rollingRebuildMaxSecond = std::numeric_limits<juce::int64>::min();
+
+    for (int i = 0; i < secondsCapacity; ++i)
+    {
+        const auto t = secAbsIndexTag[(size_t) i];
+        if (t != (juce::int64) -1)
+        {
+            rollingRebuildMinSecond = juce::jmin (rollingRebuildMinSecond, t);
+            rollingRebuildMaxSecond = juce::jmax (rollingRebuildMaxSecond, t);
+        }
+    }
+
+    if (rollingRebuildMinSecond <= rollingRebuildMaxSecond)
+        rollingRebuildNextSecond = rollingRebuildMinSecond;
+    else
+        rollingRebuildInProgress = false;
+}
+
+void VolumeHistoryComponent::rebuildRollingLraStep (int maxSecondsToProcess)
+{
+    if (! rollingRebuildInProgress)
+        return;
+
+    const int maxCount = juce::jmax (1, maxSecondsToProcess);
+    int done = 0;
+
+    while (done < maxCount && rollingRebuildNextSecond <= rollingRebuildMaxSecond)
+    {
+        // Only recompute if that second exists
+        const int slot = wrapSecondSlot (rollingRebuildNextSecond);
+        if (secAbsIndexTag[(size_t) slot] == rollingRebuildNextSecond)
+            recomputeRollingLraForSecond (rollingRebuildNextSecond);
+
+        ++rollingRebuildNextSecond;
+        ++done;
+    }
+
+    if (rollingRebuildNextSecond > rollingRebuildMaxSecond)
+        rollingRebuildInProgress = false;
+}

@@ -237,6 +237,52 @@ private:
     juce::ToggleButton gateButton;   // [LRAG] show/hide LRA gate curve
     bool showGate = false;
 
+    juce::ToggleButton rollingLraButton; // [ROLLING-LRA] show/hide rolling LRA curve
+    bool showRollingLra = false;
+
+    //==============================================================================
+    // [ROLLING-LRA] Per-second short-term + gate history and computed rolling LRA
+    // We compute short-term samples at 1 Hz by sampling the incoming 60 Hz stream.
+    // Then compute rolling LRA over the last N seconds (30/60/120), gated by:
+    // gate = max(-70 LUFS, gateLufsAtCurrentSecond) where gateLufsAtCurrentSecond is the
+    // yellow LRAG curve (IntegratedRunning - 20).
+    //==============================================================================
+
+    int secondsCapacity = 0; // ~10800 for 3 hours
+
+    std::vector<float> secShortTermLufs;   // per-second sampled short-term LUFS
+    std::vector<float> secGateLufs;        // per-second sampled LRA gate (LUFS)
+    std::vector<float> secRollingLraLu;    // computed rolling LRA (LU)
+    std::vector<juce::int64> secAbsIndexTag; // -1 = empty, else absSecondIndex
+
+    juce::int64 lastSecondPushed = std::numeric_limits<juce::int64>::min();
+
+    // Rolling window selection (read from processor)
+    int rollingWindowSecondsCached = 60;
+
+    // Rebuild state (when user changes 30/60/120, we rebuild rolling curve over stored seconds)
+    bool        rollingRebuildInProgress = false;
+    juce::int64 rollingRebuildMinSecond = 0;
+    juce::int64 rollingRebuildMaxSecond = -1;
+    juce::int64 rollingRebuildNextSecond = 0;
+
+    // [ROLLING-LRA] ring helpers
+    int wrapSecondSlot (juce::int64 absSecondIndex) const noexcept;
+
+    // [ROLLING-LRA] write one per-second sample (overwrite-safe via tag)
+    void pushSecondSample (juce::int64 absSecondIndex,
+                           float shortTermLufs,
+                           float gateLufs);
+
+    // [ROLLING-LRA] recompute rolling LRA for one second index (if present)
+    void recomputeRollingLraForSecond (juce::int64 absSecondIndex);
+
+    // [ROLLING-LRA] detect selector change and (re)start rebuild
+    void startRollingRebuildIfWindowChanged();
+
+    // [ROLLING-LRA] chunked rebuild so we don’t block UI
+    void rebuildRollingLraStep (int maxSecondsToProcess);
+
     // [TIMEBASE-PLAYHEAD]
     int         frameSamples = 0;            // samples per 60 Hz loudness frame (from processor)
 
