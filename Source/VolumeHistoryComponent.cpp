@@ -90,7 +90,7 @@ VolumeHistoryComponent::VolumeHistoryComponent (LevelScopeAudioProcessor& proc)
     // [ROLLING-LRA] Rolling LRA toggle
     rollingLraButton.setButtonText ("rLRA");
     rollingLraButton.setToggleState (showRollingLra, juce::dontSendNotification);
-    ollingLraButton.onClick = [this]
+    rollingLraButton.onClick = [this]
     {
         showRollingLra = rollingLraButton.getToggleState();
         repaint();
