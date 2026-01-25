@@ -27,7 +27,7 @@ void LevelScopeAudioProcessorEditor::paint (juce::Graphics& g)
 void LevelScopeAudioProcessorEditor::resized()
 {
     auto r = getLocalBounds();
-    const int statsH = 28;
+    const int statsH = statsComponent.getPreferredHeight();
 
     statsComponent.setBounds (r.removeFromTop (statsH));
     historyComponent.setBounds (r);

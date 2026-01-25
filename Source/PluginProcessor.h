@@ -109,6 +109,11 @@ public:
     float getRunningLraLu() const noexcept          { return runningStats.getLraLu(); }
     float getRunningLraGateLufs() const noexcept    { return runningStats.getLraGateLufs(); }
 
+    float getRollingLraLu() const noexcept { return runningStats.getRollingLraLu(); }
+
+    int  getRollingLraWindowSeconds() const noexcept { return runningStats.getRollingWindowSeconds(); }
+    void setRollingLraWindowSeconds (int s) noexcept { runningStats.setRollingWindowSeconds (s); }
+
 private:
     //==============================================================================
     // Analysis state (still owned by plugin wrapper for Phase 1)
