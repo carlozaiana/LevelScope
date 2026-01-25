@@ -132,6 +132,9 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             scratchPathRepS.clear();
         }
 
+        if (showRollingLra)
+        scratchPathRollingLra.clear(); // [ROLLING-LRA]
+
         if (showGate)
             scratchPathGate.clear(); // [LRAG]
 
@@ -323,6 +326,162 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             // A faint vertical line to separate the scale
             g.setColour (juce::Colours::white.withMultipliedAlpha (0.18f));
             g.drawLine (rightX, scaleArea.getY(), rightX, scaleArea.getBottom(), 1.0f);
+        }
+    }
+
+    //==============================================================================
+    // [ROLLING-LRA] Rolling LRA curve strip (0..20 LU) drawn above time ruler
+    //==============================================================================
+
+    if (showRollingLra && haveNowFrameIndex && zoomX > 1.0e-12)
+    {
+        const auto timeRuler = getTimeRulerArea();
+        const auto dbRuler   = getDbRulerArea();
+
+        const int rollingH = 46;
+        int yTop = timeRuler.getY() - rollingH;
+
+        if (yTop < 0)
+            yTop = 0;
+
+        const int graphW = juce::jmax (1, getWidth() - dbRuler.getWidth());
+        juce::Rectangle<int> rollingArea (0, yTop, graphW, rollingH);
+
+        if (rollingArea.getWidth() > 20 && rollingArea.getHeight() > 12)
+        {
+            juce::Graphics::ScopedSaveState ss (g);
+            g.reduceClipRegion (rollingArea);
+
+            // Background strip
+            g.setColour (juce::Colours::black.withMultipliedAlpha (0.20f));
+            g.fillRect (rollingArea);
+
+            // Grid (0..20 LU)
+            const float vMin = 0.0f;
+            const float vMax = 20.0f;
+
+            auto valueToY = [&] (float v) -> float
+            {
+                v = juce::jlimit (vMin, vMax, v);
+                const float norm = (v - vMin) / (vMax - vMin);
+                return (float) rollingArea.getBottom() - norm * (float) rollingArea.getHeight();
+            };
+
+            g.setColour (juce::Colours::white.withMultipliedAlpha (0.10f));
+            for (float v : { 0.0f, 5.0f, 10.0f, 15.0f, 20.0f })
+                g.drawHorizontalLine ((int) std::round (valueToY (v)), 0.0f, (float) rollingArea.getRight());
+
+            // Label
+            g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
+            g.setFont (12.0f);
+            g.drawText ("rLRA " + juce::String (rollingWindowSecondsCached) + "s (LU)",
+                        rollingArea.getX() + 6,
+                        rollingArea.getY() + 2,
+                        rollingArea.getWidth() - 12,
+                        14,
+                        juce::Justification::left);
+
+            // Visible time range in seconds
+            const juce::int64 rightFrameI = (juce::int64) std::floor (viewRightFrame);
+            const juce::int64 visibleFrames = (juce::int64) std::ceil ((double) getWidth() / zoomX);
+            const juce::int64 leftFrameI = rightFrameI - visibleFrames;
+
+            const juce::int64 leftSecondWanted  = floorDivInt64 (leftFrameI, 60) - 2;  // overscan
+            const juce::int64 rightSecondWanted = floorDivInt64 (rightFrameI, 60) + 2;
+
+            const juce::int64 latestSecond = floorDivInt64 (nowFrameIndex, 60);
+            const juce::int64 earliestSecond = latestSecond - (juce::int64) (secondsCapacity - 1);
+
+            const juce::int64 minSecond = juce::jmax (earliestSecond, leftSecondWanted);
+            const juce::int64 maxSecond = juce::jmin (latestSecond, rightSecondWanted);
+
+            const juce::int64 totalSeconds = (maxSecond - minSecond + 1);
+            if (totalSeconds >= 2 && secondsCapacity > 0)
+            {
+                // Cap points for performance (simple chunking)
+                const int maxPoints = juce::jlimit (256, 4096, (int) std::round ((double) rollingArea.getWidth() * 1.20));
+                const juce::int64 step = (juce::int64) juce::jmax (1, (int) std::ceil ((double) totalSeconds / (double) maxPoints));
+
+                // Negative-safe floor-to-grid
+                auto floorDivLocal = [] (juce::int64 a, juce::int64 b) -> juce::int64
+                {
+                    if (b <= 0) return 0;
+                    if (a >= 0) return a / b;
+                    return - ((-a + b - 1) / b);
+                };
+
+                auto floorToGrid = [&] (juce::int64 v, juce::int64 grid) -> juce::int64
+                {
+                    if (grid <= 0) return v;
+                    return floorDivLocal (v, grid) * grid;
+                };
+
+                juce::int64 firstSecond = floorToGrid (minSecond, step);
+                if (firstSecond > minSecond)
+                    firstSecond -= step;
+
+                firstSecond = juce::jmax (earliestSecond, firstSecond - step);
+
+                scratchPathRollingLra.clear();
+                bool started = false;
+
+                for (juce::int64 s0 = firstSecond; s0 <= maxSecond; s0 += step)
+                {
+                    const juce::int64 s1 = juce::jmin (maxSecond, s0 + step - 1);
+
+                    // Aggregate chunk: take MAX (peak-preserving) rolling LRA in this chunk
+                    float vmax = -1.0f;
+                    bool any = false;
+
+                    for (juce::int64 s = s0; s <= s1; ++s)
+                    {
+                        const int slot = wrapSecondSlot (s);
+                        if (secAbsIndexTag[(size_t) slot] != s)
+                            continue;
+
+                        any = true;
+                        vmax = juce::jmax (vmax, secRollingLraLu[(size_t) slot]);
+                    }
+
+                    if (! any)
+                        continue;
+
+                    const float y = valueToY (juce::jlimit (vMin, vMax, vmax));
+
+                    // Map this point to the same X timeline as the main graph.
+                    // Use chunk end time (s1) -> endFrame = (s1+1)*60
+                    const juce::int64 endFrame = (s1 + 1) * 60;
+
+                    const double xD = (double) getWidth() - (viewRightFrame - (double) endFrame) * zoomX;
+                    float x = (float) xD;
+
+                    if (x < -10.0f)
+                        continue;
+
+                    if (x > (float) getWidth() + 10.0f)
+                        continue;
+
+                    if (! started)
+                    {
+                        scratchPathRollingLra.startNewSubPath (x, y);
+                        started = true;
+                    }
+                    else
+                    {
+                        scratchPathRollingLra.lineTo (x, y);
+                    }
+                }
+
+                if (started)
+                {
+                    g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.90f));
+                    g.strokePath (scratchPathRollingLra, juce::PathStrokeType (1.6f));
+                }
+            }
+
+            // Border
+            g.setColour (juce::Colours::white.withMultipliedAlpha (0.12f));
+            g.drawRect (rollingArea);
         }
     }
 

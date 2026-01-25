@@ -314,6 +314,8 @@ private:
 
     mutable juce::Path scratchPathGate; // [LRAG]
 
+    mutable juce::Path scratchPathRollingLra; // [ROLLING-LRA]
+
     // Bands (batched)
     mutable juce::Path              scratchPathBandM;
     mutable juce::Path              scratchPathBandS;
