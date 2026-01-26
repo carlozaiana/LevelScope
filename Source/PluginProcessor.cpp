@@ -164,7 +164,21 @@ void LevelScopeAudioProcessor::processSampleForLoudness (const float* const* cha
         runningStats.pushFrameEnergy (energyMS);
 
         // LRA "relative gate" curve value (integratedRunning - 20 LU)
-        const float gateLufs = runningStats.getLraGateLufs();
+        float gateLufs = runningStats.getLraGateLufs();
+
+        // [LRAG-WARMUP-OVERWRITE-FIX]
+        // After a stop/start, integrated is not valid immediately (warm-up).
+        // If we're overwriting an already-existing timeline frame during warm-up,
+        // do NOT overwrite its previously stored gate curve value.
+        const float I = runningStats.getIntegratedLufs();
+        const bool integratedValid = (I > -199.0f);
+
+        if (! integratedValid && historyModel.frameExists (frameIndex))
+        {
+            float existingGate = -200.0f;
+            if (historyModel.getLraGateLufsAtFrameIndex (frameIndex, existingGate))
+                gateLufs = existingGate;
+        }
 
         historyModel.pushEnergyFrame (frameIndex,
                                      energyMS,
