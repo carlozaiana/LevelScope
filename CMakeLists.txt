@@ -45,17 +45,16 @@ add_library(LevelScopeCore STATIC
     # Core context-pack umbrella (public-facing)
     Source/Core/PublicAPI.h
 
-        # [BEGIN MTDM-CMAKE-CORESOURCES]
-        # Processing / module-chain scaffolding
-        Source/Core/Processing/ProcessContext.h
-        Source/Core/Processing/IAudioModule.h
-        Source/Core/Processing/ProcessorCore.h
+    # [BEGIN MTDM-CMAKE-CORESOURCES]
+    # Processing / module-chain scaffolding
+    Source/Core/Processing/ProcessContext.h
+    Source/Core/Processing/IAudioModule.h
+    Source/Core/Processing/ProcessorCore.h
 
-        # Processing / modules
-        Source/Core/Processing/Modules/MultiThresholdDynamicsModule.h
-        Source/Core/Processing/Modules/MultiThresholdDynamicsModule.cpp
-        # [END MTDM-CMAKE-CORESOURCES]
-    )
+    # Processing / modules
+    Source/Core/Processing/Modules/MultiThresholdDynamicsModule.h
+    Source/Core/Processing/Modules/MultiThresholdDynamicsModule.cpp
+    # [END MTDM-CMAKE-CORESOURCES]
 )
 
 target_include_directories(LevelScopeCore
