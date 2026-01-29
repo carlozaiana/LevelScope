@@ -44,8 +44,9 @@ LevelScopeAudioProcessor::~LevelScopeAudioProcessor() = default;
 
 //==============================================================================
 
+// [BEGIN LS-PROCESSORCORE-PREPARETOPLAY]
 void LevelScopeAudioProcessor::prepareToPlay (double sampleRate,
-                                             int /*samplesPerBlockExpected*/)
+                                             int samplesPerBlockExpected)
 {
     currentSampleRate = (sampleRate > 0.0 ? sampleRate : 44100.0);
 
@@ -65,14 +66,26 @@ void LevelScopeAudioProcessor::prepareToPlay (double sampleRate,
         if (layout.getTypeOfChannel (ch) == juce::AudioChannelSet::LFE)
             bs1770ChannelWeights[(size_t) ch] = 0.0f;
 
+    // ProcessorCore host prepare (Stage A: empty/default graph => no-op)
+    {
+        juce::dsp::ProcessSpec spec;
+        spec.sampleRate       = currentSampleRate;
+        spec.maximumBlockSize = (juce::uint32) juce::jmax (1, samplesPerBlockExpected);
+        spec.numChannels      = (juce::uint32) juce::jmax (1, getTotalNumInputChannels());
+
+        processorCore.prepare (spec);
+    }
+
     resetLoudnessState();
 }
+// [END LS-PROCESSORCORE-PREPARETOPLAY]
 
 void LevelScopeAudioProcessor::releaseResources()
 {
     resetLoudnessState();
 }
 
+// [BEGIN LS-PROCESSORCORE-RESETLOUDNESSSTATE]
 void LevelScopeAudioProcessor::resetLoudnessState() noexcept
 {
     samplesUntilNextFrame = frameSamples;
@@ -80,7 +93,11 @@ void LevelScopeAudioProcessor::resetLoudnessState() noexcept
     historyModel.resetRealtimeFifo();
     kWeight.reset();
     runningStats.reset();
+
+    // RT-safe reset; module graph is empty in Stage A (no audible change)
+    processorCore.reset();
 }
+// [END LS-PROCESSORCORE-RESETLOUDNESSSTATE]
 
 //==============================================================================
 
@@ -283,23 +300,52 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     lastBlockEndProjectSample = blockStartProjectSample + (juce::int64) numSamples;
     lastBlockIsPlaying = blockIsPlaying;
 
-    if (! shouldAnalyse)
-        return;
+    // [BEGIN LS-PROCESSORCORE-SKIP-ANALYSIS-STILL-PROCESS]
+        if (! shouldAnalyse)
+        {
+            // Stage A: still run ProcessorCore (empty graph => no-op).
+            levelscope::ProcessContext ctx { buffer, &midiMessages };
+            ctx.sampleRate           = currentSampleRate;
+            ctx.numSamples           = numSamples;
+            ctx.channelSet           = getBusesLayout().getMainInputChannelSet();
+            ctx.isPlaying            = (blockIsPlaying == 1);
+            ctx.discontinuity        = discontinuity;
+            ctx.absoluteSampleIndex  = blockStartProjectSample;
 
-    currentBlockStartProjectSample = blockStartProjectSample;
-    currentBlockIsPlaying = blockIsPlaying;
+            processorCore.process (ctx);
+            return;
+        }
+    // [END LS-PROCESSORCORE-SKIP-ANALYSIS-STILL-PROCESS]
 
-    juce::HeapBlock<const float*> channelData ((size_t) numChannels);
-    for (int ch = 0; ch < numChannels; ++ch)
-        channelData[ch] = buffer.getReadPointer (ch);
+    // [BEGIN LS-PROCESSORCORE-PROCESSBLOCK]
+        currentBlockStartProjectSample = blockStartProjectSample;
+        currentBlockIsPlaying = blockIsPlaying;
 
-    for (int i = 0; i < numSamples; ++i)
-    {
-        currentBlockSampleIndex = i;
-        processSampleForLoudness (channelData.getData(), numChannels, i);
-    }
+        // RT: avoid per-block heap allocation (was juce::HeapBlock)
+        const float* const* channelData = buffer.getArrayOfReadPointers();
 
-    // Audio passthrough unchanged
+        for (int i = 0; i < numSamples; ++i)
+        {
+            currentBlockSampleIndex = i;
+            processSampleForLoudness (channelData, numChannels, i);
+        }
+
+        // Stage A: run ProcessorCore with an empty/default graph (no-op => no audible change).
+        // RT-safety requirement: ProcessorCore must not allocate/lock in process().
+        {
+            levelscope::ProcessContext ctx { buffer, &midiMessages };
+            ctx.sampleRate           = currentSampleRate;
+            ctx.numSamples           = numSamples;
+            ctx.channelSet           = getBusesLayout().getMainInputChannelSet();
+            ctx.isPlaying            = (blockIsPlaying == 1);
+            ctx.discontinuity        = discontinuity;
+            ctx.absoluteSampleIndex  = blockStartProjectSample;
+
+            processorCore.process (ctx);
+        }
+
+        // Audio passthrough unchanged (empty graph => buffer is unchanged)
+    // [END LS-PROCESSORCORE-PROCESSBLOCK]
 }
 
 //==============================================================================

@@ -7,6 +7,10 @@
 #include "Core/LevelScopeHistoryModel.h"
 #include "Core/BS1770KWeighting.h"
 #include "Core/RunningLoudnessStats.h"
+// [BEGIN LS-PROCESSORCORE-INCLUDES]
+#include "Core/Processing/ProcessContext.h"
+#include "Core/Processing/ProcessorCore.h"
+// [END LS-PROCESSORCORE-INCLUDES]
 
 //==============================================================================
 // Main audio processor for LevelScope
@@ -136,6 +140,11 @@ private:
     
     // Member RunningLoudnessStats
     RunningLoudnessStats runningStats;
+
+    // [BEGIN LS-PROCESSORCORE-MEMBER]
+    // DSP module-chain host (Stage A: empty graph => no-op, no audible change)
+    levelscope::ProcessorCore processorCore;
+    // [END LS-PROCESSORCORE-MEMBER]
 
     // [FIX-START-RAMP] guard against host start ramp overwriting existing truth
     int transportStartOverwriteGuardFrames = 0;
