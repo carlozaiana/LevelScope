@@ -41,6 +41,21 @@ add_library(LevelScopeCore STATIC
     Source/Core/BS1770KWeighting.h
     Source/Core/RunningLoudnessStats.cpp
     Source/Core/RunningLoudnessStats.h
+
+    # Core context-pack umbrella (public-facing)
+    Source/Core/PublicAPI.h
+
+        # [BEGIN MTDM-CMAKE-CORESOURCES]
+        # Processing / module-chain scaffolding
+        Source/Core/Processing/ProcessContext.h
+        Source/Core/Processing/IAudioModule.h
+        Source/Core/Processing/ProcessorCore.h
+
+        # Processing / modules
+        Source/Core/Processing/Modules/MultiThresholdDynamicsModule.h
+        Source/Core/Processing/Modules/MultiThresholdDynamicsModule.cpp
+        # [END MTDM-CMAKE-CORESOURCES]
+    )
 )
 
 target_include_directories(LevelScopeCore
@@ -51,6 +66,8 @@ target_include_directories(LevelScopeCore
 target_link_libraries(LevelScopeCore
     PUBLIC
         juce::juce_core
+        juce::juce_audio_basics       # ProcessContext uses AudioBuffer/AudioChannelSet
+        juce::juce_data_structures    # IAudioModule uses ValueTree
 )
 
 # The plugin target
