@@ -1,6 +1,10 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+// [BEGIN MTDM-PLUGIN-INCLUDE]
+#include "Core/Processing/Modules/MultiThresholdDynamicsModule.h"
+// [END MTDM-PLUGIN-INCLUDE]
+
 #include <cmath>
 #include <algorithm>
 #include <type_traits>
@@ -39,15 +43,16 @@ LevelScopeAudioProcessor::LevelScopeAudioProcessor()
     // Phase 2A: core publishes LUFS (UI will be updated in Phase 2B)
     historyModel.setOutputMode (LevelScopeHistoryModel::OutputMode::lufs);
 
-    // [BEGIN LS-PROCESSORCORE-CONSTRUCTOR-EMPTY-GRAPH]
-    // Stage A: install an empty/default module graph (no modules => no audible change).
-    // Non-RT thread (constructor), allocation OK here.
+    // [BEGIN LS-PROCESSORCORE-CONSTRUCTOR-GRAPH-WITH-MTDM]
+    // Stage B: install a default module graph with MultiThresholdDynamicsModule.
+    // Module is currently a no-op => no audible change.
     {
-        auto emptyGraph = std::make_shared<levelscope::ModuleGraph>();
-        emptyGraph->revision = 1;
-        processorCore.setActiveGraph (std::move (emptyGraph));
+        auto graph = std::make_shared<levelscope::ModuleGraph>();
+        graph->revision = 2;
+        graph->modules.push_back (std::make_shared<levelscope::MultiThresholdDynamicsModule>());
+        processorCore.setActiveGraph (std::move (graph));
     }
-    // [END LS-PROCESSORCORE-CONSTRUCTOR-EMPTY-GRAPH]
+    // [END LS-PROCESSORCORE-CONSTRUCTOR-GRAPH-WITH-MTDM]
 }
 
 LevelScopeAudioProcessor::~LevelScopeAudioProcessor() = default;
@@ -79,8 +84,14 @@ void LevelScopeAudioProcessor::prepareToPlay (double sampleRate,
     // Stage A: prepare ProcessorCore (empty graph => no-op).
     // We avoid juce::dsp::ProcessSpec (juce_dsp not enabled).
     // Also, we don't assume ModulePrepareSpec field names here.
-    juce::ignoreUnused (samplesPerBlockExpected);
-    processorCore.prepare (levelscope::ModulePrepareSpec{});
+    // [BEGIN LS-PROCESSORCORE-PREPARE-SPEC]
+    levelscope::ModulePrepareSpec spec;
+    spec.sampleRate  = currentSampleRate;
+    spec.maxBlockSize = juce::jmax (0, samplesPerBlockExpected);
+    spec.channelSet  = getBusesLayout().getMainInputChannelSet();
+
+    processorCore.prepare (spec);
+    // [END LS-PROCESSORCORE-PREPARE-SPEC]
 
     resetLoudnessState();
 }
