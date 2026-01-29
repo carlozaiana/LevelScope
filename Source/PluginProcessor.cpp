@@ -38,6 +38,16 @@ LevelScopeAudioProcessor::LevelScopeAudioProcessor()
 {
     // Phase 2A: core publishes LUFS (UI will be updated in Phase 2B)
     historyModel.setOutputMode (LevelScopeHistoryModel::OutputMode::lufs);
+
+    // [BEGIN LS-PROCESSORCORE-CONSTRUCTOR-EMPTY-GRAPH]
+    // Stage A: install an empty/default module graph (no modules => no audible change).
+    // Non-RT thread (constructor), allocation OK here.
+    {
+        auto emptyGraph = std::make_shared<levelscope::ModuleGraph>();
+        emptyGraph->revision = 1;
+        processorCore.setActiveGraph (std::move (emptyGraph));
+    }
+    // [END LS-PROCESSORCORE-CONSTRUCTOR-EMPTY-GRAPH]
 }
 
 LevelScopeAudioProcessor::~LevelScopeAudioProcessor() = default;
@@ -66,15 +76,11 @@ void LevelScopeAudioProcessor::prepareToPlay (double sampleRate,
         if (layout.getTypeOfChannel (ch) == juce::AudioChannelSet::LFE)
             bs1770ChannelWeights[(size_t) ch] = 0.0f;
 
-    // ProcessorCore host prepare (Stage A: empty/default graph => no-op)
-    {
-        juce::dsp::ProcessSpec spec;
-        spec.sampleRate       = currentSampleRate;
-        spec.maximumBlockSize = (juce::uint32) juce::jmax (1, samplesPerBlockExpected);
-        spec.numChannels      = (juce::uint32) juce::jmax (1, getTotalNumInputChannels());
-
-        processorCore.prepare (spec);
-    }
+    // Stage A: prepare ProcessorCore (empty graph => no-op).
+    // We avoid juce::dsp::ProcessSpec (juce_dsp not enabled).
+    // Also, we don't assume ModulePrepareSpec field names here.
+    juce::ignoreUnused (samplesPerBlockExpected);
+    processorCore.prepare (levelscope::ModulePrepareSpec{});
 
     resetLoudnessState();
 }
@@ -94,7 +100,7 @@ void LevelScopeAudioProcessor::resetLoudnessState() noexcept
     kWeight.reset();
     runningStats.reset();
 
-    // RT-safe reset; module graph is empty in Stage A (no audible change)
+    // RT-safe reset; Stage A graph is empty => no audible change
     processorCore.reset();
 }
 // [END LS-PROCESSORCORE-RESETLOUDNESSSTATE]
@@ -303,14 +309,25 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     // [BEGIN LS-PROCESSORCORE-SKIP-ANALYSIS-STILL-PROCESS]
         if (! shouldAnalyse)
         {
-            // Stage A: still run ProcessorCore (empty graph => no-op).
-            levelscope::ProcessContext ctx { buffer, &midiMessages };
-            ctx.sampleRate           = currentSampleRate;
-            ctx.numSamples           = numSamples;
-            ctx.channelSet           = getBusesLayout().getMainInputChannelSet();
-            ctx.isPlaying            = (blockIsPlaying == 1);
-            ctx.discontinuity        = discontinuity;
-            ctx.absoluteSampleIndex  = blockStartProjectSample;
+            // Stage A: still run ProcessorCore (empty graph => no-op, buffer unchanged).
+            levelscope::ProcessContext ctx { buffer,
+                                            &midiMessages,
+                                            currentSampleRate,
+                                            numSamples,
+                                            getBusesLayout().getMainInputChannelSet() };
+
+            ctx.isRealtime        = ! isNonRealtime();
+            ctx.isPlaying         = (blockIsPlaying == 1);
+            ctx.isDiscontinuity   = discontinuity;
+            ctx.freezeAnalysis    = true; // matches existing "stop-time silence freeze" behavior intent
+            ctx.absoluteSampleIndex = (int64_t) blockStartProjectSample;
+
+            if (frameSamples > 0 && haveTimeInSamples)
+            {
+                ctx.hasFrameIndex60Hz = true;
+                ctx.absoluteFrameIndex60Hz = (int64_t) floorDivInt64 (blockStartProjectSample,
+                                                                     (juce::int64) frameSamples);
+            }
 
             processorCore.process (ctx);
             return;
@@ -318,7 +335,7 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     // [END LS-PROCESSORCORE-SKIP-ANALYSIS-STILL-PROCESS]
 
     // [BEGIN LS-PROCESSORCORE-PROCESSBLOCK]
-        currentBlockStartProjectSample = blockStartProjectSample;
+    currentBlockStartProjectSample = blockStartProjectSample;
         currentBlockIsPlaying = blockIsPlaying;
 
         // RT: avoid per-block heap allocation (was juce::HeapBlock)
@@ -331,15 +348,25 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         }
 
         // Stage A: run ProcessorCore with an empty/default graph (no-op => no audible change).
-        // RT-safety requirement: ProcessorCore must not allocate/lock in process().
         {
-            levelscope::ProcessContext ctx { buffer, &midiMessages };
-            ctx.sampleRate           = currentSampleRate;
-            ctx.numSamples           = numSamples;
-            ctx.channelSet           = getBusesLayout().getMainInputChannelSet();
-            ctx.isPlaying            = (blockIsPlaying == 1);
-            ctx.discontinuity        = discontinuity;
-            ctx.absoluteSampleIndex  = blockStartProjectSample;
+            levelscope::ProcessContext ctx { buffer,
+                                            &midiMessages,
+                                            currentSampleRate,
+                                            numSamples,
+                                            getBusesLayout().getMainInputChannelSet() };
+
+            ctx.isRealtime         = ! isNonRealtime();
+            ctx.isPlaying          = (blockIsPlaying == 1);
+            ctx.isDiscontinuity    = discontinuity;
+            ctx.freezeAnalysis     = false;
+            ctx.absoluteSampleIndex = (int64_t) blockStartProjectSample;
+
+            if (frameSamples > 0 && haveTimeInSamples)
+            {
+                ctx.hasFrameIndex60Hz = true;
+                ctx.absoluteFrameIndex60Hz = (int64_t) floorDivInt64 (blockStartProjectSample,
+                                                                     (juce::int64) frameSamples);
+            }
 
             processorCore.process (ctx);
         }
