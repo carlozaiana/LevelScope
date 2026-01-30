@@ -25,11 +25,41 @@ namespace levelscope
         // No state yet.
     }
 
-    void MultiThresholdDynamicsModule::process (ProcessContext& ctx) noexcept
-    {
-        // Stage B: intentional no-op (pass-through).
-        juce::ignoreUnused (ctx);
-    }
+    // [BEGIN MTDM-RT-PARAM-BINDING-IMPL]
+        void MultiThresholdDynamicsModule::bindParameters (std::atomic<float>* enabled01,
+                                                          std::atomic<float>* thresholdDb,
+                                                          std::atomic<float>* ratio) noexcept
+        {
+            // Non-RT call expected (constructor / graph build thread).
+            // Storing pointers is RT-safe; we only read them in process().
+            pEnabled01   = enabled01;
+            pThresholdDb = thresholdDb;
+            pRatio       = ratio;
+        }
+
+        void MultiThresholdDynamicsModule::process (ProcessContext& ctx) noexcept
+        {
+            // Stage C1: still no DSP. We only demonstrate RT-safe parameter reads.
+            // Default is disabled => pass-through.
+            const float enabled = (pEnabled01 != nullptr
+                                     ? pEnabled01->load (std::memory_order_relaxed)
+                                     : 0.0f);
+
+            if (enabled < 0.5f)
+            {
+                // Module disabled => guaranteed pass-through.
+                juce::ignoreUnused (ctx);
+                return;
+            }
+
+            // Enabled but still skeleton/no-op.
+            // (Reading these avoids “unused member” warnings and validates binding path.)
+            if (pThresholdDb != nullptr) (void) pThresholdDb->load (std::memory_order_relaxed);
+            if (pRatio       != nullptr) (void) pRatio->load       (std::memory_order_relaxed);
+
+            juce::ignoreUnused (ctx);
+        }
+    // [END MTDM-RT-PARAM-BINDING-IMPL]
 
     juce::ValueTree MultiThresholdDynamicsModule::saveState() const
     {
