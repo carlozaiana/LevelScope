@@ -60,6 +60,10 @@ public:
     //==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+    // [BEGIN MTDM-APVTS-ACCESSOR]
+        juce::AudioProcessorValueTreeState&       getAPVTS() noexcept       { return apvts; }
+        const juce::AudioProcessorValueTreeState& getAPVTS() const noexcept { return apvts; }
+    // [END MTDM-APVTS-ACCESSOR]
 
     //==============================================================================
     // GUI access helpers (UI API unchanged; forwarded to core model)
@@ -140,6 +144,11 @@ private:
     
     // Member RunningLoudnessStats
     RunningLoudnessStats runningStats;
+
+    // [BEGIN MTDM-APVTS-DECL]
+        static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+        juce::AudioProcessorValueTreeState apvts;
+    // [END MTDM-APVTS-DECL]
 
     // [BEGIN LS-PROCESSORCORE-MEMBER]
     // DSP module-chain host (Stage A: empty graph => no-op, no audible change)

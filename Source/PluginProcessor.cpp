@@ -5,6 +5,10 @@
 #include "Core/Processing/Modules/MultiThresholdDynamicsModule.h"
 // [END MTDM-PLUGIN-INCLUDE]
 
+// [BEGIN MTDM-PARAMIDS-INCLUDE]
+#include "Core/Processing/Modules/MultiThresholdDynamicsParamIDs.h"
+// [END MTDM-PARAMIDS-INCLUDE]
+
 #include <cmath>
 #include <algorithm>
 #include <type_traits>
@@ -26,6 +30,34 @@ namespace
     auto optValue (const Opt& o) noexcept -> decltype(*o) { return *o; }
 }
 
+// [BEGIN MTDM-APVTS-PARAM-LAYOUT]
+juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::createParameterLayout()
+{
+    juce::AudioProcessorValueTreeState::ParameterLayout layout;
+
+    using namespace levelscope::mtdm;
+
+    layout.add (std::make_unique<juce::AudioParameterBool> (
+        juce::ParameterID { ParamIDs::enabled, 1 },
+        "MTDM Enabled",
+        (Defaults::enabled01 >= 0.5f)));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { ParamIDs::thresholdDb, 1 },
+        "MTDM Threshold (dB)",
+        juce::NormalisableRange<float> (Ranges::thresholdMinDb, Ranges::thresholdMaxDb, 0.1f),
+        Defaults::thresholdDb));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { ParamIDs::ratio, 1 },
+        "MTDM Ratio",
+        juce::NormalisableRange<float> (Ranges::ratioMin, Ranges::ratioMax, 0.01f),
+        Defaults::ratio));
+
+    return layout;
+}
+// [END MTDM-APVTS-PARAM-LAYOUT]
+
 juce::int64 LevelScopeAudioProcessor::floorDivInt64 (juce::int64 a, juce::int64 b) noexcept
 {
     if (b <= 0) return 0;
@@ -35,21 +67,33 @@ juce::int64 LevelScopeAudioProcessor::floorDivInt64 (juce::int64 a, juce::int64 
 
 //==============================================================================
 
+// [BEGIN MTDM-APVTS-CTOR-INIT]
 LevelScopeAudioProcessor::LevelScopeAudioProcessor()
     : AudioProcessor (BusesProperties()
                         .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
-                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true))
+                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)),
+      apvts (*this, nullptr, "PARAMS", createParameterLayout())
+// [END MTDM-APVTS-CTOR-INIT]
 {
     // Phase 2A: core publishes LUFS (UI will be updated in Phase 2B)
     historyModel.setOutputMode (LevelScopeHistoryModel::OutputMode::lufs);
 
     // [BEGIN LS-PROCESSORCORE-CONSTRUCTOR-GRAPH-WITH-MTDM]
-    // Stage B: install a default module graph with MultiThresholdDynamicsModule.
-    // Module is currently a no-op => no audible change.
+    // Stage C1: graph with MTDM + RT-safe APVTS binding.
+    // Default: MTDM disabled => pass-through (no audible change).
     {
         auto graph = std::make_shared<levelscope::ModuleGraph>();
-        graph->revision = 2;
-        graph->modules.push_back (std::make_shared<levelscope::MultiThresholdDynamicsModule>());
+        graph->revision = 3;
+
+        auto mtdm = std::make_shared<levelscope::MultiThresholdDynamicsModule>();
+
+        // Bind APVTS raw atomics (safe to read in audio thread; no ValueTree in process()).
+        mtdm->bindParameters (apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::enabled),
+                              apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::thresholdDb),
+                              apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::ratio));
+
+        graph->modules.push_back (mtdm);
+
         processorCore.setActiveGraph (std::move (graph));
     }
     // [END LS-PROCESSORCORE-CONSTRUCTOR-GRAPH-WITH-MTDM]
