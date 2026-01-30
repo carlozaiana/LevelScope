@@ -55,6 +55,10 @@ add_library(LevelScopeCore STATIC
     Source/Core/Processing/Modules/MultiThresholdDynamicsModule.h
     Source/Core/Processing/Modules/MultiThresholdDynamicsModule.cpp
     # [END MTDM-CMAKE-CORESOURCES]
+
+    # [BEGIN MTDM-CMAKE-PARAMIDS]
+    Source/Core/Processing/Modules/MultiThresholdDynamicsParamIDs.h
+    # [END MTDM-CMAKE-PARAMIDS]
 )
 
 target_include_directories(LevelScopeCore
