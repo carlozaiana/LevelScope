@@ -100,6 +100,24 @@ public:
     void saveState (juce::MemoryBlock& destData) const;
     void loadState (const void* data, int sizeInBytes);
 
+    // [BEGIN LS-STATE-ADDITIVE-API]
+        // Stage C2 (additive, backward compatible):
+        // Optional extra chunks appended after baseline chunks:
+        // - APVS: APVTS state
+        // - MODG: module graph (IDs/order/bypass)
+        //
+        // If these are nullptr (or empty), the file format is identical to baseline.
+        void saveState (juce::MemoryBlock& destData,
+                        const juce::MemoryBlock* apvsChunkData,
+                        const juce::MemoryBlock* modgChunkData) const;
+
+        // Stage C2 loader: extracts optional APVS/MODG payloads if present.
+        // Old sessions simply won't have them => outputs remain empty.
+        void loadState (const void* data, int sizeInBytes,
+                        juce::MemoryBlock* apvsChunkOut,
+                        juce::MemoryBlock* modgChunkOut);
+    // [END LS-STATE-ADDITIVE-API]
+
     //==============================================================================
     // [CORE-TIMECODE-USER]
     double getUserTimecodeOffsetSeconds() const noexcept

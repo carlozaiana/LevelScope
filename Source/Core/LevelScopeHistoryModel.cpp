@@ -290,7 +290,17 @@ void LevelScopeHistoryModel::pushEnergyFrame (juce::int64 absFrameIndex,
 // State (HIST + LRAG + TCOF)
 //==============================================================================
 
+// [BEGIN LS-STATE-SAVESTATE-WRAPPER]
 void LevelScopeHistoryModel::saveState (juce::MemoryBlock& destData) const
+{
+    saveState (destData, nullptr, nullptr);
+}
+// [END LS-STATE-SAVESTATE-WRAPPER]
+
+// [BEGIN LS-STATE-SAVESTATE-ADDITIVE]
+void LevelScopeHistoryModel::saveState (juce::MemoryBlock& destData,
+                                       const juce::MemoryBlock* apvsChunkData,
+                                       const juce::MemoryBlock* modgChunkData) const
 {
     juce::MemoryOutputStream out (destData, true);
 
@@ -300,13 +310,22 @@ void LevelScopeHistoryModel::saveState (juce::MemoryBlock& destData) const
     out.writeInt ((int) kMagic);
     out.writeInt ((int) kVersion);
 
-    // chunk count (HIST + LRAG + TCOF)
-    out.writeInt (3);
+    const auto hasExtraChunk = [] (const juce::MemoryBlock* mb) noexcept
+    {
+        return (mb != nullptr && mb->getSize() > 0);
+    };
+
+    const int extraChunks =
+        (hasExtraChunk (apvsChunkData) ? 1 : 0) +
+        (hasExtraChunk (modgChunkData) ? 1 : 0);
+
+    // Baseline chunk count is 3 (HIST + LRAG + TCOF). We append extras after.
+    out.writeInt (3 + extraChunks);
 
     const juce::int64 maxWritten = maxWrittenFrameIndex.load (std::memory_order_relaxed);
 
     //--------------------------------------------------------------------------
-    // Chunk: HIST (energy + valid mask)
+    // Chunk: HIST (energy + valid mask)  [BASELINE - unchanged]
     //--------------------------------------------------------------------------
     {
         juce::MemoryOutputStream chunk (4096);
@@ -374,7 +393,7 @@ void LevelScopeHistoryModel::saveState (juce::MemoryBlock& destData) const
     }
 
     //--------------------------------------------------------------------------
-    // Chunk: LRAG (gate curve + valid mask)
+    // Chunk: LRAG (gate curve + valid mask)  [BASELINE - unchanged]
     //--------------------------------------------------------------------------
     {
         juce::MemoryOutputStream chunk (4096);
@@ -435,7 +454,7 @@ void LevelScopeHistoryModel::saveState (juce::MemoryBlock& destData) const
     }
 
     //--------------------------------------------------------------------------
-    // Chunk: TCOF
+    // Chunk: TCOF  [BASELINE - unchanged]
     //--------------------------------------------------------------------------
     {
         juce::MemoryOutputStream tc (64);
@@ -447,10 +466,46 @@ void LevelScopeHistoryModel::saveState (juce::MemoryBlock& destData) const
         out.writeInt ((int) tc.getDataSize());
         out.write (tc.getData(), tc.getDataSize());
     }
-}
 
+    //--------------------------------------------------------------------------
+    // Chunk: APVS (APVTS state)  [Stage C2 - additive]
+    //--------------------------------------------------------------------------
+    if (hasExtraChunk (apvsChunkData))
+    {
+        const juce::uint32 id = fourcc ('A','P','V','S');
+        out.writeInt ((int) id);
+        out.writeInt ((int) apvsChunkData->getSize());
+        out.write (apvsChunkData->getData(), apvsChunkData->getSize());
+    }
+
+    //--------------------------------------------------------------------------
+    // Chunk: MODG (module graph state)  [Stage C2 - additive]
+    //--------------------------------------------------------------------------
+    if (hasExtraChunk (modgChunkData))
+    {
+        const juce::uint32 id = fourcc ('M','O','D','G');
+        out.writeInt ((int) id);
+        out.writeInt ((int) modgChunkData->getSize());
+        out.write (modgChunkData->getData(), modgChunkData->getSize());
+    }
+}
+// [END LS-STATE-SAVESTATE-ADDITIVE]
+
+// [BEGIN LS-STATE-LOADSTATE-WRAPPER]
 void LevelScopeHistoryModel::loadState (const void* data, int sizeInBytes)
 {
+    loadState (data, sizeInBytes, nullptr, nullptr);
+}
+// [END LS-STATE-LOADSTATE-WRAPPER]
+
+// [BEGIN LS-STATE-LOADSTATE-ADDITIVE]
+void LevelScopeHistoryModel::loadState (const void* data, int sizeInBytes,
+                                       juce::MemoryBlock* apvsChunkOut,
+                                       juce::MemoryBlock* modgChunkOut)
+{
+    if (apvsChunkOut != nullptr) apvsChunkOut->reset();
+    if (modgChunkOut != nullptr) modgChunkOut->reset();
+
     if (data == nullptr || sizeInBytes <= 0)
         return;
 
@@ -460,6 +515,7 @@ void LevelScopeHistoryModel::loadState (const void* data, int sizeInBytes)
     const int magic = in.readInt();
     const int version = in.readInt();
 
+    // Container version unchanged (v1). New chunks are optional.
     if ((juce::uint32) magic != kMagicExpected || version != 1)
         return;
 
@@ -485,6 +541,21 @@ void LevelScopeHistoryModel::loadState (const void* data, int sizeInBytes)
 
         juce::MemoryBlock chunkData ((size_t) chunkBytes);
         in.read (chunkData.getData(), (size_t) chunkBytes);
+
+        // Stage C2 additive chunks: capture raw payload and continue
+        if (chunkId == fourcc ('A','P','V','S'))
+        {
+            if (apvsChunkOut != nullptr)
+                *apvsChunkOut = std::move (chunkData);
+            continue;
+        }
+
+        if (chunkId == fourcc ('M','O','D','G'))
+        {
+            if (modgChunkOut != nullptr)
+                *modgChunkOut = std::move (chunkData);
+            continue;
+        }
 
         if (chunkId == fourcc ('T','C','O','F'))
         {
@@ -654,3 +725,4 @@ void LevelScopeHistoryModel::loadState (const void* data, int sizeInBytes)
         // Unknown chunk: ignore
     }
 }
+// [END LS-STATE-LOADSTATE-ADDITIVE]
