@@ -79,25 +79,87 @@ LevelScopeAudioProcessor::LevelScopeAudioProcessor()
     historyModel.setOutputMode (LevelScopeHistoryModel::OutputMode::lufs);
 
     // [BEGIN LS-PROCESSORCORE-CONSTRUCTOR-GRAPH-WITH-MTDM]
-    // Stage C1: graph with MTDM + RT-safe APVTS binding.
-    // Default: MTDM disabled => pass-through (no audible change).
-    {
-        auto graph = std::make_shared<levelscope::ModuleGraph>();
-        graph->revision = 3;
-
-        auto mtdm = std::make_shared<levelscope::MultiThresholdDynamicsModule>();
-
-        // Bind APVTS raw atomics (safe to read in audio thread; no ValueTree in process()).
-        mtdm->bindParameters (apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::enabled),
-                              apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::thresholdDb),
-                              apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::ratio));
-
-        graph->modules.push_back (mtdm);
-
-        processorCore.setActiveGraph (std::move (graph));
-    }
+        // Stage C1/C2: default graph with MTDM + RT-safe APVTS binding.
+        // Default: MTDM disabled => pass-through (no audible change).
+        rebuildModuleGraphFromState (nullptr);
     // [END LS-PROCESSORCORE-CONSTRUCTOR-GRAPH-WITH-MTDM]
 }
+
+// [BEGIN LS-C2-MODGRAPH-IMPL]
+void LevelScopeAudioProcessor::rebuildModuleGraphFromState (const juce::MemoryBlock* modgChunkData)
+{
+    // Non-audio-thread only. Builds a new graph snapshot and swaps it in.
+    const juce::String mtdmId = juce::String (levelscope::MultiThresholdDynamicsModule().getModuleID());
+
+    std::vector<juce::String> orderedModuleIds;
+    orderedModuleIds.reserve (4);
+
+    // Default graph if no MODG chunk (or invalid)
+    orderedModuleIds.push_back (mtdmId);
+
+    if (modgChunkData != nullptr && modgChunkData->getSize() > 0)
+    {
+        juce::MemoryInputStream in (modgChunkData->getData(), modgChunkData->getSize(), false);
+
+        const int schema = in.readInt();
+        if (schema == 1)
+        {
+            const int numModules = in.readInt();
+            if (numModules >= 0 && numModules < 1024)
+            {
+                orderedModuleIds.clear();
+                orderedModuleIds.reserve ((size_t) numModules);
+
+                for (int i = 0; i < numModules; ++i)
+                {
+                    if (in.getNumBytesRemaining() <= 0)
+                        break;
+
+                    const auto id = in.readString();
+                    (void) in.readByte(); // bypass flag (stored, but not applied separately yet)
+                    if (id.isNotEmpty())
+                        orderedModuleIds.push_back (id);
+                }
+
+                if (orderedModuleIds.empty())
+                    orderedModuleIds.push_back (mtdmId);
+            }
+        }
+    }
+
+    auto graph = std::make_shared<levelscope::ModuleGraph>();
+    graph->revision = 3;
+
+    for (const auto& id : orderedModuleIds)
+    {
+        if (id == mtdmId)
+        {
+            auto mtdm = std::make_shared<levelscope::MultiThresholdDynamicsModule>();
+
+            mtdm->bindParameters (apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::enabled),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::thresholdDb),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::ratio));
+
+            graph->modules.push_back (mtdm);
+        }
+        // Unknown modules are ignored (forward-compat)
+    }
+
+    processorCore.setActiveGraph (std::move (graph));
+
+    // If host already called prepareToPlay, immediately prepare the newly-swapped graph too.
+    if (processorCorePrepared)
+    {
+        levelscope::ModulePrepareSpec spec;
+        spec.sampleRate   = currentSampleRate;
+        spec.maxBlockSize = lastMaxBlockSizeForSpec;
+        spec.channelSet   = getBusesLayout().getMainInputChannelSet();
+
+        processorCore.prepare (spec);
+        processorCore.reset();
+    }
+}
+// [END LS-C2-MODGRAPH-IMPL]
 
 LevelScopeAudioProcessor::~LevelScopeAudioProcessor() = default;
 
@@ -137,6 +199,11 @@ void LevelScopeAudioProcessor::prepareToPlay (double sampleRate,
     processorCore.prepare (spec);
     // [END LS-PROCESSORCORE-PREPARE-SPEC]
 
+    // [BEGIN LS-C2-PREPARE-FLAGS]
+        processorCorePrepared = true;
+        lastMaxBlockSizeForSpec = juce::jmax (0, samplesPerBlockExpected);
+    // [END LS-C2-PREPARE-FLAGS]
+
     resetLoudnessState();
 }
 // [END LS-PROCESSORCORE-PREPARETOPLAY]
@@ -144,6 +211,10 @@ void LevelScopeAudioProcessor::prepareToPlay (double sampleRate,
 void LevelScopeAudioProcessor::releaseResources()
 {
     resetLoudnessState();
+
+    // [BEGIN LS-C2-RELEASE-FLAGS]
+    processorCorePrepared = false;
+    // [END LS-C2-RELEASE-FLAGS]
 }
 
 // [BEGIN LS-PROCESSORCORE-RESETLOUDNESSSTATE]
@@ -467,15 +538,67 @@ int LevelScopeAudioProcessor::readLoudnessFromFifo (float* momentaryDest,
 // [STATE-PERSIST] forward to core (format unchanged)
 //==============================================================================
 
+// [BEGIN LS-C2-STATE-GETSET]
 void LevelScopeAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    historyModel.saveState (destData);
+    // Baseline chunks are written exactly as before, then we append APVS + MODG.
+    juce::MemoryBlock apvsChunk;
+    {
+        juce::MemoryOutputStream os (apvsChunk, true);
+        os.writeInt (1); // APVS schema version
+
+        // Store the APVTS ValueTree in binary form (non-audio-thread only).
+        auto vt = apvts.copyState();
+        vt.writeToStream (os);
+    }
+
+    juce::MemoryBlock modgChunk;
+    {
+        juce::MemoryOutputStream os (modgChunk, true);
+        os.writeInt (1); // MODG schema version
+
+        // For Stage C2, we persist: module ID list (order) + bypass flag.
+        // Current graph is effectively fixed (MTDM only), but this chunk establishes the additive format.
+        const juce::String mtdmId = juce::String (levelscope::MultiThresholdDynamicsModule().getModuleID());
+
+        os.writeInt (1); // num modules
+        os.writeString (mtdmId);
+
+        // "bypass" persisted here as a graph-level concept.
+        // For now (Stage C2), we mirror the MTDM Enabled param for persistence.
+        const auto* enabled01 = apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::enabled);
+        const bool bypassed = (enabled01 != nullptr ? (enabled01->load() < 0.5f) : true);
+        os.writeByte ((char) (bypassed ? 1 : 0));
+    }
+
+    historyModel.saveState (destData, &apvsChunk, &modgChunk);
 }
 
 void LevelScopeAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    historyModel.loadState (data, sizeInBytes);
+    juce::MemoryBlock apvsChunk;
+    juce::MemoryBlock modgChunk;
+
+    historyModel.loadState (data, sizeInBytes, &apvsChunk, &modgChunk);
+
+    // Restore APVTS if present (old sessions won't have APVS).
+    if (apvsChunk.getSize() > 0)
+    {
+        juce::MemoryInputStream in (apvsChunk.getData(), apvsChunk.getSize(), false);
+        const int schema = in.readInt();
+
+        if (schema == 1)
+        {
+            auto vt = juce::ValueTree::readFromStream (in);
+            if (vt.isValid())
+                apvts.replaceState (vt);
+        }
+    }
+
+    // Rebuild module graph safely (old sessions won't have MODG).
+    rebuildModuleGraphFromState (modgChunk.getSize() > 0 ? &modgChunk : nullptr);
 }
+// [END LS-C2-STATE-GETSET]
 
 //==============================================================================
 

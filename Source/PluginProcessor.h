@@ -187,6 +187,13 @@ private:
                                    int numChannels,
                                    int sampleIndex) noexcept;
 
+    // [BEGIN LS-C2-MODGRAPH-DECL]
+        void rebuildModuleGraphFromState (const juce::MemoryBlock* modgChunkData);
+
+        bool processorCorePrepared = false;
+        int  lastMaxBlockSizeForSpec = 0;
+    // [END LS-C2-MODGRAPH-DECL]
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LevelScopeAudioProcessor)
 };
