@@ -56,6 +56,12 @@ add_library(LevelScopeCore STATIC
     Source/Core/Processing/Modules/MultiThresholdDynamicsModule.cpp
     # [END MTDM-CMAKE-CORESOURCES]
 
+    # [BEGIN MTDM-CMAKE-SUC-DSP]
+    # Processing / DSP building blocks (Stage D1a)
+    Source/Core/Processing/DSP/SpectralUpwardCompressor.h
+    Source/Core/Processing/DSP/SpectralUpwardCompressor.cpp
+    # [END MTDM-CMAKE-SUC-DSP]
+
     # [BEGIN MTDM-CMAKE-PARAMIDS]
     Source/Core/Processing/Modules/MultiThresholdDynamicsParamIDs.h
     # [END MTDM-CMAKE-PARAMIDS]
@@ -66,12 +72,15 @@ target_include_directories(LevelScopeCore
         ${CMAKE_CURRENT_SOURCE_DIR}/Source
 )
 
+# [BEGIN MTDM-CMAKE-JUCE-DSP]
 target_link_libraries(LevelScopeCore
     PUBLIC
         juce::juce_core
         juce::juce_audio_basics       # ProcessContext uses AudioBuffer/AudioChannelSet
         juce::juce_data_structures    # IAudioModule uses ValueTree
+        juce::juce_dsp                # Stage D1a spectral processor (FFT/windowing)
 )
+# [END MTDM-CMAKE-JUCE-DSP]
 
 # The plugin target
 juce_add_plugin(LevelScope
