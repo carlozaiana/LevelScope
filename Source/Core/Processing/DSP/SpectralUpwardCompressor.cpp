@@ -310,7 +310,7 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
         for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
         {
             auto& st = ch[(size_t) chIdx];
-            pr.fft->performRealOnlyForwardTransform (st.fftBuf.data(), true);
+            pr.fft->performRealOnlyForwardTransform (st.fftBuf.data());
         }
     // [END LS-SUC-FORWARD-NONNEGATIVE]
 
@@ -382,12 +382,21 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
         const float g = bandSmoothers[(size_t) bi].process (targetG);
 
         // Apply gain to each channel's bins in this band
-        for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
-        {
-            auto& st = ch[(size_t) chIdx];
-            for (int bin = b0; bin <= b1; ++bin)
-                scaleBin (st.fftBuf, fftSize, bin, g);
-        }
+        // [BEGIN LS-SUC-SCALE-MIRROR-BINS]
+                for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
+                {
+                    auto& st = ch[(size_t) chIdx];
+
+                    for (int bin = b0; bin <= b1; ++bin)
+                    {
+                        scaleBin (st.fftBuf, fftSize, bin, g);
+
+                        const int mirror = fftSize - bin; // conjugate bin for real signals
+                        if (mirror != bin)
+                            scaleBin (st.fftBuf, fftSize, mirror, g);
+                    }
+                }
+        // [END LS-SUC-SCALE-MIRROR-BINS]
     }
 
     // 6) Inverse FFT + synthesis (window + norm + OLA), then emit hop samples

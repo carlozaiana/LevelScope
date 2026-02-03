@@ -206,23 +206,27 @@ private:
 
     void processFrameAllChannels() noexcept;
 
-    inline void getBin (const std::vector<float>& fftBuf, int fftSize, int bin, float& re, float& im) const noexcept
-    {
-        if (bin == 0)         { re = fftBuf[0]; im = 0.0f; return; }
-        if (bin == fftSize/2) { re = fftBuf[1]; im = 0.0f; return; }
-        const int i = 2 * bin;
-        re = fftBuf[(size_t) i];
-        im = fftBuf[(size_t) (i + 1)];
-    }
+    // [BEGIN LS-SUC-FFT-FULL-COMPLEX-FORMAT]
+        // JUCE real-only FFT (full spectrum format):
+        // After performRealOnlyForwardTransform (default mode), the buffer contains N complex bins:
+        //   bin k: re = data[2*k], im = data[2*k+1], for k = 0..N-1.
+        //
+        // IMPORTANT: To keep the inverse real-valued, any magnitude scaling applied to bin k in
+        // 1..N/2-1 must also be applied to its conjugate mirror bin (N - k).
+        inline void getBin (const std::vector<float>& fftBuf, int /*fftSize*/, int bin, float& re, float& im) const noexcept
+        {
+            const int i = 2 * bin;
+            re = fftBuf[(size_t) i];
+            im = fftBuf[(size_t) (i + 1)];
+        }
 
-    inline void scaleBin (std::vector<float>& fftBuf, int fftSize, int bin, float g) noexcept
-    {
-        if (bin == 0)         { fftBuf[0] *= g; return; }
-        if (bin == fftSize/2) { fftBuf[1] *= g; return; }
-        const int i = 2 * bin;
-        fftBuf[(size_t) i]     *= g;
-        fftBuf[(size_t) (i+1)] *= g;
-    }
+        inline void scaleBin (std::vector<float>& fftBuf, int /*fftSize*/, int bin, float g) noexcept
+        {
+            const int i = 2 * bin;
+            fftBuf[(size_t) i]     *= g;
+            fftBuf[(size_t) (i+1)] *= g;
+        }
+    // [END LS-SUC-FFT-FULL-COMPLEX-FORMAT]
 
     inline void pushFifo (ChannelState& st, float s) noexcept
     {
