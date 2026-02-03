@@ -1,0 +1,74 @@
+version: 2.1
+
+jobs:
+  build-macos:
+    macos:
+      # Pick an Xcode image that CircleCI supports. Adjust if needed.
+      xcode: "15.3.0"
+
+    resource_class: macos.m1.medium
+
+    environment:
+      # Keep these in one place
+      BUILD_DIR: build
+      CMAKE_BUILD_TYPE: Release
+      CMAKE_OSX_ARCHITECTURES: "x86_64;arm64"
+      CMAKE_OSX_DEPLOYMENT_TARGET: "10.13"
+
+    steps:
+      - checkout
+
+      - run:
+          name: Show tool versions
+          command: |
+            sw_vers
+            xcodebuild -version
+            cmake --version || true
+            ninja --version || true
+
+      - run:
+          name: Install build tools (CMake + Ninja)
+          command: |
+            brew update
+            brew install cmake ninja || true
+
+      # Optional caching: speeds up repeated builds by caching FetchContent deps inside build/_deps
+      - restore_cache:
+          keys:
+            - v1-deps-{{ checksum "CMakeLists.txt" }}
+
+      - run:
+          name: Configure (CMake)
+          command: |
+            cmake -B "${BUILD_DIR}" -G Ninja \
+              -DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}" \
+              -DCMAKE_OSX_ARCHITECTURES="${CMAKE_OSX_ARCHITECTURES}" \
+              -DCMAKE_OSX_DEPLOYMENT_TARGET="${CMAKE_OSX_DEPLOYMENT_TARGET}"
+
+      - run:
+          name: Build
+          command: |
+            cmake --build "${BUILD_DIR}" --config "${CMAKE_BUILD_TYPE}" -- -j 3
+
+      - save_cache:
+          key: v1-deps-{{ checksum "CMakeLists.txt" }}
+          paths:
+            - build/_deps
+
+      - run:
+          name: Collect VST3 artifact
+          command: |
+            mkdir -p artifacts
+            # Find the built VST3 bundle and copy it
+            find "${BUILD_DIR}" -name "LevelScope.vst3" -print -exec cp -R {} artifacts/ \;
+            ls -la artifacts || true
+
+      - store_artifacts:
+          path: artifacts
+          destination: LevelScope-macOS
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build-macos
