@@ -300,12 +300,19 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
     // cheap LUFS-ish proxy (no K-weighting, no gating)
     const double broadbandDb = -0.691 + 10.0 * std::log10 (meanSq + 1.0e-12);
 
-    // 2) Forward FFT per channel
-    for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
-    {
-        auto& st = ch[(size_t) chIdx];
-        pr.fft->performRealOnlyForwardTransform (st.fftBuf.data());
-    }
+    // [BEGIN LS-SUC-FORWARD-NONNEGATIVE]
+        // 2) Forward FFT per channel
+        // IMPORTANT: We rely on JUCE's packed "non-negative frequencies only" real-only format:
+        //   bin 0    -> data[0] (real), imag=0
+        //   bin N/2  -> data[1] (real), imag=0
+        //   bins 1..N/2-1 -> data[2*bin] (real), data[2*bin+1] (imag)
+        // So we must request only non-negative frequencies here.
+        for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
+        {
+            auto& st = ch[(size_t) chIdx];
+            pr.fft->performRealOnlyForwardTransform (st.fftBuf.data(), true);
+        }
+    // [END LS-SUC-FORWARD-NONNEGATIVE]
 
     // 3) Spectral proxy level for adaptive offset
     // Sum power across bins 1..N/2-1 across linked channels
