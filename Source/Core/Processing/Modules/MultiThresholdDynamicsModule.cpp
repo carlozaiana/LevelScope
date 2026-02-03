@@ -18,48 +18,132 @@ namespace levelscope
         preparedSampleRate = spec.sampleRate;
         preparedMaxBlockSize = spec.maxBlockSize;
         preparedChannelSet = spec.channelSet;
+
+        // [BEGIN MTDM-PREPARE-SUC]
+                // Stage D1a: prepare spectral upward compressor (allocations happen here only).
+                const int numCh = juce::jmax (1, spec.channelSet.size());
+                spectralUpward.prepare (spec.sampleRate, numCh, spec.channelSet, spec.maxBlockSize);
+                spectralPrepared = true;
+        // [END MTDM-PREPARE-SUC]
     }
 
-    void MultiThresholdDynamicsModule::reset()
-    {
-        // No state yet.
-    }
-
-    // [BEGIN MTDM-RT-PARAM-BINDING-IMPL]
-        void MultiThresholdDynamicsModule::bindParameters (std::atomic<float>* enabled01,
-                                                          std::atomic<float>* thresholdDb,
-                                                          std::atomic<float>* ratio) noexcept
+    // [BEGIN MTDM-RESET-STAGE-D1A]
+        void MultiThresholdDynamicsModule::reset()
         {
-            // Non-RT call expected (constructor / graph build thread).
-            // Storing pointers is RT-safe; we only read them in process().
-            pEnabled01   = enabled01;
-            pThresholdDb = thresholdDb;
-            pRatio       = ratio;
+            if (spectralPrepared)
+                spectralUpward.reset();
         }
+    // [END MTDM-RESET-STAGE-D1A]
 
+    // [BEGIN MTDM-BINDPARAMS-STAGE-D1A-IMPL]
+            void MultiThresholdDynamicsModule::bindParameters (std::atomic<float>* enabled01,
+                                                              std::atomic<float>* thresholdDb,
+                                                              std::atomic<float>* ratio,
+                                                              std::atomic<float>* t0Lufs,
+                                                              std::atomic<float>* t1Lufs,
+                                                              std::atomic<float>* sucAmount01,
+                                                              std::atomic<float>* sucMaxBoostDb,
+                                                              std::atomic<float>* sucCurve,
+                                                              std::atomic<float>* sucLowKneeDb,
+                                                              std::atomic<float>* sucHighKneeDb,
+                                                              std::atomic<float>* sucAttackMs,
+                                                              std::atomic<float>* sucReleaseMs,
+                                                              std::atomic<float>* sucFftSizeChoice,
+                                                              std::atomic<float>* sucBandsPerOctChoice,
+                                                              std::atomic<float>* sucMinFreqHz,
+                                                              std::atomic<float>* sucMaxFreqHz) noexcept
+            {
+                pEnabled01   = enabled01;
+                pThresholdDb = thresholdDb;
+                pRatio       = ratio;
+
+                pT0Lufs = t0Lufs;
+                pT1Lufs = t1Lufs;
+
+                pSucAmount01   = sucAmount01;
+                pSucMaxBoostDb = sucMaxBoostDb;
+                pSucCurve      = sucCurve;
+                pSucLowKneeDb  = sucLowKneeDb;
+                pSucHighKneeDb = sucHighKneeDb;
+                pSucAttackMs   = sucAttackMs;
+                pSucReleaseMs  = sucReleaseMs;
+
+                pSucFftSizeChoice     = sucFftSizeChoice;
+                pSucBandsPerOctChoice = sucBandsPerOctChoice;
+                pSucMinFreqHz         = sucMinFreqHz;
+                pSucMaxFreqHz         = sucMaxFreqHz;
+            }
+    // [END MTDM-BINDPARAMS-STAGE-D1A-IMPL]
+
+    // [BEGIN MTDM-PROCESS-STAGE-D1A]
         void MultiThresholdDynamicsModule::process (ProcessContext& ctx) noexcept
         {
-            // Stage C1: still no DSP. We only demonstrate RT-safe parameter reads.
-            // Default is disabled => pass-through.
+            // Default is disabled => pass-through (no audible change, no latency insertion).
             const float enabled = (pEnabled01 != nullptr
                                      ? pEnabled01->load (std::memory_order_relaxed)
                                      : 0.0f);
 
             if (enabled < 0.5f)
-            {
-                // Module disabled => guaranteed pass-through.
-                juce::ignoreUnused (ctx);
                 return;
-            }
 
-            // Enabled but still skeleton/no-op.
-            // (Reading these avoids “unused member” warnings and validates binding path.)
-            if (pThresholdDb != nullptr) (void) pThresholdDb->load (std::memory_order_relaxed);
-            if (pRatio       != nullptr) (void) pRatio->load       (std::memory_order_relaxed);
+            // Must be prepared before processing.
+            if (! spectralPrepared)
+                return;
 
-            juce::ignoreUnused (ctx);
+            // Read parameters (audio-thread-only contract).
+            levelscope::dsp::SpectralUpwardCompressor::Parameters p;
+
+            // UI-oriented thresholds (LUFS axis); internally translated by spectralUpward
+            const float t0 = (pT0Lufs != nullptr ? pT0Lufs->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::t0Lufs);
+            const float t1 = (pT1Lufs != nullptr ? pT1Lufs->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::t1Lufs);
+
+            // Safety: enforce ordering (UI should constrain too).
+            p.t0Lufs = juce::jmin (t0, t1);
+            p.t1Lufs = juce::jmax (t0, t1);
+
+            p.amount01   = (pSucAmount01   != nullptr ? pSucAmount01->load   (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucAmount01);
+            p.maxBoostDb = (pSucMaxBoostDb != nullptr ? pSucMaxBoostDb->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucMaxBoostDb);
+            p.curve      = (pSucCurve      != nullptr ? pSucCurve->load      (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucCurve);
+
+            p.lowKneeDb  = (pSucLowKneeDb  != nullptr ? pSucLowKneeDb->load  (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucLowKneeDb);
+            p.highKneeDb = (pSucHighKneeDb != nullptr ? pSucHighKneeDb->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucHighKneeDb);
+
+            p.attackMs   = (pSucAttackMs   != nullptr ? pSucAttackMs->load   (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucAttackMs);
+            p.releaseMs  = (pSucReleaseMs  != nullptr ? pSucReleaseMs->load  (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucReleaseMs);
+
+            // Stage D1a: start with monotonic curve (fewest parameters).
+            p.curveType = levelscope::dsp::SpectralUpwardCompressor::CurveType::monotonic;
+
+            // Advanced choices (choice params come through as float indices)
+            const int fftChoice = (int) std::lround (pSucFftSizeChoice != nullptr
+                                                     ? pSucFftSizeChoice->load (std::memory_order_relaxed)
+                                                     : (float) levelscope::mtdm::Defaults::sucFftSizeChoice);
+
+            const int bpoChoice = (int) std::lround (pSucBandsPerOctChoice != nullptr
+                                                     ? pSucBandsPerOctChoice->load (std::memory_order_relaxed)
+                                                     : (float) levelscope::mtdm::Defaults::sucBandsPerOctChoice);
+
+            p.fftSizeChoice     = fftChoice;
+            p.bandsPerOctChoice = bpoChoice;
+
+            p.minFreqHz = (pSucMinFreqHz != nullptr ? pSucMinFreqHz->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucMinFreqHz);
+            p.maxFreqHz = (pSucMaxFreqHz != nullptr ? pSucMaxFreqHz->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucMaxFreqHz);
+
+            // Ensure min/max freq ordering
+            if (p.maxFreqHz < p.minFreqHz + 10.0f)
+                p.maxFreqHz = p.minFreqHz + 10.0f;
+
+            // Apply
+            spectralUpward.setParametersAudioThread (p);
+
+            // Process in-place (safe)
+            spectralUpward.process (ctx.audio);
+
+            // NOTE: Other zones (T1–T2, etc.) are pass-through for Stage D1a by simply not existing yet.
+            // thresholdDb/ratio are currently unused placeholders for future time-domain zones.
+            juce::ignoreUnused (pThresholdDb, pRatio);
         }
-    // [END MTDM-RT-PARAM-BINDING-IMPL]
+    // [END MTDM-PROCESS-STAGE-D1A]
 
     juce::ValueTree MultiThresholdDynamicsModule::saveState() const
     {
