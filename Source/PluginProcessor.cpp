@@ -54,6 +54,86 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
         juce::NormalisableRange<float> (Ranges::ratioMin, Ranges::ratioMax, 0.01f),
         Defaults::ratio));
 
+// [BEGIN MTDM-APVTS-PARAM-LAYOUT-STAGE-D1A-ADD]
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { ParamIDs::t0Lufs, 1 },
+        "MTDM T0 (LUFS)",
+        juce::NormalisableRange<float> (Ranges::t0MinLufs, Ranges::t0MaxLufs, 0.1f),
+        Defaults::t0Lufs));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { ParamIDs::t1Lufs, 1 },
+        "MTDM T1 (LUFS)",
+        juce::NormalisableRange<float> (Ranges::t1MinLufs, Ranges::t1MaxLufs, 0.1f),
+        Defaults::t1Lufs));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { ParamIDs::sucAmount01, 1 },
+        "SUC Amount",
+        juce::NormalisableRange<float> (Ranges::sucAmountMin01, Ranges::sucAmountMax01, 0.001f),
+        Defaults::sucAmount01));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { ParamIDs::sucMaxBoostDb, 1 },
+        "SUC Max Boost (dB)",
+        juce::NormalisableRange<float> (Ranges::sucMaxBoostMinDb, Ranges::sucMaxBoostMaxDb, 0.1f),
+        Defaults::sucMaxBoostDb));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { ParamIDs::sucCurve, 1 },
+        "SUC Curve",
+        juce::NormalisableRange<float> (Ranges::sucCurveMin, Ranges::sucCurveMax, 0.001f),
+        Defaults::sucCurve));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { ParamIDs::sucLowKneeDb, 1 },
+        "SUC Low Knee (dB)",
+        juce::NormalisableRange<float> (Ranges::sucKneeMinDb, Ranges::sucKneeMaxDb, 0.1f),
+        Defaults::sucLowKneeDb));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { ParamIDs::sucHighKneeDb, 1 },
+        "SUC High Knee (dB)",
+        juce::NormalisableRange<float> (Ranges::sucKneeMinDb, Ranges::sucKneeMaxDb, 0.1f),
+        Defaults::sucHighKneeDb));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { ParamIDs::sucAttackMs, 1 },
+        "SUC Attack (ms)",
+        juce::NormalisableRange<float> (Ranges::sucAttackMinMs, Ranges::sucAttackMaxMs, 0.1f),
+        Defaults::sucAttackMs));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { ParamIDs::sucReleaseMs, 1 },
+        "SUC Release (ms)",
+        juce::NormalisableRange<float> (Ranges::sucReleaseMinMs, Ranges::sucReleaseMaxMs, 0.1f),
+        Defaults::sucReleaseMs));
+
+    layout.add (std::make_unique<juce::AudioParameterChoice> (
+        juce::ParameterID { ParamIDs::sucFftSizeChoice, 1 },
+        "SUC FFT Size",
+        juce::StringArray { "1024", "2048", "4096", "8192" },
+        Defaults::sucFftSizeChoice));
+
+    layout.add (std::make_unique<juce::AudioParameterChoice> (
+        juce::ParameterID { ParamIDs::sucBandsPerOctChoice, 1 },
+        "SUC Bands/Oct",
+        juce::StringArray { "1", "2", "3", "6" },
+        Defaults::sucBandsPerOctChoice));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { ParamIDs::sucMinFreqHz, 1 },
+        "SUC Min Freq (Hz)",
+        juce::NormalisableRange<float> (Ranges::sucMinFreqMinHz, Ranges::sucMinFreqMaxHz, 1.0f),
+        Defaults::sucMinFreqHz));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { ParamIDs::sucMaxFreqHz, 1 },
+        "SUC Max Freq (Hz)",
+        juce::NormalisableRange<float> (Ranges::sucMaxFreqMinHz, Ranges::sucMaxFreqMaxHz, 1.0f),
+        Defaults::sucMaxFreqHz));
+// [END MTDM-APVTS-PARAM-LAYOUT-STAGE-D1A-ADD]
+
     return layout;
 }
 // [END MTDM-APVTS-PARAM-LAYOUT]
@@ -136,9 +216,27 @@ void LevelScopeAudioProcessor::rebuildModuleGraphFromState (const juce::MemoryBl
         {
             auto mtdm = std::make_shared<levelscope::MultiThresholdDynamicsModule>();
 
-            mtdm->bindParameters (apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::enabled),
-                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::thresholdDb),
-                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::ratio));
+            // [BEGIN MTDM-BINDPARAMS-CALL-STAGE-D1A]
+                    mtdm->bindParameters (apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::enabled),
+                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::thresholdDb),
+                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::ratio),
+
+                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::t0Lufs),
+                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::t1Lufs),
+
+                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucAmount01),
+                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucMaxBoostDb),
+                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucCurve),
+                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucLowKneeDb),
+                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucHighKneeDb),
+                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucAttackMs),
+                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucReleaseMs),
+
+                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucFftSizeChoice),
+                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucBandsPerOctChoice),
+                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucMinFreqHz),
+                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucMaxFreqHz));
+            // [END MTDM-BINDPARAMS-CALL-STAGE-D1A]
 
             graph->modules.push_back (mtdm);
         }
