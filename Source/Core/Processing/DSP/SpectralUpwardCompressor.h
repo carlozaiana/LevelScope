@@ -1,120 +1,184 @@
 #pragma once
 
-// [BEGIN SUC-HEADER]
-#include <juce_dsp/juce_dsp.h>
-#include <juce_audio_basics/juce_audio_basics.h>
-
-#include "Core/BS1770KWeighting.h" // for a cheap LUFS-ish proxy aligned with existing analysis constant
-
-#include <vector>
-#include <array>
-#include <memory>
-#include <algorithm>
-#include <cmath>
-#include <cstdint>
-#include <cstring>
-
-//==============================================================================
-// SpectralUpwardCompressor (Stage D1a DSP building block)
+// [BEGIN LS-SUC-HEADER]
+// SpectralUpwardCompressor (Stage D1a building block)
+// - STFT-based spectral upward processing with per-band floor (T0) and upper bound (T1)
+// - Supports LUFS-oriented UI thresholds by translating them into spectral-domain thresholds
+//   via an adaptive + smoothed offset (cheap proxy; not full BS.1770).
 //
 // Threading contract (IMPORTANT):
-// - All setters (setParameters/setChannelMasks) are AUDIO-THREAD-ONLY.
-// - No locks, no allocations in processBlock().
-// - All heap allocations happen in prepare().
+// - All setters are AUDIO-THREAD-ONLY unless explicitly documented otherwise.
+// - prepare()/reset() are non-audio-thread (or at least not concurrently with process()).
+// - process() performs no allocations, no locks.
 //
-// Behavior summary:
-// - STFT (hop = N/4, 75% overlap), sqrt-Hann analysis/synthesis.
-// - Per-band upward gain with a per-band floor (T0) to avoid lifting noise.
-// - User thresholds are provided in "LUFS" UI scale.
-// - Internally, we derive a per-frame adaptive + smoothed offset that maps
-//   broadband LUFS-ish (time-domain proxy) to spectral dB (FFT proxy).
-//   Then we translate:
-//       T0_bandDb = T0_userLufs - offsetDb
-//       T1_bandDb = T1_userLufs - offsetDb
-//
-// Notes:
-// - This is not a full BS.1770 measurement engine (no gating/integration spec).
-//   It uses the same LUFS conversion constant (-0.691) and optional K-weighting
-//   filter to better align UI thresholds with loudness curves.
-// - Designed to be embedded inside MultiThresholdDynamicsModule.
-//==============================================================================
+// This is a DSP building block; MultiThresholdDynamicsModule decides when/how to enable it.
+// [END LS-SUC-HEADER]
+
+#include <juce_audio_basics/juce_audio_basics.h>
+#include <juce_dsp/juce_dsp.h>
+
+#include <array>
+#include <vector>
+#include <memory>
+#include <cstring>
+#include <cmath>
+#include <algorithm>
 
 namespace levelscope::dsp
 {
 class SpectralUpwardCompressor
 {
 public:
-    // Supported FFT sizes for Stage D1a (must be powers of two).
-    static constexpr int kFftSizes[] = { 1024, 2048, 4096, 8192 };
+    enum class CurveType : int
+    {
+        monotonic = 0, // quieter (above T0) => more boost, approaching T1 => less boost
+        bell      = 1  // mid-zone boosted most (legacy option; useful later)
+    };
 
     struct Parameters
     {
-        // User-facing thresholds (on LUFS axis in UI)
-        float t0UserLufs = -45.0f;
-        float t1UserLufs = -30.0f;
+        // Thresholds shown on LUFS history curve (UI orientation).
+        // Internally translated to spectral domain using adaptive offset.
+        float t0Lufs = -45.0f;
+        float t1Lufs = -30.0f;
 
-        // Effect
-        float amount01   = 1.0f;  // global wet amount 0..1
-        float maxBoostDb = 8.0f;
+        float amount01   = 1.0f;  // 0..1 fade in/out
+        float maxBoostDb = 8.0f;  // clamp
 
-        // Curve shaping (monotonic upward curve; higher -> more concentrated toward low end)
-        float curve = 0.5f; // 0..1
+        // shaping
+        CurveType curveType = CurveType::monotonic;
+        float curve = 0.5f;       // 0..1, shapes the curve exponent
 
-        // Soft knees around T0 and T1 (in the *band domain* after translation)
+        // knees for the "active zone" (soft transitions near T0 and T1)
         float lowKneeDb  = 3.0f;
         float highKneeDb = 3.0f;
 
-        // Per-band gain smoothing (per-hop update)
+        // smoothing of band gains (per-hop)
         float attackMs  = 5.0f;
         float releaseMs = 50.0f;
 
-        // Advanced quality / mapping
-        int   fftSize        = 4096;   // must be one of kFftSizes
-        int   bandsPerOctave = 3;      // typical: 1,2,3,6
-        float minFreqHz      = 25.0f;
-        float maxFreqHz      = 20000.0f;
+        // advanced
+        int   fftSizeChoice     = 2;      // 0=1024,1=2048,2=4096,3=8192
+        int   bandsPerOctChoice = 2;      // 0=1,1=2,2=3,3=6
+        float minFreqHz = 25.0f;
+        float maxFreqHz = 20000.0f;
     };
 
     SpectralUpwardCompressor() = default;
+    ~SpectralUpwardCompressor() = default;
+
+    SpectralUpwardCompressor (const SpectralUpwardCompressor&) = delete;
+    SpectralUpwardCompressor& operator= (const SpectralUpwardCompressor&) = delete;
 
     void prepare (double sampleRate,
                   int numChannels,
-                  const juce::AudioChannelSet& channelSet);
+                  const juce::AudioChannelSet& channelSet,
+                  int maxBlockSize);
 
     void reset() noexcept;
 
-    // AUDIO-THREAD-ONLY setters
-    void setParameters (const Parameters& p) noexcept;
-    void setChannelMasks (uint32_t detectorMask, uint32_t applyMask) noexcept;
+    // AUDIO-THREAD-ONLY (see header comment)
+    void setParametersAudioThread (const Parameters& p) noexcept;
 
-    // In-place processing. Writes output for all channels.
-    void processBlock (juce::AudioBuffer<float>& buffer) noexcept;
+    void process (juce::AudioBuffer<float>& buffer) noexcept;
 
     int getLatencySamples() const noexcept { return activeFftSize; }
 
 private:
     //==============================================================================
-    // Internal helpers
+    // Constants / limits
     //==============================================================================
+    static constexpr int kNumFftChoices = 4;
+    static constexpr int kFftSizes[kNumFftChoices] = { 1024, 2048, 4096, 8192 };
 
+    static constexpr int kNumBandsPerOctChoices = 4;
+    static constexpr int kBandsPerOct[kNumBandsPerOctChoices] = { 1, 2, 3, 6 };
+
+    static constexpr int kMaxBands = 128;
+
+    //==============================================================================
     struct GainSmoother
     {
-        void prepare (float sampleRate, float hopSamples, float attackMs, float releaseMs) noexcept;
+        void prepare (double sampleRate, int hopSamples, float attackMs, float releaseMs) noexcept
+        {
+            const float attackS  = std::max (1.0e-4f, attackMs  * 0.001f);
+            const float releaseS = std::max (1.0e-4f, releaseMs * 0.001f);
+
+            const float dt = (float) hopSamples / std::max (1.0f, (float) sampleRate);
+
+            aA = std::exp (-dt / attackS);
+            aR = std::exp (-dt / releaseS);
+            z  = 1.0f;
+        }
+
         void reset() noexcept { z = 1.0f; }
 
-        float process (float target) noexcept;
+        float process (float target) noexcept
+        {
+            target = juce::jlimit (0.01f, 100.0f, target);
+            const float a = (target > z ? aA : aR);
+            z = a * z + (1.0f - a) * target;
+            return z;
+        }
 
         float aA = 0.9f, aR = 0.99f;
         float z  = 1.0f;
+    };
+
+    struct OffsetSmoother
+    {
+        void prepare (double sampleRate, int hopSamples, double timeSeconds) noexcept
+        {
+            const double dt = (double) hopSamples / std::max (1.0, sampleRate);
+            const double tau = std::max (0.05, timeSeconds);
+            a = std::exp (-dt / tau);
+            z = 0.0;
+            hasValue = false;
+        }
+
+        void reset() noexcept
+        {
+            z = 0.0;
+            hasValue = false;
+        }
+
+        double process (double x) noexcept
+        {
+            if (! hasValue)
+            {
+                z = x;
+                hasValue = true;
+                return z;
+            }
+
+            z = a * z + (1.0 - a) * x;
+            return z;
+        }
+
+        double a = 0.99;
+        double z = 0.0;
+        bool hasValue = false;
     };
 
     struct Band
     {
         int startBin = 1;
         int endBin   = 1;
-        GainSmoother smoother;
     };
 
+    struct ChannelState
+    {
+        std::vector<float> input;   // maxFftSize
+        std::vector<float> fftBuf;  // 2*maxFftSize (JUCE real-only packed)
+        std::vector<float> ola;     // maxFftSize
+
+        std::vector<float> fifo;    // ring for output samples
+        int fifoRead = 0, fifoWrite = 0, fifoCount = 0;
+    };
+
+    //==============================================================================
+    // FFT profiles (prebuilt for each allowed size to allow switching without allocations)
+    //==============================================================================
     struct FftProfile
     {
         int fftSize = 0;
@@ -122,116 +186,118 @@ private:
         int overlapCount = 4;
 
         std::unique_ptr<juce::dsp::FFT> fft;
-
         std::vector<float> window;   // sqrt-Hann
-        std::vector<float> olaNorm;  // overlap-add normalization profile
+        std::vector<float> olaNorm;   // OLA normalization
         double coherentGain = 0.5;
     };
 
-    struct ChannelState
+    //==============================================================================
+    // Internal helpers
+    //==============================================================================
+    static int clampChoice (int v, int numChoices) noexcept
     {
-        std::vector<float> input;     // size = maxFftSize
-        std::vector<float> fftBuf;    // size = 2*maxFftSize (JUCE real-only packing)
-        std::vector<float> ola;       // size = maxFftSize
-        std::vector<float> outFifo;   // size = 4*maxFftSize
+        return juce::jlimit (0, std::max (0, numChoices - 1), v);
+    }
 
-        int fifoRead = 0, fifoWrite = 0, fifoCount = 0;
-    };
+    static float softKnee01 (float levelDb, float threshold, float kneeWidthDb) noexcept;
 
-    static constexpr int kMaxFftSize   = 8192;
-    static constexpr int kMaxBands     = 128;
-    static constexpr int kMaxChannels  = 16; // future-proof up to 7.1.4 (12) + headroom
+    void rebuildBandsNoAlloc() noexcept;
+    void updateSmoothersNoAlloc() noexcept;
 
-    static bool isSupportedFftSize (int n) noexcept;
-    static int  clampToSupportedFftSize (int n) noexcept;
+    void processFrameAllChannels() noexcept;
 
-    void buildProfiles();
-    void setActiveFftSize (int fftSize) noexcept;
+    inline void getBin (const std::vector<float>& fftBuf, int fftSize, int bin, float& re, float& im) const noexcept
+    {
+        if (bin == 0)         { re = fftBuf[0]; im = 0.0f; return; }
+        if (bin == fftSize/2) { re = fftBuf[1]; im = 0.0f; return; }
+        const int i = 2 * bin;
+        re = fftBuf[(size_t) i];
+        im = fftBuf[(size_t) (i + 1)];
+    }
 
-    void rebuildBandsIfNeeded() noexcept;
-    void rebuildBands() noexcept;
-    void prepareBandSmoothers() noexcept;
+    inline void scaleBin (std::vector<float>& fftBuf, int fftSize, int bin, float g) noexcept
+    {
+        if (bin == 0)         { fftBuf[0] *= g; return; }
+        if (bin == fftSize/2) { fftBuf[1] *= g; return; }
+        const int i = 2 * bin;
+        fftBuf[(size_t) i]     *= g;
+        fftBuf[(size_t) (i+1)] *= g;
+    }
 
-    void clearAllState() noexcept;
+    inline void pushFifo (ChannelState& st, float s) noexcept
+    {
+        const int cap = (int) st.fifo.size();
+        if (cap <= 0) return;
 
-    // Packed FFT helpers (JUCE real-only format)
-    inline void scaleBin (float* fftData, int fftSize, int bin, float g) noexcept;
+        if (st.fifoCount >= cap)
+        {
+            st.fifoRead = (st.fifoRead + 1) % cap;
+            --st.fifoCount;
+        }
 
-    // Main STFT frame processing (runs once per hop after initial fill)
-    void processFrame() noexcept;
+        st.fifo[(size_t) st.fifoWrite] = s;
+        st.fifoWrite = (st.fifoWrite + 1) % cap;
+        ++st.fifoCount;
+    }
 
-    // Gain curve (monotonic upward curve with soft knees)
-    float calculateBandGainLinear (float bandLevelDb,
-                                  float t0BandDb,
-                                  float t1BandDb) const noexcept;
+    inline float popFifo (ChannelState& st) noexcept
+    {
+        const int cap = (int) st.fifo.size();
+        if (cap <= 0 || st.fifoCount <= 0) return 0.0f;
 
-    static float softKnee01 (float x, float threshold, float kneeWidth) noexcept;
+        const float s = st.fifo[(size_t) st.fifoRead];
+        st.fifoRead = (st.fifoRead + 1) % cap;
+        --st.fifoCount;
+        return s;
+    }
 
-    static float energyToLufs (float meanSquare) noexcept;
-
-    // FIFO helpers
-    inline void pushFifo (ChannelState& st, float s) noexcept;
-    inline float popFifo (ChannelState& st) noexcept;
+    float computeTargetGainLinear (float bandLevelDb,
+                                   float t0SpectralDb,
+                                   float t1SpectralDb) noexcept;
 
     //==============================================================================
     // State
     //==============================================================================
+    Parameters params;
 
     double fs = 48000.0;
-    int numChPrepared = 0;
+    int preparedNumChannels = 0;
     juce::AudioChannelSet preparedChannelSet;
+    int preparedMaxBlockSize = 0;
 
-    // Channel masks (bit i = channel i). Stage D1a: stereo only, but kept for future.
-    uint32_t detectorMask = 0xFFFFFFFFu;
-    uint32_t applyMask    = 0xFFFFFFFFu;
-
-    // Profiles for supported FFT sizes
-    std::vector<FftProfile> profiles;
-    FftProfile* activeProfile = nullptr;
-
-    int activeFftSize = 0;
-    int activeHopSize = 0;
-
-    // Shared band list + smoothers (linked gains)
-    std::array<Band, kMaxBands> bands {};
-    int numBands = 0;
-
-    // Cached band-mapping parameters to detect changes
-    int   lastBandsPerOct = 0;
-    float lastMinHz = 0.0f;
-    float lastMaxHz = 0.0f;
-    float lastAttackMs = 0.0f;
-    float lastReleaseMs = 0.0f;
-
-    // Input write head (shared across channels; channels stay frame-aligned)
+    // common write position (channels are synchronous)
     int inputWritePos = 0;
 
-    // Per-channel STFT state
-    std::vector<ChannelState> chState;
+    // active FFT selection
+    int activeFftChoice = 2;
+    int activeFftSize = 4096;
+    int activeHopSize = 1024;
 
-    // -------------------------------------------------------------------------
-    // Parameters (audio-thread-owned via setParameters())
-    Parameters params;
-    Parameters pendingParams;
-    bool pendingDirty = false;
+    int maxFftSize = 8192;
 
-    // -------------------------------------------------------------------------
-    // Adaptive offset: broadband LUFS-ish vs spectral dB
-    //
-    // offsetDb is smoothed slowly (seconds) to provide stable UI-to-spectral mapping.
-    float offsetDb = 0.0f;
-    float offsetAlpha = 0.999f; // computed from tau + hop dt
+    std::array<FftProfile, kNumFftChoices> profiles;
 
-    // Broadband LUFS-ish proxy using K-weighting filter + channel weights
-    BS1770KWeighting kWeight;
-    std::vector<float> bs1770ChannelWeights;
+    // bands (fixed storage, variable count)
+    std::array<Band, kMaxBands> bands;
+    int numBands = 0;
 
-    double broadbandEnergyAccum = 0.0;
-    int    broadbandSamplesAccum = 0;
+    // band smoothing (linked for now; later we can add per-channel smoothers)
+    std::array<GainSmoother, kMaxBands> bandSmoothers;
 
-    // Cached last broadband LUFS for debugging/inspection (not currently exposed)
-    float lastBroadbandLufs = -200.0f;
-//==============================================================================
+    // smoothed LUFS<->spectral translation
+    OffsetSmoother offsetSmoother;
+    double smoothedOffsetDb = 0.0;
+
+    // change tracking (no allocations; triggers reset/recompute safely)
+    int lastBandsPerOctChoice = 2;
+    float lastMinFreqHz = 25.0f;
+    float lastMaxFreqHz = 20000.0f;
+
+    float lastAttackMs  = 5.0f;
+    float lastReleaseMs = 50.0f;
+
+    bool pendingHardReset = false;
+
+    std::vector<ChannelState> ch;
 };
-// [END SUC-HEADER]
 } // namespace levelscope::dsp
