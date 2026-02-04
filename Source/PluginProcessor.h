@@ -194,6 +194,10 @@ private:
         int  lastMaxBlockSizeForSpec = 0;
     // [END LS-C2-MODGRAPH-DECL]
 
+    // [BEGIN LS-LATENCY-HELPER-DECL]
+        void updateLatencyFromAPVTS_NonRT();
+    // [END LS-LATENCY-HELPER-DECL]
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LevelScopeAudioProcessor)
 };

@@ -134,6 +134,20 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
         Defaults::sucMaxFreqHz));
 // [END MTDM-APVTS-PARAM-LAYOUT-STAGE-D1A-ADD]
 
+// [BEGIN MTDM-APVTS-PARAM-LAYOUT-TRIM-AND-CURVETYPE]
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { ParamIDs::sucCalTrimDb, 1 },
+        "SUC Cal Trim (dB)",
+        juce::NormalisableRange<float> (Ranges::sucCalTrimMinDb, Ranges::sucCalTrimMaxDb, 0.1f),
+        Defaults::sucCalTrimDb));
+
+    layout.add (std::make_unique<juce::AudioParameterChoice> (
+        juce::ParameterID { ParamIDs::sucCurveTypeChoice, 1 },
+        "SUC Curve Type",
+        juce::StringArray { "Monotonic", "Bell" },
+        Defaults::sucCurveTypeChoice));
+// [END MTDM-APVTS-PARAM-LAYOUT-TRIM-AND-CURVETYPE]
+
     return layout;
 }
 // [END MTDM-APVTS-PARAM-LAYOUT]
@@ -150,8 +164,8 @@ juce::int64 LevelScopeAudioProcessor::floorDivInt64 (juce::int64 a, juce::int64 
 // [BEGIN MTDM-APVTS-CTOR-INIT]
 LevelScopeAudioProcessor::LevelScopeAudioProcessor()
     : AudioProcessor (BusesProperties()
-                        .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
-                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)),
+        .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
+        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)),
       apvts (*this, nullptr, "PARAMS", createParameterLayout())
 // [END MTDM-APVTS-CTOR-INIT]
 {
@@ -161,8 +175,12 @@ LevelScopeAudioProcessor::LevelScopeAudioProcessor()
     // [BEGIN LS-PROCESSORCORE-CONSTRUCTOR-GRAPH-WITH-MTDM]
         // Stage C1/C2: default graph with MTDM + RT-safe APVTS binding.
         // Default: MTDM disabled => pass-through (no audible change).
-        rebuildModuleGraphFromState (nullptr);
+    rebuildModuleGraphFromState (nullptr);
     // [END LS-PROCESSORCORE-CONSTRUCTOR-GRAPH-WITH-MTDM]
+
+    // [BEGIN LS-LATENCY-CTOR-UPDATE]
+    updateLatencyFromAPVTS_NonRT();
+    // [END LS-LATENCY-CTOR-UPDATE]
 }
 
 // [BEGIN LS-C2-MODGRAPH-IMPL]
@@ -235,7 +253,10 @@ void LevelScopeAudioProcessor::rebuildModuleGraphFromState (const juce::MemoryBl
                                           apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucFftSizeChoice),
                                           apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucBandsPerOctChoice),
                                           apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucMinFreqHz),
-                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucMaxFreqHz));
+                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucMaxFreqHz),
+
+                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucCalTrimDb),
+                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucCurveTypeChoice));
             // [END MTDM-BINDPARAMS-CALL-STAGE-D1A]
 
             graph->modules.push_back (mtdm);
@@ -258,6 +279,31 @@ void LevelScopeAudioProcessor::rebuildModuleGraphFromState (const juce::MemoryBl
     }
 }
 // [END LS-C2-MODGRAPH-IMPL]
+
+// [BEGIN LS-LATENCY-HELPER-IMPL]
+void LevelScopeAudioProcessor::updateLatencyFromAPVTS_NonRT()
+{
+    // Policy A: update only from non-audio-thread call sites (prepareToPlay, setStateInformation, ctor).
+    int latency = 0;
+
+    const auto* enabled01 = apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::enabled);
+    const bool enabled = (enabled01 != nullptr && enabled01->load (std::memory_order_relaxed) >= 0.5f);
+
+    if (enabled)
+    {
+        const auto* choiceP = apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucFftSizeChoice);
+        const int choice = (int) std::lround (choiceP != nullptr ? choiceP->load (std::memory_order_relaxed)
+                                                                 : (float) levelscope::mtdm::Defaults::sucFftSizeChoice);
+
+        // Must match SpectralUpwardCompressor choices: 0=1024,1=2048,2=4096,3=8192
+        const int fftSizes[] = { 1024, 2048, 4096, 8192 };
+        const int idx = juce::jlimit (0, 3, choice);
+        latency = fftSizes[idx];
+    }
+
+    setLatencySamples (latency);
+}
+// [END LS-LATENCY-HELPER-IMPL]
 
 LevelScopeAudioProcessor::~LevelScopeAudioProcessor() = default;
 
@@ -301,6 +347,10 @@ void LevelScopeAudioProcessor::prepareToPlay (double sampleRate,
         processorCorePrepared = true;
         lastMaxBlockSizeForSpec = juce::jmax (0, samplesPerBlockExpected);
     // [END LS-C2-PREPARE-FLAGS]
+
+    // [BEGIN LS-LATENCY-PREPARE-UPDATE]
+        updateLatencyFromAPVTS_NonRT();
+    // [END LS-LATENCY-PREPARE-UPDATE]
 
     resetLoudnessState();
 }
@@ -695,6 +745,11 @@ void LevelScopeAudioProcessor::setStateInformation (const void* data, int sizeIn
 
     // Rebuild module graph safely (old sessions won't have MODG).
     rebuildModuleGraphFromState (modgChunk.getSize() > 0 ? &modgChunk : nullptr);
+
+    // [BEGIN LS-LATENCY-STATE-UPDATE]
+    updateLatencyFromAPVTS_NonRT();
+    // [END LS-LATENCY-STATE-UPDATE]
+
 }
 // [END LS-C2-STATE-GETSET]
 
