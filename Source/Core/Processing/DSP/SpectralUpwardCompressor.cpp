@@ -50,22 +50,27 @@ void SpectralUpwardCompressor::prepare (double sampleRate,
             pr.coherentGain += (double) w;
         pr.coherentGain /= (double) pr.fftSize;
 
-        // OLA normalization (periodic with hop)
-        pr.olaNorm.resize ((size_t) pr.fftSize);
-        for (int i = 0; i < pr.fftSize; ++i)
-        {
-            double s = 0.0;
-            for (int m = 0; m < pr.overlapCount; ++m)
-            {
-                const int idx = i + m * pr.hopSize;
-                if (idx >= 0 && idx < pr.fftSize)
+        // [BEGIN LS-SUC-HOP-NORM-PREPARE]
+                // COLA normalization for emitted hop samples:
+                // When we output ola[0..hop-1], those samples will (in steady state) contain
+                // contributions from window indices i + m*hop. We normalize at output time.
+                pr.hopNorm.resize ((size_t) pr.hopSize);
+
+                for (int i = 0; i < pr.hopSize; ++i)
                 {
-                    const double w = (double) pr.window[(size_t) idx];
-                    s += w * w;
+                    double s = 0.0;
+                    for (int m = 0; m < pr.overlapCount; ++m)
+                    {
+                        const int idx = i + m * pr.hopSize;
+                        if (idx >= 0 && idx < pr.fftSize)
+                        {
+                            const double w = (double) pr.window[(size_t) idx];
+                            s += w * w; // window^2
+                        }
+                    }
+                    pr.hopNorm[(size_t) i] = (float) std::max (1.0e-8, s);
                 }
-            }
-            pr.olaNorm[(size_t) i] = (float) std::max (1.0e-8, s);
-        }
+        // [END LS-SUC-HOP-NORM-PREPARE]
     }
 
     maxFftSize = kFftSizes[kNumFftChoices - 1];
@@ -407,18 +412,19 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
 
         pr.fft->performRealOnlyInverseTransform (st.fftBuf.data());
 
-        for (int i = 0; i < fftSize; ++i)
-        {
-            // IMPORTANT:
-            // Do NOT apply an extra 1/N scale here. In practice this caused output attenuation
-            // proportional to FFT size (e.g. ~-60 dB at N=1024, ~-72 dB at N=4096).
-            const float x = st.fftBuf[(size_t) i];
-            const float y = (x * pr.window[(size_t) i]) / pr.olaNorm[(size_t) i];
-            st.ola[(size_t) i] += y;
-        }
+        // [BEGIN LS-SUC-SYNTH-ACCUM-THEN-NORMALIZE-ON-EMIT]
+            // Accumulate un-normalized WOLA synthesis (normalize at emit time).
+            for (int i = 0; i < fftSize; ++i)
+            {
+                const float x = st.fftBuf[(size_t) i];
+                const float y = (x * pr.window[(size_t) i]);
+                st.ola[(size_t) i] += y;
+            }
 
-        for (int i = 0; i < hopSize; ++i)
-            pushFifo (st, st.ola[(size_t) i]);
+            // Emit next hop and normalize using COLA sum for hop positions.
+            for (int i = 0; i < hopSize; ++i)
+                pushFifo (st, st.ola[(size_t) i] / pr.hopNorm[(size_t) i]);
+        // [END LS-SUC-SYNTH-ACCUM-THEN-NORMALIZE-ON-EMIT]
 
         const int keep = fftSize - hopSize;
         std::memmove (st.ola.data(),

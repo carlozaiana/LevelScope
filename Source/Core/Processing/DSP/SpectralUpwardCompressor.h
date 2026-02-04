@@ -186,9 +186,11 @@ private:
         int overlapCount = 4;
 
         std::unique_ptr<juce::dsp::FFT> fft;
-        std::vector<float> window;   // sqrt-Hann
-        std::vector<float> olaNorm;   // OLA normalization
-        double coherentGain = 0.5;
+        // [BEGIN LS-SUC-HOP-NORM-DECL]
+            std::vector<float> window;   // sqrt-Hann
+            std::vector<float> hopNorm;  // size = hopSize; COLA norm for emitted hop samples
+            double coherentGain = 0.5;
+        // [END LS-SUC-HOP-NORM-DECL]
     };
 
     //==============================================================================
