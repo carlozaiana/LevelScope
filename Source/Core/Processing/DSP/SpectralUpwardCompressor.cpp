@@ -399,9 +399,8 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
         // [END LS-SUC-SCALE-MIRROR-BINS]
     }
 
+    // [BEGIN LS-SUC-REMOVE-EXTRA-INV-N]
     // 6) Inverse FFT + synthesis (window + norm + OLA), then emit hop samples
-    const float invN = 1.0f / (float) fftSize;
-
     for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
     {
         auto& st = ch[(size_t) chIdx];
@@ -410,7 +409,10 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
 
         for (int i = 0; i < fftSize; ++i)
         {
-            const float x = st.fftBuf[(size_t) i] * invN;
+            // IMPORTANT:
+            // Do NOT apply an extra 1/N scale here. In practice this caused output attenuation
+            // proportional to FFT size (e.g. ~-60 dB at N=1024, ~-72 dB at N=4096).
+            const float x = st.fftBuf[(size_t) i];
             const float y = (x * pr.window[(size_t) i]) / pr.olaNorm[(size_t) i];
             st.ola[(size_t) i] += y;
         }
@@ -424,6 +426,7 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
                       (size_t) keep * sizeof (float));
         std::fill (st.ola.begin() + keep, st.ola.begin() + fftSize, 0.0f);
     }
+    // [END LS-SUC-REMOVE-EXTRA-INV-N]
 
     // 7) Shift input buffers left by hop (common framing)
     const int keep = fftSize - hopSize;
