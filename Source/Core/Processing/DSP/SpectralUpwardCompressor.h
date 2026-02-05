@@ -62,6 +62,12 @@ public:
         int   bandsPerOctChoice = 2;      // 0=1,1=2,2=3,3=6
         float minFreqHz = 25.0f;
         float maxFreqHz = 20000.0f;
+
+        // [BEGIN LS-SUC-CAL-TRIM-PARAM]
+                // User trim (dB) applied on top of adaptive smoothed offset.
+                // Purpose: make LUFS-threshold handles line up intuitively with SUC behavior.
+                float calibrationTrimDb = 0.0f;
+        // [END LS-SUC-CAL-TRIM-PARAM]
     };
 
     SpectralUpwardCompressor() = default;

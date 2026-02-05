@@ -351,8 +351,12 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
         smoothedOffsetDb = offsetSmoother.process (clamped);
     }
 
-    const float t0SpectralDb = (float) (params.t0Lufs - (float) smoothedOffsetDb);
-    const float t1SpectralDb = (float) (params.t1Lufs - (float) smoothedOffsetDb);
+    // [BEGIN LS-SUC-APPLY-CAL-TRIM]
+        const double effectiveOffsetDb = smoothedOffsetDb + (double) params.calibrationTrimDb;
+
+        const float t0SpectralDb = (float) ((double) params.t0Lufs - effectiveOffsetDb);
+        const float t1SpectralDb = (float) ((double) params.t1Lufs - effectiveOffsetDb);
+    // [END LS-SUC-APPLY-CAL-TRIM]
 
     const float amount = juce::jlimit (0.0f, 1.0f, params.amount01);
 
