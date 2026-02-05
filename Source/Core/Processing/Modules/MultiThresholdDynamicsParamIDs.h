@@ -111,6 +111,29 @@ namespace levelscope::mtdm
             static constexpr float sucMaxFreqMinHz = 1000.0f;
             static constexpr float sucMaxFreqMaxHz = 24000.0f;
         }
+
+    // [BEGIN MTDM-PARAM-IDS-STAGE-D1A-TRIM-AND-CURVETYPE]
+        namespace ParamIDs
+        {
+            // User calibration trim: shifts LUFS->spectral mapping.
+            static constexpr const char* sucCalTrimDb        = "mtdm.suc.calTrimDb";
+
+            // Curve type selection
+            static constexpr const char* sucCurveTypeChoice  = "mtdm.suc.curveTypeChoice"; // 0=Monotonic, 1=Bell
+        }
+
+        namespace Defaults
+        {
+            static constexpr float sucCalTrimDb = 0.0f;
+            static constexpr int   sucCurveTypeChoice = 0; // Monotonic
+        }
+
+        namespace Ranges
+        {
+            static constexpr float sucCalTrimMinDb = -12.0f;
+            static constexpr float sucCalTrimMaxDb =  12.0f;
+        }
+    // [END MTDM-PARAM-IDS-STAGE-D1A-TRIM-AND-CURVETYPE]
     // [END MTDM-PARAM-IDS-STAGE-D1A-ADD]
     // [END MTDM-PARAM-IDS]
 } // namespace levelscope::mtdm

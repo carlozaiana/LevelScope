@@ -32,26 +32,30 @@ namespace levelscope
             // Parameter binding (non-owning pointers; RT-safe reads in process()).
             // Caller must ensure pointers remain valid for module lifetime (APVTS raw param pointers do).
             // [BEGIN MTDM-BINDPARAMS-STAGE-D1A-DECL]
-                        void bindParameters (std::atomic<float>* enabled01,
-                                             std::atomic<float>* thresholdDb,
-                                             std::atomic<float>* ratio,
+                void bindParameters (std::atomic<float>* enabled01,
+                                     std::atomic<float>* thresholdDb,
+                                     std::atomic<float>* ratio,
 
-                                             // Stage D1a params (additive)
-                                             std::atomic<float>* t0Lufs,
-                                             std::atomic<float>* t1Lufs,
+                                     // Stage D1a params (additive)
+                                     std::atomic<float>* t0Lufs,
+                                     std::atomic<float>* t1Lufs,
 
-                                             std::atomic<float>* sucAmount01,
-                                             std::atomic<float>* sucMaxBoostDb,
-                                             std::atomic<float>* sucCurve,
-                                             std::atomic<float>* sucLowKneeDb,
-                                             std::atomic<float>* sucHighKneeDb,
-                                             std::atomic<float>* sucAttackMs,
-                                             std::atomic<float>* sucReleaseMs,
+                                     std::atomic<float>* sucAmount01,
+                                     std::atomic<float>* sucMaxBoostDb,
+                                     std::atomic<float>* sucCurve,
+                                     std::atomic<float>* sucLowKneeDb,
+                                     std::atomic<float>* sucHighKneeDb,
+                                     std::atomic<float>* sucAttackMs,
+                                     std::atomic<float>* sucReleaseMs,
 
-                                             std::atomic<float>* sucFftSizeChoice,
-                                             std::atomic<float>* sucBandsPerOctChoice,
-                                             std::atomic<float>* sucMinFreqHz,
-                                             std::atomic<float>* sucMaxFreqHz) noexcept;
+                                     std::atomic<float>* sucFftSizeChoice,
+                                     std::atomic<float>* sucBandsPerOctChoice,
+                                     std::atomic<float>* sucMinFreqHz,
+                                     std::atomic<float>* sucMaxFreqHz,
+
+                                     // Stage D1a usability
+                                     std::atomic<float>* sucCalTrimDb,
+                                    std::atomic<float>* sucCurveTypeChoice) noexcept;
             // [END MTDM-BINDPARAMS-STAGE-D1A-DECL]
 
             // Persistence (non-audio-thread only)
@@ -89,6 +93,11 @@ namespace levelscope
                 std::atomic<float>* pSucBandsPerOctChoice  = nullptr; // choice index in float form
                 std::atomic<float>* pSucMinFreqHz          = nullptr;
                 std::atomic<float>* pSucMaxFreqHz          = nullptr;
+
+            // [BEGIN MTDM-SUC-TRIM-AND-CURVETYPE-MEMBERS]
+                std::atomic<float>* pSucCalTrimDb       = nullptr;
+                std::atomic<float>* pSucCurveTypeChoice = nullptr; // 0=Monotonic, 1=Bell
+            // [END MTDM-SUC-TRIM-AND-CURVETYPE-MEMBERS]
 
                 // Stage D1a DSP
                 levelscope::dsp::SpectralUpwardCompressor spectralUpward;

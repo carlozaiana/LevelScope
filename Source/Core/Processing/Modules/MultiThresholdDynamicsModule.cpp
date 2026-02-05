@@ -51,7 +51,9 @@ namespace levelscope
                                                               std::atomic<float>* sucFftSizeChoice,
                                                               std::atomic<float>* sucBandsPerOctChoice,
                                                               std::atomic<float>* sucMinFreqHz,
-                                                              std::atomic<float>* sucMaxFreqHz) noexcept
+                                                              std::atomic<float>* sucMaxFreqHz,
+                                                              std::atomic<float>* sucCalTrimDb,
+                                                              std::atomic<float>* sucCurveTypeChoice) noexcept
             {
                 pEnabled01   = enabled01;
                 pThresholdDb = thresholdDb;
@@ -72,6 +74,9 @@ namespace levelscope
                 pSucBandsPerOctChoice = sucBandsPerOctChoice;
                 pSucMinFreqHz         = sucMinFreqHz;
                 pSucMaxFreqHz         = sucMaxFreqHz;
+
+                pSucCalTrimDb       = sucCalTrimDb;
+                pSucCurveTypeChoice = sucCurveTypeChoice;
             }
     // [END MTDM-BINDPARAMS-STAGE-D1A-IMPL]
 
@@ -111,9 +116,6 @@ namespace levelscope
             p.attackMs   = (pSucAttackMs   != nullptr ? pSucAttackMs->load   (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucAttackMs);
             p.releaseMs  = (pSucReleaseMs  != nullptr ? pSucReleaseMs->load  (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucReleaseMs);
 
-            // Stage D1a: start with monotonic curve (fewest parameters).
-            p.curveType = levelscope::dsp::SpectralUpwardCompressor::CurveType::monotonic;
-
             // Advanced choices (choice params come through as float indices)
             const int fftChoice = (int) std::lround (pSucFftSizeChoice != nullptr
                                                      ? pSucFftSizeChoice->load (std::memory_order_relaxed)
@@ -129,9 +131,30 @@ namespace levelscope
             p.minFreqHz = (pSucMinFreqHz != nullptr ? pSucMinFreqHz->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucMinFreqHz);
             p.maxFreqHz = (pSucMaxFreqHz != nullptr ? pSucMaxFreqHz->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucMaxFreqHz);
 
+                p.minFreqHz = juce::jlimit (10.0f, 2000.0f, p.minFreqHz);
+                p.maxFreqHz = juce::jlimit (1000.0f, 24000.0f, p.maxFreqHz);
+
             // Ensure min/max freq ordering
             if (p.maxFreqHz < p.minFreqHz + 10.0f)
                 p.maxFreqHz = p.minFreqHz + 10.0f;
+
+            // [BEGIN MTDM-SUC-TRIM-AND-CURVETYPE-APPLY]
+                p.calibrationTrimDb =
+                    (pSucCalTrimDb != nullptr ? pSucCalTrimDb->load (std::memory_order_relaxed)
+                        : levelscope::mtdm::Defaults::sucCalTrimDb);
+
+                const int curveTypeChoice = (int) std::lround (pSucCurveTypeChoice != nullptr
+                        ? pSucCurveTypeChoice->load (std::memory_order_relaxed)
+                        : (float) levelscope::mtdm::Defaults::sucCurveTypeChoice);
+
+                p.curveType = (curveTypeChoice == 1
+                        ? levelscope::dsp::SpectralUpwardCompressor::CurveType::bell
+                        : levelscope::dsp::SpectralUpwardCompressor::CurveType::monotonic);
+
+                p.fftSizeChoice = juce::jlimit (0, 3, fftChoice);
+                p.bandsPerOctChoice = juce::jlimit (0, 3, bpoChoice);
+
+            // [END MTDM-SUC-TRIM-AND-CURVETYPE-APPLY]
 
             // Apply
             spectralUpward.setParametersAudioThread (p);
