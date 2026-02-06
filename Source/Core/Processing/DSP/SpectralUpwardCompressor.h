@@ -166,6 +166,45 @@ private:
         bool hasValue = false;
     };
 
+    // [BEGIN LS-SUC-GLOBAL-AMOUNT-SMOOTHER]
+    struct OnePoleSmoother
+    {
+        void prepare (double sampleRate, int hopSamples, double timeSeconds) noexcept
+        {
+            const double dt  = (double) hopSamples / std::max (1.0, sampleRate);
+            const double tau = std::max (0.01, timeSeconds);
+            a = std::exp (-dt / tau);
+            z = 0.0f;
+            hasValue = false;
+        }
+
+        void reset() noexcept
+        {
+            z = 0.0f;
+            hasValue = false;
+        }
+
+        float process (float x) noexcept
+        {
+            x = juce::jlimit (0.0f, 1.0f, x);
+
+            if (! hasValue)
+            {
+                z = x;
+                hasValue = true;
+                return z;
+            }
+
+            z = (float) (a * (double) z + (1.0 - a) * (double) x);
+            return z;
+        }
+
+        double a = 0.99;
+        float  z = 0.0f;
+        bool   hasValue = false;
+    };
+    // [END LS-SUC-GLOBAL-AMOUNT-SMOOTHER]
+
     struct Band
     {
         int startBin = 1;
@@ -299,6 +338,16 @@ private:
     // smoothed LUFS<->spectral translation
     OffsetSmoother offsetSmoother;
     double smoothedOffsetDb = 0.0;
+
+    // [BEGIN LS-SUC-GLOBAL-ZONE-AND-FREQ-SMOOTH-MEMBERS]
+    // Global zone scaler (Option A): fades SUC in around T0 and fades out around T1 based on broadband loudness proxy.
+    OnePoleSmoother globalZoneSmoother;
+    float smoothedGlobalZoneAmount01 = 1.0f; // 0..1
+
+    // Scratch arrays (no allocations in process): per-band target gains before/after cross-band smoothing
+    std::array<float, kMaxBands> bandTargetGain {};
+    std::array<float, kMaxBands> bandTargetGainFreqSmoothed {};
+    // [END LS-SUC-GLOBAL-ZONE-AND-FREQ-SMOOTH-MEMBERS]
 
     // change tracking (no allocations; triggers reset/recompute safely)
     int lastBandsPerOctChoice = 2;

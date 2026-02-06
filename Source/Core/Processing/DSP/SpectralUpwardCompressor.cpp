@@ -109,10 +109,16 @@ void SpectralUpwardCompressor::prepare (double sampleRate,
     updateSmoothersNoAlloc();
 
     // Offset smoother (slow)
+    // [BEGIN LS-SUC-PREPARE-GLOBAL-ZONE]
     offsetSmoother.prepare (fs, activeHopSize, 4.0 /*seconds*/);
     smoothedOffsetDb = 0.0;
 
+    // Global zone smoothing (Option A). Slow enough to avoid audible pumping.
+    globalZoneSmoother.prepare (fs, activeHopSize, 0.5 /*seconds*/);
+    smoothedGlobalZoneAmount01 = 1.0f;
+
     reset();
+    // [END LS-SUC-PREPARE-GLOBAL-ZONE]
 }
 
 void SpectralUpwardCompressor::reset() noexcept
@@ -132,10 +138,15 @@ void SpectralUpwardCompressor::reset() noexcept
     for (int i = 0; i < numBands; ++i)
         bandSmoothers[(size_t) i].reset();
 
+    // [BEGIN LS-SUC-RESET-GLOBAL-ZONE]
     offsetSmoother.reset();
     smoothedOffsetDb = 0.0;
 
+    globalZoneSmoother.reset();
+    smoothedGlobalZoneAmount01 = 1.0f;
+
     pendingHardReset = false;
+    // [END LS-SUC-RESET-GLOBAL-ZONE]
 }
 
 void SpectralUpwardCompressor::setParametersAudioThread (const Parameters& p) noexcept
@@ -152,8 +163,11 @@ void SpectralUpwardCompressor::setParametersAudioThread (const Parameters& p) no
         activeFftSize   = profiles[(size_t) activeFftChoice].fftSize;
         activeHopSize   = profiles[(size_t) activeFftChoice].hopSize;
 
+        // [BEGIN LS-SUC-PARAMS-REPREPARE-SMOOTHERS]
         offsetSmoother.prepare (fs, activeHopSize, 4.0);
+        globalZoneSmoother.prepare (fs, activeHopSize, 0.5);
         pendingHardReset = true;
+        // [END LS-SUC-PARAMS-REPREPARE-SMOOTHERS]
     }
 
     // Band mapping changes: recompute into fixed storage, no allocations.
@@ -305,6 +319,22 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
     // cheap LUFS-ish proxy (no K-weighting, no gating)
     const double broadbandDb = -0.691 + 10.0 * std::log10 (meanSq + 1.0e-12);
 
+    // [BEGIN LS-SUC-GLOBAL-ZONE-AMOUNT]
+    // Option A global zone scaler:
+    // - Fade IN around T0 (below T0 => less processing)
+    // - Fade OUT around T1 (above T1 => less processing)
+    // Uses the same knee widths as the per-band zone for now (simple + parameter-light).
+        {
+            const float L = (float) broadbandDb;
+
+            const float inAroundT0  = softKnee01 (L, params.t0Lufs, params.lowKneeDb);          // 0..1
+            const float outAroundT1 = 1.0f - softKnee01 (L, params.t1Lufs, params.highKneeDb); // 1..0
+
+            const float zoneTarget01 = juce::jlimit (0.0f, 1.0f, inAroundT0 * outAroundT1);
+            smoothedGlobalZoneAmount01 = globalZoneSmoother.process (zoneTarget01);
+        }
+    // [END LS-SUC-GLOBAL-ZONE-AMOUNT]
+
     // [BEGIN LS-SUC-FORWARD-NONNEGATIVE]
         // 2) Forward FFT per channel
         // IMPORTANT: We rely on JUCE's packed "non-negative frequencies only" real-only format:
@@ -358,14 +388,26 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
         const float t1SpectralDb = (float) ((double) params.t1Lufs - effectiveOffsetDb);
     // [END LS-SUC-APPLY-CAL-TRIM]
 
-    const float amount = juce::jlimit (0.0f, 1.0f, params.amount01);
+    // [BEGIN LS-SUC-EFFECTIVE-AMOUNT]
+        const float userAmount = juce::jlimit (0.0f, 1.0f, params.amount01);
+        const float effectiveAmount = juce::jlimit (0.0f, 1.0f, userAmount * smoothedGlobalZoneAmount01);
+    // [END LS-SUC-EFFECTIVE-AMOUNT]
 
-    // 5) Per-band gains computed from LINKED power, applied to all channels
+    // [BEGIN LS-SUC-PERBAND-GAINS-WITH-FREQ-SMOOTH]
+    // 5) Per-band gains computed from LINKED power.
+    // First pass: measure band levels and compute per-band target gains.
+    // Second pass: cross-band smooth target gains, then time-smooth, then apply to bins.
+
+    // ---- Pass 1: compute target gains per band (linear)
     for (int bi = 0; bi < numBands; ++bi)
     {
         const int b0 = juce::jlimit (1, maxBin - 1, bands[(size_t) bi].startBin);
         const int b1 = juce::jlimit (1, maxBin - 1, bands[(size_t) bi].endBin);
-        if (b1 < b0) continue;
+        if (b1 < b0)
+        {
+            bandTargetGain[(size_t) bi] = 1.0f;
+            continue;
+        }
 
         double pBand = 0.0;
         const int nBins = (b1 - b0 + 1);
@@ -386,27 +428,51 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
         const float bandDb = (float) (10.0 * std::log10 (meanBinPower / refPower + 1.0e-18));
 
         float targetG = computeTargetGainLinear (bandDb, t0SpectralDb, t1SpectralDb);
-        targetG = 1.0f + (targetG - 1.0f) * amount;
 
-        const float g = bandSmoothers[(size_t) bi].process (targetG);
+        // Global strength: user amount * global zone amount
+        targetG = 1.0f + (targetG - 1.0f) * effectiveAmount;
 
-        // Apply gain to each channel's bins in this band
-        // [BEGIN LS-SUC-SCALE-MIRROR-BINS]
-                for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
-                {
-                    auto& st = ch[(size_t) chIdx];
-
-                    for (int bin = b0; bin <= b1; ++bin)
-                    {
-                        scaleBin (st.fftBuf, fftSize, bin, g);
-
-                        const int mirror = fftSize - bin; // conjugate bin for real signals
-                        if (mirror != bin)
-                            scaleBin (st.fftBuf, fftSize, mirror, g);
-                    }
-                }
-        // [END LS-SUC-SCALE-MIRROR-BINS]
+        bandTargetGain[(size_t) bi] = targetG;
     }
+
+    // ---- Pass 2a: cross-band smoothing (3-tap)
+    if (numBands > 0)
+    {
+        for (int bi = 0; bi < numBands; ++bi)
+        {
+            const float g0 = bandTargetGain[(size_t) bi];
+            const float gL = (bi > 0 ? bandTargetGain[(size_t) (bi - 1)] : g0);
+            const float gR = (bi + 1 < numBands ? bandTargetGain[(size_t) (bi + 1)] : g0);
+
+            bandTargetGainFreqSmoothed[(size_t) bi] = 0.25f * gL + 0.5f * g0 + 0.25f * gR;
+        }
+    }
+
+    // ---- Pass 2b: time smoothing + apply gains to bins (and mirror bins)
+    for (int bi = 0; bi < numBands; ++bi)
+    {
+        const int b0 = juce::jlimit (1, maxBin - 1, bands[(size_t) bi].startBin);
+        const int b1 = juce::jlimit (1, maxBin - 1, bands[(size_t) bi].endBin);
+        if (b1 < b0)
+            continue;
+
+        const float g = bandSmoothers[(size_t) bi].process (bandTargetGainFreqSmoothed[(size_t) bi]);
+
+        for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
+        {
+            auto& st = ch[(size_t) chIdx];
+
+            for (int bin = b0; bin <= b1; ++bin)
+            {
+                scaleBin (st.fftBuf, fftSize, bin, g);
+
+                const int mirror = fftSize - bin;
+                if (mirror != bin)
+                    scaleBin (st.fftBuf, fftSize, mirror, g);
+            }
+        }
+    }
+    // [END LS-SUC-PERBAND-GAINS-WITH-FREQ-SMOOTH]
 
     // [BEGIN LS-SUC-REMOVE-EXTRA-INV-N]
     // 6) Inverse FFT + synthesis (window + norm + OLA), then emit hop samples
