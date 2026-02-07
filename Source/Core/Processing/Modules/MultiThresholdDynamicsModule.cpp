@@ -53,7 +53,8 @@ namespace levelscope
                                                               std::atomic<float>* sucMinFreqHz,
                                                               std::atomic<float>* sucMaxFreqHz,
                                                               std::atomic<float>* sucCalTrimDb,
-                                                              std::atomic<float>* sucCurveTypeChoice) noexcept
+                                                              std::atomic<float>* sucCurveTypeChoice,
+                                                              std::atomic<float>* upwardModeChoice) noexcept
             {
                 pEnabled01   = enabled01;
                 pThresholdDb = thresholdDb;
