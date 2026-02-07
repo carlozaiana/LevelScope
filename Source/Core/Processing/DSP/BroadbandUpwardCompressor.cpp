@@ -1,0 +1,135 @@
+#include "BroadbandUpwardCompressor.h"
+
+namespace levelscope::dsp
+{
+void BroadbandUpwardCompressor::prepare (double sampleRate,
+                                        int numChannels,
+                                        const juce::AudioChannelSet& channelSet,
+                                        int maxBlockSize)
+{
+    fs = (sampleRate > 0.0 ? sampleRate : 48000.0);
+    preparedNumChannels = std::max (1, numChannels);
+    preparedChannelSet = channelSet;
+    preparedMaxBlockSize = std::max (0, maxBlockSize);
+
+    updateCoefficientsIfNeeded();
+    reset();
+}
+
+void BroadbandUpwardCompressor::reset() noexcept
+{
+    envMS = 0.0f;
+    gainZ = 1.0f;
+}
+
+void BroadbandUpwardCompressor::setParametersAudioThread (const Parameters& p) noexcept
+{
+    params = p;
+    updateCoefficientsIfNeeded();
+}
+
+void BroadbandUpwardCompressor::updateCoefficientsIfNeeded() noexcept
+{
+    // Only recompute if attack/release changed meaningfully.
+    if (params.attackMs == lastAttackMs && params.releaseMs == lastReleaseMs)
+        return;
+
+    lastAttackMs  = params.attackMs;
+    lastReleaseMs = params.releaseMs;
+
+    const float attackS  = std::max (1.0e-4f, params.attackMs  * 0.001f);
+    const float releaseS = std::max (1.0e-4f, params.releaseMs * 0.001f);
+
+    const float sr = (float) std::max (1.0, fs);
+
+    // Standard per-sample one-pole coefficients
+    aDetA  = std::exp (-1.0f / (attackS  * sr));
+    aDetR  = std::exp (-1.0f / (releaseS * sr));
+
+    // Use the same time constants for gain smoothing in this minimal version
+    aGainA = aDetA;
+    aGainR = aDetR;
+}
+
+void BroadbandUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexcept
+{
+    juce::ScopedNoDenormals noDenormals;
+
+    const int numSamples = buffer.getNumSamples();
+    const int numChInBuf = buffer.getNumChannels();
+    if (numSamples <= 0 || numChInBuf <= 0)
+        return;
+
+    const int chToProcess = std::min (preparedNumChannels > 0 ? preparedNumChannels : numChInBuf, numChInBuf);
+
+    const float t0 = std::min (params.t0Lufs, params.t1Lufs);
+    const float t1 = std::max (params.t0Lufs, params.t1Lufs);
+
+    const float userAmount = juce::jlimit (0.0f, 1.0f, params.amount01);
+    const float maxBoostDb = std::max (0.0f, params.maxBoostDb);
+    const float curve01    = juce::jlimit (0.0f, 1.0f, params.curve);
+
+    const float expo = 1.0f + curve01 * 3.0f;
+    const float range = std::max (1.0f, t1 - t0);
+
+    auto** chans = buffer.getArrayOfWritePointers();
+
+    for (int i = 0; i < numSamples; ++i)
+    {
+        // Linked broadband mean-square across channels
+        double sumSq = 0.0;
+        for (int ch = 0; ch < chToProcess; ++ch)
+        {
+            const float x = chans[ch][i];
+            sumSq += (double) x * (double) x;
+        }
+
+        const float e = (float) (sumSq / (double) std::max (1, chToProcess));
+
+        // Detector smoothing (mean-square)
+        const float aDet = (e > envMS ? aDetA : aDetR);
+        envMS = aDet * envMS + (1.0f - aDet) * e;
+
+        // Loudness proxy in LUFS-ish units (same constant as your other LUFS conversion)
+        const float L = (float) (-0.691 + 10.0 * std::log10 ((double) envMS + 1.0e-12));
+
+        // Option A zone window: fade in around T0, fade out around T1
+        const float inAroundT0  = softKnee01 (L, t0, params.lowKneeDb);
+        const float outAroundT1 = 1.0f - softKnee01 (L, t1, params.highKneeDb);
+        const float zone01 = juce::jlimit (0.0f, 1.0f, inAroundT0 * outAroundT1);
+
+        // Position inside zone (0..1), used for curve shaping
+        float pos = (L - t0) / range;
+        pos = juce::jlimit (0.0f, 1.0f, pos);
+
+        float shaped = 0.0f;
+
+        if (params.curveType == CurveType::monotonic)
+        {
+            shaped = std::pow (std::max (0.0f, 1.0f - pos), expo);
+        }
+        else // bell
+        {
+            const float d = std::abs (pos - 0.5f) * 2.0f; // 0..1
+            shaped = std::pow (std::max (0.0f, 1.0f - d), expo);
+        }
+
+        // Boost in dB, bounded and zone-weighted
+        float boostDb = maxBoostDb * shaped * zone01;
+        boostDb = juce::jlimit (0.0f, maxBoostDb, boostDb);
+
+        const float baseGain = dbToLin (boostDb);
+
+        // Apply user amount (fade toward unity)
+        const float gainTarget = 1.0f + (baseGain - 1.0f) * userAmount;
+
+        // Gain smoothing
+        const float aG = (gainTarget > gainZ ? aGainA : aGainR);
+        gainZ = aG * gainZ + (1.0f - aG) * gainTarget;
+
+        // Apply to all processed channels
+        for (int ch = 0; ch < chToProcess; ++ch)
+            chans[ch][i] *= gainZ;
+    }
+}
+} // namespace levelscope::dsp
