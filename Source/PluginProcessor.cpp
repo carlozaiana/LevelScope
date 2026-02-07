@@ -238,38 +238,39 @@ void LevelScopeAudioProcessor::rebuildModuleGraphFromState (const juce::MemoryBl
 
     for (const auto& id : orderedModuleIds)
     {
+        // [BEGIN MTDM-BINDPARAMS-CALL-FULL-D1C]
         if (id == mtdmId)
         {
             auto mtdm = std::make_shared<levelscope::MultiThresholdDynamicsModule>();
 
-            // [BEGIN MTDM-BINDPARAMS-CALL-STAGE-D1A]
-                mtdm->bindParameters (apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::enabled),
-                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::thresholdDb),
-                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::ratio),
+            mtdm->bindParameters (apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::enabled),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::thresholdDb),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::ratio),
 
-                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::t0Lufs),
-                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::t1Lufs),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::t0Lufs),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::t1Lufs),
 
-                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucAmount01),
-                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucMaxBoostDb),
-                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucCurve),
-                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucLowKneeDb),
-                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucHighKneeDb),
-                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucAttackMs),
-                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucReleaseMs),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucAmount01),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucMaxBoostDb),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucCurve),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucLowKneeDb),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucHighKneeDb),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucAttackMs),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucReleaseMs),
 
-                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucFftSizeChoice),
-                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucBandsPerOctChoice),
-                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucMinFreqHz),
-                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucMaxFreqHz),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucFftSizeChoice),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucBandsPerOctChoice),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucMinFreqHz),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucMaxFreqHz),
 
-                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucCalTrimDb),
-                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucCurveTypeChoice),
-                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::upwardModeChoice));
-            // [END MTDM-BINDPARAMS-CALL-STAGE-D1A]
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucCalTrimDb),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucCurveTypeChoice),
+
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::upwardModeChoice));
 
             graph->modules.push_back (mtdm);
         }
+        // [END MTDM-BINDPARAMS-CALL-FULL-D1C]
         // Unknown modules are ignored (forward-compat)
     }
 
