@@ -72,7 +72,9 @@ void BroadbandUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexc
     const float expo = 1.0f + curve01 * 3.0f;
     const float range = std::max (1.0f, t1 - t0);
 
-    auto** chans = buffer.getArrayOfWritePointers();
+    // [BEGIN LS-BUC-CHANPTR-FIX]
+    float* const* chans = buffer.getArrayOfWritePointers();
+    // [END LS-BUC-CHANPTR-FIX]
 
     for (int i = 0; i < numSamples; ++i)
     {
