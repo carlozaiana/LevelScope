@@ -7,6 +7,9 @@
 // [BEGIN MTDM-SUC-INCLUDE]
 #include "../DSP/SpectralUpwardCompressor.h"
 // [END MTDM-SUC-INCLUDE]
+// [BEGIN MTDM-BUC-INCLUDE]
+#include "../DSP/BroadbandUpwardCompressor.h"
+// [END MTDM-BUC-INCLUDE]
 
 namespace levelscope
 {
@@ -73,6 +76,71 @@ namespace levelscope
         std::atomic<float>* pThresholdDb   = nullptr;
         std::atomic<float>* pRatio         = nullptr;
 
+        // [BEGIN MTDM-UPWARD-STRATEGY-TYPES]
+        struct UpwardRuntimeParams
+        {
+            float t0Lufs = levelscope::mtdm::Defaults::t0Lufs;
+            float t1Lufs = levelscope::mtdm::Defaults::t1Lufs;
+
+            float amount01   = levelscope::mtdm::Defaults::sucAmount01;
+            float maxBoostDb = levelscope::mtdm::Defaults::sucMaxBoostDb;
+            float curve      = levelscope::mtdm::Defaults::sucCurve;
+
+            float lowKneeDb  = levelscope::mtdm::Defaults::sucLowKneeDb;
+            float highKneeDb = levelscope::mtdm::Defaults::sucHighKneeDb;
+
+            float attackMs   = levelscope::mtdm::Defaults::sucAttackMs;
+            float releaseMs  = levelscope::mtdm::Defaults::sucReleaseMs;
+
+            // 0=Monotonic, 1=Bell (shared across strategies)
+            int curveTypeChoice = levelscope::mtdm::Defaults::sucCurveTypeChoice;
+
+            // Spectral-only:
+            int fftSizeChoice     = levelscope::mtdm::Defaults::sucFftSizeChoice;
+            int bandsPerOctChoice = levelscope::mtdm::Defaults::sucBandsPerOctChoice;
+            float minFreqHz       = levelscope::mtdm::Defaults::sucMinFreqHz;
+            float maxFreqHz       = levelscope::mtdm::Defaults::sucMaxFreqHz;
+            float calibrationTrimDb = levelscope::mtdm::Defaults::sucCalTrimDb;
+        };
+
+        struct IUpwardProcessor
+        {
+            virtual ~IUpwardProcessor() = default;
+            virtual void prepare (const ModulePrepareSpec& spec) = 0;
+            virtual void reset() noexcept = 0;
+            virtual void process (juce::AudioBuffer<float>& audio, const UpwardRuntimeParams& p) noexcept = 0;
+            virtual int  getLatencySamples() const noexcept = 0;
+        };
+
+        struct SpectralUpwardProcessor final : IUpwardProcessor
+        {
+            void prepare (const ModulePrepareSpec& spec) override;
+            void reset() noexcept override;
+            void process (juce::AudioBuffer<float>& audio, const UpwardRuntimeParams& p) noexcept override;
+            int  getLatencySamples() const noexcept override;
+
+            levelscope::dsp::SpectralUpwardCompressor suc;
+            bool prepared = false;
+        };
+
+        struct BroadbandUpwardProcessor final : IUpwardProcessor
+        {
+            void prepare (const ModulePrepareSpec& spec) override;
+            void reset() noexcept override;
+            void process (juce::AudioBuffer<float>& audio, const UpwardRuntimeParams& p) noexcept override;
+            int  getLatencySamples() const noexcept override;
+
+            levelscope::dsp::BroadbandUpwardCompressor buc;
+            bool prepared = false;
+        };
+
+        SpectralUpwardProcessor  spectralUpwardProcessor;
+        BroadbandUpwardProcessor broadbandUpwardProcessor;
+
+        IUpwardProcessor* activeUpward = nullptr;
+        int lastUpwardModeChoice = -1; // 0=Spectral, 1=Broadband
+        // [END MTDM-UPWARD-STRATEGY-TYPES]
+
         // Stored from prepare() for debugging/future DSP wiring. Not used for DSP yet.
         double preparedSampleRate = 0.0;
         int preparedMaxBlockSize = 0;
@@ -106,9 +174,6 @@ namespace levelscope
                 std::atomic<float>* pUpwardModeChoice = nullptr; // 0=Spectral, 1=Broadband
         // [END MTDM-UPWARD-MODE-MEMBER]
 
-        // Stage D1a DSP
-                levelscope::dsp::SpectralUpwardCompressor spectralUpward;
-                bool spectralPrepared = false;
         // [END MTDM-SUC-MEMBERS]
     };
     // [END MTDM-MODULE-DECL]

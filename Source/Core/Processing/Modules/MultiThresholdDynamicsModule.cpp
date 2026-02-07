@@ -1,4 +1,7 @@
 #include "MultiThresholdDynamicsModule.h"
+// [BEGIN MTDM-UPWARD-STRATEGY-INCLUDES]
+#include <cmath>
+// [END MTDM-UPWARD-STRATEGY-INCLUDES]
 
 namespace levelscope
 {
@@ -19,21 +22,122 @@ namespace levelscope
         preparedMaxBlockSize = spec.maxBlockSize;
         preparedChannelSet = spec.channelSet;
 
-        // [BEGIN MTDM-PREPARE-SUC]
-                // Stage D1a: prepare spectral upward compressor (allocations happen here only).
-                const int numCh = juce::jmax (1, spec.channelSet.size());
-                spectralUpward.prepare (spec.sampleRate, numCh, spec.channelSet, spec.maxBlockSize);
-                spectralPrepared = true;
-        // [END MTDM-PREPARE-SUC]
+        // [BEGIN MTDM-PREPARE-UPWARD-STRATEGIES]
+        spectralUpwardProcessor.prepare (spec);
+        broadbandUpwardProcessor.prepare (spec);
+
+        // Default active strategy is Spectral; actual mode is selected in process() from APVTS.
+        activeUpward = &spectralUpwardProcessor;
+        lastUpwardModeChoice = -1;
+        // [END MTDM-PREPARE-UPWARD-STRATEGIES]
     }
 
-    // [BEGIN MTDM-RESET-STAGE-D1A]
+        // [BEGIN MTDM-RESET-UPWARD-STRATEGIES]
         void MultiThresholdDynamicsModule::reset()
         {
-            if (spectralPrepared)
-                spectralUpward.reset();
+            spectralUpwardProcessor.reset();
+            broadbandUpwardProcessor.reset();
         }
-    // [END MTDM-RESET-STAGE-D1A]
+        // [END MTDM-RESET-UPWARD-STRATEGIES]
+
+    // [BEGIN MTDM-UPWARD-STRATEGY-IMPL]
+    void MultiThresholdDynamicsModule::SpectralUpwardProcessor::prepare (const ModulePrepareSpec& spec)
+    {
+        const int numCh = juce::jmax (1, spec.channelSet.size());
+        suc.prepare (spec.sampleRate, numCh, spec.channelSet, spec.maxBlockSize);
+        prepared = true;
+    }
+
+    void MultiThresholdDynamicsModule::SpectralUpwardProcessor::reset() noexcept
+    {
+        if (prepared)
+            suc.reset();
+    }
+
+    void MultiThresholdDynamicsModule::SpectralUpwardProcessor::process (juce::AudioBuffer<float>& audio,
+                                                                         const UpwardRuntimeParams& rp) noexcept
+    {
+        if (! prepared)
+            return;
+
+        levelscope::dsp::SpectralUpwardCompressor::Parameters p;
+        p.t0Lufs = rp.t0Lufs;
+        p.t1Lufs = rp.t1Lufs;
+
+        p.amount01   = rp.amount01;
+        p.maxBoostDb = rp.maxBoostDb;
+        p.curve      = rp.curve;
+        p.lowKneeDb  = rp.lowKneeDb;
+        p.highKneeDb = rp.highKneeDb;
+        p.attackMs   = rp.attackMs;
+        p.releaseMs  = rp.releaseMs;
+
+        p.calibrationTrimDb = rp.calibrationTrimDb;
+
+        p.fftSizeChoice     = rp.fftSizeChoice;
+        p.bandsPerOctChoice = rp.bandsPerOctChoice;
+        p.minFreqHz         = rp.minFreqHz;
+        p.maxFreqHz         = rp.maxFreqHz;
+
+        p.curveType = (rp.curveTypeChoice == 1
+                         ? levelscope::dsp::SpectralUpwardCompressor::CurveType::bell
+                         : levelscope::dsp::SpectralUpwardCompressor::CurveType::monotonic);
+
+        suc.setParametersAudioThread (p);
+        suc.process (audio);
+    }
+
+    int MultiThresholdDynamicsModule::SpectralUpwardProcessor::getLatencySamples() const noexcept
+    {
+        return suc.getLatencySamples();
+    }
+
+    void MultiThresholdDynamicsModule::BroadbandUpwardProcessor::prepare (const ModulePrepareSpec& spec)
+    {
+        const int numCh = juce::jmax (1, spec.channelSet.size());
+        buc.prepare (spec.sampleRate, numCh, spec.channelSet, spec.maxBlockSize);
+        prepared = true;
+    }
+
+    void MultiThresholdDynamicsModule::BroadbandUpwardProcessor::reset() noexcept
+    {
+        if (prepared)
+            buc.reset();
+    }
+
+    void MultiThresholdDynamicsModule::BroadbandUpwardProcessor::process (juce::AudioBuffer<float>& audio,
+                                                                          const UpwardRuntimeParams& rp) noexcept
+    {
+        if (! prepared)
+            return;
+
+        levelscope::dsp::BroadbandUpwardCompressor::Parameters p;
+        p.t0Lufs = rp.t0Lufs;
+        p.t1Lufs = rp.t1Lufs;
+
+        p.amount01   = rp.amount01;
+        p.maxBoostDb = rp.maxBoostDb;
+        p.curve      = rp.curve;
+        p.lowKneeDb  = rp.lowKneeDb;
+        p.highKneeDb = rp.highKneeDb;
+
+        // minimal set: reuse attack/release
+        p.attackMs   = rp.attackMs;
+        p.releaseMs  = rp.releaseMs;
+
+        p.curveType = (rp.curveTypeChoice == 1
+                         ? levelscope::dsp::BroadbandUpwardCompressor::CurveType::bell
+                         : levelscope::dsp::BroadbandUpwardCompressor::CurveType::monotonic);
+
+        buc.setParametersAudioThread (p);
+        buc.process (audio);
+    }
+
+    int MultiThresholdDynamicsModule::BroadbandUpwardProcessor::getLatencySamples() const noexcept
+    {
+        return 0;
+    }
+    // [END MTDM-UPWARD-STRATEGY-IMPL]
 
     // [BEGIN MTDM-BINDPARAMS-STAGE-D1A-IMPL]
             void MultiThresholdDynamicsModule::bindParameters (std::atomic<float>* enabled01,
@@ -96,76 +200,73 @@ namespace levelscope
             if (enabled < 0.5f)
                 return;
 
-            // Must be prepared before processing.
-            if (! spectralPrepared)
-                return;
+            // [BEGIN MTDM-PROCESS-UPWARD-MODE-SWITCH]
+            // Select upward mode (0=Spectral, 1=Broadband)
+            const int upwardMode = (int) std::lround (pUpwardModeChoice != nullptr
+                                                      ? pUpwardModeChoice->load (std::memory_order_relaxed)
+                                                      : (float) levelscope::mtdm::Defaults::upwardModeChoice);
 
-            // Read parameters (audio-thread-only contract).
-            levelscope::dsp::SpectralUpwardCompressor::Parameters p;
+            if (activeUpward == nullptr)
+                activeUpward = &spectralUpwardProcessor;
 
-            // UI-oriented thresholds (LUFS axis); internally translated by spectralUpward
+            if (upwardMode != lastUpwardModeChoice)
+            {
+                lastUpwardModeChoice = upwardMode;
+
+                activeUpward = (upwardMode == 1 ? static_cast<IUpwardProcessor*> (&broadbandUpwardProcessor)
+                                                : static_cast<IUpwardProcessor*> (&spectralUpwardProcessor));
+
+                // Rare user action; reset to avoid stale delay lines / FIFOs during mode switch.
+                spectralUpwardProcessor.reset();
+                broadbandUpwardProcessor.reset();
+            }
+
+            UpwardRuntimeParams up;
+
             const float t0 = (pT0Lufs != nullptr ? pT0Lufs->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::t0Lufs);
             const float t1 = (pT1Lufs != nullptr ? pT1Lufs->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::t1Lufs);
+            up.t0Lufs = juce::jmin (t0, t1);
+            up.t1Lufs = juce::jmax (t0, t1);
 
-            // Safety: enforce ordering (UI should constrain too).
-            p.t0Lufs = juce::jmin (t0, t1);
-            p.t1Lufs = juce::jmax (t0, t1);
+            up.amount01   = (pSucAmount01   != nullptr ? pSucAmount01->load   (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucAmount01);
+            up.maxBoostDb = (pSucMaxBoostDb != nullptr ? pSucMaxBoostDb->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucMaxBoostDb);
+            up.curve      = (pSucCurve      != nullptr ? pSucCurve->load      (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucCurve);
 
-            p.amount01   = (pSucAmount01   != nullptr ? pSucAmount01->load   (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucAmount01);
-            p.maxBoostDb = (pSucMaxBoostDb != nullptr ? pSucMaxBoostDb->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucMaxBoostDb);
-            p.curve      = (pSucCurve      != nullptr ? pSucCurve->load      (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucCurve);
+            up.lowKneeDb  = (pSucLowKneeDb  != nullptr ? pSucLowKneeDb->load  (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucLowKneeDb);
+            up.highKneeDb = (pSucHighKneeDb != nullptr ? pSucHighKneeDb->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucHighKneeDb);
 
-            p.lowKneeDb  = (pSucLowKneeDb  != nullptr ? pSucLowKneeDb->load  (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucLowKneeDb);
-            p.highKneeDb = (pSucHighKneeDb != nullptr ? pSucHighKneeDb->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucHighKneeDb);
+            up.attackMs   = (pSucAttackMs   != nullptr ? pSucAttackMs->load   (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucAttackMs);
+            up.releaseMs  = (pSucReleaseMs  != nullptr ? pSucReleaseMs->load  (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucReleaseMs);
 
-            p.attackMs   = (pSucAttackMs   != nullptr ? pSucAttackMs->load   (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucAttackMs);
-            p.releaseMs  = (pSucReleaseMs  != nullptr ? pSucReleaseMs->load  (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucReleaseMs);
+            up.calibrationTrimDb = (pSucCalTrimDb != nullptr ? pSucCalTrimDb->load (std::memory_order_relaxed)
+                                                             : levelscope::mtdm::Defaults::sucCalTrimDb);
 
-            // Advanced choices (choice params come through as float indices)
-            const int fftChoice = (int) std::lround (pSucFftSizeChoice != nullptr
-                                                     ? pSucFftSizeChoice->load (std::memory_order_relaxed)
-                                                     : (float) levelscope::mtdm::Defaults::sucFftSizeChoice);
+            // curve type shared across strategies
+            up.curveTypeChoice = (int) std::lround (pSucCurveTypeChoice != nullptr
+                                                    ? pSucCurveTypeChoice->load (std::memory_order_relaxed)
+                                                    : (float) levelscope::mtdm::Defaults::sucCurveTypeChoice);
 
-            const int bpoChoice = (int) std::lround (pSucBandsPerOctChoice != nullptr
-                                                     ? pSucBandsPerOctChoice->load (std::memory_order_relaxed)
-                                                     : (float) levelscope::mtdm::Defaults::sucBandsPerOctChoice);
+            // Spectral-only params (ignored by Broadband)
+            up.fftSizeChoice = juce::jlimit (0, 3, (int) std::lround (pSucFftSizeChoice != nullptr
+                                                                      ? pSucFftSizeChoice->load (std::memory_order_relaxed)
+                                                                      : (float) levelscope::mtdm::Defaults::sucFftSizeChoice));
 
-            p.fftSizeChoice     = fftChoice;
-            p.bandsPerOctChoice = bpoChoice;
+            up.bandsPerOctChoice = juce::jlimit (0, 3, (int) std::lround (pSucBandsPerOctChoice != nullptr
+                                                                          ? pSucBandsPerOctChoice->load (std::memory_order_relaxed)
+                                                                          : (float) levelscope::mtdm::Defaults::sucBandsPerOctChoice));
 
-            p.minFreqHz = (pSucMinFreqHz != nullptr ? pSucMinFreqHz->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucMinFreqHz);
-            p.maxFreqHz = (pSucMaxFreqHz != nullptr ? pSucMaxFreqHz->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucMaxFreqHz);
+            up.minFreqHz = (pSucMinFreqHz != nullptr ? pSucMinFreqHz->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucMinFreqHz);
+            up.maxFreqHz = (pSucMaxFreqHz != nullptr ? pSucMaxFreqHz->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::sucMaxFreqHz);
 
-                p.minFreqHz = juce::jlimit (10.0f, 2000.0f, p.minFreqHz);
-                p.maxFreqHz = juce::jlimit (1000.0f, 24000.0f, p.maxFreqHz);
+            up.minFreqHz = juce::jlimit (10.0f, 2000.0f, up.minFreqHz);
+            up.maxFreqHz = juce::jlimit (1000.0f, 24000.0f, up.maxFreqHz);
+            if (up.maxFreqHz < up.minFreqHz + 10.0f)
+                up.maxFreqHz = up.minFreqHz + 10.0f;
 
-            // Ensure min/max freq ordering
-            if (p.maxFreqHz < p.minFreqHz + 10.0f)
-                p.maxFreqHz = p.minFreqHz + 10.0f;
+            activeUpward->process (ctx.audio, up);
 
-            // [BEGIN MTDM-SUC-TRIM-AND-CURVETYPE-APPLY]
-                p.calibrationTrimDb =
-                    (pSucCalTrimDb != nullptr ? pSucCalTrimDb->load (std::memory_order_relaxed)
-                        : levelscope::mtdm::Defaults::sucCalTrimDb);
-
-                const int curveTypeChoice = (int) std::lround (pSucCurveTypeChoice != nullptr
-                        ? pSucCurveTypeChoice->load (std::memory_order_relaxed)
-                        : (float) levelscope::mtdm::Defaults::sucCurveTypeChoice);
-
-                p.curveType = (curveTypeChoice == 1
-                        ? levelscope::dsp::SpectralUpwardCompressor::CurveType::bell
-                        : levelscope::dsp::SpectralUpwardCompressor::CurveType::monotonic);
-
-                p.fftSizeChoice = juce::jlimit (0, 3, fftChoice);
-                p.bandsPerOctChoice = juce::jlimit (0, 3, bpoChoice);
-
-            // [END MTDM-SUC-TRIM-AND-CURVETYPE-APPLY]
-
-            // Apply
-            spectralUpward.setParametersAudioThread (p);
-
-            // Process in-place (safe)
-            spectralUpward.process (ctx.audio);
+            juce::ignoreUnused (pThresholdDb, pRatio);
+            // [END MTDM-PROCESS-UPWARD-MODE-SWITCH]
 
             // NOTE: Other zones (T1–T2, etc.) are pass-through for Stage D1a by simply not existing yet.
             // thresholdDb/ratio are currently unused placeholders for future time-domain zones.
@@ -186,4 +287,4 @@ namespace levelscope
         // schemaVersion currently unused; tolerate older/missing fields.
     }
     // [END MTDM-MODULE-IMPL]
-} // namespace levelscope
+}
