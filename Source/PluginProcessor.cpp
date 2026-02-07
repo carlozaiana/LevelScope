@@ -148,10 +148,18 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
         Defaults::sucCurveTypeChoice));
 // [END MTDM-APVTS-PARAM-LAYOUT-TRIM-AND-CURVETYPE]
 
+// [BEGIN MTDM-APVTS-PARAM-LAYOUT-UPWARD-MODE]
+    layout.add (std::make_unique<juce::AudioParameterChoice> (
+        juce::ParameterID { ParamIDs::upwardModeChoice, 1 },
+        "Upward Mode",
+        juce::StringArray { "Spectral", "Broadband" },
+        Defaults::upwardModeChoice));
+// [END MTDM-APVTS-PARAM-LAYOUT-UPWARD-MODE]
+
     return layout;
 }
 // [END MTDM-APVTS-PARAM-LAYOUT]
-
+apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucMaxFreqHz),
 juce::int64 LevelScopeAudioProcessor::floorDivInt64 (juce::int64 a, juce::int64 b) noexcept
 {
     if (b <= 0) return 0;
@@ -235,28 +243,29 @@ void LevelScopeAudioProcessor::rebuildModuleGraphFromState (const juce::MemoryBl
             auto mtdm = std::make_shared<levelscope::MultiThresholdDynamicsModule>();
 
             // [BEGIN MTDM-BINDPARAMS-CALL-STAGE-D1A]
-                    mtdm->bindParameters (apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::enabled),
-                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::thresholdDb),
-                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::ratio),
+                mtdm->bindParameters (apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::enabled),
+                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::thresholdDb),
+                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::ratio),
 
-                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::t0Lufs),
-                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::t1Lufs),
+                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::t0Lufs),
+                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::t1Lufs),
 
-                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucAmount01),
-                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucMaxBoostDb),
-                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucCurve),
-                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucLowKneeDb),
-                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucHighKneeDb),
-                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucAttackMs),
-                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucReleaseMs),
+                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucAmount01),
+                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucMaxBoostDb),
+                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucCurve),
+                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucLowKneeDb),
+                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucHighKneeDb),
+                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucAttackMs),
+                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucReleaseMs),
 
-                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucFftSizeChoice),
-                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucBandsPerOctChoice),
-                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucMinFreqHz),
-                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucMaxFreqHz),
+                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucFftSizeChoice),
+                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucBandsPerOctChoice),
+                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucMinFreqHz),
+                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucMaxFreqHz),
 
-                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucCalTrimDb),
-                                          apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucCurveTypeChoice));
+                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucCalTrimDb),
+                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucCurveTypeChoice),
+                                      apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::upwardModeChoice));
             // [END MTDM-BINDPARAMS-CALL-STAGE-D1A]
 
             graph->modules.push_back (mtdm);
@@ -289,7 +298,13 @@ void LevelScopeAudioProcessor::updateLatencyFromAPVTS_NonRT()
     const auto* enabled01 = apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::enabled);
     const bool enabled = (enabled01 != nullptr && enabled01->load (std::memory_order_relaxed) >= 0.5f);
 
-    if (enabled)
+    // Upward mode: 0=Spectral, 1=Broadband
+    const auto* upwardModeP = apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::upwardModeChoice);
+    const int upwardMode = (int) std::lround (upwardModeP != nullptr
+                                              ? upwardModeP->load (std::memory_order_relaxed)
+                                              : (float) levelscope::mtdm::Defaults::upwardModeChoice);
+
+    if (enabled && upwardMode == 0) // Spectral mode only
     {
         const auto* choiceP = apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucFftSizeChoice);
         const int choice = (int) std::lround (choiceP != nullptr ? choiceP->load (std::memory_order_relaxed)
@@ -299,6 +314,11 @@ void LevelScopeAudioProcessor::updateLatencyFromAPVTS_NonRT()
         const int fftSizes[] = { 1024, 2048, 4096, 8192 };
         const int idx = juce::jlimit (0, 3, choice);
         latency = fftSizes[idx];
+    }
+    else
+    {
+        // Broadband upward (and/or MTDM disabled) => zero algorithmic latency
+        latency = 0;
     }
 
     setLatencySamples (latency);
