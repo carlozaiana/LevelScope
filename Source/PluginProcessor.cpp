@@ -159,7 +159,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
     return layout;
 }
 // [END MTDM-APVTS-PARAM-LAYOUT]
-apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucMaxFreqHz),
+
 juce::int64 LevelScopeAudioProcessor::floorDivInt64 (juce::int64 a, juce::int64 b) noexcept
 {
     if (b <= 0) return 0;
