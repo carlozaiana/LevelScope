@@ -77,6 +77,10 @@ namespace levelscope
 
                 pSucCalTrimDb       = sucCalTrimDb;
                 pSucCurveTypeChoice = sucCurveTypeChoice;
+
+                // [BEGIN MTDM-BINDPARAMS-STORE-UPWARD-MODE]
+                pUpwardModeChoice = upwardModeChoice;
+                // [END MTDM-BINDPARAMS-STORE-UPWARD-MODE]
             }
     // [END MTDM-BINDPARAMS-STAGE-D1A-IMPL]
 

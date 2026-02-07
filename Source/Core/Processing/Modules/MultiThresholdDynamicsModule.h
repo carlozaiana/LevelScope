@@ -55,7 +55,10 @@ namespace levelscope
 
                                      // Stage D1a usability
                                      std::atomic<float>* sucCalTrimDb,
-                                    std::atomic<float>* sucCurveTypeChoice) noexcept;
+                                     std::atomic<float>* sucCurveTypeChoice,
+
+                                     // Stage D1c ADD-UPWARD-MODE
+                                     std::atomic<float>* upwardModeChoice) noexcept;
             // [END MTDM-BINDPARAMS-STAGE-D1A-DECL]
 
             // Persistence (non-audio-thread only)
@@ -94,12 +97,16 @@ namespace levelscope
                 std::atomic<float>* pSucMinFreqHz          = nullptr;
                 std::atomic<float>* pSucMaxFreqHz          = nullptr;
 
-            // [BEGIN MTDM-SUC-TRIM-AND-CURVETYPE-MEMBERS]
+        // [BEGIN MTDM-SUC-TRIM-AND-CURVETYPE-MEMBERS]
                 std::atomic<float>* pSucCalTrimDb       = nullptr;
                 std::atomic<float>* pSucCurveTypeChoice = nullptr; // 0=Monotonic, 1=Bell
-            // [END MTDM-SUC-TRIM-AND-CURVETYPE-MEMBERS]
+        // [END MTDM-SUC-TRIM-AND-CURVETYPE-MEMBERS]
 
-                // Stage D1a DSP
+        // [BEGIN MTDM-UPWARD-MODE-MEMBER]
+                std::atomic<float>* pUpwardModeChoice = nullptr; // 0=Spectral, 1=Broadband
+        // [END MTDM-UPWARD-MODE-MEMBER]
+
+        // Stage D1a DSP
                 levelscope::dsp::SpectralUpwardCompressor spectralUpward;
                 bool spectralPrepared = false;
         // [END MTDM-SUC-MEMBERS]

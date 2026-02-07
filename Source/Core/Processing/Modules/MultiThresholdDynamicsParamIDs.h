@@ -134,6 +134,21 @@ namespace levelscope::mtdm
             static constexpr float sucCalTrimMaxDb =  12.0f;
         }
     // [END MTDM-PARAM-IDS-STAGE-D1A-TRIM-AND-CURVETYPE]
+
+    // [BEGIN MTDM-UPWARD-MODE-PARAM]
+        namespace ParamIDs
+        {
+        // Upward processor mode:
+        // 0 = Spectral (SUC), 1 = Broadband (time-domain upward)
+            static constexpr const char* upwardModeChoice = "mtdm.upwardModeChoice";
+        }
+
+        namespace Defaults
+        {
+            static constexpr int upwardModeChoice = 0; // Spectral default (current behavior)
+        }
+    // [END MTDM-UPWARD-MODE-PARAM]
+
     // [END MTDM-PARAM-IDS-STAGE-D1A-ADD]
     // [END MTDM-PARAM-IDS]
 } // namespace levelscope::mtdm
