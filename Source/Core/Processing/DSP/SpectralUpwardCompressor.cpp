@@ -90,6 +90,35 @@ void SpectralUpwardCompressor::prepare (double sampleRate,
         st.fifoRead = st.fifoWrite = st.fifoCount = 0;
     }
 
+    // [BEGIN LS-SUC-PREPARE-BUILD-MASKS]
+    detectChannels.clear();
+    applyChannels.clear();
+    detectChannels.reserve ((size_t) preparedNumChannels);
+    applyChannels.reserve ((size_t) preparedNumChannels);
+
+    for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
+    {
+        const bool isLfe = (preparedChannelSet.getTypeOfChannel (chIdx) == juce::AudioChannelSet::LFE);
+
+        if (! isLfe)
+        {
+            detectChannels.push_back (chIdx);
+            applyChannels.push_back (chIdx);
+        }
+    }
+
+    if (detectChannels.empty() || applyChannels.empty())
+    {
+        detectChannels.clear();
+        applyChannels.clear();
+        for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
+        {
+            detectChannels.push_back (chIdx);
+            applyChannels.push_back (chIdx);
+        }
+    }
+    // [END LS-SUC-PREPARE-BUILD-MASKS]
+
     // Apply initial selection + derived values
     activeFftChoice = clampChoice (params.fftSizeChoice, kNumFftChoices);
     activeFftSize   = profiles[(size_t) activeFftChoice].fftSize;
@@ -294,7 +323,9 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
     const int hopSize = pr.hopSize;
     const int maxBin = fftSize / 2;
 
-    // 1) Analysis window into per-channel fft buffers, and compute broadband proxy energy
+    // [BEGIN LS-SUC-LFE-EXCLUDE-BROADBAND-PROXY]
+    // 1) Analysis window into per-channel fft buffers.
+    // We compute the broadband proxy energy from DETECTOR channels only (default excludes LFE).
     double sumSq = 0.0;
 
     for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
@@ -305,7 +336,6 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
         {
             const float x = st.input[(size_t) i] * pr.window[(size_t) i];
             st.fftBuf[(size_t) i] = x;
-            sumSq += (double) x * (double) x;
         }
 
         std::fill (st.fftBuf.begin() + (size_t) fftSize,
@@ -313,8 +343,41 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
                    0.0f);
     }
 
-    const int linkedCh = std::max (1, preparedNumChannels);
-    const double meanSq = sumSq / (double) (fftSize * linkedCh);
+    // Sum energy only over detector channels (fallback: all channels)
+    const bool haveDetect = (! detectChannels.empty());
+    const int linkedCh = (haveDetect ? (int) detectChannels.size() : std::max (1, preparedNumChannels));
+
+    if (haveDetect)
+    {
+        for (int di = 0; di < (int) detectChannels.size(); ++di)
+        {
+            const int chIdx = detectChannels[(size_t) di];
+            if (chIdx < 0 || chIdx >= preparedNumChannels)
+                continue;
+
+            const auto& st = ch[(size_t) chIdx];
+            for (int i = 0; i < fftSize; ++i)
+            {
+                const double x = (double) st.fftBuf[(size_t) i];
+                sumSq += x * x;
+            }
+        }
+    }
+    else
+    {
+        for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
+        {
+            const auto& st = ch[(size_t) chIdx];
+            for (int i = 0; i < fftSize; ++i)
+            {
+                const double x = (double) st.fftBuf[(size_t) i];
+                sumSq += x * x;
+            }
+        }
+    }
+
+    const double meanSq = sumSq / (double) (fftSize * std::max (1, linkedCh));
+    // [END LS-SUC-LFE-EXCLUDE-BROADBAND-PROXY]
 
     // cheap LUFS-ish proxy (no K-weighting, no gating)
     const double broadbandDb = -0.691 + 10.0 * std::log10 (meanSq + 1.0e-12);
@@ -354,17 +417,40 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
     double pAll = 0.0;
     const int numBins = std::max (1, (maxBin - 1));
 
-    for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
+    // [BEGIN LS-SUC-LFE-EXCLUDE-SPECTRAL-PROXY]
+    if (haveDetect)
     {
-        auto& st = ch[(size_t) chIdx];
-
-        for (int bin = 1; bin <= maxBin - 1; ++bin)
+        for (int di = 0; di < (int) detectChannels.size(); ++di)
         {
-            float re = 0.0f, im = 0.0f;
-            getBin (st.fftBuf, fftSize, bin, re, im);
-            pAll += (double) re * (double) re + (double) im * (double) im;
+            const int chIdx = detectChannels[(size_t) di];
+            if (chIdx < 0 || chIdx >= preparedNumChannels)
+                continue;
+
+            auto& st = ch[(size_t) chIdx];
+
+            for (int bin = 1; bin <= maxBin - 1; ++bin)
+            {
+                float re = 0.0f, im = 0.0f;
+                getBin (st.fftBuf, fftSize, bin, re, im);
+                pAll += (double) re * (double) re + (double) im * (double) im;
+            }
         }
     }
+    else
+    {
+        for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
+        {
+            auto& st = ch[(size_t) chIdx];
+
+            for (int bin = 1; bin <= maxBin - 1; ++bin)
+            {
+                float re = 0.0f, im = 0.0f;
+                getBin (st.fftBuf, fftSize, bin, re, im);
+                pAll += (double) re * (double) re + (double) im * (double) im;
+            }
+        }
+    }
+    // [END LS-SUC-LFE-EXCLUDE-SPECTRAL-PROXY]
 
     const double ref = (pr.coherentGain * (double) fftSize * 0.5);
     const double refPower = std::max (1.0e-18, ref * ref);
@@ -412,17 +498,40 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
         double pBand = 0.0;
         const int nBins = (b1 - b0 + 1);
 
-        for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
+        // [BEGIN LS-SUC-LFE-EXCLUDE-PERBAND-MEASURE]
+        if (haveDetect)
         {
-            auto& st = ch[(size_t) chIdx];
-
-            for (int bin = b0; bin <= b1; ++bin)
+            for (int di = 0; di < (int) detectChannels.size(); ++di)
             {
-                float re = 0.0f, im = 0.0f;
-                getBin (st.fftBuf, fftSize, bin, re, im);
-                pBand += (double) re * (double) re + (double) im * (double) im;
+                const int chIdx = detectChannels[(size_t) di];
+                if (chIdx < 0 || chIdx >= preparedNumChannels)
+                    continue;
+
+                auto& st = ch[(size_t) chIdx];
+
+                for (int bin = b0; bin <= b1; ++bin)
+                {
+                    float re = 0.0f, im = 0.0f;
+                    getBin (st.fftBuf, fftSize, bin, re, im);
+                    pBand += (double) re * (double) re + (double) im * (double) im;
+                }
             }
         }
+        else
+        {
+            for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
+            {
+                auto& st = ch[(size_t) chIdx];
+
+                for (int bin = b0; bin <= b1; ++bin)
+                {
+                    float re = 0.0f, im = 0.0f;
+                    getBin (st.fftBuf, fftSize, bin, re, im);
+                    pBand += (double) re * (double) re + (double) im * (double) im;
+                }
+            }
+        }
+        // [END LS-SUC-LFE-EXCLUDE-PERBAND-MEASURE]
 
         const double meanBinPower = pBand / (double) (nBins * linkedCh);
         const float bandDb = (float) (10.0 * std::log10 (meanBinPower / refPower + 1.0e-18));
@@ -458,19 +567,46 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
 
         const float g = bandSmoothers[(size_t) bi].process (bandTargetGainFreqSmoothed[(size_t) bi]);
 
-        for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
+        // [BEGIN LS-SUC-LFE-EXCLUDE-PERBAND-APPLY]
+        const bool haveApply = (! applyChannels.empty());
+
+        if (haveApply)
         {
-            auto& st = ch[(size_t) chIdx];
-
-            for (int bin = b0; bin <= b1; ++bin)
+            for (int ai = 0; ai < (int) applyChannels.size(); ++ai)
             {
-                scaleBin (st.fftBuf, fftSize, bin, g);
+                const int chIdx = applyChannels[(size_t) ai];
+                if (chIdx < 0 || chIdx >= preparedNumChannels)
+                    continue;
 
-                const int mirror = fftSize - bin;
-                if (mirror != bin)
-                    scaleBin (st.fftBuf, fftSize, mirror, g);
+                auto& st = ch[(size_t) chIdx];
+
+                for (int bin = b0; bin <= b1; ++bin)
+                {
+                    scaleBin (st.fftBuf, fftSize, bin, g);
+
+                    const int mirror = fftSize - bin;
+                    if (mirror != bin)
+                        scaleBin (st.fftBuf, fftSize, mirror, g);
+                }
             }
         }
+        else
+        {
+            for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
+            {
+                auto& st = ch[(size_t) chIdx];
+
+                for (int bin = b0; bin <= b1; ++bin)
+                {
+                    scaleBin (st.fftBuf, fftSize, bin, g);
+
+                    const int mirror = fftSize - bin;
+                    if (mirror != bin)
+                        scaleBin (st.fftBuf, fftSize, mirror, g);
+                }
+            }
+        }
+        // [END LS-SUC-LFE-EXCLUDE-PERBAND-APPLY]
     }
     // [END LS-SUC-PERBAND-GAINS-WITH-FREQ-SMOOTH]
 

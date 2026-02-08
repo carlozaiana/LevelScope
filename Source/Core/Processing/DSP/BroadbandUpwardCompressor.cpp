@@ -12,6 +12,36 @@ void BroadbandUpwardCompressor::prepare (double sampleRate,
     preparedChannelSet = channelSet;
     preparedMaxBlockSize = std::max (0, maxBlockSize);
 
+    // [BEGIN LS-BUC-PREPARE-BUILD-MASKS]
+    detectChannels.clear();
+    applyChannels.clear();
+    detectChannels.reserve ((size_t) preparedNumChannels);
+    applyChannels.reserve ((size_t) preparedNumChannels);
+
+    for (int ch = 0; ch < preparedNumChannels; ++ch)
+    {
+        const bool isLfe = (preparedChannelSet.getTypeOfChannel (ch) == juce::AudioChannelSet::LFE);
+
+        if (! isLfe)
+        {
+            detectChannels.push_back (ch);
+            applyChannels.push_back (ch);
+        }
+    }
+
+    // Safety fallback: if layout is weird and we excluded everything, include all channels.
+    if (detectChannels.empty() || applyChannels.empty())
+    {
+        detectChannels.clear();
+        applyChannels.clear();
+        for (int ch = 0; ch < preparedNumChannels; ++ch)
+        {
+            detectChannels.push_back (ch);
+            applyChannels.push_back (ch);
+        }
+    }
+    // [END LS-BUC-PREPARE-BUILD-MASKS]
+
     updateCoefficientsIfNeeded();
     reset();
 }
@@ -60,6 +90,7 @@ void BroadbandUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexc
     if (numSamples <= 0 || numChInBuf <= 0)
         return;
 
+    // [BEGIN LS-BUC-PROCESS-EXCLUDE-LFE]
     const int chToProcess = std::min (preparedNumChannels > 0 ? preparedNumChannels : numChInBuf, numChInBuf);
 
     const float t0 = std::min (params.t0Lufs, params.t1Lufs);
@@ -72,21 +103,27 @@ void BroadbandUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexc
     const float expo = 1.0f + curve01 * 3.0f;
     const float range = std::max (1.0f, t1 - t0);
 
-    // [BEGIN LS-BUC-CHANPTR-FIX]
     float* const* chans = buffer.getArrayOfWritePointers();
-    // [END LS-BUC-CHANPTR-FIX]
+
+    const int numDetect = (int) detectChannels.size();
+    const int numApply  = (int) applyChannels.size();
 
     for (int i = 0; i < numSamples; ++i)
     {
-        // Linked broadband mean-square across channels
+        // Linked broadband mean-square across DETECTOR channels (default excludes LFE).
         double sumSq = 0.0;
-        for (int ch = 0; ch < chToProcess; ++ch)
+
+        for (int di = 0; di < numDetect; ++di)
         {
-            const float x = chans[ch][i];
-            sumSq += (double) x * (double) x;
+            const int ch = detectChannels[(size_t) di];
+            if (ch >= 0 && ch < chToProcess)
+            {
+                const float x = chans[ch][i];
+                sumSq += (double) x * (double) x;
+            }
         }
 
-        const float e = (float) (sumSq / (double) std::max (1, chToProcess));
+        const float e = (float) (sumSq / (double) std::max (1, numDetect));
 
         // Detector smoothing (mean-square)
         const float aDet = (e > envMS ? aDetA : aDetR);
@@ -129,9 +166,14 @@ void BroadbandUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexc
         const float aG = (gainTarget > gainZ ? aGainA : aGainR);
         gainZ = aG * gainZ + (1.0f - aG) * gainTarget;
 
-        // Apply to all processed channels
-        for (int ch = 0; ch < chToProcess; ++ch)
-            chans[ch][i] *= gainZ;
+        // Apply to APPLY channels (default excludes LFE)
+        for (int ai = 0; ai < numApply; ++ai)
+        {
+            const int ch = applyChannels[(size_t) ai];
+            if (ch >= 0 && ch < chToProcess)
+                chans[ch][i] *= gainZ;
+        }
     }
+// [END LS-BUC-PROCESS-EXCLUDE-LFE]
 }
 } // namespace levelscope::dsp

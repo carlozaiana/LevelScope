@@ -16,6 +16,9 @@
 #include <juce_audio_basics/juce_audio_basics.h>
 #include <cmath>
 #include <algorithm>
+// [BEGIN LS-BUC-INCLUDE-VECTOR]
+#include <vector>
+// [END LS-BUC-INCLUDE-VECTOR]
 
 namespace levelscope::dsp
 {
@@ -100,5 +103,12 @@ private:
 
     float lastAttackMs  = -1.0f;
     float lastReleaseMs = -1.0f;
+
+    // [BEGIN LS-BUC-LFE-MASK-MEMBERS]
+    // Channel masks (prepared once; RT-safe usage in process()).
+    // Default policy: exclude LFE from detector and gain application.
+    std::vector<int> detectChannels;
+    std::vector<int> applyChannels;
+    // [END LS-BUC-LFE-MASK-MEMBERS]
 };
 } // namespace levelscope::dsp

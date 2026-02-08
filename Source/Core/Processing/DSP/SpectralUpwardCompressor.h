@@ -360,5 +360,13 @@ private:
     bool pendingHardReset = false;
 
     std::vector<ChannelState> ch;
+
+    // [BEGIN LS-SUC-LFE-MASK-MEMBERS]
+    // Channel masks (prepared once; RT-safe usage in processFrameAllChannels()).
+    // Default policy: exclude LFE from detector and gain application.
+    std::vector<int> detectChannels;
+    std::vector<int> applyChannels;
+    // [END LS-SUC-LFE-MASK-MEMBERS]
+
 };
 } // namespace levelscope::dsp
