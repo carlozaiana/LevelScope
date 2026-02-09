@@ -168,6 +168,55 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
         (levelscope::mtdm::Defaults::lfeInApply01 >= 0.5f)));
     // [END MTDM-APVTS-PARAM-LAYOUT-LFE-MASK]
 
+    // [BEGIN MTDM-APVTS-PARAM-LAYOUT-DOWNWARD]
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { ParamIDs::t2Lufs, 1 },
+        "MTDM T2 (LUFS)",
+        juce::NormalisableRange<float> (Ranges::t2MinLufs, Ranges::t2MaxLufs, 0.1f),
+        Defaults::t2Lufs));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { ParamIDs::t3Lufs, 1 },
+        "MTDM T3 (LUFS)",
+        juce::NormalisableRange<float> (Ranges::t3MinLufs, Ranges::t3MaxLufs, 0.1f),
+        Defaults::t3Lufs));
+
+    layout.add (std::make_unique<juce::AudioParameterBool> (
+        juce::ParameterID { ParamIDs::downEnabled01, 1 },
+        "Downward Enabled",
+        (Defaults::downEnabled01 >= 0.5f)));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { ParamIDs::downRatio, 1 },
+        "Downward Ratio",
+        juce::NormalisableRange<float> (Ranges::downRatioMin, Ranges::downRatioMax, 0.01f),
+        Defaults::downRatio));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { ParamIDs::downKneeDb, 1 },
+        "Downward Knee (dB)",
+        juce::NormalisableRange<float> (Ranges::downKneeMinDb, Ranges::downKneeMaxDb, 0.1f),
+        Defaults::downKneeDb));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { ParamIDs::downAttackMs, 1 },
+        "Downward Attack (ms)",
+        juce::NormalisableRange<float> (Ranges::downAttackMinMs, Ranges::downAttackMaxMs, 0.1f),
+        Defaults::downAttackMs));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { ParamIDs::downReleaseMs, 1 },
+        "Downward Release (ms)",
+        juce::NormalisableRange<float> (Ranges::downReleaseMinMs, Ranges::downReleaseMaxMs, 0.1f),
+        Defaults::downReleaseMs));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { ParamIDs::downMakeupDb, 1 },
+        "Downward Makeup (dB)",
+        juce::NormalisableRange<float> (Ranges::downMakeupMinDb, Ranges::downMakeupMaxDb, 0.1f),
+        Defaults::downMakeupDb));
+    // [END MTDM-APVTS-PARAM-LAYOUT-DOWNWARD]
+
     return layout;
 }
 // [END MTDM-APVTS-PARAM-LAYOUT]
