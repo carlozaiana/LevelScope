@@ -82,6 +82,11 @@ namespace levelscope
         p.curveType = (rp.curveTypeChoice == 1
                          ? levelscope::dsp::SpectralUpwardCompressor::CurveType::bell
                          : levelscope::dsp::SpectralUpwardCompressor::CurveType::monotonic);
+        
+        // [BEGIN MTDM-SUC-SET-LFE-MASK]
+        p.lfeInDetector = rp.lfeInDetector;
+        p.lfeInApply    = rp.lfeInApply;
+        // [END MTDM-SUC-SET-LFE-MASK]
 
         suc.setParametersAudioThread (p);
         suc.process (audio);
@@ -129,6 +134,11 @@ namespace levelscope
                          ? levelscope::dsp::BroadbandUpwardCompressor::CurveType::bell
                          : levelscope::dsp::BroadbandUpwardCompressor::CurveType::monotonic);
 
+        // [BEGIN MTDM-BUC-SET-LFE-MASK]
+        p.lfeInDetector = rp.lfeInDetector;
+        p.lfeInApply    = rp.lfeInApply;
+        // [END MTDM-BUC-SET-LFE-MASK]                 
+
         buc.setParametersAudioThread (p);
         buc.process (audio);
     }
@@ -158,7 +168,9 @@ namespace levelscope
                                                               std::atomic<float>* sucMaxFreqHz,
                                                               std::atomic<float>* sucCalTrimDb,
                                                               std::atomic<float>* sucCurveTypeChoice,
-                                                              std::atomic<float>* upwardModeChoice) noexcept
+                                                              std::atomic<float>* upwardModeChoice,
+                                                              std::atomic<float>* lfeInDetector01,
+                                                              std::atomic<float>* lfeInApply01) noexcept
             {
                 pEnabled01   = enabled01;
                 pThresholdDb = thresholdDb;
@@ -186,6 +198,11 @@ namespace levelscope
                 // [BEGIN MTDM-BINDPARAMS-STORE-UPWARD-MODE]
                 pUpwardModeChoice = upwardModeChoice;
                 // [END MTDM-BINDPARAMS-STORE-UPWARD-MODE]
+
+                // [BEGIN MTDM-BINDPARAMS-STORE-LFE-MASK]
+                pLfeInDetector01 = lfeInDetector01;
+                pLfeInApply01    = lfeInApply01;
+                // [END MTDM-BINDPARAMS-STORE-LFE-MASK]
             }
     // [END MTDM-BINDPARAMS-STAGE-D1A-IMPL]
 
@@ -263,6 +280,16 @@ namespace levelscope
             if (up.maxFreqHz < up.minFreqHz + 10.0f)
                 up.maxFreqHz = up.minFreqHz + 10.0f;
 
+            // [BEGIN MTDM-UPWARD-RP-SET-LFE-MASK]
+            up.lfeInDetector = (pLfeInDetector01 != nullptr
+                                  ? (pLfeInDetector01->load (std::memory_order_relaxed) >= 0.5f)
+                                  : (levelscope::mtdm::Defaults::lfeInDetector01 >= 0.5f));
+
+            up.lfeInApply = (pLfeInApply01 != nullptr
+                               ? (pLfeInApply01->load (std::memory_order_relaxed) >= 0.5f)
+                               : (levelscope::mtdm::Defaults::lfeInApply01 >= 0.5f));
+            // [END MTDM-UPWARD-RP-SET-LFE-MASK]
+
             activeUpward->process (ctx.audio, up);
 
             juce::ignoreUnused (pThresholdDb, pRatio);
@@ -270,7 +297,6 @@ namespace levelscope
 
             // NOTE: Other zones (T1–T2, etc.) are pass-through for Stage D1a by simply not existing yet.
             // thresholdDb/ratio are currently unused placeholders for future time-domain zones.
-            juce::ignoreUnused (pThresholdDb, pRatio);
         }
     // [END MTDM-PROCESS-STAGE-D1A]
 

@@ -61,7 +61,11 @@ namespace levelscope
                                      std::atomic<float>* sucCurveTypeChoice,
 
                                      // Stage D1c ADD-UPWARD-MODE
-                                     std::atomic<float>* upwardModeChoice) noexcept;
+                                     std::atomic<float>* upwardModeChoice,
+                                     // [BEGIN MTDM-BINDPARAMS-ADD-LFE-MASK]
+                                     std::atomic<float>* lfeInDetector01,
+                                     std::atomic<float>* lfeInApply01) noexcept;
+                                     // [END MTDM-BINDPARAMS-ADD-LFE-MASK]
             // [END MTDM-BINDPARAMS-STAGE-D1A-DECL]
 
             // Persistence (non-audio-thread only)
@@ -101,6 +105,11 @@ namespace levelscope
             float minFreqHz       = levelscope::mtdm::Defaults::sucMinFreqHz;
             float maxFreqHz       = levelscope::mtdm::Defaults::sucMaxFreqHz;
             float calibrationTrimDb = levelscope::mtdm::Defaults::sucCalTrimDb;
+
+            // [BEGIN MTDM-UPWARD-RP-LFE-MASK]
+            bool lfeInDetector = false;
+            bool lfeInApply    = false;
+            // [END MTDM-UPWARD-RP-LFE-MASK]
         };
 
         struct IUpwardProcessor
@@ -174,7 +183,11 @@ namespace levelscope
                 std::atomic<float>* pUpwardModeChoice = nullptr; // 0=Spectral, 1=Broadband
         // [END MTDM-UPWARD-MODE-MEMBER]
 
-        // [END MTDM-SUC-MEMBERS]
+        // [BEGIN MTDM-LFE-MASK-MEMBERS]
+                std::atomic<float>* pLfeInDetector01 = nullptr; // 0/1
+                std::atomic<float>* pLfeInApply01    = nullptr; // 0/1
+        // [END MTDM-LFE-MASK-MEMBERS]
+
     };
     // [END MTDM-MODULE-DECL]
 } // namespace levelscope

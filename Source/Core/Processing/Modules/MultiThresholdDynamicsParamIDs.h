@@ -149,6 +149,23 @@ namespace levelscope::mtdm
         }
     // [END MTDM-UPWARD-MODE-PARAM]
 
+    // [BEGIN MTDM-LFE-MASK-PARAMS]
+    namespace ParamIDs
+    {
+        // LFE routing policies (default false):
+        // - lfeInDetector: include LFE in level measurement (detector)
+        // - lfeInApply:    apply computed gain to LFE
+        static constexpr const char* lfeInDetector = "mtdm.lfeInDetector";
+        static constexpr const char* lfeInApply    = "mtdm.lfeInApply";
+    }
+
+    namespace Defaults
+    {
+        static constexpr float lfeInDetector01 = 0.0f;
+        static constexpr float lfeInApply01    = 0.0f;
+    }
+    // [END MTDM-LFE-MASK-PARAMS]
+
     // [END MTDM-PARAM-IDS-STAGE-D1A-ADD]
     // [END MTDM-PARAM-IDS]
 } // namespace levelscope::mtdm
