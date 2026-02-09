@@ -192,11 +192,14 @@ namespace levelscope
     // [END MTDM-DOWNWARD-STRATEGY-IMPL]
 
     // [BEGIN MTDM-BINDPARAMS-STAGE-D1A-IMPL]
+            // [BEGIN MTDM-BINDPARAMS-STAGE-D2A-IMPL]
             void MultiThresholdDynamicsModule::bindParameters (std::atomic<float>* enabled01,
                                                               std::atomic<float>* thresholdDb,
                                                               std::atomic<float>* ratio,
+            
                                                               std::atomic<float>* t0Lufs,
                                                               std::atomic<float>* t1Lufs,
+
                                                               std::atomic<float>* sucAmount01,
                                                               std::atomic<float>* sucMaxBoostDb,
                                                               std::atomic<float>* sucCurve,
@@ -204,17 +207,19 @@ namespace levelscope
                                                               std::atomic<float>* sucHighKneeDb,
                                                               std::atomic<float>* sucAttackMs,
                                                               std::atomic<float>* sucReleaseMs,
+
                                                               std::atomic<float>* sucFftSizeChoice,
                                                               std::atomic<float>* sucBandsPerOctChoice,
                                                               std::atomic<float>* sucMinFreqHz,
                                                               std::atomic<float>* sucMaxFreqHz,
+
                                                               std::atomic<float>* sucCalTrimDb,
                                                               std::atomic<float>* sucCurveTypeChoice,
+
                                                               std::atomic<float>* upwardModeChoice,
                                                               std::atomic<float>* lfeInDetector01,
                                                               std::atomic<float>* lfeInApply01,
-                                                              // [BEGIN MTDM-BINDPARAMS-ADD-DOWNWARD]
-                                                              // Stage D2a: downward zone params
+
                                                               std::atomic<float>* t2Lufs,
                                                               std::atomic<float>* t3Lufs,
                                                               std::atomic<float>* downEnabled01,
@@ -222,8 +227,7 @@ namespace levelscope
                                                               std::atomic<float>* downKneeDb,
                                                               std::atomic<float>* downAttackMs,
                                                               std::atomic<float>* downReleaseMs,
-                                                              std::atomic<float>* downMakeupDb) noexcept;
-                                                              // [END MTDM-BINDPARAMS-ADD-DOWNWARD]
+                                                              std::atomic<float>* downMakeupDb) noexcept
             {
                 pEnabled01   = enabled01;
                 pThresholdDb = thresholdDb;
@@ -248,16 +252,10 @@ namespace levelscope
                 pSucCalTrimDb       = sucCalTrimDb;
                 pSucCurveTypeChoice = sucCurveTypeChoice;
 
-                // [BEGIN MTDM-BINDPARAMS-STORE-UPWARD-MODE]
-                pUpwardModeChoice = upwardModeChoice;
-                // [END MTDM-BINDPARAMS-STORE-UPWARD-MODE]
+                pUpwardModeChoice  = upwardModeChoice;
+                pLfeInDetector01   = lfeInDetector01;
+                pLfeInApply01      = lfeInApply01;
 
-                // [BEGIN MTDM-BINDPARAMS-STORE-LFE-MASK]
-                pLfeInDetector01 = lfeInDetector01;
-                pLfeInApply01    = lfeInApply01;
-                // [END MTDM-BINDPARAMS-STORE-LFE-MASK]
-
-                // [BEGIN MTDM-BINDPARAMS-STORE-DOWNWARD]
                 pT2Lufs = t2Lufs;
                 pT3Lufs = t3Lufs;
 
@@ -267,9 +265,8 @@ namespace levelscope
                 pDownAttackMs  = downAttackMs;
                 pDownReleaseMs = downReleaseMs;
                 pDownMakeupDb  = downMakeupDb;
-                // [END MTDM-BINDPARAMS-STORE-DOWNWARD]
             }
-    // [END MTDM-BINDPARAMS-STAGE-D1A-IMPL]
+            // [END MTDM-BINDPARAMS-STAGE-D2A-IMPL]
 
     // [BEGIN MTDM-PROCESS-STAGE-D1A]
         void MultiThresholdDynamicsModule::process (ProcessContext& ctx) noexcept
