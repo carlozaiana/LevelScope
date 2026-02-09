@@ -70,6 +70,11 @@ add_library(LevelScopeCore STATIC
     Source/Core/Processing/DSP/BroadbandUpwardCompressor.h
     Source/Core/Processing/DSP/BroadbandUpwardCompressor.cpp
     # [END MTDM-CMAKE-BUC-DSP]
+
+    # [BEGIN MTDM-CMAKE-BDC-DSP]
+    Source/Core/Processing/DSP/BroadbandDownwardCompressor.h
+    Source/Core/Processing/DSP/BroadbandDownwardCompressor.cpp
+    # [END MTDM-CMAKE-BDC-DSP]
 )
 
 target_include_directories(LevelScopeCore
