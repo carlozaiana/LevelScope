@@ -10,6 +10,9 @@
 // [BEGIN MTDM-BUC-INCLUDE]
 #include "../DSP/BroadbandUpwardCompressor.h"
 // [END MTDM-BUC-INCLUDE]
+// [BEGIN MTDM-BDC-INCLUDE]
+#include "../DSP/BroadbandDownwardCompressor.h"
+// [END MTDM-BDC-INCLUDE]
 
 namespace levelscope
 {
@@ -64,9 +67,19 @@ namespace levelscope
                                      std::atomic<float>* upwardModeChoice,
                                      // [BEGIN MTDM-BINDPARAMS-ADD-LFE-MASK]
                                      std::atomic<float>* lfeInDetector01,
-                                     std::atomic<float>* lfeInApply01) noexcept;
+                                     std::atomic<float>* lfeInApply01,
                                      // [END MTDM-BINDPARAMS-ADD-LFE-MASK]
-            // [END MTDM-BINDPARAMS-STAGE-D1A-DECL]
+                                     // [BEGIN MTDM-BINDPARAMS-ADD-DOWNWARD]
+                                     // Stage D2a: downward zone params
+                                     std::atomic<float>* t2Lufs,
+                                     std::atomic<float>* t3Lufs,
+                                     std::atomic<float>* downEnabled01,
+                                     std::atomic<float>* downRatio,
+                                     std::atomic<float>* downKneeDb,
+                                     std::atomic<float>* downAttackMs,
+                                     std::atomic<float>* downReleaseMs,
+                                     std::atomic<float>* downMakeupDb) noexcept;
+                                     // [END MTDM-BINDPARAMS-STAGE-D1A-DECL]
 
             // Persistence (non-audio-thread only)
             juce::ValueTree saveState() const override;
@@ -148,6 +161,45 @@ namespace levelscope
 
         IUpwardProcessor* activeUpward = nullptr;
         int lastUpwardModeChoice = -1; // 0=Spectral, 1=Broadband
+        
+        // [BEGIN MTDM-DOWNWARD-STRATEGY-TYPES]
+        struct DownwardRuntimeParams
+        {
+            bool enabled = false;
+
+            float t2Lufs = levelscope::mtdm::Defaults::t2Lufs;
+            float t3Lufs = levelscope::mtdm::Defaults::t3Lufs;
+
+            float ratio    = levelscope::mtdm::Defaults::downRatio;
+            float kneeDb   = levelscope::mtdm::Defaults::downKneeDb;
+            float attackMs = levelscope::mtdm::Defaults::downAttackMs;
+            float releaseMs = levelscope::mtdm::Defaults::downReleaseMs;
+            float makeupDb = levelscope::mtdm::Defaults::downMakeupDb;
+
+            bool lfeInDetector = false;
+            bool lfeInApply    = false;
+        };
+
+        struct IDownwardProcessor
+        {
+            virtual ~IDownwardProcessor() = default;
+            virtual void prepare (const ModulePrepareSpec& spec) = 0;
+            virtual void reset() noexcept = 0;
+            virtual void process (juce::AudioBuffer<float>& audio, const DownwardRuntimeParams& p) noexcept = 0;
+        };
+
+        struct BroadbandDownwardProcessor final : IDownwardProcessor
+        {
+            void prepare (const ModulePrepareSpec& spec) override;
+            void reset() noexcept override;
+            void process (juce::AudioBuffer<float>& audio, const DownwardRuntimeParams& p) noexcept override;
+
+            levelscope::dsp::BroadbandDownwardCompressor comp;
+            bool prepared = false;
+        };
+
+        BroadbandDownwardProcessor downwardProcessor;
+        // [END MTDM-DOWNWARD-STRATEGY-TYPES]
         // [END MTDM-UPWARD-STRATEGY-TYPES]
 
         // Stored from prepare() for debugging/future DSP wiring. Not used for DSP yet.
@@ -188,6 +240,17 @@ namespace levelscope
                 std::atomic<float>* pLfeInApply01    = nullptr; // 0/1
         // [END MTDM-LFE-MASK-MEMBERS]
 
+        // [BEGIN MTDM-DOWNWARD-PARAM-PTRS]
+        std::atomic<float>* pT2Lufs = nullptr;
+        std::atomic<float>* pT3Lufs = nullptr;
+
+        std::atomic<float>* pDownEnabled01 = nullptr;
+        std::atomic<float>* pDownRatio     = nullptr;
+        std::atomic<float>* pDownKneeDb    = nullptr;
+        std::atomic<float>* pDownAttackMs  = nullptr;
+        std::atomic<float>* pDownReleaseMs = nullptr;
+        std::atomic<float>* pDownMakeupDb  = nullptr;
+        // [END MTDM-DOWNWARD-PARAM-PTRS]
     };
     // [END MTDM-MODULE-DECL]
 } // namespace levelscope

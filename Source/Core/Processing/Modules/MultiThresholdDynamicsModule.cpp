@@ -29,6 +29,9 @@ namespace levelscope
         // Default active strategy is Spectral; actual mode is selected in process() from APVTS.
         activeUpward = &spectralUpwardProcessor;
         lastUpwardModeChoice = -1;
+        // [BEGIN MTDM-PREPARE-DOWNWARD]
+            downwardProcessor.prepare (spec);
+        // [END MTDM-PREPARE-DOWNWARD]
         // [END MTDM-PREPARE-UPWARD-STRATEGIES]
     }
 
@@ -37,6 +40,9 @@ namespace levelscope
         {
             spectralUpwardProcessor.reset();
             broadbandUpwardProcessor.reset();
+            // [BEGIN MTDM-RESET-DOWNWARD]
+            downwardProcessor.reset();
+            // [END MTDM-RESET-DOWNWARD]
         }
         // [END MTDM-RESET-UPWARD-STRATEGIES]
 
@@ -149,6 +155,42 @@ namespace levelscope
     }
     // [END MTDM-UPWARD-STRATEGY-IMPL]
 
+    // [BEGIN MTDM-DOWNWARD-STRATEGY-IMPL]
+        void MultiThresholdDynamicsModule::BroadbandDownwardProcessor::prepare (const ModulePrepareSpec& spec)
+        {
+            const int numCh = juce::jmax (1, spec.channelSet.size());
+            comp.prepare (spec.sampleRate, numCh, spec.channelSet, spec.maxBlockSize);
+            prepared = true;
+        }
+
+        void MultiThresholdDynamicsModule::BroadbandDownwardProcessor::reset() noexcept
+        {
+            if (prepared)
+                comp.reset();
+        }
+
+        void MultiThresholdDynamicsModule::BroadbandDownwardProcessor::process (juce::AudioBuffer<float>& audio,
+                                                                                const DownwardRuntimeParams& rp) noexcept
+        {
+            if (! prepared)
+                return;
+
+            levelscope::dsp::BroadbandDownwardCompressor::Parameters p;
+            p.enabled   = rp.enabled;
+            p.t2Lufs    = rp.t2Lufs;
+            p.t3Lufs    = rp.t3Lufs;
+            p.ratio     = rp.ratio;
+            p.kneeDb    = rp.kneeDb;
+            p.attackMs  = rp.attackMs;
+            p.releaseMs = rp.releaseMs;
+            p.makeupDb  = rp.makeupDb;
+
+            comp.setParametersAudioThread (p);
+            comp.setLfePolicyAudioThread (rp.lfeInDetector, rp.lfeInApply);
+            comp.process (audio);
+        }
+    // [END MTDM-DOWNWARD-STRATEGY-IMPL]
+
     // [BEGIN MTDM-BINDPARAMS-STAGE-D1A-IMPL]
             void MultiThresholdDynamicsModule::bindParameters (std::atomic<float>* enabled01,
                                                               std::atomic<float>* thresholdDb,
@@ -170,7 +212,18 @@ namespace levelscope
                                                               std::atomic<float>* sucCurveTypeChoice,
                                                               std::atomic<float>* upwardModeChoice,
                                                               std::atomic<float>* lfeInDetector01,
-                                                              std::atomic<float>* lfeInApply01) noexcept
+                                                              std::atomic<float>* lfeInApply01,
+                                                              // [BEGIN MTDM-BINDPARAMS-ADD-DOWNWARD]
+                                                              // Stage D2a: downward zone params
+                                                              std::atomic<float>* t2Lufs,
+                                                              std::atomic<float>* t3Lufs,
+                                                              std::atomic<float>* downEnabled01,
+                                                              std::atomic<float>* downRatio,
+                                                              std::atomic<float>* downKneeDb,
+                                                              std::atomic<float>* downAttackMs,
+                                                              std::atomic<float>* downReleaseMs,
+                                                              std::atomic<float>* downMakeupDb) noexcept;
+                                                              // [END MTDM-BINDPARAMS-ADD-DOWNWARD]
             {
                 pEnabled01   = enabled01;
                 pThresholdDb = thresholdDb;
@@ -203,6 +256,18 @@ namespace levelscope
                 pLfeInDetector01 = lfeInDetector01;
                 pLfeInApply01    = lfeInApply01;
                 // [END MTDM-BINDPARAMS-STORE-LFE-MASK]
+
+                // [BEGIN MTDM-BINDPARAMS-STORE-DOWNWARD]
+                pT2Lufs = t2Lufs;
+                pT3Lufs = t3Lufs;
+
+                pDownEnabled01 = downEnabled01;
+                pDownRatio     = downRatio;
+                pDownKneeDb    = downKneeDb;
+                pDownAttackMs  = downAttackMs;
+                pDownReleaseMs = downReleaseMs;
+                pDownMakeupDb  = downMakeupDb;
+                // [END MTDM-BINDPARAMS-STORE-DOWNWARD]
             }
     // [END MTDM-BINDPARAMS-STAGE-D1A-IMPL]
 
@@ -291,6 +356,37 @@ namespace levelscope
             // [END MTDM-UPWARD-RP-SET-LFE-MASK]
 
             activeUpward->process (ctx.audio, up);
+            // [BEGIN MTDM-PROCESS-DOWNWARD]
+            DownwardRuntimeParams down;
+
+            down.enabled = (pDownEnabled01 != nullptr
+                              ? (pDownEnabled01->load (std::memory_order_relaxed) >= 0.5f)
+                              : (levelscope::mtdm::Defaults::downEnabled01 >= 0.5f));
+
+            down.t2Lufs = (pT2Lufs != nullptr ? pT2Lufs->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::t2Lufs);
+            down.t3Lufs = (pT3Lufs != nullptr ? pT3Lufs->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::t3Lufs);
+
+            // Safety ordering (user may set T2/T3 in any order)
+            if (down.t3Lufs < down.t2Lufs)
+                std::swap (down.t2Lufs, down.t3Lufs);
+
+            down.ratio = (pDownRatio != nullptr ? pDownRatio->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::downRatio);
+            down.kneeDb = (pDownKneeDb != nullptr ? pDownKneeDb->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::downKneeDb);
+            down.attackMs = (pDownAttackMs != nullptr ? pDownAttackMs->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::downAttackMs);
+            down.releaseMs = (pDownReleaseMs != nullptr ? pDownReleaseMs->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::downReleaseMs);
+            down.makeupDb = (pDownMakeupDb != nullptr ? pDownMakeupDb->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::downMakeupDb);
+
+            // Reuse the existing LFE policy params (already in MTDM)
+            down.lfeInDetector = (pLfeInDetector01 != nullptr
+                                    ? (pLfeInDetector01->load (std::memory_order_relaxed) >= 0.5f)
+                                    : (levelscope::mtdm::Defaults::lfeInDetector01 >= 0.5f));
+
+            down.lfeInApply = (pLfeInApply01 != nullptr
+                                 ? (pLfeInApply01->load (std::memory_order_relaxed) >= 0.5f)
+                                 : (levelscope::mtdm::Defaults::lfeInApply01 >= 0.5f));
+
+            downwardProcessor.process (ctx.audio, down);
+            // [END MTDM-PROCESS-DOWNWARD]
 
             juce::ignoreUnused (pThresholdDb, pRatio);
             // [END MTDM-PROCESS-UPWARD-MODE-SWITCH]
