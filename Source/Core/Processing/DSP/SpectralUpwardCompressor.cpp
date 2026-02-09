@@ -90,6 +90,13 @@ void SpectralUpwardCompressor::prepare (double sampleRate,
         st.fifoRead = st.fifoWrite = st.fifoCount = 0;
     }
 
+    // [BEGIN LS-SUC-PREPARE-BUILD-ALLCHANNELS]
+    allChannels.clear();
+    allChannels.reserve ((size_t) preparedNumChannels);
+    for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
+        allChannels.push_back (chIdx);
+    // [END LS-SUC-PREPARE-BUILD-ALLCHANNELS]
+
     // [BEGIN LS-SUC-PREPARE-BUILD-MASKS]
     detectChannels.clear();
     applyChannels.clear();
@@ -323,6 +330,14 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
     const int hopSize = pr.hopSize;
     const int maxBin = fftSize / 2;
 
+    // [BEGIN LS-SUC-SELECT-DETECT-APPLY-LISTS]
+    const auto& detectList = (params.lfeInDetector ? allChannels : detectChannels);
+    const auto& applyList  = (params.lfeInApply    ? allChannels : applyChannels);
+
+    const bool haveDetect = (! detectList.empty());
+    const bool haveApply  = (! applyList.empty());
+    // [END LS-SUC-SELECT-DETECT-APPLY-LISTS]
+
     // [BEGIN LS-SUC-LFE-EXCLUDE-BROADBAND-PROXY]
     // 1) Analysis window into per-channel fft buffers.
     // We compute the broadband proxy energy from DETECTOR channels only (default excludes LFE).
@@ -344,16 +359,15 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
     }
 
     // Sum energy only over detector channels (fallback: all channels)
-    const bool haveDetect = (! detectChannels.empty());
-    const int linkedCh = (haveDetect ? (int) detectChannels.size() : std::max (1, preparedNumChannels));
+    const int linkedCh = (haveDetect ? (int) detectList.size() : std::max (1, preparedNumChannels));
 
     if (haveDetect)
     {
-        for (int di = 0; di < (int) detectChannels.size(); ++di)
+        for (int di = 0; di < (int) detectList.size(); ++di)
         {
-            const int chIdx = detectChannels[(size_t) di];
+            const int chIdx = detectList[(size_t) di];
             if (chIdx < 0 || chIdx >= preparedNumChannels)
-                continue;
+            continue;
 
             const auto& st = ch[(size_t) chIdx];
             for (int i = 0; i < fftSize; ++i)
@@ -420,9 +434,9 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
     // [BEGIN LS-SUC-LFE-EXCLUDE-SPECTRAL-PROXY]
     if (haveDetect)
     {
-        for (int di = 0; di < (int) detectChannels.size(); ++di)
+        for (int di = 0; di < (int) detectList.size(); ++di)
         {
-            const int chIdx = detectChannels[(size_t) di];
+            const int chIdx = detectList[(size_t) di];
             if (chIdx < 0 || chIdx >= preparedNumChannels)
                 continue;
 
@@ -501,9 +515,9 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
         // [BEGIN LS-SUC-LFE-EXCLUDE-PERBAND-MEASURE]
         if (haveDetect)
         {
-            for (int di = 0; di < (int) detectChannels.size(); ++di)
+            for (int di = 0; di < (int) detectList.size(); ++di)
             {
-                const int chIdx = detectChannels[(size_t) di];
+                const int chIdx = detectList[(size_t) di];
                 if (chIdx < 0 || chIdx >= preparedNumChannels)
                     continue;
 
@@ -568,13 +582,12 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
         const float g = bandSmoothers[(size_t) bi].process (bandTargetGainFreqSmoothed[(size_t) bi]);
 
         // [BEGIN LS-SUC-LFE-EXCLUDE-PERBAND-APPLY]
-        const bool haveApply = (! applyChannels.empty());
 
         if (haveApply)
         {
-            for (int ai = 0; ai < (int) applyChannels.size(); ++ai)
+            for (int ai = 0; ai < (int) applyList.size(); ++ai)
             {
-                const int chIdx = applyChannels[(size_t) ai];
+                const int chIdx = applyList[(size_t) ai];
                 if (chIdx < 0 || chIdx >= preparedNumChannels)
                     continue;
 

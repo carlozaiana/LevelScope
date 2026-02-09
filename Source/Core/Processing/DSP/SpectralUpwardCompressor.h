@@ -366,7 +366,13 @@ private:
     // Default policy: exclude LFE from detector and gain application.
     std::vector<int> detectChannels;
     std::vector<int> applyChannels;
+    std::vector<int> allChannels;
     // [END LS-SUC-LFE-MASK-MEMBERS]
+
+    // [BEGIN LS-SUC-LFE-MASK-PARAMS]
+    bool lfeInDetector = false;
+    bool lfeInApply    = false;
+// [END LS-SUC-LFE-MASK-PARAMS]
 
 };
 } // namespace levelscope::dsp

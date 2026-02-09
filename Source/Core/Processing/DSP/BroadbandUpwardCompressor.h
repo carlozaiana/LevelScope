@@ -110,5 +110,10 @@ private:
     std::vector<int> detectChannels;
     std::vector<int> applyChannels;
     // [END LS-BUC-LFE-MASK-MEMBERS]
+
+    // [BEGIN LS-BUC-LFE-MASK-PARAMS]
+    bool lfeInDetector = false;
+    bool lfeInApply    = false;
+    // [END LS-BUC-LFE-MASK-PARAMS]
 };
 } // namespace levelscope::dsp

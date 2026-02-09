@@ -42,6 +42,13 @@ void BroadbandUpwardCompressor::prepare (double sampleRate,
     }
     // [END LS-BUC-PREPARE-BUILD-MASKS]
 
+    // [BEGIN LS-BUC-PREPARE-BUILD-ALLCHANNELS]
+    allChannels.clear();
+    allChannels.reserve ((size_t) preparedNumChannels);
+    for (int ch = 0; ch < preparedNumChannels; ++ch)
+        allChannels.push_back (ch);
+    // [END LS-BUC-PREPARE-BUILD-ALLCHANNELS]
+
     updateCoefficientsIfNeeded();
     reset();
 }
@@ -105,8 +112,13 @@ void BroadbandUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexc
 
     float* const* chans = buffer.getArrayOfWritePointers();
 
-    const int numDetect = (int) detectChannels.size();
-    const int numApply  = (int) applyChannels.size();
+    // [BEGIN LS-BUC-SELECT-DETECT-APPLY-LISTS]
+    const auto& detectList = (params.lfeInDetector ? allChannels : detectChannels);
+    const auto& applyList  = (params.lfeInApply    ? allChannels : applyChannels);
+
+    const int numDetect = (int) detectList.size();
+    const int numApply  = (int) applyList.size();
+    // [END LS-BUC-SELECT-DETECT-APPLY-LISTS]
 
     for (int i = 0; i < numSamples; ++i)
     {
@@ -115,7 +127,7 @@ void BroadbandUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexc
 
         for (int di = 0; di < numDetect; ++di)
         {
-            const int ch = detectChannels[(size_t) di];
+            const int ch = detectList[(size_t) di];
             if (ch >= 0 && ch < chToProcess)
             {
                 const float x = chans[ch][i];
@@ -169,7 +181,7 @@ void BroadbandUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexc
         // Apply to APPLY channels (default excludes LFE)
         for (int ai = 0; ai < numApply; ++ai)
         {
-            const int ch = applyChannels[(size_t) ai];
+            const int ch = applyList[(size_t) ai];
             if (ch >= 0 && ch < chToProcess)
                 chans[ch][i] *= gainZ;
         }
