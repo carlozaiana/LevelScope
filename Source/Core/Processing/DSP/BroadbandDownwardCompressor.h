@@ -58,6 +58,11 @@ public:
 
     void process (juce::AudioBuffer<float>& buffer) noexcept;
 
+    // [BEGIN LS-BDC-LFE-POLICY-API]
+    // AUDIO-THREAD-ONLY: selects internal prebuilt lists based on LFE policy flags.
+    void setLfePolicyAudioThread (bool lfeInDetector, bool lfeInApply) noexcept;
+    // [END LS-BDC-LFE-POLICY-API]
+
 private:
     static float dbToLin (float db) noexcept
     {

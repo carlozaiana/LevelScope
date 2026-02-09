@@ -61,6 +61,14 @@ void BroadbandDownwardCompressor::setChannelListsAudioThread (const std::vector<
     applyPtr  = (applyList  != nullptr ? applyList  : &nonLfeChannels);
 }
 
+// [BEGIN LS-BDC-LFE-POLICY-IMPL]
+void BroadbandDownwardCompressor::setLfePolicyAudioThread (bool lfeInDetector, bool lfeInApply) noexcept
+{
+    detectPtr = (lfeInDetector ? &allChannels : &nonLfeChannels);
+    applyPtr  = (lfeInApply    ? &allChannels : &nonLfeChannels);
+}
+// [END LS-BDC-LFE-POLICY-IMPL]
+
 void BroadbandDownwardCompressor::updateCoefficientsIfNeeded() noexcept
 {
     if (params.attackMs == lastAttackMs && params.releaseMs == lastReleaseMs)
