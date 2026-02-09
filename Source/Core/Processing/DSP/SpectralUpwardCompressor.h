@@ -68,6 +68,14 @@ public:
                 // Purpose: make LUFS-threshold handles line up intuitively with SUC behavior.
                 float calibrationTrimDb = 0.0f;
         // [END LS-SUC-CAL-TRIM-PARAM]
+
+        // [BEGIN LS-SUC-LFE-MASK-PARAMS]
+        // LFE routing policies:
+        // - lfeInDetector: include LFE when computing control signals
+        // - lfeInApply: apply computed gain to LFE
+        bool lfeInDetector = false;
+        bool lfeInApply    = false;
+        // [END LS-SUC-LFE-MASK-PARAMS]
     };
 
     SpectralUpwardCompressor() = default;
@@ -368,11 +376,6 @@ private:
     std::vector<int> applyChannels;
     std::vector<int> allChannels;
     // [END LS-SUC-LFE-MASK-MEMBERS]
-
-    // [BEGIN LS-SUC-LFE-MASK-PARAMS]
-    bool lfeInDetector = false;
-    bool lfeInApply    = false;
-// [END LS-SUC-LFE-MASK-PARAMS]
 
 };
 } // namespace levelscope::dsp

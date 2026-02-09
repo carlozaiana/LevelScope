@@ -48,6 +48,11 @@ public:
         // Used both for detector smoothing and gain smoothing (minimal parameter set).
         float attackMs  = 10.0f;
         float releaseMs = 100.0f;
+
+        // [BEGIN LS-BUC-LFE-MASK-PARAMS]
+        bool lfeInDetector = false;
+        bool lfeInApply    = false;
+        // [END LS-BUC-LFE-MASK-PARAMS]
     };
 
     void prepare (double sampleRate,
@@ -111,9 +116,5 @@ private:
     std::vector<int> applyChannels;
     // [END LS-BUC-LFE-MASK-MEMBERS]
 
-    // [BEGIN LS-BUC-LFE-MASK-PARAMS]
-    bool lfeInDetector = false;
-    bool lfeInApply    = false;
-    // [END LS-BUC-LFE-MASK-PARAMS]
 };
 } // namespace levelscope::dsp
