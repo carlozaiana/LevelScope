@@ -114,6 +114,8 @@ private:
     // Default policy: exclude LFE from detector and gain application.
     std::vector<int> detectChannels;
     std::vector<int> applyChannels;
+    // All channels (0..N-1), used when LFE is opted into detector/apply.
+    std::vector<int> allChannels;
     // [END LS-BUC-LFE-MASK-MEMBERS]
 
 };
