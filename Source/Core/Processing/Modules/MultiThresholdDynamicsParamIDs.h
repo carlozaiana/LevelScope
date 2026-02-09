@@ -166,6 +166,58 @@ namespace levelscope::mtdm
     }
     // [END MTDM-LFE-MASK-PARAMS]
 
+    // [BEGIN MTDM-DOWNWARD-PARAMS]
+    namespace ParamIDs
+    {
+        static constexpr const char* t2Lufs = "mtdm.t2Lufs";
+        static constexpr const char* t3Lufs = "mtdm.t3Lufs";
+
+        static constexpr const char* downEnabled01 = "mtdm.down.enabled";
+        static constexpr const char* downRatio     = "mtdm.down.ratio";
+        static constexpr const char* downKneeDb    = "mtdm.down.kneeDb";
+        static constexpr const char* downAttackMs  = "mtdm.down.attackMs";
+        static constexpr const char* downReleaseMs = "mtdm.down.releaseMs";
+        static constexpr const char* downMakeupDb  = "mtdm.down.makeupDb";
+    }
+
+    namespace Defaults
+    {
+        static constexpr float t2Lufs = -12.0f;
+        static constexpr float t3Lufs =  -6.0f;
+
+        static constexpr float downEnabled01 = 0.0f; // OFF by default => no audible change
+        static constexpr float downRatio     = 2.0f;
+        static constexpr float downKneeDb    = 6.0f;
+        static constexpr float downAttackMs  = 10.0f;
+        static constexpr float downReleaseMs = 100.0f;
+        static constexpr float downMakeupDb  = 0.0f;
+    }
+
+    namespace Ranges
+    {
+        static constexpr float t2MinLufs = -80.0f;
+        static constexpr float t2MaxLufs =   0.0f;
+
+        static constexpr float t3MinLufs = -80.0f;
+        static constexpr float t3MaxLufs =   0.0f;
+
+        static constexpr float downRatioMin = 1.0f;
+        static constexpr float downRatioMax = 20.0f;
+
+        static constexpr float downKneeMinDb = 0.0f;
+        static constexpr float downKneeMaxDb = 24.0f;
+
+        static constexpr float downAttackMinMs  = 1.0f;
+        static constexpr float downAttackMaxMs  = 200.0f;
+
+        static constexpr float downReleaseMinMs = 5.0f;
+        static constexpr float downReleaseMaxMs = 1000.0f;
+
+        static constexpr float downMakeupMinDb = -24.0f;
+        static constexpr float downMakeupMaxDb =  24.0f;
+    }
+    // [END MTDM-DOWNWARD-PARAMS]
+
     // [END MTDM-PARAM-IDS-STAGE-D1A-ADD]
     // [END MTDM-PARAM-IDS]
 } // namespace levelscope::mtdm
