@@ -328,7 +328,16 @@ void LevelScopeAudioProcessor::rebuildModuleGraphFromState (const juce::MemoryBl
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucCurveTypeChoice),
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::upwardModeChoice),
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::lfeInDetector),
-                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::lfeInApply));
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::lfeInApply),
+
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::t2Lufs),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::t3Lufs),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::downEnabled01),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::downRatio),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::downKneeDb),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::downAttackMs),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::downReleaseMs),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::downMakeupDb));
 
             graph->modules.push_back (mtdm);
         }
