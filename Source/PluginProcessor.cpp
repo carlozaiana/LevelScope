@@ -54,7 +54,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
         juce::NormalisableRange<float> (Ranges::ratioMin, Ranges::ratioMax, 0.01f),
         Defaults::ratio));
 
-// [BEGIN MTDM-APVTS-PARAM-LAYOUT-STAGE-D1A-ADD]
+    // [BEGIN MTDM-APVTS-PARAM-LAYOUT-STAGE-D1A-ADD]
     layout.add (std::make_unique<juce::AudioParameterFloat> (
         juce::ParameterID { ParamIDs::t0Lufs, 1 },
         "MTDM T0 (LUFS)",
@@ -132,9 +132,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
         "SUC Max Freq (Hz)",
         juce::NormalisableRange<float> (Ranges::sucMaxFreqMinHz, Ranges::sucMaxFreqMaxHz, 1.0f),
         Defaults::sucMaxFreqHz));
-// [END MTDM-APVTS-PARAM-LAYOUT-STAGE-D1A-ADD]
+    // [END MTDM-APVTS-PARAM-LAYOUT-STAGE-D1A-ADD]
 
-// [BEGIN MTDM-APVTS-PARAM-LAYOUT-TRIM-AND-CURVETYPE]
+    // [BEGIN MTDM-APVTS-PARAM-LAYOUT-TRIM-AND-CURVETYPE]
     layout.add (std::make_unique<juce::AudioParameterFloat> (
         juce::ParameterID { ParamIDs::sucCalTrimDb, 1 },
         "SUC Cal Trim (dB)",
@@ -146,15 +146,27 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
         "SUC Curve Type",
         juce::StringArray { "Monotonic", "Bell" },
         Defaults::sucCurveTypeChoice));
-// [END MTDM-APVTS-PARAM-LAYOUT-TRIM-AND-CURVETYPE]
+    // [END MTDM-APVTS-PARAM-LAYOUT-TRIM-AND-CURVETYPE]
 
-// [BEGIN MTDM-APVTS-PARAM-LAYOUT-UPWARD-MODE]
+    // [BEGIN MTDM-APVTS-PARAM-LAYOUT-UPWARD-MODE]
     layout.add (std::make_unique<juce::AudioParameterChoice> (
         juce::ParameterID { ParamIDs::upwardModeChoice, 1 },
         "Upward Mode",
         juce::StringArray { "Spectral", "Broadband" },
         Defaults::upwardModeChoice));
-// [END MTDM-APVTS-PARAM-LAYOUT-UPWARD-MODE]
+    // [END MTDM-APVTS-PARAM-LAYOUT-UPWARD-MODE]
+
+    // [BEGIN MTDM-APVTS-PARAM-LAYOUT-LFE-MASK]
+    layout.add (std::make_unique<juce::AudioParameterBool> (
+        juce::ParameterID { ParamIDs::lfeInDetector, 1 },
+        "LFE In Detector",
+        (levelscope::mtdm::Defaults::lfeInDetector01 >= 0.5f)));
+
+    layout.add (std::make_unique<juce::AudioParameterBool> (
+        juce::ParameterID { ParamIDs::lfeInApply, 1 },
+        "LFE In Apply",
+        (levelscope::mtdm::Defaults::lfeInApply01 >= 0.5f)));
+    // [END MTDM-APVTS-PARAM-LAYOUT-LFE-MASK]
 
     return layout;
 }
@@ -265,8 +277,9 @@ void LevelScopeAudioProcessor::rebuildModuleGraphFromState (const juce::MemoryBl
 
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucCalTrimDb),
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucCurveTypeChoice),
-
-                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::upwardModeChoice));
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::upwardModeChoice),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::lfeInDetector),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::lfeInApply));
 
             graph->modules.push_back (mtdm);
         }
