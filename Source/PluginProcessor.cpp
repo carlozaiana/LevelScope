@@ -362,7 +362,12 @@ void LevelScopeAudioProcessor::rebuildModuleGraphFromState (const juce::MemoryBl
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::downKneeDb),
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::downAttackMs),
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::downReleaseMs),
-                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::downMakeupDb));
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::downMakeupDb),
+
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limEnabled01),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limCeilingDb),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limLookaheadMs),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limReleaseMs));
 
             graph->modules.push_back (mtdm);
         }
@@ -389,36 +394,55 @@ void LevelScopeAudioProcessor::rebuildModuleGraphFromState (const juce::MemoryBl
 // [BEGIN LS-LATENCY-HELPER-IMPL]
 void LevelScopeAudioProcessor::updateLatencyFromAPVTS_NonRT()
 {
-    // Policy A: update only from non-audio-thread call sites (prepareToPlay, setStateInformation, ctor).
-    int latency = 0;
+    int totalLatency = 0;
 
     const auto* enabled01 = apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::enabled);
-    const bool enabled = (enabled01 != nullptr && enabled01->load (std::memory_order_relaxed) >= 0.5f);
+    const bool mtdmEnabled = (enabled01 != nullptr && enabled01->load (std::memory_order_relaxed) >= 0.5f);
 
-    // Upward mode: 0=Spectral, 1=Broadband
+    if (! mtdmEnabled)
+    {
+        setLatencySamples (0);
+        return;
+    }
+
+    // --- Upward latency
+    int upwardLatency = 0;
+
     const auto* upwardModeP = apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::upwardModeChoice);
     const int upwardMode = (int) std::lround (upwardModeP != nullptr
                                               ? upwardModeP->load (std::memory_order_relaxed)
                                               : (float) levelscope::mtdm::Defaults::upwardModeChoice);
 
-    if (enabled && upwardMode == 0) // Spectral mode only
+    if (upwardMode == 0) // Spectral
     {
         const auto* choiceP = apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucFftSizeChoice);
         const int choice = (int) std::lround (choiceP != nullptr ? choiceP->load (std::memory_order_relaxed)
                                                                  : (float) levelscope::mtdm::Defaults::sucFftSizeChoice);
 
-        // Must match SpectralUpwardCompressor choices: 0=1024,1=2048,2=4096,3=8192
         const int fftSizes[] = { 1024, 2048, 4096, 8192 };
-        const int idx = juce::jlimit (0, 3, choice);
-        latency = fftSizes[idx];
-    }
-    else
-    {
-        // Broadband upward (and/or MTDM disabled) => zero algorithmic latency
-        latency = 0;
+        upwardLatency = fftSizes[juce::jlimit (0, 3, choice)];
     }
 
-    setLatencySamples (latency);
+    // --- Limiter latency (lookahead)
+    int limiterLatency = 0;
+
+    const auto* limEnabledP = apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limEnabled01);
+    const bool limEnabled = (limEnabledP != nullptr && limEnabledP->load (std::memory_order_relaxed) >= 0.5f);
+
+    if (limEnabled)
+    {
+        const auto* lookMsP = apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limLookaheadMs);
+        const float lookMs = (lookMsP != nullptr ? lookMsP->load (std::memory_order_relaxed)
+                                                 : levelscope::mtdm::Defaults::limLookaheadMs);
+
+        const double sr = (currentSampleRate > 0.0 ? currentSampleRate : 48000.0);
+        const double ms = juce::jlimit (0.0, 50.0, (double) lookMs);
+
+        limiterLatency = (int) std::lround (sr * ms * 0.001);
+    }
+
+    totalLatency = upwardLatency + limiterLatency;
+    setLatencySamples (totalLatency);
 }
 // [END LS-LATENCY-HELPER-IMPL]
 
