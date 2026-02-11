@@ -1,0 +1,114 @@
+#pragma once
+
+// [BEGIN MTDM-PARAM-GROUPS-HEADER]
+// Non-RT metadata only.
+// Purpose:
+// - Provide a stable grouping of MTDM parameters for UI organization and future policy/standalone tooling.
+// - Does not affect DSP, persistence, or parameter IDs.
+// - Safe to use from message thread / UI thread / offline analysis.
+//
+// IMPORTANT:
+// - Parameter IDs are the compatibility contract. UI labels/grouping may change freely,
+//   but IDs in MultiThresholdDynamicsParamIDs.h must remain stable.
+// [END MTDM-PARAM-GROUPS-HEADER]
+
+#include <juce_core/juce_core.h>
+#include <vector>
+
+#include "MultiThresholdDynamicsParamIDs.h"
+
+namespace levelscope::mtdm
+{
+    // [BEGIN MTDM-PARAM-GROUPS-DECL]
+    struct ParamGroup
+    {
+        juce::String groupKey;                 // stable-ish internal key (not a persistence contract)
+        juce::String displayName;              // user-facing group label (may change)
+        std::vector<const char*> paramIDs;     // ParamIDs::* entries (stable)
+    };
+
+    // Returns default MTDM parameter groups.
+    // Non-RT: may allocate.
+    inline std::vector<ParamGroup> createDefaultParamGroups()
+    {
+        using namespace ParamIDs;
+
+        std::vector<ParamGroup> groups;
+        groups.reserve (8);
+
+        // Master / Mode selection
+        groups.push_back (ParamGroup {
+            "mtdm.master",
+            "MTDM: Master",
+            {
+                enabled,
+                upwardModeChoice
+            }
+        });
+
+        // Upward common controls (shared by Spectral + Broadband modes)
+        groups.push_back (ParamGroup {
+            "mtdm.upward.common",
+            "Upward: Common",
+            {
+                t0Lufs,
+                t1Lufs,
+
+                sucAmount01,
+                sucMaxBoostDb,
+                sucCurve,
+                sucCurveTypeChoice,
+
+                sucLowKneeDb,
+                sucHighKneeDb,
+
+                sucAttackMs,
+                sucReleaseMs,
+
+                sucCalTrimDb
+            }
+        });
+
+        // Upward spectral advanced controls (Spectral mode only)
+        groups.push_back (ParamGroup {
+            "mtdm.upward.spectral.advanced",
+            "Upward: Spectral Advanced",
+            {
+                sucFftSizeChoice,
+                sucBandsPerOctChoice,
+                sucMinFreqHz,
+                sucMaxFreqHz
+            }
+        });
+
+        // Downward compressor (T2–T3)
+        groups.push_back (ParamGroup {
+            "mtdm.downward",
+            "Downward Compressor",
+            {
+                t2Lufs,
+                t3Lufs,
+
+                downEnabled01,
+                downRatio,
+                downKneeDb,
+                downAttackMs,
+                downReleaseMs,
+                downMakeupDb
+            }
+        });
+
+        // Advanced routing / policies
+        groups.push_back (ParamGroup {
+            "mtdm.routing.advanced",
+            "Advanced Routing",
+            {
+                lfeInDetector,
+                lfeInApply
+            }
+        });
+
+        return groups;
+    }
+    // [END MTDM-PARAM-GROUPS-DECL]
+} // namespace levelscope::mtdm
