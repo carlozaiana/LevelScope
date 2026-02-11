@@ -13,6 +13,9 @@
 // [BEGIN MTDM-BDC-INCLUDE]
 #include "../DSP/BroadbandDownwardCompressor.h"
 // [END MTDM-BDC-INCLUDE]
+// [BEGIN MTDM-LIMITER-INCLUDE]
+#include "../DSP/LookaheadLimiter.h"
+// [END MTDM-LIMITER-INCLUDE]
 
 namespace levelscope
 {
