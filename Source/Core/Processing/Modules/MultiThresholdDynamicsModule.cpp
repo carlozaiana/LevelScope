@@ -33,6 +33,10 @@ namespace levelscope
             downwardProcessor.prepare (spec);
         // [END MTDM-PREPARE-DOWNWARD]
         // [END MTDM-PREPARE-UPWARD-STRATEGIES]
+
+        // [BEGIN MTDM-PREPARE-LIMITER]
+            limiterStage.prepare (spec);
+        // [END MTDM-PREPARE-LIMITER]
     }
 
         // [BEGIN MTDM-RESET-UPWARD-STRATEGIES]
@@ -43,6 +47,9 @@ namespace levelscope
             // [BEGIN MTDM-RESET-DOWNWARD]
             downwardProcessor.reset();
             // [END MTDM-RESET-DOWNWARD]
+            // [BEGIN MTDM-RESET-LIMITER]
+            limiterStage.reset();
+            // [END MTDM-RESET-LIMITER]
         }
         // [END MTDM-RESET-UPWARD-STRATEGIES]
 
@@ -191,6 +198,42 @@ namespace levelscope
         }
     // [END MTDM-DOWNWARD-STRATEGY-IMPL]
 
+    // [BEGIN MTDM-LIMITER-STRATEGY-IMPL]
+    void MultiThresholdDynamicsModule::LookaheadLimiterStage::prepare (const ModulePrepareSpec& spec)
+    {
+        const int numCh = juce::jmax (1, spec.channelSet.size());
+        lim.prepare (spec.sampleRate, numCh, spec.channelSet, spec.maxBlockSize);
+        prepared = true;
+    }
+
+    void MultiThresholdDynamicsModule::LookaheadLimiterStage::reset() noexcept
+    {
+        if (prepared)
+            lim.reset();
+    }
+
+    void MultiThresholdDynamicsModule::LookaheadLimiterStage::process (juce::AudioBuffer<float>& audio,
+                                                                       const LimiterRuntimeParams& rp) noexcept
+    {
+        if (! prepared)
+            return;
+
+        levelscope::dsp::LookaheadLimiter::Parameters p;
+        p.enabled      = rp.enabled;
+        p.ceilingDb    = rp.ceilingDb;
+        p.lookaheadMs  = rp.lookaheadMs;
+        p.releaseMs    = rp.releaseMs;
+
+        lim.setParametersAudioThread (p);
+        lim.process (audio);
+    }
+
+    int MultiThresholdDynamicsModule::LookaheadLimiterStage::getLatencySamples() const noexcept
+    {
+        return lim.getLatencySamples();
+    }
+    // [END MTDM-LIMITER-STRATEGY-IMPL]
+
     // [BEGIN MTDM-BINDPARAMS-STAGE-D1A-IMPL]
             // [BEGIN MTDM-BINDPARAMS-STAGE-D2A-IMPL]
             void MultiThresholdDynamicsModule::bindParameters (std::atomic<float>* enabled01,
@@ -227,7 +270,11 @@ namespace levelscope
                                                               std::atomic<float>* downKneeDb,
                                                               std::atomic<float>* downAttackMs,
                                                               std::atomic<float>* downReleaseMs,
-                                                              std::atomic<float>* downMakeupDb) noexcept
+                                                              std::atomic<float>* downMakeupDb,
+                                                              std::atomic<float>* limEnabled01,
+                                                              std::atomic<float>* limCeilingDb,
+                                                              std::atomic<float>* limLookaheadMs,
+                                                              std::atomic<float>* limReleaseMs) noexcept
             {
                 pEnabled01   = enabled01;
                 pThresholdDb = thresholdDb;
@@ -265,6 +312,13 @@ namespace levelscope
                 pDownAttackMs  = downAttackMs;
                 pDownReleaseMs = downReleaseMs;
                 pDownMakeupDb  = downMakeupDb;
+
+                // [BEGIN MTDM-BINDPARAMS-STORE-LIMITER]
+                pLimEnabled01   = limEnabled01;
+                pLimCeilingDb   = limCeilingDb;
+                pLimLookaheadMs = limLookaheadMs;
+                pLimReleaseMs   = limReleaseMs;
+                // [END MTDM-BINDPARAMS-STORE-LIMITER]
             }
             // [END MTDM-BINDPARAMS-STAGE-D2A-IMPL]
 
@@ -384,6 +438,24 @@ namespace levelscope
 
             downwardProcessor.process (ctx.audio, down);
             // [END MTDM-PROCESS-DOWNWARD]
+            // [BEGIN MTDM-PROCESS-LIMITER]
+            LimiterRuntimeParams lim;
+
+            lim.enabled = (pLimEnabled01 != nullptr
+                             ? (pLimEnabled01->load (std::memory_order_relaxed) >= 0.5f)
+                             : (levelscope::mtdm::Defaults::limEnabled01 >= 0.5f));
+
+            lim.ceilingDb = (pLimCeilingDb != nullptr ? pLimCeilingDb->load (std::memory_order_relaxed)
+                                                      : levelscope::mtdm::Defaults::limCeilingDb);
+
+            lim.lookaheadMs = (pLimLookaheadMs != nullptr ? pLimLookaheadMs->load (std::memory_order_relaxed)
+                                                          : levelscope::mtdm::Defaults::limLookaheadMs);
+
+            lim.releaseMs = (pLimReleaseMs != nullptr ? pLimReleaseMs->load (std::memory_order_relaxed)
+                                                      : levelscope::mtdm::Defaults::limReleaseMs);
+
+            limiterStage.process (ctx.audio, lim);
+            // [END MTDM-PROCESS-LIMITER]
 
             juce::ignoreUnused (pThresholdDb, pRatio);
             // [END MTDM-PROCESS-UPWARD-MODE-SWITCH]

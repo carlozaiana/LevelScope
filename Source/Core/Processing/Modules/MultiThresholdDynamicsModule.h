@@ -78,7 +78,13 @@ namespace levelscope
                                      std::atomic<float>* downKneeDb,
                                      std::atomic<float>* downAttackMs,
                                      std::atomic<float>* downReleaseMs,
-                                     std::atomic<float>* downMakeupDb) noexcept;
+                                     std::atomic<float>* downMakeupDb,
+
+                                     // Stage D3a: limiter params
+                                     std::atomic<float>* limEnabled01,
+                                     std::atomic<float>* limCeilingDb,
+                                     std::atomic<float>* limLookaheadMs,
+                                     std::atomic<float>* limReleaseMs) noexcept;
                                      // [END MTDM-BINDPARAMS-STAGE-D1A-DECL]
 
             // Persistence (non-audio-thread only)
@@ -202,6 +208,38 @@ namespace levelscope
         // [END MTDM-DOWNWARD-STRATEGY-TYPES]
         // [END MTDM-UPWARD-STRATEGY-TYPES]
 
+        // [BEGIN MTDM-LIMITER-STRATEGY-TYPES]
+        struct LimiterRuntimeParams
+        {
+            bool enabled = false;
+            float ceilingDb   = levelscope::mtdm::Defaults::limCeilingDb;
+            float lookaheadMs = levelscope::mtdm::Defaults::limLookaheadMs;
+            float releaseMs   = levelscope::mtdm::Defaults::limReleaseMs;
+        };
+
+        struct ILimiter
+        {
+            virtual ~ILimiter() = default;
+            virtual void prepare (const ModulePrepareSpec& spec) = 0;
+            virtual void reset() noexcept = 0;
+            virtual void process (juce::AudioBuffer<float>& audio, const LimiterRuntimeParams& p) noexcept = 0;
+            virtual int  getLatencySamples() const noexcept = 0;
+        };
+
+        struct LookaheadLimiterStage final : ILimiter
+        {
+            void prepare (const ModulePrepareSpec& spec) override;
+            void reset() noexcept override;
+            void process (juce::AudioBuffer<float>& audio, const LimiterRuntimeParams& p) noexcept override;
+            int  getLatencySamples() const noexcept override;
+
+            levelscope::dsp::LookaheadLimiter lim;
+            bool prepared = false;
+        };
+
+        LookaheadLimiterStage limiterStage;
+        // [END MTDM-LIMITER-STRATEGY-TYPES]
+
         // Stored from prepare() for debugging/future DSP wiring. Not used for DSP yet.
         double preparedSampleRate = 0.0;
         int preparedMaxBlockSize = 0;
@@ -251,6 +289,13 @@ namespace levelscope
         std::atomic<float>* pDownReleaseMs = nullptr;
         std::atomic<float>* pDownMakeupDb  = nullptr;
         // [END MTDM-DOWNWARD-PARAM-PTRS]
+
+        // [BEGIN MTDM-LIMITER-PARAM-PTRS]
+        std::atomic<float>* pLimEnabled01   = nullptr;
+        std::atomic<float>* pLimCeilingDb   = nullptr;
+        std::atomic<float>* pLimLookaheadMs = nullptr;
+        std::atomic<float>* pLimReleaseMs   = nullptr;
+        // [END MTDM-LIMITER-PARAM-PTRS]
     };
     // [END MTDM-MODULE-DECL]
 } // namespace levelscope
