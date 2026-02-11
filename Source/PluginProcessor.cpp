@@ -217,6 +217,31 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
         Defaults::downMakeupDb));
     // [END MTDM-APVTS-PARAM-LAYOUT-DOWNWARD]
 
+    // [BEGIN MTDM-APVTS-PARAM-LAYOUT-LIMITER]
+    layout.add (std::make_unique<juce::AudioParameterBool> (
+        juce::ParameterID { ParamIDs::limEnabled01, 1 },
+        "Limiter Enabled",
+        (Defaults::limEnabled01 >= 0.5f)));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { ParamIDs::limCeilingDb, 1 },
+        "Limiter Ceiling (dBFS)",
+        juce::NormalisableRange<float> (Ranges::limCeilingMinDb, Ranges::limCeilingMaxDb, 0.1f),
+        Defaults::limCeilingDb));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { ParamIDs::limLookaheadMs, 1 },
+        "Limiter Lookahead (ms)",
+        juce::NormalisableRange<float> (Ranges::limLookaheadMinMs, Ranges::limLookaheadMaxMs, 0.1f),
+        Defaults::limLookaheadMs));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { ParamIDs::limReleaseMs, 1 },
+        "Limiter Release (ms)",
+        juce::NormalisableRange<float> (Ranges::limReleaseMinMs, Ranges::limReleaseMaxMs, 0.1f),
+        Defaults::limReleaseMs));
+    // [END MTDM-APVTS-PARAM-LAYOUT-LIMITER]
+
     return layout;
 }
 // [END MTDM-APVTS-PARAM-LAYOUT]
