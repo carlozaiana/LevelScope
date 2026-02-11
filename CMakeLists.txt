@@ -66,6 +66,10 @@ add_library(LevelScopeCore STATIC
     Source/Core/Processing/Modules/MultiThresholdDynamicsParamIDs.h
     # [END MTDM-CMAKE-PARAMIDS]
 
+    # [BEGIN MTDM-CMAKE-PARAMGROUPS]
+    Source/Core/Processing/Modules/MultiThresholdDynamicsParamGroups.h
+    # [END MTDM-CMAKE-PARAMGROUPS]
+
     # [BEGIN MTDM-CMAKE-BUC-DSP]
     Source/Core/Processing/DSP/BroadbandUpwardCompressor.h
     Source/Core/Processing/DSP/BroadbandUpwardCompressor.cpp
