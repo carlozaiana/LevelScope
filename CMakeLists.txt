@@ -79,6 +79,11 @@ add_library(LevelScopeCore STATIC
     Source/Core/Processing/DSP/BroadbandDownwardCompressor.h
     Source/Core/Processing/DSP/BroadbandDownwardCompressor.cpp
     # [END MTDM-CMAKE-BDC-DSP]
+
+    # [BEGIN MTDM-CMAKE-LIMITER-DSP]
+    Source/Core/Processing/DSP/LookaheadLimiter.h
+    Source/Core/Processing/DSP/LookaheadLimiter.cpp
+    # [END MTDM-CMAKE-LIMITER-DSP]
 )
 
 target_include_directories(LevelScopeCore
