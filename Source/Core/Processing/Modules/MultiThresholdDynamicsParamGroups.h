@@ -98,6 +98,19 @@ namespace levelscope::mtdm
             }
         });
 
+        // [BEGIN MTDM-PARAMGROUPS-LIMITER]
+        groups.push_back (ParamGroup {
+            "mtdm.limiter",
+            "Limiter (Safety)",
+            {
+                limEnabled01,
+                limCeilingDb,
+                limLookaheadMs,
+                limReleaseMs
+            }
+        });
+        // [END MTDM-PARAMGROUPS-LIMITER]
+
         // Advanced routing / policies
         groups.push_back (ParamGroup {
             "mtdm.routing.advanced",

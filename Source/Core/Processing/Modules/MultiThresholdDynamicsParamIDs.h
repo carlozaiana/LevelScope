@@ -218,6 +218,36 @@ namespace levelscope::mtdm
     }
     // [END MTDM-DOWNWARD-PARAMS]
 
+    // [BEGIN MTDM-LIMITER-PARAMS]
+    namespace ParamIDs
+    {
+        static constexpr const char* limEnabled01    = "mtdm.lim.enabled";
+        static constexpr const char* limCeilingDb    = "mtdm.lim.ceilingDb";
+        static constexpr const char* limLookaheadMs  = "mtdm.lim.lookaheadMs";
+        static constexpr const char* limReleaseMs    = "mtdm.lim.releaseMs";
+    }
+
+    namespace Defaults
+    {
+        static constexpr float limEnabled01   = 0.0f;   // OFF by default => no audible change
+        static constexpr float limCeilingDb   = -1.0f;  // dBFS
+        static constexpr float limLookaheadMs = 5.0f;   // ms
+        static constexpr float limReleaseMs   = 100.0f; // ms
+    }
+
+    namespace Ranges
+    {
+        static constexpr float limCeilingMinDb = -20.0f;
+        static constexpr float limCeilingMaxDb =   0.0f;
+
+        static constexpr float limLookaheadMinMs = 0.0f;
+        static constexpr float limLookaheadMaxMs = 50.0f;
+
+        static constexpr float limReleaseMinMs = 5.0f;
+        static constexpr float limReleaseMaxMs = 2000.0f;
+    }
+    // [END MTDM-LIMITER-PARAMS]
+
     // [END MTDM-PARAM-IDS-STAGE-D1A-ADD]
     // [END MTDM-PARAM-IDS]
 } // namespace levelscope::mtdm
