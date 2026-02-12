@@ -240,6 +240,26 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
         "Limiter Release (ms)",
         juce::NormalisableRange<float> (Ranges::limReleaseMinMs, Ranges::limReleaseMaxMs, 0.1f),
         Defaults::limReleaseMs));
+
+    // [BEGIN MTDM-APVTS-PARAM-LAYOUT-LIMITER-TP-ATTACK-DRIVE]
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { ParamIDs::limAttackMs, 1 },
+        "Limiter Attack (ms)",
+        juce::NormalisableRange<float> (Ranges::limAttackMinMs, Ranges::limAttackMaxMs, 0.01f),
+        Defaults::limAttackMs));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { ParamIDs::limDriveDb, 1 },
+        "Limiter Drive (dB)",
+        juce::NormalisableRange<float> (Ranges::limDriveMinDb, Ranges::limDriveMaxDb, 0.1f),
+        Defaults::limDriveDb));
+
+    layout.add (std::make_unique<juce::AudioParameterChoice> (
+        juce::ParameterID { ParamIDs::limOversamplingChoice, 1 },
+        "Limiter Oversampling",
+        juce::StringArray { "Off", "2x", "4x" },
+        Defaults::limOversamplingChoice));
+    // [END MTDM-APVTS-PARAM-LAYOUT-LIMITER-TP-ATTACK-DRIVE]
     // [END MTDM-APVTS-PARAM-LAYOUT-LIMITER]
 
     return layout;
