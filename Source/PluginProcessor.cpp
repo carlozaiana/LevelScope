@@ -446,7 +446,7 @@ void LevelScopeAudioProcessor::updateLatencyFromAPVTS_NonRT()
         upwardLatency = fftSizes[juce::jlimit (0, 3, choice)];
     }
 
-    // --- Limiter latency (lookahead)
+    // [BEGIN LS-LATENCY-LIMITER-INCLUDES-FIR]
     int limiterLatency = 0;
 
     const auto* limEnabledP = apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limEnabled01);
@@ -461,11 +461,27 @@ void LevelScopeAudioProcessor::updateLatencyFromAPVTS_NonRT()
         const double sr = (currentSampleRate > 0.0 ? currentSampleRate : 48000.0);
         const double ms = juce::jlimit (0.0, 50.0, (double) lookMs);
 
-        limiterLatency = (int) std::lround (sr * ms * 0.001);
-    }
+        const int lookSamples = (int) std::lround (sr * ms * 0.001);
 
-    totalLatency = upwardLatency + limiterLatency;
-    setLatencySamples (totalLatency);
+        // FIR oversampling detector delay (base-rate samples)
+        int detDelay = 0;
+        const auto* osP = apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limOversamplingChoice);
+        const int osChoice = (int) std::lround (osP != nullptr ? osP->load (std::memory_order_relaxed)
+                                                               : (float) levelscope::mtdm::Defaults::limOversamplingChoice);
+
+        const int clamped = juce::jlimit (0, 2, osChoice);
+        if (clamped > 0)
+        {
+            const int stages = (clamped == 1 ? 1 : 2); // 2x=1 stage, 4x=2 stages
+            juce::dsp::Oversampling<float> os (1, stages,
+                juce::dsp::Oversampling<float>::filterHalfBandFIREquiripple, true);
+            os.initProcessing (1);
+            detDelay = os.getLatencyInSamples();
+        }
+
+        limiterLatency = lookSamples + detDelay;
+    }
+    // [END LS-LATENCY-LIMITER-INCLUDES-FIR]
 }
 // [END LS-LATENCY-HELPER-IMPL]
 
