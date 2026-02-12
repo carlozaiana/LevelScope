@@ -387,7 +387,10 @@ void LevelScopeAudioProcessor::rebuildModuleGraphFromState (const juce::MemoryBl
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limEnabled01),
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limCeilingDb),
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limLookaheadMs),
-                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limReleaseMs));
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limReleaseMs),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limAttackMs),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limDriveDb),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limOversamplingChoice));
 
             graph->modules.push_back (mtdm);
         }
