@@ -13,6 +13,9 @@
 // [END LS-LIM-HEADER]
 
 #include <juce_audio_basics/juce_audio_basics.h>
+// [BEGIN LS-LIM-INCLUDE-DSP]
+#include <juce_dsp/juce_dsp.h>
+// [END LS-LIM-INCLUDE-DSP]
 #include <vector>
 #include <cmath>
 #include <algorithm>
@@ -63,7 +66,9 @@ private:
     void updateAttackIfNeeded() noexcept;
     void updateDriveIfNeeded() noexcept;
 
-    float computeLinkedPeakDetector (const float* const* chans, int chToProcess, int sampleIndex) noexcept;
+    // [BEGIN LS-LIM-DETECTOR-API-FIR]
+    float computeLinkedPeakSamplePeak (float* const* chans, int chToProcess, int sampleIndex) noexcept;
+    // [END LS-LIM-DETECTOR-API-FIR]
     // [END LS-LIM-HELPERS-TP]
 
     Parameters params;
@@ -106,6 +111,17 @@ private:
 
     std::vector<float> prevDriven; // per-channel previous driven sample (for 2x/4x detector)
     // [END LS-LIM-STATE-TP]
+
+    // [BEGIN LS-LIM-FIR-OVERSAMPLING-MEMBERS]
+    std::unique_ptr<juce::dsp::Oversampling<float>> os2; // 2x FIR
+    std::unique_ptr<juce::dsp::Oversampling<float>> os4; // 4x FIR
+    juce::dsp::Oversampling<float>* activeOs = nullptr;
+
+    int osFactor = 1;
+    int detectorDelaySamples = 0; // FIR group delay at base rate samples
+
+    juce::AudioBuffer<float> detectorBuffer; // driven input copy for oversampled detector
+    // [END LS-LIM-FIR-OVERSAMPLING-MEMBERS]
 
     bool pendingReset = false;
 

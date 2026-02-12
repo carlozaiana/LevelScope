@@ -26,6 +26,26 @@ void LookaheadLimiter::prepare (double sampleRate,
     // [BEGIN LS-LIM-PREPARE-PREVDRIVEN]
     prevDriven.assign ((size_t) preparedNumChannels, 0.0f);
     // [END LS-LIM-PREPARE-PREVDRIVEN]
+    // [BEGIN LS-LIM-PREPARE-FIR-OVERSAMPLERS]
+    // FIR oversamplers for true-peak-ish detection (detector path).
+    // 2x = 1 stage, 4x = 2 stages.
+    os2 = std::make_unique<juce::dsp::Oversampling<float>> (
+        (size_t) preparedNumChannels, 1,
+        juce::dsp::Oversampling<float>::filterHalfBandFIREquiripple, true);
+
+    os4 = std::make_unique<juce::dsp::Oversampling<float>> (
+        (size_t) preparedNumChannels, 2,
+        juce::dsp::Oversampling<float>::filterHalfBandFIREquiripple, true);
+
+    os2->initProcessing ((size_t) juce::jmax (1, preparedMaxBlockSize));
+    os4->initProcessing ((size_t) juce::jmax (1, preparedMaxBlockSize));
+
+    detectorBuffer.setSize (preparedNumChannels, juce::jmax (1, preparedMaxBlockSize), false, false, true);
+
+    activeOs = nullptr;
+    osFactor = 1;
+    detectorDelaySamples = 0;
+    // [END LS-LIM-PREPARE-FIR-OVERSAMPLERS]
 
     writePos = 0;
 
@@ -55,6 +75,10 @@ void LookaheadLimiter::reset() noexcept
     // [BEGIN LS-LIM-RESET-PREVDRIVEN]
     std::fill (prevDriven.begin(), prevDriven.end(), 0.0f);
     // [END LS-LIM-RESET-PREVDRIVEN]
+    // [BEGIN LS-LIM-RESET-FIR-OVERSAMPLERS]
+    if (os2) os2->reset();
+    if (os4) os4->reset();
+    // [END LS-LIM-RESET-FIR-OVERSAMPLERS]
     pendingReset = false;
 }
 
@@ -139,47 +163,31 @@ void LookaheadLimiter::updateDriveIfNeeded() noexcept
     driveLin = dbToLin (d);
 }
 
-// Detector peak with optional 2x/4x linear-interp oversampling between prev and current driven samples.
-float LookaheadLimiter::computeLinkedPeakDetector (const float* const* chans,
-                                                   int chToProcess,
-                                                   int sampleIndex) noexcept
+// [BEGIN LS-LIM-SELECT-ACTIVE-OS]
+static int osChoiceToFactor (int choice) noexcept
 {
-    const int os = juce::jlimit (0, 2, params.oversamplingChoice); // 0=off,1=2x,2=4x
+    if (choice == 1) return 2;
+    if (choice == 2) return 4;
+    return 1;
+}
+// [END LS-LIM-SELECT-ACTIVE-OS]
 
+// [BEGIN LS-LIM-SAMPLEPEAK-DETECTOR]
+float LookaheadLimiter::computeLinkedPeakSamplePeak (float* const* chans,
+                                                     int chToProcess,
+                                                     int sampleIndex) noexcept
+{
     float peak = 0.0f;
-
     for (int ch = 0; ch < chToProcess; ++ch)
     {
-        const float x0 = prevDriven[(size_t) ch];
-        const float x1 = chans[ch][sampleIndex] * driveLin;
-
-        // always consider current sample
-        peak = std::max (peak, std::abs (x1));
-
-        if (os == 1) // 2x
-        {
-            const float mid = 0.5f * (x0 + x1);
-            peak = std::max (peak, std::abs (mid));
-        }
-        else if (os == 2) // 4x
-        {
-            const float d = (x1 - x0);
-            const float q1 = x0 + 0.25f * d;
-            const float q2 = x0 + 0.50f * d;
-            const float q3 = x0 + 0.75f * d;
-            peak = std::max (peak, std::abs (q1));
-            peak = std::max (peak, std::abs (q2));
-            peak = std::max (peak, std::abs (q3));
-        }
-
-        prevDriven[(size_t) ch] = x1; // update prev for next sample
+        const float x = chans[ch][sampleIndex] * driveLin;
+        peak = std::max (peak, std::abs (x));
     }
-
     return peak;
 }
-// [END LS-LIM-HELPERS-TP-IMPL]
+// [END LS-LIM-SAMPLEPEAK-DETECTOR]
 
-// [BEGIN LS-LIM-PROCESS-TP]
+// [BEGIN LS-LIM-PROCESS-FIR-TRUEPEAK]
 void LookaheadLimiter::process (juce::AudioBuffer<float>& buffer) noexcept
 {
     juce::ScopedNoDenormals noDenormals;
@@ -195,31 +203,41 @@ void LookaheadLimiter::process (juce::AudioBuffer<float>& buffer) noexcept
 
     const int chToProcess = std::min (preparedNumChannels, numChInBuf);
 
-    const float ceilingLin = dbToLin (juce::jmin (0.0f, params.ceilingDb));
-
     float* const* chans = buffer.getArrayOfWritePointers();
 
-    // Ensure derived values are up to date (safe: no allocations)
+    // Keep derived values fresh (no allocations)
     updateLookaheadIfNeeded();
     updateReleaseCoeffIfNeeded();
     updateAttackIfNeeded();
     updateDriveIfNeeded();
 
-    if (lookaheadSamples <= 0)
+    // Select FIR oversampler for detector (Off/2x/4x)
+    const int osChoice = juce::jlimit (0, 2, params.oversamplingChoice);
+    const int factor = osChoiceToFactor (osChoice);
+
+    if (factor == 2)
+        activeOs = (os2 ? os2.get() : nullptr);
+    else if (factor == 4)
+        activeOs = (os4 ? os4.get() : nullptr);
+    else
+        activeOs = nullptr;
+
+    osFactor = factor;
+    detectorDelaySamples = (activeOs != nullptr ? activeOs->getLatencyInSamples() : 0);
+
+    // Effective limiter latency = lookahead + detector FIR delay
+    const int effectiveDelay = lookaheadSamples + detectorDelaySamples;
+
+    const float ceilingLin = dbToLin (juce::jmin (0.0f, params.ceilingDb));
+
+    // If lookahead is zero, we fall back to immediate limiting (still uses drive and optional sample-peak).
+    if (effectiveDelay <= 0)
     {
-        // No lookahead: hard limiter behavior (attack smoothing cannot be guaranteed).
         for (int i = 0; i < numSamples; ++i)
         {
-            float peak = 0.0f;
-            for (int ch = 0; ch < chToProcess; ++ch)
-            {
-                const float x = chans[ch][i] * driveLin;
-                peak = std::max (peak, std::abs (x));
-            }
-
+            const float peak = computeLinkedPeakSamplePeak (chans, chToProcess, i);
             const float required = (peak > ceilingLin ? (ceilingLin / (peak + 1.0e-12f)) : 1.0f);
 
-            // Instant drop, smoothed release
             if (required < gainZ)
                 gainZ = required;
             else
@@ -234,18 +252,52 @@ void LookaheadLimiter::process (juce::AudioBuffer<float>& buffer) noexcept
         return;
     }
 
-    // Lookahead limiter with attack ramp:
-    // - schedule per-sample gain in ring buffer
-    // - when a lower gain is required at writePos, ramp the scheduled gains down over attackSamples
-    //   leading up to writePos (within the lookahead window).
+    // FIR detector path: build driven detectorBuffer (before we overwrite output with delayed samples)
+    juce::dsp::AudioBlock<float> osBlock;
+
+    if (activeOs != nullptr)
+    {
+        for (int ch = 0; ch < chToProcess; ++ch)
+        {
+            const float* in = buffer.getReadPointer (ch);
+            float* dst = detectorBuffer.getWritePointer (ch);
+
+            for (int i = 0; i < numSamples; ++i)
+                dst[i] = in[i] * driveLin;
+        }
+
+        juce::dsp::AudioBlock<float> inBlock (detectorBuffer);
+        auto slice = inBlock.getSubBlock (0, (size_t) numSamples);
+        osBlock = activeOs->processSamplesUp (slice);
+    }
+
+    // Per-sample processing: schedule gain for the sample that will be output after effectiveDelay.
     for (int i = 0; i < numSamples; ++i)
     {
-        // Detector on driven signal (optionally oversampled)
-        const float peak = computeLinkedPeakDetector ((const float* const*) chans, chToProcess, i);
+        float peak = 0.0f;
+
+        if (activeOs != nullptr)
+        {
+            // Oversampled detector: peak over this base-rate slice across channels.
+            const int osStart = i * osFactor;
+            const int osEnd   = osStart + osFactor;
+
+            for (int ch = 0; ch < chToProcess; ++ch)
+            {
+                const float* osCh = osBlock.getChannelPointer ((size_t) ch);
+                for (int j = osStart; j < osEnd; ++j)
+                    peak = std::max (peak, std::abs (osCh[(size_t) j]));
+            }
+        }
+        else
+        {
+            // Sample peak detector
+            peak = computeLinkedPeakSamplePeak (chans, chToProcess, i);
+        }
 
         const float required = (peak > ceilingLin ? (ceilingLin / (peak + 1.0e-12f)) : 1.0f);
 
-        // Gain state: instant reduction to required, exponential recovery toward 1
+        // Gain state: instantaneous down, smoothed up
         if (required < gainZ)
             gainZ = required;
         else
@@ -253,14 +305,14 @@ void LookaheadLimiter::process (juce::AudioBuffer<float>& buffer) noexcept
 
         const float scheduled = std::min (gainZ, required);
 
-        // Store driven audio at writePos (for later output)
+        // Store driven audio at writePos
         for (int ch = 0; ch < chToProcess; ++ch)
-            delay[(size_t) ch].buf[(size_t) writePos] = chans[ch][i] * driveLin;
+            delay[(size_t) ch].buf[(size_t) writePos] = buffer.getReadPointer (ch)[i] * driveLin;
 
-        // Write scheduled gain for this sample
+        // Schedule the gain at the current writePos
         gainDelay[(size_t) writePos] = std::min (gainDelay[(size_t) writePos], scheduled);
 
-        // Attack ramp: adjust previous scheduled gains in the ring (not yet output)
+        // Rounded attack: ramp scheduled gain backwards over attackSamples (limited by lookaheadSamples only).
         if (attackSamples > 0 && scheduled < 0.999999f)
         {
             for (int k = 1; k <= attackSamples; ++k)
@@ -274,17 +326,17 @@ void LookaheadLimiter::process (juce::AudioBuffer<float>& buffer) noexcept
             }
         }
 
-        const int readPos = (writePos - lookaheadSamples + delayCapacity) % delayCapacity;
+        const int readPos = (writePos - effectiveDelay + delayCapacity) % delayCapacity;
         const float gOut = gainDelay[(size_t) readPos];
 
         for (int ch = 0; ch < chToProcess; ++ch)
             chans[ch][i] = delay[(size_t) ch].buf[(size_t) readPos] * gOut;
 
-        // After reading, clear the gain slot so future scheduling can restore toward unity
+        // Clear after use (so future scheduling can recover to unity)
         gainDelay[(size_t) readPos] = 1.0f;
 
         writePos = (writePos + 1) % delayCapacity;
     }
 }
-// [END LS-LIM-PROCESS-TP]
+// [END LS-LIM-PROCESS-FIR-TRUEPEAK]
 } // namespace levelscope::dsp
