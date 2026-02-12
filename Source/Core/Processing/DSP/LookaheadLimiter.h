@@ -28,6 +28,11 @@ public:
 
         float ceilingDb = -1.0f;     // dBFS, <= 0 typically
         float lookaheadMs = 5.0f;    // 0..50ms typical
+        // [BEGIN LS-LIM-PARAMS-TP]
+        float attackMs = 0.5f;        // ramp-down length (requires lookahead to be effective)
+        float driveDb  = 0.0f;        // pre-limiter gain
+        int   oversamplingChoice = 0; // 0=Off, 1=2x, 2=4x (detector only)
+        // [END LS-LIM-PARAMS-TP]
         float releaseMs = 100.0f;    // release smoothing
     };
 
@@ -53,6 +58,13 @@ private:
 
     void updateLookaheadIfNeeded() noexcept;
     void updateReleaseCoeffIfNeeded() noexcept;
+
+    // [BEGIN LS-LIM-HELPERS-TP]
+    void updateAttackIfNeeded() noexcept;
+    void updateDriveIfNeeded() noexcept;
+
+    float computeLinkedPeakDetector (const float* const* chans, int chToProcess, int sampleIndex) noexcept;
+    // [END LS-LIM-HELPERS-TP]
 
     Parameters params;
 
@@ -82,6 +94,18 @@ private:
     float gainZ = 1.0f;
     float aRelease = 0.999f;
     float lastReleaseMs = -999.0f;
+    // [BEGIN LS-LIM-STATE-TP]
+    float aAttack = 0.0f;
+    float lastAttackMs = -999.0f;
+    int attackSamples = 0;
+
+    float lastDriveDb = -999.0f;
+    float driveLin = 1.0f;
+
+    int lastOversamplingChoice = -999;
+
+    std::vector<float> prevDriven; // per-channel previous driven sample (for 2x/4x detector)
+    // [END LS-LIM-STATE-TP]
 
     bool pendingReset = false;
 
