@@ -218,11 +218,16 @@ namespace levelscope
         if (! prepared)
             return;
 
+        // [BEGIN MTDM-LIMITER-WRAPPER-TP]
         levelscope::dsp::LookaheadLimiter::Parameters p;
         p.enabled      = rp.enabled;
         p.ceilingDb    = rp.ceilingDb;
         p.lookaheadMs  = rp.lookaheadMs;
+        p.attackMs     = rp.attackMs;
         p.releaseMs    = rp.releaseMs;
+        p.driveDb      = rp.driveDb;
+        p.oversamplingChoice = rp.oversamplingChoice;
+        // [END MTDM-LIMITER-WRAPPER-TP]
 
         lim.setParametersAudioThread (p);
         lim.process (audio);
@@ -274,7 +279,10 @@ namespace levelscope
                                                               std::atomic<float>* limEnabled01,
                                                               std::atomic<float>* limCeilingDb,
                                                               std::atomic<float>* limLookaheadMs,
-                                                              std::atomic<float>* limReleaseMs) noexcept
+                                                              std::atomic<float>* limReleaseMs,
+                                                              std::atomic<float>* limAttackMs,
+                                                              std::atomic<float>* limDriveDb,
+                                                              std::atomic<float>* limOversamplingChoice) noexcept
             {
                 pEnabled01   = enabled01;
                 pThresholdDb = thresholdDb;
@@ -319,6 +327,11 @@ namespace levelscope
                 pLimLookaheadMs = limLookaheadMs;
                 pLimReleaseMs   = limReleaseMs;
                 // [END MTDM-BINDPARAMS-STORE-LIMITER]
+                // [BEGIN MTDM-BINDPARAMS-STORE-LIMITER-TP]
+                pLimAttackMs           = limAttackMs;
+                pLimDriveDb            = limDriveDb;
+                pLimOversamplingChoice = limOversamplingChoice;
+                // [END MTDM-BINDPARAMS-STORE-LIMITER-TP]
             }
             // [END MTDM-BINDPARAMS-STAGE-D2A-IMPL]
 
@@ -453,6 +466,18 @@ namespace levelscope
 
             lim.releaseMs = (pLimReleaseMs != nullptr ? pLimReleaseMs->load (std::memory_order_relaxed)
                                                       : levelscope::mtdm::Defaults::limReleaseMs);
+
+            // [BEGIN MTDM-PROCESS-LIMITER-TP]
+            lim.attackMs = (pLimAttackMs != nullptr ? pLimAttackMs->load (std::memory_order_relaxed)
+                                                    : levelscope::mtdm::Defaults::limAttackMs);
+
+            lim.driveDb = (pLimDriveDb != nullptr ? pLimDriveDb->load (std::memory_order_relaxed)
+                                                  : levelscope::mtdm::Defaults::limDriveDb);
+
+            lim.oversamplingChoice = (int) std::lround (pLimOversamplingChoice != nullptr
+                                                        ? pLimOversamplingChoice->load (std::memory_order_relaxed)
+                                                        : (float) levelscope::mtdm::Defaults::limOversamplingChoice);
+            // [END MTDM-PROCESS-LIMITER-TP]
 
             limiterStage.process (ctx.audio, lim);
             // [END MTDM-PROCESS-LIMITER]

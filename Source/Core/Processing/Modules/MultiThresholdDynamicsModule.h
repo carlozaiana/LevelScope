@@ -87,7 +87,10 @@ namespace levelscope
                                      std::atomic<float>* limEnabled01,
                                      std::atomic<float>* limCeilingDb,
                                      std::atomic<float>* limLookaheadMs,
-                                     std::atomic<float>* limReleaseMs) noexcept;
+                                     std::atomic<float>* limReleaseMs,
+                                     std::atomic<float>* limAttackMs,
+                                     std::atomic<float>* limDriveDb,
+                                     std::atomic<float>* limOversamplingChoice) noexcept;
                                      // [END MTDM-BINDPARAMS-STAGE-D1A-DECL]
 
             // Persistence (non-audio-thread only)
@@ -218,6 +221,11 @@ namespace levelscope
             float ceilingDb   = levelscope::mtdm::Defaults::limCeilingDb;
             float lookaheadMs = levelscope::mtdm::Defaults::limLookaheadMs;
             float releaseMs   = levelscope::mtdm::Defaults::limReleaseMs;
+            // [BEGIN MTDM-LIM-RUNTIME-TP]
+            float attackMs = levelscope::mtdm::Defaults::limAttackMs;
+            float driveDb  = levelscope::mtdm::Defaults::limDriveDb;
+            int   oversamplingChoice = levelscope::mtdm::Defaults::limOversamplingChoice;
+            // [END MTDM-LIM-RUNTIME-TP]
         };
 
         struct ILimiter
@@ -299,6 +307,12 @@ namespace levelscope
         std::atomic<float>* pLimLookaheadMs = nullptr;
         std::atomic<float>* pLimReleaseMs   = nullptr;
         // [END MTDM-LIMITER-PARAM-PTRS]
+
+        // [BEGIN MTDM-LIMITER-PARAM-PTRS-TP]
+        std::atomic<float>* pLimAttackMs          = nullptr;
+        std::atomic<float>* pLimDriveDb           = nullptr;
+        std::atomic<float>* pLimOversamplingChoice = nullptr; // 0=Off,1=2x,2=4x
+        // [END MTDM-LIMITER-PARAM-PTRS-TP]
     };
     // [END MTDM-MODULE-DECL]
 } // namespace levelscope
