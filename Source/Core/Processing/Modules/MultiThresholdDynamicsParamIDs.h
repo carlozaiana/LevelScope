@@ -246,8 +246,32 @@ namespace levelscope::mtdm
         static constexpr float limReleaseMinMs = 5.0f;
         static constexpr float limReleaseMaxMs = 2000.0f;
     }
-    // [END MTDM-LIMITER-PARAMS]
 
+    // [BEGIN MTDM-LIMITER-PARAMS-TP-ATTACK-DRIVE]
+    namespace ParamIDs
+    {
+        static constexpr const char* limAttackMs            = "mtdm.lim.attackMs";
+        static constexpr const char* limDriveDb             = "mtdm.lim.driveDb";
+        static constexpr const char* limOversamplingChoice  = "mtdm.lim.oversamplingChoice"; // 0=Off, 1=2x, 2=4x
+    }
+
+    namespace Defaults
+    {
+        static constexpr float limAttackMs = 0.5f;
+        static constexpr float limDriveDb  = 0.0f;
+        static constexpr int   limOversamplingChoice = 0; // Off
+    }
+
+    namespace Ranges
+    {
+        static constexpr float limAttackMinMs = 0.0f;
+        static constexpr float limAttackMaxMs = 5.0f;
+
+        static constexpr float limDriveMinDb = -24.0f;
+        static constexpr float limDriveMaxDb =  24.0f;
+    }
+    // [END MTDM-LIMITER-PARAMS-TP-ATTACK-DRIVE]
+    // [END MTDM-LIMITER-PARAMS]
     // [END MTDM-PARAM-IDS-STAGE-D1A-ADD]
     // [END MTDM-PARAM-IDS]
 } // namespace levelscope::mtdm

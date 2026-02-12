@@ -105,8 +105,11 @@ namespace levelscope::mtdm
             {
                 limEnabled01,
                 limCeilingDb,
+                limDriveDb,
                 limLookaheadMs,
-                limReleaseMs
+                limAttackMs,
+                limReleaseMs,
+                limOversamplingChoice
             }
         });
         // [END MTDM-PARAMGROUPS-LIMITER]
