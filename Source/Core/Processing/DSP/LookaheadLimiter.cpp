@@ -309,15 +309,20 @@ void LookaheadLimiter::process (juce::AudioBuffer<float>& buffer) noexcept
         for (int ch = 0; ch < chToProcess; ++ch)
             delay[(size_t) ch].buf[(size_t) writePos] = buffer.getReadPointer (ch)[i] * driveLin;
 
-        // Schedule the gain at the current writePos
-        gainDelay[(size_t) writePos] = std::min (gainDelay[(size_t) writePos], scheduled);
+        // [BEGIN LS-LIM-FIR-SCHEDULE-WITH-DETECTOR-DELAY]
+        // IMPORTANT: FIR oversampling has detector latency. The "required" gain we computed at time i
+        // corresponds to an earlier sample by detectorDelaySamples. Therefore schedule gain at:
+        //   gainWritePos = writePos - detectorDelaySamples
+        const int gainWritePos = (writePos - detectorDelaySamples + delayCapacity) % delayCapacity;
 
-        // Rounded attack: ramp scheduled gain backwards over attackSamples (limited by lookaheadSamples only).
+        gainDelay[(size_t) gainWritePos] = std::min (gainDelay[(size_t) gainWritePos], scheduled);
+
+        // Rounded attack: ramp scheduled gain backwards over attackSamples leading up to gainWritePos.
         if (attackSamples > 0 && scheduled < 0.999999f)
         {
             for (int k = 1; k <= attackSamples; ++k)
             {
-                const int pos = (writePos - k + delayCapacity) % delayCapacity;
+                const int pos = (gainWritePos - k + delayCapacity) % delayCapacity;
 
                 const float t = 1.0f - ((float) k / (float) attackSamples); // 1..0
                 const float rampG = 1.0f + (scheduled - 1.0f) * t;
@@ -325,6 +330,7 @@ void LookaheadLimiter::process (juce::AudioBuffer<float>& buffer) noexcept
                 gainDelay[(size_t) pos] = std::min (gainDelay[(size_t) pos], rampG);
             }
         }
+        // [END LS-LIM-FIR-SCHEDULE-WITH-DETECTOR-DELAY]
 
         const int readPos = (writePos - effectiveDelay + delayCapacity) % delayCapacity;
         const float gOut = gainDelay[(size_t) readPos];
