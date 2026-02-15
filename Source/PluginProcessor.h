@@ -3,6 +3,9 @@
 #include <JuceHeader.h>
 #include <vector>
 #include <atomic>
+// [BEGIN LS-UI-METERING-INCLUDES]
+#include <memory>
+// [END LS-UI-METERING-INCLUDES]
 
 #include "Core/LevelScopeHistoryModel.h"
 #include "Core/BS1770KWeighting.h"
