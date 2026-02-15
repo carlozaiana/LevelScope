@@ -392,11 +392,20 @@ void LevelScopeAudioProcessor::rebuildModuleGraphFromState (const juce::MemoryBl
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limDriveDb),
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limOversamplingChoice));
 
+            // [BEGIN LS-MTDM-UI-HANDLE-STORE]
+            std::atomic_store_explicit (&mtdmForUI, mtdm, std::memory_order_release);
+            // [END LS-MTDM-UI-HANDLE-STORE]                  
+
             graph->modules.push_back (mtdm);
         }
         // [END MTDM-BINDPARAMS-CALL-FULL-D1C]
         // Unknown modules are ignored (forward-compat)
     }
+
+    // [BEGIN LS-MTDM-UI-HANDLE-CLEAR-IF-NOT-SET]
+    if (std::find (orderedModuleIds.begin(), orderedModuleIds.end(), mtdmId) == orderedModuleIds.end())
+        std::atomic_store_explicit (&mtdmForUI, std::shared_ptr<levelscope::MultiThresholdDynamicsModule>{}, std::memory_order_release);
+    // [END LS-MTDM-UI-HANDLE-CLEAR-IF-NOT-SET]
 
     processorCore.setActiveGraph (std::move (graph));
 
@@ -486,6 +495,23 @@ void LevelScopeAudioProcessor::updateLatencyFromAPVTS_NonRT()
 // [END LS-LATENCY-HELPER-IMPL]
 
 LevelScopeAudioProcessor::~LevelScopeAudioProcessor() = default;
+
+// [BEGIN LS-LIMITER-METERING-SNAPSHOT-IMPL]
+LevelScopeAudioProcessor::LimiterMeteringSnapshot LevelScopeAudioProcessor::getLimiterMeteringSnapshot() const noexcept
+{
+    LimiterMeteringSnapshot s;
+
+    auto m = std::atomic_load_explicit (&mtdmForUI, std::memory_order_acquire);
+    if (! m)
+        return s;
+
+    const auto& met = m->getLimiterMetering();
+    s.grDbCurrent   = met.grDbCurrent.load   (std::memory_order_relaxed);
+    s.grDbBlockPeak = met.grDbBlockPeak.load (std::memory_order_relaxed);
+    s.grDbHold      = met.grDbHold.load      (std::memory_order_relaxed);
+    return s;
+}
+// [END LS-LIMITER-METERING-SNAPSHOT-IMPL]
 
 //==============================================================================
 

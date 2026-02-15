@@ -65,6 +65,17 @@ public:
         const juce::AudioProcessorValueTreeState& getAPVTS() const noexcept { return apvts; }
     // [END MTDM-APVTS-ACCESSOR]
 
+    // [BEGIN LS-LIMITER-METERING-SNAPSHOT-API]
+    struct LimiterMeteringSnapshot
+    {
+        float grDbCurrent   = 0.0f;
+        float grDbBlockPeak = 0.0f;
+        float grDbHold      = 0.0f;
+    };
+
+    LimiterMeteringSnapshot getLimiterMeteringSnapshot() const noexcept;
+    // [END LS-LIMITER-METERING-SNAPSHOT-API]
+
     //==============================================================================
     // GUI access helpers (UI API unchanged; forwarded to core model)
 
@@ -154,6 +165,11 @@ private:
     // DSP module-chain host (Stage A: empty graph => no-op, no audible change)
     levelscope::ProcessorCore processorCore;
     // [END LS-PROCESSORCORE-MEMBER]
+
+    // [BEGIN LS-MTDM-UI-HANDLE]
+    // Non-RT handle for UI/meter polling. Stored atomically on graph rebuild.
+    std::shared_ptr<levelscope::MultiThresholdDynamicsModule> mtdmForUI;
+    // [END LS-MTDM-UI-HANDLE]
 
     // [FIX-START-RAMP] guard against host start ramp overwriting existing truth
     int transportStartOverwriteGuardFrames = 0;
