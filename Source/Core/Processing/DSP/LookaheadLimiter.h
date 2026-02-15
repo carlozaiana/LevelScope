@@ -53,6 +53,12 @@ public:
 
     int getLatencySamples() const noexcept { return (params.enabled ? lookaheadSamples : 0); }
 
+    // [BEGIN LS-LIM-METERING-GETTERS]
+    // Non-RT / UI safe to read; written by audio thread once per process() call.
+    float getLastBlockMinGain() const noexcept { return lastBlockMinGain; }
+    float getLastBlockLastGain() const noexcept { return lastBlockLastGain; }
+    // [END LS-LIM-METERING-GETTERS]
+
 private:
     static float dbToLin (float db) noexcept
     {
@@ -119,6 +125,11 @@ private:
 
     int osFactor = 1;
     int detectorDelaySamples = 0; // FIR group delay at base rate samples
+
+    // [BEGIN LS-LIM-METERING-MEMBERS]
+    float lastBlockMinGain  = 1.0f; // minimum gOut used during last process() call
+    float lastBlockLastGain = 1.0f; // gOut of last sample in last process() call
+    // [END LS-LIM-METERING-MEMBERS]
 
     juce::AudioBuffer<float> detectorBuffer; // driven input copy for oversampled detector
     // [END LS-LIM-FIR-OVERSAMPLING-MEMBERS]

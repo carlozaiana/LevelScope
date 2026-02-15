@@ -205,6 +205,11 @@ void LookaheadLimiter::process (juce::AudioBuffer<float>& buffer) noexcept
 
     float* const* chans = buffer.getArrayOfWritePointers();
 
+    // [BEGIN LS-LIM-METERING-INIT]
+    float blockMinG  = 1.0f;
+    float blockLastG = 1.0f;
+    // [END LS-LIM-METERING-INIT]
+
     // Keep derived values fresh (no allocations)
     updateLookaheadIfNeeded();
     updateReleaseCoeffIfNeeded();
@@ -244,10 +249,18 @@ void LookaheadLimiter::process (juce::AudioBuffer<float>& buffer) noexcept
                 gainZ = aRelease * gainZ + (1.0f - aRelease) * 1.0f;
 
             const float gOut = gainZ;
+            // [BEGIN LS-LIM-METERING-UPDATE-NOLOOKAHEAD]
+            blockMinG  = std::min (blockMinG, gOut);
+            blockLastG = gOut;
+            // [END LS-LIM-METERING-UPDATE-NOLOOKAHEAD]
 
             for (int ch = 0; ch < chToProcess; ++ch)
                 chans[ch][i] = (chans[ch][i] * driveLin) * gOut;
         }
+        // [BEGIN LS-LIM-METERING-STORE-NOLOOKAHEAD]
+        lastBlockMinGain  = blockMinG;
+        lastBlockLastGain = blockLastG;
+        // [END LS-LIM-METERING-STORE-NOLOOKAHEAD]
 
         return;
     }
@@ -335,6 +348,11 @@ void LookaheadLimiter::process (juce::AudioBuffer<float>& buffer) noexcept
         const int readPos = (writePos - effectiveDelay + delayCapacity) % delayCapacity;
         const float gOut = gainDelay[(size_t) readPos];
 
+        // [BEGIN LS-LIM-METERING-UPDATE]
+        blockMinG = std::min (blockMinG, gOut);
+        blockLastG = gOut;
+        // [END LS-LIM-METERING-UPDATE]
+
         for (int ch = 0; ch < chToProcess; ++ch)
             chans[ch][i] = delay[(size_t) ch].buf[(size_t) readPos] * gOut;
 
@@ -343,6 +361,10 @@ void LookaheadLimiter::process (juce::AudioBuffer<float>& buffer) noexcept
 
         writePos = (writePos + 1) % delayCapacity;
     }
+    // [BEGIN LS-LIM-METERING-STORE]
+    lastBlockMinGain  = blockMinG;
+    lastBlockLastGain = blockLastG;
+    // [END LS-LIM-METERING-STORE]
 }
 // [END LS-LIM-PROCESS-FIR-TRUEPEAK]
 } // namespace levelscope::dsp
