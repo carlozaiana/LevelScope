@@ -21,6 +21,10 @@
 // Timebase/discontinuity detection remains here for now.
 //==============================================================================
 
+// [BEGIN LS-UI-METERING-FWDDECL]
+namespace levelscope { class MultiThresholdDynamicsModule; }
+// [END LS-UI-METERING-FWDDECL]
+
 class LevelScopeAudioProcessor : public juce::AudioProcessor
 {
 public:
