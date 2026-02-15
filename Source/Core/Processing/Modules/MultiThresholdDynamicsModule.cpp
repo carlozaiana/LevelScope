@@ -482,6 +482,52 @@ namespace levelscope
             limiterStage.process (ctx.audio, lim);
             // [END MTDM-PROCESS-LIMITER]
 
+            // [BEGIN MTDM-LIMITER-METERING-UPDATE]
+            // Metering: compute GR dB from limiter-applied gain (block min and last).
+            // GR dB is reported as positive numbers (0 = no reduction).
+            auto gainToGrDb = [] (float g) noexcept
+            {
+                g = juce::jlimit (1.0e-6f, 1.0f, g);
+                return (float) (-20.0 * std::log10 ((double) g));
+            };
+
+            const float minGain  = limiterStage.lim.getLastBlockMinGain();
+            const float lastGain = limiterStage.lim.getLastBlockLastGain();
+
+            const float grBlockPeak = gainToGrDb (minGain);
+            const float grCurrent   = gainToGrDb (lastGain);
+
+            limiterMetering.grDbBlockPeak.store (grBlockPeak, std::memory_order_relaxed);
+            limiterMetering.grDbCurrent.store   (grCurrent,   std::memory_order_relaxed);
+
+            // Peak-hold with hold time + decay (audio-thread-only state).
+            const int holdSamples = (int) std::lround (preparedSampleRate * (double) limiterHoldTimeSeconds);
+            const float decayDbThisBlock =
+                (preparedSampleRate > 1.0 ? limiterHoldDecayDbPerSecond * (float) ((double) ctx.numSamples / preparedSampleRate)
+                                          : 0.0f);
+
+            if (grBlockPeak > limiterHoldDbInternal)
+            {
+                limiterHoldDbInternal = grBlockPeak;
+                limiterHoldSamplesLeft = holdSamples;
+            }
+            else
+            {
+                if (limiterHoldSamplesLeft > 0)
+                {
+                    limiterHoldSamplesLeft -= ctx.numSamples;
+                    if (limiterHoldSamplesLeft < 0)
+                        limiterHoldSamplesLeft = 0;
+                }
+                else
+                {
+                    limiterHoldDbInternal = std::max (0.0f, limiterHoldDbInternal - decayDbThisBlock);
+                }
+            }
+
+            limiterMetering.grDbHold.store (limiterHoldDbInternal, std::memory_order_relaxed);
+            // [END MTDM-LIMITER-METERING-UPDATE]
+
             juce::ignoreUnused (pThresholdDb, pRatio);
             // [END MTDM-PROCESS-UPWARD-MODE-SWITCH]
 

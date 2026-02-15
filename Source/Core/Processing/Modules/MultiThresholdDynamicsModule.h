@@ -32,6 +32,19 @@ namespace levelscope
         juce::String getModuleID() const override;
         juce::String getDisplayName() const override;
 
+        // [BEGIN MTDM-LIMITER-METERING-PUBLIC]
+        struct LimiterMetering
+        {
+            // All values are "gain reduction in dB" as positive numbers.
+            // 0.0 = no reduction, 6.0 = 6 dB reduction, etc.
+            std::atomic<float> grDbCurrent   { 0.0f }; // current/instant (updated once per block)
+            std::atomic<float> grDbBlockPeak { 0.0f }; // peak GR seen in last processed block
+            std::atomic<float> grDbHold      { 0.0f }; // peak-hold with decay
+        };
+
+        const LimiterMetering& getLimiterMetering() const noexcept { return limiterMetering; }
+        // [END MTDM-LIMITER-METERING-PUBLIC]
+
         void prepare (const ModulePrepareSpec& spec) override;
         void reset() override;
 
@@ -250,6 +263,17 @@ namespace levelscope
 
         LookaheadLimiterStage limiterStage;
         // [END MTDM-LIMITER-STRATEGY-TYPES]
+
+        // [BEGIN MTDM-LIMITER-METERING-MEMBERS]
+        LimiterMetering limiterMetering;
+
+        // Audio-thread-only state for peak-hold behavior (no atomics needed here).
+        float limiterHoldDbInternal = 0.0f;
+        int   limiterHoldSamplesLeft = 0;
+
+        static constexpr float limiterHoldTimeSeconds = 0.25f;   // hold before decay
+        static constexpr float limiterHoldDecayDbPerSecond = 12.0f; // pro-style decay rate
+        // [END MTDM-LIMITER-METERING-MEMBERS]
 
         // Stored from prepare() for debugging/future DSP wiring. Not used for DSP yet.
         double preparedSampleRate = 0.0;
