@@ -488,7 +488,10 @@ void LevelScopeAudioProcessor::updateLatencyFromAPVTS_NonRT()
             const int stages = (clamped == 1 ? 1 : 2); // 2x=1 stage, 4x=2 stages
             juce::dsp::Oversampling<float> os (1, stages,
                 juce::dsp::Oversampling<float>::filterHalfBandFIREquiripple, true);
-            os.initProcessing (1);
+            // [BEGIN LS-LATENCY-OS-INITPROCESSING-BLOCKSIZE-FIX]
+            const int bs = juce::jmax (1, lastMaxBlockSizeForSpec);
+            os.initProcessing ((size_t) bs);
+            // [END LS-LATENCY-OS-INITPROCESSING-BLOCKSIZE-FIX]
             detDelay = os.getLatencyInSamples();
         }
 
