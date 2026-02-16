@@ -58,6 +58,13 @@ public:
 
     void process (juce::AudioBuffer<float>& buffer) noexcept;
 
+    // [BEGIN LS-BDC-METERING-GETTERS]
+    // Non-RT/UI safe to read; written by audio thread once per process() call.
+    // These gains are the compressor gain (zone crossfade + smoothing), EXCLUDING makeup gain.
+    float getLastBlockMinCompGain() const noexcept { return lastBlockMinCompGain; }
+    float getLastBlockLastCompGain() const noexcept { return lastBlockLastCompGain; }
+    // [END LS-BDC-METERING-GETTERS]
+
     // [BEGIN LS-BDC-LFE-POLICY-API]
     // AUDIO-THREAD-ONLY: selects internal prebuilt lists based on LFE policy flags.
     void setLfePolicyAudioThread (bool lfeInDetector, bool lfeInApply) noexcept;
@@ -105,5 +112,10 @@ private:
 
     float lastAttackMs  = -1.0f;
     float lastReleaseMs = -1.0f;
+
+    // [BEGIN LS-BDC-METERING-MEMBERS]
+    float lastBlockMinCompGain  = 1.0f; // minimum compressor gain (<=1) in last process() call
+    float lastBlockLastCompGain = 1.0f; // last compressor gain in last process() call
+    // [END LS-BDC-METERING-MEMBERS]
 };
 } // namespace levelscope::dsp

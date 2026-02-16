@@ -155,6 +155,11 @@ void BroadbandDownwardCompressor::process (juce::AudioBuffer<float>& buffer) noe
 
     const float makeupLin = dbToLin (params.makeupDb);
 
+    // [BEGIN LS-BDC-METERING-INIT]
+    float blockMinG  = 1.0f;
+    float blockLastG = 1.0f;
+    // [END LS-BDC-METERING-INIT]
+
     for (int i = 0; i < numSamples; ++i)
     {
         // Linked detector energy (default excludes LFE)
@@ -194,6 +199,12 @@ void BroadbandDownwardCompressor::process (juce::AudioBuffer<float>& buffer) noe
 
         const float gOut = gainZ * makeupLin;
 
+        // [BEGIN LS-BDC-METERING-UPDATE]
+            // Meter compressor gain only (exclude makeup)
+            blockMinG  = std::min (blockMinG, gainZ);
+            blockLastG = gainZ;
+        // [END LS-BDC-METERING-UPDATE]
+
         // Apply to apply channels (default excludes LFE)
         for (int ai = 0; ai < numApply; ++ai)
         {
@@ -202,5 +213,9 @@ void BroadbandDownwardCompressor::process (juce::AudioBuffer<float>& buffer) noe
                 chans[ch][i] *= gOut;
         }
     }
+    // [BEGIN LS-BDC-METERING-STORE]
+    lastBlockMinCompGain  = blockMinG;
+    lastBlockLastCompGain = blockLastG;
+    // [END LS-BDC-METERING-STORE]
 }
 } // namespace levelscope::dsp
