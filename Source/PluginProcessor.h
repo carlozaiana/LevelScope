@@ -61,10 +61,6 @@ public:
     bool isMidiEffect() const override                             { return false; }
     double getTailLengthSeconds() const override                   { return 0.0; }
 
-    // [BEGIN LS-LATENCY-GETLATENCY-OVERRIDE]
-    int getLatencySamples() const override;
-    // [END LS-LATENCY-GETLATENCY-OVERRIDE]
-
     //==============================================================================
     int getNumPrograms() override                                  { return 1; }
     int getCurrentProgram() override                               { return 0; }
