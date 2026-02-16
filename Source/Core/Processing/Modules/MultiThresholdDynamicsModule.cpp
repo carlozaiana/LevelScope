@@ -451,6 +451,64 @@ namespace levelscope
 
             downwardProcessor.process (ctx.audio, down);
             // [END MTDM-PROCESS-DOWNWARD]
+
+            // [BEGIN MTDM-DOWNWARD-METERING-UPDATE]
+            // Downward compressor metering: use compressor gain excluding makeup.
+            auto gainToGrDb = [] (float g) noexcept
+            {
+                g = juce::jlimit (1.0e-6f, 1.0f, g);
+                return (float) (-20.0 * std::log10 ((double) g));
+            };
+
+            // If downward disabled, publish zeros and reset hold
+            if (! down.enabled)
+            {
+                downwardHoldDbInternal = 0.0f;
+                downwardHoldSamplesLeft = 0;
+
+                downwardMetering.grDbCurrent.store   (0.0f, std::memory_order_relaxed);
+                downwardMetering.grDbBlockPeak.store (0.0f, std::memory_order_relaxed);
+                downwardMetering.grDbHold.store      (0.0f, std::memory_order_relaxed);
+            }
+            else
+            {
+                const float minGain  = downwardProcessor.comp.getLastBlockMinCompGain();
+                const float lastGain = downwardProcessor.comp.getLastBlockLastCompGain();
+
+                const float grBlockPeak = gainToGrDb (minGain);
+                const float grCurrent   = gainToGrDb (lastGain);
+
+                downwardMetering.grDbBlockPeak.store (grBlockPeak, std::memory_order_relaxed);
+                downwardMetering.grDbCurrent.store   (grCurrent,   std::memory_order_relaxed);
+
+                const int holdSamples = (int) std::lround (preparedSampleRate * (double) downwardHoldTimeSeconds);
+                const float decayDbThisBlock =
+                    (preparedSampleRate > 1.0 ? downwardHoldDecayDbPerSecond * (float) ((double) ctx.numSamples / preparedSampleRate)
+                                              : 0.0f);
+
+                if (grBlockPeak > downwardHoldDbInternal)
+                {
+                    downwardHoldDbInternal = grBlockPeak;
+                    downwardHoldSamplesLeft = holdSamples;
+                }
+                else
+                {
+                    if (downwardHoldSamplesLeft > 0)
+                    {
+                        downwardHoldSamplesLeft -= ctx.numSamples;
+                        if (downwardHoldSamplesLeft < 0)
+                            downwardHoldSamplesLeft = 0;
+                    }
+                    else
+                    {
+                        downwardHoldDbInternal = std::max (0.0f, downwardHoldDbInternal - decayDbThisBlock);
+                    }
+                }
+
+                downwardMetering.grDbHold.store (downwardHoldDbInternal, std::memory_order_relaxed);
+            }
+            // [END MTDM-DOWNWARD-METERING-UPDATE]
+
             // [BEGIN MTDM-PROCESS-LIMITER]
             LimiterRuntimeParams lim;
 

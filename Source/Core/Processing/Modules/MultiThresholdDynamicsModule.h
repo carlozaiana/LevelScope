@@ -45,6 +45,18 @@ namespace levelscope
         const LimiterMetering& getLimiterMetering() const noexcept { return limiterMetering; }
         // [END MTDM-LIMITER-METERING-PUBLIC]
 
+        // [BEGIN MTDM-DOWNWARD-METERING-PUBLIC]
+        struct DownwardMetering
+        {
+            // Gain reduction in dB as positive numbers (0 = no reduction).
+            std::atomic<float> grDbCurrent   { 0.0f };
+            std::atomic<float> grDbBlockPeak { 0.0f };
+            std::atomic<float> grDbHold      { 0.0f };
+        };
+
+        const DownwardMetering& getDownwardMetering() const noexcept { return downwardMetering; }
+        // [END MTDM-DOWNWARD-METERING-PUBLIC]
+
         void prepare (const ModulePrepareSpec& spec) override;
         void reset() override;
 
@@ -266,6 +278,16 @@ namespace levelscope
 
         // [BEGIN MTDM-LIMITER-METERING-MEMBERS]
         LimiterMetering limiterMetering;
+
+        // [BEGIN MTDM-DOWNWARD-METERING-MEMBERS]
+        DownwardMetering downwardMetering;
+
+        float downwardHoldDbInternal = 0.0f;
+        int   downwardHoldSamplesLeft = 0;
+
+        static constexpr float downwardHoldTimeSeconds = 0.25f;
+        static constexpr float downwardHoldDecayDbPerSecond = 12.0f;
+        // [END MTDM-DOWNWARD-METERING-MEMBERS]
 
         // Audio-thread-only state for peak-hold behavior (no atomics needed here).
         float limiterHoldDbInternal = 0.0f;
