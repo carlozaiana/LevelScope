@@ -65,58 +65,56 @@ namespace levelscope
 
             // Parameter binding (non-owning pointers; RT-safe reads in process()).
             // Caller must ensure pointers remain valid for module lifetime (APVTS raw param pointers do).
-            // [BEGIN MTDM-BINDPARAMS-STAGE-D1A-DECL]
-                void bindParameters (std::atomic<float>* enabled01,
-                                     std::atomic<float>* thresholdDb,
-                                     std::atomic<float>* ratio,
+            // [BEGIN MTDM-BINDPARAMS-FULL-DECL]
+            void bindParameters (std::atomic<float>* enabled01,
+                                 std::atomic<float>* thresholdDb,
+                                 std::atomic<float>* ratio,
 
-                                     // Stage D1a params (additive)
-                                     std::atomic<float>* t0Lufs,
-                                     std::atomic<float>* t1Lufs,
+                                 std::atomic<float>* t0Lufs,
+                                 std::atomic<float>* t1Lufs,
 
-                                     std::atomic<float>* sucAmount01,
-                                     std::atomic<float>* sucMaxBoostDb,
-                                     std::atomic<float>* sucCurve,
-                                     std::atomic<float>* sucLowKneeDb,
-                                     std::atomic<float>* sucHighKneeDb,
-                                     std::atomic<float>* sucAttackMs,
-                                     std::atomic<float>* sucReleaseMs,
+                                 std::atomic<float>* sucAmount01,
+                                 std::atomic<float>* sucMaxBoostDb,
+                                 std::atomic<float>* sucCurve,
+                                 std::atomic<float>* sucLowKneeDb,
+                                 std::atomic<float>* sucHighKneeDb,
+                                 std::atomic<float>* sucAttackMs,
+                                 std::atomic<float>* sucReleaseMs,
 
-                                     std::atomic<float>* sucFftSizeChoice,
-                                     std::atomic<float>* sucBandsPerOctChoice,
-                                     std::atomic<float>* sucMinFreqHz,
-                                     std::atomic<float>* sucMaxFreqHz,
+                                 std::atomic<float>* sucFftSizeChoice,
+                                 std::atomic<float>* sucBandsPerOctChoice,
+                                 std::atomic<float>* sucMinFreqHz,
+                                 std::atomic<float>* sucMaxFreqHz,
 
-                                     // Stage D1a usability
-                                     std::atomic<float>* sucCalTrimDb,
-                                     std::atomic<float>* sucCurveTypeChoice,
+                                 std::atomic<float>* sucCalTrimDb,
+                                 std::atomic<float>* sucCurveTypeChoice,
 
-                                     // Stage D1c ADD-UPWARD-MODE
-                                     std::atomic<float>* upwardModeChoice,
-                                     // [BEGIN MTDM-BINDPARAMS-ADD-LFE-MASK]
-                                     std::atomic<float>* lfeInDetector01,
-                                     std::atomic<float>* lfeInApply01,
-                                     // [END MTDM-BINDPARAMS-ADD-LFE-MASK]
-                                     // [BEGIN MTDM-BINDPARAMS-ADD-DOWNWARD]
-                                     // Stage D2a: downward zone params
-                                     std::atomic<float>* t2Lufs,
-                                     std::atomic<float>* t3Lufs,
-                                     std::atomic<float>* downEnabled01,
-                                     std::atomic<float>* downRatio,
-                                     std::atomic<float>* downKneeDb,
-                                     std::atomic<float>* downAttackMs,
-                                     std::atomic<float>* downReleaseMs,
-                                     std::atomic<float>* downMakeupDb,
+                                 std::atomic<float>* upwardModeChoice,
+                                 std::atomic<float>* lfeInDetector01,
+                                 std::atomic<float>* lfeInApply01,
 
-                                     // Stage D3a: limiter params
-                                     std::atomic<float>* limEnabled01,
-                                     std::atomic<float>* limCeilingDb,
-                                     std::atomic<float>* limLookaheadMs,
-                                     std::atomic<float>* limReleaseMs,
-                                     std::atomic<float>* limAttackMs,
-                                     std::atomic<float>* limDriveDb,
-                                     std::atomic<float>* limOversamplingChoice) noexcept;
-                                     // [END MTDM-BINDPARAMS-STAGE-D1A-DECL]
+                                 std::atomic<float>* t2Lufs,
+                                 std::atomic<float>* t3Lufs,
+                                 std::atomic<float>* downEnabled01,
+                                 std::atomic<float>* downRatio,
+                                 std::atomic<float>* downKneeDb,
+                                 std::atomic<float>* downAttackMs,
+                                 std::atomic<float>* downReleaseMs,
+                                 std::atomic<float>* downMakeupDb,
+
+                                 std::atomic<float>* limEnabled01,
+                                 std::atomic<float>* limCeilingDb,
+                                 std::atomic<float>* limLookaheadMs,
+                                 std::atomic<float>* limReleaseMs,
+                                 std::atomic<float>* limAttackMs,
+                                 std::atomic<float>* limDriveDb,
+                                 std::atomic<float>* limOversamplingChoice,
+
+                                 std::atomic<float>* zoneSoloChoice,
+                                 std::atomic<float>* zoneUpwardMute01,
+                                 std::atomic<float>* zoneDownwardMute01,
+                                 std::atomic<float>* zoneLimiterMute01) noexcept;
+            // [END MTDM-BINDPARAMS-FULL-DECL]
 
             // Persistence (non-audio-thread only)
             juce::ValueTree saveState() const override;
@@ -359,6 +357,13 @@ namespace levelscope
         std::atomic<float>* pLimDriveDb           = nullptr;
         std::atomic<float>* pLimOversamplingChoice = nullptr; // 0=Off,1=2x,2=4x
         // [END MTDM-LIMITER-PARAM-PTRS-TP]
+
+        // [BEGIN MTDM-ZONE-SOLO-MUTE-PTRS]
+        std::atomic<float>* pZoneSoloChoice = nullptr; // 0=None,1=Upward,2=Downward,3=Limiter
+        std::atomic<float>* pZoneUpwardMute01 = nullptr;
+        std::atomic<float>* pZoneDownwardMute01 = nullptr;
+        std::atomic<float>* pZoneLimiterMute01 = nullptr;
+        // [END MTDM-ZONE-SOLO-MUTE-PTRS]
     };
     // [END MTDM-MODULE-DECL]
 } // namespace levelscope

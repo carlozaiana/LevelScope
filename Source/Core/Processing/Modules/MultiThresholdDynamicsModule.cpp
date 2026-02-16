@@ -239,101 +239,107 @@ namespace levelscope
     }
     // [END MTDM-LIMITER-STRATEGY-IMPL]
 
-    // [BEGIN MTDM-BINDPARAMS-STAGE-D1A-IMPL]
-            // [BEGIN MTDM-BINDPARAMS-STAGE-D2A-IMPL]
-            void MultiThresholdDynamicsModule::bindParameters (std::atomic<float>* enabled01,
-                                                              std::atomic<float>* thresholdDb,
-                                                              std::atomic<float>* ratio,
-            
-                                                              std::atomic<float>* t0Lufs,
-                                                              std::atomic<float>* t1Lufs,
+    // [BEGIN MTDM-BINDPARAMS-FULL-IMPL]
+    void MultiThresholdDynamicsModule::bindParameters (std::atomic<float>* enabled01,
+                                                      std::atomic<float>* thresholdDb,
+                                                      std::atomic<float>* ratio,
 
-                                                              std::atomic<float>* sucAmount01,
-                                                              std::atomic<float>* sucMaxBoostDb,
-                                                              std::atomic<float>* sucCurve,
-                                                              std::atomic<float>* sucLowKneeDb,
-                                                              std::atomic<float>* sucHighKneeDb,
-                                                              std::atomic<float>* sucAttackMs,
-                                                              std::atomic<float>* sucReleaseMs,
+                                                      std::atomic<float>* t0Lufs,
+                                                      std::atomic<float>* t1Lufs,
 
-                                                              std::atomic<float>* sucFftSizeChoice,
-                                                              std::atomic<float>* sucBandsPerOctChoice,
-                                                              std::atomic<float>* sucMinFreqHz,
-                                                              std::atomic<float>* sucMaxFreqHz,
+                                                      std::atomic<float>* sucAmount01,
+                                                      std::atomic<float>* sucMaxBoostDb,
+                                                      std::atomic<float>* sucCurve,
+                                                      std::atomic<float>* sucLowKneeDb,
+                                                      std::atomic<float>* sucHighKneeDb,
+                                                      std::atomic<float>* sucAttackMs,
+                                                      std::atomic<float>* sucReleaseMs,
 
-                                                              std::atomic<float>* sucCalTrimDb,
-                                                              std::atomic<float>* sucCurveTypeChoice,
+                                                      std::atomic<float>* sucFftSizeChoice,
+                                                      std::atomic<float>* sucBandsPerOctChoice,
+                                                      std::atomic<float>* sucMinFreqHz,
+                                                      std::atomic<float>* sucMaxFreqHz,
 
-                                                              std::atomic<float>* upwardModeChoice,
-                                                              std::atomic<float>* lfeInDetector01,
-                                                              std::atomic<float>* lfeInApply01,
+                                                      std::atomic<float>* sucCalTrimDb,
+                                                      std::atomic<float>* sucCurveTypeChoice,
 
-                                                              std::atomic<float>* t2Lufs,
-                                                              std::atomic<float>* t3Lufs,
-                                                              std::atomic<float>* downEnabled01,
-                                                              std::atomic<float>* downRatio,
-                                                              std::atomic<float>* downKneeDb,
-                                                              std::atomic<float>* downAttackMs,
-                                                              std::atomic<float>* downReleaseMs,
-                                                              std::atomic<float>* downMakeupDb,
-                                                              std::atomic<float>* limEnabled01,
-                                                              std::atomic<float>* limCeilingDb,
-                                                              std::atomic<float>* limLookaheadMs,
-                                                              std::atomic<float>* limReleaseMs,
-                                                              std::atomic<float>* limAttackMs,
-                                                              std::atomic<float>* limDriveDb,
-                                                              std::atomic<float>* limOversamplingChoice) noexcept
-            {
-                pEnabled01   = enabled01;
-                pThresholdDb = thresholdDb;
-                pRatio       = ratio;
+                                                      std::atomic<float>* upwardModeChoice,
+                                                      std::atomic<float>* lfeInDetector01,
+                                                      std::atomic<float>* lfeInApply01,
 
-                pT0Lufs = t0Lufs;
-                pT1Lufs = t1Lufs;
+                                                      std::atomic<float>* t2Lufs,
+                                                      std::atomic<float>* t3Lufs,
+                                                      std::atomic<float>* downEnabled01,
+                                                      std::atomic<float>* downRatio,
+                                                      std::atomic<float>* downKneeDb,
+                                                      std::atomic<float>* downAttackMs,
+                                                      std::atomic<float>* downReleaseMs,
+                                                      std::atomic<float>* downMakeupDb,
 
-                pSucAmount01   = sucAmount01;
-                pSucMaxBoostDb = sucMaxBoostDb;
-                pSucCurve      = sucCurve;
-                pSucLowKneeDb  = sucLowKneeDb;
-                pSucHighKneeDb = sucHighKneeDb;
-                pSucAttackMs   = sucAttackMs;
-                pSucReleaseMs  = sucReleaseMs;
+                                                      std::atomic<float>* limEnabled01,
+                                                      std::atomic<float>* limCeilingDb,
+                                                      std::atomic<float>* limLookaheadMs,
+                                                      std::atomic<float>* limReleaseMs,
+                                                      std::atomic<float>* limAttackMs,
+                                                      std::atomic<float>* limDriveDb,
+                                                      std::atomic<float>* limOversamplingChoice,
 
-                pSucFftSizeChoice     = sucFftSizeChoice;
-                pSucBandsPerOctChoice = sucBandsPerOctChoice;
-                pSucMinFreqHz         = sucMinFreqHz;
-                pSucMaxFreqHz         = sucMaxFreqHz;
+                                                      std::atomic<float>* zoneSoloChoice,
+                                                      std::atomic<float>* zoneUpwardMute01,
+                                                      std::atomic<float>* zoneDownwardMute01,
+                                                      std::atomic<float>* zoneLimiterMute01) noexcept
+    {
+        pEnabled01   = enabled01;
+        pThresholdDb = thresholdDb;
+        pRatio       = ratio;
 
-                pSucCalTrimDb       = sucCalTrimDb;
-                pSucCurveTypeChoice = sucCurveTypeChoice;
+        pT0Lufs = t0Lufs;
+        pT1Lufs = t1Lufs;
 
-                pUpwardModeChoice  = upwardModeChoice;
-                pLfeInDetector01   = lfeInDetector01;
-                pLfeInApply01      = lfeInApply01;
+        pSucAmount01   = sucAmount01;
+        pSucMaxBoostDb = sucMaxBoostDb;
+        pSucCurve      = sucCurve;
+        pSucLowKneeDb  = sucLowKneeDb;
+        pSucHighKneeDb = sucHighKneeDb;
+        pSucAttackMs   = sucAttackMs;
+        pSucReleaseMs  = sucReleaseMs;
 
-                pT2Lufs = t2Lufs;
-                pT3Lufs = t3Lufs;
+        pSucFftSizeChoice     = sucFftSizeChoice;
+        pSucBandsPerOctChoice = sucBandsPerOctChoice;
+        pSucMinFreqHz         = sucMinFreqHz;
+        pSucMaxFreqHz         = sucMaxFreqHz;
 
-                pDownEnabled01 = downEnabled01;
-                pDownRatio     = downRatio;
-                pDownKneeDb    = downKneeDb;
-                pDownAttackMs  = downAttackMs;
-                pDownReleaseMs = downReleaseMs;
-                pDownMakeupDb  = downMakeupDb;
+        pSucCalTrimDb       = sucCalTrimDb;
+        pSucCurveTypeChoice = sucCurveTypeChoice;
 
-                // [BEGIN MTDM-BINDPARAMS-STORE-LIMITER]
-                pLimEnabled01   = limEnabled01;
-                pLimCeilingDb   = limCeilingDb;
-                pLimLookaheadMs = limLookaheadMs;
-                pLimReleaseMs   = limReleaseMs;
-                // [END MTDM-BINDPARAMS-STORE-LIMITER]
-                // [BEGIN MTDM-BINDPARAMS-STORE-LIMITER-TP]
-                pLimAttackMs           = limAttackMs;
-                pLimDriveDb            = limDriveDb;
-                pLimOversamplingChoice = limOversamplingChoice;
-                // [END MTDM-BINDPARAMS-STORE-LIMITER-TP]
-            }
-            // [END MTDM-BINDPARAMS-STAGE-D2A-IMPL]
+        pUpwardModeChoice = upwardModeChoice;
+        pLfeInDetector01  = lfeInDetector01;
+        pLfeInApply01     = lfeInApply01;
+
+        pT2Lufs = t2Lufs;
+        pT3Lufs = t3Lufs;
+
+        pDownEnabled01 = downEnabled01;
+        pDownRatio     = downRatio;
+        pDownKneeDb    = downKneeDb;
+        pDownAttackMs  = downAttackMs;
+        pDownReleaseMs = downReleaseMs;
+        pDownMakeupDb  = downMakeupDb;
+
+        pLimEnabled01   = limEnabled01;
+        pLimCeilingDb   = limCeilingDb;
+        pLimLookaheadMs = limLookaheadMs;
+        pLimReleaseMs   = limReleaseMs;
+        pLimAttackMs    = limAttackMs;
+        pLimDriveDb     = limDriveDb;
+        pLimOversamplingChoice = limOversamplingChoice;
+
+        pZoneSoloChoice        = zoneSoloChoice;
+        pZoneUpwardMute01      = zoneUpwardMute01;
+        pZoneDownwardMute01    = zoneDownwardMute01;
+       pZoneLimiterMute01     = zoneLimiterMute01;
+    }
+    // [END MTDM-BINDPARAMS-FULL-IMPL]
 
     // [BEGIN MTDM-PROCESS-STAGE-D1A]
         void MultiThresholdDynamicsModule::process (ProcessContext& ctx) noexcept
@@ -419,7 +425,33 @@ namespace levelscope
                                : (levelscope::mtdm::Defaults::lfeInApply01 >= 0.5f));
             // [END MTDM-UPWARD-RP-SET-LFE-MASK]
 
-            activeUpward->process (ctx.audio, up);
+            // [BEGIN MTDM-ZONE-SOLO-MUTE-LOGIC]
+            const int solo = (pZoneSoloChoice != nullptr
+                                ? (int) std::lround (pZoneSoloChoice->load (std::memory_order_relaxed))
+                                : levelscope::mtdm::Defaults::zoneSoloChoice);
+
+            const bool muteUp = (pZoneUpwardMute01 != nullptr
+                                   ? (pZoneUpwardMute01->load (std::memory_order_relaxed) >= 0.5f)
+                                   : (levelscope::mtdm::Defaults::zoneUpwardMute01 >= 0.5f));
+
+            const bool muteDown = (pZoneDownwardMute01 != nullptr
+                                     ? (pZoneDownwardMute01->load (std::memory_order_relaxed) >= 0.5f)
+                                     : (levelscope::mtdm::Defaults::zoneDownwardMute01 >= 0.5f));
+
+            const bool muteLim = (pZoneLimiterMute01 != nullptr
+                                    ? (pZoneLimiterMute01->load (std::memory_order_relaxed) >= 0.5f)
+                                    : (levelscope::mtdm::Defaults::zoneLimiterMute01 >= 0.5f));
+
+            const bool runUp   = (! muteUp)   && (solo == 0 || solo == 1);
+            const bool runDown = (! muteDown) && (solo == 0 || solo == 2);
+            const bool runLim  = (! muteLim)  && (solo == 0 || solo == 3);
+            // [END MTDM-ZONE-SOLO-MUTE-LOGIC]
+
+            // [BEGIN MTDM-RUN-UPWARD]
+                if (runUp)
+                    activeUpward->process (ctx.audio, up);
+            // [END MTDM-RUN-UPWARD]
+
             // [BEGIN MTDM-PROCESS-DOWNWARD]
             DownwardRuntimeParams down;
 
@@ -449,7 +481,10 @@ namespace levelscope
                                  ? (pLfeInApply01->load (std::memory_order_relaxed) >= 0.5f)
                                  : (levelscope::mtdm::Defaults::lfeInApply01 >= 0.5f));
 
-            downwardProcessor.process (ctx.audio, down);
+            // [BEGIN MTDM-RUN-DOWNWARD]
+            if (runDown)
+                downwardProcessor.process (ctx.audio, down);
+            // [END MTDM-RUN-DOWNWARD]
             // [END MTDM-PROCESS-DOWNWARD]
 
             // [BEGIN MTDM-DOWNWARD-METERING-UPDATE]
@@ -539,7 +574,10 @@ namespace levelscope
                                                         : (float) levelscope::mtdm::Defaults::limOversamplingChoice);
             // [END MTDM-PROCESS-LIMITER-TP]
 
-            limiterStage.process (ctx.audio, lim);
+            // [BEGIN MTDM-RUN-LIMITER]
+            if (runLim)
+                limiterStage.process (ctx.audio, lim);
+            // [END MTDM-RUN-LIMITER]
             // [END MTDM-PROCESS-LIMITER]
 
             // [BEGIN MTDM-LIMITER-METERING-UPDATE]
