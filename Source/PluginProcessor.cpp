@@ -539,13 +539,27 @@ void LevelScopeAudioProcessor::unregisterLatencyParamListeners()
     apvts.removeParameterListener (limOversamplingChoice, this);
 }
 
+// [BEGIN LS-LATENCY-LISTENER-PARAMCHANGED-IMMEDIATE]
 void LevelScopeAudioProcessor::parameterChanged (const juce::String& parameterID, float newValue)
 {
     juce::ignoreUnused (parameterID, newValue);
 
-    // RT-safe: just mark dirty. Do NOT call setLatencySamples() here.
+    // If this callback arrives on the message thread, update latency immediately
+    // (avoids waiting for the 10 Hz timer, which can matter before an export).
+    if (auto* mm = juce::MessageManager::getInstanceWithoutCreating())
+    {
+        if (mm->isThisTheMessageThread())
+        {
+            updateLatencyFromAPVTS_NonRT();
+            updateHostDisplay();
+            return;
+        }
+    }
+
+    // RT-safe fallback (audio thread or unknown thread): mark dirty for timerCallback().
     latencyDirty.store (true, std::memory_order_release);
 }
+// [END LS-LATENCY-LISTENER-PARAMCHANGED-IMMEDIATE]
 
 void LevelScopeAudioProcessor::timerCallback()
 {
