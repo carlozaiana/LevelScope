@@ -87,6 +87,17 @@ public:
     LimiterMeteringSnapshot getLimiterMeteringSnapshot() const noexcept;
     // [END LS-LIMITER-METERING-SNAPSHOT-API]
 
+    // [BEGIN LS-DOWNWARD-METERING-SNAPSHOT-API]
+    struct DownwardMeteringSnapshot
+    {
+        float grDbCurrent   = 0.0f;
+        float grDbBlockPeak = 0.0f;
+        float grDbHold      = 0.0f;
+    };
+
+    DownwardMeteringSnapshot getDownwardMeteringSnapshot() const noexcept;
+    // [END LS-DOWNWARD-METERING-SNAPSHOT-API]
+
     //==============================================================================
     // GUI access helpers (UI API unchanged; forwarded to core model)
 

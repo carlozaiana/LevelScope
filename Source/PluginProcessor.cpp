@@ -609,6 +609,23 @@ LevelScopeAudioProcessor::LimiterMeteringSnapshot LevelScopeAudioProcessor::getL
 }
 // [END LS-LIMITER-METERING-SNAPSHOT-IMPL]
 
+// [BEGIN LS-DOWNWARD-METERING-SNAPSHOT-IMPL]
+LevelScopeAudioProcessor::DownwardMeteringSnapshot LevelScopeAudioProcessor::getDownwardMeteringSnapshot() const noexcept
+{
+    DownwardMeteringSnapshot s;
+
+    auto m = std::atomic_load_explicit (&mtdmForUI, std::memory_order_acquire);
+    if (! m)
+        return s;
+
+    const auto& met = m->getDownwardMetering();
+    s.grDbCurrent   = met.grDbCurrent.load   (std::memory_order_relaxed);
+    s.grDbBlockPeak = met.grDbBlockPeak.load (std::memory_order_relaxed);
+    s.grDbHold      = met.grDbHold.load      (std::memory_order_relaxed);
+    return s;
+}
+// [END LS-DOWNWARD-METERING-SNAPSHOT-IMPL]
+
 //==============================================================================
 
 // [BEGIN LS-PROCESSORCORE-PREPARETOPLAY]
