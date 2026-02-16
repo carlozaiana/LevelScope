@@ -454,7 +454,9 @@ namespace levelscope
 
             // [BEGIN MTDM-DOWNWARD-METERING-UPDATE]
             // Downward compressor metering: use compressor gain excluding makeup.
-            auto gainToGrDb = [] (float g) noexcept
+            // [BEGIN MTDM-DOWNWARD-METERING-GAINTOGR-RENAME]
+            auto gainToGrDbDown = [] (float g) noexcept
+            // [END MTDM-DOWNWARD-METERING-GAINTOGR-RENAME]
             {
                 g = juce::jlimit (1.0e-6f, 1.0f, g);
                 return (float) (-20.0 * std::log10 ((double) g));
@@ -475,8 +477,8 @@ namespace levelscope
                 const float minGain  = downwardProcessor.comp.getLastBlockMinCompGain();
                 const float lastGain = downwardProcessor.comp.getLastBlockLastCompGain();
 
-                const float grBlockPeak = gainToGrDb (minGain);
-                const float grCurrent   = gainToGrDb (lastGain);
+                const float grBlockPeak = gainToGrDbDown (minGain);
+                const float grCurrent   = gainToGrDbDown (lastGain);
 
                 downwardMetering.grDbBlockPeak.store (grBlockPeak, std::memory_order_relaxed);
                 downwardMetering.grDbCurrent.store   (grCurrent,   std::memory_order_relaxed);
