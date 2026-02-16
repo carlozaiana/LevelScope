@@ -509,13 +509,6 @@ int LevelScopeAudioProcessor::computeTotalLatencySamplesFromCachedParams() const
 
     return upwardLatency + limiterLatency;
 }
-
-int LevelScopeAudioProcessor::getLatencySamples() const
-{
-    // Host may query this at times when setLatencySamples() updates aren’t applied yet.
-    // This must be lock-free and allocation-free.
-    return computeTotalLatencySamplesFromCachedParams();
-}
 // [END LS-LATENCY-CACHED-PARAMS-IMPL]
 
 // [BEGIN LS-LATENCY-HELPER-IMPL]
