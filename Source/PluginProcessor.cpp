@@ -292,6 +292,10 @@ LevelScopeAudioProcessor::LevelScopeAudioProcessor()
     rebuildModuleGraphFromState (nullptr);
     // [END LS-PROCESSORCORE-CONSTRUCTOR-GRAPH-WITH-MTDM]
 
+    // [BEGIN LS-LATENCY-LISTENER-CTOR-START]
+    registerLatencyParamListeners();
+    // [END LS-LATENCY-LISTENER-CTOR-START]
+
     // [BEGIN LS-LATENCY-CTOR-UPDATE]
     updateLatencyFromAPVTS_NonRT();
     // [END LS-LATENCY-CTOR-UPDATE]
@@ -494,7 +498,63 @@ void LevelScopeAudioProcessor::updateLatencyFromAPVTS_NonRT()
 }
 // [END LS-LATENCY-HELPER-IMPL]
 
-LevelScopeAudioProcessor::~LevelScopeAudioProcessor() = default;
+// [BEGIN LS-LATENCY-LISTENER-IMPL]
+
+LevelScopeAudioProcessor::~LevelScopeAudioProcessor()
+{
+    stopTimer();
+    unregisterLatencyParamListeners();
+}
+
+void LevelScopeAudioProcessor::registerLatencyParamListeners()
+{
+    using namespace levelscope::mtdm::ParamIDs;
+
+    // Only params that can change total latency.
+    apvts.addParameterListener (enabled, this);
+    apvts.addParameterListener (upwardModeChoice, this);
+    apvts.addParameterListener (sucFftSizeChoice, this);
+
+    apvts.addParameterListener (limEnabled01, this);
+    apvts.addParameterListener (limLookaheadMs, this);
+    apvts.addParameterListener (limOversamplingChoice, this);
+
+    // 10 Hz polling on message thread to apply latency updates non-RT.
+    startTimerHz (10);
+}
+
+void LevelScopeAudioProcessor::unregisterLatencyParamListeners()
+{
+    using namespace levelscope::mtdm::ParamIDs;
+
+    apvts.removeParameterListener (enabled, this);
+    apvts.removeParameterListener (upwardModeChoice, this);
+    apvts.removeParameterListener (sucFftSizeChoice, this);
+
+    apvts.removeParameterListener (limEnabled01, this);
+    apvts.removeParameterListener (limLookaheadMs, this);
+    apvts.removeParameterListener (limOversamplingChoice, this);
+}
+
+void LevelScopeAudioProcessor::parameterChanged (const juce::String& parameterID, float newValue)
+{
+    juce::ignoreUnused (parameterID, newValue);
+
+    // RT-safe: just mark dirty. Do NOT call setLatencySamples() here.
+    latencyDirty.store (true, std::memory_order_release);
+}
+
+void LevelScopeAudioProcessor::timerCallback()
+{
+    if (! latencyDirty.exchange (false, std::memory_order_acq_rel))
+        return;
+
+    updateLatencyFromAPVTS_NonRT();
+
+    // Helps some hosts refresh; safe on message thread.
+    updateHostDisplay();
+}
+// [END LS-LATENCY-LISTENER-IMPL]
 
 // [BEGIN LS-LIMITER-METERING-SNAPSHOT-IMPL]
 LevelScopeAudioProcessor::LimiterMeteringSnapshot LevelScopeAudioProcessor::getLimiterMeteringSnapshot() const noexcept

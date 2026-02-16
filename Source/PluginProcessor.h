@@ -25,7 +25,11 @@
 namespace levelscope { class MultiThresholdDynamicsModule; }
 // [END LS-UI-METERING-FWDDECL]
 
-class LevelScopeAudioProcessor : public juce::AudioProcessor
+// [BEGIN LS-LATENCY-LISTENER-CLASS]
+class LevelScopeAudioProcessor  : public juce::AudioProcessor,
+                                  private juce::AudioProcessorValueTreeState::Listener,
+                                  private juce::Timer
+// [END LS-LATENCY-LISTENER-CLASS]
 {
 public:
     static constexpr double loudnessFrameRate       = 60.0;  // 60 Hz
@@ -220,6 +224,17 @@ private:
     // [BEGIN LS-LATENCY-HELPER-DECL]
         void updateLatencyFromAPVTS_NonRT();
     // [END LS-LATENCY-HELPER-DECL]
+
+    // [BEGIN LS-LATENCY-LISTENER-DECL]
+    void parameterChanged (const juce::String& parameterID, float newValue) override;
+
+    void timerCallback() override;
+
+    std::atomic<bool> latencyDirty { false };
+
+    void registerLatencyParamListeners();
+    void unregisterLatencyParamListeners();
+    // [END LS-LATENCY-LISTENER-DECL]
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LevelScopeAudioProcessor)
