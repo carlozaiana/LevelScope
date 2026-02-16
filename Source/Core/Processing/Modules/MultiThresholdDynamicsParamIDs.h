@@ -167,7 +167,7 @@ namespace levelscope::mtdm
     // [END MTDM-LFE-MASK-PARAMS]
 
     // [BEGIN MTDM-ZONE-SOLO-MUTE-PARAMS]
-    namespace levelscope::mtdm::ParamIDs
+    namespace ParamIDs
     {
         static constexpr const char* zoneSoloChoice      = "mtdm.zone.solo";
         static constexpr const char* zoneUpwardMute01    = "mtdm.zone.upward.mute";
@@ -175,7 +175,7 @@ namespace levelscope::mtdm
         static constexpr const char* zoneLimiterMute01   = "mtdm.zone.limiter.mute";
     }
 
-    namespace levelscope::mtdm::Defaults
+    namespace Defaults
     {
         static constexpr int   zoneSoloChoice         = 0;   // 0=None, 1=Upward, 2=Downward, 3=Limiter
         static constexpr float zoneUpwardMute01       = 0.0f;
