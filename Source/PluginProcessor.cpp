@@ -523,6 +523,7 @@ void LevelScopeAudioProcessor::updateLatencyFromAPVTS_NonRT()
 {
     const int totalLatency = computeTotalLatencySamplesFromCachedParams();
     setLatencySamples (totalLatency);
+    updateHostDisplay();
 }
 // [END LS-LATENCY-HELPER-IMPL]
 
