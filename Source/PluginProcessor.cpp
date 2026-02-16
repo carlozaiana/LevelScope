@@ -262,6 +262,29 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
     // [END MTDM-APVTS-PARAM-LAYOUT-LIMITER-TP-ATTACK-DRIVE]
     // [END MTDM-APVTS-PARAM-LAYOUT-LIMITER]
 
+    // [BEGIN MTDM-APVTS-PARAM-LAYOUT-ZONE-SOLO-MUTE]
+    layout.add (std::make_unique<juce::AudioParameterChoice> (
+        juce::ParameterID { ParamIDs::zoneSoloChoice, 1 },
+        "Zone Solo",
+        juce::StringArray { "None", "Upward", "Downward", "Limiter" },
+        Defaults::zoneSoloChoice));
+
+    layout.add (std::make_unique<juce::AudioParameterBool> (
+        juce::ParameterID { ParamIDs::zoneUpwardMute01, 1 },
+        "Upward Mute",
+        (Defaults::zoneUpwardMute01 >= 0.5f)));
+
+    layout.add (std::make_unique<juce::AudioParameterBool> (
+        juce::ParameterID { ParamIDs::zoneDownwardMute01, 1 },
+        "Downward Mute",
+        (Defaults::zoneDownwardMute01 >= 0.5f)));
+
+    layout.add (std::make_unique<juce::AudioParameterBool> (
+        juce::ParameterID { ParamIDs::zoneLimiterMute01, 1 },
+        "Limiter Mute",
+        (Defaults::zoneLimiterMute01 >= 0.5f)));
+    // [END MTDM-APVTS-PARAM-LAYOUT-ZONE-SOLO-MUTE]
+
     return layout;
 }
 // [END MTDM-APVTS-PARAM-LAYOUT]
@@ -398,7 +421,11 @@ void LevelScopeAudioProcessor::rebuildModuleGraphFromState (const juce::MemoryBl
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limReleaseMs),
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limAttackMs),
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limDriveDb),
-                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limOversamplingChoice));
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limOversamplingChoice),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneSoloChoice),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneUpwardMute01),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneDownwardMute01),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneLimiterMute01));
 
             // [BEGIN LS-MTDM-UI-HANDLE-STORE]
             std::atomic_store_explicit (&mtdmForUI, mtdm, std::memory_order_release);
