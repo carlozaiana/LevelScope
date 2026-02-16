@@ -292,6 +292,10 @@ LevelScopeAudioProcessor::LevelScopeAudioProcessor()
     rebuildModuleGraphFromState (nullptr);
     // [END LS-PROCESSORCORE-CONSTRUCTOR-GRAPH-WITH-MTDM]
 
+    // [BEGIN LS-LATENCY-CACHE-PARAMS-CTOR]
+    cacheLatencyParamPointers();
+    // [END LS-LATENCY-CACHE-PARAMS-CTOR]
+
     // [BEGIN LS-LATENCY-LISTENER-CTOR-START]
     registerLatencyParamListeners();
     // [END LS-LATENCY-LISTENER-CTOR-START]
@@ -427,77 +431,98 @@ void LevelScopeAudioProcessor::rebuildModuleGraphFromState (const juce::MemoryBl
 }
 // [END LS-C2-MODGRAPH-IMPL]
 
-// [BEGIN LS-LATENCY-HELPER-IMPL]
-void LevelScopeAudioProcessor::updateLatencyFromAPVTS_NonRT()
+// [BEGIN LS-LATENCY-CACHED-PARAMS-IMPL]
+void LevelScopeAudioProcessor::cacheLatencyParamPointers()
 {
-    int totalLatency = 0;
+    using namespace levelscope::mtdm::ParamIDs;
 
-    const auto* enabled01 = apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::enabled);
-    const bool mtdmEnabled = (enabled01 != nullptr && enabled01->load (std::memory_order_relaxed) >= 0.5f);
+    pLatMtdmEnabled01         = apvts.getRawParameterValue (enabled);
+    pLatUpwardModeChoice      = apvts.getRawParameterValue (upwardModeChoice);
+    pLatSucFftSizeChoice      = apvts.getRawParameterValue (sucFftSizeChoice);
+
+    pLatLimEnabled01          = apvts.getRawParameterValue (limEnabled01);
+    pLatLimLookaheadMs        = apvts.getRawParameterValue (limLookaheadMs);
+    pLatLimOversamplingChoice = apvts.getRawParameterValue (limOversamplingChoice);
+}
+
+int LevelScopeAudioProcessor::computeTotalLatencySamplesFromCachedParams() const noexcept
+{
+    const bool mtdmEnabled =
+        (pLatMtdmEnabled01 != nullptr && pLatMtdmEnabled01->load (std::memory_order_relaxed) >= 0.5f);
 
     if (! mtdmEnabled)
-    {
-        setLatencySamples (0);
-        return;
-    }
+        return 0;
 
     // --- Upward latency
     int upwardLatency = 0;
 
-    const auto* upwardModeP = apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::upwardModeChoice);
-    const int upwardMode = (int) std::lround (upwardModeP != nullptr
-                                              ? upwardModeP->load (std::memory_order_relaxed)
-                                              : (float) levelscope::mtdm::Defaults::upwardModeChoice);
+    const int upwardMode =
+        (pLatUpwardModeChoice != nullptr ? (int) std::lround (pLatUpwardModeChoice->load (std::memory_order_relaxed))
+                                         : levelscope::mtdm::Defaults::upwardModeChoice);
 
     if (upwardMode == 0) // Spectral
     {
-        const auto* choiceP = apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::sucFftSizeChoice);
-        const int choice = (int) std::lround (choiceP != nullptr ? choiceP->load (std::memory_order_relaxed)
-                                                                 : (float) levelscope::mtdm::Defaults::sucFftSizeChoice);
+        const int choice =
+            (pLatSucFftSizeChoice != nullptr ? (int) std::lround (pLatSucFftSizeChoice->load (std::memory_order_relaxed))
+                                             : levelscope::mtdm::Defaults::sucFftSizeChoice);
 
         const int fftSizes[] = { 1024, 2048, 4096, 8192 };
         upwardLatency = fftSizes[juce::jlimit (0, 3, choice)];
     }
 
-    // [BEGIN LS-LATENCY-LIMITER-INCLUDES-FIR]
+    // --- Limiter latency (lookahead + FIR detector latency)
     int limiterLatency = 0;
 
-    const auto* limEnabledP = apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limEnabled01);
-    const bool limEnabled = (limEnabledP != nullptr && limEnabledP->load (std::memory_order_relaxed) >= 0.5f);
+    const bool limEnabled =
+        (pLatLimEnabled01 != nullptr && pLatLimEnabled01->load (std::memory_order_relaxed) >= 0.5f);
 
     if (limEnabled)
     {
-        const auto* lookMsP = apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limLookaheadMs);
-        const float lookMs = (lookMsP != nullptr ? lookMsP->load (std::memory_order_relaxed)
-                                                 : levelscope::mtdm::Defaults::limLookaheadMs);
+        const float lookMs =
+            (pLatLimLookaheadMs != nullptr ? pLatLimLookaheadMs->load (std::memory_order_relaxed)
+                                           : levelscope::mtdm::Defaults::limLookaheadMs);
 
         const double sr = (currentSampleRate > 0.0 ? currentSampleRate : 48000.0);
         const double ms = juce::jlimit (0.0, 50.0, (double) lookMs);
-
         const int lookSamples = (int) std::lround (sr * ms * 0.001);
 
-        // FIR oversampling detector delay (base-rate samples)
         int detDelay = 0;
-        const auto* osP = apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limOversamplingChoice);
-        const int osChoice = (int) std::lround (osP != nullptr ? osP->load (std::memory_order_relaxed)
-                                                               : (float) levelscope::mtdm::Defaults::limOversamplingChoice);
+        const int osChoice =
+            (pLatLimOversamplingChoice != nullptr ? (int) std::lround (pLatLimOversamplingChoice->load (std::memory_order_relaxed))
+                                                  : levelscope::mtdm::Defaults::limOversamplingChoice);
 
         const int clamped = juce::jlimit (0, 2, osChoice);
         if (clamped > 0)
         {
-            const int stages = (clamped == 1 ? 1 : 2); // 2x=1 stage, 4x=2 stages
+            const int stages = (clamped == 1 ? 1 : 2);
+            // Using initProcessing(maxBlockSize) gives correct latency for the configured filter.
             juce::dsp::Oversampling<float> os (1, stages,
                 juce::dsp::Oversampling<float>::filterHalfBandFIREquiripple, true);
-            // [BEGIN LS-LATENCY-OS-INITPROCESSING-BLOCKSIZE-FIX]
+
             const int bs = juce::jmax (1, lastMaxBlockSizeForSpec);
             os.initProcessing ((size_t) bs);
-            // [END LS-LATENCY-OS-INITPROCESSING-BLOCKSIZE-FIX]
             detDelay = os.getLatencyInSamples();
         }
 
         limiterLatency = lookSamples + detDelay;
     }
-    // [END LS-LATENCY-LIMITER-INCLUDES-FIR]
+
+    return upwardLatency + limiterLatency;
+}
+
+int LevelScopeAudioProcessor::getLatencySamples() const
+{
+    // Host may query this at times when setLatencySamples() updates aren’t applied yet.
+    // This must be lock-free and allocation-free.
+    return computeTotalLatencySamplesFromCachedParams();
+}
+// [END LS-LATENCY-CACHED-PARAMS-IMPL]
+
+// [BEGIN LS-LATENCY-HELPER-IMPL]
+void LevelScopeAudioProcessor::updateLatencyFromAPVTS_NonRT()
+{
+    const int totalLatency = computeTotalLatencySamplesFromCachedParams();
+    setLatencySamples (totalLatency);
 }
 // [END LS-LATENCY-HELPER-IMPL]
 

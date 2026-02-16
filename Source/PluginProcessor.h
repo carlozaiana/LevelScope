@@ -61,6 +61,10 @@ public:
     bool isMidiEffect() const override                             { return false; }
     double getTailLengthSeconds() const override                   { return 0.0; }
 
+    // [BEGIN LS-LATENCY-GETLATENCY-OVERRIDE]
+    int getLatencySamples() const override;
+    // [END LS-LATENCY-GETLATENCY-OVERRIDE]
+
     //==============================================================================
     int getNumPrograms() override                                  { return 1; }
     int getCurrentProgram() override                               { return 0; }
@@ -235,6 +239,20 @@ private:
     void registerLatencyParamListeners();
     void unregisterLatencyParamListeners();
     // [END LS-LATENCY-LISTENER-DECL]
+
+    // [BEGIN LS-LATENCY-CACHED-PARAMS]
+    // Cached raw parameter pointers for latency computation (no APVTS lookup in getLatencySamples()).
+    std::atomic<float>* pLatMtdmEnabled01          = nullptr;
+    std::atomic<float>* pLatUpwardModeChoice       = nullptr;
+    std::atomic<float>* pLatSucFftSizeChoice       = nullptr;
+
+    std::atomic<float>* pLatLimEnabled01           = nullptr;
+    std::atomic<float>* pLatLimLookaheadMs         = nullptr;
+    std::atomic<float>* pLatLimOversamplingChoice  = nullptr;
+
+    int computeTotalLatencySamplesFromCachedParams() const noexcept;
+    void cacheLatencyParamPointers();
+// [END LS-LATENCY-CACHED-PARAMS]
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LevelScopeAudioProcessor)
