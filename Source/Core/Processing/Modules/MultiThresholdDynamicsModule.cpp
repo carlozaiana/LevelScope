@@ -101,6 +101,10 @@ namespace levelscope
         p.lfeInApply    = rp.lfeInApply;
         // [END MTDM-SUC-SET-LFE-MASK]
 
+        // [BEGIN MTDM-SUC-PASS-AUDITION-BYPASS]
+        p.auditionBypass = rp.auditionBypass;
+        // [END MTDM-SUC-PASS-AUDITION-BYPASS]
+
         suc.setParametersAudioThread (p);
         suc.process (audio);
     }
@@ -228,6 +232,10 @@ namespace levelscope
         p.driveDb      = rp.driveDb;
         p.oversamplingChoice = rp.oversamplingChoice;
         // [END MTDM-LIMITER-WRAPPER-TP]
+
+        // [BEGIN MTDM-LIMITER-PASS-AUDITION-BYPASS]
+        p.auditionBypass = rp.auditionBypass;
+        // [END MTDM-LIMITER-PASS-AUDITION-BYPASS]
 
         lim.setParametersAudioThread (p);
         lim.process (audio);
@@ -448,8 +456,19 @@ namespace levelscope
             // [END MTDM-ZONE-SOLO-MUTE-LOGIC]
 
             // [BEGIN MTDM-RUN-UPWARD]
+            // If Upward mode is Spectral, always call it to preserve STFT delay.
+            // If muted/unsoloed, we run it in auditionBypass mode (unity gains).
+            if (lastUpwardModeChoice == 0) // Spectral
+            {
+                up.auditionBypass = ! runUp;
+                activeUpward->process (ctx.audio, up);
+            }
+            else
+            {
+                // Broadband upward has no latency; safe to skip.
                 if (runUp)
                     activeUpward->process (ctx.audio, up);
+            }
             // [END MTDM-RUN-UPWARD]
 
             // [BEGIN MTDM-PROCESS-DOWNWARD]
@@ -574,9 +593,12 @@ namespace levelscope
                                                         : (float) levelscope::mtdm::Defaults::limOversamplingChoice);
             // [END MTDM-PROCESS-LIMITER-TP]
 
-            // [BEGIN MTDM-RUN-LIMITER]
-            if (runLim)
+                // [BEGIN MTDM-RUN-LIMITER]
+            if (lim.enabled)
+            {
+                lim.auditionBypass = ! runLim;
                 limiterStage.process (ctx.audio, lim);
+            }
             // [END MTDM-RUN-LIMITER]
             // [END MTDM-PROCESS-LIMITER]
 

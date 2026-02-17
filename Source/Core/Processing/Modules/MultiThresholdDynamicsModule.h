@@ -158,6 +158,10 @@ namespace levelscope
             bool lfeInDetector = false;
             bool lfeInApply    = false;
             // [END MTDM-UPWARD-RP-LFE-MASK]
+
+            // [BEGIN MTDM-UPWARD-AUDITION-BYPASS]
+            bool auditionBypass = false; // delay-preserving unity mode (Spectral only)
+            // [END MTDM-UPWARD-AUDITION-BYPASS]
         };
 
         struct IUpwardProcessor
@@ -249,6 +253,9 @@ namespace levelscope
             float driveDb  = levelscope::mtdm::Defaults::limDriveDb;
             int   oversamplingChoice = levelscope::mtdm::Defaults::limOversamplingChoice;
             // [END MTDM-LIM-RUNTIME-TP]
+            // [BEGIN MTDM-LIMITER-AUDITION-BYPASS]
+            bool auditionBypass = false; // delay-preserving unity mode
+            // [END MTDM-LIMITER-AUDITION-BYPASS]
         };
 
         struct ILimiter
