@@ -485,6 +485,13 @@ namespace levelscope
             if (down.t3Lufs < down.t2Lufs)
                 std::swap (down.t2Lufs, down.t3Lufs);
 
+            // [BEGIN MTDM-T1T2-UNTOUCHED-CLAMP]
+            // Enforce T1–T2 untouched semantics: do not allow downward engagement below T1.
+            // (UI will constrain too; this is a safety clamp.)
+            down.t2Lufs = juce::jmax (down.t2Lufs, up.t1Lufs);
+            down.t3Lufs = juce::jmax (down.t3Lufs, down.t2Lufs);
+            // [END MTDM-T1T2-UNTOUCHED-CLAMP]
+
             down.ratio = (pDownRatio != nullptr ? pDownRatio->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::downRatio);
             down.kneeDb = (pDownKneeDb != nullptr ? pDownKneeDb->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::downKneeDb);
             down.attackMs = (pDownAttackMs != nullptr ? pDownAttackMs->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::downAttackMs);
