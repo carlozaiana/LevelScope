@@ -397,19 +397,44 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
     const double broadbandDb = -0.691 + 10.0 * std::log10 (meanSq + 1.0e-12);
 
     // [BEGIN LS-SUC-GLOBAL-ZONE-AMOUNT]
-    // Option A global zone scaler:
-    // - Fade IN around T0 (below T0 => less processing)
-    // - Fade OUT around T1 (above T1 => less processing)
-    // Uses the same knee widths as the per-band zone for now (simple + parameter-light).
+    // Option A global zone scaler with ONE-SIDED knees:
+    // - Fade IN from (T0 - lowKnee) up to T0
+    // - Fade OUT from (T1 - highKnee) down to 0 at/above T1
+    // This guarantees "untouched" above T1 (no bleed into T1–T2).
+    auto kneeUpToThreshold01 = [] (float levelDb, float threshold, float kneeWidthDb) noexcept
+    {
+        kneeWidthDb = juce::jmax (1.0e-4f, kneeWidthDb);
+
+        const float start = threshold - kneeWidthDb;
+
+        if (levelDb <= start)     return 0.0f;
+        if (levelDb >= threshold) return 1.0f;
+
+        const float t = (levelDb - start) / kneeWidthDb; // 0..1
+        return t * t * (3.0f - 2.0f * t);                // smoothstep
+    };
+
+    {
+        const float L = (float) broadbandDb;
+
+        const float inAroundT0  = kneeUpToThreshold01 (L, params.t0Lufs, params.lowKneeDb);
+        const float outAroundT1 = 1.0f - kneeUpToThreshold01 (L, params.t1Lufs, params.highKneeDb);
+
+        const float zoneTarget01 = juce::jlimit (0.0f, 1.0f, inAroundT0 * outAroundT1);
+
+        // If we're at/above T1, hard-zero and reset to avoid lingering processing into T1–T2.
+        if (L >= params.t1Lufs)
         {
-            const float L = (float) broadbandDb;
+            smoothedGlobalZoneAmount01 = 0.0f;
 
-            const float inAroundT0  = softKnee01 (L, params.t0Lufs, params.lowKneeDb);          // 0..1
-            const float outAroundT1 = 1.0f - softKnee01 (L, params.t1Lufs, params.highKneeDb); // 1..0
-
-            const float zoneTarget01 = juce::jlimit (0.0f, 1.0f, inAroundT0 * outAroundT1);
+            for (int bi = 0; bi < numBands; ++bi)
+                bandSmoothers[(size_t) bi].reset();
+        }
+        else
+        {
             smoothedGlobalZoneAmount01 = globalZoneSmoother.process (zoneTarget01);
         }
+    }
     // [END LS-SUC-GLOBAL-ZONE-AMOUNT]
 
     // [BEGIN LS-SUC-FORWARD-NONNEGATIVE]
