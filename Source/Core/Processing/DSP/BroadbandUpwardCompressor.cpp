@@ -144,10 +144,31 @@ void BroadbandUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexc
         // Loudness proxy in LUFS-ish units (same constant as your other LUFS conversion)
         const float L = (float) (-0.691 + 10.0 * std::log10 ((double) envMS + 1.0e-12));
 
-        // Option A zone window: fade in around T0, fade out around T1
-        const float inAroundT0  = softKnee01 (L, t0, params.lowKneeDb);
-        const float outAroundT1 = 1.0f - softKnee01 (L, t1, params.highKneeDb);
+        // [BEGIN LS-BUC-T1T2-UNTOUCHED-ZONE]
+        // Option A zone window with ONE-SIDED knees:
+        // Fade OUT reaches 0 at/above T1 (no bleed into T1–T2).
+        auto kneeUpToThreshold01 = [] (float levelDb, float threshold, float kneeWidthDb) noexcept
+        {
+            kneeWidthDb = juce::jmax (1.0e-4f, kneeWidthDb);
+
+            const float start = threshold - kneeWidthDb;
+
+            if (levelDb <= start)     return 0.0f;
+            if (levelDb >= threshold) return 1.0f;
+
+            const float tt = (levelDb - start) / kneeWidthDb; // 0..1
+            return tt * tt * (3.0f - 2.0f * tt);
+        };
+
+        const float inAroundT0  = kneeUpToThreshold01 (L, t0, params.lowKneeDb);
+        const float outAroundT1 = 1.0f - kneeUpToThreshold01 (L, t1, params.highKneeDb);
+
         const float zone01 = juce::jlimit (0.0f, 1.0f, inAroundT0 * outAroundT1);
+
+        // Hard reset above T1 to prevent lingering gain smoothing into untouched zone.
+        if (L >= t1)
+            gainZ = 1.0f;
+        // [END LS-BUC-T1T2-UNTOUCHED-ZONE]
 
         // Position inside zone (0..1), used for curve shaping
         float pos = (L - t0) / range;
