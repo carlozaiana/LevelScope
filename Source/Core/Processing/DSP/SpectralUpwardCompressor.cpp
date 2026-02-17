@@ -426,6 +426,56 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
         }
     // [END LS-SUC-FORWARD-NONNEGATIVE]
 
+    // [BEGIN LS-SUC-AUDITION-BYPASS-EARLYRETURN]
+    // Audition bypass: preserve STFT delay pipeline, but do not measure/apply any gains.
+    if (params.auditionBypass)
+    {
+        // Ensure band smoothers don't carry non-unity state while bypassed.
+        for (int bi = 0; bi < numBands; ++bi)
+            bandSmoothers[(size_t) bi].reset();
+
+        // Inverse FFT + synthesis (same as normal path)
+        for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
+        {
+            auto& st = ch[(size_t) chIdx];
+
+            pr.fft->performRealOnlyInverseTransform (st.fftBuf.data());
+
+            for (int i = 0; i < fftSize; ++i)
+            {
+                const float x = st.fftBuf[(size_t) i];
+                const float y = (x * pr.window[(size_t) i]);
+                st.ola[(size_t) i] += y;
+            }
+
+            for (int i = 0; i < hopSize; ++i)
+                pushFifo (st, st.ola[(size_t) i] / pr.hopNorm[(size_t) i]);
+
+            const int keep2 = fftSize - hopSize;
+            std::memmove (st.ola.data(),
+                          st.ola.data() + hopSize,
+                          (size_t) keep2 * sizeof (float));
+            std::fill (st.ola.begin() + keep2, st.ola.begin() + fftSize, 0.0f);
+        }
+
+        // Shift input buffers left by hop (common framing)
+        const int keep = fftSize - hopSize;
+        for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
+        {
+            auto& st = ch[(size_t) chIdx];
+
+            std::memmove (st.input.data(),
+                          st.input.data() + hopSize,
+                          (size_t) keep * sizeof (float));
+
+            std::fill (st.input.begin() + keep, st.input.begin() + fftSize, 0.0f);
+        }
+
+        inputWritePos = keep;
+        return;
+    }
+    // [END LS-SUC-AUDITION-BYPASS-EARLYRETURN]
+
     // 3) Spectral proxy level for adaptive offset
     // Sum power across bins 1..N/2-1 across linked channels
     double pAll = 0.0;

@@ -37,6 +37,9 @@ public:
         int   oversamplingChoice = 0; // 0=Off, 1=2x, 2=4x (detector only)
         // [END LS-LIM-PARAMS-TP]
         float releaseMs = 100.0f;    // release smoothing
+        // [BEGIN LS-LIM-AUDITION-BYPASS-PARAM]
+        bool auditionBypass = false; // if true: preserve delay pipeline, but force unity gain and no drive
+        // [END LS-LIM-AUDITION-BYPASS-PARAM]
     };
 
     void prepare (double sampleRate,

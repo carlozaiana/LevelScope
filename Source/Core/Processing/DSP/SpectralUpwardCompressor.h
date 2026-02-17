@@ -76,6 +76,10 @@ public:
         bool lfeInDetector = false;
         bool lfeInApply    = false;
         // [END LS-SUC-LFE-MASK-PARAMS]
+
+        // [BEGIN LS-SUC-AUDITION-BYPASS-PARAM]
+        bool auditionBypass = false; // if true: preserve STFT delay but apply no spectral gain changes
+        // [END LS-SUC-AUDITION-BYPASS-PARAM]
     };
 
     SpectralUpwardCompressor() = default;

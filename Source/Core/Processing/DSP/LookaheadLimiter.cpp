@@ -233,6 +233,47 @@ void LookaheadLimiter::process (juce::AudioBuffer<float>& buffer) noexcept
     // Effective limiter latency = lookahead + detector FIR delay
     const int effectiveDelay = lookaheadSamples + detectorDelaySamples;
 
+    // [BEGIN LS-LIM-AUDITION-BYPASS]
+    if (params.auditionBypass)
+    {
+        // Delay-preserving bypass: no drive, no gain reduction, but maintain the same delay line timing.
+        // If there's no effective delay, it's a plain passthrough.
+        if (effectiveDelay <= 0)
+        {
+            // Metering coherence
+            lastBlockMinGain = 1.0f;
+            lastBlockLastGain = 1.0f;
+            return;
+        }
+
+        float* const* chansW = buffer.getArrayOfWritePointers();
+
+        for (int i = 0; i < numSamples; ++i)
+        {
+            // Write raw input into delay line
+            for (int ch = 0; ch < chToProcess; ++ch)
+                delay[(size_t) ch].buf[(size_t) writePos] = chansW[ch][i];
+
+            // Schedule unity gain
+            gainDelay[(size_t) writePos] = 1.0f;
+
+            const int readPos = (writePos - effectiveDelay + delayCapacity) % delayCapacity;
+            const float gOut = gainDelay[(size_t) readPos]; // unity
+
+            // Output delayed samples
+            for (int ch = 0; ch < chToProcess; ++ch)
+                chansW[ch][i] = delay[(size_t) ch].buf[(size_t) readPos] * gOut;
+
+            gainDelay[(size_t) readPos] = 1.0f;
+            writePos = (writePos + 1) % delayCapacity;
+        }
+
+        lastBlockMinGain = 1.0f;
+        lastBlockLastGain = 1.0f;
+        return;
+    }
+    // [END LS-LIM-AUDITION-BYPASS]
+
     const float ceilingLin = dbToLin (juce::jmin (0.0f, params.ceilingDb));
 
     // If lookahead is zero, we fall back to immediate limiting (still uses drive and optional sample-peak).
