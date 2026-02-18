@@ -113,7 +113,8 @@ namespace levelscope
                                  std::atomic<float>* zoneSoloChoice,
                                  std::atomic<float>* zoneUpwardMute01,
                                  std::atomic<float>* zoneDownwardMute01,
-                                 std::atomic<float>* zoneLimiterMute01) noexcept;
+                                 std::atomic<float>* zoneLimiterMute01,
+                                 std::atomic<float>* zoneUntouchedMute01) noexcept;
             // [END MTDM-BINDPARAMS-FULL-DECL]
 
             // Persistence (non-audio-thread only)
@@ -302,6 +303,18 @@ namespace levelscope
         static constexpr float limiterHoldDecayDbPerSecond = 12.0f; // pro-style decay rate
         // [END MTDM-LIMITER-METERING-MEMBERS]
 
+        // [BEGIN MTDM-UNTOUCHED-AUDITION-DETECTOR]
+        // Audition gate detector (broadband LUFS-ish proxy) for "Untouched Solo/Mute".
+        float auditionEnvMS = 0.0f;
+        float auditionGateZ = 1.0f;
+
+        float auditionDetA = 0.99f; // per-sample one-pole coeffs (set in prepare)
+        float auditionDetR = 0.999f;
+        float auditionGateA = 0.99f; // gate smoothing (set in prepare)
+
+        bool auditionWasActive = false;
+        // [END MTDM-UNTOUCHED-AUDITION-DETECTOR]
+
         // Stored from prepare() for debugging/future DSP wiring. Not used for DSP yet.
         double preparedSampleRate = 0.0;
         int preparedMaxBlockSize = 0;
@@ -370,6 +383,9 @@ namespace levelscope
         std::atomic<float>* pZoneUpwardMute01 = nullptr;
         std::atomic<float>* pZoneDownwardMute01 = nullptr;
         std::atomic<float>* pZoneLimiterMute01 = nullptr;
+        // [BEGIN MTDM-ZONE-UNTOUCHED-MUTE-PTR]
+        std::atomic<float>* pZoneUntouchedMute01 = nullptr;
+        // [END MTDM-ZONE-UNTOUCHED-MUTE-PTR]
         // [END MTDM-ZONE-SOLO-MUTE-PTRS]
     };
     // [END MTDM-MODULE-DECL]

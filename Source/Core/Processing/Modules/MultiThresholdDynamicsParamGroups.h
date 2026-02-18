@@ -124,6 +124,20 @@ namespace levelscope::mtdm
             }
         });
 
+        // [BEGIN MTDM-PARAMGROUPS-ZONE-MUTES]
+        groups.push_back (ParamGroup {
+            "mtdm.zones",
+            "Zones (A/B)",
+            {
+                zoneSoloChoice,
+                zoneUpwardMute01,
+                zoneDownwardMute01,
+                zoneLimiterMute01,
+                zoneUntouchedMute01
+            }
+        });
+        // [END MTDM-PARAMGROUPS-ZONE-MUTES]
+
         return groups;
     }
     // [END MTDM-PARAM-GROUPS-DECL]

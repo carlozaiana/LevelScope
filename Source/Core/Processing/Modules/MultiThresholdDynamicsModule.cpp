@@ -37,6 +37,24 @@ namespace levelscope
         // [BEGIN MTDM-PREPARE-LIMITER]
             limiterStage.prepare (spec);
         // [END MTDM-PREPARE-LIMITER]
+
+        // [BEGIN MTDM-UNTOUCHED-AUDITION-PREPARE]
+        // Fixed audition detector times (can be parameterized later if needed)
+            const float sr = (float) juce::jmax (1.0, preparedSampleRate);
+
+            const float detAttackS  = 0.010f; // 10 ms
+            const float detReleaseS = 0.100f; // 100 ms
+
+            auditionDetA = std::exp (-1.0f / (detAttackS  * sr));
+            auditionDetR = std::exp (-1.0f / (detReleaseS * sr));
+
+            const float gateS = 0.005f; // 5 ms gate smoothing to avoid clicks
+            auditionGateA = std::exp (-1.0f / (gateS * sr));
+
+            auditionEnvMS = 0.0f;
+            auditionGateZ = 1.0f;
+            auditionWasActive = false;
+        // [END MTDM-UNTOUCHED-AUDITION-PREPARE]
     }
 
         // [BEGIN MTDM-RESET-UPWARD-STRATEGIES]
@@ -50,6 +68,11 @@ namespace levelscope
             // [BEGIN MTDM-RESET-LIMITER]
             limiterStage.reset();
             // [END MTDM-RESET-LIMITER]
+            // [BEGIN MTDM-UNTOUCHED-AUDITION-RESET]
+            auditionEnvMS = 0.0f;
+            auditionGateZ = 1.0f;
+            auditionWasActive = false;
+            // [END MTDM-UNTOUCHED-AUDITION-RESET]
         }
         // [END MTDM-RESET-UPWARD-STRATEGIES]
 
@@ -295,7 +318,8 @@ namespace levelscope
                                                       std::atomic<float>* zoneSoloChoice,
                                                       std::atomic<float>* zoneUpwardMute01,
                                                       std::atomic<float>* zoneDownwardMute01,
-                                                      std::atomic<float>* zoneLimiterMute01) noexcept
+                                                      std::atomic<float>* zoneLimiterMute01,
+                                                      std::atomic<float>* zoneUntouchedMute01) noexcept
     {
         pEnabled01   = enabled01;
         pThresholdDb = thresholdDb;
@@ -346,6 +370,7 @@ namespace levelscope
         pZoneUpwardMute01      = zoneUpwardMute01;
         pZoneDownwardMute01    = zoneDownwardMute01;
        pZoneLimiterMute01     = zoneLimiterMute01;
+       pZoneUntouchedMute01 = zoneUntouchedMute01;
     }
     // [END MTDM-BINDPARAMS-FULL-IMPL]
 
@@ -453,6 +478,21 @@ namespace levelscope
             const bool runUp   = (! muteUp)   && (solo == 0 || solo == 1);
             const bool runDown = (! muteDown) && (solo == 0 || solo == 2);
             const bool runLim  = (! muteLim)  && (solo == 0 || solo == 3);
+            // [BEGIN MTDM-UNTOUCHED-AUDITION-FLAGS]
+            const bool soloUntouched = (solo == 4);
+
+            const bool muteUntouched = (pZoneUntouchedMute01 != nullptr
+                                          ? (pZoneUntouchedMute01->load (std::memory_order_relaxed) >= 0.5f)
+                                          : (levelscope::mtdm::Defaults::zoneUntouchedMute01 >= 0.5f));
+
+            // Gate mode precedence:
+            // - Solo Untouched overrides everything.
+            // - Untouched Mute only applies when not soloing a stage (solo==0).
+            const bool gateSoloUntouched = soloUntouched;
+            const bool gateMuteUntouched = (! soloUntouched) && (solo == 0) && muteUntouched;
+
+            const bool auditionGateActive = gateSoloUntouched || gateMuteUntouched;
+            // [END MTDM-UNTOUCHED-AUDITION-FLAGS]
             // [END MTDM-ZONE-SOLO-MUTE-LOGIC]
 
             // [BEGIN MTDM-RUN-UPWARD]
@@ -654,6 +694,74 @@ namespace levelscope
 
             limiterMetering.grDbHold.store (limiterHoldDbInternal, std::memory_order_relaxed);
             // [END MTDM-LIMITER-METERING-UPDATE]
+            // [BEGIN MTDM-UNTOUCHED-AUDITION-APPLY]
+            // Audition gate: either "solo untouched zone" or "mute untouched zone".
+            // Untouched zone is defined as T1 <= L < T2 (broadband LUFS-ish proxy).
+            if (auditionGateActive)
+            {
+                // Reset detector smoothly when gate mode toggles to avoid popping.
+                if (! auditionWasActive)
+                {
+                    auditionEnvMS = 0.0f;
+                    auditionGateZ = 0.0f;
+                }
+                auditionWasActive = true;
+
+                const float t1 = up.t1Lufs;
+                float t2 = (pT2Lufs != nullptr ? pT2Lufs->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::t2Lufs);
+                if (t2 < t1) t2 = t1;
+
+                auto** chans = ctx.audio.getArrayOfWritePointers();
+                const int numCh = ctx.audio.getNumChannels();
+                const int numS  = ctx.audio.getNumSamples();
+
+                // Decide detector channel set (exclude LFE unless lfeInDetector is true)
+                const bool lfeDet = (pLfeInDetector01 != nullptr
+                                       ? (pLfeInDetector01->load (std::memory_order_relaxed) >= 0.5f)
+                                       : (levelscope::mtdm::Defaults::lfeInDetector01 >= 0.5f));
+
+                for (int i = 0; i < numS; ++i)
+                {
+                    double sumSq = 0.0;
+                    int count = 0;
+
+                    for (int ch = 0; ch < numCh; ++ch)
+                    {
+                        const bool isLfe = (preparedChannelSet.getTypeOfChannel (ch) == juce::AudioChannelSet::LFE);
+
+                        if (! lfeDet && isLfe)
+                            continue;
+
+                        const float x = chans[ch][i];
+                        sumSq += (double) x * (double) x;
+                        ++count;
+                    }
+
+                    const float e = (float) (sumSq / (double) juce::jmax (1, count));
+
+                    const float a = (e > auditionEnvMS ? auditionDetA : auditionDetR);
+                    auditionEnvMS = a * auditionEnvMS + (1.0f - a) * e;
+
+                    const float L = (float) (-0.691 + 10.0 * std::log10 ((double) auditionEnvMS + 1.0e-12));
+
+                    const bool inUntouched = (L >= t1 && L < t2);
+
+                    const float targetGate =
+                        gateSoloUntouched ? (inUntouched ? 1.0f : 0.0f)
+                                          : (inUntouched ? 0.0f : 1.0f);
+
+                    // Smooth the gate to avoid clicks
+                    auditionGateZ = auditionGateA * auditionGateZ + (1.0f - auditionGateA) * targetGate;
+
+                    for (int ch = 0; ch < numCh; ++ch)
+                        chans[ch][i] *= auditionGateZ;
+                }
+            }
+            else
+            {
+                auditionWasActive = false;
+            }
+            // [END MTDM-UNTOUCHED-AUDITION-APPLY]
 
             juce::ignoreUnused (pThresholdDb, pRatio);
             // [END MTDM-PROCESS-UPWARD-MODE-SWITCH]

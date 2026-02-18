@@ -182,6 +182,18 @@ namespace levelscope::mtdm
         static constexpr float zoneDownwardMute01     = 0.0f;
         static constexpr float zoneLimiterMute01      = 0.0f;
     }
+
+    // [BEGIN MTDM-ZONE-UNTOUCHED-AUDITION-PARAM]
+    namespace ParamIDs
+    {
+        static constexpr const char* zoneUntouchedMute01 = "mtdm.zone.untouched.mute";
+    }
+
+    namespace Defaults
+    {
+        static constexpr float zoneUntouchedMute01 = 0.0f;
+    }
+    // [END MTDM-ZONE-UNTOUCHED-AUDITION-PARAM]
     // [END MTDM-ZONE-SOLO-MUTE-PARAMS]
 
     // [BEGIN MTDM-DOWNWARD-PARAMS]
