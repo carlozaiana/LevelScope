@@ -266,7 +266,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
     layout.add (std::make_unique<juce::AudioParameterChoice> (
         juce::ParameterID { ParamIDs::zoneSoloChoice, 1 },
         "Zone Solo",
-        juce::StringArray { "None", "Upward", "Downward", "Limiter" },
+        juce::StringArray { "None", "Upward", "Downward", "Limiter", "Untouched" },
         Defaults::zoneSoloChoice));
 
     layout.add (std::make_unique<juce::AudioParameterBool> (
@@ -283,6 +283,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
         juce::ParameterID { ParamIDs::zoneLimiterMute01, 1 },
         "Limiter Mute",
         (Defaults::zoneLimiterMute01 >= 0.5f)));
+
+    layout.add (std::make_unique<juce::AudioParameterBool> (
+        juce::ParameterID { ParamIDs::zoneUntouchedMute01, 1 },
+        "Untouched Mute (audition)",
+        (Defaults::zoneUntouchedMute01 >= 0.5f)));
     // [END MTDM-APVTS-PARAM-LAYOUT-ZONE-SOLO-MUTE]
 
     return layout;
@@ -425,7 +430,8 @@ void LevelScopeAudioProcessor::rebuildModuleGraphFromState (const juce::MemoryBl
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneSoloChoice),
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneUpwardMute01),
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneDownwardMute01),
-                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneLimiterMute01));
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneLimiterMute01),
+                                  , apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneUntouchedMute01));
 
             // [BEGIN LS-MTDM-UI-HANDLE-STORE]
             std::atomic_store_explicit (&mtdmForUI, mtdm, std::memory_order_release);
