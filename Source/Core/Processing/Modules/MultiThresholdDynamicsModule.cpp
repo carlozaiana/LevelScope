@@ -711,7 +711,9 @@ namespace levelscope
                 float t2 = (pT2Lufs != nullptr ? pT2Lufs->load (std::memory_order_relaxed) : levelscope::mtdm::Defaults::t2Lufs);
                 if (t2 < t1) t2 = t1;
 
-                auto** chans = ctx.audio.getArrayOfWritePointers();
+                // [BEGIN MTDM-UNTOUCHED-AUDITION-CHANPTR-FIX]
+                float* const* chans = ctx.audio.getArrayOfWritePointers();
+                // [END MTDM-UNTOUCHED-AUDITION-CHANPTR-FIX]
                 const int numCh = ctx.audio.getNumChannels();
                 const int numS  = ctx.audio.getNumSamples();
 
