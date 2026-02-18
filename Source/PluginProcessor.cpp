@@ -431,7 +431,7 @@ void LevelScopeAudioProcessor::rebuildModuleGraphFromState (const juce::MemoryBl
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneUpwardMute01),
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneDownwardMute01),
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneLimiterMute01),
-                                  , apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneUntouchedMute01));
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneUntouchedMute01));
 
             // [BEGIN LS-MTDM-UI-HANDLE-STORE]
             std::atomic_store_explicit (&mtdmForUI, mtdm, std::memory_order_release);
