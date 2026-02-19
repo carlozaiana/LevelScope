@@ -302,6 +302,30 @@ namespace levelscope::mtdm
     }
     // [END MTDM-LIMITER-PARAMS-TP-ATTACK-DRIVE]
     // [END MTDM-LIMITER-PARAMS]
+
+    // [BEGIN MTDM-MC-POLICY-PARAMS]
+    namespace ParamIDs
+    {
+        // Multichannel policy:
+        // 0 = Linked (default)
+        // 1 = Dialog-mask (detector from C or LCR; apply to C or LCR)
+        // 2 = Unlinked (per-channel detectors)
+        static constexpr const char* mcPolicyChoice = "mtdm.mcPolicyChoice";
+
+        // Dialog-mask controls
+        // 0 = C, 1 = LCR
+        static constexpr const char* dialogDetectorChoice = "mtdm.dialogDetectorChoice";
+        static constexpr const char* dialogApplyChoice    = "mtdm.dialogApplyChoice";
+    }
+
+    namespace Defaults
+    {
+        static constexpr int mcPolicyChoice        = 0; // Linked
+        static constexpr int dialogDetectorChoice  = 0; // C
+        static constexpr int dialogApplyChoice     = 0; // C
+    }
+    // [END MTDM-MC-POLICY-PARAMS]
+    
     // [END MTDM-PARAM-IDS-STAGE-D1A-ADD]
     // [END MTDM-PARAM-IDS]
 } // namespace levelscope::mtdm

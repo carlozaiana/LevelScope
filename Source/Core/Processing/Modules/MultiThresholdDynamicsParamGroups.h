@@ -37,14 +37,20 @@ namespace levelscope::mtdm
         groups.reserve (8);
 
         // Master / Mode selection
+        // [BEGIN MTDM-PARAMGROUPS-ADVANCED-ROUTING-ADD-MC]
         groups.push_back (ParamGroup {
-            "mtdm.master",
-            "MTDM: Master",
+            "mtdm.routing.advanced",
+            "Advanced Routing",
             {
-                enabled,
-                upwardModeChoice
+                mcPolicyChoice,
+                dialogDetectorChoice,
+                dialogApplyChoice,
+
+                lfeInDetector,
+                lfeInApply
             }
         });
+        // [END MTDM-PARAMGROUPS-ADVANCED-ROUTING-ADD-MC]
 
         // Upward common controls (shared by Spectral + Broadband modes)
         groups.push_back (ParamGroup {

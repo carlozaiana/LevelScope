@@ -1,6 +1,9 @@
 #pragma once
 
 #include "../IAudioModule.h"
+// [BEGIN MTDM-INCLUDE-CSTDINT]
+#include <cstdint>
+// [END MTDM-INCLUDE-CSTDINT]
 // [BEGIN MTDM-PARAM-HEADER-INCLUDE]
 #include "MultiThresholdDynamicsParamIDs.h"
 // [END MTDM-PARAM-HEADER-INCLUDE]
@@ -114,7 +117,12 @@ namespace levelscope
                                  std::atomic<float>* zoneUpwardMute01,
                                  std::atomic<float>* zoneDownwardMute01,
                                  std::atomic<float>* zoneLimiterMute01,
-                                 std::atomic<float>* zoneUntouchedMute01) noexcept;
+                                 std::atomic<float>* zoneUntouchedMute01,
+                                 // [BEGIN MTDM-MC-POLICY-BINDPARAMS-DECL]
+                                 std::atomic<float>* mcPolicyChoice,
+                                 std::atomic<float>* dialogDetectorChoice,
+                                 std::atomic<float>* dialogApplyChoice) noexcept;
+                                 // [END MTDM-MC-POLICY-BINDPARAMS-DECL]
             // [END MTDM-BINDPARAMS-FULL-DECL]
 
             // Persistence (non-audio-thread only)
@@ -128,6 +136,38 @@ namespace levelscope
         std::atomic<float>* pEnabled01     = nullptr; // 0/1
         std::atomic<float>* pThresholdDb   = nullptr;
         std::atomic<float>* pRatio         = nullptr;
+
+        // [BEGIN MTDM-MC-POLICY-TYPES-AND-MASK-STATE]
+        enum class MCPolicy : int
+        {
+            linked     = 0,
+            dialogMask = 1,
+            unlinked   = 2
+        };
+
+        static constexpr int kMaxPolicyChannels = 16; // enough for 7.1.4 (12ch) + headroom
+
+        // Current masks (recomputed on audio thread when dirty)
+        uint16_t detectMaskBits = 0; // bit i => channel i included in detector set
+        uint16_t applyMaskBits  = 0; // bit i => channel i included in apply set
+
+        // Cached inputs to detect changes (RT-safe; updated only on audio thread)
+        int lastPolicyChoice = -1;
+        int lastDialogDetectorChoice = -1;
+        int lastDialogApplyChoice    = -1;
+        bool lastLfeInDetector = false;
+        bool lastLfeInApply    = false;
+        int lastMaskNumChannels = -1;
+        juce::AudioChannelSet lastMaskChannelSet; // value type; safe to store/copy
+
+        // AUDIO THREAD ONLY: recompute detect/apply masks if needed (no alloc)
+        void updateChannelMasksIfNeeded (const ProcessContext& ctx,
+                                         int policyChoice,
+                                         int dialogDetectorChoice,
+                                         int dialogApplyChoice,
+                                         bool lfeInDetector,
+                                         bool lfeInApply) noexcept;
+        // [END MTDM-MC-POLICY-TYPES-AND-MASK-STATE]
 
         // [BEGIN MTDM-UPWARD-STRATEGY-TYPES]
         struct UpwardRuntimeParams
@@ -159,6 +199,13 @@ namespace levelscope
             bool lfeInDetector = false;
             bool lfeInApply    = false;
             // [END MTDM-UPWARD-RP-LFE-MASK]
+
+            // [BEGIN MTDM-UPWARD-RP-MC-MASKBITS]
+            // Stage E multichannel masks (interpreted by DSP blocks in Part 3/4)
+            uint16_t detectMaskBits = 0;
+            uint16_t applyMaskBits  = 0;
+            bool     unlinked       = false;
+            // [END MTDM-UPWARD-RP-MC-MASKBITS]
 
             // [BEGIN MTDM-UPWARD-AUDITION-BYPASS]
             bool auditionBypass = false; // delay-preserving unity mode (Spectral only)
@@ -218,6 +265,12 @@ namespace levelscope
 
             bool lfeInDetector = false;
             bool lfeInApply    = false;
+
+            // [BEGIN MTDM-DOWNWARD-RP-MC-MASKBITS]
+            uint16_t detectMaskBits = 0;
+            uint16_t applyMaskBits  = 0;
+            bool     unlinked       = false;
+            // [END MTDM-DOWNWARD-RP-MC-MASKBITS]
         };
 
         struct IDownwardProcessor
@@ -352,6 +405,12 @@ namespace levelscope
                 std::atomic<float>* pLfeInDetector01 = nullptr; // 0/1
                 std::atomic<float>* pLfeInApply01    = nullptr; // 0/1
         // [END MTDM-LFE-MASK-MEMBERS]
+
+        // [BEGIN MTDM-MC-POLICY-PARAM-PTRS]
+        std::atomic<float>* pMcPolicyChoice       = nullptr; // choice index in float form
+        std::atomic<float>* pDialogDetectorChoice = nullptr; // 0=C, 1=LCR
+        std::atomic<float>* pDialogApplyChoice    = nullptr; // 0=C, 1=LCR
+        // [END MTDM-MC-POLICY-PARAM-PTRS]
 
         // [BEGIN MTDM-DOWNWARD-PARAM-PTRS]
         std::atomic<float>* pT2Lufs = nullptr;

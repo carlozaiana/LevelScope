@@ -5,6 +5,110 @@
 
 namespace levelscope
 {
+    // [BEGIN MTDM-MC-POLICY-MASK-HELPER-IMPL]
+    void MultiThresholdDynamicsModule::updateChannelMasksIfNeeded (const ProcessContext& ctx,
+                                                                   int policyChoice,
+                                                                   int dialogDetectorChoice,
+                                                                   int dialogApplyChoice,
+                                                                   bool lfeInDetector,
+                                                                   bool lfeInApply) noexcept
+    {
+        // AUDIO THREAD ONLY. No allocations, no locks.
+
+        const int numChBuf = ctx.audio.getNumChannels();
+        const int numChSet = ctx.channelSet.size();
+        const int numCh = juce::jlimit (0, kMaxPolicyChannels, juce::jmin (numChBuf, numChSet));
+
+        const bool dirty =
+            (policyChoice != lastPolicyChoice) ||
+            (dialogDetectorChoice != lastDialogDetectorChoice) ||
+            (dialogApplyChoice    != lastDialogApplyChoice) ||
+            (lfeInDetector != lastLfeInDetector) ||
+            (lfeInApply    != lastLfeInApply) ||
+            (numCh != lastMaskNumChannels) ||
+            (ctx.channelSet != lastMaskChannelSet);
+
+        if (! dirty)
+            return;
+
+        lastPolicyChoice = policyChoice;
+        lastDialogDetectorChoice = dialogDetectorChoice;
+        lastDialogApplyChoice    = dialogApplyChoice;
+        lastLfeInDetector = lfeInDetector;
+        lastLfeInApply    = lfeInApply;
+        lastMaskNumChannels = numCh;
+        lastMaskChannelSet  = ctx.channelSet;
+
+        auto bitFor = [] (int ch) noexcept -> uint16_t
+        {
+            if (ch < 0 || ch >= kMaxPolicyChannels) return 0;
+            return (uint16_t) (1u << (unsigned) ch);
+        };
+
+        uint16_t nonLfeBits = 0;
+        uint16_t lfeBits    = 0;
+        uint16_t centreBits = 0;
+        uint16_t lcrBits    = 0;
+        uint16_t allBits    = 0;
+
+        for (int ch = 0; ch < numCh; ++ch)
+        {
+            const uint16_t b = bitFor (ch);
+            allBits |= b;
+
+            const auto t = ctx.channelSet.getTypeOfChannel (ch);
+
+            if (t == juce::AudioChannelSet::LFE)
+                lfeBits |= b;
+            else
+                nonLfeBits |= b;
+
+            if (t == juce::AudioChannelSet::centre)
+                centreBits |= b;
+
+            if (t == juce::AudioChannelSet::left
+                || t == juce::AudioChannelSet::right
+                || t == juce::AudioChannelSet::centre)
+                lcrBits |= b;
+        }
+
+        // Base masks from policy/dialog choices (LFE excluded at base layer)
+        uint16_t baseDetect = 0;
+        uint16_t baseApply  = 0;
+
+        if (policyChoice == 1) // Dialog-mask
+        {
+            baseDetect = (dialogDetectorChoice == 0 ? centreBits : lcrBits);
+            baseApply  = (dialogApplyChoice    == 0 ? centreBits : lcrBits);
+
+            // Fallbacks if layout lacks requested channels
+            if (baseDetect == 0) baseDetect = nonLfeBits;
+            if (baseApply  == 0) baseApply  = nonLfeBits;
+        }
+        else // Linked (0) or Unlinked (2): all non-LFE by default
+        {
+            baseDetect = nonLfeBits;
+            baseApply  = nonLfeBits;
+
+            if (baseDetect == 0) baseDetect = allBits;
+            if (baseApply  == 0) baseApply  = allBits;
+        }
+
+        // Apply LFE override layer (add/remove LFE bit)
+        uint16_t det = baseDetect;
+        uint16_t app = baseApply;
+
+        if (lfeInDetector) det |= lfeBits; else det = (uint16_t) (det & (uint16_t) ~lfeBits);
+        if (lfeInApply)    app |= lfeBits; else app = (uint16_t) (app & (uint16_t) ~lfeBits);
+
+        // Final safety fallback
+        if (det == 0) det = allBits;
+        if (app == 0) app = allBits;
+
+        detectMaskBits = det;
+        applyMaskBits  = app;
+    }
+    // [END MTDM-MC-POLICY-MASK-HELPER-IMPL]
     // [BEGIN MTDM-MODULE-IMPL]
     juce::String MultiThresholdDynamicsModule::getModuleID() const
     {
@@ -37,6 +141,13 @@ namespace levelscope
         // [BEGIN MTDM-PREPARE-LIMITER]
             limiterStage.prepare (spec);
         // [END MTDM-PREPARE-LIMITER]
+
+        // [BEGIN MTDM-PREPARE-CLEAR-EXTERNAL-MASKS]
+        // Ensure DSP blocks start with no external mask override (they use legacy LFE policy until MTDM sets masks).
+            spectralUpwardProcessor.suc.setChannelMasksAudioThread (0, 0, false);
+            broadbandUpwardProcessor.buc.setChannelMasksAudioThread (0, 0, false);
+            downwardProcessor.comp.setChannelMasksAudioThread (0, 0, false);
+        // [END MTDM-PREPARE-CLEAR-EXTERNAL-MASKS]
 
         // [BEGIN MTDM-UNTOUCHED-AUDITION-PREPARE]
         // Fixed audition detector times (can be parameterized later if needed)
@@ -95,6 +206,9 @@ namespace levelscope
     {
         if (! prepared)
             return;
+        // [BEGIN MTDM-SUC-PASS-STAGE-E-MASKS]
+        suc.setChannelMasksAudioThread (rp.detectMaskBits, rp.applyMaskBits, rp.unlinked);
+        // [END MTDM-SUC-PASS-STAGE-E-MASKS]
 
         levelscope::dsp::SpectralUpwardCompressor::Parameters p;
         p.t0Lufs = rp.t0Lufs;
@@ -155,6 +269,9 @@ namespace levelscope
     {
         if (! prepared)
             return;
+        // [BEGIN MTDM-BUC-PASS-STAGE-E-MASKS]
+        buc.setChannelMasksAudioThread (rp.detectMaskBits, rp.applyMaskBits, rp.unlinked);
+        // [END MTDM-BUC-PASS-STAGE-E-MASKS]
 
         levelscope::dsp::BroadbandUpwardCompressor::Parameters p;
         p.t0Lufs = rp.t0Lufs;
@@ -208,6 +325,9 @@ namespace levelscope
         {
             if (! prepared)
                 return;
+            // [BEGIN MTDM-BDC-PASS-STAGE-E-MASKS]
+            comp.setChannelMasksAudioThread (rp.detectMaskBits, rp.applyMaskBits, rp.unlinked);
+            // [END MTDM-BDC-PASS-STAGE-E-MASKS]
 
             levelscope::dsp::BroadbandDownwardCompressor::Parameters p;
             p.enabled   = rp.enabled;
@@ -220,7 +340,10 @@ namespace levelscope
             p.makeupDb  = rp.makeupDb;
 
             comp.setParametersAudioThread (p);
-            comp.setLfePolicyAudioThread (rp.lfeInDetector, rp.lfeInApply);
+            // [BEGIN MTDM-BDC-REMOVE-OLD-LFE-CALL]
+            // LFE policy is now included in detectMaskBits/applyMaskBits; no separate call needed.
+            // comp.setLfePolicyAudioThread (rp.lfeInDetector, rp.lfeInApply);
+            // [END MTDM-BDC-REMOVE-OLD-LFE-CALL]
             comp.process (audio);
         }
     // [END MTDM-DOWNWARD-STRATEGY-IMPL]
@@ -319,7 +442,12 @@ namespace levelscope
                                                       std::atomic<float>* zoneUpwardMute01,
                                                       std::atomic<float>* zoneDownwardMute01,
                                                       std::atomic<float>* zoneLimiterMute01,
-                                                      std::atomic<float>* zoneUntouchedMute01) noexcept
+                                                      std::atomic<float>* zoneUntouchedMute01,
+                                                      // [BEGIN MTDM-MC-POLICY-BINDPARAMS-IMPL]
+                                                      std::atomic<float>* mcPolicyChoice,
+                                                      std::atomic<float>* dialogDetectorChoice,
+                                                      std::atomic<float>* dialogApplyChoice) noexcept
+                                                      // [END MTDM-MC-POLICY-BINDPARAMS-IMPL]
     {
         pEnabled01   = enabled01;
         pThresholdDb = thresholdDb;
@@ -369,8 +497,13 @@ namespace levelscope
         pZoneSoloChoice        = zoneSoloChoice;
         pZoneUpwardMute01      = zoneUpwardMute01;
         pZoneDownwardMute01    = zoneDownwardMute01;
-       pZoneLimiterMute01     = zoneLimiterMute01;
-       pZoneUntouchedMute01 = zoneUntouchedMute01;
+        pZoneLimiterMute01     = zoneLimiterMute01;
+        pZoneUntouchedMute01 = zoneUntouchedMute01;
+        // [BEGIN MTDM-MC-POLICY-BINDPARAMS-ASSIGN]
+        pMcPolicyChoice       = mcPolicyChoice;
+        pDialogDetectorChoice = dialogDetectorChoice;
+        pDialogApplyChoice    = dialogApplyChoice;
+        // [END MTDM-MC-POLICY-BINDPARAMS-ASSIGN]
     }
     // [END MTDM-BINDPARAMS-FULL-IMPL]
 
@@ -384,6 +517,30 @@ namespace levelscope
 
             if (enabled < 0.5f)
                 return;
+
+            // [BEGIN MTDM-MC-POLICY-READ-AND-MASK-UPDATE]
+            const int policyChoice = (int) std::lround (pMcPolicyChoice != nullptr
+                                                          ? pMcPolicyChoice->load (std::memory_order_relaxed)
+                                                          : (float) levelscope::mtdm::Defaults::mcPolicyChoice);
+
+            const int dialogDetChoice = (int) std::lround (pDialogDetectorChoice != nullptr
+                                                             ? pDialogDetectorChoice->load (std::memory_order_relaxed)
+                                                             : (float) levelscope::mtdm::Defaults::dialogDetectorChoice);
+
+            const int dialogApplyChoice = (int) std::lround (pDialogApplyChoice != nullptr
+                                                               ? pDialogApplyChoice->load (std::memory_order_relaxed)
+                                                               : (float) levelscope::mtdm::Defaults::dialogApplyChoice);
+
+            const bool lfeDet = (pLfeInDetector01 != nullptr
+                                   ? (pLfeInDetector01->load (std::memory_order_relaxed) >= 0.5f)
+                                   : (levelscope::mtdm::Defaults::lfeInDetector01 >= 0.5f));
+
+            const bool lfeApp = (pLfeInApply01 != nullptr
+                                   ? (pLfeInApply01->load (std::memory_order_relaxed) >= 0.5f)
+                                   : (levelscope::mtdm::Defaults::lfeInApply01 >= 0.5f));
+
+            updateChannelMasksIfNeeded (ctx, policyChoice, dialogDetChoice, dialogApplyChoice, lfeDet, lfeApp);
+            // [END MTDM-MC-POLICY-READ-AND-MASK-UPDATE]
 
             // [BEGIN MTDM-PROCESS-UPWARD-MODE-SWITCH]
             // Select upward mode (0=Spectral, 1=Broadband)
@@ -457,6 +614,12 @@ namespace levelscope
                                ? (pLfeInApply01->load (std::memory_order_relaxed) >= 0.5f)
                                : (levelscope::mtdm::Defaults::lfeInApply01 >= 0.5f));
             // [END MTDM-UPWARD-RP-SET-LFE-MASK]
+
+            // [BEGIN MTDM-UPWARD-RP-SET-MC-MASKBITS]
+            up.detectMaskBits = detectMaskBits;
+            up.applyMaskBits  = applyMaskBits;
+            up.unlinked       = (policyChoice == 2);
+            // [END MTDM-UPWARD-RP-SET-MC-MASKBITS]
 
             // [BEGIN MTDM-ZONE-SOLO-MUTE-LOGIC]
             const int solo = (pZoneSoloChoice != nullptr
@@ -546,6 +709,12 @@ namespace levelscope
             down.lfeInApply = (pLfeInApply01 != nullptr
                                  ? (pLfeInApply01->load (std::memory_order_relaxed) >= 0.5f)
                                  : (levelscope::mtdm::Defaults::lfeInApply01 >= 0.5f));
+
+            // [BEGIN MTDM-DOWNWARD-RP-SET-MC-MASKBITS]
+            down.detectMaskBits = detectMaskBits;
+            down.applyMaskBits  = applyMaskBits;
+            down.unlinked       = (policyChoice == 2);
+            // [END MTDM-DOWNWARD-RP-SET-MC-MASKBITS]
 
             // [BEGIN MTDM-RUN-DOWNWARD]
             if (runDown)
