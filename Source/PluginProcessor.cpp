@@ -168,6 +168,26 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
         (levelscope::mtdm::Defaults::lfeInApply01 >= 0.5f)));
     // [END MTDM-APVTS-PARAM-LAYOUT-LFE-MASK]
 
+    // [BEGIN MTDM-APVTS-PARAM-LAYOUT-MC-POLICY]
+    layout.add (std::make_unique<juce::AudioParameterChoice> (
+        juce::ParameterID { ParamIDs::mcPolicyChoice, 1 },
+        "Multichannel Policy",
+        juce::StringArray { "Linked", "Dialog-mask", "Unlinked" },
+        Defaults::mcPolicyChoice));
+
+    layout.add (std::make_unique<juce::AudioParameterChoice> (
+        juce::ParameterID { ParamIDs::dialogDetectorChoice, 1 },
+        "Dialog Detector",
+        juce::StringArray { "C", "LCR" },
+        Defaults::dialogDetectorChoice));
+
+    layout.add (std::make_unique<juce::AudioParameterChoice> (
+        juce::ParameterID { ParamIDs::dialogApplyChoice, 1 },
+        "Dialog Apply",
+        juce::StringArray { "C", "LCR" },
+        Defaults::dialogApplyChoice));
+    // [END MTDM-APVTS-PARAM-LAYOUT-MC-POLICY]
+
     // [BEGIN MTDM-APVTS-PARAM-LAYOUT-DOWNWARD]
     layout.add (std::make_unique<juce::AudioParameterFloat> (
         juce::ParameterID { ParamIDs::t2Lufs, 1 },
@@ -431,7 +451,12 @@ void LevelScopeAudioProcessor::rebuildModuleGraphFromState (const juce::MemoryBl
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneUpwardMute01),
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneDownwardMute01),
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneLimiterMute01),
-                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneUntouchedMute01));
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneUntouchedMute01),
+                                  // [BEGIN MTDM-BINDPARAMS-STAGE-E-MC]
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::mcPolicyChoice),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::dialogDetectorChoice),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::dialogApplyChoice));
+                                  // [END MTDM-BINDPARAMS-STAGE-E-MC]
 
             // [BEGIN LS-MTDM-UI-HANDLE-STORE]
             std::atomic_store_explicit (&mtdmForUI, mtdm, std::memory_order_release);
@@ -733,6 +758,7 @@ void LevelScopeAudioProcessor::resetLoudnessState() noexcept
 
 //==============================================================================
 
+// [BEGIN LS-BUSES-LAYOUT-SUPPORTED-STAGE-E]
 bool LevelScopeAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
     const auto& mainIn  = layouts.getMainInputChannelSet();
@@ -741,15 +767,23 @@ bool LevelScopeAudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
     if (mainIn.isDisabled() || mainOut.isDisabled())
         return false;
 
-    // Prototype: mono or stereo only
-    if (mainIn.size() > 2 || mainOut.size() > 2)
+    // Must be symmetrical I/O for this processor (same channel set).
+    if (mainIn != mainOut)
         return false;
 
-    if (mainIn != mainOut)
+    // Disallow ambisonics for now (channel-role policies assume speaker roles).
+    if (mainIn.isAmbisonic())
+        return false;
+
+    const int ch = mainIn.size();
+
+    // Allow up to 7.1.4 (12ch). (We keep headroom for future by changing this constant later.)
+    if (ch <= 0 || ch > 12)
         return false;
 
     return true;
 }
+// [END LS-BUSES-LAYOUT-SUPPORTED-STAGE-E]
 
 //==============================================================================
 
