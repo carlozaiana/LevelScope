@@ -772,8 +772,12 @@ bool LevelScopeAudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
         return false;
 
     // Disallow ambisonics for now (channel-role policies assume speaker roles).
-    if (mainIn.isAmbisonic())
+    // [BEGIN LS-BUSES-AMBISONIC-CHECK-COMPAT]
+    // JUCE compatibility: some JUCE versions don't provide AudioChannelSet::isAmbisonic().
+    // Heuristic is fine here (non-RT path): ambisonic layouts are labeled "Ambisonic" in description.
+    if (mainIn.getDescription().containsIgnoreCase ("ambisonic"))
         return false;
+    // [END LS-BUSES-AMBISONIC-CHECK-COMPAT]
 
     const int ch = mainIn.size();
 
