@@ -23,6 +23,9 @@
 #include <cstring>
 #include <cmath>
 #include <algorithm>
+// [BEGIN LS-SUC-INCLUDE-CSTDINT]
+#include <cstdint>
+// [END LS-SUC-INCLUDE-CSTDINT]
 
 namespace levelscope::dsp
 {
@@ -97,6 +100,14 @@ public:
 
     // AUDIO-THREAD-ONLY (see header comment)
     void setParametersAudioThread (const Parameters& p) noexcept;
+    // [BEGIN LS-SUC-STAGE-E-MASK-API]
+    // AUDIO-THREAD-ONLY:
+    // If detect/apply bits are both 0, clears override and reverts to legacy LFE policy in params.
+    // Bits are channel indices (bit 0 => channel 0). Only first 16 channels are addressable.
+    void setChannelMasksAudioThread (uint16_t detectMaskBits,
+                                     uint16_t applyMaskBits,
+                                     bool unlinked) noexcept;
+    // [END LS-SUC-STAGE-E-MASK-API]
 
     void process (juce::AudioBuffer<float>& buffer) noexcept;
 
@@ -373,13 +384,39 @@ private:
 
     std::vector<ChannelState> ch;
 
-    // [BEGIN LS-SUC-LFE-MASK-MEMBERS]
-    // Channel masks (prepared once; RT-safe usage in processFrameAllChannels()).
-    // Default policy: exclude LFE from detector and gain application.
-    std::vector<int> detectChannels;
-    std::vector<int> applyChannels;
-    std::vector<int> allChannels;
-    // [END LS-SUC-LFE-MASK-MEMBERS]
+    // [BEGIN LS-SUC-STAGE-E-MASK-MEMBERS]
+    static constexpr int kMaxMaskChannels = 16;
 
+    // Prepared masks (computed in prepare() from channel roles)
+    uint16_t preparedAllMaskBits    = 0;
+    uint16_t preparedNonLfeMaskBits = 0;
+    uint16_t preparedLfeMaskBits    = 0;
+
+    // External override masks (set by MTDM Stage E). If both == 0 => not set.
+    uint16_t externalDetectMaskBits = 0;
+    uint16_t externalApplyMaskBits  = 0;
+    bool     externalUnlinked       = false;
+    bool     externalMasksActive    = false;
+
+    // Cached effective masks + fixed index lists (rebuilt when masks change, no alloc)
+    uint16_t effectiveDetectMaskBitsCached = 0;
+    uint16_t effectiveApplyMaskBitsCached  = 0;
+
+    std::array<uint8_t, kMaxMaskChannels> detectIdx {};
+    std::array<uint8_t, kMaxMaskChannels> applyIdx  {};
+    int detectCount = 0;
+    int applyCount  = 0;
+
+    void rebuildIndexListsIfNeededNoAlloc (uint16_t effectiveDetectBits,
+                                          uint16_t effectiveApplyBits) noexcept;
+
+    // Unlinked state: per-channel smoothing/translation
+    std::array<OffsetSmoother, kMaxMaskChannels> offsetSmootherUnlinked;
+    std::array<double,        kMaxMaskChannels> smoothedOffsetDbUnlinked {};
+    std::array<OnePoleSmoother, kMaxMaskChannels> globalZoneSmootherUnlinked;
+    std::array<float,          kMaxMaskChannels> smoothedGlobalZoneAmount01Unlinked {};
+
+    std::array<std::array<GainSmoother, kMaxBands>, kMaxMaskChannels> bandSmoothersUnlinked;
+    // [END LS-SUC-STAGE-E-MASK-MEMBERS]
 };
 } // namespace levelscope::dsp

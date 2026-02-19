@@ -12,29 +12,37 @@ void BroadbandDownwardCompressor::prepare (double sampleRate,
     preparedChannelSet = channelSet;
     preparedMaxBlockSize = std::max (0, maxBlockSize);
 
-    // Prebuild default channel lists (exclude LFE)
-    nonLfeChannels.clear();
-    allChannels.clear();
+    // [BEGIN LS-BDC-STAGE-E-PREPARE-MASKBITS]
+    preparedAllMaskBits    = 0;
+    preparedNonLfeMaskBits = 0;
 
-    nonLfeChannels.reserve ((size_t) preparedNumChannels);
-    allChannels.reserve ((size_t) preparedNumChannels);
+    const int nMaskCh = juce::jlimit (0, kMaxMaskChannels, preparedNumChannels);
 
-    for (int ch = 0; ch < preparedNumChannels; ++ch)
+    for (int ch = 0; ch < nMaskCh; ++ch)
     {
-        allChannels.push_back (ch);
+        const uint16_t b = (uint16_t) (1u << (unsigned) ch);
+        preparedAllMaskBits |= b;
 
         const bool isLfe = (preparedChannelSet.getTypeOfChannel (ch) == juce::AudioChannelSet::LFE);
         if (! isLfe)
-            nonLfeChannels.push_back (ch);
+            preparedNonLfeMaskBits |= b;
     }
 
-    // fallback if layout is odd
-    if (nonLfeChannels.empty())
-        nonLfeChannels = allChannels;
+    if (preparedNonLfeMaskBits == 0)
+        preparedNonLfeMaskBits = preparedAllMaskBits;
 
-    // default pointers
-    detectPtr = &nonLfeChannels;
-    applyPtr  = &nonLfeChannels;
+    legacyDetectMaskBits = preparedNonLfeMaskBits;
+    legacyApplyMaskBits  = preparedNonLfeMaskBits;
+
+    externalMasksActive = false;
+    externalDetectMaskBits = 0;
+    externalApplyMaskBits  = 0;
+    externalUnlinked       = false;
+
+    effectiveDetectMaskBitsCached = 0;
+    effectiveApplyMaskBitsCached  = 0;
+    detectCount = applyCount = 0;
+    // [END LS-BDC-STAGE-E-PREPARE-MASKBITS]
 
     updateCoefficientsIfNeeded();
     reset();
@@ -44,6 +52,10 @@ void BroadbandDownwardCompressor::reset() noexcept
 {
     envMS = 0.0f;
     gainZ = 1.0f;
+    // [BEGIN LS-BDC-STAGE-E-RESET-UNLINKED]
+    envMSUnlinked.fill (0.0f);
+    gainZUnlinked.fill (1.0f);
+    // [END LS-BDC-STAGE-E-RESET-UNLINKED]
 }
 
 void BroadbandDownwardCompressor::setParametersAudioThread (const Parameters& p) noexcept
@@ -52,22 +64,94 @@ void BroadbandDownwardCompressor::setParametersAudioThread (const Parameters& p)
     updateCoefficientsIfNeeded();
 }
 
+// [BEGIN LS-BDC-STAGE-E-MASK-IMPL]
+void BroadbandDownwardCompressor::setChannelMasksAudioThread (uint16_t detectBits,
+                                                              uint16_t applyBits,
+                                                              bool unlinked) noexcept
+{
+    if (detectBits == 0 && applyBits == 0)
+    {
+        externalMasksActive = false;
+        externalDetectMaskBits = 0;
+        externalApplyMaskBits  = 0;
+        externalUnlinked       = false;
+        return;
+    }
+
+    externalMasksActive = true;
+    externalDetectMaskBits = detectBits;
+    externalApplyMaskBits  = applyBits;
+    externalUnlinked       = unlinked;
+}
+
+void BroadbandDownwardCompressor::rebuildIndexListsIfNeededNoAlloc (uint16_t detBits,
+                                                                    uint16_t appBits) noexcept
+{
+    if (detBits == effectiveDetectMaskBitsCached && appBits == effectiveApplyMaskBitsCached)
+        return;
+
+    effectiveDetectMaskBitsCached = detBits;
+    effectiveApplyMaskBitsCached  = appBits;
+
+    const int nMaskCh = juce::jlimit (0, kMaxMaskChannels, preparedNumChannels);
+
+    detectCount = 0;
+    applyCount  = 0;
+
+    for (int ch = 0; ch < nMaskCh; ++ch)
+    {
+        const uint16_t b = (uint16_t) (1u << (unsigned) ch);
+
+        if ((detBits & b) != 0 && detectCount < kMaxMaskChannels)
+            detectIdx[(size_t) detectCount++] = (uint8_t) ch;
+
+        if ((appBits & b) != 0 && applyCount < kMaxMaskChannels)
+            applyIdx[(size_t) applyCount++] = (uint8_t) ch;
+    }
+
+    if (detectCount <= 0)
+        for (int ch = 0; ch < nMaskCh && detectCount < kMaxMaskChannels; ++ch)
+            detectIdx[(size_t) detectCount++] = (uint8_t) ch;
+
+    if (applyCount <= 0)
+        for (int ch = 0; ch < nMaskCh && applyCount < kMaxMaskChannels; ++ch)
+            applyIdx[(size_t) applyCount++] = (uint8_t) ch;
+}
+// [END LS-BDC-STAGE-E-MASK-IMPL]
+
+// [BEGIN LS-BDC-STAGE-E-SETCHANNELLISTS-LEGACYBITS]
 void BroadbandDownwardCompressor::setChannelListsAudioThread (const std::vector<int>* detectList,
                                                              const std::vector<int>* applyList) noexcept
 {
-    // Pointers must refer to prebuilt vectors owned by this object (nonLfeChannels/allChannels).
-    // If null, fall back to default.
-    detectPtr = (detectList != nullptr ? detectList : &nonLfeChannels);
-    applyPtr  = (applyList  != nullptr ? applyList  : &nonLfeChannels);
-}
+    auto listToBits = [this] (const std::vector<int>* list) noexcept -> uint16_t
+    {
+        if (list == nullptr || list->empty())
+            return preparedNonLfeMaskBits;
 
-// [BEGIN LS-BDC-LFE-POLICY-IMPL]
+        uint16_t bits = 0;
+        for (int idx : *list)
+        {
+            if (idx >= 0 && idx < kMaxMaskChannels)
+                bits |= (uint16_t) (1u << (unsigned) idx);
+        }
+
+        bits = (uint16_t) (bits & preparedAllMaskBits);
+        if (bits == 0) bits = preparedAllMaskBits;
+        return bits;
+    };
+
+    legacyDetectMaskBits = listToBits (detectList);
+    legacyApplyMaskBits  = listToBits (applyList);
+}
+// [END LS-BDC-STAGE-E-SETCHANNELLISTS-LEGACYBITS]
+
+// [BEGIN LS-BDC-STAGE-E-LFE-POLICY-LEGACYBITS]
 void BroadbandDownwardCompressor::setLfePolicyAudioThread (bool lfeInDetector, bool lfeInApply) noexcept
 {
-    detectPtr = (lfeInDetector ? &allChannels : &nonLfeChannels);
-    applyPtr  = (lfeInApply    ? &allChannels : &nonLfeChannels);
+    legacyDetectMaskBits = (lfeInDetector ? preparedAllMaskBits : preparedNonLfeMaskBits);
+    legacyApplyMaskBits  = (lfeInApply    ? preparedAllMaskBits : preparedNonLfeMaskBits);
 }
-// [END LS-BDC-LFE-POLICY-IMPL]
+// [END LS-BDC-STAGE-E-LFE-POLICY-LEGACYBITS]
 
 void BroadbandDownwardCompressor::updateCoefficientsIfNeeded() noexcept
 {
@@ -141,13 +225,22 @@ void BroadbandDownwardCompressor::process (juce::AudioBuffer<float>& buffer) noe
 
     float* const* chans = buffer.getArrayOfWritePointers();
 
-    const auto& detectList = (detectPtr != nullptr ? *detectPtr : nonLfeChannels);
-    const auto& applyList  = (applyPtr  != nullptr ? *applyPtr  : nonLfeChannels);
-
+    // [BEGIN LS-BDC-STAGE-E-PROCESS-MASKS]
     const int chToProcess = std::min (preparedNumChannels > 0 ? preparedNumChannels : numChInBuf, numChInBuf);
 
-    const int numDetect = (int) detectList.size();
-    const int numApply  = (int) applyList.size();
+    uint16_t effDetectBits = (externalMasksActive ? externalDetectMaskBits : legacyDetectMaskBits);
+    uint16_t effApplyBits  = (externalMasksActive ? externalApplyMaskBits  : legacyApplyMaskBits);
+
+    effDetectBits = (uint16_t) (effDetectBits & preparedAllMaskBits);
+    effApplyBits  = (uint16_t) (effApplyBits  & preparedAllMaskBits);
+
+    if (effDetectBits == 0) effDetectBits = preparedAllMaskBits;
+    if (effApplyBits  == 0) effApplyBits  = preparedAllMaskBits;
+
+    rebuildIndexListsIfNeededNoAlloc (effDetectBits, effApplyBits);
+
+    const bool doUnlinked = (externalMasksActive && externalUnlinked);
+    // [END LS-BDC-STAGE-E-PROCESS-MASKS]
 
     const float t2 = std::min (params.t2Lufs, params.t3Lufs);
     const float t3 = std::max (params.t2Lufs, params.t3Lufs);
@@ -160,59 +253,100 @@ void BroadbandDownwardCompressor::process (juce::AudioBuffer<float>& buffer) noe
     float blockLastG = 1.0f;
     // [END LS-BDC-METERING-INIT]
 
-    for (int i = 0; i < numSamples; ++i)
+    // [BEGIN LS-BDC-STAGE-E-LINKED-UNLINKED-LOOPS]
+    if (! doUnlinked)
     {
-        // Linked detector energy (default excludes LFE)
-        double sumSq = 0.0;
-        for (int di = 0; di < numDetect; ++di)
+        for (int i = 0; i < numSamples; ++i)
         {
-            const int ch = detectList[(size_t) di];
-            if (ch >= 0 && ch < chToProcess)
+            double sumSq = 0.0;
+            for (int di = 0; di < detectCount; ++di)
             {
-                const float x = chans[ch][i];
-                sumSq += (double) x * (double) x;
+                const int chDet = (int) detectIdx[(size_t) di];
+                if (chDet >= 0 && chDet < chToProcess)
+                {
+                    const float x = chans[chDet][i];
+                    sumSq += (double) x * (double) x;
+                }
             }
-        }
 
-        const float e = (float) (sumSq / (double) std::max (1, numDetect));
+            const float e = (float) (sumSq / (double) std::max (1, detectCount));
 
-        // detector smoothing (mean-square)
-        const float a = (e > envMS ? aA : aR);
-        envMS = a * envMS + (1.0f - a) * e;
+            const float a = (e > envMS ? aA : aR);
+            envMS = a * envMS + (1.0f - a) * e;
 
-        // LUFS-ish proxy
-        const float L = (float) (-0.691 + 10.0 * std::log10 ((double) envMS + 1.0e-12));
+            const float L = (float) (-0.691 + 10.0 * std::log10 ((double) envMS + 1.0e-12));
 
-        // T2–T3 engagement ramp: 0 below T2, 1 at/above T3
-        float pos = (L - t2) / zoneWidth;
-        const float zone01 = smoothstep01 (pos);
+            float pos = (L - t2) / zoneWidth;
+            const float zone01 = smoothstep01 (pos);
 
-        // Full compression gain (<=1) based on threshold at T2
-        const float gComp = computeCompressionGain (L);
+            const float gComp = computeCompressionGain (L);
+            const float gTarget = 1.0f + (gComp - 1.0f) * zone01;
 
-        // Crossfade from unity to compression by zone amount
-        const float gTarget = 1.0f + (gComp - 1.0f) * zone01;
+            const float aG = (gTarget < gainZ ? aA : aR);
+            gainZ = aG * gainZ + (1.0f - aG) * gTarget;
 
-        // Gain smoothing (use same A/R as detector for minimal control set)
-        const float aG = (gTarget < gainZ ? aA : aR); // reducing gain uses "attack"
-        gainZ = aG * gainZ + (1.0f - aG) * gTarget;
+            const float gOut = gainZ * makeupLin;
 
-        const float gOut = gainZ * makeupLin;
-
-        // [BEGIN LS-BDC-METERING-UPDATE]
-            // Meter compressor gain only (exclude makeup)
             blockMinG  = std::min (blockMinG, gainZ);
             blockLastG = gainZ;
-        // [END LS-BDC-METERING-UPDATE]
 
-        // Apply to apply channels (default excludes LFE)
-        for (int ai = 0; ai < numApply; ++ai)
-        {
-            const int ch = applyList[(size_t) ai];
-            if (ch >= 0 && ch < chToProcess)
-                chans[ch][i] *= gOut;
+            for (int ai = 0; ai < applyCount; ++ai)
+            {
+                const int chAp = (int) applyIdx[(size_t) ai];
+                if (chAp >= 0 && chAp < chToProcess)
+                    chans[chAp][i] *= gOut;
+            }
         }
     }
+    else
+    {
+        // Unlinked: per-channel detectors/gains, applied per channel (apply channels)
+        float lastMinAtEnd = 1.0f;
+
+        for (int i = 0; i < numSamples; ++i)
+        {
+            float minGainThisSample = 1.0f;
+
+            for (int ai = 0; ai < applyCount; ++ai)
+            {
+                const int chAp = (int) applyIdx[(size_t) ai];
+                if (chAp < 0 || chAp >= chToProcess || chAp >= kMaxMaskChannels)
+                    continue;
+
+                const float x = chans[chAp][i];
+                const float e = x * x;
+
+                float& env = envMSUnlinked[(size_t) chAp];
+                float& gz  = gainZUnlinked[(size_t) chAp];
+
+                const float a = (e > env ? aA : aR);
+                env = a * env + (1.0f - a) * e;
+
+                const float L = (float) (-0.691 + 10.0 * std::log10 ((double) env + 1.0e-12));
+
+                float pos = (L - t2) / zoneWidth;
+                const float zone01 = smoothstep01 (pos);
+
+                const float gComp = computeCompressionGain (L);
+                const float gTarget = 1.0f + (gComp - 1.0f) * zone01;
+
+                const float aG = (gTarget < gz ? aA : aR);
+                gz = aG * gz + (1.0f - aG) * gTarget;
+
+                const float gOut = gz * makeupLin;
+
+                chans[chAp][i] *= gOut;
+
+                minGainThisSample = std::min (minGainThisSample, gz);
+                blockMinG = std::min (blockMinG, gz);
+            }
+
+            lastMinAtEnd = minGainThisSample;
+        }
+
+        blockLastG = lastMinAtEnd;
+    }
+    // [END LS-BDC-STAGE-E-LINKED-UNLINKED-LOOPS]
     // [BEGIN LS-BDC-METERING-STORE]
     lastBlockMinCompGain  = blockMinG;
     lastBlockLastCompGain = blockLastG;

@@ -21,6 +21,10 @@
 #include <cmath>
 #include <algorithm>
 
+// [BEGIN LS-BDC-INCLUDE-CSTDINT]
+#include <cstdint>
+// [END LS-BDC-INCLUDE-CSTDINT]
+
 namespace levelscope::dsp
 {
 class BroadbandDownwardCompressor
@@ -51,6 +55,14 @@ public:
 
     // AUDIO-THREAD-ONLY
     void setParametersAudioThread (const Parameters& p) noexcept;
+
+    // [BEGIN LS-BDC-STAGE-E-MASK-API]
+    // AUDIO-THREAD-ONLY:
+    // If detect/apply bits are both 0, clears override and uses legacy (LFE policy / lists).
+    void setChannelMasksAudioThread (uint16_t detectMaskBits,
+                                     uint16_t applyMaskBits,
+                                     bool unlinked) noexcept;
+    // [END LS-BDC-STAGE-E-MASK-API]
 
     // AUDIO-THREAD-ONLY: selects among prebuilt lists (no allocations)
     void setChannelListsAudioThread (const std::vector<int>* detectList,
@@ -94,12 +106,38 @@ private:
     juce::AudioChannelSet preparedChannelSet;
     int preparedMaxBlockSize = 0;
 
-    // Prebuilt channel lists (from prepare) and pointers to current selection.
-    std::vector<int> nonLfeChannels;  // default detect/apply list
-    std::vector<int> allChannels;     // 0..N-1
+    // [BEGIN LS-BDC-STAGE-E-MASK-MEMBERS]
+    static constexpr int kMaxMaskChannels = 16;
 
-    const std::vector<int>* detectPtr = nullptr;
-    const std::vector<int>* applyPtr  = nullptr;
+    uint16_t preparedAllMaskBits    = 0;
+    uint16_t preparedNonLfeMaskBits = 0;
+
+    // Legacy selection (what setLfePolicyAudioThread / setChannelListsAudioThread modifies)
+    uint16_t legacyDetectMaskBits = 0;
+    uint16_t legacyApplyMaskBits  = 0;
+
+    // External override selection (set by MTDM Stage E)
+    uint16_t externalDetectMaskBits = 0;
+    uint16_t externalApplyMaskBits  = 0;
+    bool     externalUnlinked       = false;
+    bool     externalMasksActive    = false;
+
+    // Cached effective masks + fixed index lists
+    uint16_t effectiveDetectMaskBitsCached = 0;
+    uint16_t effectiveApplyMaskBitsCached  = 0;
+
+    std::array<uint8_t, kMaxMaskChannels> detectIdx {};
+    std::array<uint8_t, kMaxMaskChannels> applyIdx  {};
+    int detectCount = 0;
+    int applyCount  = 0;
+
+    void rebuildIndexListsIfNeededNoAlloc (uint16_t effectiveDetectBits,
+                                          uint16_t effectiveApplyBits) noexcept;
+
+    // Unlinked per-channel detector/gain state
+    std::array<float, kMaxMaskChannels> envMSUnlinked {};
+    std::array<float, kMaxMaskChannels> gainZUnlinked {};
+    // [END LS-BDC-STAGE-E-MASK-MEMBERS]
 
     // detector state (mean-square)
     float envMS = 0.0f;

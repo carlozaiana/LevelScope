@@ -16,6 +16,9 @@
 #include <juce_audio_basics/juce_audio_basics.h>
 #include <cmath>
 #include <algorithm>
+// [BEGIN LS-BUC-INCLUDE-CSTDINT]
+#include <cstdint>
+// [END LS-BUC-INCLUDE-CSTDINT]
 // [BEGIN LS-BUC-INCLUDE-VECTOR]
 #include <vector>
 // [END LS-BUC-INCLUDE-VECTOR]
@@ -65,6 +68,15 @@ public:
     // AUDIO-THREAD-ONLY
     void setParametersAudioThread (const Parameters& p) noexcept;
 
+    // [BEGIN LS-BUC-STAGE-E-MASK-API]
+    // AUDIO-THREAD-ONLY:
+    // If detect/apply bits are both 0, clears override and reverts to legacy LFE policy in params.
+    // Bits are channel indices (bit 0 => channel 0), up to 16 channels.
+    void setChannelMasksAudioThread (uint16_t detectMaskBits,
+                                     uint16_t applyMaskBits,
+                                     bool unlinked) noexcept;
+    // [END LS-BUC-STAGE-E-MASK-API]
+
     void process (juce::AudioBuffer<float>& buffer) noexcept;
 
     int getLatencySamples() const noexcept { return 0; }
@@ -109,14 +121,32 @@ private:
     float lastAttackMs  = -1.0f;
     float lastReleaseMs = -1.0f;
 
-    // [BEGIN LS-BUC-LFE-MASK-MEMBERS]
-    // Channel masks (prepared once; RT-safe usage in process()).
-    // Default policy: exclude LFE from detector and gain application.
-    std::vector<int> detectChannels;
-    std::vector<int> applyChannels;
-    // All channels (0..N-1), used when LFE is opted into detector/apply.
-    std::vector<int> allChannels;
-    // [END LS-BUC-LFE-MASK-MEMBERS]
+    // [BEGIN LS-BUC-STAGE-E-MASK-MEMBERS]
+    static constexpr int kMaxMaskChannels = 16;
+
+    uint16_t preparedAllMaskBits    = 0;
+    uint16_t preparedNonLfeMaskBits = 0;
+
+    uint16_t externalDetectMaskBits = 0;
+    uint16_t externalApplyMaskBits  = 0;
+    bool     externalUnlinked       = false;
+    bool     externalMasksActive    = false;
+
+    uint16_t effectiveDetectMaskBitsCached = 0;
+    uint16_t effectiveApplyMaskBitsCached  = 0;
+
+    std::array<uint8_t, kMaxMaskChannels> detectIdx {};
+    std::array<uint8_t, kMaxMaskChannels> applyIdx  {};
+    int detectCount = 0;
+    int applyCount  = 0;
+
+    void rebuildIndexListsIfNeededNoAlloc (uint16_t effectiveDetectBits,
+                                          uint16_t effectiveApplyBits) noexcept;
+
+    // Unlinked per-channel state (detector + gain)
+    std::array<float, kMaxMaskChannels> envMSUnlinked {};
+    std::array<float, kMaxMaskChannels> gainZUnlinked {};
+    // [END LS-BUC-STAGE-E-MASK-MEMBERS]
 
 };
 } // namespace levelscope::dsp

@@ -90,41 +90,37 @@ void SpectralUpwardCompressor::prepare (double sampleRate,
         st.fifoRead = st.fifoWrite = st.fifoCount = 0;
     }
 
-    // [BEGIN LS-SUC-PREPARE-BUILD-ALLCHANNELS]
-    allChannels.clear();
-    allChannels.reserve ((size_t) preparedNumChannels);
-    for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
-        allChannels.push_back (chIdx);
-    // [END LS-SUC-PREPARE-BUILD-ALLCHANNELS]
+    // [BEGIN LS-SUC-STAGE-E-PREPARE-BUILD-PREPARED-MASKBITS]
+    preparedAllMaskBits    = 0;
+    preparedNonLfeMaskBits = 0;
+    preparedLfeMaskBits    = 0;
 
-    // [BEGIN LS-SUC-PREPARE-BUILD-MASKS]
-    detectChannels.clear();
-    applyChannels.clear();
-    detectChannels.reserve ((size_t) preparedNumChannels);
-    applyChannels.reserve ((size_t) preparedNumChannels);
+    const int nMaskCh = juce::jlimit (0, kMaxMaskChannels, preparedNumChannels);
 
-    for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
+    for (int chIdx = 0; chIdx < nMaskCh; ++chIdx)
     {
+        const uint16_t b = (uint16_t) (1u << (unsigned) chIdx);
+        preparedAllMaskBits |= b;
+
         const bool isLfe = (preparedChannelSet.getTypeOfChannel (chIdx) == juce::AudioChannelSet::LFE);
-
-        if (! isLfe)
-        {
-            detectChannels.push_back (chIdx);
-            applyChannels.push_back (chIdx);
-        }
+        if (isLfe) preparedLfeMaskBits |= b;
+        else       preparedNonLfeMaskBits |= b;
     }
 
-    if (detectChannels.empty() || applyChannels.empty())
-    {
-        detectChannels.clear();
-        applyChannels.clear();
-        for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
-        {
-            detectChannels.push_back (chIdx);
-            applyChannels.push_back (chIdx);
-        }
-    }
-    // [END LS-SUC-PREPARE-BUILD-MASKS]
+    // Safety fallback
+    if (preparedNonLfeMaskBits == 0)
+        preparedNonLfeMaskBits = preparedAllMaskBits;
+
+    // Default: no external override
+    externalMasksActive = false;
+    externalDetectMaskBits = 0;
+    externalApplyMaskBits  = 0;
+    externalUnlinked       = false;
+
+    effectiveDetectMaskBitsCached = 0;
+    effectiveApplyMaskBitsCached  = 0;
+    detectCount = applyCount = 0;
+    // [END LS-SUC-STAGE-E-PREPARE-BUILD-PREPARED-MASKBITS]
 
     // Apply initial selection + derived values
     activeFftChoice = clampChoice (params.fftSizeChoice, kNumFftChoices);
@@ -153,6 +149,17 @@ void SpectralUpwardCompressor::prepare (double sampleRate,
     globalZoneSmoother.prepare (fs, activeHopSize, 0.5 /*seconds*/);
     smoothedGlobalZoneAmount01 = 1.0f;
 
+    // [BEGIN LS-SUC-STAGE-E-PREPARE-UNLINKED-SMOOTHERS]
+    for (int chIdx = 0; chIdx < kMaxMaskChannels; ++chIdx)
+    {
+        offsetSmootherUnlinked[(size_t) chIdx].prepare (fs, activeHopSize, 4.0);
+        smoothedOffsetDbUnlinked[(size_t) chIdx] = 0.0;
+
+        globalZoneSmootherUnlinked[(size_t) chIdx].prepare (fs, activeHopSize, 0.5);
+        smoothedGlobalZoneAmount01Unlinked[(size_t) chIdx] = 1.0f;
+    }
+    // [END LS-SUC-STAGE-E-PREPARE-UNLINKED-SMOOTHERS]
+
     reset();
     // [END LS-SUC-PREPARE-GLOBAL-ZONE]
 }
@@ -173,6 +180,20 @@ void SpectralUpwardCompressor::reset() noexcept
 
     for (int i = 0; i < numBands; ++i)
         bandSmoothers[(size_t) i].reset();
+
+    // [BEGIN LS-SUC-STAGE-E-RESET-UNLINKED]
+    for (int chIdx = 0; chIdx < kMaxMaskChannels; ++chIdx)
+    {
+        offsetSmootherUnlinked[(size_t) chIdx].reset();
+        smoothedOffsetDbUnlinked[(size_t) chIdx] = 0.0;
+
+        globalZoneSmootherUnlinked[(size_t) chIdx].reset();
+        smoothedGlobalZoneAmount01Unlinked[(size_t) chIdx] = 1.0f;
+
+        for (int bi = 0; bi < numBands; ++bi)
+            bandSmoothersUnlinked[(size_t) chIdx][(size_t) bi].reset();
+    }
+    // [END LS-SUC-STAGE-E-RESET-UNLINKED]
 
     // [BEGIN LS-SUC-RESET-GLOBAL-ZONE]
     offsetSmoother.reset();
@@ -202,6 +223,13 @@ void SpectralUpwardCompressor::setParametersAudioThread (const Parameters& p) no
         // [BEGIN LS-SUC-PARAMS-REPREPARE-SMOOTHERS]
         offsetSmoother.prepare (fs, activeHopSize, 4.0);
         globalZoneSmoother.prepare (fs, activeHopSize, 0.5);
+
+        for (int chIdx = 0; chIdx < kMaxMaskChannels; ++chIdx)
+        {
+            offsetSmootherUnlinked[(size_t) chIdx].prepare (fs, activeHopSize, 4.0);
+            globalZoneSmootherUnlinked[(size_t) chIdx].prepare (fs, activeHopSize, 0.5);
+        }
+
         pendingHardReset = true;
         // [END LS-SUC-PARAMS-REPREPARE-SMOOTHERS]
     }
@@ -227,6 +255,66 @@ void SpectralUpwardCompressor::setParametersAudioThread (const Parameters& p) no
         updateSmoothersNoAlloc();
     }
 }
+
+// [BEGIN LS-SUC-STAGE-E-MASK-IMPL]
+void SpectralUpwardCompressor::setChannelMasksAudioThread (uint16_t detectBits,
+                                                           uint16_t applyBits,
+                                                           bool unlinked) noexcept
+{
+    if (detectBits == 0 && applyBits == 0)
+    {
+        externalMasksActive = false;
+        externalDetectMaskBits = 0;
+        externalApplyMaskBits  = 0;
+        externalUnlinked       = false;
+        return;
+    }
+
+    externalMasksActive = true;
+    externalDetectMaskBits = detectBits;
+    externalApplyMaskBits  = applyBits;
+    externalUnlinked       = unlinked;
+}
+
+void SpectralUpwardCompressor::rebuildIndexListsIfNeededNoAlloc (uint16_t detBits,
+                                                                 uint16_t appBits) noexcept
+{
+    if (detBits == effectiveDetectMaskBitsCached && appBits == effectiveApplyMaskBitsCached)
+        return;
+
+    effectiveDetectMaskBitsCached = detBits;
+    effectiveApplyMaskBitsCached  = appBits;
+
+    const int nMaskCh = juce::jlimit (0, kMaxMaskChannels, preparedNumChannels);
+
+    detectCount = 0;
+    applyCount  = 0;
+
+    for (int ch = 0; ch < nMaskCh; ++ch)
+    {
+        const uint16_t b = (uint16_t) (1u << (unsigned) ch);
+
+        if ((detBits & b) != 0 && detectCount < kMaxMaskChannels)
+            detectIdx[(size_t) detectCount++] = (uint8_t) ch;
+
+        if ((appBits & b) != 0 && applyCount < kMaxMaskChannels)
+            applyIdx[(size_t) applyCount++] = (uint8_t) ch;
+    }
+
+    // Safety fallbacks
+    if (detectCount <= 0)
+    {
+        for (int ch = 0; ch < nMaskCh && detectCount < kMaxMaskChannels; ++ch)
+            detectIdx[(size_t) detectCount++] = (uint8_t) ch;
+    }
+
+    if (applyCount <= 0)
+    {
+        for (int ch = 0; ch < nMaskCh && applyCount < kMaxMaskChannels; ++ch)
+            applyIdx[(size_t) applyCount++] = (uint8_t) ch;
+    }
+}
+// [END LS-SUC-STAGE-E-MASK-IMPL]
 
 void SpectralUpwardCompressor::rebuildBandsNoAlloc() noexcept
 {
@@ -276,8 +364,15 @@ void SpectralUpwardCompressor::rebuildBandsNoAlloc() noexcept
 
 void SpectralUpwardCompressor::updateSmoothersNoAlloc() noexcept
 {
+    // [BEGIN LS-SUC-STAGE-E-PREPARE-BANDSMOOTHERS-LINKED-AND-UNLINKED]
     for (int i = 0; i < numBands; ++i)
+    {
         bandSmoothers[(size_t) i].prepare (fs, activeHopSize, params.attackMs, params.releaseMs);
+
+        for (int chIdx = 0; chIdx < kMaxMaskChannels; ++chIdx)
+            bandSmoothersUnlinked[(size_t) chIdx][(size_t) i].prepare (fs, activeHopSize, params.attackMs, params.releaseMs);
+    }
+    // [END LS-SUC-STAGE-E-PREPARE-BANDSMOOTHERS-LINKED-AND-UNLINKED]
 }
 
 float SpectralUpwardCompressor::computeTargetGainLinear (float bandLevelDb,
@@ -320,6 +415,7 @@ float SpectralUpwardCompressor::computeTargetGainLinear (float bandLevelDb,
     return g;
 }
 
+// [BEGIN LS-SUC-STAGE-E-PROCESSFRAME-REPLACE]
 void SpectralUpwardCompressor::processFrameAllChannels() noexcept
 {
     if (pendingHardReset)
@@ -328,138 +424,70 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
     const auto& pr = profiles[(size_t) activeFftChoice];
     const int fftSize = pr.fftSize;
     const int hopSize = pr.hopSize;
-    const int maxBin = fftSize / 2;
+    const int maxBin  = fftSize / 2;
 
-    // [BEGIN LS-SUC-SELECT-DETECT-APPLY-LISTS]
-    const auto& detectList = (params.lfeInDetector ? allChannels : detectChannels);
-    const auto& applyList  = (params.lfeInApply    ? allChannels : applyChannels);
+    // --- Determine effective masks (external override if set; otherwise legacy LFE policy)
+    const uint16_t legacyDetectBits = (params.lfeInDetector ? preparedAllMaskBits : preparedNonLfeMaskBits);
+    const uint16_t legacyApplyBits  = (params.lfeInApply    ? preparedAllMaskBits : preparedNonLfeMaskBits);
 
-    const bool haveDetect = (! detectList.empty());
-    const bool haveApply  = (! applyList.empty());
-    // [END LS-SUC-SELECT-DETECT-APPLY-LISTS]
+    uint16_t effDetectBits = (externalMasksActive ? externalDetectMaskBits : legacyDetectBits);
+    uint16_t effApplyBits  = (externalMasksActive ? externalApplyMaskBits  : legacyApplyBits);
 
-    // [BEGIN LS-SUC-LFE-EXCLUDE-BROADBAND-PROXY]
-    // 1) Analysis window into per-channel fft buffers.
-    // We compute the broadband proxy energy from DETECTOR channels only (default excludes LFE).
-    double sumSq = 0.0;
+    // Clamp to prepared channel count / 16ch range
+    effDetectBits = (uint16_t) (effDetectBits & preparedAllMaskBits);
+    effApplyBits  = (uint16_t) (effApplyBits  & preparedAllMaskBits);
+
+    if (effDetectBits == 0) effDetectBits = preparedAllMaskBits;
+    if (effApplyBits  == 0) effApplyBits  = preparedAllMaskBits;
+
+    rebuildIndexListsIfNeededNoAlloc (effDetectBits, effApplyBits);
+
+    const bool doUnlinked = (externalMasksActive && externalUnlinked);
+
+    // --- 1) Analysis window into per-channel fft buffers.
+    // Also compute broadband proxy energies.
+    std::array<double, kMaxMaskChannels> sumSqWinPerCh {};
+    double sumSqLinked = 0.0;
 
     for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
     {
         auto& st = ch[(size_t) chIdx];
 
+        double sumSqThis = 0.0;
+
         for (int i = 0; i < fftSize; ++i)
         {
             const float x = st.input[(size_t) i] * pr.window[(size_t) i];
             st.fftBuf[(size_t) i] = x;
+            sumSqThis += (double) x * (double) x;
         }
 
         std::fill (st.fftBuf.begin() + (size_t) fftSize,
                    st.fftBuf.begin() + (size_t) (2 * fftSize),
                    0.0f);
+
+        if (chIdx < kMaxMaskChannels)
+            sumSqWinPerCh[(size_t) chIdx] = sumSqThis;
     }
 
-    // Sum energy only over detector channels (fallback: all channels)
-    const int linkedCh = (haveDetect ? (int) detectList.size() : std::max (1, preparedNumChannels));
-
-    if (haveDetect)
+    // --- 2) Forward FFT per channel
+    for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
     {
-        for (int di = 0; di < (int) detectList.size(); ++di)
-        {
-            const int chIdx = detectList[(size_t) di];
-            if (chIdx < 0 || chIdx >= preparedNumChannels)
-            continue;
-
-            const auto& st = ch[(size_t) chIdx];
-            for (int i = 0; i < fftSize; ++i)
-            {
-                const double x = (double) st.fftBuf[(size_t) i];
-                sumSq += x * x;
-            }
-        }
-    }
-    else
-    {
-        for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
-        {
-            const auto& st = ch[(size_t) chIdx];
-            for (int i = 0; i < fftSize; ++i)
-            {
-                const double x = (double) st.fftBuf[(size_t) i];
-                sumSq += x * x;
-            }
-        }
+        auto& st = ch[(size_t) chIdx];
+        pr.fft->performRealOnlyForwardTransform (st.fftBuf.data());
     }
 
-    const double meanSq = sumSq / (double) (fftSize * std::max (1, linkedCh));
-    // [END LS-SUC-LFE-EXCLUDE-BROADBAND-PROXY]
-
-    // cheap LUFS-ish proxy (no K-weighting, no gating)
-    const double broadbandDb = -0.691 + 10.0 * std::log10 (meanSq + 1.0e-12);
-
-    // [BEGIN LS-SUC-GLOBAL-ZONE-AMOUNT]
-    // Option A global zone scaler with ONE-SIDED knees:
-    // - Fade IN from (T0 - lowKnee) up to T0
-    // - Fade OUT from (T1 - highKnee) down to 0 at/above T1
-    // This guarantees "untouched" above T1 (no bleed into T1–T2).
-    auto kneeUpToThreshold01 = [] (float levelDb, float threshold, float kneeWidthDb) noexcept
-    {
-        kneeWidthDb = juce::jmax (1.0e-4f, kneeWidthDb);
-
-        const float start = threshold - kneeWidthDb;
-
-        if (levelDb <= start)     return 0.0f;
-        if (levelDb >= threshold) return 1.0f;
-
-        const float t = (levelDb - start) / kneeWidthDb; // 0..1
-        return t * t * (3.0f - 2.0f * t);                // smoothstep
-    };
-
-    {
-        const float L = (float) broadbandDb;
-
-        const float inAroundT0  = kneeUpToThreshold01 (L, params.t0Lufs, params.lowKneeDb);
-        const float outAroundT1 = 1.0f - kneeUpToThreshold01 (L, params.t1Lufs, params.highKneeDb);
-
-        const float zoneTarget01 = juce::jlimit (0.0f, 1.0f, inAroundT0 * outAroundT1);
-
-        // If we're at/above T1, hard-zero and reset to avoid lingering processing into T1–T2.
-        if (L >= params.t1Lufs)
-        {
-            smoothedGlobalZoneAmount01 = 0.0f;
-
-            for (int bi = 0; bi < numBands; ++bi)
-                bandSmoothers[(size_t) bi].reset();
-        }
-        else
-        {
-            smoothedGlobalZoneAmount01 = globalZoneSmoother.process (zoneTarget01);
-        }
-    }
-    // [END LS-SUC-GLOBAL-ZONE-AMOUNT]
-
-    // [BEGIN LS-SUC-FORWARD-NONNEGATIVE]
-        // 2) Forward FFT per channel
-        // IMPORTANT: We rely on JUCE's packed "non-negative frequencies only" real-only format:
-        //   bin 0    -> data[0] (real), imag=0
-        //   bin N/2  -> data[1] (real), imag=0
-        //   bins 1..N/2-1 -> data[2*bin] (real), data[2*bin+1] (imag)
-        // So we must request only non-negative frequencies here.
-        for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
-        {
-            auto& st = ch[(size_t) chIdx];
-            pr.fft->performRealOnlyForwardTransform (st.fftBuf.data());
-        }
-    // [END LS-SUC-FORWARD-NONNEGATIVE]
-
-    // [BEGIN LS-SUC-AUDITION-BYPASS-EARLYRETURN]
-    // Audition bypass: preserve STFT delay pipeline, but do not measure/apply any gains.
+    // --- Audition bypass: preserve delay pipeline, no gains
     if (params.auditionBypass)
     {
-        // Ensure band smoothers don't carry non-unity state while bypassed.
         for (int bi = 0; bi < numBands; ++bi)
             bandSmoothers[(size_t) bi].reset();
 
-        // Inverse FFT + synthesis (same as normal path)
+        for (int chIdx = 0; chIdx < kMaxMaskChannels; ++chIdx)
+            for (int bi = 0; bi < numBands; ++bi)
+                bandSmoothersUnlinked[(size_t) chIdx][(size_t) bi].reset();
+
+        // Inverse FFT + synthesis (no spectral modifications)
         for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
         {
             auto& st = ch[(size_t) chIdx];
@@ -467,282 +495,357 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
             pr.fft->performRealOnlyInverseTransform (st.fftBuf.data());
 
             for (int i = 0; i < fftSize; ++i)
-            {
-                const float x = st.fftBuf[(size_t) i];
-                const float y = (x * pr.window[(size_t) i]);
-                st.ola[(size_t) i] += y;
-            }
+                st.ola[(size_t) i] += (st.fftBuf[(size_t) i] * pr.window[(size_t) i]);
 
             for (int i = 0; i < hopSize; ++i)
                 pushFifo (st, st.ola[(size_t) i] / pr.hopNorm[(size_t) i]);
 
             const int keep2 = fftSize - hopSize;
-            std::memmove (st.ola.data(),
-                          st.ola.data() + hopSize,
-                          (size_t) keep2 * sizeof (float));
+            std::memmove (st.ola.data(), st.ola.data() + hopSize, (size_t) keep2 * sizeof (float));
             std::fill (st.ola.begin() + keep2, st.ola.begin() + fftSize, 0.0f);
         }
 
-        // Shift input buffers left by hop (common framing)
+        // shift input
         const int keep = fftSize - hopSize;
         for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
         {
             auto& st = ch[(size_t) chIdx];
-
-            std::memmove (st.input.data(),
-                          st.input.data() + hopSize,
-                          (size_t) keep * sizeof (float));
-
+            std::memmove (st.input.data(), st.input.data() + hopSize, (size_t) keep * sizeof (float));
             std::fill (st.input.begin() + keep, st.input.begin() + fftSize, 0.0f);
         }
 
         inputWritePos = keep;
         return;
     }
-    // [END LS-SUC-AUDITION-BYPASS-EARLYRETURN]
 
-    // 3) Spectral proxy level for adaptive offset
-    // Sum power across bins 1..N/2-1 across linked channels
-    double pAll = 0.0;
+    const double ref = (pr.coherentGain * (double) fftSize * 0.5);
+    const double refPower = std::max (1.0e-18, ref * ref);
     const int numBins = std::max (1, (maxBin - 1));
 
-    // [BEGIN LS-SUC-LFE-EXCLUDE-SPECTRAL-PROXY]
-    if (haveDetect)
+    const float userAmount = juce::jlimit (0.0f, 1.0f, params.amount01);
+
+    // --- Linked vs Unlinked processing
+    if (! doUnlinked)
     {
-        for (int di = 0; di < (int) detectList.size(); ++di)
+        // Linked broadband proxy over detector channels
+        for (int di = 0; di < detectCount; ++di)
         {
-            const int chIdx = detectList[(size_t) di];
-            if (chIdx < 0 || chIdx >= preparedNumChannels)
+            const int chDet = (int) detectIdx[(size_t) di];
+            if (chDet >= 0 && chDet < kMaxMaskChannels)
+                sumSqLinked += sumSqWinPerCh[(size_t) chDet];
+        }
+
+        const int linkedCh = std::max (1, detectCount);
+        const double meanSq = sumSqLinked / (double) (fftSize * linkedCh);
+        const double broadbandDb = -0.691 + 10.0 * std::log10 (meanSq + 1.0e-12);
+
+        // Spectral proxy over detector channels
+        double pAll = 0.0;
+        for (int di = 0; di < detectCount; ++di)
+        {
+            const int chDet = (int) detectIdx[(size_t) di];
+            if (chDet < 0 || chDet >= preparedNumChannels)
                 continue;
 
-            auto& st = ch[(size_t) chIdx];
-
+            auto& st = ch[(size_t) chDet];
             for (int bin = 1; bin <= maxBin - 1; ++bin)
             {
                 float re = 0.0f, im = 0.0f;
                 getBin (st.fftBuf, fftSize, bin, re, im);
                 pAll += (double) re * (double) re + (double) im * (double) im;
+            }
+        }
+
+        const double meanBinPowerAll = pAll / (double) (numBins * linkedCh);
+        const double spectralDb = 10.0 * std::log10 (meanBinPowerAll / refPower + 1.0e-18);
+
+        // Adaptive offset (linked)
+        if (meanSq > 1.0e-12)
+        {
+            const double instantOffset = broadbandDb - spectralDb;
+            const double clamped = juce::jlimit (-30.0, 30.0, instantOffset);
+            smoothedOffsetDb = offsetSmoother.process (clamped);
+        }
+
+        const double effectiveOffsetDb = smoothedOffsetDb + (double) params.calibrationTrimDb;
+        const float t0SpectralDb = (float) ((double) params.t0Lufs - effectiveOffsetDb);
+        const float t1SpectralDb = (float) ((double) params.t1Lufs - effectiveOffsetDb);
+
+        // Global zone amount (linked)
+        auto kneeUpToThreshold01 = [] (float levelDb, float threshold, float kneeWidthDb) noexcept
+        {
+            kneeWidthDb = juce::jmax (1.0e-4f, kneeWidthDb);
+            const float start = threshold - kneeWidthDb;
+            if (levelDb <= start)     return 0.0f;
+            if (levelDb >= threshold) return 1.0f;
+            const float t = (levelDb - start) / kneeWidthDb;
+            return t * t * (3.0f - 2.0f * t);
+        };
+
+        {
+            const float L = (float) broadbandDb;
+
+            const float inAroundT0  = kneeUpToThreshold01 (L, params.t0Lufs, params.lowKneeDb);
+            const float outAroundT1 = 1.0f - kneeUpToThreshold01 (L, params.t1Lufs, params.highKneeDb);
+
+            const float zoneTarget01 = juce::jlimit (0.0f, 1.0f, inAroundT0 * outAroundT1);
+
+            if (L >= params.t1Lufs)
+            {
+                smoothedGlobalZoneAmount01 = 0.0f;
+                for (int bi = 0; bi < numBands; ++bi)
+                    bandSmoothers[(size_t) bi].reset();
+            }
+            else
+            {
+                smoothedGlobalZoneAmount01 = globalZoneSmoother.process (zoneTarget01);
+            }
+        }
+
+        const float effectiveAmount = juce::jlimit (0.0f, 1.0f, userAmount * smoothedGlobalZoneAmount01);
+
+        // Per-band linked gains (measure over detector channels, apply over apply channels)
+        for (int bi = 0; bi < numBands; ++bi)
+        {
+            const int b0 = juce::jlimit (1, maxBin - 1, bands[(size_t) bi].startBin);
+            const int b1 = juce::jlimit (1, maxBin - 1, bands[(size_t) bi].endBin);
+            if (b1 < b0)
+            {
+                bandTargetGain[(size_t) bi] = 1.0f;
+                continue;
+            }
+
+            double pBand = 0.0;
+            const int nBins = (b1 - b0 + 1);
+
+            for (int di = 0; di < detectCount; ++di)
+            {
+                const int chDet = (int) detectIdx[(size_t) di];
+                if (chDet < 0 || chDet >= preparedNumChannels)
+                    continue;
+
+                auto& st = ch[(size_t) chDet];
+                for (int bin = b0; bin <= b1; ++bin)
+                {
+                    float re = 0.0f, im = 0.0f;
+                    getBin (st.fftBuf, fftSize, bin, re, im);
+                    pBand += (double) re * (double) re + (double) im * (double) im;
+                }
+            }
+
+            const double meanBinPower = pBand / (double) (nBins * std::max (1, detectCount));
+            const float bandDb = (float) (10.0 * std::log10 (meanBinPower / refPower + 1.0e-18));
+
+            float targetG = computeTargetGainLinear (bandDb, t0SpectralDb, t1SpectralDb);
+            targetG = 1.0f + (targetG - 1.0f) * effectiveAmount;
+
+            bandTargetGain[(size_t) bi] = targetG;
+        }
+
+        // freq smooth
+        if (numBands > 0)
+        {
+            for (int bi = 0; bi < numBands; ++bi)
+            {
+                const float g0 = bandTargetGain[(size_t) bi];
+                const float gL = (bi > 0 ? bandTargetGain[(size_t) (bi - 1)] : g0);
+                const float gR = (bi + 1 < numBands ? bandTargetGain[(size_t) (bi + 1)] : g0);
+                bandTargetGainFreqSmoothed[(size_t) bi] = 0.25f * gL + 0.5f * g0 + 0.25f * gR;
+            }
+        }
+
+        // time smooth + apply
+        for (int bi = 0; bi < numBands; ++bi)
+        {
+            const int b0 = juce::jlimit (1, maxBin - 1, bands[(size_t) bi].startBin);
+            const int b1 = juce::jlimit (1, maxBin - 1, bands[(size_t) bi].endBin);
+            if (b1 < b0) continue;
+
+            const float g = bandSmoothers[(size_t) bi].process (bandTargetGainFreqSmoothed[(size_t) bi]);
+
+            for (int ai = 0; ai < applyCount; ++ai)
+            {
+                const int chAp = (int) applyIdx[(size_t) ai];
+                if (chAp < 0 || chAp >= preparedNumChannels)
+                    continue;
+
+                auto& st = ch[(size_t) chAp];
+                for (int bin = b0; bin <= b1; ++bin)
+                {
+                    scaleBin (st.fftBuf, fftSize, bin, g);
+                    const int mirror = fftSize - bin;
+                    if (mirror != bin)
+                        scaleBin (st.fftBuf, fftSize, mirror, g);
+                }
             }
         }
     }
     else
     {
-        for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
+        // --- Unlinked: per-channel detector and per-channel smoothing
+        auto kneeUpToThreshold01 = [] (float levelDb, float threshold, float kneeWidthDb) noexcept
         {
-            auto& st = ch[(size_t) chIdx];
+            kneeWidthDb = juce::jmax (1.0e-4f, kneeWidthDb);
+            const float start = threshold - kneeWidthDb;
+            if (levelDb <= start)     return 0.0f;
+            if (levelDb >= threshold) return 1.0f;
+            const float t = (levelDb - start) / kneeWidthDb;
+            return t * t * (3.0f - 2.0f * t);
+        };
 
-            for (int bin = 1; bin <= maxBin - 1; ++bin)
+        for (int ai = 0; ai < applyCount; ++ai)
+        {
+            const int chAp = (int) applyIdx[(size_t) ai];
+            if (chAp < 0 || chAp >= preparedNumChannels || chAp >= kMaxMaskChannels)
+                continue;
+
+            const double meanSqCh = sumSqWinPerCh[(size_t) chAp] / (double) fftSize;
+            const double broadbandDb = -0.691 + 10.0 * std::log10 (meanSqCh + 1.0e-12);
+
+            // spectral proxy for this channel
+            double pAll = 0.0;
             {
-                float re = 0.0f, im = 0.0f;
-                getBin (st.fftBuf, fftSize, bin, re, im);
-                pAll += (double) re * (double) re + (double) im * (double) im;
+                auto& st = ch[(size_t) chAp];
+                for (int bin = 1; bin <= maxBin - 1; ++bin)
+                {
+                    float re = 0.0f, im = 0.0f;
+                    getBin (st.fftBuf, fftSize, bin, re, im);
+                    pAll += (double) re * (double) re + (double) im * (double) im;
+                }
             }
-        }
-    }
-    // [END LS-SUC-LFE-EXCLUDE-SPECTRAL-PROXY]
 
-    const double ref = (pr.coherentGain * (double) fftSize * 0.5);
-    const double refPower = std::max (1.0e-18, ref * ref);
+            const double meanBinPowerAll = pAll / (double) numBins;
+            const double spectralDb = 10.0 * std::log10 (meanBinPowerAll / refPower + 1.0e-18);
 
-    const double meanBinPowerAll = pAll / (double) (numBins * linkedCh);
-    const double spectralDb = 10.0 * std::log10 (meanBinPowerAll / refPower + 1.0e-18);
-
-    // 4) Adaptive offset: broadband - spectral, smoothed slowly and clamped.
-    // Freeze update near silence to avoid wild offsets.
-    if (meanSq > 1.0e-12)
-    {
-        const double instantOffset = broadbandDb - spectralDb;
-        const double clamped = juce::jlimit (-30.0, 30.0, instantOffset);
-        smoothedOffsetDb = offsetSmoother.process (clamped);
-    }
-
-    // [BEGIN LS-SUC-APPLY-CAL-TRIM]
-        const double effectiveOffsetDb = smoothedOffsetDb + (double) params.calibrationTrimDb;
-
-        const float t0SpectralDb = (float) ((double) params.t0Lufs - effectiveOffsetDb);
-        const float t1SpectralDb = (float) ((double) params.t1Lufs - effectiveOffsetDb);
-    // [END LS-SUC-APPLY-CAL-TRIM]
-
-    // [BEGIN LS-SUC-EFFECTIVE-AMOUNT]
-        const float userAmount = juce::jlimit (0.0f, 1.0f, params.amount01);
-        const float effectiveAmount = juce::jlimit (0.0f, 1.0f, userAmount * smoothedGlobalZoneAmount01);
-    // [END LS-SUC-EFFECTIVE-AMOUNT]
-
-    // [BEGIN LS-SUC-PERBAND-GAINS-WITH-FREQ-SMOOTH]
-    // 5) Per-band gains computed from LINKED power.
-    // First pass: measure band levels and compute per-band target gains.
-    // Second pass: cross-band smooth target gains, then time-smooth, then apply to bins.
-
-    // ---- Pass 1: compute target gains per band (linear)
-    for (int bi = 0; bi < numBands; ++bi)
-    {
-        const int b0 = juce::jlimit (1, maxBin - 1, bands[(size_t) bi].startBin);
-        const int b1 = juce::jlimit (1, maxBin - 1, bands[(size_t) bi].endBin);
-        if (b1 < b0)
-        {
-            bandTargetGain[(size_t) bi] = 1.0f;
-            continue;
-        }
-
-        double pBand = 0.0;
-        const int nBins = (b1 - b0 + 1);
-
-        // [BEGIN LS-SUC-LFE-EXCLUDE-PERBAND-MEASURE]
-        if (haveDetect)
-        {
-            for (int di = 0; di < (int) detectList.size(); ++di)
+            if (meanSqCh > 1.0e-12)
             {
-                const int chIdx = detectList[(size_t) di];
-                if (chIdx < 0 || chIdx >= preparedNumChannels)
+                const double instantOffset = broadbandDb - spectralDb;
+                const double clamped = juce::jlimit (-30.0, 30.0, instantOffset);
+                smoothedOffsetDbUnlinked[(size_t) chAp] =
+                    offsetSmootherUnlinked[(size_t) chAp].process (clamped);
+            }
+
+            const double effectiveOffsetDb = smoothedOffsetDbUnlinked[(size_t) chAp] + (double) params.calibrationTrimDb;
+            const float t0SpectralDb = (float) ((double) params.t0Lufs - effectiveOffsetDb);
+            const float t1SpectralDb = (float) ((double) params.t1Lufs - effectiveOffsetDb);
+
+            // zone
+            const float L = (float) broadbandDb;
+
+            const float inAroundT0  = kneeUpToThreshold01 (L, params.t0Lufs, params.lowKneeDb);
+            const float outAroundT1 = 1.0f - kneeUpToThreshold01 (L, params.t1Lufs, params.highKneeDb);
+            const float zoneTarget01 = juce::jlimit (0.0f, 1.0f, inAroundT0 * outAroundT1);
+
+            if (L >= params.t1Lufs)
+            {
+                smoothedGlobalZoneAmount01Unlinked[(size_t) chAp] = 0.0f;
+                for (int bi = 0; bi < numBands; ++bi)
+                    bandSmoothersUnlinked[(size_t) chAp][(size_t) bi].reset();
+            }
+            else
+            {
+                smoothedGlobalZoneAmount01Unlinked[(size_t) chAp] =
+                    globalZoneSmootherUnlinked[(size_t) chAp].process (zoneTarget01);
+            }
+
+            const float effectiveAmount =
+                juce::jlimit (0.0f, 1.0f, userAmount * smoothedGlobalZoneAmount01Unlinked[(size_t) chAp]);
+
+            // per-band targets for this channel (reuse scratch arrays)
+            for (int bi = 0; bi < numBands; ++bi)
+            {
+                const int b0 = juce::jlimit (1, maxBin - 1, bands[(size_t) bi].startBin);
+                const int b1 = juce::jlimit (1, maxBin - 1, bands[(size_t) bi].endBin);
+                if (b1 < b0)
+                {
+                    bandTargetGain[(size_t) bi] = 1.0f;
                     continue;
+                }
 
-                auto& st = ch[(size_t) chIdx];
+                double pBand = 0.0;
+                const int nBins = (b1 - b0 + 1);
 
+                auto& st = ch[(size_t) chAp];
                 for (int bin = b0; bin <= b1; ++bin)
                 {
                     float re = 0.0f, im = 0.0f;
                     getBin (st.fftBuf, fftSize, bin, re, im);
                     pBand += (double) re * (double) re + (double) im * (double) im;
                 }
-            }
-        }
-        else
-        {
-            for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
-            {
-                auto& st = ch[(size_t) chIdx];
 
-                for (int bin = b0; bin <= b1; ++bin)
+                const double meanBinPower = pBand / (double) nBins;
+                const float bandDb = (float) (10.0 * std::log10 (meanBinPower / refPower + 1.0e-18));
+
+                float targetG = computeTargetGainLinear (bandDb, t0SpectralDb, t1SpectralDb);
+                targetG = 1.0f + (targetG - 1.0f) * effectiveAmount;
+                bandTargetGain[(size_t) bi] = targetG;
+            }
+
+            // freq smooth
+            if (numBands > 0)
+            {
+                for (int bi = 0; bi < numBands; ++bi)
                 {
-                    float re = 0.0f, im = 0.0f;
-                    getBin (st.fftBuf, fftSize, bin, re, im);
-                    pBand += (double) re * (double) re + (double) im * (double) im;
+                    const float g0 = bandTargetGain[(size_t) bi];
+                    const float gL = (bi > 0 ? bandTargetGain[(size_t) (bi - 1)] : g0);
+                    const float gR = (bi + 1 < numBands ? bandTargetGain[(size_t) (bi + 1)] : g0);
+                    bandTargetGainFreqSmoothed[(size_t) bi] = 0.25f * gL + 0.5f * g0 + 0.25f * gR;
                 }
             }
-        }
-        // [END LS-SUC-LFE-EXCLUDE-PERBAND-MEASURE]
 
-        const double meanBinPower = pBand / (double) (nBins * linkedCh);
-        const float bandDb = (float) (10.0 * std::log10 (meanBinPower / refPower + 1.0e-18));
-
-        float targetG = computeTargetGainLinear (bandDb, t0SpectralDb, t1SpectralDb);
-
-        // Global strength: user amount * global zone amount
-        targetG = 1.0f + (targetG - 1.0f) * effectiveAmount;
-
-        bandTargetGain[(size_t) bi] = targetG;
-    }
-
-    // ---- Pass 2a: cross-band smoothing (3-tap)
-    if (numBands > 0)
-    {
-        for (int bi = 0; bi < numBands; ++bi)
-        {
-            const float g0 = bandTargetGain[(size_t) bi];
-            const float gL = (bi > 0 ? bandTargetGain[(size_t) (bi - 1)] : g0);
-            const float gR = (bi + 1 < numBands ? bandTargetGain[(size_t) (bi + 1)] : g0);
-
-            bandTargetGainFreqSmoothed[(size_t) bi] = 0.25f * gL + 0.5f * g0 + 0.25f * gR;
-        }
-    }
-
-    // ---- Pass 2b: time smoothing + apply gains to bins (and mirror bins)
-    for (int bi = 0; bi < numBands; ++bi)
-    {
-        const int b0 = juce::jlimit (1, maxBin - 1, bands[(size_t) bi].startBin);
-        const int b1 = juce::jlimit (1, maxBin - 1, bands[(size_t) bi].endBin);
-        if (b1 < b0)
-            continue;
-
-        const float g = bandSmoothers[(size_t) bi].process (bandTargetGainFreqSmoothed[(size_t) bi]);
-
-        // [BEGIN LS-SUC-LFE-EXCLUDE-PERBAND-APPLY]
-
-        if (haveApply)
-        {
-            for (int ai = 0; ai < (int) applyList.size(); ++ai)
+            // time smooth + apply bins (this channel only)
+            for (int bi = 0; bi < numBands; ++bi)
             {
-                const int chIdx = applyList[(size_t) ai];
-                if (chIdx < 0 || chIdx >= preparedNumChannels)
-                    continue;
+                const int b0 = juce::jlimit (1, maxBin - 1, bands[(size_t) bi].startBin);
+                const int b1 = juce::jlimit (1, maxBin - 1, bands[(size_t) bi].endBin);
+                if (b1 < b0) continue;
 
-                auto& st = ch[(size_t) chIdx];
+                const float g =
+                    bandSmoothersUnlinked[(size_t) chAp][(size_t) bi].process (bandTargetGainFreqSmoothed[(size_t) bi]);
+
+                auto& st = ch[(size_t) chAp];
 
                 for (int bin = b0; bin <= b1; ++bin)
                 {
                     scaleBin (st.fftBuf, fftSize, bin, g);
-
                     const int mirror = fftSize - bin;
                     if (mirror != bin)
                         scaleBin (st.fftBuf, fftSize, mirror, g);
                 }
             }
         }
-        else
-        {
-            for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
-            {
-                auto& st = ch[(size_t) chIdx];
-
-                for (int bin = b0; bin <= b1; ++bin)
-                {
-                    scaleBin (st.fftBuf, fftSize, bin, g);
-
-                    const int mirror = fftSize - bin;
-                    if (mirror != bin)
-                        scaleBin (st.fftBuf, fftSize, mirror, g);
-                }
-            }
-        }
-        // [END LS-SUC-LFE-EXCLUDE-PERBAND-APPLY]
     }
-    // [END LS-SUC-PERBAND-GAINS-WITH-FREQ-SMOOTH]
 
-    // [BEGIN LS-SUC-REMOVE-EXTRA-INV-N]
-    // 6) Inverse FFT + synthesis (window + norm + OLA), then emit hop samples
+    // --- 6) Inverse FFT + synthesis
     for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
     {
         auto& st = ch[(size_t) chIdx];
 
         pr.fft->performRealOnlyInverseTransform (st.fftBuf.data());
 
-        // [BEGIN LS-SUC-SYNTH-ACCUM-THEN-NORMALIZE-ON-EMIT]
-            // Accumulate un-normalized WOLA synthesis (normalize at emit time).
-            for (int i = 0; i < fftSize; ++i)
-            {
-                const float x = st.fftBuf[(size_t) i];
-                const float y = (x * pr.window[(size_t) i]);
-                st.ola[(size_t) i] += y;
-            }
+        for (int i = 0; i < fftSize; ++i)
+            st.ola[(size_t) i] += (st.fftBuf[(size_t) i] * pr.window[(size_t) i]);
 
-            // Emit next hop and normalize using COLA sum for hop positions.
-            for (int i = 0; i < hopSize; ++i)
-                pushFifo (st, st.ola[(size_t) i] / pr.hopNorm[(size_t) i]);
-        // [END LS-SUC-SYNTH-ACCUM-THEN-NORMALIZE-ON-EMIT]
+        for (int i = 0; i < hopSize; ++i)
+            pushFifo (st, st.ola[(size_t) i] / pr.hopNorm[(size_t) i]);
 
         const int keep = fftSize - hopSize;
-        std::memmove (st.ola.data(),
-                      st.ola.data() + hopSize,
-                      (size_t) keep * sizeof (float));
+        std::memmove (st.ola.data(), st.ola.data() + hopSize, (size_t) keep * sizeof (float));
         std::fill (st.ola.begin() + keep, st.ola.begin() + fftSize, 0.0f);
     }
-    // [END LS-SUC-REMOVE-EXTRA-INV-N]
 
-    // 7) Shift input buffers left by hop (common framing)
+    // --- 7) Shift input buffers
     const int keep = fftSize - hopSize;
     for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
     {
         auto& st = ch[(size_t) chIdx];
-
-        std::memmove (st.input.data(),
-                      st.input.data() + hopSize,
-                      (size_t) keep * sizeof (float));
-
+        std::memmove (st.input.data(), st.input.data() + hopSize, (size_t) keep * sizeof (float));
         std::fill (st.input.begin() + keep, st.input.begin() + fftSize, 0.0f);
     }
 
     inputWritePos = keep;
 }
+// [END LS-SUC-STAGE-E-PROCESSFRAME-REPLACE]
 
 void SpectralUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexcept
 {
