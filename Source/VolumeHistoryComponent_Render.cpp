@@ -1,5 +1,8 @@
 #include "VolumeHistoryComponent.h"
 #include "PluginProcessor.h"
+// [BEGIN MTDM-THRESH-UI-INCLUDE-PARAMIDS]
+#include "Core/Processing/Modules/MultiThresholdDynamicsParamIDs.h"
+// [END MTDM-THRESH-UI-INCLUDE-PARAMIDS]
 
 //==============================================================================
 // VolumeHistoryComponent_Render.cpp
@@ -255,6 +258,12 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             g.drawLine (x, 0.0f, x, (float) height, 1.0f);
         }
     }
+
+    // [BEGIN MTDM-THRESH-UI-PAINT-CALL]
+    // Draw MTDM thresholds over the curves (O(1): 4 lines + 4 handles).
+    // Done here so rulers/labels remain on top.
+    drawMtdmThresholdOverlay (g);
+    // [END MTDM-THRESH-UI-PAINT-CALL]
 
     //==============================================================================
     // [DBFS-SCALE] Right-side dBFS scale (overlay)
@@ -657,6 +666,252 @@ void VolumeHistoryComponent::rebuildStaticBackgroundIfNeeded()
     gg.drawHorizontalLine ((int) std::round (rulerBaseY), 0.0f, (float) w);
 }
 // [END VHC-RENDER-CACHED-BG]
+
+// [BEGIN MTDM-THRESH-UI-IMPL]
+//==============================================================================
+// [MTDM-THRESH-UI] Threshold overlay implementation (T0..T3)
+//==============================================================================
+
+bool VolumeHistoryComponent::mtdmParamsAvailable() const noexcept
+{
+    for (auto* a : mtdmThreshAtoms)
+        if (a == nullptr)
+            return false;
+
+    for (auto* p : mtdmThreshParams)
+        if (p == nullptr)
+            return false;
+
+    return true;
+}
+
+void VolumeHistoryComponent::initMtdmParamPointersIfNeeded()
+{
+    if (mtdmParamPtrsInitialised)
+        return;
+
+    auto& apvts = processor.getAPVTS();
+    using namespace levelscope::mtdm::ParamIDs;
+
+    mtdmThreshAtoms[0]  = apvts.getRawParameterValue (t0Lufs);
+    mtdmThreshAtoms[1]  = apvts.getRawParameterValue (t1Lufs);
+    mtdmThreshAtoms[2]  = apvts.getRawParameterValue (t2Lufs);
+    mtdmThreshAtoms[3]  = apvts.getRawParameterValue (t3Lufs);
+
+    mtdmThreshParams[0] = apvts.getParameter (t0Lufs);
+    mtdmThreshParams[1] = apvts.getParameter (t1Lufs);
+    mtdmThreshParams[2] = apvts.getParameter (t2Lufs);
+    mtdmThreshParams[3] = apvts.getParameter (t3Lufs);
+
+    mtdmParamPtrsInitialised = true;
+}
+
+float VolumeHistoryComponent::yToLufs (float y, float height) const noexcept
+{
+    if (height <= 0.0f)
+        return 0.0f;
+
+    // Must match dbToY() usage in the existing curve drawing:
+    // dbToY (value, bounds.getHeight()).
+    const float effectiveRange = (float) (baseDbRange / zoomY);
+    const float top            = (float) viewTopDb;
+    const float bottom         = top - effectiveRange;
+
+    const float normY = juce::jlimit (0.0f, 1.0f, y / height); // y=0 top, y=height bottom
+    return bottom + (1.0f - normY) * effectiveRange;
+}
+
+void VolumeHistoryComponent::updateMtdmThresholdOverlayGeometry()
+{
+    initMtdmParamPointersIfNeeded();
+    if (! mtdmParamsAvailable())
+        return;
+
+    const int w = getWidth();
+    const int h = getHeight();
+    if (w <= 1 || h <= 1)
+        return;
+
+    // Exclude only the right dB ruler strip so we don't draw under it.
+    const auto dbRuler = getDbRulerArea();
+    mtdmOverlayArea = juce::Rectangle<float> (0.0f,
+                                             0.0f,
+                                             (float) (w - dbRuler.getWidth()),
+                                             (float) h);
+
+    const float handleW = 34.0f;
+    const float handleH = 18.0f;
+    const float handleX = mtdmOverlayArea.getX() + 4.0f;
+
+    for (int i = 0; i < 4; ++i)
+    {
+        const float v = mtdmThreshAtoms[(size_t) i]->load (std::memory_order_relaxed);
+
+        const float yLocal = dbToY (v, (float) h);             // IMPORTANT: use full height (matches curves)
+        const float yAbs   = mtdmOverlayArea.getY() + yLocal;   // area starts at y=0 anyway
+
+        const float hy = juce::jlimit (mtdmOverlayArea.getY(),
+                                       mtdmOverlayArea.getBottom() - handleH,
+                                       yAbs - handleH * 0.5f);
+
+        auto& th = thresholdHandles[(size_t) i];
+        th.index      = i;
+        th.drawBounds = juce::Rectangle<float> (handleX, hy, handleW, handleH);
+        th.hitBounds  = th.drawBounds.expanded (5.0f, 6.0f);
+    }
+}
+
+void VolumeHistoryComponent::computeOrderedThresholdsWithPush (int changedIndex,
+                                                              float newValueLufs,
+                                                              float outVals[4]) const noexcept
+{
+    // Precondition: pointers valid
+    for (int i = 0; i < 4; ++i)
+        outVals[i] = mtdmThreshAtoms[(size_t) i]->load (std::memory_order_relaxed);
+
+    // Helper: clamp + snap for that param
+    auto clampSnap = [&] (int idx, float v) -> float
+    {
+        if (auto* p = mtdmThreshParams[(size_t) idx])
+        {
+            const auto r = p->getNormalisableRange();
+            v = juce::jlimit ((float) r.start, (float) r.end, v);
+            v = r.snapToLegalValue (v);
+        }
+        return v;
+    };
+
+    newValueLufs = clampSnap (changedIndex, newValueLufs);
+    outVals[changedIndex] = newValueLufs;
+
+    // First clamp/snap everything to legal values
+    for (int i = 0; i < 4; ++i)
+        outVals[i] = clampSnap (i, outVals[i]);
+
+    // Enforce ordering with "push" and min gap.
+    // Do a couple passes to recover if clamping introduces collisions near limits.
+    for (int pass = 0; pass < 2; ++pass)
+    {
+        // Push right
+        for (int i = 1; i < 4; ++i)
+        {
+            const float minAllowed = outVals[i - 1] + kThreshMinGapLu;
+            if (outVals[i] < minAllowed)
+                outVals[i] = minAllowed;
+
+            outVals[i] = clampSnap (i, outVals[i]);
+        }
+
+        // Push left
+        for (int i = 2; i >= 0; --i)
+        {
+            const float maxAllowed = outVals[i + 1] - kThreshMinGapLu;
+            if (outVals[i] > maxAllowed)
+                outVals[i] = maxAllowed;
+
+            outVals[i] = clampSnap (i, outVals[i]);
+        }
+    }
+}
+
+void VolumeHistoryComponent::applyThresholdValuesDuringDrag (const float newVals[4])
+{
+    // Lazy-start gestures for any param that gets pushed/changed during this drag.
+    for (int i = 0; i < 4; ++i)
+    {
+        auto* p = mtdmThreshParams[(size_t) i];
+        auto* a = mtdmThreshAtoms[(size_t) i];
+        if (p == nullptr || a == nullptr)
+            continue;
+
+        const float oldV = a->load (std::memory_order_relaxed);
+        const float newV = newVals[i];
+
+        if (std::abs (newV - oldV) < 1.0e-6f)
+            continue;
+
+        if (! threshGestureActive[(size_t) i])
+        {
+            p->beginChangeGesture();
+            threshGestureActive[(size_t) i] = true;
+        }
+
+        const float norm = juce::jlimit (0.0f, 1.0f, p->convertTo0to1 (newV));
+        p->setValueNotifyingHost (norm);
+    }
+}
+
+void VolumeHistoryComponent::endAllThresholdGestures()
+{
+    for (int i = 0; i < 4; ++i)
+    {
+        if (! threshGestureActive[(size_t) i])
+            continue;
+
+        if (auto* p = mtdmThreshParams[(size_t) i])
+            p->endChangeGesture();
+
+        threshGestureActive[(size_t) i] = false;
+    }
+}
+
+void VolumeHistoryComponent::drawMtdmThresholdOverlay (juce::Graphics& g)
+{
+    initMtdmParamPointersIfNeeded();
+    if (! mtdmParamsAvailable())
+        return;
+
+    updateMtdmThresholdOverlayGeometry();
+
+    if (mtdmOverlayArea.getWidth() <= 1.0f || mtdmOverlayArea.getHeight() <= 1.0f)
+        return;
+
+    const int h = getHeight();
+
+    const juce::Colour lineColours[4] =
+    {
+        juce::Colours::orange.withMultipliedAlpha (0.85f),     // T0
+        juce::Colours::cyan.withMultipliedAlpha   (0.80f),     // T1
+        juce::Colours::magenta.withMultipliedAlpha(0.78f),     // T2
+        juce::Colours::limegreen.withMultipliedAlpha (0.78f)   // T3
+    };
+
+    juce::Graphics::ScopedSaveState ss (g);
+    g.reduceClipRegion (mtdmOverlayArea.toNearestInt());
+
+    for (int i = 0; i < 4; ++i)
+    {
+        const float v = mtdmThreshAtoms[(size_t) i]->load (std::memory_order_relaxed);
+
+        const float y = dbToY (v, (float) h); // IMPORTANT: full height (matches curves)
+        const float yAbs = mtdmOverlayArea.getY() + y;
+
+        // Line
+        g.setColour (lineColours[i]);
+        g.drawLine (mtdmOverlayArea.getX(),
+                    yAbs,
+                    mtdmOverlayArea.getRight(),
+                    yAbs,
+                    1.2f);
+
+        // Handle
+        const auto& th = thresholdHandles[(size_t) i];
+        auto r = th.drawBounds;
+
+        const bool isActive = (thresholdDragging && activeThresholdIndex == i);
+
+        g.setColour (juce::Colours::black.withMultipliedAlpha (isActive ? 0.80f : 0.65f));
+        g.fillRoundedRectangle (r, 3.5f);
+
+        g.setColour (lineColours[i].withMultipliedAlpha (isActive ? 1.0f : 0.85f));
+        g.drawRoundedRectangle (r, 3.5f, isActive ? 1.6f : 1.0f);
+
+        g.setColour (juce::Colours::white.withMultipliedAlpha (0.95f));
+        g.setFont (12.0f);
+        g.drawFittedText ("T" + juce::String (i), r.toNearestInt(), juce::Justification::centred, 1);
+    }
+}
+// [END MTDM-THRESH-UI-IMPL]
 
 //==============================================================================
 // Geometry helpers

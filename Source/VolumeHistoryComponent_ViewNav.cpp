@@ -298,6 +298,89 @@ void VolumeHistoryComponent::resized()
 }
 // [END VHC-VNAV-RESIZED]
 
+// [BEGIN MTDM-THRESH-UI-MOUSE-IMPL]
+//==============================================================================
+// [MTDM-THRESH-UI] Mouse interaction (T0..T3)
+//==============================================================================
+
+void VolumeHistoryComponent::handleThresholdMouseDown (const juce::MouseEvent& event)
+{
+    if (! event.mods.isLeftButtonDown())
+        return;
+
+    initMtdmParamPointersIfNeeded();
+    if (! mtdmParamsAvailable())
+        return;
+
+    // Ensure hit-bounds are up-to-date even if paint hasn't run recently.
+    updateMtdmThresholdOverlayGeometry();
+
+    const auto pos = event.position;
+
+    // Only respond inside overlay area (i.e., not on right dB ruler strip).
+    if (! mtdmOverlayArea.contains (pos))
+        return;
+
+    // Prefer higher thresholds if handles overlap: T3 > ... > T0
+    int hit = -1;
+    for (int i = 3; i >= 0; --i)
+    {
+        if (thresholdHandles[(size_t) i].hitBounds.contains (pos))
+        {
+            hit = i;
+            break;
+        }
+    }
+
+    if (hit < 0)
+        return;
+
+    thresholdDragging = true;
+    activeThresholdIndex = hit;
+
+    // Reset gesture state for this drag
+    threshGestureActive = { { false, false, false, false } };
+
+    // Begin gesture immediately for the actively grabbed threshold.
+    if (auto* p = mtdmThreshParams[(size_t) hit])
+    {
+        p->beginChangeGesture();
+        threshGestureActive[(size_t) hit] = true;
+    }
+}
+
+void VolumeHistoryComponent::handleThresholdMouseDrag (const juce::MouseEvent& event)
+{
+    if (! thresholdDragging || activeThresholdIndex < 0)
+        return;
+
+    initMtdmParamPointersIfNeeded();
+    if (! mtdmParamsAvailable())
+        return;
+
+    const float h = (float) juce::jmax (1, getHeight());
+    const float targetLufs = yToLufs (event.position.y, h);
+
+    float newVals[4];
+    computeOrderedThresholdsWithPush (activeThresholdIndex, targetLufs, newVals);
+
+    applyThresholdValuesDuringDrag (newVals);
+}
+
+void VolumeHistoryComponent::handleThresholdMouseUp (const juce::MouseEvent& event)
+{
+    juce::ignoreUnused (event);
+
+    if (! thresholdDragging)
+        return;
+
+    endAllThresholdGestures();
+
+    thresholdDragging = false;
+    activeThresholdIndex = -1;
+}
+// [END MTDM-THRESH-UI-MOUSE-IMPL]
+
 //==============================================================================
 // Mouse
 //==============================================================================
@@ -364,6 +447,12 @@ void VolumeHistoryComponent::mouseDoubleClick (const juce::MouseEvent& event)
 void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
 {
     const auto p = event.getPosition();
+    // [BEGIN MTDM-THRESH-UI-MOUSE-HOOK-DOWN]
+    // Threshold handles take precedence over the view-nav interactions.
+    handleThresholdMouseDown (event);
+    if (thresholdDragging)
+        return;
+    // [END MTDM-THRESH-UI-MOUSE-HOOK-DOWN]
 
     // [TIMECODE-USER] Right-click on time ruler to set/reset user timecode offset
     if (getTimeRulerArea().contains (p) && event.mods.isPopupMenu())
@@ -432,6 +521,15 @@ void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
 
 void VolumeHistoryComponent::mouseDrag (const juce::MouseEvent& event)
 {
+    // [BEGIN MTDM-THRESH-UI-MOUSE-HOOK-DRAG]
+    if (thresholdDragging)
+    {
+        handleThresholdMouseDrag (event);
+        repaint();
+        return;
+    }
+    // [END MTDM-THRESH-UI-MOUSE-HOOK-DRAG]
+
     if (dragMode == DragMode::none)
         return;
 
@@ -468,8 +566,16 @@ void VolumeHistoryComponent::mouseDrag (const juce::MouseEvent& event)
     }
 }
 
-void VolumeHistoryComponent::mouseUp (const juce::MouseEvent&)
+void VolumeHistoryComponent::mouseUp (const juce::MouseEvent& event)
 {
+    // [BEGIN MTDM-THRESH-UI-MOUSE-HOOK-UP]
+    if (thresholdDragging)
+    {
+        handleThresholdMouseUp (event);
+        repaint();
+    }
+    // [END MTDM-THRESH-UI-MOUSE-HOOK-UP]
+
     dragMode = DragMode::none;
 }
 // [END VHC-VNAV-MOUSE]

@@ -3,6 +3,9 @@
 #include <JuceHeader.h>
 #include <vector>
 #include <array>
+// [BEGIN MTDM-THRESH-UI-INCLUDE-ATOMIC]
+#include <atomic>
+// [END MTDM-THRESH-UI-INCLUDE-ATOMIC]
 
 class LevelScopeAudioProcessor;
 
@@ -239,6 +242,61 @@ private:
 
     juce::ToggleButton rollingLraButton; // [ROLLING-LRA] show/hide rolling LRA curve
     bool showRollingLra = false;
+
+    // [BEGIN MTDM-THRESH-UI-DECL]
+    //==============================================================================
+    // [MTDM-THRESH-UI] Multi-threshold dynamics overlay (T0..T3)
+    // UI-only, driven by APVTS params. O(1) draw: 4 lines + 4 handles.
+    //==============================================================================
+
+    struct ThresholdHandle
+    {
+        juce::Rectangle<float> hitBounds;   // expanded hit zone
+        juce::Rectangle<float> drawBounds;  // visible handle rect
+        int index = -1;                     // 0..3
+    };
+
+    // Cached parameter pointers (initialised lazily on UI thread)
+    bool mtdmParamPtrsInitialised = false;
+    std::array<std::atomic<float>*, 4>        mtdmThreshAtoms  { { nullptr, nullptr, nullptr, nullptr } };
+    std::array<juce::RangedAudioParameter*, 4> mtdmThreshParams { { nullptr, nullptr, nullptr, nullptr } };
+
+    // Drag state
+    bool thresholdDragging = false;
+    int  activeThresholdIndex = -1;
+
+    // Gesture state: begin once (mouseDown / lazy for pushed), end once (mouseUp)
+    std::array<bool, 4> threshGestureActive { { false, false, false, false } };
+
+    // Geometry cache for drawing/hit-test (updated O(1) whenever needed)
+    juce::Rectangle<float> mtdmOverlayArea;            // excludes right dB ruler only
+    std::array<ThresholdHandle, 4> thresholdHandles;   // T0..T3
+
+    // Constants
+    static constexpr float kThreshMinGapLu = 0.1f;
+
+    // Helpers
+    void initMtdmParamPointersIfNeeded();
+    bool mtdmParamsAvailable() const noexcept;
+
+    void updateMtdmThresholdOverlayGeometry();               // O(1)
+    void drawMtdmThresholdOverlay (juce::Graphics& g);       // O(1)
+
+    float yToLufs (float y, float height) const noexcept;
+
+    void computeOrderedThresholdsWithPush (int changedIndex,
+                                          float newValueLufs,
+                                          float outVals[4]) const noexcept;
+
+    void applyThresholdValuesDuringDrag (const float newVals[4]);
+
+    void endAllThresholdGestures();
+
+    // Mouse handlers (called from existing mouseDown/Drag/Up)
+    void handleThresholdMouseDown (const juce::MouseEvent& event);
+    void handleThresholdMouseDrag (const juce::MouseEvent& event);
+    void handleThresholdMouseUp   (const juce::MouseEvent& event);
+    // [END MTDM-THRESH-UI-DECL]
 
     //==============================================================================
     // [ROLLING-LRA] Per-second short-term + gate history and computed rolling LRA
