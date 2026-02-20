@@ -761,15 +761,15 @@ void VolumeHistoryComponent::updateMtdmThresholdOverlayGeometry()
     }
 }
 
+// [BEGIN MTDM-THRESH-UI-PUSH-FIX]
 void VolumeHistoryComponent::computeOrderedThresholdsWithPush (int changedIndex,
                                                               float newValueLufs,
                                                               float outVals[4]) const noexcept
 {
-    // Precondition: pointers valid
-    for (int i = 0; i < 4; ++i)
-        outVals[i] = mtdmThreshAtoms[(size_t) i]->load (std::memory_order_relaxed);
+    if (changedIndex < 0 || changedIndex > 3)
+        return;
 
-    // Helper: clamp + snap for that param
+    // Precondition: pointers valid (initMtdmParamPointersIfNeeded() already called)
     auto clampSnap = [&] (int idx, float v) -> float
     {
         if (auto* p = mtdmThreshParams[(size_t) idx])
@@ -781,38 +781,48 @@ void VolumeHistoryComponent::computeOrderedThresholdsWithPush (int changedIndex,
         return v;
     };
 
-    newValueLufs = clampSnap (changedIndex, newValueLufs);
-    outVals[changedIndex] = newValueLufs;
-
-    // First clamp/snap everything to legal values
+    // 1) Start from current values, clamped/snapped
     for (int i = 0; i < 4; ++i)
+    {
+        float v = mtdmThreshAtoms[(size_t) i]->load (std::memory_order_relaxed);
+        outVals[i] = clampSnap (i, v);
+    }
+
+    // 2) Set the dragged threshold (ANCHOR) and do not move it again in this function
+    outVals[changedIndex] = clampSnap (changedIndex, newValueLufs);
+
+    // 3) Push to the RIGHT (higher index) upwards as needed
+    for (int i = changedIndex + 1; i < 4; ++i)
+    {
+        const float minAllowed = outVals[i - 1] + kThreshMinGapLu;
+
+        if (outVals[i] < minAllowed)
+            outVals[i] = minAllowed;
+
         outVals[i] = clampSnap (i, outVals[i]);
 
-    // Enforce ordering with "push" and min gap.
-    // Do a couple passes to recover if clamping introduces collisions near limits.
-    for (int pass = 0; pass < 2; ++pass)
+        // If clamping at the max range prevents satisfying minAllowed, we accept the limit.
+        // (At normal ranges this won't happen; this avoids "pulling back" the anchor.)
+        if (outVals[i] < minAllowed)
+            outVals[i] = outVals[i]; // keep clamped value
+    }
+
+    // 4) Push to the LEFT (lower index) downwards as needed
+    for (int i = changedIndex - 1; i >= 0; --i)
     {
-        // Push right
-        for (int i = 1; i < 4; ++i)
-        {
-            const float minAllowed = outVals[i - 1] + kThreshMinGapLu;
-            if (outVals[i] < minAllowed)
-                outVals[i] = minAllowed;
+        const float maxAllowed = outVals[i + 1] - kThreshMinGapLu;
 
-            outVals[i] = clampSnap (i, outVals[i]);
-        }
+        if (outVals[i] > maxAllowed)
+            outVals[i] = maxAllowed;
 
-        // Push left
-        for (int i = 2; i >= 0; --i)
-        {
-            const float maxAllowed = outVals[i + 1] - kThreshMinGapLu;
-            if (outVals[i] > maxAllowed)
-                outVals[i] = maxAllowed;
+        outVals[i] = clampSnap (i, outVals[i]);
 
-            outVals[i] = clampSnap (i, outVals[i]);
-        }
+        // If clamping at the min range prevents satisfying maxAllowed, we accept the limit.
+        if (outVals[i] > maxAllowed)
+            outVals[i] = outVals[i]; // keep clamped value
     }
 }
+// [END MTDM-THRESH-UI-PUSH-FIX]
 
 void VolumeHistoryComponent::applyThresholdValuesDuringDrag (const float newVals[4])
 {
