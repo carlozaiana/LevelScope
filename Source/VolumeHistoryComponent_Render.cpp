@@ -126,13 +126,18 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     rebuildStaticBackgroundIfNeeded();
     if (cachedStaticBackground.isValid())
         g.drawImageAt (cachedStaticBackground, 0, 0);
+        // [BEGIN ROLLING-LRA-SPLITTER-HOIST-SELECTEDLEVEL]
+        // Must live outside the plot-clip scope because we use it later for debug text.
+        const int selectedLevel = selectBestLevelForCurrentZoom (width);
+        // [END ROLLING-LRA-SPLITTER-HOIST-SELECTEDLEVEL]
+
         // [BEGIN ROLLING-LRA-SPLITTER-CLIP-PLOT]
         {
             juce::Graphics::ScopedSaveState plotClip (g);
             g.reduceClipRegion (mainPlotArea.toNearestInt());
         // [END ROLLING-LRA-SPLITTER-CLIP-PLOT]
 
-    const int selectedLevel = selectBestLevelForCurrentZoom (width);
+    // [ROLLING-LRA-SPLITTER] selectedLevel moved above (outside clip scope)
 
     buildVisibleGroupsForLevel (selectedLevel, width, scratchVisibleGroups, scratchVisibleEndFrameIndex); // [TIMEBASE-FIX]
 
