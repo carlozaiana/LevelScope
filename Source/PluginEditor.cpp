@@ -119,6 +119,35 @@ MtdmControlPanel::MtdmControlPanel (LevelScopeAudioProcessor& p)
     t2Att = std::make_unique<SliderAttachment> (apvts, t2Lufs, t2Slider);
     t3Att = std::make_unique<SliderAttachment> (apvts, t3Lufs, t3Slider);
 
+    // [BEGIN MTDM-PANEL-THRESH-ORDER-HOOKS]
+    auto attachThreshHooks = [this] (juce::Slider& s, int idx)
+    {
+        s.onDragStart = [this, idx]
+        {
+            thresholdSliderDragging = true;
+            thresholdSliderDraggingIndex = idx;
+            pushedGestureActive = { { false, false, false, false } };
+        };
+
+        s.onValueChange = [this, idx]
+        {
+            enforceThresholdOrderingFromSlider (idx);
+        };
+
+        s.onDragEnd = [this]
+        {
+            endPushedThresholdGestures();
+            thresholdSliderDragging = false;
+            thresholdSliderDraggingIndex = -1;
+        };
+    };
+
+    attachThreshHooks (t0Slider, 0);
+    attachThreshHooks (t1Slider, 1);
+    attachThreshHooks (t2Slider, 2);
+    attachThreshHooks (t3Slider, 3);
+    // [END MTDM-PANEL-THRESH-ORDER-HOOKS]
+
     // UI poll rate for meters
     startTimerHz (30);
 }
@@ -161,6 +190,122 @@ void MtdmControlPanel::configureSliderForParam (juce::Slider& s,
     }
     // [END MTDM-PANEL-SLIDER-RANGE-DOUBLE-FIX]
 }
+
+// [BEGIN MTDM-PANEL-THRESH-ORDER-IMPL]
+void MtdmControlPanel::endPushedThresholdGestures()
+{
+    using namespace levelscope::mtdm::ParamIDs;
+
+    const juce::String ids[4] = { t0Lufs, t1Lufs, t2Lufs, t3Lufs };
+
+    for (int i = 0; i < 4; ++i)
+    {
+        if (! pushedGestureActive[(size_t) i])
+            continue;
+
+        if (auto* p = apvts.getParameter (ids[i]))
+            p->endChangeGesture();
+
+        pushedGestureActive[(size_t) i] = false;
+    }
+}
+
+void MtdmControlPanel::enforceThresholdOrderingFromSlider (int changedIndex)
+{
+    if (thresholdCallbacksSuppressed)
+        return;
+
+    if (changedIndex < 0 || changedIndex > 3)
+        return;
+
+    using namespace levelscope::mtdm::ParamIDs;
+    const juce::String ids[4] = { t0Lufs, t1Lufs, t2Lufs, t3Lufs };
+
+    juce::RangedAudioParameter* params[4] =
+    {
+        apvts.getParameter (ids[0]),
+        apvts.getParameter (ids[1]),
+        apvts.getParameter (ids[2]),
+        apvts.getParameter (ids[3])
+    };
+
+    if (params[0] == nullptr || params[1] == nullptr || params[2] == nullptr || params[3] == nullptr)
+        return;
+
+    auto clampSnap = [&] (int idx, float v) -> float
+    {
+        const auto r = params[idx]->getNormalisableRange();
+        v = juce::jlimit ((float) r.start, (float) r.end, v);
+        v = r.snapToLegalValue (v);
+        return v;
+    };
+
+    // Read current parameter values (authoritative)
+    float v[4];
+    for (int i = 0; i < 4; ++i)
+    {
+        // convertFrom0to1(getValue()) gives the parameter's current "real" value.
+        v[i] = (float) params[i]->convertFrom0to1 (params[i]->getValue());
+        v[i] = clampSnap (i, v[i]);
+    }
+
+    // Anchor = the value the user is changing (from the slider, so it matches what they see)
+    const juce::Slider* sliders[4] = { &t0Slider, &t1Slider, &t2Slider, &t3Slider };
+    v[changedIndex] = clampSnap (changedIndex, (float) sliders[changedIndex]->getValue());
+
+    // Push OUTWARDS from the changed index (same UX as handle dragging)
+    for (int i = changedIndex + 1; i < 4; ++i)
+    {
+        const float minAllowed = v[i - 1] + minGapLu;
+        if (v[i] < minAllowed)
+            v[i] = clampSnap (i, minAllowed);
+    }
+
+    for (int i = changedIndex - 1; i >= 0; --i)
+    {
+        const float maxAllowed = v[i + 1] - minGapLu;
+        if (v[i] > maxAllowed)
+            v[i] = clampSnap (i, maxAllowed);
+    }
+
+    // Apply pushed neighbors only (do not fight the actively changed slider)
+    thresholdCallbacksSuppressed = true;
+
+    for (int i = 0; i < 4; ++i)
+    {
+        if (i == changedIndex)
+            continue;
+
+        const float cur = (float) params[i]->convertFrom0to1 (params[i]->getValue());
+        const float dst = v[i];
+
+        if (std::abs (dst - cur) < 1.0e-6f)
+            continue;
+
+        // Gesture strategy:
+        // - while user drags a threshold slider, keep neighbor gestures open (lazy-start)
+        // - otherwise (text entry / programmatic), do an immediate begin-set-end
+        if (thresholdSliderDragging)
+        {
+            if (! pushedGestureActive[(size_t) i])
+            {
+                params[i]->beginChangeGesture();
+                pushedGestureActive[(size_t) i] = true;
+            }
+
+            params[i]->setValueNotifyingHost (juce::jlimit (0.0f, 1.0f, params[i]->convertTo0to1 (dst)));
+        }
+        else
+        {
+            params[i]->beginChangeGesture();
+            params[i]->setValueNotifyingHost (juce::jlimit (0.0f, 1.0f, params[i]->convertTo0to1 (dst)));
+            params[i]->endChangeGesture();
+        }
+    }
+
+    thresholdCallbacksSuppressed = false;
+}
+// [END MTDM-PANEL-THRESH-ORDER-IMPL]
 
 void MtdmControlPanel::timerCallback()
 {

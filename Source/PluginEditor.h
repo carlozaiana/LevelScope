@@ -45,6 +45,21 @@ public:
 private:
     void timerCallback() override;
 
+    // [BEGIN MTDM-PANEL-THRESH-ORDER-DECL]
+    void enforceThresholdOrderingFromSlider (int changedIndex);
+    void endPushedThresholdGestures();
+
+    bool thresholdCallbacksSuppressed = false;
+
+    bool thresholdSliderDragging = false;
+    int  thresholdSliderDraggingIndex = -1;
+
+    // Gestures for pushed neighbors (not the actively dragged slider)
+    std::array<bool, 4> pushedGestureActive { { false, false, false, false } };
+
+    static constexpr float minGapLu = 0.1f;
+    // [END MTDM-PANEL-THRESH-ORDER-DECL]
+
     void configureToggle (juce::ToggleButton& b, const juce::String& text);
     void configureSliderForParam (juce::Slider& s, const juce::String& paramID,
                                   juce::Slider::SliderStyle style,

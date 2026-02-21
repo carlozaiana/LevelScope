@@ -263,28 +263,9 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         }
     }
 
-    //==============================================================================
-    // [PLAYHEAD-LINE] draw DAW playhead position on top of the graph
-    // Right edge is "furthest written" (nowFrameIndex). Playhead can be left of it
-    // during loop/rewind, which is intended.
-    //==============================================================================
-    if (haveNowFrameIndex && havePlayheadFrameIndex && zoomX > 1.0e-12)
-    {
-        const double framesFromRight = viewRightFrame - (double) playheadFrameIndex;
-        float x = (float) ((double) width - framesFromRight * zoomX);
-
-        // [PLAYHEAD-LINE] snap to pixel center to reduce AA shimmer/flicker while scrolling
-        x = std::floor (x) + 0.5f;
-
-        if (x >= -2.0f && x <= (float) width + 2.0f)
-        {
-            // Thin, slightly transparent so it doesn't dominate
-            g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
-            // [BEGIN ROLLING-LRA-SPLITTER-PLAYHEAD-HEIGHT]
-            g.drawLine (x, 0.0f, x, mainPlotArea.getBottom(), 1.0f);
-            // [END ROLLING-LRA-SPLITTER-PLAYHEAD-HEIGHT]
-        }
-    }
+    // [BEGIN ROLLING-LRA-PLAYHEAD-MOVED]
+    // [PLAYHEAD-LINE] moved ниже (after rLRA drawing) so it overlays the rLRA lane too.
+    // [END ROLLING-LRA-PLAYHEAD-MOVED]
 
     // [BEGIN MTDM-THRESH-UI-PAINT-CALL]
     // Draw MTDM thresholds over the curves (O(1): 4 lines + 4 handles).
@@ -546,6 +527,24 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             g.drawRect (rollingArea);
         }
     }
+
+    // [BEGIN ROLLING-LRA-PLAYHEAD-OVERLAY-ALL]
+    // Draw playhead on top of plot + rLRA lane (but not into time ruler).
+    if (haveNowFrameIndex && havePlayheadFrameIndex && zoomX > 1.0e-12)
+    {
+        const double framesFromRight = viewRightFrame - (double) playheadFrameIndex;
+        float x = (float) ((double) width - framesFromRight * zoomX);
+
+        x = std::floor (x) + 0.5f; // snap to pixel center
+
+        const float yBottom = (float) getTimeRulerArea().getY(); // includes rLRA lane area above ruler
+        if (x >= -2.0f && x <= (float) width + 2.0f && yBottom > 1.0f)
+        {
+            g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
+            g.drawLine (x, 0.0f, x, yBottom, 1.0f);
+        }
+    }
+    // [END ROLLING-LRA-PLAYHEAD-OVERLAY-ALL]
 
     //==========================================================================
     // [RULER-FRAMES]  [VIEW-NAV]
