@@ -1,5 +1,8 @@
 #include "VolumeHistoryComponent.h"
 #include "PluginProcessor.h"
+// [BEGIN MTDM-THRESH-UI-APVTS-LISTENER-INCLUDE]
+#include "Core/Processing/Modules/MultiThresholdDynamicsParamIDs.h"
+// [END MTDM-THRESH-UI-APVTS-LISTENER-INCLUDE]
 
 #include <cmath>
 #include <algorithm>
@@ -98,9 +101,32 @@ VolumeHistoryComponent::VolumeHistoryComponent (LevelScopeAudioProcessor& proc)
     addAndMakeVisible (rollingLraButton);
 
     markStaticBackgroundDirty();
+    // [BEGIN MTDM-THRESH-UI-APVTS-LISTENER-REGISTER]
+    {
+        auto& apvts = processor.getAPVTS();
+        using namespace levelscope::mtdm::ParamIDs;
+
+        apvts.addParameterListener (t0Lufs, this);
+        apvts.addParameterListener (t1Lufs, this);
+        apvts.addParameterListener (t2Lufs, this);
+        apvts.addParameterListener (t3Lufs, this);
+    }
+    // [END MTDM-THRESH-UI-APVTS-LISTENER-REGISTER]
 }
 
+// [BEGIN MTDM-THRESH-UI-APVTS-LISTENER-UNREGISTER]
 VolumeHistoryComponent::~VolumeHistoryComponent()
 {
+    {
+        auto& apvts = processor.getAPVTS();
+        using namespace levelscope::mtdm::ParamIDs;
+
+        apvts.removeParameterListener (t0Lufs, this);
+        apvts.removeParameterListener (t1Lufs, this);
+        apvts.removeParameterListener (t2Lufs, this);
+        apvts.removeParameterListener (t3Lufs, this);
+    }
+
     stopTimer();
 }
+// [END MTDM-THRESH-UI-APVTS-LISTENER-UNREGISTER]

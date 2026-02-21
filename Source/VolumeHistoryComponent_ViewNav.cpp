@@ -1,6 +1,16 @@
 #include "VolumeHistoryComponent.h"
 #include "PluginProcessor.h"
 
+// [BEGIN MTDM-THRESH-UI-APVTS-LISTENER-IMPL]
+void VolumeHistoryComponent::parameterChanged (const juce::String& parameterID, float newValue)
+{
+    juce::ignoreUnused (parameterID, newValue);
+
+    // Safe to call from any thread in JUCE (asynchronous repaint request).
+    repaint();
+}
+// [END MTDM-THRESH-UI-APVTS-LISTENER-IMPL]
+
 //==============================================================================
 // VolumeHistoryComponent_ViewNav.cpp
 // - view state (follow, viewRightFrame, viewTopDb)
@@ -358,8 +368,17 @@ void VolumeHistoryComponent::handleThresholdMouseDrag (const juce::MouseEvent& e
     if (! mtdmParamsAvailable())
         return;
 
-    const float h = (float) juce::jmax (1, getHeight());
-    const float targetLufs = yToLufs (event.position.y, h);
+    // [BEGIN ROLLING-LRA-SPLITTER-THRESH-DRAG-MAPPING-FIX]
+    // Make sure geometry (including mainPlotArea height) is up-to-date.
+    updateMtdmThresholdOverlayGeometry();
+
+    const float plotH = (float) juce::jmax (1.0f, mainPlotArea.getHeight());
+
+    // Clamp Y into the plot area so the mapping matches what we draw.
+    const float yInPlot = juce::jlimit (0.0f, plotH, (float) event.position.y);
+
+    const float targetLufs = yToLufs (yInPlot, plotH);
+    // [END ROLLING-LRA-SPLITTER-THRESH-DRAG-MAPPING-FIX]
 
     float newVals[4];
     computeOrderedThresholdsWithPush (activeThresholdIndex, targetLufs, newVals);

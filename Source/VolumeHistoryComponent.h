@@ -24,8 +24,11 @@ class LevelScopeAudioProcessor;
 //   - [RULER-HYST-FIX]    : tickStep hysteresis that doesn't thrash while zooming
 //==============================================================================
 
+// [BEGIN MTDM-THRESH-UI-APVTS-LISTENER-INHERIT]
 class VolumeHistoryComponent : public juce::Component,
-                               private juce::Timer
+                               private juce::Timer,
+                               private juce::AudioProcessorValueTreeState::Listener
+// [END MTDM-THRESH-UI-APVTS-LISTENER-INHERIT]
 {
 public:
     explicit VolumeHistoryComponent (LevelScopeAudioProcessor& processor);
@@ -77,6 +80,9 @@ private:
     //==============================================================================
 
     void timerCallback() override;
+    // [BEGIN MTDM-THRESH-UI-APVTS-LISTENER-DECL]
+    void parameterChanged (const juce::String& parameterID, float newValue) override;
+    // [END MTDM-THRESH-UI-APVTS-LISTENER-DECL]
     
     //==============================================================================
     // [STATE-PERSIST] bootstrap GUI history from processor timeline after project load
