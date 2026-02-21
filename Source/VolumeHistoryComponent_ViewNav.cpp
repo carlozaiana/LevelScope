@@ -489,6 +489,26 @@ void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
         return;
     }
 
+    // [BEGIN ROLLING-LRA-SPLITTER-MOUSEDOWN]
+    // Drag the rolling LRA divider (allocates space between plot and rolling lane).
+    if (showRollingLra)
+    {
+        const auto dbRuler = getDbRulerArea();
+        const int graphRight = getWidth() - dbRuler.getWidth();
+
+        const int dividerY = getTimeRulerArea().getY() - rollingLaneHeightPx;
+        juce::Rectangle<int> hitZone (0, dividerY - 4, graphRight, 8);
+
+        if (event.mods.isLeftButtonDown() && hitZone.contains (p))
+        {
+            dragMode = DragMode::rollingLraDivider;
+            dragStartPos = p;
+            dragStartRollingLaneHeightPx = rollingLaneHeightPx;
+            return;
+        }
+    }
+    // [END ROLLING-LRA-SPLITTER-MOUSEDOWN]
+
     // [UI-RULERS] Drag time ruler to pan time
     if (getTimeRulerArea().contains (p))
     {
@@ -534,6 +554,24 @@ void VolumeHistoryComponent::mouseDrag (const juce::MouseEvent& event)
         return;
 
     const auto p = event.getPosition();
+
+    // [BEGIN ROLLING-LRA-SPLITTER-MOUSEDRAG]
+    if (dragMode == DragMode::rollingLraDivider)
+    {
+        const int dy = p.y - dragStartPos.y;
+
+        // Dragging DOWN reduces rolling lane height; dragging UP increases it.
+        rollingLaneHeightPx = dragStartRollingLaneHeightPx - dy;
+        rollingLaneHeightPx = juce::jlimit (rollingLaneMinHeightPx,
+                                            rollingLaneMaxHeightPx,
+                                            rollingLaneHeightPx);
+
+        // Plot area height changed -> repaint (and background grid alignment may change)
+        markStaticBackgroundDirty();
+        repaint();
+        return;
+    }
+    // [END ROLLING-LRA-SPLITTER-MOUSEDRAG]
 
     if (dragMode == DragMode::timeRuler)
     {

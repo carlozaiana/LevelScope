@@ -227,7 +227,9 @@ private:
     void resetYViewDefault();
 
     // Dragging rulers
-    enum class DragMode { none, timeRuler, dbRuler };
+    // [BEGIN ROLLING-LRA-SPLITTER-DRAGMODE]
+    enum class DragMode { none, timeRuler, dbRuler, rollingLraDivider };
+    // [END ROLLING-LRA-SPLITTER-DRAGMODE]
     DragMode dragMode = DragMode::none;
 
     juce::Point<int> dragStartPos;
@@ -242,6 +244,17 @@ private:
 
     juce::ToggleButton rollingLraButton; // [ROLLING-LRA] show/hide rolling LRA curve
     bool showRollingLra = false;
+    // [BEGIN ROLLING-LRA-SPLITTER-STATE]
+    // Rolling LRA lane height (px). User can drag the divider to resize.
+    int rollingLaneHeightPx = 46; // old hardcoded value
+    static constexpr int rollingLaneMinHeightPx = 28;
+    static constexpr int rollingLaneMaxHeightPx = 240;
+
+    int dragStartRollingLaneHeightPx = 46;
+
+    // Main plot area (curves + threshold overlay). Updated in paint and in hit-test prep.
+    juce::Rectangle<float> mainPlotArea;
+    // [END ROLLING-LRA-SPLITTER-STATE]
 
     // [BEGIN MTDM-THRESH-UI-DECL]
     //==============================================================================

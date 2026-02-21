@@ -51,6 +51,19 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     const int width  = (int) bounds.getWidth();
     const int height = (int) bounds.getHeight();
 
+    // [BEGIN ROLLING-LRA-SPLITTER-MAINPLOT-AREA]
+    // Reserve bottom space for time ruler, and optionally for rolling LRA lane.
+    const auto timeRuler = getTimeRulerArea();
+
+    int plotBottom = timeRuler.getY();
+    if (showRollingLra)
+        plotBottom -= rollingLaneHeightPx;
+
+    plotBottom = juce::jlimit (1, juce::jmax (1, height), plotBottom);
+
+    mainPlotArea = juce::Rectangle<float> (0.0f, 0.0f, (float) width, (float) plotBottom);
+    // [END ROLLING-LRA-SPLITTER-MAINPLOT-AREA]
+
     // [VIEW-NAV] Follow mode: follow playhead (so overwrite outside view jumps to that section)
     // Keep playhead at center while following.
     if (followRightEdge)
@@ -113,14 +126,21 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     rebuildStaticBackgroundIfNeeded();
     if (cachedStaticBackground.isValid())
         g.drawImageAt (cachedStaticBackground, 0, 0);
+        // [BEGIN ROLLING-LRA-SPLITTER-CLIP-PLOT]
+        {
+            juce::Graphics::ScopedSaveState plotClip (g);
+            g.reduceClipRegion (mainPlotArea.toNearestInt());
+        // [END ROLLING-LRA-SPLITTER-CLIP-PLOT]
 
     const int selectedLevel = selectBestLevelForCurrentZoom (width);
 
     buildVisibleGroupsForLevel (selectedLevel, width, scratchVisibleGroups, scratchVisibleEndFrameIndex); // [TIMEBASE-FIX]
 
     const size_t n = scratchVisibleGroups.size();
+    // [BEGIN ROLLING-LRA-SPLITTER-USE-PLOT-H]
     const float w = bounds.getWidth();
-    const float h = bounds.getHeight();
+    const float h = mainPlotArea.getHeight(); // plot height changes when rolling lane is resized
+    // [END ROLLING-LRA-SPLITTER-USE-PLOT-H]
 
     if (n >= 2)
     {
@@ -255,7 +275,9 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         {
             // Thin, slightly transparent so it doesn't dominate
             g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
-            g.drawLine (x, 0.0f, x, (float) height, 1.0f);
+            // [BEGIN ROLLING-LRA-SPLITTER-PLAYHEAD-HEIGHT]
+            g.drawLine (x, 0.0f, x, mainPlotArea.getBottom(), 1.0f);
+            // [END ROLLING-LRA-SPLITTER-PLAYHEAD-HEIGHT]
         }
     }
 
@@ -264,6 +286,16 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     // Done here so rulers/labels remain on top.
     drawMtdmThresholdOverlay (g);
     // [END MTDM-THRESH-UI-PAINT-CALL]
+    // [BEGIN ROLLING-LRA-SPLITTER-UNCLIP-AFTER-PLOT]
+    // End plot clip so rulers / rolling lane can draw in the bottom reserved area.
+    // (plotClip ScopedSaveState will restore when it goes out of scope; we end scope here.)
+    // NOTE: this relies on plotClip being created just above the curve drawing.
+    // We close its scope by wrapping the plotted section in braces.
+    // [END ROLLING-LRA-SPLITTER-UNCLIP-AFTER-PLOT]
+
+    // [BEGIN ROLLING-LRA-SPLITTER-CLIP-PLOT-END]
+    } // end plot clip scope
+    // [END ROLLING-LRA-SPLITTER-CLIP-PLOT-END]
 
     //==============================================================================
     // [DBFS-SCALE] Right-side dBFS scale (overlay)
@@ -271,8 +303,10 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     //==============================================================================
     {
         // Keep the scale above the time ruler area
-        const float rulerHeightPx = 16.0f;
-        const auto scaleArea = bounds.withTrimmedBottom (rulerHeightPx);
+        // [BEGIN ROLLING-LRA-SPLITTER-DBSCALE-TRIM]
+        const float reservedBottomPx = bounds.getHeight() - mainPlotArea.getHeight();
+        const auto scaleArea = bounds.withTrimmedBottom (reservedBottomPx);
+        // [END ROLLING-LRA-SPLITTER-DBSCALE-TRIM]
 
         const float scaleH = scaleArea.getHeight();
         if (scaleH > 20.0f)
@@ -347,7 +381,9 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         const auto timeRuler = getTimeRulerArea();
         const auto dbRuler   = getDbRulerArea();
 
-        const int rollingH = 46;
+        // [BEGIN ROLLING-LRA-SPLITTER-HEIGHT]
+        const int rollingH = rollingLaneHeightPx;
+        // [END ROLLING-LRA-SPLITTER-HEIGHT]
         int yTop = timeRuler.getY() - rollingH;
 
         if (yTop < 0)
@@ -355,6 +391,18 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
         const int graphW = juce::jmax (1, getWidth() - dbRuler.getWidth());
         juce::Rectangle<int> rollingArea (0, yTop, graphW, rollingH);
+
+        // [BEGIN ROLLING-LRA-SPLITTER-DIVIDER-DRAW]
+        {
+            const int dividerY = rollingArea.getY();
+            g.setColour (juce::Colours::white.withMultipliedAlpha (0.18f));
+            g.drawHorizontalLine (dividerY, 0.0f, (float) rollingArea.getRight());
+
+            // Slightly brighter "handle" segment on the left
+            g.setColour (juce::Colours::white.withMultipliedAlpha (0.30f));
+            g.drawLine (8.0f, (float) dividerY, 38.0f, (float) dividerY, 2.0f);
+        }
+        // [END ROLLING-LRA-SPLITTER-DIVIDER-DRAW]
 
         if (rollingArea.getWidth() > 20 && rollingArea.getHeight() > 12)
         {
@@ -727,17 +775,32 @@ void VolumeHistoryComponent::updateMtdmThresholdOverlayGeometry()
     if (! mtdmParamsAvailable())
         return;
 
+    // [BEGIN ROLLING-LRA-SPLITTER-MTDM-PLOT-HEIGHT]
     const int w = getWidth();
-    const int h = getHeight();
+    const int hTotal = getHeight();
+
+    // Ensure mainPlotArea is valid even if paint hasn't run yet.
+    const auto timeRuler = getTimeRulerArea();
+    int plotBottom = timeRuler.getY();
+    if (showRollingLra)
+        plotBottom -= rollingLaneHeightPx;
+
+    plotBottom = juce::jlimit (1, juce::jmax (1, hTotal), plotBottom);
+    mainPlotArea = juce::Rectangle<float> (0.0f, 0.0f, (float) w, (float) plotBottom);
+
+    const int h = (int) juce::jmax (1.0f, mainPlotArea.getHeight());
+    // [END ROLLING-LRA-SPLITTER-MTDM-PLOT-HEIGHT]
     if (w <= 1 || h <= 1)
         return;
 
-    // Exclude only the right dB ruler strip so we don't draw under it.
+    // [BEGIN ROLLING-LRA-SPLITTER-MTDM-OVERLAY-AREA]
+    // Exclude only the right dB ruler strip; height matches the main plot area.
     const auto dbRuler = getDbRulerArea();
     mtdmOverlayArea = juce::Rectangle<float> (0.0f,
                                              0.0f,
                                              (float) (w - dbRuler.getWidth()),
                                              (float) h);
+    // [END ROLLING-LRA-SPLITTER-MTDM-OVERLAY-AREA]
 
     const float handleW = 34.0f;
     const float handleH = 18.0f;
@@ -876,7 +939,9 @@ void VolumeHistoryComponent::drawMtdmThresholdOverlay (juce::Graphics& g)
     if (mtdmOverlayArea.getWidth() <= 1.0f || mtdmOverlayArea.getHeight() <= 1.0f)
         return;
 
-    const int h = getHeight();
+    // [BEGIN ROLLING-LRA-SPLITTER-MTDM-DRAW-PLOT-H]
+    const int h = (int) juce::jmax (1.0f, mainPlotArea.getHeight());
+    // [END ROLLING-LRA-SPLITTER-MTDM-DRAW-PLOT-H]
 
     const juce::Colour lineColours[4] =
     {
