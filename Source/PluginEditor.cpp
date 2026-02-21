@@ -145,8 +145,21 @@ void MtdmControlPanel::configureSliderForParam (juce::Slider& s,
     s.setColour (juce::Slider::textBoxOutlineColourId, juce::Colours::white.withMultipliedAlpha (0.15f));
     s.setTextValueSuffix (suffix);
 
+    // [BEGIN MTDM-PANEL-SLIDER-RANGE-DOUBLE-FIX]
     if (auto* p = apvts.getParameter (paramID))
-        s.setNormalisableRange (p->getNormalisableRange());
+    {
+        const auto rf = p->getNormalisableRange(); // NormalisableRange<float>
+
+        juce::NormalisableRange<double> rd ((double) rf.start,
+                                            (double) rf.end,
+                                            (double) rf.interval);
+
+        rd.skew = (double) rf.skew;
+        rd.symmetricSkew = rf.symmetricSkew;
+
+        s.setNormalisableRange (rd);
+    }
+    // [END MTDM-PANEL-SLIDER-RANGE-DOUBLE-FIX]
 }
 
 void MtdmControlPanel::timerCallback()
