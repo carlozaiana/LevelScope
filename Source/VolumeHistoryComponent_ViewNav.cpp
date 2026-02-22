@@ -1,15 +1,25 @@
 #include "VolumeHistoryComponent.h"
 #include "PluginProcessor.h"
 
-// [BEGIN MTDM-THRESH-UI-APVTS-LISTENER-IMPL]
+// [BEGIN MTDM-THRESH-UI-APVTS-LISTENER-IMPL-RTSAFE]
 void VolumeHistoryComponent::parameterChanged (const juce::String& parameterID, float newValue)
 {
     juce::ignoreUnused (parameterID, newValue);
 
-    // Safe to call from any thread in JUCE (asynchronous repaint request).
-    repaint();
+    // IMPORTANT: may be called from audio thread.
+    // Do not call repaint() here. Just set a flag and trigger an async UI update.
+    threshUiNeedsRepaint.store (true, std::memory_order_release);
+    triggerAsyncUpdate(); // coalesced; safe to call from non-message threads
 }
-// [END MTDM-THRESH-UI-APVTS-LISTENER-IMPL]
+// [END MTDM-THRESH-UI-APVTS-LISTENER-IMPL-RTSAFE]
+
+// [BEGIN MTDM-THRESH-UI-ASYNCUPDATER-HANDLE-IMPL]
+void VolumeHistoryComponent::handleAsyncUpdate()
+{
+    if (threshUiNeedsRepaint.exchange (false, std::memory_order_acq_rel))
+        repaint();
+}
+// [END MTDM-THRESH-UI-ASYNCUPDATER-HANDLE-IMPL]
 
 //==============================================================================
 // VolumeHistoryComponent_ViewNav.cpp
