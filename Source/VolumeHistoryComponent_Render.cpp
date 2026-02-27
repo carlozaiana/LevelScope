@@ -154,11 +154,13 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         scratchPathBandM.clear();
         scratchPathBandS.clear();
 
-        if (showLines)
-        {
-            scratchPathRepM.clear();
-            scratchPathRepS.clear();
-        }
+        // [BEGIN UI3A-CURVE-VISIBILITY-CLEAR-PATHS]
+        const bool drawM = (showLines && showMomentaryCurve);
+        const bool drawS = (showLines && showShortTermCurve);
+
+        if (drawM) scratchPathRepM.clear();
+        if (drawS) scratchPathRepS.clear();
+        // [END UI3A-CURVE-VISIBILITY-CLEAR-PATHS]
 
         if (showRollingLra)
         scratchPathRollingLra.clear(); // [ROLLING-LRA]
@@ -203,17 +205,25 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
                 }
             }
 
-            if (showLines)
+            // [BEGIN UI3A-CURVE-VISIBILITY-BUILD-PATHS]
+            if (drawM || drawS)
             {
                 const float yRepM = dbToY (scratchRepMomentaryDb[i], h);
                 const float yRepS = dbToY (scratchRepShortTermDb[i], h);
 
-                if (! startedRepS) { scratchPathRepS.startNewSubPath (x, yRepS); startedRepS = true; }
-                else               { scratchPathRepS.lineTo         (x, yRepS); }
+                if (drawS)
+                {
+                    if (! startedRepS) { scratchPathRepS.startNewSubPath (x, yRepS); startedRepS = true; }
+                    else               { scratchPathRepS.lineTo         (x, yRepS); }
+                }
 
-                if (! startedRepM) { scratchPathRepM.startNewSubPath (x, yRepM); startedRepM = true; }
-                else               { scratchPathRepM.lineTo          (x, yRepM); }
+                if (drawM)
+                {
+                    if (! startedRepM) { scratchPathRepM.startNewSubPath (x, yRepM); startedRepM = true; }
+                    else               { scratchPathRepM.lineTo          (x, yRepM); }
+                }
             }
+            // [END UI3A-CURVE-VISIBILITY-BUILD-PATHS]
 
             // [LRAG] Gate curve path
             if (showGate)
@@ -246,14 +256,19 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
         // Lines (stroked paths only)
         // Draw momentary first, then short-term on top.
-        if (showLines)
+        // [BEGIN UI3A-CURVE-VISIBILITY-STROKE]
+        if (drawM)
         {
             g.setColour (juce::Colour::fromRGB (95, 117, 140)); // momentary
             g.strokePath (scratchPathRepM, juce::PathStrokeType (2.0f));
+        }
 
-            g.setColour (juce::Colour::fromRGB (0, 80, 180).withMultipliedAlpha (0.95f)); // short-term (on top)
+        if (drawS)
+        {
+            g.setColour (juce::Colour::fromRGB (0, 80, 180).withMultipliedAlpha (0.95f)); // short-term
             g.strokePath (scratchPathRepS, juce::PathStrokeType (1.5f));
         }
+        // [END UI3A-CURVE-VISIBILITY-STROKE]
 
         // [LRAG] Gate line (drawn on top)
         if (showGate && startedGate)

@@ -3,6 +3,410 @@
 #include "Core/Processing/Modules/MultiThresholdDynamicsParamIDs.h"
 // [END MTDM-PANEL-INCLUDE-PARAMIDS]
 
+// [BEGIN UI3A-MISSIONCONTROL-IMPL]
+const juce::Identifier MissionControlComponent::kTargetI    ("ui.targetIntegratedLufs");
+const juce::Identifier MissionControlComponent::kTargetPeak ("ui.targetMaxPeakDb");
+const juce::Identifier MissionControlComponent::kTargetLra  ("ui.targetLraLu");
+
+MissionControlComponent::RoutingGraphic::RoutingGraphic (LevelScopeAudioProcessor& p)
+    : processor (p)
+{
+    setOpaque (false);
+}
+
+juce::String MissionControlComponent::RoutingGraphic::channelLabelForType (juce::AudioChannelSet::ChannelType t) const
+{
+    using CT = juce::AudioChannelSet::ChannelType;
+    switch (t)
+    {
+        case CT::left:              return "L";
+        case CT::right:             return "R";
+        case CT::centre:            return "C";
+        case CT::LFE:               return "LFE";
+        case CT::leftSurround:      return "Ls";
+        case CT::rightSurround:     return "Rs";
+        case CT::leftRearSurround:  return "Lrs";
+        case CT::rightRearSurround: return "Rrs";
+        case CT::topFrontLeft:      return "TFL";
+        case CT::topFrontRight:     return "TFR";
+        case CT::topRearLeft:       return "TRL";
+        case CT::topRearRight:      return "TRR";
+        default:                    return "?";
+    }
+}
+
+bool MissionControlComponent::RoutingGraphic::isDetectorChannelActive (juce::AudioChannelSet::ChannelType t,
+                                                                      int mcPolicy, int detChoice, bool lfeInDet) const
+{
+    using CT = juce::AudioChannelSet::ChannelType;
+
+    const bool isLfe = (t == CT::LFE);
+    if (isLfe)
+        return lfeInDet;
+
+    // mcPolicy: 0 Linked, 1 Dialog-mask, 2 Unlinked  (per ParamIDs string array)
+    if (mcPolicy == 1) // Dialog-mask
+    {
+        if (detChoice == 0) // C
+            return t == CT::centre;
+        else                // LCR
+            return (t == CT::left || t == CT::centre || t == CT::right);
+    }
+
+    // Linked/Unlinked: detector uses all non-LFE channels
+    return true;
+}
+
+bool MissionControlComponent::RoutingGraphic::isApplyChannelActive (juce::AudioChannelSet::ChannelType t,
+                                                                   int mcPolicy, int applyChoice, bool lfeInApply) const
+{
+    using CT = juce::AudioChannelSet::ChannelType;
+
+    const bool isLfe = (t == CT::LFE);
+    if (isLfe)
+        return lfeInApply;
+
+    if (mcPolicy == 1) // Dialog-mask
+    {
+        if (applyChoice == 0) // C
+            return t == CT::centre;
+        else                  // LCR
+            return (t == CT::left || t == CT::centre || t == CT::right);
+    }
+
+    // Linked/Unlinked: apply uses all non-LFE channels
+    return true;
+}
+
+void MissionControlComponent::RoutingGraphic::paint (juce::Graphics& g)
+{
+    auto r = getLocalBounds().toFloat().reduced (6.0f, 6.0f);
+
+    g.setColour (juce::Colours::white.withMultipliedAlpha (0.10f));
+    g.drawRoundedRectangle (r, 6.0f, 1.0f);
+
+    r = r.reduced (8.0f, 8.0f);
+    if (r.getWidth() < 50.0f || r.getHeight() < 30.0f)
+        return;
+
+    auto& apvts = processor.getAPVTS();
+    using namespace levelscope::mtdm::ParamIDs;
+
+    const int mcPolicy = (int) std::lround (apvts.getRawParameterValue (mcPolicyChoice)->load());
+    const int detChoice = (int) std::lround (apvts.getRawParameterValue (dialogDetectorChoice)->load());
+    const int appChoice = (int) std::lround (apvts.getRawParameterValue (dialogApplyChoice)->load());
+
+    const bool lfeDet = (apvts.getRawParameterValue (lfeInDetector)->load() >= 0.5f);
+    const bool lfeApp = (apvts.getRawParameterValue (lfeInApply)->load() >= 0.5f);
+
+    const auto layout = processor.getBusesLayout().getMainInputChannelSet();
+    const int numCh = layout.size();
+
+    const float rowH = r.getHeight() * 0.5f;
+    const float cellW = (numCh > 0 ? r.getWidth() / (float) numCh : r.getWidth());
+
+    auto drawRow = [&] (float y0, const juce::String& rowName, auto isActiveFn)
+    {
+        g.setColour (juce::Colours::white.withMultipliedAlpha (0.60f));
+        g.setFont (12.0f);
+        g.drawText (rowName, (int) r.getX() - 34, (int) y0, 32, (int) rowH, juce::Justification::centredRight);
+
+        for (int ch = 0; ch < numCh; ++ch)
+        {
+            const auto t = layout.getTypeOfChannel (ch);
+            const bool active = isActiveFn (t);
+
+            juce::Rectangle<float> cell (r.getX() + cellW * (float) ch + 1.0f,
+                                         y0 + 2.0f,
+                                         cellW - 2.0f,
+                                         rowH - 4.0f);
+
+            g.setColour (active ? juce::Colours::red.withMultipliedAlpha (0.75f)
+                                : juce::Colours::grey.withMultipliedAlpha (0.25f));
+            g.fillRoundedRectangle (cell, 3.0f);
+
+            g.setColour (juce::Colours::white.withMultipliedAlpha (0.80f));
+            g.setFont (11.0f);
+            g.drawFittedText (channelLabelForType (t), cell.toNearestInt(), juce::Justification::centred, 1);
+        }
+    };
+
+    drawRow (r.getY(), "Det", [&] (juce::AudioChannelSet::ChannelType t)
+    {
+        return isDetectorChannelActive (t, mcPolicy, detChoice, lfeDet);
+    });
+
+    drawRow (r.getY() + rowH, "App", [&] (juce::AudioChannelSet::ChannelType t)
+    {
+        return isApplyChannelActive (t, mcPolicy, appChoice, lfeApp);
+    });
+}
+
+MissionControlComponent::MissionControlComponent (LevelScopeAudioProcessor& p, VolumeHistoryComponent& h)
+    : processor (p),
+      history (h),
+      apvts (p.getAPVTS()),
+      routingGraphic (p)
+{
+    setOpaque (true);
+
+    // Presets
+    addAndMakeVisible (savePresetButton);
+    addAndMakeVisible (loadPresetButton);
+
+    savePresetButton.onClick = [this] { startSavePreset(); };
+    loadPresetButton.onClick = [this] { startLoadPreset(); };
+
+    auto setupLabelBox = [] (juce::Label& l)
+    {
+        l.setColour (juce::Label::textColourId, juce::Colours::white.withMultipliedAlpha (0.90f));
+        l.setColour (juce::Label::backgroundColourId, juce::Colours::black.withMultipliedAlpha (0.15f));
+        l.setColour (juce::Label::outlineColourId, juce::Colours::white.withMultipliedAlpha (0.10f));
+        l.setJustificationType (juce::Justification::centred);
+        l.setFont (juce::Font (13.0f));
+    };
+
+    // Target labels (editable)
+    setupLabelBox (targetILabel);
+    setupLabelBox (targetPeakLabel);
+    setupLabelBox (targetLraLabel);
+
+    targetILabel.setEditable (true);
+    targetPeakLabel.setEditable (true);
+    targetLraLabel.setEditable (true);
+
+    addAndMakeVisible (targetILabel);
+    addAndMakeVisible (targetPeakLabel);
+    addAndMakeVisible (targetLraLabel);
+
+    // Current labels (read-only)
+    setupLabelBox (currentILabel);
+    setupLabelBox (currentPeakLabel);
+    setupLabelBox (currentLraLabel);
+
+    addAndMakeVisible (currentILabel);
+    addAndMakeVisible (currentPeakLabel);
+    addAndMakeVisible (currentLraLabel);
+
+    // Policy controls
+    using namespace levelscope::mtdm::ParamIDs;
+
+    mcPolicyBox.addItemList (juce::StringArray { "Linked", "Dialog-mask", "Unlinked" }, 1);
+    dialogDetBox.addItemList (juce::StringArray { "C", "LCR" }, 1);
+    dialogApplyBox.addItemList (juce::StringArray { "C", "LCR" }, 1);
+
+    addAndMakeVisible (mcPolicyBox);
+    addAndMakeVisible (dialogDetBox);
+    addAndMakeVisible (dialogApplyBox);
+    addAndMakeVisible (lfeDetToggle);
+    addAndMakeVisible (lfeApplyToggle);
+
+    mcPolicyAtt   = std::make_unique<ComboAttachment>  (apvts, mcPolicyChoice, mcPolicyBox);
+    dialogDetAtt  = std::make_unique<ComboAttachment>  (apvts, dialogDetectorChoice, dialogDetBox);
+    dialogApplyAtt= std::make_unique<ComboAttachment>  (apvts, dialogApplyChoice, dialogApplyBox);
+    lfeDetAtt     = std::make_unique<ButtonAttachment> (apvts, lfeInDetector, lfeDetToggle);
+    lfeApplyAtt   = std::make_unique<ButtonAttachment> (apvts, lfeInApply,    lfeApplyToggle);
+
+    addAndMakeVisible (routingGraphic);
+
+    // Curve toggles row (bottom)
+    auto setupToggle = [] (juce::ToggleButton& b)
+    {
+        b.setClickingTogglesState (true);
+        b.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.90f));
+    };
+
+    setupToggle (toggleMomentary);
+    setupToggle (toggleShortTerm);
+    setupToggle (toggleGate);
+    setupToggle (toggleRolling);
+
+    addAndMakeVisible (toggleMomentary);
+    addAndMakeVisible (toggleShortTerm);
+    addAndMakeVisible (toggleGate);
+    addAndMakeVisible (toggleRolling);
+
+    toggleMomentary.onClick = [this] { history.setShowMomentaryCurve (toggleMomentary.getToggleState()); };
+    toggleShortTerm.onClick = [this] { history.setShowShortTermCurve (toggleShortTerm.getToggleState()); };
+    toggleGate.onClick      = [this] { history.setShowGateCurve (toggleGate.getToggleState()); };
+    toggleRolling.onClick   = [this] { history.setShowRollingLraLane (toggleRolling.getToggleState()); };
+
+    // Target persistence
+    loadTargetsFromState();
+
+    auto hookTarget = [this] (juce::Label& lab, const juce::Identifier& key, double def)
+    {
+        lab.onTextChange = [this, &lab, key, def]
+        {
+            const double v = lab.getText().trim().getDoubleValue();
+            storeTargetToState (key, v);
+            // reformat
+            const double vv = getTargetFromState (key, def);
+            lab.setText (juce::String (vv, 1), juce::dontSendNotification);
+        };
+    };
+
+    hookTarget (targetILabel,    kTargetI,    -23.0);
+    hookTarget (targetPeakLabel, kTargetPeak, -1.0);
+    hookTarget (targetLraLabel,  kTargetLra,   7.0);
+
+    // Start polling current readouts + keep toggles synced
+    startTimerHz (10);
+}
+
+MissionControlComponent::~MissionControlComponent()
+{
+    stopTimer();
+}
+
+void MissionControlComponent::paint (juce::Graphics& g)
+{
+    g.fillAll (juce::Colour::fromRGB (10, 18, 28));
+    g.setColour (juce::Colours::white.withMultipliedAlpha (0.08f));
+    g.drawRect (getLocalBounds());
+}
+
+double MissionControlComponent::getTargetFromState (const juce::Identifier& key, double defaultValue) const
+{
+    const auto& vt = apvts.state;
+    if (vt.hasProperty (key))
+        return (double) vt.getProperty (key);
+    return defaultValue;
+}
+
+void MissionControlComponent::storeTargetToState (const juce::Identifier& key, double value)
+{
+    apvts.state.setProperty (key, value, nullptr);
+}
+
+void MissionControlComponent::loadTargetsFromState()
+{
+    const double ti = getTargetFromState (kTargetI, -23.0);
+    const double tp = getTargetFromState (kTargetPeak, -1.0);
+    const double tl = getTargetFromState (kTargetLra, 7.0);
+
+    targetILabel.setText    (juce::String (ti, 1), juce::dontSendNotification);
+    targetPeakLabel.setText (juce::String (tp, 1), juce::dontSendNotification);
+    targetLraLabel.setText  (juce::String (tl, 1), juce::dontSendNotification);
+}
+
+void MissionControlComponent::updateCurrentReadouts()
+{
+    const float I = processor.getRunningIntegratedLufs();
+    const float LRA = processor.getRunningLraLu();
+
+    currentILabel.setText   ((I > -199.0f ? juce::String (I, 1) : "--"), juce::dontSendNotification);
+    currentLraLabel.setText ((LRA > 0.0f ? juce::String (LRA, 1) : "--"), juce::dontSendNotification);
+
+    // Max peak not implemented yet in analysis pipeline -> placeholder
+    currentPeakLabel.setText ("--", juce::dontSendNotification);
+}
+
+void MissionControlComponent::refreshCurveToggleStatesFromHistory()
+{
+    toggleMomentary.setToggleState (history.getShowMomentaryCurve(), juce::dontSendNotification);
+    toggleShortTerm.setToggleState (history.getShowShortTermCurve(), juce::dontSendNotification);
+    toggleGate.setToggleState      (history.getShowGateCurve(), juce::dontSendNotification);
+    toggleRolling.setToggleState   (history.getShowRollingLraLane(), juce::dontSendNotification);
+}
+
+void MissionControlComponent::timerCallback()
+{
+    updateCurrentReadouts();
+    refreshCurveToggleStatesFromHistory();
+    routingGraphic.repaint();
+}
+
+void MissionControlComponent::startSavePreset()
+{
+    juce::FileChooser chooser ("Save LevelScope preset",
+                              juce::File::getSpecialLocation (juce::File::userDocumentsDirectory),
+                              "*.lscpreset");
+
+    chooser.launchAsync (juce::FileBrowserComponent::saveMode | juce::FileBrowserComponent::canSelectFiles,
+                         [this] (const juce::FileChooser& fc)
+                         {
+                             auto f = fc.getResult();
+                             if (f == juce::File())
+                                 return;
+
+                             juce::MemoryBlock mb;
+                             processor.getStateInformation (mb);
+
+                             (void) f.replaceWithData (mb.getData(), mb.getSize());
+                         });
+}
+
+void MissionControlComponent::startLoadPreset()
+{
+    juce::FileChooser chooser ("Load LevelScope preset",
+                              juce::File::getSpecialLocation (juce::File::userDocumentsDirectory),
+                              "*.lscpreset");
+
+    chooser.launchAsync (juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles,
+                         [this] (const juce::FileChooser& fc)
+                         {
+                             auto f = fc.getResult();
+                             if (f == juce::File() || ! f.existsAsFile())
+                                 return;
+
+                             juce::MemoryBlock mb;
+                             if (! f.loadFileAsData (mb))
+                                 return;
+
+                             processor.setStateInformation (mb.getData(), (int) mb.getSize());
+                             loadTargetsFromState();
+                         });
+}
+
+void MissionControlComponent::resized()
+{
+    auto r = getLocalBounds().reduced (8);
+
+    // Bottom row: curve toggles (minimal height, broad buttons)
+    auto toggles = r.removeFromBottom (22);
+    const int tW = 70;
+    toggleMomentary.setBounds (toggles.removeFromLeft (tW));
+    toggleShortTerm.setBounds (toggles.removeFromLeft (tW));
+    toggleGate.setBounds      (toggles.removeFromLeft (tW));
+    toggleRolling.setBounds   (toggles.removeFromLeft (tW));
+
+    r.removeFromBottom (6);
+
+    // Right: routing graphic + policy controls
+    auto right = r.removeFromRight (360);
+    auto policyRow = right.removeFromTop (22);
+    mcPolicyBox.setBounds    (policyRow.removeFromLeft (120));
+    dialogDetBox.setBounds   (policyRow.removeFromLeft (70));
+    dialogApplyBox.setBounds (policyRow.removeFromLeft (70));
+    lfeDetToggle.setBounds   (policyRow.removeFromLeft (80));
+    lfeApplyToggle.setBounds (policyRow.removeFromLeft (90));
+
+    right.removeFromTop (6);
+    routingGraphic.setBounds (right);
+
+    // Left: presets + targets/current aligned
+    auto left = r;
+
+    auto topRow = left.removeFromTop (22);
+    savePresetButton.setBounds (topRow.removeFromLeft (120));
+    topRow.removeFromLeft (6);
+    loadPresetButton.setBounds (topRow.removeFromLeft (120));
+
+    left.removeFromTop (8);
+
+    auto targetRow = left.removeFromTop (26);
+    targetILabel.setBounds    (targetRow.removeFromLeft (90));
+    targetPeakLabel.setBounds (targetRow.removeFromLeft (90));
+    targetLraLabel.setBounds  (targetRow.removeFromLeft (90));
+
+    auto currentRow = left.removeFromTop (26);
+    currentILabel.setBounds    (currentRow.removeFromLeft (90));
+    currentPeakLabel.setBounds (currentRow.removeFromLeft (90));
+    currentLraLabel.setBounds  (currentRow.removeFromLeft (90));
+}
+// [END UI3A-MISSIONCONTROL-IMPL]
+
 //==============================================================================
 // [BEGIN MTDM-PANEL-IMPL]
 //==============================================================================
@@ -374,15 +778,19 @@ void MtdmControlPanel::resized()
 
 LevelScopeAudioProcessorEditor::LevelScopeAudioProcessorEditor (LevelScopeAudioProcessor& p)
     : AudioProcessorEditor (&p),
-      statsComponent (p),
-      historyComponent (p),
+            historyComponent (p),
+      // [BEGIN UI3A-EDITOR-CTOR-MISSIONCONTROL]
+      missionControl (p, historyComponent),
+      // [END UI3A-EDITOR-CTOR-MISSIONCONTROL]
       // [BEGIN MTDM-PANEL-EDITOR-CTOR-INIT]
       mtdmPanel (p),
       layoutResizerBar (&layoutHistoryAndPanel, 1, false) // false = horizontal bar (drag up/down)
       // [END MTDM-PANEL-EDITOR-CTOR-INIT]
 {
-    addAndMakeVisible (statsComponent);
+    // [BEGIN UI3A-EDITOR-ADD-MISSIONCONTROL]
+    addAndMakeVisible (missionControl);
     addAndMakeVisible (historyComponent);
+    // [END UI3A-EDITOR-ADD-MISSIONCONTROL]
 
     // [BEGIN MTDM-PANEL-EDITOR-ADD]
     addAndMakeVisible (layoutResizerBar);
@@ -415,9 +823,10 @@ void LevelScopeAudioProcessorEditor::paint (juce::Graphics& g)
 void LevelScopeAudioProcessorEditor::resized()
 {
     auto r = getLocalBounds();
-    const int statsH = statsComponent.getPreferredHeight();
-
-    statsComponent.setBounds (r.removeFromTop (statsH));
+    // [BEGIN UI3A-EDITOR-RESIZED-TOPSTRIP]
+    const int statsH = missionControl.getPreferredHeight();
+    missionControl.setBounds (r.removeFromTop (statsH));
+    // [END UI3A-EDITOR-RESIZED-TOPSTRIP]
 
     // [BEGIN MTDM-PANEL-EDITOR-RESIZED-SPLIT]
     juce::Component* comps[] = { &historyComponent, &layoutResizerBar, &mtdmPanel };

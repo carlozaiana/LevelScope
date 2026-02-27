@@ -410,6 +410,36 @@ void VolumeHistoryComponent::handleThresholdMouseUp (const juce::MouseEvent& eve
 }
 // [END MTDM-THRESH-UI-MOUSE-IMPL]
 
+// [BEGIN UI3A-CURVE-VISIBILITY-SETTERS]
+void VolumeHistoryComponent::setShowMomentaryCurve (bool b)
+{
+    showMomentaryCurve = b;
+    showLines = (showMomentaryCurve || showShortTermCurve);
+    repaint();
+}
+
+void VolumeHistoryComponent::setShowShortTermCurve (bool b)
+{
+    showShortTermCurve = b;
+    showLines = (showMomentaryCurve || showShortTermCurve);
+    repaint();
+}
+
+void VolumeHistoryComponent::setShowGateCurve (bool b)
+{
+    showGate = b;
+    gateButton.setToggleState (showGate, juce::dontSendNotification);
+    repaint();
+}
+
+void VolumeHistoryComponent::setShowRollingLraLane (bool b)
+{
+    showRollingLra = b;
+    rollingLraButton.setToggleState (showRollingLra, juce::dontSendNotification);
+    repaint();
+}
+// [END UI3A-CURVE-VISIBILITY-SETTERS]
+
 //==============================================================================
 // Mouse
 //==============================================================================
@@ -559,11 +589,20 @@ void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
         return;
     }
 
-    // Existing behavior: Shift-click toggles bands; plain click toggles lines.
+    // [BEGIN UI3A-CURVE-VISIBILITY-MOUSEDOWN-TOGGLE]
+    // Existing behavior: Shift-click toggles bands; plain click toggles BOTH curves (momentary+short-term).
     if (event.mods.isShiftDown())
+    {
         showBands = ! showBands;
+    }
     else
-        showLines = ! showLines;
+    {
+        const bool anyOn = (showMomentaryCurve || showShortTermCurve);
+        showMomentaryCurve = ! anyOn;
+        showShortTermCurve = ! anyOn;
+        showLines = (showMomentaryCurve || showShortTermCurve);
+    }
+    // [END UI3A-CURVE-VISIBILITY-MOUSEDOWN-TOGGLE]
 
     repaint();
 }

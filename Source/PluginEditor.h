@@ -5,8 +5,104 @@
 #include <memory>
 // [END MTDM-PANEL-INCLUDE-MEMORY]
 #include "PluginProcessor.h"
-#include "LoudnessStatsComponent.h"
 #include "VolumeHistoryComponent.h"
+
+// [BEGIN UI3A-MISSIONCONTROL-DECL]
+//==============================================================================
+// Mission Control Top Strip (preset + targets/current + MC routing + curve toggles)
+//==============================================================================
+
+class MissionControlComponent : public juce::Component,
+                                private juce::Timer
+{
+public:
+    MissionControlComponent (LevelScopeAudioProcessor& p, VolumeHistoryComponent& h);
+    ~MissionControlComponent() override;
+
+    int getPreferredHeight() const noexcept { return preferredHeightPx; }
+
+    void paint (juce::Graphics& g) override;
+    void resized() override;
+
+private:
+    void timerCallback() override;
+
+    void loadTargetsFromState();
+    void storeTargetToState (const juce::Identifier& key, double value);
+    double getTargetFromState (const juce::Identifier& key, double defaultValue) const;
+
+    void updateCurrentReadouts();
+
+    void startSavePreset();
+    void startLoadPreset();
+
+    void refreshCurveToggleStatesFromHistory();
+
+    // Small graphic: detector/apply channel squares (always visible)
+    class RoutingGraphic : public juce::Component
+    {
+    public:
+        RoutingGraphic (LevelScopeAudioProcessor& p);
+        void paint (juce::Graphics& g) override;
+
+    private:
+        LevelScopeAudioProcessor& processor;
+
+        juce::String channelLabelForType (juce::AudioChannelSet::ChannelType t) const;
+        bool isDetectorChannelActive (juce::AudioChannelSet::ChannelType t,
+                                      int mcPolicy, int detChoice, bool lfeInDet) const;
+        bool isApplyChannelActive (juce::AudioChannelSet::ChannelType t,
+                                   int mcPolicy, int applyChoice, bool lfeInApply) const;
+
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RoutingGraphic)
+    };
+
+    LevelScopeAudioProcessor& processor;
+    VolumeHistoryComponent&   history;
+    juce::AudioProcessorValueTreeState& apvts;
+
+    const int preferredHeightPx = 120;
+
+    // Presets
+    juce::TextButton savePresetButton { "Save Preset..." };
+    juce::TextButton loadPresetButton { "Load Preset..." };
+
+    // Targets (editable)
+    juce::Label targetILabel, targetPeakLabel, targetLraLabel;
+
+    // Current (read-only)
+    juce::Label currentILabel, currentPeakLabel, currentLraLabel;
+
+    // Policy controls (APVTS)
+    juce::ComboBox mcPolicyBox, dialogDetBox, dialogApplyBox;
+    juce::ToggleButton lfeDetToggle { "LFE det" };
+    juce::ToggleButton lfeApplyToggle { "LFE apply" };
+
+    using ComboAttachment  = juce::AudioProcessorValueTreeState::ComboBoxAttachment;
+    using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
+
+    std::unique_ptr<ComboAttachment>  mcPolicyAtt;
+    std::unique_ptr<ComboAttachment>  dialogDetAtt;
+    std::unique_ptr<ComboAttachment>  dialogApplyAtt;
+    std::unique_ptr<ButtonAttachment> lfeDetAtt;
+    std::unique_ptr<ButtonAttachment> lfeApplyAtt;
+
+    RoutingGraphic routingGraphic;
+
+    // Curve toggles (bottom row)
+    juce::ToggleButton toggleMomentary { "M" };
+    juce::ToggleButton toggleShortTerm { "S" };
+    juce::ToggleButton toggleGate      { "Gate" };
+    juce::ToggleButton toggleRolling   { "rLRA" };
+
+    // State keys (persisted inside APVTS state tree as properties)
+    static const juce::Identifier kTargetI;
+    static const juce::Identifier kTargetPeak;
+    static const juce::Identifier kTargetLra;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MissionControlComponent)
+};
+// [END UI3A-MISSIONCONTROL-DECL]
 
 //==============================================================================
 // [BEGIN MTDM-PANEL-DECL]
@@ -108,8 +204,10 @@ public:
     void resized() override;
 
 private:
-    LoudnessStatsComponent  statsComponent;
+    // [BEGIN UI3A-EDITOR-MEMBERS-TOPSTRIP]
     VolumeHistoryComponent  historyComponent;
+    MissionControlComponent missionControl;
+    // [END UI3A-EDITOR-MEMBERS-TOPSTRIP]
 
     // [BEGIN MTDM-PANEL-EDITOR-MEMBERS]
     MtdmControlPanel mtdmPanel;

@@ -45,6 +45,18 @@ public:
     void mouseDrag (const juce::MouseEvent& event) override;
     void mouseUp (const juce::MouseEvent& event) override;
     void mouseDoubleClick (const juce::MouseEvent& event) override;
+    // [BEGIN UI3A-CURVE-VISIBILITY-PUBLIC-API]
+    // Curve visibility (controlled by Mission Control top strip)
+    void setShowMomentaryCurve (bool b);
+    void setShowShortTermCurve (bool b);
+    void setShowGateCurve      (bool b);
+    void setShowRollingLraLane (bool b);
+
+    bool getShowMomentaryCurve() const noexcept { return showMomentaryCurve; }
+    bool getShowShortTermCurve() const noexcept { return showShortTermCurve; }
+    bool getShowGateCurve() const noexcept      { return showGate; }
+    bool getShowRollingLraLane() const noexcept { return showRollingLra; }
+    // [END UI3A-CURVE-VISIBILITY-PUBLIC-API]
 
 private:
     //==============================================================================
@@ -213,6 +225,10 @@ private:
 
     bool showBands = true;
     bool showLines = true;
+    // [BEGIN UI3A-CURVE-VISIBILITY-FLAGS]
+    bool showMomentaryCurve = true;
+    bool showShortTermCurve = true;
+    // [END UI3A-CURVE-VISIBILITY-FLAGS]
 
     //==============================================================================
     // [VIEW-NAV] View state
