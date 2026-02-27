@@ -14,26 +14,20 @@ MissionControlComponent::RoutingGraphic::RoutingGraphic (LevelScopeAudioProcesso
     setOpaque (false);
 }
 
+// [BEGIN UI3A-ROUTINGGRAPHIC-CHANNEL-LABEL-PORTABLE]
 juce::String MissionControlComponent::RoutingGraphic::channelLabelForType (juce::AudioChannelSet::ChannelType t) const
 {
-    using CT = juce::AudioChannelSet::ChannelType;
-    switch (t)
-    {
-        case CT::left:              return "L";
-        case CT::right:             return "R";
-        case CT::centre:            return "C";
-        case CT::LFE:               return "LFE";
-        case CT::leftSurround:      return "Ls";
-        case CT::rightSurround:     return "Rs";
-        case CT::leftRearSurround:  return "Lrs";
-        case CT::rightRearSurround: return "Rrs";
-        case CT::topFrontLeft:      return "TFL";
-        case CT::topFrontRight:     return "TFR";
-        case CT::topRearLeft:       return "TRL";
-        case CT::topRearRight:      return "TRR";
-        default:                    return "?";
-    }
+    // Use JUCE's built-in abbreviated labels to stay compatible across JUCE versions
+    // and all supported layouts (stereo .. 7.1.4).
+    auto s = juce::AudioChannelSet::getAbbreviatedChannelTypeName (t);
+
+    if (s.isNotEmpty())
+        return s;
+
+    // Fallback (shouldn't happen)
+    return "?";
 }
+// [END UI3A-ROUTINGGRAPHIC-CHANNEL-LABEL-PORTABLE]
 
 bool MissionControlComponent::RoutingGraphic::isDetectorChannelActive (juce::AudioChannelSet::ChannelType t,
                                                                       int mcPolicy, int detChoice, bool lfeInDet) const
