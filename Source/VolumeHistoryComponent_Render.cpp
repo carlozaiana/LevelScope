@@ -313,28 +313,15 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     // [DBFS-SCALE] Right-side dBFS scale (overlay)
     // Shows the currently visible dB range (affected by zoomY).
     //==============================================================================
+    // [BEGIN UI3B-DBSCALE-BLOCK-REPLACE]
     {
-        // Keep the scale above the time ruler area
-        // [BEGIN ROLLING-LRA-SPLITTER-DBSCALE-TRIM]
-        const float reservedBottomPx = bounds.getHeight() - mainPlotArea.getHeight();
-        // [BEGIN UI3B-DBSCALE-SUBAREA-REPLACE]
-        const float reservedBottomPx = bounds.getHeight() - mainPlotArea.getHeight();
-        juce::ignoreUnused (reservedBottomPx); // kept for clarity; plot height is used below
-
+        // Draw the LUFS scale only inside the "db scale" sub-area (not over the meters).
         const auto dbScaleAreaI = getDbScaleArea();
+
         const auto scaleArea = juce::Rectangle<float> ((float) dbScaleAreaI.getX(),
                                                        (float) dbScaleAreaI.getY(),
                                                        (float) dbScaleAreaI.getWidth(),
                                                        (float) mainPlotArea.getHeight());
-        // [END UI3B-DBSCALE-SUBAREA-REPLACE]
-        // [END ROLLING-LRA-SPLITTER-DBSCALE-TRIM]
-        // [BEGIN UI3B-DBSCALE-USE-SUBAREA]
-        const auto dbScaleAreaI = getDbScaleArea();
-        const auto scaleArea = juce::Rectangle<float> ((float) dbScaleAreaI.getX(),
-                                                       (float) dbScaleAreaI.getY(),
-                                                       (float) dbScaleAreaI.getWidth(),
-                                                       (float) (mainPlotArea.getHeight())); // only plot height
-        // [END UI3B-DBSCALE-USE-SUBAREA]
 
         const float scaleH = scaleArea.getHeight();
         if (scaleH > 20.0f)
@@ -352,17 +339,17 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             float stepDb = candidates[(int) (sizeof (candidates) / sizeof (candidates[0])) - 1];
             for (float s : candidates)
             {
-            if (s >= approxStepDb) { stepDb = s; break; }
+                if (s >= approxStepDb) { stepDb = s; break; }
             }
 
             const float rightX = scaleArea.getRight() - 1.0f;
             const float tickLen = 6.0f;
-            const float labelWidth = 56.0f;
+            const float labelWidth = (float) dbScaleAreaI.getWidth() - tickLen - 6.0f;
             const float labelHeight = 16.0f;
 
             g.setFont (14.0f); // [UI-FONTS]
 
-            // Optional header
+            // Header
             g.setColour (juce::Colours::white.withMultipliedAlpha (0.6f));
             g.drawText ("LUFS",
                         (int) (rightX - labelWidth - 2.0f),
@@ -394,11 +381,12 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
                             juce::Justification::right);
             }
 
-            // A faint vertical line to separate the scale
+            // Faint vertical separator line at the right edge of the scale
             g.setColour (juce::Colours::white.withMultipliedAlpha (0.18f));
             g.drawLine (rightX, scaleArea.getY(), rightX, scaleArea.getBottom(), 1.0f);
         }
     }
+    // [END UI3B-DBSCALE-BLOCK-REPLACE]
 
     // [BEGIN UI3B-RIGHT-METERS-DRAW]
     {
