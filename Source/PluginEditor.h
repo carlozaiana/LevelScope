@@ -67,11 +67,19 @@ private:
     juce::TextButton savePresetButton { "Save Preset..." };
     juce::TextButton loadPresetButton { "Load Preset..." };
 
-    // Targets (editable)
+    // [BEGIN UI3A-MISSIONCONTROL-TARGETS-CURRENT-LABELS]
+    // Column headers
+    juce::Label hdrILabel, hdrPeakLabel, hdrLraLabel;
+
+    // Row headers
+    juce::Label hdrTargetRow, hdrCurrentRow;
+
+    // Targets (editable values)
     juce::Label targetILabel, targetPeakLabel, targetLraLabel;
 
-    // Current (read-only)
+    // Current (read-only values)
     juce::Label currentILabel, currentPeakLabel, currentLraLabel;
+    // [END UI3A-MISSIONCONTROL-TARGETS-CURRENT-LABELS]
 
     // Policy controls (APVTS)
     juce::ComboBox mcPolicyBox, dialogDetBox, dialogApplyBox;

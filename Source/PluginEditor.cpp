@@ -76,12 +76,16 @@ void MissionControlComponent::RoutingGraphic::paint (juce::Graphics& g)
 {
     auto r = getLocalBounds().toFloat().reduced (6.0f, 6.0f);
 
-    g.setColour (juce::Colours::white.withMultipliedAlpha (0.10f));
+    // [BEGIN UI3A-ROUTINGGRAPHIC-VISIBILITY]
+    g.setColour (juce::Colours::white.withMultipliedAlpha (0.22f));
+    // [END UI3A-ROUTINGGRAPHIC-VISIBILITY]
     g.drawRoundedRectangle (r, 6.0f, 1.0f);
 
-    r = r.reduced (8.0f, 8.0f);
-    if (r.getWidth() < 50.0f || r.getHeight() < 30.0f)
+    // [BEGIN UI3A-ROUTINGGRAPHIC-SMALL-AREA-FIX]
+    r = r.reduced (4.0f, 4.0f);
+    if (r.getWidth() < 60.0f || r.getHeight() < 18.0f)
         return;
+    // [END UI3A-ROUTINGGRAPHIC-SMALL-AREA-FIX]
 
     auto& apvts = processor.getAPVTS();
     using namespace levelscope::mtdm::ParamIDs;
@@ -160,6 +164,40 @@ MissionControlComponent::MissionControlComponent (LevelScopeAudioProcessor& p, V
         l.setFont (juce::Font (13.0f));
     };
 
+    // [BEGIN UI3A-MISSIONCONTROL-HEADERS-SETUP]
+    auto setupHeader = [] (juce::Label& l)
+    {
+        l.setEditable (false);
+        l.setJustificationType (juce::Justification::centred);
+        l.setColour (juce::Label::textColourId, juce::Colours::white.withMultipliedAlpha (0.70f));
+        l.setFont (juce::Font (11.0f));
+    };
+
+    setupHeader (hdrILabel);
+    setupHeader (hdrPeakLabel);
+    setupHeader (hdrLraLabel);
+
+    hdrILabel.setText    ("Int (LUFS)", juce::dontSendNotification);
+    hdrPeakLabel.setText ("Max Peak",   juce::dontSendNotification);
+    hdrLraLabel.setText  ("LRA (LU)",   juce::dontSendNotification);
+
+    addAndMakeVisible (hdrILabel);
+    addAndMakeVisible (hdrPeakLabel);
+    addAndMakeVisible (hdrLraLabel);
+
+    setupHeader (hdrTargetRow);
+    setupHeader (hdrCurrentRow);
+
+    hdrTargetRow.setText  ("Target",  juce::dontSendNotification);
+    hdrCurrentRow.setText ("Current", juce::dontSendNotification);
+
+    hdrTargetRow.setJustificationType  (juce::Justification::centredLeft);
+    hdrCurrentRow.setJustificationType (juce::Justification::centredLeft);
+
+    addAndMakeVisible (hdrTargetRow);
+    addAndMakeVisible (hdrCurrentRow);
+    // [END UI3A-MISSIONCONTROL-HEADERS-SETUP]
+
     // Target labels (editable)
     setupLabelBox (targetILabel);
     setupLabelBox (targetPeakLabel);
@@ -194,6 +232,15 @@ MissionControlComponent::MissionControlComponent (LevelScopeAudioProcessor& p, V
     addAndMakeVisible (dialogApplyBox);
     addAndMakeVisible (lfeDetToggle);
     addAndMakeVisible (lfeApplyToggle);
+
+    // [BEGIN UI3A-MISSIONCONTROL-POLICY-COLOURS]
+    lfeDetToggle.setColour   (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.90f));
+    lfeApplyToggle.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.90f));
+
+    // Shorter labels so they fit in the right column
+    lfeDetToggle.setButtonText   ("LFE Det");
+    lfeApplyToggle.setButtonText ("LFE Apply");
+    // [END UI3A-MISSIONCONTROL-POLICY-COLOURS]
 
     mcPolicyAtt   = std::make_unique<ComboAttachment>  (apvts, mcPolicyChoice, mcPolicyBox);
     dialogDetAtt  = std::make_unique<ComboAttachment>  (apvts, dialogDetectorChoice, dialogDetBox);
@@ -368,13 +415,19 @@ void MissionControlComponent::resized()
     r.removeFromBottom (6);
 
     // Right: routing graphic + policy controls
-    auto right = r.removeFromRight (360);
+    // [BEGIN UI3A-MISSIONCONTROL-RIGHT-COL-WIDTH-FIX]
+    const int rightW = juce::jlimit (320, 560, r.getWidth() / 2);
+    auto right = r.removeFromRight (rightW);
+    // [END UI3A-MISSIONCONTROL-RIGHT-COL-WIDTH-FIX]
+    // [BEGIN UI3A-MISSIONCONTROL-POLICY-ROW-LAYOUT]
     auto policyRow = right.removeFromTop (22);
-    mcPolicyBox.setBounds    (policyRow.removeFromLeft (120));
-    dialogDetBox.setBounds   (policyRow.removeFromLeft (70));
-    dialogApplyBox.setBounds (policyRow.removeFromLeft (70));
+
+    mcPolicyBox.setBounds    (policyRow.removeFromLeft (130));
+    dialogDetBox.setBounds   (policyRow.removeFromLeft (60));
+    dialogApplyBox.setBounds (policyRow.removeFromLeft (60));
     lfeDetToggle.setBounds   (policyRow.removeFromLeft (80));
     lfeApplyToggle.setBounds (policyRow.removeFromLeft (90));
+    // [END UI3A-MISSIONCONTROL-POLICY-ROW-LAYOUT]
 
     right.removeFromTop (6);
     routingGraphic.setBounds (right);
@@ -389,15 +442,33 @@ void MissionControlComponent::resized()
 
     left.removeFromTop (8);
 
-    auto targetRow = left.removeFromTop (26);
-    targetILabel.setBounds    (targetRow.removeFromLeft (90));
-    targetPeakLabel.setBounds (targetRow.removeFromLeft (90));
-    targetLraLabel.setBounds  (targetRow.removeFromLeft (90));
+    // [BEGIN UI3A-MISSIONCONTROL-TARGETS-CURRENT-LAYOUT]
+    const int rowHdrW = 62;
+    const int colW    = 96;
 
+    // Column headers
+    auto hdrRow = left.removeFromTop (16);
+    hdrRow.removeFromLeft (rowHdrW);
+    hdrILabel.setBounds    (hdrRow.removeFromLeft (colW));
+    hdrPeakLabel.setBounds (hdrRow.removeFromLeft (colW));
+    hdrLraLabel.setBounds  (hdrRow.removeFromLeft (colW));
+
+    left.removeFromTop (2);
+
+    // Targets row
+    auto targetRow = left.removeFromTop (26);
+    hdrTargetRow.setBounds (targetRow.removeFromLeft (rowHdrW));
+    targetILabel.setBounds    (targetRow.removeFromLeft (colW));
+    targetPeakLabel.setBounds (targetRow.removeFromLeft (colW));
+    targetLraLabel.setBounds  (targetRow.removeFromLeft (colW));
+
+    // Current row
     auto currentRow = left.removeFromTop (26);
-    currentILabel.setBounds    (currentRow.removeFromLeft (90));
-    currentPeakLabel.setBounds (currentRow.removeFromLeft (90));
-    currentLraLabel.setBounds  (currentRow.removeFromLeft (90));
+    hdrCurrentRow.setBounds (currentRow.removeFromLeft (rowHdrW));
+    currentILabel.setBounds    (currentRow.removeFromLeft (colW));
+    currentPeakLabel.setBounds (currentRow.removeFromLeft (colW));
+    currentLraLabel.setBounds  (currentRow.removeFromLeft (colW));
+    // [END UI3A-MISSIONCONTROL-TARGETS-CURRENT-LAYOUT]
 }
 // [END UI3A-MISSIONCONTROL-IMPL]
 
