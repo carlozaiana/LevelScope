@@ -51,23 +51,31 @@ juce::Rectangle<int> VolumeHistoryComponent::getTimeRulerArea() const
 // [BEGIN UI3B-RIGHT-STRIP-GETTERS]
 juce::Rectangle<int> VolumeHistoryComponent::getDbRulerArea() const
 {
-    // Total right strip: LUFS scale + meters
     const int timeRulerH = getTimeRulerArea().getHeight();
-    return { getWidth() - rightStripWidthPx, 0, rightStripWidthPx, getHeight() - timeRulerH };
+
+    const int w = juce::jmax (0, getWidth());
+    const int stripW = juce::jlimit (rightStripMinWidthPx, rightStripMaxWidthPx,
+                                     juce::jmin (rightStripWidthPxUser, w));
+
+    return { w - stripW, 0, stripW, getHeight() - timeRulerH };
 }
 
 juce::Rectangle<int> VolumeHistoryComponent::getDbScaleArea() const
 {
-    // Left part of the right strip: LUFS scale area (interactive for Y pan/reset)
     const auto total = getDbRulerArea();
-    return { total.getX(), total.getY(), dbScaleWidthPx, total.getHeight() };
+    const int scaleW = juce::jmin (dbScaleWidthPx, total.getWidth());
+    return { total.getX(), total.getY(), scaleW, total.getHeight() };
 }
 
 juce::Rectangle<int> VolumeHistoryComponent::getRightMetersArea() const
 {
-    // Right part of the right strip: meters
     const auto total = getDbRulerArea();
-    return { total.getX() + dbScaleWidthPx, total.getY(), metersWidthPx, total.getHeight() };
+    const auto scale = getDbScaleArea();
+
+    const int metersX = scale.getRight();
+    const int metersW = juce::jmax (0, total.getRight() - metersX);
+
+    return { metersX, total.getY(), metersW, total.getHeight() };
 }
 // [END UI3B-RIGHT-STRIP-GETTERS]
 
@@ -586,6 +594,25 @@ void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
     }
     // [END ROLLING-LRA-SPLITTER-MOUSEDOWN]
 
+    // [BEGIN UI3B-RIGHTSTRIP-RESIZER-MOUSEDOWN]
+    // Drag the left edge of the right strip to resize meters width.
+    if (event.mods.isLeftButtonDown())
+    {
+        const auto rightStrip = getDbRulerArea();
+
+        // A thin vertical hit zone at the left edge of the strip
+        juce::Rectangle<int> hitZone (rightStrip.getX() - 3, rightStrip.getY(), 6, rightStrip.getHeight());
+
+        if (hitZone.contains (p))
+        {
+            dragMode = DragMode::rightStripResizer;
+            dragStartPos = p;
+            dragStartRightStripWidthPxUser = rightStripWidthPxUser;
+            return;
+        }
+    }
+    // [END UI3B-RIGHTSTRIP-RESIZER-MOUSEDOWN]
+
     // [UI-RULERS] Drag time ruler to pan time
     if (getTimeRulerArea().contains (p))
     {
@@ -660,6 +687,20 @@ void VolumeHistoryComponent::mouseDrag (const juce::MouseEvent& event)
         return;
     }
     // [END ROLLING-LRA-SPLITTER-MOUSEDRAG]
+
+    // [BEGIN UI3B-RIGHTSTRIP-RESIZER-MOUSEDRAG]
+    if (dragMode == DragMode::rightStripResizer)
+    {
+        const int dx = p.x - dragStartPos.x;
+
+        // Dragging LEFT increases strip width; dragging RIGHT decreases it.
+        rightStripWidthPxUser = dragStartRightStripWidthPxUser - dx;
+        rightStripWidthPxUser = juce::jlimit (rightStripMinWidthPx, rightStripMaxWidthPx, rightStripWidthPxUser);
+
+        repaint();
+        return;
+    }
+    // [END UI3B-RIGHTSTRIP-RESIZER-MOUSEDRAG]
 
     if (dragMode == DragMode::timeRuler)
     {

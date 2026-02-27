@@ -130,13 +130,17 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     rebuildStaticBackgroundIfNeeded();
     if (cachedStaticBackground.isValid())
         g.drawImageAt (cachedStaticBackground, 0, 0);
-        // [BEGIN UI3B-RIGHTSTRIP-BG]
-        {
-            const auto rightStrip = getDbRulerArea();
-            g.setColour (juce::Colours::black.withMultipliedAlpha (0.25f));
-            g.fillRect (rightStrip);
-        }
-        // [END UI3B-RIGHTSTRIP-BG]
+    // [BEGIN UI3B-RIGHTSTRIP-BG]
+    {
+        const auto rightStrip = getDbRulerArea();
+        g.setColour (juce::Colours::black.withMultipliedAlpha (0.25f));
+        g.fillRect (rightStrip);
+
+        // Divider line at left edge of right strip (also serves as resize affordance)
+        g.setColour (juce::Colours::white.withMultipliedAlpha (0.14f));
+        g.drawVerticalLine (rightStrip.getX(), (float) rightStrip.getY(), (float) rightStrip.getBottom());
+    }
+    // [END UI3B-RIGHTSTRIP-BG]
         // [BEGIN ROLLING-LRA-SPLITTER-HOIST-SELECTEDLEVEL]
         // Must live outside the plot-clip scope because we use it later for debug text.
         const int selectedLevel = selectBestLevelForCurrentZoom (width);
@@ -468,7 +472,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
             // Use HOLD for display stability (current is often jittery). You can change later.
             drawUp   (colUp,   upBoostDb);
-            drawDown (colDown, down.grDbHold, "Down", juce::Colours::deepskyblue);
+            drawDown (colDown, down.grDbHold, "Dn", juce::Colours::deepskyblue);
             drawDown (colLim,  lim.grDbHold,  "Lim",  juce::Colours::orange);
 
             // Separators

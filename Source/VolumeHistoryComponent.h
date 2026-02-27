@@ -226,9 +226,16 @@ private:
     bool showBands = true;
     bool showLines = true;
     // [BEGIN UI3B-RIGHT-STRIP-CONSTANTS]
-    static constexpr int dbScaleWidthPx = 72;     // existing LUFS ruler width (kept)
-    static constexpr int metersWidthPx  = 66;     // 3 meters side-by-side + gaps
-    static constexpr int rightStripWidthPx = dbScaleWidthPx + metersWidthPx;
+    // LUFS scale itself is narrow; meters consume the remaining right strip width.
+    static constexpr int dbScaleWidthPx = 48;
+
+    // User-resizable total right strip width (scale + meters), anchored to the right edge.
+    int rightStripWidthPxUser = dbScaleWidthPx + 120;
+
+    static constexpr int rightStripMinWidthPx = dbScaleWidthPx + 72;
+    static constexpr int rightStripMaxWidthPx = dbScaleWidthPx + 260;
+
+    int dragStartRightStripWidthPxUser = dbScaleWidthPx + 120;
     // [END UI3B-RIGHT-STRIP-CONSTANTS]
     // [BEGIN UI3A-CURVE-VISIBILITY-FLAGS]
     bool showMomentaryCurve = true;
@@ -273,7 +280,9 @@ private:
 
     // Dragging rulers
     // [BEGIN ROLLING-LRA-SPLITTER-DRAGMODE]
-    enum class DragMode { none, timeRuler, dbRuler, rollingLraDivider };
+    // [BEGIN UI3B-RIGHTSTRIP-DRAGMODE]
+    enum class DragMode { none, timeRuler, dbRuler, rollingLraDivider, rightStripResizer };
+    // [END UI3B-RIGHTSTRIP-DRAGMODE]
     // [END ROLLING-LRA-SPLITTER-DRAGMODE]
     DragMode dragMode = DragMode::none;
 
