@@ -61,7 +61,9 @@ private:
     VolumeHistoryComponent&   history;
     juce::AudioProcessorValueTreeState& apvts;
 
-    const int preferredHeightPx = 120;
+    // [BEGIN UI3A-MISSIONCONTROL-PREFERRED-HEIGHT]
+    const int preferredHeightPx = 140;
+    // [END UI3A-MISSIONCONTROL-PREFERRED-HEIGHT]
 
     // Presets
     juce::TextButton savePresetButton { "Save Preset..." };

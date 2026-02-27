@@ -100,21 +100,31 @@ void MissionControlComponent::RoutingGraphic::paint (juce::Graphics& g)
     const auto layout = processor.getBusesLayout().getMainInputChannelSet();
     const int numCh = layout.size();
 
+    // [BEGIN UI3A-ROUTINGGRAPHIC-ROWLABELS-FIX]
     const float rowH = r.getHeight() * 0.5f;
-    const float cellW = (numCh > 0 ? r.getWidth() / (float) numCh : r.getWidth());
+
+    const float labelW = 30.0f; // reserved inside the component for "Det"/"App"
+    const float cellsW = juce::jmax (1.0f, r.getWidth() - labelW);
+    const float cellW  = (numCh > 0 ? cellsW / (float) numCh : cellsW);
 
     auto drawRow = [&] (float y0, const juce::String& rowName, auto isActiveFn)
     {
-        g.setColour (juce::Colours::white.withMultipliedAlpha (0.60f));
+        // Row label inside reserved left strip
+        g.setColour (juce::Colours::white.withMultipliedAlpha (0.70f));
         g.setFont (12.0f);
-        g.drawText (rowName, (int) r.getX() - 34, (int) y0, 32, (int) rowH, juce::Justification::centredRight);
+
+        juce::Rectangle<int> lbl ((int) r.getX(), (int) y0, (int) labelW, (int) rowH);
+        g.drawText (rowName, lbl, juce::Justification::centred);
+
+        // Cells start after label strip
+        const float x0 = r.getX() + labelW;
 
         for (int ch = 0; ch < numCh; ++ch)
         {
             const auto t = layout.getTypeOfChannel (ch);
             const bool active = isActiveFn (t);
 
-            juce::Rectangle<float> cell (r.getX() + cellW * (float) ch + 1.0f,
+            juce::Rectangle<float> cell (x0 + cellW * (float) ch + 1.0f,
                                          y0 + 2.0f,
                                          cellW - 2.0f,
                                          rowH - 4.0f);
@@ -128,6 +138,7 @@ void MissionControlComponent::RoutingGraphic::paint (juce::Graphics& g)
             g.drawFittedText (channelLabelForType (t), cell.toNearestInt(), juce::Justification::centred, 1);
         }
     };
+    // [END UI3A-ROUTINGGRAPHIC-ROWLABELS-FIX]
 
     drawRow (r.getY(), "Det", [&] (juce::AudioChannelSet::ChannelType t)
     {
@@ -400,39 +411,39 @@ void MissionControlComponent::startLoadPreset()
                          });
 }
 
+// [BEGIN UI3A-MISSIONCONTROL-RESIZED-RELAYOUT]
 void MissionControlComponent::resized()
 {
     auto r = getLocalBounds().reduced (8);
 
-    // Bottom row: curve toggles (minimal height, broad buttons)
-    auto toggles = r.removeFromBottom (22);
-    const int tW = 70;
-    toggleMomentary.setBounds (toggles.removeFromLeft (tW));
-    toggleShortTerm.setBounds (toggles.removeFromLeft (tW));
-    toggleGate.setBounds      (toggles.removeFromLeft (tW));
-    toggleRolling.setBounds   (toggles.removeFromLeft (tW));
-
-    r.removeFromBottom (6);
-
-    // Right: routing graphic + policy controls
-    // [BEGIN UI3A-MISSIONCONTROL-RIGHT-COL-WIDTH-FIX]
+    // Right: policy row + routing graphic + curve toggles under it
     const int rightW = juce::jlimit (320, 560, r.getWidth() / 2);
     auto right = r.removeFromRight (rightW);
-    // [END UI3A-MISSIONCONTROL-RIGHT-COL-WIDTH-FIX]
-    // [BEGIN UI3A-MISSIONCONTROL-POLICY-ROW-LAYOUT]
-    auto policyRow = right.removeFromTop (22);
 
+    // Put curve toggles under the routing graphic (right column bottom)
+    auto rightToggles = right.removeFromBottom (22);
+    const int tW = 70;
+    toggleMomentary.setBounds (rightToggles.removeFromLeft (tW));
+    toggleShortTerm.setBounds (rightToggles.removeFromLeft (tW));
+    toggleGate.setBounds      (rightToggles.removeFromLeft (tW));
+    toggleRolling.setBounds   (rightToggles.removeFromLeft (tW));
+
+    right.removeFromBottom (6);
+
+    // Policy row at top of right column
+    auto policyRow = right.removeFromTop (22);
     mcPolicyBox.setBounds    (policyRow.removeFromLeft (130));
     dialogDetBox.setBounds   (policyRow.removeFromLeft (60));
     dialogApplyBox.setBounds (policyRow.removeFromLeft (60));
     lfeDetToggle.setBounds   (policyRow.removeFromLeft (80));
     lfeApplyToggle.setBounds (policyRow.removeFromLeft (90));
-    // [END UI3A-MISSIONCONTROL-POLICY-ROW-LAYOUT]
 
     right.removeFromTop (6);
+
+    // Remaining right area is routing graphic
     routingGraphic.setBounds (right);
 
-    // Left: presets + targets/current aligned
+    // Left: presets + targets/current aligned (now has room because toggles moved right)
     auto left = r;
 
     auto topRow = left.removeFromTop (22);
@@ -440,9 +451,9 @@ void MissionControlComponent::resized()
     topRow.removeFromLeft (6);
     loadPresetButton.setBounds (topRow.removeFromLeft (120));
 
-    left.removeFromTop (8);
+    left.removeFromTop (6);
 
-    // [BEGIN UI3A-MISSIONCONTROL-TARGETS-CURRENT-LAYOUT]
+    // Targets/current table with headers
     const int rowHdrW = 62;
     const int colW    = 96;
 
@@ -462,15 +473,14 @@ void MissionControlComponent::resized()
     targetPeakLabel.setBounds (targetRow.removeFromLeft (colW));
     targetLraLabel.setBounds  (targetRow.removeFromLeft (colW));
 
-    // Current row
+    // Current row (this was missing for you; it will now be visible)
     auto currentRow = left.removeFromTop (26);
     hdrCurrentRow.setBounds (currentRow.removeFromLeft (rowHdrW));
     currentILabel.setBounds    (currentRow.removeFromLeft (colW));
     currentPeakLabel.setBounds (currentRow.removeFromLeft (colW));
     currentLraLabel.setBounds  (currentRow.removeFromLeft (colW));
-    // [END UI3A-MISSIONCONTROL-TARGETS-CURRENT-LAYOUT]
 }
-// [END UI3A-MISSIONCONTROL-IMPL]
+// [END UI3A-MISSIONCONTROL-RESIZED-RELAYOUT]
 
 //==============================================================================
 // [BEGIN MTDM-PANEL-IMPL]
