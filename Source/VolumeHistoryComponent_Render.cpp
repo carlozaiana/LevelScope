@@ -61,7 +61,11 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
     plotBottom = juce::jlimit (1, juce::jmax (1, height), plotBottom);
 
-    mainPlotArea = juce::Rectangle<float> (0.0f, 0.0f, (float) width, (float) plotBottom);
+    // [BEGIN UI3B-MAINPLOT-WIDTH-EXCLUDE-RIGHTSTRIP]
+    const auto rightStrip = getDbRulerArea();
+    const int plotW = juce::jmax (1, width - rightStrip.getWidth());
+    mainPlotArea = juce::Rectangle<float> (0.0f, 0.0f, (float) plotW, (float) plotBottom);
+    // [END UI3B-MAINPLOT-WIDTH-EXCLUDE-RIGHTSTRIP]
     // [END ROLLING-LRA-SPLITTER-MAINPLOT-AREA]
 
     // [VIEW-NAV] Follow mode: follow playhead (so overwrite outside view jumps to that section)
@@ -126,6 +130,13 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     rebuildStaticBackgroundIfNeeded();
     if (cachedStaticBackground.isValid())
         g.drawImageAt (cachedStaticBackground, 0, 0);
+        // [BEGIN UI3B-RIGHTSTRIP-BG]
+        {
+            const auto rightStrip = getDbRulerArea();
+            g.setColour (juce::Colours::black.withMultipliedAlpha (0.25f));
+            g.fillRect (rightStrip);
+        }
+        // [END UI3B-RIGHTSTRIP-BG]
         // [BEGIN ROLLING-LRA-SPLITTER-HOIST-SELECTEDLEVEL]
         // Must live outside the plot-clip scope because we use it later for debug text.
         const int selectedLevel = selectBestLevelForCurrentZoom (width);
@@ -306,8 +317,24 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         // Keep the scale above the time ruler area
         // [BEGIN ROLLING-LRA-SPLITTER-DBSCALE-TRIM]
         const float reservedBottomPx = bounds.getHeight() - mainPlotArea.getHeight();
-        const auto scaleArea = bounds.withTrimmedBottom (reservedBottomPx);
+        // [BEGIN UI3B-DBSCALE-SUBAREA-REPLACE]
+        const float reservedBottomPx = bounds.getHeight() - mainPlotArea.getHeight();
+        juce::ignoreUnused (reservedBottomPx); // kept for clarity; plot height is used below
+
+        const auto dbScaleAreaI = getDbScaleArea();
+        const auto scaleArea = juce::Rectangle<float> ((float) dbScaleAreaI.getX(),
+                                                       (float) dbScaleAreaI.getY(),
+                                                       (float) dbScaleAreaI.getWidth(),
+                                                       (float) mainPlotArea.getHeight());
+        // [END UI3B-DBSCALE-SUBAREA-REPLACE]
         // [END ROLLING-LRA-SPLITTER-DBSCALE-TRIM]
+        // [BEGIN UI3B-DBSCALE-USE-SUBAREA]
+        const auto dbScaleAreaI = getDbScaleArea();
+        const auto scaleArea = juce::Rectangle<float> ((float) dbScaleAreaI.getX(),
+                                                       (float) dbScaleAreaI.getY(),
+                                                       (float) dbScaleAreaI.getWidth(),
+                                                       (float) (mainPlotArea.getHeight())); // only plot height
+        // [END UI3B-DBSCALE-USE-SUBAREA]
 
         const float scaleH = scaleArea.getHeight();
         if (scaleH > 20.0f)
@@ -372,6 +399,96 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             g.drawLine (rightX, scaleArea.getY(), rightX, scaleArea.getBottom(), 1.0f);
         }
     }
+
+    // [BEGIN UI3B-RIGHT-METERS-DRAW]
+    {
+        const auto metersAreaI = getRightMetersArea();
+        if (metersAreaI.getWidth() > 10 && metersAreaI.getHeight() > 20)
+        {
+            // Read snapshots (atomic loads inside processor; message-thread safe)
+            const auto lim  = processor.getLimiterMeteringSnapshot();
+            const auto down = processor.getDownwardMeteringSnapshot();
+
+            // Upward metering not published yet -> placeholder 0.0 (we will wire later)
+            const float upBoostDb = 0.0f;
+
+            // Meter geometry
+            auto r = metersAreaI.toFloat().reduced (6.0f, 6.0f);
+
+            const float gap = 6.0f;
+            const float colW = (r.getWidth() - 2.0f * gap) / 3.0f;
+
+            auto colUp   = juce::Rectangle<float> (r.getX(),                  r.getY(), colW, r.getHeight());
+            auto colDown = juce::Rectangle<float> (r.getX() + colW + gap,     r.getY(), colW, r.getHeight());
+            auto colLim  = juce::Rectangle<float> (r.getX() + 2.0f*(colW+gap),r.getY(), colW, r.getHeight());
+
+            auto drawFrame = [&] (juce::Rectangle<float> col)
+            {
+                g.setColour (juce::Colours::white.withMultipliedAlpha (0.14f));
+                g.drawRoundedRectangle (col, 3.0f, 1.0f);
+
+                g.setColour (juce::Colours::black.withMultipliedAlpha (0.25f));
+                g.fillRoundedRectangle (col.reduced (1.0f), 2.5f);
+            };
+
+            auto mapDb01 = [] (float db) -> float
+            {
+                // 0..24 dB mapped to 0..1
+                constexpr float maxDb = 24.0f;
+                return juce::jlimit (0.0f, 1.0f, db / maxDb);
+            };
+
+            auto drawUp = [&] (juce::Rectangle<float> col, float db)
+            {
+                drawFrame (col);
+
+                const float v01 = mapDb01 (db);
+                auto inner = col.reduced (2.0f);
+
+                // Upward fills from bottom upwards
+                const float fillH = inner.getHeight() * v01;
+                auto filled = inner.withY (inner.getBottom() - fillH).withHeight (fillH);
+
+                g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.75f));
+                g.fillRoundedRectangle (filled, 2.0f);
+
+                g.setColour (juce::Colours::white.withMultipliedAlpha (0.85f));
+                g.setFont (11.0f);
+                g.drawFittedText ("Up", col.toNearestInt().withHeight (14).withY ((int) col.getBottom() - 14),
+                                  juce::Justification::centred, 1);
+            };
+
+            auto drawDown = [&] (juce::Rectangle<float> col, float db, const juce::String& label, juce::Colour c)
+            {
+                drawFrame (col);
+
+                const float v01 = mapDb01 (db);
+                auto inner = col.reduced (2.0f);
+
+                // Downward fills from top downwards
+                const float fillH = inner.getHeight() * v01;
+                auto filled = inner.withHeight (fillH);
+
+                g.setColour (c.withMultipliedAlpha (0.75f));
+                g.fillRoundedRectangle (filled, 2.0f);
+
+                g.setColour (juce::Colours::white.withMultipliedAlpha (0.85f));
+                g.setFont (11.0f);
+                g.drawFittedText (label, col.toNearestInt().withHeight (14).withY ((int) col.getBottom() - 14),
+                                  juce::Justification::centred, 1);
+            };
+
+            // Use HOLD for display stability (current is often jittery). You can change later.
+            drawUp   (colUp,   upBoostDb);
+            drawDown (colDown, down.grDbHold, "Down", juce::Colours::deepskyblue);
+            drawDown (colLim,  lim.grDbHold,  "Lim",  juce::Colours::orange);
+
+            // Separators
+            g.setColour (juce::Colours::white.withMultipliedAlpha (0.10f));
+            g.drawVerticalLine ((int) metersAreaI.getX(), (float) metersAreaI.getY(), (float) metersAreaI.getBottom());
+        }
+    }
+    // [END UI3B-RIGHT-METERS-DRAW]
 
     //==============================================================================
     // [ROLLING-LRA] Rolling LRA curve strip (0..20 LU) drawn above time ruler

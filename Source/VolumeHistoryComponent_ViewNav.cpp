@@ -48,14 +48,28 @@ juce::Rectangle<int> VolumeHistoryComponent::getTimeRulerArea() const
     return { 0, getHeight() - rulerH, getWidth(), rulerH };
 }
 
+// [BEGIN UI3B-RIGHT-STRIP-GETTERS]
 juce::Rectangle<int> VolumeHistoryComponent::getDbRulerArea() const
 {
-    // Right-side strip used for dB scale interaction
-    const int rulerW = 72; // room for bigger labels
+    // Total right strip: LUFS scale + meters
     const int timeRulerH = getTimeRulerArea().getHeight();
-
-    return { getWidth() - rulerW, 0, rulerW, getHeight() - timeRulerH };
+    return { getWidth() - rightStripWidthPx, 0, rightStripWidthPx, getHeight() - timeRulerH };
 }
+
+juce::Rectangle<int> VolumeHistoryComponent::getDbScaleArea() const
+{
+    // Left part of the right strip: LUFS scale area (interactive for Y pan/reset)
+    const auto total = getDbRulerArea();
+    return { total.getX(), total.getY(), dbScaleWidthPx, total.getHeight() };
+}
+
+juce::Rectangle<int> VolumeHistoryComponent::getRightMetersArea() const
+{
+    // Right part of the right strip: meters
+    const auto total = getDbRulerArea();
+    return { total.getX() + dbScaleWidthPx, total.getY(), metersWidthPx, total.getHeight() };
+}
+// [END UI3B-RIGHT-STRIP-GETTERS]
 
 void VolumeHistoryComponent::resetXViewDefault()
 {
@@ -311,10 +325,12 @@ void VolumeHistoryComponent::resized()
     // Do NOT reset tickStepIndex here; hysteresis should smoothly adapt.
     markStaticBackgroundDirty();
 
-    // [FOLLOW-BUTTON] small toggle in the top-right
-    followButton.setBounds (getWidth() - 88, 6, 80, 22);
-    gateButton.setBounds   (getWidth() - 172, 6, 76, 22);
-    rollingLraButton.setBounds (getWidth() - 256, 6, 76, 22);
+    // [BEGIN UI3B-TOPRIGHT-BUTTONS-AVOID-RIGHTSTRIP]
+    const int rightEdge = getDbRulerArea().getX(); // left edge of right strip
+    followButton.setBounds (rightEdge - 88, 6, 80, 22);
+    gateButton.setBounds   (rightEdge - 172, 6, 76, 22);
+    rollingLraButton.setBounds (rightEdge - 256, 6, 76, 22);
+    // [END UI3B-TOPRIGHT-BUTTONS-AVOID-RIGHTSTRIP]
 }
 // [END VHC-VNAV-RESIZED]
 
@@ -480,8 +496,10 @@ void VolumeHistoryComponent::mouseDoubleClick (const juce::MouseEvent& event)
 {
     const auto p = event.getPosition();
 
-    // Double-click dB ruler resets Y view
-    if (getDbRulerArea().contains (p))
+    // [BEGIN UI3B-DBSCALE-DOUBLECLICK-HIT]
+    // Double-click LUFS scale resets Y view
+    if (getDbScaleArea().contains (p))
+    // [END UI3B-DBSCALE-DOUBLECLICK-HIT]
     {
         resetYViewDefault();
         repaint();
@@ -580,8 +598,10 @@ void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
         return;
     }
 
-    // [UI-RULERS] Drag dB ruler to pan dB
-    if (getDbRulerArea().contains (p))
+    // [BEGIN UI3B-DBSCALE-DRAG-HIT]
+    // Drag LUFS scale to pan dB (meters area is not interactive)
+    if (getDbScaleArea().contains (p))
+    // [END UI3B-DBSCALE-DRAG-HIT]
     {
         dragMode = DragMode::dbRuler;
         dragStartPos = p;

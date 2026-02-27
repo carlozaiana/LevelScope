@@ -225,6 +225,11 @@ private:
 
     bool showBands = true;
     bool showLines = true;
+    // [BEGIN UI3B-RIGHT-STRIP-CONSTANTS]
+    static constexpr int dbScaleWidthPx = 72;     // existing LUFS ruler width (kept)
+    static constexpr int metersWidthPx  = 66;     // 3 meters side-by-side + gaps
+    static constexpr int rightStripWidthPx = dbScaleWidthPx + metersWidthPx;
+    // [END UI3B-RIGHT-STRIP-CONSTANTS]
     // [BEGIN UI3A-CURVE-VISIBILITY-FLAGS]
     bool showMomentaryCurve = true;
     bool showShortTermCurve = true;
@@ -249,8 +254,18 @@ private:
     // [UI-RULERS] Ruler hit zones + interactions
     //==============================================================================
 
+    // [BEGIN UI3B-RIGHT-STRIP-AREAS]
     juce::Rectangle<int> getTimeRulerArea() const;
+
+    // Total right strip (LUFS scale + meters) used to reserve space from plot.
     juce::Rectangle<int> getDbRulerArea() const;
+
+    // LUFS scale sub-area (left part of the right strip) used for Y pan/reset interactions.
+    juce::Rectangle<int> getDbScaleArea() const;
+
+    // Meter sub-area (right part of the right strip).
+    juce::Rectangle<int> getRightMetersArea() const;
+    // [END UI3B-RIGHT-STRIP-AREAS]
 
     void resetXViewDefault();
     void fitXViewMaxZoomOut();
