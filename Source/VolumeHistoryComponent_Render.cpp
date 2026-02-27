@@ -392,95 +392,145 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     }
     // [END UI3B-DBSCALE-BLOCK-REPLACE]
 
-    // [BEGIN UI3B-RIGHT-METERS-DRAW]
+    // [BEGIN UI3C-RIGHT-METERS-IO-DRAW]
     {
         const auto metersAreaI = getRightMetersArea();
-        if (metersAreaI.getWidth() > 10 && metersAreaI.getHeight() > 20)
+        if (metersAreaI.getWidth() > 20 && metersAreaI.getHeight() > 40)
         {
-            // Read snapshots (atomic loads inside processor; message-thread safe)
+            // Read snapshots
+            const auto io   = processor.getIOMeteringSnapshot();
             const auto lim  = processor.getLimiterMeteringSnapshot();
             const auto down = processor.getDownwardMeteringSnapshot();
 
-            // Upward metering not published yet -> placeholder 0.0 (we will wire later)
+            // Upward metering not published yet -> placeholder
             const float upBoostDb = 0.0f;
 
-            // Meter geometry
             auto r = metersAreaI.toFloat().reduced (6.0f, 6.0f);
 
+            const int numCols = 5; // In, Up, Dn, Lim, Out
             const float gap = 6.0f;
-            const float colW = (r.getWidth() - 2.0f * gap) / 3.0f;
+            const float totalGap = gap * (numCols - 1);
+            const float colW = (r.getWidth() - totalGap) / (float) numCols;
 
-            auto colUp   = juce::Rectangle<float> (r.getX(),                  r.getY(), colW, r.getHeight());
-            auto colDown = juce::Rectangle<float> (r.getX() + colW + gap,     r.getY(), colW, r.getHeight());
-            auto colLim  = juce::Rectangle<float> (r.getX() + 2.0f*(colW+gap),r.getY(), colW, r.getHeight());
+            if (colW < 10.0f)
+                return;
 
-            auto drawFrame = [&] (juce::Rectangle<float> col)
+            auto col = [&] (int i) -> juce::Rectangle<float>
             {
-                g.setColour (juce::Colours::white.withMultipliedAlpha (0.14f));
-                g.drawRoundedRectangle (col, 3.0f, 1.0f);
-
-                g.setColour (juce::Colours::black.withMultipliedAlpha (0.25f));
-                g.fillRoundedRectangle (col.reduced (1.0f), 2.5f);
+                return { r.getX() + (colW + gap) * (float) i, r.getY(), colW, r.getHeight() };
             };
 
-            auto mapDb01 = [] (float db) -> float
+            auto drawFrame = [&] (juce::Rectangle<float> colR)
             {
-                // 0..24 dB mapped to 0..1
+                g.setColour (juce::Colours::white.withMultipliedAlpha (0.14f));
+                g.drawRoundedRectangle (colR, 3.0f, 1.0f);
+
+                g.setColour (juce::Colours::black.withMultipliedAlpha (0.25f));
+                g.fillRoundedRectangle (colR.reduced (1.0f), 2.5f);
+            };
+
+            auto drawLabel = [&] (juce::Rectangle<float> colR, const juce::String& label)
+            {
+                g.setColour (juce::Colours::white.withMultipliedAlpha (0.85f));
+                g.setFont (11.0f);
+                auto b = colR.toNearestInt();
+                b.setY (b.getBottom() - 14);
+                b.setHeight (14);
+                g.drawFittedText (label, b, juce::Justification::centred, 1);
+            };
+
+            // I/O meter mapping: dBFS range [-60..0]
+            auto mapDbfsToY = [&] (juce::Rectangle<float> colR, float db) -> float
+            {
+                const float topDb = 0.0f;
+                const float botDb = -60.0f;
+                db = juce::jlimit (botDb, topDb, db);
+                const float norm = (db - botDb) / (topDb - botDb); // 0..1
+                return colR.getBottom() - norm * colR.getHeight();
+            };
+
+            auto drawIoMeter = [&] (juce::Rectangle<float> colR,
+                                    juce::Colour c,
+                                    float rmsDb,
+                                    float peakDbCurrent,
+                                    float peakDbHold,
+                                    const juce::String& label)
+            {
+                drawFrame (colR);
+
+                auto inner = colR.reduced (2.0f);
+                inner = inner.withTrimmedBottom (14.0f); // leave label area
+
+                // RMS bar (filled from bottom)
+                const float yRms = mapDbfsToY (inner, rmsDb);
+                auto rmsFill = inner.withY (yRms).withBottom (inner.getBottom());
+
+                g.setColour (c.withMultipliedAlpha (0.35f));
+                g.fillRoundedRectangle (rmsFill, 2.0f);
+    
+                // Peak current line
+                const float yPk = mapDbfsToY (inner, peakDbCurrent);
+                g.setColour (c.withMultipliedAlpha (0.85f));
+                g.drawLine (inner.getX(), yPk, inner.getRight(), yPk, 1.2f);
+
+                // Peak hold line
+                const float yHold = mapDbfsToY (inner, peakDbHold);
+                g.setColour (juce::Colours::white.withMultipliedAlpha (0.90f));
+                g.drawLine (inner.getX(), yHold, inner.getRight(), yHold, 1.2f);
+
+                drawLabel (colR, label);
+            };
+
+            // GR meters mapping: 0..24 dB
+            auto mapGr01 = [] (float db) -> float
+            {
                 constexpr float maxDb = 24.0f;
                 return juce::jlimit (0.0f, 1.0f, db / maxDb);
             };
 
-            auto drawUp = [&] (juce::Rectangle<float> col, float db)
+            auto drawUp = [&] (juce::Rectangle<float> colR, float db)
             {
-                drawFrame (col);
+                drawFrame (colR);
 
-                const float v01 = mapDb01 (db);
-                auto inner = col.reduced (2.0f);
-
-                // Upward fills from bottom upwards
+                auto inner = colR.reduced (2.0f);
+                inner = inner.withTrimmedBottom (14.0f);
+    
+                const float v01 = mapGr01 (db);
                 const float fillH = inner.getHeight() * v01;
                 auto filled = inner.withY (inner.getBottom() - fillH).withHeight (fillH);
 
-                g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.75f));
+                g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.65f));
                 g.fillRoundedRectangle (filled, 2.0f);
-
-                g.setColour (juce::Colours::white.withMultipliedAlpha (0.85f));
-                g.setFont (11.0f);
-                g.drawFittedText ("Up", col.toNearestInt().withHeight (14).withY ((int) col.getBottom() - 14),
-                                  juce::Justification::centred, 1);
+    
+                drawLabel (colR, "Up");
             };
 
-            auto drawDown = [&] (juce::Rectangle<float> col, float db, const juce::String& label, juce::Colour c)
+            auto drawDown = [&] (juce::Rectangle<float> colR, float db, const juce::String& label, juce::Colour c)
             {
-                drawFrame (col);
+                drawFrame (colR);
 
-                const float v01 = mapDb01 (db);
-                auto inner = col.reduced (2.0f);
+                auto inner = colR.reduced (2.0f);
+                inner = inner.withTrimmedBottom (14.0f);
 
-                // Downward fills from top downwards
+                const float v01 = mapGr01 (db);
                 const float fillH = inner.getHeight() * v01;
                 auto filled = inner.withHeight (fillH);
 
-                g.setColour (c.withMultipliedAlpha (0.75f));
+                g.setColour (c.withMultipliedAlpha (0.65f));
                 g.fillRoundedRectangle (filled, 2.0f);
 
-                g.setColour (juce::Colours::white.withMultipliedAlpha (0.85f));
-                g.setFont (11.0f);
-                g.drawFittedText (label, col.toNearestInt().withHeight (14).withY ((int) col.getBottom() - 14),
-                                  juce::Justification::centred, 1);
+                drawLabel (colR, label);
             };
 
-            // Use HOLD for display stability (current is often jittery). You can change later.
-            drawUp   (colUp,   upBoostDb);
-            drawDown (colDown, down.grDbHold, "Dn", juce::Colours::deepskyblue);
-            drawDown (colLim,  lim.grDbHold,  "Lim",  juce::Colours::orange);
-
-            // Separators
-            g.setColour (juce::Colours::white.withMultipliedAlpha (0.10f));
-            g.drawVerticalLine ((int) metersAreaI.getX(), (float) metersAreaI.getY(), (float) metersAreaI.getBottom());
+            // Columns: In | Up | Dn | Lim | Out
+            drawIoMeter (col (0), juce::Colours::deepskyblue, io.inRmsDbCurrent,  io.inPeakDbCurrent,  io.inPeakDbHold,  "In");
+            drawUp      (col (1), upBoostDb);
+            drawDown    (col (2), down.grDbHold, "Dn",  juce::Colours::deepskyblue);
+            drawDown    (col (3), lim.grDbHold,  "Lim", juce::Colours::orange);
+            drawIoMeter (col (4), juce::Colours::orange,     io.outRmsDbCurrent, io.outPeakDbCurrent, io.outPeakDbHold, "Out");
         }
     }
-    // [END UI3B-RIGHT-METERS-DRAW]
+    // [END UI3C-RIGHT-METERS-IO-DRAW]
 
     //==============================================================================
     // [ROLLING-LRA] Rolling LRA curve strip (0..20 LU) drawn above time ruler

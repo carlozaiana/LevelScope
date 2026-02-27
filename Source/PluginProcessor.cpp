@@ -28,6 +28,59 @@ namespace
 
     template <typename Opt, std::enable_if_t<!std::is_arithmetic_v<std::decay_t<Opt>>, int> = 0>
     auto optValue (const Opt& o) noexcept -> decltype(*o) { return *o; }
+
+    // [BEGIN LS-IO-METERING-HELPER]
+    struct BlockPeakRms
+    {
+        float peakDb = -200.0f;
+        float rmsDb  = -200.0f;
+    };
+
+    static BlockPeakRms computeBlockPeakRmsMaxAcrossChannels (const juce::AudioBuffer<float>& b,
+                                                              int numCh,
+                                                              int numSamples) noexcept
+    {
+        BlockPeakRms out;
+        if (numCh <= 0 || numSamples <= 0)
+            return out;
+
+        numCh = juce::jlimit (1, 12, numCh);
+
+        float peakMax = 0.0f;
+        float rmsMax  = 0.0f;
+
+        for (int ch = 0; ch < numCh; ++ch)
+        {
+            const float* d = b.getReadPointer (ch);
+            float p = 0.0f;
+            double ss = 0.0;
+
+            for (int i = 0; i < numSamples; ++i)
+            {
+                const float x = d[i];
+                const float ax = std::abs (x);
+                if (ax > p) p = ax;
+                ss += (double) x * (double) x;
+            }
+
+            const float rms = (float) std::sqrt (ss / (double) numSamples);
+
+            if (p > peakMax) peakMax = p;
+            if (rms > rmsMax) rmsMax = rms;
+        }
+
+        out.peakDb = juce::Decibels::gainToDecibels (peakMax, -200.0f);
+        out.rmsDb  = juce::Decibels::gainToDecibels (rmsMax,  -200.0f);
+        return out;
+    }
+
+    static float decayHoldDb (float holdDb, float currentDb, float decayDb) noexcept
+    {
+        // Linear decay in dB for simplicity (stable and cheap).
+        holdDb = juce::jmax (holdDb - decayDb, -200.0f);
+        return juce::jmax (holdDb, currentDb);
+    }
+    // [END LS-IO-METERING-HELPER]
 }
 
 // [BEGIN MTDM-APVTS-PARAM-LAYOUT]
@@ -684,6 +737,21 @@ LevelScopeAudioProcessor::DownwardMeteringSnapshot LevelScopeAudioProcessor::get
 }
 // [END LS-DOWNWARD-METERING-SNAPSHOT-IMPL]
 
+// [BEGIN LS-IO-METERING-SNAPSHOT-IMPL]
+LevelScopeAudioProcessor::IOMeteringSnapshot LevelScopeAudioProcessor::getIOMeteringSnapshot() const noexcept
+{
+    IOMeteringSnapshot s;
+    s.inPeakDbCurrent  = ioInPeakDbCurrent.load  (std::memory_order_relaxed);
+    s.inPeakDbHold     = ioInPeakDbHold.load     (std::memory_order_relaxed);
+    s.inRmsDbCurrent   = ioInRmsDbCurrent.load   (std::memory_order_relaxed);
+
+    s.outPeakDbCurrent = ioOutPeakDbCurrent.load (std::memory_order_relaxed);
+    s.outPeakDbHold    = ioOutPeakDbHold.load    (std::memory_order_relaxed);
+    s.outRmsDbCurrent  = ioOutRmsDbCurrent.load  (std::memory_order_relaxed);
+    return s;
+}
+// [END LS-IO-METERING-SNAPSHOT-IMPL]
+
 //==============================================================================
 
 // [BEGIN LS-PROCESSORCORE-PREPARETOPLAY]
@@ -885,6 +953,21 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     const int numChannels = getTotalNumInputChannels();
     const int numSamples  = buffer.getNumSamples();
 
+    // [BEGIN LS-IO-METERING-IN-COMPUTE]
+    // Compute INPUT metering before ProcessorCore modifies the buffer.
+    const auto inMet = computeBlockPeakRmsMaxAcrossChannels (buffer, numChannels, numSamples);
+
+    ioInPeakDbCurrent.store (inMet.peakDb, std::memory_order_relaxed);
+    ioInRmsDbCurrent.store  (inMet.rmsDb,  std::memory_order_relaxed);
+
+    {
+        const float hold = ioInPeakDbHold.load (std::memory_order_relaxed);
+        const float dt = (currentSampleRate > 1.0e-6 ? (float) numSamples / (float) currentSampleRate : 0.0f);
+        const float dec = ioPeakHoldDecayDbPerSec * dt;
+        ioInPeakDbHold.store (decayHoldDb (hold, inMet.peakDb, dec), std::memory_order_relaxed);
+    }
+    // [END LS-IO-METERING-IN-COMPUTE]
+
     for (int ch = numChannels; ch < getTotalNumOutputChannels(); ++ch)
         buffer.clear (ch, 0, numSamples);
 
@@ -994,6 +1077,22 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
             }
 
             processorCore.process (ctx);
+
+            // [BEGIN LS-IO-METERING-OUT-COMPUTE-STOPPATH]
+            // Compute OUTPUT metering after ProcessorCore (even if analysis is frozen).
+            const auto outMet = computeBlockPeakRmsMaxAcrossChannels (buffer, numChannels, numSamples);
+
+            ioOutPeakDbCurrent.store (outMet.peakDb, std::memory_order_relaxed);
+            ioOutRmsDbCurrent.store  (outMet.rmsDb,  std::memory_order_relaxed);
+
+            {
+                const float hold = ioOutPeakDbHold.load (std::memory_order_relaxed);
+                const float dt = (currentSampleRate > 1.0e-6 ? (float) numSamples / (float) currentSampleRate : 0.0f);
+                const float dec = ioPeakHoldDecayDbPerSec * dt;
+                ioOutPeakDbHold.store (decayHoldDb (hold, outMet.peakDb, dec), std::memory_order_relaxed);
+            }
+            // [END LS-IO-METERING-OUT-COMPUTE-STOPPATH]
+
             return;
         }
     // [END LS-PROCESSORCORE-SKIP-ANALYSIS-STILL-PROCESS]
@@ -1034,6 +1133,20 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 
             processorCore.process (ctx);
         }
+        // [BEGIN LS-IO-METERING-OUT-COMPUTE]
+        // Compute OUTPUT metering after ProcessorCore.
+        const auto outMet = computeBlockPeakRmsMaxAcrossChannels (buffer, numChannels, numSamples);
+
+        ioOutPeakDbCurrent.store (outMet.peakDb, std::memory_order_relaxed);
+        ioOutRmsDbCurrent.store  (outMet.rmsDb,  std::memory_order_relaxed);
+
+        {
+            const float hold = ioOutPeakDbHold.load (std::memory_order_relaxed);
+            const float dt = (currentSampleRate > 1.0e-6 ? (float) numSamples / (float) currentSampleRate : 0.0f);
+            const float dec = ioPeakHoldDecayDbPerSec * dt;
+            ioOutPeakDbHold.store (decayHoldDb (hold, outMet.peakDb, dec), std::memory_order_relaxed);
+        }
+        // [END LS-IO-METERING-OUT-COMPUTE]
 
         // Audio passthrough unchanged (empty graph => buffer is unchanged)
     // [END LS-PROCESSORCORE-PROCESSBLOCK]

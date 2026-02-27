@@ -98,6 +98,21 @@ public:
     DownwardMeteringSnapshot getDownwardMeteringSnapshot() const noexcept;
     // [END LS-DOWNWARD-METERING-SNAPSHOT-API]
 
+    // [BEGIN LS-IO-METERING-SNAPSHOT-API]
+    struct IOMeteringSnapshot
+    {
+        float inPeakDbCurrent  = -200.0f;
+        float inPeakDbHold     = -200.0f;
+        float inRmsDbCurrent   = -200.0f;
+
+        float outPeakDbCurrent = -200.0f;
+        float outPeakDbHold    = -200.0f;
+        float outRmsDbCurrent  = -200.0f;
+    };
+
+    IOMeteringSnapshot getIOMeteringSnapshot() const noexcept;
+    // [END LS-IO-METERING-SNAPSHOT-API]
+
     //==============================================================================
     // GUI access helpers (UI API unchanged; forwarded to core model)
 
@@ -204,6 +219,20 @@ private:
     std::atomic<double>      lastHostTimeSeconds { 0.0 };
     std::atomic<int>         haveHostTimeSamples { 0 };
     std::atomic<int>         haveHostTimeSeconds { 0 };
+
+    // [BEGIN LS-IO-METERING-ATOMICS]
+    // Input/Output metering (max across channels). Updated on audio thread, read on UI thread.
+    std::atomic<float> ioInPeakDbCurrent  { -200.0f };
+    std::atomic<float> ioInPeakDbHold     { -200.0f };
+    std::atomic<float> ioInRmsDbCurrent   { -200.0f };
+
+    std::atomic<float> ioOutPeakDbCurrent { -200.0f };
+    std::atomic<float> ioOutPeakDbHold    { -200.0f };
+    std::atomic<float> ioOutRmsDbCurrent  { -200.0f };
+
+    // Peak-hold decay rate (dB per second)
+    float ioPeakHoldDecayDbPerSec = 12.0f;
+    // [END LS-IO-METERING-ATOMICS]
 
     // [FIX-RESTART-PARTIAL-FRAME]
     juce::int64 lastBlockEndProjectSample = 0;
