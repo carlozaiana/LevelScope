@@ -45,6 +45,10 @@ public:
     void mouseDrag (const juce::MouseEvent& event) override;
     void mouseUp (const juce::MouseEvent& event) override;
     void mouseDoubleClick (const juce::MouseEvent& event) override;
+    // [BEGIN UI3C-FOLLOW-PUBLIC-API]
+    void setFollowRightEdge (bool shouldFollow);
+    bool getFollowRightEdge() const noexcept { return followRightEdge; }
+    // [END UI3C-FOLLOW-PUBLIC-API]
     // [BEGIN UI3A-CURVE-VISIBILITY-PUBLIC-API]
     // Curve visibility (controlled by Mission Control top strip)
     void setShowMomentaryCurve (bool b);

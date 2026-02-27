@@ -100,6 +100,13 @@ VolumeHistoryComponent::VolumeHistoryComponent (LevelScopeAudioProcessor& proc)
     };
     addAndMakeVisible (rollingLraButton);
 
+    // [BEGIN UI3C-HIDE-HISTORY-TOPRIGHT-TOGGLES]
+    // These controls are now owned by the Mission Control strip.
+    followButton.setVisible (false);
+    gateButton.setVisible (false);
+    rollingLraButton.setVisible (false);
+    // [END UI3C-HIDE-HISTORY-TOPRIGHT-TOGGLES]
+
     markStaticBackgroundDirty();
     // [BEGIN MTDM-THRESH-UI-APVTS-LISTENER-REGISTER]
     {

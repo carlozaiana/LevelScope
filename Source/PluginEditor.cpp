@@ -268,20 +268,29 @@ MissionControlComponent::MissionControlComponent (LevelScopeAudioProcessor& p, V
         b.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.90f));
     };
 
+    // [BEGIN UI3C-MISSIONCONTROL-SETUP-FOLLOW-TOGGLE]
     setupToggle (toggleMomentary);
     setupToggle (toggleShortTerm);
     setupToggle (toggleGate);
     setupToggle (toggleRolling);
+    setupToggle (toggleFollow);
+    // [END UI3C-MISSIONCONTROL-SETUP-FOLLOW-TOGGLE]
 
+    // [BEGIN UI3C-MISSIONCONTROL-ADD-FOLLOW-TOGGLE]
     addAndMakeVisible (toggleMomentary);
     addAndMakeVisible (toggleShortTerm);
     addAndMakeVisible (toggleGate);
     addAndMakeVisible (toggleRolling);
+    addAndMakeVisible (toggleFollow);
+    // [END UI3C-MISSIONCONTROL-ADD-FOLLOW-TOGGLE]
 
+    // [BEGIN UI3C-MISSIONCONTROL-WIRE-FOLLOW]
     toggleMomentary.onClick = [this] { history.setShowMomentaryCurve (toggleMomentary.getToggleState()); };
     toggleShortTerm.onClick = [this] { history.setShowShortTermCurve (toggleShortTerm.getToggleState()); };
-    toggleGate.onClick      = [this] { history.setShowGateCurve (toggleGate.getToggleState()); };
+    toggleGate.onClick      = [this] { history.setShowGateCurve      (toggleGate.getToggleState()); };
     toggleRolling.onClick   = [this] { history.setShowRollingLraLane (toggleRolling.getToggleState()); };
+    toggleFollow.onClick    = [this] { history.setFollowRightEdge    (toggleFollow.getToggleState()); };
+    // [END UI3C-MISSIONCONTROL-WIRE-FOLLOW]
 
     // Target persistence
     loadTargetsFromState();
@@ -354,13 +363,16 @@ void MissionControlComponent::updateCurrentReadouts()
     currentPeakLabel.setText ("--", juce::dontSendNotification);
 }
 
+// [BEGIN UI3C-MISSIONCONTROL-REFRESH-WITH-FOLLOW]
 void MissionControlComponent::refreshCurveToggleStatesFromHistory()
 {
     toggleMomentary.setToggleState (history.getShowMomentaryCurve(), juce::dontSendNotification);
     toggleShortTerm.setToggleState (history.getShowShortTermCurve(), juce::dontSendNotification);
     toggleGate.setToggleState      (history.getShowGateCurve(), juce::dontSendNotification);
     toggleRolling.setToggleState   (history.getShowRollingLraLane(), juce::dontSendNotification);
+    toggleFollow.setToggleState    (history.getFollowRightEdge(), juce::dontSendNotification);
 }
+// [END UI3C-MISSIONCONTROL-REFRESH-WITH-FOLLOW]
 
 void MissionControlComponent::timerCallback()
 {
@@ -421,12 +433,25 @@ void MissionControlComponent::resized()
     auto right = r.removeFromRight (rightW);
 
     // Put curve toggles under the routing graphic (right column bottom)
+    // [BEGIN UI3C-MISSIONCONTROL-TOGGLES-LAYOUT-5]
     auto rightToggles = right.removeFromBottom (22);
-    const int tW = 70;
-    toggleMomentary.setBounds (rightToggles.removeFromLeft (tW));
-    toggleShortTerm.setBounds (rightToggles.removeFromLeft (tW));
-    toggleGate.setBounds      (rightToggles.removeFromLeft (tW));
-    toggleRolling.setBounds   (rightToggles.removeFromLeft (tW));
+
+    // 5 broad buttons across (Follow sits next to rLRA)
+    const int gap = 4;
+    const int n = 5;
+    const int w = rightToggles.getWidth();
+    const int each = juce::jmax (56, (w - gap * (n - 1)) / n);
+
+    toggleMomentary.setBounds (rightToggles.removeFromLeft (each));
+    rightToggles.removeFromLeft (gap);
+    toggleShortTerm.setBounds (rightToggles.removeFromLeft (each));
+    rightToggles.removeFromLeft (gap);
+    toggleGate.setBounds (rightToggles.removeFromLeft (each));
+    rightToggles.removeFromLeft (gap);
+    toggleRolling.setBounds (rightToggles.removeFromLeft (each));
+    rightToggles.removeFromLeft (gap);
+    toggleFollow.setBounds (rightToggles);
+    // [END UI3C-MISSIONCONTROL-TOGGLES-LAYOUT-5]
 
     right.removeFromBottom (6);
 

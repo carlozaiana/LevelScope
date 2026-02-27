@@ -434,6 +434,39 @@ void VolumeHistoryComponent::handleThresholdMouseUp (const juce::MouseEvent& eve
 }
 // [END MTDM-THRESH-UI-MOUSE-IMPL]
 
+// [BEGIN UI3C-FOLLOW-SETTER-IMPL]
+void VolumeHistoryComponent::setFollowRightEdge (bool shouldFollow)
+{
+    followRightEdge = shouldFollow;
+
+    if (! followRightEdge)
+        autoRefollowArmed = false; // prevent immediate auto-refollow
+
+    if (followRightEdge)
+    {
+        const int w = getWidth();
+
+        if (havePlayheadFrameIndex && zoomX > 1.0e-12 && w > 1)
+        {
+            const double visibleFrames = (double) w / zoomX;
+            constexpr double playheadXFrac = 0.5; // center
+            viewRightFrame = (double) playheadFrameIndex + visibleFrames * (1.0 - playheadXFrac);
+        }
+        else if (haveNowFrameIndex)
+        {
+            viewRightFrame = (double) nowFrameIndex;
+        }
+
+        clampViewRightFrame (w);
+    }
+
+    // keep internal button state in sync (even if hidden)
+    followButton.setToggleState (followRightEdge, juce::dontSendNotification);
+
+    repaint();
+}
+// [END UI3C-FOLLOW-SETTER-IMPL]
+
 // [BEGIN UI3A-CURVE-VISIBILITY-SETTERS]
 void VolumeHistoryComponent::setShowMomentaryCurve (bool b)
 {

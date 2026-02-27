@@ -100,10 +100,13 @@ private:
     RoutingGraphic routingGraphic;
 
     // Curve toggles (bottom row)
+    // [BEGIN UI3C-MISSIONCONTROL-TOGGLES-WITH-FOLLOW]
     juce::ToggleButton toggleMomentary { "M" };
     juce::ToggleButton toggleShortTerm { "S" };
     juce::ToggleButton toggleGate      { "Gate" };
     juce::ToggleButton toggleRolling   { "rLRA" };
+    juce::ToggleButton toggleFollow    { "Follow" };
+    // [END UI3C-MISSIONCONTROL-TOGGLES-WITH-FOLLOW]
 
     // State keys (persisted inside APVTS state tree as properties)
     static const juce::Identifier kTargetI;
