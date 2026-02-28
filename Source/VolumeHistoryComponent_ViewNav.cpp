@@ -162,7 +162,7 @@ void VolumeHistoryComponent::clampViewRightFrame (int widthPixels) noexcept
 
 void VolumeHistoryComponent::panTime (float wheelDelta)
 {
-    const int w = getWidth();
+    const int w = juce::jmax (1, getWidth() - getDbRulerArea().getWidth());
     if (w <= 1 || wheelDelta == 0.0f || zoomX <= 1.0e-12)
         return;
 
@@ -204,7 +204,7 @@ void VolumeHistoryComponent::panDb (float wheelDelta)
 
 void VolumeHistoryComponent::applyHorizontalZoom (float wheelDelta, float anchorX)
 {
-    const int w = getWidth();
+    const int w = juce::jmax (1, getWidth() - getDbRulerArea().getWidth());
     if (w <= 1 || wheelDelta == 0.0f)
         return;
 
@@ -310,7 +310,7 @@ void VolumeHistoryComponent::resized()
 {
     if (! hasCustomZoomX)
     {
-        const int w = getWidth();
+        const int w = juce::jmax (1, getWidth() - getDbRulerArea().getWidth());
         if (w > 0 && visualFrameRate > 0.0)
         {
             const double desiredVisibleSeconds = 10.0;
@@ -444,7 +444,7 @@ void VolumeHistoryComponent::setFollowRightEdge (bool shouldFollow)
 
     if (followRightEdge)
     {
-        const int w = getWidth();
+        const int w = juce::jmax (1, getWidth() - getDbRulerArea().getWidth());
 
         if (havePlayheadFrameIndex && zoomX > 1.0e-12 && w > 1)
         {

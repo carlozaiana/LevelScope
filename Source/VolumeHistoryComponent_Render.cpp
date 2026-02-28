@@ -51,6 +51,12 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     const int width  = (int) bounds.getWidth();
     const int height = (int) bounds.getHeight();
 
+    // [BEGIN UI3C1-PLOT-WIDTH-FOR-TIMEAXIS]
+    // The plot width excludes the entire right strip (LUFS scale + meters).
+    const int rightStripW = getDbRulerArea().getWidth();
+    const int plotWidth   = juce::jmax (1, width - rightStripW);
+    // [END UI3C1-PLOT-WIDTH-FOR-TIMEAXIS]
+
     // [BEGIN ROLLING-LRA-SPLITTER-MAINPLOT-AREA]
     // Reserve bottom space for time ruler, and optionally for rolling LRA lane.
     const auto timeRuler = getTimeRulerArea();
@@ -64,7 +70,9 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     // [BEGIN UI3B-MAINPLOT-WIDTH-EXCLUDE-RIGHTSTRIP]
     const auto rightStrip = getDbRulerArea();
     const int plotW = juce::jmax (1, width - rightStrip.getWidth());
-    mainPlotArea = juce::Rectangle<float> (0.0f, 0.0f, (float) plotW, (float) plotBottom);
+    // [BEGIN UI3C1-MAINPLOT-W-USE-PLOTWIDTH]
+    mainPlotArea = juce::Rectangle<float> (0.0f, 0.0f, (float) plotWidth, (float) plotBottom);
+    // [END UI3C1-MAINPLOT-W-USE-PLOTWIDTH]
     // [END UI3B-MAINPLOT-WIDTH-EXCLUDE-RIGHTSTRIP]
     // [END ROLLING-LRA-SPLITTER-MAINPLOT-AREA]
 
@@ -74,7 +82,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     {
         if (havePlayheadFrameIndex && zoomX > 1.0e-12)
         {
-            const double visibleFrames = (double) width / zoomX;
+            const double visibleFrames = (double) plotWidth / zoomX;
             constexpr double playheadXFrac = 0.5; // 0.5 = center
             viewRightFrame = (double) playheadFrameIndex + visibleFrames * (1.0 - playheadXFrac);
         }
@@ -87,7 +95,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
     followButton.setToggleState (followRightEdge, juce::dontSendNotification);
 
-    clampViewRightFrame (width);
+    clampViewRightFrame (plotWidth);
 
     //==============================================================================
     // [AUTO-FOLLOW-HYST] Auto re-follow when playhead reaches right edge
@@ -98,7 +106,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
        && havePlayheadFrameIndex && zoomX > 1.0e-12 && width > 1)
     {
         const double playheadX =
-            (double) width - (viewRightFrame - (double) playheadFrameIndex) * zoomX;
+            (double) plotWidth - (viewRightFrame - (double) playheadFrameIndex) * zoomX;
 
         constexpr double enterPx = 10.0;  // trigger when within 10px of right edge
         constexpr double exitPx  = 80.0;  // re-arm only after playhead is at least 80px left
@@ -116,11 +124,11 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             followButton.setToggleState (true, juce::dontSendNotification);
 
             // Immediately compute the followed view so it takes effect now
-            const double visibleFrames = (double) width / zoomX;
+            const double visibleFrames = (double) plotWidth / zoomX;
             constexpr double playheadXFrac = 0.5; // keep playhead centered while following
             viewRightFrame = (double) playheadFrameIndex + visibleFrames * (1.0 - playheadXFrac);
 
-            clampViewRightFrame (width);
+            clampViewRightFrame (plotWidth);
         }
     }
     
@@ -143,7 +151,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     // [END UI3B-RIGHTSTRIP-BG]
         // [BEGIN ROLLING-LRA-SPLITTER-HOIST-SELECTEDLEVEL]
         // Must live outside the plot-clip scope because we use it later for debug text.
-        const int selectedLevel = selectBestLevelForCurrentZoom (width);
+        const int selectedLevel = selectBestLevelForCurrentZoom (plotWidth);
         // [END ROLLING-LRA-SPLITTER-HOIST-SELECTEDLEVEL]
 
         // [BEGIN ROLLING-LRA-SPLITTER-CLIP-PLOT]
@@ -154,7 +162,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
     // [ROLLING-LRA-SPLITTER] selectedLevel moved above (outside clip scope)
 
-    buildVisibleGroupsForLevel (selectedLevel, width, scratchVisibleGroups, scratchVisibleEndFrameIndex); // [TIMEBASE-FIX]
+    buildVisibleGroupsForLevel (selectedLevel, plotWidth, scratchVisibleGroups, scratchVisibleEndFrameIndex); // [TIMEBASE-FIX]
 
     const size_t n = scratchVisibleGroups.size();
     // [BEGIN ROLLING-LRA-SPLITTER-USE-PLOT-H]
@@ -190,7 +198,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
         for (size_t i = 0; i < n; ++i)
         {
-            const double xD = (double) w - (viewRightFrame - (double) scratchVisibleEndFrameIndex[i]) * zoomX;
+            const double xD = (double) plotWidth - (viewRightFrame - (double) scratchVisibleEndFrameIndex[i]) * zoomX;
             float x = (float) xD;
             if (x < -10.0f)
                 continue;
@@ -549,7 +557,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         if (yTop < 0)
             yTop = 0;
 
-        const int graphW = juce::jmax (1, getWidth() - dbRuler.getWidth());
+        const int graphW = plotWidth;
         juce::Rectangle<int> rollingArea (0, yTop, graphW, rollingH);
 
         // [BEGIN ROLLING-LRA-SPLITTER-DIVIDER-DRAW]
@@ -669,13 +677,13 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
                     // Use chunk end time (s1) -> endFrame = (s1+1)*60
                     const juce::int64 endFrame = (s1 + 1) * 60;
 
-                    const double xD = (double) getWidth() - (viewRightFrame - (double) endFrame) * zoomX;
+                    const double xD = (double) plotWidth - (viewRightFrame - (double) endFrame) * zoomX;
                     float x = (float) xD;
 
                     if (x < -10.0f)
                         continue;
 
-                    if (x > (float) getWidth() + 10.0f)
+                    if (x > (float) plotWidth + 10.0f)
                         continue;
 
                     if (! started)
@@ -707,12 +715,12 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     if (haveNowFrameIndex && havePlayheadFrameIndex && zoomX > 1.0e-12)
     {
         const double framesFromRight = viewRightFrame - (double) playheadFrameIndex;
-        float x = (float) ((double) width - framesFromRight * zoomX);
+        float x = (float) ((double) plotWidth - framesFromRight * zoomX);
 
         x = std::floor (x) + 0.5f; // snap to pixel center
 
         const float yBottom = (float) getTimeRulerArea().getY(); // includes rLRA lane area above ruler
-        if (x >= -2.0f && x <= (float) width + 2.0f && yBottom > 1.0f)
+        if (x >= -2.0f && x <= (float) plotWidth + 2.0f && yBottom > 1.0f)
         {
             g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
             g.drawLine (x, 0.0f, x, yBottom, 1.0f);
@@ -735,7 +743,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         const juce::int64 rightFrameI = (juce::int64) std::floor (viewRightFrame);
         const double safeZoomX = zoomX;
 
-        const double framesByWidth = (double) width / safeZoomX;
+        const double framesByWidth = (double) plotWidth / safeZoomX;
         const juce::int64 visibleFrames = (juce::int64) std::ceil (juce::jmax (1.0, framesByWidth));
 
         // Earliest frame we can possibly still have in our history window
@@ -761,12 +769,12 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
         for (juce::int64 tickFrame = lastTickFrame; tickFrame >= leftFrame; tickFrame -= tickStepFrames)
         {
-            const float x = (float) ((double) width - (viewRightFrame - (double) tickFrame) * zoomX);
+            const float x = (float) ((double) plotWidth - (viewRightFrame - (double) tickFrame) * zoomX);
 
             if (x < -2.0f)
                 break;
 
-            if (x > (float) width + 2.0f)
+            if (x > (float) plotWidth + 2.0f)
                 continue;
 
             g.drawLine (x, tickTopY, x, rulerBaseY, 1.0f);
