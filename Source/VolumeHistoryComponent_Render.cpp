@@ -358,11 +358,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
                 if (s >= approxStepDb) { stepDb = s; break; }
             }
 
-            const float rightX = scaleArea.getRight() - 1.0f;
-            const float tickLen = 6.0f;
-            const float labelWidth = (float) dbScaleAreaI.getWidth() - tickLen - 6.0f;
-            const float labelHeight = 16.0f;
-
             // [BEGIN UI3C2-DBSCALE-HEADER-NO-OVERLAP]
             // Draw ticks first, then paint a small header band on top so nothing bleeds behind "LUFS".
             const float headerH = 14.0f;
