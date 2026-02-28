@@ -102,8 +102,10 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     // - Only triggers when Follow is OFF
     // - Requires playhead to be sufficiently left first (arm), then near right edge (trigger)
     //==============================================================================
+    // [BEGIN UI3C1-AUTOREFOLLOW-PLOTWIDTH]
     if (! followRightEdge && dragMode == DragMode::none
-       && havePlayheadFrameIndex && zoomX > 1.0e-12 && width > 1)
+       && havePlayheadFrameIndex && zoomX > 1.0e-12 && plotWidth > 1)
+    // [END UI3C1-AUTOREFOLLOW-PLOTWIDTH]
     {
         const double playheadX =
             (double) plotWidth - (viewRightFrame - (double) playheadFrameIndex) * zoomX;
@@ -111,13 +113,15 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         constexpr double enterPx = 10.0;  // trigger when within 10px of right edge
         constexpr double exitPx  = 80.0;  // re-arm only after playhead is at least 80px left
 
-        if (playheadX <= (double) width - exitPx)
+        // [BEGIN UI3C1-AUTOREFOLLOW-EDGE-COMPARE-PLOTWIDTH]
+        if (playheadX <= (double) plotWidth - exitPx)
             autoRefollowArmed = true;
 
-        // Only trigger if playhead is close to the right edge (not far offscreen)
+        // Only trigger if playhead is close to the plot right edge (not the window right edge)
         if (autoRefollowArmed
-            && playheadX >= (double) width - enterPx
-            && playheadX <= (double) width + enterPx)
+            && playheadX >= (double) plotWidth - enterPx
+            && playheadX <= (double) plotWidth + enterPx)
+        // [END UI3C1-AUTOREFOLLOW-EDGE-COMPARE-PLOTWIDTH]
         {
             followRightEdge = true;
             autoRefollowArmed = false;
