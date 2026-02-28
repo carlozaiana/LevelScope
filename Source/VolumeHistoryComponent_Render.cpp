@@ -363,26 +363,30 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             const float labelWidth = (float) dbScaleAreaI.getWidth() - tickLen - 6.0f;
             const float labelHeight = 16.0f;
 
-            g.setFont (14.0f); // [UI-FONTS]
+            // [BEGIN UI3C2-DBSCALE-HEADER-NO-OVERLAP]
+            // Draw ticks first, then paint a small header band on top so nothing bleeds behind "LUFS".
+            const float headerH = 14.0f;
+            const auto headerRect = scaleArea.withHeight (headerH);
 
-            // Header
-            g.setColour (juce::Colours::white.withMultipliedAlpha (0.6f));
-            g.drawText ("LUFS",
-                        (int) (rightX - labelWidth - 2.0f),
-                        (int) (scaleArea.getY() + 2.0f),
-                        (int) labelWidth,
-                        12,
-                        juce::Justification::right);
+            const float rightX = scaleArea.getRight() - 1.0f;
+            const float tickLen = 6.0f;
+            const float labelWidth = juce::jmax (20.0f, (float) dbScaleAreaI.getWidth() - tickLen - 6.0f);
+            const float labelHeight = 14.0f;
 
             // Major ticks: from first tick >= bottomDb up to topDb
             const float firstTick = std::ceil (bottomDb / stepDb) * stepDb;
 
+            g.setFont (12.0f);
             g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
 
             for (float db = firstTick; db <= topDb + 0.001f; db += stepDb)
             {
                 const float yLocal = dbToY (db, scaleH);
                 const float y = scaleArea.getY() + yLocal;
+
+                // Do not draw ticks/labels behind the header band
+                if (y < headerRect.getBottom() + 2.0f)
+                    continue;
 
                 // Tick
                 g.drawLine (rightX - tickLen, y, rightX, y, 1.0f);
@@ -396,6 +400,20 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
                             (int) labelHeight,
                             juce::Justification::right);
             }
+
+            // Header band (covers anything behind it) + header text
+            g.setColour (juce::Colours::black.withMultipliedAlpha (0.35f));
+            g.fillRect (headerRect);
+
+            g.setColour (juce::Colours::white.withMultipliedAlpha (0.70f));
+            g.setFont (11.0f);
+            g.drawText ("LUFS",
+                        (int) (rightX - labelWidth - 2.0f),
+                        (int) headerRect.getY(),
+                        (int) labelWidth,
+                        (int) headerRect.getHeight(),
+                        juce::Justification::right);
+            // [END UI3C2-DBSCALE-HEADER-NO-OVERLAP]
 
             // Faint vertical separator line at the right edge of the scale
             g.setColour (juce::Colours::white.withMultipliedAlpha (0.18f));

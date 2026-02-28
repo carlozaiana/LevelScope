@@ -231,7 +231,9 @@ private:
     bool showLines = true;
     // [BEGIN UI3B-RIGHT-STRIP-CONSTANTS]
     // LUFS scale itself is narrow; meters consume the remaining right strip width.
-    static constexpr int dbScaleWidthPx = 48;
+    // [BEGIN UI3C2-DBSCALE-WIDTH-SHRINK]
+    static constexpr int dbScaleWidthPx = 40;
+    // [END UI3C2-DBSCALE-WIDTH-SHRINK]
 
     // User-resizable total right strip width (scale + meters), anchored to the right edge.
     int rightStripWidthPxUser = dbScaleWidthPx + 120;
