@@ -639,13 +639,6 @@ MtdmControlPanel::MtdmControlPanel (LevelScopeAudioProcessor& p)
     addAndMakeVisible (t2Slider);
     addAndMakeVisible (t3Slider);
 
-    // GR meters
-    limGrMeter.setNameLabel ("Limiter");
-    downGrMeter.setNameLabel ("Downward");
-
-    addAndMakeVisible (limGrMeter);
-    addAndMakeVisible (downGrMeter);
-
     // Attachments
     mtdmEnabledAtt = std::make_unique<ButtonAttachment> (apvts, enabled,       mtdmEnabledButton);
     downEnabledAtt = std::make_unique<ButtonAttachment> (apvts, downEnabled01, downEnabledButton);
@@ -684,15 +677,11 @@ MtdmControlPanel::MtdmControlPanel (LevelScopeAudioProcessor& p)
     attachThreshHooks (t2Slider, 2);
     attachThreshHooks (t3Slider, 3);
     // [END MTDM-PANEL-THRESH-ORDER-HOOKS]
-
-    // UI poll rate for meters
-    startTimerHz (30);
 }
 
-MtdmControlPanel::~MtdmControlPanel()
-{
-    stopTimer();
-}
+// [BEGIN UI3C4-PANEL-DTOR]
+MtdmControlPanel::~MtdmControlPanel() = default;
+// [END UI3C4-PANEL-DTOR]
 
 void MtdmControlPanel::configureToggle (juce::ToggleButton& b, const juce::String& text)
 {
@@ -844,19 +833,6 @@ void MtdmControlPanel::enforceThresholdOrderingFromSlider (int changedIndex)
 }
 // [END MTDM-PANEL-THRESH-ORDER-IMPL]
 
-void MtdmControlPanel::timerCallback()
-{
-    // Poll DSP snapshots (message thread)
-    const auto lim  = processor.getLimiterMeteringSnapshot();
-    const auto down = processor.getDownwardMeteringSnapshot();
-
-    limGrMeter.setValuesDb (lim.grDbCurrent, lim.grDbHold);
-    downGrMeter.setValuesDb (down.grDbCurrent, down.grDbHold);
-
-    limGrMeter.repaint();
-    downGrMeter.repaint();
-}
-
 void MtdmControlPanel::paint (juce::Graphics& g)
 {
     g.fillAll (juce::Colour::fromRGB (12, 22, 36));
@@ -877,14 +853,6 @@ void MtdmControlPanel::resized()
     }
 
     r.removeFromTop (6);
-
-    // Bottom: meters
-    auto meters = r.removeFromBottom (52);
-    limGrMeter.setBounds  (meters.removeFromTop (24));
-    meters.removeFromTop (4);
-    downGrMeter.setBounds (meters.removeFromTop (24));
-
-    r.removeFromBottom (6);
 
     // Middle: 4 threshold sliders (vertical)
     auto slidersArea = r;

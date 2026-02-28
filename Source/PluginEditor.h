@@ -143,8 +143,9 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GrMeterComponent)
 };
 
-class MtdmControlPanel : public juce::Component,
-                         private juce::Timer
+// [BEGIN UI3C4-PANEL-REMOVE-TIMER-INHERIT]
+class MtdmControlPanel : public juce::Component
+// [END UI3C4-PANEL-REMOVE-TIMER-INHERIT]
 {
 public:
     explicit MtdmControlPanel (LevelScopeAudioProcessor& p);
@@ -154,7 +155,7 @@ public:
     void resized() override;
 
 private:
-    void timerCallback() override;
+    // [UI3C4] timerCallback removed (panel GR meters removed)
 
     // [BEGIN MTDM-PANEL-THRESH-ORDER-DECL]
     void enforceThresholdOrderingFromSlider (int changedIndex);
@@ -188,9 +189,9 @@ private:
     juce::Label  t0Label, t1Label, t2Label, t3Label;
     juce::Slider t0Slider, t1Slider, t2Slider, t3Slider;
 
-    // GR meters (read-only)
-    GrMeterComponent limGrMeter;
-    GrMeterComponent downGrMeter;
+    // [BEGIN UI3C4-PANEL-REMOVE-GR-METERS]
+    // GR meters removed from bottom panel (now shown in right-side meter strip)
+    // [END UI3C4-PANEL-REMOVE-GR-METERS]
 
     // Attachments (must be kept alive)
     using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
