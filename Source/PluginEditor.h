@@ -99,14 +99,16 @@ private:
 
     RoutingGraphic routingGraphic;
 
-    // Curve toggles (bottom row)
-    // [BEGIN UI3C-MISSIONCONTROL-TOGGLES-WITH-FOLLOW]
+    // [BEGIN UI3C3-MISSIONCONTROL-RLRA-WINDOW-MEMBERS]
     juce::ToggleButton toggleMomentary { "M" };
     juce::ToggleButton toggleShortTerm { "S" };
     juce::ToggleButton toggleGate      { "Gate" };
     juce::ToggleButton toggleRolling   { "rLRA" };
+
+    juce::ComboBox     rollingWindowBox; // 30/60/120s selector (between rLRA and Follow)
+
     juce::ToggleButton toggleFollow    { "Follow" };
-    // [END UI3C-MISSIONCONTROL-TOGGLES-WITH-FOLLOW]
+    // [END UI3C3-MISSIONCONTROL-RLRA-WINDOW-MEMBERS]
 
     // State keys (persisted inside APVTS state tree as properties)
     static const juce::Identifier kTargetI;
