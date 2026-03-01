@@ -1040,6 +1040,7 @@ void MtdmLimiterCard::resized()
 // Content stack
 //==============================================================================
 
+// [BEGIN UI4A1-CARDS-RESIZABLE-CTOR]
 MtdmCardsContent::MtdmCardsContent (LevelScopeAudioProcessor& p)
     : levelling(),
       zones (p),
@@ -1048,37 +1049,64 @@ MtdmCardsContent::MtdmCardsContent (LevelScopeAudioProcessor& p)
       limiter (p)
 {
     addAndMakeVisible (levelling);
+    addAndMakeVisible (bar01);
     addAndMakeVisible (zones);
+    addAndMakeVisible (bar12);
     addAndMakeVisible (upward);
+    addAndMakeVisible (bar23);
     addAndMakeVisible (downward);
+    addAndMakeVisible (bar34);
     addAndMakeVisible (limiter);
-}
 
+    // Layout items: card, bar, card, bar, ...
+    // setItemLayout (index, minSize, maxSize, preferredSize)
+    // Bars have near-fixed size; cards have flexible size.
+    cardsLayout.setItemLayout (0,  60, -1.0,  80); // levelling
+    cardsLayout.setItemLayout (1,   6,  10.0,  8); // bar
+    cardsLayout.setItemLayout (2, 160, -1.0, 220); // zones (thresholds)
+    cardsLayout.setItemLayout (3,   6,  10.0,  8); // bar
+    cardsLayout.setItemLayout (4, 160, -1.0, 220); // upward essentials
+    cardsLayout.setItemLayout (5,   6,  10.0,  8); // bar
+    cardsLayout.setItemLayout (6, 160, -1.0, 220); // downward essentials
+    cardsLayout.setItemLayout (7,   6,  10.0,  8); // bar
+    cardsLayout.setItemLayout (8, 200, -1.0, 260); // limiter essentials
+}
+// [END UI4A1-CARDS-RESIZABLE-CTOR]
+
+// [BEGIN UI4A1-CARDS-PREFERRED-HEIGHT]
 int MtdmCardsContent::getPreferredHeight() const noexcept
 {
-    // Simple fixed heights for now (scrollable anyway)
-    const int pad = 10;
-    return pad
-         + 70  + pad   // levelling
-         + 170 + pad   // zones
-         + 170 + pad   // upward
-         + 170 + pad   // downward
-         + 210 + pad;  // limiter (slightly taller)
-}
+    // Used by the Viewport host to size the content.
+    // Resizer bars redistribute height; total height comes from the viewport host.
+    if (contentPreferredHeightPx > 0)
+        return contentPreferredHeightPx;
 
+    // Fallback initial value (before first resized)
+    return 900;
+}
+// [END UI4A1-CARDS-PREFERRED-HEIGHT]
+
+// [BEGIN UI4A1-CARDS-RESIZED-LAYOUT]
 void MtdmCardsContent::resized()
 {
-    auto r = getLocalBounds().reduced (10);
-    const int pad = 10;
+    juce::Component* comps[] =
+    {
+        &levelling, &bar01,
+        &zones,     &bar12,
+        &upward,    &bar23,
+        &downward,  &bar34,
+        &limiter
+    };
 
-    auto take = [&] (int h) { auto a = r.removeFromTop (h); r.removeFromTop (pad); return a; };
+    cardsLayout.layOutComponents (comps,
+                                 9,
+                                 0, 0, getWidth(), getHeight(),
+                                 true,  // vertically stacked
+                                 true); // resize other dimension too
 
-    levelling.setBounds (take (70));
-    zones.setBounds     (take (170));
-    upward.setBounds    (take (170));
-    downward.setBounds  (take (170));
-    limiter.setBounds   (take (210));
+    contentPreferredHeightPx = juce::jmax (getHeight(), 1);
 }
+// [END UI4A1-CARDS-RESIZED-LAYOUT]
 
 //==============================================================================
 // Public panel component (viewport)

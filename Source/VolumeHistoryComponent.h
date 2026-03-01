@@ -41,6 +41,11 @@ public:
     void mouseWheelMove (const juce::MouseEvent& event,
                          const juce::MouseWheelDetails& wheel) override;
 
+    // [BEGIN UI4A1-RESIZE-CURSOR-MOUSEMOVE]
+    void mouseMove (const juce::MouseEvent& event) override;
+    void mouseExit (const juce::MouseEvent& event) override;
+    // [END UI4A1-RESIZE-CURSOR-MOUSEMOVE]
+
     void mouseDown (const juce::MouseEvent& event) override;
     void mouseDrag (const juce::MouseEvent& event) override;
     void mouseUp (const juce::MouseEvent& event) override;

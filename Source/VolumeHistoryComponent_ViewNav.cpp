@@ -501,6 +501,54 @@ void VolumeHistoryComponent::setShowRollingLraLane (bool b)
 // Mouse
 //==============================================================================
 
+// [BEGIN UI4A1-RESIZE-CURSOR-IMPL]
+void VolumeHistoryComponent::mouseMove (const juce::MouseEvent& event)
+{
+    // Don't fight an active drag interaction
+    if (dragMode != DragMode::none || thresholdDragging)
+        return;
+
+    const auto p = event.getPosition();
+
+    // Right strip vertical resizer hit zone (same as used in mouseDown)
+    {
+        const auto rightStrip = getDbRulerArea();
+        juce::Rectangle<int> hitZone (rightStrip.getX() - 3, rightStrip.getY(), 6, rightStrip.getHeight());
+
+        if (hitZone.contains (p))
+        {
+            setMouseCursor (juce::MouseCursor::LeftRightResizeCursor);
+            return;
+        }
+    }
+
+    // rLRA lane divider (up/down resize cursor)
+    if (showRollingLra)
+    {
+        const auto dbRuler = getDbRulerArea();
+        const int graphRight = getWidth() - dbRuler.getWidth();
+
+        const int dividerY = getTimeRulerArea().getY() - rollingLaneHeightPx;
+        juce::Rectangle<int> hitZone (0, dividerY - 4, graphRight, 8);
+
+        if (hitZone.contains (p))
+        {
+            setMouseCursor (juce::MouseCursor::UpDownResizeCursor);
+            return;
+        }
+    }
+
+    setMouseCursor (juce::MouseCursor::NormalCursor);
+}
+
+void VolumeHistoryComponent::mouseExit (const juce::MouseEvent& event)
+{
+    juce::ignoreUnused (event);
+    if (dragMode == DragMode::none && ! thresholdDragging)
+        setMouseCursor (juce::MouseCursor::NormalCursor);
+}
+// [END UI4A1-RESIZE-CURSOR-IMPL]
+
 // [BEGIN VHC-VNAV-MOUSE]
 void VolumeHistoryComponent::mouseWheelMove (const juce::MouseEvent& event,
                                              const juce::MouseWheelDetails& wheel)

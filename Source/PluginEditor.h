@@ -327,6 +327,18 @@ private:
     MtdmDownwardCard downward;
     MtdmLimiterCard  limiter;
 
+    // [BEGIN UI4A1-CARDS-RESIZABLE-LAYOUT-MEMBERS]
+    juce::StretchableLayoutManager cardsLayout;
+
+    // Horizontal resizer bars between cards (drag up/down)
+    juce::StretchableLayoutResizerBar bar01 { &cardsLayout, 1, false };
+    juce::StretchableLayoutResizerBar bar12 { &cardsLayout, 3, false };
+    juce::StretchableLayoutResizerBar bar23 { &cardsLayout, 5, false };
+    juce::StretchableLayoutResizerBar bar34 { &cardsLayout, 7, false };
+
+    int contentPreferredHeightPx = 0;
+    // [END UI4A1-CARDS-RESIZABLE-LAYOUT-MEMBERS]
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MtdmCardsContent)
 };
 
