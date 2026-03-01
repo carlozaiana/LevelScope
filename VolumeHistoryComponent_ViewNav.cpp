@@ -1,0 +1,847 @@
+#include "VolumeHistoryComponent.h"
+#include "PluginProcessor.h"
+
+// [BEGIN MTDM-THRESH-UI-APVTS-LISTENER-IMPL-RTSAFE]
+void VolumeHistoryComponent::parameterChanged (const juce::String& parameterID, float newValue)
+{
+    juce::ignoreUnused (parameterID, newValue);
+
+    // IMPORTANT: may be called from audio thread.
+    // Do not call repaint() here. Just set a flag and trigger an async UI update.
+    threshUiNeedsRepaint.store (true, std::memory_order_release);
+    triggerAsyncUpdate(); // coalesced; safe to call from non-message threads
+}
+// [END MTDM-THRESH-UI-APVTS-LISTENER-IMPL-RTSAFE]
+
+// [BEGIN MTDM-THRESH-UI-ASYNCUPDATER-HANDLE-IMPL]
+void VolumeHistoryComponent::handleAsyncUpdate()
+{
+    if (threshUiNeedsRepaint.exchange (false, std::memory_order_acq_rel))
+        repaint();
+}
+// [END MTDM-THRESH-UI-ASYNCUPDATER-HANDLE-IMPL]
+
+//==============================================================================
+// VolumeHistoryComponent_ViewNav.cpp
+// - view state (follow, viewRightFrame, viewTopDb)
+// - wheel gestures (zoom/pan)
+// - ruler hit test
+// - mouse drag/double click interactions
+//==============================================================================
+//==============================================================================
+// [EDIT-BLOCKS]
+//   - [BEGIN VHC-VNAV-RULER-AREAS-RESETS] ... [END VHC-VNAV-RULER-AREAS-RESETS]
+//   - [BEGIN VHC-VNAV-CLAMP-PAN-ZOOM]     ... [END VHC-VNAV-CLAMP-PAN-ZOOM]
+//   - [BEGIN VHC-VNAV-RESIZED]            ... [END VHC-VNAV-RESIZED]
+//   - [BEGIN VHC-VNAV-MOUSE]              ... [END VHC-VNAV-MOUSE]
+//==============================================================================
+
+//==============================================================================
+// [UI-RULERS] Areas + resets
+//==============================================================================
+
+// [BEGIN VHC-VNAV-RULER-AREAS-RESETS]
+juce::Rectangle<int> VolumeHistoryComponent::getTimeRulerArea() const
+{
+    // Keep consistent with paint() ruler height
+    const int rulerH = 22; // [UI-FONTS] 150% bigger than before
+    return { 0, getHeight() - rulerH, getWidth(), rulerH };
+}
+
+// [BEGIN UI3B-RIGHT-STRIP-GETTERS]
+juce::Rectangle<int> VolumeHistoryComponent::getDbRulerArea() const
+{
+    const int timeRulerH = getTimeRulerArea().getHeight();
+
+    const int w = juce::jmax (0, getWidth());
+    const int stripW = juce::jlimit (rightStripMinWidthPx, rightStripMaxWidthPx,
+                                     juce::jmin (rightStripWidthPxUser, w));
+
+    return { w - stripW, 0, stripW, getHeight() - timeRulerH };
+}
+
+juce::Rectangle<int> VolumeHistoryComponent::getDbScaleArea() const
+{
+    const auto total = getDbRulerArea();
+    const int scaleW = juce::jmin (dbScaleWidthPx, total.getWidth());
+    return { total.getX(), total.getY(), scaleW, total.getHeight() };
+}
+
+juce::Rectangle<int> VolumeHistoryComponent::getRightMetersArea() const
+{
+    const auto total = getDbRulerArea();
+    const auto scale = getDbScaleArea();
+
+    const int metersX = scale.getRight();
+    const int metersW = juce::jmax (0, total.getRight() - metersX);
+
+    return { metersX, total.getY(), metersW, total.getHeight() };
+}
+// [END UI3B-RIGHT-STRIP-GETTERS]
+
+void VolumeHistoryComponent::resetXViewDefault()
+{
+    if (getWidth() <= 1 || visualFrameRate <= 0.0)
+        return;
+
+    const double desiredVisibleSeconds = 10.0;
+    zoomX = (double) getWidth() / (desiredVisibleSeconds * visualFrameRate);
+    zoomX = juce::jlimit (minZoomX, maxZoomX, zoomX);
+
+    followRightEdge = true;
+    if (haveNowFrameIndex)
+        viewRightFrame = (double) nowFrameIndex;
+
+    clampViewRightFrame (getWidth());
+}
+
+void VolumeHistoryComponent::fitXViewMaxZoomOut()
+{
+    if (getWidth() <= 1 || ! haveNowFrameIndex)
+        return;
+
+    // [FIT-FIRST-WRITTEN]
+    // Find earliest written L0 frame index currently present in the GUI ring.
+    // This avoids fitting the full 3h window when only a few minutes exist.
+    const auto& tags = levels[0].absGroupIndexTag;
+
+    juce::int64 minWritten = std::numeric_limits<juce::int64>::max();
+    bool haveMin = false;
+
+    for (const auto& t : tags)
+    {
+        if (t != (juce::int64) -1)
+        {
+            minWritten = juce::jmin (minWritten, t);
+            haveMin = true;
+        }
+    }
+
+    const juce::int64 right = nowFrameIndex;
+    const juce::int64 left  = (haveMin ? minWritten : (right - (juce::int64) rawCapacityFrames + 1));
+
+    const double visibleFrames = (double) (right - left + 1);
+    zoomX = (double) getWidth() / juce::jmax (1.0, visibleFrames);
+    zoomX = juce::jlimit (minZoomX, maxZoomX, zoomX);
+
+    // Fit view to [left..right] and keep it there (do not force follow)
+    followRightEdge = false;
+    viewRightFrame = (double) right;
+    clampViewRightFrame (getWidth());
+}
+
+void VolumeHistoryComponent::resetYViewDefault()
+{
+    zoomY = 1.0;
+    viewTopDb = (double) maxDb; // default top at 0 dBFS
+    markStaticBackgroundDirty();
+}
+// [END VHC-VNAV-RULER-AREAS-RESETS]
+
+//==============================================================================
+// [VIEW-NAV] clamp + pan/zoom
+//==============================================================================
+
+// [BEGIN VHC-VNAV-CLAMP-PAN-ZOOM]
+void VolumeHistoryComponent::clampViewRightFrame (int widthPixels) noexcept
+{
+    if (! haveNowFrameIndex || zoomX <= 1.0e-12 || widthPixels <= 1)
+        return;
+
+    const double visibleFrames = (double) widthPixels / zoomX;
+
+    const double maxRight = (double) nowFrameIndex;
+    const double earliest = (double) nowFrameIndex - (double) rawCapacityFrames + 1.0;
+
+    double minRight = earliest + visibleFrames;
+    if (minRight > maxRight)
+        minRight = maxRight;
+
+    viewRightFrame = juce::jlimit (minRight, maxRight, viewRightFrame);
+}
+
+void VolumeHistoryComponent::panTime (float wheelDelta)
+{
+    const int w = juce::jmax (1, getWidth() - getDbRulerArea().getWidth());
+    if (w <= 1 || wheelDelta == 0.0f || zoomX <= 1.0e-12)
+        return;
+
+    if (followRightEdge)
+        viewRightFrame = (double) nowFrameIndex;
+
+    const double visibleFrames = (double) w / zoomX;
+
+    // Pan by ~15% of the visible range per wheel "unit"
+    const double panFrames = (double) wheelDelta * visibleFrames * 0.15;
+
+    // Wheel up (positive) moves to earlier time (left)
+    viewRightFrame -= panFrames;
+
+    followRightEdge = false;
+    autoRefollowArmed = false; // [AUTO-FOLLOW-HYST] disarm until playhead moves away from edge
+    clampViewRightFrame (w);
+}
+
+void VolumeHistoryComponent::panDb (float wheelDelta)
+{
+    const int h = getHeight();
+    if (h <= 1 || wheelDelta == 0.0f)
+        return;
+
+    const double effectiveRange = (double) baseDbRange / zoomY;
+
+    // Pan by ~10% of visible range per wheel "unit"
+    const double panDbAmount = (double) wheelDelta * effectiveRange * 0.10;
+
+    viewTopDb += panDbAmount;
+
+    const double topMin = viewMinDbLimit + effectiveRange;
+    const double topMax = viewMaxDbLimit;
+    viewTopDb = juce::jlimit (topMin, topMax, viewTopDb);
+
+    markStaticBackgroundDirty();
+}
+
+void VolumeHistoryComponent::applyHorizontalZoom (float wheelDelta, float anchorX)
+{
+    const int w = juce::jmax (1, getWidth() - getDbRulerArea().getWidth());
+    if (w <= 1 || wheelDelta == 0.0f)
+        return;
+
+    if (! haveNowFrameIndex)
+        return;
+
+    const double oldZoom = zoomX;
+
+    //--------------------------------------------------------------------------
+    // [FOLLOW-ZOOM-FIX]
+    // If Follow is ON, we must base the zoom anchor on the *currently followed*
+    // viewRightFrame (playhead-centered), NOT on nowFrameIndex (furthest written).
+    // Otherwise, when overwriting earlier material, zoom snaps to the far-right
+    // prior written region.
+    //--------------------------------------------------------------------------
+    if (followRightEdge)
+    {
+        if (havePlayheadFrameIndex && oldZoom > 1.0e-12)
+        {
+            const double visibleFrames = (double) w / oldZoom;
+            constexpr double playheadXFrac = 0.5; // keep playhead centered while following
+            viewRightFrame = (double) playheadFrameIndex + visibleFrames * (1.0 - playheadXFrac);
+        }
+        else if (haveNowFrameIndex)
+        {
+            // Fallback only if playhead is unknown
+            viewRightFrame = (double) nowFrameIndex;
+        }
+    }
+
+    const double zoomBase   = 1.1;
+    const double zoomFactor = std::pow (zoomBase, (double) wheelDelta);
+
+    zoomX *= zoomFactor;
+    zoomX  = juce::jlimit (minZoomX, maxZoomX, zoomX);
+
+    // Keep the timeline frame under the mouse fixed
+    const double ax = juce::jlimit (0.0, (double) w, (double) anchorX);
+
+    const double safeOld = (oldZoom > 1.0e-12 ? oldZoom : 1.0e-12);
+    const double safeNew = (zoomX   > 1.0e-12 ? zoomX   : 1.0e-12);
+
+    const double frameAtCursor = viewRightFrame - ((double) w - ax) / safeOld;
+    viewRightFrame = frameAtCursor + ((double) w - ax) / safeNew;
+
+    // Manual zoom disables follow (consistent with existing pan behavior)
+    followRightEdge = false;
+    autoRefollowArmed = false; // [AUTO-FOLLOW-HYST]
+    hasCustomZoomX = true;
+
+    clampViewRightFrame (w);
+}
+
+void VolumeHistoryComponent::applyVerticalZoom (float wheelDelta, float anchorY)
+{
+    const int h = getHeight();
+    if (h <= 1 || wheelDelta == 0.0f)
+        return;
+
+    const double oldZoomY = zoomY;
+
+    const double zoomBase   = 1.1;
+    const double zoomFactor = std::pow (zoomBase, (double) wheelDelta);
+
+    zoomY *= zoomFactor;
+    zoomY  = juce::jlimit (minZoomY, maxZoomY, zoomY);
+
+    // [VIEW-NAV-Y-LIMITS]
+    // Prevent impossible states where the visible range exceeds the allowed view limits.
+    // effectiveRange = baseDbRange / zoomY must be <= (viewMaxDbLimit - viewMinDbLimit)
+    const double maxVisibleRange = viewMaxDbLimit - viewMinDbLimit;
+    const double minZoomYByLimits = (double) baseDbRange / maxVisibleRange;
+    zoomY = juce::jmax (zoomY, minZoomYByLimits);
+
+    // Keep the dB under the mouse fixed while zooming
+    const double ay = juce::jlimit (0.0, (double) h, (double) anchorY);
+    const double norm = 1.0 - (ay / (double) h);
+
+    const double effectiveOld = (double) baseDbRange / oldZoomY;
+    const double bottomOld = viewTopDb - effectiveOld;
+    const double dbAtCursor = bottomOld + norm * effectiveOld;
+
+    const double effectiveNew = (double) baseDbRange / zoomY;
+    const double bottomNew = dbAtCursor - norm * effectiveNew;
+    double topNew = bottomNew + effectiveNew;
+
+    const double topMin = viewMinDbLimit + effectiveNew; // ensures bottom >= viewMinDbLimit
+    const double topMax = viewMaxDbLimit;                // allows positive dBFS
+    topNew = juce::jlimit (topMin, topMax, topNew);
+    
+    viewTopDb = topNew;
+
+    markStaticBackgroundDirty();
+}
+// [END VHC-VNAV-CLAMP-PAN-ZOOM]
+
+//==============================================================================
+// Component lifecycle
+//==============================================================================
+
+// [BEGIN VHC-VNAV-RESIZED]
+void VolumeHistoryComponent::resized()
+{
+    if (! hasCustomZoomX)
+    {
+        const int w = juce::jmax (1, getWidth() - getDbRulerArea().getWidth());
+        if (w > 0 && visualFrameRate > 0.0)
+        {
+            const double desiredVisibleSeconds = 10.0;
+            zoomX = (double) w / (desiredVisibleSeconds * visualFrameRate);
+            zoomX = juce::jlimit (minZoomX, maxZoomX, zoomX);
+        }
+    }
+
+    // Reserve scratch buffers
+    {
+        const int w = juce::jmax (1, getWidth());
+        const size_t reserveCount = (size_t) juce::jlimit (256, 8192, w + 512);
+
+        scratchVisibleGroups.reserve (reserveCount);
+        scratchVisibleEndFrameIndex.reserve (reserveCount); // [TIMEBASE-FIX]
+        scratchRepMomentaryDb.reserve (reserveCount);
+        scratchRepShortTermDb.reserve (reserveCount);
+    }
+
+    // Do NOT reset tickStepIndex here; hysteresis should smoothly adapt.
+    markStaticBackgroundDirty();
+
+    // [BEGIN UI3B-TOPRIGHT-BUTTONS-AVOID-RIGHTSTRIP]
+    const int rightEdge = getDbRulerArea().getX(); // left edge of right strip
+    followButton.setBounds (rightEdge - 88, 6, 80, 22);
+    gateButton.setBounds   (rightEdge - 172, 6, 76, 22);
+    rollingLraButton.setBounds (rightEdge - 256, 6, 76, 22);
+    // [END UI3B-TOPRIGHT-BUTTONS-AVOID-RIGHTSTRIP]
+}
+// [END VHC-VNAV-RESIZED]
+
+// [BEGIN MTDM-THRESH-UI-MOUSE-IMPL]
+//==============================================================================
+// [MTDM-THRESH-UI] Mouse interaction (T0..T3)
+//==============================================================================
+
+void VolumeHistoryComponent::handleThresholdMouseDown (const juce::MouseEvent& event)
+{
+    if (! event.mods.isLeftButtonDown())
+        return;
+
+    initMtdmParamPointersIfNeeded();
+    if (! mtdmParamsAvailable())
+        return;
+
+    // Ensure hit-bounds are up-to-date even if paint hasn't run recently.
+    updateMtdmThresholdOverlayGeometry();
+
+    const auto pos = event.position;
+
+    // Only respond inside overlay area (i.e., not on right dB ruler strip).
+    if (! mtdmOverlayArea.contains (pos))
+        return;
+
+    // Prefer higher thresholds if handles overlap: T3 > ... > T0
+    int hit = -1;
+    for (int i = 3; i >= 0; --i)
+    {
+        if (thresholdHandles[(size_t) i].hitBounds.contains (pos))
+        {
+            hit = i;
+            break;
+        }
+    }
+
+    if (hit < 0)
+        return;
+
+    thresholdDragging = true;
+    activeThresholdIndex = hit;
+
+    // Reset gesture state for this drag
+    threshGestureActive = { { false, false, false, false } };
+
+    // Begin gesture immediately for the actively grabbed threshold.
+    if (auto* p = mtdmThreshParams[(size_t) hit])
+    {
+        p->beginChangeGesture();
+        threshGestureActive[(size_t) hit] = true;
+    }
+}
+
+void VolumeHistoryComponent::handleThresholdMouseDrag (const juce::MouseEvent& event)
+{
+    if (! thresholdDragging || activeThresholdIndex < 0)
+        return;
+
+    initMtdmParamPointersIfNeeded();
+    if (! mtdmParamsAvailable())
+        return;
+
+    // [BEGIN ROLLING-LRA-SPLITTER-THRESH-DRAG-MAPPING-FIX]
+    // Make sure geometry (including mainPlotArea height) is up-to-date.
+    updateMtdmThresholdOverlayGeometry();
+
+    const float plotH = (float) juce::jmax (1.0f, mainPlotArea.getHeight());
+
+    // Clamp Y into the plot area so the mapping matches what we draw.
+    const float yInPlot = juce::jlimit (0.0f, plotH, (float) event.position.y);
+
+    const float targetLufs = yToLufs (yInPlot, plotH);
+    // [END ROLLING-LRA-SPLITTER-THRESH-DRAG-MAPPING-FIX]
+
+    float newVals[4];
+    computeOrderedThresholdsWithPush (activeThresholdIndex, targetLufs, newVals);
+
+    applyThresholdValuesDuringDrag (newVals);
+}
+
+void VolumeHistoryComponent::handleThresholdMouseUp (const juce::MouseEvent& event)
+{
+    juce::ignoreUnused (event);
+
+    if (! thresholdDragging)
+        return;
+
+    endAllThresholdGestures();
+
+    thresholdDragging = false;
+    activeThresholdIndex = -1;
+}
+// [END MTDM-THRESH-UI-MOUSE-IMPL]
+
+// [BEGIN UI3C-FOLLOW-SETTER-IMPL]
+void VolumeHistoryComponent::setFollowRightEdge (bool shouldFollow)
+{
+    followRightEdge = shouldFollow;
+
+    if (! followRightEdge)
+        autoRefollowArmed = false; // prevent immediate auto-refollow
+
+    if (followRightEdge)
+    {
+        const int w = juce::jmax (1, getWidth() - getDbRulerArea().getWidth());
+
+        if (havePlayheadFrameIndex && zoomX > 1.0e-12 && w > 1)
+        {
+            const double visibleFrames = (double) w / zoomX;
+            constexpr double playheadXFrac = 0.5; // center
+            viewRightFrame = (double) playheadFrameIndex + visibleFrames * (1.0 - playheadXFrac);
+        }
+        else if (haveNowFrameIndex)
+        {
+            viewRightFrame = (double) nowFrameIndex;
+        }
+
+        clampViewRightFrame (w);
+    }
+
+    // keep internal button state in sync (even if hidden)
+    followButton.setToggleState (followRightEdge, juce::dontSendNotification);
+
+    repaint();
+}
+// [END UI3C-FOLLOW-SETTER-IMPL]
+
+// [BEGIN UI3A-CURVE-VISIBILITY-SETTERS]
+void VolumeHistoryComponent::setShowMomentaryCurve (bool b)
+{
+    showMomentaryCurve = b;
+    showLines = (showMomentaryCurve || showShortTermCurve);
+    repaint();
+}
+
+void VolumeHistoryComponent::setShowShortTermCurve (bool b)
+{
+    showShortTermCurve = b;
+    showLines = (showMomentaryCurve || showShortTermCurve);
+    repaint();
+}
+
+void VolumeHistoryComponent::setShowGateCurve (bool b)
+{
+    showGate = b;
+    gateButton.setToggleState (showGate, juce::dontSendNotification);
+    repaint();
+}
+
+void VolumeHistoryComponent::setShowRollingLraLane (bool b)
+{
+    showRollingLra = b;
+    rollingLraButton.setToggleState (showRollingLra, juce::dontSendNotification);
+    repaint();
+}
+// [END UI3A-CURVE-VISIBILITY-SETTERS]
+
+//==============================================================================
+// Mouse
+//==============================================================================
+
+// [BEGIN UI4A1-RESIZE-CURSOR-IMPL]
+void VolumeHistoryComponent::mouseMove (const juce::MouseEvent& event)
+{
+    // Don't fight an active drag interaction
+    if (dragMode != DragMode::none || thresholdDragging)
+        return;
+
+    const auto p = event.getPosition();
+
+    // Right strip vertical resizer hit zone (same as used in mouseDown)
+    {
+        const auto rightStrip = getDbRulerArea();
+        juce::Rectangle<int> hitZone (rightStrip.getX() - 3, rightStrip.getY(), 6, rightStrip.getHeight());
+
+        if (hitZone.contains (p))
+        {
+            setMouseCursor (juce::MouseCursor::LeftRightResizeCursor);
+            return;
+        }
+    }
+
+    // rLRA lane divider (up/down resize cursor)
+    if (showRollingLra)
+    {
+        const auto dbRuler = getDbRulerArea();
+        const int graphRight = getWidth() - dbRuler.getWidth();
+
+        const int dividerY = getTimeRulerArea().getY() - rollingLaneHeightPx;
+        juce::Rectangle<int> hitZone (0, dividerY - 4, graphRight, 8);
+
+        if (hitZone.contains (p))
+        {
+            setMouseCursor (juce::MouseCursor::UpDownResizeCursor);
+            return;
+        }
+    }
+
+    // [BEGIN UI4A2-CURSOR-TIMERULER-PAN]
+    // Time ruler pan affordance (left-right)
+    if (getTimeRulerArea().contains (p) && p.x < getDbRulerArea().getX())
+    {
+        setMouseCursor (juce::MouseCursor::LeftRightResizeCursor);
+        return;
+    }
+    // [END UI4A2-CURSOR-TIMERULER-PAN]
+
+    // [BEGIN UI4A2-CURSOR-DBSCALE-PAN]
+    // LUFS scale pan affordance (up-down). Meters area remains non-interactive.
+    if (getDbScaleArea().contains (p))
+    {
+        setMouseCursor (juce::MouseCursor::UpDownResizeCursor);
+        return;
+    }
+    // [END UI4A2-CURSOR-DBSCALE-PAN]
+
+    setMouseCursor (juce::MouseCursor::NormalCursor);
+}
+
+void VolumeHistoryComponent::mouseExit (const juce::MouseEvent& event)
+{
+    juce::ignoreUnused (event);
+    if (dragMode == DragMode::none && ! thresholdDragging)
+        setMouseCursor (juce::MouseCursor::NormalCursor);
+}
+// [END UI4A1-RESIZE-CURSOR-IMPL]
+
+// [BEGIN VHC-VNAV-MOUSE]
+void VolumeHistoryComponent::mouseWheelMove (const juce::MouseEvent& event,
+                                             const juce::MouseWheelDetails& wheel)
+{
+    // Use deltaY when available, otherwise fall back to deltaX
+    const float wheelDelta = (wheel.deltaY != 0.0f ? wheel.deltaY : wheel.deltaX);
+    if (wheelDelta == 0.0f)
+        return;
+
+    // Gesture map:
+    // - Shift + wheel: pan time
+    // - Alt   + wheel: zoom Y at mouse
+    // - Ctrl  + wheel: pan Y
+    // - wheel: zoom X at mouse
+    if (event.mods.isShiftDown())
+        panTime (wheelDelta);
+    else if (event.mods.isAltDown())
+        applyVerticalZoom (wheelDelta, event.position.y);
+    else if (
+       #if JUCE_MAC
+            event.mods.isCommandDown()
+   #else
+        event.mods.isCtrlDown()
+   #endif
+    )
+        panDb (wheelDelta);
+    else
+        applyHorizontalZoom (wheelDelta, event.position.x);
+
+    repaint();
+}
+
+void VolumeHistoryComponent::mouseDoubleClick (const juce::MouseEvent& event)
+{
+    const auto p = event.getPosition();
+
+    // [BEGIN UI3B-DBSCALE-DOUBLECLICK-HIT]
+    // Double-click LUFS scale resets Y view
+    if (getDbScaleArea().contains (p))
+    // [END UI3B-DBSCALE-DOUBLECLICK-HIT]
+    {
+        resetYViewDefault();
+        repaint();
+        return;
+    }
+
+    // Double-click time ruler resets X view
+    // Shift + double-click: fit/max zoom out
+    if (getTimeRulerArea().contains (p))
+    {
+        if (event.mods.isShiftDown())
+            fitXViewMaxZoomOut();
+        else
+            resetXViewDefault();
+
+        followButton.setToggleState (followRightEdge, juce::dontSendNotification);
+        repaint();
+        return;
+    }
+}
+
+void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
+{
+    const auto p = event.getPosition();
+    // [BEGIN MTDM-THRESH-UI-MOUSE-HOOK-DOWN]
+    // Threshold handles take precedence over the view-nav interactions.
+    handleThresholdMouseDown (event);
+    if (thresholdDragging)
+        return;
+    // [END MTDM-THRESH-UI-MOUSE-HOOK-DOWN]
+
+    // [TIMECODE-USER] Right-click on time ruler to set/reset user timecode offset
+    if (getTimeRulerArea().contains (p) && event.mods.isPopupMenu())
+    {
+        juce::PopupMenu m;
+        m.addItem (1, "Timecode offset: -2.0 s (Cubase common preroll)");
+        m.addItem (2, "Timecode offset: 0.0 s (reset)");
+        m.addSeparator();
+        m.addItem (3, "Offset -1.0 s");
+        m.addItem (4, "Offset +1.0 s");
+        m.addItem (5, "Offset -0.1 s");
+        m.addItem (6, "Offset +0.1 s");
+
+        m.showMenuAsync (juce::PopupMenu::Options(),
+                         [this] (int r)
+                         {
+                             auto setOff = [this] (double s)
+                             {
+                                 processor.setUserTimecodeOffsetSeconds (s);
+                             };
+
+                             auto addOff = [this] (double ds)
+                             {
+                                 processor.setUserTimecodeOffsetSeconds (processor.getUserTimecodeOffsetSeconds() + ds);
+                             };
+
+                             if (r == 1) { setOff (-2.0); repaint(); return; }
+                             if (r == 2) { setOff ( 0.0); repaint(); return; }
+                                     if (r == 3) { addOff (-1.0); repaint(); return; }
+                             if (r == 4) { addOff (+1.0); repaint(); return; }
+                             if (r == 5) { addOff (-0.1); repaint(); return; }
+                             if (r == 6) { addOff (+0.1); repaint(); return; }
+                         });
+        return;
+    }
+
+    // [BEGIN ROLLING-LRA-SPLITTER-MOUSEDOWN]
+    // Drag the rolling LRA divider (allocates space between plot and rolling lane).
+    if (showRollingLra)
+    {
+        const auto dbRuler = getDbRulerArea();
+        const int graphRight = getWidth() - dbRuler.getWidth();
+
+        const int dividerY = getTimeRulerArea().getY() - rollingLaneHeightPx;
+        juce::Rectangle<int> hitZone (0, dividerY - 4, graphRight, 8);
+
+        if (event.mods.isLeftButtonDown() && hitZone.contains (p))
+        {
+            dragMode = DragMode::rollingLraDivider;
+            dragStartPos = p;
+            dragStartRollingLaneHeightPx = rollingLaneHeightPx;
+            return;
+        }
+    }
+    // [END ROLLING-LRA-SPLITTER-MOUSEDOWN]
+
+    // [BEGIN UI3B-RIGHTSTRIP-RESIZER-MOUSEDOWN]
+    // Drag the left edge of the right strip to resize meters width.
+    if (event.mods.isLeftButtonDown())
+    {
+        const auto rightStrip = getDbRulerArea();
+
+        // A thin vertical hit zone at the left edge of the strip
+        juce::Rectangle<int> hitZone (rightStrip.getX() - 3, rightStrip.getY(), 6, rightStrip.getHeight());
+
+        if (hitZone.contains (p))
+        {
+            dragMode = DragMode::rightStripResizer;
+            dragStartPos = p;
+            dragStartRightStripWidthPxUser = rightStripWidthPxUser;
+            return;
+        }
+    }
+    // [END UI3B-RIGHTSTRIP-RESIZER-MOUSEDOWN]
+
+    // [UI-RULERS] Drag time ruler to pan time
+    if (getTimeRulerArea().contains (p))
+    {
+        dragMode = DragMode::timeRuler;
+        dragStartPos = p;
+        dragStartViewRightFrame = viewRightFrame;
+        followRightEdge = false;
+        autoRefollowArmed = false; // [AUTO-FOLLOW-HYST] disarm until playhead moves away from edge
+        followButton.setToggleState (false, juce::dontSendNotification);
+        return;
+    }
+
+    // [BEGIN UI3B-DBSCALE-DRAG-HIT]
+    // Drag LUFS scale to pan dB (meters area is not interactive)
+    if (getDbScaleArea().contains (p))
+    // [END UI3B-DBSCALE-DRAG-HIT]
+    {
+        dragMode = DragMode::dbRuler;
+        dragStartPos = p;
+        dragStartViewTopDb = viewTopDb;
+        return;
+    }
+
+    // [BEGIN UI3A-CURVE-VISIBILITY-MOUSEDOWN-TOGGLE]
+    // Existing behavior: Shift-click toggles bands; plain click toggles BOTH curves (momentary+short-term).
+    if (event.mods.isShiftDown())
+    {
+        showBands = ! showBands;
+    }
+    else
+    {
+        const bool anyOn = (showMomentaryCurve || showShortTermCurve);
+        showMomentaryCurve = ! anyOn;
+        showShortTermCurve = ! anyOn;
+        showLines = (showMomentaryCurve || showShortTermCurve);
+    }
+    // [END UI3A-CURVE-VISIBILITY-MOUSEDOWN-TOGGLE]
+
+    repaint();
+}
+
+void VolumeHistoryComponent::mouseDrag (const juce::MouseEvent& event)
+{
+    // [BEGIN MTDM-THRESH-UI-MOUSE-HOOK-DRAG]
+    if (thresholdDragging)
+    {
+        handleThresholdMouseDrag (event);
+        repaint();
+        return;
+    }
+    // [END MTDM-THRESH-UI-MOUSE-HOOK-DRAG]
+
+    if (dragMode == DragMode::none)
+        return;
+
+    const auto p = event.getPosition();
+
+    // [BEGIN ROLLING-LRA-SPLITTER-MOUSEDRAG]
+    if (dragMode == DragMode::rollingLraDivider)
+    {
+        const int dy = p.y - dragStartPos.y;
+
+        // Dragging DOWN reduces rolling lane height; dragging UP increases it.
+        rollingLaneHeightPx = dragStartRollingLaneHeightPx - dy;
+        rollingLaneHeightPx = juce::jlimit (rollingLaneMinHeightPx,
+                                            rollingLaneMaxHeightPx,
+                                            rollingLaneHeightPx);
+
+        // Plot area height changed -> repaint (and background grid alignment may change)
+        markStaticBackgroundDirty();
+        repaint();
+        return;
+    }
+    // [END ROLLING-LRA-SPLITTER-MOUSEDRAG]
+
+    // [BEGIN UI3B-RIGHTSTRIP-RESIZER-MOUSEDRAG]
+    if (dragMode == DragMode::rightStripResizer)
+    {
+        const int dx = p.x - dragStartPos.x;
+
+        // Dragging LEFT increases strip width; dragging RIGHT decreases it.
+        rightStripWidthPxUser = dragStartRightStripWidthPxUser - dx;
+        rightStripWidthPxUser = juce::jlimit (rightStripMinWidthPx, rightStripMaxWidthPx, rightStripWidthPxUser);
+
+        repaint();
+        return;
+    }
+    // [END UI3B-RIGHTSTRIP-RESIZER-MOUSEDRAG]
+
+    if (dragMode == DragMode::timeRuler)
+    {
+        const int dx = p.x - dragStartPos.x;
+
+        // "Grab" behavior: drag right -> earlier time (content moves right)
+        viewRightFrame = dragStartViewRightFrame - (double) dx / (zoomX > 1.0e-12 ? zoomX : 1.0e-12);
+        clampViewRightFrame (getWidth());
+        repaint();
+        return;
+    }
+
+    if (dragMode == DragMode::dbRuler)
+    {
+        const int dy = p.y - dragStartPos.y;
+
+        const double effectiveRange = (double) baseDbRange / zoomY;
+        const double dbPerPixel = effectiveRange / (double) juce::jmax (1, getHeight());
+
+        // [DB-DRAG-DIRECTION] drag down -> curves go down (topDb increases)
+        viewTopDb = dragStartViewTopDb + (double) dy * dbPerPixel;
+
+        const double topMin = viewMinDbLimit + effectiveRange;
+        const double topMax = viewMaxDbLimit;
+        viewTopDb = juce::jlimit (topMin, topMax, viewTopDb);
+
+        markStaticBackgroundDirty();
+        repaint();
+        return;
+    }
+}
+
+void VolumeHistoryComponent::mouseUp (const juce::MouseEvent& event)
+{
+    // [BEGIN MTDM-THRESH-UI-MOUSE-HOOK-UP]
+    if (thresholdDragging)
+    {
+        handleThresholdMouseUp (event);
+        repaint();
+    }
+    // [END MTDM-THRESH-UI-MOUSE-HOOK-UP]
+
+    dragMode = DragMode::none;
+}
+// [END VHC-VNAV-MOUSE]
