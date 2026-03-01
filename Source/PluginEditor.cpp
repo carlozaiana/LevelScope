@@ -541,187 +541,161 @@ void MissionControlComponent::resized()
 // [END UI3A-MISSIONCONTROL-RESIZED-RELAYOUT]
 
 //==============================================================================
-// [BEGIN MTDM-PANEL-IMPL]
-//==============================================================================
-// GR meter (simple read-only bar)
-//==============================================================================
-
-void GrMeterComponent::setValuesDb (float currentDb, float holdDb) noexcept
+// [BEGIN UI4A-MTDM-PANEL-CARDS-IMPL]
+static void setSliderRangeFromParam (juce::AudioProcessorValueTreeState& apvts,
+                                     const juce::String& paramID,
+                                     juce::Slider& s)
 {
-    current = juce::jmax (0.0f, currentDb);
-    hold    = juce::jmax (0.0f, holdDb);
+    if (auto* p = apvts.getParameter (paramID))
+    {
+        const auto rf = p->getNormalisableRange(); // float
+        juce::NormalisableRange<double> rd ((double) rf.start, (double) rf.end, (double) rf.interval);
+        rd.skew = (double) rf.skew;
+        rd.symmetricSkew = rf.symmetricSkew;
+        s.setNormalisableRange (rd);
+    }
 }
 
-void GrMeterComponent::paint (juce::Graphics& g)
+static void styleSlider (juce::Slider& s, const juce::String& suffix)
+{
+    s.setSliderStyle (juce::Slider::LinearHorizontal);
+    s.setTextBoxStyle (juce::Slider::TextBoxRight, false, 80, 18);
+    s.setTextValueSuffix (suffix);
+
+    s.setColour (juce::Slider::textBoxTextColourId, juce::Colours::white.withMultipliedAlpha (0.90f));
+    s.setColour (juce::Slider::textBoxOutlineColourId, juce::Colours::white.withMultipliedAlpha (0.15f));
+}
+
+static void styleLabel (juce::Label& l, const juce::String& text)
+{
+    l.setText (text, juce::dontSendNotification);
+    l.setColour (juce::Label::textColourId, juce::Colours::white.withMultipliedAlpha (0.75f));
+    l.setFont (juce::Font (12.0f));
+    l.setJustificationType (juce::Justification::centredLeft);
+}
+
+//==============================================================================
+// Card base
+//==============================================================================
+
+MtdmCardComponent::MtdmCardComponent (juce::String titleText)
+{
+    title.setText (std::move (titleText), juce::dontSendNotification);
+    title.setColour (juce::Label::textColourId, juce::Colours::white.withMultipliedAlpha (0.92f));
+    title.setFont (juce::Font (14.0f, juce::Font::bold));
+    addAndMakeVisible (title);
+
+    setOpaque (false);
+}
+
+void MtdmCardComponent::paint (juce::Graphics& g)
 {
     auto r = getLocalBounds().toFloat();
+    g.setColour (juce::Colours::black.withMultipliedAlpha (0.18f));
+    g.fillRoundedRectangle (r, 8.0f);
 
-    g.setColour (juce::Colour::fromRGB (10, 18, 28));
-    g.fillRoundedRectangle (r, 4.0f);
+    g.setColour (juce::Colours::white.withMultipliedAlpha (0.10f));
+    g.drawRoundedRectangle (r, 8.0f, 1.0f);
+}
 
-    r = r.reduced (6.0f, 5.0f);
-    if (r.getWidth() <= 2.0f || r.getHeight() <= 2.0f)
-        return;
+juce::Rectangle<int> MtdmCardComponent::getContentArea() const
+{
+    auto r = getLocalBounds().reduced (10);
+    r.removeFromTop (24);
+    return r;
+}
 
-    // Meter scale
-    constexpr float maxDb = 24.0f;
-    const float curNorm  = juce::jlimit (0.0f, 1.0f, current / maxDb);
-    const float holdNorm = juce::jlimit (0.0f, 1.0f, hold    / maxDb);
-
-    // Background bar
-    g.setColour (juce::Colours::black.withMultipliedAlpha (0.35f));
-    g.fillRoundedRectangle (r, 3.0f);
-
-    // Filled current
-    auto filled = r.withWidth (r.getWidth() * curNorm);
-    g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.80f));
-    g.fillRoundedRectangle (filled, 3.0f);
-
-    // Hold marker
-    const float holdX = r.getX() + r.getWidth() * holdNorm;
-    g.setColour (juce::Colours::white.withMultipliedAlpha (0.85f));
-    g.drawLine (holdX, r.getY(), holdX, r.getBottom(), 1.2f);
-
-    // Text
-    g.setColour (juce::Colours::white.withMultipliedAlpha (0.90f));
-    g.setFont (12.0f);
-
-    const juce::String txt = name + "  GR " + juce::String (current, 1) + " dB";
-    g.drawText (txt, getLocalBounds().reduced (8, 2), juce::Justification::centredLeft, true);
+void MtdmCardComponent::resized()
+{
+    title.setBounds (getLocalBounds().reduced (10, 6).removeFromTop (18));
 }
 
 //==============================================================================
-// MTDM control panel
+// Levelling placeholder
 //==============================================================================
 
-MtdmControlPanel::MtdmControlPanel (LevelScopeAudioProcessor& p)
-    : processor (p),
+LevellingCard::LevellingCard()
+    : MtdmCardComponent ("Levelling (Coming soon)")
+{
+    info.setText ("Placeholder for gain-riding module.", juce::dontSendNotification);
+    info.setColour (juce::Label::textColourId, juce::Colours::white.withMultipliedAlpha (0.60f));
+    info.setFont (juce::Font (12.0f));
+    addAndMakeVisible (info);
+}
+
+void LevellingCard::resized()
+{
+    MtdmCardComponent::resized();
+    info.setBounds (getContentArea().removeFromTop (18));
+}
+
+//==============================================================================
+// Zones / Thresholds
+//==============================================================================
+
+MtdmZonesCard::MtdmZonesCard (LevelScopeAudioProcessor& p)
+    : MtdmCardComponent ("Zones / Thresholds"),
+      processor (p),
       apvts (p.getAPVTS())
 {
-    setOpaque (true);
-
-    configureToggle (mtdmEnabledButton, "MTDM");
-    configureToggle (downEnabledButton, "Down");
-    configureToggle (limEnabledButton,  "Lim");
-
-    addAndMakeVisible (mtdmEnabledButton);
-    addAndMakeVisible (downEnabledButton);
-    addAndMakeVisible (limEnabledButton);
-
-    auto initLabel = [] (juce::Label& l, const juce::String& s)
-    {
-        l.setText (s, juce::dontSendNotification);
-        l.setJustificationType (juce::Justification::centred);
-        l.setColour (juce::Label::textColourId, juce::Colours::white.withMultipliedAlpha (0.85f));
-        l.setFont (juce::Font (12.0f));
-    };
-
-    initLabel (t0Label, "T0");
-    initLabel (t1Label, "T1");
-    initLabel (t2Label, "T2");
-    initLabel (t3Label, "T3");
-
-    addAndMakeVisible (t0Label);
-    addAndMakeVisible (t1Label);
-    addAndMakeVisible (t2Label);
-    addAndMakeVisible (t3Label);
-
-    // Configure sliders from param ranges
     using namespace levelscope::mtdm::ParamIDs;
 
-    configureSliderForParam (t0Slider, t0Lufs, juce::Slider::LinearVertical, " LUFS");
-    configureSliderForParam (t1Slider, t1Lufs, juce::Slider::LinearVertical, " LUFS");
-    configureSliderForParam (t2Slider, t2Lufs, juce::Slider::LinearVertical, " LUFS");
-    configureSliderForParam (t3Slider, t3Lufs, juce::Slider::LinearVertical, " LUFS");
+    addAndMakeVisible (mtdmEnabledButton);
+    mtdmEnabledButton.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.90f));
+    mtdmEnabledAtt = std::make_unique<ButtonAttachment> (apvts, enabled, mtdmEnabledButton);
 
-    addAndMakeVisible (t0Slider);
-    addAndMakeVisible (t1Slider);
-    addAndMakeVisible (t2Slider);
-    addAndMakeVisible (t3Slider);
+    styleLabel (t0Label, "T0 (LUFS)"); styleLabel (t1Label, "T1 (LUFS)");
+    styleLabel (t2Label, "T2 (LUFS)"); styleLabel (t3Label, "T3 (LUFS)");
+    addAndMakeVisible (t0Label); addAndMakeVisible (t1Label);
+    addAndMakeVisible (t2Label); addAndMakeVisible (t3Label);
 
-    // Attachments
-    mtdmEnabledAtt = std::make_unique<ButtonAttachment> (apvts, enabled,       mtdmEnabledButton);
-    downEnabledAtt = std::make_unique<ButtonAttachment> (apvts, downEnabled01, downEnabledButton);
-    limEnabledAtt  = std::make_unique<ButtonAttachment> (apvts, limEnabled01,  limEnabledButton);
+    styleSlider (t0Slider, " LUFS"); styleSlider (t1Slider, " LUFS");
+    styleSlider (t2Slider, " LUFS"); styleSlider (t3Slider, " LUFS");
+
+    setSliderRangeFromParam (apvts, t0Lufs, t0Slider);
+    setSliderRangeFromParam (apvts, t1Lufs, t1Slider);
+    setSliderRangeFromParam (apvts, t2Lufs, t2Slider);
+    setSliderRangeFromParam (apvts, t3Lufs, t3Slider);
+
+    addAndMakeVisible (t0Slider); addAndMakeVisible (t1Slider);
+    addAndMakeVisible (t2Slider); addAndMakeVisible (t3Slider);
 
     t0Att = std::make_unique<SliderAttachment> (apvts, t0Lufs, t0Slider);
     t1Att = std::make_unique<SliderAttachment> (apvts, t1Lufs, t1Slider);
     t2Att = std::make_unique<SliderAttachment> (apvts, t2Lufs, t2Slider);
     t3Att = std::make_unique<SliderAttachment> (apvts, t3Lufs, t3Slider);
 
-    // [BEGIN MTDM-PANEL-THRESH-ORDER-HOOKS]
-    auto attachThreshHooks = [this] (juce::Slider& s, int idx)
+    auto attachHooks = [this] (juce::Slider& s, int idx)
     {
-        s.onDragStart = [this, idx]
+        s.onDragStart = [this]
         {
             thresholdSliderDragging = true;
-            thresholdSliderDraggingIndex = idx;
             pushedGestureActive = { { false, false, false, false } };
         };
 
-        s.onValueChange = [this, idx]
-        {
-            enforceThresholdOrderingFromSlider (idx);
-        };
+        s.onValueChange = [this, idx] { enforceThresholdOrderingFromSlider (idx); };
 
         s.onDragEnd = [this]
         {
             endPushedThresholdGestures();
             thresholdSliderDragging = false;
-            thresholdSliderDraggingIndex = -1;
         };
     };
 
-    attachThreshHooks (t0Slider, 0);
-    attachThreshHooks (t1Slider, 1);
-    attachThreshHooks (t2Slider, 2);
-    attachThreshHooks (t3Slider, 3);
-    // [END MTDM-PANEL-THRESH-ORDER-HOOKS]
+    attachHooks (t0Slider, 0);
+    attachHooks (t1Slider, 1);
+    attachHooks (t2Slider, 2);
+    attachHooks (t3Slider, 3);
 }
 
-// [BEGIN UI3C4-PANEL-DTOR]
-MtdmControlPanel::~MtdmControlPanel() = default;
-// [END UI3C4-PANEL-DTOR]
-
-void MtdmControlPanel::configureToggle (juce::ToggleButton& b, const juce::String& text)
+MtdmZonesCard::~MtdmZonesCard()
 {
-    b.setButtonText (text);
-    b.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.9f));
+    endPushedThresholdGestures();
 }
 
-void MtdmControlPanel::configureSliderForParam (juce::Slider& s,
-                                                const juce::String& paramID,
-                                                juce::Slider::SliderStyle style,
-                                                const juce::String& suffix)
-{
-    s.setSliderStyle (style);
-    s.setTextBoxStyle (juce::Slider::TextBoxBelow, false, 64, 18);
-    s.setColour (juce::Slider::textBoxTextColourId, juce::Colours::white.withMultipliedAlpha (0.9f));
-    s.setColour (juce::Slider::textBoxOutlineColourId, juce::Colours::white.withMultipliedAlpha (0.15f));
-    s.setTextValueSuffix (suffix);
-
-    // [BEGIN MTDM-PANEL-SLIDER-RANGE-DOUBLE-FIX]
-    if (auto* p = apvts.getParameter (paramID))
-    {
-        const auto rf = p->getNormalisableRange(); // NormalisableRange<float>
-
-        juce::NormalisableRange<double> rd ((double) rf.start,
-                                            (double) rf.end,
-                                            (double) rf.interval);
-
-        rd.skew = (double) rf.skew;
-        rd.symmetricSkew = rf.symmetricSkew;
-
-        s.setNormalisableRange (rd);
-    }
-    // [END MTDM-PANEL-SLIDER-RANGE-DOUBLE-FIX]
-}
-
-// [BEGIN MTDM-PANEL-THRESH-ORDER-IMPL]
-void MtdmControlPanel::endPushedThresholdGestures()
+void MtdmZonesCard::endPushedThresholdGestures()
 {
     using namespace levelscope::mtdm::ParamIDs;
-
     const juce::String ids[4] = { t0Lufs, t1Lufs, t2Lufs, t3Lufs };
 
     for (int i = 0; i < 4; ++i)
@@ -736,12 +710,9 @@ void MtdmControlPanel::endPushedThresholdGestures()
     }
 }
 
-void MtdmControlPanel::enforceThresholdOrderingFromSlider (int changedIndex)
+void MtdmZonesCard::enforceThresholdOrderingFromSlider (int changedIndex)
 {
-    if (thresholdCallbacksSuppressed)
-        return;
-
-    if (changedIndex < 0 || changedIndex > 3)
+    if (callbacksSuppressed || changedIndex < 0 || changedIndex > 3)
         return;
 
     using namespace levelscope::mtdm::ParamIDs;
@@ -755,7 +726,7 @@ void MtdmControlPanel::enforceThresholdOrderingFromSlider (int changedIndex)
         apvts.getParameter (ids[3])
     };
 
-    if (params[0] == nullptr || params[1] == nullptr || params[2] == nullptr || params[3] == nullptr)
+    if (! params[0] || ! params[1] || ! params[2] || ! params[3])
         return;
 
     auto clampSnap = [&] (int idx, float v) -> float
@@ -766,20 +737,18 @@ void MtdmControlPanel::enforceThresholdOrderingFromSlider (int changedIndex)
         return v;
     };
 
-    // Read current parameter values (authoritative)
+    const juce::Slider* sliders[4] = { &t0Slider, &t1Slider, &t2Slider, &t3Slider };
+
     float v[4];
     for (int i = 0; i < 4; ++i)
     {
-        // convertFrom0to1(getValue()) gives the parameter's current "real" value.
         v[i] = (float) params[i]->convertFrom0to1 (params[i]->getValue());
         v[i] = clampSnap (i, v[i]);
     }
 
-    // Anchor = the value the user is changing (from the slider, so it matches what they see)
-    const juce::Slider* sliders[4] = { &t0Slider, &t1Slider, &t2Slider, &t3Slider };
     v[changedIndex] = clampSnap (changedIndex, (float) sliders[changedIndex]->getValue());
 
-    // Push OUTWARDS from the changed index (same UX as handle dragging)
+    // push outward from anchor
     for (int i = changedIndex + 1; i < 4; ++i)
     {
         const float minAllowed = v[i - 1] + minGapLu;
@@ -794,8 +763,7 @@ void MtdmControlPanel::enforceThresholdOrderingFromSlider (int changedIndex)
             v[i] = clampSnap (i, maxAllowed);
     }
 
-    // Apply pushed neighbors only (do not fight the actively changed slider)
-    thresholdCallbacksSuppressed = true;
+    callbacksSuppressed = true;
 
     for (int i = 0; i < 4; ++i)
     {
@@ -808,9 +776,6 @@ void MtdmControlPanel::enforceThresholdOrderingFromSlider (int changedIndex)
         if (std::abs (dst - cur) < 1.0e-6f)
             continue;
 
-        // Gesture strategy:
-        // - while user drags a threshold slider, keep neighbor gestures open (lazy-start)
-        // - otherwise (text entry / programmatic), do an immediate begin-set-end
         if (thresholdSliderDragging)
         {
             if (! pushedGestureActive[(size_t) i])
@@ -829,53 +794,322 @@ void MtdmControlPanel::enforceThresholdOrderingFromSlider (int changedIndex)
         }
     }
 
-    thresholdCallbacksSuppressed = false;
+    callbacksSuppressed = false;
 }
-// [END MTDM-PANEL-THRESH-ORDER-IMPL]
+
+void MtdmZonesCard::resized()
+{
+    MtdmCardComponent::resized();
+    auto r = getContentArea();
+
+    mtdmEnabledButton.setBounds (r.removeFromTop (22));
+
+    r.removeFromTop (8);
+
+    auto row = [&] (juce::Label& lab, juce::Slider& s)
+    {
+        auto rr = r.removeFromTop (24);
+        lab.setBounds (rr.removeFromLeft (90));
+        s.setBounds (rr);
+        r.removeFromTop (6);
+    };
+
+    row (t0Label, t0Slider);
+    row (t1Label, t1Slider);
+    row (t2Label, t2Slider);
+    row (t3Label, t3Slider);
+}
+
+//==============================================================================
+// Upward
+//==============================================================================
+
+MtdmUpwardCard::MtdmUpwardCard (LevelScopeAudioProcessor& p)
+    : MtdmCardComponent ("Upward (Essentials)"),
+      apvts (p.getAPVTS())
+{
+    using namespace levelscope::mtdm::ParamIDs;
+
+    styleLabel (modeLabel, "Mode");
+    addAndMakeVisible (modeLabel);
+    addAndMakeVisible (modeBox);
+
+    modeBox.addItemList (juce::StringArray { "Spectral", "Broadband" }, 1);
+    modeAtt = std::make_unique<ComboAttachment> (apvts, upwardModeChoice, modeBox);
+
+    styleLabel (amountLabel, "Amount");
+    styleLabel (maxBoostLabel, "MaxBoost");
+    styleLabel (attackLabel, "Attack");
+    styleLabel (releaseLabel, "Release");
+
+    addAndMakeVisible (amountLabel); addAndMakeVisible (maxBoostLabel);
+    addAndMakeVisible (attackLabel); addAndMakeVisible (releaseLabel);
+
+    styleSlider (amountSlider, "");
+    styleSlider (maxBoostSlider, " dB");
+    styleSlider (attackSlider, " ms");
+    styleSlider (releaseSlider, " ms");
+
+    setSliderRangeFromParam (apvts, sucAmount01, amountSlider);
+    setSliderRangeFromParam (apvts, sucMaxBoostDb, maxBoostSlider);
+    setSliderRangeFromParam (apvts, sucAttackMs, attackSlider);
+    setSliderRangeFromParam (apvts, sucReleaseMs, releaseSlider);
+
+    addAndMakeVisible (amountSlider); addAndMakeVisible (maxBoostSlider);
+    addAndMakeVisible (attackSlider); addAndMakeVisible (releaseSlider);
+
+    amountAtt   = std::make_unique<SliderAttachment> (apvts, sucAmount01, amountSlider);
+    maxBoostAtt = std::make_unique<SliderAttachment> (apvts, sucMaxBoostDb, maxBoostSlider);
+    attackAtt   = std::make_unique<SliderAttachment> (apvts, sucAttackMs, attackSlider);
+    releaseAtt  = std::make_unique<SliderAttachment> (apvts, sucReleaseMs, releaseSlider);
+}
+
+void MtdmUpwardCard::resized()
+{
+    MtdmCardComponent::resized();
+    auto r = getContentArea();
+
+    auto rr = r.removeFromTop (24);
+    modeLabel.setBounds (rr.removeFromLeft (90));
+    modeBox.setBounds (rr);
+
+    r.removeFromTop (8);
+
+    auto row = [&] (juce::Label& lab, juce::Slider& s)
+    {
+        auto r2 = r.removeFromTop (24);
+        lab.setBounds (r2.removeFromLeft (90));
+        s.setBounds (r2);
+        r.removeFromTop (6);
+    };
+
+    row (amountLabel, amountSlider);
+    row (maxBoostLabel, maxBoostSlider);
+    row (attackLabel, attackSlider);
+    row (releaseLabel, releaseSlider);
+}
+
+//==============================================================================
+// Downward
+//==============================================================================
+
+MtdmDownwardCard::MtdmDownwardCard (LevelScopeAudioProcessor& p)
+    : MtdmCardComponent ("Downward (Essentials)"),
+      apvts (p.getAPVTS())
+{
+    using namespace levelscope::mtdm::ParamIDs;
+
+    enabledButton.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.90f));
+    addAndMakeVisible (enabledButton);
+    enabledAtt = std::make_unique<ButtonAttachment> (apvts, downEnabled01, enabledButton);
+
+    styleLabel (ratioLabel, "Ratio");
+    styleLabel (attackLabel, "Attack");
+    styleLabel (releaseLabel, "Release");
+    styleLabel (makeupLabel, "Makeup");
+
+    addAndMakeVisible (ratioLabel); addAndMakeVisible (attackLabel);
+    addAndMakeVisible (releaseLabel); addAndMakeVisible (makeupLabel);
+
+    styleSlider (ratioSlider, "");
+    styleSlider (attackSlider, " ms");
+    styleSlider (releaseSlider, " ms");
+    styleSlider (makeupSlider, " dB");
+
+    setSliderRangeFromParam (apvts, downRatio, ratioSlider);
+    setSliderRangeFromParam (apvts, downAttackMs, attackSlider);
+    setSliderRangeFromParam (apvts, downReleaseMs, releaseSlider);
+    setSliderRangeFromParam (apvts, downMakeupDb, makeupSlider);
+
+    addAndMakeVisible (ratioSlider); addAndMakeVisible (attackSlider);
+    addAndMakeVisible (releaseSlider); addAndMakeVisible (makeupSlider);
+
+    ratioAtt   = std::make_unique<SliderAttachment> (apvts, downRatio, ratioSlider);
+    attackAtt  = std::make_unique<SliderAttachment> (apvts, downAttackMs, attackSlider);
+    releaseAtt = std::make_unique<SliderAttachment> (apvts, downReleaseMs, releaseSlider);
+    makeupAtt  = std::make_unique<SliderAttachment> (apvts, downMakeupDb, makeupSlider);
+}
+
+void MtdmDownwardCard::resized()
+{
+    MtdmCardComponent::resized();
+    auto r = getContentArea();
+
+    enabledButton.setBounds (r.removeFromTop (22));
+    r.removeFromTop (8);
+
+    auto row = [&] (juce::Label& lab, juce::Slider& s)
+    {
+        auto r2 = r.removeFromTop (24);
+        lab.setBounds (r2.removeFromLeft (90));
+        s.setBounds (r2);
+        r.removeFromTop (6);
+    };
+
+    row (ratioLabel, ratioSlider);
+    row (attackLabel, attackSlider);
+    row (releaseLabel, releaseSlider);
+    row (makeupLabel, makeupSlider);
+}
+
+//==============================================================================
+// Limiter
+//==============================================================================
+
+MtdmLimiterCard::MtdmLimiterCard (LevelScopeAudioProcessor& p)
+    : MtdmCardComponent ("Limiter (Essentials)"),
+      apvts (p.getAPVTS())
+{
+    using namespace levelscope::mtdm::ParamIDs;
+
+    enabledButton.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.90f));
+    addAndMakeVisible (enabledButton);
+    enabledAtt = std::make_unique<ButtonAttachment> (apvts, limEnabled01, enabledButton);
+
+    styleLabel (ceilingLabel, "Ceiling");
+    styleLabel (lookLabel, "Lookahead");
+    styleLabel (osLabel, "OS");
+    styleLabel (attackLabel, "Attack");
+    styleLabel (releaseLabel, "Release");
+    styleLabel (driveLabel, "Drive");
+
+    addAndMakeVisible (ceilingLabel); addAndMakeVisible (lookLabel);
+    addAndMakeVisible (osLabel); addAndMakeVisible (attackLabel);
+    addAndMakeVisible (releaseLabel); addAndMakeVisible (driveLabel);
+
+    styleSlider (ceilingSlider, " dBFS");
+    styleSlider (lookSlider, " ms");
+    styleSlider (attackSlider, " ms");
+    styleSlider (releaseSlider, " ms");
+    styleSlider (driveSlider, " dB");
+
+    setSliderRangeFromParam (apvts, limCeilingDb, ceilingSlider);
+    setSliderRangeFromParam (apvts, limLookaheadMs, lookSlider);
+    setSliderRangeFromParam (apvts, limAttackMs, attackSlider);
+    setSliderRangeFromParam (apvts, limReleaseMs, releaseSlider);
+    setSliderRangeFromParam (apvts, limDriveDb, driveSlider);
+
+    addAndMakeVisible (ceilingSlider);
+    addAndMakeVisible (lookSlider);
+    addAndMakeVisible (attackSlider);
+    addAndMakeVisible (releaseSlider);
+    addAndMakeVisible (driveSlider);
+
+    ceilingAtt = std::make_unique<SliderAttachment> (apvts, limCeilingDb, ceilingSlider);
+    lookAtt    = std::make_unique<SliderAttachment> (apvts, limLookaheadMs, lookSlider);
+    attackAtt  = std::make_unique<SliderAttachment> (apvts, limAttackMs, attackSlider);
+    releaseAtt = std::make_unique<SliderAttachment> (apvts, limReleaseMs, releaseSlider);
+    driveAtt   = std::make_unique<SliderAttachment> (apvts, limDriveDb, driveSlider);
+
+    addAndMakeVisible (osBox);
+    osBox.addItemList (juce::StringArray { "Off", "2x", "4x" }, 1);
+    osAtt = std::make_unique<ComboAttachment> (apvts, limOversamplingChoice, osBox);
+}
+
+void MtdmLimiterCard::resized()
+{
+    MtdmCardComponent::resized();
+    auto r = getContentArea();
+
+    enabledButton.setBounds (r.removeFromTop (22));
+    r.removeFromTop (8);
+
+    auto rowS = [&] (juce::Label& lab, juce::Slider& s)
+    {
+        auto r2 = r.removeFromTop (24);
+        lab.setBounds (r2.removeFromLeft (90));
+        s.setBounds (r2);
+        r.removeFromTop (6);
+    };
+
+    rowS (ceilingLabel, ceilingSlider);
+    rowS (lookLabel, lookSlider);
+
+    // Oversampling row
+    auto rOS = r.removeFromTop (24);
+    osLabel.setBounds (rOS.removeFromLeft (90));
+    osBox.setBounds (rOS);
+    r.removeFromTop (6);
+
+    rowS (attackLabel, attackSlider);
+    rowS (releaseLabel, releaseSlider);
+    rowS (driveLabel, driveSlider);
+}
+
+//==============================================================================
+// Content stack
+//==============================================================================
+
+MtdmCardsContent::MtdmCardsContent (LevelScopeAudioProcessor& p)
+    : levelling(),
+      zones (p),
+      upward (p),
+      downward (p),
+      limiter (p)
+{
+    addAndMakeVisible (levelling);
+    addAndMakeVisible (zones);
+    addAndMakeVisible (upward);
+    addAndMakeVisible (downward);
+    addAndMakeVisible (limiter);
+}
+
+int MtdmCardsContent::getPreferredHeight() const noexcept
+{
+    // Simple fixed heights for now (scrollable anyway)
+    const int pad = 10;
+    return pad
+         + 70  + pad   // levelling
+         + 170 + pad   // zones
+         + 170 + pad   // upward
+         + 170 + pad   // downward
+         + 210 + pad;  // limiter (slightly taller)
+}
+
+void MtdmCardsContent::resized()
+{
+    auto r = getLocalBounds().reduced (10);
+    const int pad = 10;
+
+    auto take = [&] (int h) { auto a = r.removeFromTop (h); r.removeFromTop (pad); return a; };
+
+    levelling.setBounds (take (70));
+    zones.setBounds     (take (170));
+    upward.setBounds    (take (170));
+    downward.setBounds  (take (170));
+    limiter.setBounds   (take (210));
+}
+
+//==============================================================================
+// Public panel component (viewport)
+//==============================================================================
+
+MtdmControlPanel::MtdmControlPanel (LevelScopeAudioProcessor& p)
+    : content (p)
+{
+    setOpaque (true);
+
+    viewport.setScrollBarsShown (true, false); // vertical only
+    viewport.setViewedComponent (&content, false);
+
+    addAndMakeVisible (viewport);
+}
 
 void MtdmControlPanel::paint (juce::Graphics& g)
 {
     g.fillAll (juce::Colour::fromRGB (12, 22, 36));
-    g.setColour (juce::Colours::white.withMultipliedAlpha (0.08f));
-    g.drawRect (getLocalBounds());
 }
 
 void MtdmControlPanel::resized()
 {
-    auto r = getLocalBounds().reduced (8);
+    viewport.setBounds (getLocalBounds());
 
-    // Top row: toggles
-    {
-        auto top = r.removeFromTop (26);
-        mtdmEnabledButton.setBounds (top.removeFromLeft (90));
-        downEnabledButton.setBounds (top.removeFromLeft (90));
-        limEnabledButton.setBounds  (top.removeFromLeft (90));
-    }
-
-    r.removeFromTop (6);
-
-    // Middle: 4 threshold sliders (vertical)
-    auto slidersArea = r;
-    const int colW = juce::jmax (60, slidersArea.getWidth() / 4);
-
-    auto col0 = slidersArea.removeFromLeft (colW);
-    auto col1 = slidersArea.removeFromLeft (colW);
-    auto col2 = slidersArea.removeFromLeft (colW);
-    auto col3 = slidersArea;
-
-    auto place = [] (juce::Rectangle<int> col, juce::Label& lab, juce::Slider& s)
-    {
-        lab.setBounds (col.removeFromTop (16));
-        col.removeFromTop (4);
-        s.setBounds (col);
-    };
-
-    place (col0, t0Label, t0Slider);
-    place (col1, t1Label, t1Slider);
-    place (col2, t2Label, t2Slider);
-    place (col3, t3Label, t3Slider);
+    // Ensure content is tall enough to scroll; width matches viewport width.
+    const int prefH = content.getPreferredHeight();
+    content.setSize (juce::jmax (1, viewport.getWidth() - viewport.getScrollBarThickness()),
+                     juce::jmax (prefH, viewport.getHeight()));
 }
-// [END MTDM-PANEL-IMPL]
+// [END UI4A-MTDM-PANEL-CARDS-IMPL]
 
 LevelScopeAudioProcessorEditor::LevelScopeAudioProcessorEditor (LevelScopeAudioProcessor& p)
     : AudioProcessorEditor (&p),
@@ -904,12 +1138,12 @@ LevelScopeAudioProcessorEditor::LevelScopeAudioProcessorEditor (LevelScopeAudioP
     // [END MTDM-PANEL-EDITOR-ADD]
 
     setResizable (true, true);
-    // [BEGIN MTDM-PANEL-EDITOR-RESIZE-LIMITS]
-    setResizeLimits (520, 320, 4096, 2048);
-    // [END MTDM-PANEL-EDITOR-RESIZE-LIMITS]
-    // [BEGIN MTDM-PANEL-EDITOR-DEFAULT-SIZE]
-    setSize (900, 520);
-    // [END MTDM-PANEL-EDITOR-DEFAULT-SIZE]
+    // [BEGIN UI4A-EDITOR-RESIZE-LIMITS-BIGGER]
+    setResizeLimits (820, 520, 4096, 2048);
+    // [END UI4A-EDITOR-RESIZE-LIMITS-BIGGER]
+    // [BEGIN UI4A-EDITOR-DEFAULT-SIZE-BIGGER]
+    setSize (1200, 760);
+    // [END UI4A-EDITOR-DEFAULT-SIZE-BIGGER]
 }
 
 LevelScopeAudioProcessorEditor::~LevelScopeAudioProcessorEditor() = default;

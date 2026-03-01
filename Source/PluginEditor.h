@@ -143,72 +143,212 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GrMeterComponent)
 };
 
-// [BEGIN UI3C4-PANEL-REMOVE-TIMER-INHERIT]
+// [BEGIN UI4A-MTDM-PANEL-CARDS-DECL]
+//==============================================================================
+// MTDM Control Panel (scrollable cards)
+//==============================================================================
+
+class MtdmCardComponent : public juce::Component
+{
+public:
+    explicit MtdmCardComponent (juce::String titleText);
+    ~MtdmCardComponent() override = default;
+
+    void paint (juce::Graphics& g) override;
+    void resized() override;
+
+protected:
+    juce::Rectangle<int> getContentArea() const;
+
+    juce::Label title;
+
+private:
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MtdmCardComponent)
+};
+
+//------------------------------------------------------------------------------
+// Levelling placeholder (future module)
+//------------------------------------------------------------------------------
+class LevellingCard : public MtdmCardComponent
+{
+public:
+    LevellingCard();
+    void resized() override;
+
+private:
+    juce::Label info;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LevellingCard)
+};
+
+//------------------------------------------------------------------------------
+// Zones / Thresholds card (T0..T3 + MTDM Enabled) with ordering push behavior
+//------------------------------------------------------------------------------
+class MtdmZonesCard : public MtdmCardComponent
+{
+public:
+    explicit MtdmZonesCard (LevelScopeAudioProcessor& p);
+    ~MtdmZonesCard() override;
+
+    void resized() override;
+
+private:
+    LevelScopeAudioProcessor& processor;
+    juce::AudioProcessorValueTreeState& apvts;
+
+    juce::ToggleButton mtdmEnabledButton { "MTDM Enabled" };
+
+    juce::Label  t0Label, t1Label, t2Label, t3Label;
+    juce::Slider t0Slider, t1Slider, t2Slider, t3Slider;
+
+    using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
+    using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
+
+    std::unique_ptr<ButtonAttachment> mtdmEnabledAtt;
+    std::unique_ptr<SliderAttachment> t0Att, t1Att, t2Att, t3Att;
+
+    // Threshold ordering enforcement (same behavior as handle drag)
+    void enforceThresholdOrderingFromSlider (int changedIndex);
+    void endPushedThresholdGestures();
+
+    bool callbacksSuppressed = false;
+    bool thresholdSliderDragging = false;
+
+    std::array<bool, 4> pushedGestureActive { { false, false, false, false } };
+    static constexpr float minGapLu = 0.1f;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MtdmZonesCard)
+};
+
+//------------------------------------------------------------------------------
+// Upward card (essentials)
+//------------------------------------------------------------------------------
+class MtdmUpwardCard : public MtdmCardComponent
+{
+public:
+    explicit MtdmUpwardCard (LevelScopeAudioProcessor& p);
+    ~MtdmUpwardCard() override = default;
+
+    void resized() override;
+
+private:
+    juce::AudioProcessorValueTreeState& apvts;
+
+    juce::Label modeLabel;
+    juce::ComboBox modeBox;
+
+    juce::Label amountLabel, maxBoostLabel, attackLabel, releaseLabel;
+    juce::Slider amountSlider, maxBoostSlider, attackSlider, releaseSlider;
+
+    using ComboAttachment  = juce::AudioProcessorValueTreeState::ComboBoxAttachment;
+    using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
+
+    std::unique_ptr<ComboAttachment>  modeAtt;
+    std::unique_ptr<SliderAttachment> amountAtt, maxBoostAtt, attackAtt, releaseAtt;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MtdmUpwardCard)
+};
+
+//------------------------------------------------------------------------------
+// Downward card (essentials)
+//------------------------------------------------------------------------------
+class MtdmDownwardCard : public MtdmCardComponent
+{
+public:
+    explicit MtdmDownwardCard (LevelScopeAudioProcessor& p);
+    ~MtdmDownwardCard() override = default;
+
+    void resized() override;
+
+private:
+    juce::AudioProcessorValueTreeState& apvts;
+
+    juce::ToggleButton enabledButton { "Downward Enabled" };
+
+    juce::Label ratioLabel, attackLabel, releaseLabel, makeupLabel;
+    juce::Slider ratioSlider, attackSlider, releaseSlider, makeupSlider;
+
+    using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
+    using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
+
+    std::unique_ptr<ButtonAttachment> enabledAtt;
+    std::unique_ptr<SliderAttachment> ratioAtt, attackAtt, releaseAtt, makeupAtt;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MtdmDownwardCard)
+};
+
+//------------------------------------------------------------------------------
+// Limiter card (essentials)
+//------------------------------------------------------------------------------
+class MtdmLimiterCard : public MtdmCardComponent
+{
+public:
+    explicit MtdmLimiterCard (LevelScopeAudioProcessor& p);
+    ~MtdmLimiterCard() override = default;
+
+    void resized() override;
+
+private:
+    juce::AudioProcessorValueTreeState& apvts;
+
+    juce::ToggleButton enabledButton { "Limiter Enabled" };
+
+    juce::Label ceilingLabel, lookLabel, osLabel, attackLabel, releaseLabel, driveLabel;
+    juce::Slider ceilingSlider, lookSlider, attackSlider, releaseSlider, driveSlider;
+    juce::ComboBox osBox;
+
+    using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
+    using ComboAttachment  = juce::AudioProcessorValueTreeState::ComboBoxAttachment;
+    using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
+
+    std::unique_ptr<ButtonAttachment> enabledAtt;
+    std::unique_ptr<ComboAttachment>  osAtt;
+    std::unique_ptr<SliderAttachment> ceilingAtt, lookAtt, attackAtt, releaseAtt, driveAtt;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MtdmLimiterCard)
+};
+
+//------------------------------------------------------------------------------
+// Content component (stacked cards) hosted inside a Viewport
+//------------------------------------------------------------------------------
+class MtdmCardsContent : public juce::Component
+{
+public:
+    explicit MtdmCardsContent (LevelScopeAudioProcessor& p);
+    ~MtdmCardsContent() override = default;
+
+    void resized() override;
+    int getPreferredHeight() const noexcept;
+
+private:
+    LevellingCard    levelling;
+    MtdmZonesCard    zones;
+    MtdmUpwardCard   upward;
+    MtdmDownwardCard downward;
+    MtdmLimiterCard  limiter;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MtdmCardsContent)
+};
+
+//------------------------------------------------------------------------------
+// Public panel component used by the editor (scrollable viewport)
+//------------------------------------------------------------------------------
 class MtdmControlPanel : public juce::Component
-// [END UI3C4-PANEL-REMOVE-TIMER-INHERIT]
 {
 public:
     explicit MtdmControlPanel (LevelScopeAudioProcessor& p);
-    ~MtdmControlPanel() override;
+    ~MtdmControlPanel() override = default;
 
     void paint (juce::Graphics& g) override;
     void resized() override;
 
 private:
-    // [UI3C4] timerCallback removed (panel GR meters removed)
-
-    // [BEGIN MTDM-PANEL-THRESH-ORDER-DECL]
-    void enforceThresholdOrderingFromSlider (int changedIndex);
-    void endPushedThresholdGestures();
-
-    bool thresholdCallbacksSuppressed = false;
-
-    bool thresholdSliderDragging = false;
-    int  thresholdSliderDraggingIndex = -1;
-
-    // Gestures for pushed neighbors (not the actively dragged slider)
-    std::array<bool, 4> pushedGestureActive { { false, false, false, false } };
-
-    static constexpr float minGapLu = 0.1f;
-    // [END MTDM-PANEL-THRESH-ORDER-DECL]
-
-    void configureToggle (juce::ToggleButton& b, const juce::String& text);
-    void configureSliderForParam (juce::Slider& s, const juce::String& paramID,
-                                  juce::Slider::SliderStyle style,
-                                  const juce::String& suffix);
-
-    LevelScopeAudioProcessor& processor;
-    juce::AudioProcessorValueTreeState& apvts;
-
-    // Top row toggles
-    juce::ToggleButton mtdmEnabledButton;
-    juce::ToggleButton downEnabledButton;
-    juce::ToggleButton limEnabledButton;
-
-    // Threshold sliders
-    juce::Label  t0Label, t1Label, t2Label, t3Label;
-    juce::Slider t0Slider, t1Slider, t2Slider, t3Slider;
-
-    // [BEGIN UI3C4-PANEL-REMOVE-GR-METERS]
-    // GR meters removed from bottom panel (now shown in right-side meter strip)
-    // [END UI3C4-PANEL-REMOVE-GR-METERS]
-
-    // Attachments (must be kept alive)
-    using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
-    using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
-
-    std::unique_ptr<ButtonAttachment> mtdmEnabledAtt;
-    std::unique_ptr<ButtonAttachment> downEnabledAtt;
-    std::unique_ptr<ButtonAttachment> limEnabledAtt;
-
-    std::unique_ptr<SliderAttachment> t0Att;
-    std::unique_ptr<SliderAttachment> t1Att;
-    std::unique_ptr<SliderAttachment> t2Att;
-    std::unique_ptr<SliderAttachment> t3Att;
+    juce::Viewport viewport;
+    MtdmCardsContent content;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MtdmControlPanel)
 };
-// [END MTDM-PANEL-DECL]
+// [END UI4A-MTDM-PANEL-CARDS-DECL]
 
 class LevelScopeAudioProcessorEditor : public juce::AudioProcessorEditor
 {
