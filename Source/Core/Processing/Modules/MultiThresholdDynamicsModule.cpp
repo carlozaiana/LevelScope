@@ -184,6 +184,14 @@ namespace levelscope
             auditionGateZ = 1.0f;
             auditionWasActive = false;
             // [END MTDM-UNTOUCHED-AUDITION-RESET]
+            // [BEGIN MTDM-UPWARD-METERING-RESET]
+            upwardHoldDbInternal = 0.0f;
+            upwardHoldSamplesLeft = 0;
+
+            upwardMetering.boostDbCurrent.store   (0.0f, std::memory_order_relaxed);
+            upwardMetering.boostDbBlockPeak.store (0.0f, std::memory_order_relaxed);
+            upwardMetering.boostDbHold.store      (0.0f, std::memory_order_relaxed);
+            // [END MTDM-UPWARD-METERING-RESET]
         }
         // [END MTDM-RESET-UPWARD-STRATEGIES]
 
@@ -673,6 +681,90 @@ namespace levelscope
                     activeUpward->process (ctx.audio, up);
             }
             // [END MTDM-RUN-UPWARD]
+
+            // [BEGIN MTDM-UPWARD-METERING-UPDATE]
+            // Upward metering: report max boost across channels (as dB >= 0).
+            auto gainToBoostDb = [] (float g) noexcept
+            {
+                g = juce::jmax (1.0f, g);
+                const float db = (float) (20.0 * std::log10 ((double) g));
+                return (db > 0.0f ? db : 0.0f);
+            };
+
+            bool upwardActiveForMeter = runUp;
+
+            float gMax  = 1.0f;
+            float gLast = 1.0f;
+
+            if (lastUpwardModeChoice == 0) // Spectral (called always, but may be auditionBypass)
+            {
+                if (up.auditionBypass)
+                {
+                    upwardActiveForMeter = false;
+                }
+                else
+                {
+                    gMax  = spectralUpwardProcessor.suc.getLastBlockMaxLinearGain();
+                    gLast = spectralUpwardProcessor.suc.getLastBlockLastLinearGain();
+                }
+            }
+            else // Broadband
+            {
+                if (runUp)
+                {
+                    gMax  = broadbandUpwardProcessor.buc.getLastBlockMaxLinearGain();
+                    gLast = broadbandUpwardProcessor.buc.getLastBlockLastLinearGain();
+                }
+                else
+                {
+                    upwardActiveForMeter = false;
+                }
+            }
+
+            if (! upwardActiveForMeter)
+            {
+                upwardHoldDbInternal = 0.0f;
+                upwardHoldSamplesLeft = 0;
+
+                upwardMetering.boostDbCurrent.store   (0.0f, std::memory_order_relaxed);
+                upwardMetering.boostDbBlockPeak.store (0.0f, std::memory_order_relaxed);
+                upwardMetering.boostDbHold.store      (0.0f, std::memory_order_relaxed);
+            }
+            else
+            {
+                const float boostBlockPeak = gainToBoostDb (gMax);
+                const float boostCurrent   = gainToBoostDb (gLast);
+
+                upwardMetering.boostDbBlockPeak.store (boostBlockPeak, std::memory_order_relaxed);
+                upwardMetering.boostDbCurrent.store   (boostCurrent,   std::memory_order_relaxed);
+
+                const int holdSamples = (int) std::lround (preparedSampleRate * (double) upwardHoldTimeSeconds);
+                const float decayDbThisBlock =
+                    (preparedSampleRate > 1.0 ? upwardHoldDecayDbPerSecond * (float) ((double) ctx.numSamples / preparedSampleRate)
+                                              : 0.0f);
+
+                if (boostBlockPeak > upwardHoldDbInternal)
+                {
+                    upwardHoldDbInternal = boostBlockPeak;
+                    upwardHoldSamplesLeft = holdSamples;
+                }
+                else
+                {
+                    if (upwardHoldSamplesLeft > 0)
+                    {
+                        upwardHoldSamplesLeft -= ctx.numSamples;
+                        if (upwardHoldSamplesLeft < 0)
+                            upwardHoldSamplesLeft = 0;
+                    }
+                    else
+                    {
+                        upwardHoldDbInternal = std::max (0.0f, upwardHoldDbInternal - decayDbThisBlock);
+                    }
+                }
+
+                upwardMetering.boostDbHold.store (upwardHoldDbInternal, std::memory_order_relaxed);
+            }
+            // [END MTDM-UPWARD-METERING-UPDATE]
 
             // [BEGIN MTDM-PROCESS-DOWNWARD]
             DownwardRuntimeParams down;

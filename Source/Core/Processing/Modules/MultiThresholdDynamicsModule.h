@@ -60,6 +60,18 @@ namespace levelscope
         const DownwardMetering& getDownwardMetering() const noexcept { return downwardMetering; }
         // [END MTDM-DOWNWARD-METERING-PUBLIC]
 
+        // [BEGIN MTDM-UPWARD-METERING-PUBLIC]
+        struct UpwardMetering
+        {
+            // Boost in dB as positive numbers (0 = no boost).
+            std::atomic<float> boostDbCurrent   { 0.0f };
+            std::atomic<float> boostDbBlockPeak { 0.0f };
+            std::atomic<float> boostDbHold      { 0.0f };
+        };
+
+        const UpwardMetering& getUpwardMetering() const noexcept { return upwardMetering; }
+        // [END MTDM-UPWARD-METERING-PUBLIC]
+
         void prepare (const ModulePrepareSpec& spec) override;
         void reset() override;
 
@@ -334,6 +346,16 @@ namespace levelscope
 
         LookaheadLimiterStage limiterStage;
         // [END MTDM-LIMITER-STRATEGY-TYPES]
+
+        // [BEGIN MTDM-UPWARD-METERING-MEMBERS]
+        UpwardMetering upwardMetering;
+
+        float upwardHoldDbInternal = 0.0f;
+        int   upwardHoldSamplesLeft = 0;
+
+        static constexpr float upwardHoldTimeSeconds = 0.25f;
+        static constexpr float upwardHoldDecayDbPerSecond = 12.0f;
+        // [END MTDM-UPWARD-METERING-MEMBERS]
 
         // [BEGIN MTDM-LIMITER-METERING-MEMBERS]
         LimiterMetering limiterMetering;
