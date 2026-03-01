@@ -427,8 +427,10 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             const auto lim  = processor.getLimiterMeteringSnapshot();
             const auto down = processor.getDownwardMeteringSnapshot();
 
-            // Upward metering not published yet -> placeholder
-            const float upBoostDb = 0.0f;
+            // [BEGIN UI3C-UPWARD-METER-USE-SNAPSHOT]
+            const auto up = processor.getUpwardMeteringSnapshot();
+            // We render HOLD as the filled bar (stable), and CURRENT as a thin marker (live).
+            // [END UI3C-UPWARD-METER-USE-SNAPSHOT]
 
             auto r = metersAreaI.toFloat().reduced (6.0f, 6.0f);
 
@@ -513,22 +515,37 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
                 return juce::jlimit (0.0f, 1.0f, db / maxDb);
             };
 
-            auto drawUp = [&] (juce::Rectangle<float> colR, float db)
+            // [BEGIN UI3C-UPWARD-METER-DRAW-HOLD-AND-CURRENT]
+            auto drawUp = [&] (juce::Rectangle<float> colR, float holdDb, float currentDb)
             {
                 drawFrame (colR);
 
                 auto inner = colR.reduced (2.0f);
                 inner = inner.withTrimmedBottom (14.0f);
-    
-                const float v01 = mapGr01 (db);
-                const float fillH = inner.getHeight() * v01;
+
+                const float hold01 = mapGr01 (juce::jmax (0.0f, holdDb));
+                const float cur01  = mapGr01 (juce::jmax (0.0f, currentDb));
+
+                // Filled bar = HOLD (stable)
+                const float fillH = inner.getHeight() * hold01;
                 auto filled = inner.withY (inner.getBottom() - fillH).withHeight (fillH);
 
-                g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.65f));
+                g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.55f));
                 g.fillRoundedRectangle (filled, 2.0f);
-    
+
+                // Hold top line (white)
+                const float yHold = inner.getBottom() - inner.getHeight() * hold01;
+                g.setColour (juce::Colours::white.withMultipliedAlpha (0.70f));
+                g.drawLine (inner.getX(), yHold, inner.getRight(), yHold, 1.2f);
+
+                // Current marker (bright green)
+                const float yCur = inner.getBottom() - inner.getHeight() * cur01;
+                g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.90f));
+                g.drawLine (inner.getX(), yCur, inner.getRight(), yCur, 1.2f);
+
                 drawLabel (colR, "Up");
             };
+            // [END UI3C-UPWARD-METER-DRAW-HOLD-AND-CURRENT]
 
             auto drawDown = [&] (juce::Rectangle<float> colR, float db, const juce::String& label, juce::Colour c)
             {
@@ -549,7 +566,9 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
             // Columns: In | Up | Dn | Lim | Out
             drawIoMeter (col (0), juce::Colours::deepskyblue, io.inRmsDbCurrent,  io.inPeakDbCurrent,  io.inPeakDbHold,  "In");
-            drawUp      (col (1), upBoostDb);
+            // [BEGIN UI3C-UPWARD-METER-CALL]
+            drawUp      (col (1), up.boostDbHold, up.boostDbCurrent);
+            // [END UI3C-UPWARD-METER-CALL]
             drawDown    (col (2), down.grDbHold, "Dn",  juce::Colours::deepskyblue);
             drawDown    (col (3), lim.grDbHold,  "Lim", juce::Colours::orange);
             drawIoMeter (col (4), juce::Colours::orange,     io.outRmsDbCurrent, io.outPeakDbCurrent, io.outPeakDbHold, "Out");
