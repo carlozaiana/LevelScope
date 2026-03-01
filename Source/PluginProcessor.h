@@ -87,6 +87,17 @@ public:
     LimiterMeteringSnapshot getLimiterMeteringSnapshot() const noexcept;
     // [END LS-LIMITER-METERING-SNAPSHOT-API]
 
+    // [BEGIN LS-UPWARD-METERING-SNAPSHOT-API]
+    struct UpwardMeteringSnapshot
+    {
+        float boostDbCurrent   = 0.0f;
+        float boostDbBlockPeak = 0.0f;
+        float boostDbHold      = 0.0f;
+    };
+
+    UpwardMeteringSnapshot getUpwardMeteringSnapshot() const noexcept;
+    // [END LS-UPWARD-METERING-SNAPSHOT-API]
+
     // [BEGIN LS-DOWNWARD-METERING-SNAPSHOT-API]
     struct DownwardMeteringSnapshot
     {

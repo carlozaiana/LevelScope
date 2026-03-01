@@ -703,6 +703,23 @@ void LevelScopeAudioProcessor::timerCallback()
 }
 // [END LS-LATENCY-LISTENER-IMPL]
 
+// [BEGIN LS-UPWARD-METERING-SNAPSHOT-IMPL]
+LevelScopeAudioProcessor::UpwardMeteringSnapshot LevelScopeAudioProcessor::getUpwardMeteringSnapshot() const noexcept
+{
+    UpwardMeteringSnapshot s;
+
+    auto m = std::atomic_load_explicit (&mtdmForUI, std::memory_order_acquire);
+    if (! m)
+        return s;
+
+    const auto& met = m->getUpwardMetering();
+    s.boostDbCurrent   = met.boostDbCurrent.load   (std::memory_order_relaxed);
+    s.boostDbBlockPeak = met.boostDbBlockPeak.load (std::memory_order_relaxed);
+    s.boostDbHold      = met.boostDbHold.load      (std::memory_order_relaxed);
+    return s;
+}
+// [END LS-UPWARD-METERING-SNAPSHOT-IMPL]
+
 // [BEGIN LS-LIMITER-METERING-SNAPSHOT-IMPL]
 LevelScopeAudioProcessor::LimiterMeteringSnapshot LevelScopeAudioProcessor::getLimiterMeteringSnapshot() const noexcept
 {
