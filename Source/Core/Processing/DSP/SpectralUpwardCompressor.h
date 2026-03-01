@@ -113,6 +113,13 @@ public:
 
     int getLatencySamples() const noexcept { return activeFftSize; }
 
+    // [BEGIN LS-SUC-UPWARD-METERING-GETTERS]
+    // AUDIO THREAD writes, UI thread may read via MTDM snapshot on message thread.
+    // Linear gain >= 1.0. (1.0 means no boost)
+    float getLastBlockMaxLinearGain()  const noexcept { return lastBlockMaxLinearGain; }
+    float getLastBlockLastLinearGain() const noexcept { return lastBlockLastLinearGain; }
+    // [END LS-SUC-UPWARD-METERING-GETTERS]
+
 private:
     //==============================================================================
     // Constants / limits
@@ -371,6 +378,16 @@ private:
     std::array<float, kMaxBands> bandTargetGain {};
     std::array<float, kMaxBands> bandTargetGainFreqSmoothed {};
     // [END LS-SUC-GLOBAL-ZONE-AND-FREQ-SMOOTH-MEMBERS]
+
+    // [BEGIN LS-SUC-UPWARD-METERING-MEMBERS]
+    // Upward boost metering (linear gain >= 1). Updated on audio thread.
+    float lastBlockMaxLinearGain  = 1.0f;
+    float lastBlockLastLinearGain = 1.0f;
+
+    // Updated by processFrameAllChannels(), consumed by process() when a frame is processed.
+    float lastFrameMaxLinearGain  = 1.0f;
+    float lastFrameLastLinearGain = 1.0f;
+    // [END LS-SUC-UPWARD-METERING-MEMBERS]
 
     // change tracking (no allocations; triggers reset/recompute safely)
     int lastBandsPerOctChoice = 2;

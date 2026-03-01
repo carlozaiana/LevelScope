@@ -81,6 +81,11 @@ public:
 
     int getLatencySamples() const noexcept { return 0; }
 
+    // [BEGIN LS-BUC-UPWARD-METERING-GETTERS]
+    float getLastBlockMaxLinearGain()  const noexcept { return lastBlockMaxLinearGain; }
+    float getLastBlockLastLinearGain() const noexcept { return lastBlockLastLinearGain; }
+    // [END LS-BUC-UPWARD-METERING-GETTERS]
+
 private:
     static float softKnee01 (float levelDb, float thresholdDb, float kneeWidthDb) noexcept
     {
@@ -120,6 +125,11 @@ private:
 
     float lastAttackMs  = -1.0f;
     float lastReleaseMs = -1.0f;
+
+    // [BEGIN LS-BUC-UPWARD-METERING-MEMBERS]
+    float lastBlockMaxLinearGain  = 1.0f;
+    float lastBlockLastLinearGain = 1.0f;
+    // [END LS-BUC-UPWARD-METERING-MEMBERS]
 
     // [BEGIN LS-BUC-STAGE-E-MASK-MEMBERS]
     static constexpr int kMaxMaskChannels = 16;

@@ -421,6 +421,11 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
     if (pendingHardReset)
         reset();
 
+    // [BEGIN LS-SUC-UPWARD-METERING-FRAME-INIT]
+    lastFrameMaxLinearGain  = 1.0f;
+    lastFrameLastLinearGain = 1.0f;
+    // [END LS-SUC-UPWARD-METERING-FRAME-INIT]
+
     const auto& pr = profiles[(size_t) activeFftChoice];
     const int fftSize = pr.fftSize;
     const int hopSize = pr.hopSize;
@@ -480,6 +485,11 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
     // --- Audition bypass: preserve delay pipeline, no gains
     if (params.auditionBypass)
     {
+        // [BEGIN LS-SUC-UPWARD-METERING-BYPASS-ZERO]
+        // No boost applied while bypassed
+        lastFrameMaxLinearGain  = 1.0f;
+        lastFrameLastLinearGain = 1.0f;
+        // [END LS-SUC-UPWARD-METERING-BYPASS-ZERO]
         for (int bi = 0; bi < numBands; ++bi)
             bandSmoothers[(size_t) bi].reset();
 
@@ -663,6 +673,11 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
 
             const float g = bandSmoothers[(size_t) bi].process (bandTargetGainFreqSmoothed[(size_t) bi]);
 
+            // [BEGIN LS-SUC-UPWARD-METERING-LINKED-UPDATE]
+            lastFrameMaxLinearGain  = std::max (lastFrameMaxLinearGain,  g);
+            lastFrameLastLinearGain = g;
+            // [END LS-SUC-UPWARD-METERING-LINKED-UPDATE]
+
             for (int ai = 0; ai < applyCount; ++ai)
             {
                 const int chAp = (int) applyIdx[(size_t) ai];
@@ -803,6 +818,11 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
                 const float g =
                     bandSmoothersUnlinked[(size_t) chAp][(size_t) bi].process (bandTargetGainFreqSmoothed[(size_t) bi]);
 
+                // [BEGIN LS-SUC-UPWARD-METERING-UNLINKED-UPDATE]
+                lastFrameMaxLinearGain  = std::max (lastFrameMaxLinearGain,  g);
+                lastFrameLastLinearGain = g;
+                // [END LS-SUC-UPWARD-METERING-UNLINKED-UPDATE]
+
                 auto& st = ch[(size_t) chAp];
 
                 for (int bin = b0; bin <= b1; ++bin)
@@ -859,6 +879,12 @@ void SpectralUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexce
 
     const int chToProcess = std::min (preparedNumChannels, numChInBuf);
 
+    // [BEGIN LS-SUC-UPWARD-METERING-BLOCK-INIT]
+    bool hadFrameThisCall = false;
+    float blockMaxG  = 1.0f;
+    float blockLastG = lastBlockLastLinearGain;
+    // [END LS-SUC-UPWARD-METERING-BLOCK-INIT]
+
     // Sample-by-sample framing keeps all channels aligned and avoids extra ring buffers.
     for (int i = 0; i < numSamples; ++i)
     {
@@ -871,8 +897,16 @@ void SpectralUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexce
 
         ++inputWritePos;
 
+        // [BEGIN LS-SUC-UPWARD-METERING-CAPTURE-FRAME]
         if (inputWritePos >= activeFftSize)
+        {
             processFrameAllChannels();
+
+            hadFrameThisCall = true;
+            blockMaxG  = std::max (blockMaxG, lastFrameMaxLinearGain);
+            blockLastG = lastFrameLastLinearGain;
+        }
+        // [END LS-SUC-UPWARD-METERING-CAPTURE-FRAME]
 
         // Pop output
         for (int chIdx = 0; chIdx < chToProcess; ++chIdx)
@@ -881,5 +915,12 @@ void SpectralUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexce
             buffer.getWritePointer (chIdx)[i] = (st.fifoCount > 0 ? popFifo (st) : 0.0f);
         }
     }
+    // [BEGIN LS-SUC-UPWARD-METERING-BLOCK-STORE]
+    if (hadFrameThisCall)
+    {
+        lastBlockMaxLinearGain  = std::max (1.0f, blockMaxG);
+        lastBlockLastLinearGain = std::max (1.0f, blockLastG);
+    }
+    // [END LS-SUC-UPWARD-METERING-BLOCK-STORE]
 }
 } // namespace levelscope::dsp

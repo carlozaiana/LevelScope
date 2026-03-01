@@ -149,6 +149,12 @@ void BroadbandUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexc
         return;
 
     // [BEGIN LS-BUC-STAGE-E-PROCESS-MASKS-AND-UNLINKED]
+
+    // [BEGIN LS-BUC-UPWARD-METERING-BLOCK-INIT]
+    float blockMaxG  = 1.0f;
+    float blockLastG = 1.0f;
+    // [END LS-BUC-UPWARD-METERING-BLOCK-INIT]
+
     const int chToProcess = std::min (preparedNumChannels > 0 ? preparedNumChannels : numChInBuf, numChInBuf);
 
     const float t0 = std::min (params.t0Lufs, params.t1Lufs);
@@ -239,6 +245,11 @@ void BroadbandUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexc
             const float aG = (gainTarget > gainZ ? aGainA : aGainR);
             gainZ = aG * gainZ + (1.0f - aG) * gainTarget;
 
+            // [BEGIN LS-BUC-UPWARD-METERING-LINKED-UPDATE]
+            blockMaxG  = std::max (blockMaxG, gainZ);
+            blockLastG = gainZ;
+            // [END LS-BUC-UPWARD-METERING-LINKED-UPDATE]
+
             for (int ai = 0; ai < applyCount; ++ai)
             {
                 const int ch = (int) applyIdx[(size_t) ai];
@@ -252,6 +263,10 @@ void BroadbandUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexc
         // Unlinked: per-channel detectors/gains (apply channels only)
         for (int i = 0; i < numSamples; ++i)
         {
+            // [BEGIN LS-BUC-UPWARD-METERING-UNLINKED-SAMPLE-MAX]
+            float sampleMaxG = 1.0f;
+            // [END LS-BUC-UPWARD-METERING-UNLINKED-SAMPLE-MAX]
+
             for (int ai = 0; ai < applyCount; ++ai)
             {
                 const int ch = (int) applyIdx[(size_t) ai];
@@ -297,10 +312,22 @@ void BroadbandUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexc
                 const float aG = (gainTarget > gz ? aGainA : aGainR);
                 gz = aG * gz + (1.0f - aG) * gainTarget;
 
+                // [BEGIN LS-BUC-UPWARD-METERING-UNLINKED-UPDATE]
+                sampleMaxG = std::max (sampleMaxG, gz);
+                // [END LS-BUC-UPWARD-METERING-UNLINKED-UPDATE]
+
                 chans[ch][i] *= gz;
             }
+            // [BEGIN LS-BUC-UPWARD-METERING-UNLINKED-STORE]
+            blockMaxG  = std::max (blockMaxG, sampleMaxG);
+            blockLastG = sampleMaxG;
+            // [END LS-BUC-UPWARD-METERING-UNLINKED-STORE]
         }
     }
+    // [BEGIN LS-BUC-UPWARD-METERING-BLOCK-STORE]
+    lastBlockMaxLinearGain  = std::max (1.0f, blockMaxG);
+    lastBlockLastLinearGain = std::max (1.0f, blockLastG);
+    // [END LS-BUC-UPWARD-METERING-BLOCK-STORE]
     // [END LS-BUC-STAGE-E-PROCESS-MASKS-AND-UNLINKED]
 }
 } // namespace levelscope::dsp
