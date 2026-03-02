@@ -1127,17 +1127,13 @@ void MtdmLimiterCard::resized()
 //==============================================================================
 
 // [BEGIN UI4A1-CARDS-RESIZABLE-CTOR]
-// [BEGIN UI4A3-CARDS-ACCORDION-CTOR]
+// [BEGIN UI4A3-CARDS-ACCORDION-CTOR-FIX]
 MtdmCardsContent::MtdmCardsContent (LevelScopeAudioProcessor& p)
     : levelling(),
       zones (p),
       upward (p),
       downward (p),
-      limiter (p),
-      bar01 (*this, CardResizerBar::Boundary::levellingZones),
-      bar12 (*this, CardResizerBar::Boundary::zonesUpward),
-      bar23 (*this, CardResizerBar::Boundary::upwardDownward),
-      bar34 (*this, CardResizerBar::Boundary::downwardLimiter)
+      limiter (p)
 {
     addAndMakeVisible (levelling);
     addAndMakeVisible (bar01);
@@ -1148,23 +1144,12 @@ MtdmCardsContent::MtdmCardsContent (LevelScopeAudioProcessor& p)
     addAndMakeVisible (downward);
     addAndMakeVisible (bar34);
     addAndMakeVisible (limiter);
-}
-// [END UI4A3-CARDS-ACCORDION-CTOR]
 
-    // Layout items: card, bar, card, bar, ...
-    // setItemLayout (index, minSize, maxSize, preferredSize)
-    // Bars have near-fixed size; cards have flexible size.
-    cardsLayout.setItemLayout (0,  60, -1.0,  80); // levelling
-    cardsLayout.setItemLayout (1,   6,  10.0,  8); // bar
-    cardsLayout.setItemLayout (2,  34, -1.0, 220); // zones: allow collapse (title-only + maybe enabled)
-    cardsLayout.setItemLayout (3,   6,  10.0,  8); // bar
-    cardsLayout.setItemLayout (4,  34, -1.0, 220); // upward: allow collapse (title-only)
-    cardsLayout.setItemLayout (5,   6,  10.0,  8); // bar
-    cardsLayout.setItemLayout (6,  26, -1.0, 220); // downward: enabled toggle header
-    cardsLayout.setItemLayout (7,   6,  10.0,  8); // bar
-    cardsLayout.setItemLayout (8,  26, -1.0, 260); // limiter: enabled toggle header
+    // IMPORTANT:
+    // No cardsLayout here. No setItemLayout calls.
+    // Resizer bars are custom components (CardResizerBar) and act accordion-style.
 }
-// [END UI4A1-CARDS-RESIZABLE-CTOR]
+// [END UI4A3-CARDS-ACCORDION-CTOR-FIX]
 
 // [BEGIN UI4A3-CARDS-ACCORDION-PREFERREDHEIGHT]
 int MtdmCardsContent::getPreferredHeight() const noexcept
