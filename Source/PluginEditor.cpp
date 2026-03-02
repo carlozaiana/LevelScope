@@ -1127,12 +1127,17 @@ void MtdmLimiterCard::resized()
 //==============================================================================
 
 // [BEGIN UI4A1-CARDS-RESIZABLE-CTOR]
+// [BEGIN UI4A3-CARDS-ACCORDION-CTOR]
 MtdmCardsContent::MtdmCardsContent (LevelScopeAudioProcessor& p)
     : levelling(),
       zones (p),
       upward (p),
       downward (p),
-      limiter (p)
+      limiter (p),
+      bar01 (*this, CardResizerBar::Boundary::levellingZones),
+      bar12 (*this, CardResizerBar::Boundary::zonesUpward),
+      bar23 (*this, CardResizerBar::Boundary::upwardDownward),
+      bar34 (*this, CardResizerBar::Boundary::downwardLimiter)
 {
     addAndMakeVisible (levelling);
     addAndMakeVisible (bar01);
@@ -1143,6 +1148,8 @@ MtdmCardsContent::MtdmCardsContent (LevelScopeAudioProcessor& p)
     addAndMakeVisible (downward);
     addAndMakeVisible (bar34);
     addAndMakeVisible (limiter);
+}
+// [END UI4A3-CARDS-ACCORDION-CTOR]
 
     // Layout items: card, bar, card, bar, ...
     // setItemLayout (index, minSize, maxSize, preferredSize)
@@ -1159,40 +1166,125 @@ MtdmCardsContent::MtdmCardsContent (LevelScopeAudioProcessor& p)
 }
 // [END UI4A1-CARDS-RESIZABLE-CTOR]
 
-// [BEGIN UI4A1-CARDS-PREFERRED-HEIGHT]
+// [BEGIN UI4A3-CARDS-ACCORDION-PREFERREDHEIGHT]
 int MtdmCardsContent::getPreferredHeight() const noexcept
 {
-    // Used by the Viewport host to size the content.
-    // Resizer bars redistribute height; total height comes from the viewport host.
-    if (contentPreferredHeightPx > 0)
-        return contentPreferredHeightPx;
+    const int bars = 4 * barHeightPx;
 
-    // Fallback initial value (before first resized)
-    return 900;
+    const int sumCards =
+        cardHeights.levelling +
+        cardHeights.zones +
+        cardHeights.upward +
+        cardHeights.downward +
+        cardHeights.limiter;
+
+    const int total = sumCards + bars;
+
+    return juce::jmax (total, 1);
 }
-// [END UI4A1-CARDS-PREFERRED-HEIGHT]
+// [END UI4A3-CARDS-ACCORDION-PREFERREDHEIGHT]
 
-// [BEGIN UI4A1-CARDS-RESIZED-LAYOUT]
+// [BEGIN UI4A3-CARDS-ACCORDION-RESIZED]
 void MtdmCardsContent::resized()
 {
-    juce::Component* comps[] =
+    auto r = getLocalBounds();
+
+    auto takeCard = [&] (int h)
     {
-        &levelling, &bar01,
-        &zones,     &bar12,
-        &upward,    &bar23,
-        &downward,  &bar34,
-        &limiter
+        h = juce::jmax (0, h);
+        return r.removeFromTop (h);
     };
 
-    cardsLayout.layOutComponents (comps,
-                                 9,
-                                 0, 0, getWidth(), getHeight(),
-                                 true,  // vertically stacked
-                                 true); // resize other dimension too
+    auto takeBar = [&]
+    {
+        return r.removeFromTop (barHeightPx);
+    };
 
-    contentPreferredHeightPx = juce::jmax (getHeight(), 1);
+    levelling.setBounds (takeCard (cardHeights.levelling));
+    bar01.setBounds     (takeBar());
+    zones.setBounds     (takeCard (cardHeights.zones));
+    bar12.setBounds     (takeBar());
+    upward.setBounds    (takeCard (cardHeights.upward));
+    bar23.setBounds     (takeBar());
+    downward.setBounds  (takeCard (cardHeights.downward));
+    bar34.setBounds     (takeBar());
+    limiter.setBounds   (takeCard (cardHeights.limiter));
+
+    contentPreferredHeightPx = getHeight();
 }
-// [END UI4A1-CARDS-RESIZED-LAYOUT]
+// [END UI4A3-CARDS-ACCORDION-RESIZED]
+
+// [BEGIN UI4A3-CARDS-ACCORDION-RESIZER-IMPL]
+MtdmCardsContent::CardResizerBar::CardResizerBar (MtdmCardsContent& ownerIn, Boundary b)
+    : owner (ownerIn), boundary (b)
+{
+    setMouseCursor (juce::MouseCursor::UpDownResizeCursor);
+    setRepaintsOnMouseActivity (true);
+}
+
+void MtdmCardsContent::CardResizerBar::paint (juce::Graphics& g)
+{
+    auto r = getLocalBounds().toFloat();
+
+    const bool over = isMouseOver();
+    const float a = over ? 0.22f : 0.14f;
+
+    g.setColour (juce::Colours::white.withMultipliedAlpha (a));
+    g.drawLine (r.getX(), r.getCentreY(), r.getRight(), r.getCentreY(), 1.0f);
+
+    // little handle
+    g.setColour (juce::Colours::white.withMultipliedAlpha (over ? 0.35f : 0.22f));
+    g.drawLine (r.getX() + 10.0f, r.getCentreY(), r.getX() + 40.0f, r.getCentreY(), 2.0f);
+}
+
+void MtdmCardsContent::CardResizerBar::mouseEnter (const juce::MouseEvent&) {}
+void MtdmCardsContent::CardResizerBar::mouseExit  (const juce::MouseEvent&) {}
+
+void MtdmCardsContent::CardResizerBar::mouseDown (const juce::MouseEvent& e)
+{
+    dragStartY = e.getPosition().y;
+    dragStartHeights = owner.cardHeights;
+}
+
+void MtdmCardsContent::CardResizerBar::mouseDrag (const juce::MouseEvent& e)
+{
+    const int dy = e.getPosition().y - dragStartY;
+
+    owner.cardHeights = dragStartHeights;
+    owner.applyDragToBoundary (boundary, dy);
+
+    // Resize the content component itself so the viewport scroll range updates
+    const int newH = owner.getPreferredHeight();
+    owner.setSize (owner.getWidth(), newH);
+    owner.resized();
+    owner.repaint();
+}
+
+void MtdmCardsContent::applyDragToBoundary (CardResizerBar::Boundary b, int dy)
+{
+    // dy > 0: drag downward => increase the card ABOVE the bar
+    auto clamp = [] (int v, int lo, int hi) { return juce::jlimit (lo, hi, v); };
+
+    switch (b)
+    {
+        case CardResizerBar::Boundary::levellingZones:
+            cardHeights.levelling = clamp (cardHeights.levelling + dy, minLevellingPx, 6000);
+            break;
+
+        case CardResizerBar::Boundary::zonesUpward:
+            cardHeights.zones = clamp (cardHeights.zones + dy, minZonesPx, 6000);
+            break;
+
+        case CardResizerBar::Boundary::upwardDownward:
+            cardHeights.upward = clamp (cardHeights.upward + dy, minUpwardPx, 6000);
+            break;
+
+        case CardResizerBar::Boundary::downwardLimiter:
+            cardHeights.downward = clamp (cardHeights.downward + dy, minDownwardPx, 6000);
+            break;
+    }
+}
+// [END UI4A3-CARDS-ACCORDION-RESIZER-IMPL]
 
 //==============================================================================
 // Public panel component (viewport)

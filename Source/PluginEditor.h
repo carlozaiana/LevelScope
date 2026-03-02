@@ -327,17 +327,59 @@ private:
     MtdmDownwardCard downward;
     MtdmLimiterCard  limiter;
 
-    // [BEGIN UI4A1-CARDS-RESIZABLE-LAYOUT-MEMBERS]
-    juce::StretchableLayoutManager cardsLayout;
+    // [BEGIN UI4A3-CARDS-ACCORDION-MEMBERS]
+    struct CardHeights
+    {
+        int levelling = 70;
+        int zones     = 220;
+        int upward    = 220;
+        int downward  = 180;
+        int limiter   = 260;
+    };
 
-    // Horizontal resizer bars between cards (drag up/down)
-    juce::StretchableLayoutResizerBar bar01 { &cardsLayout, 1, false };
-    juce::StretchableLayoutResizerBar bar12 { &cardsLayout, 3, false };
-    juce::StretchableLayoutResizerBar bar23 { &cardsLayout, 5, false };
-    juce::StretchableLayoutResizerBar bar34 { &cardsLayout, 7, false };
+    CardHeights cardHeights;
+
+    static constexpr int barHeightPx = 8;
+
+    static constexpr int minLevellingPx = 50;
+    static constexpr int minZonesPx     = 34;
+    static constexpr int minUpwardPx    = 34;
+    static constexpr int minDownwardPx  = 26;
+    static constexpr int minLimiterPx   = 26;
+
+    class CardResizerBar : public juce::Component
+    {
+    public:
+        enum class Boundary { levellingZones, zonesUpward, upwardDownward, downwardLimiter };
+
+        CardResizerBar (MtdmCardsContent& ownerIn, Boundary b);
+
+        void paint (juce::Graphics& g) override;
+
+        void mouseEnter (const juce::MouseEvent&) override;
+        void mouseExit  (const juce::MouseEvent&) override;
+        void mouseDown  (const juce::MouseEvent& e) override;
+        void mouseDrag  (const juce::MouseEvent& e) override;
+
+    private:
+        MtdmCardsContent& owner;
+        Boundary boundary;
+
+        int dragStartY = 0;
+        CardHeights dragStartHeights;
+
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CardResizerBar)
+    };
+
+    CardResizerBar bar01 { *this, CardResizerBar::Boundary::levellingZones };
+    CardResizerBar bar12 { *this, CardResizerBar::Boundary::zonesUpward };
+    CardResizerBar bar23 { *this, CardResizerBar::Boundary::upwardDownward };
+    CardResizerBar bar34 { *this, CardResizerBar::Boundary::downwardLimiter };
+
+    void applyDragToBoundary (CardResizerBar::Boundary b, int dy);
 
     int contentPreferredHeightPx = 0;
-    // [END UI4A1-CARDS-RESIZABLE-LAYOUT-MEMBERS]
+    // [END UI4A3-CARDS-ACCORDION-MEMBERS]
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MtdmCardsContent)
 };
