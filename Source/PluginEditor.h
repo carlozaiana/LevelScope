@@ -365,8 +365,10 @@ private:
         MtdmCardsContent& owner;
         Boundary boundary;
 
-        int dragStartY = 0;
+        // [BEGIN UI4A3-RESIZER-SCREENPOS]
+        int dragStartScreenY = 0; // stable even if the component moves during drag
         CardHeights dragStartHeights;
+        // [END UI4A3-RESIZER-SCREENPOS]
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CardResizerBar)
     };

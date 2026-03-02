@@ -1225,25 +1225,30 @@ void MtdmCardsContent::CardResizerBar::paint (juce::Graphics& g)
 void MtdmCardsContent::CardResizerBar::mouseEnter (const juce::MouseEvent&) {}
 void MtdmCardsContent::CardResizerBar::mouseExit  (const juce::MouseEvent&) {}
 
+// [BEGIN UI4A3-RESIZER-MOUSEDOWN-SCREENY]
 void MtdmCardsContent::CardResizerBar::mouseDown (const juce::MouseEvent& e)
 {
-    dragStartY = e.getPosition().y;
+    dragStartScreenY = e.getScreenPosition().y;
     dragStartHeights = owner.cardHeights;
 }
+// [END UI4A3-RESIZER-MOUSEDOWN-SCREENY]
 
+// [BEGIN UI4A3-RESIZER-MOUSEDRAG-SCREENY]
 void MtdmCardsContent::CardResizerBar::mouseDrag (const juce::MouseEvent& e)
 {
-    const int dy = e.getPosition().y - dragStartY;
+    const int dy = e.getScreenPosition().y - dragStartScreenY;
 
     owner.cardHeights = dragStartHeights;
     owner.applyDragToBoundary (boundary, dy);
 
-    // Resize the content component itself so the viewport scroll range updates
+    // Resize the content component itself so the viewport scroll range updates.
+    // setSize() will trigger layout via resized().
     const int newH = owner.getPreferredHeight();
     owner.setSize (owner.getWidth(), newH);
-    owner.resized();
+
     owner.repaint();
 }
+// [END UI4A3-RESIZER-MOUSEDRAG-SCREENY]
 
 void MtdmCardsContent::applyDragToBoundary (CardResizerBar::Boundary b, int dy)
 {
