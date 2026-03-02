@@ -598,17 +598,26 @@ void MtdmCardComponent::paint (juce::Graphics& g)
     g.drawRoundedRectangle (r, 8.0f, 1.0f);
 }
 
+// [BEGIN UI4A3-CARD-CONTENTAREA-TITLE-OPTIONAL]
 juce::Rectangle<int> MtdmCardComponent::getContentArea() const
 {
     auto r = getLocalBounds().reduced (10);
-    r.removeFromTop (24);
+
+    const int headerH = (title.isVisible() ? 24 : 0);
+    if (headerH > 0)
+        r.removeFromTop (headerH);
+
     return r;
 }
+// [END UI4A3-CARD-CONTENTAREA-TITLE-OPTIONAL]
 
+// [BEGIN UI4A3-CARD-RESIZED-TITLE-OPTIONAL]
 void MtdmCardComponent::resized()
 {
-    title.setBounds (getLocalBounds().reduced (10, 6).removeFromTop (18));
+    if (title.isVisible())
+        title.setBounds (getLocalBounds().reduced (10, 6).removeFromTop (18));
 }
+// [END UI4A3-CARD-RESIZED-TITLE-OPTIONAL]
 
 //==============================================================================
 // Levelling placeholder
@@ -804,18 +813,30 @@ void MtdmZonesCard::resized()
 
     mtdmEnabledButton.setBounds (r.removeFromTop (22));
 
-    // [BEGIN UI4A2-CARD-SECTION-GAP]
-    r.removeFromTop (4);
-    // [END UI4A2-CARD-SECTION-GAP]
+    // [BEGIN UI4A3-ZONES-COMPACT-HIDE]
+    const bool compact = (r.getHeight() < 70);
+
+    t0Label.setVisible (! compact);  t0Slider.setVisible (! compact);
+    t1Label.setVisible (! compact);  t1Slider.setVisible (! compact);
+    t2Label.setVisible (! compact);  t2Slider.setVisible (! compact);
+    t3Label.setVisible (! compact);  t3Slider.setVisible (! compact);
+
+    if (compact)
+        return;
+    // [END UI4A3-ZONES-COMPACT-HIDE]
+
+    // [BEGIN UI4A3-ZONES-SECTION-GAP]
+    r.removeFromTop (2);
+    // [END UI4A3-ZONES-SECTION-GAP]
 
     auto row = [&] (juce::Label& lab, juce::Slider& s)
     {
         auto rr = r.removeFromTop (24);
         lab.setBounds (rr.removeFromLeft (90));
         s.setBounds (rr);
-        // [BEGIN UI4A2-CARD-ROW-GAP]
-        r.removeFromTop (3);
-        // [END UI4A2-CARD-ROW-GAP]
+        // [BEGIN UI4A3-ROW-GAP-ZERO]
+        r.removeFromTop (0);
+        // [END UI4A3-ROW-GAP-ZERO]
     };
 
     row (t0Label, t0Slider);
@@ -873,22 +894,37 @@ void MtdmUpwardCard::resized()
     MtdmCardComponent::resized();
     auto r = getContentArea();
 
+    // [BEGIN UI4A3-UPWARD-COMPACT-HIDE]
+    const bool compact = (r.getHeight() < 70);
+
+    modeLabel.setVisible (! compact);
+    modeBox.setVisible (! compact);
+
+    amountLabel.setVisible (! compact);  amountSlider.setVisible (! compact);
+    maxBoostLabel.setVisible (! compact);maxBoostSlider.setVisible (! compact);
+    attackLabel.setVisible (! compact);  attackSlider.setVisible (! compact);
+    releaseLabel.setVisible (! compact); releaseSlider.setVisible (! compact);
+
+    if (compact)
+        return;
+    // [END UI4A3-UPWARD-COMPACT-HIDE]
+
     auto rr = r.removeFromTop (24);
     modeLabel.setBounds (rr.removeFromLeft (90));
     modeBox.setBounds (rr);
 
-    // [BEGIN UI4A2-CARD-SECTION-GAP-UP]
-    r.removeFromTop (4);
-    // [END UI4A2-CARD-SECTION-GAP-UP]
+    // [BEGIN UI4A3-UPWARD-SECTION-GAP]
+    r.removeFromTop (2);
+    // [END UI4A3-UPWARD-SECTION-GAP]
 
     auto row = [&] (juce::Label& lab, juce::Slider& s)
     {
         auto r2 = r.removeFromTop (24);
         lab.setBounds (r2.removeFromLeft (90));
         s.setBounds (r2);
-        // [BEGIN UI4A2-CARD-ROW-GAP-UP]
-        r.removeFromTop (3);
-        // [END UI4A2-CARD-ROW-GAP-UP]
+        // [BEGIN UI4A3-ROW-GAP-ZERO-UP]
+        r.removeFromTop (0);
+        // [END UI4A3-ROW-GAP-ZERO-UP]
     };
 
     row (amountLabel, amountSlider);
@@ -901,10 +937,13 @@ void MtdmUpwardCard::resized()
 // Downward
 //==============================================================================
 
+// [BEGIN UI4A3-DOWNWARD-HIDE-TITLE]
 MtdmDownwardCard::MtdmDownwardCard (LevelScopeAudioProcessor& p)
-    : MtdmCardComponent ("Downward (Essentials)"),
+    : MtdmCardComponent (""), // title hidden; enabled toggle acts as header
       apvts (p.getAPVTS())
 {
+    title.setVisible (false);
+// [END UI4A3-DOWNWARD-HIDE-TITLE]
     using namespace levelscope::mtdm::ParamIDs;
 
     enabledButton.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.90f));
@@ -944,18 +983,31 @@ void MtdmDownwardCard::resized()
     auto r = getContentArea();
 
     enabledButton.setBounds (r.removeFromTop (22));
-    // [BEGIN UI4A2-CARD-SECTION-GAP-DOWN]
-    r.removeFromTop (4);
-    // [END UI4A2-CARD-SECTION-GAP-DOWN]
+
+    // [BEGIN UI4A3-DOWNWARD-COMPACT-HIDE]
+    const bool compact = (r.getHeight() < 60);
+
+    ratioLabel.setVisible (! compact);   ratioSlider.setVisible (! compact);
+    attackLabel.setVisible (! compact);  attackSlider.setVisible (! compact);
+    releaseLabel.setVisible (! compact); releaseSlider.setVisible (! compact);
+    makeupLabel.setVisible (! compact);  makeupSlider.setVisible (! compact);
+
+    if (compact)
+        return;
+    // [END UI4A3-DOWNWARD-COMPACT-HIDE]
+
+    // [BEGIN UI4A3-DOWNWARD-SECTION-GAP]
+    r.removeFromTop (2);
+    // [END UI4A3-DOWNWARD-SECTION-GAP]
 
     auto row = [&] (juce::Label& lab, juce::Slider& s)
     {
         auto r2 = r.removeFromTop (24);
         lab.setBounds (r2.removeFromLeft (90));
         s.setBounds (r2);
-        // [BEGIN UI4A2-CARD-ROW-GAP-DOWN]
-        r.removeFromTop (3);
-        // [END UI4A2-CARD-ROW-GAP-DOWN]
+        // [BEGIN UI4A3-ROW-GAP-ZERO-DOWN]
+        r.removeFromTop (0);
+        // [END UI4A3-ROW-GAP-ZERO-DOWN]
     };
 
     row (ratioLabel, ratioSlider);
@@ -968,10 +1020,13 @@ void MtdmDownwardCard::resized()
 // Limiter
 //==============================================================================
 
+// [BEGIN UI4A3-LIMITER-HIDE-TITLE]
 MtdmLimiterCard::MtdmLimiterCard (LevelScopeAudioProcessor& p)
-    : MtdmCardComponent ("Limiter (Essentials)"),
+    : MtdmCardComponent (""), // title hidden; enabled toggle acts as header
       apvts (p.getAPVTS())
 {
+    title.setVisible (false);
+// [END UI4A3-LIMITER-HIDE-TITLE]
     using namespace levelscope::mtdm::ParamIDs;
 
     enabledButton.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.90f));
@@ -1024,6 +1079,21 @@ void MtdmLimiterCard::resized()
     auto r = getContentArea();
 
     enabledButton.setBounds (r.removeFromTop (22));
+
+    // [BEGIN UI4A3-LIMITER-COMPACT-HIDE]
+    const bool compact = (r.getHeight() < 60);
+
+    ceilingLabel.setVisible (! compact); ceilingSlider.setVisible (! compact);
+    lookLabel.setVisible (! compact);    lookSlider.setVisible (! compact);
+    osLabel.setVisible (! compact);      osBox.setVisible (! compact);
+    attackLabel.setVisible (! compact);  attackSlider.setVisible (! compact);
+    releaseLabel.setVisible (! compact); releaseSlider.setVisible (! compact);
+    driveLabel.setVisible (! compact);   driveSlider.setVisible (! compact);
+
+    if (compact)
+        return;
+    // [END UI4A3-LIMITER-COMPACT-HIDE]
+
     r.removeFromTop (8);
 
     auto rowS = [&] (juce::Label& lab, juce::Slider& s)
@@ -1031,9 +1101,9 @@ void MtdmLimiterCard::resized()
         auto r2 = r.removeFromTop (24);
         lab.setBounds (r2.removeFromLeft (90));
         s.setBounds (r2);
-        // [BEGIN UI4A2-CARD-ROW-GAP-LIM]
-        r.removeFromTop (3);
-        // [END UI4A2-CARD-ROW-GAP-LIM]
+        // [BEGIN UI4A3-ROW-GAP-ZERO-LIM]
+        r.removeFromTop (0);
+        // [END UI4A3-ROW-GAP-ZERO-LIM]
     };
 
     rowS (ceilingLabel, ceilingSlider);
@@ -1043,9 +1113,9 @@ void MtdmLimiterCard::resized()
     auto rOS = r.removeFromTop (24);
     osLabel.setBounds (rOS.removeFromLeft (90));
     osBox.setBounds (rOS);
-    // [BEGIN UI4A2-CARD-ROW-GAP-LIM-OS]
-    r.removeFromTop (3);
-    // [END UI4A2-CARD-ROW-GAP-LIM-OS]
+    // [BEGIN UI4A3-ROW-GAP-ZERO-LIM-OS]
+    r.removeFromTop (0);
+    // [END UI4A3-ROW-GAP-ZERO-LIM-OS]
 
     rowS (attackLabel, attackSlider);
     rowS (releaseLabel, releaseSlider);
@@ -1079,13 +1149,13 @@ MtdmCardsContent::MtdmCardsContent (LevelScopeAudioProcessor& p)
     // Bars have near-fixed size; cards have flexible size.
     cardsLayout.setItemLayout (0,  60, -1.0,  80); // levelling
     cardsLayout.setItemLayout (1,   6,  10.0,  8); // bar
-    cardsLayout.setItemLayout (2, 160, -1.0, 220); // zones (thresholds)
+    cardsLayout.setItemLayout (2,  34, -1.0, 220); // zones: allow collapse (title-only + maybe enabled)
     cardsLayout.setItemLayout (3,   6,  10.0,  8); // bar
-    cardsLayout.setItemLayout (4, 160, -1.0, 220); // upward essentials
+    cardsLayout.setItemLayout (4,  34, -1.0, 220); // upward: allow collapse (title-only)
     cardsLayout.setItemLayout (5,   6,  10.0,  8); // bar
-    cardsLayout.setItemLayout (6, 160, -1.0, 220); // downward essentials
+    cardsLayout.setItemLayout (6,  26, -1.0, 220); // downward: enabled toggle header
     cardsLayout.setItemLayout (7,   6,  10.0,  8); // bar
-    cardsLayout.setItemLayout (8, 200, -1.0, 260); // limiter essentials
+    cardsLayout.setItemLayout (8,  26, -1.0, 260); // limiter: enabled toggle header
 }
 // [END UI4A1-CARDS-RESIZABLE-CTOR]
 
