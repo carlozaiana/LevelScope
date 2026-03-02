@@ -804,14 +804,18 @@ void MtdmZonesCard::resized()
 
     mtdmEnabledButton.setBounds (r.removeFromTop (22));
 
-    r.removeFromTop (8);
+    // [BEGIN UI4A2-CARD-SECTION-GAP]
+    r.removeFromTop (4);
+    // [END UI4A2-CARD-SECTION-GAP]
 
     auto row = [&] (juce::Label& lab, juce::Slider& s)
     {
         auto rr = r.removeFromTop (24);
         lab.setBounds (rr.removeFromLeft (90));
         s.setBounds (rr);
-        r.removeFromTop (6);
+        // [BEGIN UI4A2-CARD-ROW-GAP]
+        r.removeFromTop (3);
+        // [END UI4A2-CARD-ROW-GAP]
     };
 
     row (t0Label, t0Slider);
@@ -873,14 +877,18 @@ void MtdmUpwardCard::resized()
     modeLabel.setBounds (rr.removeFromLeft (90));
     modeBox.setBounds (rr);
 
-    r.removeFromTop (8);
+    // [BEGIN UI4A2-CARD-SECTION-GAP-UP]
+    r.removeFromTop (4);
+    // [END UI4A2-CARD-SECTION-GAP-UP]
 
     auto row = [&] (juce::Label& lab, juce::Slider& s)
     {
         auto r2 = r.removeFromTop (24);
         lab.setBounds (r2.removeFromLeft (90));
         s.setBounds (r2);
-        r.removeFromTop (6);
+        // [BEGIN UI4A2-CARD-ROW-GAP-UP]
+        r.removeFromTop (3);
+        // [END UI4A2-CARD-ROW-GAP-UP]
     };
 
     row (amountLabel, amountSlider);
@@ -936,14 +944,18 @@ void MtdmDownwardCard::resized()
     auto r = getContentArea();
 
     enabledButton.setBounds (r.removeFromTop (22));
-    r.removeFromTop (8);
+    // [BEGIN UI4A2-CARD-SECTION-GAP-DOWN]
+    r.removeFromTop (4);
+    // [END UI4A2-CARD-SECTION-GAP-DOWN]
 
     auto row = [&] (juce::Label& lab, juce::Slider& s)
     {
         auto r2 = r.removeFromTop (24);
         lab.setBounds (r2.removeFromLeft (90));
         s.setBounds (r2);
-        r.removeFromTop (6);
+        // [BEGIN UI4A2-CARD-ROW-GAP-DOWN]
+        r.removeFromTop (3);
+        // [END UI4A2-CARD-ROW-GAP-DOWN]
     };
 
     row (ratioLabel, ratioSlider);
@@ -1019,7 +1031,9 @@ void MtdmLimiterCard::resized()
         auto r2 = r.removeFromTop (24);
         lab.setBounds (r2.removeFromLeft (90));
         s.setBounds (r2);
-        r.removeFromTop (6);
+        // [BEGIN UI4A2-CARD-ROW-GAP-LIM]
+        r.removeFromTop (3);
+        // [END UI4A2-CARD-ROW-GAP-LIM]
     };
 
     rowS (ceilingLabel, ceilingSlider);
@@ -1029,7 +1043,9 @@ void MtdmLimiterCard::resized()
     auto rOS = r.removeFromTop (24);
     osLabel.setBounds (rOS.removeFromLeft (90));
     osBox.setBounds (rOS);
-    r.removeFromTop (6);
+    // [BEGIN UI4A2-CARD-ROW-GAP-LIM-OS]
+    r.removeFromTop (3);
+    // [END UI4A2-CARD-ROW-GAP-LIM-OS]
 
     rowS (attackLabel, attackSlider);
     rowS (releaseLabel, releaseSlider);

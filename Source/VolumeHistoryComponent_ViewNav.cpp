@@ -538,6 +538,24 @@ void VolumeHistoryComponent::mouseMove (const juce::MouseEvent& event)
         }
     }
 
+    // [BEGIN UI4A2-CURSOR-TIMERULER-PAN]
+    // Time ruler pan affordance (left-right)
+    if (getTimeRulerArea().contains (p) && p.x < getDbRulerArea().getX())
+    {
+        setMouseCursor (juce::MouseCursor::LeftRightResizeCursor);
+        return;
+    }
+    // [END UI4A2-CURSOR-TIMERULER-PAN]
+
+    // [BEGIN UI4A2-CURSOR-DBSCALE-PAN]
+    // LUFS scale pan affordance (up-down). Meters area remains non-interactive.
+    if (getDbScaleArea().contains (p))
+    {
+        setMouseCursor (juce::MouseCursor::UpDownResizeCursor);
+        return;
+    }
+    // [END UI4A2-CURSOR-DBSCALE-PAN]
+
     setMouseCursor (juce::MouseCursor::NormalCursor);
 }
 
