@@ -868,13 +868,29 @@ MtdmUpwardCard::MtdmUpwardCard (LevelScopeAudioProcessor& p)
     advancedToggle.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.85f));
     addAndMakeVisible (advancedToggle);
 
+    // [BEGIN UI4B1-UPWARD-AUTOEXPAND-ON-ADVANCED]
     advancedToggle.onClick = [this]
     {
         showAdvanced = advancedToggle.getToggleState();
         updateAdvancedVisibility();
+        updateSpectralEnablement();
+
+        if (showAdvanced)
+        {
+            // Ensure the card is tall enough to actually show the advanced rows.
+            // Keep this simple and stable: reserve for the full advanced set.
+            constexpr int rowH = 22;
+            constexpr int rows = 15; // mode + advanced toggle + 4 essentials + 9 advanced rows
+            const int desiredCardHeight = 44 + rowH * rows; // ~24 title/header + ~20 padding + rows
+
+            if (auto* owner = findParentComponentOfClass<MtdmCardsContent>())
+                owner->ensureUpwardHeightAtLeast (desiredCardHeight);
+        }
+
         resized();
         repaint();
     };
+    // [END UI4B1-UPWARD-AUTOEXPAND-ON-ADVANCED]
     // [END UI4B1-UPWARD-ADVANCED-TOGGLE-CTOR]
 
     styleLabel (amountLabel, "Amount");
@@ -1447,6 +1463,24 @@ void MtdmCardsContent::applyDragToBoundary (CardResizerBar::Boundary b, int dy)
     }
 }
 // [END UI4A3-CARDS-ACCORDION-RESIZER-IMPL]
+
+// [BEGIN UI4B1-UPWARD-AUTOEXPAND-IMPL]
+void MtdmCardsContent::ensureUpwardHeightAtLeast (int px)
+{
+    px = juce::jmax (px, minUpwardPx);
+
+    if (cardHeights.upward >= px)
+        return;
+
+    cardHeights.upward = px;
+
+    // Update our own size so the viewport scroll range updates.
+    setSize (getWidth(), getPreferredHeight());
+
+    resized();
+    repaint();
+}
+// [END UI4B1-UPWARD-AUTOEXPAND-IMPL]
 
 //==============================================================================
 // Public panel component (viewport)

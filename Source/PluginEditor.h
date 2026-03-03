@@ -342,6 +342,10 @@ public:
     void resized() override;
     int getPreferredHeight() const noexcept;
 
+    // [BEGIN UI4B1-UPWARD-AUTOEXPAND-DECL]
+    void ensureUpwardHeightAtLeast (int px);
+    // [END UI4B1-UPWARD-AUTOEXPAND-DECL]
+
 private:
     LevellingCard    levelling;
     MtdmZonesCard    zones;
