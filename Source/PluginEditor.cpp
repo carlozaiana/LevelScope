@@ -849,9 +849,10 @@ void MtdmZonesCard::resized()
 // Upward
 //==============================================================================
 
+    // [BEGIN UI4B1-UPWARD-TITLE-CLEAN]
 MtdmUpwardCard::MtdmUpwardCard (LevelScopeAudioProcessor& p)
-    : MtdmCardComponent ("Upward (Essentials)"),
-      apvts (p.getAPVTS())
+    : MtdmCardComponent ("Upward"),
+    // [END UI4B1-UPWARD-TITLE-CLEAN]
 {
     using namespace levelscope::mtdm::ParamIDs;
 
@@ -1050,6 +1051,18 @@ void MtdmUpwardCard::updateSpectralEnablement()
 void MtdmUpwardCard::resized()
 {
     MtdmCardComponent::resized();
+    // [BEGIN UI4B1-UPWARD-ADVANCED-IN-HEADER]
+    // Put Advanced toggle in the header row, to the right of the title.
+    {
+        auto header = getLocalBounds().reduced (10, 6).removeFromTop (18);
+
+        const int advW = juce::jmin (96, header.getWidth() / 3);
+        auto advArea = header.removeFromRight (juce::jmax (60, advW));
+
+        advancedToggle.setBounds (advArea);
+        title.setBounds (header); // reclaim header width so title doesn't overlap toggle
+    }
+    // [END UI4B1-UPWARD-ADVANCED-IN-HEADER]
     auto r = getContentArea();
 
     // Compact mode: hide everything except the title (so resizing can collapse cleanly)
@@ -1077,9 +1090,6 @@ void MtdmUpwardCard::resized()
     auto rr = r.removeFromTop (rowH);
     modeLabel.setBounds (rr.removeFromLeft (90));
     modeBox.setBounds (rr);
-
-    rr = r.removeFromTop (rowH);
-    advancedToggle.setBounds (rr.removeFromLeft (120));
 
     // Essentials rows
     auto row = [&] (juce::Label& lab, juce::Slider& s)
@@ -1300,16 +1310,18 @@ void MtdmLimiterCard::updateAdvancedVisibility()
 // [END UI4B2-LIMITER-ADVANCED-HELPER]
 
 // [BEGIN UI4B2-LIMITER-RESIZED-WITH-ADVANCED]
-void MtdmLimiterCard::resized()
-{
-    MtdmCardComponent::resized();
-    auto r = getContentArea();
+    // [BEGIN UI4B2-LIMITER-ADVANCED-IN-ENABLED-ROW]
+    auto topRow = r.removeFromTop (22);
 
-    enabledButton.setBounds (r.removeFromTop (22));
+    const int advW = juce::jmin (110, topRow.getWidth() / 3);
+    advancedToggle.setBounds (topRow.removeFromRight (juce::jmax (70, advW)));
+    enabledButton.setBounds (topRow);
 
     const bool compact = (r.getHeight() < 60);
 
-    advancedToggle.setVisible (! compact);
+    // Advanced toggle stays visible even in compact mode (since it's in the header row).
+    advancedToggle.setVisible (true);
+    // [END UI4B2-LIMITER-ADVANCED-IN-ENABLED-ROW]
     ceilingLabel.setVisible (! compact); ceilingSlider.setVisible (! compact);
     lookLabel.setVisible (! compact);    lookSlider.setVisible (! compact);
     osLabel.setVisible (! compact);      osBox.setVisible (! compact);
@@ -1319,9 +1331,6 @@ void MtdmLimiterCard::resized()
         updateAdvancedVisibility(); // will hide advanced
         return;
     }
-
-    // Advanced toggle row
-    advancedToggle.setBounds (r.removeFromTop (22).removeFromLeft (120));
 
     const int rowH = 22;
 

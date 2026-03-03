@@ -314,7 +314,9 @@ private:
     juce::AudioProcessorValueTreeState& apvts;
 
     // [BEGIN UI4B2-LIMITER-ADVANCED-MEMBERS]
-    juce::ToggleButton enabledButton { "Limiter Enabled" };
+    // [BEGIN UI4B2-LIMITER-ENABLED-TEXT]
+    juce::ToggleButton enabledButton { "Limiter" };
+    // [END UI4B2-LIMITER-ENABLED-TEXT]
 
     juce::ToggleButton advancedToggle { "Advanced" };
     bool showAdvanced = false;
