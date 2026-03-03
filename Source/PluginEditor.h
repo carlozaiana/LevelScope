@@ -234,17 +234,39 @@ public:
 private:
     juce::AudioProcessorValueTreeState& apvts;
 
+    // [BEGIN UI4B1-UPWARD-ADVANCED-MEMBERS]
     juce::Label modeLabel;
     juce::ComboBox modeBox;
 
+    juce::ToggleButton advancedToggle { "Advanced" };
+    bool showAdvanced = false;
+
+    // Essentials
     juce::Label amountLabel, maxBoostLabel, attackLabel, releaseLabel;
     juce::Slider amountSlider, maxBoostSlider, attackSlider, releaseSlider;
+
+    // Advanced (curve + knees)
+    juce::Label curveLabel, curveTypeLabel, lowKneeLabel, highKneeLabel, calTrimLabel;
+    juce::Slider curveSlider, lowKneeSlider, highKneeSlider, calTrimSlider;
+    juce::ComboBox curveTypeBox;
+
+    // Advanced (spectral-only controls)
+    juce::Label fftLabel, bandsLabel, minFreqLabel, maxFreqLabel;
+    juce::ComboBox fftBox, bandsBox;
+    juce::Slider minFreqSlider, maxFreqSlider;
 
     using ComboAttachment  = juce::AudioProcessorValueTreeState::ComboBoxAttachment;
     using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
 
     std::unique_ptr<ComboAttachment>  modeAtt;
     std::unique_ptr<SliderAttachment> amountAtt, maxBoostAtt, attackAtt, releaseAtt;
+
+    std::unique_ptr<SliderAttachment> curveAtt, lowKneeAtt, highKneeAtt, calTrimAtt, minFreqAtt, maxFreqAtt;
+    std::unique_ptr<ComboAttachment>  curveTypeAtt, fftAtt, bandsAtt;
+
+    void updateAdvancedVisibility();
+    void updateSpectralEnablement();
+    // [END UI4B1-UPWARD-ADVANCED-MEMBERS]
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MtdmUpwardCard)
 };

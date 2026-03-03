@@ -862,6 +862,21 @@ MtdmUpwardCard::MtdmUpwardCard (LevelScopeAudioProcessor& p)
     modeBox.addItemList (juce::StringArray { "Spectral", "Broadband" }, 1);
     modeAtt = std::make_unique<ComboAttachment> (apvts, upwardModeChoice, modeBox);
 
+    // [BEGIN UI4B1-UPWARD-ADVANCED-TOGGLE-CTOR]
+    advancedToggle.setClickingTogglesState (true);
+    advancedToggle.setToggleState (false, juce::dontSendNotification);
+    advancedToggle.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.85f));
+    addAndMakeVisible (advancedToggle);
+
+    advancedToggle.onClick = [this]
+    {
+        showAdvanced = advancedToggle.getToggleState();
+        updateAdvancedVisibility();
+        resized();
+        repaint();
+    };
+    // [END UI4B1-UPWARD-ADVANCED-TOGGLE-CTOR]
+
     styleLabel (amountLabel, "Amount");
     styleLabel (maxBoostLabel, "MaxBoost");
     styleLabel (attackLabel, "Attack");
@@ -887,51 +902,208 @@ MtdmUpwardCard::MtdmUpwardCard (LevelScopeAudioProcessor& p)
     maxBoostAtt = std::make_unique<SliderAttachment> (apvts, sucMaxBoostDb, maxBoostSlider);
     attackAtt   = std::make_unique<SliderAttachment> (apvts, sucAttackMs, attackSlider);
     releaseAtt  = std::make_unique<SliderAttachment> (apvts, sucReleaseMs, releaseSlider);
+
+    // [BEGIN UI4B1-UPWARD-ADVANCED-CONTROLS-CTOR]
+    // Curve / knees / trim
+    styleLabel (curveLabel,     "Curve");
+    styleLabel (curveTypeLabel, "CurveType");
+    styleLabel (lowKneeLabel,   "Low Knee");
+    styleLabel (highKneeLabel,  "High Knee");
+    styleLabel (calTrimLabel,   "Cal Trim");
+
+    addAndMakeVisible (curveLabel);
+    addAndMakeVisible (curveTypeLabel);
+    addAndMakeVisible (lowKneeLabel);
+    addAndMakeVisible (highKneeLabel);
+    addAndMakeVisible (calTrimLabel);
+
+    styleSlider (curveSlider, "");
+    styleSlider (lowKneeSlider,  " dB");
+    styleSlider (highKneeSlider, " dB");
+    styleSlider (calTrimSlider,  " dB");
+
+    addAndMakeVisible (curveSlider);
+    addAndMakeVisible (lowKneeSlider);
+    addAndMakeVisible (highKneeSlider);
+    addAndMakeVisible (calTrimSlider);
+
+    addAndMakeVisible (curveTypeBox);
+    curveTypeBox.addItemList (juce::StringArray { "Monotonic", "Bell" }, 1);
+
+    // Spectral-only
+    styleLabel (fftLabel,    "FFT");
+    styleLabel (bandsLabel,  "Bands/Oct");
+    styleLabel (minFreqLabel,"Min Freq");
+    styleLabel (maxFreqLabel,"Max Freq");
+
+    addAndMakeVisible (fftLabel);
+    addAndMakeVisible (bandsLabel);
+    addAndMakeVisible (minFreqLabel);
+    addAndMakeVisible (maxFreqLabel);
+
+    addAndMakeVisible (fftBox);
+    addAndMakeVisible (bandsBox);
+
+    fftBox.addItemList   (juce::StringArray { "1024", "2048", "4096", "8192" }, 1);
+    bandsBox.addItemList (juce::StringArray { "1", "2", "3", "6" }, 1);
+
+    styleSlider (minFreqSlider, " Hz");
+    styleSlider (maxFreqSlider, " Hz");
+    addAndMakeVisible (minFreqSlider);
+    addAndMakeVisible (maxFreqSlider);
+
+    // Ranges from params
+    setSliderRangeFromParam (apvts, sucCurve, curveSlider);
+    setSliderRangeFromParam (apvts, sucLowKneeDb, lowKneeSlider);
+    setSliderRangeFromParam (apvts, sucHighKneeDb, highKneeSlider);
+    setSliderRangeFromParam (apvts, sucCalTrimDb, calTrimSlider);
+    setSliderRangeFromParam (apvts, sucMinFreqHz, minFreqSlider);
+    setSliderRangeFromParam (apvts, sucMaxFreqHz, maxFreqSlider);
+
+    // Attachments
+    curveAtt     = std::make_unique<SliderAttachment> (apvts, sucCurve, curveSlider);
+    lowKneeAtt   = std::make_unique<SliderAttachment> (apvts, sucLowKneeDb, lowKneeSlider);
+    highKneeAtt  = std::make_unique<SliderAttachment> (apvts, sucHighKneeDb, highKneeSlider);
+    calTrimAtt   = std::make_unique<SliderAttachment> (apvts, sucCalTrimDb, calTrimSlider);
+
+    curveTypeAtt = std::make_unique<ComboAttachment>  (apvts, sucCurveTypeChoice, curveTypeBox);
+    fftAtt       = std::make_unique<ComboAttachment>  (apvts, sucFftSizeChoice, fftBox);
+    bandsAtt     = std::make_unique<ComboAttachment>  (apvts, sucBandsPerOctChoice, bandsBox);
+
+    minFreqAtt   = std::make_unique<SliderAttachment> (apvts, sucMinFreqHz, minFreqSlider);
+    maxFreqAtt   = std::make_unique<SliderAttachment> (apvts, sucMaxFreqHz, maxFreqSlider);
+
+    // Enable/disable spectral-only controls based on upward mode
+    modeBox.onChange = [this]
+    {
+        updateSpectralEnablement();
+    };
+
+    showAdvanced = false;
+    updateAdvancedVisibility();
+    updateSpectralEnablement();
+    // [END UI4B1-UPWARD-ADVANCED-CONTROLS-CTOR]
 }
 
+// [BEGIN UI4B1-UPWARD-ADVANCED-HELPERS]
+void MtdmUpwardCard::updateAdvancedVisibility()
+{
+    const bool v = showAdvanced;
+
+    curveLabel.setVisible (v);
+    curveSlider.setVisible (v);
+    curveTypeLabel.setVisible (v);
+    curveTypeBox.setVisible (v);
+
+    lowKneeLabel.setVisible (v);
+    lowKneeSlider.setVisible (v);
+    highKneeLabel.setVisible (v);
+    highKneeSlider.setVisible (v);
+
+    calTrimLabel.setVisible (v);
+    calTrimSlider.setVisible (v);
+
+    fftLabel.setVisible (v);
+    fftBox.setVisible (v);
+    bandsLabel.setVisible (v);
+    bandsBox.setVisible (v);
+
+    minFreqLabel.setVisible (v);
+    minFreqSlider.setVisible (v);
+    maxFreqLabel.setVisible (v);
+    maxFreqSlider.setVisible (v);
+}
+
+void MtdmUpwardCard::updateSpectralEnablement()
+{
+    // Spectral = item index 0, Broadband = index 1
+    const bool spectral = (modeBox.getSelectedItemIndex() == 0);
+
+    // Only matters if advanced is visible
+    const bool enable = (showAdvanced && spectral);
+
+    fftLabel.setEnabled (enable);   fftBox.setEnabled (enable);
+    bandsLabel.setEnabled (enable); bandsBox.setEnabled (enable);
+
+    minFreqLabel.setEnabled (enable); minFreqSlider.setEnabled (enable);
+    maxFreqLabel.setEnabled (enable); maxFreqSlider.setEnabled (enable);
+}
+// [END UI4B1-UPWARD-ADVANCED-HELPERS]
+
+// [BEGIN UI4B1-UPWARD-RESIZED-WITH-ADVANCED]
 void MtdmUpwardCard::resized()
 {
     MtdmCardComponent::resized();
     auto r = getContentArea();
 
-    // [BEGIN UI4A3-UPWARD-COMPACT-HIDE]
+    // Compact mode: hide everything except the title (so resizing can collapse cleanly)
     const bool compact = (r.getHeight() < 70);
+
+    advancedToggle.setVisible (! compact);
 
     modeLabel.setVisible (! compact);
     modeBox.setVisible (! compact);
 
-    amountLabel.setVisible (! compact);  amountSlider.setVisible (! compact);
-    maxBoostLabel.setVisible (! compact);maxBoostSlider.setVisible (! compact);
-    attackLabel.setVisible (! compact);  attackSlider.setVisible (! compact);
-    releaseLabel.setVisible (! compact); releaseSlider.setVisible (! compact);
+    amountLabel.setVisible (! compact);   amountSlider.setVisible (! compact);
+    maxBoostLabel.setVisible (! compact); maxBoostSlider.setVisible (! compact);
+    attackLabel.setVisible (! compact);   attackSlider.setVisible (! compact);
+    releaseLabel.setVisible (! compact);  releaseSlider.setVisible (! compact);
 
     if (compact)
+    {
+        updateAdvancedVisibility(); // will hide advanced (showAdvanced might be true)
         return;
-    // [END UI4A3-UPWARD-COMPACT-HIDE]
+    }
 
-    auto rr = r.removeFromTop (24);
+    // Header rows
+    const int rowH = 22;
+
+    auto rr = r.removeFromTop (rowH);
     modeLabel.setBounds (rr.removeFromLeft (90));
     modeBox.setBounds (rr);
 
-    // [BEGIN UI4A3-UPWARD-SECTION-GAP]
-    r.removeFromTop (2);
-    // [END UI4A3-UPWARD-SECTION-GAP]
+    rr = r.removeFromTop (rowH);
+    advancedToggle.setBounds (rr.removeFromLeft (120));
 
+    // Essentials rows
     auto row = [&] (juce::Label& lab, juce::Slider& s)
     {
-        auto r2 = r.removeFromTop (24);
+        auto r2 = r.removeFromTop (rowH);
         lab.setBounds (r2.removeFromLeft (90));
         s.setBounds (r2);
-        // [BEGIN UI4A3-ROW-GAP-ZERO-UP]
-        r.removeFromTop (0);
-        // [END UI4A3-ROW-GAP-ZERO-UP]
     };
 
     row (amountLabel, amountSlider);
     row (maxBoostLabel, maxBoostSlider);
     row (attackLabel, attackSlider);
     row (releaseLabel, releaseSlider);
+
+    // Advanced rows
+    updateAdvancedVisibility();
+    updateSpectralEnablement();
+
+    if (! showAdvanced)
+        return;
+
+    auto rowCombo = [&] (juce::Label& lab, juce::ComboBox& c)
+    {
+        auto r2 = r.removeFromTop (rowH);
+        lab.setBounds (r2.removeFromLeft (90));
+        c.setBounds (r2);
+    };
+
+    row (curveLabel, curveSlider);
+    rowCombo (curveTypeLabel, curveTypeBox);
+    row (lowKneeLabel, lowKneeSlider);
+    row (highKneeLabel, highKneeSlider);
+    row (calTrimLabel, calTrimSlider);
+
+    rowCombo (fftLabel, fftBox);
+    rowCombo (bandsLabel, bandsBox);
+    row (minFreqLabel, minFreqSlider);
+    row (maxFreqLabel, maxFreqSlider);
 }
+// [END UI4B1-UPWARD-RESIZED-WITH-ADVANCED]
 
 //==============================================================================
 // Downward
