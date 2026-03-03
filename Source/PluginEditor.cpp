@@ -849,10 +849,9 @@ void MtdmZonesCard::resized()
 // Upward
 //==============================================================================
 
-    // [BEGIN UI4B1-UPWARD-TITLE-CLEAN]
 MtdmUpwardCard::MtdmUpwardCard (LevelScopeAudioProcessor& p)
     : MtdmCardComponent ("Upward"),
-    // [END UI4B1-UPWARD-TITLE-CLEAN]
+      apvts (p.getAPVTS())
 {
     using namespace levelscope::mtdm::ParamIDs;
 
@@ -1047,12 +1046,12 @@ void MtdmUpwardCard::updateSpectralEnablement()
 }
 // [END UI4B1-UPWARD-ADVANCED-HELPERS]
 
-// [BEGIN UI4B1-UPWARD-RESIZED-WITH-ADVANCED]
+// [BEGIN UI4B1-UPWARD-RESIZED-HEADER-ADV-FIX]
 void MtdmUpwardCard::resized()
 {
     MtdmCardComponent::resized();
-    // [BEGIN UI4B1-UPWARD-ADVANCED-IN-HEADER]
-    // Put Advanced toggle in the header row, to the right of the title.
+
+    // Header row: title left, Advanced toggle right
     {
         auto header = getLocalBounds().reduced (10, 6).removeFromTop (18);
 
@@ -1060,15 +1059,14 @@ void MtdmUpwardCard::resized()
         auto advArea = header.removeFromRight (juce::jmax (60, advW));
 
         advancedToggle.setBounds (advArea);
-        title.setBounds (header); // reclaim header width so title doesn't overlap toggle
+        title.setBounds (header);
+        advancedToggle.setVisible (true);
     }
-    // [END UI4B1-UPWARD-ADVANCED-IN-HEADER]
+
     auto r = getContentArea();
 
-    // Compact mode: hide everything except the title (so resizing can collapse cleanly)
+    // Compact mode: hide everything except header controls
     const bool compact = (r.getHeight() < 70);
-
-    advancedToggle.setVisible (! compact);
 
     modeLabel.setVisible (! compact);
     modeBox.setVisible (! compact);
@@ -1080,13 +1078,14 @@ void MtdmUpwardCard::resized()
 
     if (compact)
     {
-        updateAdvancedVisibility(); // will hide advanced (showAdvanced might be true)
+        // Also hide advanced section if compact
+        updateAdvancedVisibility();
         return;
     }
 
-    // Header rows
     const int rowH = 22;
 
+    // Mode row
     auto rr = r.removeFromTop (rowH);
     modeLabel.setBounds (rr.removeFromLeft (90));
     modeBox.setBounds (rr);
@@ -1129,7 +1128,7 @@ void MtdmUpwardCard::resized()
     row (minFreqLabel, minFreqSlider);
     row (maxFreqLabel, maxFreqSlider);
 }
-// [END UI4B1-UPWARD-RESIZED-WITH-ADVANCED]
+// [END UI4B1-UPWARD-RESIZED-HEADER-ADV-FIX]
 
 //==============================================================================
 // Downward
@@ -1309,8 +1308,13 @@ void MtdmLimiterCard::updateAdvancedVisibility()
 }
 // [END UI4B2-LIMITER-ADVANCED-HELPER]
 
-// [BEGIN UI4B2-LIMITER-RESIZED-WITH-ADVANCED]
-    // [BEGIN UI4B2-LIMITER-ADVANCED-IN-ENABLED-ROW]
+// [BEGIN UI4B2-LIMITER-RESIZED-RESTORE]
+void MtdmLimiterCard::resized()
+{
+    MtdmCardComponent::resized();
+    auto r = getContentArea();
+
+    // Top row: Limiter checkbox + Advanced toggle on the same line
     auto topRow = r.removeFromTop (22);
 
     const int advW = juce::jmin (110, topRow.getWidth() / 3);
@@ -1319,16 +1323,18 @@ void MtdmLimiterCard::updateAdvancedVisibility()
 
     const bool compact = (r.getHeight() < 60);
 
-    // Advanced toggle stays visible even in compact mode (since it's in the header row).
+    // Advanced toggle stays visible (header)
     advancedToggle.setVisible (true);
-    // [END UI4B2-LIMITER-ADVANCED-IN-ENABLED-ROW]
+
     ceilingLabel.setVisible (! compact); ceilingSlider.setVisible (! compact);
     lookLabel.setVisible (! compact);    lookSlider.setVisible (! compact);
     osLabel.setVisible (! compact);      osBox.setVisible (! compact);
 
     if (compact)
     {
-        updateAdvancedVisibility(); // will hide advanced
+        showAdvanced = false;
+        advancedToggle.setToggleState (false, juce::dontSendNotification);
+        updateAdvancedVisibility();
         return;
     }
 
@@ -1358,7 +1364,7 @@ void MtdmLimiterCard::updateAdvancedVisibility()
     rowS (releaseLabel, releaseSlider);
     rowS (driveLabel, driveSlider);
 }
-// [END UI4B2-LIMITER-RESIZED-WITH-ADVANCED]
+// [END UI4B2-LIMITER-RESIZED-RESTORE]
 
 //==============================================================================
 // Content stack
