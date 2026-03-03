@@ -313,11 +313,23 @@ public:
 private:
     juce::AudioProcessorValueTreeState& apvts;
 
+    // [BEGIN UI4B2-LIMITER-ADVANCED-MEMBERS]
     juce::ToggleButton enabledButton { "Limiter Enabled" };
 
-    juce::Label ceilingLabel, lookLabel, osLabel, attackLabel, releaseLabel, driveLabel;
-    juce::Slider ceilingSlider, lookSlider, attackSlider, releaseSlider, driveSlider;
+    juce::ToggleButton advancedToggle { "Advanced" };
+    bool showAdvanced = false;
+
+    // Essentials
+    juce::Label ceilingLabel, lookLabel, osLabel;
+    juce::Slider ceilingSlider, lookSlider;
     juce::ComboBox osBox;
+
+    // Advanced
+    juce::Label attackLabel, releaseLabel, driveLabel;
+    juce::Slider attackSlider, releaseSlider, driveSlider;
+
+    void updateAdvancedVisibility();
+    // [END UI4B2-LIMITER-ADVANCED-MEMBERS]
 
     using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
     using ComboAttachment  = juce::AudioProcessorValueTreeState::ComboBoxAttachment;
@@ -345,6 +357,10 @@ public:
     // [BEGIN UI4B1-UPWARD-AUTOEXPAND-DECL]
     void ensureUpwardHeightAtLeast (int px);
     // [END UI4B1-UPWARD-AUTOEXPAND-DECL]
+
+    // [BEGIN UI4B2-LIMITER-AUTOEXPAND-DECL]
+    void ensureLimiterHeightAtLeast (int px);
+    // [END UI4B2-LIMITER-AUTOEXPAND-DECL]
 
 private:
     LevellingCard    levelling;
@@ -376,7 +392,9 @@ private:
     class CardResizerBar : public juce::Component
     {
     public:
-        enum class Boundary { levellingZones, zonesUpward, upwardDownward, downwardLimiter };
+        // [BEGIN UI4B2-RESIZER-ADD-LIMITER-TAIL]
+        enum class Boundary { levellingZones, zonesUpward, upwardDownward, downwardLimiter, limiterTail };
+        // [END UI4B2-RESIZER-ADD-LIMITER-TAIL]
 
         CardResizerBar (MtdmCardsContent& ownerIn, Boundary b);
 
@@ -399,10 +417,13 @@ private:
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CardResizerBar)
     };
 
+    // [BEGIN UI4B2-RESIZER-ADD-LIMITER-TAIL-BAR]
     CardResizerBar bar01 { *this, CardResizerBar::Boundary::levellingZones };
     CardResizerBar bar12 { *this, CardResizerBar::Boundary::zonesUpward };
     CardResizerBar bar23 { *this, CardResizerBar::Boundary::upwardDownward };
     CardResizerBar bar34 { *this, CardResizerBar::Boundary::downwardLimiter };
+    CardResizerBar bar45 { *this, CardResizerBar::Boundary::limiterTail }; // bottom tail bar resizes Limiter
+    // [END UI4B2-RESIZER-ADD-LIMITER-TAIL-BAR]
 
     void applyDragToBoundary (CardResizerBar::Boundary b, int dy);
 

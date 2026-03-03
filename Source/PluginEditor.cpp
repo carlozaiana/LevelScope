@@ -1208,18 +1208,42 @@ void MtdmDownwardCard::resized()
 // Limiter
 //==============================================================================
 
-// [BEGIN UI4A3-LIMITER-HIDE-TITLE]
+    // [BEGIN UI4A3-LIMITER-HIDE-TITLE]
 MtdmLimiterCard::MtdmLimiterCard (LevelScopeAudioProcessor& p)
     : MtdmCardComponent (""), // title hidden; enabled toggle acts as header
       apvts (p.getAPVTS())
 {
     title.setVisible (false);
-// [END UI4A3-LIMITER-HIDE-TITLE]
+    // [END UI4A3-LIMITER-HIDE-TITLE]
     using namespace levelscope::mtdm::ParamIDs;
 
     enabledButton.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.90f));
     addAndMakeVisible (enabledButton);
     enabledAtt = std::make_unique<ButtonAttachment> (apvts, limEnabled01, enabledButton);
+
+    // [BEGIN UI4B2-LIMITER-ADVANCED-TOGGLE-CTOR]
+    advancedToggle.setClickingTogglesState (true);
+    advancedToggle.setToggleState (false, juce::dontSendNotification);
+    advancedToggle.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.85f));
+    addAndMakeVisible (advancedToggle);
+
+    advancedToggle.onClick = [this]
+    {
+        showAdvanced = advancedToggle.getToggleState();
+        updateAdvancedVisibility();
+
+        if (showAdvanced)
+        {
+            // Ensure Limiter is tall enough to show advanced rows
+            const int desired = 220; // stable simple choice
+            if (auto* owner = findParentComponentOfClass<MtdmCardsContent>())
+                owner->ensureLimiterHeightAtLeast (desired);
+        }
+
+        resized();
+        repaint();
+    };
+    // [END UI4B2-LIMITER-ADVANCED-TOGGLE-CTOR]
 
     styleLabel (ceilingLabel, "Ceiling");
     styleLabel (lookLabel, "Lookahead");
@@ -1261,6 +1285,21 @@ MtdmLimiterCard::MtdmLimiterCard (LevelScopeAudioProcessor& p)
     osAtt = std::make_unique<ComboAttachment> (apvts, limOversamplingChoice, osBox);
 }
 
+// [BEGIN UI4B2-LIMITER-ADVANCED-HELPER]
+void MtdmLimiterCard::updateAdvancedVisibility()
+{
+    const bool v = showAdvanced;
+
+    attackLabel.setVisible (v);
+    attackSlider.setVisible (v);
+    releaseLabel.setVisible (v);
+    releaseSlider.setVisible (v);
+    driveLabel.setVisible (v);
+    driveSlider.setVisible (v);
+}
+// [END UI4B2-LIMITER-ADVANCED-HELPER]
+
+// [BEGIN UI4B2-LIMITER-RESIZED-WITH-ADVANCED]
 void MtdmLimiterCard::resized()
 {
     MtdmCardComponent::resized();
@@ -1268,47 +1307,49 @@ void MtdmLimiterCard::resized()
 
     enabledButton.setBounds (r.removeFromTop (22));
 
-    // [BEGIN UI4A3-LIMITER-COMPACT-HIDE]
     const bool compact = (r.getHeight() < 60);
 
+    advancedToggle.setVisible (! compact);
     ceilingLabel.setVisible (! compact); ceilingSlider.setVisible (! compact);
     lookLabel.setVisible (! compact);    lookSlider.setVisible (! compact);
     osLabel.setVisible (! compact);      osBox.setVisible (! compact);
-    attackLabel.setVisible (! compact);  attackSlider.setVisible (! compact);
-    releaseLabel.setVisible (! compact); releaseSlider.setVisible (! compact);
-    driveLabel.setVisible (! compact);   driveSlider.setVisible (! compact);
 
     if (compact)
+    {
+        updateAdvancedVisibility(); // will hide advanced
         return;
-    // [END UI4A3-LIMITER-COMPACT-HIDE]
+    }
 
-    r.removeFromTop (8);
+    // Advanced toggle row
+    advancedToggle.setBounds (r.removeFromTop (22).removeFromLeft (120));
+
+    const int rowH = 22;
 
     auto rowS = [&] (juce::Label& lab, juce::Slider& s)
     {
-        auto r2 = r.removeFromTop (24);
+        auto r2 = r.removeFromTop (rowH);
         lab.setBounds (r2.removeFromLeft (90));
         s.setBounds (r2);
-        // [BEGIN UI4A3-ROW-GAP-ZERO-LIM]
-        r.removeFromTop (0);
-        // [END UI4A3-ROW-GAP-ZERO-LIM]
     };
 
     rowS (ceilingLabel, ceilingSlider);
     rowS (lookLabel, lookSlider);
 
     // Oversampling row
-    auto rOS = r.removeFromTop (24);
+    auto rOS = r.removeFromTop (rowH);
     osLabel.setBounds (rOS.removeFromLeft (90));
     osBox.setBounds (rOS);
-    // [BEGIN UI4A3-ROW-GAP-ZERO-LIM-OS]
-    r.removeFromTop (0);
-    // [END UI4A3-ROW-GAP-ZERO-LIM-OS]
+
+    // Advanced rows
+    updateAdvancedVisibility();
+    if (! showAdvanced)
+        return;
 
     rowS (attackLabel, attackSlider);
     rowS (releaseLabel, releaseSlider);
     rowS (driveLabel, driveSlider);
 }
+// [END UI4B2-LIMITER-RESIZED-WITH-ADVANCED]
 
 //==============================================================================
 // Content stack
@@ -1330,8 +1371,11 @@ MtdmCardsContent::MtdmCardsContent (LevelScopeAudioProcessor& p)
     addAndMakeVisible (upward);
     addAndMakeVisible (bar23);
     addAndMakeVisible (downward);
+    // [BEGIN UI4B2-ADD-LIMITER-TAIL-BAR]
     addAndMakeVisible (bar34);
     addAndMakeVisible (limiter);
+    addAndMakeVisible (bar45);
+    // [END UI4B2-ADD-LIMITER-TAIL-BAR]
 
     // IMPORTANT:
     // No cardsLayout here. No setItemLayout calls.
@@ -1342,7 +1386,9 @@ MtdmCardsContent::MtdmCardsContent (LevelScopeAudioProcessor& p)
 // [BEGIN UI4A3-CARDS-ACCORDION-PREFERREDHEIGHT]
 int MtdmCardsContent::getPreferredHeight() const noexcept
 {
-    const int bars = 4 * barHeightPx;
+    // [BEGIN UI4B2-BAR-COUNT-5]
+    const int bars = 5 * barHeightPx;
+    // [END UI4B2-BAR-COUNT-5]
 
     const int sumCards =
         cardHeights.levelling +
@@ -1379,11 +1425,14 @@ void MtdmCardsContent::resized()
     bar12.setBounds     (takeBar());
     upward.setBounds    (takeCard (cardHeights.upward));
     bar23.setBounds     (takeBar());
+    // [BEGIN UI4B2-RESIZED-ADD-BAR45]
     downward.setBounds  (takeCard (cardHeights.downward));
     bar34.setBounds     (takeBar());
     limiter.setBounds   (takeCard (cardHeights.limiter));
+    bar45.setBounds     (takeBar());
 
     contentPreferredHeightPx = getHeight();
+    // [END UI4B2-RESIZED-ADD-BAR45]
 }
 // [END UI4A3-CARDS-ACCORDION-RESIZED]
 
@@ -1460,6 +1509,12 @@ void MtdmCardsContent::applyDragToBoundary (CardResizerBar::Boundary b, int dy)
         case CardResizerBar::Boundary::downwardLimiter:
             cardHeights.downward = clamp (cardHeights.downward + dy, minDownwardPx, 6000);
             break;
+
+            // [BEGIN UI4B2-APPLYDRAG-LIMITER-TAIL]
+        case CardResizerBar::Boundary::limiterTail:
+            cardHeights.limiter = clamp (cardHeights.limiter + dy, minLimiterPx, 6000);
+            break;
+            // [END UI4B2-APPLYDRAG-LIMITER-TAIL]
     }
 }
 // [END UI4A3-CARDS-ACCORDION-RESIZER-IMPL]
@@ -1481,6 +1536,22 @@ void MtdmCardsContent::ensureUpwardHeightAtLeast (int px)
     repaint();
 }
 // [END UI4B1-UPWARD-AUTOEXPAND-IMPL]
+
+// [BEGIN UI4B2-LIMITER-AUTOEXPAND-IMPL]
+void MtdmCardsContent::ensureLimiterHeightAtLeast (int px)
+{
+    px = juce::jmax (px, minLimiterPx);
+
+    if (cardHeights.limiter >= px)
+        return;
+
+    cardHeights.limiter = px;
+
+    setSize (getWidth(), getPreferredHeight());
+    resized();
+    repaint();
+}
+// [END UI4B2-LIMITER-AUTOEXPAND-IMPL]
 
 //==============================================================================
 // Public panel component (viewport)
