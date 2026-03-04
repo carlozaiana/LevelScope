@@ -363,6 +363,33 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
         (Defaults::zoneUntouchedMute01 >= 0.5f)));
     // [END MTDM-APVTS-PARAM-LAYOUT-ZONE-SOLO-MUTE]
 
+    // [BEGIN MTDM-APVTS-PARAM-LAYOUT-ZONE-AUDITION]
+    layout.add (std::make_unique<juce::AudioParameterBool> (
+        juce::ParameterID { ParamIDs::zoneAudBelowT0_01, 1 },
+        "Zone Audition: Below T0",
+        (Defaults::zoneAudBelowT0_01 >= 0.5f)));
+
+    layout.add (std::make_unique<juce::AudioParameterBool> (
+        juce::ParameterID { ParamIDs::zoneAudT0T1_01, 1 },
+        "Zone Audition: T0..T1",
+        (Defaults::zoneAudT0T1_01 >= 0.5f)));
+
+    layout.add (std::make_unique<juce::AudioParameterBool> (
+        juce::ParameterID { ParamIDs::zoneAudT1T2_01, 1 },
+        "Zone Audition: T1..T2",
+        (Defaults::zoneAudT1T2_01 >= 0.5f)));
+
+    layout.add (std::make_unique<juce::AudioParameterBool> (
+        juce::ParameterID { ParamIDs::zoneAudT2T3_01, 1 },
+        "Zone Audition: T2..T3",
+        (Defaults::zoneAudT2T3_01 >= 0.5f)));
+
+    layout.add (std::make_unique<juce::AudioParameterBool> (
+        juce::ParameterID { ParamIDs::zoneAudAboveT3_01, 1 },
+        "Zone Audition: Above T3",
+        (Defaults::zoneAudAboveT3_01 >= 0.5f)));
+    // [END MTDM-APVTS-PARAM-LAYOUT-ZONE-AUDITION]
+
     return layout;
 }
 // [END MTDM-APVTS-PARAM-LAYOUT]
@@ -508,7 +535,15 @@ void LevelScopeAudioProcessor::rebuildModuleGraphFromState (const juce::MemoryBl
                                   // [BEGIN MTDM-BINDPARAMS-STAGE-E-MC]
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::mcPolicyChoice),
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::dialogDetectorChoice),
-                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::dialogApplyChoice));
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::dialogApplyChoice),
+
+                                  // [BEGIN MTDM-BINDPARAMS-ZONE-AUDITION]
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneAudBelowT0_01),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneAudT0T1_01),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneAudT1T2_01),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneAudT2T3_01),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneAudAboveT3_01));
+                                  // [END MTDM-BINDPARAMS-ZONE-AUDITION]
                                   // [END MTDM-BINDPARAMS-STAGE-E-MC]
 
             // [BEGIN LS-MTDM-UI-HANDLE-STORE]
