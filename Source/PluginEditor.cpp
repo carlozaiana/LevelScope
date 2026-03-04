@@ -1196,6 +1196,40 @@ MtdmDownwardCard::MtdmDownwardCard (LevelScopeAudioProcessor& p)
     addAndMakeVisible (enabledButton);
     enabledAtt = std::make_unique<ButtonAttachment> (apvts, downEnabled01, enabledButton);
 
+    // [BEGIN UI4B3-DOWNWARD-ADVANCED-TOGGLE-CTOR]
+    advancedToggle.setClickingTogglesState (true);
+    advancedToggle.setToggleState (false, juce::dontSendNotification);
+    advancedToggle.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.85f));
+    addAndMakeVisible (advancedToggle);
+
+    advancedToggle.onClick = [this]
+    {
+        const bool was = showAdvanced;
+        showAdvanced = advancedToggle.getToggleState();
+
+        updateAdvancedVisibility();
+
+        if (showAdvanced && ! was)
+        {
+            const int desired = 190; // enough for knee row
+            if (auto* owner = findParentComponentOfClass<MtdmCardsContent>())
+                owner->ensureDownwardHeightAtLeast (desired);
+
+            if (auto* vp = findParentComponentOfClass<juce::Viewport>())
+                scrollViewportToShowComponentBottom (*vp, kneeSlider);
+        }
+        else if (! showAdvanced && was)
+        {
+            const int essentialsH = 150;
+            if (auto* owner = findParentComponentOfClass<MtdmCardsContent>())
+                owner->setDownwardHeightPx (essentialsH);
+        }
+
+        resized();
+        repaint();
+    };
+    // [END UI4B3-DOWNWARD-ADVANCED-TOGGLE-CTOR]
+
     styleLabel (ratioLabel, "Ratio");
     styleLabel (attackLabel, "Attack");
     styleLabel (releaseLabel, "Release");
@@ -1221,17 +1255,49 @@ MtdmDownwardCard::MtdmDownwardCard (LevelScopeAudioProcessor& p)
     attackAtt  = std::make_unique<SliderAttachment> (apvts, downAttackMs, attackSlider);
     releaseAtt = std::make_unique<SliderAttachment> (apvts, downReleaseMs, releaseSlider);
     makeupAtt  = std::make_unique<SliderAttachment> (apvts, downMakeupDb, makeupSlider);
+
+    // [BEGIN UI4B3-DOWNWARD-ADVANCED-CONTROLS-CTOR]
+    using namespace levelscope::mtdm::ParamIDs;
+
+    styleLabel (kneeLabel, "Knee");
+    addAndMakeVisible (kneeLabel);
+
+    styleSlider (kneeSlider, " dB");
+    setSliderRangeFromParam (apvts, downKneeDb, kneeSlider);
+    addAndMakeVisible (kneeSlider);
+
+    kneeAtt = std::make_unique<SliderAttachment> (apvts, downKneeDb, kneeSlider);
+
+    showAdvanced = false;
+    updateAdvancedVisibility();
+    // [END UI4B3-DOWNWARD-ADVANCED-CONTROLS-CTOR]
 }
 
+// [BEGIN UI4B3-DOWNWARD-ADVANCED-VISIBILITY]
+void MtdmDownwardCard::updateAdvancedVisibility()
+{
+    const bool v = showAdvanced;
+    kneeLabel.setVisible (v);
+    kneeSlider.setVisible (v);
+}
+// [END UI4B3-DOWNWARD-ADVANCED-VISIBILITY]
+
+// [BEGIN UI4B3-DOWNWARD-RESIZED-WITH-ADVANCED]
 void MtdmDownwardCard::resized()
 {
     MtdmCardComponent::resized();
     auto r = getContentArea();
 
-    enabledButton.setBounds (r.removeFromTop (22));
+    // Top row: Enabled toggle + Advanced toggle on same line
+    auto topRow = r.removeFromTop (22);
 
-    // [BEGIN UI4A3-DOWNWARD-COMPACT-HIDE]
+    const int advW = juce::jmin (110, topRow.getWidth() / 3);
+    advancedToggle.setBounds (topRow.removeFromRight (juce::jmax (70, advW)));
+    enabledButton.setBounds (topRow);
+
     const bool compact = (r.getHeight() < 60);
+
+    advancedToggle.setVisible (true);
 
     ratioLabel.setVisible (! compact);   ratioSlider.setVisible (! compact);
     attackLabel.setVisible (! compact);  attackSlider.setVisible (! compact);
@@ -1239,28 +1305,34 @@ void MtdmDownwardCard::resized()
     makeupLabel.setVisible (! compact);  makeupSlider.setVisible (! compact);
 
     if (compact)
+    {
+        showAdvanced = false;
+        advancedToggle.setToggleState (false, juce::dontSendNotification);
+        updateAdvancedVisibility();
         return;
-    // [END UI4A3-DOWNWARD-COMPACT-HIDE]
+    }
 
-    // [BEGIN UI4A3-DOWNWARD-SECTION-GAP]
-    r.removeFromTop (2);
-    // [END UI4A3-DOWNWARD-SECTION-GAP]
+    const int rowH = 22;
 
     auto row = [&] (juce::Label& lab, juce::Slider& s)
     {
-        auto r2 = r.removeFromTop (24);
+        auto r2 = r.removeFromTop (rowH);
         lab.setBounds (r2.removeFromLeft (90));
         s.setBounds (r2);
-        // [BEGIN UI4A3-ROW-GAP-ZERO-DOWN]
-        r.removeFromTop (0);
-        // [END UI4A3-ROW-GAP-ZERO-DOWN]
     };
 
     row (ratioLabel, ratioSlider);
     row (attackLabel, attackSlider);
     row (releaseLabel, releaseSlider);
     row (makeupLabel, makeupSlider);
+
+    updateAdvancedVisibility();
+    if (! showAdvanced)
+        return;
+
+    row (kneeLabel, kneeSlider);
 }
+// [END UI4B3-DOWNWARD-RESIZED-WITH-ADVANCED]
 
 //==============================================================================
 // Limiter
@@ -1644,6 +1716,36 @@ void MtdmCardsContent::setLimiterHeightPx (int px)
     repaint();
 }
 // [END UI4B3-CARDS-SHRINK-IMPL]
+
+// [BEGIN UI4B3-DOWNWARD-HEIGHT-IMPL]
+void MtdmCardsContent::ensureDownwardHeightAtLeast (int px)
+{
+    px = juce::jmax (px, minDownwardPx);
+
+    if (cardHeights.downward >= px)
+        return;
+
+    cardHeights.downward = px;
+
+    setSize (getWidth(), getPreferredHeight());
+    resized();
+    repaint();
+}
+
+void MtdmCardsContent::setDownwardHeightPx (int px)
+{
+    px = juce::jmax (px, minDownwardPx);
+
+    if (cardHeights.downward == px)
+        return;
+
+    cardHeights.downward = px;
+
+    setSize (getWidth(), getPreferredHeight());
+    resized();
+    repaint();
+}
+// [END UI4B3-DOWNWARD-HEIGHT-IMPL]
 
 // [BEGIN UI4B2-LIMITER-AUTOEXPAND-IMPL]
 void MtdmCardsContent::ensureLimiterHeightAtLeast (int px)

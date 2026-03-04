@@ -285,16 +285,31 @@ public:
 private:
     juce::AudioProcessorValueTreeState& apvts;
 
+    // [BEGIN UI4B3-DOWNWARD-ADVANCED-MEMBERS]
     juce::ToggleButton enabledButton { "Downward Enabled" };
 
+    juce::ToggleButton advancedToggle { "Advanced" };
+    bool showAdvanced = false;
+
+    // Essentials
     juce::Label ratioLabel, attackLabel, releaseLabel, makeupLabel;
     juce::Slider ratioSlider, attackSlider, releaseSlider, makeupSlider;
+
+    // Advanced
+    juce::Label kneeLabel;
+    juce::Slider kneeSlider;
+
+    void updateAdvancedVisibility();
+    // [END UI4B3-DOWNWARD-ADVANCED-MEMBERS]
 
     using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
     using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
 
+    // [BEGIN UI4B3-DOWNWARD-ADVANCED-ATTACHMENTS]
     std::unique_ptr<ButtonAttachment> enabledAtt;
     std::unique_ptr<SliderAttachment> ratioAtt, attackAtt, releaseAtt, makeupAtt;
+    std::unique_ptr<SliderAttachment> kneeAtt;
+    // [END UI4B3-DOWNWARD-ADVANCED-ATTACHMENTS]
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MtdmDownwardCard)
 };
@@ -368,6 +383,11 @@ public:
     void setUpwardHeightPx  (int px);
     void setLimiterHeightPx (int px);
     // [END UI4B3-CARDS-SHRINK-DECL]
+
+    // [BEGIN UI4B3-DOWNWARD-HEIGHT-DECL]
+    void ensureDownwardHeightAtLeast (int px);
+    void setDownwardHeightPx (int px);
+    // [END UI4B3-DOWNWARD-HEIGHT-DECL]
 
 private:
     LevellingCard    levelling;
