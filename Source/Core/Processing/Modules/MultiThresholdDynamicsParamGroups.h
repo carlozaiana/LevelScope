@@ -144,6 +144,20 @@ namespace levelscope::mtdm
         });
         // [END MTDM-PARAMGROUPS-ZONE-MUTES]
 
+        // [BEGIN MTDM-PARAMGROUPS-ZONE-AUDITION]
+        groups.push_back (ParamGroup {
+            "mtdm.zoneAudition",
+            "Zone Audition (T0–T3)",
+            {
+                zoneAudBelowT0_01,
+                zoneAudT0T1_01,
+                zoneAudT1T2_01,
+                zoneAudT2T3_01,
+                zoneAudAboveT3_01
+            }
+        });
+        // [END MTDM-PARAMGROUPS-ZONE-AUDITION]
+
         return groups;
     }
     // [END MTDM-PARAM-GROUPS-DECL]

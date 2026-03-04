@@ -4,6 +4,9 @@
 // [BEGIN MTDM-INCLUDE-CSTDINT]
 #include <cstdint>
 // [END MTDM-INCLUDE-CSTDINT]
+// [BEGIN MTDM-INCLUDE-VECTOR]
+#include <vector>
+// [END MTDM-INCLUDE-VECTOR]
 // [BEGIN MTDM-PARAM-HEADER-INCLUDE]
 #include "MultiThresholdDynamicsParamIDs.h"
 // [END MTDM-PARAM-HEADER-INCLUDE]
@@ -133,7 +136,14 @@ namespace levelscope
                                  // [BEGIN MTDM-MC-POLICY-BINDPARAMS-DECL]
                                  std::atomic<float>* mcPolicyChoice,
                                  std::atomic<float>* dialogDetectorChoice,
-                                 std::atomic<float>* dialogApplyChoice) noexcept;
+                                 std::atomic<float>* dialogApplyChoice,
+                                 // [BEGIN MTDM-ZONE-AUDITION-BINDPARAMS-DECL]
+                                 std::atomic<float>* zoneAudBelowT0_01,
+                                 std::atomic<float>* zoneAudT0T1_01,
+                                 std::atomic<float>* zoneAudT1T2_01,
+                                 std::atomic<float>* zoneAudT2T3_01,
+                                 std::atomic<float>* zoneAudAboveT3_01) noexcept;
+                                 // [END MTDM-ZONE-AUDITION-BINDPARAMS-DECL]
                                  // [END MTDM-MC-POLICY-BINDPARAMS-DECL]
             // [END MTDM-BINDPARAMS-FULL-DECL]
 
@@ -379,7 +389,7 @@ namespace levelscope
         // [END MTDM-LIMITER-METERING-MEMBERS]
 
         // [BEGIN MTDM-UNTOUCHED-AUDITION-DETECTOR]
-        // Audition gate detector (broadband LUFS-ish proxy) for "Untouched Solo/Mute".
+        /// Audition gate detector (broadband LUFS-ish proxy) for Zone Audition (T0–T3).
         float auditionEnvMS = 0.0f;
         float auditionGateZ = 1.0f;
 
@@ -388,6 +398,17 @@ namespace levelscope
         float auditionGateA = 0.99f; // gate smoothing (set in prepare)
 
         bool auditionWasActive = false;
+        // [BEGIN MTDM-ZONE-AUDITION-GATE-DELAYLINE]
+        // Gate delay line to align PRE-processing zone detector with POST-processing output
+        // (important when Spectral Upward and/or Limiter latency is active).
+        std::vector<float> zoneGateDelayLine; // circular buffer
+        std::vector<float> zoneGateScratch;   // per-block gate values to apply (size=maxBlockSize)
+
+        int gateWritePos = 0;
+        int gateReadPos  = 0;
+        int gateDelaySamples = 0;
+        int gateLineSize = 0;
+        // [END MTDM-ZONE-AUDITION-GATE-DELAYLINE]
         // [END MTDM-UNTOUCHED-AUDITION-DETECTOR]
 
         // Stored from prepare() for debugging/future DSP wiring. Not used for DSP yet.
@@ -433,6 +454,14 @@ namespace levelscope
         std::atomic<float>* pDialogDetectorChoice = nullptr; // 0=C, 1=LCR
         std::atomic<float>* pDialogApplyChoice    = nullptr; // 0=C, 1=LCR
         // [END MTDM-MC-POLICY-PARAM-PTRS]
+
+        // [BEGIN MTDM-ZONE-AUDITION-PTRS]
+        std::atomic<float>* pZoneAudBelowT0_01 = nullptr;
+        std::atomic<float>* pZoneAudT0T1_01    = nullptr;
+        std::atomic<float>* pZoneAudT1T2_01    = nullptr;
+        std::atomic<float>* pZoneAudT2T3_01    = nullptr;
+        std::atomic<float>* pZoneAudAboveT3_01 = nullptr;
+        // [END MTDM-ZONE-AUDITION-PTRS]
 
         // [BEGIN MTDM-DOWNWARD-PARAM-PTRS]
         std::atomic<float>* pT2Lufs = nullptr;

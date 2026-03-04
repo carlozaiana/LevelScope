@@ -196,6 +196,28 @@ namespace levelscope::mtdm
     // [END MTDM-ZONE-UNTOUCHED-AUDITION-PARAM]
     // [END MTDM-ZONE-SOLO-MUTE-PARAMS]
 
+    // [BEGIN MTDM-ZONE-AUDITION-PARAMS]
+    namespace ParamIDs
+    {
+        // Zone audition (combinable "solo zones"):
+        // If any of these are ON => audition is active and ONLY the selected zones pass.
+        static constexpr const char* zoneAudBelowT0_01 = "mtdm.zoneAud.belowT0";
+        static constexpr const char* zoneAudT0T1_01    = "mtdm.zoneAud.t0t1";
+        static constexpr const char* zoneAudT1T2_01    = "mtdm.zoneAud.t1t2";
+        static constexpr const char* zoneAudT2T3_01    = "mtdm.zoneAud.t2t3";
+        static constexpr const char* zoneAudAboveT3_01 = "mtdm.zoneAud.aboveT3";
+    }
+
+    namespace Defaults
+    {
+        static constexpr float zoneAudBelowT0_01 = 0.0f;
+        static constexpr float zoneAudT0T1_01    = 0.0f;
+        static constexpr float zoneAudT1T2_01    = 0.0f;
+        static constexpr float zoneAudT2T3_01    = 0.0f;
+        static constexpr float zoneAudAboveT3_01 = 0.0f;
+    }
+    // [END MTDM-ZONE-AUDITION-PARAMS]
+
     // [BEGIN MTDM-DOWNWARD-PARAMS]
     namespace ParamIDs
     {
