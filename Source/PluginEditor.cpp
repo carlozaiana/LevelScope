@@ -551,7 +551,10 @@ static void scrollViewportToShowComponentBottom (juce::Viewport& vp, const juce:
         return;
 
     // Child bounds in the viewed component's coordinate space
-    const auto childBounds = child.getBounds();
+    // [BEGIN UI4B3-SCROLL-COORDSPACE-FIX]
+    // Convert child's local bounds into the viewed component's coordinate space.
+    const auto childBounds = viewed->getLocalArea (&child, child.getLocalBounds());
+    // [END UI4B3-SCROLL-COORDSPACE-FIX]
 
     const int viewY = vp.getViewPositionY();
     const int viewH = vp.getViewHeight();
