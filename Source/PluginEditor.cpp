@@ -542,6 +542,40 @@ void MissionControlComponent::resized()
 
 //==============================================================================
 // [BEGIN UI4A-MTDM-PANEL-CARDS-IMPL]
+
+// [BEGIN UI4B3-VIEWPORT-SCROLL-HELPER]
+static void scrollViewportToShowComponentBottom (juce::Viewport& vp, const juce::Component& child, int marginPx = 6)
+{
+    auto* viewed = vp.getViewedComponent();
+    if (viewed == nullptr)
+        return;
+
+    // Child bounds in the viewed component's coordinate space
+    const auto childBounds = child.getBounds();
+
+    const int viewY = vp.getViewPositionY();
+    const int viewH = vp.getViewHeight();
+
+    const int targetBottom = childBounds.getBottom() + marginPx;
+    const int targetTop    = childBounds.getY() - marginPx;
+
+    // If already fully visible, do nothing
+    if (targetTop >= viewY && targetBottom <= viewY + viewH)
+        return;
+
+    int newY = viewY;
+
+    // Prefer scrolling just enough so bottom becomes visible
+    if (targetBottom > viewY + viewH)
+        newY = targetBottom - viewH;
+    else if (targetTop < viewY)
+        newY = targetTop;
+
+    newY = juce::jmax (0, newY);
+    vp.setViewPosition (vp.getViewPositionX(), newY);
+}
+// [END UI4B3-VIEWPORT-SCROLL-HELPER]
+
 static void setSliderRangeFromParam (juce::AudioProcessorValueTreeState& apvts,
                                      const juce::String& paramID,
                                      juce::Slider& s)
@@ -889,7 +923,7 @@ MtdmUpwardCard::MtdmUpwardCard (LevelScopeAudioProcessor& p)
 
             // 2) Scroll just enough so the last advanced control becomes visible
             if (auto* vp = findParentComponentOfClass<juce::Viewport>())
-                vp->scrollToKeepComponentOnScreen (maxFreqSlider);
+                scrollViewportToShowComponentBottom (*vp, maxFreqSlider);
         }
         else if (! showAdvanced && was)
         {
@@ -1265,7 +1299,7 @@ MtdmLimiterCard::MtdmLimiterCard (LevelScopeAudioProcessor& p)
 
             // Scroll just enough so the last advanced control becomes visible
             if (auto* vp = findParentComponentOfClass<juce::Viewport>())
-                vp->scrollToKeepComponentOnScreen (driveSlider);
+                scrollViewportToShowComponentBottom (*vp, driveSlider);
         }
         else if (! showAdvanced && was)
         {
