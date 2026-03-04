@@ -882,6 +882,80 @@ void MtdmZonesCard::resized()
     row (t3Label, t3Slider);
 }
 
+// [BEGIN UI4C-AUDITION-CARD-IMPL]
+MtdmAuditionCard::MtdmAuditionCard (LevelScopeAudioProcessor& p)
+    : MtdmCardComponent ("Audition / Zones"),
+      apvts (p.getAPVTS())
+{
+    using namespace levelscope::mtdm::ParamIDs;
+
+    styleLabel (soloLabel, "Zone Solo");
+    addAndMakeVisible (soloLabel);
+    addAndMakeVisible (soloBox);
+
+    soloBox.addItemList (juce::StringArray { "None", "Upward", "Downward", "Limiter", "Untouched" }, 1);
+    soloAtt = std::make_unique<ComboAttachment> (apvts, zoneSoloChoice, soloBox);
+
+    auto styleMute = [] (juce::ToggleButton& b)
+    {
+        b.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.90f));
+    };
+
+    styleMute (muteUp);
+    styleMute (muteDown);
+    styleMute (muteLim);
+    styleMute (muteUnt);
+
+    addAndMakeVisible (muteUp);
+    addAndMakeVisible (muteDown);
+    addAndMakeVisible (muteLim);
+    addAndMakeVisible (muteUnt);
+
+    muteUpAtt   = std::make_unique<ButtonAttachment> (apvts, zoneUpwardMute01,   muteUp);
+    muteDownAtt = std::make_unique<ButtonAttachment> (apvts, zoneDownwardMute01, muteDown);
+    muteLimAtt  = std::make_unique<ButtonAttachment> (apvts, zoneLimiterMute01,  muteLim);
+    muteUntAtt  = std::make_unique<ButtonAttachment> (apvts, zoneUntouchedMute01, muteUnt);
+}
+
+void MtdmAuditionCard::resized()
+{
+    MtdmCardComponent::resized();
+
+    auto r = getContentArea();
+    const bool compact = (r.getHeight() < 60);
+
+    soloLabel.setVisible (! compact);
+    soloBox.setVisible (! compact);
+    muteUp.setVisible (! compact);
+    muteDown.setVisible (! compact);
+    muteLim.setVisible (! compact);
+    muteUnt.setVisible (! compact);
+
+    if (compact)
+        return;
+
+    const int rowH = 22;
+
+    auto rowCombo = [&] (juce::Label& lab, juce::ComboBox& c)
+    {
+        auto rr = r.removeFromTop (rowH);
+        lab.setBounds (rr.removeFromLeft (90));
+        c.setBounds (rr);
+    };
+
+    rowCombo (soloLabel, soloBox);
+
+    // Two rows of mute buttons
+    auto m1 = r.removeFromTop (rowH);
+    muteUp.setBounds   (m1.removeFromLeft (110));
+    muteDown.setBounds (m1);
+
+    auto m2 = r.removeFromTop (rowH);
+    muteLim.setBounds (m2.removeFromLeft (110));
+    muteUnt.setBounds (m2);
+}
+// [END UI4C-AUDITION-CARD-IMPL]
+
 //==============================================================================
 // Upward
 //==============================================================================
@@ -1506,10 +1580,11 @@ void MtdmLimiterCard::resized()
 //==============================================================================
 
 // [BEGIN UI4A1-CARDS-RESIZABLE-CTOR]
-// [BEGIN UI4A3-CARDS-ACCORDION-CTOR-FIX]
+// [BEGIN UI4C-CONTENT-CTOR-REPLACE]
 MtdmCardsContent::MtdmCardsContent (LevelScopeAudioProcessor& p)
     : levelling(),
       zones (p),
+      audition (p),
       upward (p),
       downward (p),
       limiter (p)
@@ -1518,34 +1593,33 @@ MtdmCardsContent::MtdmCardsContent (LevelScopeAudioProcessor& p)
     addAndMakeVisible (bar01);
     addAndMakeVisible (zones);
     addAndMakeVisible (bar12);
-    addAndMakeVisible (upward);
+    addAndMakeVisible (audition);
     addAndMakeVisible (bar23);
-    addAndMakeVisible (downward);
-    // [BEGIN UI4B2-ADD-LIMITER-TAIL-BAR]
+    addAndMakeVisible (upward);
     addAndMakeVisible (bar34);
-    addAndMakeVisible (limiter);
+    addAndMakeVisible (downward);
     addAndMakeVisible (bar45);
-    // [END UI4B2-ADD-LIMITER-TAIL-BAR]
-
-    // IMPORTANT:
-    // No cardsLayout here. No setItemLayout calls.
-    // Resizer bars are custom components (CardResizerBar) and act accordion-style.
+    addAndMakeVisible (limiter);
+    addAndMakeVisible (bar56);
 }
-// [END UI4A3-CARDS-ACCORDION-CTOR-FIX]
+// [END UI4C-CONTENT-CTOR-REPLACE]
 
 // [BEGIN UI4A3-CARDS-ACCORDION-PREFERREDHEIGHT]
 int MtdmCardsContent::getPreferredHeight() const noexcept
 {
-    // [BEGIN UI4B2-BAR-COUNT-5]
-    const int bars = 5 * barHeightPx;
-    // [END UI4B2-BAR-COUNT-5]
+    // [BEGIN UI4C-BARCOUNT-6]
+    const int bars = 6 * barHeightPx;
+    // [END UI4C-BARCOUNT-6]
 
+    // [BEGIN UI4C-SUMCARDS-ADD-AUDITION]
     const int sumCards =
         cardHeights.levelling +
         cardHeights.zones +
+        cardHeights.audition +
         cardHeights.upward +
         cardHeights.downward +
         cardHeights.limiter;
+    // [END UI4C-SUMCARDS-ADD-AUDITION]
 
     const int total = sumCards + bars;
 
@@ -1553,38 +1627,30 @@ int MtdmCardsContent::getPreferredHeight() const noexcept
 }
 // [END UI4A3-CARDS-ACCORDION-PREFERREDHEIGHT]
 
-// [BEGIN UI4A3-CARDS-ACCORDION-RESIZED]
+// [BEGIN UI4C-CONTENT-RESIZED-REPLACE]
 void MtdmCardsContent::resized()
 {
     auto r = getLocalBounds();
 
-    auto takeCard = [&] (int h)
-    {
-        h = juce::jmax (0, h);
-        return r.removeFromTop (h);
-    };
-
-    auto takeBar = [&]
-    {
-        return r.removeFromTop (barHeightPx);
-    };
+    auto takeCard = [&] (int h) { h = juce::jmax (0, h); return r.removeFromTop (h); };
+    auto takeBar  = [&] { return r.removeFromTop (barHeightPx); };
 
     levelling.setBounds (takeCard (cardHeights.levelling));
     bar01.setBounds     (takeBar());
     zones.setBounds     (takeCard (cardHeights.zones));
     bar12.setBounds     (takeBar());
-    upward.setBounds    (takeCard (cardHeights.upward));
+    audition.setBounds  (takeCard (cardHeights.audition));
     bar23.setBounds     (takeBar());
-    // [BEGIN UI4B2-RESIZED-ADD-BAR45]
-    downward.setBounds  (takeCard (cardHeights.downward));
+    upward.setBounds    (takeCard (cardHeights.upward));
     bar34.setBounds     (takeBar());
-    limiter.setBounds   (takeCard (cardHeights.limiter));
+    downward.setBounds  (takeCard (cardHeights.downward));
     bar45.setBounds     (takeBar());
+    limiter.setBounds   (takeCard (cardHeights.limiter));
+    bar56.setBounds     (takeBar());
 
     contentPreferredHeightPx = getHeight();
-    // [END UI4B2-RESIZED-ADD-BAR45]
 }
-// [END UI4A3-CARDS-ACCORDION-RESIZED]
+// [END UI4C-CONTENT-RESIZED-REPLACE]
 
 // [BEGIN UI4A3-CARDS-ACCORDION-RESIZER-IMPL]
 MtdmCardsContent::CardResizerBar::CardResizerBar (MtdmCardsContent& ownerIn, Boundary b)
@@ -1642,14 +1708,19 @@ void MtdmCardsContent::applyDragToBoundary (CardResizerBar::Boundary b, int dy)
     // dy > 0: drag downward => increase the card ABOVE the bar
     auto clamp = [] (int v, int lo, int hi) { return juce::jlimit (lo, hi, v); };
 
+    // [BEGIN UI4C-APPLYDRAG-REPLACE]
     switch (b)
     {
         case CardResizerBar::Boundary::levellingZones:
             cardHeights.levelling = clamp (cardHeights.levelling + dy, minLevellingPx, 6000);
             break;
 
-        case CardResizerBar::Boundary::zonesUpward:
+        case CardResizerBar::Boundary::zonesAudition:
             cardHeights.zones = clamp (cardHeights.zones + dy, minZonesPx, 6000);
+            break;
+
+        case CardResizerBar::Boundary::auditionUpward:
+            cardHeights.audition = clamp (cardHeights.audition + dy, minAuditionPx, 6000);
             break;
 
         case CardResizerBar::Boundary::upwardDownward:
@@ -1660,12 +1731,11 @@ void MtdmCardsContent::applyDragToBoundary (CardResizerBar::Boundary b, int dy)
             cardHeights.downward = clamp (cardHeights.downward + dy, minDownwardPx, 6000);
             break;
 
-            // [BEGIN UI4B2-APPLYDRAG-LIMITER-TAIL]
         case CardResizerBar::Boundary::limiterTail:
             cardHeights.limiter = clamp (cardHeights.limiter + dy, minLimiterPx, 6000);
             break;
-            // [END UI4B2-APPLYDRAG-LIMITER-TAIL]
     }
+    // [END UI4C-APPLYDRAG-REPLACE]
 }
 // [END UI4A3-CARDS-ACCORDION-RESIZER-IMPL]
 

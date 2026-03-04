@@ -220,6 +220,39 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MtdmZonesCard)
 };
 
+// [BEGIN UI4C-AUDITION-CARD-DECL]
+//------------------------------------------------------------------------------
+// Audition / Zones card (zone solo + mutes)
+//------------------------------------------------------------------------------
+class MtdmAuditionCard : public MtdmCardComponent
+{
+public:
+    explicit MtdmAuditionCard (LevelScopeAudioProcessor& p);
+    ~MtdmAuditionCard() override = default;
+
+    void resized() override;
+
+private:
+    juce::AudioProcessorValueTreeState& apvts;
+
+    juce::Label soloLabel;
+    juce::ComboBox soloBox;
+
+    juce::ToggleButton muteUp   { "Up Mute" };
+    juce::ToggleButton muteDown { "Down Mute" };
+    juce::ToggleButton muteLim  { "Lim Mute" };
+    juce::ToggleButton muteUnt  { "Untouched Mute" };
+
+    using ComboAttachment  = juce::AudioProcessorValueTreeState::ComboBoxAttachment;
+    using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
+
+    std::unique_ptr<ComboAttachment>  soloAtt;
+    std::unique_ptr<ButtonAttachment> muteUpAtt, muteDownAtt, muteLimAtt, muteUntAtt;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MtdmAuditionCard)
+};
+// [END UI4C-AUDITION-CARD-DECL]
+
 //------------------------------------------------------------------------------
 // Upward card (essentials)
 //------------------------------------------------------------------------------
@@ -390,21 +423,26 @@ public:
     // [END UI4B3-DOWNWARD-HEIGHT-DECL]
 
 private:
+    // [BEGIN UI4C-CONTENT-ADD-AUDITION-MEMBER]
     LevellingCard    levelling;
     MtdmZonesCard    zones;
+    MtdmAuditionCard audition;
     MtdmUpwardCard   upward;
+    // [END UI4C-CONTENT-ADD-AUDITION-MEMBER]
     MtdmDownwardCard downward;
     MtdmLimiterCard  limiter;
 
-    // [BEGIN UI4A3-CARDS-ACCORDION-MEMBERS]
+    // [BEGIN UI4C-CARDHEIGHTS-ADD-AUDITION]
     struct CardHeights
     {
         int levelling = 70;
         int zones     = 220;
+        int audition  = 110;
         int upward    = 220;
         int downward  = 180;
         int limiter   = 260;
     };
+    // [END UI4C-CARDHEIGHTS-ADD-AUDITION]
 
     CardHeights cardHeights;
 
@@ -412,6 +450,9 @@ private:
 
     static constexpr int minLevellingPx = 50;
     static constexpr int minZonesPx     = 34;
+    // [BEGIN UI4C-MINHEIGHT-AUDITION]
+    static constexpr int minAuditionPx  = 34;
+    // [END UI4C-MINHEIGHT-AUDITION]
     static constexpr int minUpwardPx    = 34;
     static constexpr int minDownwardPx  = 26;
     static constexpr int minLimiterPx   = 26;
@@ -419,9 +460,17 @@ private:
     class CardResizerBar : public juce::Component
     {
     public:
-        // [BEGIN UI4B2-RESIZER-ADD-LIMITER-TAIL]
-        enum class Boundary { levellingZones, zonesUpward, upwardDownward, downwardLimiter, limiterTail };
-        // [END UI4B2-RESIZER-ADD-LIMITER-TAIL]
+        // [BEGIN UI4C-BOUNDARY-ADD-AUDITION]
+        enum class Boundary
+        {
+            levellingZones,
+            zonesAudition,
+            auditionUpward,
+            upwardDownward,
+            downwardLimiter,
+            limiterTail
+        };
+        // [END UI4C-BOUNDARY-ADD-AUDITION]
 
         CardResizerBar (MtdmCardsContent& ownerIn, Boundary b);
 
@@ -444,13 +493,14 @@ private:
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CardResizerBar)
     };
 
-    // [BEGIN UI4B2-RESIZER-ADD-LIMITER-TAIL-BAR]
+    // [BEGIN UI4C-BARS-REPLACE]
     CardResizerBar bar01 { *this, CardResizerBar::Boundary::levellingZones };
-    CardResizerBar bar12 { *this, CardResizerBar::Boundary::zonesUpward };
-    CardResizerBar bar23 { *this, CardResizerBar::Boundary::upwardDownward };
-    CardResizerBar bar34 { *this, CardResizerBar::Boundary::downwardLimiter };
-    CardResizerBar bar45 { *this, CardResizerBar::Boundary::limiterTail }; // bottom tail bar resizes Limiter
-    // [END UI4B2-RESIZER-ADD-LIMITER-TAIL-BAR]
+    CardResizerBar bar12 { *this, CardResizerBar::Boundary::zonesAudition };
+    CardResizerBar bar23 { *this, CardResizerBar::Boundary::auditionUpward };
+    CardResizerBar bar34 { *this, CardResizerBar::Boundary::upwardDownward };
+    CardResizerBar bar45 { *this, CardResizerBar::Boundary::downwardLimiter };
+    CardResizerBar bar56 { *this, CardResizerBar::Boundary::limiterTail };
+    // [END UI4C-BARS-REPLACE]
 
     void applyDragToBoundary (CardResizerBar::Boundary b, int dy);
 
