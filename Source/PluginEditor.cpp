@@ -868,29 +868,41 @@ MtdmUpwardCard::MtdmUpwardCard (LevelScopeAudioProcessor& p)
     advancedToggle.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.85f));
     addAndMakeVisible (advancedToggle);
 
-    // [BEGIN UI4B1-UPWARD-AUTOEXPAND-ON-ADVANCED]
+    // [BEGIN UI4B3-UPWARD-ADVANCED-AUTOSCROLL-AUTOSHRINK]
     advancedToggle.onClick = [this]
     {
+        const bool was = showAdvanced;
         showAdvanced = advancedToggle.getToggleState();
+
         updateAdvancedVisibility();
         updateSpectralEnablement();
 
-        if (showAdvanced)
+        if (showAdvanced && ! was)
         {
-            // Ensure the card is tall enough to actually show the advanced rows.
-            // Keep this simple and stable: reserve for the full advanced set.
+            // 1) Expand enough to show advanced rows
             constexpr int rowH = 22;
-            constexpr int rows = 15; // mode + advanced toggle + 4 essentials + 9 advanced rows
-            const int desiredCardHeight = 44 + rowH * rows; // ~24 title/header + ~20 padding + rows
+            constexpr int rows = 15; // mode + (essentials 4) + (advanced ~9) + header padding
+            const int desiredCardHeight = 44 + rowH * rows;
 
             if (auto* owner = findParentComponentOfClass<MtdmCardsContent>())
                 owner->ensureUpwardHeightAtLeast (desiredCardHeight);
+
+            // 2) Scroll just enough so the last advanced control becomes visible
+            if (auto* vp = findParentComponentOfClass<juce::Viewport>())
+                vp->scrollToKeepComponentOnScreen (maxFreqSlider);
+        }
+        else if (! showAdvanced && was)
+        {
+            // Shrink to essentials height (no empty space)
+            constexpr int essentialsHeight = 160; // fits: mode + 4 essentials rows comfortably
+            if (auto* owner = findParentComponentOfClass<MtdmCardsContent>())
+                owner->setUpwardHeightPx (essentialsHeight);
         }
 
         resized();
         repaint();
     };
-    // [END UI4B1-UPWARD-AUTOEXPAND-ON-ADVANCED]
+    // [END UI4B3-UPWARD-ADVANCED-AUTOSCROLL-AUTOSHRINK]
     // [END UI4B1-UPWARD-ADVANCED-TOGGLE-CTOR]
 
     styleLabel (amountLabel, "Amount");
@@ -1236,23 +1248,37 @@ MtdmLimiterCard::MtdmLimiterCard (LevelScopeAudioProcessor& p)
     advancedToggle.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.85f));
     addAndMakeVisible (advancedToggle);
 
+    // [BEGIN UI4B3-LIMITER-ADVANCED-AUTOSCROLL-AUTOSHRINK]
     advancedToggle.onClick = [this]
     {
+        const bool was = showAdvanced;
         showAdvanced = advancedToggle.getToggleState();
+
         updateAdvancedVisibility();
 
-        if (showAdvanced)
+        if (showAdvanced && ! was)
         {
-            // Ensure Limiter is tall enough to show advanced rows
-            const int desired = 220; // stable simple choice
+            // Expand enough to show advanced rows (Attack/Release/Drive)
+            const int desired = 220;
             if (auto* owner = findParentComponentOfClass<MtdmCardsContent>())
                 owner->ensureLimiterHeightAtLeast (desired);
+
+            // Scroll just enough so the last advanced control becomes visible
+            if (auto* vp = findParentComponentOfClass<juce::Viewport>())
+                vp->scrollToKeepComponentOnScreen (driveSlider);
+        }
+        else if (! showAdvanced && was)
+        {
+            // Shrink to essentials height (Enabled row + Ceiling + Lookahead + OS)
+            const int essentialsHeight = 150;
+            if (auto* owner = findParentComponentOfClass<MtdmCardsContent>())
+                owner->setLimiterHeightPx (essentialsHeight);
         }
 
         resized();
         repaint();
     };
-    // [END UI4B2-LIMITER-ADVANCED-TOGGLE-CTOR]
+    // [END UI4B3-LIMITER-ADVANCED-AUTOSCROLL-AUTOSHRINK]
 
     styleLabel (ceilingLabel, "Ceiling");
     styleLabel (lookLabel, "Lookahead");
@@ -1551,6 +1577,36 @@ void MtdmCardsContent::ensureUpwardHeightAtLeast (int px)
     repaint();
 }
 // [END UI4B1-UPWARD-AUTOEXPAND-IMPL]
+
+// [BEGIN UI4B3-CARDS-SHRINK-IMPL]
+void MtdmCardsContent::setUpwardHeightPx (int px)
+{
+    px = juce::jmax (px, minUpwardPx);
+
+    if (cardHeights.upward == px)
+        return;
+
+    cardHeights.upward = px;
+
+    setSize (getWidth(), getPreferredHeight());
+    resized();
+    repaint();
+}
+
+void MtdmCardsContent::setLimiterHeightPx (int px)
+{
+    px = juce::jmax (px, minLimiterPx);
+
+    if (cardHeights.limiter == px)
+        return;
+
+    cardHeights.limiter = px;
+
+    setSize (getWidth(), getPreferredHeight());
+    resized();
+    repaint();
+}
+// [END UI4B3-CARDS-SHRINK-IMPL]
 
 // [BEGIN UI4B2-LIMITER-AUTOEXPAND-IMPL]
 void MtdmCardsContent::ensureLimiterHeightAtLeast (int px)

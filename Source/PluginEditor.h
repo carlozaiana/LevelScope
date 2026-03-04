@@ -364,6 +364,11 @@ public:
     void ensureLimiterHeightAtLeast (int px);
     // [END UI4B2-LIMITER-AUTOEXPAND-DECL]
 
+    // [BEGIN UI4B3-CARDS-SHRINK-DECL]
+    void setUpwardHeightPx  (int px);
+    void setLimiterHeightPx (int px);
+    // [END UI4B3-CARDS-SHRINK-DECL]
+
 private:
     LevellingCard    levelling;
     MtdmZonesCard    zones;
