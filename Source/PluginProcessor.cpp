@@ -209,6 +209,18 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
         Defaults::upwardModeChoice));
     // [END MTDM-APVTS-PARAM-LAYOUT-UPWARD-MODE]
 
+    // [BEGIN MTDM-APVTS-PARAM-LAYOUT-UPWARD-ENABLED-BYPASS]
+    layout.add (std::make_unique<juce::AudioParameterBool> (
+        juce::ParameterID { ParamIDs::upEnabled01, 1 },
+        "Upward Enabled",
+        (levelscope::mtdm::Defaults::upEnabled01 >= 0.5f)));
+
+    layout.add (std::make_unique<juce::AudioParameterBool> (
+        juce::ParameterID { ParamIDs::upBypass01, 1 },
+        "Upward Bypass (safe)",
+        (levelscope::mtdm::Defaults::upBypass01 >= 0.5f)));
+    // [END MTDM-APVTS-PARAM-LAYOUT-UPWARD-ENABLED-BYPASS]
+
     // [BEGIN MTDM-APVTS-PARAM-LAYOUT-LFE-MASK]
     layout.add (std::make_unique<juce::AudioParameterBool> (
         juce::ParameterID { ParamIDs::lfeInDetector, 1 },
@@ -290,6 +302,13 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
         Defaults::downMakeupDb));
     // [END MTDM-APVTS-PARAM-LAYOUT-DOWNWARD]
 
+    // [BEGIN MTDM-APVTS-PARAM-LAYOUT-DOWNWARD-BYPASS]
+    layout.add (std::make_unique<juce::AudioParameterBool> (
+        juce::ParameterID { ParamIDs::downBypass01, 1 },
+        "Downward Bypass (safe)",
+        (levelscope::mtdm::Defaults::downBypass01 >= 0.5f)));
+    // [END MTDM-APVTS-PARAM-LAYOUT-DOWNWARD-BYPASS]
+
     // [BEGIN MTDM-APVTS-PARAM-LAYOUT-LIMITER]
     layout.add (std::make_unique<juce::AudioParameterBool> (
         juce::ParameterID { ParamIDs::limEnabled01, 1 },
@@ -334,6 +353,13 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
         Defaults::limOversamplingChoice));
     // [END MTDM-APVTS-PARAM-LAYOUT-LIMITER-TP-ATTACK-DRIVE]
     // [END MTDM-APVTS-PARAM-LAYOUT-LIMITER]
+
+    // [BEGIN MTDM-APVTS-PARAM-LAYOUT-LIMITER-BYPASS]
+    layout.add (std::make_unique<juce::AudioParameterBool> (
+        juce::ParameterID { ParamIDs::limBypass01, 1 },
+        "Limiter Bypass (safe)",
+        (levelscope::mtdm::Defaults::limBypass01 >= 0.5f)));
+    // [END MTDM-APVTS-PARAM-LAYOUT-LIMITER-BYPASS]
 
     // [BEGIN MTDM-APVTS-PARAM-LAYOUT-ZONE-SOLO-MUTE]
     layout.add (std::make_unique<juce::AudioParameterChoice> (
@@ -542,7 +568,14 @@ void LevelScopeAudioProcessor::rebuildModuleGraphFromState (const juce::MemoryBl
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneAudT0T1_01),
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneAudT1T2_01),
                                   apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneAudT2T3_01),
-                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneAudAboveT3_01));
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::zoneAudAboveT3_01),
+
+                                  // [BEGIN MTDM-BINDPARAMS-STAGE-BYPASS]
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::upEnabled01),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::upBypass01),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::downBypass01),
+                                  apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::limBypass01));
+                                  // [END MTDM-BINDPARAMS-STAGE-BYPASS]
                                   // [END MTDM-BINDPARAMS-ZONE-AUDITION]
                                   // [END MTDM-BINDPARAMS-STAGE-E-MC]
 
@@ -584,6 +617,7 @@ void LevelScopeAudioProcessor::cacheLatencyParamPointers()
 
     pLatMtdmEnabled01         = apvts.getRawParameterValue (enabled);
     pLatUpwardModeChoice      = apvts.getRawParameterValue (upwardModeChoice);
+    pLatUpEnabled01           = apvts.getRawParameterValue (upEnabled01);
     pLatSucFftSizeChoice      = apvts.getRawParameterValue (sucFftSizeChoice);
 
     pLatLimEnabled01          = apvts.getRawParameterValue (limEnabled01);
@@ -599,14 +633,18 @@ int LevelScopeAudioProcessor::computeTotalLatencySamplesFromCachedParams() const
     if (! mtdmEnabled)
         return 0;
 
+    // [BEGIN LS-LATENCY-UPWARD-RESPECT-UPENABLED]
     // --- Upward latency
     int upwardLatency = 0;
+
+    const bool upEnabled =
+        (pLatUpEnabled01 != nullptr && pLatUpEnabled01->load (std::memory_order_relaxed) >= 0.5f);
 
     const int upwardMode =
         (pLatUpwardModeChoice != nullptr ? (int) std::lround (pLatUpwardModeChoice->load (std::memory_order_relaxed))
                                          : levelscope::mtdm::Defaults::upwardModeChoice);
 
-    if (upwardMode == 0) // Spectral
+    if (upEnabled && upwardMode == 0) // Spectral
     {
         const int choice =
             (pLatSucFftSizeChoice != nullptr ? (int) std::lround (pLatSucFftSizeChoice->load (std::memory_order_relaxed))
@@ -615,6 +653,7 @@ int LevelScopeAudioProcessor::computeTotalLatencySamplesFromCachedParams() const
         const int fftSizes[] = { 1024, 2048, 4096, 8192 };
         upwardLatency = fftSizes[juce::jlimit (0, 3, choice)];
     }
+    // [END LS-LATENCY-UPWARD-RESPECT-UPENABLED]
 
     // --- Limiter latency (lookahead + FIR detector latency)
     int limiterLatency = 0;
@@ -681,6 +720,7 @@ void LevelScopeAudioProcessor::registerLatencyParamListeners()
     // Only params that can change total latency.
     apvts.addParameterListener (enabled, this);
     apvts.addParameterListener (upwardModeChoice, this);
+    apvts.addParameterListener (upEnabled01, this);
     apvts.addParameterListener (sucFftSizeChoice, this);
 
     apvts.addParameterListener (limEnabled01, this);
@@ -697,6 +737,7 @@ void LevelScopeAudioProcessor::unregisterLatencyParamListeners()
 
     apvts.removeParameterListener (enabled, this);
     apvts.removeParameterListener (upwardModeChoice, this);
+    apvts.removeParameterListener (upEnabled01, this);
     apvts.removeParameterListener (sucFftSizeChoice, this);
 
     apvts.removeParameterListener (limEnabled01, this);

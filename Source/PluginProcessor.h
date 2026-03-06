@@ -291,6 +291,7 @@ private:
     // Cached raw parameter pointers for latency computation (no APVTS lookup in getLatencySamples()).
     std::atomic<float>* pLatMtdmEnabled01          = nullptr;
     std::atomic<float>* pLatUpwardModeChoice       = nullptr;
+    std::atomic<float>* pLatUpEnabled01            = nullptr;
     std::atomic<float>* pLatSucFftSizeChoice       = nullptr;
 
     std::atomic<float>* pLatLimEnabled01           = nullptr;
