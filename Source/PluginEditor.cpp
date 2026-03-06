@@ -1006,6 +1006,21 @@ MtdmUpwardCard::MtdmUpwardCard (LevelScopeAudioProcessor& p)
 {
     using namespace levelscope::mtdm::ParamIDs;
 
+    // [BEGIN UI-UP-HEADER-CTOR]
+    // Header replaces title
+    title.setVisible (false);
+
+    enabledButton.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.92f));
+    bypassButton.setColour  (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.85f));
+
+    addAndMakeVisible (enabledButton);
+    addAndMakeVisible (bypassButton);
+
+    // Bind to new params added in module chat
+    enabledAtt = std::make_unique<ButtonAttachment> (apvts, upEnabled01, enabledButton);
+    bypassAtt  = std::make_unique<ButtonAttachment> (apvts, upBypass01,  bypassButton);
+    // [END UI-UP-HEADER-CTOR]
+
     styleLabel (modeLabel, "Mode");
     addAndMakeVisible (modeLabel);
     addAndMakeVisible (modeBox);
@@ -1210,26 +1225,30 @@ void MtdmUpwardCard::updateSpectralEnablement()
 // [END UI4B1-UPWARD-ADVANCED-HELPERS]
 
 // [BEGIN UI4B1-UPWARD-RESIZED-HEADER-ADV-FIX]
+// [BEGIN UI-UP-RESIZED-HEADER-ENABLE-BYPASS]
 void MtdmUpwardCard::resized()
 {
     MtdmCardComponent::resized();
 
-    // Header row: title left, Advanced toggle right
-    {
-        auto header = getLocalBounds().reduced (10, 6).removeFromTop (18);
+    auto r = getLocalBounds().reduced (10, 6);
 
-        const int advW = juce::jmin (96, header.getWidth() / 3);
-        auto advArea = header.removeFromRight (juce::jmax (60, advW));
+    // Header row: Enable + Bypass (left), Advanced (right)
+    auto header = r.removeFromTop (22);
 
-        advancedToggle.setBounds (advArea);
-        title.setBounds (header);
-        advancedToggle.setVisible (true);
-    }
+    const int advW = 90;
+    advancedToggle.setBounds (header.removeFromRight (advW));
 
-    auto r = getContentArea();
+    const int bypassW = 90;
+    bypassButton.setBounds (header.removeFromRight (bypassW));
 
-    // Compact mode: hide everything except header controls
-    const bool compact = (r.getHeight() < 70);
+    enabledButton.setBounds (header);
+
+    // Content area below header
+    r.removeFromTop (4);
+    auto content = r;
+
+    // Compact: keep only header
+    const bool compact = (content.getHeight() < 70);
 
     modeLabel.setVisible (! compact);
     modeBox.setVisible (! compact);
@@ -1241,7 +1260,6 @@ void MtdmUpwardCard::resized()
 
     if (compact)
     {
-        // Also hide advanced section if compact
         updateAdvancedVisibility();
         return;
     }
@@ -1249,14 +1267,13 @@ void MtdmUpwardCard::resized()
     const int rowH = 22;
 
     // Mode row
-    auto rr = r.removeFromTop (rowH);
+    auto rr = content.removeFromTop (rowH);
     modeLabel.setBounds (rr.removeFromLeft (90));
     modeBox.setBounds (rr);
 
-    // Essentials rows
     auto row = [&] (juce::Label& lab, juce::Slider& s)
     {
-        auto r2 = r.removeFromTop (rowH);
+        auto r2 = content.removeFromTop (rowH);
         lab.setBounds (r2.removeFromLeft (90));
         s.setBounds (r2);
     };
@@ -1266,7 +1283,6 @@ void MtdmUpwardCard::resized()
     row (attackLabel, attackSlider);
     row (releaseLabel, releaseSlider);
 
-    // Advanced rows
     updateAdvancedVisibility();
     updateSpectralEnablement();
 
@@ -1275,7 +1291,7 @@ void MtdmUpwardCard::resized()
 
     auto rowCombo = [&] (juce::Label& lab, juce::ComboBox& c)
     {
-        auto r2 = r.removeFromTop (rowH);
+        auto r2 = content.removeFromTop (rowH);
         lab.setBounds (r2.removeFromLeft (90));
         c.setBounds (r2);
     };
@@ -1291,24 +1307,33 @@ void MtdmUpwardCard::resized()
     row (minFreqLabel, minFreqSlider);
     row (maxFreqLabel, maxFreqSlider);
 }
+// [END UI-UP-RESIZED-HEADER-ENABLE-BYPASS]
 // [END UI4B1-UPWARD-RESIZED-HEADER-ADV-FIX]
 
 //==============================================================================
 // Downward
 //==============================================================================
 
-// [BEGIN UI4A3-DOWNWARD-HIDE-TITLE]
+    // [BEGIN UI4A3-DOWNWARD-HIDE-TITLE]
 MtdmDownwardCard::MtdmDownwardCard (LevelScopeAudioProcessor& p)
     : MtdmCardComponent (""), // title hidden; enabled toggle acts as header
       apvts (p.getAPVTS())
 {
     title.setVisible (false);
-// [END UI4A3-DOWNWARD-HIDE-TITLE]
+    // [END UI4A3-DOWNWARD-HIDE-TITLE]
     using namespace levelscope::mtdm::ParamIDs;
 
     enabledButton.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.90f));
     addAndMakeVisible (enabledButton);
     enabledAtt = std::make_unique<ButtonAttachment> (apvts, downEnabled01, enabledButton);
+
+    // [BEGIN UI-DOWN-BYPASS-CTOR]
+    bypassButton.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.85f));
+    addAndMakeVisible (bypassButton);
+
+    // Bind to new bypass param
+    bypassAtt = std::make_unique<ButtonAttachment> (apvts, downBypass01, bypassButton);
+    // [END UI-DOWN-BYPASS-CTOR]
 
     // [BEGIN UI4B3-DOWNWARD-ADVANCED-TOGGLE-CTOR]
     advancedToggle.setClickingTogglesState (true);
@@ -1403,11 +1428,17 @@ void MtdmDownwardCard::resized()
     auto r = getContentArea();
 
     // Top row: Enabled toggle + Advanced toggle on same line
+    // [BEGIN UI-DOWN-HEADER-ENABLE-BYPASS-ADV]
     auto topRow = r.removeFromTop (22);
 
     const int advW = juce::jmin (110, topRow.getWidth() / 3);
     advancedToggle.setBounds (topRow.removeFromRight (juce::jmax (70, advW)));
+
+    const int bypW = 90;
+    bypassButton.setBounds (topRow.removeFromRight (bypW));
+
     enabledButton.setBounds (topRow);
+    // [END UI-DOWN-HEADER-ENABLE-BYPASS-ADV]
 
     const bool compact = (r.getHeight() < 60);
 
@@ -1464,6 +1495,13 @@ MtdmLimiterCard::MtdmLimiterCard (LevelScopeAudioProcessor& p)
     enabledButton.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.90f));
     addAndMakeVisible (enabledButton);
     enabledAtt = std::make_unique<ButtonAttachment> (apvts, limEnabled01, enabledButton);
+
+    // [BEGIN UI-LIM-BYPASS-CTOR]
+    bypassButton.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.85f));
+    addAndMakeVisible (bypassButton);
+
+    bypassAtt = std::make_unique<ButtonAttachment> (apvts, limBypass01, bypassButton);
+    // [END UI-LIM-BYPASS-CTOR]
 
     // [BEGIN UI4B2-LIMITER-ADVANCED-TOGGLE-CTOR]
     advancedToggle.setClickingTogglesState (true);
@@ -1564,11 +1602,17 @@ void MtdmLimiterCard::resized()
     auto r = getContentArea();
 
     // Top row: Limiter checkbox + Advanced toggle on the same line
+    // [BEGIN UI-LIM-HEADER-ENABLE-BYPASS-ADV]
     auto topRow = r.removeFromTop (22);
 
     const int advW = juce::jmin (110, topRow.getWidth() / 3);
     advancedToggle.setBounds (topRow.removeFromRight (juce::jmax (70, advW)));
+
+    const int bypW = 90;
+    bypassButton.setBounds (topRow.removeFromRight (bypW));
+
     enabledButton.setBounds (topRow);
+    // [END UI-LIM-HEADER-ENABLE-BYPASS-ADV]
 
     const bool compact = (r.getHeight() < 60);
 

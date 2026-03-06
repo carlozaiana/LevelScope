@@ -272,11 +272,16 @@ private:
     juce::AudioProcessorValueTreeState& apvts;
 
     // [BEGIN UI4B1-UPWARD-ADVANCED-MEMBERS]
+    // [BEGIN UI-UP-EN-BYP-HEADER-MEMBERS]
+    juce::ToggleButton enabledButton { "Upward" };
+    juce::ToggleButton bypassButton  { "Bypass" };
+
     juce::Label modeLabel;
     juce::ComboBox modeBox;
 
     juce::ToggleButton advancedToggle { "Advanced" };
     bool showAdvanced = false;
+    // [END UI-UP-EN-BYP-HEADER-MEMBERS]
 
     // Essentials
     juce::Label amountLabel, maxBoostLabel, attackLabel, releaseLabel;
@@ -292,11 +297,19 @@ private:
     juce::ComboBox fftBox, bandsBox;
     juce::Slider minFreqSlider, maxFreqSlider;
 
+    // [BEGIN UI-UP-ADD-BUTTONATTACHMENT-TYPEDEF]
+    using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
     using ComboAttachment  = juce::AudioProcessorValueTreeState::ComboBoxAttachment;
     using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
+    // [END UI-UP-ADD-BUTTONATTACHMENT-TYPEDEF]
+
+    // [BEGIN UI-UP-EN-BYP-ATTACHMENTS]
+    std::unique_ptr<ButtonAttachment> enabledAtt;
+    std::unique_ptr<ButtonAttachment> bypassAtt;
 
     std::unique_ptr<ComboAttachment>  modeAtt;
     std::unique_ptr<SliderAttachment> amountAtt, maxBoostAtt, attackAtt, releaseAtt;
+    // [END UI-UP-EN-BYP-ATTACHMENTS]
 
     std::unique_ptr<SliderAttachment> curveAtt, lowKneeAtt, highKneeAtt, calTrimAtt, minFreqAtt, maxFreqAtt;
     std::unique_ptr<ComboAttachment>  curveTypeAtt, fftAtt, bandsAtt;
@@ -323,10 +336,13 @@ private:
     juce::AudioProcessorValueTreeState& apvts;
 
     // [BEGIN UI4B3-DOWNWARD-ADVANCED-MEMBERS]
+    // [BEGIN UI-DOWN-BYP-MEMBERS]
     juce::ToggleButton enabledButton { "Downward Enabled" };
+    juce::ToggleButton bypassButton  { "Bypass" };
 
     juce::ToggleButton advancedToggle { "Advanced" };
     bool showAdvanced = false;
+    // [END UI-DOWN-BYP-MEMBERS]
 
     // Essentials
     juce::Label ratioLabel, attackLabel, releaseLabel, makeupLabel;
@@ -343,7 +359,10 @@ private:
     using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
 
     // [BEGIN UI4B3-DOWNWARD-ADVANCED-ATTACHMENTS]
+    // [BEGIN UI-DOWN-BYP-ATTACH]
     std::unique_ptr<ButtonAttachment> enabledAtt;
+    std::unique_ptr<ButtonAttachment> bypassAtt;
+    // [END UI-DOWN-BYP-ATTACH]
     std::unique_ptr<SliderAttachment> ratioAtt, attackAtt, releaseAtt, makeupAtt;
     std::unique_ptr<SliderAttachment> kneeAtt;
     // [END UI4B3-DOWNWARD-ADVANCED-ATTACHMENTS]
@@ -367,11 +386,13 @@ private:
 
     // [BEGIN UI4B2-LIMITER-ADVANCED-MEMBERS]
     // [BEGIN UI4B2-LIMITER-ENABLED-TEXT]
+    // [BEGIN UI-LIM-BYP-MEMBERS]
     juce::ToggleButton enabledButton { "Limiter" };
-    // [END UI4B2-LIMITER-ENABLED-TEXT]
+    juce::ToggleButton bypassButton  { "Bypass" };
 
     juce::ToggleButton advancedToggle { "Advanced" };
     bool showAdvanced = false;
+    // [END UI-LIM-BYP-MEMBERS]
 
     // Essentials
     juce::Label ceilingLabel, lookLabel, osLabel;
@@ -389,7 +410,10 @@ private:
     using ComboAttachment  = juce::AudioProcessorValueTreeState::ComboBoxAttachment;
     using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
 
+    // [BEGIN UI-LIM-BYP-ATTACH]
     std::unique_ptr<ButtonAttachment> enabledAtt;
+    std::unique_ptr<ButtonAttachment> bypassAtt;
+    // [END UI-LIM-BYP-ATTACH]
     std::unique_ptr<ComboAttachment>  osAtt;
     std::unique_ptr<SliderAttachment> ceilingAtt, lookAtt, attackAtt, releaseAtt, driveAtt;
 
