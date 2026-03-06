@@ -882,79 +882,119 @@ void MtdmZonesCard::resized()
     row (t3Label, t3Slider);
 }
 
-// [BEGIN UI4C-AUDITION-CARD-IMPL]
+// [BEGIN UI-ZONE-AUDITION-CARD-IMPL]
 MtdmAuditionCard::MtdmAuditionCard (LevelScopeAudioProcessor& p)
-    : MtdmCardComponent ("Audition / Zones"),
+    : MtdmCardComponent ("Zone Audition (T0–T3)"),
       apvts (p.getAPVTS())
 {
     using namespace levelscope::mtdm::ParamIDs;
 
-    styleLabel (soloLabel, "Zone Solo");
-    addAndMakeVisible (soloLabel);
-    addAndMakeVisible (soloBox);
-
-    soloBox.addItemList (juce::StringArray { "None", "Upward", "Downward", "Limiter", "Untouched" }, 1);
-    soloAtt = std::make_unique<ComboAttachment> (apvts, zoneSoloChoice, soloBox);
-
-    auto styleMute = [] (juce::ToggleButton& b)
+    auto styleToggle = [] (juce::ToggleButton& b)
     {
         b.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.90f));
+        b.setClickingTogglesState (true);
     };
 
-    styleMute (muteUp);
-    styleMute (muteDown);
-    styleMute (muteLim);
-    styleMute (muteUnt);
+    styleToggle (zBelowT0);
+    styleToggle (zT0T1);
+    styleToggle (zT1T2);
+    styleToggle (zT2T3);
+    styleToggle (zAboveT3);
 
-    addAndMakeVisible (muteUp);
-    addAndMakeVisible (muteDown);
-    addAndMakeVisible (muteLim);
-    addAndMakeVisible (muteUnt);
+    addAndMakeVisible (zBelowT0);
+    addAndMakeVisible (zT0T1);
+    addAndMakeVisible (zT1T2);
+    addAndMakeVisible (zT2T3);
+    addAndMakeVisible (zAboveT3);
 
-    muteUpAtt   = std::make_unique<ButtonAttachment> (apvts, zoneUpwardMute01,   muteUp);
-    muteDownAtt = std::make_unique<ButtonAttachment> (apvts, zoneDownwardMute01, muteDown);
-    muteLimAtt  = std::make_unique<ButtonAttachment> (apvts, zoneLimiterMute01,  muteLim);
-    muteUntAtt  = std::make_unique<ButtonAttachment> (apvts, zoneUntouchedMute01, muteUnt);
+    // Bind to NEW zone audition params (bools)
+    // NOTE: these IDs must match what you added in the module chat.
+    attBelowT0 = std::make_unique<ButtonAttachment> (apvts, zoneAudBelowT0_01, zBelowT0);
+    attT0T1    = std::make_unique<ButtonAttachment> (apvts, zoneAudT0T1_01,    zT0T1);
+    attT1T2    = std::make_unique<ButtonAttachment> (apvts, zoneAudT1T2_01,    zT1T2);
+    attT2T3    = std::make_unique<ButtonAttachment> (apvts, zoneAudT2T3_01,    zT2T3);
+    attAboveT3 = std::make_unique<ButtonAttachment> (apvts, zoneAudAboveT3_01, zAboveT3);
+
+    // Active indicator (purely visual; DSP already implements A/B behavior)
+    activeLabel.setText ("Audition Mode", juce::dontSendNotification);
+    activeLabel.setColour (juce::Label::textColourId, juce::Colours::white.withMultipliedAlpha (0.65f));
+    activeLabel.setFont (juce::Font (12.0f));
+    activeLabel.setJustificationType (juce::Justification::centredLeft);
+    addAndMakeVisible (activeLabel);
+
+    // Clear / All helpers
+    addAndMakeVisible (clearButton);
+    addAndMakeVisible (allButton);
+
+    clearButton.onClick = [this] { setAllZoneAuditionToggles (false); };
+    allButton.onClick   = [this] { setAllZoneAuditionToggles (true); };
+
+    setOpaque (false);
+}
+
+void MtdmAuditionCard::setAllZoneAuditionToggles (bool newState)
+{
+    using namespace levelscope::mtdm::ParamIDs;
+
+    const juce::String ids[] =
+    {
+        zoneAudBelowT0_01,
+        zoneAudT0T1_01,
+        zoneAudT1T2_01,
+        zoneAudT2T3_01,
+        zoneAudAboveT3_01
+    };
+
+    for (const auto& id : ids)
+    {
+        if (auto* p = apvts.getParameter (id))
+        {
+            p->beginChangeGesture();
+            p->setValueNotifyingHost (newState ? 1.0f : 0.0f);
+            p->endChangeGesture();
+        }
+    }
 }
 
 void MtdmAuditionCard::resized()
 {
     MtdmCardComponent::resized();
-
     auto r = getContentArea();
+
     const bool compact = (r.getHeight() < 60);
 
-    soloLabel.setVisible (! compact);
-    soloBox.setVisible (! compact);
-    muteUp.setVisible (! compact);
-    muteDown.setVisible (! compact);
-    muteLim.setVisible (! compact);
-    muteUnt.setVisible (! compact);
+    zBelowT0.setVisible (! compact);
+    zT0T1.setVisible (! compact);
+    zT1T2.setVisible (! compact);
+    zT2T3.setVisible (! compact);
+    zAboveT3.setVisible (! compact);
+    clearButton.setVisible (! compact);
+    allButton.setVisible (! compact);
+    activeLabel.setVisible (! compact);
 
     if (compact)
         return;
 
     const int rowH = 22;
 
-    auto rowCombo = [&] (juce::Label& lab, juce::ComboBox& c)
-    {
-        auto rr = r.removeFromTop (rowH);
-        lab.setBounds (rr.removeFromLeft (90));
-        c.setBounds (rr);
-    };
+    // Two rows of toggles + helpers row
+    auto row1 = r.removeFromTop (rowH);
+    zBelowT0.setBounds (row1.removeFromLeft (120));
+    zT0T1.setBounds    (row1.removeFromLeft (90));
+    zT1T2.setBounds    (row1);
 
-    rowCombo (soloLabel, soloBox);
+    auto row2 = r.removeFromTop (rowH);
+    zT2T3.setBounds    (row2.removeFromLeft (90));
+    zAboveT3.setBounds (row2.removeFromLeft (120));
 
-    // Two rows of mute buttons
-    auto m1 = r.removeFromTop (rowH);
-    muteUp.setBounds   (m1.removeFromLeft (110));
-    muteDown.setBounds (m1);
+    // Right side of row2: Clear/All
+    allButton.setBounds   (row2.removeFromRight (54));
+    clearButton.setBounds (row2.removeFromRight (60));
 
-    auto m2 = r.removeFromTop (rowH);
-    muteLim.setBounds (m2.removeFromLeft (110));
-    muteUnt.setBounds (m2);
+    // Indicator row
+    activeLabel.setBounds (r.removeFromTop (18));
 }
-// [END UI4C-AUDITION-CARD-IMPL]
+// [END UI-ZONE-AUDITION-CARD-IMPL]
 
 //==============================================================================
 // Upward

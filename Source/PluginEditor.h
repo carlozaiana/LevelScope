@@ -220,9 +220,9 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MtdmZonesCard)
 };
 
-// [BEGIN UI4C-AUDITION-CARD-DECL]
+// [BEGIN UI-ZONE-AUDITION-CARD-DECL]
 //------------------------------------------------------------------------------
-// Audition / Zones card (zone solo + mutes)
+// Zone Audition card (NEW): 5 loudness zones, combinable (OR), empty selection = OFF
 //------------------------------------------------------------------------------
 class MtdmAuditionCard : public MtdmCardComponent
 {
@@ -235,23 +235,27 @@ public:
 private:
     juce::AudioProcessorValueTreeState& apvts;
 
-    juce::Label soloLabel;
-    juce::ComboBox soloBox;
+    // 5 combinable zone toggles
+    juce::ToggleButton zBelowT0 { "Below T0" };
+    juce::ToggleButton zT0T1    { "T0..T1" };
+    juce::ToggleButton zT1T2    { "T1..T2" };
+    juce::ToggleButton zT2T3    { "T2..T3" };
+    juce::ToggleButton zAboveT3 { "Above T3" };
 
-    juce::ToggleButton muteUp   { "Up Mute" };
-    juce::ToggleButton muteDown { "Down Mute" };
-    juce::ToggleButton muteLim  { "Lim Mute" };
-    juce::ToggleButton muteUnt  { "Untouched Mute" };
+    // Optional helpers
+    juce::TextButton clearButton { "Clear" };
+    juce::TextButton allButton   { "All" };
+    juce::Label      activeLabel;
 
-    using ComboAttachment  = juce::AudioProcessorValueTreeState::ComboBoxAttachment;
     using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
 
-    std::unique_ptr<ComboAttachment>  soloAtt;
-    std::unique_ptr<ButtonAttachment> muteUpAtt, muteDownAtt, muteLimAtt, muteUntAtt;
+    std::unique_ptr<ButtonAttachment> attBelowT0, attT0T1, attT1T2, attT2T3, attAboveT3;
+
+    void setAllZoneAuditionToggles (bool newState);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MtdmAuditionCard)
 };
-// [END UI4C-AUDITION-CARD-DECL]
+// [END UI-ZONE-AUDITION-CARD-DECL]
 
 //------------------------------------------------------------------------------
 // Upward card (essentials)
