@@ -489,7 +489,14 @@ namespace levelscope
                                                       std::atomic<float>* zoneAudT0T1_01,
                                                       std::atomic<float>* zoneAudT1T2_01,
                                                       std::atomic<float>* zoneAudT2T3_01,
-                                                      std::atomic<float>* zoneAudAboveT3_01) noexcept
+                                                      std::atomic<float>* zoneAudAboveT3_01,
+
+                                                      // [BEGIN MTDM-STAGE-BYPASS-BINDPARAMS-IMPL]
+                                                      std::atomic<float>* upEnabled01,
+                                                      std::atomic<float>* upBypass01,
+                                                      std::atomic<float>* downBypass01,
+                                                      std::atomic<float>* limBypass01) noexcept
+                                                      // [END MTDM-STAGE-BYPASS-BINDPARAMS-IMPL]
                                                       // [END MTDM-ZONE-AUDITION-BINDPARAMS-IMPL]
                                                       // [END MTDM-MC-POLICY-BINDPARAMS-IMPL]
     {
@@ -556,6 +563,15 @@ namespace levelscope
         pZoneAudT2T3_01    = zoneAudT2T3_01;
         pZoneAudAboveT3_01 = zoneAudAboveT3_01;
         // [END MTDM-ZONE-AUDITION-BINDPARAMS-ASSIGN]
+
+        // [BEGIN MTDM-STAGE-BYPASS-BINDPARAMS-ASSIGN]
+        pUpEnabled01  = upEnabled01;
+        pUpBypass01   = upBypass01;
+
+        pDownBypass01 = downBypass01;
+
+        pLimBypass01  = limBypass01;
+        // [END MTDM-STAGE-BYPASS-BINDPARAMS-ASSIGN]
     }
     // [END MTDM-BINDPARAMS-FULL-IMPL]
 
@@ -820,18 +836,34 @@ namespace levelscope
             // [END MTDM-ZONE-SOLO-MUTE-LOGIC]
 
             // [BEGIN MTDM-RUN-UPWARD]
-            // If Upward mode is Spectral, always call it to preserve STFT delay.
-            // If muted/unsoloed, we run it in auditionBypass mode (unity gains).
-            if (lastUpwardModeChoice == 0) // Spectral
+            const bool upEnabled = (pUpEnabled01 != nullptr
+                                      ? (pUpEnabled01->load (std::memory_order_relaxed) >= 0.5f)
+                                      : (levelscope::mtdm::Defaults::upEnabled01 >= 0.5f));
+
+            const bool upBypass = (pUpBypass01 != nullptr
+                                     ? (pUpBypass01->load (std::memory_order_relaxed) >= 0.5f)
+                                     : (levelscope::mtdm::Defaults::upBypass01 >= 0.5f));
+
+            if (! upEnabled)
             {
-                up.auditionBypass = ! runUp;
-                activeUpward->process (ctx.audio, up);
+                // Structural disable: stage not in chain. (Latency reporting is handled in PluginProcessor.)
+                // Do nothing here.
             }
             else
             {
-                // Broadband upward has no latency; safe to skip.
-                if (runUp)
+                // Safe bypass:
+                // - Spectral: must still run to preserve STFT latency, but force unity via auditionBypass.
+                // - Broadband: no latency, so we can simply skip when bypassed.
+                if (lastUpwardModeChoice == 0) // Spectral
+                {
+                    up.auditionBypass = upBypass;
                     activeUpward->process (ctx.audio, up);
+                }
+                else
+                {
+                    if (! upBypass)
+                        activeUpward->process (ctx.audio, up);
+                }
             }
             // [END MTDM-RUN-UPWARD]
 
@@ -962,7 +994,11 @@ namespace levelscope
             // [END MTDM-DOWNWARD-RP-SET-MC-MASKBITS]
 
             // [BEGIN MTDM-RUN-DOWNWARD]
-            if (runDown)
+            const bool downBypass = (pDownBypass01 != nullptr
+                                       ? (pDownBypass01->load (std::memory_order_relaxed) >= 0.5f)
+                                       : (levelscope::mtdm::Defaults::downBypass01 >= 0.5f));
+
+            if (! downBypass)
                 downwardProcessor.process (ctx.audio, down);
             // [END MTDM-RUN-DOWNWARD]
             // [END MTDM-PROCESS-DOWNWARD]
@@ -1054,10 +1090,15 @@ namespace levelscope
                                                         : (float) levelscope::mtdm::Defaults::limOversamplingChoice);
             // [END MTDM-PROCESS-LIMITER-TP]
 
-                // [BEGIN MTDM-RUN-LIMITER]
+            // [BEGIN MTDM-RUN-LIMITER]
+            const bool limBypass = (pLimBypass01 != nullptr
+                                      ? (pLimBypass01->load (std::memory_order_relaxed) >= 0.5f)
+                                      : (levelscope::mtdm::Defaults::limBypass01 >= 0.5f));
+
             if (lim.enabled)
             {
-                lim.auditionBypass = ! runLim;
+                // Safe bypass preserves limiter latency/delay pipeline.
+                lim.auditionBypass = limBypass;
                 limiterStage.process (ctx.audio, lim);
             }
             // [END MTDM-RUN-LIMITER]

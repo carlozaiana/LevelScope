@@ -149,6 +149,23 @@ namespace levelscope::mtdm
         }
     // [END MTDM-UPWARD-MODE-PARAM]
 
+    // [BEGIN MTDM-UPWARD-ENABLED-BYPASS-PARAMS]
+    namespace ParamIDs
+    {
+        // Structural enable (affects latency when Spectral).
+        static constexpr const char* upEnabled01 = "mtdm.up.enabled01";
+
+        // Safe bypass (automation-friendly): preserves latency when applicable.
+        static constexpr const char* upBypass01  = "mtdm.up.bypass01";
+    }
+
+    namespace Defaults
+    {
+        static constexpr float upEnabled01 = 1.0f; // ON by default (matches existing behavior)
+        static constexpr float upBypass01  = 0.0f;
+    }
+    // [END MTDM-UPWARD-ENABLED-BYPASS-PARAMS]
+
     // [BEGIN MTDM-LFE-MASK-PARAMS]
     namespace ParamIDs
     {
@@ -270,6 +287,17 @@ namespace levelscope::mtdm
     }
     // [END MTDM-DOWNWARD-PARAMS]
 
+    // [BEGIN MTDM-DOWNWARD-BYPASS-PARAM]
+    namespace ParamIDs
+    {
+        static constexpr const char* downBypass01 = "mtdm.down.bypass01";
+    }
+    namespace Defaults
+    {
+        static constexpr float downBypass01 = 0.0f;
+    }
+    // [END MTDM-DOWNWARD-BYPASS-PARAM]
+
     // [BEGIN MTDM-LIMITER-PARAMS]
     namespace ParamIDs
     {
@@ -324,6 +352,17 @@ namespace levelscope::mtdm
     }
     // [END MTDM-LIMITER-PARAMS-TP-ATTACK-DRIVE]
     // [END MTDM-LIMITER-PARAMS]
+
+    // [BEGIN MTDM-LIMITER-BYPASS-PARAM]
+    namespace ParamIDs
+    {
+        static constexpr const char* limBypass01 = "mtdm.lim.bypass01";
+    }
+    namespace Defaults
+    {
+        static constexpr float limBypass01 = 0.0f;
+    }
+    // [END MTDM-LIMITER-BYPASS-PARAM]
 
     // [BEGIN MTDM-MC-POLICY-PARAMS]
     namespace ParamIDs

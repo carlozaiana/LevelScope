@@ -142,7 +142,14 @@ namespace levelscope
                                  std::atomic<float>* zoneAudT0T1_01,
                                  std::atomic<float>* zoneAudT1T2_01,
                                  std::atomic<float>* zoneAudT2T3_01,
-                                 std::atomic<float>* zoneAudAboveT3_01) noexcept;
+                                 std::atomic<float>* zoneAudAboveT3_01,
+
+                                 // [BEGIN MTDM-STAGE-BYPASS-BINDPARAMS-DECL]
+                                 std::atomic<float>* upEnabled01,
+                                 std::atomic<float>* upBypass01,
+                                 std::atomic<float>* downBypass01,
+                                 std::atomic<float>* limBypass01) noexcept;
+                                 // [END MTDM-STAGE-BYPASS-BINDPARAMS-DECL]
                                  // [END MTDM-ZONE-AUDITION-BINDPARAMS-DECL]
                                  // [END MTDM-MC-POLICY-BINDPARAMS-DECL]
             // [END MTDM-BINDPARAMS-FULL-DECL]
@@ -462,6 +469,15 @@ namespace levelscope
         std::atomic<float>* pZoneAudT2T3_01    = nullptr;
         std::atomic<float>* pZoneAudAboveT3_01 = nullptr;
         // [END MTDM-ZONE-AUDITION-PTRS]
+
+        // [BEGIN MTDM-STAGE-BYPASS-PTRS]
+        std::atomic<float>* pUpEnabled01    = nullptr;
+        std::atomic<float>* pUpBypass01     = nullptr;
+
+        std::atomic<float>* pDownBypass01   = nullptr;
+
+        std::atomic<float>* pLimBypass01    = nullptr;
+        // [END MTDM-STAGE-BYPASS-PTRS]
 
         // [BEGIN MTDM-DOWNWARD-PARAM-PTRS]
         std::atomic<float>* pT2Lufs = nullptr;

@@ -60,6 +60,9 @@ namespace levelscope::mtdm
                 t0Lufs,
                 t1Lufs,
 
+                upEnabled01,
+                upBypass01,
+
                 sucAmount01,
                 sucMaxBoostDb,
                 sucCurve,
@@ -96,6 +99,7 @@ namespace levelscope::mtdm
                 t3Lufs,
 
                 downEnabled01,
+                downBypass01,
                 downRatio,
                 downKneeDb,
                 downAttackMs,
@@ -110,6 +114,7 @@ namespace levelscope::mtdm
             "Limiter (Safety)",
             {
                 limEnabled01,
+                limBypass01,                
                 limCeilingDb,
                 limDriveDb,
                 limLookaheadMs,
