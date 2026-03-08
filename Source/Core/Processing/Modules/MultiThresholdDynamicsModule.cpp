@@ -868,7 +868,6 @@ namespace levelscope
             // [END MTDM-RUN-UPWARD]
 
             // [BEGIN MTDM-UPWARD-METERING-UPDATE]
-            // Upward metering: report max boost across channels (as dB >= 0).
             auto gainToBoostDb = [] (float g) noexcept
             {
                 g = juce::jmax (1.0f, g);
@@ -884,80 +883,99 @@ namespace levelscope
                                           ? (pUpBypass01->load (std::memory_order_relaxed) >= 0.5f)
                                           : (levelscope::mtdm::Defaults::upBypass01 >= 0.5f));
 
-            // Consider the stage inactive if:
-            // - transport not playing, OR
-            // - upward structurally disabled, OR
-            // - upward bypassed (safe bypass = unity), OR
-            // - spectral is in auditionBypass (also unity)
-            bool upwardActiveForMeter = ctx.isPlaying && upEnabledMeter && (! upBypassMeter);
+            const float decayDbThisBlock =
+                (preparedSampleRate > 1.0 ? upwardHoldDecayDbPerSecond * (float) ((double) ctx.numSamples / preparedSampleRate)
+                                          : 0.0f);
 
-            float gMax  = 1.0f;
-            float gLast = 1.0f;
-
-            if (upwardActiveForMeter)
+            // "Inactive" because transport stopped: decay slowly (do NOT hard-reset).
+            if (! ctx.isPlaying)
             {
-                if (lastUpwardModeChoice == 0) // Spectral
-                {
-                    if (up.auditionBypass) // unity, latency-preserving
-                    {
-                        upwardActiveForMeter = false;
-                    }
-                    else
-                    {
-                        gMax  = spectralUpwardProcessor.suc.getLastBlockMaxLinearGain();
-                        gLast = spectralUpwardProcessor.suc.getLastBlockLastLinearGain();
-                    }
-                }
-                else // Broadband
-                {
-                    // In broadband mode, bypass skips processing, so treat bypass as inactive (handled above).
-                    gMax  = broadbandUpwardProcessor.buc.getLastBlockMaxLinearGain();
-                    gLast = broadbandUpwardProcessor.buc.getLastBlockLastLinearGain();
-                }
-            }
-
-            if (! upwardActiveForMeter)
-            {
-                upwardHoldDbInternal = 0.0f;
-                upwardHoldSamplesLeft = 0;
-
                 upwardMetering.boostDbCurrent.store   (0.0f, std::memory_order_relaxed);
                 upwardMetering.boostDbBlockPeak.store (0.0f, std::memory_order_relaxed);
-                upwardMetering.boostDbHold.store      (0.0f, std::memory_order_relaxed);
-            }
-            else
-            {
-                const float boostBlockPeak = gainToBoostDb (gMax);
-                const float boostCurrent   = gainToBoostDb (gLast);
 
-                upwardMetering.boostDbBlockPeak.store (boostBlockPeak, std::memory_order_relaxed);
-                upwardMetering.boostDbCurrent.store   (boostCurrent,   std::memory_order_relaxed);
-
-                const int holdSamples = (int) std::lround (preparedSampleRate * (double) upwardHoldTimeSeconds);
-                const float decayDbThisBlock =
-                    (preparedSampleRate > 1.0 ? upwardHoldDecayDbPerSecond * (float) ((double) ctx.numSamples / preparedSampleRate)
-                                              : 0.0f);
-
-                if (boostBlockPeak > upwardHoldDbInternal)
+                if (upwardHoldSamplesLeft > 0)
                 {
-                    upwardHoldDbInternal = boostBlockPeak;
-                    upwardHoldSamplesLeft = holdSamples;
+                    upwardHoldSamplesLeft -= ctx.numSamples;
+                    if (upwardHoldSamplesLeft < 0)
+                        upwardHoldSamplesLeft = 0;
                 }
                 else
                 {
-                    if (upwardHoldSamplesLeft > 0)
-                    {
-                        upwardHoldSamplesLeft -= ctx.numSamples;
-                        if (upwardHoldSamplesLeft < 0)
-                            upwardHoldSamplesLeft = 0;
-                    }
-                    else
-                    {
-                        upwardHoldDbInternal = std::max (0.0f, upwardHoldDbInternal - decayDbThisBlock);
-                    }
+                    upwardHoldDbInternal = std::max (0.0f, upwardHoldDbInternal - decayDbThisBlock);
                 }
 
                 upwardMetering.boostDbHold.store (upwardHoldDbInternal, std::memory_order_relaxed);
+            }
+            else
+            {
+                // Transport playing: if structurally disabled or bypassed, hard-reset to 0.
+                // (Bypass/disable is a user action; we want the meter to drop immediately.)
+                bool upwardActiveForMeter = upEnabledMeter && (! upBypassMeter);
+
+                float gMax  = 1.0f;
+                float gLast = 1.0f;
+
+                if (upwardActiveForMeter)
+                {
+                    if (lastUpwardModeChoice == 0) // Spectral
+                    {
+                        if (up.auditionBypass) // unity
+                        {
+                            upwardActiveForMeter = false;
+                        }
+                        else
+                        {
+                            gMax  = spectralUpwardProcessor.suc.getLastBlockMaxLinearGain();
+                            gLast = spectralUpwardProcessor.suc.getLastBlockLastLinearGain();
+                        }
+                    }
+                    else // Broadband
+                    {
+                        gMax  = broadbandUpwardProcessor.buc.getLastBlockMaxLinearGain();
+                        gLast = broadbandUpwardProcessor.buc.getLastBlockLastLinearGain();
+                    }
+                }
+
+                if (! upwardActiveForMeter)
+                {
+                    upwardHoldDbInternal = 0.0f;
+                    upwardHoldSamplesLeft = 0;
+
+                    upwardMetering.boostDbCurrent.store   (0.0f, std::memory_order_relaxed);
+                    upwardMetering.boostDbBlockPeak.store (0.0f, std::memory_order_relaxed);
+                    upwardMetering.boostDbHold.store      (0.0f, std::memory_order_relaxed);
+                }
+                else
+                {
+                    const float boostBlockPeak = gainToBoostDb (gMax);
+                    const float boostCurrent   = gainToBoostDb (gLast);
+
+                    upwardMetering.boostDbBlockPeak.store (boostBlockPeak, std::memory_order_relaxed);
+                    upwardMetering.boostDbCurrent.store   (boostCurrent,   std::memory_order_relaxed);
+
+                    const int holdSamples = (int) std::lround (preparedSampleRate * (double) upwardHoldTimeSeconds);
+
+                    if (boostBlockPeak > upwardHoldDbInternal)
+                    {
+                        upwardHoldDbInternal = boostBlockPeak;
+                        upwardHoldSamplesLeft = holdSamples;
+                    }
+                    else
+                    {
+                        if (upwardHoldSamplesLeft > 0)
+                        {
+                            upwardHoldSamplesLeft -= ctx.numSamples;
+                            if (upwardHoldSamplesLeft < 0)
+                                upwardHoldSamplesLeft = 0;
+                        }
+                        else
+                        {
+                            upwardHoldDbInternal = std::max (0.0f, upwardHoldDbInternal - decayDbThisBlock);
+                        }
+                    }
+
+                    upwardMetering.boostDbHold.store (upwardHoldDbInternal, std::memory_order_relaxed);
+                }
             }
             // [END MTDM-UPWARD-METERING-UPDATE]
 
@@ -1015,9 +1033,7 @@ namespace levelscope
 
             // [BEGIN MTDM-DOWNWARD-METERING-UPDATE]
             // Downward compressor metering: use compressor gain excluding makeup.
-            // [BEGIN MTDM-DOWNWARD-METERING-GAINTOGR-RENAME]
             auto gainToGrDbDown = [] (float g) noexcept
-            // [END MTDM-DOWNWARD-METERING-GAINTOGR-RENAME]
             {
                 g = juce::jlimit (1.0e-6f, 1.0f, g);
                 return (float) (-20.0 * std::log10 ((double) g));
@@ -1027,8 +1043,31 @@ namespace levelscope
                                             ? (pDownBypass01->load (std::memory_order_relaxed) >= 0.5f)
                                             : (levelscope::mtdm::Defaults::downBypass01 >= 0.5f));
 
-            // If transport stopped OR downward disabled OR bypassed => publish zeros and reset hold
-            if (! ctx.isPlaying || ! down.enabled || downBypassMeter)
+            const float decayDbThisBlock =
+                (preparedSampleRate > 1.0 ? downwardHoldDecayDbPerSecond * (float) ((double) ctx.numSamples / preparedSampleRate)
+                                          : 0.0f);
+
+            // Transport stopped => decay slowly (do NOT hard-reset).
+            if (! ctx.isPlaying)
+            {
+                downwardMetering.grDbCurrent.store   (0.0f, std::memory_order_relaxed);
+                downwardMetering.grDbBlockPeak.store (0.0f, std::memory_order_relaxed);
+
+                if (downwardHoldSamplesLeft > 0)
+                {
+                    downwardHoldSamplesLeft -= ctx.numSamples;
+                    if (downwardHoldSamplesLeft < 0)
+                        downwardHoldSamplesLeft = 0;
+                }
+                else
+                {
+                    downwardHoldDbInternal = std::max (0.0f, downwardHoldDbInternal - decayDbThisBlock);
+                }
+
+                downwardMetering.grDbHold.store (downwardHoldDbInternal, std::memory_order_relaxed);
+            }
+            // Playing, but bypass/disabled => drop immediately.
+            else if (! down.enabled || downBypassMeter)
             {
                 downwardHoldDbInternal = 0.0f;
                 downwardHoldSamplesLeft = 0;
@@ -1049,9 +1088,6 @@ namespace levelscope
                 downwardMetering.grDbCurrent.store   (grCurrent,   std::memory_order_relaxed);
 
                 const int holdSamples = (int) std::lround (preparedSampleRate * (double) downwardHoldTimeSeconds);
-                const float decayDbThisBlock =
-                    (preparedSampleRate > 1.0 ? downwardHoldDecayDbPerSecond * (float) ((double) ctx.numSamples / preparedSampleRate)
-                                              : 0.0f);
 
                 if (grBlockPeak > downwardHoldDbInternal)
                 {
@@ -1119,15 +1155,36 @@ namespace levelscope
             // [END MTDM-PROCESS-LIMITER]
 
             // [BEGIN MTDM-LIMITER-METERING-UPDATE]
-            // Metering: compute GR dB from limiter-applied gain (block min and last).
-            // GR dB is reported as positive numbers (0 = no reduction).
             const bool limBypassMeter = (pLimBypass01 != nullptr
                                            ? (pLimBypass01->load (std::memory_order_relaxed) >= 0.5f)
                                            : (levelscope::mtdm::Defaults::limBypass01 >= 0.5f));
 
-            // If transport stopped OR limiter disabled OR bypassed => publish zeros and reset hold
-            if (! ctx.isPlaying || ! lim.enabled || limBypassMeter)
+            const float decayDbThisBlock =
+                (preparedSampleRate > 1.0 ? limiterHoldDecayDbPerSecond * (float) ((double) ctx.numSamples / preparedSampleRate)
+                                          : 0.0f);
+
+            if (! ctx.isPlaying)
             {
+                // Transport stopped: decay slowly.
+                limiterMetering.grDbCurrent.store   (0.0f, std::memory_order_relaxed);
+                limiterMetering.grDbBlockPeak.store (0.0f, std::memory_order_relaxed);
+
+                if (limiterHoldSamplesLeft > 0)
+                {
+                    limiterHoldSamplesLeft -= ctx.numSamples;
+                    if (limiterHoldSamplesLeft < 0)
+                        limiterHoldSamplesLeft = 0;
+                }
+                else
+                {
+                    limiterHoldDbInternal = std::max (0.0f, limiterHoldDbInternal - decayDbThisBlock);
+                }
+
+                limiterMetering.grDbHold.store (limiterHoldDbInternal, std::memory_order_relaxed);
+            }
+            else if (! lim.enabled || limBypassMeter)
+            {
+                // Playing, but limiter inactive by user action: drop immediately.
                 limiterHoldDbInternal = 0.0f;
                 limiterHoldSamplesLeft = 0;
 
@@ -1137,8 +1194,6 @@ namespace levelscope
             }
             else
             {
-                // Metering: compute GR dB from limiter-applied gain (block min and last).
-                // GR dB is reported as positive numbers (0 = no reduction).
                 auto gainToGrDb = [] (float g) noexcept
                 {
                     g = juce::jlimit (1.0e-6f, 1.0f, g);
@@ -1154,11 +1209,7 @@ namespace levelscope
                 limiterMetering.grDbBlockPeak.store (grBlockPeak, std::memory_order_relaxed);
                 limiterMetering.grDbCurrent.store   (grCurrent,   std::memory_order_relaxed);
 
-                // Peak-hold with hold time + decay (audio-thread-only state).
                 const int holdSamples = (int) std::lround (preparedSampleRate * (double) limiterHoldTimeSeconds);
-                const float decayDbThisBlock =
-                    (preparedSampleRate > 1.0 ? limiterHoldDecayDbPerSecond * (float) ((double) ctx.numSamples / preparedSampleRate)
-                                              : 0.0f);
 
                 if (grBlockPeak > limiterHoldDbInternal)
                 {
