@@ -914,20 +914,6 @@ void LevelScopeAudioProcessor::resetLoudnessState() noexcept
 
     // RT-safe reset; Stage A graph is empty => no audible change
     processorCore.reset();
-    // [BEGIN LS-IO-METERING-RESET]
-    inHoldDbInternal = -120.0f;
-    outHoldDbInternal = -120.0f;
-    inHoldSamplesLeft = 0;
-    outHoldSamplesLeft = 0;
-
-    inputMetering.currentDbfs.store   (-120.0f, std::memory_order_relaxed);
-    inputMetering.blockPeakDbfs.store (-120.0f, std::memory_order_relaxed);
-    inputMetering.holdDbfs.store      (-120.0f, std::memory_order_relaxed);
-
-    outputMetering.currentDbfs.store   (-120.0f, std::memory_order_relaxed);
-    outputMetering.blockPeakDbfs.store (-120.0f, std::memory_order_relaxed);
-    outputMetering.holdDbfs.store      (-120.0f, std::memory_order_relaxed);
-    // [END LS-IO-METERING-RESET]
 }
 // [END LS-PROCESSORCORE-RESETLOUDNESSSTATE]
 
@@ -1159,66 +1145,6 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     haveLastBlockEnd = true;
     lastBlockEndProjectSample = blockStartProjectSample + (juce::int64) numSamples;
     lastBlockIsPlaying = blockIsPlaying;
-
-    // [BEGIN LS-IO-METERING-UPDATE-HELPERS]
-    auto peakToDbfs = [] (float peak01) noexcept
-    {
-        peak01 = juce::jlimit (0.0f, 16.0f, peak01);
-        if (peak01 <= 1.0e-9f) return -120.0f;
-        const float db = (float) (20.0 * std::log10 ((double) peak01));
-        return juce::jmax (-120.0f, db);
-    };
-
-    auto computeBlockPeak01 = [] (const juce::AudioBuffer<float>& b, int nCh) noexcept
-    {
-        const int nS = b.getNumSamples();
-        float p = 0.0f;
-
-        for (int ch = 0; ch < nCh; ++ch)
-        {
-            const float* x = b.getReadPointer (ch);
-            for (int i = 0; i < nS; ++i)
-                p = std::max (p, std::abs (x[i]));
-        }
-        return p;
-    };
-
-    auto updateHoldDbfs = [this, numSamples] (IOMeteringAtomics& m,
-                                              float& holdDbInternal,
-                                              int& holdSamplesLeft,
-                                              float blockPeakDbfs) noexcept
-    {
-        m.currentDbfs.store   (blockPeakDbfs, std::memory_order_relaxed);
-        m.blockPeakDbfs.store (blockPeakDbfs, std::memory_order_relaxed);
-
-        const int holdSamples = (int) std::lround ((currentSampleRate > 1.0 ? currentSampleRate : 48000.0) * (double) ioHoldTimeSeconds);
-
-        const float decayDbThisBlock =
-            (currentSampleRate > 1.0 ? ioHoldDecayDbPerSecond * (float) ((double) numSamples / currentSampleRate)
-                                     : 0.0f);
-
-        if (blockPeakDbfs > holdDbInternal)
-        {
-            holdDbInternal = blockPeakDbfs;
-            holdSamplesLeft = holdSamples;
-        }
-        else
-        {
-            if (holdSamplesLeft > 0)
-            {
-                holdSamplesLeft -= numSamples;
-                if (holdSamplesLeft < 0)
-                    holdSamplesLeft = 0;
-            }
-            else
-            {
-                holdDbInternal = std::max (-120.0f, holdDbInternal - decayDbThisBlock);
-            }
-        }
-
-        m.holdDbfs.store (holdDbInternal, std::memory_order_relaxed);
-    };
-    // [END LS-IO-METERING-UPDATE-HELPERS]
 
     // [BEGIN LS-PROCESSORCORE-SKIP-ANALYSIS-STILL-PROCESS]
         if (! shouldAnalyse)
