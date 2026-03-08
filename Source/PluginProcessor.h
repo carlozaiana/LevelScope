@@ -107,6 +107,22 @@ public:
     };
 
     DownwardMeteringSnapshot getDownwardMeteringSnapshot() const noexcept;
+
+    // [BEGIN LS-IO-METERING-SNAPSHOT-API]
+    struct IOMeteringSnapshot
+    {
+        float inDbfsCurrent   = -120.0f;
+        float inDbfsBlockPeak = -120.0f;
+        float inDbfsHold      = -120.0f;
+
+        float outDbfsCurrent   = -120.0f;
+        float outDbfsBlockPeak = -120.0f;
+        float outDbfsHold      = -120.0f;
+    };
+
+    IOMeteringSnapshot getIOMeteringSnapshot() const noexcept;
+    // [END LS-IO-METERING-SNAPSHOT-API]
+
     // [END LS-DOWNWARD-METERING-SNAPSHOT-API]
 
     // [BEGIN LS-IO-METERING-SNAPSHOT-API]
@@ -213,6 +229,26 @@ private:
     // DSP module-chain host (Stage A: empty graph => no-op, no audible change)
     levelscope::ProcessorCore processorCore;
     // [END LS-PROCESSORCORE-MEMBER]
+
+    // [BEGIN LS-IO-METERING-MEMBERS]
+    struct IOMeteringAtomics
+    {
+        std::atomic<float> currentDbfs   { -120.0f };
+        std::atomic<float> blockPeakDbfs { -120.0f };
+        std::atomic<float> holdDbfs      { -120.0f };
+    };
+
+    IOMeteringAtomics inputMetering;
+    IOMeteringAtomics outputMetering;
+
+    float inHoldDbInternal  = -120.0f;
+    float outHoldDbInternal = -120.0f;
+    int   inHoldSamplesLeft  = 0;
+    int   outHoldSamplesLeft = 0;
+
+    static constexpr float ioHoldTimeSeconds = 0.25f;
+    static constexpr float ioHoldDecayDbPerSecond = 12.0f;
+    // [END LS-IO-METERING-MEMBERS]
 
     // [BEGIN LS-MTDM-UI-HANDLE]
     // Non-RT handle for UI/meter polling. Stored atomically on graph rebuild.
