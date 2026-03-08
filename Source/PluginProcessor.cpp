@@ -779,23 +779,6 @@ void LevelScopeAudioProcessor::timerCallback()
 }
 // [END LS-LATENCY-LISTENER-IMPL]
 
-// [BEGIN LS-IO-METERING-SNAPSHOT-IMPL]
-LevelScopeAudioProcessor::IOMeteringSnapshot LevelScopeAudioProcessor::getIOMeteringSnapshot() const noexcept
-{
-    IOMeteringSnapshot s;
-
-    s.inDbfsCurrent   = inputMetering.currentDbfs.load   (std::memory_order_relaxed);
-    s.inDbfsBlockPeak = inputMetering.blockPeakDbfs.load (std::memory_order_relaxed);
-    s.inDbfsHold      = inputMetering.holdDbfs.load      (std::memory_order_relaxed);
-
-    s.outDbfsCurrent   = outputMetering.currentDbfs.load   (std::memory_order_relaxed);
-    s.outDbfsBlockPeak = outputMetering.blockPeakDbfs.load (std::memory_order_relaxed);
-    s.outDbfsHold      = outputMetering.holdDbfs.load      (std::memory_order_relaxed);
-
-    return s;
-}
-// [END LS-IO-METERING-SNAPSHOT-IMPL]
-
 // [BEGIN LS-UPWARD-METERING-SNAPSHOT-IMPL]
 LevelScopeAudioProcessor::UpwardMeteringSnapshot LevelScopeAudioProcessor::getUpwardMeteringSnapshot() const noexcept
 {
