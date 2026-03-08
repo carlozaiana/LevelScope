@@ -883,7 +883,7 @@ namespace levelscope
                                           ? (pUpBypass01->load (std::memory_order_relaxed) >= 0.5f)
                                           : (levelscope::mtdm::Defaults::upBypass01 >= 0.5f));
 
-            const float decayDbThisBlock =
+            const float decayDbThisBlockUp =
                 (preparedSampleRate > 1.0 ? upwardHoldDecayDbPerSecond * (float) ((double) ctx.numSamples / preparedSampleRate)
                                           : 0.0f);
 
@@ -901,7 +901,7 @@ namespace levelscope
                 }
                 else
                 {
-                    upwardHoldDbInternal = std::max (0.0f, upwardHoldDbInternal - decayDbThisBlock);
+                    upwardHoldDbInternal = std::max (0.0f, upwardHoldDbInternal - decayDbThisBlockUp);
                 }
 
                 upwardMetering.boostDbHold.store (upwardHoldDbInternal, std::memory_order_relaxed);
@@ -970,7 +970,7 @@ namespace levelscope
                         }
                         else
                         {
-                            upwardHoldDbInternal = std::max (0.0f, upwardHoldDbInternal - decayDbThisBlock);
+                            upwardHoldDbInternal = std::max (0.0f, upwardHoldDbInternal - decayDbThisBlockUp);
                         }
                     }
 
@@ -1043,7 +1043,7 @@ namespace levelscope
                                             ? (pDownBypass01->load (std::memory_order_relaxed) >= 0.5f)
                                             : (levelscope::mtdm::Defaults::downBypass01 >= 0.5f));
 
-            const float decayDbThisBlock =
+            const float decayDbThisBlockDown =
                 (preparedSampleRate > 1.0 ? downwardHoldDecayDbPerSecond * (float) ((double) ctx.numSamples / preparedSampleRate)
                                           : 0.0f);
 
@@ -1061,7 +1061,7 @@ namespace levelscope
                 }
                 else
                 {
-                    downwardHoldDbInternal = std::max (0.0f, downwardHoldDbInternal - decayDbThisBlock);
+                    downwardHoldDbInternal = std::max (0.0f, downwardHoldDbInternal - decayDbThisBlockDown);
                 }
 
                 downwardMetering.grDbHold.store (downwardHoldDbInternal, std::memory_order_relaxed);
@@ -1104,7 +1104,7 @@ namespace levelscope
                     }
                     else
                     {
-                        downwardHoldDbInternal = std::max (0.0f, downwardHoldDbInternal - decayDbThisBlock);
+                        downwardHoldDbInternal = std::max (0.0f, downwardHoldDbInternal - decayDbThisBlockDown);
                     }
                 }
 
@@ -1159,7 +1159,7 @@ namespace levelscope
                                            ? (pLimBypass01->load (std::memory_order_relaxed) >= 0.5f)
                                            : (levelscope::mtdm::Defaults::limBypass01 >= 0.5f));
 
-            const float decayDbThisBlock =
+            const float decayDbThisBlockLim =
                 (preparedSampleRate > 1.0 ? limiterHoldDecayDbPerSecond * (float) ((double) ctx.numSamples / preparedSampleRate)
                                           : 0.0f);
 
@@ -1177,7 +1177,7 @@ namespace levelscope
                 }
                 else
                 {
-                    limiterHoldDbInternal = std::max (0.0f, limiterHoldDbInternal - decayDbThisBlock);
+                    limiterHoldDbInternal = std::max (0.0f, limiterHoldDbInternal - decayDbThisBlockLim);
                 }
 
                 limiterMetering.grDbHold.store (limiterHoldDbInternal, std::memory_order_relaxed);
@@ -1226,7 +1226,7 @@ namespace levelscope
                     }
                     else
                     {
-                        limiterHoldDbInternal = std::max (0.0f, limiterHoldDbInternal - decayDbThisBlock);
+                        limiterHoldDbInternal = std::max (0.0f, limiterHoldDbInternal - decayDbThisBlockLim);
                     }
                 }
 
