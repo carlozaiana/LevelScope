@@ -309,6 +309,45 @@ private:
 
     juce::ToggleButton rollingLraButton; // [ROLLING-LRA] show/hide rolling LRA curve
     bool showRollingLra = false;
+    // [BEGIN UI-METERS-IDLE-DECAY-STATE]
+    struct RightStripMeterDisplay
+    {
+        // I/O (dBFS)
+        float inPeakDbCurrent  = -200.0f;
+        float inPeakDbHold     = -200.0f;
+        float inRmsDbCurrent   = -200.0f;
+
+        float outPeakDbCurrent = -200.0f;
+        float outPeakDbHold    = -200.0f;
+        float outRmsDbCurrent  = -200.0f;
+
+        // Stages (dB)
+        float upBoostDbCurrent = 0.0f;
+        float upBoostDbHold    = 0.0f;
+
+        float downGrDbHold     = 0.0f;
+        float limGrDbHold      = 0.0f;
+    };
+
+    RightStripMeterDisplay meterDisp;
+
+    // Detect whether processor is still being called (host time-in-samples changes)
+    juce::int64 lastSeenHostSamplesForMeters = 0;
+    double      lastHostSamplesChangeMs      = 0.0;
+
+    // [BEGIN UI-METERS-IDLE-DECAY-LASTMS]
+    double lastMeterUiUpdateMs = 0.0;
+    // [END UI-METERS-IDLE-DECAY-LASTMS]
+
+    // UI-only decay when host stops calling processBlock()
+    static constexpr float uiDecayDbPerSecLevel = 36.0f; // dBFS meters fall fairly quickly
+    static constexpr float uiDecayDbPerSecStage = 18.0f; // GR/Boost falls a bit slower
+
+    // [BEGIN UI-METERS-IDLE-DECAY-SIGNATURE]
+    // Returns true if the meters changed (or are decaying) and need a repaint.
+    bool updateRightStripMetersFromTimer();
+    // [END UI-METERS-IDLE-DECAY-SIGNATURE]
+    // [END UI-METERS-IDLE-DECAY-STATE]
     // [BEGIN ROLLING-LRA-SPLITTER-STATE]
     // Rolling LRA lane height (px). User can drag the divider to resize.
     int rollingLaneHeightPx = 46; // old hardcoded value
