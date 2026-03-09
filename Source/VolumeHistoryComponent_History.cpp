@@ -42,18 +42,24 @@ void VolumeHistoryComponent::timerCallback()
 
     // Repaint if we got new history data OR rolling is rebuilding OR meters need animation.
     // Meters need repaint even when gotNewData is false (e.g. host stopped calling processBlock()).
+    // [BEGIN UI-METERS-IDLE-DECAY-CALL]
     const bool metersNeedRepaint = updateRightStripMetersFromTimer();
-    // [BEGIN UI-METERS-IDLE-DECAY-CONDITIONAL-REPAINT]
+    // [END UI-METERS-IDLE-DECAY-CALL]
+
+    // [BEGIN UI-METERS-IDLE-DECAY-REPAINT-STRATEGY]
     if (gotNewData || rollingRebuildInProgress)
     {
-        // Full repaint when curves/rolling rebuild changed
+        // Full repaint only when curves need updating
         repaint();
     }
-    else if (metersNeedRepaint)
+    else
     {
-        // Only meters changed/decayed -> repaint only the right strip (cheap)
-        repaint (getDbRulerArea());
+        // No new curve data: keep animating meters cheaply by repainting only the right strip.
+        // (paint() will skip heavy curve work based on clip bounds; see Render.cpp patch)
+        if (metersNeedRepaint)
+            repaint (getDbRulerArea());
     }
+    // [END UI-METERS-IDLE-DECAY-REPAINT-STRATEGY]
     // [END UI-METERS-IDLE-DECAY-CONDITIONAL-REPAINT]
 }
 

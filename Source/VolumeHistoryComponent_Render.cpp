@@ -73,6 +73,10 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     // [BEGIN UI3C1-MAINPLOT-W-USE-PLOTWIDTH]
     mainPlotArea = juce::Rectangle<float> (0.0f, 0.0f, (float) plotWidth, (float) plotBottom);
     // [END UI3C1-MAINPLOT-W-USE-PLOTWIDTH]
+    // [BEGIN UI-METERS-CLIP-SKIP-HEAVY-PLOT]
+    const auto clipI = g.getClipBounds();
+    const bool clipTouchesPlot = clipI.intersects (mainPlotArea.toNearestInt());
+    // [END UI-METERS-CLIP-SKIP-HEAVY-PLOT]
     // [END UI3B-MAINPLOT-WIDTH-EXCLUDE-RIGHTSTRIP]
     // [END ROLLING-LRA-SPLITTER-MAINPLOT-AREA]
 
@@ -155,6 +159,14 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     // [END UI3B-RIGHTSTRIP-BG]
         // [BEGIN ROLLING-LRA-SPLITTER-HOIST-SELECTEDLEVEL]
         // Must live outside the plot-clip scope because we use it later for debug text.
+
+            // [BEGIN UI-METERS-CLIP-SKIP-HEAVY-PLOT-WRAP]
+            if (clipTouchesPlot)
+            {
+                // ... existing heavy plot work (selectedLevel, buildVisibleGroups, curves loop, bands/lines/gate) ...
+            }
+            // [END UI-METERS-CLIP-SKIP-HEAVY-PLOT-WRAP]
+
         const int selectedLevel = selectBestLevelForCurrentZoom (plotWidth);
         // [END ROLLING-LRA-SPLITTER-HOIST-SELECTEDLEVEL]
 
