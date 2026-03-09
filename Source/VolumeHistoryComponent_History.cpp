@@ -43,7 +43,9 @@ void VolumeHistoryComponent::timerCallback()
     // Repaint if we got new history data OR rolling is rebuilding OR meters need animation.
     // Meters need repaint even when gotNewData is false (e.g. host stopped calling processBlock()).
     // [BEGIN UI-METERS-IDLE-DECAY-CALL]
-    const bool metersNeedRepaint = updateRightStripMetersFromTimer();
+    // [BEGIN UI-METERS-IDLE-DECAY-CALL2]
+    const bool metersNeedRepaint = updateRightStripMetersFromTimer (gotNewData);
+    // [END UI-METERS-IDLE-DECAY-CALL2]
     // [END UI-METERS-IDLE-DECAY-CALL]
 
     // [BEGIN UI-METERS-IDLE-DECAY-REPAINT-STRATEGY]

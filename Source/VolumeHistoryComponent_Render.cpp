@@ -1228,7 +1228,7 @@ void VolumeHistoryComponent::drawMtdmThresholdOverlay (juce::Graphics& g)
 // [END MTDM-THRESH-UI-IMPL]
 
 // [BEGIN UI-METERS-IDLE-DECAY-IMPL-BOOL]
-bool VolumeHistoryComponent::updateRightStripMetersFromTimer()
+bool VolumeHistoryComponent::updateRightStripMetersFromTimer (bool gotNewHistoryData)
 {
     const double nowMs = juce::Time::getMillisecondCounterHiRes();
 
@@ -1246,26 +1246,33 @@ bool VolumeHistoryComponent::updateRightStripMetersFromTimer()
 
     bool audioCallbackActive = false;
 
+    // [BEGIN UI-METERS-IDLE-DECAY-ACTIVITY-FIX]
+    const bool haveHostSamples = processor.hostHasTimeInSamples();
+    const juce::int64 hostSamp = processor.getLastHostTimeInSamples();
+
+    // Treat "activity" as either:
+    // - host sample time advancing, OR
+    // - new loudness history data arriving (drainProcessorFifo() returned >0)
+    bool activityThisTick = false;
+
     if (haveHostSamples)
     {
         if (hostSamp != lastSeenHostSamplesForMeters)
         {
             lastSeenHostSamplesForMeters = hostSamp;
-            lastHostSamplesChangeMs = nowMs;
-            audioCallbackActive = true;
-        }
-        else
-        {
-            // Consider "inactive" if host samples haven't changed recently
-            audioCallbackActive = ((nowMs - lastHostSamplesChangeMs) < 150.0);
+            activityThisTick = true;
         }
     }
-    else
-    {
-        // If host doesn't provide sample time, we can't detect stop reliably.
-        // Treat as active and just mirror snapshots.
-        audioCallbackActive = true;
-    }
+
+    if (gotNewHistoryData)
+        activityThisTick = true;
+
+    if (activityThisTick)
+        lastHostSamplesChangeMs = nowMs;
+
+    // Consider "active" if we've seen activity recently
+    const bool audioCallbackActive = ((nowMs - lastHostSamplesChangeMs) < 150.0);
+    // [END UI-METERS-IDLE-DECAY-ACTIVITY-FIX]
 
     if (audioCallbackActive)
     {

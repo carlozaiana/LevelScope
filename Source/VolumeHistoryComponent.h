@@ -345,7 +345,9 @@ private:
 
     // [BEGIN UI-METERS-IDLE-DECAY-SIGNATURE]
     // Returns true if the meters changed (or are decaying) and need a repaint.
-    bool updateRightStripMetersFromTimer();
+    // [BEGIN UI-METERS-IDLE-DECAY-SIGNATURE2]
+    bool updateRightStripMetersFromTimer (bool gotNewHistoryData);
+    // [END UI-METERS-IDLE-DECAY-SIGNATURE2]
     // [END UI-METERS-IDLE-DECAY-SIGNATURE]
     // [END UI-METERS-IDLE-DECAY-STATE]
     // [BEGIN ROLLING-LRA-SPLITTER-STATE]
