@@ -159,16 +159,16 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     // [END UI3B-RIGHTSTRIP-BG]
         // [BEGIN ROLLING-LRA-SPLITTER-HOIST-SELECTEDLEVEL]
         // Must live outside the plot-clip scope because we use it later for debug text.
-
-            // [BEGIN UI-METERS-CLIP-SKIP-HEAVY-PLOT-WRAP]
-            if (clipTouchesPlot)
-            {
-                // ... existing heavy plot work (selectedLevel, buildVisibleGroups, curves loop, bands/lines/gate) ...
-            }
-            // [END UI-METERS-CLIP-SKIP-HEAVY-PLOT-WRAP]
-
-        const int selectedLevel = selectBestLevelForCurrentZoom (plotWidth);
+        // [BEGIN UI-METERS-CLIP-SELECTEDLEVEL-DECL]
+        int selectedLevel = 0;
+        // [END UI-METERS-CLIP-SELECTEDLEVEL-DECL]
         // [END ROLLING-LRA-SPLITTER-HOIST-SELECTEDLEVEL]
+
+        // [BEGIN UI-METERS-CLIP-SKIP-HEAVY-PLOT-WRAP]
+        if (clipTouchesPlot)
+        {
+            selectedLevel = selectBestLevelForCurrentZoom (plotWidth);
+        // [END UI-METERS-CLIP-SKIP-HEAVY-PLOT-WRAP]
 
         // [BEGIN ROLLING-LRA-SPLITTER-CLIP-PLOT]
         {
@@ -336,6 +336,9 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     // [BEGIN ROLLING-LRA-SPLITTER-CLIP-PLOT-END]
     } // end plot clip scope
     // [END ROLLING-LRA-SPLITTER-CLIP-PLOT-END]
+    // [BEGIN UI-METERS-CLIP-SKIP-HEAVY-PLOT-WRAP-END]
+    } // end if (clipTouchesPlot)
+    // [END UI-METERS-CLIP-SKIP-HEAVY-PLOT-WRAP-END]
 
     //==============================================================================
     // [DBFS-SCALE] Right-side dBFS scale (overlay)
