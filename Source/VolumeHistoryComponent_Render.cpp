@@ -73,10 +73,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     // [BEGIN UI3C1-MAINPLOT-W-USE-PLOTWIDTH]
     mainPlotArea = juce::Rectangle<float> (0.0f, 0.0f, (float) plotWidth, (float) plotBottom);
     // [END UI3C1-MAINPLOT-W-USE-PLOTWIDTH]
-    // [BEGIN UI-METERS-CLIP-SKIP-HEAVY-PLOT]
-    const auto clipI = g.getClipBounds();
-    const bool clipTouchesPlot = clipI.intersects (mainPlotArea.toNearestInt());
-    // [END UI-METERS-CLIP-SKIP-HEAVY-PLOT]
     // [END UI3B-MAINPLOT-WIDTH-EXCLUDE-RIGHTSTRIP]
     // [END ROLLING-LRA-SPLITTER-MAINPLOT-AREA]
 
@@ -159,16 +155,8 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     // [END UI3B-RIGHTSTRIP-BG]
         // [BEGIN ROLLING-LRA-SPLITTER-HOIST-SELECTEDLEVEL]
         // Must live outside the plot-clip scope because we use it later for debug text.
-        // [BEGIN UI-METERS-CLIP-SELECTEDLEVEL-DECL]
-        int selectedLevel = 0;
-        // [END UI-METERS-CLIP-SELECTEDLEVEL-DECL]
+        const int selectedLevel = selectBestLevelForCurrentZoom (plotWidth);
         // [END ROLLING-LRA-SPLITTER-HOIST-SELECTEDLEVEL]
-
-        // [BEGIN UI-METERS-CLIP-SKIP-HEAVY-PLOT-WRAP]
-        if (clipTouchesPlot)
-        {
-            selectedLevel = selectBestLevelForCurrentZoom (plotWidth);
-        // [END UI-METERS-CLIP-SKIP-HEAVY-PLOT-WRAP]
 
         // [BEGIN ROLLING-LRA-SPLITTER-CLIP-PLOT]
         {
@@ -336,9 +324,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     // [BEGIN ROLLING-LRA-SPLITTER-CLIP-PLOT-END]
     } // end plot clip scope
     // [END ROLLING-LRA-SPLITTER-CLIP-PLOT-END]
-    // [BEGIN UI-METERS-CLIP-SKIP-HEAVY-PLOT-WRAP-END]
-    } // end if (clipTouchesPlot)
-    // [END UI-METERS-CLIP-SKIP-HEAVY-PLOT-WRAP-END]
 
     //==============================================================================
     // [DBFS-SCALE] Right-side dBFS scale (overlay)
@@ -437,10 +422,13 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         const auto metersAreaI = getRightMetersArea();
         if (metersAreaI.getWidth() > 20 && metersAreaI.getHeight() > 40)
         {
-            // [BEGIN UI-METERS-PAINT-USE-CACHED]
-            // Paint uses cached display values (meterDisp) so UI-only decay works when host stops audio callbacks.
-            const auto& ioDisp = meterDisp;
-            // [END UI-METERS-PAINT-USE-CACHED]
+            // Read snapshots
+            const auto io   = processor.getIOMeteringSnapshot();
+            const auto lim  = processor.getLimiterMeteringSnapshot();
+            const auto down = processor.getDownwardMeteringSnapshot();
+
+            // [BEGIN UI3C-UPWARD-METER-USE-SNAPSHOT]
+            const auto up = processor.getUpwardMeteringSnapshot();
             // We render HOLD as the filled bar (stable), and CURRENT as a thin marker (live).
             // [END UI3C-UPWARD-METER-USE-SNAPSHOT]
 
@@ -577,18 +565,13 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             };
 
             // Columns: In | Up | Dn | Lim | Out
-            // [BEGIN UI-METERS-PAINT-DRAW-CACHED]
-            drawIoMeter (col (0), juce::Colours::deepskyblue,
-                         ioDisp.inRmsDbCurrent, ioDisp.inPeakDbCurrent, ioDisp.inPeakDbHold, "In");
-
-            drawUp (col (1), ioDisp.upBoostDbHold, ioDisp.upBoostDbCurrent);
-
-            drawDown (col (2), ioDisp.downGrDbHold, "Dn",  juce::Colours::deepskyblue);
-            drawDown (col (3), ioDisp.limGrDbHold,  "Lim", juce::Colours::orange);
-
-            drawIoMeter (col (4), juce::Colours::orange,
-                         ioDisp.outRmsDbCurrent, ioDisp.outPeakDbCurrent, ioDisp.outPeakDbHold, "Out");
-            // [END UI-METERS-PAINT-DRAW-CACHED]
+            drawIoMeter (col (0), juce::Colours::deepskyblue, io.inRmsDbCurrent,  io.inPeakDbCurrent,  io.inPeakDbHold,  "In");
+            // [BEGIN UI3C-UPWARD-METER-CALL]
+            drawUp      (col (1), up.boostDbHold, up.boostDbCurrent);
+            // [END UI3C-UPWARD-METER-CALL]
+            drawDown    (col (2), down.grDbHold, "Dn",  juce::Colours::deepskyblue);
+            drawDown    (col (3), lim.grDbHold,  "Lim", juce::Colours::orange);
+            drawIoMeter (col (4), juce::Colours::orange,     io.outRmsDbCurrent, io.outPeakDbCurrent, io.outPeakDbHold, "Out");
         }
     }
     // [END UI3C-RIGHT-METERS-IO-DRAW]
@@ -1226,128 +1209,6 @@ void VolumeHistoryComponent::drawMtdmThresholdOverlay (juce::Graphics& g)
     }
 }
 // [END MTDM-THRESH-UI-IMPL]
-
-// [BEGIN UI-METERS-IDLE-DECAY-IMPL-BOOL]
-bool VolumeHistoryComponent::updateRightStripMetersFromTimer (bool gotNewHistoryData)
-{
-    const double nowMs = juce::Time::getMillisecondCounterHiRes();
-
-    // Snapshot previous display values so we can detect whether anything changed
-    const auto prev = meterDisp;
-
-    const bool haveHostSamples = processor.hostHasTimeInSamples();
-    const juce::int64 hostSamp = processor.getLastHostTimeInSamples();
-
-    if (lastHostSamplesChangeMs <= 0.0)
-        lastHostSamplesChangeMs = nowMs;
-
-    if (lastMeterUiUpdateMs <= 0.0)
-        lastMeterUiUpdateMs = nowMs;
-
-    bool audioCallbackActive = false;
-
-    // [BEGIN UI-METERS-IDLE-DECAY-ACTIVITY-FIX]
-    const bool haveHostSamples = processor.hostHasTimeInSamples();
-    const juce::int64 hostSamp = processor.getLastHostTimeInSamples();
-
-    // Treat "activity" as either:
-    // - host sample time advancing, OR
-    // - new loudness history data arriving (drainProcessorFifo() returned >0)
-    bool activityThisTick = false;
-
-    if (haveHostSamples)
-    {
-        if (hostSamp != lastSeenHostSamplesForMeters)
-        {
-            lastSeenHostSamplesForMeters = hostSamp;
-            activityThisTick = true;
-        }
-    }
-
-    if (gotNewHistoryData)
-        activityThisTick = true;
-
-    if (activityThisTick)
-        lastHostSamplesChangeMs = nowMs;
-
-    // Consider "active" if we've seen activity recently
-    const bool audioCallbackActive = ((nowMs - lastHostSamplesChangeMs) < 150.0);
-    // [END UI-METERS-IDLE-DECAY-ACTIVITY-FIX]
-
-    if (audioCallbackActive)
-    {
-        // Pull fresh snapshots (normal path)
-        const auto io   = processor.getIOMeteringSnapshot();
-        const auto up   = processor.getUpwardMeteringSnapshot();
-        const auto down = processor.getDownwardMeteringSnapshot();
-        const auto lim  = processor.getLimiterMeteringSnapshot();
-
-        meterDisp.inPeakDbCurrent  = io.inPeakDbCurrent;
-        meterDisp.inPeakDbHold     = io.inPeakDbHold;
-        meterDisp.inRmsDbCurrent   = io.inRmsDbCurrent;
-
-        meterDisp.outPeakDbCurrent = io.outPeakDbCurrent;
-        meterDisp.outPeakDbHold    = io.outPeakDbHold;
-        meterDisp.outRmsDbCurrent  = io.outRmsDbCurrent;
-
-        meterDisp.upBoostDbCurrent = up.boostDbCurrent;
-        meterDisp.upBoostDbHold    = up.boostDbHold;
-
-        meterDisp.downGrDbHold     = down.grDbHold;
-        meterDisp.limGrDbHold      = lim.grDbHold;
-
-        lastMeterUiUpdateMs = nowMs;
-    }
-    else
-    {
-        // Host not calling processBlock() -> UI-only decay fallback
-        const float dt = (float) juce::jlimit (0.0, 0.25, (nowMs - lastMeterUiUpdateMs) * 0.001);
-        lastMeterUiUpdateMs = nowMs;
-
-        const float decLevel = uiDecayDbPerSecLevel * dt;
-        const float decStage = uiDecayDbPerSecStage * dt;
-
-        auto decayToward = [] (float v, float target, float dec) -> float
-        {
-            if (v > target) return juce::jmax (target, v - dec);
-            if (v < target) return juce::jmin (target, v + dec);
-            return v;
-        };
-
-        // dBFS meters decay toward silence (-200)
-        meterDisp.inPeakDbCurrent  = decayToward (meterDisp.inPeakDbCurrent,  -200.0f, decLevel);
-        meterDisp.inPeakDbHold     = decayToward (meterDisp.inPeakDbHold,     -200.0f, decLevel);
-        meterDisp.inRmsDbCurrent   = decayToward (meterDisp.inRmsDbCurrent,   -200.0f, decLevel);
-
-        meterDisp.outPeakDbCurrent = decayToward (meterDisp.outPeakDbCurrent, -200.0f, decLevel);
-        meterDisp.outPeakDbHold    = decayToward (meterDisp.outPeakDbHold,    -200.0f, decLevel);
-        meterDisp.outRmsDbCurrent  = decayToward (meterDisp.outRmsDbCurrent,  -200.0f, decLevel);
-
-        // Stage meters decay toward 0
-        meterDisp.upBoostDbCurrent = decayToward (meterDisp.upBoostDbCurrent, 0.0f, decStage);
-        meterDisp.upBoostDbHold    = decayToward (meterDisp.upBoostDbHold,    0.0f, decStage);
-        meterDisp.downGrDbHold     = decayToward (meterDisp.downGrDbHold,     0.0f, decStage);
-        meterDisp.limGrDbHold      = decayToward (meterDisp.limGrDbHold,      0.0f, decStage);
-    }
-
-    auto diff = [] (float a, float b) { return std::abs (a - b); };
-    constexpr float eps = 0.01f; // repaint threshold in dB
-
-    const bool changed =
-        diff (prev.inPeakDbCurrent,  meterDisp.inPeakDbCurrent)  > eps ||
-        diff (prev.inPeakDbHold,     meterDisp.inPeakDbHold)     > eps ||
-        diff (prev.inRmsDbCurrent,   meterDisp.inRmsDbCurrent)   > eps ||
-        diff (prev.outPeakDbCurrent, meterDisp.outPeakDbCurrent) > eps ||
-        diff (prev.outPeakDbHold,    meterDisp.outPeakDbHold)    > eps ||
-        diff (prev.outRmsDbCurrent,  meterDisp.outRmsDbCurrent)  > eps ||
-        diff (prev.upBoostDbCurrent, meterDisp.upBoostDbCurrent) > eps ||
-        diff (prev.upBoostDbHold,    meterDisp.upBoostDbHold)    > eps ||
-        diff (prev.downGrDbHold,     meterDisp.downGrDbHold)     > eps ||
-        diff (prev.limGrDbHold,      meterDisp.limGrDbHold)      > eps;
-
-    return changed;
-}
-// [END UI-METERS-IDLE-DECAY-IMPL-BOOL]
 
 //==============================================================================
 // Geometry helpers

@@ -107,7 +107,6 @@ public:
     };
 
     DownwardMeteringSnapshot getDownwardMeteringSnapshot() const noexcept;
-
     // [END LS-DOWNWARD-METERING-SNAPSHOT-API]
 
     // [BEGIN LS-IO-METERING-SNAPSHOT-API]

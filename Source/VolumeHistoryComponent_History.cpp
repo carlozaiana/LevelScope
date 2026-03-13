@@ -35,34 +35,8 @@ void VolumeHistoryComponent::timerCallback()
     if (rollingRebuildInProgress)
         rebuildRollingLraStep (200); // process up to 200 seconds per timer tick
 
-    // [BEGIN UI-METERS-IDLE-DECAY-CALL]
-    // Update cached right-strip meter display values (also decays when host stops calling audio).
-    updateRightStripMetersFromTimer();
-    // [END UI-METERS-IDLE-DECAY-CALL]
-
-    // Repaint if we got new history data OR rolling is rebuilding OR meters need animation.
-    // Meters need repaint even when gotNewData is false (e.g. host stopped calling processBlock()).
-    // [BEGIN UI-METERS-IDLE-DECAY-CALL]
-    // [BEGIN UI-METERS-IDLE-DECAY-CALL2]
-    const bool metersNeedRepaint = updateRightStripMetersFromTimer (gotNewData);
-    // [END UI-METERS-IDLE-DECAY-CALL2]
-    // [END UI-METERS-IDLE-DECAY-CALL]
-
-    // [BEGIN UI-METERS-IDLE-DECAY-REPAINT-STRATEGY]
     if (gotNewData || rollingRebuildInProgress)
-    {
-        // Full repaint only when curves need updating
         repaint();
-    }
-    else
-    {
-        // No new curve data: keep animating meters cheaply by repainting only the right strip.
-        // (paint() will skip heavy curve work based on clip bounds; see Render.cpp patch)
-        if (metersNeedRepaint)
-            repaint (getDbRulerArea());
-    }
-    // [END UI-METERS-IDLE-DECAY-REPAINT-STRATEGY]
-    // [END UI-METERS-IDLE-DECAY-CONDITIONAL-REPAINT]
 }
 
 bool VolumeHistoryComponent::drainProcessorFifo()

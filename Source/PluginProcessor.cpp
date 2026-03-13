@@ -1168,20 +1168,6 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                 ctx.absoluteFrameIndex60Hz = (int64_t) floorDivInt64 (blockStartProjectSample,
                                                                      (juce::int64) frameSamples);
             }
-            // [BEGIN LS-IO-METERING-IN-COMPUTE-STOPPATH]
-            // Compute INPUT metering before ProcessorCore (even if analysis is frozen).
-            const auto inMet = computeBlockPeakRmsMaxAcrossChannels (buffer, numChannels, numSamples);
-
-            ioInPeakDbCurrent.store (inMet.peakDb, std::memory_order_relaxed);
-            ioInRmsDbCurrent.store  (inMet.rmsDb,  std::memory_order_relaxed);
-
-            {
-                const float hold = ioInPeakDbHold.load (std::memory_order_relaxed);
-                const float dt = (currentSampleRate > 1.0e-6 ? (float) numSamples / (float) currentSampleRate : 0.0f);
-                const float dec = ioPeakHoldDecayDbPerSec * dt;
-                ioInPeakDbHold.store (decayHoldDb (hold, inMet.peakDb, dec), std::memory_order_relaxed);
-            }
-            // [END LS-IO-METERING-IN-COMPUTE-STOPPATH]
 
             processorCore.process (ctx);
 
@@ -1237,36 +1223,8 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                 ctx.absoluteFrameIndex60Hz = (int64_t) floorDivInt64 (blockStartProjectSample,
                                                                      (juce::int64) frameSamples);
             }
-            // [BEGIN LS-IO-METERING-IN-COMPUTE-PLAYPATH]
-            // Compute INPUT metering before ProcessorCore (normal playing path).
-            const auto inMet = computeBlockPeakRmsMaxAcrossChannels (buffer, numChannels, numSamples);
-
-            ioInPeakDbCurrent.store (inMet.peakDb, std::memory_order_relaxed);
-            ioInRmsDbCurrent.store  (inMet.rmsDb,  std::memory_order_relaxed);
-
-            {
-                const float hold = ioInPeakDbHold.load (std::memory_order_relaxed);
-                const float dt = (currentSampleRate > 1.0e-6 ? (float) numSamples / (float) currentSampleRate : 0.0f);
-                const float dec = ioPeakHoldDecayDbPerSec * dt;
-                ioInPeakDbHold.store (decayHoldDb (hold, inMet.peakDb, dec), std::memory_order_relaxed);
-            }
-            // [END LS-IO-METERING-IN-COMPUTE-PLAYPATH]
 
             processorCore.process (ctx);
-            // [BEGIN LS-IO-METERING-OUT-COMPUTE-PLAYPATH]
-            // Compute OUTPUT metering after ProcessorCore (normal playing path).
-            const auto outMet = computeBlockPeakRmsMaxAcrossChannels (buffer, numChannels, numSamples);
-
-            ioOutPeakDbCurrent.store (outMet.peakDb, std::memory_order_relaxed);
-            ioOutRmsDbCurrent.store  (outMet.rmsDb,  std::memory_order_relaxed);
-
-            {
-                const float hold = ioOutPeakDbHold.load (std::memory_order_relaxed);
-                const float dt = (currentSampleRate > 1.0e-6 ? (float) numSamples / (float) currentSampleRate : 0.0f);
-                const float dec = ioPeakHoldDecayDbPerSec * dt;
-                ioOutPeakDbHold.store (decayHoldDb (hold, outMet.peakDb, dec), std::memory_order_relaxed);
-            }
-            // [END LS-IO-METERING-OUT-COMPUTE-PLAYPATH]
         }
         // [BEGIN LS-IO-METERING-OUT-COMPUTE]
         // Compute OUTPUT metering after ProcessorCore.
