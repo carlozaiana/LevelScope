@@ -44,6 +44,11 @@ void LookaheadLimiter::prepare (double sampleRate,
 
     activeOs = nullptr;
     osFactor = 1;
+
+    cachedDetectorDelaySamplesOff = 0;
+    cachedDetectorDelaySamples2x  = (os2 ? os2->getLatencyInSamples() : 0);
+    cachedDetectorDelaySamples4x  = (os4 ? os4->getLatencyInSamples() : 0);
+
     detectorDelaySamples = 0;
     // [END LS-LIM-PREPARE-FIR-OVERSAMPLERS]
 
@@ -92,6 +97,13 @@ void LookaheadLimiter::setParametersAudioThread (const Parameters& p) noexcept
     // [BEGIN LS-LIM-SETPARAMS-TP]
     updateAttackIfNeeded();
     updateDriveIfNeeded();
+
+    switch (juce::jlimit (0, 2, params.oversamplingChoice))
+    {
+        case 1: detectorDelaySamples = cachedDetectorDelaySamples2x;  break;
+        case 2: detectorDelaySamples = cachedDetectorDelaySamples4x;  break;
+        default: detectorDelaySamples = cachedDetectorDelaySamplesOff; break;
+    }
     // [END LS-LIM-SETPARAMS-TP]
 
     if (pendingReset)
@@ -162,6 +174,30 @@ void LookaheadLimiter::updateDriveIfNeeded() noexcept
     lastDriveDb = d;
     driveLin = dbToLin (d);
 }
+
+// [BEGIN LS-LIM-EFFECTIVE-LATENCY-QUERY]
+int LookaheadLimiter::getLatencySamplesForSettings (bool enabled,
+                                                    float lookaheadMs,
+                                                    int oversamplingChoice) const noexcept
+{
+    if (! enabled)
+        return 0;
+
+    const double sr = std::max (1.0, fs);
+    const double ms = juce::jlimit (0.0, (double) kMaxLookaheadMs, (double) lookaheadMs);
+    const int lookSamples = (int) std::lround (sr * ms * 0.001);
+
+    int detDelay = 0;
+    switch (juce::jlimit (0, 2, oversamplingChoice))
+    {
+        case 1: detDelay = cachedDetectorDelaySamples2x;  break;
+        case 2: detDelay = cachedDetectorDelaySamples4x;  break;
+        default: detDelay = cachedDetectorDelaySamplesOff; break;
+    }
+
+    return lookSamples + detDelay;
+}
+// [END LS-LIM-EFFECTIVE-LATENCY-QUERY]
 
 // [BEGIN LS-LIM-SELECT-ACTIVE-OS]
 static int osChoiceToFactor (int choice) noexcept

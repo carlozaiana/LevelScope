@@ -54,7 +54,19 @@ public:
 
     void process (juce::AudioBuffer<float>& buffer) noexcept;
 
-    int getLatencySamples() const noexcept { return (params.enabled ? lookaheadSamples : 0); }
+    int getLatencySamples() const noexcept
+    {
+        return getLatencySamplesForSettings (params.enabled,
+                                            params.lookaheadMs,
+                                            params.oversamplingChoice);
+    }
+
+    // RT-safe latency query using current prepared sample rate + cached FIR detector delays.
+    // Returns the true effective output delay of the limiter path:
+    // lookahead + detector FIR latency (when oversampling is active), or 0 if disabled.
+    int getLatencySamplesForSettings (bool enabled,
+                                      float lookaheadMs,
+                                      int oversamplingChoice) const noexcept;
 
     // [BEGIN LS-LIM-METERING-GETTERS]
     // Non-RT / UI safe to read; written by audio thread once per process() call.
@@ -127,7 +139,12 @@ private:
     juce::dsp::Oversampling<float>* activeOs = nullptr;
 
     int osFactor = 1;
-    int detectorDelaySamples = 0; // FIR group delay at base rate samples
+    int detectorDelaySamples = 0; // currently selected FIR detector delay at base rate samples
+
+    // Cached FIR detector delays for RT-safe latency queries.
+    int cachedDetectorDelaySamplesOff = 0;
+    int cachedDetectorDelaySamples2x  = 0;
+    int cachedDetectorDelaySamples4x  = 0;
 
     // [BEGIN LS-LIM-METERING-MEMBERS]
     float lastBlockMinGain  = 1.0f; // minimum gOut used during last process() call
