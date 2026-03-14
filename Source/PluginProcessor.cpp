@@ -911,6 +911,7 @@ void LevelScopeAudioProcessor::resetLoudnessState() noexcept
     historyModel.resetRealtimeFifo();
     kWeight.reset();
     runningStats.reset();
+    transportIsPlaying.store (false, std::memory_order_relaxed);
 
     // RT-safe reset; Stage A graph is empty => no audible change
     processorCore.reset();
@@ -1113,6 +1114,7 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
             }
         }
     }
+    transportIsPlaying.store (blockIsPlaying == 1, std::memory_order_relaxed);
 
     const bool shouldAnalyse = (blockIsPlaying == 1 && haveTimeInSamples);
 

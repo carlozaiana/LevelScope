@@ -151,6 +151,7 @@ public:
     double      getLastHostTimeInSeconds() const noexcept { return lastHostTimeSeconds.load (std::memory_order_relaxed); }
     bool        hostHasTimeInSamples() const noexcept { return haveHostTimeSamples.load (std::memory_order_relaxed) != 0; }
     bool        hostHasTimeInSeconds() const noexcept { return haveHostTimeSeconds.load (std::memory_order_relaxed) != 0; }
+    bool        getTransportIsPlaying() const noexcept { return transportIsPlaying.load (std::memory_order_relaxed); }
 
     double getLoudnessFrameRate() const noexcept { return loudnessFrameRate; }
     int getFrameSamples() const noexcept { return frameSamples; }
@@ -230,6 +231,7 @@ private:
     std::atomic<double>      lastHostTimeSeconds { 0.0 };
     std::atomic<int>         haveHostTimeSamples { 0 };
     std::atomic<int>         haveHostTimeSeconds { 0 };
+    std::atomic<bool>        transportIsPlaying { false };
 
     // [BEGIN LS-IO-METERING-ATOMICS]
     // Input/Output metering (max across channels). Updated on audio thread, read on UI thread.
