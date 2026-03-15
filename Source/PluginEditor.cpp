@@ -165,6 +165,7 @@ MissionControlComponent::MissionControlComponent (LevelScopeAudioProcessor& p, V
 
     savePresetButton.onClick = [this] { startSavePreset(); };
     loadPresetButton.onClick = [this] { startLoadPreset(); };
+    loadPresetButton.setTooltip ("Stop playback to load preset (may change latency).");
 
     auto setupLabelBox = [] (juce::Label& l)
     {
@@ -345,6 +346,24 @@ void MissionControlComponent::paint (juce::Graphics& g)
     g.fillAll (juce::Colour::fromRGB (10, 18, 28));
     g.setColour (juce::Colours::white.withMultipliedAlpha (0.08f));
     g.drawRect (getLocalBounds());
+
+    if (loadPresetLocked)
+    {
+        auto r = getLocalBounds().reduced (8);
+        auto topRow = r.removeFromTop (22);
+
+        topRow.removeFromLeft (120); // Save button
+        topRow.removeFromLeft (6);
+        topRow.removeFromLeft (120); // Load button
+        topRow.removeFromLeft (8);
+
+        g.setColour (juce::Colours::orange.withMultipliedAlpha (0.92f));
+        g.setFont (12.0f);
+        g.drawFittedText ("Stop playback to load preset (may change latency).",
+                          topRow,
+                          juce::Justification::centredLeft,
+                          1);
+    }
 }
 
 double MissionControlComponent::getTargetFromState (const juce::Identifier& key, double defaultValue) const
@@ -404,10 +423,26 @@ void MissionControlComponent::refreshCurveToggleStatesFromHistory()
 // [END UI3C3-MISSIONCONTROL-REFRESH-RLRA-WINDOW]
 // [END UI3C-MISSIONCONTROL-REFRESH-WITH-FOLLOW]
 
+void MissionControlComponent::updatePresetLoadEnablement()
+{
+    const bool lockedNow = processor.getTransportIsEffectivelyPlaying();
+
+    if (loadPresetLocked == lockedNow)
+    {
+        loadPresetButton.setEnabled (! lockedNow);
+        return;
+    }
+
+    loadPresetLocked = lockedNow;
+    loadPresetButton.setEnabled (! loadPresetLocked);
+    repaint();
+}
+
 void MissionControlComponent::timerCallback()
 {
     updateCurrentReadouts();
     refreshCurveToggleStatesFromHistory();
+    updatePresetLoadEnablement();
     routingGraphic.repaint();
 }
 
@@ -433,6 +468,9 @@ void MissionControlComponent::startSavePreset()
 
 void MissionControlComponent::startLoadPreset()
 {
+    if (processor.getTransportIsEffectivelyPlaying())
+        return;
+
     juce::FileChooser chooser ("Load LevelScope preset",
                               juce::File::getSpecialLocation (juce::File::userDocumentsDirectory),
                               "*.lscpreset");
@@ -1001,6 +1039,7 @@ void MtdmAuditionCard::resized()
 
 MtdmUpwardCard::MtdmUpwardCard (LevelScopeAudioProcessor& p)
     : MtdmCardComponent ("Upward"),
+      processor (p),
       apvts (p.getAPVTS())
 {
     using namespace levelscope::mtdm::ParamIDs;
@@ -1139,6 +1178,7 @@ MtdmUpwardCard::MtdmUpwardCard (LevelScopeAudioProcessor& p)
 
     fftBox.addItemList   (juce::StringArray { "1024", "2048", "4096", "8192" }, 1);
     bandsBox.addItemList (juce::StringArray { "1", "2", "3", "6" }, 1);
+    fftBox.setTooltip ("Stop playback to change (changes latency).");
 
     styleSlider (minFreqSlider, " Hz");
     styleSlider (maxFreqSlider, " Hz");
@@ -1173,8 +1213,10 @@ MtdmUpwardCard::MtdmUpwardCard (LevelScopeAudioProcessor& p)
     };
 
     showAdvanced = false;
+    latencyLocked = processor.getTransportIsEffectivelyPlaying();
     updateAdvancedVisibility();
     updateSpectralEnablement();
+    startTimerHz (10);
     // [END UI4B1-UPWARD-ADVANCED-CONTROLS-CTOR]
 }
 
@@ -1209,17 +1251,54 @@ void MtdmUpwardCard::updateAdvancedVisibility()
 
 void MtdmUpwardCard::updateSpectralEnablement()
 {
-    // Spectral = item index 0, Broadband = index 1
+    // Spectral = item index 0, Broadband = item index 1
     const bool spectral = (modeBox.getSelectedItemIndex() == 0);
 
     // Only matters if advanced is visible
     const bool enable = (showAdvanced && spectral);
 
-    fftLabel.setEnabled (enable);   fftBox.setEnabled (enable);
-    bandsLabel.setEnabled (enable); bandsBox.setEnabled (enable);
+    const bool fftEnabled = (enable && ! latencyLocked);
 
-    minFreqLabel.setEnabled (enable); minFreqSlider.setEnabled (enable);
-    maxFreqLabel.setEnabled (enable); maxFreqSlider.setEnabled (enable);
+    fftLabel.setEnabled (fftEnabled);
+    fftBox.setEnabled   (fftEnabled);
+
+    bandsLabel.setEnabled (enable);
+    bandsBox.setEnabled   (enable);
+
+    minFreqLabel.setEnabled (enable);
+    minFreqSlider.setEnabled (enable);
+
+    maxFreqLabel.setEnabled (enable);
+    maxFreqSlider.setEnabled (enable);
+}
+
+void MtdmUpwardCard::timerCallback()
+{
+    const bool lockedNow = processor.getTransportIsEffectivelyPlaying();
+    if (latencyLocked == lockedNow)
+        return;
+
+    latencyLocked = lockedNow;
+    updateSpectralEnablement();
+    repaint();
+}
+
+void MtdmUpwardCard::paint (juce::Graphics& g)
+{
+    MtdmCardComponent::paint (g);
+
+    if (latencyLocked && showAdvanced && modeBox.getSelectedItemIndex() == 0)
+    {
+        auto r = getLocalBounds().reduced (12);
+        auto textArea = r.removeFromBottom (18);
+
+        g.setColour (juce::Colours::orange.withMultipliedAlpha (0.92f));
+        g.setFont (12.0f);
+        g.drawFittedText ("Stop playback to change (changes latency).",
+                          textArea,
+                          juce::Justification::centredLeft,
+                          1);
+    }
 }
 // [END UI4B1-UPWARD-ADVANCED-HELPERS]
 
@@ -1485,6 +1564,7 @@ void MtdmDownwardCard::resized()
     // [BEGIN UI4A3-LIMITER-HIDE-TITLE]
 MtdmLimiterCard::MtdmLimiterCard (LevelScopeAudioProcessor& p)
     : MtdmCardComponent (""), // title hidden; enabled toggle acts as header
+      processor (p),
       apvts (p.getAPVTS())
 {
     title.setVisible (false);
@@ -1557,6 +1637,8 @@ MtdmLimiterCard::MtdmLimiterCard (LevelScopeAudioProcessor& p)
     styleSlider (releaseSlider, " ms");
     styleSlider (driveSlider, " dB");
 
+    lookSlider.setTooltip ("Stop playback to change (changes latency).");
+
     setSliderRangeFromParam (apvts, limCeilingDb, ceilingSlider);
     setSliderRangeFromParam (apvts, limLookaheadMs, lookSlider);
     setSliderRangeFromParam (apvts, limAttackMs, attackSlider);
@@ -1577,7 +1659,12 @@ MtdmLimiterCard::MtdmLimiterCard (LevelScopeAudioProcessor& p)
 
     addAndMakeVisible (osBox);
     osBox.addItemList (juce::StringArray { "Off", "2x", "4x" }, 1);
+    osBox.setTooltip ("Stop playback to change (changes latency).");
     osAtt = std::make_unique<ComboAttachment> (apvts, limOversamplingChoice, osBox);
+
+    latencyLocked = processor.getTransportIsEffectivelyPlaying();
+    updateLatencySensitiveEnablement();
+    startTimerHz (10);
 }
 
 // [BEGIN UI4B2-LIMITER-ADVANCED-HELPER]
@@ -1591,6 +1678,46 @@ void MtdmLimiterCard::updateAdvancedVisibility()
     releaseSlider.setVisible (v);
     driveLabel.setVisible (v);
     driveSlider.setVisible (v);
+}
+
+void MtdmLimiterCard::updateLatencySensitiveEnablement()
+{
+    const bool allowLatencyChanges = ! latencyLocked;
+
+    lookLabel.setEnabled (allowLatencyChanges);
+    lookSlider.setEnabled (allowLatencyChanges);
+
+    osLabel.setEnabled (allowLatencyChanges);
+    osBox.setEnabled (allowLatencyChanges);
+}
+
+void MtdmLimiterCard::timerCallback()
+{
+    const bool lockedNow = processor.getTransportIsEffectivelyPlaying();
+    if (latencyLocked == lockedNow)
+        return;
+
+    latencyLocked = lockedNow;
+    updateLatencySensitiveEnablement();
+    repaint();
+}
+
+void MtdmLimiterCard::paint (juce::Graphics& g)
+{
+    MtdmCardComponent::paint (g);
+
+    if (latencyLocked)
+    {
+        auto r = getLocalBounds().reduced (12);
+        auto textArea = r.removeFromBottom (18);
+
+        g.setColour (juce::Colours::orange.withMultipliedAlpha (0.92f));
+        g.setFont (12.0f);
+        g.drawFittedText ("Stop playback to change (changes latency).",
+                          textArea,
+                          juce::Justification::centredLeft,
+                          1);
+    }
 }
 // [END UI4B2-LIMITER-ADVANCED-HELPER]
 
@@ -1646,6 +1773,8 @@ void MtdmLimiterCard::resized()
     auto rOS = r.removeFromTop (rowH);
     osLabel.setBounds (rOS.removeFromLeft (90));
     osBox.setBounds (rOS);
+
+    updateLatencySensitiveEnablement();
 
     // Advanced rows
     updateAdvancedVisibility();
@@ -1955,7 +2084,8 @@ LevelScopeAudioProcessorEditor::LevelScopeAudioProcessorEditor (LevelScopeAudioP
       // [END UI3A-EDITOR-CTOR-MISSIONCONTROL]
       // [BEGIN MTDM-PANEL-EDITOR-CTOR-INIT]
       mtdmPanel (p),
-      layoutResizerBar (&layoutHistoryAndPanel, 1, false) // false = horizontal bar (drag up/down)
+      layoutResizerBar (&layoutHistoryAndPanel, 1, false), // false = horizontal bar (drag up/down)
+      tooltipWindow (this, 700)
       // [END MTDM-PANEL-EDITOR-CTOR-INIT]
 {
     // [BEGIN UI3A-EDITOR-ADD-MISSIONCONTROL]

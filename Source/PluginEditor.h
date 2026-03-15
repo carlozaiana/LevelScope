@@ -37,6 +37,7 @@ private:
     void startLoadPreset();
 
     void refreshCurveToggleStatesFromHistory();
+    void updatePresetLoadEnablement();
 
     // Small graphic: detector/apply channel squares (always visible)
     class RoutingGraphic : public juce::Component
@@ -98,6 +99,7 @@ private:
     std::unique_ptr<ButtonAttachment> lfeApplyAtt;
 
     RoutingGraphic routingGraphic;
+    bool loadPresetLocked = false;
 
     // [BEGIN UI3C3-MISSIONCONTROL-RLRA-WINDOW-MEMBERS]
     juce::ToggleButton toggleMomentary { "M" };
@@ -259,15 +261,18 @@ private:
 //------------------------------------------------------------------------------
 // Upward card (essentials)
 //------------------------------------------------------------------------------
-class MtdmUpwardCard : public MtdmCardComponent
+class MtdmUpwardCard : public MtdmCardComponent,
+                       private juce::Timer
 {
 public:
     explicit MtdmUpwardCard (LevelScopeAudioProcessor& p);
     ~MtdmUpwardCard() override = default;
 
+    void paint (juce::Graphics& g) override;
     void resized() override;
 
 private:
+    LevelScopeAudioProcessor& processor;
     juce::AudioProcessorValueTreeState& apvts;
 
     // [BEGIN UI4B1-UPWARD-ADVANCED-MEMBERS]
@@ -315,6 +320,8 @@ private:
 
     void updateAdvancedVisibility();
     void updateSpectralEnablement();
+    void timerCallback() override;
+    bool latencyLocked = false;
     // [END UI4B1-UPWARD-ADVANCED-MEMBERS]
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MtdmUpwardCard)
@@ -372,15 +379,18 @@ private:
 //------------------------------------------------------------------------------
 // Limiter card (essentials)
 //------------------------------------------------------------------------------
-class MtdmLimiterCard : public MtdmCardComponent
+class MtdmLimiterCard : public MtdmCardComponent,
+                        private juce::Timer
 {
 public:
     explicit MtdmLimiterCard (LevelScopeAudioProcessor& p);
     ~MtdmLimiterCard() override = default;
 
+    void paint (juce::Graphics& g) override;
     void resized() override;
 
 private:
+    LevelScopeAudioProcessor& processor;
     juce::AudioProcessorValueTreeState& apvts;
 
     // [BEGIN UI4B2-LIMITER-ADVANCED-MEMBERS]
@@ -403,6 +413,9 @@ private:
     juce::Slider attackSlider, releaseSlider, driveSlider;
 
     void updateAdvancedVisibility();
+    void updateLatencySensitiveEnablement();
+    void timerCallback() override;
+    bool latencyLocked = false;
     // [END UI4B2-LIMITER-ADVANCED-MEMBERS]
 
     using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
@@ -578,6 +591,9 @@ private:
     // Draggable horizontal splitter between history and panel
     juce::StretchableLayoutManager layoutHistoryAndPanel;
     juce::StretchableLayoutResizerBar layoutResizerBar;
+
+    // Enables JUCE tooltips for controls in the editor
+    juce::TooltipWindow tooltipWindow;
     // [END MTDM-PANEL-EDITOR-MEMBERS]
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LevelScopeAudioProcessorEditor)
