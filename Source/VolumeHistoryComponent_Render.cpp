@@ -422,13 +422,11 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
         const auto metersAreaI = getRightMetersArea();
         if (metersAreaI.getWidth() > 20 && metersAreaI.getHeight() > 40)
         {
-            // Read snapshots
-            const auto io   = processor.getIOMeteringSnapshot();
-            const auto lim  = processor.getLimiterMeteringSnapshot();
-            const auto down = processor.getDownwardMeteringSnapshot();
+            // Use UI-side displayed meter values.
+            // They follow processor snapshots while transport is live,
+            // and decay toward rest when transport stops or callbacks go stale.
 
             // [BEGIN UI3C-UPWARD-METER-USE-SNAPSHOT]
-            const auto up = processor.getUpwardMeteringSnapshot();
             // We render HOLD as the filled bar (stable), and CURRENT as a thin marker (live).
             // [END UI3C-UPWARD-METER-USE-SNAPSHOT]
 
@@ -565,13 +563,24 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             };
 
             // Columns: In | Up | Dn | Lim | Out
-            drawIoMeter (col (0), juce::Colours::deepskyblue, io.inRmsDbCurrent,  io.inPeakDbCurrent,  io.inPeakDbHold,  "In");
+            drawIoMeter (col (0), juce::Colours::deepskyblue,
+                         displayedMeters.inRmsDbCurrent,
+                         displayedMeters.inPeakDbCurrent,
+                         displayedMeters.inPeakDbHold,
+                         "In");
+
             // [BEGIN UI3C-UPWARD-METER-CALL]
-            drawUp      (col (1), up.boostDbHold, up.boostDbCurrent);
+            drawUp      (col (1), displayedMeters.upBoostDbHold, displayedMeters.upBoostDbCurrent);
             // [END UI3C-UPWARD-METER-CALL]
-            drawDown    (col (2), down.grDbHold, "Dn",  juce::Colours::deepskyblue);
-            drawDown    (col (3), lim.grDbHold,  "Lim", juce::Colours::orange);
-            drawIoMeter (col (4), juce::Colours::orange,     io.outRmsDbCurrent, io.outPeakDbCurrent, io.outPeakDbHold, "Out");
+
+            drawDown    (col (2), displayedMeters.downGrDbHold, "Dn",  juce::Colours::deepskyblue);
+            drawDown    (col (3), displayedMeters.limGrDbHold,  "Lim", juce::Colours::orange);
+
+            drawIoMeter (col (4), juce::Colours::orange,
+                         displayedMeters.outRmsDbCurrent,
+                         displayedMeters.outPeakDbCurrent,
+                         displayedMeters.outPeakDbHold,
+                         "Out");
         }
     }
     // [END UI3C-RIGHT-METERS-IO-DRAW]

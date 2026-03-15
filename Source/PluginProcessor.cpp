@@ -769,6 +769,25 @@ void LevelScopeAudioProcessor::parameterChanged (const juce::String& parameterID
 
 void LevelScopeAudioProcessor::timerCallback()
 {
+    // Transport freshness watchdog.
+    {
+        const auto seq = processBlockSequence.load (std::memory_order_relaxed);
+
+        if (seq != lastObservedProcessBlockSequence)
+        {
+            lastObservedProcessBlockSequence = seq;
+            processBlockQuietTimerTicks = 0;
+            transportStateFresh.store (true, std::memory_order_relaxed);
+        }
+        else
+        {
+            ++processBlockQuietTimerTicks;
+
+            if (processBlockQuietTimerTicks >= processBlockFreshnessTimeoutTicks)
+                transportStateFresh.store (false, std::memory_order_relaxed);
+        }
+    }
+
     if (! latencyDirty.exchange (false, std::memory_order_acq_rel))
         return;
 
@@ -912,6 +931,8 @@ void LevelScopeAudioProcessor::resetLoudnessState() noexcept
     kWeight.reset();
     runningStats.reset();
     transportIsPlaying.store (false, std::memory_order_relaxed);
+    transportStateFresh.store (false, std::memory_order_relaxed);
+    transportIsPlaying.store (false, std::memory_order_relaxed);
 
     // RT-safe reset; Stage A graph is empty => no audible change
     processorCore.reset();
@@ -1046,6 +1067,9 @@ void LevelScopeAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 
     const int numChannels = getTotalNumInputChannels();
     const int numSamples  = buffer.getNumSamples();
+
+    processBlockSequence.fetch_add (1u, std::memory_order_relaxed);
+    transportStateFresh.store (true, std::memory_order_relaxed);
 
     // [BEGIN LS-IO-METERING-IN-COMPUTE]
     // Compute INPUT metering before ProcessorCore modifies the buffer.

@@ -1,6 +1,8 @@
 #include "VolumeHistoryComponent.h"
 #include "PluginProcessor.h"
 
+#include <cmath>
+
 //==============================================================================
 // VolumeHistoryComponent_History.cpp
 // - FIFO drain / timeline writes
@@ -26,16 +28,122 @@
 //==============================================================================
 
 // [BEGIN VHC-HIST-TIMER-AND-DRAIN]
+bool VolumeHistoryComponent::updateDisplayedMeters()
+{
+    const auto before = displayedMeters;
+    const bool live = processor.getTransportIsEffectivelyPlaying();
+
+    if (live)
+    {
+        const auto io   = processor.getIOMeteringSnapshot();
+        const auto up   = processor.getUpwardMeteringSnapshot();
+        const auto down = processor.getDownwardMeteringSnapshot();
+        const auto lim  = processor.getLimiterMeteringSnapshot();
+
+        displayedMeters.inPeakDbCurrent  = io.inPeakDbCurrent;
+        displayedMeters.inPeakDbHold     = io.inPeakDbHold;
+        displayedMeters.inRmsDbCurrent   = io.inRmsDbCurrent;
+
+        displayedMeters.outPeakDbCurrent = io.outPeakDbCurrent;
+        displayedMeters.outPeakDbHold    = io.outPeakDbHold;
+        displayedMeters.outRmsDbCurrent  = io.outRmsDbCurrent;
+
+        displayedMeters.upBoostDbCurrent   = up.boostDbCurrent;
+        displayedMeters.upBoostDbBlockPeak = up.boostDbBlockPeak;
+        displayedMeters.upBoostDbHold      = up.boostDbHold;
+
+        displayedMeters.downGrDbCurrent    = down.grDbCurrent;
+        displayedMeters.downGrDbBlockPeak  = down.grDbBlockPeak;
+        displayedMeters.downGrDbHold       = down.grDbHold;
+
+        displayedMeters.limGrDbCurrent     = lim.grDbCurrent;
+        displayedMeters.limGrDbBlockPeak   = lim.grDbBlockPeak;
+        displayedMeters.limGrDbHold        = lim.grDbHold;
+
+        displayedMetersPrimed = true;
+    }
+    else if (displayedMetersPrimed)
+    {
+        constexpr float timerHz = 30.0f;
+        constexpr float dt = 1.0f / timerHz;
+
+        auto decayTowardFloor = [] (float v, float floor, float step) noexcept
+        {
+            return juce::jmax (floor, v - step);
+        };
+
+        auto decayTowardZero = [] (float v, float step) noexcept
+        {
+            return juce::jmax (0.0f, v - step);
+        };
+
+        constexpr float audioCurrentDecayDbPerSec = 24.0f;
+        constexpr float audioHoldDecayDbPerSec    = 12.0f;
+        constexpr float moduleDecayDbPerSec       = 12.0f;
+
+        const float audioCurStep  = audioCurrentDecayDbPerSec * dt;
+        const float audioHoldStep = audioHoldDecayDbPerSec * dt;
+        const float moduleStep    = moduleDecayDbPerSec * dt;
+
+        displayedMeters.inPeakDbCurrent  = decayTowardFloor (displayedMeters.inPeakDbCurrent,  -200.0f, audioCurStep);
+        displayedMeters.inPeakDbHold     = decayTowardFloor (displayedMeters.inPeakDbHold,     -200.0f, audioHoldStep);
+        displayedMeters.inRmsDbCurrent   = decayTowardFloor (displayedMeters.inRmsDbCurrent,   -200.0f, audioCurStep);
+
+        displayedMeters.outPeakDbCurrent = decayTowardFloor (displayedMeters.outPeakDbCurrent, -200.0f, audioCurStep);
+        displayedMeters.outPeakDbHold    = decayTowardFloor (displayedMeters.outPeakDbHold,    -200.0f, audioHoldStep);
+        displayedMeters.outRmsDbCurrent  = decayTowardFloor (displayedMeters.outRmsDbCurrent,  -200.0f, audioCurStep);
+
+        displayedMeters.upBoostDbCurrent   = decayTowardZero (displayedMeters.upBoostDbCurrent,   moduleStep);
+        displayedMeters.upBoostDbBlockPeak = decayTowardZero (displayedMeters.upBoostDbBlockPeak, moduleStep);
+        displayedMeters.upBoostDbHold      = decayTowardZero (displayedMeters.upBoostDbHold,      moduleStep);
+
+        displayedMeters.downGrDbCurrent    = decayTowardZero (displayedMeters.downGrDbCurrent,    moduleStep);
+        displayedMeters.downGrDbBlockPeak  = decayTowardZero (displayedMeters.downGrDbBlockPeak,  moduleStep);
+        displayedMeters.downGrDbHold       = decayTowardZero (displayedMeters.downGrDbHold,       moduleStep);
+
+        displayedMeters.limGrDbCurrent     = decayTowardZero (displayedMeters.limGrDbCurrent,     moduleStep);
+        displayedMeters.limGrDbBlockPeak   = decayTowardZero (displayedMeters.limGrDbBlockPeak,   moduleStep);
+        displayedMeters.limGrDbHold        = decayTowardZero (displayedMeters.limGrDbHold,        moduleStep);
+    }
+
+    auto changed = [] (float a, float b) noexcept
+    {
+        return std::abs (a - b) > 1.0e-4f;
+    };
+
+    return
+        changed (before.inPeakDbCurrent,  displayedMeters.inPeakDbCurrent)  ||
+        changed (before.inPeakDbHold,     displayedMeters.inPeakDbHold)     ||
+        changed (before.inRmsDbCurrent,   displayedMeters.inRmsDbCurrent)   ||
+
+        changed (before.outPeakDbCurrent, displayedMeters.outPeakDbCurrent) ||
+        changed (before.outPeakDbHold,    displayedMeters.outPeakDbHold)    ||
+        changed (before.outRmsDbCurrent,  displayedMeters.outRmsDbCurrent)  ||
+
+        changed (before.upBoostDbCurrent,   displayedMeters.upBoostDbCurrent)   ||
+        changed (before.upBoostDbBlockPeak, displayedMeters.upBoostDbBlockPeak) ||
+        changed (before.upBoostDbHold,      displayedMeters.upBoostDbHold)      ||
+
+        changed (before.downGrDbCurrent,   displayedMeters.downGrDbCurrent)   ||
+        changed (before.downGrDbBlockPeak, displayedMeters.downGrDbBlockPeak) ||
+        changed (before.downGrDbHold,      displayedMeters.downGrDbHold)      ||
+
+        changed (before.limGrDbCurrent,   displayedMeters.limGrDbCurrent)   ||
+        changed (before.limGrDbBlockPeak, displayedMeters.limGrDbBlockPeak) ||
+        changed (before.limGrDbHold,      displayedMeters.limGrDbHold);
+}
+
 void VolumeHistoryComponent::timerCallback()
 {
     const bool gotNewData = drainProcessorFifo();
+    const bool metersChanged = updateDisplayedMeters();
 
     // [ROLLING-LRA] if window selection changed, start rebuild; then do small chunks per tick
     startRollingRebuildIfWindowChanged();
     if (rollingRebuildInProgress)
         rebuildRollingLraStep (200); // process up to 200 seconds per timer tick
 
-    if (gotNewData || rollingRebuildInProgress)
+    if (gotNewData || rollingRebuildInProgress || metersChanged)
         repaint();
 }
 

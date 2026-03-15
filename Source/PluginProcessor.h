@@ -152,6 +152,13 @@ public:
     bool        hostHasTimeInSamples() const noexcept { return haveHostTimeSamples.load (std::memory_order_relaxed) != 0; }
     bool        hostHasTimeInSeconds() const noexcept { return haveHostTimeSeconds.load (std::memory_order_relaxed) != 0; }
     bool        getTransportIsPlaying() const noexcept { return transportIsPlaying.load (std::memory_order_relaxed); }
+    bool        getTransportStateIsFresh() const noexcept { return transportStateFresh.load (std::memory_order_relaxed); }
+
+    bool        getTransportIsEffectivelyPlaying() const noexcept
+    {
+        return transportStateFresh.load (std::memory_order_relaxed)
+            && transportIsPlaying.load (std::memory_order_relaxed);
+    }
 
     double getLoudnessFrameRate() const noexcept { return loudnessFrameRate; }
     int getFrameSamples() const noexcept { return frameSamples; }
@@ -232,6 +239,12 @@ private:
     std::atomic<int>         haveHostTimeSamples { 0 };
     std::atomic<int>         haveHostTimeSeconds { 0 };
     std::atomic<bool>        transportIsPlaying { false };
+    std::atomic<bool>        transportStateFresh { false };
+    std::atomic<juce::uint32> processBlockSequence { 0 };
+
+    juce::uint32             lastObservedProcessBlockSequence = 0;
+    int                      processBlockQuietTimerTicks = 0;
+    static constexpr int     processBlockFreshnessTimeoutTicks = 4; // 10 Hz timer => ~400 ms
 
     // [BEGIN LS-IO-METERING-ATOMICS]
     // Input/Output metering (max across channels). Updated on audio thread, read on UI thread.

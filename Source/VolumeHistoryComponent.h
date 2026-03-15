@@ -419,6 +419,8 @@ private:
     // [ROLLING-LRA] chunked rebuild so we don’t block UI
     void rebuildRollingLraStep (int maxSecondsToProcess);
 
+    bool updateDisplayedMeters();
+
     // [TIMEBASE-PLAYHEAD]
     int         frameSamples = 0;            // samples per 60 Hz loudness frame (from processor)
 
@@ -433,6 +435,38 @@ private:
 
     // [RULER-HYST-FIX]
     int tickStepIndex = -1; // remembered tickStep choice (hysteresis)
+
+        //==============================================================================
+    // [UI-METERS] UI-side displayed meter values.
+    // - While transport is effectively playing: snap to processor snapshots.
+    // - When playback stops or callbacks go stale: decay toward rest.
+    //==============================================================================
+
+    struct MeterDisplayState
+    {
+        float inPeakDbCurrent  = -200.0f;
+        float inPeakDbHold     = -200.0f;
+        float inRmsDbCurrent   = -200.0f;
+
+        float outPeakDbCurrent = -200.0f;
+        float outPeakDbHold    = -200.0f;
+        float outRmsDbCurrent  = -200.0f;
+
+        float upBoostDbCurrent   = 0.0f;
+        float upBoostDbBlockPeak = 0.0f;
+        float upBoostDbHold      = 0.0f;
+
+        float downGrDbCurrent    = 0.0f;
+        float downGrDbBlockPeak  = 0.0f;
+        float downGrDbHold       = 0.0f;
+
+        float limGrDbCurrent     = 0.0f;
+        float limGrDbBlockPeak   = 0.0f;
+        float limGrDbHold        = 0.0f;
+    };
+
+    MeterDisplayState displayedMeters;
+    bool displayedMetersPrimed = false;
 
     //==============================================================================
     // Scratch buffers
