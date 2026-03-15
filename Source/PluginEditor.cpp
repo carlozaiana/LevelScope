@@ -681,7 +681,6 @@ void LevellingCard::resized()
 
 MtdmZonesCard::MtdmZonesCard (LevelScopeAudioProcessor& p)
     : MtdmCardComponent ("Zones / Thresholds"),
-      processor (p),
       apvts (p.getAPVTS())
 {
     using namespace levelscope::mtdm::ParamIDs;

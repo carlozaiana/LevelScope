@@ -193,7 +193,6 @@ public:
     void resized() override;
 
 private:
-    LevelScopeAudioProcessor& processor;
     juce::AudioProcessorValueTreeState& apvts;
 
     juce::ToggleButton mtdmEnabledButton { "MTDM Enabled" };

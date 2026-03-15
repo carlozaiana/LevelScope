@@ -69,7 +69,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
     // [BEGIN UI3B-MAINPLOT-WIDTH-EXCLUDE-RIGHTSTRIP]
     const auto rightStrip = getDbRulerArea();
-    const int plotW = juce::jmax (1, width - rightStrip.getWidth());
     // [BEGIN UI3C1-MAINPLOT-W-USE-PLOTWIDTH]
     mainPlotArea = juce::Rectangle<float> (0.0f, 0.0f, (float) plotWidth, (float) plotBottom);
     // [END UI3C1-MAINPLOT-W-USE-PLOTWIDTH]
@@ -170,7 +169,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
     const size_t n = scratchVisibleGroups.size();
     // [BEGIN ROLLING-LRA-SPLITTER-USE-PLOT-H]
-    const float w = bounds.getWidth();
     const float h = mainPlotArea.getHeight(); // plot height changes when rolling lane is resized
     // [END ROLLING-LRA-SPLITTER-USE-PLOT-H]
 
@@ -592,7 +590,6 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
     if (showRollingLra && haveNowFrameIndex && zoomX > 1.0e-12)
     {
         const auto timeRuler = getTimeRulerArea();
-        const auto dbRuler   = getDbRulerArea();
 
         // [BEGIN ROLLING-LRA-SPLITTER-HEIGHT]
         const int rollingH = rollingLaneHeightPx;
@@ -1386,7 +1383,7 @@ void VolumeHistoryComponent::computeRepresentativeCurves (const std::vector<Fram
 // [TIMECODE-USER] parse either seconds (e.g. -2.0) or HH:MM:SS (e.g. -00:00:02)
 
 // [BEGIN VHC-RENDER-PARSE-USER-OFFSET]
-static bool parseUserOffsetSeconds (juce::String text, double& outSeconds)
+[[maybe_unused]] static bool parseUserOffsetSeconds (juce::String text, double& outSeconds)
 {
     text = text.trim();
 
