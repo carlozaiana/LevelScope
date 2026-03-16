@@ -166,25 +166,29 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
         juce::ParameterID { ParamIDs::sucFftSizeChoice, 1 },
         "SUC FFT Size",
         juce::StringArray { "1024", "2048", "4096", "8192" },
-        Defaults::sucFftSizeChoice));
+        Defaults::sucFftSizeChoice,
+        juce::AudioParameterChoiceAttributes().withAutomatable (false)));
 
     layout.add (std::make_unique<juce::AudioParameterChoice> (
         juce::ParameterID { ParamIDs::sucBandsPerOctChoice, 1 },
         "SUC Bands/Oct",
         juce::StringArray { "1", "2", "3", "6" },
-        Defaults::sucBandsPerOctChoice));
+        Defaults::sucBandsPerOctChoice,
+        juce::AudioParameterChoiceAttributes().withAutomatable (false)));
 
     layout.add (std::make_unique<juce::AudioParameterFloat> (
         juce::ParameterID { ParamIDs::sucMinFreqHz, 1 },
         "SUC Min Freq (Hz)",
         juce::NormalisableRange<float> (Ranges::sucMinFreqMinHz, Ranges::sucMinFreqMaxHz, 1.0f),
-        Defaults::sucMinFreqHz));
+        Defaults::sucMinFreqHz,
+        juce::AudioParameterFloatAttributes().withAutomatable (false)));
 
     layout.add (std::make_unique<juce::AudioParameterFloat> (
         juce::ParameterID { ParamIDs::sucMaxFreqHz, 1 },
         "SUC Max Freq (Hz)",
         juce::NormalisableRange<float> (Ranges::sucMaxFreqMinHz, Ranges::sucMaxFreqMaxHz, 1.0f),
-        Defaults::sucMaxFreqHz));
+        Defaults::sucMaxFreqHz,
+        juce::AudioParameterFloatAttributes().withAutomatable (false)));
     // [END MTDM-APVTS-PARAM-LAYOUT-STAGE-D1A-ADD]
 
     // [BEGIN MTDM-APVTS-PARAM-LAYOUT-TRIM-AND-CURVETYPE]
@@ -206,7 +210,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
         juce::ParameterID { ParamIDs::upwardModeChoice, 1 },
         "Upward Mode",
         juce::StringArray { "Spectral", "Broadband" },
-        Defaults::upwardModeChoice));
+        Defaults::upwardModeChoice,
+        juce::AudioParameterChoiceAttributes().withAutomatable (false)));
     // [END MTDM-APVTS-PARAM-LAYOUT-UPWARD-MODE]
 
     // [BEGIN MTDM-APVTS-PARAM-LAYOUT-UPWARD-ENABLED-BYPASS]
@@ -325,7 +330,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
         juce::ParameterID { ParamIDs::limLookaheadMs, 1 },
         "Limiter Lookahead (ms)",
         juce::NormalisableRange<float> (Ranges::limLookaheadMinMs, Ranges::limLookaheadMaxMs, 0.1f),
-        Defaults::limLookaheadMs));
+        Defaults::limLookaheadMs,
+        juce::AudioParameterFloatAttributes().withAutomatable (false)));
 
     layout.add (std::make_unique<juce::AudioParameterFloat> (
         juce::ParameterID { ParamIDs::limReleaseMs, 1 },
@@ -350,7 +356,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
         juce::ParameterID { ParamIDs::limOversamplingChoice, 1 },
         "Limiter Oversampling",
         juce::StringArray { "Off", "2x", "4x" },
-        Defaults::limOversamplingChoice));
+        Defaults::limOversamplingChoice,
+        juce::AudioParameterChoiceAttributes().withAutomatable (false)));
     // [END MTDM-APVTS-PARAM-LAYOUT-LIMITER-TP-ATTACK-DRIVE]
     // [END MTDM-APVTS-PARAM-LAYOUT-LIMITER]
 
