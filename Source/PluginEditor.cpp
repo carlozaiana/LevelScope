@@ -701,13 +701,18 @@ void LevellingCard::resized()
 
 MtdmZonesCard::MtdmZonesCard (LevelScopeAudioProcessor& p)
     : MtdmCardComponent ("Zones / Thresholds"),
+      processor (p),
       apvts (p.getAPVTS())
 {
     using namespace levelscope::mtdm::ParamIDs;
 
     addAndMakeVisible (mtdmEnabledButton);
     mtdmEnabledButton.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.90f));
+    mtdmEnabledButton.setTooltip ("Stop playback to change (changes latency).");
     mtdmEnabledAtt = std::make_unique<ButtonAttachment> (apvts, enabled, mtdmEnabledButton);
+
+    latencyLocked = processor.getTransportIsEffectivelyPlaying();
+    mtdmEnabledButton.setEnabled (! latencyLocked);
 
     styleLabel (t0Label, "T0 (LUFS)"); styleLabel (t1Label, "T1 (LUFS)");
     styleLabel (t2Label, "T2 (LUFS)"); styleLabel (t3Label, "T3 (LUFS)");
@@ -751,11 +756,25 @@ MtdmZonesCard::MtdmZonesCard (LevelScopeAudioProcessor& p)
     attachHooks (t1Slider, 1);
     attachHooks (t2Slider, 2);
     attachHooks (t3Slider, 3);
+
+    startTimerHz (10);
 }
 
 MtdmZonesCard::~MtdmZonesCard()
 {
+    stopTimer();
     endPushedThresholdGestures();
+}
+
+void MtdmZonesCard::timerCallback()
+{
+    const bool lockedNow = processor.getTransportIsEffectivelyPlaying();
+    if (latencyLocked == lockedNow)
+        return;
+
+    latencyLocked = lockedNow;
+    mtdmEnabledButton.setEnabled (! latencyLocked);
+    repaint();
 }
 
 void MtdmZonesCard::endPushedThresholdGestures()
@@ -1165,8 +1184,8 @@ MtdmUpwardCard::MtdmUpwardCard (LevelScopeAudioProcessor& p)
     fftLabel.setTooltip ("Stop playback to change (changes latency).");
     fftBox.setTooltip   ("Stop playback to change (changes latency).");
 
-    bandsLabel.setTooltip ("Stop playback to change (changes latency).");
-    bandsBox.setTooltip   ("Stop playback to change (changes latency).");
+    bandsLabel.setTooltip ("Stop playback to change.");
+    bandsBox.setTooltip   ("Stop playback to change.");
 
     minFreqLabel.setTooltip  ("Stop playback to change.");
     minFreqSlider.setTooltip ("Stop playback to change.");

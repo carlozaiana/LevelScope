@@ -186,7 +186,8 @@ private:
 //------------------------------------------------------------------------------
 // Zones / Thresholds card (T0..T3 + MTDM Enabled) with ordering push behavior
 //------------------------------------------------------------------------------
-class MtdmZonesCard : public MtdmCardComponent
+class MtdmZonesCard : public MtdmCardComponent,
+                      private juce::Timer
 {
 public:
     explicit MtdmZonesCard (LevelScopeAudioProcessor& p);
@@ -195,6 +196,7 @@ public:
     void resized() override;
 
 private:
+    LevelScopeAudioProcessor& processor;
     juce::AudioProcessorValueTreeState& apvts;
 
     juce::ToggleButton mtdmEnabledButton { "MTDM Enabled" };
@@ -214,6 +216,9 @@ private:
 
     bool callbacksSuppressed = false;
     bool thresholdSliderDragging = false;
+
+    void timerCallback() override;
+    bool latencyLocked = false;
 
     std::array<bool, 4> pushedGestureActive { { false, false, false, false } };
     static constexpr float minGapLu = 0.1f;
