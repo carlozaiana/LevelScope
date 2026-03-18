@@ -1052,6 +1052,8 @@ MtdmUpwardCard::MtdmUpwardCard (LevelScopeAudioProcessor& p)
     enabledButton.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.92f));
     bypassButton.setColour  (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.85f));
 
+    enabledButton.setTooltip ("Stop playback to change (changes latency).");
+
     addAndMakeVisible (enabledButton);
     addAndMakeVisible (bypassButton);
 
@@ -1267,16 +1269,19 @@ void MtdmUpwardCard::updateSpectralEnablement()
     // Spectral = item index 0, Broadband = item index 1
     const bool spectral = (modeBox.getSelectedItemIndex() == 0);
 
-    // Upward mode itself is locked during effective playback
-    const bool modeEnabled = ! latencyLocked;
-    modeLabel.setEnabled (modeEnabled);
-    modeBox.setEnabled   (modeEnabled);
+    // Upward enable and mode are locked during effective playback
+    const bool allowLatencyChanges = ! latencyLocked;
+
+    enabledButton.setEnabled (allowLatencyChanges);
+
+    modeLabel.setEnabled (allowLatencyChanges);
+    modeBox.setEnabled   (allowLatencyChanges);
 
     // Spectral-only controls are editable only when:
     // - Advanced is visible
     // - Spectral mode is selected
     // - playback is not effectively running
-    const bool spectralControlsEnabled = (showAdvanced && spectral && ! latencyLocked);
+    const bool spectralControlsEnabled = (showAdvanced && spectral && allowLatencyChanges);
 
     fftLabel.setEnabled (spectralControlsEnabled);
     fftBox.setEnabled   (spectralControlsEnabled);
@@ -1578,6 +1583,7 @@ MtdmLimiterCard::MtdmLimiterCard (LevelScopeAudioProcessor& p)
     using namespace levelscope::mtdm::ParamIDs;
 
     enabledButton.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.90f));
+    enabledButton.setTooltip ("Stop playback to change (changes latency).");
     addAndMakeVisible (enabledButton);
     enabledAtt = std::make_unique<ButtonAttachment> (apvts, limEnabled01, enabledButton);
 
@@ -1691,6 +1697,8 @@ void MtdmLimiterCard::updateAdvancedVisibility()
 void MtdmLimiterCard::updateLatencySensitiveEnablement()
 {
     const bool allowLatencyChanges = ! latencyLocked;
+
+    enabledButton.setEnabled (allowLatencyChanges);
 
     lookLabel.setEnabled (allowLatencyChanges);
     lookSlider.setEnabled (allowLatencyChanges);
