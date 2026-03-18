@@ -90,10 +90,13 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
 
     using namespace levelscope::mtdm;
 
+    // [BEGIN MTDM-NONAUTOMATABLE-STRUCTURAL-ENABLES]
     layout.add (std::make_unique<juce::AudioParameterBool> (
         juce::ParameterID { ParamIDs::enabled, 1 },
         "MTDM Enabled",
-        (Defaults::enabled01 >= 0.5f)));
+        (Defaults::enabled01 >= 0.5f),
+        juce::AudioParameterBoolAttributes().withAutomatable (false)));
+    // [END MTDM-NONAUTOMATABLE-STRUCTURAL-ENABLES]
 
     layout.add (std::make_unique<juce::AudioParameterFloat> (
         juce::ParameterID { ParamIDs::thresholdDb, 1 },
@@ -215,10 +218,13 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
     // [END MTDM-APVTS-PARAM-LAYOUT-UPWARD-MODE]
 
     // [BEGIN MTDM-APVTS-PARAM-LAYOUT-UPWARD-ENABLED-BYPASS]
+    // [BEGIN MTDM-NONAUTOMATABLE-UPWARD-STRUCTURAL-ENABLE]
     layout.add (std::make_unique<juce::AudioParameterBool> (
         juce::ParameterID { ParamIDs::upEnabled01, 1 },
         "Upward Enabled",
-        (levelscope::mtdm::Defaults::upEnabled01 >= 0.5f)));
+        (levelscope::mtdm::Defaults::upEnabled01 >= 0.5f),
+        juce::AudioParameterBoolAttributes().withAutomatable (false)));
+    // [END MTDM-NONAUTOMATABLE-UPWARD-STRUCTURAL-ENABLE]
 
     layout.add (std::make_unique<juce::AudioParameterBool> (
         juce::ParameterID { ParamIDs::upBypass01, 1 },
@@ -315,10 +321,13 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
     // [END MTDM-APVTS-PARAM-LAYOUT-DOWNWARD-BYPASS]
 
     // [BEGIN MTDM-APVTS-PARAM-LAYOUT-LIMITER]
+    // [BEGIN MTDM-NONAUTOMATABLE-LIMITER-STRUCTURAL-ENABLE]
     layout.add (std::make_unique<juce::AudioParameterBool> (
         juce::ParameterID { ParamIDs::limEnabled01, 1 },
         "Limiter Enabled",
-        (Defaults::limEnabled01 >= 0.5f)));
+        (Defaults::limEnabled01 >= 0.5f),
+        juce::AudioParameterBoolAttributes().withAutomatable (false)));
+    // [END MTDM-NONAUTOMATABLE-LIMITER-STRUCTURAL-ENABLE]
 
     layout.add (std::make_unique<juce::AudioParameterFloat> (
         juce::ParameterID { ParamIDs::limCeilingDb, 1 },
