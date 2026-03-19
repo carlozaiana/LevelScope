@@ -1361,7 +1361,7 @@ int LevelScopeAudioProcessor::readLoudnessFromFifo (float* momentaryDest,
 
 // [BEGIN LS-C2-STATE-GETSET]
 // [BEGIN LS-SETTINGS-PRESET-HELPERS-IMPL]
-void LevelScopeAudioProcessor::buildApvsStateChunk (juce::MemoryBlock& destData) const
+void LevelScopeAudioProcessor::buildApvsStateChunk (juce::MemoryBlock& destData)
 {
     destData.setSize (0);
 
@@ -1372,7 +1372,7 @@ void LevelScopeAudioProcessor::buildApvsStateChunk (juce::MemoryBlock& destData)
     vt.writeToStream (os);
 }
 
-void LevelScopeAudioProcessor::buildModgStateChunk (juce::MemoryBlock& destData) const
+void LevelScopeAudioProcessor::buildModgStateChunk (juce::MemoryBlock& destData)
 {
     destData.setSize (0);
 

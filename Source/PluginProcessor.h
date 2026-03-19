@@ -323,8 +323,8 @@ private:
     // [END LS-LATENCY-CACHED-PARAMS]
 
     // [BEGIN LS-SETTINGS-PRESET-HELPERS]
-    void buildApvsStateChunk (juce::MemoryBlock& destData) const;
-    void buildModgStateChunk (juce::MemoryBlock& destData) const;
+    void buildApvsStateChunk (juce::MemoryBlock& destData);
+    void buildModgStateChunk (juce::MemoryBlock& destData);
     bool applyApvsStateChunk (const juce::MemoryBlock& apvsChunk);
     bool parseSettingsPresetBlob (const void* data, int sizeInBytes,
                                   juce::MemoryBlock& apvsChunkOut,
