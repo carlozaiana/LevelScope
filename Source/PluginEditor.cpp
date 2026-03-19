@@ -466,25 +466,28 @@ void MissionControlComponent::showLoadMenu()
 
 void MissionControlComponent::startSaveSettingsPreset()
 {
-    juce::FileChooser chooser ("Save LevelScope settings preset",
-                               juce::File::getSpecialLocation (juce::File::userDocumentsDirectory),
-                               "*.lscsettings");
+    activeFileChooser = std::make_unique<juce::FileChooser> (
+        "Save LevelScope settings preset",
+        juce::File::getSpecialLocation (juce::File::userDocumentsDirectory),
+        "*.lscsettings");
 
-    chooser.launchAsync (juce::FileBrowserComponent::saveMode | juce::FileBrowserComponent::canSelectFiles,
-                         [this] (const juce::FileChooser& fc)
-                         {
-                             auto f = fc.getResult();
-                             if (f == juce::File())
-                                 return;
+    activeFileChooser->launchAsync (juce::FileBrowserComponent::saveMode | juce::FileBrowserComponent::canSelectFiles,
+                                    [this] (const juce::FileChooser& fc)
+                                    {
+                                        auto f = fc.getResult();
+                                        activeFileChooser.reset();
 
-                             if (f.getFileExtension().isEmpty())
-                                 f = f.withFileExtension (".lscsettings");
+                                        if (f == juce::File())
+                                            return;
 
-                             juce::MemoryBlock mb;
-                             processor.getSettingsPresetInformation (mb);
+                                        if (f.getFileExtension().isEmpty())
+                                            f = f.withFileExtension (".lscsettings");
 
-                             (void) f.replaceWithData (mb.getData(), mb.getSize());
-                         });
+                                        juce::MemoryBlock mb;
+                                        processor.getSettingsPresetInformation (mb);
+
+                                        (void) f.replaceWithData (mb.getData(), mb.getSize());
+                                    });
 }
 
 void MissionControlComponent::startLoadSettingsPreset()
@@ -492,47 +495,53 @@ void MissionControlComponent::startLoadSettingsPreset()
     if (processor.getTransportIsEffectivelyPlaying())
         return;
 
-    juce::FileChooser chooser ("Load LevelScope settings preset",
-                               juce::File::getSpecialLocation (juce::File::userDocumentsDirectory),
-                               "*.lscsettings");
+    activeFileChooser = std::make_unique<juce::FileChooser> (
+        "Load LevelScope settings preset",
+        juce::File::getSpecialLocation (juce::File::userDocumentsDirectory),
+        "*.lscsettings");
 
-    chooser.launchAsync (juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles,
-                         [this] (const juce::FileChooser& fc)
-                         {
-                             auto f = fc.getResult();
-                             if (f == juce::File() || ! f.existsAsFile())
-                                 return;
+    activeFileChooser->launchAsync (juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles,
+                                    [this] (const juce::FileChooser& fc)
+                                    {
+                                        auto f = fc.getResult();
+                                        activeFileChooser.reset();
 
-                             juce::MemoryBlock mb;
-                             if (! f.loadFileAsData (mb))
-                                 return;
+                                        if (f == juce::File() || ! f.existsAsFile())
+                                            return;
 
-                             if (processor.setSettingsPresetInformation (mb.getData(), (int) mb.getSize()))
-                                 loadTargetsFromState();
-                         });
+                                        juce::MemoryBlock mb;
+                                        if (! f.loadFileAsData (mb))
+                                            return;
+
+                                        if (processor.setSettingsPresetInformation (mb.getData(), (int) mb.getSize()))
+                                            loadTargetsFromState();
+                                    });
 }
 
 void MissionControlComponent::startSaveSnapshot()
 {
-    juce::FileChooser chooser ("Save LevelScope snapshot",
-                               juce::File::getSpecialLocation (juce::File::userDocumentsDirectory),
-                               "*.lscpreset");
+    activeFileChooser = std::make_unique<juce::FileChooser> (
+        "Save LevelScope snapshot",
+        juce::File::getSpecialLocation (juce::File::userDocumentsDirectory),
+        "*.lscpreset");
 
-    chooser.launchAsync (juce::FileBrowserComponent::saveMode | juce::FileBrowserComponent::canSelectFiles,
-                         [this] (const juce::FileChooser& fc)
-                         {
-                             auto f = fc.getResult();
-                             if (f == juce::File())
-                                 return;
+    activeFileChooser->launchAsync (juce::FileBrowserComponent::saveMode | juce::FileBrowserComponent::canSelectFiles,
+                                    [this] (const juce::FileChooser& fc)
+                                    {
+                                        auto f = fc.getResult();
+                                        activeFileChooser.reset();
 
-                             if (f.getFileExtension().isEmpty())
-                                 f = f.withFileExtension (".lscpreset");
+                                        if (f == juce::File())
+                                            return;
 
-                             juce::MemoryBlock mb;
-                             processor.getStateInformation (mb);
+                                        if (f.getFileExtension().isEmpty())
+                                            f = f.withFileExtension (".lscpreset");
 
-                             (void) f.replaceWithData (mb.getData(), mb.getSize());
-                         });
+                                        juce::MemoryBlock mb;
+                                        processor.getStateInformation (mb);
+
+                                        (void) f.replaceWithData (mb.getData(), mb.getSize());
+                                    });
 }
 
 void MissionControlComponent::startLoadSnapshot()
@@ -540,24 +549,27 @@ void MissionControlComponent::startLoadSnapshot()
     if (processor.getTransportIsEffectivelyPlaying())
         return;
 
-    juce::FileChooser chooser ("Load LevelScope snapshot",
-                               juce::File::getSpecialLocation (juce::File::userDocumentsDirectory),
-                               "*.lscpreset");
+    activeFileChooser = std::make_unique<juce::FileChooser> (
+        "Load LevelScope snapshot",
+        juce::File::getSpecialLocation (juce::File::userDocumentsDirectory),
+        "*.lscpreset");
 
-    chooser.launchAsync (juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles,
-                         [this] (const juce::FileChooser& fc)
-                         {
-                             auto f = fc.getResult();
-                             if (f == juce::File() || ! f.existsAsFile())
-                                 return;
+    activeFileChooser->launchAsync (juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles,
+                                    [this] (const juce::FileChooser& fc)
+                                    {
+                                        auto f = fc.getResult();
+                                        activeFileChooser.reset();
 
-                             juce::MemoryBlock mb;
-                             if (! f.loadFileAsData (mb))
-                                 return;
+                                        if (f == juce::File() || ! f.existsAsFile())
+                                            return;
 
-                             processor.setStateInformation (mb.getData(), (int) mb.getSize());
-                             loadTargetsFromState();
-                         });
+                                        juce::MemoryBlock mb;
+                                        if (! f.loadFileAsData (mb))
+                                            return;
+
+                                        processor.setStateInformation (mb.getData(), (int) mb.getSize());
+                                        loadTargetsFromState();
+                                    });
 }
 // [END UI3A-MISSIONCONTROL-SAVELOAD-MODES-IMPL]
 

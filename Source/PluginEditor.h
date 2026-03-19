@@ -109,6 +109,10 @@ private:
     RoutingGraphic routingGraphic;
     bool loadPresetLocked = false;
 
+    // [BEGIN UI3A-MISSIONCONTROL-FILECHOOSER-MEMBER]
+    std::unique_ptr<juce::FileChooser> activeFileChooser;
+    // [END UI3A-MISSIONCONTROL-FILECHOOSER-MEMBER]
+
     // [BEGIN UI3C3-MISSIONCONTROL-RLRA-WINDOW-MEMBERS]
     juce::ToggleButton toggleMomentary { "M" };
     juce::ToggleButton toggleShortTerm { "S" };
