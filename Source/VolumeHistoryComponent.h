@@ -67,6 +67,10 @@ public:
     bool getShowRollingLraLane() const noexcept { return showRollingLra; }
     // [END UI3A-CURVE-VISIBILITY-PUBLIC-API]
 
+    // [BEGIN UI3A-HISTORY-RELOAD-FROM-PROCESSOR-API]
+    void reloadFromProcessorState();
+    // [END UI3A-HISTORY-RELOAD-FROM-PROCESSOR-API]
+
 private:
     //==============================================================================
     // History structures

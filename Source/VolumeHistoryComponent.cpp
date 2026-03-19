@@ -137,3 +137,42 @@ VolumeHistoryComponent::~VolumeHistoryComponent()
     stopTimer();
 }
 // [END MTDM-THRESH-UI-APVTS-LISTENER-UNREGISTER]
+
+// [BEGIN UI3A-HISTORY-RELOAD-FROM-PROCESSOR-IMPL]
+void VolumeHistoryComponent::reloadFromProcessorState()
+{
+    // Rebuild the UI-side cached/ring history from the processor's persisted timeline.
+    resetHistoryLevels();
+
+    std::fill (secShortTermLufs.begin(),  secShortTermLufs.end(),  -200.0f);
+    std::fill (secGateLufs.begin(),       secGateLufs.end(),       -200.0f);
+    std::fill (secRollingLraLu.begin(),   secRollingLraLu.end(),   0.0f);
+    std::fill (secAbsIndexTag.begin(),    secAbsIndexTag.end(),    (juce::int64) -1);
+
+    lastSecondPushed = std::numeric_limits<juce::int64>::min();
+
+    rollingWindowSecondsCached = processor.getRollingLraWindowSeconds();
+    rollingRebuildInProgress = false;
+    rollingRebuildMinSecond = 0;
+    rollingRebuildMaxSecond = -1;
+    rollingRebuildNextSecond = 0;
+
+    nowFrameIndex = 0;
+    haveNowFrameIndex = false;
+
+    playheadFrameIndex = 0;
+    havePlayheadFrameIndex = false;
+
+    bootstrappedFromProcessor = false;
+    bootstrapHistoryFromProcessorIfNeeded();
+
+    if (followRightEdge && haveNowFrameIndex)
+    {
+        viewRightFrame = (double) nowFrameIndex;
+        clampViewRightFrame (getWidth());
+    }
+
+    markStaticBackgroundDirty();
+    repaint();
+}
+// [END UI3A-HISTORY-RELOAD-FROM-PROCESSOR-IMPL]
