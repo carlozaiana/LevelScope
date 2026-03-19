@@ -71,6 +71,11 @@ public:
     //==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+
+    // [BEGIN LS-SETTINGS-PRESET-API]
+    void getSettingsPresetInformation (juce::MemoryBlock& destData);
+    bool setSettingsPresetInformation (const void* data, int sizeInBytes);
+    // [END LS-SETTINGS-PRESET-API]
     // [BEGIN MTDM-APVTS-ACCESSOR]
         juce::AudioProcessorValueTreeState&       getAPVTS() noexcept       { return apvts; }
         const juce::AudioProcessorValueTreeState& getAPVTS() const noexcept { return apvts; }
@@ -315,7 +320,16 @@ private:
 
     int computeTotalLatencySamplesFromCachedParams() const noexcept;
     void cacheLatencyParamPointers();
-// [END LS-LATENCY-CACHED-PARAMS]
+    // [END LS-LATENCY-CACHED-PARAMS]
+
+    // [BEGIN LS-SETTINGS-PRESET-HELPERS]
+    void buildApvsStateChunk (juce::MemoryBlock& destData) const;
+    void buildModgStateChunk (juce::MemoryBlock& destData) const;
+    bool applyApvsStateChunk (const juce::MemoryBlock& apvsChunk);
+    bool parseSettingsPresetBlob (const void* data, int sizeInBytes,
+                                  juce::MemoryBlock& apvsChunkOut,
+                                  juce::MemoryBlock& modgChunkOut) const;
+    // [END LS-SETTINGS-PRESET-HELPERS]
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LevelScopeAudioProcessor)

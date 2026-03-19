@@ -12,6 +12,7 @@
 #include <cmath>
 #include <algorithm>
 #include <type_traits>
+#include <cstring>
 
 namespace
 {
@@ -89,6 +90,40 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
     juce::AudioProcessorValueTreeState::ParameterLayout layout;
 
     using namespace levelscope::mtdm;
+
+    // [BEGIN MTDM-STRUCTURAL-PARAM-SOURCE-OF-TRUTH]
+    // MTDM "structural / stop-playback / quality" parameter list.
+    // Keep this comment block as the single source of truth so:
+    //   1) APVTS non-automatable flags,
+    //   2) UI playback-lock rules,
+    //   3) latency-update bookkeeping
+    // do not drift apart over time.
+    //
+    // Maintenance rule:
+    // - If a param here should not be host-automatable, set .withAutomatable (false) on its APVTS parameter.
+    // - If a param here should be blocked during playback, include it in the UI effective-playback lock list.
+    // - If a param here changes reported latency, also update:
+    //     cacheLatencyParamPointers()
+    //     registerLatencyParamListeners()
+    //     unregisterLatencyParamListeners()
+    //     computeTotalLatencySamplesFromCachedParams()
+    //
+    // Structural enable params
+    // (non-automatable + playback-locked; these may change processing topology/latency):
+    // - ParamIDs::enabled              // mtdm.enabled
+    // - ParamIDs::upEnabled01          // mtdm.up.enabled01
+    // - ParamIDs::limEnabled01         // mtdm.lim.enabled
+    //
+    // Structural / quality params
+    // (currently non-automatable + playback-locked):
+    // - ParamIDs::upwardModeChoice     // mtdm.upwardModeChoice
+    // - ParamIDs::sucFftSizeChoice     // mtdm.suc.fftSizeChoice
+    // - ParamIDs::sucBandsPerOctChoice // mtdm.suc.bandsPerOctChoice
+    // - ParamIDs::sucMinFreqHz         // mtdm.suc.minFreqHz
+    // - ParamIDs::sucMaxFreqHz         // mtdm.suc.maxFreqHz
+    // - ParamIDs::limLookaheadMs       // mtdm.lim.lookaheadMs
+    // - ParamIDs::limOversamplingChoice// mtdm.lim.oversamplingChoice
+    // [END MTDM-STRUCTURAL-PARAM-SOURCE-OF-TRUTH]
 
     // [BEGIN MTDM-NONAUTOMATABLE-STRUCTURAL-ENABLES]
     layout.add (std::make_unique<juce::AudioParameterBool> (
@@ -1325,37 +1360,165 @@ int LevelScopeAudioProcessor::readLoudnessFromFifo (float* momentaryDest,
 //==============================================================================
 
 // [BEGIN LS-C2-STATE-GETSET]
+// [BEGIN LS-SETTINGS-PRESET-HELPERS-IMPL]
+void LevelScopeAudioProcessor::buildApvsStateChunk (juce::MemoryBlock& destData) const
+{
+    destData.setSize (0);
+
+    juce::MemoryOutputStream os (destData, true);
+    os.writeInt (1); // APVS schema version
+
+    auto vt = apvts.copyState();
+    vt.writeToStream (os);
+}
+
+void LevelScopeAudioProcessor::buildModgStateChunk (juce::MemoryBlock& destData) const
+{
+    destData.setSize (0);
+
+    juce::MemoryOutputStream os (destData, true);
+    os.writeInt (1); // MODG schema version
+
+    // For Stage C2, persist module order + bypass byte.
+    const juce::String mtdmId = juce::String (levelscope::MultiThresholdDynamicsModule().getModuleID());
+
+    os.writeInt (1); // num modules
+    os.writeString (mtdmId);
+
+    // Mirror MTDM enabled state as graph-level bypass persistence.
+    const auto* enabled01 = apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::enabled);
+    const bool bypassed = (enabled01 != nullptr ? (enabled01->load() < 0.5f) : true);
+    os.writeByte ((char) (bypassed ? 1 : 0));
+}
+
+bool LevelScopeAudioProcessor::applyApvsStateChunk (const juce::MemoryBlock& apvsChunk)
+{
+    if (apvsChunk.getSize() == 0)
+        return false;
+
+    juce::MemoryInputStream in (apvsChunk.getData(), apvsChunk.getSize(), false);
+    const int schema = in.readInt();
+
+    if (schema != 1)
+        return false;
+
+    auto vt = juce::ValueTree::readFromStream (in);
+    if (! vt.isValid())
+        return false;
+
+    apvts.replaceState (vt);
+    return true;
+}
+
+bool LevelScopeAudioProcessor::parseSettingsPresetBlob (const void* data, int sizeInBytes,
+                                                        juce::MemoryBlock& apvsChunkOut,
+                                                        juce::MemoryBlock& modgChunkOut) const
+{
+    apvsChunkOut.setSize (0);
+    modgChunkOut.setSize (0);
+
+    if (data == nullptr || sizeInBytes <= 8)
+        return false;
+
+    juce::MemoryInputStream in (data, (size_t) sizeInBytes, false);
+
+    char magic[4] = {};
+    if (in.read (magic, 4) != 4)
+        return false;
+
+    if (std::memcmp (magic, "LSSP", 4) != 0)
+        return false;
+
+    const int version = in.readInt();
+    if (version != 1)
+        return false;
+
+    while (in.getNumBytesRemaining() >= 8)
+    {
+        char chunkId[4] = {};
+        if (in.read (chunkId, 4) != 4)
+            return false;
+
+        const int chunkSize = in.readInt();
+        if (chunkSize < 0 || in.getNumBytesRemaining() < (juce::int64) chunkSize)
+            return false;
+
+        juce::MemoryBlock chunk;
+        chunk.setSize ((size_t) chunkSize);
+
+        if (chunkSize > 0)
+        {
+            if (in.read (chunk.getData(), chunkSize) != chunkSize)
+                return false;
+        }
+
+        if (std::memcmp (chunkId, "APVS", 4) == 0)
+            apvsChunkOut = chunk;
+        else if (std::memcmp (chunkId, "MODG", 4) == 0)
+            modgChunkOut = chunk;
+        // Unknown chunks ignored for forward compatibility
+    }
+
+    return (apvsChunkOut.getSize() > 0 || modgChunkOut.getSize() > 0);
+}
+// [END LS-SETTINGS-PRESET-HELPERS-IMPL]
+
+// [BEGIN LS-SETTINGS-PRESET-GETSET]
+void LevelScopeAudioProcessor::getSettingsPresetInformation (juce::MemoryBlock& destData)
+{
+    juce::MemoryBlock apvsChunk;
+    juce::MemoryBlock modgChunk;
+
+    buildApvsStateChunk (apvsChunk);
+    buildModgStateChunk (modgChunk);
+
+    destData.setSize (0);
+    juce::MemoryOutputStream os (destData, true);
+
+    // Simple versioned settings-preset container:
+    // magic "LSSP" + version + chunk stream
+    os.write ("LSSP", 4);
+    os.writeInt (1);
+
+    auto writeChunk = [&os] (const char* chunkId4, const juce::MemoryBlock& chunk)
+    {
+        os.write (chunkId4, 4);
+        os.writeInt ((int) chunk.getSize());
+
+        if (chunk.getSize() > 0)
+            os.write (chunk.getData(), chunk.getSize());
+    };
+
+    writeChunk ("APVS", apvsChunk);
+    writeChunk ("MODG", modgChunk);
+}
+
+bool LevelScopeAudioProcessor::setSettingsPresetInformation (const void* data, int sizeInBytes)
+{
+    juce::MemoryBlock apvsChunk;
+    juce::MemoryBlock modgChunk;
+
+    if (! parseSettingsPresetBlob (data, sizeInBytes, apvsChunk, modgChunk))
+        return false;
+
+    if (apvsChunk.getSize() > 0)
+        (void) applyApvsStateChunk (apvsChunk);
+
+    rebuildModuleGraphFromState (modgChunk.getSize() > 0 ? &modgChunk : nullptr);
+
+    updateLatencyFromAPVTS_NonRT();
+    return true;
+}
+// [END LS-SETTINGS-PRESET-GETSET]
+
 void LevelScopeAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    // Baseline chunks are written exactly as before, then we append APVS + MODG.
+    // Full snapshot: baseline history/timeline blob + APVS + MODG.
     juce::MemoryBlock apvsChunk;
-    {
-        juce::MemoryOutputStream os (apvsChunk, true);
-        os.writeInt (1); // APVS schema version
-
-        // Store the APVTS ValueTree in binary form (non-audio-thread only).
-        auto vt = apvts.copyState();
-        vt.writeToStream (os);
-    }
-
     juce::MemoryBlock modgChunk;
-    {
-        juce::MemoryOutputStream os (modgChunk, true);
-        os.writeInt (1); // MODG schema version
 
-        // For Stage C2, we persist: module ID list (order) + bypass flag.
-        // Current graph is effectively fixed (MTDM only), but this chunk establishes the additive format.
-        const juce::String mtdmId = juce::String (levelscope::MultiThresholdDynamicsModule().getModuleID());
-
-        os.writeInt (1); // num modules
-        os.writeString (mtdmId);
-
-        // "bypass" persisted here as a graph-level concept.
-        // For now (Stage C2), we mirror the MTDM Enabled param for persistence.
-        const auto* enabled01 = apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::enabled);
-        const bool bypassed = (enabled01 != nullptr ? (enabled01->load() < 0.5f) : true);
-        os.writeByte ((char) (bypassed ? 1 : 0));
-    }
+    buildApvsStateChunk (apvsChunk);
+    buildModgStateChunk (modgChunk);
 
     historyModel.saveState (destData, &apvsChunk, &modgChunk);
 }
@@ -1369,17 +1532,7 @@ void LevelScopeAudioProcessor::setStateInformation (const void* data, int sizeIn
 
     // Restore APVTS if present (old sessions won't have APVS).
     if (apvsChunk.getSize() > 0)
-    {
-        juce::MemoryInputStream in (apvsChunk.getData(), apvsChunk.getSize(), false);
-        const int schema = in.readInt();
-
-        if (schema == 1)
-        {
-            auto vt = juce::ValueTree::readFromStream (in);
-            if (vt.isValid())
-                apvts.replaceState (vt);
-        }
-    }
+        (void) applyApvsStateChunk (apvsChunk);
 
     // Rebuild module graph safely (old sessions won't have MODG).
     rebuildModuleGraphFromState (modgChunk.getSize() > 0 ? &modgChunk : nullptr);
@@ -1387,7 +1540,6 @@ void LevelScopeAudioProcessor::setStateInformation (const void* data, int sizeIn
     // [BEGIN LS-LATENCY-STATE-UPDATE]
     updateLatencyFromAPVTS_NonRT();
     // [END LS-LATENCY-STATE-UPDATE]
-
 }
 // [END LS-C2-STATE-GETSET]
 

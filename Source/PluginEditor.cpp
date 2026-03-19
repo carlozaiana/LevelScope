@@ -163,9 +163,9 @@ MissionControlComponent::MissionControlComponent (LevelScopeAudioProcessor& p, V
     addAndMakeVisible (savePresetButton);
     addAndMakeVisible (loadPresetButton);
 
-    savePresetButton.onClick = [this] { startSavePreset(); };
-    loadPresetButton.onClick = [this] { startLoadPreset(); };
-    loadPresetButton.setTooltip ("Stop playback to load preset (may change latency).");
+    savePresetButton.onClick = [this] { showSaveMenu(); };
+    loadPresetButton.onClick = [this] { showLoadMenu(); };
+    loadPresetButton.setTooltip ("Stop playback to load settings preset or snapshot (may change latency).");
 
     auto setupLabelBox = [] (juce::Label& l)
     {
@@ -428,11 +428,47 @@ void MissionControlComponent::timerCallback()
     routingGraphic.repaint();
 }
 
-void MissionControlComponent::startSavePreset()
+// [BEGIN UI3A-MISSIONCONTROL-SAVELOAD-MODES-IMPL]
+void MissionControlComponent::showSaveMenu()
 {
-    juce::FileChooser chooser ("Save LevelScope preset",
-                              juce::File::getSpecialLocation (juce::File::userDocumentsDirectory),
-                              "*.lscpreset");
+    juce::PopupMenu m;
+    m.addItem (1, "Save Settings Preset...");
+    m.addItem (2, "Save Snapshot...");
+
+    m.showMenuAsync (juce::PopupMenu::Options().withTargetComponent (&savePresetButton),
+                     [this] (int result)
+                     {
+                         if (result == 1)
+                             startSaveSettingsPreset();
+                         else if (result == 2)
+                             startSaveSnapshot();
+                     });
+}
+
+void MissionControlComponent::showLoadMenu()
+{
+    if (processor.getTransportIsEffectivelyPlaying())
+        return;
+
+    juce::PopupMenu m;
+    m.addItem (1, "Load Settings Preset...");
+    m.addItem (2, "Load Snapshot...");
+
+    m.showMenuAsync (juce::PopupMenu::Options().withTargetComponent (&loadPresetButton),
+                     [this] (int result)
+                     {
+                         if (result == 1)
+                             startLoadSettingsPreset();
+                         else if (result == 2)
+                             startLoadSnapshot();
+                     });
+}
+
+void MissionControlComponent::startSaveSettingsPreset()
+{
+    juce::FileChooser chooser ("Save LevelScope settings preset",
+                               juce::File::getSpecialLocation (juce::File::userDocumentsDirectory),
+                               "*.lscsettings");
 
     chooser.launchAsync (juce::FileBrowserComponent::saveMode | juce::FileBrowserComponent::canSelectFiles,
                          [this] (const juce::FileChooser& fc)
@@ -441,6 +477,57 @@ void MissionControlComponent::startSavePreset()
                              if (f == juce::File())
                                  return;
 
+                             if (f.getFileExtension().isEmpty())
+                                 f = f.withFileExtension (".lscsettings");
+
+                             juce::MemoryBlock mb;
+                             processor.getSettingsPresetInformation (mb);
+
+                             (void) f.replaceWithData (mb.getData(), mb.getSize());
+                         });
+}
+
+void MissionControlComponent::startLoadSettingsPreset()
+{
+    if (processor.getTransportIsEffectivelyPlaying())
+        return;
+
+    juce::FileChooser chooser ("Load LevelScope settings preset",
+                               juce::File::getSpecialLocation (juce::File::userDocumentsDirectory),
+                               "*.lscsettings");
+
+    chooser.launchAsync (juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles,
+                         [this] (const juce::FileChooser& fc)
+                         {
+                             auto f = fc.getResult();
+                             if (f == juce::File() || ! f.existsAsFile())
+                                 return;
+
+                             juce::MemoryBlock mb;
+                             if (! f.loadFileAsData (mb))
+                                 return;
+
+                             if (processor.setSettingsPresetInformation (mb.getData(), (int) mb.getSize()))
+                                 loadTargetsFromState();
+                         });
+}
+
+void MissionControlComponent::startSaveSnapshot()
+{
+    juce::FileChooser chooser ("Save LevelScope snapshot",
+                               juce::File::getSpecialLocation (juce::File::userDocumentsDirectory),
+                               "*.lscpreset");
+
+    chooser.launchAsync (juce::FileBrowserComponent::saveMode | juce::FileBrowserComponent::canSelectFiles,
+                         [this] (const juce::FileChooser& fc)
+                         {
+                             auto f = fc.getResult();
+                             if (f == juce::File())
+                                 return;
+
+                             if (f.getFileExtension().isEmpty())
+                                 f = f.withFileExtension (".lscpreset");
+
                              juce::MemoryBlock mb;
                              processor.getStateInformation (mb);
 
@@ -448,14 +535,14 @@ void MissionControlComponent::startSavePreset()
                          });
 }
 
-void MissionControlComponent::startLoadPreset()
+void MissionControlComponent::startLoadSnapshot()
 {
     if (processor.getTransportIsEffectivelyPlaying())
         return;
 
-    juce::FileChooser chooser ("Load LevelScope preset",
-                              juce::File::getSpecialLocation (juce::File::userDocumentsDirectory),
-                              "*.lscpreset");
+    juce::FileChooser chooser ("Load LevelScope snapshot",
+                               juce::File::getSpecialLocation (juce::File::userDocumentsDirectory),
+                               "*.lscpreset");
 
     chooser.launchAsync (juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles,
                          [this] (const juce::FileChooser& fc)
@@ -472,6 +559,7 @@ void MissionControlComponent::startLoadPreset()
                              loadTargetsFromState();
                          });
 }
+// [END UI3A-MISSIONCONTROL-SAVELOAD-MODES-IMPL]
 
 // [BEGIN UI3A-MISSIONCONTROL-RESIZED-RELAYOUT]
 void MissionControlComponent::resized()

@@ -33,8 +33,16 @@ private:
 
     void updateCurrentReadouts();
 
-    void startSavePreset();
-    void startLoadPreset();
+    // [BEGIN UI3A-MISSIONCONTROL-SAVELOAD-MODES]
+    void showSaveMenu();
+    void showLoadMenu();
+
+    void startSaveSettingsPreset();
+    void startLoadSettingsPreset();
+
+    void startSaveSnapshot();
+    void startLoadSnapshot();
+    // [END UI3A-MISSIONCONTROL-SAVELOAD-MODES]
 
     void refreshCurveToggleStatesFromHistory();
     void updatePresetLoadEnablement();
@@ -66,9 +74,9 @@ private:
     const int preferredHeightPx = 140;
     // [END UI3A-MISSIONCONTROL-PREFERRED-HEIGHT]
 
-    // Presets
-    juce::TextButton savePresetButton { "Save Preset..." };
-    juce::TextButton loadPresetButton { "Load Preset..." };
+    // Presets / snapshots
+    juce::TextButton savePresetButton { "Save..." };
+    juce::TextButton loadPresetButton { "Load..." };
 
     // [BEGIN UI3A-MISSIONCONTROL-TARGETS-CURRENT-LABELS]
     // Column headers
