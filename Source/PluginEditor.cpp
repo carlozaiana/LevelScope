@@ -569,6 +569,13 @@ void MissionControlComponent::startLoadSnapshot()
 
                                         processor.setStateInformation (mb.getData(), (int) mb.getSize());
                                         loadTargetsFromState();
+
+                                        // [BEGIN UI3A-SNAPSHOT-LOAD-FORCE-REFRESH]
+                                        history.repaint();
+                                        resized();
+                                        if (auto* p = getParentComponent())
+                                            p->repaint();
+                                        // [END UI3A-SNAPSHOT-LOAD-FORCE-REFRESH]
                                     });
 }
 // [END UI3A-MISSIONCONTROL-SAVELOAD-MODES-IMPL]
