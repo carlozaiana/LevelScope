@@ -93,6 +93,7 @@ void VolumeHistoryComponent::resetXViewDefault()
         viewRightFrame = (double) nowFrameIndex;
 
     clampViewRightFrame (getWidth());
+    syncPersistedUiStateToProcessor();
 }
 
 void VolumeHistoryComponent::fitXViewMaxZoomOut()
@@ -128,6 +129,7 @@ void VolumeHistoryComponent::fitXViewMaxZoomOut()
     followRightEdge = false;
     viewRightFrame = (double) right;
     clampViewRightFrame (getWidth());
+    syncPersistedUiStateToProcessor();
 }
 
 void VolumeHistoryComponent::resetYViewDefault()
@@ -135,6 +137,7 @@ void VolumeHistoryComponent::resetYViewDefault()
     zoomY = 1.0;
     viewTopDb = (double) maxDb; // default top at 0 dBFS
     markStaticBackgroundDirty();
+    syncPersistedUiStateToProcessor();
 }
 // [END VHC-VNAV-RULER-AREAS-RESETS]
 
@@ -180,6 +183,7 @@ void VolumeHistoryComponent::panTime (float wheelDelta)
     followRightEdge = false;
     autoRefollowArmed = false; // [AUTO-FOLLOW-HYST] disarm until playhead moves away from edge
     clampViewRightFrame (w);
+    syncPersistedUiStateToProcessor();
 }
 
 void VolumeHistoryComponent::panDb (float wheelDelta)
@@ -200,6 +204,7 @@ void VolumeHistoryComponent::panDb (float wheelDelta)
     viewTopDb = juce::jlimit (topMin, topMax, viewTopDb);
 
     markStaticBackgroundDirty();
+    syncPersistedUiStateToProcessor();
 }
 
 void VolumeHistoryComponent::applyHorizontalZoom (float wheelDelta, float anchorX)
@@ -256,6 +261,7 @@ void VolumeHistoryComponent::applyHorizontalZoom (float wheelDelta, float anchor
     hasCustomZoomX = true;
 
     clampViewRightFrame (w);
+    syncPersistedUiStateToProcessor();
 }
 
 void VolumeHistoryComponent::applyVerticalZoom (float wheelDelta, float anchorY)
@@ -298,6 +304,7 @@ void VolumeHistoryComponent::applyVerticalZoom (float wheelDelta, float anchorY)
     viewTopDb = topNew;
 
     markStaticBackgroundDirty();
+    syncPersistedUiStateToProcessor();
 }
 // [END VHC-VNAV-CLAMP-PAN-ZOOM]
 
@@ -460,9 +467,9 @@ void VolumeHistoryComponent::setFollowRightEdge (bool shouldFollow)
         clampViewRightFrame (w);
     }
 
-    // keep internal button state in sync (even if hidden)
     followButton.setToggleState (followRightEdge, juce::dontSendNotification);
 
+    syncPersistedUiStateToProcessor();
     repaint();
 }
 // [END UI3C-FOLLOW-SETTER-IMPL]
@@ -472,6 +479,7 @@ void VolumeHistoryComponent::setShowMomentaryCurve (bool b)
 {
     showMomentaryCurve = b;
     showLines = (showMomentaryCurve || showShortTermCurve);
+    syncPersistedUiStateToProcessor();
     repaint();
 }
 
@@ -479,6 +487,7 @@ void VolumeHistoryComponent::setShowShortTermCurve (bool b)
 {
     showShortTermCurve = b;
     showLines = (showMomentaryCurve || showShortTermCurve);
+    syncPersistedUiStateToProcessor();
     repaint();
 }
 
@@ -486,6 +495,7 @@ void VolumeHistoryComponent::setShowGateCurve (bool b)
 {
     showGate = b;
     gateButton.setToggleState (showGate, juce::dontSendNotification);
+    syncPersistedUiStateToProcessor();
     repaint();
 }
 
@@ -493,6 +503,7 @@ void VolumeHistoryComponent::setShowRollingLraLane (bool b)
 {
     showRollingLra = b;
     rollingLraButton.setToggleState (showRollingLra, juce::dontSendNotification);
+    syncPersistedUiStateToProcessor();
     repaint();
 }
 // [END UI3A-CURVE-VISIBILITY-SETTERS]
@@ -747,6 +758,7 @@ void VolumeHistoryComponent::mouseDown (const juce::MouseEvent& event)
         showMomentaryCurve = ! anyOn;
         showShortTermCurve = ! anyOn;
         showLines = (showMomentaryCurve || showShortTermCurve);
+        syncPersistedUiStateToProcessor();
     }
     // [END UI3A-CURVE-VISIBILITY-MOUSEDOWN-TOGGLE]
 

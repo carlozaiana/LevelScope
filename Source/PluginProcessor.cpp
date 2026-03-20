@@ -936,6 +936,22 @@ LevelScopeAudioProcessor::UIStateSnapshot LevelScopeAudioProcessor::getPersisted
     s.upwardAdvancedOpen   = (uiUpwardAdvancedOpen01.load   (std::memory_order_relaxed) != 0);
     s.downwardAdvancedOpen = (uiDownwardAdvancedOpen01.load (std::memory_order_relaxed) != 0);
     s.limiterAdvancedOpen  = (uiLimiterAdvancedOpen01.load  (std::memory_order_relaxed) != 0);
+
+    s.showMomentaryCurve = (uiShowMomentaryCurve01.load (std::memory_order_relaxed) != 0);
+    s.showShortTermCurve = (uiShowShortTermCurve01.load (std::memory_order_relaxed) != 0);
+    s.showGateCurve      = (uiShowGateCurve01.load      (std::memory_order_relaxed) != 0);
+    s.showRollingLra     = (uiShowRollingLra01.load     (std::memory_order_relaxed) != 0);
+    s.followRightEdge    = (uiFollowRightEdge01.load    (std::memory_order_relaxed) != 0);
+
+    s.rollingWindowSeconds = uiRollingWindowSeconds.load (std::memory_order_relaxed);
+
+    s.historyViewStateValid = (uiHistoryViewStateValid01.load (std::memory_order_relaxed) != 0);
+    s.historyHasCustomZoomX = (uiHistoryHasCustomZoomX01.load (std::memory_order_relaxed) != 0);
+    s.historyZoomX          = uiHistoryZoomX.load          (std::memory_order_relaxed);
+    s.historyZoomY          = uiHistoryZoomY.load          (std::memory_order_relaxed);
+    s.historyViewRightFrame = uiHistoryViewRightFrame.load (std::memory_order_relaxed);
+    s.historyViewTopDb      = uiHistoryViewTopDb.load      (std::memory_order_relaxed);
+
     return s;
 }
 
@@ -982,6 +998,60 @@ void LevelScopeAudioProcessor::setUiLimiterAdvancedOpen (bool b) noexcept
     uiLimiterAdvancedOpen01.store (b ? 1 : 0, std::memory_order_relaxed);
 }
 
+void LevelScopeAudioProcessor::setUiHistoryToggleState (bool showMomentary,
+                                                        bool showShortTerm,
+                                                        bool showGate,
+                                                        bool showRollingLra,
+                                                        bool followRightEdge) noexcept
+{
+    uiShowMomentaryCurve01.store (showMomentary ? 1 : 0, std::memory_order_relaxed);
+    uiShowShortTermCurve01.store (showShortTerm ? 1 : 0, std::memory_order_relaxed);
+    uiShowGateCurve01.store      (showGate ? 1 : 0, std::memory_order_relaxed);
+    uiShowRollingLra01.store     (showRollingLra ? 1 : 0, std::memory_order_relaxed);
+    uiFollowRightEdge01.store    (followRightEdge ? 1 : 0, std::memory_order_relaxed);
+}
+
+void LevelScopeAudioProcessor::setUiHistoryViewState (double zoomX,
+                                                      double zoomY,
+                                                      double viewRightFrame,
+                                                      double viewTopDb,
+                                                      bool hasCustomZoomX,
+                                                      bool valid) noexcept
+{
+    uiHistoryZoomX.store          (zoomX,          std::memory_order_relaxed);
+    uiHistoryZoomY.store          (zoomY,          std::memory_order_relaxed);
+    uiHistoryViewRightFrame.store (viewRightFrame, std::memory_order_relaxed);
+    uiHistoryViewTopDb.store      (viewTopDb,      std::memory_order_relaxed);
+
+    uiHistoryHasCustomZoomX01.store (hasCustomZoomX ? 1 : 0, std::memory_order_relaxed);
+    uiHistoryViewStateValid01.store (valid ? 1 : 0, std::memory_order_relaxed);
+}
+
+void LevelScopeAudioProcessor::setUiCardHeights (const UICardHeightsState& h) noexcept
+{
+    uiCardLevellingPx.store (juce::jmax (50, h.levelling), std::memory_order_relaxed);
+    uiCardZonesPx.store     (juce::jmax (34, h.zones),     std::memory_order_relaxed);
+    uiCardAuditionPx.store  (juce::jmax (34, h.audition),  std::memory_order_relaxed);
+    uiCardUpwardPx.store    (juce::jmax (34, h.upward),    std::memory_order_relaxed);
+    uiCardDownwardPx.store  (juce::jmax (26, h.downward),  std::memory_order_relaxed);
+    uiCardLimiterPx.store   (juce::jmax (26, h.limiter),   std::memory_order_relaxed);
+}
+
+void LevelScopeAudioProcessor::setUiUpwardAdvancedOpen (bool b) noexcept
+{
+    uiUpwardAdvancedOpen01.store (b ? 1 : 0, std::memory_order_relaxed);
+}
+
+void LevelScopeAudioProcessor::setUiDownwardAdvancedOpen (bool b) noexcept
+{
+    uiDownwardAdvancedOpen01.store (b ? 1 : 0, std::memory_order_relaxed);
+}
+
+void LevelScopeAudioProcessor::setUiLimiterAdvancedOpen (bool b) noexcept
+{
+    uiLimiterAdvancedOpen01.store (b ? 1 : 0, std::memory_order_relaxed);
+}
+
 void LevelScopeAudioProcessor::buildUistStateChunk (juce::MemoryBlock& destData) const
 {
     destData.setSize (0);
@@ -989,8 +1059,9 @@ void LevelScopeAudioProcessor::buildUistStateChunk (juce::MemoryBlock& destData)
     const auto s = getPersistedUIStateSnapshot();
 
     juce::MemoryOutputStream os (destData, true);
-    os.writeInt (1); // UIST schema v1
+    os.writeInt (2); // UIST schema v2
 
+    // v1 fields
     os.writeFloat (juce::jlimit (0.10f, 0.60f, s.bottomPanelFraction01));
     os.writeInt   (juce::jlimit (112, 300, s.rightStripWidthPxUser));
     os.writeInt   (juce::jlimit (28, 240, s.rollingLaneHeightPx));
@@ -1006,18 +1077,39 @@ void LevelScopeAudioProcessor::buildUistStateChunk (juce::MemoryBlock& destData)
     os.writeByte ((char) (s.downwardAdvancedOpen ? 1 : 0));
     os.writeByte ((char) (s.limiterAdvancedOpen  ? 1 : 0));
     os.writeByte ((char) 0); // reserved/padding
+
+    // v2 fields
+    os.writeByte ((char) (s.showMomentaryCurve ? 1 : 0));
+    os.writeByte ((char) (s.showShortTermCurve ? 1 : 0));
+    os.writeByte ((char) (s.showGateCurve      ? 1 : 0));
+    os.writeByte ((char) (s.showRollingLra     ? 1 : 0));
+    os.writeByte ((char) (s.followRightEdge    ? 1 : 0));
+    os.writeByte ((char) (s.historyViewStateValid ? 1 : 0));
+    os.writeByte ((char) (s.historyHasCustomZoomX ? 1 : 0));
+    os.writeByte ((char) 0); // reserved
+
+    const int rollingWindow = (s.rollingWindowSeconds == 30 || s.rollingWindowSeconds == 60 || s.rollingWindowSeconds == 120
+                                ? s.rollingWindowSeconds : 60);
+    os.writeInt (rollingWindow);
+
+    os.writeDouble (s.historyZoomX);
+    os.writeDouble (s.historyZoomY);
+    os.writeDouble (s.historyViewRightFrame);
+    os.writeDouble (s.historyViewTopDb);
 }
 
 bool LevelScopeAudioProcessor::applyUistStateChunk (const juce::MemoryBlock& uistChunk)
 {
-    constexpr size_t minBytesV1 = 40; // schema + payload sanity floor
+    constexpr size_t minBytesV1 = 40;
+    constexpr size_t minBytesV2 = 88;
 
     if (uistChunk.getSize() < minBytesV1)
         return false;
 
     juce::MemoryInputStream in (uistChunk.getData(), uistChunk.getSize(), false);
     const int schema = in.readInt();
-    if (schema != 1)
+
+    if (schema != 1 && schema != 2)
         return false;
 
     setUiBottomPanelFraction01 (in.readFloat());
@@ -1037,6 +1129,31 @@ bool LevelScopeAudioProcessor::applyUistStateChunk (const juce::MemoryBlock& uis
     setUiDownwardAdvancedOpen (in.readByte() != 0);
     setUiLimiterAdvancedOpen  (in.readByte() != 0);
     (void) in.readByte(); // reserved
+
+    if (schema == 1)
+        return true;
+
+    if (uistChunk.getSize() < minBytesV2)
+        return false;
+
+    const bool showMomentary = (in.readByte() != 0);
+    const bool showShortTerm = (in.readByte() != 0);
+    const bool showGate      = (in.readByte() != 0);
+    const bool showRolling   = (in.readByte() != 0);
+    const bool follow        = (in.readByte() != 0);
+    const bool viewValid     = (in.readByte() != 0);
+    const bool customZoomX   = (in.readByte() != 0);
+    (void) in.readByte(); // reserved
+
+    setUiHistoryToggleState (showMomentary, showShortTerm, showGate, showRolling, follow);
+    setRollingLraWindowSeconds (in.readInt());
+
+    setUiHistoryViewState (in.readDouble(),
+                           in.readDouble(),
+                           in.readDouble(),
+                           in.readDouble(),
+                           customZoomX,
+                           viewValid);
 
     return true;
 }

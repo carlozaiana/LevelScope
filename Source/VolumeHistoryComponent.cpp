@@ -153,14 +153,64 @@ void VolumeHistoryComponent::applyPersistedUiStateFromProcessor()
     dragStartRightStripWidthPxUser = rightStripWidthPxUser;
     dragStartRollingLaneHeightPx   = rollingLaneHeightPx;
 
+    showMomentaryCurve = ui.showMomentaryCurve;
+    showShortTermCurve = ui.showShortTermCurve;
+    showGate           = ui.showGateCurve;
+    showRollingLra     = ui.showRollingLra;
+    followRightEdge    = ui.followRightEdge;
+    showLines          = (showMomentaryCurve || showShortTermCurve);
+
+    followButton.setToggleState (followRightEdge, juce::dontSendNotification);
+    gateButton.setToggleState   (showGate, juce::dontSendNotification);
+    rollingLraButton.setToggleState (showRollingLra, juce::dontSendNotification);
+
+    processor.setRollingLraWindowSeconds (ui.rollingWindowSeconds);
+    rollingWindowSecondsCached = processor.getRollingLraWindowSeconds();
+
+    if (ui.historyViewStateValid)
+    {
+        zoomX = juce::jlimit (minZoomX, maxZoomX, ui.historyZoomX);
+        zoomY = juce::jlimit (minZoomY, maxZoomY, ui.historyZoomY);
+
+        const double maxVisibleRange = viewMaxDbLimit - viewMinDbLimit;
+        const double minZoomYByLimits = (double) baseDbRange / maxVisibleRange;
+        zoomY = juce::jmax (zoomY, minZoomYByLimits);
+
+        viewTopDb = ui.historyViewTopDb;
+        {
+            const double effectiveRange = (double) baseDbRange / zoomY;
+            const double topMin = viewMinDbLimit + effectiveRange;
+            const double topMax = viewMaxDbLimit;
+            viewTopDb = juce::jlimit (topMin, topMax, viewTopDb);
+        }
+
+        viewRightFrame = ui.historyViewRightFrame;
+        hasCustomZoomX = ui.historyHasCustomZoomX;
+    }
+
     markStaticBackgroundDirty();
+}
+
+void VolumeHistoryComponent::syncPersistedUiStateToProcessor() const
+{
+    processor.setUiHistoryToggleState (showMomentaryCurve,
+                                       showShortTermCurve,
+                                       showGate,
+                                       showRollingLra,
+                                       followRightEdge);
+
+    processor.setUiHistoryViewState (zoomX,
+                                     zoomY,
+                                     viewRightFrame,
+                                     viewTopDb,
+                                     hasCustomZoomX,
+                                     true);
 }
 
 void VolumeHistoryComponent::reloadFromProcessorState()
 {
     applyPersistedUiStateFromProcessor();
 
-    // Rebuild the UI-side cached/ring history from the processor's persisted timeline.
     resetHistoryLevels();
 
     std::fill (secShortTermLufs.begin(),  secShortTermLufs.end(),  -200.0f);

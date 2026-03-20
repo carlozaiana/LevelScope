@@ -104,6 +104,22 @@ public:
         bool upwardAdvancedOpen   = false;
         bool downwardAdvancedOpen = false;
         bool limiterAdvancedOpen  = false;
+
+        bool showMomentaryCurve = true;
+        bool showShortTermCurve = true;
+        bool showGateCurve      = false;
+        bool showRollingLra     = false;
+        bool followRightEdge    = true;
+
+        int rollingWindowSeconds = 60;
+
+        bool historyViewStateValid = false;
+        bool historyHasCustomZoomX = false;
+
+        double historyZoomX         = 0.0;
+        double historyZoomY         = 1.0;
+        double historyViewRightFrame= 0.0;
+        double historyViewTopDb     = -10.0;
     };
 
     UIStateSnapshot getPersistedUIStateSnapshot() const noexcept;
@@ -116,6 +132,19 @@ public:
     void setUiUpwardAdvancedOpen   (bool b) noexcept;
     void setUiDownwardAdvancedOpen (bool b) noexcept;
     void setUiLimiterAdvancedOpen  (bool b) noexcept;
+
+    void setUiHistoryToggleState (bool showMomentary,
+                                  bool showShortTerm,
+                                  bool showGate,
+                                  bool showRollingLra,
+                                  bool followRightEdge) noexcept;
+
+    void setUiHistoryViewState (double zoomX,
+                                double zoomY,
+                                double viewRightFrame,
+                                double viewTopDb,
+                                bool hasCustomZoomX,
+                                bool valid) noexcept;
     // [END LS-UIST-PUBLIC-STATE]
 
     // [BEGIN LS-LIMITER-METERING-SNAPSHOT-API]
@@ -229,7 +258,12 @@ public:
     float getRollingLraLu() const noexcept { return runningStats.getRollingLraLu(); }
 
     int  getRollingLraWindowSeconds() const noexcept { return runningStats.getRollingWindowSeconds(); }
-    void setRollingLraWindowSeconds (int s) noexcept { runningStats.setRollingWindowSeconds (s); }
+    void setRollingLraWindowSeconds (int s) noexcept
+    {
+        const int clamped = (s == 30 || s == 60 || s == 120 ? s : 60);
+        runningStats.setRollingWindowSeconds (clamped);
+        uiRollingWindowSeconds.store (clamped, std::memory_order_relaxed);
+    }
 
 private:
     //==============================================================================
@@ -386,6 +420,21 @@ private:
     std::atomic<int> uiUpwardAdvancedOpen01   { 0 };
     std::atomic<int> uiDownwardAdvancedOpen01 { 0 };
     std::atomic<int> uiLimiterAdvancedOpen01  { 0 };
+
+    std::atomic<int> uiShowMomentaryCurve01 { 1 };
+    std::atomic<int> uiShowShortTermCurve01 { 1 };
+    std::atomic<int> uiShowGateCurve01      { 0 };
+    std::atomic<int> uiShowRollingLra01     { 0 };
+    std::atomic<int> uiFollowRightEdge01    { 1 };
+
+    std::atomic<int> uiRollingWindowSeconds { 60 };
+
+    std::atomic<int>    uiHistoryViewStateValid01 { 0 };
+    std::atomic<int>    uiHistoryHasCustomZoomX01 { 0 };
+    std::atomic<double> uiHistoryZoomX            { 0.0 };
+    std::atomic<double> uiHistoryZoomY            { 1.0 };
+    std::atomic<double> uiHistoryViewRightFrame   { 0.0 };
+    std::atomic<double> uiHistoryViewTopDb        { -10.0 };
     // [END LS-UIST-ATOMICS]
 
     //==============================================================================

@@ -70,6 +70,7 @@ public:
     // [BEGIN UI3A-HISTORY-RELOAD-FROM-PROCESSOR-API]
     void reloadFromProcessorState();
     void applyPersistedUiStateFromProcessor();
+    void syncPersistedUiStateToProcessor() const;
     // [END UI3A-HISTORY-RELOAD-FROM-PROCESSOR-API]
 
 private:
