@@ -1027,31 +1027,6 @@ void LevelScopeAudioProcessor::setUiHistoryViewState (double zoomX,
     uiHistoryViewStateValid01.store (valid ? 1 : 0, std::memory_order_relaxed);
 }
 
-void LevelScopeAudioProcessor::setUiCardHeights (const UICardHeightsState& h) noexcept
-{
-    uiCardLevellingPx.store (juce::jmax (50, h.levelling), std::memory_order_relaxed);
-    uiCardZonesPx.store     (juce::jmax (34, h.zones),     std::memory_order_relaxed);
-    uiCardAuditionPx.store  (juce::jmax (34, h.audition),  std::memory_order_relaxed);
-    uiCardUpwardPx.store    (juce::jmax (34, h.upward),    std::memory_order_relaxed);
-    uiCardDownwardPx.store  (juce::jmax (26, h.downward),  std::memory_order_relaxed);
-    uiCardLimiterPx.store   (juce::jmax (26, h.limiter),   std::memory_order_relaxed);
-}
-
-void LevelScopeAudioProcessor::setUiUpwardAdvancedOpen (bool b) noexcept
-{
-    uiUpwardAdvancedOpen01.store (b ? 1 : 0, std::memory_order_relaxed);
-}
-
-void LevelScopeAudioProcessor::setUiDownwardAdvancedOpen (bool b) noexcept
-{
-    uiDownwardAdvancedOpen01.store (b ? 1 : 0, std::memory_order_relaxed);
-}
-
-void LevelScopeAudioProcessor::setUiLimiterAdvancedOpen (bool b) noexcept
-{
-    uiLimiterAdvancedOpen01.store (b ? 1 : 0, std::memory_order_relaxed);
-}
-
 void LevelScopeAudioProcessor::buildUistStateChunk (juce::MemoryBlock& destData) const
 {
     destData.setSize (0);
