@@ -101,21 +101,33 @@ public:
     void loadState (const void* data, int sizeInBytes);
 
     // [BEGIN LS-STATE-ADDITIVE-API]
-        // Stage C2 (additive, backward compatible):
-        // Optional extra chunks appended after baseline chunks:
-        // - APVS: APVTS state
-        // - MODG: module graph (IDs/order/bypass)
-        //
-        // If these are nullptr (or empty), the file format is identical to baseline.
-        void saveState (juce::MemoryBlock& destData,
-                        const juce::MemoryBlock* apvsChunkData,
-                        const juce::MemoryBlock* modgChunkData) const;
+        struct ExtraStateChunksIn
+        {
+            const juce::MemoryBlock* apvs = nullptr;
+            const juce::MemoryBlock* modg = nullptr;
+            const juce::MemoryBlock* uist = nullptr;
+        };
 
-        // Stage C2 loader: extracts optional APVS/MODG payloads if present.
+        struct ExtraStateChunksOut
+        {
+            juce::MemoryBlock* apvs = nullptr;
+            juce::MemoryBlock* modg = nullptr;
+            juce::MemoryBlock* uist = nullptr;
+        };
+
+        // Stage C2/C3 additive, backward-compatible extras:
+        // - APVS: APVTS state
+        // - MODG: module graph
+        // - UIST: UI-only persisted layout state
+        //
+        // If pointers are nullptr (or empty), the file format remains baseline-compatible.
+        void saveState (juce::MemoryBlock& destData,
+                        const ExtraStateChunksIn& extraChunks) const;
+
+        // Loader extracts optional additive chunks if present.
         // Old sessions simply won't have them => outputs remain empty.
         void loadState (const void* data, int sizeInBytes,
-                        juce::MemoryBlock* apvsChunkOut,
-                        juce::MemoryBlock* modgChunkOut);
+                        const ExtraStateChunksOut& extraChunksOut);
     // [END LS-STATE-ADDITIVE-API]
 
     //==============================================================================

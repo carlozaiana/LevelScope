@@ -293,14 +293,13 @@ void LevelScopeHistoryModel::pushEnergyFrame (juce::int64 absFrameIndex,
 // [BEGIN LS-STATE-SAVESTATE-WRAPPER]
 void LevelScopeHistoryModel::saveState (juce::MemoryBlock& destData) const
 {
-    saveState (destData, nullptr, nullptr);
+    saveState (destData, ExtraStateChunksIn {});
 }
 // [END LS-STATE-SAVESTATE-WRAPPER]
 
 // [BEGIN LS-STATE-SAVESTATE-ADDITIVE]
 void LevelScopeHistoryModel::saveState (juce::MemoryBlock& destData,
-                                       const juce::MemoryBlock* apvsChunkData,
-                                       const juce::MemoryBlock* modgChunkData) const
+                                       const ExtraStateChunksIn& extraChunks) const
 {
     juce::MemoryOutputStream out (destData, true);
 
@@ -315,12 +314,13 @@ void LevelScopeHistoryModel::saveState (juce::MemoryBlock& destData,
         return (mb != nullptr && mb->getSize() > 0);
     };
 
-    const int extraChunks =
-        (hasExtraChunk (apvsChunkData) ? 1 : 0) +
-        (hasExtraChunk (modgChunkData) ? 1 : 0);
+    const int extraChunkCount =
+        (hasExtraChunk (extraChunks.apvs) ? 1 : 0) +
+        (hasExtraChunk (extraChunks.modg) ? 1 : 0) +
+        (hasExtraChunk (extraChunks.uist) ? 1 : 0);
 
     // Baseline chunk count is 3 (HIST + LRAG + TCOF). We append extras after.
-    out.writeInt (3 + extraChunks);
+    out.writeInt (3 + extraChunkCount);
 
     const juce::int64 maxWritten = maxWrittenFrameIndex.load (std::memory_order_relaxed);
 
@@ -470,23 +470,34 @@ void LevelScopeHistoryModel::saveState (juce::MemoryBlock& destData,
     //--------------------------------------------------------------------------
     // Chunk: APVS (APVTS state)  [Stage C2 - additive]
     //--------------------------------------------------------------------------
-    if (hasExtraChunk (apvsChunkData))
+    if (hasExtraChunk (extraChunks.apvs))
     {
         const juce::uint32 id = fourcc ('A','P','V','S');
         out.writeInt ((int) id);
-        out.writeInt ((int) apvsChunkData->getSize());
-        out.write (apvsChunkData->getData(), apvsChunkData->getSize());
+        out.writeInt ((int) extraChunks.apvs->getSize());
+        out.write (extraChunks.apvs->getData(), extraChunks.apvs->getSize());
     }
 
     //--------------------------------------------------------------------------
     // Chunk: MODG (module graph state)  [Stage C2 - additive]
     //--------------------------------------------------------------------------
-    if (hasExtraChunk (modgChunkData))
+    if (hasExtraChunk (extraChunks.modg))
     {
         const juce::uint32 id = fourcc ('M','O','D','G');
         out.writeInt ((int) id);
-        out.writeInt ((int) modgChunkData->getSize());
-        out.write (modgChunkData->getData(), modgChunkData->getSize());
+        out.writeInt ((int) extraChunks.modg->getSize());
+        out.write (extraChunks.modg->getData(), extraChunks.modg->getSize());
+    }
+
+    //--------------------------------------------------------------------------
+    // Chunk: UIST (UI-only persisted layout state)  [Stage C3 - additive]
+    //--------------------------------------------------------------------------
+    if (hasExtraChunk (extraChunks.uist))
+    {
+        const juce::uint32 id = fourcc ('U','I','S','T');
+        out.writeInt ((int) id);
+        out.writeInt ((int) extraChunks.uist->getSize());
+        out.write (extraChunks.uist->getData(), extraChunks.uist->getSize());
     }
 }
 // [END LS-STATE-SAVESTATE-ADDITIVE]
@@ -494,17 +505,17 @@ void LevelScopeHistoryModel::saveState (juce::MemoryBlock& destData,
 // [BEGIN LS-STATE-LOADSTATE-WRAPPER]
 void LevelScopeHistoryModel::loadState (const void* data, int sizeInBytes)
 {
-    loadState (data, sizeInBytes, nullptr, nullptr);
+    loadState (data, sizeInBytes, ExtraStateChunksOut {});
 }
 // [END LS-STATE-LOADSTATE-WRAPPER]
 
 // [BEGIN LS-STATE-LOADSTATE-ADDITIVE]
 void LevelScopeHistoryModel::loadState (const void* data, int sizeInBytes,
-                                       juce::MemoryBlock* apvsChunkOut,
-                                       juce::MemoryBlock* modgChunkOut)
+                                       const ExtraStateChunksOut& extraChunksOut)
 {
-    if (apvsChunkOut != nullptr) apvsChunkOut->reset();
-    if (modgChunkOut != nullptr) modgChunkOut->reset();
+    if (extraChunksOut.apvs != nullptr) extraChunksOut.apvs->reset();
+    if (extraChunksOut.modg != nullptr) extraChunksOut.modg->reset();
+    if (extraChunksOut.uist != nullptr) extraChunksOut.uist->reset();
 
     if (data == nullptr || sizeInBytes <= 0)
         return;
@@ -545,15 +556,22 @@ void LevelScopeHistoryModel::loadState (const void* data, int sizeInBytes,
         // Stage C2 additive chunks: capture raw payload and continue
         if (chunkId == fourcc ('A','P','V','S'))
         {
-            if (apvsChunkOut != nullptr)
-                *apvsChunkOut = std::move (chunkData);
+            if (extraChunksOut.apvs != nullptr)
+                *extraChunksOut.apvs = std::move (chunkData);
             continue;
         }
 
         if (chunkId == fourcc ('M','O','D','G'))
         {
-            if (modgChunkOut != nullptr)
-                *modgChunkOut = std::move (chunkData);
+            if (extraChunksOut.modg != nullptr)
+                *extraChunksOut.modg = std::move (chunkData);
+            continue;
+        }
+
+        if (chunkId == fourcc ('U','I','S','T'))
+        {
+            if (extraChunksOut.uist != nullptr)
+                *extraChunksOut.uist = std::move (chunkData);
             continue;
         }
 
