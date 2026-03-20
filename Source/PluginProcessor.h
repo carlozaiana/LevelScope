@@ -81,6 +81,43 @@ public:
         const juce::AudioProcessorValueTreeState& getAPVTS() const noexcept { return apvts; }
     // [END MTDM-APVTS-ACCESSOR]
 
+    // [BEGIN LS-UIST-PUBLIC-STATE]
+    struct UICardHeightsState
+    {
+        int levelling = 70;
+        int zones     = 220;
+        int audition  = 110;
+        int upward    = 220;
+        int downward  = 180;
+        int limiter   = 260;
+    };
+
+    struct UIStateSnapshot
+    {
+        float bottomPanelFraction01 = 0.25f;
+
+        int rightStripWidthPxUser = 160;
+        int rollingLaneHeightPx   = 46;
+
+        UICardHeightsState cardHeights;
+
+        bool upwardAdvancedOpen   = false;
+        bool downwardAdvancedOpen = false;
+        bool limiterAdvancedOpen  = false;
+    };
+
+    UIStateSnapshot getPersistedUIStateSnapshot() const noexcept;
+
+    void setUiBottomPanelFraction01 (float v) noexcept;
+    void setUiRightStripWidthPx     (int v) noexcept;
+    void setUiRollingLaneHeightPx   (int v) noexcept;
+    void setUiCardHeights           (const UICardHeightsState& h) noexcept;
+
+    void setUiUpwardAdvancedOpen   (bool b) noexcept;
+    void setUiDownwardAdvancedOpen (bool b) noexcept;
+    void setUiLimiterAdvancedOpen  (bool b) noexcept;
+    // [END LS-UIST-PUBLIC-STATE]
+
     // [BEGIN LS-LIMITER-METERING-SNAPSHOT-API]
     struct LimiterMeteringSnapshot
     {
@@ -325,11 +362,31 @@ private:
     // [BEGIN LS-SETTINGS-PRESET-HELPERS]
     void buildApvsStateChunk (juce::MemoryBlock& destData);
     void buildModgStateChunk (juce::MemoryBlock& destData);
+    void buildUistStateChunk (juce::MemoryBlock& destData) const;
     bool applyApvsStateChunk (const juce::MemoryBlock& apvsChunk);
+    bool applyUistStateChunk (const juce::MemoryBlock& uistChunk);
     bool parseSettingsPresetBlob (const void* data, int sizeInBytes,
                                   juce::MemoryBlock& apvsChunkOut,
                                   juce::MemoryBlock& modgChunkOut) const;
     // [END LS-SETTINGS-PRESET-HELPERS]
+
+    // [BEGIN LS-UIST-ATOMICS]
+    std::atomic<float> uiBottomPanelFraction01 { 0.25f };
+
+    std::atomic<int> uiRightStripWidthPxUser { 160 };
+    std::atomic<int> uiRollingLaneHeightPx   { 46 };
+
+    std::atomic<int> uiCardLevellingPx { 70 };
+    std::atomic<int> uiCardZonesPx     { 220 };
+    std::atomic<int> uiCardAuditionPx  { 110 };
+    std::atomic<int> uiCardUpwardPx    { 220 };
+    std::atomic<int> uiCardDownwardPx  { 180 };
+    std::atomic<int> uiCardLimiterPx   { 260 };
+
+    std::atomic<int> uiUpwardAdvancedOpen01   { 0 };
+    std::atomic<int> uiDownwardAdvancedOpen01 { 0 };
+    std::atomic<int> uiLimiterAdvancedOpen01  { 0 };
+    // [END LS-UIST-ATOMICS]
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LevelScopeAudioProcessor)

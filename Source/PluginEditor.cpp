@@ -570,12 +570,13 @@ void MissionControlComponent::startLoadSnapshot()
                                         processor.setStateInformation (mb.getData(), (int) mb.getSize());
                                         loadTargetsFromState();
 
-                                        // [BEGIN UI3A-SNAPSHOT-LOAD-REBUILD-HISTORY]
+                                        if (auto* ed = findParentComponentOfClass<LevelScopeAudioProcessorEditor>())
+                                            ed->applyPersistedUiStateFromProcessor();
+
                                         history.reloadFromProcessorState();
                                         resized();
                                         if (auto* p = getParentComponent())
                                             p->repaint();
-                                        // [END UI3A-SNAPSHOT-LOAD-REBUILD-HISTORY]
                                     });
 }
 // [END UI3A-MISSIONCONTROL-SAVELOAD-MODES-IMPL]
@@ -1215,6 +1216,8 @@ MtdmUpwardCard::MtdmUpwardCard (LevelScopeAudioProcessor& p)
                 owner->setUpwardHeightPx (essentialsHeight);
         }
 
+        processor.setUiUpwardAdvancedOpen (showAdvanced);
+
         resized();
         repaint();
     };
@@ -1418,6 +1421,16 @@ void MtdmUpwardCard::paint (juce::Graphics& g)
 {
     MtdmCardComponent::paint (g);
 }
+
+void MtdmUpwardCard::applyPersistedAdvancedOpenState (bool shouldOpen)
+{
+    showAdvanced = shouldOpen;
+    advancedToggle.setToggleState (shouldOpen, juce::dontSendNotification);
+    updateAdvancedVisibility();
+    updateSpectralEnablement();
+    resized();
+    repaint();
+}
 // [END UI4B1-UPWARD-ADVANCED-HELPERS]
 
 // [BEGIN UI4B1-UPWARD-RESIZED-HEADER-ADV-FIX]
@@ -1513,6 +1526,7 @@ void MtdmUpwardCard::resized()
     // [BEGIN UI4A3-DOWNWARD-HIDE-TITLE]
 MtdmDownwardCard::MtdmDownwardCard (LevelScopeAudioProcessor& p)
     : MtdmCardComponent (""), // title hidden; enabled toggle acts as header
+      processor (p),
       apvts (p.getAPVTS())
 {
     title.setVisible (false);
@@ -1559,6 +1573,8 @@ MtdmDownwardCard::MtdmDownwardCard (LevelScopeAudioProcessor& p)
             if (auto* owner = findParentComponentOfClass<MtdmCardsContent>())
                 owner->setDownwardHeightPx (essentialsH);
         }
+
+        processor.setUiDownwardAdvancedOpen (showAdvanced);
 
         resized();
         repaint();
@@ -1614,6 +1630,15 @@ void MtdmDownwardCard::updateAdvancedVisibility()
     const bool v = showAdvanced;
     kneeLabel.setVisible (v);
     kneeSlider.setVisible (v);
+}
+
+void MtdmDownwardCard::applyPersistedAdvancedOpenState (bool shouldOpen)
+{
+    showAdvanced = shouldOpen;
+    advancedToggle.setToggleState (shouldOpen, juce::dontSendNotification);
+    updateAdvancedVisibility();
+    resized();
+    repaint();
 }
 // [END UI4B3-DOWNWARD-ADVANCED-VISIBILITY]
 
@@ -1734,6 +1759,8 @@ MtdmLimiterCard::MtdmLimiterCard (LevelScopeAudioProcessor& p)
                 owner->setLimiterHeightPx (essentialsHeight);
         }
 
+        processor.setUiLimiterAdvancedOpen (showAdvanced);
+
         resized();
         repaint();
     };
@@ -1829,6 +1856,16 @@ void MtdmLimiterCard::paint (juce::Graphics& g)
 {
     MtdmCardComponent::paint (g);
 }
+
+void MtdmLimiterCard::applyPersistedAdvancedOpenState (bool shouldOpen)
+{
+    showAdvanced = shouldOpen;
+    advancedToggle.setToggleState (shouldOpen, juce::dontSendNotification);
+    updateAdvancedVisibility();
+    updateLatencySensitiveEnablement();
+    resized();
+    repaint();
+}
 // [END UI4B2-LIMITER-ADVANCED-HELPER]
 
 // [BEGIN UI4B2-LIMITER-RESIZED-RESTORE]
@@ -1904,7 +1941,8 @@ void MtdmLimiterCard::resized()
 // [BEGIN UI4A1-CARDS-RESIZABLE-CTOR]
 // [BEGIN UI4C-CONTENT-CTOR-REPLACE]
 MtdmCardsContent::MtdmCardsContent (LevelScopeAudioProcessor& p)
-    : levelling(),
+    : processor (p),
+      levelling(),
       zones (p),
       audition (p),
       upward (p),
@@ -1925,6 +1963,38 @@ MtdmCardsContent::MtdmCardsContent (LevelScopeAudioProcessor& p)
     addAndMakeVisible (bar56);
 }
 // [END UI4C-CONTENT-CTOR-REPLACE]
+
+void MtdmCardsContent::applyPersistedUiStateFromProcessor()
+{
+    const auto ui = processor.getPersistedUIStateSnapshot();
+
+    cardHeights.levelling = juce::jmax (minLevellingPx, ui.cardHeights.levelling);
+    cardHeights.zones     = juce::jmax (minZonesPx,     ui.cardHeights.zones);
+    cardHeights.audition  = juce::jmax (minAuditionPx,  ui.cardHeights.audition);
+    cardHeights.upward    = juce::jmax (minUpwardPx,    ui.cardHeights.upward);
+    cardHeights.downward  = juce::jmax (minDownwardPx,  ui.cardHeights.downward);
+    cardHeights.limiter   = juce::jmax (minLimiterPx,   ui.cardHeights.limiter);
+
+    upward.applyPersistedAdvancedOpenState   (ui.upwardAdvancedOpen);
+    downward.applyPersistedAdvancedOpenState (ui.downwardAdvancedOpen);
+    limiter.applyPersistedAdvancedOpenState  (ui.limiterAdvancedOpen);
+
+    setSize (getWidth(), getPreferredHeight());
+    resized();
+    repaint();
+}
+
+void MtdmCardsContent::syncPersistedCardHeightsToProcessor() const
+{
+    LevelScopeAudioProcessor::UICardHeightsState h;
+    h.levelling = cardHeights.levelling;
+    h.zones     = cardHeights.zones;
+    h.audition  = cardHeights.audition;
+    h.upward    = cardHeights.upward;
+    h.downward  = cardHeights.downward;
+    h.limiter   = cardHeights.limiter;
+    processor.setUiCardHeights (h);
+}
 
 // [BEGIN UI4A3-CARDS-ACCORDION-PREFERREDHEIGHT]
 int MtdmCardsContent::getPreferredHeight() const noexcept
@@ -2058,6 +2128,8 @@ void MtdmCardsContent::applyDragToBoundary (CardResizerBar::Boundary b, int dy)
             break;
     }
     // [END UI4C-APPLYDRAG-REPLACE]
+
+    syncPersistedCardHeightsToProcessor();
 }
 // [END UI4A3-CARDS-ACCORDION-RESIZER-IMPL]
 
@@ -2070,6 +2142,7 @@ void MtdmCardsContent::ensureUpwardHeightAtLeast (int px)
         return;
 
     cardHeights.upward = px;
+    syncPersistedCardHeightsToProcessor();
 
     // Update our own size so the viewport scroll range updates.
     setSize (getWidth(), getPreferredHeight());
@@ -2088,6 +2161,7 @@ void MtdmCardsContent::setUpwardHeightPx (int px)
         return;
 
     cardHeights.upward = px;
+    syncPersistedCardHeightsToProcessor();
 
     setSize (getWidth(), getPreferredHeight());
     resized();
@@ -2102,6 +2176,7 @@ void MtdmCardsContent::setLimiterHeightPx (int px)
         return;
 
     cardHeights.limiter = px;
+    syncPersistedCardHeightsToProcessor();
 
     setSize (getWidth(), getPreferredHeight());
     resized();
@@ -2118,6 +2193,7 @@ void MtdmCardsContent::ensureDownwardHeightAtLeast (int px)
         return;
 
     cardHeights.downward = px;
+    syncPersistedCardHeightsToProcessor();
 
     setSize (getWidth(), getPreferredHeight());
     resized();
@@ -2132,6 +2208,7 @@ void MtdmCardsContent::setDownwardHeightPx (int px)
         return;
 
     cardHeights.downward = px;
+    syncPersistedCardHeightsToProcessor();
 
     setSize (getWidth(), getPreferredHeight());
     resized();
@@ -2148,6 +2225,7 @@ void MtdmCardsContent::ensureLimiterHeightAtLeast (int px)
         return;
 
     cardHeights.limiter = px;
+    syncPersistedCardHeightsToProcessor();
 
     setSize (getWidth(), getPreferredHeight());
     resized();
@@ -2175,11 +2253,16 @@ void MtdmControlPanel::paint (juce::Graphics& g)
     g.fillAll (juce::Colour::fromRGB (12, 22, 36));
 }
 
+void MtdmControlPanel::applyPersistedUiStateFromProcessor()
+{
+    content.applyPersistedUiStateFromProcessor();
+    resized();
+}
+
 void MtdmControlPanel::resized()
 {
     viewport.setBounds (getLocalBounds());
 
-    // Ensure content is tall enough to scroll; width matches viewport width.
     const int prefH = content.getPreferredHeight();
     content.setSize (juce::jmax (1, viewport.getWidth() - viewport.getScrollBarThickness()),
                      juce::jmax (prefH, viewport.getHeight()));
@@ -2188,7 +2271,8 @@ void MtdmControlPanel::resized()
 
 LevelScopeAudioProcessorEditor::LevelScopeAudioProcessorEditor (LevelScopeAudioProcessor& p)
     : AudioProcessorEditor (&p),
-            historyComponent (p),
+      processor (p),
+      historyComponent (p),
       // [BEGIN UI3A-EDITOR-CTOR-MISSIONCONTROL]
       missionControl (p, historyComponent),
       // [END UI3A-EDITOR-CTOR-MISSIONCONTROL]
@@ -2220,11 +2304,28 @@ LevelScopeAudioProcessorEditor::LevelScopeAudioProcessorEditor (LevelScopeAudioP
     // [BEGIN UI4A-EDITOR-DEFAULT-SIZE-BIGGER]
     setSize (1200, 760);
     // [END UI4A-EDITOR-DEFAULT-SIZE-BIGGER]
+
+    applyPersistedUiStateFromProcessor();
 }
 
 LevelScopeAudioProcessorEditor::~LevelScopeAudioProcessorEditor() = default;
 
 //==============================================================================
+
+void LevelScopeAudioProcessorEditor::applyPersistedUiStateFromProcessor()
+{
+    const auto ui = processor.getPersistedUIStateSnapshot();
+    const float bottomFrac = juce::jlimit (0.10f, 0.60f, ui.bottomPanelFraction01);
+
+    historyComponent.applyPersistedUiStateFromProcessor();
+    mtdmPanel.applyPersistedUiStateFromProcessor();
+
+    layoutHistoryAndPanel.setItemLayout (0, 140, -1.0, -(1.0 - (double) bottomFrac));
+    layoutHistoryAndPanel.setItemLayout (1, 6,   10,    8);
+    layoutHistoryAndPanel.setItemLayout (2, 140, -1.0, -(double) bottomFrac);
+
+    resized();
+}
 
 void LevelScopeAudioProcessorEditor::paint (juce::Graphics& g)
 {
@@ -2239,13 +2340,18 @@ void LevelScopeAudioProcessorEditor::resized()
     missionControl.setBounds (r.removeFromTop (statsH));
     // [END UI3A-EDITOR-RESIZED-TOPSTRIP]
 
+    const auto contentArea = r;
+
     // [BEGIN MTDM-PANEL-EDITOR-RESIZED-SPLIT]
     juce::Component* comps[] = { &historyComponent, &layoutResizerBar, &mtdmPanel };
 
     layoutHistoryAndPanel.layOutComponents (comps,
                                            3,
                                            r.getX(), r.getY(), r.getWidth(), r.getHeight(),
-                                           true,   // vertically stacked
-                                           true);  // resize other dimension
+                                           true,
+                                           true);
     // [END MTDM-PANEL-EDITOR-RESIZED-SPLIT]
+
+    const float bottomFrac = (float) mtdmPanel.getHeight() / (float) juce::jmax (1, contentArea.getHeight());
+    processor.setUiBottomPanelFraction01 (bottomFrac);
 }

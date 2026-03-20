@@ -917,6 +917,131 @@ LevelScopeAudioProcessor::IOMeteringSnapshot LevelScopeAudioProcessor::getIOMete
 
 //==============================================================================
 
+// [BEGIN LS-UIST-IMPL]
+LevelScopeAudioProcessor::UIStateSnapshot LevelScopeAudioProcessor::getPersistedUIStateSnapshot() const noexcept
+{
+    UIStateSnapshot s;
+    s.bottomPanelFraction01 = uiBottomPanelFraction01.load (std::memory_order_relaxed);
+
+    s.rightStripWidthPxUser = uiRightStripWidthPxUser.load (std::memory_order_relaxed);
+    s.rollingLaneHeightPx   = uiRollingLaneHeightPx.load   (std::memory_order_relaxed);
+
+    s.cardHeights.levelling = uiCardLevellingPx.load (std::memory_order_relaxed);
+    s.cardHeights.zones     = uiCardZonesPx.load     (std::memory_order_relaxed);
+    s.cardHeights.audition  = uiCardAuditionPx.load  (std::memory_order_relaxed);
+    s.cardHeights.upward    = uiCardUpwardPx.load    (std::memory_order_relaxed);
+    s.cardHeights.downward  = uiCardDownwardPx.load  (std::memory_order_relaxed);
+    s.cardHeights.limiter   = uiCardLimiterPx.load   (std::memory_order_relaxed);
+
+    s.upwardAdvancedOpen   = (uiUpwardAdvancedOpen01.load   (std::memory_order_relaxed) != 0);
+    s.downwardAdvancedOpen = (uiDownwardAdvancedOpen01.load (std::memory_order_relaxed) != 0);
+    s.limiterAdvancedOpen  = (uiLimiterAdvancedOpen01.load  (std::memory_order_relaxed) != 0);
+    return s;
+}
+
+void LevelScopeAudioProcessor::setUiBottomPanelFraction01 (float v) noexcept
+{
+    v = juce::jlimit (0.10f, 0.60f, v);
+    uiBottomPanelFraction01.store (v, std::memory_order_relaxed);
+}
+
+void LevelScopeAudioProcessor::setUiRightStripWidthPx (int v) noexcept
+{
+    v = juce::jlimit (112, 300, v);
+    uiRightStripWidthPxUser.store (v, std::memory_order_relaxed);
+}
+
+void LevelScopeAudioProcessor::setUiRollingLaneHeightPx (int v) noexcept
+{
+    v = juce::jlimit (28, 240, v);
+    uiRollingLaneHeightPx.store (v, std::memory_order_relaxed);
+}
+
+void LevelScopeAudioProcessor::setUiCardHeights (const UICardHeightsState& h) noexcept
+{
+    uiCardLevellingPx.store (juce::jmax (50, h.levelling), std::memory_order_relaxed);
+    uiCardZonesPx.store     (juce::jmax (34, h.zones),     std::memory_order_relaxed);
+    uiCardAuditionPx.store  (juce::jmax (34, h.audition),  std::memory_order_relaxed);
+    uiCardUpwardPx.store    (juce::jmax (34, h.upward),    std::memory_order_relaxed);
+    uiCardDownwardPx.store  (juce::jmax (26, h.downward),  std::memory_order_relaxed);
+    uiCardLimiterPx.store   (juce::jmax (26, h.limiter),   std::memory_order_relaxed);
+}
+
+void LevelScopeAudioProcessor::setUiUpwardAdvancedOpen (bool b) noexcept
+{
+    uiUpwardAdvancedOpen01.store (b ? 1 : 0, std::memory_order_relaxed);
+}
+
+void LevelScopeAudioProcessor::setUiDownwardAdvancedOpen (bool b) noexcept
+{
+    uiDownwardAdvancedOpen01.store (b ? 1 : 0, std::memory_order_relaxed);
+}
+
+void LevelScopeAudioProcessor::setUiLimiterAdvancedOpen (bool b) noexcept
+{
+    uiLimiterAdvancedOpen01.store (b ? 1 : 0, std::memory_order_relaxed);
+}
+
+void LevelScopeAudioProcessor::buildUistStateChunk (juce::MemoryBlock& destData) const
+{
+    destData.setSize (0);
+
+    const auto s = getPersistedUIStateSnapshot();
+
+    juce::MemoryOutputStream os (destData, true);
+    os.writeInt (1); // UIST schema v1
+
+    os.writeFloat (juce::jlimit (0.10f, 0.60f, s.bottomPanelFraction01));
+    os.writeInt   (juce::jlimit (112, 300, s.rightStripWidthPxUser));
+    os.writeInt   (juce::jlimit (28, 240, s.rollingLaneHeightPx));
+
+    os.writeInt (juce::jmax (50, s.cardHeights.levelling));
+    os.writeInt (juce::jmax (34, s.cardHeights.zones));
+    os.writeInt (juce::jmax (34, s.cardHeights.audition));
+    os.writeInt (juce::jmax (34, s.cardHeights.upward));
+    os.writeInt (juce::jmax (26, s.cardHeights.downward));
+    os.writeInt (juce::jmax (26, s.cardHeights.limiter));
+
+    os.writeByte ((char) (s.upwardAdvancedOpen   ? 1 : 0));
+    os.writeByte ((char) (s.downwardAdvancedOpen ? 1 : 0));
+    os.writeByte ((char) (s.limiterAdvancedOpen  ? 1 : 0));
+    os.writeByte ((char) 0); // reserved/padding
+}
+
+bool LevelScopeAudioProcessor::applyUistStateChunk (const juce::MemoryBlock& uistChunk)
+{
+    constexpr size_t minBytesV1 = 40; // schema + payload sanity floor
+
+    if (uistChunk.getSize() < minBytesV1)
+        return false;
+
+    juce::MemoryInputStream in (uistChunk.getData(), uistChunk.getSize(), false);
+    const int schema = in.readInt();
+    if (schema != 1)
+        return false;
+
+    setUiBottomPanelFraction01 (in.readFloat());
+    setUiRightStripWidthPx     (in.readInt());
+    setUiRollingLaneHeightPx   (in.readInt());
+
+    UICardHeightsState h;
+    h.levelling = in.readInt();
+    h.zones     = in.readInt();
+    h.audition  = in.readInt();
+    h.upward    = in.readInt();
+    h.downward  = in.readInt();
+    h.limiter   = in.readInt();
+    setUiCardHeights (h);
+
+    setUiUpwardAdvancedOpen   (in.readByte() != 0);
+    setUiDownwardAdvancedOpen (in.readByte() != 0);
+    setUiLimiterAdvancedOpen  (in.readByte() != 0);
+    (void) in.readByte(); // reserved
+
+    return true;
+}
+// [END LS-UIST-IMPL]
+
 // [BEGIN LS-PROCESSORCORE-PREPARETOPLAY]
 void LevelScopeAudioProcessor::prepareToPlay (double sampleRate,
                                              int samplesPerBlockExpected)
@@ -1513,29 +1638,43 @@ bool LevelScopeAudioProcessor::setSettingsPresetInformation (const void* data, i
 
 void LevelScopeAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    // Full snapshot: baseline history/timeline blob + APVS + MODG.
+    // Full snapshot: baseline history/timeline blob + APVS + MODG + UIST.
     juce::MemoryBlock apvsChunk;
     juce::MemoryBlock modgChunk;
+    juce::MemoryBlock uistChunk;
 
     buildApvsStateChunk (apvsChunk);
     buildModgStateChunk (modgChunk);
+    buildUistStateChunk (uistChunk);
 
-    historyModel.saveState (destData, &apvsChunk, &modgChunk);
+    LevelScopeHistoryModel::ExtraStateChunksIn extra;
+    extra.apvs = &apvsChunk;
+    extra.modg = &modgChunk;
+    extra.uist = &uistChunk;
+
+    historyModel.saveState (destData, extra);
 }
 
 void LevelScopeAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     juce::MemoryBlock apvsChunk;
     juce::MemoryBlock modgChunk;
+    juce::MemoryBlock uistChunk;
 
-    historyModel.loadState (data, sizeInBytes, &apvsChunk, &modgChunk);
+    LevelScopeHistoryModel::ExtraStateChunksOut extra;
+    extra.apvs = &apvsChunk;
+    extra.modg = &modgChunk;
+    extra.uist = &uistChunk;
 
-    // Restore APVTS if present (old sessions won't have APVS).
+    historyModel.loadState (data, sizeInBytes, extra);
+
     if (apvsChunk.getSize() > 0)
         (void) applyApvsStateChunk (apvsChunk);
 
-    // Rebuild module graph safely (old sessions won't have MODG).
     rebuildModuleGraphFromState (modgChunk.getSize() > 0 ? &modgChunk : nullptr);
+
+    if (uistChunk.getSize() > 0)
+        (void) applyUistStateChunk (uistChunk);
 
     // [BEGIN LS-LATENCY-STATE-UPDATE]
     updateLatencyFromAPVTS_NonRT();

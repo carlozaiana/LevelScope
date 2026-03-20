@@ -42,6 +42,10 @@ VolumeHistoryComponent::VolumeHistoryComponent (LevelScopeAudioProcessor& proc)
     viewRightFrame = 0.0;           // will follow right edge once we have data
     followRightEdge = true;
 
+    // [BEGIN LS-UIST-APPLY-HISTORY-CTOR]
+    applyPersistedUiStateFromProcessor();
+    // [END LS-UIST-APPLY-HISTORY-CTOR]
+
     bootstrapHistoryFromProcessorIfNeeded(); // [STATE-PERSIST]
 
     setOpaque (true);
@@ -139,8 +143,23 @@ VolumeHistoryComponent::~VolumeHistoryComponent()
 // [END MTDM-THRESH-UI-APVTS-LISTENER-UNREGISTER]
 
 // [BEGIN UI3A-HISTORY-RELOAD-FROM-PROCESSOR-IMPL]
+void VolumeHistoryComponent::applyPersistedUiStateFromProcessor()
+{
+    const auto ui = processor.getPersistedUIStateSnapshot();
+
+    rightStripWidthPxUser = juce::jlimit (rightStripMinWidthPx, rightStripMaxWidthPx, ui.rightStripWidthPxUser);
+    rollingLaneHeightPx   = juce::jlimit (rollingLaneMinHeightPx, rollingLaneMaxHeightPx, ui.rollingLaneHeightPx);
+
+    dragStartRightStripWidthPxUser = rightStripWidthPxUser;
+    dragStartRollingLaneHeightPx   = rollingLaneHeightPx;
+
+    markStaticBackgroundDirty();
+}
+
 void VolumeHistoryComponent::reloadFromProcessorState()
 {
+    applyPersistedUiStateFromProcessor();
+
     // Rebuild the UI-side cached/ring history from the processor's persisted timeline.
     resetHistoryLevels();
 
@@ -172,6 +191,7 @@ void VolumeHistoryComponent::reloadFromProcessorState()
         clampViewRightFrame (getWidth());
     }
 
+    resized();
     markStaticBackgroundDirty();
     repaint();
 }

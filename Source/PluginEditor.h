@@ -288,6 +288,9 @@ public:
     void paint (juce::Graphics& g) override;
     void resized() override;
 
+    bool isAdvancedOpen() const noexcept { return showAdvanced; }
+    void applyPersistedAdvancedOpenState (bool shouldOpen);
+
 private:
     LevelScopeAudioProcessor& processor;
     juce::AudioProcessorValueTreeState& apvts;
@@ -355,7 +358,11 @@ public:
 
     void resized() override;
 
+    bool isAdvancedOpen() const noexcept { return showAdvanced; }
+    void applyPersistedAdvancedOpenState (bool shouldOpen);
+
 private:
+    LevelScopeAudioProcessor& processor;
     juce::AudioProcessorValueTreeState& apvts;
 
     // [BEGIN UI4B3-DOWNWARD-ADVANCED-MEMBERS]
@@ -405,6 +412,9 @@ public:
 
     void paint (juce::Graphics& g) override;
     void resized() override;
+
+    bool isAdvancedOpen() const noexcept { return showAdvanced; }
+    void applyPersistedAdvancedOpenState (bool shouldOpen);
 
 private:
     LevelScopeAudioProcessor& processor;
@@ -461,6 +471,8 @@ public:
     void resized() override;
     int getPreferredHeight() const noexcept;
 
+    void applyPersistedUiStateFromProcessor();
+
     // [BEGIN UI4B1-UPWARD-AUTOEXPAND-DECL]
     void ensureUpwardHeightAtLeast (int px);
     // [END UI4B1-UPWARD-AUTOEXPAND-DECL]
@@ -480,6 +492,8 @@ public:
     // [END UI4B3-DOWNWARD-HEIGHT-DECL]
 
 private:
+    LevelScopeAudioProcessor& processor;
+
     // [BEGIN UI4C-CONTENT-ADD-AUDITION-MEMBER]
     LevellingCard    levelling;
     MtdmZonesCard    zones;
@@ -560,6 +574,7 @@ private:
     // [END UI4C-BARS-REPLACE]
 
     void applyDragToBoundary (CardResizerBar::Boundary b, int dy);
+    void syncPersistedCardHeightsToProcessor() const;
 
     int contentPreferredHeightPx = 0;
     // [END UI4A3-CARDS-ACCORDION-MEMBERS]
@@ -579,6 +594,8 @@ public:
     void paint (juce::Graphics& g) override;
     void resized() override;
 
+    void applyPersistedUiStateFromProcessor();
+
 private:
     juce::Viewport viewport;
     MtdmCardsContent content;
@@ -596,7 +613,11 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
 
+    void applyPersistedUiStateFromProcessor();
+
 private:
+    LevelScopeAudioProcessor& processor;
+
     // [BEGIN UI3A-EDITOR-MEMBERS-TOPSTRIP]
     VolumeHistoryComponent  historyComponent;
     MissionControlComponent missionControl;

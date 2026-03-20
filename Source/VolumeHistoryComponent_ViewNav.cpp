@@ -774,13 +774,13 @@ void VolumeHistoryComponent::mouseDrag (const juce::MouseEvent& event)
     {
         const int dy = p.y - dragStartPos.y;
 
-        // Dragging DOWN reduces rolling lane height; dragging UP increases it.
         rollingLaneHeightPx = dragStartRollingLaneHeightPx - dy;
         rollingLaneHeightPx = juce::jlimit (rollingLaneMinHeightPx,
                                             rollingLaneMaxHeightPx,
                                             rollingLaneHeightPx);
 
-        // Plot area height changed -> repaint (and background grid alignment may change)
+        processor.setUiRollingLaneHeightPx (rollingLaneHeightPx);
+
         markStaticBackgroundDirty();
         repaint();
         return;
@@ -792,9 +792,10 @@ void VolumeHistoryComponent::mouseDrag (const juce::MouseEvent& event)
     {
         const int dx = p.x - dragStartPos.x;
 
-        // Dragging LEFT increases strip width; dragging RIGHT decreases it.
         rightStripWidthPxUser = dragStartRightStripWidthPxUser - dx;
         rightStripWidthPxUser = juce::jlimit (rightStripMinWidthPx, rightStripMaxWidthPx, rightStripWidthPxUser);
+
+        processor.setUiRightStripWidthPx (rightStripWidthPxUser);
 
         repaint();
         return;
