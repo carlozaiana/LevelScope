@@ -74,12 +74,12 @@ namespace levelscope
             return bypassed.load (std::memory_order_relaxed);
         }
 
+        // [BEGIN LVLR-VALUETREE-PERSISTENCE-SIGNATURE]
         // Leveler currently relies on APVTS-backed params only.
-        // Module-local persistence is a no-op for v1.
-        // [BEGIN LVLR-SAVESTATE-SIGNATURE-FIX]
-        void saveState (juce::MemoryBlock& destData) override;
-        void loadState (const void* data, int sizeInBytes) override;
-        // [END LVLR-SAVESTATE-SIGNATURE-FIX]
+        // Module-local persistence is minimal for v1.
+        juce::ValueTree saveState() const override;
+        void loadState (const juce::ValueTree& state) override;
+        // [END LVLR-VALUETREE-PERSISTENCE-SIGNATURE]
 
         void bindParameters (std::atomic<float>* enabledParam,
                              std::atomic<float>* targetLufsParam,

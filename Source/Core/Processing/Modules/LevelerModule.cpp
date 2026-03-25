@@ -33,16 +33,20 @@ namespace levelscope
     }
 
     // [BEGIN LVLR-SAVESTATE-SIGNATURE-FIX]
-    void LevelerModule::saveState (juce::MemoryBlock& destData)
+    // [BEGIN LVLR-VALUETREE-PERSISTENCE-IMPL]
+    juce::ValueTree LevelerModule::saveState() const
     {
-        destData.reset();
+        juce::ValueTree t (getModuleID());
+        t.setProperty ("bypassed", isBypassed(), nullptr);
+        return t;
     }
 
-    void LevelerModule::loadState (const void* data, int sizeInBytes)
-    // [END LVLR-SAVESTATE-SIGNATURE-FIX]
+    void LevelerModule::loadState (const juce::ValueTree& state)
     {
-        juce::ignoreUnused (data, sizeInBytes);
+        const auto b = state.getProperty ("bypassed", false);
+        setBypassed ((bool) b);
     }
+    // [END LVLR-VALUETREE-PERSISTENCE-IMPL]
 
     void LevelerModule::bindParameters (std::atomic<float>* enabledParam,
                                         std::atomic<float>* targetLufsParam,
