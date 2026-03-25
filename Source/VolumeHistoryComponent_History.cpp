@@ -36,6 +36,7 @@ bool VolumeHistoryComponent::updateDisplayedMeters()
     if (live)
     {
         const auto io   = processor.getIOMeteringSnapshot();
+        const auto lvlr = processor.getLevelerMeteringSnapshot();
         const auto up   = processor.getUpwardMeteringSnapshot();
         const auto down = processor.getDownwardMeteringSnapshot();
         const auto lim  = processor.getLimiterMeteringSnapshot();
@@ -47,6 +48,10 @@ bool VolumeHistoryComponent::updateDisplayedMeters()
         displayedMeters.outPeakDbCurrent = io.outPeakDbCurrent;
         displayedMeters.outPeakDbHold    = io.outPeakDbHold;
         displayedMeters.outRmsDbCurrent  = io.outRmsDbCurrent;
+
+        displayedMeters.levelerGainDbCurrent   = lvlr.gainDbCurrent;
+        displayedMeters.levelerGainDbBlockPeak = lvlr.gainDbBlockPeak;
+        displayedMeters.levelerGainDbHold      = lvlr.gainDbHold;
 
         displayedMeters.upBoostDbCurrent   = up.boostDbCurrent;
         displayedMeters.upBoostDbBlockPeak = up.boostDbBlockPeak;
@@ -93,6 +98,17 @@ bool VolumeHistoryComponent::updateDisplayedMeters()
         displayedMeters.outPeakDbHold    = decayTowardFloor (displayedMeters.outPeakDbHold,    -200.0f, audioHoldStep);
         displayedMeters.outRmsDbCurrent  = decayTowardFloor (displayedMeters.outRmsDbCurrent,  -200.0f, audioCurStep);
 
+        auto decaySignedTowardZero = [] (float v, float step) noexcept
+        {
+            if (v > 0.0f) return juce::jmax (0.0f, v - step);
+            if (v < 0.0f) return juce::jmin (0.0f, v + step);
+            return 0.0f;
+        };
+
+        displayedMeters.levelerGainDbCurrent   = decaySignedTowardZero (displayedMeters.levelerGainDbCurrent,   moduleStep);
+        displayedMeters.levelerGainDbBlockPeak = decaySignedTowardZero (displayedMeters.levelerGainDbBlockPeak, moduleStep);
+        displayedMeters.levelerGainDbHold      = decaySignedTowardZero (displayedMeters.levelerGainDbHold,      moduleStep);
+
         displayedMeters.upBoostDbCurrent   = decayTowardZero (displayedMeters.upBoostDbCurrent,   moduleStep);
         displayedMeters.upBoostDbBlockPeak = decayTowardZero (displayedMeters.upBoostDbBlockPeak, moduleStep);
         displayedMeters.upBoostDbHold      = decayTowardZero (displayedMeters.upBoostDbHold,      moduleStep);
@@ -119,6 +135,10 @@ bool VolumeHistoryComponent::updateDisplayedMeters()
         changed (before.outPeakDbCurrent, displayedMeters.outPeakDbCurrent) ||
         changed (before.outPeakDbHold,    displayedMeters.outPeakDbHold)    ||
         changed (before.outRmsDbCurrent,  displayedMeters.outRmsDbCurrent)  ||
+
+        changed (before.levelerGainDbCurrent,   displayedMeters.levelerGainDbCurrent)   ||
+        changed (before.levelerGainDbBlockPeak, displayedMeters.levelerGainDbBlockPeak) ||
+        changed (before.levelerGainDbHold,      displayedMeters.levelerGainDbHold)      ||
 
         changed (before.upBoostDbCurrent,   displayedMeters.upBoostDbCurrent)   ||
         changed (before.upBoostDbBlockPeak, displayedMeters.upBoostDbBlockPeak) ||

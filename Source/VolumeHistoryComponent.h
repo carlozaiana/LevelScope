@@ -458,6 +458,10 @@ private:
         float outPeakDbHold    = -200.0f;
         float outRmsDbCurrent  = -200.0f;
 
+        float levelerGainDbCurrent   = 0.0f;
+        float levelerGainDbBlockPeak = 0.0f;
+        float levelerGainDbHold      = 0.0f;
+
         float upBoostDbCurrent   = 0.0f;
         float upBoostDbBlockPeak = 0.0f;
         float upBoostDbHold      = 0.0f;

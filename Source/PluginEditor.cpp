@@ -785,22 +785,121 @@ void MtdmCardComponent::resized()
 // [END UI4A3-CARD-RESIZED-TITLE-OPTIONAL]
 
 //==============================================================================
-// Levelling placeholder
+// Leveler
 //==============================================================================
 
-LevellingCard::LevellingCard()
-    : MtdmCardComponent ("Levelling (Coming soon)")
+LevelerCard::LevelerCard (LevelScopeAudioProcessor& p)
+    : MtdmCardComponent ("Leveler"),
+      apvts (p.getAPVTS())
 {
-    info.setText ("Placeholder for gain-riding module.", juce::dontSendNotification);
-    info.setColour (juce::Label::textColourId, juce::Colours::white.withMultipliedAlpha (0.60f));
-    info.setFont (juce::Font (12.0f));
-    addAndMakeVisible (info);
+    // [BEGIN LVLR-CARD-CTOR]
+    addAndMakeVisible (enabledButton);
+    enabledButton.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.92f));
+    enabledAtt = std::make_unique<ButtonAttachment> (apvts, "lvlr.enabled", enabledButton);
+
+    styleLabel (targetLabel,   "Target");
+    styleLabel (maxBoostLabel, "Max Boost");
+    styleLabel (maxCutLabel,   "Max Cut");
+    styleLabel (measLabel,     "Measurement");
+    styleLabel (modeLabel,     "Mode");
+    styleLabel (rateUpLabel,   "Rate Up");
+    styleLabel (rateDownLabel, "Rate Down");
+
+    addAndMakeVisible (targetLabel);
+    addAndMakeVisible (maxBoostLabel);
+    addAndMakeVisible (maxCutLabel);
+    addAndMakeVisible (measLabel);
+    addAndMakeVisible (modeLabel);
+    addAndMakeVisible (rateUpLabel);
+    addAndMakeVisible (rateDownLabel);
+
+    styleSlider (targetSlider,   " LUFS");
+    styleSlider (maxBoostSlider, " dB");
+    styleSlider (maxCutSlider,   " dB");
+    styleSlider (rateUpSlider,   " dB/s");
+    styleSlider (rateDownSlider, " dB/s");
+
+    setSliderRangeFromParam (apvts, "lvlr.targetLufs",     targetSlider);
+    setSliderRangeFromParam (apvts, "lvlr.maxBoostDb",     maxBoostSlider);
+    setSliderRangeFromParam (apvts, "lvlr.maxCutDb",       maxCutSlider);
+    setSliderRangeFromParam (apvts, "lvlr.rateUpDbPerSec", rateUpSlider);
+    setSliderRangeFromParam (apvts, "lvlr.rateDownDbPerSec", rateDownSlider);
+
+    addAndMakeVisible (targetSlider);
+    addAndMakeVisible (maxBoostSlider);
+    addAndMakeVisible (maxCutSlider);
+    addAndMakeVisible (rateUpSlider);
+    addAndMakeVisible (rateDownSlider);
+
+    targetAtt   = std::make_unique<SliderAttachment> (apvts, "lvlr.targetLufs", targetSlider);
+    maxBoostAtt = std::make_unique<SliderAttachment> (apvts, "lvlr.maxBoostDb", maxBoostSlider);
+    maxCutAtt   = std::make_unique<SliderAttachment> (apvts, "lvlr.maxCutDb",   maxCutSlider);
+    rateUpAtt   = std::make_unique<SliderAttachment> (apvts, "lvlr.rateUpDbPerSec",   rateUpSlider);
+    rateDownAtt = std::make_unique<SliderAttachment> (apvts, "lvlr.rateDownDbPerSec", rateDownSlider);
+
+    addAndMakeVisible (measBox);
+    measBox.addItemList (juce::StringArray { "Auto", "Momentary", "Short-term" }, 1);
+    measAtt = std::make_unique<ComboAttachment> (apvts, "lvlr.measChoice", measBox);
+
+    addAndMakeVisible (modeBox);
+    modeBox.addItemList (juce::StringArray { "Adaptive", "Learn-Hold" }, 1);
+    modeAtt = std::make_unique<ComboAttachment> (apvts, "lvlr.modeChoice", modeBox);
+
+    learnButton.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.90f));
+    addAndMakeVisible (learnButton);
+    learnAtt = std::make_unique<ButtonAttachment> (apvts, "lvlr.learn01", learnButton);
+    // [END LVLR-CARD-CTOR]
 }
 
-void LevellingCard::resized()
+void LevelerCard::resized()
 {
+    // [BEGIN LVLR-CARD-RESIZED]
     MtdmCardComponent::resized();
-    info.setBounds (getContentArea().removeFromTop (18));
+    auto r = getContentArea();
+
+    const bool compact = (r.getHeight() < 110);
+
+    targetLabel.setVisible (! compact);   targetSlider.setVisible (! compact);
+    maxBoostLabel.setVisible (! compact); maxBoostSlider.setVisible (! compact);
+    maxCutLabel.setVisible (! compact);   maxCutSlider.setVisible (! compact);
+    measLabel.setVisible (! compact);     measBox.setVisible (! compact);
+    modeLabel.setVisible (! compact);     modeBox.setVisible (! compact);
+    rateUpLabel.setVisible (! compact);   rateUpSlider.setVisible (! compact);
+    rateDownLabel.setVisible (! compact); rateDownSlider.setVisible (! compact);
+    learnButton.setVisible (! compact);
+
+    enabledButton.setBounds (r.removeFromTop (22));
+
+    if (compact)
+        return;
+
+    const int rowH = 22;
+
+    auto rowS = [&] (juce::Label& lab, juce::Slider& s)
+    {
+        auto rr = r.removeFromTop (rowH);
+        lab.setBounds (rr.removeFromLeft (90));
+        s.setBounds (rr);
+    };
+
+    auto rowC = [&] (juce::Label& lab, juce::ComboBox& c)
+    {
+        auto rr = r.removeFromTop (rowH);
+        lab.setBounds (rr.removeFromLeft (90));
+        c.setBounds (rr);
+    };
+
+    rowS (targetLabel,   targetSlider);
+    rowS (maxBoostLabel, maxBoostSlider);
+    rowS (maxCutLabel,   maxCutSlider);
+    rowC (measLabel,     measBox);
+    rowC (modeLabel,     modeBox);
+
+    learnButton.setBounds (r.removeFromTop (rowH));
+
+    rowS (rateUpLabel,   rateUpSlider);
+    rowS (rateDownLabel, rateDownSlider);
+    // [END LVLR-CARD-RESIZED]
 }
 
 //==============================================================================
@@ -1942,7 +2041,7 @@ void MtdmLimiterCard::resized()
 // [BEGIN UI4C-CONTENT-CTOR-REPLACE]
 MtdmCardsContent::MtdmCardsContent (LevelScopeAudioProcessor& p)
     : processor (p),
-      levelling(),
+      levelling (p),
       zones (p),
       audition (p),
       upward (p),

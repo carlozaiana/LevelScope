@@ -430,7 +430,7 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
 
             auto r = metersAreaI.toFloat().reduced (6.0f, 6.0f);
 
-            const int numCols = 5; // In, Up, Dn, Lim, Out
+            const int numCols = 6; // In, Lvlr, Up, Dn, Lim, Out
             const float gap = 6.0f;
             const float totalGap = gap * (numCols - 1);
             const float colW = (r.getWidth() - totalGap) / (float) numCols;
@@ -543,6 +543,57 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
             };
             // [END UI3C-UPWARD-METER-DRAW-HOLD-AND-CURRENT]
 
+            // [BEGIN LVLR-RIGHT-METER-DRAW]
+            auto drawLeveler = [&] (juce::Rectangle<float> colR, float holdDb, float currentDb)
+            {
+                drawFrame (colR);
+
+                auto inner = colR.reduced (2.0f);
+                inner = inner.withTrimmedBottom (14.0f);
+
+                auto mapBipolarDbToY = [&] (float db) -> float
+                {
+                    constexpr float maxAbsDb = 24.0f;
+                    db = juce::jlimit (-maxAbsDb, maxAbsDb, db);
+                    const float norm = (db + maxAbsDb) / (2.0f * maxAbsDb); // -24..+24 => 0..1
+                    return inner.getBottom() - norm * inner.getHeight();
+                };
+
+                const float yZero = mapBipolarDbToY (0.0f);
+
+                g.setColour (juce::Colours::white.withMultipliedAlpha (0.18f));
+                g.drawLine (inner.getX(), yZero, inner.getRight(), yZero, 1.0f);
+
+                const float yHold = mapBipolarDbToY (holdDb);
+                juce::Rectangle<float> filled;
+
+                if (holdDb >= 0.0f)
+                {
+                    filled = juce::Rectangle<float> (inner.getX(), yHold, inner.getWidth(), yZero - yHold);
+                    g.setColour (juce::Colours::limegreen.withMultipliedAlpha (0.50f));
+                }
+                else
+                {
+                    filled = juce::Rectangle<float> (inner.getX(), yZero, inner.getWidth(), yHold - yZero);
+                    g.setColour (juce::Colours::deepskyblue.withMultipliedAlpha (0.45f));
+                }
+
+                if (filled.getHeight() > 0.5f)
+                    g.fillRoundedRectangle (filled, 2.0f);
+
+                g.setColour (juce::Colours::white.withMultipliedAlpha (0.70f));
+                g.drawLine (inner.getX(), yHold, inner.getRight(), yHold, 1.2f);
+
+                const float yCur = mapBipolarDbToY (currentDb);
+                g.setColour (currentDb >= 0.0f
+                                ? juce::Colours::limegreen.withMultipliedAlpha (0.92f)
+                                : juce::Colours::deepskyblue.withMultipliedAlpha (0.88f));
+                g.drawLine (inner.getX(), yCur, inner.getRight(), yCur, 1.2f);
+
+                drawLabel (colR, "Lvlr");
+            };
+            // [END LVLR-RIGHT-METER-DRAW]
+
             auto drawDown = [&] (juce::Rectangle<float> colR, float db, const juce::String& label, juce::Colour c)
             {
                 drawFrame (colR);
@@ -560,21 +611,25 @@ void VolumeHistoryComponent::paint (juce::Graphics& g)
                 drawLabel (colR, label);
             };
 
-            // Columns: In | Up | Dn | Lim | Out
+            // Columns: In | Lvlr | Up | Dn | Lim | Out
             drawIoMeter (col (0), juce::Colours::deepskyblue,
                          displayedMeters.inRmsDbCurrent,
                          displayedMeters.inPeakDbCurrent,
                          displayedMeters.inPeakDbHold,
                          "In");
 
+            drawLeveler (col (1),
+                         displayedMeters.levelerGainDbHold,
+                         displayedMeters.levelerGainDbCurrent);
+
             // [BEGIN UI3C-UPWARD-METER-CALL]
-            drawUp      (col (1), displayedMeters.upBoostDbHold, displayedMeters.upBoostDbCurrent);
+            drawUp      (col (2), displayedMeters.upBoostDbHold, displayedMeters.upBoostDbCurrent);
             // [END UI3C-UPWARD-METER-CALL]
 
-            drawDown    (col (2), displayedMeters.downGrDbHold, "Dn",  juce::Colours::deepskyblue);
-            drawDown    (col (3), displayedMeters.limGrDbHold,  "Lim", juce::Colours::orange);
+            drawDown    (col (3), displayedMeters.downGrDbHold, "Dn",  juce::Colours::deepskyblue);
+            drawDown    (col (4), displayedMeters.limGrDbHold,  "Lim", juce::Colours::orange);
 
-            drawIoMeter (col (4), juce::Colours::orange,
+            drawIoMeter (col (5), juce::Colours::orange,
                          displayedMeters.outRmsDbCurrent,
                          displayedMeters.outPeakDbCurrent,
                          displayedMeters.outPeakDbHold,

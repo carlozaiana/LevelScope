@@ -181,18 +181,42 @@ private:
 };
 
 //------------------------------------------------------------------------------
-// Levelling placeholder (future module)
+// Leveler card
 //------------------------------------------------------------------------------
-class LevellingCard : public MtdmCardComponent
+class LevelerCard : public MtdmCardComponent
 {
 public:
-    LevellingCard();
+    explicit LevelerCard (LevelScopeAudioProcessor& p);
+    ~LevelerCard() override = default;
+
     void resized() override;
 
 private:
-    juce::Label info;
+    juce::AudioProcessorValueTreeState& apvts;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LevellingCard)
+    juce::ToggleButton enabledButton { "Enabled" };
+
+    juce::Label targetLabel, maxBoostLabel, maxCutLabel;
+    juce::Label measLabel, modeLabel;
+    juce::Label rateUpLabel, rateDownLabel;
+
+    juce::Slider targetSlider, maxBoostSlider, maxCutSlider;
+    juce::Slider rateUpSlider, rateDownSlider;
+
+    juce::ComboBox measBox, modeBox;
+    juce::ToggleButton learnButton { "Learn" };
+
+    using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
+    using ComboAttachment  = juce::AudioProcessorValueTreeState::ComboBoxAttachment;
+    using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
+
+    std::unique_ptr<ButtonAttachment> enabledAtt;
+    std::unique_ptr<SliderAttachment> targetAtt, maxBoostAtt, maxCutAtt;
+    std::unique_ptr<ComboAttachment>  measAtt, modeAtt;
+    std::unique_ptr<ButtonAttachment> learnAtt;
+    std::unique_ptr<SliderAttachment> rateUpAtt, rateDownAtt;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LevelerCard)
 };
 
 //------------------------------------------------------------------------------
@@ -495,7 +519,7 @@ private:
     LevelScopeAudioProcessor& processor;
 
     // [BEGIN UI4C-CONTENT-ADD-AUDITION-MEMBER]
-    LevellingCard    levelling;
+    LevelerCard      levelling;
     MtdmZonesCard    zones;
     MtdmAuditionCard audition;
     MtdmUpwardCard   upward;
@@ -506,7 +530,7 @@ private:
     // [BEGIN UI4C-CARDHEIGHTS-ADD-AUDITION]
     struct CardHeights
     {
-        int levelling = 70;
+        int levelling = 240;
         int zones     = 220;
         int audition  = 110;
         int upward    = 220;
