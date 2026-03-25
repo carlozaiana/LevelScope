@@ -32,12 +32,14 @@ namespace levelscope
         resetGainState();
     }
 
-    void LevelerModule::saveState (juce::MemoryBlock& destData) const
+    // [BEGIN LVLR-SAVESTATE-SIGNATURE-FIX]
+    void LevelerModule::saveState (juce::MemoryBlock& destData)
     {
         destData.reset();
     }
 
-    void LevelerModule::loadState (const void* data, size_t sizeInBytes)
+    void LevelerModule::loadState (const void* data, int sizeInBytes)
+    // [END LVLR-SAVESTATE-SIGNATURE-FIX]
     {
         juce::ignoreUnused (data, sizeInBytes);
     }

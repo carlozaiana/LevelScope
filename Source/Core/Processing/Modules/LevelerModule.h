@@ -76,8 +76,10 @@ namespace levelscope
 
         // Leveler currently relies on APVTS-backed params only.
         // Module-local persistence is a no-op for v1.
-        void saveState (juce::MemoryBlock& destData) const override;
-        void loadState (const void* data, size_t sizeInBytes) override;
+        // [BEGIN LVLR-SAVESTATE-SIGNATURE-FIX]
+        void saveState (juce::MemoryBlock& destData) override;
+        void loadState (const void* data, int sizeInBytes) override;
+        // [END LVLR-SAVESTATE-SIGNATURE-FIX]
 
         void bindParameters (std::atomic<float>* enabledParam,
                              std::atomic<float>* targetLufsParam,
