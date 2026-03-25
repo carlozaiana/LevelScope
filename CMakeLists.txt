@@ -52,6 +52,11 @@ add_library(LevelScopeCore STATIC
     Source/Core/Processing/ProcessorCore.h
 
     # Processing / modules
+    # [BEGIN LVLR-CMAKE-CORESOURCES]
+    Source/Core/Processing/Modules/LevelerModule.h
+    Source/Core/Processing/Modules/LevelerModule.cpp
+    # [END LVLR-CMAKE-CORESOURCES]
+
     Source/Core/Processing/Modules/MultiThresholdDynamicsModule.h
     Source/Core/Processing/Modules/MultiThresholdDynamicsModule.cpp
     # [END MTDM-CMAKE-CORESOURCES]
@@ -61,6 +66,10 @@ add_library(LevelScopeCore STATIC
     Source/Core/Processing/DSP/SpectralUpwardCompressor.h
     Source/Core/Processing/DSP/SpectralUpwardCompressor.cpp
     # [END MTDM-CMAKE-SUC-DSP]
+
+    # [BEGIN LVLR-CMAKE-PARAMIDS]
+    Source/Core/Processing/Modules/LevelerParamIDs.h
+    # [END LVLR-CMAKE-PARAMIDS]
 
     # [BEGIN MTDM-CMAKE-PARAMIDS]
     Source/Core/Processing/Modules/MultiThresholdDynamicsParamIDs.h
