@@ -1,9 +1,17 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+// [BEGIN LVLR-PLUGIN-INCLUDE]
+#include "Core/Processing/Modules/LevelerModule.h"
+// [END LVLR-PLUGIN-INCLUDE]
+
 // [BEGIN MTDM-PLUGIN-INCLUDE]
 #include "Core/Processing/Modules/MultiThresholdDynamicsModule.h"
 // [END MTDM-PLUGIN-INCLUDE]
+
+// [BEGIN LVLR-PARAMIDS-INCLUDE]
+#include "Core/Processing/Modules/LevelerParamIDs.h"
+// [END LVLR-PARAMIDS-INCLUDE]
 
 // [BEGIN MTDM-PARAMIDS-INCLUDE]
 #include "Core/Processing/Modules/MultiThresholdDynamicsParamIDs.h"
@@ -91,6 +99,32 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
 
     using namespace levelscope::mtdm;
 
+    // [BEGIN LVLR-STRUCTURAL-PARAM-SOURCE-OF-TRUTH]
+    // Leveler v1 parameter policy/source-of-truth block.
+    // Keep this block in sync with:
+    //   1) APVTS automatable/non-automatable flags
+    //   2) UI playback-lock rules (when Leveler UI is added)
+    //   3) module binding order
+    //
+    // Leveler-specific params
+    // - levelscope::lvlr::ParamIDs::enabled
+    // - levelscope::lvlr::ParamIDs::targetLufs
+    // - levelscope::lvlr::ParamIDs::maxBoostDb
+    // - levelscope::lvlr::ParamIDs::maxCutDb
+    // - levelscope::lvlr::ParamIDs::measChoice       // non-automatable
+    // - levelscope::lvlr::ParamIDs::modeChoice       // non-automatable
+    // - levelscope::lvlr::ParamIDs::learn01          // non-automatable
+    // - levelscope::lvlr::ParamIDs::rateUpDbPerSec
+    // - levelscope::lvlr::ParamIDs::rateDownDbPerSec
+    //
+    // Reused shared routing-policy params (currently under mtdm.* namespace)
+    // - ParamIDs::mcPolicyChoice
+    // - ParamIDs::dialogDetectorChoice
+    // - ParamIDs::dialogApplyChoice
+    // - ParamIDs::lfeInDetector
+    // - ParamIDs::lfeInApply
+    // [END LVLR-STRUCTURAL-PARAM-SOURCE-OF-TRUTH]
+
     // [BEGIN MTDM-STRUCTURAL-PARAM-SOURCE-OF-TRUTH]
     // MTDM "structural / stop-playback / quality" parameter list.
     // Keep this comment block as the single source of truth so:
@@ -124,6 +158,73 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
     // - ParamIDs::limLookaheadMs       // mtdm.lim.lookaheadMs
     // - ParamIDs::limOversamplingChoice// mtdm.lim.oversamplingChoice
     // [END MTDM-STRUCTURAL-PARAM-SOURCE-OF-TRUTH]
+
+    // [BEGIN LVLR-APVTS-PARAM-LAYOUT]
+    layout.add (std::make_unique<juce::AudioParameterBool> (
+        juce::ParameterID { levelscope::lvlr::ParamIDs::enabled, 1 },
+        "Leveler Enabled",
+        (levelscope::lvlr::Defaults::enabled01 >= 0.5f)));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { levelscope::lvlr::ParamIDs::targetLufs, 1 },
+        "Leveler Target (LUFS)",
+        juce::NormalisableRange<float> (levelscope::lvlr::Ranges::targetMinLufs,
+                                        levelscope::lvlr::Ranges::targetMaxLufs,
+                                        0.1f),
+        levelscope::lvlr::Defaults::targetLufs));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { levelscope::lvlr::ParamIDs::maxBoostDb, 1 },
+        "Leveler Max Boost (dB)",
+        juce::NormalisableRange<float> (levelscope::lvlr::Ranges::maxBoostMinDb,
+                                        levelscope::lvlr::Ranges::maxBoostMaxDb,
+                                        0.1f),
+        levelscope::lvlr::Defaults::maxBoostDb));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { levelscope::lvlr::ParamIDs::maxCutDb, 1 },
+        "Leveler Max Cut (dB)",
+        juce::NormalisableRange<float> (levelscope::lvlr::Ranges::maxCutMinDb,
+                                        levelscope::lvlr::Ranges::maxCutMaxDb,
+                                        0.1f),
+        levelscope::lvlr::Defaults::maxCutDb));
+
+    layout.add (std::make_unique<juce::AudioParameterChoice> (
+        juce::ParameterID { levelscope::lvlr::ParamIDs::measChoice, 1 },
+        "Leveler Measurement",
+        juce::StringArray { "Auto", "Momentary", "Short-term" },
+        levelscope::lvlr::Defaults::measChoice,
+        juce::AudioParameterChoiceAttributes().withAutomatable (false)));
+
+    layout.add (std::make_unique<juce::AudioParameterChoice> (
+        juce::ParameterID { levelscope::lvlr::ParamIDs::modeChoice, 1 },
+        "Leveler Mode",
+        juce::StringArray { "Adaptive", "Learn-Hold" },
+        levelscope::lvlr::Defaults::modeChoice,
+        juce::AudioParameterChoiceAttributes().withAutomatable (false)));
+
+    layout.add (std::make_unique<juce::AudioParameterBool> (
+        juce::ParameterID { levelscope::lvlr::ParamIDs::learn01, 1 },
+        "Leveler Learn",
+        (levelscope::lvlr::Defaults::learn01 >= 0.5f),
+        juce::AudioParameterBoolAttributes().withAutomatable (false)));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { levelscope::lvlr::ParamIDs::rateUpDbPerSec, 1 },
+        "Leveler Rate Up (dB/s)",
+        juce::NormalisableRange<float> (levelscope::lvlr::Ranges::rateUpMinDbPerSec,
+                                        levelscope::lvlr::Ranges::rateUpMaxDbPerSec,
+                                        0.1f),
+        levelscope::lvlr::Defaults::rateUpDbPerSec));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { levelscope::lvlr::ParamIDs::rateDownDbPerSec, 1 },
+        "Leveler Rate Down (dB/s)",
+        juce::NormalisableRange<float> (levelscope::lvlr::Ranges::rateDownMinDbPerSec,
+                                        levelscope::lvlr::Ranges::rateDownMaxDbPerSec,
+                                        0.1f),
+        levelscope::lvlr::Defaults::rateDownDbPerSec));
+    // [END LVLR-APVTS-PARAM-LAYOUT]
 
     // [BEGIN MTDM-NONAUTOMATABLE-STRUCTURAL-ENABLES]
     layout.add (std::make_unique<juce::AudioParameterBool> (
@@ -514,13 +615,20 @@ LevelScopeAudioProcessor::LevelScopeAudioProcessor()
 void LevelScopeAudioProcessor::rebuildModuleGraphFromState (const juce::MemoryBlock* modgChunkData)
 {
     // Non-audio-thread only. Builds a new graph snapshot and swaps it in.
-    const juce::String mtdmId = juce::String (levelscope::MultiThresholdDynamicsModule().getModuleID());
+    // [BEGIN LVLR-MODGRAPH-MODULE-IDS]
+    const juce::String levelerId = juce::String (levelscope::LevelerModule().getModuleID());
+    const juce::String mtdmId    = juce::String (levelscope::MultiThresholdDynamicsModule().getModuleID());
+    // [END LVLR-MODGRAPH-MODULE-IDS]
 
     std::vector<juce::String> orderedModuleIds;
     orderedModuleIds.reserve (4);
 
-    // Default graph if no MODG chunk (or invalid)
+    // [BEGIN LVLR-MODGRAPH-DEFAULT-ORDER]
+    // Default graph if no MODG chunk (or invalid):
+    // Leveler first, then MTDM.
+    orderedModuleIds.push_back (levelerId);
     orderedModuleIds.push_back (mtdmId);
+    // [END LVLR-MODGRAPH-DEFAULT-ORDER]
 
     if (modgChunkData != nullptr && modgChunkData->getSize() > 0)
     {
@@ -547,16 +655,68 @@ void LevelScopeAudioProcessor::rebuildModuleGraphFromState (const juce::MemoryBl
                 }
 
                 if (orderedModuleIds.empty())
+                {
+                    orderedModuleIds.push_back (levelerId);
                     orderedModuleIds.push_back (mtdmId);
+                }
             }
         }
     }
+
+    // [BEGIN LVLR-MODGRAPH-ENSURE-ADDITIVE-INSERT]
+    // Backward-compatible additive graph upgrade:
+    // if an older session stored only MTDM in MODG, insert Leveler before it.
+    {
+        const auto levelerIt = std::find (orderedModuleIds.begin(), orderedModuleIds.end(), levelerId);
+        const auto mtdmIt    = std::find (orderedModuleIds.begin(), orderedModuleIds.end(), mtdmId);
+
+        if (levelerIt == orderedModuleIds.end())
+        {
+            if (mtdmIt != orderedModuleIds.end())
+                orderedModuleIds.insert (mtdmIt, levelerId);
+            else
+                orderedModuleIds.insert (orderedModuleIds.begin(), levelerId);
+        }
+
+        if (std::find (orderedModuleIds.begin(), orderedModuleIds.end(), mtdmId) == orderedModuleIds.end())
+            orderedModuleIds.push_back (mtdmId);
+    }
+    // [END LVLR-MODGRAPH-ENSURE-ADDITIVE-INSERT]
 
     auto graph = std::make_shared<levelscope::ModuleGraph>();
     graph->revision = 3;
 
     for (const auto& id : orderedModuleIds)
     {
+        // [BEGIN LVLR-BINDPARAMS-CALL]
+        if (id == levelerId)
+        {
+            auto leveler = std::make_shared<levelscope::LevelerModule>();
+
+            leveler->bindParameters (
+                apvts.getRawParameterValue (levelscope::lvlr::ParamIDs::enabled),
+                apvts.getRawParameterValue (levelscope::lvlr::ParamIDs::targetLufs),
+                apvts.getRawParameterValue (levelscope::lvlr::ParamIDs::maxBoostDb),
+                apvts.getRawParameterValue (levelscope::lvlr::ParamIDs::maxCutDb),
+                apvts.getRawParameterValue (levelscope::lvlr::ParamIDs::measChoice),
+                apvts.getRawParameterValue (levelscope::lvlr::ParamIDs::modeChoice),
+                apvts.getRawParameterValue (levelscope::lvlr::ParamIDs::learn01),
+                apvts.getRawParameterValue (levelscope::lvlr::ParamIDs::rateUpDbPerSec),
+                apvts.getRawParameterValue (levelscope::lvlr::ParamIDs::rateDownDbPerSec),
+
+                apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::mcPolicyChoice),
+                apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::dialogDetectorChoice),
+                apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::dialogApplyChoice),
+                apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::lfeInDetector),
+                apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::lfeInApply));
+
+            // [BEGIN LS-LVLR-UI-HANDLE-STORE]
+            std::atomic_store_explicit (&levelerForUI, leveler, std::memory_order_release);
+            // [END LS-LVLR-UI-HANDLE-STORE]
+
+            graph->modules.push_back (leveler);
+        }
+        // [END LVLR-BINDPARAMS-CALL]
         // [BEGIN MTDM-BINDPARAMS-CALL-FULL-D1C]
         if (id == mtdmId)
         {
@@ -639,6 +799,11 @@ void LevelScopeAudioProcessor::rebuildModuleGraphFromState (const juce::MemoryBl
         // [END MTDM-BINDPARAMS-CALL-FULL-D1C]
         // Unknown modules are ignored (forward-compat)
     }
+
+    // [BEGIN LS-LVLR-UI-HANDLE-CLEAR-IF-NOT-SET]
+    if (std::find (orderedModuleIds.begin(), orderedModuleIds.end(), levelerId) == orderedModuleIds.end())
+        std::atomic_store_explicit (&levelerForUI, std::shared_ptr<levelscope::LevelerModule>{}, std::memory_order_release);
+    // [END LS-LVLR-UI-HANDLE-CLEAR-IF-NOT-SET]
 
     // [BEGIN LS-MTDM-UI-HANDLE-CLEAR-IF-NOT-SET]
     if (std::find (orderedModuleIds.begin(), orderedModuleIds.end(), mtdmId) == orderedModuleIds.end())
@@ -865,6 +1030,23 @@ LevelScopeAudioProcessor::UpwardMeteringSnapshot LevelScopeAudioProcessor::getUp
     return s;
 }
 // [END LS-UPWARD-METERING-SNAPSHOT-IMPL]
+
+// [BEGIN LS-LVLR-METERING-SNAPSHOT-IMPL]
+LevelScopeAudioProcessor::LevelerMeteringSnapshot LevelScopeAudioProcessor::getLevelerMeteringSnapshot() const noexcept
+{
+    LevelerMeteringSnapshot s;
+
+    auto m = std::atomic_load_explicit (&levelerForUI, std::memory_order_acquire);
+    if (! m)
+        return s;
+
+    const auto& met = m->getMetering();
+    s.gainDbCurrent   = met.gainDbCurrent.load   (std::memory_order_relaxed);
+    s.gainDbBlockPeak = met.gainDbBlockPeak.load (std::memory_order_relaxed);
+    s.gainDbHold      = met.gainDbHold.load      (std::memory_order_relaxed);
+    return s;
+}
+// [END LS-LVLR-METERING-SNAPSHOT-IMPL]
 
 // [BEGIN LS-LIMITER-METERING-SNAPSHOT-IMPL]
 LevelScopeAudioProcessor::LimiterMeteringSnapshot LevelScopeAudioProcessor::getLimiterMeteringSnapshot() const noexcept
@@ -1589,6 +1771,7 @@ void LevelScopeAudioProcessor::buildApvsStateChunk (juce::MemoryBlock& destData)
     vt.writeToStream (os);
 }
 
+// [BEGIN LVLR-MODG-BUILD-STATE-CHUNK]
 void LevelScopeAudioProcessor::buildModgStateChunk (juce::MemoryBlock& destData)
 {
     destData.setSize (0);
@@ -1596,17 +1779,27 @@ void LevelScopeAudioProcessor::buildModgStateChunk (juce::MemoryBlock& destData)
     juce::MemoryOutputStream os (destData, true);
     os.writeInt (1); // MODG schema version
 
-    // For Stage C2, persist module order + bypass byte.
-    const juce::String mtdmId = juce::String (levelscope::MultiThresholdDynamicsModule().getModuleID());
+    // Persist default graph order + bypass byte.
+    const juce::String levelerId = juce::String (levelscope::LevelerModule().getModuleID());
+    const juce::String mtdmId    = juce::String (levelscope::MultiThresholdDynamicsModule().getModuleID());
 
-    os.writeInt (1); // num modules
+    os.writeInt (2); // num modules: Leveler -> MTDM
+
+    os.writeString (levelerId);
+    {
+        const auto* enabled01 = apvts.getRawParameterValue (levelscope::lvlr::ParamIDs::enabled);
+        const bool bypassed = (enabled01 != nullptr ? (enabled01->load() < 0.5f) : true);
+        os.writeByte ((char) (bypassed ? 1 : 0));
+    }
+
     os.writeString (mtdmId);
-
-    // Mirror MTDM enabled state as graph-level bypass persistence.
-    const auto* enabled01 = apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::enabled);
-    const bool bypassed = (enabled01 != nullptr ? (enabled01->load() < 0.5f) : true);
-    os.writeByte ((char) (bypassed ? 1 : 0));
+    {
+        const auto* enabled01 = apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::enabled);
+        const bool bypassed = (enabled01 != nullptr ? (enabled01->load() < 0.5f) : true);
+        os.writeByte ((char) (bypassed ? 1 : 0));
+    }
 }
+// [END LVLR-MODG-BUILD-STATE-CHUNK]
 
 bool LevelScopeAudioProcessor::applyApvsStateChunk (const juce::MemoryBlock& apvsChunk)
 {

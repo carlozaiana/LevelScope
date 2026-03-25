@@ -22,7 +22,11 @@
 //==============================================================================
 
 // [BEGIN LS-UI-METERING-FWDDECL]
-namespace levelscope { class MultiThresholdDynamicsModule; }
+namespace levelscope
+{
+    class LevelerModule;
+    class MultiThresholdDynamicsModule;
+}
 // [END LS-UI-METERING-FWDDECL]
 
 // [BEGIN LS-LATENCY-LISTENER-CLASS]
@@ -146,6 +150,17 @@ public:
                                 bool hasCustomZoomX,
                                 bool valid) noexcept;
     // [END LS-UIST-PUBLIC-STATE]
+
+    // [BEGIN LS-LVLR-METERING-SNAPSHOT-API]
+    struct LevelerMeteringSnapshot
+    {
+        float gainDbCurrent   = 0.0f;
+        float gainDbBlockPeak = 0.0f;
+        float gainDbHold      = 0.0f;
+    };
+
+    LevelerMeteringSnapshot getLevelerMeteringSnapshot() const noexcept;
+    // [END LS-LVLR-METERING-SNAPSHOT-API]
 
     // [BEGIN LS-LIMITER-METERING-SNAPSHOT-API]
     struct LimiterMeteringSnapshot
@@ -297,6 +312,11 @@ private:
     // DSP module-chain host (Stage A: empty graph => no-op, no audible change)
     levelscope::ProcessorCore processorCore;
     // [END LS-PROCESSORCORE-MEMBER]
+
+    // [BEGIN LS-LVLR-UI-HANDLE]
+    // Non-RT handle for UI/meter polling. Stored atomically on graph rebuild.
+    std::shared_ptr<levelscope::LevelerModule> levelerForUI;
+    // [END LS-LVLR-UI-HANDLE]
 
     // [BEGIN LS-MTDM-UI-HANDLE]
     // Non-RT handle for UI/meter polling. Stored atomically on graph rebuild.
