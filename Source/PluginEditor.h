@@ -6,6 +6,10 @@
 // [END MTDM-PANEL-INCLUDE-MEMORY]
 #include "PluginProcessor.h"
 #include "VolumeHistoryComponent.h"
+// [BEGIN UI-CURVE-INCLUDES]
+#include "DynamicsCurveComponent.h"
+#include "LevelerCurveComponent.h"
+// [END UI-CURVE-INCLUDES]
 
 // [BEGIN UI3A-MISSIONCONTROL-DECL]
 //==============================================================================
@@ -495,6 +499,10 @@ public:
     void resized() override;
     int getPreferredHeight() const noexcept;
 
+    // [BEGIN UI-CURVE-SHARED-STRIP-DECL]
+    int getCurveStripWidthForContent (int totalContentWidth) const noexcept;
+    // [END UI-CURVE-SHARED-STRIP-DECL]
+
     void applyPersistedUiStateFromProcessor();
 
     // [BEGIN UI4B1-UPWARD-AUTOEXPAND-DECL]
@@ -543,6 +551,16 @@ private:
 
     static constexpr int barHeightPx = 8;
 
+    // [BEGIN UI-CURVE-SHARED-STRIP-CONSTANTS]
+    static constexpr int curveStripDefaultWidthPx    = 280;
+    static constexpr int curveStripMinWidthPx        = 180;
+    static constexpr int curveStripMaxWidthPx        = 520;
+    static constexpr int curveStripMinControlWidthPx = 420;
+
+    int curveStripWidthPxUser = curveStripDefaultWidthPx;
+    int dragStartCurveStripWidthPxUser = curveStripDefaultWidthPx;
+    // [END UI-CURVE-SHARED-STRIP-CONSTANTS]
+
     static constexpr int minLevellingPx = 50;
     static constexpr int minZonesPx     = 34;
     // [BEGIN UI4C-MINHEIGHT-AUDITION]
@@ -551,6 +569,24 @@ private:
     static constexpr int minUpwardPx    = 34;
     static constexpr int minDownwardPx  = 26;
     static constexpr int minLimiterPx   = 26;
+
+    // [BEGIN UI-CURVE-SHARED-STRIP-RESIZER-DECL]
+    class CurveStripResizerBar : public juce::Component
+    {
+    public:
+        explicit CurveStripResizerBar (MtdmCardsContent& ownerIn);
+
+        void paint (juce::Graphics& g) override;
+        void mouseDown (const juce::MouseEvent& e) override;
+        void mouseDrag (const juce::MouseEvent& e) override;
+
+    private:
+        MtdmCardsContent& owner;
+        int dragStartScreenX = 0;
+
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CurveStripResizerBar)
+    };
+    // [END UI-CURVE-SHARED-STRIP-RESIZER-DECL]
 
     class CardResizerBar : public juce::Component
     {
@@ -595,6 +631,10 @@ private:
     CardResizerBar bar34 { *this, CardResizerBar::Boundary::upwardDownward };
     CardResizerBar bar45 { *this, CardResizerBar::Boundary::downwardLimiter };
     CardResizerBar bar56 { *this, CardResizerBar::Boundary::limiterTail };
+
+    // [BEGIN UI-CURVE-SHARED-STRIP-MEMBER]
+    CurveStripResizerBar curveStripBar { *this };
+    // [END UI-CURVE-SHARED-STRIP-MEMBER]
     // [END UI4C-BARS-REPLACE]
 
     void applyDragToBoundary (CardResizerBar::Boundary b, int dy);

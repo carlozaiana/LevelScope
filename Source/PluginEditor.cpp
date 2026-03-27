@@ -2060,6 +2060,10 @@ MtdmCardsContent::MtdmCardsContent (LevelScopeAudioProcessor& p)
     addAndMakeVisible (bar45);
     addAndMakeVisible (limiter);
     addAndMakeVisible (bar56);
+
+    // [BEGIN UI-CURVE-SHARED-STRIP-CTOR]
+    addAndMakeVisible (curveStripBar);
+    // [END UI-CURVE-SHARED-STRIP-CTOR]
 }
 // [END UI4C-CONTENT-CTOR-REPLACE]
 
@@ -2094,6 +2098,25 @@ void MtdmCardsContent::syncPersistedCardHeightsToProcessor() const
     h.limiter   = cardHeights.limiter;
     processor.setUiCardHeights (h);
 }
+
+// [BEGIN UI-CURVE-SHARED-STRIP-WIDTH-IMPL]
+int MtdmCardsContent::getCurveStripWidthForContent (int totalContentWidth) const noexcept
+{
+    totalContentWidth = juce::jmax (0, totalContentWidth);
+
+    // If the content gets too narrow, collapse the curve strip entirely.
+    if (totalContentWidth < curveStripMinControlWidthPx + 120)
+        return 0;
+
+    const int maxByAvailableSpace = juce::jmin (curveStripMaxWidthPx,
+                                                totalContentWidth - curveStripMinControlWidthPx);
+
+    if (maxByAvailableSpace < curveStripMinWidthPx)
+        return 0;
+
+    return juce::jlimit (curveStripMinWidthPx, maxByAvailableSpace, curveStripWidthPxUser);
+}
+// [END UI-CURVE-SHARED-STRIP-WIDTH-IMPL]
 
 // [BEGIN UI4A3-CARDS-ACCORDION-PREFERREDHEIGHT]
 int MtdmCardsContent::getPreferredHeight() const noexcept
@@ -2138,6 +2161,21 @@ void MtdmCardsContent::resized()
     bar45.setBounds     (takeBar());
     limiter.setBounds   (takeCard (cardHeights.limiter));
     bar56.setBounds     (takeBar());
+
+    // [BEGIN UI-CURVE-SHARED-STRIP-RESIZED]
+    const int stripW = getCurveStripWidthForContent (getWidth());
+    if (stripW > 0)
+    {
+        const int x = juce::jmax (0, getWidth() - stripW - 3);
+        curveStripBar.setBounds (x, 0, 6, getHeight());
+        curveStripBar.setVisible (true);
+        curveStripBar.toFront (false);
+    }
+    else
+    {
+        curveStripBar.setVisible (false);
+    }
+    // [END UI-CURVE-SHARED-STRIP-RESIZED]
 
     contentPreferredHeightPx = getHeight();
 }
@@ -2230,6 +2268,50 @@ void MtdmCardsContent::applyDragToBoundary (CardResizerBar::Boundary b, int dy)
 
     syncPersistedCardHeightsToProcessor();
 }
+
+// [BEGIN UI-CURVE-SHARED-STRIP-RESIZER-IMPL]
+MtdmCardsContent::CurveStripResizerBar::CurveStripResizerBar (MtdmCardsContent& ownerIn)
+    : owner (ownerIn)
+{
+    setMouseCursor (juce::MouseCursor::LeftRightResizeCursor);
+    setRepaintsOnMouseActivity (true);
+}
+
+void MtdmCardsContent::CurveStripResizerBar::paint (juce::Graphics& g)
+{
+    auto r = getLocalBounds().toFloat();
+
+    const bool over = isMouseOver();
+    const float a = over ? 0.30f : 0.18f;
+
+    g.setColour (juce::Colours::white.withMultipliedAlpha (a));
+    g.drawVerticalLine ((int) std::round (r.getCentreX()), r.getY(), r.getBottom());
+
+    g.setColour (juce::Colours::white.withMultipliedAlpha (over ? 0.38f : 0.24f));
+    const float cx = r.getCentreX();
+    g.drawLine (cx, r.getY() + 14.0f, cx, r.getY() + 44.0f, 2.0f);
+}
+
+void MtdmCardsContent::CurveStripResizerBar::mouseDown (const juce::MouseEvent& e)
+{
+    dragStartScreenX = e.getScreenPosition().x;
+    owner.dragStartCurveStripWidthPxUser = owner.curveStripWidthPxUser;
+}
+
+void MtdmCardsContent::CurveStripResizerBar::mouseDrag (const juce::MouseEvent& e)
+{
+    const int dx = e.getScreenPosition().x - dragStartScreenX;
+
+    // Dragging left increases curve width, dragging right decreases it.
+    owner.curveStripWidthPxUser = owner.dragStartCurveStripWidthPxUser - dx;
+    owner.curveStripWidthPxUser = juce::jlimit (MtdmCardsContent::curveStripMinWidthPx,
+                                                MtdmCardsContent::curveStripMaxWidthPx,
+                                                owner.curveStripWidthPxUser);
+
+    owner.resized();
+    owner.repaint();
+}
+// [END UI-CURVE-SHARED-STRIP-RESIZER-IMPL]
 // [END UI4A3-CARDS-ACCORDION-RESIZER-IMPL]
 
 // [BEGIN UI4B1-UPWARD-AUTOEXPAND-IMPL]
