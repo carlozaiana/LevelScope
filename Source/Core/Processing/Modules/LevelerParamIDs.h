@@ -28,6 +28,17 @@ namespace levelscope::lvlr
         // Rate limiting for applied gain movement (dB/sec)
         static constexpr const char* rateUpDbPerSec    = "lvlr.rateUpDbPerSec";
         static constexpr const char* rateDownDbPerSec  = "lvlr.rateDownDbPerSec";
+
+        // Control source:
+        // 0 = Internal, 1 = Host Gain
+        static constexpr const char* controlModeChoice = "lvlr.controlModeChoice";
+
+        // Host-editable gain lane (dB)
+        static constexpr const char* hostGainDb        = "lvlr.hostGainDb";
+
+        // Explicit capture arm:
+        // when true in Internal mode, plugin writes adaptive gain into hostGainDb
+        static constexpr const char* captureToHost01   = "lvlr.captureToHost01";
     }
 
     namespace Defaults
@@ -43,6 +54,10 @@ namespace levelscope::lvlr
 
         static constexpr float rateUpDbPerSec     = 1.0f;
         static constexpr float rateDownDbPerSec   = 3.0f;
+
+        static constexpr int   controlModeChoice  = 0;      // Internal
+        static constexpr float hostGainDb         = 0.0f;
+        static constexpr float captureToHost01    = 0.0f;   // false
     }
 
     namespace Ranges
@@ -61,6 +76,9 @@ namespace levelscope::lvlr
 
         static constexpr float rateDownMinDbPerSec  = 0.1f;
         static constexpr float rateDownMaxDbPerSec  = 24.0f;
+
+        static constexpr float hostGainMinDb        = -24.0f;
+        static constexpr float hostGainMaxDb        =  24.0f;
     }
     // [END LVLR-PARAM-IDS]
 } // namespace levelscope::lvlr

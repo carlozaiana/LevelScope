@@ -47,6 +47,12 @@ namespace levelscope
             modeLearnHold
         };
 
+        enum ControlModeChoice
+        {
+            controlInternal = 0,
+            controlHostGain
+        };
+
         struct Metering
         {
             std::atomic<float> gainDbCurrent   { 0.0f };
@@ -90,6 +96,8 @@ namespace levelscope
                              std::atomic<float>* learn01Param,
                              std::atomic<float>* rateUpDbPerSecParam,
                              std::atomic<float>* rateDownDbPerSecParam,
+                             std::atomic<float>* controlModeChoiceParam,
+                             std::atomic<float>* hostGainDbParam,
                              std::atomic<float>* mcPolicyChoiceParam,
                              std::atomic<float>* dialogDetectorChoiceParam,
                              std::atomic<float>* dialogApplyChoiceParam,
@@ -110,6 +118,8 @@ namespace levelscope
         std::atomic<float>* pLearn01               = nullptr;
         std::atomic<float>* pRateUpDbPerSec        = nullptr;
         std::atomic<float>* pRateDownDbPerSec      = nullptr;
+        std::atomic<float>* pControlModeChoice     = nullptr;
+        std::atomic<float>* pHostGainDb            = nullptr;
 
         // Reused shared routing policy params (currently under mtdm.* namespace)
         std::atomic<float>* pMcPolicyChoice        = nullptr;

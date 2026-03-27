@@ -57,6 +57,8 @@ namespace levelscope
                                         std::atomic<float>* learn01Param,
                                         std::atomic<float>* rateUpDbPerSecParam,
                                         std::atomic<float>* rateDownDbPerSecParam,
+                                        std::atomic<float>* controlModeChoiceParam,
+                                        std::atomic<float>* hostGainDbParam,
                                         std::atomic<float>* mcPolicyChoiceParam,
                                         std::atomic<float>* dialogDetectorChoiceParam,
                                         std::atomic<float>* dialogApplyChoiceParam,
@@ -72,6 +74,8 @@ namespace levelscope
         pLearn01              = learn01Param;
         pRateUpDbPerSec       = rateUpDbPerSecParam;
         pRateDownDbPerSec     = rateDownDbPerSecParam;
+        pControlModeChoice    = controlModeChoiceParam;
+        pHostGainDb           = hostGainDbParam;
 
         pMcPolicyChoice       = mcPolicyChoiceParam;
         pDialogDetectorChoice = dialogDetectorChoiceParam;
@@ -468,7 +472,7 @@ namespace levelscope
         metering.gainDbHold.store (hold, std::memory_order_relaxed);
     }
 
-    // [BEGIN LVLR-PROCESS-FIXED-DETECTOR-TIMING]
+    // [BEGIN LVLR-PROCESS-INTERNAL-VS-HOSTGAIN]
     void LevelerModule::process (ProcessContext& ctx) noexcept
     {
         auto& audio = ctx.audio;
@@ -508,6 +512,11 @@ namespace levelscope
         const int modeChoice =
             juce::jlimit (0, 1, readChoiceOrDefault (pModeChoice, lvlr::Defaults::modeChoice));
 
+        const int controlModeChoice =
+            juce::jlimit (0, 1, readChoiceOrDefault (pControlModeChoice, lvlr::Defaults::controlModeChoice));
+
+        const bool useHostGain = (controlModeChoice == controlHostGain);
+
         const bool learnOn =
             (readParamOrDefault (pLearn01, lvlr::Defaults::learn01) >= 0.5f);
 
@@ -523,10 +532,14 @@ namespace levelscope
                          lvlr::Ranges::rateDownMaxDbPerSec,
                          lvlr::Defaults::rateDownDbPerSec);
 
-        // Learn-Hold commit edges:
-        // 1) Learn ON -> OFF
-        // 2) playing -> stopped while learning
-        if (modeChoice == modeLearnHold)
+        const float hostGainDb =
+            clampFinite (readParamOrDefault (pHostGainDb, lvlr::Defaults::hostGainDb),
+                         lvlr::Ranges::hostGainMinDb,
+                         lvlr::Ranges::hostGainMaxDb,
+                         lvlr::Defaults::hostGainDb);
+
+        // Learn-Hold commit edges are relevant only for the Internal algorithm path.
+        if (! useHostGain && modeChoice == modeLearnHold)
         {
             if (learnWasOnLastBlock && ! learnOn)
                 commitLearnedGain();
@@ -542,7 +555,15 @@ namespace levelscope
 
         if (enabled && ! bypass)
         {
-            if (mcPolicyChoice == 2) // Unlinked
+            if (useHostGain)
+            {
+                for (int ch = 0; ch < numChannels; ++ch)
+                {
+                    const uint16_t bit = bitForChannel (ch);
+                    desiredGainDbByChannel[(size_t) ch] = ((applyMaskBits & bit) != 0 ? hostGainDb : 0.0f);
+                }
+            }
+            else if (mcPolicyChoice == 2) // Unlinked
             {
                 for (int ch = 0; ch < numChannels; ++ch)
                 {
@@ -610,48 +631,90 @@ namespace levelscope
             }
         }
 
-        for (int ch = 0; ch < numChannels; ++ch)
-        {
-            currentGainDbByChannel[(size_t) ch] =
-                applyRateLimitDb (currentGainDbByChannel[(size_t) ch],
-                                  desiredGainDbByChannel[(size_t) ch],
-                                  rateUpDbPerSec,
-                                  rateDownDbPerSec,
-                                  numSamples);
-        }
-
+        std::array<float, maxSupportedChannels> blockStartGainDbByChannel {};
+        std::array<float, maxSupportedChannels> blockEndGainDbByChannel   {};
         std::array<float*, maxSupportedChannels> writePtrs {};
         std::array<float,  maxSupportedChannels> gainLinByChannel {};
 
         for (int ch = 0; ch < numChannels; ++ch)
         {
+            blockStartGainDbByChannel[(size_t) ch] = currentGainDbByChannel[(size_t) ch];
+
+            blockEndGainDbByChannel[(size_t) ch] =
+                (useHostGain
+                    ? desiredGainDbByChannel[(size_t) ch]
+                    : applyRateLimitDb (currentGainDbByChannel[(size_t) ch],
+                                        desiredGainDbByChannel[(size_t) ch],
+                                        rateUpDbPerSec,
+                                        rateDownDbPerSec,
+                                        numSamples));
+
+            currentGainDbByChannel[(size_t) ch] = blockEndGainDbByChannel[(size_t) ch];
             writePtrs[(size_t) ch] = audio.getWritePointer (ch);
-            gainLinByChannel[(size_t) ch] = juce::Decibels::decibelsToGain (currentGainDbByChannel[(size_t) ch]);
+
+            if (! useHostGain)
+                gainLinByChannel[(size_t) ch] = juce::Decibels::decibelsToGain (blockEndGainDbByChannel[(size_t) ch]);
         }
 
         if (ctx.isDiscontinuity)
             resetDetectorState();
 
-        for (int i = 0; i < numSamples; ++i)
+        const bool runDetector = (enabled && ! bypass && ! ctx.freezeAnalysis);
+
+        if (useHostGain)
         {
-            if (! ctx.freezeAnalysis)
+            for (int i = 0; i < numSamples; ++i)
             {
+                if (runDetector)
+                {
+                    for (int ch = 0; ch < numChannels; ++ch)
+                    {
+                        const float x = writePtrs[(size_t) ch][i];
+                        const float y = kWeight.processSample (ch, x);
+                        frameEnergyAccumByChannel[(size_t) ch] += (double) y * (double) y;
+                    }
+
+                    if (--samplesUntilNextFrame <= 0)
+                    {
+                        samplesUntilNextFrame += frameSamples;
+                        pushDetectorFrameFromAccumulatedEnergy (numChannels);
+                    }
+                }
+
+                const float alpha = (numSamples > 1 ? (float) i / (float) (numSamples - 1) : 1.0f);
+
                 for (int ch = 0; ch < numChannels; ++ch)
                 {
-                    const float x = writePtrs[(size_t) ch][i];
-                    const float y = kWeight.processSample (ch, x);
-                    frameEnergyAccumByChannel[(size_t) ch] += (double) y * (double) y;
-                }
-
-                if (--samplesUntilNextFrame <= 0)
-                {
-                    samplesUntilNextFrame += frameSamples;
-                    pushDetectorFrameFromAccumulatedEnergy (numChannels);
+                    const float startDb = blockStartGainDbByChannel[(size_t) ch];
+                    const float endDb   = blockEndGainDbByChannel[(size_t) ch];
+                    const float gDb     = startDb + (endDb - startDb) * alpha;
+                    writePtrs[(size_t) ch][i] *= juce::Decibels::decibelsToGain (gDb);
                 }
             }
+        }
+        else
+        {
+            for (int i = 0; i < numSamples; ++i)
+            {
+                if (runDetector)
+                {
+                    for (int ch = 0; ch < numChannels; ++ch)
+                    {
+                        const float x = writePtrs[(size_t) ch][i];
+                        const float y = kWeight.processSample (ch, x);
+                        frameEnergyAccumByChannel[(size_t) ch] += (double) y * (double) y;
+                    }
 
-            for (int ch = 0; ch < numChannels; ++ch)
-                writePtrs[(size_t) ch][i] *= gainLinByChannel[(size_t) ch];
+                    if (--samplesUntilNextFrame <= 0)
+                    {
+                        samplesUntilNextFrame += frameSamples;
+                        pushDetectorFrameFromAccumulatedEnergy (numChannels);
+                    }
+                }
+
+                for (int ch = 0; ch < numChannels; ++ch)
+                    writePtrs[(size_t) ch][i] *= gainLinByChannel[(size_t) ch];
+            }
         }
 
         updateMeteringFromAppliedGain (numChannels, numSamples);
@@ -659,6 +722,6 @@ namespace levelscope
         wasPlayingLastBlock = ctx.isPlaying;
         learnWasOnLastBlock = learnOn;
     }
-    // [END LVLR-PROCESS-FIXED-DETECTOR-TIMING]
+    // [END LVLR-PROCESS-INTERNAL-VS-HOSTGAIN]
     // [END LVLR-MODULE-IMPL]
 } // namespace levelscope
