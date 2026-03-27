@@ -137,6 +137,10 @@ target_sources(LevelScope
         Source/PluginProcessor.h
         Source/PluginEditor.cpp
         Source/PluginEditor.h
+        Source/DynamicsCurveComponent.cpp
+        Source/DynamicsCurveComponent.h
+        Source/LevelerCurveComponent.cpp
+        Source/LevelerCurveComponent.h
         Source/VolumeHistoryComponent.cpp
         Source/VolumeHistoryComponent.h
         Source/VolumeHistoryComponent_History.cpp
