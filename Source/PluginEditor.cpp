@@ -790,12 +790,17 @@ void MtdmCardComponent::resized()
 
 LevelerCard::LevelerCard (LevelScopeAudioProcessor& p)
     : MtdmCardComponent ("Leveler"),
-      apvts (p.getAPVTS())
+      apvts (p.getAPVTS()),
+      curve (p)
 {
     // [BEGIN LVLR-CARD-CTOR]
     addAndMakeVisible (enabledButton);
     enabledButton.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.92f));
     enabledAtt = std::make_unique<ButtonAttachment> (apvts, "lvlr.enabled", enabledButton);
+
+    // [BEGIN UI-CURVE-LVLR-ADDVISIBLE]
+    addAndMakeVisible (curve);
+    // [END UI-CURVE-LVLR-ADDVISIBLE]
 
     styleLabel (targetLabel,   "Target");
     styleLabel (maxBoostLabel, "Max Boost");
@@ -857,6 +862,17 @@ void LevelerCard::resized()
     MtdmCardComponent::resized();
     auto r = getContentArea();
 
+    int curveW = 0;
+    if (auto* owner = findParentComponentOfClass<MtdmCardsContent>())
+        curveW = owner->getCurveStripWidthForContent (r.getWidth());
+
+    juce::Rectangle<int> curveArea;
+    if (curveW > 0)
+    {
+        curveArea = r.removeFromRight (curveW);
+        r.removeFromRight (8); // gap between controls and curve strip
+    }
+
     const bool compact = (r.getHeight() < 110);
 
     targetLabel.setVisible (! compact);   targetSlider.setVisible (! compact);
@@ -867,6 +883,10 @@ void LevelerCard::resized()
     rateUpLabel.setVisible (! compact);   rateUpSlider.setVisible (! compact);
     rateDownLabel.setVisible (! compact); rateDownSlider.setVisible (! compact);
     learnButton.setVisible (! compact);
+
+    curve.setVisible (! compact && curveArea.getWidth() > 40 && curveArea.getHeight() > 40);
+    if (curve.isVisible())
+        curve.setBounds (curveArea.reduced (4));
 
     enabledButton.setBounds (r.removeFromTop (22));
 
@@ -1626,7 +1646,8 @@ void MtdmUpwardCard::resized()
 MtdmDownwardCard::MtdmDownwardCard (LevelScopeAudioProcessor& p)
     : MtdmCardComponent (""), // title hidden; enabled toggle acts as header
       processor (p),
-      apvts (p.getAPVTS())
+      apvts (p.getAPVTS()),
+      curve (p, DynamicsCurveComponent::CurveKind::downward)
 {
     title.setVisible (false);
     // [END UI4A3-DOWNWARD-HIDE-TITLE]
@@ -1635,6 +1656,10 @@ MtdmDownwardCard::MtdmDownwardCard (LevelScopeAudioProcessor& p)
     enabledButton.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.90f));
     addAndMakeVisible (enabledButton);
     enabledAtt = std::make_unique<ButtonAttachment> (apvts, downEnabled01, enabledButton);
+
+    // [BEGIN UI-CURVE-DOWN-CTOR]
+    addAndMakeVisible (curve);
+    // [END UI-CURVE-DOWN-CTOR]
 
     // [BEGIN UI-DOWN-BYPASS-CTOR]
     bypassButton.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.85f));
@@ -1747,6 +1772,17 @@ void MtdmDownwardCard::resized()
     MtdmCardComponent::resized();
     auto r = getContentArea();
 
+    int curveW = 0;
+    if (auto* owner = findParentComponentOfClass<MtdmCardsContent>())
+        curveW = owner->getCurveStripWidthForContent (r.getWidth());
+
+    juce::Rectangle<int> curveArea;
+    if (curveW > 0)
+    {
+        curveArea = r.removeFromRight (curveW);
+        r.removeFromRight (8); // gap between controls and curve strip
+    }
+
     // Top row: Enabled toggle + Advanced toggle on same line
     // [BEGIN UI-DOWN-HEADER-ENABLE-BYPASS-ADV]
     auto topRow = r.removeFromTop (22);
@@ -1768,6 +1804,10 @@ void MtdmDownwardCard::resized()
     attackLabel.setVisible (! compact);  attackSlider.setVisible (! compact);
     releaseLabel.setVisible (! compact); releaseSlider.setVisible (! compact);
     makeupLabel.setVisible (! compact);  makeupSlider.setVisible (! compact);
+
+    curve.setVisible (! compact && curveArea.getWidth() > 40 && curveArea.getHeight() > 40);
+    if (curve.isVisible())
+        curve.setBounds (curveArea.reduced (4));
 
     if (compact)
     {

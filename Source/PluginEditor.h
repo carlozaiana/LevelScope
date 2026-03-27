@@ -198,6 +198,10 @@ public:
 private:
     juce::AudioProcessorValueTreeState& apvts;
 
+    // [BEGIN UI-CURVE-LVLR-MEMBER]
+    LevelerCurveComponent curve;
+    // [END UI-CURVE-LVLR-MEMBER]
+
     juce::ToggleButton enabledButton { "Enabled" };
 
     juce::Label targetLabel, maxBoostLabel, maxCutLabel;
@@ -393,6 +397,10 @@ private:
     LevelScopeAudioProcessor& processor;
     juce::AudioProcessorValueTreeState& apvts;
 
+    // [BEGIN UI-CURVE-DOWN-MEMBER]
+    DynamicsCurveComponent curve;
+    // [END UI-CURVE-DOWN-MEMBER]
+
     // [BEGIN UI4B3-DOWNWARD-ADVANCED-MEMBERS]
     // [BEGIN UI-DOWN-BYP-MEMBERS]
     juce::ToggleButton enabledButton { "Downward Enabled" };
@@ -538,7 +546,7 @@ private:
     // [BEGIN UI4C-CARDHEIGHTS-ADD-AUDITION]
     struct CardHeights
     {
-        int levelling = 240;
+        int levelling = 260;
         int zones     = 220;
         int audition  = 110;
         int upward    = 220;
