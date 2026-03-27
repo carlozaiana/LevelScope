@@ -1083,8 +1083,30 @@ void LevelScopeAudioProcessor::updateLevelerHostGainCapture_NonRT()
     const bool captureArmed =
         (captureRaw != nullptr && captureRaw->load (std::memory_order_relaxed) >= 0.5f);
 
-    const bool shouldCapture =
-        (controlMode == levelscope::LevelerModule::controlInternal) && captureArmed;
+    const bool controlModeIsInternal =
+        (controlMode == levelscope::LevelerModule::controlInternal);
+
+    const bool transportPlaying = getTransportIsEffectivelyPlaying();
+
+    // Safety rule 1:
+    // If user leaves Internal mode, capture arm must switch OFF.
+    if (captureArmed && ! controlModeIsInternal)
+    {
+        forceDisarmLevelerHostGainCapture_NonRT();
+        return;
+    }
+
+    // Safety rule 2:
+    // If capture had actually started and playback stops, switch arm OFF.
+    // We only do this when a capture gesture was active, so arming while stopped
+    // does not immediately disarm before playback begins.
+    if (captureArmed && levelerHostGainGestureActive && ! transportPlaying)
+    {
+        forceDisarmLevelerHostGainCapture_NonRT();
+        return;
+    }
+
+    const bool shouldCapture = controlModeIsInternal && captureArmed && transportPlaying;
 
     auto* hostGainParam = apvts.getParameter (levelscope::lvlr::ParamIDs::hostGainDb);
 
