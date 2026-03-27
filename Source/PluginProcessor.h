@@ -340,7 +340,7 @@ private:
 
     juce::uint32             lastObservedProcessBlockSequence = 0;
     int                      processBlockQuietTimerTicks = 0;
-    static constexpr int     processBlockFreshnessTimeoutTicks = 4; // 10 Hz timer => ~400 ms
+    static constexpr int     processBlockFreshnessTimeoutTicks = 12; // 30 Hz timer => ~400 ms
 
     // [BEGIN LS-IO-METERING-ATOMICS]
     // Input/Output metering (max across channels). Updated on audio thread, read on UI thread.
@@ -394,8 +394,19 @@ private:
 
     std::atomic<bool> latencyDirty { false };
 
+    // [BEGIN LVLR-HOSTGAIN-CAPTURE-MEMBERS]
+    bool  levelerHostGainGestureActive = false;
+    bool  haveLastSentLevelerHostGainDb = false;
+    float lastSentLevelerHostGainDb = 0.0f;
+    // [END LVLR-HOSTGAIN-CAPTURE-MEMBERS]
+
     void registerLatencyParamListeners();
     void unregisterLatencyParamListeners();
+    // [BEGIN LVLR-HOSTGAIN-CAPTURE-DECL]
+    void updateLevelerHostGainCapture_NonRT();
+    void endLevelerHostGainCaptureGesture_NonRT();
+    void forceDisarmLevelerHostGainCapture_NonRT();
+    // [END LVLR-HOSTGAIN-CAPTURE-DECL]
     // [END LS-LATENCY-LISTENER-DECL]
 
     // [BEGIN LS-LATENCY-CACHED-PARAMS]

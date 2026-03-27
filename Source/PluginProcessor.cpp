@@ -100,22 +100,26 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
     using namespace levelscope::mtdm;
 
     // [BEGIN LVLR-STRUCTURAL-PARAM-SOURCE-OF-TRUTH]
-    // Leveler v1 parameter policy/source-of-truth block.
+    // Leveler parameter policy/source-of-truth block.
     // Keep this block in sync with:
     //   1) APVTS automatable/non-automatable flags
-    //   2) UI playback-lock rules (when Leveler UI is added)
+    //   2) UI enable/disable rules
     //   3) module binding order
+    //   4) host-gain capture logic in PluginProcessor timerCallback()
     //
     // Leveler-specific params
     // - levelscope::lvlr::ParamIDs::enabled
     // - levelscope::lvlr::ParamIDs::targetLufs
     // - levelscope::lvlr::ParamIDs::maxBoostDb
     // - levelscope::lvlr::ParamIDs::maxCutDb
-    // - levelscope::lvlr::ParamIDs::measChoice       // non-automatable
-    // - levelscope::lvlr::ParamIDs::modeChoice       // non-automatable
-    // - levelscope::lvlr::ParamIDs::learn01          // non-automatable
+    // - levelscope::lvlr::ParamIDs::measChoice          // non-automatable
+    // - levelscope::lvlr::ParamIDs::modeChoice          // non-automatable
+    // - levelscope::lvlr::ParamIDs::learn01             // non-automatable
     // - levelscope::lvlr::ParamIDs::rateUpDbPerSec
     // - levelscope::lvlr::ParamIDs::rateDownDbPerSec
+    // - levelscope::lvlr::ParamIDs::controlModeChoice   // non-automatable
+    // - levelscope::lvlr::ParamIDs::hostGainDb          // automatable host-editable lane
+    // - levelscope::lvlr::ParamIDs::captureToHost01     // non-automatable; forcibly disarmed on state load
     //
     // Reused shared routing-policy params (currently under mtdm.* namespace)
     // - ParamIDs::mcPolicyChoice
@@ -165,6 +169,27 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
         "Leveler Enabled",
         (levelscope::lvlr::Defaults::enabled01 >= 0.5f)));
 
+    layout.add (std::make_unique<juce::AudioParameterChoice> (
+        juce::ParameterID { levelscope::lvlr::ParamIDs::controlModeChoice, 1 },
+        "Leveler Control Mode",
+        juce::StringArray { "Internal", "Host Gain" },
+        levelscope::lvlr::Defaults::controlModeChoice,
+        juce::AudioParameterChoiceAttributes().withAutomatable (false)));
+
+    layout.add (std::make_unique<juce::AudioParameterFloat> (
+        juce::ParameterID { levelscope::lvlr::ParamIDs::hostGainDb, 1 },
+        "Leveler Host Gain (dB)",
+        juce::NormalisableRange<float> (levelscope::lvlr::Ranges::hostGainMinDb,
+                                        levelscope::lvlr::Ranges::hostGainMaxDb,
+                                        0.1f),
+        levelscope::lvlr::Defaults::hostGainDb));
+
+    layout.add (std::make_unique<juce::AudioParameterBool> (
+        juce::ParameterID { levelscope::lvlr::ParamIDs::captureToHost01, 1 },
+        "Leveler Capture To Host Gain",
+        (levelscope::lvlr::Defaults::captureToHost01 >= 0.5f),
+        juce::AudioParameterBoolAttributes().withAutomatable (false)));
+
     layout.add (std::make_unique<juce::AudioParameterFloat> (
         juce::ParameterID { levelscope::lvlr::ParamIDs::targetLufs, 1 },
         "Leveler Target (LUFS)",
@@ -198,8 +223,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout LevelScopeAudioProcessor::cr
 
     layout.add (std::make_unique<juce::AudioParameterChoice> (
         juce::ParameterID { levelscope::lvlr::ParamIDs::modeChoice, 1 },
-        "Leveler Mode",
-        juce::StringArray { "Adaptive", "Learn-Hold" },
+        "Leveler Algorithm Mode",
+        juce::StringArray { "Continuous", "Learn-Hold" },
         levelscope::lvlr::Defaults::modeChoice,
         juce::AudioParameterChoiceAttributes().withAutomatable (false)));
 
@@ -703,6 +728,8 @@ void LevelScopeAudioProcessor::rebuildModuleGraphFromState (const juce::MemoryBl
                 apvts.getRawParameterValue (levelscope::lvlr::ParamIDs::learn01),
                 apvts.getRawParameterValue (levelscope::lvlr::ParamIDs::rateUpDbPerSec),
                 apvts.getRawParameterValue (levelscope::lvlr::ParamIDs::rateDownDbPerSec),
+                apvts.getRawParameterValue (levelscope::lvlr::ParamIDs::controlModeChoice),
+                apvts.getRawParameterValue (levelscope::lvlr::ParamIDs::hostGainDb),
 
                 apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::mcPolicyChoice),
                 apvts.getRawParameterValue (levelscope::mtdm::ParamIDs::dialogDetectorChoice),
@@ -926,6 +953,7 @@ void LevelScopeAudioProcessor::updateLatencyFromAPVTS_NonRT()
 LevelScopeAudioProcessor::~LevelScopeAudioProcessor()
 {
     stopTimer();
+    endLevelerHostGainCaptureGesture_NonRT();
     unregisterLatencyParamListeners();
 }
 
@@ -943,8 +971,13 @@ void LevelScopeAudioProcessor::registerLatencyParamListeners()
     apvts.addParameterListener (limLookaheadMs, this);
     apvts.addParameterListener (limOversamplingChoice, this);
 
-    // 10 Hz polling on message thread to apply latency updates non-RT.
-    startTimerHz (10);
+    // [BEGIN LVLR-HOSTGAIN-CAPTURE-TIMER-RATE]
+    // 30 Hz message-thread timer:
+    // - latency updates remain cheap
+    // - transport freshness watchdog still works
+    // - Leveler host-gain capture uses this cadence
+    startTimerHz (30);
+    // [END LVLR-HOSTGAIN-CAPTURE-TIMER-RATE]
 }
 
 void LevelScopeAudioProcessor::unregisterLatencyParamListeners()
@@ -1004,14 +1037,84 @@ void LevelScopeAudioProcessor::timerCallback()
         }
     }
 
-    if (! latencyDirty.exchange (false, std::memory_order_acq_rel))
-        return;
+    if (latencyDirty.exchange (false, std::memory_order_acq_rel))
+    {
+        updateLatencyFromAPVTS_NonRT();
 
-    updateLatencyFromAPVTS_NonRT();
+        // Helps some hosts refresh; safe on message thread.
+        updateHostDisplay();
+    }
 
-    // Helps some hosts refresh; safe on message thread.
-    updateHostDisplay();
+    // [BEGIN LVLR-HOSTGAIN-CAPTURE-TIMER]
+    updateLevelerHostGainCapture_NonRT();
+    // [END LVLR-HOSTGAIN-CAPTURE-TIMER]
 }
+
+// [BEGIN LVLR-HOSTGAIN-CAPTURE-IMPL]
+void LevelScopeAudioProcessor::endLevelerHostGainCaptureGesture_NonRT()
+{
+    if (levelerHostGainGestureActive)
+    {
+        if (auto* hostGainParam = apvts.getParameter (levelscope::lvlr::ParamIDs::hostGainDb))
+            hostGainParam->endChangeGesture();
+    }
+
+    levelerHostGainGestureActive = false;
+    haveLastSentLevelerHostGainDb = false;
+}
+
+void LevelScopeAudioProcessor::forceDisarmLevelerHostGainCapture_NonRT()
+{
+    endLevelerHostGainCaptureGesture_NonRT();
+
+    if (auto* captureParam = apvts.getParameter (levelscope::lvlr::ParamIDs::captureToHost01))
+        captureParam->setValueNotifyingHost (0.0f);
+}
+
+void LevelScopeAudioProcessor::updateLevelerHostGainCapture_NonRT()
+{
+    const auto* controlModeRaw = apvts.getRawParameterValue (levelscope::lvlr::ParamIDs::controlModeChoice);
+    const auto* captureRaw     = apvts.getRawParameterValue (levelscope::lvlr::ParamIDs::captureToHost01);
+
+    const int controlMode =
+        (controlModeRaw != nullptr ? (int) std::lround (controlModeRaw->load (std::memory_order_relaxed))
+                                   : levelscope::lvlr::Defaults::controlModeChoice);
+
+    const bool captureArmed =
+        (captureRaw != nullptr && captureRaw->load (std::memory_order_relaxed) >= 0.5f);
+
+    const bool shouldCapture =
+        (controlMode == levelscope::LevelerModule::controlInternal) && captureArmed;
+
+    auto* hostGainParam = apvts.getParameter (levelscope::lvlr::ParamIDs::hostGainDb);
+
+    if (! shouldCapture || hostGainParam == nullptr)
+    {
+        endLevelerHostGainCaptureGesture_NonRT();
+        return;
+    }
+
+    if (! levelerHostGainGestureActive)
+    {
+        hostGainParam->beginChangeGesture();
+        levelerHostGainGestureActive = true;
+        haveLastSentLevelerHostGainDb = false;
+    }
+
+    const auto snap = getLevelerMeteringSnapshot();
+    const float capturedDb = juce::jlimit (levelscope::lvlr::Ranges::hostGainMinDb,
+                                           levelscope::lvlr::Ranges::hostGainMaxDb,
+                                           snap.gainDbCurrent);
+
+    if (! haveLastSentLevelerHostGainDb
+        || std::abs (capturedDb - lastSentLevelerHostGainDb) >= 0.1f)
+    {
+        hostGainParam->setValueNotifyingHost (hostGainParam->convertTo0to1 (capturedDb));
+        lastSentLevelerHostGainDb = capturedDb;
+        haveLastSentLevelerHostGainDb = true;
+    }
+}
+// [END LVLR-HOSTGAIN-CAPTURE-IMPL]
 // [END LS-LATENCY-LISTENER-IMPL]
 
 // [BEGIN LS-UPWARD-METERING-SNAPSHOT-IMPL]
@@ -1817,6 +1920,10 @@ bool LevelScopeAudioProcessor::applyApvsStateChunk (const juce::MemoryBlock& apv
         return false;
 
     apvts.replaceState (vt);
+    // [BEGIN LVLR-HOSTGAIN-CAPTURE-DISARM-ON-LOAD]
+    // Safety: capture arm must never come back armed after state/preset load.
+    forceDisarmLevelerHostGainCapture_NonRT();
+    // [END LVLR-HOSTGAIN-CAPTURE-DISARM-ON-LOAD]
     return true;
 }
 
