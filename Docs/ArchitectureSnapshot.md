@@ -9,7 +9,7 @@ This document is a **contract** for parallel development chats.
 Anything marked **Implemented** must be preserved.  
 Anything marked **Planned** must not be assumed to exist until integrated.
 
-Last updated: **2026-03-11**
+Last updated: **2026-03-22**
 
 ---
 
@@ -23,13 +23,15 @@ Last updated: **2026-03-11**
 - Running program stats support (I running, LRA running, rolling LRA selector/numeric)
 
 **Implemented (current):**
-- Module DSP chain scaffolding (ProcessorCore + module interfaces)
-- Module 1 DSP lives in Core and is reusable by plugin/standalone targets (no GUI dependencies)
+- Module chain scaffolding (ProcessorCore + module interfaces)
+- Module 1 DSP: MTDM (multi-stage dynamics) in Core (reusable)
+- Module 2 DSP: Leveler in Core (reusable)
 
 **Planned / next milestones:**
 - IN snapshot vs OUT live analysis tracks (separate histories/curves, separate visibility)
 - Offline render/analysis hooks for standalone determinism
 - Policy/proposal engine hooks
+- Additional modules as needed (OutputTrim later, etc.)
 
 Hard rule: Core must be usable by plugin + future standalone + headless tests.
 
@@ -45,12 +47,9 @@ Hard rule: Core must be usable by plugin + future standalone + headless tests.
 **Implemented (current):**
 - Hosts ProcessorCore and runs module graph inside `processBlock()`
 - Owns APVTS and binds raw atomics into Core modules RT-safely
-- Host latency is reported and updated when latency-affecting params change
+- Host latency is reported and updated when latency-affecting params change (APVTS listener + message-thread timer)
 - RT-safe input/output metering snapshots for UI
-
-**Planned / next milestones:**
-- Capture-pass controls for IN snapshot analysis
-- OUT live analysis track refresh workflows
+- Exposes UI-safe “effective playback” state (transport playing + callback freshness)
 
 ### 3) UI (JUCE Components)
 
@@ -59,17 +58,35 @@ Hard rule: Core must be usable by plugin + future standalone + headless tests.
 - Multi-resolution LOD history pyramid for fast drawing at all zoom levels
 
 **Implemented (current):**
-- Threshold overlay (T0–T3) over loudness history with ordered push-drag (min gap 0.1 LU)
-- Mission Control top strip (targets/current readouts, curve toggles, follow, rLRA window, multichannel policy controls + routing graphic)
-- Right-side strip next to timeline: LUFS scale + stage meters (In/Up/Dn/Lim/Out)
+- Threshold overlay (T0–T3) over loudness history with ordered push-drag (min gap **0.1 LU**)
+- Mission Control top strip:
+  - target/current readouts
+  - curve toggles + follow
+  - rLRA window selector
+  - multichannel policy controls + routing graphic (Detector vs Apply)
+  - preset save/load (settings vs snapshot; see Persistence section)
+- Right-side strip next to timeline:
+  - LUFS scale
+  - stage meters (at least In/Up/Dn/Lim/Out; Leveler metering available via snapshot API)
 - Resizable rolling LRA lane (height divider)
-- Bottom MTDM panel (card-based controls with internal resizers)
+- Bottom processing UI:
+  - MTDM cards/panels
+  - Leveler controls integrated
+- Playback-lock policy in UI:
+  - latency/structure controls disabled during **effective playback**
+  - tooltips explain “Stop playback to change (changes latency)” etc.
+  - preset load is disabled and guarded during effective playback
+- Meter display behavior on stop/stale callbacks:
+  - when callbacks go stale, UI meters decay toward rest (do not freeze forever)
+
+**Implemented (current): UI view state persistence**
+- UI layout + history viewport state is persisted via UIST chunk (see Persistence).
 
 **Planned / next milestones:**
 - IN vs OUT curve sets with toggles/labels
 - Module strip UI (order/enable/bypass for multiple modules)
+- 2D transfer/curve displays for processors (compressors/leveler)
 - Advanced overlays (hotspots/gates/etc.)
-- UI-only state persistence chunk (splitter positions, lane heights, strip widths)
 
 ---
 
@@ -79,7 +96,7 @@ Hard rule: Core must be usable by plugin + future standalone + headless tests.
 - IN (Input) snapshot captured from **unprocessed input** during a defined capture pass; frozen until re-captured
 - OUT (Output) analysis computed from **post-processing output**; refreshable via capture/offline render
 
-Current behavior note:
+**Current behavior note:**
 - Loudness/history analysis in the plugin is currently computed on the **input-side** (pre-module-chain).
 - I/O meters reflect pre- and post-module-chain audio.
 
@@ -102,7 +119,12 @@ Module graph swaps:
 APVTS listeners:
 - `AudioProcessorValueTreeState::Listener::parameterChanged()` may be called from non-message threads.
 - UI must not call `repaint()` or touch Components directly from `parameterChanged()`.
-- Correct pattern: set an atomic/flag + use `AsyncUpdater` or a message-thread `Timer` to repaint.
+- Correct pattern: set a flag + use `AsyncUpdater` or a message-thread `Timer` to repaint.
+
+UI “effective playback” gating (implemented):
+- UI edit-lock decisions must use **effective playback**, not only last-known transport:
+  - transport is playing AND audio callback is “fresh/recent”
+- This avoids controls getting stuck disabled if a host stops calling `processBlock()` on stop.
 
 ---
 
@@ -163,24 +185,39 @@ Required methods:
 
 **Implemented (current additive chunks):**
 - `APVS` — APVTS state (ValueTree binary), schema v1
-- `MODG` — module graph (module IDs/order; bypass byte stored but currently not relied upon for restore), schema v1
+- `MODG` — module graph (module IDs/order), schema v1
+  - backward-compatible graph upgrade behavior: older sessions that only had MTDM can be upgraded to include Leveler before MTDM
+- `UIST` — UI-only persisted state (layout + history viewport/toggles), schema v2
+  - loader accepts schema v1 and v2; unknown schemas ignored
+
+Container API:
+- Core state container supports passing additive chunks via helper structs:
+  - `ExtraStateChunksIn`
+  - `ExtraStateChunksOut`
 
 Rules:
 - Never break old states: new chunks are optional with defaults
 - Unknown chunks must be ignored on load (forward compatibility)
 
-Presets (current UI behavior):
-- `.lscpreset` save/load uses the **full plugin state blob** (equivalent to getStateInformation/setStateInformation).
-- Planned refinement: “Settings preset” (APVS+MODG only) vs “Session snapshot” (full blob including history).
+### Presets vs Snapshots (Implemented)
+Two file semantics exist:
 
-Planned:
-- `UIST` (or similar) UI-only preferences chunk (splitter positions, lane heights, strip widths, card heights)
+**Settings Preset**
+- file extension: `.lscsettings`
+- contains: `APVS + MODG`
+- excludes: `UIST` and baseline history chunks
+- loading settings presets must not change UI layout/view state
+
+**Snapshot / DAW session**
+- file extension: `.lscpreset` (snapshot)
+- DAW session state is equivalent to full plugin state
+- contains: baseline state + `APVS + MODG + UIST`
 
 ---
 
 ## 7. Module 1 (MTDM) — Implemented State
 
-Module 1 is a multistage dynamics/leveling prototype hosted as a Core module.
+MTDM is a multistage dynamics/leveling module hosted as a Core module.
 
 ### Processing order (inside MTDM)
 1) Upward stage (Spectral or Broadband; optional)
@@ -188,50 +225,132 @@ Module 1 is a multistage dynamics/leveling prototype hosted as a Core module.
 3) Limiter stage (lookahead; optional; output protection)
 4) Post-chain **zone audition gate** (time-membership gating aligned with chain latency)
 
-### Upward stage
-- Spectral (STFT-based) or Broadband (time-domain)
-- Supports Linked / Dialog-mask / Unlinked policies via detector/apply masks
-- Spectral mode contributes FFT latency; provides delay-preserving audition bypass (unity through pipeline)
-
-### Downward stage
-- Broadband downward compressor with T2–T3 engagement zone
-- Supports Linked / Dialog-mask / Unlinked via masks
-- T2/T3 are clamped/reordered at runtime to preserve T1–T2 untouched semantics
-
-### Limiter stage
-- Lookahead limiter with drive, attack ramping (back-scheduled), release smoothing
-- Optional FIR oversampling on detector path (true-peak-ish)
-- Applies to all channels by default (output protection)
-- Delay-preserving audition bypass (unity through delay pipeline when bypassed but enabled)
-
 ### Multichannel policies
 - Linked: detector = all non-LFE; apply = all non-LFE (default)
 - Dialog-mask: detector/apply selectable as C or LCR (fallback to non-LFE if not present)
 - Unlinked: per-channel detector/gain states (advanced)
 
-### Zone audition (important)
+### Zone audition (implemented, important)
 - Implemented via `mtdm.zoneAud.*` toggles (belowT0 / t0t1 / t1t2 / t2t3 / aboveT3)
 - This is “solo/mute zones between thresholds” by timeline membership.
-- Legacy “stage solo/mute” params exist but are **deprecated** (not used by DSP/UI); plan is to keep IDs for backward session compatibility but not expose them.
+- Legacy “stage solo/mute” params are deprecated/unneeded; keep IDs for backward session compatibility but do not expose.
 
-### Latency reporting & updates
-- Host latency computed from latency-affecting params and updated via APVTS listener + 10 Hz message-thread timer.
-- Latency-affecting params include MTDM enabled, upward enabled/mode/FFT size, limiter enabled/lookahead/oversampling.
+### Latency reporting & updates (implemented)
+- Host latency computed from latency-affecting params and updated via APVTS listener + message-thread timer.
+- MTDM internal delayed features (zone audition) are aligned to the **true effective chain latency**, including limiter FIR detector delay when oversampling is enabled.
 
-Known watch item:
-- Ensure any internal delay alignment (e.g. zone audition gate) accounts for all latency components (including oversampling FIR detector delay), consistent with host-reported latency.
+### Stop-playback edit policy (implemented)
+Certain params are treated as “structural/latency/quality” and are:
+- **Non-automatable** (backend)
+- **Playback-locked** in UI using effective playback state
 
-### Metering
+Structural enable params marked non-automatable:
+- `mtdm.enabled`
+- `mtdm.up.enabled01`
+- `mtdm.lim.enabled`
+
+Structural/quality params marked non-automatable:
+- `mtdm.upwardModeChoice`
+- `mtdm.suc.fftSizeChoice`
+- `mtdm.suc.bandsPerOctChoice`
+- `mtdm.suc.minFreqHz`
+- `mtdm.suc.maxFreqHz`
+- `mtdm.lim.lookaheadMs`
+- `mtdm.lim.oversamplingChoice`
+
+### Metering (implemented)
 - RT-safe snapshots for:
   - I/O peak+RMS (pre and post processing)
   - Upward boost
   - Downward gain reduction (excluding makeup)
   - Limiter gain reduction
-- UI polls snapshots on message thread; audio thread writes atomics once per block.
 
 ---
 
-## 8. Coding & Patch Workflow (Hard)
+## 8. Module 2 (Leveler) — Implemented State
+
+Leveler is a zero-latency Core module inserted **before MTDM** by default.
+
+### Graph position (default)
+1) Leveler  
+2) MTDM
+
+### Leveler parameters (lvlr.*)
+
+**Core**
+- `lvlr.enabled` (default OFF)
+- `lvlr.targetLufs` (default -27.0)
+- `lvlr.maxBoostDb` (default 12.0)
+- `lvlr.maxCutDb` (default 12.0 magnitude)
+
+**Measurement / algorithm**
+- `lvlr.measChoice` = Auto / Momentary / Short-term (non-automatable)
+- `lvlr.modeChoice` = Adaptive / Learn-Hold (non-automatable)
+- `lvlr.learn01` (non-automatable)
+- `lvlr.rateUpDbPerSec` (default 1.0)
+- `lvlr.rateDownDbPerSec` (default 3.0)
+
+**Control source + host lane capture**
+- `lvlr.controlModeChoice` = Internal / Host Gain (non-automatable)
+- `lvlr.hostGainDb` (automatable, default 0.0 dB, range approx -24..+24 dB)
+- `lvlr.captureToHost01` (non-automatable; explicit arm/toggle; default OFF)
+
+Important: no `lvlr.appliedGainDb` APVTS parameter exists. “Applied gain” is exposed via metering snapshots only (telemetry), not as a host-controlled parameter.
+
+### Detector / measurement (implemented)
+- Self-contained detector (does not depend on timeline/history model)
+- BS.1770-oriented K-weighted path; LFE excluded by default unless routing override includes it
+- Internal detector update cadence: 60 Hz
+- Momentary window: 0.4 s (24 frames)
+- Short-term window: 3.0 s (180 frames)
+- Auto measurement rule: use Short-term when valid; otherwise use Momentary
+
+### Modes (implemented)
+- Adaptive: continuously measures and applies bounded/rate-limited correction
+- Learn-Hold:
+  - while learn01 true: measure and compute candidate
+  - on learn01 false: commit one held gain and apply until next learn pass
+  - commit also occurs on playing→stopped edge when learning (best-effort)
+
+### Control modes (implemented)
+- **Internal**
+  - Leveler computes and applies internal gain (Adaptive/Learn-Hold behavior)
+  - `lvlr.hostGainDb` is not used as the audio gain source
+- **Host Gain**
+  - Leveler ignores internal gain decisions for the applied gain
+  - applied gain comes from `lvlr.hostGainDb` and is smoothed with a per-block ramp to avoid zippering
+
+### Capture: Adaptive → Host Gain lane (implemented)
+- When:
+  - `lvlr.controlModeChoice == Internal`
+  - `lvlr.captureToHost01 == true`
+  - transport is **effectively playing**
+- The processor periodically writes the Leveler’s **actual applied gain** into `lvlr.hostGainDb` using proper host gesture semantics:
+  - beginChangeGesture → periodic setValueNotifyingHost → endChangeGesture
+- Capture cadence: 30 Hz, with a write threshold (≈ 0.1 dB) to limit automation density.
+- Host recording of plugin-driven parameter changes is DAW-dependent.
+
+**Session safety rule (implemented):**
+- `lvlr.captureToHost01` is forcibly disarmed on state load/preset restore and other safety transitions (e.g., leaving Internal mode / stopping capture) to prevent reopening a session and unintentionally overwriting the host gain automation lane.
+
+### Gain behavior (implemented)
+- Rate-limited in **dB/sec** (separate up/down) for internal gain changes.
+- Host Gain mode uses a per-block ramp to avoid zipper noise.
+
+### Routing (implemented; reused shared controls)
+Leveler v1 reuses existing shared routing policy params:
+- `mtdm.mcPolicyChoice`, dialog choices, and LFE overrides
+- Supports Linked / Dialog-mask / Unlinked policies consistent with MTDM
+
+### Metering (implemented)
+- Leveler gain snapshot:
+  - `gainDbCurrent`, `gainDbBlockPeak`, `gainDbHold`
+  - sign: positive = boost, negative = cut
+- Meter reflects the **actual applied gain** in both Internal and Host Gain modes.
+
+---
+
+## 9. Coding & Patch Workflow (Hard)
 
 - Large files must not be replaced wholesale.
 - Add edit anchors:
@@ -240,17 +359,17 @@ Known watch item:
 
 ---
 
-## 9. Roadmap Chats (Parallel Work Split)
+## 10. Roadmap Chats (Parallel Work Split)
 
 ### Chat A: Modules / DSP
-- Extend MTDM correctness (latency alignment edge cases, presets semantics, RT audits)
-- Add future modules (Module 2+)
+- Refine Leveler + MTDM (quality/performance)
+- Add 2D curve displays (UI support)
+- Future modules if needed
 
 ### Chat B: UI Overhaul Milestone (later)
 - IN vs OUT curves + toggles
 - module strip (order/enable/bypass)
 - overlays/hotspots/policy visualizations
-- UI state persistence chunk
 
 ### Chat C: Logic/Policy Proposal Engine
 - Presets/specs + proposal outputs (static params + automation curves)
