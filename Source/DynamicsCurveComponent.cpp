@@ -164,8 +164,18 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
     const float grCur  = juce::jmax (0.0f, met.grDbCurrent);
     const float grHold = juce::jmax (0.0f, met.grDbHold);
 
-    const float yCur  = mapY (grCur);
-    const float yHold = mapY (grHold);
+    // [BEGIN UI-CURVE-DOWN-INDICATOR-DOWNWARD]
+    // For the small GR indicator on the right edge, use meter-like behavior:
+    // more gain reduction => indicator moves downward.
+    auto mapMeterY = [&] (float gr) -> float
+    {
+        const float n = juce::jlimit (0.0f, 1.0f, gr / yMax);
+        return r.getY() + n * r.getHeight();
+    };
+
+    const float yCur  = mapMeterY (grCur);
+    const float yHold = mapMeterY (grHold);
+    // [END UI-CURVE-DOWN-INDICATOR-DOWNWARD]
 
     g.setColour (juce::Colours::deepskyblue.withMultipliedAlpha (0.85f));
     g.drawLine (r.getRight() - 18.0f, yCur, r.getRight() - 2.0f, yCur, 1.6f);

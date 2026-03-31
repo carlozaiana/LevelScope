@@ -646,6 +646,9 @@ private:
     // [END UI4C-BARS-REPLACE]
 
     void applyDragToBoundary (CardResizerBar::Boundary b, int dy);
+    // [BEGIN UI-CURVE-SHARED-STRIP-REFRESH-DECL]
+    void refreshChildCardLayoutsForSharedCurveStripChange();
+    // [END UI-CURVE-SHARED-STRIP-REFRESH-DECL]
     void syncPersistedCardHeightsToProcessor() const;
 
     int contentPreferredHeightPx = 0;

@@ -2158,6 +2158,25 @@ int MtdmCardsContent::getCurveStripWidthForContent (int totalContentWidth) const
 }
 // [END UI-CURVE-SHARED-STRIP-WIDTH-IMPL]
 
+// [BEGIN UI-CURVE-SHARED-STRIP-REFRESH-IMPL]
+void MtdmCardsContent::refreshChildCardLayoutsForSharedCurveStripChange()
+{
+    levelling.resized();
+    zones.resized();
+    audition.resized();
+    upward.resized();
+    downward.resized();
+    limiter.resized();
+
+    levelling.repaint();
+    zones.repaint();
+    audition.repaint();
+    upward.repaint();
+    downward.repaint();
+    limiter.repaint();
+}
+// [END UI-CURVE-SHARED-STRIP-REFRESH-IMPL]
+
 // [BEGIN UI4A3-CARDS-ACCORDION-PREFERREDHEIGHT]
 int MtdmCardsContent::getPreferredHeight() const noexcept
 {
@@ -2349,6 +2368,7 @@ void MtdmCardsContent::CurveStripResizerBar::mouseDrag (const juce::MouseEvent& 
                                                 owner.curveStripWidthPxUser);
 
     owner.resized();
+    owner.refreshChildCardLayoutsForSharedCurveStripChange();
     owner.repaint();
 }
 // [END UI-CURVE-SHARED-STRIP-RESIZER-IMPL]
