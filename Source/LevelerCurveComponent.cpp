@@ -16,6 +16,168 @@ void LevelerCurveComponent::timerCallback()
     repaint();
 }
 
+// [BEGIN UI-CURVE-LVLR-TARGET-DRAG-IMPL]
+bool LevelerCurveComponent::getTargetInteractionGeometry (juce::Rectangle<float>& plotOut,
+                                                          float& targetXOut,
+                                                          bool& editableOut) const
+{
+    auto bounds = getLocalBounds().toFloat();
+    auto r = bounds.reduced (10.0f);
+    if (r.getWidth() < 110.0f || r.getHeight() < 80.0f)
+        return false;
+
+    auto topArea    = r.removeFromTop (28.0f);
+    auto bottomArea = r.removeFromBottom (18.0f);
+    auto rightArea  = r.removeFromRight (32.0f);
+    juce::ignoreUnused (topArea, bottomArea, rightArea);
+
+    auto plot = r;
+    if (plot.getWidth() < 60.0f || plot.getHeight() < 40.0f)
+        return false;
+
+    auto& apvts = processor.getAPVTS();
+    using namespace levelscope::lvlr;
+
+    auto loadParam = [&] (const char* id, float fallback) -> float
+    {
+        if (auto* a = apvts.getRawParameterValue (id))
+            return a->load (std::memory_order_relaxed);
+        return fallback;
+    };
+
+    const float target = loadParam (ParamIDs::targetLufs, Defaults::targetLufs);
+    const int controlMode = (int) std::lround (loadParam (ParamIDs::controlModeChoice,
+                                                          (float) Defaults::controlModeChoice));
+
+    constexpr float xMin = levelscope::lvlr::Ranges::targetMinLufs;
+    constexpr float xMax = levelscope::lvlr::Ranges::targetMaxLufs;
+
+    auto mapX = [&] (float x) -> float
+    {
+        const float n = (x - xMin) / (xMax - xMin);
+        return plot.getX() + juce::jlimit (0.0f, 1.0f, n) * plot.getWidth();
+    };
+
+    plotOut = plot;
+    targetXOut = mapX (target);
+    editableOut = (controlMode == 0); // Internal mode only
+
+    return true;
+}
+
+void LevelerCurveComponent::updateMouseCursorForTarget (juce::Point<float> pos)
+{
+    juce::Rectangle<float> plot;
+    float targetX = 0.0f;
+    bool editable = false;
+
+    if (! getTargetInteractionGeometry (plot, targetX, editable))
+    {
+        if (! targetDragging)
+            setMouseCursor (juce::MouseCursor::NormalCursor);
+        return;
+    }
+
+    if (! editable)
+    {
+        if (! targetDragging)
+            setMouseCursor (juce::MouseCursor::NormalCursor);
+        return;
+    }
+
+    const auto hit = plot.expanded (6.0f, 0.0f);
+    const bool overTarget = hit.contains (pos) && std::abs (pos.x - targetX) <= 6.0f;
+
+    if (! targetDragging)
+        setMouseCursor (overTarget ? juce::MouseCursor::LeftRightResizeCursor
+                                   : juce::MouseCursor::NormalCursor);
+}
+
+void LevelerCurveComponent::mouseMove (const juce::MouseEvent& e)
+{
+    updateMouseCursorForTarget (e.position);
+}
+
+void LevelerCurveComponent::mouseExit (const juce::MouseEvent& e)
+{
+    juce::ignoreUnused (e);
+    if (! targetDragging)
+        setMouseCursor (juce::MouseCursor::NormalCursor);
+}
+
+void LevelerCurveComponent::mouseDown (const juce::MouseEvent& e)
+{
+    if (! e.mods.isLeftButtonDown())
+        return;
+
+    juce::Rectangle<float> plot;
+    float targetX = 0.0f;
+    bool editable = false;
+
+    if (! getTargetInteractionGeometry (plot, targetX, editable) || ! editable)
+        return;
+
+    const auto hit = plot.expanded (6.0f, 0.0f);
+    const bool overTarget = hit.contains (e.position) && std::abs (e.position.x - targetX) <= 6.0f;
+    if (! overTarget)
+        return;
+
+    using namespace levelscope::lvlr;
+    if (auto* p = processor.getAPVTS().getParameter (ParamIDs::targetLufs))
+    {
+        p->beginChangeGesture();
+        targetGestureActive = true;
+        targetDragging = true;
+        setMouseCursor (juce::MouseCursor::LeftRightResizeCursor);
+    }
+}
+
+void LevelerCurveComponent::mouseDrag (const juce::MouseEvent& e)
+{
+    if (! targetDragging)
+        return;
+
+    using namespace levelscope::lvlr;
+
+    auto* p = processor.getAPVTS().getParameter (ParamIDs::targetLufs);
+    if (p == nullptr)
+        return;
+
+    juce::Rectangle<float> plot;
+    float targetX = 0.0f;
+    bool editable = false;
+
+    if (! getTargetInteractionGeometry (plot, targetX, editable) || ! editable)
+        return;
+
+    constexpr float xMin = levelscope::lvlr::Ranges::targetMinLufs;
+    constexpr float xMax = levelscope::lvlr::Ranges::targetMaxLufs;
+
+    const float x = juce::jlimit (plot.getX(), plot.getRight(), e.position.x);
+    const float n = (plot.getWidth() > 1.0f ? (x - plot.getX()) / plot.getWidth() : 0.0f);
+    const float target = xMin + juce::jlimit (0.0f, 1.0f, n) * (xMax - xMin);
+
+    p->setValueNotifyingHost (juce::jlimit (0.0f, 1.0f, p->convertTo0to1 (target)));
+    repaint();
+}
+
+void LevelerCurveComponent::mouseUp (const juce::MouseEvent& e)
+{
+    juce::ignoreUnused (e);
+
+    using namespace levelscope::lvlr;
+    if (targetGestureActive)
+    {
+        if (auto* p = processor.getAPVTS().getParameter (ParamIDs::targetLufs))
+            p->endChangeGesture();
+    }
+
+    targetDragging = false;
+    targetGestureActive = false;
+    setMouseCursor (juce::MouseCursor::NormalCursor);
+}
+// [END UI-CURVE-LVLR-TARGET-DRAG-IMPL]
+
 void LevelerCurveComponent::paint (juce::Graphics& g)
 {
     auto bounds = getLocalBounds().toFloat();
@@ -125,8 +287,16 @@ void LevelerCurveComponent::paint (juce::Graphics& g)
     g.drawHorizontalLine ((int) std::round (mapY (-maxCut)), plot.getX(), plot.getRight());
 
     // Target marker
+    const float targetX = mapX (target);
     g.setColour (juce::Colours::white.withMultipliedAlpha (hostGainMode ? 0.18f : 0.45f));
-    g.drawVerticalLine ((int) std::round (mapX (target)), plot.getY(), plot.getBottom());
+    g.drawVerticalLine ((int) std::round (targetX), plot.getY(), plot.getBottom());
+
+    // Small handle cue in Internal mode
+    if (! hostGainMode)
+    {
+        g.setColour (juce::Colours::white.withMultipliedAlpha (targetDragging ? 0.95f : 0.72f));
+        g.fillRoundedRectangle (juce::Rectangle<float> (targetX - 3.0f, plot.getY() + 16.0f, 6.0f, 12.0f), 2.0f);
+    }
 
     // Internal conceptual mapping
     {
@@ -226,5 +396,5 @@ void LevelerCurveComponent::paint (juce::Graphics& g)
                 juce::Justification::centredRight, false);
 
     g.setColour (juce::Colours::white.withMultipliedAlpha (hostGainMode ? 0.45f : 0.68f));
-    g.drawText ("T", (int) mapX (target) - 8, (int) plot.getY() + 2, 16, 12, juce::Justification::centred);
+    g.drawText ("T", (int) targetX - 8, (int) plot.getY() + 2, 16, 12, juce::Justification::centred);
 }
