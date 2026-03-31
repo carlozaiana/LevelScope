@@ -16,6 +16,348 @@ void DynamicsCurveComponent::timerCallback()
     repaint();
 }
 
+// [BEGIN UI-CURVE-DOWN-DRAG-IMPL]
+bool DynamicsCurveComponent::getDownwardInteractionGeometry (juce::Rectangle<float>& plotOut,
+                                                             float& t2XOut,
+                                                             float& t3XOut) const
+{
+    if (kind != CurveKind::downward)
+        return false;
+
+    auto bounds = getLocalBounds().toFloat();
+    auto r = bounds.reduced (10.0f);
+    if (r.getWidth() < 90.0f || r.getHeight() < 70.0f)
+        return false;
+
+    auto bottomArea = r.removeFromBottom (28.0f);
+    auto rightArea  = r.removeFromRight (32.0f);
+    juce::ignoreUnused (bottomArea, rightArea);
+
+    auto plot = r;
+    if (plot.getWidth() < 60.0f || plot.getHeight() < 40.0f)
+        return false;
+
+    auto& apvts = processor.getAPVTS();
+    using namespace levelscope::mtdm;
+
+    auto loadParam = [&] (const char* id, float fallback) -> float
+    {
+        if (auto* a = apvts.getRawParameterValue (id))
+            return a->load (std::memory_order_relaxed);
+        return fallback;
+    };
+
+    const float t2 = loadParam (ParamIDs::t2Lufs, Defaults::t2Lufs);
+    const float t3 = loadParam (ParamIDs::t3Lufs, Defaults::t3Lufs);
+
+    constexpr float xMin = -60.0f;
+    constexpr float xMax =   0.0f;
+
+    auto mapX = [&] (float x) -> float
+    {
+        const float n = (x - xMin) / (xMax - xMin);
+        return plot.getX() + juce::jlimit (0.0f, 1.0f, n) * plot.getWidth();
+    };
+
+    plotOut = plot;
+    t2XOut = mapX (t2);
+    t3XOut = mapX (t3);
+    return true;
+}
+
+void DynamicsCurveComponent::updateMouseCursorForThresholds (juce::Point<float> pos)
+{
+    if (kind != CurveKind::downward)
+        return;
+
+    juce::Rectangle<float> plot;
+    float t2X = 0.0f, t3X = 0.0f;
+
+    if (! getDownwardInteractionGeometry (plot, t2X, t3X))
+    {
+        const int oldHover = hoverThresholdIndex;
+        hoverThresholdIndex = -1;
+        if (oldHover != hoverThresholdIndex)
+            repaint();
+
+        if (! thresholdDragging)
+            setMouseCursor (juce::MouseCursor::NormalCursor);
+        return;
+    }
+
+    const auto hit = plot.expanded (6.0f, 0.0f);
+
+    int newHover = -1;
+    if (hit.contains (pos))
+    {
+        const float d2 = std::abs (pos.x - t2X);
+        const float d3 = std::abs (pos.x - t3X);
+
+        const bool hit2 = (d2 <= 6.0f);
+        const bool hit3 = (d3 <= 6.0f);
+
+        if (hit2 && hit3)
+            newHover = (d2 <= d3 ? 2 : 3);
+        else if (hit2)
+            newHover = 2;
+        else if (hit3)
+            newHover = 3;
+    }
+
+    if (hoverThresholdIndex != newHover)
+    {
+        hoverThresholdIndex = newHover;
+        repaint();
+    }
+
+    if (! thresholdDragging)
+        setMouseCursor (hoverThresholdIndex >= 0 ? juce::MouseCursor::LeftRightResizeCursor
+                                                 : juce::MouseCursor::NormalCursor);
+}
+
+void DynamicsCurveComponent::computeOrderedThresholdsWithPush (int changedIndex,
+                                                               float newValueLufs,
+                                                               float outVals[4]) const noexcept
+{
+    if (changedIndex < 0 || changedIndex > 3)
+        return;
+
+    auto& apvts = processor.getAPVTS();
+    using namespace levelscope::mtdm;
+
+    const char* ids[4] =
+    {
+        ParamIDs::t0Lufs,
+        ParamIDs::t1Lufs,
+        ParamIDs::t2Lufs,
+        ParamIDs::t3Lufs
+    };
+
+    juce::RangedAudioParameter* params[4] =
+    {
+        apvts.getParameter (ids[0]),
+        apvts.getParameter (ids[1]),
+        apvts.getParameter (ids[2]),
+        apvts.getParameter (ids[3])
+    };
+
+    auto clampSnap = [&] (int idx, float v) -> float
+    {
+        if (auto* p = params[idx])
+        {
+            const auto r = p->getNormalisableRange();
+            v = juce::jlimit ((float) r.start, (float) r.end, v);
+            v = r.snapToLegalValue (v);
+        }
+        return v;
+    };
+
+    for (int i = 0; i < 4; ++i)
+    {
+        float v = 0.0f;
+        if (auto* a = apvts.getRawParameterValue (ids[i]))
+            v = a->load (std::memory_order_relaxed);
+        else
+            v = (i == 0 ? Defaults::t0Lufs
+                 : i == 1 ? Defaults::t1Lufs
+                 : i == 2 ? Defaults::t2Lufs
+                          : Defaults::t3Lufs);
+
+        outVals[i] = clampSnap (i, v);
+    }
+
+    outVals[changedIndex] = clampSnap (changedIndex, newValueLufs);
+
+    for (int i = changedIndex + 1; i < 4; ++i)
+    {
+        const float minAllowed = outVals[i - 1] + kThreshMinGapLu;
+        if (outVals[i] < minAllowed)
+            outVals[i] = minAllowed;
+
+        outVals[i] = clampSnap (i, outVals[i]);
+    }
+
+    for (int i = changedIndex - 1; i >= 0; --i)
+    {
+        const float maxAllowed = outVals[i + 1] - kThreshMinGapLu;
+        if (outVals[i] > maxAllowed)
+            outVals[i] = maxAllowed;
+
+        outVals[i] = clampSnap (i, outVals[i]);
+    }
+}
+
+void DynamicsCurveComponent::applyThresholdValuesDuringDrag (const float newVals[4])
+{
+    auto& apvts = processor.getAPVTS();
+    using namespace levelscope::mtdm;
+
+    const char* ids[4] =
+    {
+        ParamIDs::t0Lufs,
+        ParamIDs::t1Lufs,
+        ParamIDs::t2Lufs,
+        ParamIDs::t3Lufs
+    };
+
+    for (int i = 0; i < 4; ++i)
+    {
+        auto* p = apvts.getParameter (ids[i]);
+        auto* a = apvts.getRawParameterValue (ids[i]);
+        if (p == nullptr || a == nullptr)
+            continue;
+
+        const float oldV = a->load (std::memory_order_relaxed);
+        const float newV = newVals[i];
+        if (std::abs (newV - oldV) < 1.0e-6f)
+            continue;
+
+        if (! thresholdGestureActive[(size_t) i])
+        {
+            p->beginChangeGesture();
+            thresholdGestureActive[(size_t) i] = true;
+        }
+
+        p->setValueNotifyingHost (juce::jlimit (0.0f, 1.0f, p->convertTo0to1 (newV)));
+    }
+}
+
+void DynamicsCurveComponent::endAllThresholdGestures()
+{
+    auto& apvts = processor.getAPVTS();
+    using namespace levelscope::mtdm;
+
+    const char* ids[4] =
+    {
+        ParamIDs::t0Lufs,
+        ParamIDs::t1Lufs,
+        ParamIDs::t2Lufs,
+        ParamIDs::t3Lufs
+    };
+
+    for (int i = 0; i < 4; ++i)
+    {
+        if (! thresholdGestureActive[(size_t) i])
+            continue;
+
+        if (auto* p = apvts.getParameter (ids[i]))
+            p->endChangeGesture();
+
+        thresholdGestureActive[(size_t) i] = false;
+    }
+}
+
+void DynamicsCurveComponent::mouseMove (const juce::MouseEvent& e)
+{
+    updateMouseCursorForThresholds (e.position);
+}
+
+void DynamicsCurveComponent::mouseExit (const juce::MouseEvent& e)
+{
+    juce::ignoreUnused (e);
+
+    if (! thresholdDragging)
+        setMouseCursor (juce::MouseCursor::NormalCursor);
+
+    if (hoverThresholdIndex != -1)
+    {
+        hoverThresholdIndex = -1;
+        repaint();
+    }
+}
+
+void DynamicsCurveComponent::mouseDown (const juce::MouseEvent& e)
+{
+    if (kind != CurveKind::downward || ! e.mods.isLeftButtonDown())
+        return;
+
+    juce::Rectangle<float> plot;
+    float t2X = 0.0f, t3X = 0.0f;
+
+    if (! getDownwardInteractionGeometry (plot, t2X, t3X))
+        return;
+
+    const auto hit = plot.expanded (6.0f, 0.0f);
+    if (! hit.contains (e.position))
+        return;
+
+    const float d2 = std::abs (e.position.x - t2X);
+    const float d3 = std::abs (e.position.x - t3X);
+
+    const bool hit2 = (d2 <= 6.0f);
+    const bool hit3 = (d3 <= 6.0f);
+
+    int hitIndex = -1;
+    if (hit2 && hit3)      hitIndex = (d2 <= d3 ? 2 : 3);
+    else if (hit2)         hitIndex = 2;
+    else if (hit3)         hitIndex = 3;
+
+    if (hitIndex < 0)
+        return;
+
+    auto& apvts = processor.getAPVTS();
+    using namespace levelscope::mtdm;
+    const char* ids[4] =
+    {
+        ParamIDs::t0Lufs,
+        ParamIDs::t1Lufs,
+        ParamIDs::t2Lufs,
+        ParamIDs::t3Lufs
+    };
+
+    if (auto* p = apvts.getParameter (ids[hitIndex]))
+    {
+        p->beginChangeGesture();
+        thresholdGestureActive[(size_t) hitIndex] = true;
+        thresholdDragging = true;
+        activeThresholdIndex = hitIndex;
+        setMouseCursor (juce::MouseCursor::LeftRightResizeCursor);
+        repaint();
+    }
+}
+
+void DynamicsCurveComponent::mouseDrag (const juce::MouseEvent& e)
+{
+    if (kind != CurveKind::downward || ! thresholdDragging || activeThresholdIndex < 0)
+        return;
+
+    juce::Rectangle<float> plot;
+    float t2X = 0.0f, t3X = 0.0f;
+
+    if (! getDownwardInteractionGeometry (plot, t2X, t3X))
+        return;
+
+    constexpr float xMin = -60.0f;
+    constexpr float xMax =   0.0f;
+
+    const float x = juce::jlimit (plot.getX(), plot.getRight(), e.position.x);
+    const float n = (plot.getWidth() > 1.0f ? (x - plot.getX()) / plot.getWidth() : 0.0f);
+    const float lufs = xMin + juce::jlimit (0.0f, 1.0f, n) * (xMax - xMin);
+
+    float newVals[4] {};
+    computeOrderedThresholdsWithPush (activeThresholdIndex, lufs, newVals);
+    applyThresholdValuesDuringDrag (newVals);
+
+    hoverThresholdIndex = activeThresholdIndex;
+    repaint();
+}
+
+void DynamicsCurveComponent::mouseUp (const juce::MouseEvent& e)
+{
+    juce::ignoreUnused (e);
+
+    if (! thresholdDragging)
+        return;
+
+    endAllThresholdGestures();
+
+    thresholdDragging = false;
+    activeThresholdIndex = -1;
+    setMouseCursor (juce::MouseCursor::NormalCursor);
+    repaint();
+}
+// [END UI-CURVE-DOWN-DRAG-IMPL]
+
 void DynamicsCurveComponent::paint (juce::Graphics& g)
 {
     auto bounds = getLocalBounds().toFloat();
@@ -131,9 +473,24 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
     }
 
     // Threshold markers
+    const float t2X = mapX (t2);
+    const float t3X = mapX (t3);
+
     g.setColour (juce::Colours::white.withMultipliedAlpha (0.35f));
-    g.drawVerticalLine ((int) std::round (mapX (t2)), plot.getY(), plot.getBottom());
-    g.drawVerticalLine ((int) std::round (mapX (t3)), plot.getY(), plot.getBottom());
+    g.drawVerticalLine ((int) std::round (t2X), plot.getY(), plot.getBottom());
+    g.drawVerticalLine ((int) std::round (t3X), plot.getY(), plot.getBottom());
+
+    auto drawHandleCue = [&] (float x, int idx, float y)
+    {
+        const bool active = (thresholdDragging && activeThresholdIndex == idx);
+        const bool hover  = (! thresholdDragging && hoverThresholdIndex == idx);
+
+        g.setColour (juce::Colours::white.withMultipliedAlpha (active ? 0.95f : (hover ? 0.82f : 0.62f)));
+        g.fillRoundedRectangle (juce::Rectangle<float> (x - 3.0f, y, 6.0f, 12.0f), 2.0f);
+    };
+
+    drawHandleCue (t2X, 2, plot.getY() + 16.0f);
+    drawHandleCue (t3X, 3, plot.getY() + 30.0f);
 
     // Conceptual downward GR curve
     juce::Path p;
@@ -221,8 +578,8 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
     // Top threshold labels
     g.setFont (10.0f);
     g.setColour (juce::Colours::white.withMultipliedAlpha (0.70f));
-    g.drawText ("T2", (int) mapX (t2) - 12, (int) plot.getY() + 2, 24, 12, juce::Justification::centred);
-    g.drawText ("T3", (int) mapX (t3) - 12, (int) plot.getY() + 16, 24, 12, juce::Justification::centred);
+    g.drawText ("T2", (int) t2X - 12, (int) plot.getY() + 2, 24, 12, juce::Justification::centred);
+    g.drawText ("T3", (int) t3X - 12, (int) plot.getY() + 16, 24, 12, juce::Justification::centred);
 
     // Footer info and labels
     g.setFont (10.0f);
