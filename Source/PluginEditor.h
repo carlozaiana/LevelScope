@@ -205,13 +205,13 @@ private:
     juce::ToggleButton enabledButton { "Enabled" };
 
     juce::Label targetLabel, maxBoostLabel, maxCutLabel;
-    juce::Label measLabel, modeLabel;
+    juce::Label measLabel, modeLabel, controlModeLabel;
     juce::Label rateUpLabel, rateDownLabel;
 
     juce::Slider targetSlider, maxBoostSlider, maxCutSlider;
     juce::Slider rateUpSlider, rateDownSlider;
 
-    juce::ComboBox measBox, modeBox;
+    juce::ComboBox measBox, modeBox, controlModeBox;
     juce::ToggleButton learnButton { "Learn" };
 
     using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
@@ -220,7 +220,7 @@ private:
 
     std::unique_ptr<ButtonAttachment> enabledAtt;
     std::unique_ptr<SliderAttachment> targetAtt, maxBoostAtt, maxCutAtt;
-    std::unique_ptr<ComboAttachment>  measAtt, modeAtt;
+    std::unique_ptr<ComboAttachment>  measAtt, modeAtt, controlModeAtt;
     std::unique_ptr<ButtonAttachment> learnAtt;
     std::unique_ptr<SliderAttachment> rateUpAtt, rateDownAtt;
 
@@ -546,7 +546,7 @@ private:
     // [BEGIN UI4C-CARDHEIGHTS-ADD-AUDITION]
     struct CardHeights
     {
-        int levelling = 260;
+        int levelling = 286;
         int zones     = 220;
         int audition  = 110;
         int upward    = 220;

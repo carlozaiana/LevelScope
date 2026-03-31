@@ -26,7 +26,7 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
     g.drawRoundedRectangle (bounds, 6.0f, 1.0f);
 
     auto r = bounds.reduced (10.0f);
-    if (r.getWidth() < 80.0f || r.getHeight() < 60.0f)
+    if (r.getWidth() < 90.0f || r.getHeight() < 70.0f)
         return;
 
     if (kind != CurveKind::downward)
@@ -36,6 +36,13 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
         g.drawFittedText ("Curve pending", r.toNearestInt(), juce::Justification::centred, 1);
         return;
     }
+
+    auto bottomArea = r.removeFromBottom (28.0f);
+    auto rightArea  = r.removeFromRight (32.0f);
+    auto plot       = r;
+
+    if (plot.getWidth() < 60.0f || plot.getHeight() < 40.0f)
+        return;
 
     auto& apvts = processor.getAPVTS();
     using namespace levelscope::mtdm;
@@ -60,22 +67,50 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
     auto mapX = [&] (float x) -> float
     {
         const float n = (x - xMin) / (xMax - xMin);
-        return r.getX() + juce::jlimit (0.0f, 1.0f, n) * r.getWidth();
+        return plot.getX() + juce::jlimit (0.0f, 1.0f, n) * plot.getWidth();
     };
 
     auto mapY = [&] (float y) -> float
     {
         const float n = (y - yMin) / (yMax - yMin);
-        return r.getBottom() - juce::jlimit (0.0f, 1.0f, n) * r.getHeight();
+        return plot.getBottom() - juce::jlimit (0.0f, 1.0f, n) * plot.getHeight();
     };
 
     // Background grid
     g.setColour (juce::Colours::white.withMultipliedAlpha (0.08f));
     for (float xTick : { -60.0f, -48.0f, -36.0f, -24.0f, -12.0f, 0.0f })
-        g.drawVerticalLine ((int) std::round (mapX (xTick)), r.getY(), r.getBottom());
+        g.drawVerticalLine ((int) std::round (mapX (xTick)), plot.getY(), plot.getBottom());
 
     for (float yTick : { 0.0f, 6.0f, 12.0f, 18.0f, 24.0f })
-        g.drawHorizontalLine ((int) std::round (mapY (yTick)), r.getX(), r.getRight());
+        g.drawHorizontalLine ((int) std::round (mapY (yTick)), plot.getX(), plot.getRight());
+
+    // Right-side GR ruler
+    g.setFont (10.0f);
+    g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
+    for (float yTick : { 0.0f, 6.0f, 12.0f, 18.0f, 24.0f })
+    {
+        const float y = mapY (yTick);
+        g.drawLine (plot.getRight(), y, plot.getRight() + 4.0f, y, 1.0f);
+        g.drawText (juce::String ((int) yTick),
+                    rightArea.toNearestInt().withY ((int) std::round (y - 7.0f)).withHeight (14),
+                    juce::Justification::centredRight, false);
+    }
+
+    // Bottom LUFS ruler
+    for (float xTick : { -60.0f, -48.0f, -36.0f, -24.0f, -12.0f, 0.0f })
+    {
+        const float x = mapX (xTick);
+        g.setColour (juce::Colours::white.withMultipliedAlpha (0.40f));
+        g.drawLine (x, plot.getBottom(), x, plot.getBottom() + 4.0f, 1.0f);
+
+        g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
+        g.drawText (juce::String ((int) xTick),
+                    juce::Rectangle<int> ((int) std::round (x - 18.0f),
+                                          (int) bottomArea.getBottom() - 14,
+                                          36,
+                                          14),
+                    juce::Justification::centred, false);
+    }
 
     // Shade the T2..T3 zone
     {
@@ -83,7 +118,7 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
         const float xB = mapX (juce::jmax (t2, t3));
 
         g.setColour (juce::Colours::deepskyblue.withMultipliedAlpha (0.08f));
-        g.fillRect (juce::Rectangle<float> (xA, r.getY(), xB - xA, r.getHeight()));
+        g.fillRect (juce::Rectangle<float> (xA, plot.getY(), xB - xA, plot.getHeight()));
     }
 
     // Knee band around T2
@@ -92,13 +127,13 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
         const float xB = mapX (t2 + 0.5f * knee);
 
         g.setColour (juce::Colours::white.withMultipliedAlpha (0.06f));
-        g.fillRect (juce::Rectangle<float> (xA, r.getY(), xB - xA, r.getHeight()));
+        g.fillRect (juce::Rectangle<float> (xA, plot.getY(), xB - xA, plot.getHeight()));
     }
 
     // Threshold markers
     g.setColour (juce::Colours::white.withMultipliedAlpha (0.35f));
-    g.drawVerticalLine ((int) std::round (mapX (t2)), r.getY(), r.getBottom());
-    g.drawVerticalLine ((int) std::round (mapX (t3)), r.getY(), r.getBottom());
+    g.drawVerticalLine ((int) std::round (mapX (t2)), plot.getY(), plot.getBottom());
+    g.drawVerticalLine ((int) std::round (mapX (t3)), plot.getY(), plot.getBottom());
 
     // Conceptual downward GR curve
     juce::Path p;
@@ -142,7 +177,7 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
         return juce::jlimit (yMin, yMax, gr);
     };
 
-    const int numSteps = juce::jlimit (80, 240, (int) std::round (r.getWidth()));
+    const int numSteps = juce::jlimit (80, 240, (int) std::round (plot.getWidth()));
     for (int i = 0; i <= numSteps; ++i)
     {
         const float a = (float) i / (float) numSteps;
@@ -170,7 +205,7 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
     auto mapMeterY = [&] (float gr) -> float
     {
         const float n = juce::jlimit (0.0f, 1.0f, gr / yMax);
-        return r.getY() + n * r.getHeight();
+        return plot.getY() + n * plot.getHeight();
     };
 
     const float yCur  = mapMeterY (grCur);
@@ -178,24 +213,32 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
     // [END UI-CURVE-DOWN-INDICATOR-DOWNWARD]
 
     g.setColour (juce::Colours::deepskyblue.withMultipliedAlpha (0.85f));
-    g.drawLine (r.getRight() - 18.0f, yCur, r.getRight() - 2.0f, yCur, 1.6f);
+    g.drawLine (plot.getRight() - 18.0f, yCur, plot.getRight() - 2.0f, yCur, 1.6f);
 
     g.setColour (juce::Colours::white.withMultipliedAlpha (0.85f));
-    g.drawLine (r.getRight() - 18.0f, yHold, r.getRight() - 2.0f, yHold, 1.2f);
+    g.drawLine (plot.getRight() - 18.0f, yHold, plot.getRight() - 2.0f, yHold, 1.2f);
 
-    // Labels
-    g.setFont (11.0f);
-    g.setColour (juce::Colours::white.withMultipliedAlpha (0.65f));
-    g.drawText ("In (LUFS)", (int) r.getX(), (int) r.getBottom() - 14, 70, 14, juce::Justification::left);
-    g.drawText ("GR", (int) r.getRight() - 26, (int) r.getY(), 24, 14, juce::Justification::right);
-
+    // Top threshold labels
+    g.setFont (10.0f);
     g.setColour (juce::Colours::white.withMultipliedAlpha (0.70f));
-    g.drawText ("T2", (int) mapX (t2) - 12, (int) r.getY() + 2, 24, 12, juce::Justification::centred);
-    g.drawText ("T3", (int) mapX (t3) - 12, (int) r.getY() + 16, 24, 12, juce::Justification::centred);
+    g.drawText ("T2", (int) mapX (t2) - 12, (int) plot.getY() + 2, 24, 12, juce::Justification::centred);
+    g.drawText ("T3", (int) mapX (t3) - 12, (int) plot.getY() + 16, 24, 12, juce::Justification::centred);
 
-    g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
+    // Footer info and labels
+    g.setFont (10.0f);
+    g.setColour (juce::Colours::white.withMultipliedAlpha (0.58f));
     const juce::String info = "Ratio " + juce::String (safeRatio, 2)
                             + "   Knee " + juce::String (safeKnee, 1) + " dB";
-    g.drawFittedText (info, ((int) r.getX()) + 2, (int) r.getY() + 2, (int) r.getWidth() - 40, 14,
-                      juce::Justification::topLeft, 1);
+    g.drawFittedText (info,
+                      juce::Rectangle<int> ((int) bottomArea.getX(), (int) bottomArea.getY(),
+                                            (int) bottomArea.getWidth(), 14),
+                      juce::Justification::centredLeft, 1);
+
+    g.drawText ("In (LUFS)",
+                juce::Rectangle<int> ((int) bottomArea.getX(), (int) bottomArea.getBottom() - 14, 70, 14),
+                juce::Justification::centredLeft, false);
+
+    g.drawText ("GR",
+                juce::Rectangle<int> ((int) rightArea.getX(), (int) plot.getY(), (int) rightArea.getWidth(), 12),
+                juce::Justification::centredRight, false);
 }

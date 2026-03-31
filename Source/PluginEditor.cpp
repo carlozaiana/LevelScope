@@ -802,19 +802,21 @@ LevelerCard::LevelerCard (LevelScopeAudioProcessor& p)
     addAndMakeVisible (curve);
     // [END UI-CURVE-LVLR-ADDVISIBLE]
 
-    styleLabel (targetLabel,   "Target");
-    styleLabel (maxBoostLabel, "Max Boost");
-    styleLabel (maxCutLabel,   "Max Cut");
-    styleLabel (measLabel,     "Measurement");
-    styleLabel (modeLabel,     "Mode");
-    styleLabel (rateUpLabel,   "Rate Up");
-    styleLabel (rateDownLabel, "Rate Down");
+    styleLabel (targetLabel,      "Target");
+    styleLabel (maxBoostLabel,    "Max Boost");
+    styleLabel (maxCutLabel,      "Max Cut");
+    styleLabel (measLabel,        "Measurement");
+    styleLabel (modeLabel,        "Mode");
+    styleLabel (controlModeLabel, "Control");
+    styleLabel (rateUpLabel,      "Rate Up");
+    styleLabel (rateDownLabel,    "Rate Down");
 
     addAndMakeVisible (targetLabel);
     addAndMakeVisible (maxBoostLabel);
     addAndMakeVisible (maxCutLabel);
     addAndMakeVisible (measLabel);
     addAndMakeVisible (modeLabel);
+    addAndMakeVisible (controlModeLabel);
     addAndMakeVisible (rateUpLabel);
     addAndMakeVisible (rateDownLabel);
 
@@ -850,6 +852,10 @@ LevelerCard::LevelerCard (LevelScopeAudioProcessor& p)
     modeBox.addItemList (juce::StringArray { "Adaptive", "Learn-Hold" }, 1);
     modeAtt = std::make_unique<ComboAttachment> (apvts, "lvlr.modeChoice", modeBox);
 
+    addAndMakeVisible (controlModeBox);
+    controlModeBox.addItemList (juce::StringArray { "Internal", "Host Gain" }, 1);
+    controlModeAtt = std::make_unique<ComboAttachment> (apvts, "lvlr.controlModeChoice", controlModeBox);
+
     learnButton.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.90f));
     addAndMakeVisible (learnButton);
     learnAtt = std::make_unique<ButtonAttachment> (apvts, "lvlr.learn01", learnButton);
@@ -878,10 +884,11 @@ void LevelerCard::resized()
     targetLabel.setVisible (! compact);   targetSlider.setVisible (! compact);
     maxBoostLabel.setVisible (! compact); maxBoostSlider.setVisible (! compact);
     maxCutLabel.setVisible (! compact);   maxCutSlider.setVisible (! compact);
-    measLabel.setVisible (! compact);     measBox.setVisible (! compact);
-    modeLabel.setVisible (! compact);     modeBox.setVisible (! compact);
-    rateUpLabel.setVisible (! compact);   rateUpSlider.setVisible (! compact);
-    rateDownLabel.setVisible (! compact); rateDownSlider.setVisible (! compact);
+    measLabel.setVisible (! compact);        measBox.setVisible (! compact);
+    modeLabel.setVisible (! compact);        modeBox.setVisible (! compact);
+    controlModeLabel.setVisible (! compact); controlModeBox.setVisible (! compact);
+    rateUpLabel.setVisible (! compact);      rateUpSlider.setVisible (! compact);
+    rateDownLabel.setVisible (! compact);    rateDownSlider.setVisible (! compact);
     learnButton.setVisible (! compact);
 
     curve.setVisible (! compact && curveArea.getWidth() > 40 && curveArea.getHeight() > 40);
@@ -909,11 +916,12 @@ void LevelerCard::resized()
         c.setBounds (rr);
     };
 
-    rowS (targetLabel,   targetSlider);
-    rowS (maxBoostLabel, maxBoostSlider);
-    rowS (maxCutLabel,   maxCutSlider);
-    rowC (measLabel,     measBox);
-    rowC (modeLabel,     modeBox);
+    rowS (targetLabel,      targetSlider);
+    rowS (maxBoostLabel,    maxBoostSlider);
+    rowS (maxCutLabel,      maxCutSlider);
+    rowC (measLabel,        measBox);
+    rowC (modeLabel,        modeBox);
+    rowC (controlModeLabel, controlModeBox);
 
     learnButton.setBounds (r.removeFromTop (rowH));
 

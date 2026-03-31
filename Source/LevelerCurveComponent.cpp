@@ -26,7 +26,15 @@ void LevelerCurveComponent::paint (juce::Graphics& g)
     g.drawRoundedRectangle (bounds, 6.0f, 1.0f);
 
     auto r = bounds.reduced (10.0f);
-    if (r.getWidth() < 90.0f || r.getHeight() < 60.0f)
+    if (r.getWidth() < 110.0f || r.getHeight() < 80.0f)
+        return;
+
+    auto topArea    = r.removeFromTop (28.0f);
+    auto bottomArea = r.removeFromBottom (18.0f);
+    auto rightArea  = r.removeFromRight (32.0f);
+    auto plot       = r;
+
+    if (plot.getWidth() < 60.0f || plot.getHeight() < 40.0f)
         return;
 
     auto& apvts = processor.getAPVTS();
@@ -60,22 +68,50 @@ void LevelerCurveComponent::paint (juce::Graphics& g)
     auto mapX = [&] (float x) -> float
     {
         const float n = (x - xMin) / (xMax - xMin);
-        return r.getX() + juce::jlimit (0.0f, 1.0f, n) * r.getWidth();
+        return plot.getX() + juce::jlimit (0.0f, 1.0f, n) * plot.getWidth();
     };
 
     auto mapY = [&] (float y) -> float
     {
         const float n = (y - yMin) / (yMax - yMin);
-        return r.getBottom() - juce::jlimit (0.0f, 1.0f, n) * r.getHeight();
+        return plot.getBottom() - juce::jlimit (0.0f, 1.0f, n) * plot.getHeight();
     };
 
     // Grid
     g.setColour (juce::Colours::white.withMultipliedAlpha (0.08f));
     for (float xTick : { -48.0f, -42.0f, -36.0f, -30.0f, -24.0f, -18.0f, -12.0f })
-        g.drawVerticalLine ((int) std::round (mapX (xTick)), r.getY(), r.getBottom());
+        g.drawVerticalLine ((int) std::round (mapX (xTick)), plot.getY(), plot.getBottom());
 
     for (float yTick : { -24.0f, -12.0f, 0.0f, 12.0f, 24.0f })
-        g.drawHorizontalLine ((int) std::round (mapY (yTick)), r.getX(), r.getRight());
+        g.drawHorizontalLine ((int) std::round (mapY (yTick)), plot.getX(), plot.getRight());
+
+    // Right-side dB ruler
+    g.setFont (10.0f);
+    g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
+    for (float yTick : { -24.0f, -12.0f, 0.0f, 12.0f, 24.0f })
+    {
+        const float y = mapY (yTick);
+        g.drawLine (plot.getRight(), y, plot.getRight() + 4.0f, y, 1.0f);
+        g.drawText (juce::String ((int) yTick),
+                    rightArea.toNearestInt().withY ((int) std::round (y - 7.0f)).withHeight (14),
+                    juce::Justification::centredRight, false);
+    }
+
+    // Bottom LUFS ruler
+    for (float xTick : { -48.0f, -36.0f, -24.0f, -12.0f })
+    {
+        const float x = mapX (xTick);
+        g.setColour (juce::Colours::white.withMultipliedAlpha (0.40f));
+        g.drawLine (x, plot.getBottom(), x, plot.getBottom() + 4.0f, 1.0f);
+
+        g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
+        g.drawText (juce::String ((int) xTick),
+                    juce::Rectangle<int> ((int) std::round (x - 18.0f),
+                                          (int) bottomArea.getY(),
+                                          36,
+                                          (int) bottomArea.getHeight()),
+                    juce::Justification::centred, false);
+    }
 
     // Dim/normal overlay alpha depending on control mode
     const float activeAlpha = hostGainMode ? 0.22f : 0.90f;
@@ -83,21 +119,21 @@ void LevelerCurveComponent::paint (juce::Graphics& g)
 
     // Clamp lines
     g.setColour (juce::Colours::limegreen.withMultipliedAlpha (activeAlpha));
-    g.drawHorizontalLine ((int) std::round (mapY ( maxBoost)), r.getX(), r.getRight());
+    g.drawHorizontalLine ((int) std::round (mapY ( maxBoost)), plot.getX(), plot.getRight());
 
     g.setColour (juce::Colours::deepskyblue.withMultipliedAlpha (activeAlpha));
-    g.drawHorizontalLine ((int) std::round (mapY (-maxCut)), r.getX(), r.getRight());
+    g.drawHorizontalLine ((int) std::round (mapY (-maxCut)), plot.getX(), plot.getRight());
 
     // Target marker
     g.setColour (juce::Colours::white.withMultipliedAlpha (hostGainMode ? 0.18f : 0.45f));
-    g.drawVerticalLine ((int) std::round (mapX (target)), r.getY(), r.getBottom());
+    g.drawVerticalLine ((int) std::round (mapX (target)), plot.getY(), plot.getBottom());
 
     // Internal conceptual mapping
     {
         juce::Path p;
         bool started = false;
 
-        const int numSteps = juce::jlimit (80, 240, (int) std::round (r.getWidth()));
+        const int numSteps = juce::jlimit (80, 240, (int) std::round (plot.getWidth()));
         for (int i = 0; i <= numSteps; ++i)
         {
             const float a = (float) i / (float) numSteps;
@@ -122,19 +158,7 @@ void LevelerCurveComponent::paint (juce::Graphics& g)
     {
         const float yHost = mapY (hostGainDb);
         g.setColour (juce::Colours::orange.withMultipliedAlpha (0.88f));
-        g.drawHorizontalLine ((int) std::round (yHost), r.getX(), r.getRight());
-
-        g.setFont (12.0f);
-        g.drawFittedText ("Host Gain active",
-                          ((int) r.getX()) + 2, (int) r.getY() + 2,
-                          (int) r.getWidth() - 4, 14,
-                          juce::Justification::topLeft, 1);
-
-        g.setColour (juce::Colours::orange.withMultipliedAlpha (0.70f));
-        g.drawFittedText ("Host " + juce::String (hostGainDb, 1) + " dB",
-                          ((int) r.getX()) + 2, (int) r.getY() + 18,
-                          (int) r.getWidth() - 4, 14,
-                          juce::Justification::topLeft, 1);
+        g.drawHorizontalLine ((int) std::round (yHost), plot.getX(), plot.getRight());
     }
 
     // Actual applied gain marker(s)
@@ -145,25 +169,12 @@ void LevelerCurveComponent::paint (juce::Graphics& g)
     g.setColour (met.gainDbCurrent >= 0.0f
                     ? juce::Colours::limegreen.withMultipliedAlpha (0.92f)
                     : juce::Colours::deepskyblue.withMultipliedAlpha (0.88f));
-    g.drawLine (r.getRight() - 18.0f, yCur, r.getRight() - 2.0f, yCur, 1.6f);
+    g.drawLine (plot.getRight() - 18.0f, yCur, plot.getRight() - 2.0f, yCur, 1.6f);
 
     g.setColour (juce::Colours::white.withMultipliedAlpha (0.85f));
-    g.drawLine (r.getRight() - 18.0f, yHold, r.getRight() - 2.0f, yHold, 1.2f);
+    g.drawLine (plot.getRight() - 18.0f, yHold, plot.getRight() - 2.0f, yHold, 1.2f);
 
-    // Internal-mode capture badge
-    if (! hostGainMode && captureArmed)
-    {
-        auto badge = juce::Rectangle<float> (r.getRight() - 58.0f, r.getY() + 4.0f, 54.0f, 16.0f);
-
-        g.setColour (juce::Colours::red.withMultipliedAlpha (0.80f));
-        g.fillRoundedRectangle (badge, 4.0f);
-
-        g.setColour (juce::Colours::white.withMultipliedAlpha (0.95f));
-        g.setFont (11.0f);
-        g.drawFittedText ("CAPTURE", badge.toNearestInt(), juce::Justification::centred, 1);
-    }
-
-    // Labels
+    // Top status area
     const char* measText = "Auto";
     if (measChoice == 1) measText = "Momentary";
     else if (measChoice == 2) measText = "Short-term";
@@ -171,17 +182,49 @@ void LevelerCurveComponent::paint (juce::Graphics& g)
     const char* modeText = (modeChoice == 1 ? "Learn-Hold" : "Adaptive");
 
     g.setFont (11.0f);
-    g.setColour (juce::Colours::white.withMultipliedAlpha (dimAlpha));
-    g.drawText ("Measured LUFS", (int) r.getX(), (int) r.getBottom() - 14, 90, 14, juce::Justification::left);
-    g.drawText ("Gain", (int) r.getRight() - 30, (int) r.getY(), 28, 14, juce::Justification::right);
 
-    g.setColour (juce::Colours::white.withMultipliedAlpha (0.62f));
-    const juce::String info = juce::String (measText) + "   " + juce::String (modeText);
-    g.drawFittedText (info,
-                      ((int) r.getX()) + 2, (int) r.getBottom() - 30,
-                      (int) r.getWidth() - 4, 14,
-                      juce::Justification::bottomLeft, 1);
+    if (hostGainMode)
+    {
+        g.setColour (juce::Colours::orange.withMultipliedAlpha (0.90f));
+        g.drawFittedText ("Host Gain active", topArea.removeFromTop (14).toNearestInt(),
+                          juce::Justification::centredLeft, 1);
+
+        g.setColour (juce::Colours::orange.withMultipliedAlpha (0.72f));
+        g.drawFittedText ("Host " + juce::String (hostGainDb, 1) + " dB",
+                          topArea.toNearestInt(),
+                          juce::Justification::centredLeft, 1);
+    }
+    else
+    {
+        auto line = topArea.removeFromTop (14);
+        g.setColour (juce::Colours::white.withMultipliedAlpha (0.65f));
+        g.drawFittedText (juce::String (measText) + "   " + juce::String (modeText),
+                          line.toNearestInt(),
+                          juce::Justification::centredLeft, 1);
+
+        if (captureArmed)
+        {
+            auto badge = juce::Rectangle<float> (line.getRight() - 54.0f, line.getY(), 54.0f, 14.0f);
+            g.setColour (juce::Colours::red.withMultipliedAlpha (0.80f));
+            g.fillRoundedRectangle (badge, 4.0f);
+
+            g.setColour (juce::Colours::white.withMultipliedAlpha (0.95f));
+            g.setFont (10.0f);
+            g.drawFittedText ("CAPTURE", badge.toNearestInt(), juce::Justification::centred, 1);
+        }
+    }
+
+    // Axis labels / target label
+    g.setFont (10.0f);
+    g.setColour (juce::Colours::white.withMultipliedAlpha (dimAlpha));
+    g.drawText ("Measured LUFS",
+                juce::Rectangle<int> ((int) plot.getX(), (int) bottomArea.getY(), 90, (int) bottomArea.getHeight()),
+                juce::Justification::centredLeft, false);
+
+    g.drawText ("Gain",
+                juce::Rectangle<int> ((int) rightArea.getX(), (int) plot.getY(), (int) rightArea.getWidth(), 12),
+                juce::Justification::centredRight, false);
 
     g.setColour (juce::Colours::white.withMultipliedAlpha (hostGainMode ? 0.45f : 0.68f));
-    g.drawText ("T", (int) mapX (target) - 8, (int) r.getY() + 2, 16, 12, juce::Justification::centred);
+    g.drawText ("T", (int) mapX (target) - 8, (int) plot.getY() + 2, 16, 12, juce::Justification::centred);
 }
