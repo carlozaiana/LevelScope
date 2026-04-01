@@ -202,7 +202,7 @@ private:
     LevelerCurveComponent curve;
     // [END UI-CURVE-LVLR-MEMBER]
 
-    juce::ToggleButton enabledButton { "Enabled" };
+    juce::ToggleButton enabledButton { "Leveler" };
 
     juce::Label targetLabel, maxBoostLabel, maxCutLabel;
     juce::Label measLabel, modeLabel, controlModeLabel;
@@ -403,7 +403,7 @@ private:
 
     // [BEGIN UI4B3-DOWNWARD-ADVANCED-MEMBERS]
     // [BEGIN UI-DOWN-BYP-MEMBERS]
-    juce::ToggleButton enabledButton { "Downward Enabled" };
+    juce::ToggleButton enabledButton { "Downward" };
     juce::ToggleButton bypassButton  { "Bypass" };
 
     juce::ToggleButton advancedToggle { "Advanced" };

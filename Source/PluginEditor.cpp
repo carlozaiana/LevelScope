@@ -794,6 +794,8 @@ LevelerCard::LevelerCard (LevelScopeAudioProcessor& p)
       curve (p)
 {
     // [BEGIN LVLR-CARD-CTOR]
+    title.setVisible (false);
+    
     addAndMakeVisible (enabledButton);
     enabledButton.setColour (juce::ToggleButton::textColourId, juce::Colours::white.withMultipliedAlpha (0.92f));
     enabledAtt = std::make_unique<ButtonAttachment> (apvts, "lvlr.enabled", enabledButton);
