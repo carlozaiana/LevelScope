@@ -192,7 +192,7 @@ void LevelerCurveComponent::paint (juce::Graphics& g)
         return;
 
     auto topArea    = r.removeFromTop (28.0f);
-    auto bottomArea = r.removeFromBottom (18.0f);
+    auto bottomArea = r.removeFromBottom (28.0f);
     auto rightArea  = r.removeFromRight (32.0f);
     auto plot       = r;
 
@@ -259,7 +259,10 @@ void LevelerCurveComponent::paint (juce::Graphics& g)
                     juce::Justification::centredRight, false);
     }
 
-    // Bottom LUFS ruler
+    // Bottom LUFS ruler: top line = ticks/labels, bottom line = axis title
+    const auto bottomTicksArea = bottomArea.removeFromTop (14.0f);
+    const auto bottomTitleArea = bottomArea;
+
     for (float xTick : { -48.0f, -36.0f, -24.0f, -12.0f })
     {
         const float x = mapX (xTick);
@@ -269,9 +272,9 @@ void LevelerCurveComponent::paint (juce::Graphics& g)
         g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
         g.drawText (juce::String ((int) xTick),
                     juce::Rectangle<int> ((int) std::round (x - 18.0f),
-                                          (int) bottomArea.getY(),
+                                          (int) bottomTicksArea.getY(),
                                           36,
-                                          (int) bottomArea.getHeight()),
+                                          (int) bottomTicksArea.getHeight()),
                     juce::Justification::centred, false);
     }
 
@@ -387,12 +390,13 @@ void LevelerCurveComponent::paint (juce::Graphics& g)
     // Axis labels / target label
     g.setFont (10.0f);
     g.setColour (juce::Colours::white.withMultipliedAlpha (dimAlpha));
-    g.drawText ("Measured LUFS",
-                juce::Rectangle<int> ((int) plot.getX(), (int) bottomArea.getY(), 90, (int) bottomArea.getHeight()),
+
+    g.drawText ("LUFS in",
+                juce::Rectangle<int> ((int) plot.getX(), (int) bottomTitleArea.getY(), 70, (int) bottomTitleArea.getHeight()),
                 juce::Justification::centredLeft, false);
 
     g.drawText ("Gain",
-                juce::Rectangle<int> ((int) rightArea.getX(), (int) plot.getY(), (int) rightArea.getWidth(), 12),
+                juce::Rectangle<int> ((int) rightArea.getX(), (int) topArea.getY(), (int) rightArea.getWidth(), 12),
                 juce::Justification::centredRight, false);
 
     g.setColour (juce::Colours::white.withMultipliedAlpha (hostGainMode ? 0.45f : 0.68f));

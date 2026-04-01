@@ -379,6 +379,7 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
         return;
     }
 
+    auto topArea    = r.removeFromTop (14.0f);
     auto bottomArea = r.removeFromBottom (28.0f);
     auto rightArea  = r.removeFromRight (32.0f);
     auto plot       = r;
@@ -426,19 +427,24 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
     for (float yTick : { 0.0f, 6.0f, 12.0f, 18.0f, 24.0f })
         g.drawHorizontalLine ((int) std::round (mapY (yTick)), plot.getX(), plot.getRight());
 
-    // Right-side GR ruler
+    // Right-side GR ruler (displayed as 0 at top, 24 at bottom to match downward meter motion)
     g.setFont (10.0f);
     g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
-    for (float yTick : { 0.0f, 6.0f, 12.0f, 18.0f, 24.0f })
+    for (float yTickDisplay : { 0.0f, 6.0f, 12.0f, 18.0f, 24.0f })
     {
-        const float y = mapY (yTick);
+        const float n = juce::jlimit (0.0f, 1.0f, yTickDisplay / yMax);
+        const float y = plot.getY() + n * plot.getHeight();
+
         g.drawLine (plot.getRight(), y, plot.getRight() + 4.0f, y, 1.0f);
-        g.drawText (juce::String ((int) yTick),
+        g.drawText (juce::String ((int) yTickDisplay),
                     rightArea.toNearestInt().withY ((int) std::round (y - 7.0f)).withHeight (14),
                     juce::Justification::centredRight, false);
     }
 
-    // Bottom LUFS ruler
+    // Bottom LUFS ruler: top line = ticks/labels, bottom line = axis title
+    const auto bottomTicksArea = bottomArea.removeFromTop (14.0f);
+    const auto bottomTitleArea = bottomArea;
+
     for (float xTick : { -60.0f, -48.0f, -36.0f, -24.0f, -12.0f, 0.0f })
     {
         const float x = mapX (xTick);
@@ -448,9 +454,9 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
         g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
         g.drawText (juce::String ((int) xTick),
                     juce::Rectangle<int> ((int) std::round (x - 18.0f),
-                                          (int) bottomArea.getBottom() - 14,
+                                          (int) bottomTicksArea.getY(),
                                           36,
-                                          14),
+                                          (int) bottomTicksArea.getHeight()),
                     juce::Justification::centred, false);
     }
 
@@ -591,11 +597,11 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
                                             (int) bottomArea.getWidth(), 14),
                       juce::Justification::centredLeft, 1);
 
-    g.drawText ("In (LUFS)",
-                juce::Rectangle<int> ((int) bottomArea.getX(), (int) bottomArea.getBottom() - 14, 70, 14),
+    g.drawText ("LUFS",
+                juce::Rectangle<int> ((int) bottomTitleArea.getX(), (int) bottomTitleArea.getY(), 50, (int) bottomTitleArea.getHeight()),
                 juce::Justification::centredLeft, false);
 
     g.drawText ("GR",
-                juce::Rectangle<int> ((int) rightArea.getX(), (int) plot.getY(), (int) rightArea.getWidth(), 12),
+                juce::Rectangle<int> ((int) rightArea.getX(), (int) topArea.getY(), (int) rightArea.getWidth(), 12),
                 juce::Justification::centredRight, false);
 }
