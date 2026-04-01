@@ -766,7 +766,7 @@ void MtdmCardComponent::paint (juce::Graphics& g)
 // [BEGIN UI4A3-CARD-CONTENTAREA-TITLE-OPTIONAL]
 juce::Rectangle<int> MtdmCardComponent::getContentArea() const
 {
-    auto r = getLocalBounds().reduced (10);
+    auto r = getLocalBounds().reduced (5);
 
     const int headerH = (title.isVisible() ? 24 : 0);
     if (headerH > 0)
@@ -780,7 +780,7 @@ juce::Rectangle<int> MtdmCardComponent::getContentArea() const
 void MtdmCardComponent::resized()
 {
     if (title.isVisible())
-        title.setBounds (getLocalBounds().reduced (10, 6).removeFromTop (18));
+        title.setBounds (getLocalBounds().reduced (5, 6).removeFromTop (18));
 }
 // [END UI4A3-CARD-RESIZED-TITLE-OPTIONAL]
 
@@ -895,7 +895,7 @@ void LevelerCard::resized()
 
     curve.setVisible (! compact && curveArea.getWidth() > 40 && curveArea.getHeight() > 40);
     if (curve.isVisible())
-        curve.setBounds (curveArea.reduced (4));
+        curve.setBounds (curveArea.reduced (0));
 
     enabledButton.setBounds (r.removeFromTop (22));
 
@@ -1817,7 +1817,7 @@ void MtdmDownwardCard::resized()
 
     curve.setVisible (! compact && curveArea.getWidth() > 40 && curveArea.getHeight() > 40);
     if (curve.isVisible())
-        curve.setBounds (curveArea.reduced (4));
+        curve.setBounds (curveArea.reduced (0));
 
     if (compact)
     {
