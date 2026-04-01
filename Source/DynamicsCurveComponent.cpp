@@ -589,17 +589,25 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
 
     // Footer info and labels
     g.setFont (10.0f);
+
+    const int axisLabelW = 44;
+
     g.setColour (juce::Colours::white.withMultipliedAlpha (0.58f));
+    g.drawText ("LUFS",
+                juce::Rectangle<int> ((int) bottomTitleArea.getX(),
+                                      (int) bottomTitleArea.getY(),
+                                      axisLabelW,
+                                      (int) bottomTitleArea.getHeight()),
+                juce::Justification::centredLeft, false);
+
     const juce::String info = "Ratio " + juce::String (safeRatio, 2)
                             + "   Knee " + juce::String (safeKnee, 1) + " dB";
     g.drawFittedText (info,
-                      juce::Rectangle<int> ((int) bottomArea.getX(), (int) bottomArea.getY(),
-                                            (int) bottomArea.getWidth(), 14),
+                      juce::Rectangle<int> ((int) bottomTitleArea.getX() + axisLabelW,
+                                            (int) bottomTitleArea.getY(),
+                                            (int) bottomTitleArea.getWidth() - axisLabelW,
+                                            (int) bottomTitleArea.getHeight()),
                       juce::Justification::centredLeft, 1);
-
-    g.drawText ("LUFS",
-                juce::Rectangle<int> ((int) bottomTitleArea.getX(), (int) bottomTitleArea.getY(), 50, (int) bottomTitleArea.getHeight()),
-                juce::Justification::centredLeft, false);
 
     g.drawText ("GR",
                 juce::Rectangle<int> ((int) rightArea.getX(), (int) topArea.getY(), (int) rightArea.getWidth(), 12),
