@@ -540,15 +540,23 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
         return juce::jlimit (yMin, yMax, gr);
     };
 
+    // Unified downward display mapping:
+    // 0 at top, more GR lower on screen.
+    auto mapMeterY = [&] (float gr) -> float
+    {
+        const float n = juce::jlimit (0.0f, 1.0f, gr / yMax);
+        return plot.getY() + n * plot.getHeight();
+    };
+
     const int numSteps = juce::jlimit (80, 240, (int) std::round (plot.getWidth()));
     for (int i = 0; i <= numSteps; ++i)
     {
         const float a = (float) i / (float) numSteps;
         const float x = xMin + a * (xMax - xMin);
-        const float y = gainReductionForInput (x);
+        const float gr = gainReductionForInput (x);
 
         const float px = mapX (x);
-        const float py = mapY (y);
+        const float py = mapMeterY (gr);
 
         if (! started) { p.startNewSubPath (px, py); started = true; }
         else           { p.lineTo (px, py); }
@@ -557,29 +565,40 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
     g.setColour (juce::Colours::deepskyblue.withMultipliedAlpha (0.95f));
     g.strokePath (p, juce::PathStrokeType (2.0f));
 
-    // Existing GR snapshot -> magnitude-only indicator (not true x/y operating point)
+    // Existing GR snapshot -> side indicator + true current x/y dot
     const auto met = processor.getDownwardMeteringSnapshot();
     const float grCur  = juce::jmax (0.0f, met.grDbCurrent);
     const float grHold = juce::jmax (0.0f, met.grDbHold);
 
-    // [BEGIN UI-CURVE-DOWN-INDICATOR-DOWNWARD]
-    // For the small GR indicator on the right edge, use meter-like behavior:
-    // more gain reduction => indicator moves downward.
-    auto mapMeterY = [&] (float gr) -> float
-    {
-        const float n = juce::jlimit (0.0f, 1.0f, gr / yMax);
-        return plot.getY() + n * plot.getHeight();
-    };
-
     const float yCur  = mapMeterY (grCur);
     const float yHold = mapMeterY (grHold);
-    // [END UI-CURVE-DOWN-INDICATOR-DOWNWARD]
 
     g.setColour (juce::Colours::deepskyblue.withMultipliedAlpha (0.85f));
     g.drawLine (plot.getRight() - 18.0f, yCur, plot.getRight() - 2.0f, yCur, 1.6f);
 
     g.setColour (juce::Colours::white.withMultipliedAlpha (0.85f));
     g.drawLine (plot.getRight() - 18.0f, yHold, plot.getRight() - 2.0f, yHold, 1.2f);
+
+    // True current x/y operating point:
+    // x = detector loudness currently feeding the downward stage
+    // y = current GR magnitude in the same display mapping as the curve/ruler
+    if (std::isfinite (met.detectorLufsCurrent) && std::isfinite (met.grDbCurrent)
+        && met.detectorLufsCurrent > -199.0f)
+    {
+        const float xDot = juce::jlimit (plot.getX(), plot.getRight(),
+                                         mapX (juce::jlimit (xMin, xMax, met.detectorLufsCurrent)));
+        const float yDot = juce::jlimit (plot.getY(), plot.getBottom(),
+                                         mapMeterY (juce::jlimit (yMin, yMax, met.grDbCurrent)));
+
+        g.setColour (juce::Colours::black.withMultipliedAlpha (0.55f));
+        g.fillEllipse (xDot - 4.5f, yDot - 4.5f, 9.0f, 9.0f);
+
+        g.setColour (juce::Colours::deepskyblue.withMultipliedAlpha (0.95f));
+        g.fillEllipse (xDot - 3.0f, yDot - 3.0f, 6.0f, 6.0f);
+
+        g.setColour (juce::Colours::white.withMultipliedAlpha (0.95f));
+        g.drawEllipse (xDot - 4.0f, yDot - 4.0f, 8.0f, 8.0f, 1.0f);
+    }
 
     // Top threshold labels
     g.setFont (10.0f);

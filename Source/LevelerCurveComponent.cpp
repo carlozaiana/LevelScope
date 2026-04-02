@@ -347,6 +347,31 @@ void LevelerCurveComponent::paint (juce::Graphics& g)
     g.setColour (juce::Colours::white.withMultipliedAlpha (0.85f));
     g.drawLine (plot.getRight() - 18.0f, yHold, plot.getRight() - 2.0f, yHold, 1.2f);
 
+    // True current x/y operating point:
+    // x = measured loudness currently feeding the Leveler
+    // y = actual applied gain
+    if (std::isfinite (met.measuredLufsCurrent) && std::isfinite (met.gainDbCurrent)
+        && met.measuredLufsCurrent > -199.0f)
+    {
+        const float xDot = juce::jlimit (plot.getX(), plot.getRight(),
+                                         mapX (juce::jlimit (xMin, xMax, met.measuredLufsCurrent)));
+        const float yDot = juce::jlimit (plot.getY(), plot.getBottom(),
+                                         mapY (juce::jlimit (yMin, yMax, met.gainDbCurrent)));
+
+        const auto dotColour = (met.gainDbCurrent >= 0.0f
+                                    ? juce::Colours::limegreen.withMultipliedAlpha (0.95f)
+                                    : juce::Colours::deepskyblue.withMultipliedAlpha (0.92f));
+
+        g.setColour (juce::Colours::black.withMultipliedAlpha (0.55f));
+        g.fillEllipse (xDot - 4.5f, yDot - 4.5f, 9.0f, 9.0f);
+
+        g.setColour (dotColour);
+        g.fillEllipse (xDot - 3.0f, yDot - 3.0f, 6.0f, 6.0f);
+
+        g.setColour (juce::Colours::white.withMultipliedAlpha (0.95f));
+        g.drawEllipse (xDot - 4.0f, yDot - 4.0f, 8.0f, 8.0f, 1.0f);
+    }
+
     // Top status area
     const char* measText = "Auto";
     if (measChoice == 1) measText = "Momentary";
