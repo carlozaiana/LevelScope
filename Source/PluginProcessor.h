@@ -154,9 +154,10 @@ public:
     // [BEGIN LS-LVLR-METERING-SNAPSHOT-API]
     struct LevelerMeteringSnapshot
     {
-        float gainDbCurrent   = 0.0f;
-        float gainDbBlockPeak = 0.0f;
-        float gainDbHold      = 0.0f;
+        float gainDbCurrent      = 0.0f;
+        float gainDbBlockPeak    = 0.0f;
+        float gainDbHold         = 0.0f;
+        float measuredLufsCurrent = -200.0f;
     };
 
     LevelerMeteringSnapshot getLevelerMeteringSnapshot() const noexcept;
@@ -187,9 +188,10 @@ public:
     // [BEGIN LS-DOWNWARD-METERING-SNAPSHOT-API]
     struct DownwardMeteringSnapshot
     {
-        float grDbCurrent   = 0.0f;
-        float grDbBlockPeak = 0.0f;
-        float grDbHold      = 0.0f;
+        float grDbCurrent        = 0.0f;
+        float grDbBlockPeak      = 0.0f;
+        float grDbHold           = 0.0f;
+        float detectorLufsCurrent = -200.0f;
     };
 
     DownwardMeteringSnapshot getDownwardMeteringSnapshot() const noexcept;

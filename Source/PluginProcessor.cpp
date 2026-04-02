@@ -1166,9 +1166,10 @@ LevelScopeAudioProcessor::LevelerMeteringSnapshot LevelScopeAudioProcessor::getL
         return s;
 
     const auto& met = m->getMetering();
-    s.gainDbCurrent   = met.gainDbCurrent.load   (std::memory_order_relaxed);
-    s.gainDbBlockPeak = met.gainDbBlockPeak.load (std::memory_order_relaxed);
-    s.gainDbHold      = met.gainDbHold.load      (std::memory_order_relaxed);
+    s.gainDbCurrent       = met.gainDbCurrent.load       (std::memory_order_relaxed);
+    s.gainDbBlockPeak     = met.gainDbBlockPeak.load     (std::memory_order_relaxed);
+    s.gainDbHold          = met.gainDbHold.load          (std::memory_order_relaxed);
+    s.measuredLufsCurrent = met.measuredLufsCurrent.load (std::memory_order_relaxed);
     return s;
 }
 // [END LS-LVLR-METERING-SNAPSHOT-IMPL]
@@ -1200,9 +1201,10 @@ LevelScopeAudioProcessor::DownwardMeteringSnapshot LevelScopeAudioProcessor::get
         return s;
 
     const auto& met = m->getDownwardMetering();
-    s.grDbCurrent   = met.grDbCurrent.load   (std::memory_order_relaxed);
-    s.grDbBlockPeak = met.grDbBlockPeak.load (std::memory_order_relaxed);
-    s.grDbHold      = met.grDbHold.load      (std::memory_order_relaxed);
+    s.grDbCurrent         = met.grDbCurrent.load         (std::memory_order_relaxed);
+    s.grDbBlockPeak       = met.grDbBlockPeak.load       (std::memory_order_relaxed);
+    s.grDbHold            = met.grDbHold.load            (std::memory_order_relaxed);
+    s.detectorLufsCurrent = met.detectorLufsCurrent.load (std::memory_order_relaxed);
     return s;
 }
 // [END LS-DOWNWARD-METERING-SNAPSHOT-IMPL]
