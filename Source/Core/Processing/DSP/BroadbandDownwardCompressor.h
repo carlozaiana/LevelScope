@@ -73,8 +73,13 @@ public:
     // [BEGIN LS-BDC-METERING-GETTERS]
     // Non-RT/UI safe to read; written by audio thread once per process() call.
     // These gains are the compressor gain (zone crossfade + smoothing), EXCLUDING makeup gain.
-    float getLastBlockMinCompGain() const noexcept { return lastBlockMinCompGain; }
-    float getLastBlockLastCompGain() const noexcept { return lastBlockLastCompGain; }
+    float getLastBlockMinCompGain() const noexcept   { return lastBlockMinCompGain; }
+    float getLastBlockLastCompGain() const noexcept  { return lastBlockLastCompGain; }
+
+    // Current detector loudness/proxy (LUFS-ish) used for downward engagement.
+    // Linked/dialog-mask: shared detector at end of block.
+    // Unlinked: max current detector loudness across active channels at end of block.
+    float getLastBlockDetectorLufs() const noexcept  { return lastBlockDetectorLufs; }
     // [END LS-BDC-METERING-GETTERS]
 
     // [BEGIN LS-BDC-LFE-POLICY-API]
@@ -152,8 +157,9 @@ private:
     float lastReleaseMs = -1.0f;
 
     // [BEGIN LS-BDC-METERING-MEMBERS]
-    float lastBlockMinCompGain  = 1.0f; // minimum compressor gain (<=1) in last process() call
-    float lastBlockLastCompGain = 1.0f; // last compressor gain in last process() call
+    float lastBlockMinCompGain   = 1.0f;    // minimum compressor gain (<=1) in last process() call
+    float lastBlockLastCompGain  = 1.0f;    // last compressor gain in last process() call
+    float lastBlockDetectorLufs  = -200.0f; // current detector loudness/proxy at end of last process() call
     // [END LS-BDC-METERING-MEMBERS]
 };
 } // namespace levelscope::dsp

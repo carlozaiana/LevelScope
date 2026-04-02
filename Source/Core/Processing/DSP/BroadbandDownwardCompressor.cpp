@@ -249,8 +249,9 @@ void BroadbandDownwardCompressor::process (juce::AudioBuffer<float>& buffer) noe
     const float makeupLin = dbToLin (params.makeupDb);
 
     // [BEGIN LS-BDC-METERING-INIT]
-    float blockMinG  = 1.0f;
-    float blockLastG = 1.0f;
+    float blockMinG         = 1.0f;
+    float blockLastG        = 1.0f;
+    float blockDetectorLufs = -200.0f;
     // [END LS-BDC-METERING-INIT]
 
     // [BEGIN LS-BDC-STAGE-E-LINKED-UNLINKED-LOOPS]
@@ -275,6 +276,7 @@ void BroadbandDownwardCompressor::process (juce::AudioBuffer<float>& buffer) noe
             envMS = a * envMS + (1.0f - a) * e;
 
             const float L = (float) (-0.691 + 10.0 * std::log10 ((double) envMS + 1.0e-12));
+            blockDetectorLufs = L;
 
             float pos = (L - t2) / zoneWidth;
             const float zone01 = smoothstep01 (pos);
@@ -302,10 +304,12 @@ void BroadbandDownwardCompressor::process (juce::AudioBuffer<float>& buffer) noe
     {
         // Unlinked: per-channel detectors/gains, applied per channel (apply channels)
         float lastMinAtEnd = 1.0f;
+        float lastMaxLAtEnd = -200.0f;
 
         for (int i = 0; i < numSamples; ++i)
         {
             float minGainThisSample = 1.0f;
+            float maxLThisSample = -200.0f;
 
             for (int ai = 0; ai < applyCount; ++ai)
             {
@@ -323,6 +327,7 @@ void BroadbandDownwardCompressor::process (juce::AudioBuffer<float>& buffer) noe
                 env = a * env + (1.0f - a) * e;
 
                 const float L = (float) (-0.691 + 10.0 * std::log10 ((double) env + 1.0e-12));
+                maxLThisSample = std::max (maxLThisSample, L);
 
                 float pos = (L - t2) / zoneWidth;
                 const float zone01 = smoothstep01 (pos);
@@ -342,14 +347,17 @@ void BroadbandDownwardCompressor::process (juce::AudioBuffer<float>& buffer) noe
             }
 
             lastMinAtEnd = minGainThisSample;
+            lastMaxLAtEnd = maxLThisSample;
         }
 
         blockLastG = lastMinAtEnd;
+        blockDetectorLufs = lastMaxLAtEnd;
     }
     // [END LS-BDC-STAGE-E-LINKED-UNLINKED-LOOPS]
     // [BEGIN LS-BDC-METERING-STORE]
     lastBlockMinCompGain  = blockMinG;
     lastBlockLastCompGain = blockLastG;
+    lastBlockDetectorLufs = blockDetectorLufs;
     // [END LS-BDC-METERING-STORE]
 }
 } // namespace levelscope::dsp
