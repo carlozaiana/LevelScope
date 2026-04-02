@@ -58,6 +58,9 @@ namespace levelscope
             std::atomic<float> grDbCurrent   { 0.0f };
             std::atomic<float> grDbBlockPeak { 0.0f };
             std::atomic<float> grDbHold      { 0.0f };
+
+            // Current detector loudness/proxy (LUFS-ish) that drives downward engagement.
+            std::atomic<float> detectorLufsCurrent { -200.0f };
         };
 
         const DownwardMetering& getDownwardMetering() const noexcept { return downwardMetering; }

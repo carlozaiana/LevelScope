@@ -210,6 +210,13 @@ namespace levelscope
             upwardMetering.boostDbHold.store      (0.0f, std::memory_order_relaxed);
             // [END MTDM-UPWARD-METERING-RESET]
 
+            // [BEGIN MTDM-DOWNWARD-METERING-RESET]
+            downwardMetering.grDbCurrent.store        (0.0f,   std::memory_order_relaxed);
+            downwardMetering.grDbBlockPeak.store      (0.0f,   std::memory_order_relaxed);
+            downwardMetering.grDbHold.store           (0.0f,   std::memory_order_relaxed);
+            downwardMetering.detectorLufsCurrent.store (-200.0f, std::memory_order_relaxed);
+            // [END MTDM-DOWNWARD-METERING-RESET]
+
             // [BEGIN MTDM-ZONE-AUDITION-RESET-GATE-BUFFERS]
             if (! zoneGateDelayLine.empty())
                 std::fill (zoneGateDelayLine.begin(), zoneGateDelayLine.end(), 1.0f);
@@ -1030,20 +1037,23 @@ namespace levelscope
                 downwardHoldDbInternal = 0.0f;
                 downwardHoldSamplesLeft = 0;
 
-                downwardMetering.grDbCurrent.store   (0.0f, std::memory_order_relaxed);
-                downwardMetering.grDbBlockPeak.store (0.0f, std::memory_order_relaxed);
-                downwardMetering.grDbHold.store      (0.0f, std::memory_order_relaxed);
+                downwardMetering.grDbCurrent.store         (0.0f,   std::memory_order_relaxed);
+                downwardMetering.grDbBlockPeak.store       (0.0f,   std::memory_order_relaxed);
+                downwardMetering.grDbHold.store            (0.0f,   std::memory_order_relaxed);
+                downwardMetering.detectorLufsCurrent.store (-200.0f, std::memory_order_relaxed);
             }
             else
             {
-                const float minGain  = downwardProcessor.comp.getLastBlockMinCompGain();
-                const float lastGain = downwardProcessor.comp.getLastBlockLastCompGain();
+                const float minGain      = downwardProcessor.comp.getLastBlockMinCompGain();
+                const float lastGain     = downwardProcessor.comp.getLastBlockLastCompGain();
+                const float detectorLufs = downwardProcessor.comp.getLastBlockDetectorLufs();
 
                 const float grBlockPeak = gainToGrDbDown (minGain);
                 const float grCurrent   = gainToGrDbDown (lastGain);
 
-                downwardMetering.grDbBlockPeak.store (grBlockPeak, std::memory_order_relaxed);
-                downwardMetering.grDbCurrent.store   (grCurrent,   std::memory_order_relaxed);
+                downwardMetering.grDbBlockPeak.store       (grBlockPeak,   std::memory_order_relaxed);
+                downwardMetering.grDbCurrent.store         (grCurrent,     std::memory_order_relaxed);
+                downwardMetering.detectorLufsCurrent.store (detectorLufs,  std::memory_order_relaxed);
 
                 const int holdSamples = (int) std::lround (preparedSampleRate * (double) downwardHoldTimeSeconds);
                 const float decayDbThisBlock =

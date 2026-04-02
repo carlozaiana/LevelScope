@@ -55,9 +55,15 @@ namespace levelscope
 
         struct Metering
         {
-            std::atomic<float> gainDbCurrent   { 0.0f };
-            std::atomic<float> gainDbBlockPeak { 0.0f };
-            std::atomic<float> gainDbHold      { 0.0f };
+            std::atomic<float> gainDbCurrent      { 0.0f };
+            std::atomic<float> gainDbBlockPeak    { 0.0f };
+            std::atomic<float> gainDbHold         { 0.0f };
+
+            // Current measurement-selected detector loudness (LUFS-ish):
+            // Auto -> ST if valid else M
+            // Momentary -> M
+            // Short-term -> ST with internal fallback until valid
+            std::atomic<float> measuredLufsCurrent { -200.0f };
         };
 
         LevelerModule();

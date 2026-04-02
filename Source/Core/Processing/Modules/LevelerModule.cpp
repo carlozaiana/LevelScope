@@ -550,6 +550,8 @@ namespace levelscope
 
         const int mcPolicyChoice = readChoiceOrDefault (pMcPolicyChoice, 0);
 
+        float measuredForMeter = -200.0f;
+
         for (int ch = 0; ch < numChannels; ++ch)
             desiredGainDbByChannel[(size_t) ch] = 0.0f;
 
@@ -557,6 +559,37 @@ namespace levelscope
         {
             if (useHostGain)
             {
+                if (mcPolicyChoice == 2) // Unlinked: represent the hottest current channel detector
+                {
+                    bool haveMeasured = false;
+                    float maxMeasured = -200.0f;
+
+                    for (int ch = 0; ch < numChannels; ++ch)
+                    {
+                        const uint16_t bit = bitForChannel (ch);
+
+                        if ((applyMaskBits & bit) == 0 || (detectMaskBits & bit) == 0)
+                            continue;
+
+                        const float measured =
+                            computeMaskedCurrentMeasurementLufs (bit, numChannels, measChoice);
+
+                        if (! haveMeasured || measured > maxMeasured)
+                        {
+                            maxMeasured = measured;
+                            haveMeasured = true;
+                        }
+                    }
+
+                    if (haveMeasured)
+                        measuredForMeter = maxMeasured;
+                }
+                else // Linked / Dialog-mask
+                {
+                    measuredForMeter =
+                        computeMaskedCurrentMeasurementLufs (detectMaskBits, numChannels, measChoice);
+                }
+
                 for (int ch = 0; ch < numChannels; ++ch)
                 {
                     const uint16_t bit = bitForChannel (ch);
@@ -565,6 +598,9 @@ namespace levelscope
             }
             else if (mcPolicyChoice == 2) // Unlinked
             {
+                bool haveMeasured = false;
+                float maxMeasured = -200.0f;
+
                 for (int ch = 0; ch < numChannels; ++ch)
                 {
                     const uint16_t bit = bitForChannel (ch);
@@ -579,6 +615,15 @@ namespace levelscope
                         ((detectMaskBits & bit) != 0
                             ? computeMaskedCurrentMeasurementLufs (bit, numChannels, measChoice)
                             : -200.0f);
+
+                    if ((detectMaskBits & bit) != 0)
+                    {
+                        if (! haveMeasured || measured > maxMeasured)
+                        {
+                            maxMeasured = measured;
+                            haveMeasured = true;
+                        }
+                    }
 
                     const float candidate =
                         computeDesiredGainDbForMeasurement (measured, targetLufs, maxBoostDb, maxCutDb);
@@ -596,11 +641,16 @@ namespace levelscope
                             (haveCommittedHoldGain ? heldGainDbByChannel[(size_t) ch] : 0.0f);
                     }
                 }
+
+                if (haveMeasured)
+                    measuredForMeter = maxMeasured;
             }
             else // Linked / Dialog-mask
             {
                 const float sharedMeasured =
                     computeMaskedCurrentMeasurementLufs (detectMaskBits, numChannels, measChoice);
+
+                measuredForMeter = sharedMeasured;
 
                 const float sharedCandidate =
                     computeDesiredGainDbForMeasurement (sharedMeasured, targetLufs, maxBoostDb, maxCutDb);
@@ -630,6 +680,8 @@ namespace levelscope
                 }
             }
         }
+
+        metering.measuredLufsCurrent.store (measuredForMeter, std::memory_order_relaxed);
 
         std::array<float, maxSupportedChannels> blockStartGainDbByChannel {};
         std::array<float, maxSupportedChannels> blockEndGainDbByChannel   {};
