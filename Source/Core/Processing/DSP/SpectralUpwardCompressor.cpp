@@ -1,4 +1,7 @@
 #include "SpectralUpwardCompressor.h"
+// [BEGIN LS-SUC-UPWARD-GAINLAW-INCLUDE]
+#include "../DSP/UpwardGainLaw.h"
+// [END LS-SUC-UPWARD-GAINLAW-INCLUDE]
 
 namespace levelscope::dsp
 {
@@ -146,7 +149,7 @@ void SpectralUpwardCompressor::prepare (double sampleRate,
     smoothedOffsetDb = 0.0;
 
     // Global zone smoothing (Option A). Slow enough to avoid audible pumping.
-    globalZoneSmoother.prepare (fs, activeHopSize, 0.5 /*seconds*/);
+    globalZoneSmoother.prepare (fs, activeHopSize, 0.5 /*attackSeconds*/, 0.05 /*releaseSeconds*/);
     smoothedGlobalZoneAmount01 = 1.0f;
 
     // [BEGIN LS-SUC-STAGE-E-PREPARE-UNLINKED-SMOOTHERS]
@@ -155,7 +158,7 @@ void SpectralUpwardCompressor::prepare (double sampleRate,
         offsetSmootherUnlinked[(size_t) chIdx].prepare (fs, activeHopSize, 4.0);
         smoothedOffsetDbUnlinked[(size_t) chIdx] = 0.0;
 
-        globalZoneSmootherUnlinked[(size_t) chIdx].prepare (fs, activeHopSize, 0.5);
+        globalZoneSmootherUnlinked[(size_t) chIdx].prepare (fs, activeHopSize, 0.5, 0.05);
         smoothedGlobalZoneAmount01Unlinked[(size_t) chIdx] = 1.0f;
     }
     // [END LS-SUC-STAGE-E-PREPARE-UNLINKED-SMOOTHERS]
@@ -222,12 +225,12 @@ void SpectralUpwardCompressor::setParametersAudioThread (const Parameters& p) no
 
         // [BEGIN LS-SUC-PARAMS-REPREPARE-SMOOTHERS]
         offsetSmoother.prepare (fs, activeHopSize, 4.0);
-        globalZoneSmoother.prepare (fs, activeHopSize, 0.5);
+        globalZoneSmoother.prepare (fs, activeHopSize, 0.5, 0.05);
 
         for (int chIdx = 0; chIdx < kMaxMaskChannels; ++chIdx)
         {
             offsetSmootherUnlinked[(size_t) chIdx].prepare (fs, activeHopSize, 4.0);
-            globalZoneSmootherUnlinked[(size_t) chIdx].prepare (fs, activeHopSize, 0.5);
+            globalZoneSmootherUnlinked[(size_t) chIdx].prepare (fs, activeHopSize, 0.5, 0.05);
         }
 
         pendingHardReset = true;
@@ -376,43 +379,21 @@ void SpectralUpwardCompressor::updateSmoothersNoAlloc() noexcept
 }
 
 float SpectralUpwardCompressor::computeTargetGainLinear (float bandLevelDb,
-                                                        float t0SpectralDb,
-                                                        float t1SpectralDb) noexcept
+                                                         float t0SpectralDb,
+                                                         float t1SpectralDb) noexcept
 {
-    // Active zone fades (soft knees)
-    const float lowFade  = softKnee01 (bandLevelDb, t0SpectralDb, params.lowKneeDb);
-    const float highFade = 1.0f - softKnee01 (bandLevelDb, t1SpectralDb, params.highKneeDb);
-    const float active = lowFade * highFade;
+    UpwardGainLaw::Params law;
+    law.t0Db       = t0SpectralDb;
+    law.t1Db       = t1SpectralDb;
+    law.lowKneeDb  = params.lowKneeDb;
+    law.highKneeDb = params.highKneeDb;
+    law.maxBoostDb = std::max (0.0f, params.maxBoostDb);
+    law.curve01    = juce::jlimit (0.0f, 1.0f, params.curve);
+    law.curveType  = (params.curveType == CurveType::bell ? UpwardGainLaw::CurveType::bell
+                                                          : UpwardGainLaw::CurveType::monotonic);
 
-    if (active < 0.001f)
-        return 1.0f;
-
-    const float range = std::max (1.0f, t1SpectralDb - t0SpectralDb);
-    float pos = (bandLevelDb - t0SpectralDb) / range; // 0..1 across zone
-    pos = juce::jlimit (0.0f, 1.0f, pos);
-
-    const float expo = 1.0f + juce::jlimit (0.0f, 1.0f, params.curve) * 3.0f;
-
-    float boostDb = 0.0f;
-
-    if (params.curveType == CurveType::monotonic)
-    {
-        // quiet end (near T0) => max boost, approaching T1 => 0 boost
-        const float shaped = std::pow (std::max (0.0f, 1.0f - pos), expo);
-        boostDb = params.maxBoostDb * shaped;
-    }
-    else // CurveType::bell
-    {
-        const float d = std::abs (pos - 0.5f) * 2.0f; // 0..1
-        const float shaped = std::pow (std::max (0.0f, 1.0f - d), expo);
-        boostDb = params.maxBoostDb * shaped;
-    }
-
-    boostDb *= active;
-    boostDb = juce::jlimit (0.0f, params.maxBoostDb, boostDb);
-
-    const float g = std::pow (10.0f, boostDb / 20.0f);
-    return g;
+    // NOTE: This returns the *base* gain (no amount fade). Caller applies amount in linear domain.
+    return UpwardGainLaw::computeBaseGainLin (bandLevelDb, law);
 }
 
 // [BEGIN LS-SUC-STAGE-E-PROCESSFRAME-REPLACE]
@@ -582,35 +563,25 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
         const float t1SpectralDb = (float) ((double) params.t1Lufs - effectiveOffsetDb);
 
         // Global zone amount (linked)
-        auto kneeUpToThreshold01 = [] (float levelDb, float threshold, float kneeWidthDb) noexcept
+        // [BEGIN LS-SUC-GLOBAL-ZONE-USING-UPWARDGAINLAW-LINKED]
         {
-            kneeWidthDb = juce::jmax (1.0e-4f, kneeWidthDb);
-            const float start = threshold - kneeWidthDb;
-            if (levelDb <= start)     return 0.0f;
-            if (levelDb >= threshold) return 1.0f;
-            const float t = (levelDb - start) / kneeWidthDb;
-            return t * t * (3.0f - 2.0f * t);
-        };
+            UpwardGainLaw::Params zoneLaw;
+            zoneLaw.t0Db       = params.t0Lufs;
+            zoneLaw.t1Db       = params.t1Lufs;
+            zoneLaw.lowKneeDb  = params.lowKneeDb;
+            zoneLaw.highKneeDb = params.highKneeDb;
+            zoneLaw.maxBoostDb = 0.0f;  // not used for zone computation
+            zoneLaw.curve01    = 0.0f;  // not used for zone computation
+            zoneLaw.curveType  = UpwardGainLaw::CurveType::monotonic;
 
-        {
             const float L = (float) broadbandDb;
 
-            const float inAroundT0  = kneeUpToThreshold01 (L, params.t0Lufs, params.lowKneeDb);
-            const float outAroundT1 = 1.0f - kneeUpToThreshold01 (L, params.t1Lufs, params.highKneeDb);
+            // 0..1 target zone activity; becomes 0 at/above T1, but we now return smoothly via the smoother.
+            const float zoneTarget01 = UpwardGainLaw::computeActiveZone01 (L, zoneLaw);
 
-            const float zoneTarget01 = juce::jlimit (0.0f, 1.0f, inAroundT0 * outAroundT1);
-
-            if (L >= params.t1Lufs)
-            {
-                smoothedGlobalZoneAmount01 = 0.0f;
-                for (int bi = 0; bi < numBands; ++bi)
-                    bandSmoothers[(size_t) bi].reset();
-            }
-            else
-            {
-                smoothedGlobalZoneAmount01 = globalZoneSmoother.process (zoneTarget01);
-            }
+            smoothedGlobalZoneAmount01 = globalZoneSmoother.process (zoneTarget01);
         }
+        // [END LS-SUC-GLOBAL-ZONE-USING-UPWARDGAINLAW-LINKED]
 
         const float effectiveAmount = juce::jlimit (0.0f, 1.0f, userAmount * smoothedGlobalZoneAmount01);
 
@@ -698,16 +669,6 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
     else
     {
         // --- Unlinked: per-channel detector and per-channel smoothing
-        auto kneeUpToThreshold01 = [] (float levelDb, float threshold, float kneeWidthDb) noexcept
-        {
-            kneeWidthDb = juce::jmax (1.0e-4f, kneeWidthDb);
-            const float start = threshold - kneeWidthDb;
-            if (levelDb <= start)     return 0.0f;
-            if (levelDb >= threshold) return 1.0f;
-            const float t = (levelDb - start) / kneeWidthDb;
-            return t * t * (3.0f - 2.0f * t);
-        };
-
         for (int ai = 0; ai < applyCount; ++ai)
         {
             const int chAp = (int) applyIdx[(size_t) ai];
@@ -744,24 +705,24 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
             const float t0SpectralDb = (float) ((double) params.t0Lufs - effectiveOffsetDb);
             const float t1SpectralDb = (float) ((double) params.t1Lufs - effectiveOffsetDb);
 
-            // zone
+            // [BEGIN LS-SUC-GLOBAL-ZONE-USING-UPWARDGAINLAW-UNLINKED]
             const float L = (float) broadbandDb;
 
-            const float inAroundT0  = kneeUpToThreshold01 (L, params.t0Lufs, params.lowKneeDb);
-            const float outAroundT1 = 1.0f - kneeUpToThreshold01 (L, params.t1Lufs, params.highKneeDb);
-            const float zoneTarget01 = juce::jlimit (0.0f, 1.0f, inAroundT0 * outAroundT1);
+            UpwardGainLaw::Params zoneLaw;
+            zoneLaw.t0Db       = params.t0Lufs;
+            zoneLaw.t1Db       = params.t1Lufs;
+            zoneLaw.lowKneeDb  = params.lowKneeDb;
+            zoneLaw.highKneeDb = params.highKneeDb;
+            zoneLaw.maxBoostDb = 0.0f;  // not used for zone computation
+            zoneLaw.curve01    = 0.0f;  // not used for zone computation
+            zoneLaw.curveType  = UpwardGainLaw::CurveType::monotonic;
 
-            if (L >= params.t1Lufs)
-            {
-                smoothedGlobalZoneAmount01Unlinked[(size_t) chAp] = 0.0f;
-                for (int bi = 0; bi < numBands; ++bi)
-                    bandSmoothersUnlinked[(size_t) chAp][(size_t) bi].reset();
-            }
-            else
-            {
-                smoothedGlobalZoneAmount01Unlinked[(size_t) chAp] =
-                    globalZoneSmootherUnlinked[(size_t) chAp].process (zoneTarget01);
-            }
+            const float zoneTarget01 = UpwardGainLaw::computeActiveZone01 (L, zoneLaw);
+
+            // Smooth return to unity above T1 (no hard reset of band smoothers)
+            smoothedGlobalZoneAmount01Unlinked[(size_t) chAp] =
+                globalZoneSmootherUnlinked[(size_t) chAp].process (zoneTarget01);
+            // [END LS-SUC-GLOBAL-ZONE-USING-UPWARDGAINLAW-UNLINKED]
 
             const float effectiveAmount =
                 juce::jlimit (0.0f, 1.0f, userAmount * smoothedGlobalZoneAmount01Unlinked[(size_t) chAp]);

@@ -1,4 +1,7 @@
 #include "BroadbandUpwardCompressor.h"
+// [BEGIN LS-BUC-UPWARD-GAINLAW-INCLUDE]
+#include "../DSP/UpwardGainLaw.h"
+// [END LS-BUC-UPWARD-GAINLAW-INCLUDE]
 
 namespace levelscope::dsp
 {
@@ -184,16 +187,6 @@ void BroadbandUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexc
 
     const bool doUnlinked = (externalMasksActive && externalUnlinked);
 
-    auto kneeUpToThreshold01 = [] (float levelDb, float threshold, float kneeWidthDb) noexcept
-    {
-        kneeWidthDb = juce::jmax (1.0e-4f, kneeWidthDb);
-        const float start = threshold - kneeWidthDb;
-        if (levelDb <= start)     return 0.0f;
-        if (levelDb >= threshold) return 1.0f;
-        const float tt = (levelDb - start) / kneeWidthDb;
-        return tt * tt * (3.0f - 2.0f * tt);
-    };
-
     if (! doUnlinked)
     {
         for (int i = 0; i < numSamples; ++i)
@@ -217,33 +210,31 @@ void BroadbandUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexc
 
             const float L = (float) (-0.691 + 10.0 * std::log10 ((double) envMS + 1.0e-12));
 
-            const float inAroundT0  = kneeUpToThreshold01 (L, t0, params.lowKneeDb);
-            const float outAroundT1 = 1.0f - kneeUpToThreshold01 (L, t1, params.highKneeDb);
-            const float zone01      = juce::jlimit (0.0f, 1.0f, inAroundT0 * outAroundT1);
+            // [BEGIN LS-BUC-UPWARD-GAINLAW-LINKED]
+            UpwardGainLaw::Params law;
+            law.t0Db       = t0;
+            law.t1Db       = t1;
+            law.lowKneeDb  = params.lowKneeDb;
+            law.highKneeDb = params.highKneeDb;
+            law.maxBoostDb = maxBoostDb;
+            law.curve01    = curve01;
+            law.curveType  = (params.curveType == CurveType::bell ? UpwardGainLaw::CurveType::bell
+                                                                  : UpwardGainLaw::CurveType::monotonic);
 
-            if (L >= t1)
-                gainZ = 1.0f;
+            const float baseGain   = UpwardGainLaw::computeBaseGainLin (L, law);
+            const float gainTarget = UpwardGainLaw::applyAmountLin (baseGain, userAmount);
 
-            float pos = (L - t0) / range;
-            pos = juce::jlimit (0.0f, 1.0f, pos);
+            // Smooth return to unity above T1: when L >= T1 and we are moving downwards, use fast coeff.
+            const bool aboveT1 = (L >= t1);
 
-            float shaped = 0.0f;
-            if (params.curveType == CurveType::monotonic)
-                shaped = std::pow (std::max (0.0f, 1.0f - pos), expo);
+            float aG = 0.0f;
+            if (gainTarget > gainZ)
+                aG = aGainA;
             else
-            {
-                const float d = std::abs (pos - 0.5f) * 2.0f;
-                shaped = std::pow (std::max (0.0f, 1.0f - d), expo);
-            }
+                aG = (aboveT1 ? aGainA : aGainR);
 
-            float boostDb = maxBoostDb * shaped * zone01;
-            boostDb = juce::jlimit (0.0f, maxBoostDb, boostDb);
-
-            const float baseGain = dbToLin (boostDb);
-            const float gainTarget = 1.0f + (baseGain - 1.0f) * userAmount;
-
-            const float aG = (gainTarget > gainZ ? aGainA : aGainR);
             gainZ = aG * gainZ + (1.0f - aG) * gainTarget;
+            // [END LS-BUC-UPWARD-GAINLAW-LINKED]
 
             // [BEGIN LS-BUC-UPWARD-METERING-LINKED-UPDATE]
             blockMaxG  = std::max (blockMaxG, gainZ);
@@ -284,33 +275,30 @@ void BroadbandUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexc
 
                 const float L = (float) (-0.691 + 10.0 * std::log10 ((double) env + 1.0e-12));
 
-                const float inAroundT0  = kneeUpToThreshold01 (L, t0, params.lowKneeDb);
-                const float outAroundT1 = 1.0f - kneeUpToThreshold01 (L, t1, params.highKneeDb);
-                const float zone01      = juce::jlimit (0.0f, 1.0f, inAroundT0 * outAroundT1);
+                // [BEGIN LS-BUC-UPWARD-GAINLAW-UNLINKED]
+                UpwardGainLaw::Params law;
+                law.t0Db       = t0;
+                law.t1Db       = t1;
+                law.lowKneeDb  = params.lowKneeDb;
+                law.highKneeDb = params.highKneeDb;
+                law.maxBoostDb = maxBoostDb;
+                law.curve01    = curve01;
+                law.curveType  = (params.curveType == CurveType::bell ? UpwardGainLaw::CurveType::bell
+                                                                      : UpwardGainLaw::CurveType::monotonic);
 
-                if (L >= t1)
-                    gz = 1.0f;
+                const float baseGain   = UpwardGainLaw::computeBaseGainLin (L, law);
+                const float gainTarget = UpwardGainLaw::applyAmountLin (baseGain, userAmount);
 
-                float pos = (L - t0) / range;
-                pos = juce::jlimit (0.0f, 1.0f, pos);
+                const bool aboveT1 = (L >= t1);
 
-                float shaped = 0.0f;
-                if (params.curveType == CurveType::monotonic)
-                    shaped = std::pow (std::max (0.0f, 1.0f - pos), expo);
+                float aG = 0.0f;
+                if (gainTarget > gz)
+                    aG = aGainA;
                 else
-                {
-                    const float d = std::abs (pos - 0.5f) * 2.0f;
-                    shaped = std::pow (std::max (0.0f, 1.0f - d), expo);
-                }
+                    aG = (aboveT1 ? aGainA : aGainR);
 
-                float boostDb = maxBoostDb * shaped * zone01;
-                boostDb = juce::jlimit (0.0f, maxBoostDb, boostDb);
-
-                const float baseGain = dbToLin (boostDb);
-                const float gainTarget = 1.0f + (baseGain - 1.0f) * userAmount;
-
-                const float aG = (gainTarget > gz ? aGainA : aGainR);
                 gz = aG * gz + (1.0f - aG) * gainTarget;
+                // [END LS-BUC-UPWARD-GAINLAW-UNLINKED]
 
                 // [BEGIN LS-BUC-UPWARD-METERING-UNLINKED-UPDATE]
                 sampleMaxG = std::max (sampleMaxG, gz);

@@ -199,11 +199,17 @@ private:
     // [BEGIN LS-SUC-GLOBAL-AMOUNT-SMOOTHER]
     struct OnePoleSmoother
     {
-        void prepare (double sampleRate, int hopSamples, double timeSeconds) noexcept
+        // Asymmetric 0..1 smoother (attack/release in seconds).
+        void prepare (double sampleRate, int hopSamples, double attackSeconds, double releaseSeconds) noexcept
         {
-            const double dt  = (double) hopSamples / std::max (1.0, sampleRate);
-            const double tau = std::max (0.01, timeSeconds);
-            a = std::exp (-dt / tau);
+            const double dt = (double) hopSamples / std::max (1.0, sampleRate);
+
+            const double tauA = std::max (0.01, attackSeconds);
+            const double tauR = std::max (0.01, releaseSeconds);
+
+            aA = std::exp (-dt / tauA);
+            aR = std::exp (-dt / tauR);
+
             z = 0.0f;
             hasValue = false;
         }
@@ -225,12 +231,14 @@ private:
                 return z;
             }
 
+            const double a = (x > z ? aA : aR);
             z = (float) (a * (double) z + (1.0 - a) * (double) x);
             return z;
         }
 
-        double a = 0.99;
-        float  z = 0.0f;
+        double aA = 0.99;
+        double aR = 0.99;
+        float  z  = 0.0f;
         bool   hasValue = false;
     };
     // [END LS-SUC-GLOBAL-AMOUNT-SMOOTHER]
