@@ -564,26 +564,30 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
 
         // Global zone amount (linked)
         // [BEGIN LS-SUC-GLOBAL-ZONE-USING-UPWARDGAINLAW-LINKED]
+        float zoneTarget01Linked = 1.0f;
+
         {
             UpwardGainLaw::Params zoneLaw;
             zoneLaw.t0Db       = params.t0Lufs;
             zoneLaw.t1Db       = params.t1Lufs;
             zoneLaw.lowKneeDb  = params.lowKneeDb;
             zoneLaw.highKneeDb = params.highKneeDb;
-            zoneLaw.maxBoostDb = 0.0f;  // not used for zone computation
-            zoneLaw.curve01    = 0.0f;  // not used for zone computation
+            zoneLaw.maxBoostDb = 0.0f;
+            zoneLaw.curve01    = 0.0f;
             zoneLaw.curveType  = UpwardGainLaw::CurveType::monotonic;
 
             const float L = (float) broadbandDb;
 
-            // 0..1 target zone activity; becomes 0 at/above T1, but we now return smoothly via the smoother.
-            const float zoneTarget01 = UpwardGainLaw::computeActiveZone01 (L, zoneLaw);
+            // 0..1 instantaneous target (0 at/above T1)
+            zoneTarget01Linked = UpwardGainLaw::computeActiveZone01 (L, zoneLaw);
 
-            smoothedGlobalZoneAmount01 = globalZoneSmoother.process (zoneTarget01);
+            // Smoothed applied zone (fast release) for "smooth return to unity"
+            smoothedGlobalZoneAmount01 = globalZoneSmoother.process (zoneTarget01Linked);
         }
-        // [END LS-SUC-GLOBAL-ZONE-USING-UPWARDGAINLAW-LINKED]
 
-        const float effectiveAmount = juce::jlimit (0.0f, 1.0f, userAmount * smoothedGlobalZoneAmount01);
+        // If we're at/above T1, steer band smoothers toward unity (prevents hidden gain buildup)
+        const bool zoneOffNow = (zoneTarget01Linked <= 1.0e-6f);
+        // [END LS-SUC-GLOBAL-ZONE-USING-UPWARDGAINLAW-LINKED]
 
         // Per-band linked gains (measure over detector channels, apply over apply channels)
         for (int bi = 0; bi < numBands; ++bi)
@@ -617,8 +621,14 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
             const double meanBinPower = pBand / (double) (nBins * std::max (1, detectCount));
             const float bandDb = (float) (10.0 * std::log10 (meanBinPower / refPower + 1.0e-18));
 
-            float targetG = computeTargetGainLinear (bandDb, t0SpectralDb, t1SpectralDb);
-            targetG = 1.0f + (targetG - 1.0f) * effectiveAmount;
+            // [BEGIN LS-SUC-ZONE-LAST-LINKED-TARGET]
+            const float baseG = computeTargetGainLinear (bandDb, t0SpectralDb, t1SpectralDb); // >= 1, no amount applied
+            float targetG = 1.0f + (baseG - 1.0f) * userAmount;
+
+            // Above T1: steer smoother targets to unity so no hidden boost accumulates
+            if (zoneOffNow)
+                targetG = 1.0f;
+            // [END LS-SUC-ZONE-LAST-LINKED-TARGET]
 
             bandTargetGain[(size_t) bi] = targetG;
         }
@@ -642,7 +652,13 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
             const int b1 = juce::jlimit (1, maxBin - 1, bands[(size_t) bi].endBin);
             if (b1 < b0) continue;
 
-            const float g = bandSmoothers[(size_t) bi].process (bandTargetGainFreqSmoothed[(size_t) bi]);
+            // [BEGIN LS-SUC-ZONE-LAST-LINKED-APPLY]
+            const float gSmoothed = bandSmoothers[(size_t) bi].process (bandTargetGainFreqSmoothed[(size_t) bi]);
+
+            // Zone last: forces unity when zone -> 0, regardless of smoother memory
+            const float zone01 = juce::jlimit (0.0f, 1.0f, smoothedGlobalZoneAmount01);
+            const float g = 1.0f + (gSmoothed - 1.0f) * zone01;
+            // [END LS-SUC-ZONE-LAST-LINKED-APPLY]
 
             // [BEGIN LS-SUC-UPWARD-METERING-LINKED-UPDATE]
             lastFrameMaxLinearGain  = std::max (lastFrameMaxLinearGain,  g);
@@ -665,6 +681,14 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
                 }
             }
         }
+        // [BEGIN LS-SUC-ZONE-LAST-LINKED-RESET-WHEN-FULLY-OFF]
+        // Once the *smoothed* zone is fully off, clear any remaining band smoother state so re-entry can't "reveal" stored gain.
+        if (zoneOffNow && smoothedGlobalZoneAmount01 <= 1.0e-4f)
+        {
+            for (int bi = 0; bi < numBands; ++bi)
+                bandSmoothers[(size_t) bi].reset();
+        }
+        // [END LS-SUC-ZONE-LAST-LINKED-RESET-WHEN-FULLY-OFF]
     }
     else
     {
@@ -713,19 +737,16 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
             zoneLaw.t1Db       = params.t1Lufs;
             zoneLaw.lowKneeDb  = params.lowKneeDb;
             zoneLaw.highKneeDb = params.highKneeDb;
-            zoneLaw.maxBoostDb = 0.0f;  // not used for zone computation
-            zoneLaw.curve01    = 0.0f;  // not used for zone computation
+            zoneLaw.maxBoostDb = 0.0f;
+            zoneLaw.curve01    = 0.0f;
             zoneLaw.curveType  = UpwardGainLaw::CurveType::monotonic;
 
             const float zoneTarget01 = UpwardGainLaw::computeActiveZone01 (L, zoneLaw);
+            const bool zoneOffNow = (zoneTarget01 <= 1.0e-6f);
 
-            // Smooth return to unity above T1 (no hard reset of band smoothers)
             smoothedGlobalZoneAmount01Unlinked[(size_t) chAp] =
                 globalZoneSmootherUnlinked[(size_t) chAp].process (zoneTarget01);
             // [END LS-SUC-GLOBAL-ZONE-USING-UPWARDGAINLAW-UNLINKED]
-
-            const float effectiveAmount =
-                juce::jlimit (0.0f, 1.0f, userAmount * smoothedGlobalZoneAmount01Unlinked[(size_t) chAp]);
 
             // per-band targets for this channel (reuse scratch arrays)
             for (int bi = 0; bi < numBands; ++bi)
@@ -752,8 +773,13 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
                 const double meanBinPower = pBand / (double) nBins;
                 const float bandDb = (float) (10.0 * std::log10 (meanBinPower / refPower + 1.0e-18));
 
-                float targetG = computeTargetGainLinear (bandDb, t0SpectralDb, t1SpectralDb);
-                targetG = 1.0f + (targetG - 1.0f) * effectiveAmount;
+                // [BEGIN LS-SUC-ZONE-LAST-UNLINKED-TARGET]
+                const float baseG = computeTargetGainLinear (bandDb, t0SpectralDb, t1SpectralDb);
+                float targetG = 1.0f + (baseG - 1.0f) * userAmount;
+
+                if (zoneOffNow)
+                    targetG = 1.0f;
+                // [END LS-SUC-ZONE-LAST-UNLINKED-TARGET]
                 bandTargetGain[(size_t) bi] = targetG;
             }
 
@@ -776,8 +802,13 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
                 const int b1 = juce::jlimit (1, maxBin - 1, bands[(size_t) bi].endBin);
                 if (b1 < b0) continue;
 
-                const float g =
+                // [BEGIN LS-SUC-ZONE-LAST-UNLINKED-APPLY]
+                const float gSmoothed =
                     bandSmoothersUnlinked[(size_t) chAp][(size_t) bi].process (bandTargetGainFreqSmoothed[(size_t) bi]);
+
+                const float zone01 = juce::jlimit (0.0f, 1.0f, smoothedGlobalZoneAmount01Unlinked[(size_t) chAp]);
+                const float g = 1.0f + (gSmoothed - 1.0f) * zone01;
+                // [END LS-SUC-ZONE-LAST-UNLINKED-APPLY]
 
                 // [BEGIN LS-SUC-UPWARD-METERING-UNLINKED-UPDATE]
                 lastFrameMaxLinearGain  = std::max (lastFrameMaxLinearGain,  g);
@@ -794,6 +825,13 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
                         scaleBin (st.fftBuf, fftSize, mirror, g);
                 }
             }
+            // [BEGIN LS-SUC-ZONE-LAST-UNLINKED-RESET-WHEN-FULLY-OFF]
+            if (zoneOffNow && smoothedGlobalZoneAmount01Unlinked[(size_t) chAp] <= 1.0e-4f)
+            {
+                for (int bi = 0; bi < numBands; ++bi)
+                    bandSmoothersUnlinked[(size_t) chAp][(size_t) bi].reset();
+            }
+            // [END LS-SUC-ZONE-LAST-UNLINKED-RESET-WHEN-FULLY-OFF]
         }
     }
 
