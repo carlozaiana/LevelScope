@@ -433,6 +433,12 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
     // --- 1) Analysis window into per-channel fft buffers.
     // Also compute broadband proxy energies.
     std::array<double, kMaxMaskChannels> sumSqWinPerCh {};
+
+    // [BEGIN LS-SUC-HOP-ENERGY-GUARD-SUMSQ]
+    // Energy of the most recent hop (unwindowed) per channel.
+    std::array<double, kMaxMaskChannels> sumSqHopPerCh {};
+    // [END LS-SUC-HOP-ENERGY-GUARD-SUMSQ]
+
     double sumSqLinked = 0.0;
 
     for (int chIdx = 0; chIdx < preparedNumChannels; ++chIdx)
@@ -454,6 +460,22 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
 
         if (chIdx < kMaxMaskChannels)
             sumSqWinPerCh[(size_t) chIdx] = sumSqThis;
+
+        // [BEGIN LS-SUC-HOP-ENERGY-GUARD-COMPUTE]
+        if (chIdx < kMaxMaskChannels)
+        {
+            double sumSqHopThis = 0.0;
+
+            const int hopStart = juce::jmax (0, fftSize - hopSize);
+            for (int i = hopStart; i < fftSize; ++i)
+            {
+                const float s = st.input[(size_t) i]; // unwindowed newest samples
+                sumSqHopThis += (double) s * (double) s;
+            }
+
+            sumSqHopPerCh[(size_t) chIdx] = sumSqHopThis;
+        }
+        // [END LS-SUC-HOP-ENERGY-GUARD-COMPUTE]
     }
 
     // --- 2) Forward FFT per channel
@@ -585,6 +607,27 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
 
             // 0..1 instantaneous target (0 at/above T1)
             zoneTarget01Linked = UpwardGainLaw::computeActiveZone01 (L, zoneLaw);
+
+            // [BEGIN LS-SUC-HOP-ENERGY-GUARD-ZONE-LINKED]
+            // Fast "signal present" guard based on newest hop energy (prevents OFF spikes).
+            double sumSqHopLinked = 0.0;
+            for (int di = 0; di < detectCount; ++di)
+            {
+                const int chDet = (int) detectIdx[(size_t) di];
+                if (chDet >= 0 && chDet < kMaxMaskChannels)
+                    sumSqHopLinked += sumSqHopPerCh[(size_t) chDet];
+            }
+
+            const int detCh = juce::jmax (1, detectCount);
+            const double meanSqHop = sumSqHopLinked / (double) (juce::jmax (1, hopSize) * detCh);
+            const float Lhop = (float) (-0.691 + 10.0 * std::log10 (meanSqHop + 1.0e-12));
+
+            const float guardFloor = params.t0Lufs - kGuardBelowT0Db;
+            const float hopGuard01 =
+                UpwardGainLaw::kneeUpToThreshold01 (Lhop, guardFloor + kGuardFadeDb, kGuardFadeDb);
+
+            zoneTarget01Linked *= hopGuard01;
+            // [END LS-SUC-HOP-ENERGY-GUARD-ZONE-LINKED]
 
             // [BEGIN LS-SUC-RELATIVE-GUARD-ZONE-LINKED]
             const float guardFloor = params.t0Lufs - kGuardBelowT0Db;
@@ -764,10 +807,21 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
             const float zoneTarget01Guarded = zoneTarget01 * guard01;
             // [END LS-SUC-RELATIVE-GUARD-ZONE-UNLINKED]
 
+            // [BEGIN LS-SUC-HOP-ENERGY-GUARD-ZONE-UNLINKED]
+            const double meanSqHopCh = sumSqHopPerCh[(size_t) chAp] / (double) juce::jmax (1, hopSize);
+            const float Lhop = (float) (-0.691 + 10.0 * std::log10 (meanSqHopCh + 1.0e-12));
+
+            const float guardFloorHop = params.t0Lufs - kGuardBelowT0Db;
+            const float hopGuard01 =
+                UpwardGainLaw::kneeUpToThreshold01 (Lhop, guardFloorHop + kGuardFadeDb, kGuardFadeDb);
+
+            const float zoneTarget01Guarded2 = zoneTarget01Guarded * hopGuard01;
+            // [END LS-SUC-HOP-ENERGY-GUARD-ZONE-UNLINKED]
+
             const bool zoneOffNow = (zoneTarget01 <= 1.0e-6f);
 
             smoothedGlobalZoneAmount01Unlinked[(size_t) chAp] =
-                globalZoneSmootherUnlinked[(size_t) chAp].process (zoneTarget01Guarded);
+                globalZoneSmootherUnlinked[(size_t) chAp].process (zoneTarget01Guarded2);
             // [END LS-SUC-GLOBAL-ZONE-USING-UPWARDGAINLAW-UNLINKED]
 
             // per-band targets for this channel (reuse scratch arrays)
