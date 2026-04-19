@@ -168,6 +168,12 @@ void BroadbandUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexc
     const float curve01    = juce::jlimit (0.0f, 1.0f, params.curve);
 
     const float expo  = 1.0f + curve01 * 3.0f;
+    // [BEGIN LS-BUC-RELATIVE-GUARD-CONSTANTS]
+    // Relative guard: prevents upward boost on silence / very low noise floor.
+    // Effective guard floor is (T0 - kGuardBelowT0Db), with a fade-in over kGuardFadeDb.
+    static constexpr float kGuardBelowT0Db = 24.0f;
+    static constexpr float kGuardFadeDb    = 6.0f;
+    // [END LS-BUC-RELATIVE-GUARD-CONSTANTS]
     const float range = std::max (1.0f, t1 - t0);
 
     float* const* chans = buffer.getArrayOfWritePointers();
@@ -205,6 +211,14 @@ void BroadbandUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexc
 
             const float e = (float) (sumSq / (double) std::max (1, detectCount));
 
+            // [BEGIN LS-BUC-RELATIVE-GUARD-LINKED]
+            const float Linst = (float) (-0.691 + 10.0 * std::log10 ((double) e + 1.0e-12));
+
+            const float guardFloor = t0 - kGuardBelowT0Db;
+            const float guard01 =
+                UpwardGainLaw::kneeUpToThreshold01 (Linst, guardFloor + kGuardFadeDb, kGuardFadeDb);
+            // [END LS-BUC-RELATIVE-GUARD-LINKED]
+
             const float aDet = (e > envMS ? aDetA : aDetR);
             envMS = aDet * envMS + (1.0f - aDet) * e;
 
@@ -222,7 +236,10 @@ void BroadbandUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexc
                                                                   : UpwardGainLaw::CurveType::monotonic);
 
             const float baseGain   = UpwardGainLaw::computeBaseGainLin (L, law);
-            const float gainTarget = UpwardGainLaw::applyAmountLin (baseGain, userAmount);
+            // [BEGIN LS-BUC-RELATIVE-GUARD-LINKED-AMOUNT]
+            const float effectiveAmount = userAmount * guard01;
+            const float gainTarget = UpwardGainLaw::applyAmountLin (baseGain, effectiveAmount);
+            // [END LS-BUC-RELATIVE-GUARD-LINKED-AMOUNT]
 
             // Smooth return to unity above T1: when L >= T1 and we are moving downwards, use fast coeff.
             const bool aboveT1 = (L >= t1);
@@ -267,6 +284,14 @@ void BroadbandUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexc
                 const float x = chans[ch][i];
                 const float e = x * x;
 
+                // [BEGIN LS-BUC-RELATIVE-GUARD-UNLINKED]
+                const float Linst = (float) (-0.691 + 10.0 * std::log10 ((double) e + 1.0e-12));
+
+                const float guardFloor = t0 - kGuardBelowT0Db;
+                const float guard01 =
+                    UpwardGainLaw::kneeUpToThreshold01 (Linst, guardFloor + kGuardFadeDb, kGuardFadeDb);
+                // [END LS-BUC-RELATIVE-GUARD-UNLINKED]
+
                 float& env = envMSUnlinked[(size_t) ch];
                 float& gz  = gainZUnlinked[(size_t) ch];
 
@@ -287,7 +312,10 @@ void BroadbandUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexc
                                                                       : UpwardGainLaw::CurveType::monotonic);
 
                 const float baseGain   = UpwardGainLaw::computeBaseGainLin (L, law);
-                const float gainTarget = UpwardGainLaw::applyAmountLin (baseGain, userAmount);
+                // [BEGIN LS-BUC-RELATIVE-GUARD-UNLINKED-AMOUNT]
+                const float effectiveAmount = userAmount * guard01;
+                const float gainTarget = UpwardGainLaw::applyAmountLin (baseGain, effectiveAmount);
+                // [END LS-BUC-RELATIVE-GUARD-UNLINKED-AMOUNT]
 
                 const bool aboveT1 = (L >= t1);
 

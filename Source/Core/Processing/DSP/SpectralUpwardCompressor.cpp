@@ -515,6 +515,11 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
 
     const float userAmount = juce::jlimit (0.0f, 1.0f, params.amount01);
 
+    // [BEGIN LS-SUC-RELATIVE-GUARD-CONSTANTS]
+    static constexpr float kGuardBelowT0Db = 24.0f;
+    static constexpr float kGuardFadeDb    = 6.0f;
+    // [END LS-SUC-RELATIVE-GUARD-CONSTANTS]
+
     // --- Linked vs Unlinked processing
     if (! doUnlinked)
     {
@@ -580,6 +585,14 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
 
             // 0..1 instantaneous target (0 at/above T1)
             zoneTarget01Linked = UpwardGainLaw::computeActiveZone01 (L, zoneLaw);
+
+            // [BEGIN LS-SUC-RELATIVE-GUARD-ZONE-LINKED]
+            const float guardFloor = params.t0Lufs - kGuardBelowT0Db;
+            const float guard01 =
+                UpwardGainLaw::kneeUpToThreshold01 (L, guardFloor + kGuardFadeDb, kGuardFadeDb);
+
+            zoneTarget01Linked *= guard01;
+            // [END LS-SUC-RELATIVE-GUARD-ZONE-LINKED]
 
             // Smoothed applied zone (fast release) for "smooth return to unity"
             smoothedGlobalZoneAmount01 = globalZoneSmoother.process (zoneTarget01Linked);
@@ -742,10 +755,19 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
             zoneLaw.curveType  = UpwardGainLaw::CurveType::monotonic;
 
             const float zoneTarget01 = UpwardGainLaw::computeActiveZone01 (L, zoneLaw);
+
+            // [BEGIN LS-SUC-RELATIVE-GUARD-ZONE-UNLINKED]
+            const float guardFloor = params.t0Lufs - kGuardBelowT0Db;
+            const float guard01 =
+                UpwardGainLaw::kneeUpToThreshold01 (L, guardFloor + kGuardFadeDb, kGuardFadeDb);
+
+            const float zoneTarget01Guarded = zoneTarget01 * guard01;
+            // [END LS-SUC-RELATIVE-GUARD-ZONE-UNLINKED]
+
             const bool zoneOffNow = (zoneTarget01 <= 1.0e-6f);
 
             smoothedGlobalZoneAmount01Unlinked[(size_t) chAp] =
-                globalZoneSmootherUnlinked[(size_t) chAp].process (zoneTarget01);
+                globalZoneSmootherUnlinked[(size_t) chAp].process (zoneTarget01Guarded);
             // [END LS-SUC-GLOBAL-ZONE-USING-UPWARDGAINLAW-UNLINKED]
 
             // per-band targets for this channel (reuse scratch arrays)
