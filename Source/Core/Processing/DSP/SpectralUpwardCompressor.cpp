@@ -622,9 +622,9 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
             const double meanSqHop = sumSqHopLinked / (double) (juce::jmax (1, hopSize) * detCh);
             const float Lhop = (float) (-0.691 + 10.0 * std::log10 (meanSqHop + 1.0e-12));
 
-            const float guardFloor = params.t0Lufs - kGuardBelowT0Db;
+            const float guardFloorHop = params.t0Lufs - kGuardBelowT0Db;
             const float hopGuard01 =
-                UpwardGainLaw::kneeUpToThreshold01 (Lhop, guardFloor + kGuardFadeDb, kGuardFadeDb);
+                UpwardGainLaw::kneeUpToThreshold01 (Lhop, guardFloorHop + kGuardFadeDb, kGuardFadeDb);
 
             zoneTarget01Linked *= hopGuard01;
             // [END LS-SUC-HOP-ENERGY-GUARD-ZONE-LINKED]
