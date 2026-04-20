@@ -45,6 +45,11 @@ void BroadbandUpwardCompressor::prepare (double sampleRate,
     // [END LS-BUC-STAGE-E-PREPARE-MASKBITS]
 
     updateCoefficientsIfNeeded();
+    // [BEGIN LS-BUC-MOMENTARY-DETECTOR-PREPARE]
+    momentaryDetector.prepare (fs, preparedNumChannels);
+    cachedMomentaryLufsLinked = -200.0f;
+    cachedMomentaryLufsByChannel.fill (-200.0f);
+    // [END LS-BUC-MOMENTARY-DETECTOR-PREPARE]
     reset();
 }
 
@@ -52,6 +57,11 @@ void BroadbandUpwardCompressor::reset() noexcept
 {
     envMS = 0.0f;
     gainZ = 1.0f;
+    // [BEGIN LS-BUC-MOMENTARY-DETECTOR-RESET]
+    momentaryDetector.reset();
+    cachedMomentaryLufsLinked = -200.0f;
+    cachedMomentaryLufsByChannel.fill (-200.0f);
+    // [END LS-BUC-MOMENTARY-DETECTOR-RESET]
     // [BEGIN LS-BUC-STAGE-E-RESET-UNLINKED]
     envMSUnlinked.fill (0.0f);
     gainZUnlinked.fill (1.0f);
@@ -195,53 +205,59 @@ void BroadbandUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexc
 
     if (! doUnlinked)
     {
+        // [BEGIN LS-BUC-MOMENTARY-LINKED]
+        // Initialize cached control loudness at block start (will update at 60 Hz frames).
+        cachedMomentaryLufsLinked = momentaryDetector.getMomentaryLufsForMask (effDetectBits, chToProcess);
+
+        UpwardGainLaw::Params law;
+        law.t0Db       = t0;
+        law.t1Db       = t1;
+        law.lowKneeDb  = params.lowKneeDb;
+        law.highKneeDb = params.highKneeDb;
+        law.maxBoostDb = maxBoostDb;
+        law.curve01    = curve01;
+        law.curveType  = (params.curveType == CurveType::bell ? UpwardGainLaw::CurveType::bell
+                                                              : UpwardGainLaw::CurveType::monotonic);
+
+        const float guardFloor = t0 - kGuardBelowT0Db;
+
         for (int i = 0; i < numSamples; ++i)
         {
-            // Linked detector across detectIdx
-            double sumSq = 0.0;
+            // 1) Update K-weighted detector state (all channels)
+            for (int ch = 0; ch < chToProcess && ch < kMaxMaskChannels; ++ch)
+                kWeightedSampleScratch[(size_t) ch] = momentaryDetector.processSample (ch, chans[ch][i]);
+
+            // Advance the detector clock once per sample (60 Hz frames)
+            if (momentaryDetector.advanceSample())
+                cachedMomentaryLufsLinked = momentaryDetector.getMomentaryLufsForMask (effDetectBits, chToProcess);
+
+            // 2) Instantaneous guard level from K-weighted instantaneous energy (detect channels)
+            double sumSqInst = 0.0;
             for (int di = 0; di < detectCount; ++di)
             {
                 const int ch = (int) detectIdx[(size_t) di];
-                if (ch >= 0 && ch < chToProcess)
+                if (ch >= 0 && ch < chToProcess && ch < kMaxMaskChannels)
                 {
-                    const float x = chans[ch][i];
-                    sumSq += (double) x * (double) x;
+                    const float y = kWeightedSampleScratch[(size_t) ch];
+                    sumSqInst += (double) y * (double) y;
                 }
             }
 
-            const float e = (float) (sumSq / (double) std::max (1, detectCount));
+            const float eInst = (float) (sumSqInst / (double) std::max (1, detectCount));
+            const float Linst = (float) (-0.691 + 10.0 * std::log10 ((double) eInst + 1.0e-12));
 
-            // [BEGIN LS-BUC-RELATIVE-GUARD-LINKED]
-            const float Linst = (float) (-0.691 + 10.0 * std::log10 ((double) e + 1.0e-12));
-
-            const float guardFloor = t0 - kGuardBelowT0Db;
             const float guard01 =
                 UpwardGainLaw::kneeUpToThreshold01 (Linst, guardFloor + kGuardFadeDb, kGuardFadeDb);
-            // [END LS-BUC-RELATIVE-GUARD-LINKED]
 
-            const float aDet = (e > envMS ? aDetA : aDetR);
-            envMS = aDet * envMS + (1.0f - aDet) * e;
+            // 3) Control loudness for gain-law (Momentary LUFS)
+            const float L = cachedMomentaryLufsLinked;
 
-            const float L = (float) (-0.691 + 10.0 * std::log10 ((double) envMS + 1.0e-12));
+            const float baseGain = UpwardGainLaw::computeBaseGainLin (L, law);
 
-            // [BEGIN LS-BUC-UPWARD-GAINLAW-LINKED]
-            UpwardGainLaw::Params law;
-            law.t0Db       = t0;
-            law.t1Db       = t1;
-            law.lowKneeDb  = params.lowKneeDb;
-            law.highKneeDb = params.highKneeDb;
-            law.maxBoostDb = maxBoostDb;
-            law.curve01    = curve01;
-            law.curveType  = (params.curveType == CurveType::bell ? UpwardGainLaw::CurveType::bell
-                                                                  : UpwardGainLaw::CurveType::monotonic);
-
-            const float baseGain   = UpwardGainLaw::computeBaseGainLin (L, law);
-            // [BEGIN LS-BUC-RELATIVE-GUARD-LINKED-AMOUNT]
             const float effectiveAmount = userAmount * guard01;
             const float gainTarget = UpwardGainLaw::applyAmountLin (baseGain, effectiveAmount);
-            // [END LS-BUC-RELATIVE-GUARD-LINKED-AMOUNT]
 
-            // Smooth return to unity above T1: when L >= T1 and we are moving downwards, use fast coeff.
+            // Smooth return to unity above T1 based on control loudness
             const bool aboveT1 = (L >= t1);
 
             float aG = 0.0f;
@@ -251,12 +267,9 @@ void BroadbandUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexc
                 aG = (aboveT1 ? aGainA : aGainR);
 
             gainZ = aG * gainZ + (1.0f - aG) * gainTarget;
-            // [END LS-BUC-UPWARD-GAINLAW-LINKED]
 
-            // [BEGIN LS-BUC-UPWARD-METERING-LINKED-UPDATE]
             blockMaxG  = std::max (blockMaxG, gainZ);
             blockLastG = gainZ;
-            // [END LS-BUC-UPWARD-METERING-LINKED-UPDATE]
 
             for (int ai = 0; ai < applyCount; ++ai)
             {
@@ -265,15 +278,40 @@ void BroadbandUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexc
                     chans[ch][i] *= gainZ;
             }
         }
+        // [END LS-BUC-MOMENTARY-LINKED]
     }
     else
     {
-        // Unlinked: per-channel detectors/gains (apply channels only)
+        // [BEGIN LS-BUC-MOMENTARY-UNLINKED]
+        // Initialize per-channel cached control loudness
+        for (int ch = 0; ch < chToProcess && ch < kMaxMaskChannels; ++ch)
+            cachedMomentaryLufsByChannel[(size_t) ch] = momentaryDetector.getMomentaryLufsForChannel (ch);
+
+        UpwardGainLaw::Params law;
+        law.t0Db       = t0;
+        law.t1Db       = t1;
+        law.lowKneeDb  = params.lowKneeDb;
+        law.highKneeDb = params.highKneeDb;
+        law.maxBoostDb = maxBoostDb;
+        law.curve01    = curve01;
+        law.curveType  = (params.curveType == CurveType::bell ? UpwardGainLaw::CurveType::bell
+                                                              : UpwardGainLaw::CurveType::monotonic);
+
+        const float guardFloor = t0 - kGuardBelowT0Db;
+
         for (int i = 0; i < numSamples; ++i)
         {
-            // [BEGIN LS-BUC-UPWARD-METERING-UNLINKED-SAMPLE-MAX]
             float sampleMaxG = 1.0f;
-            // [END LS-BUC-UPWARD-METERING-UNLINKED-SAMPLE-MAX]
+
+            // Update detector state for all channels
+            for (int ch = 0; ch < chToProcess && ch < kMaxMaskChannels; ++ch)
+                kWeightedSampleScratch[(size_t) ch] = momentaryDetector.processSample (ch, chans[ch][i]);
+
+            if (momentaryDetector.advanceSample())
+            {
+                for (int ch = 0; ch < chToProcess && ch < kMaxMaskChannels; ++ch)
+                    cachedMomentaryLufsByChannel[(size_t) ch] = momentaryDetector.getMomentaryLufsForChannel (ch);
+            }
 
             for (int ai = 0; ai < applyCount; ++ai)
             {
@@ -281,43 +319,23 @@ void BroadbandUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexc
                 if (ch < 0 || ch >= chToProcess || ch >= kMaxMaskChannels)
                     continue;
 
-                const float x = chans[ch][i];
-                const float e = x * x;
+                const float y = kWeightedSampleScratch[(size_t) ch];
+                const float eInst = y * y;
+                const float Linst = (float) (-0.691 + 10.0 * std::log10 ((double) eInst + 1.0e-12));
 
-                // [BEGIN LS-BUC-RELATIVE-GUARD-UNLINKED]
-                const float Linst = (float) (-0.691 + 10.0 * std::log10 ((double) e + 1.0e-12));
-
-                const float guardFloor = t0 - kGuardBelowT0Db;
                 const float guard01 =
                     UpwardGainLaw::kneeUpToThreshold01 (Linst, guardFloor + kGuardFadeDb, kGuardFadeDb);
-                // [END LS-BUC-RELATIVE-GUARD-UNLINKED]
 
-                float& env = envMSUnlinked[(size_t) ch];
-                float& gz  = gainZUnlinked[(size_t) ch];
+                const float L = cachedMomentaryLufsByChannel[(size_t) ch];
 
-                const float aDet = (e > env ? aDetA : aDetR);
-                env = aDet * env + (1.0f - aDet) * e;
+                const float baseGain = UpwardGainLaw::computeBaseGainLin (L, law);
 
-                const float L = (float) (-0.691 + 10.0 * std::log10 ((double) env + 1.0e-12));
-
-                // [BEGIN LS-BUC-UPWARD-GAINLAW-UNLINKED]
-                UpwardGainLaw::Params law;
-                law.t0Db       = t0;
-                law.t1Db       = t1;
-                law.lowKneeDb  = params.lowKneeDb;
-                law.highKneeDb = params.highKneeDb;
-                law.maxBoostDb = maxBoostDb;
-                law.curve01    = curve01;
-                law.curveType  = (params.curveType == CurveType::bell ? UpwardGainLaw::CurveType::bell
-                                                                      : UpwardGainLaw::CurveType::monotonic);
-
-                const float baseGain   = UpwardGainLaw::computeBaseGainLin (L, law);
-                // [BEGIN LS-BUC-RELATIVE-GUARD-UNLINKED-AMOUNT]
                 const float effectiveAmount = userAmount * guard01;
                 const float gainTarget = UpwardGainLaw::applyAmountLin (baseGain, effectiveAmount);
-                // [END LS-BUC-RELATIVE-GUARD-UNLINKED-AMOUNT]
 
                 const bool aboveT1 = (L >= t1);
+
+                float& gz = gainZUnlinked[(size_t) ch];
 
                 float aG = 0.0f;
                 if (gainTarget > gz)
@@ -326,19 +344,15 @@ void BroadbandUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexc
                     aG = (aboveT1 ? aGainA : aGainR);
 
                 gz = aG * gz + (1.0f - aG) * gainTarget;
-                // [END LS-BUC-UPWARD-GAINLAW-UNLINKED]
 
-                // [BEGIN LS-BUC-UPWARD-METERING-UNLINKED-UPDATE]
                 sampleMaxG = std::max (sampleMaxG, gz);
-                // [END LS-BUC-UPWARD-METERING-UNLINKED-UPDATE]
-
                 chans[ch][i] *= gz;
             }
-            // [BEGIN LS-BUC-UPWARD-METERING-UNLINKED-STORE]
+
             blockMaxG  = std::max (blockMaxG, sampleMaxG);
             blockLastG = sampleMaxG;
-            // [END LS-BUC-UPWARD-METERING-UNLINKED-STORE]
         }
+        // [END LS-BUC-MOMENTARY-UNLINKED]
     }
     // [BEGIN LS-BUC-UPWARD-METERING-BLOCK-STORE]
     lastBlockMaxLinearGain  = std::max (1.0f, blockMaxG);

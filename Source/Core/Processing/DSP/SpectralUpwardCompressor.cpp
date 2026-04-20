@@ -162,7 +162,9 @@ void SpectralUpwardCompressor::prepare (double sampleRate,
         smoothedGlobalZoneAmount01Unlinked[(size_t) chIdx] = 1.0f;
     }
     // [END LS-SUC-STAGE-E-PREPARE-UNLINKED-SMOOTHERS]
-
+    // [BEGIN LS-SUC-MOMENTARY-DETECTOR-PREPARE]
+    momentaryDetector.prepare (fs, juce::jmax (1, preparedNumChannels));
+    // [END LS-SUC-MOMENTARY-DETECTOR-PREPARE]
     reset();
     // [END LS-SUC-PREPARE-GLOBAL-ZONE]
 }
@@ -205,6 +207,9 @@ void SpectralUpwardCompressor::reset() noexcept
     globalZoneSmoother.reset();
     smoothedGlobalZoneAmount01 = 1.0f;
 
+    // [BEGIN LS-SUC-MOMENTARY-DETECTOR-RESET]
+    momentaryDetector.reset();
+    // [END LS-SUC-MOMENTARY-DETECTOR-RESET]
     pendingHardReset = false;
     // [END LS-SUC-RESET-GLOBAL-ZONE]
 }
@@ -603,7 +608,8 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
             zoneLaw.curve01    = 0.0f;
             zoneLaw.curveType  = UpwardGainLaw::CurveType::monotonic;
 
-            const float L = (float) broadbandDb;
+            const float L = momentaryDetector.getMomentaryLufsForMask (effDetectBits,
+                                                                       juce::jmin (preparedNumChannels, BS1770MomentaryLufsDetector::kMaxChannels));
 
             // 0..1 instantaneous target (0 at/above T1)
             zoneTarget01Linked = UpwardGainLaw::computeActiveZone01 (L, zoneLaw);
@@ -786,7 +792,7 @@ void SpectralUpwardCompressor::processFrameAllChannels() noexcept
             const float t1SpectralDb = (float) ((double) params.t1Lufs - effectiveOffsetDb);
 
             // [BEGIN LS-SUC-GLOBAL-ZONE-USING-UPWARDGAINLAW-UNLINKED]
-            const float L = (float) broadbandDb;
+            const float L = momentaryDetector.getMomentaryLufsForChannel (chAp);
 
             UpwardGainLaw::Params zoneLaw;
             zoneLaw.t0Db       = params.t0Lufs;
@@ -963,12 +969,19 @@ void SpectralUpwardCompressor::process (juce::AudioBuffer<float>& buffer) noexce
     // Sample-by-sample framing keeps all channels aligned and avoids extra ring buffers.
     for (int i = 0; i < numSamples; ++i)
     {
-        // Push input into per-channel frame buffers
+        // Push input into per-channel frame buffers + update momentary loudness detector
         for (int chIdx = 0; chIdx < chToProcess; ++chIdx)
         {
+            const float x = buffer.getReadPointer (chIdx)[i];
+
             auto& st = ch[(size_t) chIdx];
-            st.input[(size_t) inputWritePos] = buffer.getReadPointer (chIdx)[i];
+            st.input[(size_t) inputWritePos] = x;
+
+            momentaryDetector.processSample (chIdx, x);
         }
+
+        // Advance detector clock once per sample (60 Hz frames)
+        momentaryDetector.advanceSample();
 
         ++inputWritePos;
 

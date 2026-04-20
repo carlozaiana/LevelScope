@@ -26,6 +26,9 @@
 // [BEGIN LS-SUC-INCLUDE-CSTDINT]
 #include <cstdint>
 // [END LS-SUC-INCLUDE-CSTDINT]
+// [BEGIN LS-SUC-MOMENTARY-DETECTOR-INCLUDE]
+#include "../DSP/BS1770MomentaryLufsDetector.h"
+// [END LS-SUC-MOMENTARY-DETECTOR-INCLUDE]
 
 namespace levelscope::dsp
 {
@@ -348,6 +351,10 @@ private:
     // State
     //==============================================================================
     Parameters params;
+
+    // [BEGIN LS-SUC-MOMENTARY-DETECTOR-MEMBER]
+    BS1770MomentaryLufsDetector momentaryDetector;
+    // [END LS-SUC-MOMENTARY-DETECTOR-MEMBER]
 
     double fs = 48000.0;
     int preparedNumChannels = 0;

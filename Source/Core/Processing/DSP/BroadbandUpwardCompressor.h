@@ -22,6 +22,9 @@
 // [BEGIN LS-BUC-INCLUDE-VECTOR]
 #include <vector>
 // [END LS-BUC-INCLUDE-VECTOR]
+// [BEGIN LS-BUC-MOMENTARY-DETECTOR-INCLUDE]
+#include "../DSP/BS1770MomentaryLufsDetector.h"
+// [END LS-BUC-MOMENTARY-DETECTOR-INCLUDE]
 
 namespace levelscope::dsp
 {
@@ -133,6 +136,17 @@ private:
 
     // [BEGIN LS-BUC-STAGE-E-MASK-MEMBERS]
     static constexpr int kMaxMaskChannels = 16;
+
+    // [BEGIN LS-BUC-MOMENTARY-DETECTOR-MEMBERS]
+    BS1770MomentaryLufsDetector momentaryDetector;
+
+    // Scratch for K-weighted samples (per sample, per channel) used for instantaneous guard energy.
+    std::array<float, kMaxMaskChannels> kWeightedSampleScratch {};
+
+    // Cached momentary loudness values updated at 60 Hz
+    float cachedMomentaryLufsLinked = -200.0f;
+    std::array<float, kMaxMaskChannels> cachedMomentaryLufsByChannel {};
+    // [END LS-BUC-MOMENTARY-DETECTOR-MEMBERS]
 
     uint16_t preparedAllMaskBits    = 0;
     uint16_t preparedNonLfeMaskBits = 0;
