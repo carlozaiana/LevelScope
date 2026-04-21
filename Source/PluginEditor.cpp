@@ -1278,7 +1278,10 @@ void MtdmAuditionCard::resized()
 MtdmUpwardCard::MtdmUpwardCard (LevelScopeAudioProcessor& p)
     : MtdmCardComponent ("Upward"),
       processor (p),
-      apvts (p.getAPVTS())
+      apvts (p.getAPVTS()),
+      // [BEGIN UI-CURVE-UPWARD-CTOR-INIT]
+      curve (p, DynamicsCurveComponent::CurveKind::upwardConceptual)
+      // [END UI-CURVE-UPWARD-CTOR-INIT]
 {
     using namespace levelscope::mtdm::ParamIDs;
 
@@ -1293,6 +1296,10 @@ MtdmUpwardCard::MtdmUpwardCard (LevelScopeAudioProcessor& p)
 
     addAndMakeVisible (enabledButton);
     addAndMakeVisible (bypassButton);
+
+    // [BEGIN UI-CURVE-UPWARD-ADDVISIBLE]
+    addAndMakeVisible (curve);
+    // [END UI-CURVE-UPWARD-ADDVISIBLE]
 
     // Bind to new params added in module chat
     enabledAtt = std::make_unique<ButtonAttachment> (apvts, upEnabled01, enabledButton);
@@ -1585,8 +1592,27 @@ void MtdmUpwardCard::resized()
     r.removeFromTop (4);
     auto content = r;
 
+    // [BEGIN UI-CURVE-UPWARD-SHARED-STRIP-RESERVE]
+    int curveW = 0;
+    if (auto* owner = findParentComponentOfClass<MtdmCardsContent>())
+        curveW = owner->getCurveStripWidthForContent (content.getWidth());
+
+    juce::Rectangle<int> curveArea;
+    if (curveW > 0)
+    {
+        curveArea = content.removeFromRight (curveW);
+        content.removeFromRight (8); // gap between controls and curve strip
+    }
+    // [END UI-CURVE-UPWARD-SHARED-STRIP-RESERVE]
+
     // Compact: keep only header
     const bool compact = (content.getHeight() < 70);
+
+    // [BEGIN UI-CURVE-UPWARD-SETBOUNDS]
+    curve.setVisible (! compact && curveArea.getWidth() > 40 && curveArea.getHeight() > 40);
+    if (curve.isVisible())
+        curve.setBounds (curveArea.reduced (0));
+    // [END UI-CURVE-UPWARD-SETBOUNDS]
 
     modeLabel.setVisible (! compact);
     modeBox.setVisible (! compact);

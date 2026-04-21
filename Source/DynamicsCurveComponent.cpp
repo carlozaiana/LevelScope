@@ -1,6 +1,9 @@
 #include "DynamicsCurveComponent.h"
 #include "PluginProcessor.h"
 #include "Core/Processing/Modules/MultiThresholdDynamicsParamIDs.h"
+// [BEGIN UI-CURVE-UPWARD-INCLUDE-GAINLAW]
+#include "Core/Processing/DSP/UpwardGainLaw.h"
+// [END UI-CURVE-UPWARD-INCLUDE-GAINLAW]
 
 #include <cmath>
 
@@ -371,6 +374,267 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
     if (r.getWidth() < 90.0f || r.getHeight() < 70.0f)
         return;
 
+    // [BEGIN UI-CURVE-UPWARD-PAINT]
+    if (kind == CurveKind::upwardConceptual)
+    {
+        auto topArea    = r.removeFromTop (14.0f);
+        auto bottomArea = r.removeFromBottom (28.0f);
+        auto rightArea  = r.removeFromRight (40.0f);
+        auto plot       = r;
+
+        if (plot.getWidth() < 60.0f || plot.getHeight() < 40.0f)
+            return;
+
+        auto& apvts = processor.getAPVTS();
+        using namespace levelscope::mtdm;
+
+        const auto loadParam = [&] (const char* id, float fallback) -> float
+        {
+            if (auto* a = apvts.getRawParameterValue (id))
+                return a->load (std::memory_order_relaxed);
+            return fallback;
+        };
+
+        const float t0        = loadParam (ParamIDs::t0Lufs,          Defaults::t0Lufs);
+        const float t1        = loadParam (ParamIDs::t1Lufs,          Defaults::t1Lufs);
+        const float amount01  = loadParam (ParamIDs::sucAmount01,     Defaults::sucAmount01);
+        const float maxBoost  = loadParam (ParamIDs::sucMaxBoostDb,   Defaults::sucMaxBoostDb);
+        const float curve01   = loadParam (ParamIDs::sucCurve,        Defaults::sucCurve);
+        const float lowKnee   = loadParam (ParamIDs::sucLowKneeDb,    Defaults::sucLowKneeDb);
+        const float highKnee  = loadParam (ParamIDs::sucHighKneeDb,   Defaults::sucHighKneeDb);
+        const float calTrimDb = loadParam (ParamIDs::sucCalTrimDb,    Defaults::sucCalTrimDb);
+
+        const int curveTypeChoice =
+            (int) std::lround (loadParam (ParamIDs::sucCurveTypeChoice, (float) Defaults::sucCurveTypeChoice));
+
+        const int upwardModeChoice =
+            (int) std::lround (loadParam (ParamIDs::upwardModeChoice, (float) Defaults::upwardModeChoice));
+
+        constexpr float xMin = -60.0f;
+        constexpr float xMax =   0.0f;
+
+        const float safeMaxBoost = juce::jlimit (0.0f, 24.0f, maxBoost);
+        const float yMin = 0.0f;
+        const float yMax = juce::jmax (1.0f, safeMaxBoost);
+
+        auto mapX = [&] (float x) -> float
+        {
+            const float n = (x - xMin) / (xMax - xMin);
+            return plot.getX() + juce::jlimit (0.0f, 1.0f, n) * plot.getWidth();
+        };
+
+        auto mapY = [&] (float y) -> float
+        {
+            const float n = (y - yMin) / (yMax - yMin);
+            return plot.getBottom() - juce::jlimit (0.0f, 1.0f, n) * plot.getHeight();
+        };
+
+        // Grid (x like other curves; y is Boost increasing upward)
+        g.setColour (juce::Colours::white.withMultipliedAlpha (0.08f));
+        for (float xTick : { -60.0f, -48.0f, -36.0f, -24.0f, -12.0f, 0.0f })
+            g.drawVerticalLine ((int) std::round (mapX (xTick)), plot.getY(), plot.getBottom());
+
+        // Y ticks: use a stable set + always include yMax
+        auto shouldDrawTick = [&] (float v) { return v >= yMin - 1.0e-6f && v <= yMax + 1.0e-6f; };
+
+        juce::Array<float> yTicks;
+        for (float v : { 0.0f, 3.0f, 6.0f, 9.0f, 12.0f, 18.0f, 24.0f })
+            if (shouldDrawTick (v))
+                yTicks.add (v);
+
+        if (yTicks.isEmpty() || std::abs (yTicks.getLast() - yMax) > 0.25f)
+            yTicks.add (yMax);
+
+        for (auto v : yTicks)
+            g.drawHorizontalLine ((int) std::round (mapY (v)), plot.getX(), plot.getRight());
+
+        // Right-side Boost ruler (0 at bottom, increasing upward)
+        g.setFont (10.0f);
+        g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
+
+        for (auto v : yTicks)
+        {
+            const float y = mapY (v);
+            g.drawLine (plot.getRight(), y, plot.getRight() + 4.0f, y, 1.0f);
+
+            const juce::String s = (v >= 9.95f ? juce::String ((int) std::lround (v))
+                                               : juce::String (v, 1));
+
+            g.drawText (s,
+                        rightArea.toNearestInt().withY ((int) std::round (y - 7.0f)).withHeight (14),
+                        juce::Justification::centredRight, false);
+        }
+
+        // Bottom LUFS ruler: ticks/labels + axis title
+        const auto bottomTicksArea = bottomArea.removeFromTop (14.0f);
+        const auto bottomTitleArea = bottomArea;
+
+        for (float xTick : { -60.0f, -48.0f, -36.0f, -24.0f, -12.0f, 0.0f })
+        {
+            const float x = mapX (xTick);
+
+            g.setColour (juce::Colours::white.withMultipliedAlpha (0.40f));
+            g.drawLine (x, plot.getBottom(), x, plot.getBottom() + 4.0f, 1.0f);
+
+            g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
+            g.drawText (juce::String ((int) xTick),
+                        juce::Rectangle<int> ((int) std::round (x - 18.0f),
+                                              (int) bottomTicksArea.getY(),
+                                              36,
+                                              (int) bottomTicksArea.getHeight()),
+                        juce::Justification::centred, false);
+        }
+
+        // Shade active band T0..T1
+        {
+            const float a = juce::jmin (t0, t1);
+            const float b = juce::jmax (t0, t1);
+
+            const float xA = mapX (a);
+            const float xB = mapX (b);
+
+            g.setColour (juce::Colours::orange.withMultipliedAlpha (0.08f));
+            g.fillRect (juce::Rectangle<float> (juce::jmin (xA, xB), plot.getY(),
+                                                std::abs (xB - xA), plot.getHeight()));
+        }
+
+        // One-sided knee hints (below thresholds)
+        {
+            const float a = juce::jmin (t0, t1);
+            const float b = juce::jmax (t0, t1);
+
+            const float x0A = mapX (a - juce::jmax (0.0f, lowKnee));
+            const float x0B = mapX (a);
+
+            const float x1A = mapX (b - juce::jmax (0.0f, highKnee));
+            const float x1B = mapX (b);
+
+            g.setColour (juce::Colours::white.withMultipliedAlpha (0.05f));
+            g.fillRect (juce::Rectangle<float> (juce::jmin (x0A, x0B), plot.getY(),
+                                                std::abs (x0B - x0A), plot.getHeight()));
+            g.fillRect (juce::Rectangle<float> (juce::jmin (x1A, x1B), plot.getY(),
+                                                std::abs (x1B - x1A), plot.getHeight()));
+        }
+
+        // Threshold markers
+        const float t0X = mapX (t0);
+        const float t1X = mapX (t1);
+
+        g.setColour (juce::Colours::white.withMultipliedAlpha (0.35f));
+        g.drawVerticalLine ((int) std::round (t0X), plot.getY(), plot.getBottom());
+        g.drawVerticalLine ((int) std::round (t1X), plot.getY(), plot.getBottom());
+
+        // Sample curve from shared DSP law (DSP-matched)
+        levelscope::dsp::UpwardGainLaw::Params gp;
+        gp.t0Db        = t0;
+        gp.t1Db        = t1;
+        gp.lowKneeDb   = juce::jmax (0.0f, lowKnee);
+        gp.highKneeDb  = juce::jmax (0.0f, highKnee);
+        gp.maxBoostDb  = juce::jmax (0.0f, safeMaxBoost);
+        gp.curve01     = juce::jlimit (0.0f, 1.0f, curve01);
+        gp.curveType   = (curveTypeChoice == 1
+                            ? levelscope::dsp::UpwardGainLaw::CurveType::bell
+                            : levelscope::dsp::UpwardGainLaw::CurveType::monotonic);
+
+        juce::Path p;
+        bool started = false;
+
+        constexpr int N = 192;
+        for (int i = 0; i <= N; ++i)
+        {
+            const float a = (float) i / (float) N;
+            const float x = xMin + a * (xMax - xMin);
+
+            // UI incorporates cal trim as an x-axis shift (conceptual mapping)
+            const float xAdjusted = x + calTrimDb;
+
+            const float boostDb =
+                levelscope::dsp::UpwardGainLaw::computeUpwardGainDb (xAdjusted, gp, amount01);
+
+            const float px = mapX (x);
+            const float py = mapY (juce::jlimit (yMin, yMax, boostDb));
+
+            if (! started) { p.startNewSubPath (px, py); started = true; }
+            else           { p.lineTo (px, py); }
+        }
+
+        g.setColour (juce::Colours::orange.withMultipliedAlpha (0.95f));
+        g.strokePath (p, juce::PathStrokeType (2.0f));
+
+        // Upward metering snapshot -> side indicators (current + hold)
+        {
+            const auto met = processor.getUpwardMeteringSnapshot();
+            const float cur  = juce::jlimit (yMin, yMax, juce::jmax (0.0f, met.boostDbCurrent));
+            const float hold = juce::jlimit (yMin, yMax, juce::jmax (0.0f, met.boostDbHold));
+
+            const float yCur  = mapY (cur);
+            const float yHold = mapY (hold);
+
+            g.setColour (juce::Colours::orange.withMultipliedAlpha (0.85f));
+            g.drawLine (plot.getRight() - 18.0f, yCur, plot.getRight() - 2.0f, yCur, 1.6f);
+
+            g.setColour (juce::Colours::white.withMultipliedAlpha (0.85f));
+            g.drawLine (plot.getRight() - 18.0f, yHold, plot.getRight() - 2.0f, yHold, 1.2f);
+        }
+
+        // Top threshold labels
+        g.setFont (10.0f);
+        g.setColour (juce::Colours::white.withMultipliedAlpha (0.70f));
+        g.drawText ("T0", (int) t0X - 12, (int) plot.getY() + 2, 24, 12, juce::Justification::centred);
+        g.drawText ("T1", (int) t1X - 12, (int) plot.getY() + 16, 24, 12, juce::Justification::centred);
+
+        // Top row: curve type + amount + mode tag
+        const juce::String typeStr = (curveTypeChoice == 1 ? "Bell" : "Monotonic");
+        const juce::String modeStr = (upwardModeChoice == 1 ? "Broadband" : "Spectral");
+
+        g.setFont (10.0f);
+        g.setColour (juce::Colours::white.withMultipliedAlpha (0.70f));
+        g.drawFittedText (typeStr + "   Amt " + juce::String (juce::jlimit (0.0f, 1.0f, amount01), 2),
+                          topArea.toNearestInt(),
+                          juce::Justification::centredLeft,
+                          1);
+
+        g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
+        g.drawFittedText (modeStr,
+                          topArea.toNearestInt(),
+                          juce::Justification::centredRight,
+                          1);
+
+        // Footer axis labels + info
+        g.setFont (10.0f);
+        const int axisLabelW = 44;
+
+        g.setColour (juce::Colours::white.withMultipliedAlpha (0.58f));
+        g.drawText ("LUFS",
+                    juce::Rectangle<int> ((int) bottomTitleArea.getX(),
+                                          (int) bottomTitleArea.getY(),
+                                          axisLabelW,
+                                          (int) bottomTitleArea.getHeight()),
+                    juce::Justification::centredLeft, false);
+
+        const juce::String info =
+            "Max " + juce::String (safeMaxBoost, 1) + " dB"
+            + "   Knees " + juce::String (juce::jmax (0.0f, lowKnee), 1)
+            + "/" + juce::String (juce::jmax (0.0f, highKnee), 1) + " dB"
+            + "   Trim " + juce::String (calTrimDb, 1) + " dB";
+
+        g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
+        g.drawFittedText (info,
+                          juce::Rectangle<int> ((int) bottomTitleArea.getX() + axisLabelW,
+                                                (int) bottomTitleArea.getY(),
+                                                (int) bottomTitleArea.getWidth() - axisLabelW,
+                                                (int) bottomTitleArea.getHeight()),
+                          juce::Justification::centredLeft, 1);
+
+        g.setColour (juce::Colours::white.withMultipliedAlpha (0.58f));
+        g.drawText ("Boost",
+                    juce::Rectangle<int> ((int) rightArea.getX(), (int) topArea.getY(),
+                                          (int) rightArea.getWidth(), 12),
+                    juce::Justification::centredRight, false);
+
+        return;
+    }
+
     if (kind != CurveKind::downward)
     {
         g.setColour (juce::Colours::white.withMultipliedAlpha (0.45f));
@@ -378,6 +642,7 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
         g.drawFittedText ("Curve pending", r.toNearestInt(), juce::Justification::centred, 1);
         return;
     }
+    // [END UI-CURVE-UPWARD-PAINT]
 
     auto topArea    = r.removeFromTop (14.0f);
     auto bottomArea = r.removeFromBottom (28.0f);

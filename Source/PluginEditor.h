@@ -327,6 +327,10 @@ private:
     LevelScopeAudioProcessor& processor;
     juce::AudioProcessorValueTreeState& apvts;
 
+    // [BEGIN UI-CURVE-UPWARD-MEMBER]
+    DynamicsCurveComponent curve;
+    // [END UI-CURVE-UPWARD-MEMBER]
+
     // [BEGIN UI4B1-UPWARD-ADVANCED-MEMBERS]
     // [BEGIN UI-UP-EN-BYP-HEADER-MEMBERS]
     juce::ToggleButton enabledButton { "Upward" };
