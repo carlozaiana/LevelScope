@@ -32,9 +32,11 @@ bool DynamicsCurveComponent::getDownwardInteractionGeometry (juce::Rectangle<flo
     if (r.getWidth() < 90.0f || r.getHeight() < 70.0f)
         return false;
 
-    auto bottomArea = r.removeFromBottom (28.0f);
-    auto rightArea  = r.removeFromRight (32.0f);
+    // [BEGIN UI-CURVE-TEXTSCALE-GEOMETRY-2X]
+    auto bottomArea = r.removeFromBottom (56.0f);
+    auto rightArea  = r.removeFromRight (64.0f);
     juce::ignoreUnused (bottomArea, rightArea);
+    // [END UI-CURVE-TEXTSCALE-GEOMETRY-2X]
 
     auto plot = r;
     if (plot.getWidth() < 60.0f || plot.getHeight() < 40.0f)
@@ -53,8 +55,10 @@ bool DynamicsCurveComponent::getDownwardInteractionGeometry (juce::Rectangle<flo
     const float t2 = loadParam (ParamIDs::t2Lufs, Defaults::t2Lufs);
     const float t3 = loadParam (ParamIDs::t3Lufs, Defaults::t3Lufs);
 
-    constexpr float xMin = -60.0f;
+    // [BEGIN UI-CURVE-XRANGE-NEG90]
+    constexpr float xMin = -90.0f;
     constexpr float xMax =   0.0f;
+    // [END UI-CURVE-XRANGE-NEG90]
 
     auto mapX = [&] (float x) -> float
     {
@@ -330,8 +334,10 @@ void DynamicsCurveComponent::mouseDrag (const juce::MouseEvent& e)
     if (! getDownwardInteractionGeometry (plot, t2X, t3X))
         return;
 
-    constexpr float xMin = -60.0f;
+    // [BEGIN UI-CURVE-XRANGE-NEG90-DRAG]
+    constexpr float xMin = -90.0f;
     constexpr float xMax =   0.0f;
+    // [END UI-CURVE-XRANGE-NEG90-DRAG]
 
     const float x = juce::jlimit (plot.getX(), plot.getRight(), e.position.x);
     const float n = (plot.getWidth() > 1.0f ? (x - plot.getX()) / plot.getWidth() : 0.0f);
@@ -377,9 +383,11 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
     // [BEGIN UI-CURVE-UPWARD-PAINT]
     if (kind == CurveKind::upwardConceptual)
     {
-        auto topArea    = r.removeFromTop (14.0f);
-        auto bottomArea = r.removeFromBottom (28.0f);
-        auto rightArea  = r.removeFromRight (40.0f);
+        // [BEGIN UI-CURVE-TEXTSCALE-UPWARD-2X-AREAS]
+        auto topArea    = r.removeFromTop (28.0f);
+        auto bottomArea = r.removeFromBottom (56.0f);
+        auto rightArea  = r.removeFromRight (64.0f);
+        // [END UI-CURVE-TEXTSCALE-UPWARD-2X-AREAS]
         auto plot       = r;
 
         if (plot.getWidth() < 60.0f || plot.getHeight() < 40.0f)
@@ -410,8 +418,42 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
         const int upwardModeChoice =
             (int) std::lround (loadParam (ParamIDs::upwardModeChoice, (float) Defaults::upwardModeChoice));
 
-        constexpr float xMin = -60.0f;
-        constexpr float xMax =   0.0f;
+        // [BEGIN UI-CURVE-UPWARD-AUTO-XRANGE-NEG90]
+        const float tLo = juce::jmin (t0, t1);
+        const float tHi = juce::jmax (t0, t1);
+
+        const float safeLowKnee  = juce::jmax (0.0f, lowKnee);
+        const float safeHighKnee = juce::jmax (0.0f, highKnee);
+
+        const float lowerKneeStart = tLo - safeLowKnee;
+
+        // Desired window: centered-ish around the zone, but must include:
+        // - lower knee start (below T0)
+        // - some space above T1 (so you see the return to 0 boost)
+        float xMin = lowerKneeStart - 12.0f;
+        float xMax = tHi + 18.0f;
+
+        // Ensure a minimum readable span
+        const float minSpan = 60.0f;
+        if ((xMax - xMin) < minSpan)
+        {
+            const float mid = 0.5f * (tLo + tHi);
+            xMin = mid - 0.5f * minSpan;
+            xMax = mid + 0.5f * minSpan;
+
+            // re-ensure knee + headroom constraints
+            xMin = juce::jmin (xMin, lowerKneeStart - 6.0f);
+            xMax = juce::jmax (xMax, tHi + 12.0f);
+        }
+
+        // Clamp to sensible loudness domain (extended to -90)
+        xMin = juce::jmax (-90.0f, xMin);
+        xMax = juce::jmin (  0.0f, xMax);
+
+        // Final safety: avoid degenerate spans after clamping
+        if ((xMax - xMin) < 40.0f)
+            xMin = juce::jmax (-90.0f, xMax - 40.0f);
+        // [END UI-CURVE-UPWARD-AUTO-XRANGE-NEG90]
 
         const float safeMaxBoost = juce::jlimit (0.0f, 24.0f, maxBoost);
         const float yMin = 0.0f;
@@ -449,7 +491,7 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
             g.drawHorizontalLine ((int) std::round (mapY (v)), plot.getX(), plot.getRight());
 
         // Right-side Boost ruler (0 at bottom, increasing upward)
-        g.setFont (10.0f);
+        g.setFont (20.0f);
         g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
 
         for (auto v : yTicks)
@@ -461,7 +503,7 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
                                                : juce::String (v, 1));
 
             g.drawText (s,
-                        rightArea.toNearestInt().withY ((int) std::round (y - 7.0f)).withHeight (14),
+                        rightArea.toNearestInt().withY ((int) std::round (y - 14.0f)).withHeight (28),
                         juce::Justification::centredRight, false);
         }
 
@@ -493,7 +535,7 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
             const float xA = mapX (a);
             const float xB = mapX (b);
 
-            g.setColour (juce::Colours::orange.withMultipliedAlpha (0.08f));
+            g.setColour (juce::Colours::orange.withMultipliedAlpha (0.10f));
             g.fillRect (juce::Rectangle<float> (juce::jmin (xA, xB), plot.getY(),
                                                 std::abs (xB - xA), plot.getHeight()));
         }
@@ -509,7 +551,9 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
             const float x1A = mapX (b - juce::jmax (0.0f, highKnee));
             const float x1B = mapX (b);
 
-            g.setColour (juce::Colours::white.withMultipliedAlpha (0.05f));
+            // [BEGIN UI-CURVE-UPWARD-KNEE-CONTRAST]
+            g.setColour (juce::Colours::orange.withMultipliedAlpha (0.12f));
+            // [END UI-CURVE-UPWARD-KNEE-CONTRAST]
             g.fillRect (juce::Rectangle<float> (juce::jmin (x0A, x0B), plot.getY(),
                                                 std::abs (x0B - x0A), plot.getHeight()));
             g.fillRect (juce::Rectangle<float> (juce::jmin (x1A, x1B), plot.getY(),
@@ -578,7 +622,7 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
         }
 
         // Top threshold labels
-        g.setFont (10.0f);
+        g.setFont (20.0f);
         g.setColour (juce::Colours::white.withMultipliedAlpha (0.70f));
         g.drawText ("T0", (int) t0X - 12, (int) plot.getY() + 2, 24, 12, juce::Justification::centred);
         g.drawText ("T1", (int) t1X - 12, (int) plot.getY() + 16, 24, 12, juce::Justification::centred);
@@ -587,22 +631,23 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
         const juce::String typeStr = (curveTypeChoice == 1 ? "Bell" : "Monotonic");
         const juce::String modeStr = (upwardModeChoice == 1 ? "Broadband" : "Spectral");
 
-        g.setFont (10.0f);
+        g.setFont (20.0f);
         g.setColour (juce::Colours::white.withMultipliedAlpha (0.70f));
-        g.drawFittedText (typeStr + "   Amt " + juce::String (juce::jlimit (0.0f, 1.0f, amount01), 2),
+        // [BEGIN UI-CURVE-UPWARD-TOPLABELS-NO-OVERLAP]
+        const juce::String topLeft =
+            modeStr + "   " + typeStr + "   Amt " + juce::String (juce::jlimit (0.0f, 1.0f, amount01), 2);
+
+        g.setFont (20.0f);
+        g.setColour (juce::Colours::white.withMultipliedAlpha (0.72f));
+        g.drawFittedText (topLeft,
                           topArea.toNearestInt(),
                           juce::Justification::centredLeft,
                           1);
-
-        g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
-        g.drawFittedText (modeStr,
-                          topArea.toNearestInt(),
-                          juce::Justification::centredRight,
-                          1);
+        // [END UI-CURVE-UPWARD-TOPLABELS-NO-OVERLAP]
 
         // Footer axis labels + info
-        g.setFont (10.0f);
-        const int axisLabelW = 44;
+        g.setFont (20.0f);
+        const int axisLabelW = 88;
 
         g.setColour (juce::Colours::white.withMultipliedAlpha (0.58f));
         g.drawText ("LUFS",
@@ -693,7 +738,7 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
         g.drawHorizontalLine ((int) std::round (mapY (yTick)), plot.getX(), plot.getRight());
 
     // Right-side GR ruler (displayed as 0 at top, 24 at bottom to match downward meter motion)
-    g.setFont (10.0f);
+    g.setFont (20.0f);
     g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
     for (float yTickDisplay : { 0.0f, 6.0f, 12.0f, 18.0f, 24.0f })
     {
@@ -702,7 +747,7 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
 
         g.drawLine (plot.getRight(), y, plot.getRight() + 4.0f, y, 1.0f);
         g.drawText (juce::String ((int) yTickDisplay),
-                    rightArea.toNearestInt().withY ((int) std::round (y - 7.0f)).withHeight (14),
+                    rightArea.toNearestInt().withY ((int) std::round (y - 14.0f)).withHeight (28),
                     juce::Justification::centredRight, false);
     }
 
@@ -739,7 +784,9 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
         const float xA = mapX (t2 - 0.5f * knee);
         const float xB = mapX (t2 + 0.5f * knee);
 
-        g.setColour (juce::Colours::white.withMultipliedAlpha (0.06f));
+        // [BEGIN UI-CURVE-DOWN-KNEE-CONTRAST]
+        g.setColour (juce::Colours::deepskyblue.withMultipliedAlpha (0.12f));
+        // [END UI-CURVE-DOWN-KNEE-CONTRAST]
         g.fillRect (juce::Rectangle<float> (xA, plot.getY(), xB - xA, plot.getHeight()));
     }
 
@@ -866,13 +913,13 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
     }
 
     // Top threshold labels
-    g.setFont (10.0f);
+    g.setFont (20.0f);
     g.setColour (juce::Colours::white.withMultipliedAlpha (0.70f));
     g.drawText ("T2", (int) t2X - 12, (int) plot.getY() + 2, 24, 12, juce::Justification::centred);
     g.drawText ("T3", (int) t3X - 12, (int) plot.getY() + 16, 24, 12, juce::Justification::centred);
 
     // Footer info and labels
-    g.setFont (10.0f);
+    g.setFont (20.0f);
 
     const int axisLabelW = 44;
 
