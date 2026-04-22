@@ -111,11 +111,16 @@ namespace levelscope::dsp::UpwardGainLaw
         // [BEGIN UPWARDGAINLAW-BELL-SMOOTH-COSINE]
         else // bell (smooth, rounded peak)
         {
-            // pos is 0..1 across zone.
-            // Use a raised-cosine bell:
-            // - smooth derivative everywhere (no cusp at the peak)
-            // - 1.0 at center (pos=0.5), 0.0 at edges (pos=0/1)
-            float u = (pos - 0.5f) * 2.0f; // -1..+1
+            // Evaluate the bell over a domain that includes the knees
+            // so the curve rises / falls smoothly inside the knee regions
+            // instead of staying locked to zero across the whole low knee.
+            const float totalSpan = range + p.lowKneeDb + p.highKneeDb;
+            float widePos = 0.0f;
+            if (totalSpan > 1.0e-4f)
+                widePos = (levelDb - (t0 - p.lowKneeDb)) / totalSpan;
+            widePos = std::clamp (widePos, 0.0f, 1.0f);
+
+            float u = (widePos - 0.5f) * 2.0f; // -1..+1
             u = std::clamp (u, -1.0f, 1.0f);
 
             constexpr float pi = 3.14159265358979323846f;
