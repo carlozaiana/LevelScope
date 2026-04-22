@@ -385,8 +385,8 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
     {
         // [BEGIN UI-CURVE-TEXTSCALE-UPWARD-AREAS]
         auto topArea    = r.removeFromTop (20.0f);
-        auto bottomArea = r.removeFromBottom (34.0f);
-        auto rightArea  = r.removeFromRight (50.0f);
+        auto bottomArea = r.removeFromBottom (28.0f);
+        auto rightArea  = r.removeFromRight (32.0f);
         // [END UI-CURVE-TEXTSCALE-UPWARD-AREAS]
         auto plot       = r;
 
@@ -679,6 +679,7 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
 
         return;
     }
+    // [END UI-CURVE-UPWARD-PAINT]
 
     if (kind != CurveKind::downward)
     {
@@ -687,9 +688,8 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
         g.drawFittedText ("Curve pending", r.toNearestInt(), juce::Justification::centred, 1);
         return;
     }
-    // [END UI-CURVE-UPWARD-PAINT]
 
-    auto topArea    = r.removeFromTop (14.0f);
+    auto topArea    = r.removeFromTop (20.0f);
     auto bottomArea = r.removeFromBottom (28.0f);
     auto rightArea  = r.removeFromRight (32.0f);
     auto plot       = r;
