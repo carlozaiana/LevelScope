@@ -108,11 +108,22 @@ namespace levelscope::dsp::UpwardGainLaw
         {
             shaped = std::pow (std::max (0.0f, 1.0f - pos), expo);
         }
-        else // bell
+        // [BEGIN UPWARDGAINLAW-BELL-SMOOTH-COSINE]
+        else // bell (smooth, rounded peak)
         {
-            const float d = std::abs (pos - 0.5f) * 2.0f; // 0..1
-            shaped = std::pow (std::max (0.0f, 1.0f - d), expo);
+            // pos is 0..1 across zone.
+            // Use a raised-cosine bell:
+            // - smooth derivative everywhere (no cusp at the peak)
+            // - 1.0 at center (pos=0.5), 0.0 at edges (pos=0/1)
+            float u = (pos - 0.5f) * 2.0f; // -1..+1
+            u = std::clamp (u, -1.0f, 1.0f);
+
+            constexpr float pi = 3.14159265358979323846f;
+            const float bell01 = 0.5f * (1.0f + std::cos (pi * u)); // 0..1
+
+            shaped = std::pow (std::max (0.0f, bell01), expo);
         }
+        // [END UPWARDGAINLAW-BELL-SMOOTH-COSINE]
 
         float boostDb = maxBoostDb * shaped * zone01;
         boostDb = std::clamp (boostDb, 0.0f, maxBoostDb);
