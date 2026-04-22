@@ -585,8 +585,8 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
         levelscope::dsp::UpwardGainLaw::Params gp;
         gp.t0Db        = t0;
         gp.t1Db        = t1;
-        gp.lowKneeDb   = juce::jmax (0.0f, lowKnee);
-        gp.highKneeDb  = juce::jmax (0.0f, highKnee);
+        gp.lowKneeDb   = juce::jmax (0.0f, highKnee);
+        gp.highKneeDb  = juce::jmax (0.0f, lowKnee);
         gp.maxBoostDb  = juce::jmax (0.0f, safeMaxBoost);
         gp.curve01     = juce::jlimit (0.0f, 1.0f, curve01);
         gp.curveType   = (curveTypeChoice == 1
