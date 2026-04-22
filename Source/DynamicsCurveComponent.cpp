@@ -334,10 +334,10 @@ void DynamicsCurveComponent::mouseDrag (const juce::MouseEvent& e)
     if (! getDownwardInteractionGeometry (plot, t2X, t3X))
         return;
 
-    // [BEGIN UI-CURVE-XRANGE-NEG90-DRAG]
-    constexpr float xMin = -90.0f;
+    // [BEGIN UI-CURVE-DOWN-DRAG-XRANGE-MATCH-PAINT]
+    constexpr float xMin = -60.0f;
     constexpr float xMax =   0.0f;
-    // [END UI-CURVE-XRANGE-NEG90-DRAG]
+    // [END UI-CURVE-DOWN-DRAG-XRANGE-MATCH-PAINT]
 
     const float x = juce::jlimit (plot.getX(), plot.getRight(), e.position.x);
     const float n = (plot.getWidth() > 1.0f ? (x - plot.getX()) / plot.getWidth() : 0.0f);
@@ -425,45 +425,45 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
         const float safeLowKnee  = juce::jmax (0.0f, lowKnee);
         const float safeHighKnee = juce::jmax (0.0f, highKnee);
 
-        const float lowerKneeStart = tLo - safeLowKnee;
+        const float kneeLoStart = tLo - safeLowKnee; // lower side of low-knee
+        const float kneeHiEnd   = tHi;               // upper side of high-knee is T1 itself
 
-        // Desired window: centered-ish around the zone, but must include:
-        // - lower knee start (below T0)
-        // - some space above T1 (so you see the return to 0 boost)
-        float xMin = lowerKneeStart - 12.0f;
-        float xMax = tHi + 18.0f;
+        constexpr float marginBelow = 10.0f;
+        constexpr float marginAbove = 10.0f;
 
-        // Ensure a minimum readable span
-        const float minSpan = 60.0f;
-        if ((xMax - xMin) < minSpan)
-        {
-            const float mid = 0.5f * (tLo + tHi);
-            xMin = mid - 0.5f * minSpan;
-            xMax = mid + 0.5f * minSpan;
+        // Tie view range to the knees + margins
+        float xMin = kneeLoStart - marginBelow;
+        float xMax = kneeHiEnd   + marginAbove;
 
-            // re-ensure knee + headroom constraints
-            xMin = juce::jmin (xMin, lowerKneeStart - 6.0f);
-            xMax = juce::jmax (xMax, tHi + 12.0f);
-        }
-
-        // Clamp to sensible loudness domain (extended to -90)
+        // Clamp to sensible domain (extended down to -90)
         xMin = juce::jmax (-90.0f, xMin);
         xMax = juce::jmin (  0.0f, xMax);
 
-        // Final safety: avoid degenerate spans after clamping
-        if ((xMax - xMin) < 40.0f)
-            xMin = juce::jmax (-90.0f, xMax - 40.0f);
+        // Ensure non-degenerate span
+        if ((xMax - xMin) < 30.0f)
+            xMin = juce::jmax (-90.0f, xMax - 30.0f);
         // [END UI-CURVE-UPWARD-AUTO-XRANGE-NEG90]
 
         const float safeMaxBoost = juce::jlimit (0.0f, 24.0f, maxBoost);
         const float yMin = 0.0f;
         const float yMax = juce::jmax (1.0f, safeMaxBoost);
 
+        // [BEGIN UI-CURVE-UPWARD-MAPX-NOCLAMP]
+        auto mapXNoClamp = [&] (float x) -> float
+        {
+            const float denom = juce::jmax (1.0e-6f, (xMax - xMin));
+            const float n = (x - xMin) / denom; // NOT clamped
+            return plot.getX() + n * plot.getWidth();
+        };
+
         auto mapX = [&] (float x) -> float
         {
-            const float n = (x - xMin) / (xMax - xMin);
+            // Safe clamped version for general drawing
+            const float denom = juce::jmax (1.0e-6f, (xMax - xMin));
+            const float n = (x - xMin) / denom;
             return plot.getX() + juce::jlimit (0.0f, 1.0f, n) * plot.getWidth();
         };
+        // [END UI-CURVE-UPWARD-MAPX-NOCLAMP]
 
         auto mapY = [&] (float y) -> float
         {
@@ -471,10 +471,20 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
             return plot.getBottom() - juce::jlimit (0.0f, 1.0f, n) * plot.getHeight();
         };
 
-        // Grid (x like other curves; y is Boost increasing upward)
+        // [BEGIN UI-CURVE-UPWARD-DYNAMIC-XTICKS-GRID]
         g.setColour (juce::Colours::white.withMultipliedAlpha (0.08f));
-        for (float xTick : { -60.0f, -48.0f, -36.0f, -24.0f, -12.0f, 0.0f })
-            g.drawVerticalLine ((int) std::round (mapX (xTick)), plot.getY(), plot.getBottom());
+
+        const float tickStep = 10.0f; // shows -90, -80, ... 0
+        const int firstTick = (int) std::ceil (xMin / tickStep);
+        const int lastTick  = (int) std::floor (xMax / tickStep);
+
+        for (int k = firstTick; k <= lastTick; ++k)
+        {
+            const float xTick = (float) k * tickStep;
+            const float x = mapXNoClamp (xTick);
+            g.drawVerticalLine ((int) std::round (x), plot.getY(), plot.getBottom());
+        }
+        // [END UI-CURVE-UPWARD-DYNAMIC-XTICKS-GRID]
 
         // Y ticks: use a stable set + always include yMax
         auto shouldDrawTick = [&] (float v) { return v >= yMin - 1.0e-6f && v <= yMax + 1.0e-6f; };
@@ -511,21 +521,24 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
         const auto bottomTicksArea = bottomArea.removeFromTop (14.0f);
         const auto bottomTitleArea = bottomArea;
 
-        for (float xTick : { -60.0f, -48.0f, -36.0f, -24.0f, -12.0f, 0.0f })
+        // [BEGIN UI-CURVE-UPWARD-DYNAMIC-XTICKS-BOTTOM]
+        for (int k = firstTick; k <= lastTick; ++k)
         {
-            const float x = mapX (xTick);
+            const float xTick = (float) k * tickStep;
+            const float x = mapXNoClamp (xTick);
 
             g.setColour (juce::Colours::white.withMultipliedAlpha (0.40f));
             g.drawLine (x, plot.getBottom(), x, plot.getBottom() + 4.0f, 1.0f);
 
             g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
-            g.drawText (juce::String ((int) xTick),
-                        juce::Rectangle<int> ((int) std::round (x - 18.0f),
+            g.drawText (juce::String ((int) std::lround (xTick)),
+                        juce::Rectangle<int> ((int) std::round (x - 22.0f),
                                               (int) bottomTicksArea.getY(),
-                                              36,
+                                              44,
                                               (int) bottomTicksArea.getHeight()),
                         juce::Justification::centred, false);
         }
+        // [END UI-CURVE-UPWARD-DYNAMIC-XTICKS-BOTTOM]
 
         // Shade active band T0..T1
         {
