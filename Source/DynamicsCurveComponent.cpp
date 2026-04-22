@@ -32,11 +32,11 @@ bool DynamicsCurveComponent::getDownwardInteractionGeometry (juce::Rectangle<flo
     if (r.getWidth() < 90.0f || r.getHeight() < 70.0f)
         return false;
 
-    // [BEGIN UI-CURVE-TEXTSCALE-GEOMETRY-2X]
-    auto bottomArea = r.removeFromBottom (56.0f);
-    auto rightArea  = r.removeFromRight (64.0f);
+    // [BEGIN UI-CURVE-TEXTSCALE-GEOMETRY]
+    auto bottomArea = r.removeFromBottom (28.0f);
+    auto rightArea  = r.removeFromRight (32.0f);
     juce::ignoreUnused (bottomArea, rightArea);
-    // [END UI-CURVE-TEXTSCALE-GEOMETRY-2X]
+    // [END UI-CURVE-TEXTSCALE-GEOMETRY]
 
     auto plot = r;
     if (plot.getWidth() < 60.0f || plot.getHeight() < 40.0f)
@@ -383,11 +383,11 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
     // [BEGIN UI-CURVE-UPWARD-PAINT]
     if (kind == CurveKind::upwardConceptual)
     {
-        // [BEGIN UI-CURVE-TEXTSCALE-UPWARD-2X-AREAS]
-        auto topArea    = r.removeFromTop (28.0f);
-        auto bottomArea = r.removeFromBottom (56.0f);
-        auto rightArea  = r.removeFromRight (64.0f);
-        // [END UI-CURVE-TEXTSCALE-UPWARD-2X-AREAS]
+        // [BEGIN UI-CURVE-TEXTSCALE-UPWARD-AREAS]
+        auto topArea    = r.removeFromTop (20.0f);
+        auto bottomArea = r.removeFromBottom (34.0f);
+        auto rightArea  = r.removeFromRight (50.0f);
+        // [END UI-CURVE-TEXTSCALE-UPWARD-AREAS]
         auto plot       = r;
 
         if (plot.getWidth() < 60.0f || plot.getHeight() < 40.0f)
@@ -491,7 +491,7 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
             g.drawHorizontalLine ((int) std::round (mapY (v)), plot.getX(), plot.getRight());
 
         // Right-side Boost ruler (0 at bottom, increasing upward)
-        g.setFont (20.0f);
+        g.setFont (14.0f);
         g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
 
         for (auto v : yTicks)
@@ -503,7 +503,7 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
                                                : juce::String (v, 1));
 
             g.drawText (s,
-                        rightArea.toNearestInt().withY ((int) std::round (y - 14.0f)).withHeight (28),
+                        rightArea.toNearestInt().withY ((int) std::round (y - 10.0f)).withHeight (20),
                         juce::Justification::centredRight, false);
         }
 
@@ -622,7 +622,7 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
         }
 
         // Top threshold labels
-        g.setFont (20.0f);
+        g.setFont (14.0f);
         g.setColour (juce::Colours::white.withMultipliedAlpha (0.70f));
         g.drawText ("T0", (int) t0X - 12, (int) plot.getY() + 2, 24, 12, juce::Justification::centred);
         g.drawText ("T1", (int) t1X - 12, (int) plot.getY() + 16, 24, 12, juce::Justification::centred);
@@ -631,13 +631,13 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
         const juce::String typeStr = (curveTypeChoice == 1 ? "Bell" : "Monotonic");
         const juce::String modeStr = (upwardModeChoice == 1 ? "Broadband" : "Spectral");
 
-        g.setFont (20.0f);
+        g.setFont (14.0f);
         g.setColour (juce::Colours::white.withMultipliedAlpha (0.70f));
         // [BEGIN UI-CURVE-UPWARD-TOPLABELS-NO-OVERLAP]
         const juce::String topLeft =
             modeStr + "   " + typeStr + "   Amt " + juce::String (juce::jlimit (0.0f, 1.0f, amount01), 2);
 
-        g.setFont (20.0f);
+        g.setFont (14.0f);
         g.setColour (juce::Colours::white.withMultipliedAlpha (0.72f));
         g.drawFittedText (topLeft,
                           topArea.toNearestInt(),
@@ -646,8 +646,8 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
         // [END UI-CURVE-UPWARD-TOPLABELS-NO-OVERLAP]
 
         // Footer axis labels + info
-        g.setFont (20.0f);
-        const int axisLabelW = 88;
+        g.setFont (14.0f);
+        const int axisLabelW = 60;
 
         g.setColour (juce::Colours::white.withMultipliedAlpha (0.58f));
         g.drawText ("LUFS",
@@ -738,7 +738,7 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
         g.drawHorizontalLine ((int) std::round (mapY (yTick)), plot.getX(), plot.getRight());
 
     // Right-side GR ruler (displayed as 0 at top, 24 at bottom to match downward meter motion)
-    g.setFont (20.0f);
+    g.setFont (14.0f);
     g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
     for (float yTickDisplay : { 0.0f, 6.0f, 12.0f, 18.0f, 24.0f })
     {
@@ -747,7 +747,7 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
 
         g.drawLine (plot.getRight(), y, plot.getRight() + 4.0f, y, 1.0f);
         g.drawText (juce::String ((int) yTickDisplay),
-                    rightArea.toNearestInt().withY ((int) std::round (y - 14.0f)).withHeight (28),
+                    rightArea.toNearestInt().withY ((int) std::round (y - 10.0f)).withHeight (20),
                     juce::Justification::centredRight, false);
     }
 
@@ -913,15 +913,15 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
     }
 
     // Top threshold labels
-    g.setFont (20.0f);
+    g.setFont (14.0f);
     g.setColour (juce::Colours::white.withMultipliedAlpha (0.70f));
     g.drawText ("T2", (int) t2X - 12, (int) plot.getY() + 2, 24, 12, juce::Justification::centred);
     g.drawText ("T3", (int) t3X - 12, (int) plot.getY() + 16, 24, 12, juce::Justification::centred);
 
     // Footer info and labels
-    g.setFont (20.0f);
+    g.setFont (14.0f);
 
-    const int axisLabelW = 44;
+    const int axisLabelW = 60;
 
     g.setColour (juce::Colours::white.withMultipliedAlpha (0.58f));
     g.drawText ("LUFS",
