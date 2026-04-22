@@ -55,10 +55,10 @@ bool DynamicsCurveComponent::getDownwardInteractionGeometry (juce::Rectangle<flo
     const float t2 = loadParam (ParamIDs::t2Lufs, Defaults::t2Lufs);
     const float t3 = loadParam (ParamIDs::t3Lufs, Defaults::t3Lufs);
 
-    // [BEGIN UI-CURVE-XRANGE-NEG90]
-    constexpr float xMin = -90.0f;
+    // [BEGIN UI-CURVE-XRANGE-NEG60]
+    constexpr float xMin = -60.0f;
     constexpr float xMax =   0.0f;
-    // [END UI-CURVE-XRANGE-NEG90]
+    // [END UI-CURVE-XRANGE-NEG60]
 
     auto mapX = [&] (float x) -> float
     {
@@ -603,7 +603,13 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
             const float x = xMin + a * (xMax - xMin);
 
             // UI incorporates cal trim as an x-axis shift (conceptual mapping)
-            const float xAdjusted = x + calTrimDb;
+            // [BEGIN UI-CURVE-UPWARD-IGNORE-CALTRIM-FOR-VISUAL]
+            // Keep the conceptual loudness-domain curve aligned to visible T0/T1 markers.
+            // CalTrim is a calibration detail; showing it as a number is fine, but shifting the x-axis
+            // here easily makes the curve look "wrong" at T0.
+            const float xAdjusted = x;
+            juce::ignoreUnused (calTrimDb);
+            // [END UI-CURVE-UPWARD-IGNORE-CALTRIM-FOR-VISUAL]
 
             const float boostDb =
                 levelscope::dsp::UpwardGainLaw::computeUpwardGainDb (xAdjusted, gp, amount01);
@@ -669,12 +675,19 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
                                           axisLabelW,
                                           (int) bottomTitleArea.getHeight()),
                     juce::Justification::centredLeft, false);
+        // [BEGIN UI-CURVE-UPWARD-BOOST-AT-T0-READOUT]
+        const float boostAtT0 =
+            levelscope::dsp::UpwardGainLaw::computeUpwardGainDb (t0, gp, amount01);
+        // [END UI-CURVE-UPWARD-BOOST-AT-T0-READOUT]
 
+        // [BEGIN UI-CURVE-UPWARD-FOOTER-ADD-BT0]
         const juce::String info =
             "Max " + juce::String (safeMaxBoost, 1) + " dB"
             + "   Knees " + juce::String (juce::jmax (0.0f, lowKnee), 1)
             + "/" + juce::String (juce::jmax (0.0f, highKnee), 1) + " dB"
+            + "   B@T0 " + juce::String (boostAtT0, 2) + " dB"
             + "   Trim " + juce::String (calTrimDb, 1) + " dB";
+        // [END UI-CURVE-UPWARD-FOOTER-ADD-BT0]
 
         g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
         g.drawFittedText (info,
