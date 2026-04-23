@@ -602,14 +602,7 @@ void DynamicsCurveComponent::paint (juce::Graphics& g)
             const float a = (float) i / (float) N;
             const float x = xMin + a * (xMax - xMin);
 
-            // UI incorporates cal trim as an x-axis shift (conceptual mapping)
-            // [BEGIN UI-CURVE-UPWARD-IGNORE-CALTRIM-FOR-VISUAL]
-            // Keep the conceptual loudness-domain curve aligned to visible T0/T1 markers.
-            // CalTrim is a calibration detail; showing it as a number is fine, but shifting the x-axis
-            // here easily makes the curve look "wrong" at T0.
-            const float xAdjusted = x;
-            juce::ignoreUnused (calTrimDb);
-            // [END UI-CURVE-UPWARD-IGNORE-CALTRIM-FOR-VISUAL]
+            const float xAdjusted = x + calTrimDb;
 
             const float boostDb =
                 levelscope::dsp::UpwardGainLaw::computeUpwardGainDb (xAdjusted, gp, amount01);
