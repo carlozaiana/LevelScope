@@ -1,8 +1,19 @@
 #include "LevelerCurveComponent.h"
 #include "PluginProcessor.h"
 #include "Core/Processing/Modules/LevelerParamIDs.h"
-
 #include <cmath>
+
+// [BEGIN UI-CURVE-LVLR-XRANGE-NEG60-TO-0]
+namespace
+{
+    constexpr float kLevelerXMin = -60.0f;
+    constexpr float kLevelerXMax =   0.0f;
+
+    // Match the other curve components
+    constexpr float kLevelerXTicks[] = { -60.0f, -48.0f, -36.0f, -24.0f, -12.0f, 0.0f };
+    constexpr float kLevelerYTicks[] = { -24.0f, -12.0f, 0.0f, 12.0f, 24.0f };
+}
+// [END UI-CURVE-LVLR-XRANGE-NEG60-TO-0]
 
 LevelerCurveComponent::LevelerCurveComponent (LevelScopeAudioProcessor& p)
     : processor (p)
@@ -49,8 +60,10 @@ bool LevelerCurveComponent::getTargetInteractionGeometry (juce::Rectangle<float>
     const int controlMode = (int) std::lround (loadParam (ParamIDs::controlModeChoice,
                                                           (float) Defaults::controlModeChoice));
 
-    constexpr float xMin = levelscope::lvlr::Ranges::targetMinLufs;
-    constexpr float xMax = levelscope::lvlr::Ranges::targetMaxLufs;
+    // [BEGIN UI-CURVE-LVLR-XRANGE-DISPLAY-FIX-GEOM]
+    constexpr float xMin = kLevelerXMin;
+    constexpr float xMax = kLevelerXMax;
+    // [END UI-CURVE-LVLR-XRANGE-DISPLAY-FIX-GEOM]
 
     auto mapX = [&] (float x) -> float
     {
@@ -150,8 +163,10 @@ void LevelerCurveComponent::mouseDrag (const juce::MouseEvent& e)
     if (! getTargetInteractionGeometry (plot, targetX, editable) || ! editable)
         return;
 
-    constexpr float xMin = levelscope::lvlr::Ranges::targetMinLufs;
-    constexpr float xMax = levelscope::lvlr::Ranges::targetMaxLufs;
+    // [BEGIN UI-CURVE-LVLR-XRANGE-DISPLAY-FIX-DRAG]
+    constexpr float xMin = kLevelerXMin;
+    constexpr float xMax = kLevelerXMax;
+    // [END UI-CURVE-LVLR-XRANGE-DISPLAY-FIX-DRAG]
 
     const float x = juce::jlimit (plot.getX(), plot.getRight(), e.position.x);
     const float n = (plot.getWidth() > 1.0f ? (x - plot.getX()) / plot.getWidth() : 0.0f);
@@ -222,8 +237,10 @@ void LevelerCurveComponent::paint (juce::Graphics& g)
 
     const bool hostGainMode = (controlMode == 1);
 
-    constexpr float xMin = levelscope::lvlr::Ranges::targetMinLufs;
-    constexpr float xMax = levelscope::lvlr::Ranges::targetMaxLufs;
+    // [BEGIN UI-CURVE-LVLR-XRANGE-DISPLAY-FIX-PAINT]
+    constexpr float xMin = kLevelerXMin;
+    constexpr float xMax = kLevelerXMax;
+    // [END UI-CURVE-LVLR-XRANGE-DISPLAY-FIX-PAINT]
     constexpr float yMin = levelscope::lvlr::Ranges::hostGainMinDb;
     constexpr float yMax = levelscope::lvlr::Ranges::hostGainMaxDb;
 
@@ -241,21 +258,28 @@ void LevelerCurveComponent::paint (juce::Graphics& g)
 
     // Grid
     g.setColour (juce::Colours::white.withMultipliedAlpha (0.08f));
-    for (float xTick : { -48.0f, -42.0f, -36.0f, -30.0f, -24.0f, -18.0f, -12.0f })
-        g.drawVerticalLine ((int) std::round (mapX (xTick)), plot.getY(), plot.getBottom());
 
-    for (float yTick : { -24.0f, -12.0f, 0.0f, 12.0f, 24.0f })
+    // [BEGIN UI-CURVE-LVLR-XTICKS-NEG60-TO-0]
+    for (float xTick : kLevelerXTicks)
+        g.drawVerticalLine ((int) std::round (mapX (xTick)), plot.getY(), plot.getBottom());
+    // [END UI-CURVE-LVLR-XTICKS-NEG60-TO-0]
+
+    // [BEGIN UI-CURVE-LVLR-YTICKS-SHARED]
+    for (float yTick : kLevelerYTicks)
         g.drawHorizontalLine ((int) std::round (mapY (yTick)), plot.getX(), plot.getRight());
+    // [END UI-CURVE-LVLR-YTICKS-SHARED]
 
     // Right-side dB ruler
-    g.setFont (10.0f);
+    // [BEGIN UI-CURVE-LVLR-FONT-14-RULER]
+    g.setFont (14.0f);
+    // [END UI-CURVE-LVLR-FONT-14-RULER]
     g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
     for (float yTick : { -24.0f, -12.0f, 0.0f, 12.0f, 24.0f })
     {
         const float y = mapY (yTick);
         g.drawLine (plot.getRight(), y, plot.getRight() + 4.0f, y, 1.0f);
         g.drawText (juce::String ((int) yTick),
-                    rightArea.toNearestInt().withY ((int) std::round (y - 7.0f)).withHeight (14),
+                    rightArea.toNearestInt().withY ((int) std::round (y - 10.0f)).withHeight (20),
                     juce::Justification::centredRight, false);
     }
 
@@ -263,7 +287,10 @@ void LevelerCurveComponent::paint (juce::Graphics& g)
     const auto bottomTicksArea = bottomArea.removeFromTop (14.0f);
     const auto bottomTitleArea = bottomArea;
 
-    for (float xTick : { -48.0f, -36.0f, -24.0f, -12.0f })
+    // [BEGIN UI-CURVE-LVLR-BOTTOM-XTICKS-NEG60-TO-0]
+    g.setFont (14.0f);
+
+    for (float xTick : kLevelerXTicks)
     {
         const float x = mapX (xTick);
         g.setColour (juce::Colours::white.withMultipliedAlpha (0.40f));
@@ -271,12 +298,13 @@ void LevelerCurveComponent::paint (juce::Graphics& g)
 
         g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
         g.drawText (juce::String ((int) xTick),
-                    juce::Rectangle<int> ((int) std::round (x - 18.0f),
+                    juce::Rectangle<int> ((int) std::round (x - 22.0f),
                                           (int) bottomTicksArea.getY(),
-                                          36,
+                                          44,
                                           (int) bottomTicksArea.getHeight()),
                     juce::Justification::centred, false);
     }
+    // [END UI-CURVE-LVLR-BOTTOM-XTICKS-NEG60-TO-0]
 
     // Dim/normal overlay alpha depending on control mode
     const float activeAlpha = hostGainMode ? 0.22f : 0.90f;
@@ -379,12 +407,14 @@ void LevelerCurveComponent::paint (juce::Graphics& g)
 
     const char* modeText = (modeChoice == 1 ? "Learn-Hold" : "Adaptive");
 
-    g.setFont (11.0f);
+    // [BEGIN UI-CURVE-LVLR-FONT-14-TOP]
+    g.setFont (14.0f);
+    // [END UI-CURVE-LVLR-FONT-14-TOP]
 
     if (hostGainMode)
     {
         g.setColour (juce::Colours::orange.withMultipliedAlpha (0.90f));
-        g.drawFittedText ("Host Gain active", topArea.removeFromTop (14).toNearestInt(),
+        g.drawFittedText ("Host Gain active", topArea.removeFromTop (18).toNearestInt(),
                           juce::Justification::centredLeft, 1);
 
         g.setColour (juce::Colours::orange.withMultipliedAlpha (0.72f));
@@ -394,7 +424,7 @@ void LevelerCurveComponent::paint (juce::Graphics& g)
     }
     else
     {
-        auto line = topArea.removeFromTop (14);
+        auto line = topArea.removeFromTop (18);
         g.setColour (juce::Colours::white.withMultipliedAlpha (0.65f));
         g.drawFittedText (juce::String (measText) + "   " + juce::String (modeText),
                           line.toNearestInt(),
@@ -402,18 +432,20 @@ void LevelerCurveComponent::paint (juce::Graphics& g)
 
         if (captureArmed)
         {
-            auto badge = juce::Rectangle<float> (line.getRight() - 54.0f, line.getY(), 54.0f, 14.0f);
+            auto badge = juce::Rectangle<float> (line.getRight() - 78.0f, line.getY(), 78.0f, 18.0f);
             g.setColour (juce::Colours::red.withMultipliedAlpha (0.80f));
             g.fillRoundedRectangle (badge, 4.0f);
 
             g.setColour (juce::Colours::white.withMultipliedAlpha (0.95f));
-            g.setFont (10.0f);
+            g.setFont (14.0f);
             g.drawFittedText ("CAPTURE", badge.toNearestInt(), juce::Justification::centred, 1);
         }
     }
 
     // Axis labels / target label
-    g.setFont (10.0f);
+    // [BEGIN UI-CURVE-LVLR-FONT-14-AXES]
+    g.setFont (14.0f);
+    // [END UI-CURVE-LVLR-FONT-14-AXES]
     g.setColour (juce::Colours::white.withMultipliedAlpha (dimAlpha));
 
     g.drawText ("LUFS in",
