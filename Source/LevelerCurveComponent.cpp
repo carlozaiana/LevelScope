@@ -407,16 +407,28 @@ void LevelerCurveComponent::paint (juce::Graphics& g)
 
     const char* modeText = (modeChoice == 1 ? "Learn-Hold" : "Adaptive");
 
-    // [BEGIN UI-CURVE-LVLR-FONT-14-TOP]
+    // [BEGIN UI-CURVE-LVLR-MOVE-GAIN-LABEL-TO-TOPLINE]
     g.setFont (14.0f);
-    // [END UI-CURVE-LVLR-FONT-14-TOP]
+
+    auto drawGainRightLabel = [&] (juce::Rectangle<float> area)
+    {
+        g.setColour (juce::Colours::white.withMultipliedAlpha (0.55f));
+        g.drawFittedText ("Gain", area.toNearestInt(), juce::Justification::centredRight, 1);
+    };
 
     if (hostGainMode)
     {
+        // Line 1: "Host Gain active" + right label "Gain"
+        auto line1 = topArea.removeFromTop (18.0f);
+
+        auto gainArea = line1.removeFromRight (56.0f);
+        drawGainRightLabel (gainArea);
+
         g.setColour (juce::Colours::orange.withMultipliedAlpha (0.90f));
-        g.drawFittedText ("Host Gain active", topArea.removeFromTop (18).toNearestInt(),
+        g.drawFittedText ("Host Gain active", line1.toNearestInt(),
                           juce::Justification::centredLeft, 1);
 
+        // Line 2: host value
         g.setColour (juce::Colours::orange.withMultipliedAlpha (0.72f));
         g.drawFittedText ("Host " + juce::String (hostGainDb, 1) + " dB",
                           topArea.toNearestInt(),
@@ -424,7 +436,19 @@ void LevelerCurveComponent::paint (juce::Graphics& g)
     }
     else
     {
-        auto line = topArea.removeFromTop (18);
+        // Line 1: measurement/mode + right label "Gain" + optional CAPTURE badge
+        auto line = topArea.removeFromTop (18.0f);
+
+        juce::Rectangle<float> badge;
+        if (captureArmed)
+        {
+            badge = juce::Rectangle<float> (line.getRight() - 78.0f, line.getY(), 78.0f, 18.0f);
+            line.setRight (badge.getX()); // reserve badge area on the right
+        }
+
+        auto gainArea = line.removeFromRight (56.0f);
+        drawGainRightLabel (gainArea);
+
         g.setColour (juce::Colours::white.withMultipliedAlpha (0.65f));
         g.drawFittedText (juce::String (measText) + "   " + juce::String (modeText),
                           line.toNearestInt(),
@@ -432,7 +456,6 @@ void LevelerCurveComponent::paint (juce::Graphics& g)
 
         if (captureArmed)
         {
-            auto badge = juce::Rectangle<float> (line.getRight() - 78.0f, line.getY(), 78.0f, 18.0f);
             g.setColour (juce::Colours::red.withMultipliedAlpha (0.80f));
             g.fillRoundedRectangle (badge, 4.0f);
 
@@ -441,6 +464,7 @@ void LevelerCurveComponent::paint (juce::Graphics& g)
             g.drawFittedText ("CAPTURE", badge.toNearestInt(), juce::Justification::centred, 1);
         }
     }
+    // [END UI-CURVE-LVLR-MOVE-GAIN-LABEL-TO-TOPLINE]
 
     // Axis labels / target label
     // [BEGIN UI-CURVE-LVLR-FONT-14-AXES]
@@ -452,9 +476,9 @@ void LevelerCurveComponent::paint (juce::Graphics& g)
                 juce::Rectangle<int> ((int) plot.getX(), (int) bottomTitleArea.getY(), 70, (int) bottomTitleArea.getHeight()),
                 juce::Justification::centredLeft, false);
 
-    g.drawText ("Gain",
-                juce::Rectangle<int> ((int) rightArea.getX(), (int) topArea.getY(), (int) rightArea.getWidth(), 12),
-                juce::Justification::centredRight, false);
+    // [BEGIN UI-CURVE-LVLR-REMOVE-GAIN-BOTTOMLABEL]
+    // "Gain" label is drawn in the top status line to avoid covering the right ruler ("24").
+    // [END UI-CURVE-LVLR-REMOVE-GAIN-BOTTOMLABEL]
 
     g.setColour (juce::Colours::white.withMultipliedAlpha (hostGainMode ? 0.45f : 0.68f));
     g.drawText ("T", (int) targetX - 8, (int) plot.getY() + 2, 16, 12, juce::Justification::centred);
