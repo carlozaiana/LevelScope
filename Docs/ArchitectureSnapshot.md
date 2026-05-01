@@ -9,7 +9,7 @@ This document is a **contract** for parallel development chats.
 Anything marked **Implemented** must be preserved.  
 Anything marked **Planned** must not be assumed to exist until integrated.
 
-Last updated: **2026-03-22**
+Last updated: **2026-04-23**
 
 ---
 
@@ -26,6 +26,9 @@ Last updated: **2026-03-22**
 - Module chain scaffolding (ProcessorCore + module interfaces)
 - Module 1 DSP: MTDM (multi-stage dynamics) in Core (reusable)
 - Module 2 DSP: Leveler in Core (reusable)
+- Shared DSP utilities now include:
+  - `Source/Core/Processing/DSP/UpwardGainLaw.h` (unified upward curve math)
+  - `Source/Core/Processing/DSP/BS1770MomentaryLufsDetector.h` (Momentary LUFS control signal for dynamics, K-weighted, 60 Hz frames)
 
 **Planned / next milestones:**
 - IN snapshot vs OUT live analysis tracks (separate histories/curves, separate visibility)
@@ -67,26 +70,33 @@ Hard rule: Core must be usable by plugin + future standalone + headless tests.
   - preset save/load (settings vs snapshot; see Persistence section)
 - Right-side strip next to timeline:
   - LUFS scale
-  - stage meters (at least In/Up/Dn/Lim/Out; Leveler metering available via snapshot API)
+  - stage meters (In/Up/Dn/Lim/Out; Leveler metering available via snapshot API)
 - Resizable rolling LRA lane (height divider)
 - Bottom processing UI:
   - MTDM cards/panels
   - Leveler controls integrated
+  - **Shared resizable right-side “curve strip” inside bottom cards**
+  - **2D curve displays (UI‑CURVE‑1): Leveler + MTDM Downward**
+  - **2D curve displays (UI‑CURVE‑2): MTDM Upward conceptual curve (DSP-sampled from `UpwardGainLaw.h`)**
+  - **Direct manipulation in curves: drag Leveler target (“T”), drag MTDM Downward T2/T3**
+  - **True current x/y operating-point dots for Leveler + Downward (uses snapshot fields)**
+  - Curve UI consistency fixes (implemented):
+    - minimum curve font size policy: **14.0f**
+    - x-range / interaction-geometry alignment to prevent drag offset bugs (e.g. Downward curve)
 - Playback-lock policy in UI:
   - latency/structure controls disabled during **effective playback**
   - tooltips explain “Stop playback to change (changes latency)” etc.
   - preset load is disabled and guarded during effective playback
 - Meter display behavior on stop/stale callbacks:
   - when callbacks go stale, UI meters decay toward rest (do not freeze forever)
-
-**Implemented (current): UI view state persistence**
-- UI layout + history viewport state is persisted via UIST chunk (see Persistence).
+- UI layout + history viewport state persisted via UIST (see Persistence)
 
 **Planned / next milestones:**
 - IN vs OUT curve sets with toggles/labels
 - Module strip UI (order/enable/bypass for multiple modules)
-- 2D transfer/curve displays for processors (compressors/leveler)
+- Optional future: hold/trajectory markers (requires hold-x snapshots)
 - Advanced overlays (hotspots/gates/etc.)
+- Optional next: publish Upward detector LUFS snapshots for UI operating-point dots on the Upward curve.
 
 ---
 
@@ -225,6 +235,47 @@ MTDM is a multistage dynamics/leveling module hosted as a Core module.
 3) Limiter stage (lookahead; optional; output protection)
 4) Post-chain **zone audition gate** (time-membership gating aligned with chain latency)
 
+### Upward gain-law semantics (implemented; unified across modes)
+- Upward boost mapping is centralized in a shared, pure, header-only Core gain-law:
+  - `Source/Core/Processing/DSP/UpwardGainLaw.h`
+  - This is the single source of truth for the loudness-domain upward curve math used by DSP and UI sampling.
+- Knee semantics are **unified** across Broadband and Spectral upward processing:
+  - knees are **one-sided below thresholds**:
+    - fade-in around T0 occurs over a region below T0
+    - fade-out around T1 occurs over a region below T1
+  - (i.e., knee width is interpreted as “width below threshold”, not symmetric around it)
+- Behavior at/above T1 is now “target unity + fast convergence”:
+  - upward target gain becomes unity (0 dB boost) above T1
+  - applied gain returns to unity **smoothly but quickly** (no hard snap/reset at the boundary)
+  - this reduces boundary chatter and makes Broadband/Spectral modes behave more consistently near T1
+  - Bell curve smoothing (implemented):
+  - the Bell curve variant in `UpwardGainLaw` uses a smooth raised-cosine style bell (no pointy cusp at the peak)
+  - improves audible behavior and keeps UI/DSP perfectly matched (UI samples the same header)
+
+### Upward control signal + noise/silence guards (implemented)
+- Upward stage control now uses a **BS.1770-style Momentary LUFS** signal (0.4 s window) rather than a raw RMS proxy:
+  - Implemented via a shared, RT-safe, header-only detector:
+    - `Source/Core/Processing/DSP/BS1770MomentaryLufsDetector.h`
+  - Reuses existing Core K-weighting:
+    - `Source/Core/BS1770KWeighting.h`
+  - Momentary loudness is accumulated in **60 Hz frames** (24 frames = 0.4 s).
+  - Broadband Upward (BUC) uses Momentary LUFS as its main “L” control input (linked mask or per-channel for unlinked).
+  - Spectral Upward (SUC) uses Momentary LUFS for its **global zone engagement** (T0–T1 logic), aligning thresholds with the loudness timeline domain.
+
+- Upward includes internal guards to prevent boosting silence/near-silence and to avoid “OFF spikes”:
+  - **Relative guard vs T0** (BUC + SUC zone):
+    - guard floor at approximately `T0 - 24 dB`
+    - fade width approximately `6 dB`
+    - scales effective upward amount toward 0 far below T0
+    - BUC guard is based on an instantaneous K-weighted energy proxy (pre envelope smoothing), preventing “delayed decay spikes” when audio hard-stops.
+  - **SUC hop-energy guard** (SUC only):
+    - guards global zone using the unwindowed energy of the newest hop
+    - prevents STFT window-tail energy from being boosted upward after the input is switched off
+
+Notes:
+- Guard constants are currently fixed internal defaults (not user parameters).
+- These changes improve stability (e.g., eliminate “gusty wind” modulation on noise near T0) and make Upward thresholds behave more intuitively against LUFS curves.
+
 ### Multichannel policies
 - Linked: detector = all non-LFE; apply = all non-LFE (default)
 - Dialog-mask: detector/apply selectable as C or LCR (fallback to non-LFE if not present)
@@ -262,7 +313,7 @@ Structural/quality params marked non-automatable:
 - RT-safe snapshots for:
   - I/O peak+RMS (pre and post processing)
   - Upward boost
-  - Downward gain reduction (excluding makeup)
+  - Downward gain reduction (excluding makeup) **+ downward detector loudness snapshot (`detectorLufsCurrent`)**
   - Limiter gain reduction
 
 ---
@@ -345,6 +396,7 @@ Leveler v1 reuses existing shared routing policy params:
 ### Metering (implemented)
 - Leveler gain snapshot:
   - `gainDbCurrent`, `gainDbBlockPeak`, `gainDbHold`
+  - `measuredLufsCurrent` (current chosen measurement loudness after Auto/M/ST selection)
   - sign: positive = boost, negative = cut
 - Meter reflects the **actual applied gain** in both Internal and Host Gain modes.
 
