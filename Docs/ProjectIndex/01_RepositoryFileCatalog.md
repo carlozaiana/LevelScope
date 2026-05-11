@@ -1,1 +1,46 @@
+# Repository File Catalog
 
+- `gitignore` — Git ignore rules.
+- `CMakeLists.txt` — Build configuration and target wiring.
+- `Docs/ArchitectureSnapshot.md` — Existing architecture contract and frozen behavior snapshot.
+- `Source/Core/LevelScopeHistoryModel.cpp` — Loudness/history timeline storage and access model.
+- `Source/Core/Processing/Modules/MultiThresholdDynamicsParamGroups.h` — Parameter grouping metadata for module/UI organization.
+- `Source/Core/Processing/Modules/MultiThresholdDynamicsParamIDs.h` — Stable parameter IDs, defaults, and ranges for modules.
+- `Source/Core/Processing/Modules/LevelerModule.cpp` — Audio module implementation/header conforming to IAudioModule.
+- `Source/Core/Processing/Modules/LevelerParamIDs.h` — Stable parameter IDs, defaults, and ranges for modules.
+- `Source/Core/Processing/Modules/LevelerModule.h` — Audio module implementation/header conforming to IAudioModule.
+- `Source/Core/Processing/Modules/MultiThresholdDynamicsModule.cpp` — Audio module implementation/header conforming to IAudioModule.
+- `Source/Core/Processing/Modules/MultiThresholdDynamicsModule.h` — Audio module implementation/header conforming to IAudioModule.
+- `Source/Core/Processing/ProcessContext.h` — Per-block processing context passed through module chain.
+- `Source/Core/Processing/ProcessorCore.h` — Core module graph host (RCU-style graph ownership/swap model).
+- `Source/Core/Processing/DSP/LookaheadLimiter.cpp` — DSP algorithm implementation/header in core processing chain.
+- `Source/Core/Processing/DSP/BroadbandUpwardCompressor.cpp` — DSP algorithm implementation/header in core processing chain.
+- `Source/Core/Processing/DSP/BroadbandUpwardCompressor.h` — DSP algorithm implementation/header in core processing chain.
+- `Source/Core/Processing/DSP/BroadbandDownwardCompressor.h` — DSP algorithm implementation/header in core processing chain.
+- `Source/Core/Processing/DSP/SpectralUpwardCompressor.h` — DSP algorithm implementation/header in core processing chain.
+- `Source/Core/Processing/DSP/UpwardGainLaw.h` — DSP algorithm implementation/header in core processing chain.
+- `Source/Core/Processing/DSP/LookaheadLimiter.h` — DSP algorithm implementation/header in core processing chain.
+- `Source/Core/Processing/DSP/BroadbandDownwardCompressor.cpp` — DSP algorithm implementation/header in core processing chain.
+- `Source/Core/Processing/DSP/BS1770MomentaryLufsDetector.h` — DSP algorithm implementation/header in core processing chain.
+- `Source/Core/Processing/DSP/SpectralUpwardCompressor.cpp` — DSP algorithm implementation/header in core processing chain.
+- `Source/Core/Processing/IAudioModule.h` — Common module interface contract for prepare/process/state/bypass.
+- `Source/Core/LevelScopeHistoryModel.h` — Loudness/history timeline storage and access model.
+- `Source/Core/RunningLoudnessStats.h` — Running integrated loudness and LRA statistics utilities.
+- `Source/Core/PublicAPI.h` — Project source/documentation file.
+- `Source/Core/BS1770KWeighting.h` — K-weighting filter implementation for BS.1770 loudness calculations.
+- `Source/Core/RunningLoudnessStats.cpp` — Running integrated loudness and LRA statistics utilities.
+- `Source/DynamicsCurveComponent.cpp` — UI curve visualization/control for dynamics behavior.
+- `Source/LevelerCurveComponent.h` — UI curve visualization/control for leveler behavior.
+- `Source/VolumeHistoryComponent_Render.cpp` — History display component and split implementation parts (render/history/navigation).
+- `Source/PluginProcessor.cpp` — Main JUCE processor implementation: APVTS parameter layout, module binding, processing orchestration, state/preset I/O.
+- `Source/PluginProcessor.h` — Processor public interface, members, and helper declarations.
+- `Source/LevelerCurveComponent.cpp` — UI curve visualization/control for leveler behavior.
+- `Source/VolumeHistoryComponent.h` — History display component and split implementation parts (render/history/navigation).
+- `Source/LoudnessStatsComponent.cpp` — UI component for target/current loudness stats readouts.
+- `Source/PluginEditor.h` — Editor public interface and component member declarations.
+- `Source/DynamicsCurveComponent.h` — UI curve visualization/control for dynamics behavior.
+- `Source/LoudnessStatsComponent.h` — UI component for target/current loudness stats readouts.
+- `Source/VolumeHistoryComponent.cpp` — History display component and split implementation parts (render/history/navigation).
+- `Source/PluginEditor.cpp` — Main editor/UI implementation: controls, attachments, layout, interaction logic.
+- `Source/VolumeHistoryComponent_History.cpp` — History display component and split implementation parts (render/history/navigation).
+- `Source/VolumeHistoryComponent_ViewNav.cpp` — History display component and split implementation parts (render/history/navigation).
