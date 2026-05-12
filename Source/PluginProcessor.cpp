@@ -1447,7 +1447,7 @@ bool LevelScopeAudioProcessor::applyUistStateChunk (const juce::MemoryBlock& uis
 void LevelScopeAudioProcessor::prepareToPlay (double sampleRate,
                                              int samplesPerBlockExpected)
 {
-    currentSampleRate = (sampleRate > 0.0 ? sampleRate : 44100.0);
+    currentSampleRate = (sampleRate > 0.0 ? sampleRate : 48000.0);
 
     frameSamples = juce::jmax (1,
         (int) std::round (currentSampleRate / loudnessFrameRate));
