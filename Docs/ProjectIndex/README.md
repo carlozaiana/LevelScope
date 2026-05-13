@@ -12,6 +12,8 @@ This folder is the persistent orientation layer for future development chats. Re
 7. `06_SampleRateAndTimingAudit.md`
 8. `07_StandardsCoverageAndRoadmap.md`
 9. `08_TestingBuildAndRiskNotes.md`
+10. `09_SignalFlowContract.md`
+11. `10_ParameterCapabilitiesMatrix.md`
 
 ## Task-based quick start
 - **Implement DSP/module behavior:** 02 + 03 + 06
