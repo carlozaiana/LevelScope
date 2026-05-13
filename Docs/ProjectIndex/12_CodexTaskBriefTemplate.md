@@ -43,7 +43,6 @@ Run these checks and report results:
 
 If no automated tests exist, run the best available sanity checks and say so clearly.
 
-
 ## 5b) Build policy in Codex/cloud (environment-specific)
 Use this policy when build steps may fetch JUCE from GitHub:
 - Run preflight first: `cmake -S . -B build`
