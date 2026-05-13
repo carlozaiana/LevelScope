@@ -43,6 +43,15 @@ Run these checks and report results:
 
 If no automated tests exist, run the best available sanity checks and say so clearly.
 
+## 5b) Build policy in Codex/cloud (environment-specific)
+Use this policy when build steps may fetch JUCE from GitHub:
+- Run preflight first: `cmake -S . -B build`
+- If output shows JUCE FetchContent clone/fetch HTTP 403 (or CONNECT tunnel failed):
+  - mark build as `⚠️ blocked by known network restriction (JUCE FetchContent GitHub access denied in Codex/cloud)`
+  - do not retry full build in the same run
+  - continue with local-only validations (grep/sed/unit tests that require no network)
+  - in final report include the exact failing command + first relevant error lines
+
 ## 6) Output format I want
 At the end, respond with:
 - Summary (bullet points)
