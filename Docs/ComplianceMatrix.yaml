@@ -1,4 +1,5 @@
 # yaml-language-server: $schema=./ComplianceMatrix.schema.json
+
 schema_version: 1
 generated_at_utc: "2026-05-13T16:47:54Z"
 project: "LevelScope"
@@ -79,7 +80,8 @@ requirements:
         owner: "TBD"
         priority: "P1"
     risk_level: "medium"
-    notes: "Used internally by shared BS.1770 analysis path; compliance requirement tagged to EBU profile."
+
+    // notes: "Used internally by shared BS.1770 analysis path; compliance requirement tagged to EBU profile."
 
   - req_id: "R-LRA-003"
     title: "Loudness Range (LRA) support"
@@ -109,7 +111,8 @@ requirements:
         owner: "TBD"
         priority: "P2"
     risk_level: "medium"
-    notes: "Used internally by shared BS.1770 analysis path; compliance requirement tagged to EBU profile."
+
+    // notes: "Used internally by shared BS.1770 analysis path; compliance requirement tagged to EBU profile."
 
   - req_id: "R-TruePeak-004"
     title: "Max/True Peak protection and limits"
