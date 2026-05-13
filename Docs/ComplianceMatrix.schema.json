@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "./ComplianceMatrix.schema.json",
+  "title": "ComplianceMatrix",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "generated_at_utc",
+    "project",
+    "profiles",
+    "status_enum",
+    "validation_method_enum",
+    "requirements"
+  ],
+  "properties": {
+    "schema_version": { "type": "integer" },
+    "generated_at_utc": { "type": "string" },
+    "project": { "type": "string" },
+    "profiles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "status_enum": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["implemented", "partial", "planned", "not_applicable"]
+      }
+    },
+    "validation_method_enum": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["automated_test", "manual_procedure", "both", "none"]
+      }
+    },
+    "requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "req_id",
+          "title",
+          "profile_ids",
+          "category",
+          "status",
+          "summary",
+          "user_visible_controls",
+          "validation",
+          "implementation_refs",
+          "export_report_outputs",
+          "gaps",
+          "next_actions",
+          "risk_level",
+          "notes"
+        ],
+        "properties": {
+          "req_id": { "type": "string" },
+          "title": { "type": "string" },
+          "profile_ids": { "type": "array", "items": { "type": "string" } },
+          "category": { "type": "string" },
+          "status": { "type": "string", "enum": ["implemented", "partial", "planned", "not_applicable"] },
+          "summary": { "type": "string" },
+          "user_visible_controls": { "type": "array", "items": { "type": "string" } },
+          "validation": {
+            "type": "object",
+            "required": ["method", "checks"],
+            "properties": {
+              "method": { "type": "string", "enum": ["automated_test", "manual_procedure", "both", "none"] },
+              "checks": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["name", "reference", "evidence"],
+                  "properties": {
+                    "name": { "type": "string" },
+                    "reference": { "type": "string" },
+                    "evidence": { "type": "string" }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          "implementation_refs": { "type": "array", "items": { "type": "string" } },
+          "export_report_outputs": { "type": "array", "items": { "type": "string" } },
+          "gaps": { "type": "array", "items": { "type": "string" } },
+          "next_actions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["action", "owner", "priority"],
+              "properties": {
+                "action": { "type": "string" },
+                "owner": { "type": "string" },
+                "priority": { "type": "string" }
+              },
+              "additionalProperties": false
+            }
+          },
+          "risk_level": { "type": "string" },
+          "notes": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
