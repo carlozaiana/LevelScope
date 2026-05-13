@@ -1,0 +1,317 @@
+schema_version: 1
+generated_at_utc: "2026-05-13T16:47:54Z"
+project: "LevelScope"
+profiles:
+  - id: "ebu_r128"
+    name: "EBU R128"
+  - id: "atsc_a85"
+    name: "ATSC A/85"
+
+status_enum:
+  - implemented
+  - partial
+  - planned
+  - not_applicable
+
+validation_method_enum:
+  - automated_test
+  - manual_procedure
+  - both
+  - none
+
+requirements:
+  - req_id: "R-Loudness-Measurement-001"
+    title: "Program loudness measurement path (BS.1770-family)"
+    profile_ids: ["ebu_r128", "atsc_a85"]
+    category: "loudness"
+    status: "implemented"
+    summary: "Loudness measurement primitives are implemented, with current analysis computed on input-side audio."
+    user_visible_controls:
+      - "Mission Control target/current LUFS readouts"
+      - "Timeline loudness history view"
+    validation:
+      method: "manual_procedure"
+      checks:
+        - name: "Architecture contract review"
+          reference: "Docs/ArchitectureSnapshot.md"
+          evidence: "Loudness features and current input-side analysis are documented."
+    implementation_refs:
+      - "Docs/ArchitectureSnapshot.md"
+      - "Docs/ProjectIndex/07_StandardsCoverageAndRoadmap.md"
+    export_report_outputs:
+      - "Current: none"
+      - "Planned: measured program loudness fields in compliance report"
+    gaps:
+      - "No deterministic automated numeric regression suite yet."
+    next_actions:
+      - action: "Add deterministic loudness regression vectors with pass/fail tolerances across 44.1/48/96/192 kHz."
+        owner: "TBD"
+        priority: "P1"
+    risk_level: "medium"
+    notes: ""
+
+  - req_id: "R-Loudness-MSI-002"
+    title: "Momentary, Short-term, and Integrated loudness visibility"
+    profile_ids: ["ebu_r128"]
+    category: "loudness"
+    status: "implemented"
+    summary: "Momentary/Short-term/Integrated tracking is present and exposed through current loudness/history workflows."
+    user_visible_controls:
+      - "Mission Control loudness readouts"
+      - "Timeline loudness curves and metrics"
+    validation:
+      method: "manual_procedure"
+      checks:
+        - name: "Readout and history verification"
+          reference: "Docs/ComplianceMatrix.md"
+          evidence: "CM-LOUD-002 marked implemented."
+    implementation_refs:
+      - "Docs/ArchitectureSnapshot.md"
+      - "Docs/ComplianceMatrix.md"
+    export_report_outputs:
+      - "Current: none"
+      - "Planned: M/S/I values in compliance export"
+    gaps:
+      - "Automated windowing-correctness assertions are not yet defined."
+    next_actions:
+      - action: "Create automated checks for M/S/I window behavior and continuity around transport seek events."
+        owner: "TBD"
+        priority: "P1"
+    risk_level: "medium"
+    notes: ""
+
+  - req_id: "R-LRA-003"
+    title: "Loudness Range (LRA) support"
+    profile_ids: ["ebu_r128"]
+    category: "loudness_range"
+    status: "implemented"
+    summary: "Running LRA and rolling LRA features are implemented and surfaced in current UI workflows."
+    user_visible_controls:
+      - "Rolling LRA selector"
+      - "Rolling LRA lane/visualization"
+    validation:
+      method: "manual_procedure"
+      checks:
+        - name: "LRA behavior review"
+          reference: "Docs/ArchitectureSnapshot.md"
+          evidence: "Running LRA and rolling LRA support documented as implemented."
+    implementation_refs:
+      - "Docs/ArchitectureSnapshot.md"
+      - "Docs/ComplianceMatrix.md"
+    export_report_outputs:
+      - "Current: none"
+      - "Planned: LRA summary fields in compliance report"
+    gaps:
+      - "No offline reference-vector verification currently documented."
+    next_actions:
+      - action: "Add LRA verification against known reference material with expected bounds."
+        owner: "TBD"
+        priority: "P2"
+    risk_level: "medium"
+    notes: ""
+
+  - req_id: "R-TruePeak-004"
+    title: "Max/True Peak protection and limits"
+    profile_ids: ["ebu_r128", "atsc_a85"]
+    category: "peak"
+    status: "partial"
+    summary: "Limiter peak-protection path exists with oversampling option, but full true-peak conformance target is not yet formalized."
+    user_visible_controls:
+      - "Limiter ceiling/lookahead/oversampling controls"
+    validation:
+      method: "manual_procedure"
+      checks:
+        - name: "Limiter path presence review"
+          reference: "Docs/ProjectIndex/07_StandardsCoverageAndRoadmap.md"
+          evidence: "True-peak protection path via limiter is documented."
+    implementation_refs:
+      - "Docs/ProjectIndex/07_StandardsCoverageAndRoadmap.md"
+      - "Docs/ComplianceMatrix.md"
+    export_report_outputs:
+      - "Current: none"
+      - "Planned: max peak/true-peak measured values and pass/fail flags"
+    gaps:
+      - "No explicit true-peak compliance target and validation vectors are documented."
+    next_actions:
+      - action: "Define explicit true-peak limits per profile and add oversampled validation vectors."
+        owner: "TBD"
+        priority: "P1"
+    risk_level: "high"
+    notes: ""
+
+  - req_id: "R-Profile-Targeting-005"
+    title: "Profile targeting (EBU R128 vs ATSC A/85)"
+    profile_ids: ["ebu_r128", "atsc_a85"]
+    category: "profile"
+    status: "planned"
+    summary: "Profiles are prioritized in roadmap documentation, but formal profile behavior/schema is not yet implemented."
+    user_visible_controls:
+      - "TODO: profile-selection controls are not yet specified."
+    validation:
+      method: "none"
+      checks:
+        - name: "TODO: profile validation plan"
+          reference: ""
+          evidence: "TODO: no profile validator exists yet."
+    implementation_refs:
+      - "Docs/ProjectIndex/07_StandardsCoverageAndRoadmap.md"
+      - "Docs/ComplianceMatrix.md"
+    export_report_outputs:
+      - "Current: none"
+      - "Planned: profile ID, target set, tolerance set"
+    gaps:
+      - "No formal profile schema or targeting engine contract yet."
+    next_actions:
+      - action: "Define machine-readable profile schema for targets/tolerances/gating outputs."
+        owner: "TBD"
+        priority: "P1"
+    risk_level: "high"
+    notes: ""
+
+  - req_id: "R-Compliance-Reporting-006"
+    title: "Compliance reporting/export outputs"
+    profile_ids: ["ebu_r128", "atsc_a85"]
+    category: "reporting"
+    status: "planned"
+    summary: "A dedicated compliance report artifact is not yet defined."
+    user_visible_controls:
+      - "TODO: report export UI/actions are not yet defined."
+    validation:
+      method: "none"
+      checks:
+        - name: "TODO: reporting validation plan"
+          reference: ""
+          evidence: "TODO: no report export implementation currently documented."
+    implementation_refs:
+      - "Docs/ComplianceMatrix.md"
+    export_report_outputs:
+      - "Current: none"
+      - "Planned: I/LRA/TP metrics, pass/fail status, source metadata, render settings"
+    gaps:
+      - "No report schema, output format, or verification procedure is documented."
+    next_actions:
+      - action: "Define report contract and output format (JSON/CSV/PDF) with required fields."
+        owner: "TBD"
+        priority: "P1"
+    risk_level: "medium"
+    notes: ""
+
+  - req_id: "R-Transport-Discontinuity-007"
+    title: "Transport/discontinuity-safe measurement behavior"
+    profile_ids: ["ebu_r128", "atsc_a85"]
+    category: "transport"
+    status: "implemented"
+    summary: "Transport guards for start/stop/seek/loop are implemented to protect analysis continuity expectations."
+    user_visible_controls:
+      - "Effective playback-based UI lock behavior"
+    validation:
+      method: "manual_procedure"
+      checks:
+        - name: "Transport policy review"
+          reference: "Docs/ArchitectureSnapshot.md"
+          evidence: "Ramp guard, stop freeze, and discontinuity detection documented as implemented."
+    implementation_refs:
+      - "Docs/ArchitectureSnapshot.md"
+      - "Docs/ProjectIndex/09_SignalFlowContract.md"
+      - "Docs/ComplianceMatrix.md"
+    export_report_outputs:
+      - "Current: none"
+      - "Planned: discontinuity markers and handling flags in validation logs"
+    gaps:
+      - "No automated host-transport simulation harness currently documented."
+    next_actions:
+      - action: "Add transport scenario checklist and automated seek/loop/start-stop validation harness."
+        owner: "TBD"
+        priority: "P2"
+    risk_level: "medium"
+    notes: ""
+
+  - req_id: "R-SampleRate-Invariance-008"
+    title: "Sample-rate invariance for measurement/control behavior"
+    profile_ids: ["ebu_r128", "atsc_a85"]
+    category: "timing"
+    status: "partial"
+    summary: "System is sample-rate aware, but fallback defaults are mixed and need standardization."
+    user_visible_controls:
+      - "None directly; reflected indirectly in measurement/processor behavior"
+    validation:
+      method: "manual_procedure"
+      checks:
+        - name: "Sample-rate policy audit"
+          reference: "Docs/ProjectIndex/06_SampleRateAndTimingAudit.md"
+          evidence: "48 kHz defaults and 44.1 fallback path noted."
+    implementation_refs:
+      - "Docs/ProjectIndex/06_SampleRateAndTimingAudit.md"
+      - "Docs/ComplianceMatrix.md"
+    export_report_outputs:
+      - "Current: none"
+      - "Planned: sample-rate context + tolerance outcomes per run"
+    gaps:
+      - "No unified invalid-rate fallback policy and no multi-rate conformance tests."
+    next_actions:
+      - action: "Standardize invalid-rate fallback policy and add multi-rate conformance matrix tests."
+        owner: "TBD"
+        priority: "P1"
+    risk_level: "high"
+    notes: ""
+
+  - req_id: "R-Multichannel-Policy-009"
+    title: "Multichannel role/LFE policy consistency"
+    profile_ids: ["ebu_r128", "atsc_a85"]
+    category: "multichannel"
+    status: "partial"
+    summary: "Role-aware multichannel support and default LFE policies exist, but profile-specific policy defaults are not yet formalized."
+    user_visible_controls:
+      - "Multichannel policy controls"
+      - "LFE detector/apply toggles"
+    validation:
+      method: "manual_procedure"
+      checks:
+        - name: "Policy behavior review"
+          reference: "Docs/ArchitectureSnapshot.md"
+          evidence: "Channel-role mapping and default LFE behavior documented."
+    implementation_refs:
+      - "Docs/ArchitectureSnapshot.md"
+      - "Docs/ComplianceMatrix.md"
+    export_report_outputs:
+      - "Current: none"
+      - "Planned: active channel-policy mapping and LFE inclusion flags"
+    gaps:
+      - "No profile-specific detector/apply policy baseline and checks documented."
+    next_actions:
+      - action: "Define profile-specific multichannel/LFE policy defaults and verification checks."
+        owner: "TBD"
+        priority: "P2"
+    risk_level: "medium"
+    notes: ""
+
+  - req_id: "R-State-Reproducibility-010"
+    title: "State/preset reproducibility for compliance workflows"
+    profile_ids: ["ebu_r128", "atsc_a85"]
+    category: "state"
+    status: "partial"
+    summary: "Additive state strategy and settings preset boundaries are implemented, but dedicated compliance reproducibility tests are missing."
+    user_visible_controls:
+      - "Preset save/load controls"
+      - "Settings preset (.lscsettings) behavior"
+    validation:
+      method: "manual_procedure"
+      checks:
+        - name: "State contract review"
+          reference: "Docs/ArchitectureSnapshot.md"
+          evidence: "APVS/MODG/UIST and additive compatibility rules documented."
+    implementation_refs:
+      - "Docs/ArchitectureSnapshot.md"
+      - "Docs/ProjectIndex/04_ControlBindingsAndAutomation.md"
+      - "Docs/ComplianceMatrix.md"
+    export_report_outputs:
+      - "Current: none"
+      - "Planned: session-state hash/version fields for reproducibility audits"
+    gaps:
+      - "No round-trip compatibility suite or profile-lock metadata."
+    next_actions:
+      - action: "Add round-trip preset/state compatibility tests and define profile-lock metadata fields."
+        owner: "TBD"
+        priority: "P1"
+    risk_level: "high"
+    notes: ""
