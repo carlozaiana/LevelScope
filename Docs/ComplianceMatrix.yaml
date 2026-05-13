@@ -78,7 +78,8 @@ requirements:
         owner: "TBD"
         priority: "P1"
     risk_level: "medium"
-    notes: ""
+
+    // notes: "Used internally by shared BS.1770 analysis path; compliance requirement tagged to EBU profile."
 
   - req_id: "R-LRA-003"
     title: "Loudness Range (LRA) support"
@@ -108,7 +109,8 @@ requirements:
         owner: "TBD"
         priority: "P2"
     risk_level: "medium"
-    notes: ""
+
+    // notes: "Used internally by shared BS.1770 analysis path; compliance requirement tagged to EBU profile."
 
   - req_id: "R-TruePeak-004"
     title: "Max/True Peak protection and limits"
