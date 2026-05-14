@@ -14,7 +14,7 @@
   ],
   "properties": {
     "schema_version": { "type": "integer" },
-    "generated_at_utc": { "type": "string" },
+    "generated_at_utc": { "type": "string", "format": "date-time" },
     "project": { "type": "string" },
     "profiles": {
       "type": "array",
@@ -65,7 +65,7 @@
         "properties": {
           "req_id": { "type": "string" },
           "title": { "type": "string" },
-          "profile_ids": { "type": "array", "items": { "type": "string" } },
+          "profile_ids": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
           "category": { "type": "string" },
           "status": { "type": "string", "enum": ["implemented", "partial", "planned", "not_applicable"] },
           "summary": { "type": "string" },
@@ -102,12 +102,12 @@
               "properties": {
                 "action": { "type": "string" },
                 "owner": { "type": "string" },
-                "priority": { "type": "string" }
+                "priority": { "type": "string", "enum": ["P0", "P1", "P2", "P3"] }
               },
               "additionalProperties": false
             }
           },
-          "risk_level": { "type": "string" },
+          "risk_level": { "type": "string", "enum": ["low", "medium", "high"] },
           "notes": { "type": "string" }
         },
         "additionalProperties": false
