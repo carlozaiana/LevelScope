@@ -73,3 +73,48 @@ If you discover this task is larger than expected, STOP and give me:
 - Channel/layout focus: [stereo / 5.1 / 7.1.4]
 - Performance budget: [CPU % target]
 - Diff budget: [max files or rough line count]
+
+
+## 8) Conflict Playbook (GitHub merge safety)
+Use this playbook whenever a PR/merge conflict appears.
+
+### A) Before requesting a patch
+- Work from a branch that is updated from the latest `main`.
+- Ask for a **minimal, block-scoped patch** (no full-file rewrites unless explicitly requested).
+- In the prompt, specify exact headings/keys that may be edited.
+
+### B) Conflict-resistant patch request pattern
+Include these hard rules in prompts:
+- "Do NOT rewrite the whole file."
+- "Edit only the exact block/keys listed below."
+- "Preserve all lines not in scope."
+- "Return unified diff for changed file(s) only."
+
+### C) If conflict markers appear in GitHub
+Conflict markers look like:
+- `<<<<<<<` current branch
+- `=======`
+- `>>>>>>>` incoming branch
+
+Resolution steps:
+1. Keep the desired final content.
+2. Delete all three marker lines.
+3. Re-check indentation/syntax for the file type (YAML uses `#` for comments, not `//`).
+4. Save and run a quick sanity check.
+
+### D) Docs conflict fallback (safe mode)
+If repeated conflicts occur in the same doc file:
+- Request from Codex the **full final content for that one file only**.
+- Replace that file fully once in GitHub editor.
+- Avoid mixing unrelated edits in the same merge.
+
+### E) Branch hygiene
+- Prefer one short-lived branch per task.
+- Merge quickly after review, then delete merged branches.
+- Keep one optional `integration/docs` branch only if combining multiple doc PRs.
+
+### F) Mandatory post-merge checks
+- Confirm no conflict markers remain: `rg -n "^(<<<<<<<|=======|>>>>>>>)" Docs`
+- Validate syntax for edited formats (YAML/JSON/Markdown).
+- Record exact validation commands in PR notes.
+
