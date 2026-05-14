@@ -65,6 +65,8 @@ Required pipeline contract:
   - Segment reanalysis reports must record segment bounds and state that surrounding context may affect integrated metrics.
 - **Assumption:** Existing plugin transport guard concepts inform behavior, but standalone should not depend on host callback freshness models.
 - TODO: Define canonical context padding/window policy when segment-level reanalysis is run.
+- **Assumption:** Existing plugin transport guard concepts inform behavior, but standalone should not depend on host callback freshness models.
+- TODO: Define canonical handling of partial re-runs and segmented jobs.
 
 ## 6) Profile/compliance requirements linkage (EBU R128 / ATSC A/85)
 - v1 must support selectable compliance profiles at minimum:
@@ -135,3 +137,5 @@ Artifacts to emit:
 - TODO: Numeric tolerance policy for determinism validation across platforms.
 - TODO: Batch job manifest format and retry/error semantics.
 - TODO: Final per-profile lock/default/free parameter tables.
+- TODO: Profile override policy (what is locked vs editable per profile).
+- TODO: Scope of reanalysis primitives (full-file only vs segment-level).
