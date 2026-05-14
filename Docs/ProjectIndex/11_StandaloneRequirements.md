@@ -42,7 +42,7 @@ Required pipeline contract:
    - Emit sufficient metadata to re-run and verify the same job.
 
 ## 4) Determinism requirements
-- Same input media + same settings + same profile + same engine version must produce the same analysis/proposal/export results.
+- Same input media + same settings + same profile + same engine version + same platform + same floating-point mode must produce the same analysis/proposal/export results.
 - Determinism applies to both:
   - Interactive/offline standalone run.
   - Batch job run.
@@ -51,6 +51,7 @@ Required pipeline contract:
   - Any unavoidable numeric tolerance must be documented as TODO with explicit thresholds.
 - Versioning requirement:
   - Reports must include engine/profile version identifiers to support reproducibility checks.
+- TODO: Define cross-platform tolerance policy (numeric acceptance criteria across CPU/OS/toolchain combinations).
 
 ## 5) Transport/analysis semantics in standalone context
 - Standalone must define analysis timeline semantics independent of DAW transport quirks.
@@ -58,6 +59,12 @@ Required pipeline contract:
   - Explicit run boundaries (start/end) for analysis windowing.
   - Explicit behavior for seeks/restarts/reanalysis requests.
   - Stable frame/timing basis for reproducible metrics.
+- Reanalysis semantics (v1):
+  - Segment-level reanalysis is **allowed** for operator iteration.
+  - Compliance pass/fail decisions must use full-program analysis unless a profile explicitly defines segment scope.
+  - Segment reanalysis reports must record segment bounds and state that surrounding context may affect integrated metrics.
+- **Assumption:** Existing plugin transport guard concepts inform behavior, but standalone should not depend on host callback freshness models.
+- TODO: Define canonical context padding/window policy when segment-level reanalysis is run.
 - **Assumption:** Existing plugin transport guard concepts inform behavior, but standalone should not depend on host callback freshness models.
 - TODO: Define canonical handling of partial re-runs and segmented jobs.
 
@@ -70,12 +77,20 @@ Required pipeline contract:
   - gating/measurement interpretation,
   - pass/fail criteria,
   - required report fields.
+- Profile parameter policy must be split into three classes:
+  - **Hard-locked by profile:** cannot be edited.
+  - **Soft defaults:** editable with an explicit warning.
+  - **Free parameters:** user-editable without profile-compliance warning.
 - **Assumption:** Detailed requirement-to-control mapping will be maintained in a dedicated compliance matrix document.
-- TODO: Finalize profile parameter lock rules vs user-overridable settings.
+- TODO: Finalize per-profile parameter classification and warning text policy.
 
 ## 7) Reporting/export artifact requirements
 Each export job must record:
-- Input identity (file path/hash or equivalent stable identifier).
+- Input identity:
+  - content hash (SHA-256 or equivalent cryptographic hash),
+  - channel layout metadata,
+  - sample rate metadata,
+  - source path/URI (informational, non-authoritative identity field).
 - Output identity and render configuration.
 - Selected compliance profile and target settings.
 - Key analysis metrics (pre and post).
@@ -85,10 +100,28 @@ Each export job must record:
 - Timestamp and job mode (interactive offline vs batch).
 - Pass/fail compliance result.
 
+Minimum required fields for reproducible pass/fail verification:
+- Profile ID and profile version.
+- Metric values pre and post processing.
+- Thresholds/targets used for pass/fail evaluation.
+- Processing graph definition and module versions.
+
 Artifacts to emit:
 - Conformed audio output.
 - Machine-readable report: TODO (exact schema/format).
 - Human-readable summary report: TODO (exact format).
+
+### 7.1) Batch failure handling requirements
+- Retry policy:
+  - Deterministic retry count/order must be defined in job configuration.
+  - Retries must not mutate analysis/proposal settings between attempts.
+- Partial job behavior:
+  - Each item result must be recorded independently (success/failure/skipped).
+  - Batch summary must include counts and stable identifiers for failed items.
+- Deterministic error codes:
+  - Failures must emit stable, documented error codes suitable for automation.
+  - Error reports must include stage-of-failure (ingest/analyze/propose/apply/export).
+- TODO: Finalize canonical error code registry and retry backoff policy.
 
 ## 8) Non-goals for v1
 - Real-time DAW-host transport integration behavior.
@@ -103,5 +136,6 @@ Artifacts to emit:
 - TODO: Canonical report schemas (machine-readable + human-readable).
 - TODO: Numeric tolerance policy for determinism validation across platforms.
 - TODO: Batch job manifest format and retry/error semantics.
+- TODO: Final per-profile lock/default/free parameter tables.
 - TODO: Profile override policy (what is locked vs editable per profile).
 - TODO: Scope of reanalysis primitives (full-file only vs segment-level).
