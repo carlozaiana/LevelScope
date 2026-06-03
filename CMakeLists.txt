@@ -195,6 +195,7 @@ target_sources(LevelScopeStandalone
         Source/Standalone/StandaloneApp.cpp
         Source/Standalone/StandaloneMainComponent.cpp
         Source/Standalone/StandaloneMainComponent.h
+        Source/Standalone/StandaloneSessionModel.h
 )
 
 target_compile_definitions(LevelScopeStandalone
