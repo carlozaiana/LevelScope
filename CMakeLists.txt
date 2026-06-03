@@ -179,3 +179,41 @@ if (MSVC)
 else()
     target_compile_options(LevelScope PRIVATE -Wall -Wextra -Wpedantic)
 endif()
+
+#==============================
+# Standalone app scaffold
+#==============================
+
+juce_add_gui_app(LevelScopeStandalone
+    PRODUCT_NAME "LevelScope Standalone"
+    COMPANY_NAME "Studio Paradiso"
+    BUNDLE_ID "com.studioparadiso.levelscope.standalone"
+)
+
+target_sources(LevelScopeStandalone
+    PRIVATE
+        Source/Standalone/StandaloneApp.cpp
+        Source/Standalone/StandaloneMainComponent.cpp
+        Source/Standalone/StandaloneMainComponent.h
+)
+
+target_compile_definitions(LevelScopeStandalone
+    PRIVATE
+        JUCE_WEB_BROWSER=0
+        JUCE_USE_CURL=0
+        JUCE_REPORT_APP_USAGE=0
+        JUCE_APPLICATION_NAME_STRING="LevelScope Standalone"
+        JUCE_APPLICATION_VERSION_STRING="0.1.0"
+)
+
+target_link_libraries(LevelScopeStandalone
+    PRIVATE
+        LevelScopeCore
+        juce::juce_gui_basics
+)
+
+if (MSVC)
+    target_compile_options(LevelScopeStandalone PRIVATE /W4)
+else()
+    target_compile_options(LevelScopeStandalone PRIVATE -Wall -Wextra -Wpedantic)
+endif()
