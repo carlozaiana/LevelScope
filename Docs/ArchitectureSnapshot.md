@@ -34,6 +34,8 @@ Last updated: **2026-04-23**
 - IN snapshot vs OUT live analysis tracks (separate histories/curves, separate visibility)
 - Offline render/analysis hooks for standalone determinism
 - Policy/proposal engine hooks
+  * Detailed proposal-engine design lives in `Docs/ProposalEngineSpec_v2.md`.
+  * Direction: standalone-first, deterministic first-pass proposal, shared measurement/analysis/verification truth model, separate proposal methods for listening comparison, freeze-aware re-measurement and recalculation.
 - Additional modules as needed (OutputTrim later, etc.)
 
 Hard rule: Core must be usable by plugin + future standalone + headless tests.
@@ -405,62 +407,26 @@ Leveler v1 reuses existing shared routing policy params:
 ## 9. Coding & Patch Workflow (Hard)
 
 - Large files must not be replaced wholesale.
-- Prefer patch-style edits: replace only marked blocks or specific functions.
-- Add edit anchors for complex or fragile zones:
+- Add edit anchors:
   - `// [BEGIN <BLOCK-ID>]` ... `// [END <BLOCK-ID>]`
-
-### Codex collaboration policy (new)
-- **One chat = one narrowly-scoped deliverable** (single objective + acceptance criteria).
-- Start each task with a **micro-brief**:
-  - goal,
-  - files in scope,
-  - non-goals,
-  - validation commands,
-  - rollback plan.
-- Require a **diff-size budget** in the prompt (target files + rough line budget) to reduce unintended churn.
-- For behavior changes, require **Before/After notes** in the final summary (what changed audibly/visually/technically).
-- If a task touches persistence, parameter IDs, routing, or timing, mandate explicit **compatibility checklist** output:
-  - parameter IDs unchanged or migrated,
-  - chunk schema handling additive/compatible,
-  - RT-safety rules preserved,
-  - host automation behavior unchanged unless requested.
-
-### Patch hygiene rules
-- Prefer additive helper functions over large in-place rewrites.
-- Keep UI-only refactors separated from DSP behavior changes when possible.
-- When touching shared math (gain laws, detectors), ensure UI sampling and DSP read from the same source-of-truth code path.
-- Any latency-affecting change must include:
-  - latency recomputation path check,
-  - playback-lock gating check,
-  - zone-audition alignment check.
+- Prefer patch-style edits: replace only marked blocks or specific functions.
 
 ---
 
 ## 10. Roadmap Chats (Parallel Work Split)
 
-### Chat A: Core DSP & Analysis Reliability (now)
-- Stabilize IN-path vs OUT-path analysis contract scaffolding.
-- Prepare deterministic analysis hooks needed by standalone/offline processing.
-- Keep Leveler + MTDM behavior stable while adding observability needed by proposal logic.
+### Chat A: Modules / DSP
+- Refine Leveler + MTDM (quality/performance)
+- Add 2D curve displays (UI support)
+- Future modules if needed
 
-### Chat B: UI Evolution (after A baseline)
-- IN vs OUT curve sets + clear toggles/labels.
-- Module strip (order/enable/bypass) and policy visualization upgrades.
-- Maintain strict decoupling: UI consumes snapshots only, no hidden processing logic.
+### Chat B: UI Overhaul Milestone (later)
+- IN vs OUT curves + toggles
+- module strip (order/enable/bypass)
+- overlays/hotspots/policy visualizations
 
-### Chat C: Proposal Engine (in parallel after A interfaces freeze)
-- Spec-profile targets (EBU R128 / A/85) + proposal outputs.
-- Generate static params + automation lanes with minimal-intervention objective.
-- Deterministic behavior for standalone/offline render.
-
-### Chat D: Verification & Compliance Harness (start now, continue continuously)
-- Build repeatable regression scenes and expected loudness outcomes.
-- Add compliance matrix mapping requirements → implementation → tests.
-- Cover critical regressions: RT safety, state compatibility, latency reporting, transport discontinuities.
-
-### Priority order (recommended)
-1. Chat A (freeze analysis/data contracts)
-2. Chat D (lock validation harness early)
-3. Chat C (proposal intelligence on stable contracts)
-4. Chat B (UI acceleration on stable data model)
-
+### Chat C: Logic/Policy Proposal Engine
+- Presets/specs + proposal outputs (static params + automation curves)
+- Operates on analysis snapshots (IN and/or OUT)
+- Deterministic standalone/offline behavior
+  * Detailed design reference: `Docs/ProposalEngineSpec_v2.md`
