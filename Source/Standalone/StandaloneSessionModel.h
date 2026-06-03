@@ -65,7 +65,7 @@ struct SourceDocument
     void clear()
     {
         hasSource = false;
-        file = {};
+        file = juce::File();
         displayName = "No source imported";
         fullPath = {};
         extension = {};
@@ -110,8 +110,8 @@ public:
     {
         sourceDocument.setFromFile (file);
 
-        source = {};
-        currentState = {};
+        source = MeasurementSummary();
+        currentState = MeasurementSummary();
 
         if (sourceDocument.hasSource)
         {
@@ -124,8 +124,8 @@ public:
     {
         sourceDocument.clear();
 
-        source = {};
-        currentState = {};
+        source = MeasurementSummary();
+        currentState = MeasurementSummary();
 
         selectedPage = WorkflowPage::importSource;
     }
