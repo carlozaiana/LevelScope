@@ -28,10 +28,11 @@ jobs:
         run: |
           cmake --build build --config Release -- -j 3
 
-      - name: Collect VST3 Artefact
+      - name: Collect Build Artefacts
         run: |
           mkdir -p artifacts
           find build -name "LevelScope.vst3" -print -exec cp -R {} artifacts/ \;
+          find build -name "LevelScope Standalone.app" -print -exec cp -R {} artifacts/ \;
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
