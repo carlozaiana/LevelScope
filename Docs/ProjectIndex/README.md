@@ -12,11 +12,13 @@ This folder is the persistent orientation layer for future development chats. Re
 7. `06_SampleRateAndTimingAudit.md`
 8. `07_StandardsCoverageAndRoadmap.md`
 9. `08_TestingBuildAndRiskNotes.md`
-10. `09_SignalFlowContract.md`
-11. `10_ParameterCapabilitiesMatrix.md`
 
 ## Task-based quick start
 - **Implement DSP/module behavior:** 02 + 03 + 06
 - **UI overhaul/localization:** 01 + 04 + 05
 - **Standalone app planning:** 00 + 07 + 08
 - **Automation/preset/state compatibility:** 03 + 04 + 08
+
+## Additional design specs
+
+* [`../ProposalEngineSpec_v2.md`](../ProposalEngineSpec_v2.md) — detailed standalone-first proposal-engine design, including workflow states, shared engine modules, separate proposal methods, Source/Target/Current State model, freeze-aware re-measurement, and verification flow.
