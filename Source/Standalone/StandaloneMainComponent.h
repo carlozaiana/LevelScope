@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include <juce_gui_basics/juce_gui_basics.h>
 
 #include "StandaloneSessionModel.h"
@@ -31,18 +33,30 @@ private:
     juce::TextButton currentStateButton { "Current State" };
     juce::TextButton exportButton { "Export" };
 
+    juce::TextButton chooseSourceButton { "Choose Source File..." };
+    juce::TextButton clearSourceButton { "Clear Source" };
+    juce::TextButton measureSourceButton { "Measure Source (not implemented)" };
+
     juce::TextEditor sourceStateBox;
     juce::TextEditor targetStateBox;
     juce::TextEditor currentStateBox;
     juce::TextEditor pageDetailBox;
 
+    std::unique_ptr<juce::FileChooser> sourceFileChooser;
+
     void configureLabels();
     void configureTargetProfileBox();
     void configureNavigationButtons();
+    void configureSourceControls();
     void configureReadOnlyBox (juce::TextEditor& box);
+
+    void chooseSourceFile();
+    void clearSourceFile();
 
     void setPage (WorkflowPage page);
     void refreshFromSession();
+
+    static juce::String getSourceFileWildcard();
 
     juce::String getPageName (WorkflowPage page) const;
     juce::String buildSourceStateText() const;
