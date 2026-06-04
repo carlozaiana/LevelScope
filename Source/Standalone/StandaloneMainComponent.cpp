@@ -226,10 +226,19 @@ juce::String StandaloneMainComponent::buildTargetStateText() const
 
     text << "TARGET\n\n";
     text << "Profile: " << profile.displayName << "\n";
+    text << "Family: " << profile.familyName << "\n";
     text << "ID: " << profile.id << "\n\n";
+
     text << profile.description << "\n\n";
-    text << "Compliance values: not loaded\n";
-    text << "Profile validation: not implemented\n";
+
+    text << StandaloneTargetProfileCatalog::buildLimitsText (profile) << "\n\n";
+
+    text << "Workflow selection: ";
+    text << (profile.isSelectableForWorkflow ? "target family selected" : "no target family selected");
+    text << "\n";
+
+    text << "Compliance enforcement: not implemented\n";
+    text << "Proposal use: blocked; proposal engine not implemented\n";
 
     return text;
 }
@@ -319,14 +328,19 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
             break;
 
         case WorkflowPage::exportResults:
+        {
             text << "Export readiness scaffold.\n\n";
-            text << "Export remains blocked until future steps provide:\n";
-            text << "- imported source\n";
-            text << "- measured source state\n";
-            text << "- selected real target profile\n";
-            text << "- measured current state\n\n";
-            text << "No render or export logic is implemented in this patch.\n";
+            text << "Readiness checklist:\n";
+            text << "- Source imported: " << (session.sourceDocument.hasSource ? "yes" : "no") << "\n";
+            text << "- Source measured: " << (session.source.hasMeasurement ? "yes" : "no") << "\n";
+            text << "- Target family selected: " << (session.hasTargetProfileFamilySelected() ? "yes" : "no") << "\n";
+            text << "- Authoritative target limits loaded: " << (session.hasAuthoritativeTargetLimits() ? "yes" : "no") << "\n";
+            text << "- Current State measured: " << (session.currentState.hasMeasurement ? "yes" : "no") << "\n\n";
+
+            text << "Export remains blocked. This patch only shows the checklist state.\n\n";
+            text << "No render, export, compliance validation, or proposal logic is implemented in this patch.\n";
             break;
+        }
 
         default:
             text << "Unknown workflow page.\n";

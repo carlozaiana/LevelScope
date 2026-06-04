@@ -2,6 +2,8 @@
 
 #include <juce_core/juce_core.h>
 
+#include "StandaloneTargetProfiles.h"
+
 namespace levelscope::standalone
 {
 // [BEGIN LS-STANDALONE-WORKFLOW-MODEL]
@@ -85,17 +87,10 @@ struct SourceDocument
     }
 };
 
-struct TargetProfile
-{
-    juce::String id;
-    juce::String displayName;
-    juce::String description;
-};
-
 class StandaloneSessionModel
 {
 public:
-    static constexpr int numTargetProfiles = 4;
+    static constexpr int numTargetProfiles = StandaloneTargetProfileCatalog::numProfiles;
 
     WorkflowPage selectedPage = WorkflowPage::importSource;
 
@@ -140,39 +135,20 @@ public:
         return getTargetProfile (selectedTargetProfileIndex);
     }
 
+    bool hasTargetProfileFamilySelected() const
+    {
+        return selectedTargetProfileIndex > 0
+            && getSelectedTargetProfile().isSelectableForWorkflow;
+    }
+
+    bool hasAuthoritativeTargetLimits() const
+    {
+        return getSelectedTargetProfile().limits.valuesAreAuthoritative;
+    }
+
     static TargetProfile getTargetProfile (int index)
     {
-        switch (index)
-        {
-            case 1:
-                return {
-                    "ebu-r128-placeholder",
-                    "EBU R128 family (placeholder)",
-                    "Target profile scaffold only. No compliance values are enforced yet."
-                };
-
-            case 2:
-                return {
-                    "atsc-a85-placeholder",
-                    "ATSC A/85 family (placeholder)",
-                    "Target profile scaffold only. No compliance values are enforced yet."
-                };
-
-            case 3:
-                return {
-                    "custom-placeholder",
-                    "Custom target (placeholder)",
-                    "Reserved for future user-defined target settings."
-                };
-
-            case 0:
-            default:
-                return {
-                    "none",
-                    "No target selected",
-                    "Choose a target profile before proposal or export features are enabled."
-                };
-        }
+        return StandaloneTargetProfileCatalog::getProfile (index);
     }
 };
 
