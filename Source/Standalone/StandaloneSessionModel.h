@@ -3,6 +3,7 @@
 #include <juce_core/juce_core.h>
 
 #include "StandaloneTargetProfiles.h"
+#include "StandaloneWorkflowReadiness.h"
 
 namespace levelscope::standalone
 {
@@ -225,6 +226,26 @@ public:
     bool hasAuthoritativeTargetLimits() const
     {
         return getSelectedTargetProfile().limits.valuesAreAuthoritative;
+    }
+
+    WorkflowReadiness getWorkflowReadiness() const
+    {
+        WorkflowReadiness readiness;
+
+        readiness.sourceImported = sourceDocument.hasSource;
+        readiness.sourceMeasured = source.hasMeasurement;
+
+        readiness.targetFamilySelected = hasTargetProfileFamilySelected();
+        readiness.targetLimitsAuthoritative = hasAuthoritativeTargetLimits();
+
+        readiness.currentStateInitialized = currentStateDocument.isInitialized;
+        readiness.currentStateNeedsRemeasurement = currentStateNeedsRemeasurement();
+        readiness.currentStateMeasured = currentState.hasMeasurement;
+
+        readiness.proposalEngineAvailable = false;
+        readiness.renderExportAvailable = false;
+
+        return readiness;
     }
 
     static TargetProfile getTargetProfile (int index)

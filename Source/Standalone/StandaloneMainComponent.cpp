@@ -335,12 +335,18 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
             break;
 
         case WorkflowPage::analyze:
+        {
+            const auto readiness = session.getWorkflowReadiness();
+
             text << "Measurement view scaffold.\n\n";
 
             if (session.sourceDocument.hasSource)
             {
                 text << "Source is ready for future measurement:\n";
                 text << session.sourceDocument.displayName << "\n\n";
+                text << "Measurement gate open for future implementation: "
+                     << (readiness.isSourceReadyForFutureMeasurement() ? "yes" : "no") << "\n\n";
+
                 text << "The Measure Source button is intentionally disabled in this patch.\n\n";
                 text << "Future implementation:\n";
                 text << "- Decode the selected source file.\n";
@@ -353,6 +359,7 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
             }
 
             break;
+        }
 
         case WorkflowPage::currentState:
             text << "Current State re-measure scaffold.\n\n";
@@ -386,17 +393,21 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
 
         case WorkflowPage::exportResults:
         {
-            text << "Export readiness scaffold.\n\n";
-            text << "Readiness checklist:\n";
-            text << "- Source imported: " << (session.sourceDocument.hasSource ? "yes" : "no") << "\n";
-            text << "- Source measured: " << (session.source.hasMeasurement ? "yes" : "no") << "\n";
-            text << "- Target family selected: " << (session.hasTargetProfileFamilySelected() ? "yes" : "no") << "\n";
-            text << "- Authoritative target limits loaded: " << (session.hasAuthoritativeTargetLimits() ? "yes" : "no") << "\n";
-            text << "- Current State initialized: " << (session.hasCurrentStateInitialized() ? "yes" : "no") << "\n";
-            text << "- Current State needs re-measurement: " << (session.currentStateNeedsRemeasurement() ? "yes" : "no") << "\n";
-            text << "- Current State measured: " << (session.currentState.hasMeasurement ? "yes" : "no") << "\n\n";
+            const auto readiness = session.getWorkflowReadiness();
 
-            text << "Export remains blocked. This patch only shows the checklist state.\n\n";
+            text << "Workflow readiness scaffold.\n\n";
+            text << readiness.buildChecklistText() << "\n\n";
+            text << readiness.buildNextActionText() << "\n\n";
+
+            text << "Proposal gate:\n";
+            text << "- Inputs satisfied: " << (readiness.areProposalInputsSatisfied() ? "yes" : "no") << "\n";
+            text << "- Proposal engine available: no\n";
+            text << "- Draft proposal: blocked\n\n";
+
+            text << "Export gate:\n";
+            text << "- Render/export available: no\n";
+            text << "- Export: blocked\n\n";
+
             text << "No render, export, compliance validation, re-measurement, or proposal logic is implemented in this patch.\n";
             break;
         }
