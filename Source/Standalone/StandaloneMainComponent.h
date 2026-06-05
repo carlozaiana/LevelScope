@@ -37,6 +37,10 @@ private:
     juce::TextButton clearSourceButton { "Clear Source" };
     juce::TextButton measureSourceButton { "Measure Source (not implemented)" };
 
+    juce::TextButton initializeCurrentStateButton { "Initialize Current From Source" };
+    juce::TextButton clearCurrentStateButton { "Clear Current State" };
+    juce::TextButton remeasureCurrentStateButton { "Re-measure Current State (not implemented)" };
+
     juce::TextEditor sourceStateBox;
     juce::TextEditor targetStateBox;
     juce::TextEditor currentStateBox;
@@ -48,10 +52,13 @@ private:
     void configureTargetProfileBox();
     void configureNavigationButtons();
     void configureSourceControls();
+    void configureCurrentStateControls();
     void configureReadOnlyBox (juce::TextEditor& box);
 
     void chooseSourceFile();
     void clearSourceFile();
+    void initializeCurrentStateFromSource();
+    void clearCurrentState();
 
     void setPage (WorkflowPage page);
     void refreshFromSession();

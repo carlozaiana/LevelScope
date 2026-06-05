@@ -87,6 +87,47 @@ struct SourceDocument
     }
 };
 
+struct CurrentStateDocument
+{
+    bool isInitialized = false;
+
+    juce::String statusText = "No Current State initialized";
+    juce::String basedOnSourceName = "No source";
+    juce::String sourcePathSnapshot;
+
+    bool needsRemeasurement = false;
+    int revision = 0;
+
+    bool initializeFromSource (const SourceDocument& sourceDocument)
+    {
+        if (! sourceDocument.hasSource)
+        {
+            clear();
+            return false;
+        }
+
+        isInitialized = true;
+        basedOnSourceName = sourceDocument.displayName;
+        sourcePathSnapshot = sourceDocument.fullPath;
+        needsRemeasurement = true;
+        ++revision;
+
+        statusText = "Initialized from Source; re-measure not implemented";
+
+        return true;
+    }
+
+    void clear()
+    {
+        isInitialized = false;
+        statusText = "No Current State initialized";
+        basedOnSourceName = "No source";
+        sourcePathSnapshot = juce::String();
+        needsRemeasurement = false;
+        revision = 0;
+    }
+};
+
 class StandaloneSessionModel
 {
 public:
@@ -95,6 +136,7 @@ public:
     WorkflowPage selectedPage = WorkflowPage::importSource;
 
     SourceDocument sourceDocument;
+    CurrentStateDocument currentStateDocument;
 
     MeasurementSummary source;
     MeasurementSummary currentState;
@@ -107,22 +149,61 @@ public:
 
         source = MeasurementSummary();
         currentState = MeasurementSummary();
+        currentStateDocument.clear();
 
         if (sourceDocument.hasSource)
         {
             source.statusText = sourceDocument.importStatus;
-            currentState.statusText = "Waiting for source measurement";
+            currentState.statusText = "Waiting for Current State initialization";
         }
     }
 
     void clearSourceFile()
     {
         sourceDocument.clear();
+        currentStateDocument.clear();
 
         source = MeasurementSummary();
         currentState = MeasurementSummary();
 
         selectedPage = WorkflowPage::importSource;
+    }
+
+    bool initializeCurrentStateFromSource()
+    {
+        const auto didInitialize = currentStateDocument.initializeFromSource (sourceDocument);
+
+        currentState = MeasurementSummary();
+
+        if (didInitialize)
+        {
+            currentState.statusText = "Current State initialized; measurement not run";
+            selectedPage = WorkflowPage::currentState;
+        }
+
+        return didInitialize;
+    }
+
+    void clearCurrentState()
+    {
+        currentStateDocument.clear();
+        currentState = MeasurementSummary();
+    }
+
+    bool canInitializeCurrentStateFromSource() const
+    {
+        return sourceDocument.hasSource;
+    }
+
+    bool hasCurrentStateInitialized() const
+    {
+        return currentStateDocument.isInitialized;
+    }
+
+    bool currentStateNeedsRemeasurement() const
+    {
+        return currentStateDocument.isInitialized
+            && currentStateDocument.needsRemeasurement;
     }
 
     void setSelectedTargetProfileIndex (int newIndex)

@@ -10,6 +10,7 @@ StandaloneMainComponent::StandaloneMainComponent()
     configureTargetProfileBox();
     configureNavigationButtons();
     configureSourceControls();
+    configureCurrentStateControls();
 
     configureReadOnlyBox (sourceStateBox);
     configureReadOnlyBox (targetStateBox);
@@ -23,7 +24,7 @@ StandaloneMainComponent::StandaloneMainComponent()
 
     refreshFromSession();
 
-    setSize (1120, 760);
+    setSize (1120, 820);
 }
 
 void StandaloneMainComponent::configureLabels()
@@ -95,6 +96,18 @@ void StandaloneMainComponent::configureSourceControls()
     addAndMakeVisible (measureSourceButton);
 }
 
+void StandaloneMainComponent::configureCurrentStateControls()
+{
+    initializeCurrentStateButton.onClick = [this] { initializeCurrentStateFromSource(); };
+    clearCurrentStateButton.onClick = [this] { clearCurrentState(); };
+
+    remeasureCurrentStateButton.setEnabled (false);
+
+    addAndMakeVisible (initializeCurrentStateButton);
+    addAndMakeVisible (clearCurrentStateButton);
+    addAndMakeVisible (remeasureCurrentStateButton);
+}
+
 void StandaloneMainComponent::configureReadOnlyBox (juce::TextEditor& box)
 {
     box.setMultiLine (true);
@@ -141,6 +154,18 @@ void StandaloneMainComponent::clearSourceFile()
     refreshFromSession();
 }
 
+void StandaloneMainComponent::initializeCurrentStateFromSource()
+{
+    session.initializeCurrentStateFromSource();
+    refreshFromSession();
+}
+
+void StandaloneMainComponent::clearCurrentState()
+{
+    session.clearCurrentState();
+    refreshFromSession();
+}
+
 void StandaloneMainComponent::setPage (WorkflowPage page)
 {
     session.selectedPage = page;
@@ -156,6 +181,10 @@ void StandaloneMainComponent::refreshFromSession()
     targetProfileBox.setSelectedId (session.selectedTargetProfileIndex + 1, juce::dontSendNotification);
 
     clearSourceButton.setEnabled (session.sourceDocument.hasSource);
+
+    initializeCurrentStateButton.setEnabled (session.canInitializeCurrentStateFromSource());
+    clearCurrentStateButton.setEnabled (session.hasCurrentStateInitialized());
+    remeasureCurrentStateButton.setEnabled (false);
 
     sourceStateBox.setText (buildSourceStateText(), false);
     targetStateBox.setText (buildTargetStateText(), false);
@@ -248,7 +277,13 @@ juce::String StandaloneMainComponent::buildCurrentStateText() const
     juce::String text;
 
     text << "CURRENT STATE\n\n";
-    text << "Status: " << session.currentState.statusText << "\n\n";
+    text << "Initialized: " << (session.currentStateDocument.isInitialized ? "yes" : "no") << "\n";
+    text << "Status: " << session.currentStateDocument.statusText << "\n";
+    text << "Based on Source: " << session.currentStateDocument.basedOnSourceName << "\n";
+    text << "Revision: " << session.currentStateDocument.revision << "\n";
+    text << "Needs re-measurement: " << (session.currentStateNeedsRemeasurement() ? "yes" : "no") << "\n\n";
+
+    text << "Measurement status: " << session.currentState.statusText << "\n\n";
 
     if (session.currentState.hasMeasurement)
     {
@@ -263,7 +298,7 @@ juce::String StandaloneMainComponent::buildCurrentStateText() const
         text << "True Peak: --\n";
     }
 
-    text << "\nRe-measure flow: not implemented\n";
+    text << "\nRe-measure flow: scaffold only\n";
 
     return text;
 }
@@ -281,7 +316,8 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
             text << "Implemented now:\n";
             text << "- Choose an audio source file.\n";
             text << "- Store file name, path, extension, and size in standalone session state.\n";
-            text << "- Clear the selected source.\n\n";
+            text << "- Clear the selected source.\n";
+            text << "- Changing Source clears Current State, because Current State must not point to a stale source.\n\n";
             text << "Accepted picker patterns:\n";
             text << getSourceFileWildcard() << "\n\n";
 
@@ -289,7 +325,7 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
             {
                 text << "Selected source:\n";
                 text << session.sourceDocument.displayName << "\n\n";
-                text << "Next step remains measurement implementation.\n";
+                text << "Next future step remains real source measurement.\n";
             }
             else
             {
@@ -319,12 +355,33 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
             break;
 
         case WorkflowPage::currentState:
-            text << "Current State scaffold.\n\n";
-            text << "Current State remains separate from Source.\n\n";
-            text << "Future implementation:\n";
-            text << "- After processing changes are possible, re-measure Current State.\n";
-            text << "- Keep real measured Current State separate from any future proposal prediction.\n";
-            text << "- Do not add proposal calculations yet.\n";
+            text << "Current State re-measure scaffold.\n\n";
+            text << "Implemented now:\n";
+            text << "- Initialize a neutral Current State document from the selected Source metadata.\n";
+            text << "- Keep Current State separate from Source.\n";
+            text << "- Clear Current State independently.\n";
+            text << "- Show whether Current State needs re-measurement.\n\n";
+
+            if (! session.sourceDocument.hasSource)
+            {
+                text << "Import a Source before Current State can be initialized.\n";
+            }
+            else if (! session.currentStateDocument.isInitialized)
+            {
+                text << "Source is available, but Current State has not been initialized yet.\n\n";
+                text << "Use Initialize Current From Source to create the Current State scaffold.\n";
+            }
+            else
+            {
+                text << "Current State initialized from:\n";
+                text << session.currentStateDocument.basedOnSourceName << "\n\n";
+                text << "The Re-measure Current State button is intentionally disabled until a real measurement engine exists.\n";
+            }
+
+            text << "\nFuture implementation:\n";
+            text << "- Re-measure Current State after user edits.\n";
+            text << "- Keep measured Current State separate from any future predicted proposal state.\n";
+            text << "- A future proposal must start from measured Current State, not stale predictions.\n";
             break;
 
         case WorkflowPage::exportResults:
@@ -335,10 +392,12 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
             text << "- Source measured: " << (session.source.hasMeasurement ? "yes" : "no") << "\n";
             text << "- Target family selected: " << (session.hasTargetProfileFamilySelected() ? "yes" : "no") << "\n";
             text << "- Authoritative target limits loaded: " << (session.hasAuthoritativeTargetLimits() ? "yes" : "no") << "\n";
+            text << "- Current State initialized: " << (session.hasCurrentStateInitialized() ? "yes" : "no") << "\n";
+            text << "- Current State needs re-measurement: " << (session.currentStateNeedsRemeasurement() ? "yes" : "no") << "\n";
             text << "- Current State measured: " << (session.currentState.hasMeasurement ? "yes" : "no") << "\n\n";
 
             text << "Export remains blocked. This patch only shows the checklist state.\n\n";
-            text << "No render, export, compliance validation, or proposal logic is implemented in this patch.\n";
+            text << "No render, export, compliance validation, re-measurement, or proposal logic is implemented in this patch.\n";
             break;
         }
 
@@ -394,9 +453,18 @@ void StandaloneMainComponent::resized()
     sourceActionRow.removeFromLeft (8);
     measureSourceButton.setBounds (sourceActionRow.removeFromLeft (240));
 
+    bounds.removeFromTop (8);
+
+    auto currentStateActionRow = bounds.removeFromTop (34);
+    initializeCurrentStateButton.setBounds (currentStateActionRow.removeFromLeft (230));
+    currentStateActionRow.removeFromLeft (8);
+    clearCurrentStateButton.setBounds (currentStateActionRow.removeFromLeft (150));
+    currentStateActionRow.removeFromLeft (8);
+    remeasureCurrentStateButton.setBounds (currentStateActionRow.removeFromLeft (300));
+
     bounds.removeFromTop (14);
 
-    auto summaryArea = bounds.removeFromTop (190);
+    auto summaryArea = bounds.removeFromTop (200);
     const auto gap = 12;
     const auto columnWidth = (summaryArea.getWidth() - (2 * gap)) / 3;
 
