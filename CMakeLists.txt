@@ -197,6 +197,7 @@ target_sources(LevelScopeStandalone
         Source/Standalone/StandaloneMainComponent.h
         Source/Standalone/StandaloneSessionModel.h
         Source/Standalone/StandaloneTargetProfiles.h
+        Source/Standalone/StandaloneWorkflowReadiness.h
 )
 
 target_compile_definitions(LevelScopeStandalone
