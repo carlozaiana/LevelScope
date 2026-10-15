@@ -17,6 +17,7 @@ Standards priority: EBU R128 and ATSC A/85.
 - 4 draggable threshold lines (T0..T3)
 - Processing modules present: Leveler, Upward compressor (spectral + broadband mode), Downward compressor, Lookahead limiter (optional oversampling)
 - Preset/snapshot infrastructure and APVTS-based parameter system
+- Standalone scaffold: validated background media import, confirmed file-channel roles, explicit output mapping/device selection and original-source audition; cancellable jobs and future service interfaces. See [scaffold handover](13_StandaloneScaffoldHandover.md) for actual validation and limitations.
 
 ## Medium-term direction
 - Standalone app with analyze/propose/apply/export workflow
@@ -25,4 +26,4 @@ Standards priority: EBU R128 and ATSC A/85.
 
 ## Platform direction
 - Current format: VST3
-- Planned: macOS standalone first (including older macOS support), later Windows
+- Standalone development now runs on an Apple Silicon Mac Studio with macOS Sequoia; earlier development was on High Sierra. The configured 10.13 deployment minimum is distinct from OS versions actually tested. Later: Windows qualification.

@@ -28,9 +28,20 @@ FetchContent_Declare(
     juce
     GIT_REPOSITORY https://github.com/juce-framework/JUCE.git
     GIT_TAG 7.0.12
+    GIT_SHALLOW TRUE
 )
 
+# JUCE 7 bootstraps juceaide in a nested CMake process. Let that helper inherit
+# the configured minimum too, rather than the host SDK's 15.x default (which
+# makes JUCE 7's CGWindowListCreateImage call unavailable at compile time).
+if (APPLE)
+    set(_levelscope_previous_deployment_env "$ENV{MACOSX_DEPLOYMENT_TARGET}")
+    set(ENV{MACOSX_DEPLOYMENT_TARGET} "${CMAKE_OSX_DEPLOYMENT_TARGET}")
+endif()
 FetchContent_MakeAvailable(juce)
+if (APPLE)
+    set(ENV{MACOSX_DEPLOYMENT_TARGET} "${_levelscope_previous_deployment_env}")
+endif()
 
 #==============================
 # Core static library (no GUI)
@@ -184,6 +195,15 @@ endif()
 # Standalone app scaffold
 #==============================
 
+add_library(LevelScopeStandaloneSupport STATIC
+    Source/Standalone/StandaloneMedia.cpp
+    Source/Standalone/StandaloneAudition.cpp
+)
+target_include_directories(LevelScopeStandaloneSupport PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Source)
+target_compile_definitions(LevelScopeStandaloneSupport PUBLIC JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0)
+target_link_libraries(LevelScopeStandaloneSupport PUBLIC
+    juce::juce_audio_formats juce::juce_audio_devices juce::juce_cryptography)
+
 juce_add_gui_app(LevelScopeStandalone
     PRODUCT_NAME "LevelScope Standalone"
     COMPANY_NAME "Studio Paradiso"
@@ -198,6 +218,9 @@ target_sources(LevelScopeStandalone
         Source/Standalone/StandaloneSessionModel.h
         Source/Standalone/StandaloneTargetProfiles.h
         Source/Standalone/StandaloneWorkflowReadiness.h
+        Source/Standalone/StandaloneAudioPanel.cpp
+        Source/Standalone/StandaloneAudioPanel.h
+        Source/Standalone/StandaloneServices.h
 )
 
 target_compile_definitions(LevelScopeStandalone
@@ -212,11 +235,24 @@ target_compile_definitions(LevelScopeStandalone
 target_link_libraries(LevelScopeStandalone
     PRIVATE
         LevelScopeCore
+        LevelScopeStandaloneSupport
         juce::juce_gui_basics
 )
 
 if (MSVC)
     target_compile_options(LevelScopeStandalone PRIVATE /W4)
+    target_compile_options(LevelScopeStandaloneSupport PRIVATE /W4)
 else()
     target_compile_options(LevelScopeStandalone PRIVATE -Wall -Wextra -Wpedantic)
+    target_compile_options(LevelScopeStandaloneSupport PRIVATE -Wall -Wextra -Wpedantic)
+endif()
+
+option(LEVELSCOPE_BUILD_SCAFFOLD_TESTS "Build hardware-independent standalone checks" OFF)
+if (LEVELSCOPE_BUILD_SCAFFOLD_TESTS)
+    enable_testing()
+    juce_add_console_app(LevelScopeScaffoldTests PRODUCT_NAME "LevelScope Scaffold Tests")
+    target_sources(LevelScopeScaffoldTests PRIVATE Tests/StandaloneScaffoldTests.cpp)
+    target_link_libraries(LevelScopeScaffoldTests PRIVATE LevelScopeStandaloneSupport)
+    add_test(NAME standalone-scaffold COMMAND LevelScopeScaffoldTests)
+    set_tests_properties(standalone-scaffold PROPERTIES TIMEOUT 60)
 endif()

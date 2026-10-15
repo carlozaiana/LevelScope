@@ -10,7 +10,7 @@
 - Additive state-chunk compatibility strategy
 
 ## Current gaps
-- No dedicated automated test suite files found in repository snapshot.
+- Hardware-independent scaffold tests now live in `Tests/StandaloneScaffoldTests.cpp`; commands and actual coverage are in [the handover](13_StandaloneScaffoldHandover.md). These do not validate loudness compliance or qualify physical audio devices.
 - No explicit MIDI/OSC mapping subsystem yet.
 - No localization framework yet.
 

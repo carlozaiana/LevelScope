@@ -9,6 +9,7 @@ namespace levelscope::standalone
 struct WorkflowReadiness
 {
     bool sourceImported = false;
+    bool channelRolesConfirmed = false;
     bool sourceMeasured = false;
 
     bool targetFamilySelected = false;
@@ -20,6 +21,8 @@ struct WorkflowReadiness
 
     bool proposalEngineAvailable = false;
     bool renderExportAvailable = false;
+    bool exactVerificationPassed = false;
+    bool exportApproved = false;
 
     static juce::String yesNo (bool value)
     {
@@ -28,12 +31,12 @@ struct WorkflowReadiness
 
     bool isSourceReadyForFutureMeasurement() const
     {
-        return sourceImported;
+        return sourceImported && channelRolesConfirmed;
     }
 
     bool areProposalInputsSatisfied() const
     {
-        return sourceMeasured
+        return isSourceReadyForFutureMeasurement() && sourceMeasured
             && targetFamilySelected
             && targetLimitsAuthoritative
             && currentStateInitialized
@@ -50,6 +53,8 @@ struct WorkflowReadiness
     bool canExport() const
     {
         return renderExportAvailable
+            && exactVerificationPassed && exportApproved
+            && isSourceReadyForFutureMeasurement()
             && sourceMeasured
             && targetFamilySelected
             && targetLimitsAuthoritative
@@ -64,6 +69,7 @@ struct WorkflowReadiness
 
         text << "Readiness checklist:\n";
         text << "- Source imported: " << yesNo (sourceImported) << "\n";
+        text << "- File-channel roles confirmed: " << yesNo (channelRolesConfirmed) << "\n";
         text << "- Source measured: " << yesNo (sourceMeasured) << "\n";
         text << "- Target family selected: " << yesNo (targetFamilySelected) << "\n";
         text << "- Authoritative target limits loaded: " << yesNo (targetLimitsAuthoritative) << "\n";
@@ -72,6 +78,8 @@ struct WorkflowReadiness
         text << "- Current State measured: " << yesNo (currentStateMeasured) << "\n";
         text << "- Proposal engine available: " << yesNo (proposalEngineAvailable) << "\n";
         text << "- Render/export available: " << yesNo (renderExportAvailable) << "\n\n";
+        text << "- Exact rendered-output verification passed: " << yesNo (exactVerificationPassed) << "\n";
+        text << "- Export approved for this revision: " << yesNo (exportApproved) << "\n\n";
 
         text << "Can draft proposal: " << yesNo (canDraftProposal()) << "\n";
         text << "Can export: " << yesNo (canExport()) << "\n";
@@ -85,7 +93,11 @@ struct WorkflowReadiness
             return "Next action: import a Source file.";
 
         if (! sourceMeasured)
+        {
+            if (! channelRolesConfirmed)
+                return "Next action: assign unique speaker roles to file channels and confirm.";
             return "Next action: implement and run Source measurement.";
+        }
 
         if (! targetFamilySelected)
             return "Next action: select a Target profile family.";

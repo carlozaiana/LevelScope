@@ -21,11 +21,81 @@ StandaloneMainComponent::StandaloneMainComponent()
     addAndMakeVisible (targetStateBox);
     addAndMakeVisible (currentStateBox);
     addAndMakeVisible (pageDetailBox);
+    addAndMakeVisible (audioPanel);
+    addAndMakeVisible (jobLabel);
+    addAndMakeVisible (cancelJobButton);
+    cancelJobButton.onClick = [this]
+    {
+        session.job.requestCancel();
+        if (importControl) importControl->cancel.store (true);
+        refreshFromSession();
+    };
 
     refreshFromSession();
 
-    setSize (1120, 820);
+    setSize (1200, 900);
+    startTimerHz (10);
 }
+
+// [BEGIN LS-STANDALONE-IMPORT-LIFECYCLE]
+StandaloneMainComponent::~StandaloneMainComponent()
+{
+    stopTimer();
+    if (importControl) importControl->cancel.store (true);
+    if (importResult.valid()) importResult.wait();
+    audition.disconnect();
+}
+
+void StandaloneMainComponent::beginImport (const juce::File& file)
+{
+    if (session.job.isActive()) return;
+    audition.stop();
+    // Replacement keeps the previous validated source until success.
+    if (! session.job.begin (JobStage::ingest, session.revision)) return;
+    importTicket = session.job.ticket;
+    importingFile = file;
+    importControl = std::make_shared<JobControl>();
+    importResult = std::async (std::launch::async, [file, control = importControl]
+    {
+        try { return validateMedia (file, *control); }
+        catch (const std::exception& error)
+        {
+            return MediaValidationResult { {}, ErrorCode::decodeFailed, "Import failed: " + juce::String (error.what()) };
+        }
+    });
+    refreshFromSession();
+}
+
+void StandaloneMainComponent::timerCallback()
+{
+    audition.poll();
+    audioPanel.refresh();
+    if (importResult.valid() && importResult.wait_for (std::chrono::seconds (0)) == std::future_status::ready)
+    {
+        const auto result = importResult.get();
+        if (session.job.finish (importTicket, session.revision, result.error, result.message))
+        {
+            if (session.setValidatedSource (importingFile, result.media))
+            {
+                session.selectedPage = WorkflowPage::analyze;
+                audioPanel.sourceChanged();
+            }
+            else
+            {
+                session.job.state = JobState::failed;
+                session.job.error = ErrorCode::sourceChanged;
+                session.job.message = "Source changed before import completed; previous source retained";
+            }
+        }
+        importControl.reset();
+        refreshFromSession();
+    }
+    auto text = session.job.message;
+    if (session.job.isActive() && importControl)
+        text << "  " << juce::String (juce::roundToInt (100 * importControl->progress.load())) << "%";
+    jobLabel.setText (text, juce::dontSendNotification);
+}
+// [END LS-STANDALONE-IMPORT-LIFECYCLE]
 
 void StandaloneMainComponent::configureLabels()
 {
@@ -35,7 +105,7 @@ void StandaloneMainComponent::configureLabels()
     titleLabel.setColour (juce::Label::textColourId, juce::Colours::white);
     addAndMakeVisible (titleLabel);
 
-    subtitleLabel.setText ("Workflow shell only: import, measurement, proposal, render, and export are not wired yet.",
+    subtitleLabel.setText ("Validated media and source audition. Measurement, proposal, render and export are unavailable.",
                            juce::dontSendNotification);
     subtitleLabel.setJustificationType (juce::Justification::centredLeft);
     subtitleLabel.setColour (juce::Label::textColourId, juce::Colour (0xffc6ccd7));
@@ -142,15 +212,17 @@ void StandaloneMainComponent::chooseSourceFile()
             if (! chosenFile.existsAsFile())
                 return;
 
-            safeThis->session.setSourceFile (chosenFile);
-            safeThis->session.selectedPage = WorkflowPage::analyze;
-            safeThis->refreshFromSession();
+            safeThis->beginImport (chosenFile);
         });
 }
 
 void StandaloneMainComponent::clearSourceFile()
 {
+    audition.stop();
+    session.job.requestCancel();
+    if (importControl) importControl->cancel.store (true);
     session.clearSourceFile();
+    audioPanel.sourceChanged();
     refreshFromSession();
 }
 
@@ -180,21 +252,25 @@ void StandaloneMainComponent::refreshFromSession()
 
     targetProfileBox.setSelectedId (session.selectedTargetProfileIndex + 1, juce::dontSendNotification);
 
-    clearSourceButton.setEnabled (session.sourceDocument.hasSource);
+    clearSourceButton.setEnabled (session.sourceDocument.hasSource || session.job.isActive());
+    chooseSourceButton.setEnabled (! session.job.isActive());
+    targetProfileBox.setEnabled (! session.job.isActive());
+    cancelJobButton.setEnabled (session.job.state == JobState::running);
 
-    initializeCurrentStateButton.setEnabled (session.canInitializeCurrentStateFromSource());
-    clearCurrentStateButton.setEnabled (session.hasCurrentStateInitialized());
+    initializeCurrentStateButton.setEnabled (! session.job.isActive() && session.canInitializeCurrentStateFromSource());
+    clearCurrentStateButton.setEnabled (! session.job.isActive() && session.hasCurrentStateInitialized());
     remeasureCurrentStateButton.setEnabled (false);
 
     sourceStateBox.setText (buildSourceStateText(), false);
     targetStateBox.setText (buildTargetStateText(), false);
     currentStateBox.setText (buildCurrentStateText(), false);
     pageDetailBox.setText (buildPageDetailText(), false);
+    audioPanel.refresh();
 }
 
 juce::String StandaloneMainComponent::getSourceFileWildcard()
 {
-    return "*.wav;*.wave;*.aif;*.aiff;*.flac;*.mp3;*.m4a";
+    return "*.wav;*.wave;*.aif;*.aiff;*.flac";
 }
 
 juce::String StandaloneMainComponent::getPageName (WorkflowPage page) const
@@ -223,6 +299,11 @@ juce::String StandaloneMainComponent::buildSourceStateText() const
         text << "Extension: " << session.sourceDocument.extension << "\n";
         text << "Size: " << session.sourceDocument.fileSizeBytes << " bytes\n";
         text << "Path: " << session.sourceDocument.fullPath << "\n\n";
+        const auto& media = session.sourceDocument.media;
+        text << media.format << " | " << media.sampleRate << " Hz | " << media.channels << " ch | " << media.bitsPerSample << " bit\n";
+        text << media.frames << " frames | " << juce::String (media.durationSeconds(), 3) << " seconds\n";
+        text << "SHA-256: " << media.sha256 << "\n";
+        text << "Channel roles: " << (session.sourceDocument.layout.confirmed ? "confirmed" : "confirmation required") << "\n\n";
     }
     else
     {
@@ -312,12 +393,13 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
     switch (session.selectedPage)
     {
         case WorkflowPage::importSource:
-            text << "Source import scaffold.\n\n";
+            text << "Validated source import.\n\n";
             text << "Implemented now:\n";
             text << "- Choose an audio source file.\n";
-            text << "- Store file name, path, extension, and size in standalone session state.\n";
+            text << "- Decode the entire file on a cancellable worker; record format, rate, frames, channels and SHA-256.\n";
+            text << "- Confirm speaker roles separately from file order and physical outputs.\n";
             text << "- Clear the selected source.\n";
-            text << "- Changing Source clears Current State, because Current State must not point to a stale source.\n\n";
+            text << "- Successful replacement clears Current State; failure/cancellation keeps the previous source.\n\n";
             text << "Accepted picker patterns:\n";
             text << getSourceFileWildcard() << "\n\n";
 
@@ -342,14 +424,14 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
 
             if (session.sourceDocument.hasSource)
             {
-                text << "Source is ready for future measurement:\n";
+                text << "Validated source (confirmed roles are required for measurement):\n";
                 text << session.sourceDocument.displayName << "\n\n";
                 text << "Measurement gate open for future implementation: "
                      << (readiness.isSourceReadyForFutureMeasurement() ? "yes" : "no") << "\n\n";
 
                 text << "The Measure Source button is intentionally disabled in this patch.\n\n";
                 text << "Future implementation:\n";
-                text << "- Decode the selected source file.\n";
+                text << "- Consume the validated source and confirmed file-channel roles.\n";
                 text << "- Run loudness/peak measurement.\n";
                 text << "- Write measured values into Source state.\n";
             }
@@ -417,7 +499,7 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
             break;
     }
 
-    text << "\n\nGuardrail: this standalone shell must not depend on PluginProcessor, PluginEditor, or APVTS.";
+    text << "\n\nSource audition uses original audio with monitor gain only. No processing or compliance claim.";
 
     return text;
 }
@@ -475,7 +557,11 @@ void StandaloneMainComponent::resized()
 
     bounds.removeFromTop (14);
 
-    auto summaryArea = bounds.removeFromTop (200);
+    auto jobRow = bounds.removeFromTop (28);
+    cancelJobButton.setBounds (jobRow.removeFromRight (120));
+    jobLabel.setBounds (jobRow);
+    bounds.removeFromTop (8);
+    auto summaryArea = bounds.removeFromTop (180);
     const auto gap = 12;
     const auto columnWidth = (summaryArea.getWidth() - (2 * gap)) / 3;
 
@@ -487,7 +573,9 @@ void StandaloneMainComponent::resized()
 
     bounds.removeFromTop (14);
 
-    pageDetailBox.setBounds (bounds);
+    pageDetailBox.setBounds (bounds.removeFromLeft (bounds.getWidth() * 38 / 100));
+    bounds.removeFromLeft (12);
+    audioPanel.setBounds (bounds);
 }
 
 // [END LS-STANDALONE-WORKFLOW-SHELL]

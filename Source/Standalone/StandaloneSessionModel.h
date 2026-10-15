@@ -4,6 +4,7 @@
 
 #include "StandaloneTargetProfiles.h"
 #include "StandaloneWorkflowReadiness.h"
+#include "StandaloneMedia.h"
 
 namespace levelscope::standalone
 {
@@ -37,10 +38,13 @@ struct SourceDocument
     juce::String fullPath;
     juce::String extension;
     juce::int64 fileSizeBytes = 0;
+    MediaInfo media;
+    ChannelLayout layout;
+    OutputRouting routing;
 
     juce::String importStatus = "No source imported";
 
-    void setFromFile (const juce::File& newFile)
+    void setValidatedFile (const juce::File& newFile, const MediaInfo& info)
     {
         file = newFile;
         hasSource = file.existsAsFile();
@@ -58,11 +62,11 @@ struct SourceDocument
         if (extension.startsWithChar ('.'))
             extension = extension.substring (1);
 
-        fileSizeBytes = file.getSize();
-
-        importStatus = hasSupportedAudioExtension()
-            ? "Source selected; measurement not run"
-            : "Source selected; extension not recognized by scaffold list";
+        fileSizeBytes = info.bytes;
+        media = info;
+        layout = info.suggestedLayout;
+        routing = OutputRouting();
+        importStatus = "Source decoded; confirm channel roles. Measurement not run.";
     }
 
     void clear()
@@ -73,19 +77,12 @@ struct SourceDocument
         fullPath = {};
         extension = {};
         fileSizeBytes = 0;
+        media = MediaInfo();
+        layout = ChannelLayout();
+        routing = OutputRouting();
         importStatus = "No source imported";
     }
 
-    bool hasSupportedAudioExtension() const
-    {
-        return extension == "wav"
-            || extension == "wave"
-            || extension == "aif"
-            || extension == "aiff"
-            || extension == "flac"
-            || extension == "mp3"
-            || extension == "m4a";
-    }
 };
 
 struct CurrentStateDocument
@@ -101,7 +98,7 @@ struct CurrentStateDocument
 
     bool initializeFromSource (const SourceDocument& sourceDocument)
     {
-        if (! sourceDocument.hasSource)
+        if (! sourceDocument.hasSource || ! sourceDocument.layout.confirmed || ! sourceDocument.layout.isValid())
         {
             clear();
             return false;
@@ -143,10 +140,14 @@ public:
     MeasurementSummary currentState;
 
     int selectedTargetProfileIndex = 0;
+    uint64_t revision = 0;
+    SessionJob job;
 
-    void setSourceFile (const juce::File& file)
+    bool setValidatedSource (const juce::File& file, const MediaInfo& media)
     {
-        sourceDocument.setFromFile (file);
+        if (! media.matchesFileStamp (file)) return false;
+        ++revision;
+        sourceDocument.setValidatedFile (file, media);
 
         source = MeasurementSummary();
         currentState = MeasurementSummary();
@@ -154,13 +155,15 @@ public:
 
         if (sourceDocument.hasSource)
         {
-            source.statusText = sourceDocument.importStatus;
+            source.statusText = "Validated source; measurement not run";
             currentState.statusText = "Waiting for Current State initialization";
         }
+        return true;
     }
 
     void clearSourceFile()
     {
+        ++revision;
         sourceDocument.clear();
         currentStateDocument.clear();
 
@@ -172,6 +175,7 @@ public:
 
     bool initializeCurrentStateFromSource()
     {
+        ++revision;
         const auto didInitialize = currentStateDocument.initializeFromSource (sourceDocument);
 
         currentState = MeasurementSummary();
@@ -187,13 +191,14 @@ public:
 
     void clearCurrentState()
     {
+        ++revision;
         currentStateDocument.clear();
         currentState = MeasurementSummary();
     }
 
     bool canInitializeCurrentStateFromSource() const
     {
-        return sourceDocument.hasSource;
+        return sourceDocument.hasSource && sourceDocument.layout.confirmed && sourceDocument.layout.isValid();
     }
 
     bool hasCurrentStateInitialized() const
@@ -209,7 +214,29 @@ public:
 
     void setSelectedTargetProfileIndex (int newIndex)
     {
+        ++revision;
         selectedTargetProfileIndex = juce::jlimit (0, numTargetProfiles - 1, newIndex);
+    }
+
+    void setChannelRole (int channel, ChannelRole role)
+    {
+        if (! juce::isPositiveAndBelow (channel, sourceDocument.layout.count)) return;
+        ++revision;
+        sourceDocument.layout.roles[channel] = role;
+        sourceDocument.layout.confirmed = false;
+        sourceDocument.importStatus = "File-channel roles changed; confirmation required. Not measured.";
+        source = MeasurementSummary();
+        currentState = MeasurementSummary();
+        currentStateDocument.clear();
+    }
+
+    bool confirmLayout()
+    {
+        if (! sourceDocument.hasSource || ! sourceDocument.layout.isValid()) return false;
+        ++revision;
+        sourceDocument.layout.confirmed = true;
+        sourceDocument.importStatus = "Source decoded; file-channel roles confirmed. Not measured.";
+        return true;
     }
 
     TargetProfile getSelectedTargetProfile() const
@@ -233,6 +260,7 @@ public:
         WorkflowReadiness readiness;
 
         readiness.sourceImported = sourceDocument.hasSource;
+        readiness.channelRolesConfirmed = sourceDocument.layout.confirmed && sourceDocument.layout.isValid();
         readiness.sourceMeasured = source.hasMeasurement;
 
         readiness.targetFamilySelected = hasTargetProfileFamilySelected();

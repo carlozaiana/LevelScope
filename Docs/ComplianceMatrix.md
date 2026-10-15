@@ -21,6 +21,6 @@ Status legend: **Implemented** = present in current code/docs, **Partial** = som
 
 ## Validation Foundation Notes
 
-- Current repo evidence is documentation- and implementation-contract-based; no dedicated automated compliance suite is present yet.
+- Current compliance evidence is documentation- and implementation-contract-based; no dedicated automated compliance suite is present yet. Hardware-independent standalone scaffold tests (15 October 2026) validate media/routing/lifecycle plumbing only; see `ProjectIndex/13_StandaloneScaffoldHandover.md`. Existing numeric compliance statuses are unchanged.
 - Short-term recommendation: keep this matrix updated whenever DSP behavior, transport semantics, sample-rate policy, or preset/state behavior changes.
 - Medium-term recommendation: add machine-readable mirror (YAML/JSON) of this table to drive automated checks and proposal gating.

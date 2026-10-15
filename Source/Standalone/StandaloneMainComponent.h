@@ -1,25 +1,36 @@
 #pragma once
 
 #include <memory>
+#include <future>
 
 #include <juce_gui_basics/juce_gui_basics.h>
 
 #include "StandaloneSessionModel.h"
+#include "StandaloneAudioPanel.h"
 
 namespace levelscope::standalone
 {
 // [BEGIN LS-STANDALONE-WORKFLOW-SHELL]
 
-class StandaloneMainComponent final : public juce::Component
+class StandaloneMainComponent final : public juce::Component, private juce::Timer
 {
 public:
     StandaloneMainComponent();
+    ~StandaloneMainComponent() override;
 
     void paint (juce::Graphics& g) override;
     void resized() override;
 
 private:
     StandaloneSessionModel session;
+    StandaloneAudition audition;
+    StandaloneAudioPanel audioPanel { session, audition, [this] { refreshFromSession(); } };
+    std::shared_ptr<JobControl> importControl;
+    std::future<MediaValidationResult> importResult;
+    JobTicket importTicket;
+    juce::File importingFile;
+    juce::Label jobLabel;
+    juce::TextButton cancelJobButton { "Cancel import" };
 
     juce::Label titleLabel;
     juce::Label subtitleLabel;
@@ -59,6 +70,8 @@ private:
     void clearSourceFile();
     void initializeCurrentStateFromSource();
     void clearCurrentState();
+    void beginImport (const juce::File&);
+    void timerCallback() override;
 
     void setPage (WorkflowPage page);
     void refreshFromSession();

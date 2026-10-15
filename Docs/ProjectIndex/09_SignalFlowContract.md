@@ -55,3 +55,7 @@ When changing flow order, latency, or transport semantics, update:
 1. this contract,
 2. `Docs/ComplianceMatrix.md` status rows tied to timing/transport,
 3. validation notes in `08_TestingBuildAndRiskNotes.md` (or successor automated suite docs).
+
+## 6) Standalone scaffold source audition (15 October 2026)
+
+This is a separate path from the plugin chain above. A decoder worker reads original media into a bounded SPSC buffer. After prefill, an explicitly selected output-only device callback clears its outputs, copies file channels according to the confirmed physical-output map and applies monitor gain. There is no Core processing, measurement, automatic downmix or sample-rate conversion in this path. Underruns produce silence without skipping source frames and are counted. Stop/EOF/device failure quiesces the callback before worker teardown. Play always restarts at source frame zero. Monitor gain is not a processing-plan parameter and cannot affect future render output. See the scaffold handover for validation and outstanding listening checks.
