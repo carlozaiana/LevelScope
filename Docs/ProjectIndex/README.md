@@ -14,10 +14,11 @@ This folder is the persistent orientation layer for future development chats. Re
 9. `08_TestingBuildAndRiskNotes.md`
 
 ## Task-based quick start
+- **Working-copy locations, GitHub video checkpoint and preserved artifacts:** [19_DevelopmentWorkflow.md](19_DevelopmentWorkflow.md)
 - **Implement DSP/module behavior:** 02 + 03 + 06
 - **UI overhaul/localization:** 01 + 04 + 05
 - **Standalone implementation / next logic-module chat:** [13_StandaloneScaffoldHandover.md](13_StandaloneScaffoldHandover.md), then 00 + 09 + 11 and the proposal spec
-- **Video implementation:** [15_VideoImplementationHandover.md](15_VideoImplementationHandover.md), from the qualified `measurement-milestone-2026-10-17` checkpoint
+- **Video implementation:** [15_VideoImplementationHandover.md](15_VideoImplementationHandover.md), continuing from `video-checkpoint-2026-10-17` in the video worktree
 - **Implemented reference picture and qualification:** [18_VideoQualificationResults.md](18_VideoQualificationResults.md), including actual two-platform tests and physical-sync limits
 - **M1 qualification evidence:** [17_M1QualificationResults.md](17_M1QualificationResults.md)
 - **VST3 measurement parity:** [16_Vst3MeasurementParityMilestone.md](16_Vst3MeasurementParityMilestone.md), a separate future milestone

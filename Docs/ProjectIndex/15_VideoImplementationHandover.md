@@ -3,6 +3,34 @@
 Prepared 17 October 2026. This document is a handover specification; no video
 implementation is included in the measurement milestone.
 
+## Current video checkpoint and source location (17 October 2026)
+
+Continue video work at
+`/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation`, on
+`codex/video-implementation`. Git moved this registered worktree out of the build
+area; `Source/`, `Tests/`, `Docs/` and all untracked files moved intact. The original
+`/Users/fuzz/Developer/LevelScope` remains on `codex/logic-module`.
+
+The published [video branch](https://github.com/carlozaiana/LevelScope/tree/codex/video-implementation)
+has fixed annotated tag
+[`video-checkpoint-2026-10-17`](https://github.com/carlozaiana/LevelScope/releases/tag/video-checkpoint-2026-10-17)
+at `700b9e77e439a8ca9bb7583adf826fac01dbe924`. Its implementation is unchanged from
+`54e2aa9d2773229dd666bb36df410ff932e9f9bf`. Location/workflow documentation follows
+in a separate commit without moving the tag.
+
+Tested products, generated fixtures, raw evidence and old CMake caches remain under
+`/Users/fuzz/Developer/LevelScope/build/video-implementation/{build,probe,evidence}`.
+A verified binary/evidence snapshot is in that root's
+`preserved/video-checkpoint-2026-10-17/`. The old cache is historical and cannot be
+reused after relocation; future builds use a fresh directory inside the new source
+root. Read [the development workflow](19_DevelopmentWorkflow.md) for exact artifact
+locations, hashes, verification, dependency setup and future build commands.
+
+Qualification remains bounded: final candidate 06 has the numeric/native tests and
+short real-device runs; preceding harness 05 has the 30-minute and listening runs.
+Physical lip-sync latency is not measured. Embedded soundtrack playback remains
+unimplemented. Preserve the historical test records and their recorded paths.
+
 ## Video development continuation (17 October 2026)
 
 Implementation and qualification evidence are recorded in
@@ -13,10 +41,12 @@ implemented scope and its measurement limits.
 The measurement tag was verified locally and with `git ls-remote origin`: annotated
 tag object `76affb667b6dab066cb36b2a2c741525b9b6eeac`, peeled commit
 `b29bc7c183743f35c6271d2d7ec8fb5ba1464591`. Development branch
-`codex/video-implementation` starts at that commit in the isolated checkout
-`build/video-implementation/checkout`. Build, generated media and working evidence
-are sibling directories `build/video-implementation/{build,probe,evidence}`. The
-original checkout remains on `codex/logic-module`; M1 evidence is preserved.
+`codex/video-implementation` started at that commit in the former isolated checkout
+`build/video-implementation/checkout`. That was the source path during qualification;
+it has since moved to the location above. Historical build, generated media and raw
+evidence remain in `build/video-implementation/{build,probe,evidence}` under the
+original project. The original checkout remains on `codex/logic-module`; M1 evidence
+is preserved.
 
 Backend spike: JUCE is still 7.0.12 at
 `4f43011b96eb0636104cb3e433894cda98243626`. Its `VideoComponent` wraps `AVPlayer`,
@@ -73,12 +103,12 @@ embedded-soundtrack source switch was discussed as a follow-up; this milestone k
 all embedded audio excluded. For physical testing, pair burned-in flash markers with
 selected-audio clicks and measure screen/speaker output independently.
 
-Build only the named standalone and test targets, including the new video test:
-
-```sh
-cmake -S build/video-implementation/checkout -B build/video-implementation/build -DLEVELSCOPE_BUILD_SCAFFOLD_TESTS=ON -DLEVELSCOPE_BUILD_MEASUREMENT_TESTS=ON -DLEVELSCOPE_BUILD_VIDEO_TESTS=ON -DFETCHCONTENT_SOURCE_DIR_JUCE=/Users/fuzz/Developer/LevelScope/build/juce-7.0.12
-cmake --build build/video-implementation/build --target LevelScopeStandalone LevelScopeVideoTests LevelScopeMeasurementTests LevelScopeScaffoldTests -j 6
-```
+For subsequent builds, use the fresh-directory commands in
+[the development workflow](19_DevelopmentWorkflow.md#fresh-builds-after-relocation)
+from `/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation`. Build only the
+named standalone and test targets, including video tests and the separate playback
+harness. Historical build commands and cache paths are retained with the evidence;
+do not execute them against the preserved products.
 
 The separate Golem SSH handle did not authenticate noninteractively. The verified
 existing `/tmp/pro40-high-sierra-ssh` handle was used without modifying or closing it.

@@ -4,12 +4,15 @@ The backend is a video-track-only AVAssetReader adapter. Tests open no embedded
 audio decoder or audio output. Hardware playback is a separate, explicit opt-in
 application and is never registered with CTest.
 
-Build only the named targets; the repository's VST3 target installs automatically:
-
-```sh
-cmake -S . -B build/video -DLEVELSCOPE_BUILD_VIDEO_TESTS=ON -DLEVELSCOPE_BUILD_SCAFFOLD_TESTS=ON -DLEVELSCOPE_BUILD_MEASUREMENT_TESTS=ON
-cmake --build build/video --target LevelScopeStandalone LevelScopeVideoTests LevelScopeVideoQualification LevelScopeMeasurementTests LevelScopeScaffoldTests -j 6
-```
+Use `/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation` as the source
+root. Configure a fresh `build/video-dev` inside that worktree, following the pinned
+external JUCE prerequisite and named-target commands in
+[the development workflow](../../Docs/ProjectIndex/19_DevelopmentWorkflow.md#fresh-builds-after-relocation).
+The VST3 target installs automatically, so build only the specified standalone/test
+targets. The original tested binaries, evidence and old cache are preserved outside
+this source root; the old cache is not reusable after relocation. Historical result
+records keep their original paths. The commands below are future fixture-generation
+examples to run from the new source root, never over the preserved artifacts.
 
 `LevelScopeVideoTests` without arguments checks rational timing, six frame rates
 over simulated hour-long timelines, VFR gaps, drop-frame labels, overflow, the
