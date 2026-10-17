@@ -1,0 +1,10 @@
+video_tracks=1 embedded_audio_tracks=0 track_id=1 dimensions=320x180 rate=29.9700298 min_duration=1001/30000
+pass=0 pts=0/30000 duration=0/0
+pass=0 pts=1001/30000 duration=0/0
+pass=0 pts=2002/30000 duration=0/0
+pass=0 frames=120 reader_outputs=1 audio_outputs=0
+pass=1 pts=45045/30000 duration=0/0
+pass=1 pts=46046/30000 duration=0/0
+pass=1 pts=47047/30000 duration=0/0
+pass=1 frames=75 reader_outputs=1 audio_outputs=0
+PASS

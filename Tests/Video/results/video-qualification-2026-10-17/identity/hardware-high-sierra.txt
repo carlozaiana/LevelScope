@@ -1,0 +1,109 @@
+Graphics/Displays:
+
+    NVIDIA GeForce GTX 670:
+
+      Chipset Model: NVIDIA GeForce GTX 670
+      Type: GPU
+      Bus: PCIe
+      PCIe Lane Width: x16
+      VRAM (Dynamic, Max): 2047 MB
+      Vendor: NVIDIA (0x10de)
+      Device ID: 0x1189
+      Revision ID: 0x00a2
+      ROM Revision: VBIOS 80.04.4b.00.70
+      Metal: Supported, feature set macOS GPUFamily1 v3
+      Displays:
+        PL2773HD:
+          Resolution: 1920 x 1080 (1080p FHD - Full High Definition)
+          UI Looks like: 1920 x 1080 @ 60 Hz
+          Framebuffer Depth: 24-Bit Color (ARGB8888)
+          Display Serial Number: 1112020100073
+          Mirror: Off
+          Online: Yes
+          Rotation: Supported
+          Automatically Adjust Brightness: No
+        PB248:
+          Resolution: 1920 x 1200 (WUXGA - Widescreen Ultra eXtended Graphics Array)
+          UI Looks like: 1920 x 1200 @ 60 Hz
+          Framebuffer Depth: 24-Bit Color (ARGB8888)
+          Display Serial Number: DBLMQS072312
+          Mirror: Off
+          Online: Yes
+          Rotation: Supported
+          Automatically Adjust Brightness: No
+        SyncMaster:
+          Resolution: 1920 x 1080 (1080p FHD - Full High Definition)
+          UI Looks like: 1920 x 1080 @ 60 Hz
+          Framebuffer Depth: 24-Bit Color (ARGB8888)
+          Main Display: Yes
+          Mirror: Off
+          Online: Yes
+          Rotation: Supported
+          Automatically Adjust Brightness: No
+
+Audio:
+
+    Devices:
+
+        Built-in Input:
+
+          Default Input Device: Yes
+          Input Channels: 2
+          Manufacturer: Apple Inc.
+          Current SampleRate: 44100
+          Transport: Built-in
+          Input Source: Internal Microphone
+
+        Built-in Line Input:
+
+          Input Channels: 2
+          Manufacturer: Apple Inc.
+          Current SampleRate: 44100
+          Transport: Built-in
+          Input Source: Line In
+
+        Built-in Output:
+
+          Default Output Device: Yes
+          Default System Output Device: Yes
+          Manufacturer: Apple Inc.
+          Output Channels: 2
+          Current SampleRate: 44100
+          Transport: Built-in
+          Output Source: Headphones
+
+        Built-in Line Output:
+
+          Manufacturer: Apple Inc.
+          Output Channels: 2
+          Current SampleRate: 44100
+          Transport: Built-in
+          Output Source: Line Out
+
+        Built-in Line Output:
+
+          Manufacturer: Apple Inc.
+          Output Channels: 2
+          Current SampleRate: 44100
+          Transport: Built-in
+          Output Source: Line Out
+
+        Built-in Digital Output:
+
+          Manufacturer: Apple Inc.
+          Output Channels: 2
+          Current SampleRate: 44100
+          Transport: Built-in
+          Output Source: Digital Out
+
+        Adobe Encore DVD 6.0:
+
+          Manufacturer: Apple Inc.
+          Current SampleRate: 0
+          Transport: Unknown
+
+        Premiere Pro 6.0:
+
+          Manufacturer: Apple Inc.
+          Current SampleRate: 0
+          Transport: Unknown

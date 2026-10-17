@@ -1,0 +1,19 @@
+{
+  "file": "probe/listening-clicks-44100-louder.wav",
+  "sha256": "c2ba45dee3df106bf483a0f46ffb718080cf2ec207b9540eb9d6e235b98dc17c",
+  "sample_rate": 44100,
+  "channels": 2,
+  "frames": 1324323,
+  "click_period_seconds": [
+    1001,
+    1000
+  ],
+  "click_rounding": "nearest source sample",
+  "flash_period_video_frames": 30,
+  "video_rate": [
+    30000,
+    1001
+  ],
+  "peak_amplitude": 0.4,
+  "pulse_frames": 220
+}

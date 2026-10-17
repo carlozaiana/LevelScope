@@ -1,0 +1,19 @@
+{
+  "file": "probe/half-hour-clicks-44100.wav",
+  "sha256": "8b795ab831a57ce81c3142621b4b65edb26faf1224da2c78a41b26a796bcea97",
+  "sample_rate": 44100,
+  "channels": 2,
+  "frames": 79459380,
+  "click_period_seconds": [
+    1001,
+    1000
+  ],
+  "click_rounding": "nearest source sample",
+  "flash_period_video_frames": 30,
+  "video_rate": [
+    30000,
+    1001
+  ],
+  "peak_amplitude": 0.1,
+  "pulse_frames": 220
+}

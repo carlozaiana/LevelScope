@@ -1,0 +1,32 @@
+Audio:
+
+    Devices:
+
+        PB248:
+
+          Manufacturer: ACI
+          Output Channels: 2
+          Current SampleRate: 48000
+          Transport: HDMI
+          Output Source: Default
+
+        Mac Studio Speakers:
+
+          Default System Output Device: Yes
+          Manufacturer: Apple Inc.
+          Output Channels: 2
+          Current SampleRate: 48000
+          Transport: Built-in
+          Output Source: Mac Studio Speakers
+
+        Saffire Pro 40 (Experimental):
+
+          Default Input Device: Yes
+          Default Output Device: Yes
+          Input Channels: 8
+          Manufacturer: Local Pro40 Development
+          Output Channels: 12
+          Current SampleRate: 48000
+          Transport: Virtual
+          Input Source: Default
+          Output Source: Default

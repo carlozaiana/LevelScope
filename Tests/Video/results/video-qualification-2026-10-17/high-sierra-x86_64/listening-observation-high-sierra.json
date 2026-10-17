@@ -1,0 +1,17 @@
+{
+  "date": "2026-10-17",
+  "platform": "Intel macOS High Sierra 10.13.6",
+  "output": "Built-in Output / Headphones",
+  "sample_rate": 44100,
+  "monitor_gain_db": -30,
+  "audio_peak_amplitude": 0.4,
+  "duration_seconds": 20,
+  "audio_sha256": "c2ba45dee3df106bf483a0f46ffb718080cf2ec207b9540eb9d6e235b98dc17c",
+  "qualification_binary_sha256": "d7bef4f1f233caf2f75e992ed9ace55c962057d50c5f7dac09e3f73b1ada5c30",
+  "user_observation": "Heard clicks; flashes seemed aligned",
+  "scope": "Subjective listening observation on Golem's own Screen 1, not an optical/acoustic offset measurement",
+  "earlier_attempts": [
+    "Heard a chime but could not see the video; window was obscured",
+    "Saw picture but heard no sound at peak amplitude 0.1"
+  ]
+}

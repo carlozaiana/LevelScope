@@ -3,6 +3,92 @@
 Prepared 17 October 2026. This document is a handover specification; no video
 implementation is included in the measurement milestone.
 
+## Video development continuation (17 October 2026)
+
+Implementation and qualification evidence are recorded in
+[18_VideoQualificationResults.md](18_VideoQualificationResults.md). The specification
+below remains the original milestone contract; the continuation describes the
+implemented scope and its measurement limits.
+
+The measurement tag was verified locally and with `git ls-remote origin`: annotated
+tag object `76affb667b6dab066cb36b2a2c741525b9b6eeac`, peeled commit
+`b29bc7c183743f35c6271d2d7ec8fb5ba1464591`. Development branch
+`codex/video-implementation` starts at that commit in the isolated checkout
+`build/video-implementation/checkout`. Build, generated media and working evidence
+are sibling directories `build/video-implementation/{build,probe,evidence}`. The
+original checkout remains on `codex/logic-module`; M1 evidence is preserved.
+
+Backend spike: JUCE is still 7.0.12 at
+`4f43011b96eb0636104cb3e433894cda98243626`. Its `VideoComponent` wraps `AVPlayer`,
+exposes seconds as doubles, and does not expose the required indexed PTS, explicit
+video-track choice or generation-tagged seek completion. The chosen macOS adapter
+uses `AVAssetReaderTrackOutput` for exactly one video track. It creates no player,
+audio reader/output, audio engine or audio device. Decoded BGRA pixels are copied
+on the video worker into immutable software images; the message thread displays them.
+No third-party codec or runtime installation is required.
+
+The universal `Tests/VideoBackendProbe.mm` spike ran on actual arm64 Sequoia 15.7.9
+and Intel High Sierra 10.13.6. Both decoded all 120 CFR and VFR H.264 frames, passed
+random-start decoding, and submitted 120 frames to a native window layer. Probe
+SHA-256: `e3d1ab8b5e5e7035f7e4692ba0814ee918e4186df872a7085344dbd11e1a456b`.
+CFR fixture: `ca0f64031788361e61c5c80eea7226aa87861fef2b52a18de4f0ae6f243cfad8`;
+VFR: `c8e48b93056d2848b8cc5d36b851ba4724c821ad895a8fa1359d697b57e16712`.
+These are API/decode/presentation-submission observations, **not** playback-sync
+qualification or optical/acoustic measurements. Later playback and regression
+results are recorded separately in document 18.
+
+The spike found that default AVAssetWriter timescales quantize 30000/1001 material;
+the generator therefore pins its track/movie timescale to 30000. AVAssetReader also
+clips the first returned PTS when a time-range seek falls inside a frame. The adapter
+indexes compressed **output** PTS/durations (sorted from decode order), then seeks to
+an exact indexed PTS. It never infers VFR positions from nominal rate or frame count.
+Output timing is essential: a passthrough-remuxed MP4 shifted raw compressed PTS
+by two frames while its decoded presentation started at zero. Empty marker buffers
+are skipped and batched samples are expanded using their output timing.
+See Apple's [track-output settings](https://developer.apple.com/documentation/avfoundation/avassetreadertrackoutput/outputsettings)
+and [timecode reader/writer note](https://developer.apple.com/library/archive/technotes/tn2310/_index.html).
+
+Initial format scope: local MOV/MP4/M4V, SDR H.264, square pixels/full aperture,
+maximum 3840x2160 decoded raster; at most two million indexed frames and eight
+queued pictures. Other codecs, HDR and unsupported aperture formats fail explicitly.
+VFR uses half-open PTS coverage with no frame before/after coverage or in an indexed
+gap. Single-origin 32/64-bit timecode tracks carry their exact rate, start and drop
+flag; unavailable or multiple-origin metadata is labelled, never invented.
+
+The audio clock uses callback-submitted source spans, not decoder position. The
+pinned JUCE CoreAudio callback passes HAL's output `mHostTime` (nanoseconds). That
+timestamp already includes buffering/scheduling; only read-only queried device and
+stream hardware latency is added. When that mapping is unavailable, callback entry
+time plus JUCE's total reported output latency is used and labelled an estimate.
+The latter is not added to the HAL timestamp. The bounded span history preserves
+source position during inserted underrun silence and drains presentation at EOF.
+Stop retains the predicted presented source frame; resume starts there. Seek/restart
+quiesce the callback, flush queues, change generation and preroll before resuming.
+Audio and device latency values are internal predictions, not physical measurements.
+
+Reference attachment, stream choice and exact signed offset are independent session
+state. Positive offset means `videoTime = audioTime - offset`; time quantization
+floors towards negative infinity. Rational operations reject overflow. An optional
+embedded-soundtrack source switch was discussed as a follow-up; this milestone keeps
+all embedded audio excluded. For physical testing, pair burned-in flash markers with
+selected-audio clicks and measure screen/speaker output independently.
+
+Build only the named standalone and test targets, including the new video test:
+
+```sh
+cmake -S build/video-implementation/checkout -B build/video-implementation/build -DLEVELSCOPE_BUILD_SCAFFOLD_TESTS=ON -DLEVELSCOPE_BUILD_MEASUREMENT_TESTS=ON -DLEVELSCOPE_BUILD_VIDEO_TESTS=ON -DFETCHCONTENT_SOURCE_DIR_JUCE=/Users/fuzz/Developer/LevelScope/build/juce-7.0.12
+cmake --build build/video-implementation/build --target LevelScopeStandalone LevelScopeVideoTests LevelScopeMeasurementTests LevelScopeScaffoldTests -j 6
+```
+
+The separate Golem SSH handle did not authenticate noninteractively. The verified
+existing `/tmp/pro40-high-sierra-ssh` handle was used without modifying or closing it.
+Remote probes live under `~/LevelScope-video-2026-10-17/probe`; installed applications
+and the M1 qualification bundle are untouched. The user authorized silent GUI checks
+on both machines. Subsequent explicitly coordinated tests used Mac Studio Speakers
+at 48 kHz and Golem's Built-in Output at its user-selected 44.1 kHz headphone rate.
+Golem's endurance run has all routes muted. A 20-second headphone check was heard
+and seen by the user, who reported that clicks and flashes seemed aligned.
+
 ## Starting checkpoint and qualification gate
 
 Start from annotated tag **`measurement-milestone-2026-10-17`** on

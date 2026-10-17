@@ -1,0 +1,8 @@
+video-timing: Passed (0.16 seconds)
+2/3 Test #2: offline-measurement ..............   Passed   13.45 sec
+    Start 3: standalone-scaffold
+3/3 Test #3: standalone-scaffold ..............   Passed    0.56 sec
+
+100% tests passed out of 3
+
+Total Test time (real) =  14.18 sec
