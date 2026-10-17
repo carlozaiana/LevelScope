@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "/usr/bin/caffeinate",
+    "-di",
+    "/Users/fuzz/Developer/LevelScope/build/video-implementation/preserved/video-checkpoint-2026-10-17/candidate-06/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+    "--allow-audio",
+    "--muted",
+    "--device",
+    "Mac Studio Speakers",
+    "--audio",
+    "/Users/fuzz/Developer/LevelScope/build/video-implementation/probe/half-hour-clicks.wav",
+    "--video",
+    "/Users/fuzz/Developer/LevelScope/build/video-implementation/probe/half-hour.mov",
+    "--seconds",
+    "1800",
+    "--report",
+    "/Users/fuzz/Developer/LevelScope/build/video-integration-2026-10-17/sequoia-arm64/playback-30min-final06.json"
+  ],
+  "started_utc": "2026-10-17T16:28:05.262855+00:00",
+  "source_revision": "54e2aa9d2773229dd666bb36df410ff932e9f9bf",
+  "checkpoint_revision": "700b9e77e439a8ca9bb7583adf826fac01dbe924",
+  "binary_sha256": "291bc99b71815056ce9dcb8cf5e20974a48b79bf66ea042b56e33533e926b231",
+  "pid": 20990,
+  "exit_code": 0,
+  "finished_utc": "2026-10-17T16:58:18.934354+00:00"
+}

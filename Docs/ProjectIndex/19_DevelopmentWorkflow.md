@@ -4,6 +4,12 @@ Recorded 17 October 2026 after publishing the video checkpoint and moving its
 registered Git worktree. This is a documentation-only continuation of the tested
 checkpoint; no source was rebuilt or requalified for the move.
 
+## Current integration continuation
+
+The later user-authorized staged main integration is recorded in
+[20_MainIntegrationAcceptance.md](20_MainIntegrationAcceptance.md). The relocation
+record below retains its original checkpoint identity and artifact locations.
+
 ## Working copies
 
 | Purpose | Source root | Branch |
@@ -15,8 +21,8 @@ Use the video root explicitly for every subsequent command in the video chat.
 Each working copy keeps its normal `Source/`, `Tests/` and `Docs/` directories.
 Create project worktrees outside build folders. Reserve each working copy's
 `build/` for generated files, compiled applications and temporary test artifacts.
-Do not switch another chat's branch, relocate the logic-module checkout, or merge
-this milestone into `main`.
+Do not switch another chat's branch or relocate the logic-module checkout. Main
+integration follows the later acceptance gate in document 20.
 
 Git moved the registered worktree from
 `/Users/fuzz/Developer/LevelScope/build/video-implementation/checkout` using

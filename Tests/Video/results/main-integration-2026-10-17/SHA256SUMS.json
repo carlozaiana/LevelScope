@@ -1,0 +1,23 @@
+{
+  "high-sierra-x86_64/audio-after.txt": "f5dbea09fbe4c81a9900d80b3cd23d4538f2ea16e0a841f2daf53ab1f2a2886e",
+  "high-sierra-x86_64/audio-before.txt": "f5dbea09fbe4c81a9900d80b3cd23d4538f2ea16e0a841f2daf53ab1f2a2886e",
+  "high-sierra-x86_64/playback-30min-final06.json": "7727b97a9acbb25ffedf6af8ff2840e0887fcbcef49b263b7d04ed3dea727d82",
+  "identity/acceptance-plan.json": "f44d576ec759c3bfbf08097a3d3a9543cec50068af9a73d5bd7538e8978a1ff6",
+  "identity/candidate-06-hashes.json": "6dd19521979b732aae817d9ff6d6c627c7a9c4e7f0eba4f91ee966de4506e38a",
+  "identity/checkpoint-tags-before.txt": "ac8da9f42e750be47193dc3c864ba0184a4e74e389dbb9977f162c0fcf28d223",
+  "identity/high-sierra-exit-code.txt": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+  "identity/high-sierra-finished-utc.txt": "cdb07bb497c9efa413d0f691a4d03b8b126cecf0c6ff834bf72156fc3afbab6e",
+  "identity/high-sierra-preserved-inputs-before.json": "26ad4d3902f5c16cf588624e61d2b08cc5e1ae1c85ee4894dddb40d00ff7ccf6",
+  "identity/high-sierra-started-utc.txt": "dcf82de4ff000d705f963ed5f4f508daeaf1e1885875a6b64933c12273d809ef",
+  "identity/local-fixture-hashes.json": "66f3c8dc2c8c78f328e1c6b08c41b33120f0b1b91fc36bf821c529637f2ff946",
+  "identity/local-preserved-artifact-verification.json": "ed6c3c8d8089e9075cb2f71a2765d4fbe07b9a2296678ae30c35156e02cfafd8",
+  "identity/measurement-main-verification.json": "9b10998011c84241536b101d8b6c82d67b4a19def8dfc75cb4004e10a05dd102",
+  "identity/preflight-verification.json": "149865daffe334281f1dd80fd7b1ac9b50fc567ac2ca902837b0337eefe4a627",
+  "identity/qualification-binding.json": "50d073ace76cb20e774f54db4e8371cb78a02a1a355d200bcae65f06294a0583",
+  "identity/sequoia-endurance-run.json": "0af592f3cba85f176a3564ff9f5fbfca89fe958e7e944a033e2e52480af1bb37",
+  "identity/source-build.json": "9ee505722447e8694c3ecbbb4e36a1241879e1d7fd41fe0e3ba78e8da2e12270",
+  "identity/source-integration-review.json": "45cda9ef786277a9ccbd2817b893bb3678774305ac26c8db5753647d8a204966",
+  "sequoia-arm64/audio-after.txt": "08cad2a634feecd0c49ec56b4c639563ab9bc128d965040f1c5a0fd452dda1bf",
+  "sequoia-arm64/audio-before.txt": "08cad2a634feecd0c49ec56b4c639563ab9bc128d965040f1c5a0fd452dda1bf",
+  "sequoia-arm64/playback-30min-final06.json": "da6177492ee10461c65ad9c5a5fcb41e6d60014ddc607c01c2f9fcf5a616ee5f"
+}

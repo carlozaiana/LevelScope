@@ -1,0 +1,15 @@
+{
+  "implementation_commit": "54e2aa9d2773229dd666bb36df410ff932e9f9bf",
+  "existing_checkpoint": "700b9e77e439a8ca9bb7583adf826fac01dbe924",
+  "branch_before_acceptance_addendum": "7736d7fc832bdf72219145cd59eb26a7a6c7a8fe",
+  "harness_sha256": "291bc99b71815056ce9dcb8cf5e20974a48b79bf66ea042b56e33533e926b231",
+  "source_changed": false,
+  "binaries_rebuilt": false,
+  "internal_timing_only": true,
+  "new_listening_observation": false,
+  "physical_synchronization_measurement": null,
+  "prior_listening_observation": "Harness 05 only: Heard clicks; flashes seemed aligned.",
+  "golem_executable": "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+  "golem_new_results_directory": "/Users/fuzz/LevelScope-video-integration-2026-10-17",
+  "new_results_directory_local": "/Users/fuzz/Developer/LevelScope/build/video-integration-2026-10-17"
+}

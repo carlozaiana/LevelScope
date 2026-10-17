@@ -1,0 +1,13 @@
+{
+  "measurement_checkpoint": "b29bc7c183743f35c6271d2d7ec8fb5ba1464591",
+  "m1_evidence_files_verified": 25,
+  "m1_identity_files_verified_at_tested_commit": 76,
+  "checkpoint_changes_to_manifest_files_documentation_only": [
+    "Tests/Reference/README.md"
+  ],
+  "video_source_and_evidence_verified": true,
+  "binaries_sha256": {
+    "app": "5d6253740a7b78266973e4db4a294d64978fb0a7f83032cd6c9809541583bed1",
+    "harness": "291bc99b71815056ce9dcb8cf5e20974a48b79bf66ea042b56e33533e926b231"
+  }
+}

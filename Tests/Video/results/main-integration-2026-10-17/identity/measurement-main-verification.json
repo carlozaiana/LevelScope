@@ -1,0 +1,11 @@
+{
+  "stage": "measurement first",
+  "previous_remote_main": "556d387ad772dc5e604ead95f1525f60e66fd5f9",
+  "pushed_remote_main": "b29bc7c183743f35c6271d2d7ec8fb5ba1464591",
+  "verification_method": "git ls-remote origin refs/heads/main, after successful ordinary push",
+  "checkpoint_tag": "measurement-milestone-2026-10-17",
+  "checkpoint_tag_object": "76affb667b6dab066cb36b2a2c741525b9b6eeac",
+  "fast_forward": true,
+  "working_copy_branches_switched": false,
+  "newer_remote_main_work_overwritten": false
+}

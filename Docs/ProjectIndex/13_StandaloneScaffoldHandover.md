@@ -10,6 +10,13 @@ both silent interactive UI checklists. The checkpoint is
 [15_VideoImplementationHandover.md](15_VideoImplementationHandover.md) for the next chat.
 Historical scaffold observations below remain scoped to their original dates.
 
+## Current integration handover (17 October 2026)
+
+The qualified measurement checkpoint is now on main; video has completed its final
+30-minute gate on both systems. Read [the main integration handover](20_MainIntegrationAcceptance.md)
+for current acceptance and the subsequent logic-module starting point. Keep VST3
+measurement parity separate. The older plans and limitations below are historical.
+
 ## Logic-module continuation (15 October 2026)
 
 The first measurement implementation is now on `codex/logic-module`, created from

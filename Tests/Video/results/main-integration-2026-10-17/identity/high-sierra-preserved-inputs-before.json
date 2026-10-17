@@ -1,0 +1,292 @@
+{
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/app-ui.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/audio-devices-final.txt": {
+    "sha256": "f5dbea09fbe4c81a9900d80b3cd23d4538f2ea16e0a841f2daf53ab1f2a2886e",
+    "bytes": 1569,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/cfr-exact.m4v": {
+    "sha256": "4eda0c99bd99ca6d9aa5d49a35e86c61d898f145d03035db1a3a215fe3c27d90",
+    "bytes": 178618,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/cfr-exact.mp4": {
+    "sha256": "4eda0c99bd99ca6d9aa5d49a35e86c61d898f145d03035db1a3a215fe3c27d90",
+    "bytes": 178618,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/ebu.json": {
+    "sha256": "76d3b3ec72874fd1f395f16aceb12999452973ebfc86713e7eb86ddf20eeba85",
+    "bytes": 218114,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/ebu.log": {
+    "sha256": "18e65c40d2edcd18e30155f9ca4f7a49b0e066f90ea10aa588ab78922e03d313",
+    "bytes": 2480,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/itu.json": {
+    "sha256": "de279e378e928ba46d893828086a4046bf304c960680976ed99ea15dcc845d33",
+    "bytes": 28593,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/itu.log": {
+    "sha256": "9571a299c82a4aa12593daf8b7ed82d5c1eb5874cfefdd6f4a5a56e0c6f1d16e",
+    "bytes": 2363,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/LevelScopeMeasurementTests": {
+    "sha256": "09c89f0cb7e3cb716bd6c77fff8f91bea66bb79d7107caa0ad3780a77be585db",
+    "bytes": 10206632,
+    "mode": "0o755"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/LevelScopeScaffoldTests": {
+    "sha256": "015b069a3698037d548262fc5d0373722415a9142ebe5ce75911635d9fc871bb",
+    "bytes": 10064264,
+    "mode": "0o755"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/LevelScopeVideoTests": {
+    "sha256": "2dd4e27206b3300515d473d162caece49d5af744c6d7d53ecb7f1a9f1c736de0",
+    "bytes": 10348424,
+    "mode": "0o755"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/measurement.log": {
+    "sha256": "693ec25505d8a388521025eedf57085a86503c9ccda9586e86f6f315285c4e6c",
+    "bytes": 30,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/mp4-qualified.json": {
+    "sha256": "1e5e720d94275785dc4f8805969c4c30eb6691aa0541b5dc93ee4925d5489bb2",
+    "bytes": 1020,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/mp4-qualified.log": {
+    "sha256": "580bda2fdbdaf5ff9a828bb3d677bedfea2f601ab8ac6c31a0bceac8cdf383c0",
+    "bytes": 1019,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/runner.log": {
+    "sha256": "698d16d7b93c4bd9707d3cfacda6fb1e0fea99ed0cda6e69bedc42772940540a",
+    "bytes": 106,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/scaffold.log": {
+    "sha256": "83c0192f04df4efeedb4aa0f4fa23fc885571ce221c6b6069f5ac8fa2ebc0e48",
+    "bytes": 47,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/vfr30-qualified.json": {
+    "sha256": "003b179aaaa344ee1f7881ec86c0b8584ce550fbafb9a754fa9fb9ba47c36c59",
+    "bytes": 1022,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/vfr30-qualified.log": {
+    "sha256": "a94a30c238bdb84cdc1e5673d08536c072bbfa3384aaf907a34b436063aef601",
+    "bytes": 1021,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/video.log": {
+    "sha256": "30cc4210bf59f098d37683bbf3d9922693308424765c765120448bb289dfd68c",
+    "bytes": 1009,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/LevelScope Standalone.app/Contents/Info.plist": {
+    "sha256": "2e76c3d0f5a40897688f2139091ad1777c76ab1e668dc36f5e61add7870396f9",
+    "bytes": 915,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/LevelScope Standalone.app/Contents/PkgInfo": {
+    "sha256": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+    "bytes": 8,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone": {
+    "sha256": "5d6253740a7b78266973e4db4a294d64978fb0a7f83032cd6c9809541583bed1",
+    "bytes": 17668248,
+    "mode": "0o755"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/LevelScope Standalone.app/Contents/Resources/RecentFilesMenuTemplate.nib": {
+    "sha256": "718eb4c5a3a5564dd832ae9a36cf649f3ef257ce896dd921693eeb6101bd008a",
+    "bytes": 2842,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/LevelScope Video Qualification.app/Contents/Info.plist": {
+    "sha256": "b52c1b2c9c4d357c61a90c3eb2b8ee4d61a1610fe194739ef79d045fbae866ae",
+    "bytes": 950,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/LevelScope Video Qualification.app/Contents/PkgInfo": {
+    "sha256": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+    "bytes": 8,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification": {
+    "sha256": "291bc99b71815056ce9dcb8cf5e20974a48b79bf66ea042b56e33533e926b231",
+    "bytes": 16209984,
+    "mode": "0o755"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/LevelScope Video Qualification.app/Contents/Resources/RecentFilesMenuTemplate.nib": {
+    "sha256": "718eb4c5a3a5564dd832ae9a36cf649f3ef257ce896dd921693eeb6101bd008a",
+    "bytes": 2842,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-05/cfr-exact.m4v": {
+    "sha256": "4eda0c99bd99ca6d9aa5d49a35e86c61d898f145d03035db1a3a215fe3c27d90",
+    "bytes": 178618,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-05/cfr-exact.mp4": {
+    "sha256": "4eda0c99bd99ca6d9aa5d49a35e86c61d898f145d03035db1a3a215fe3c27d90",
+    "bytes": 178618,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-05/headphones-louder-high-sierra.json": {
+    "sha256": "c223163a50a4d12849ae7e5bf24252c7ebf7ac95af94b237cc835de98eaa236d",
+    "bytes": 1022,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-05/headphones-louder-high-sierra.log": {
+    "sha256": "f341e99db77ec0f0f5837f4c4b701662e217c35479476184f8a63261287485bd",
+    "bytes": 1021,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-05/headphones-visible-high-sierra.json": {
+    "sha256": "2d12449cb6faf8672427fdeaf3b4abb4e53edcf86f179e6f9c6ce4bc87b0c3aa",
+    "bytes": 1023,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-05/listening-clicks-44100-louder.wav": {
+    "sha256": "c2ba45dee3df106bf483a0f46ffb718080cf2ec207b9540eb9d6e235b98dc17c",
+    "bytes": 5297336,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-05/listening-clicks-44100.wav": {
+    "sha256": "b08d701e8534e75e961a429da3e69eb0b482b128abb11d6579d4f698bd98d34a",
+    "bytes": 5297336,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-05/playback-30min-high-sierra.json": {
+    "sha256": "63f72400a2342469dcadf715db9a5fc377e38ca36bc424465fffe3e64b627fa7",
+    "bytes": 1023,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-05/playback-30min-high-sierra.log": {
+    "sha256": "f8daea209a7522391b9cbcc2b67f0adce181fae85319aca491fdc3513a528ba8",
+    "bytes": 1022,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-05/vfr-1200.mov": {
+    "sha256": "1ed750ae483aa5dd19d631f3f086216102c342b379c33e8e95c64d381aef4322",
+    "bytes": 2225515,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-05/vfr30-high-sierra.json": {
+    "sha256": "23c9fe307449ca0fd01f8ab8679b6bca89de0fd8fdb1d7562f5c2c5b691dc0f8",
+    "bytes": 1022,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-05/LevelScope Video Qualification.app/Contents/Info.plist": {
+    "sha256": "b52c1b2c9c4d357c61a90c3eb2b8ee4d61a1610fe194739ef79d045fbae866ae",
+    "bytes": 950,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-05/LevelScope Video Qualification.app/Contents/PkgInfo": {
+    "sha256": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+    "bytes": 8,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-05/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification": {
+    "sha256": "d7bef4f1f233caf2f75e992ed9ace55c962057d50c5f7dac09e3f73b1ada5c30",
+    "bytes": 16193248,
+    "mode": "0o755"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-05/LevelScope Video Qualification.app/Contents/Resources/RecentFilesMenuTemplate.nib": {
+    "sha256": "718eb4c5a3a5564dd832ae9a36cf649f3ef257ce896dd921693eeb6101bd008a",
+    "bytes": 2842,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-02/half-hour-clicks-44100.wav": {
+    "sha256": "8b795ab831a57ce81c3142621b4b65edb26faf1224da2c78a41b26a796bcea97",
+    "bytes": 317837564,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-02/half-hour-clicks.wav": {
+    "sha256": "4709852fdf45b43636171c07868ad6d0c7199cec2f9a5ae18c2ce33094d1a528",
+    "bytes": 345945644,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-02/half-hour.mov": {
+    "sha256": "d49d456ead9ce457026c4f002171d5dc901534d30950010820c93c828eb74da9",
+    "bytes": 122009605,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-02/headphones-high-sierra.json": {
+    "sha256": "413458313cace528c0580fa848d34d30526b531934bb8fde7fc9f91e56130536",
+    "bytes": 1020,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-02/LevelScopeMeasurementTests": {
+    "sha256": "117bddb5efa80a36e1e65963ed16906ff311055b0a2163084d6e005081364fc9",
+    "bytes": 10206632,
+    "mode": "0o755"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-02/LevelScopeScaffoldTests": {
+    "sha256": "c4dbb46c84e3361986c4defe8472baadca329de57420bcd24f162a4b88b48920",
+    "bytes": 10064264,
+    "mode": "0o755"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-02/LevelScopeVideoTests": {
+    "sha256": "c68f8c4bca0756dd9a6991f98a3341217406cd6e84a6ec3b1763d8727dffb721",
+    "bytes": 10327576,
+    "mode": "0o755"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-02/smoke-muted-high-sierra.json": {
+    "sha256": "b9417f18d67d322281e26011076a910a672ee9d957c416ed63baf8bbbdfb9ebd",
+    "bytes": 989,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-02/LevelScope Standalone.app/Contents/Info.plist": {
+    "sha256": "2e76c3d0f5a40897688f2139091ad1777c76ab1e668dc36f5e61add7870396f9",
+    "bytes": 915,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-02/LevelScope Standalone.app/Contents/PkgInfo": {
+    "sha256": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+    "bytes": 8,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-02/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone": {
+    "sha256": "372a2d4440c196b4ab7175a0e7d6a9e613f65a70389f617718d373302ecfc89c",
+    "bytes": 17635080,
+    "mode": "0o755"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-02/LevelScope Standalone.app/Contents/Resources/RecentFilesMenuTemplate.nib": {
+    "sha256": "718eb4c5a3a5564dd832ae9a36cf649f3ef257ce896dd921693eeb6101bd008a",
+    "bytes": 2842,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-02/LevelScope Video Qualification.app/Contents/Info.plist": {
+    "sha256": "b52c1b2c9c4d357c61a90c3eb2b8ee4d61a1610fe194739ef79d045fbae866ae",
+    "bytes": 950,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-02/LevelScope Video Qualification.app/Contents/PkgInfo": {
+    "sha256": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+    "bytes": 8,
+    "mode": "0o644"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-02/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification": {
+    "sha256": "a1844205ec9b5460e40dff10242a088818fd8630304d2969afb4dd0cc9949022",
+    "bytes": 16191472,
+    "mode": "0o755"
+  },
+  "/Users/fuzz/LevelScope-video-2026-10-17/qualification-02/LevelScope Video Qualification.app/Contents/Resources/RecentFilesMenuTemplate.nib": {
+    "sha256": "718eb4c5a3a5564dd832ae9a36cf649f3ef257ce896dd921693eeb6101bd008a",
+    "bytes": 2842,
+    "mode": "0o644"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "measurement_main_verified": "b29bc7c183743f35c6271d2d7ec8fb5ba1464591",
+  "video_implementation": "54e2aa9d2773229dd666bb36df410ff932e9f9bf",
+  "final_candidate_binary": "291bc99b71815056ce9dcb8cf5e20974a48b79bf66ea042b56e33533e926b231",
+  "required_gap": "Real 30-minute run of final candidate 06 on both actual OS versions",
+  "reuse_valid_existing_evidence": [
+    "rational clock and frame-index checks",
+    "transport and lifecycle checks",
+    "measurement independence and official M1 suites",
+    "short VFR and MP4 device runs",
+    "observed Sequoia GUI and High Sierra launch",
+    "harness-05 subjective listening observation (no millisecond bound)"
+  ],
+  "integration_regressions": [
+    "video timing/native fixtures including long index",
+    "measurement units",
+    "scaffold units",
+    "reference-runner tests",
+    "ITU and EBU comparisons to preserved M1 baseline"
+  ],
+  "no_physical_sync_claim": true,
+  "no_new_audible_run_required": true,
+  "no_source_changes_or_rebuild_required_if_checks_pass": true
+}

@@ -3,6 +3,14 @@
 Prepared 17 October 2026. This document is a handover specification; no video
 implementation is included in the measurement milestone.
 
+## Integration continuation (17 October 2026)
+
+Measurement has been integrated into main. The final-candidate 30-minute gate now
+passes on both actual systems without source changes or rebuilding. See
+[the current acceptance and main handover](20_MainIntegrationAcceptance.md).
+Earlier checkpoint-only instructions below describe their historical stage; the
+user has now authorized staged main integration. The fixed video tag stays intact.
+
 ## Current video checkpoint and source location (17 October 2026)
 
 Continue video work at

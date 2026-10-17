@@ -1,0 +1,6 @@
+{
+  "measurement_kernel_and_plugin_sources_unchanged_by_video": true,
+  "tested_source_and_current_video_branch_identical": true,
+  "all_checkpoint_objects_and_targets_unchanged": true,
+  "integration_would_be_fast_forward": true
+}
