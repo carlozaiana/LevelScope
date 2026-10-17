@@ -10,8 +10,15 @@ base `247bf97c5872d435def205592acdb6889d3091f8` and a subsequent documentation/e
 30-minute runs and integration regressions pass on both actual systems without
 source changes or rebuilding. See
 [the current acceptance and main handover](20_MainIntegrationAcceptance.md).
-Earlier checkpoint-only instructions below describe their historical stage; the
-user has now authorized staged main integration. The fixed video tag stays intact.
+All required checks and integration for the agreed reference-video milestone are
+complete. Optional embedded-soundtrack playback is explicitly deferred as a future
+enhancement, not an outstanding acceptance requirement. Selected audio remains
+authoritative, and embedded audio stays muted (neither decoded nor routed) during
+loading, seeking and playback. No new feature has begun.
+
+Earlier checkpoint-only instructions below describe their historical stage; staged
+main integration is complete. Continue logic-module work from the latest fetched
+`origin/main` as described in document 20. The fixed video tag stays intact.
 
 ## Current video checkpoint and source location (17 October 2026)
 
@@ -36,10 +43,12 @@ reused after relocation; future builds use a fresh directory inside the new sour
 root. Read [the development workflow](19_DevelopmentWorkflow.md) for exact artifact
 locations, hashes, verification, dependency setup and future build commands.
 
-Qualification remains bounded: final candidate 06 has the numeric/native tests and
-short real-device runs; preceding harness 05 has the 30-minute and listening runs.
-Physical lip-sync latency is not measured. Embedded soundtrack playback remains
-unimplemented. Preserve the historical test records and their recorded paths.
+At the historical checkpoint, final candidate 06 had the numeric/native tests and
+short real-device runs; preceding harness 05 had the 30-minute and listening runs.
+The later final-candidate 30-minute runs and integration regressions are recorded in
+document 20. Physical lip-sync latency remains unmeasured. Embedded soundtrack
+playback remains unimplemented and is explicitly deferred. Preserve the historical
+test records and their recorded paths.
 
 ## Video development continuation (17 October 2026)
 
@@ -108,9 +117,9 @@ Audio and device latency values are internal predictions, not physical measureme
 
 Reference attachment, stream choice and exact signed offset are independent session
 state. Positive offset means `videoTime = audioTime - offset`; time quantization
-floors towards negative infinity. Rational operations reject overflow. An optional
-embedded-soundtrack source switch was discussed as a follow-up; this milestone keeps
-all embedded audio excluded. For physical testing, pair burned-in flash markers with
+floors towards negative infinity. Rational operations reject overflow. Optional
+embedded-soundtrack playback is deferred as a future enhancement; this milestone
+keeps all embedded audio excluded. For physical testing, pair burned-in flash markers with
 selected-audio clicks and measure screen/speaker output independently.
 
 For subsequent builds, use the fresh-directory commands in

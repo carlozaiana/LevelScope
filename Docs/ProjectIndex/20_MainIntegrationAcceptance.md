@@ -65,6 +65,19 @@ The final candidate satisfies the defined reference-picture qualification gate.
 The integration regressions below pass on both actual platforms with unchanged
 implementation source and the exact preserved final-candidate binaries.
 
+## Optional embedded soundtrack deferred
+
+At the user's request, optional embedded-soundtrack playback is deferred as a future
+enhancement. It is not a required check or an open acceptance gate for this milestone,
+and no implementation of that enhancement has begun. Selected audio remains
+authoritative; embedded video audio remains muted throughout loading, seeking and
+playback because the video backend does not decode or route it.
+
+The agreed reference-video milestone has completed its required qualification and
+main integration. The deferral changes documentation only; the implementation and
+historical evidence remain unchanged, so no rebuild or repeated playback test is
+needed. Any future soundtrack work requires a separately agreed scope.
+
 ## Accepted main revision and integration regressions
 
 Accepted video integration base:
@@ -89,19 +102,23 @@ historical-cache reuse was needed.
 | Official EBU minimum requirements | 66/66, 72 rules, 1,052 readings | 66/66, 72 rules, 1,052 readings |
 | EBU supplementary project sanity checks | 4/4 | 4/4 |
 
-The follow-up commit containing this table and the fresh regression evidence changes
-only documentation/results and is published on both the video branch and main.
-It does not change the accepted implementation. No VST3 target was built or installed.
+The regression/evidence follow-up,
+[`7859ce3792bc52a49fb61902be18a46b8e61b253`](https://github.com/carlozaiana/LevelScope/commit/7859ce3792bc52a49fb61902be18a46b8e61b253),
+was published on both the video branch and main. It changes only documentation/results.
+The subsequent soundtrack-deferral handover update also changes documentation only.
+Neither changes the accepted implementation. No VST3 target was built or installed.
 
 ## Starting point for subsequent logic-module work
 
 Start from the latest fetched `origin/main`, which contains the accepted integration
-base above and this regression/handover follow-up. Verify that the accepted base is
-an ancestor before starting new work:
+base, the published regression evidence and the soundtrack-deferral handover update.
+Verify that the qualified regression revision is an ancestor and record the fetched
+main commit before starting new work:
 
 ```sh
 git fetch origin
-git merge-base --is-ancestor 247bf97c5872d435def205592acdb6889d3091f8 origin/main
+git merge-base --is-ancestor 7859ce3792bc52a49fb61902be18a46b8e61b253 origin/main
+git rev-parse origin/main
 ```
 
 The original logic-module working copy remains at
