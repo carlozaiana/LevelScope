@@ -62,16 +62,75 @@ claimed by these muted runs.
 | Physical synchronization measurement | Not part of this internal one-source-frame acceptance gate; remains unmeasured |
 
 The final candidate satisfies the defined reference-picture qualification gate.
-The integration regression pass and final main handover are recorded below once
-the accepted branch revision has been integrated locally and verified.
+The integration regressions below pass on both actual platforms with unchanged
+implementation source and the exact preserved final-candidate binaries.
 
-## Integration status
+## Accepted main revision and integration regressions
 
-Measurement is on remote main. The final-candidate video gate is complete; publish
-this acceptance addendum on `codex/video-implementation`, then fast-forward local
-main if remote ancestry still permits it. Run the named video and M1 regression
-executables against the exact preserved binary hashes before publishing video on
-main. Do not force a branch update or move an existing checkpoint tag.
+Accepted video integration base:
+[`247bf97c5872d435def205592acdb6889d3091f8`](https://github.com/carlozaiana/LevelScope/commit/247bf97c5872d435def205592acdb6889d3091f8).
+It includes the complete qualified measurement milestone and final video source,
+tests, handover and endurance addendum. After publishing it on
+`codex/video-implementation`, local main was fast-forwarded from measurement commit
+`b29bc7c183743f35c6271d2d7ec8fb5ba1464591` to this revision. There were no merge
+conflicts or combined-source differences. The following regressions then passed
+on the actual Sequoia arm64 and High Sierra x86_64 machines before the video main
+push. Their runtime binaries are identical to the preserved final candidate;
+source identity was checked against the integrated revision, so no rebuild or
+historical-cache reuse was needed.
+
+| Integration regression | Sequoia arm64 | High Sierra x86_64 |
+| --- | --- | --- |
+| Video timing/transport/native/long-index checks | 329,054 passed | 329,054 passed |
+| Measurement unit checks | 184 passed | 184 passed |
+| Standalone scaffold checks | 205 passed | 205 passed |
+| Reference-runner failure detection | 8 passed | 8 passed |
+| Official ITU vectors | 39/39, zero baseline comparison errors | 39/39, zero baseline comparison errors |
+| Official EBU minimum requirements | 66/66, 72 rules, 1,052 readings | 66/66, 72 rules, 1,052 readings |
+| EBU supplementary project sanity checks | 4/4 | 4/4 |
+
+The follow-up commit containing this table and the fresh regression evidence changes
+only documentation/results and is published on both the video branch and main.
+It does not change the accepted implementation. No VST3 target was built or installed.
+
+## Starting point for subsequent logic-module work
+
+Start from the latest fetched `origin/main`, which contains the accepted integration
+base above and this regression/handover follow-up. Verify that the accepted base is
+an ancestor before starting new work:
+
+```sh
+git fetch origin
+git merge-base --is-ancestor 247bf97c5872d435def205592acdb6889d3091f8 origin/main
+```
+
+The original logic-module working copy remains at
+`/Users/fuzz/Developer/LevelScope`, on `codex/logic-module` at
+`b29bc7c183743f35c6271d2d7ec8fb5ba1464591`. This integration deliberately does not
+advance that other chat's branch or alter its files. Its owning chat should inspect
+pending work and explicitly integrate current main before implementing subsequent
+logic-module work; do not reset it or discard its untracked files. The video working
+copy remains at its existing location on `codex/video-implementation`.
+
+Measurement and synchronized reference picture are implemented; do not restart those
+milestones from the historical scaffold instructions. Read the measurement contract,
+the current source and proposal-engine specification for the next agreed scope.
+VST3 measurement parity remains separate and is not an acceptance prerequisite for
+the standalone milestones. No new feature is begun by this integration task.
+
+## Preserved checkpoint tags
+
+| Annotated checkpoint tag | Original peeled commit (unchanged) |
+| --- | --- |
+| `high-sierra-pre-scaffold-2026-10-15` | `556d387ad772dc5e604ead95f1525f60e66fd5f9` |
+| `standalone-scaffold-2026-10-15` | `f192a8553e139d390056c9755f25eeb123bbc5e6` |
+| `measurement-milestone-2026-10-17` | `b29bc7c183743f35c6271d2d7ec8fb5ba1464591` |
+| `video-checkpoint-2026-10-17` | `700b9e77e439a8ca9bb7583adf826fac01dbe924` |
+
+The existing video checkpoint is retained at its exact historical revision; the
+new acceptance addendum is a descendant. No new tag is needed, and no existing tag
+object or target was changed. Development branches/worktrees remain present. Updates
+use ordinary fast-forward pushes; newer remote main work must never be overwritten.
 
 ## Evidence, preserved locations and limits
 

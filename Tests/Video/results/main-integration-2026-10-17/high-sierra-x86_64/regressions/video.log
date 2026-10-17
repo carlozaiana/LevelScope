@@ -1,0 +1,9 @@
+MEDIA cfr-exact.mov sha256=ca0f64031788361e61c5c80eea7226aa87861fef2b52a18de4f0ae6f243cfad8 frames=120 vfr=0 embedded_audio=0
+MEDIA vfr-exact.mov sha256=c8e48b93056d2848b8cc5d36b851ba4724c821ad895a8fa1359d697b57e16712 frames=120 vfr=1 embedded_audio=0
+MEDIA two-streams-audio.mov sha256=9ec72e8fcd91bfeefa332fe5c129ab8518accacb05227da84473fdeec3eeca76 frames=120 vfr=0 embedded_audio=1
+TIMECODE Origin 01:00:00;00 (drop-frame)
+MEDIA timecode.mov sha256=7f08b006d6f08ad31e2a45bab620e422b30099f9b4639c0fd4c2d7342e1564e6 frames=120 vfr=0 embedded_audio=0
+MEDIA cfr-exact.mp4 sha256=4eda0c99bd99ca6d9aa5d49a35e86c61d898f145d03035db1a3a215fe3c27d90 frames=120 vfr=0 embedded_audio=0
+MEDIA cfr-exact.m4v sha256=4eda0c99bd99ca6d9aa5d49a35e86c61d898f145d03035db1a3a215fe3c27d90 frames=120 vfr=0 embedded_audio=0
+LONG_INDEX half-hour.mov sha256=d49d456ead9ce457026c4f002171d5dc901534d30950010820c93c828eb74da9 frames=54000 exact_pts_and_coverage=PASS
+PASS: 329054 video timing/transport checks; no audio device opened

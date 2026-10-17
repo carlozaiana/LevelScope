@@ -1,0 +1,7 @@
+{
+  "local_main_integration_revision_tested": "247bf97c5872d435def205592acdb6889d3091f8",
+  "runtime_implementation_revision": "54e2aa9d2773229dd666bb36df410ff932e9f9bf",
+  "source_identical": true,
+  "reused_preserved_final_candidate_binaries": true,
+  "integration_method": "fast-forward; no combined-source differences"
+}

@@ -64,4 +64,3 @@ Audio:
           Manufacturer: Apple Inc.
           Current SampleRate: 0
           Transport: Unknown
-

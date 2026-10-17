@@ -12,9 +12,11 @@ Historical scaffold observations below remain scoped to their original dates.
 
 ## Current integration handover (17 October 2026)
 
-The qualified measurement checkpoint is now on main; video has completed its final
-30-minute gate on both systems. Read [the main integration handover](20_MainIntegrationAcceptance.md)
-for current acceptance and the subsequent logic-module starting point. Keep VST3
+The qualified measurement and video milestones are integrated into main, with
+accepted video integration base `247bf97c5872d435def205592acdb6889d3091f8` and a subsequent documentation/evidence
+follow-up. Start subsequent logic-module work from the latest fetched `origin/main`;
+[the main integration handover](20_MainIntegrationAcceptance.md) records the exact
+accepted base, passing regressions and safe continuation steps for the original chat. Keep VST3
 measurement parity separate. The older plans and limitations below are historical.
 
 ## Logic-module continuation (15 October 2026)

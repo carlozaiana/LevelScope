@@ -5,8 +5,10 @@ implementation is included in the measurement milestone.
 
 ## Integration continuation (17 October 2026)
 
-Measurement has been integrated into main. The final-candidate 30-minute gate now
-passes on both actual systems without source changes or rebuilding. See
+Measurement and video are integrated into main, with accepted video integration
+base `247bf97c5872d435def205592acdb6889d3091f8` and a subsequent documentation/evidence follow-up. Final-candidate
+30-minute runs and integration regressions pass on both actual systems without
+source changes or rebuilding. See
 [the current acceptance and main handover](20_MainIntegrationAcceptance.md).
 Earlier checkpoint-only instructions below describe their historical stage; the
 user has now authorized staged main integration. The fixed video tag stays intact.

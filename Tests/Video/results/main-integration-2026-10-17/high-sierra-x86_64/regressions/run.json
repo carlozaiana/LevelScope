@@ -1,0 +1,119 @@
+{
+  "scope": "Exact preserved final-candidate binaries; source unchanged by fast-forward integration",
+  "implementation_commit": "54e2aa9d2773229dd666bb36df410ff932e9f9bf",
+  "architecture": "x86_64",
+  "os": "ProductName:\tMac OS X\nProductVersion:\t10.13.6\nBuildVersion:\t17G66\n",
+  "started_utc": "2026-10-17T17:07:00.748617+00:00",
+  "binaries_sha256": {
+    "LevelScopeVideoTests": "2dd4e27206b3300515d473d162caece49d5af744c6d7d53ecb7f1a9f1c736de0",
+    "LevelScopeMeasurementTests": "09c89f0cb7e3cb716bd6c77fff8f91bea66bb79d7107caa0ad3780a77be585db",
+    "LevelScopeScaffoldTests": "015b069a3698037d548262fc5d0373722415a9142ebe5ce75911635d9fc871bb"
+  },
+  "runner_and_manifest_sha256": {
+    "/Users/fuzz/LevelScope-M1-qualification-2026-10-17/m1-qualification-2026-10-17/Tests/EbuReferenceRunnerTests.py": "d5cc661120f98e6c95c05b0e64a9c069dd0077dbeb724433d862bd135f266763",
+    "/Users/fuzz/LevelScope-M1-qualification-2026-10-17/m1-qualification-2026-10-17/Tests/run_reference_measurements.py": "13fe667124cbd887672090c52373f033c47b7e939c51f71550e22833959334cc",
+    "/Users/fuzz/LevelScope-M1-qualification-2026-10-17/m1-qualification-2026-10-17/Tests/run_ebu_measurements.py": "08bf7a1d84ac93c19ebbd318021f684131f16f7de70667feb0099b03771f439d",
+    "/Users/fuzz/LevelScope-M1-qualification-2026-10-17/m1-qualification-2026-10-17/Tests/Reference/itu-bs2217-manifest.json": "c8e2f6caaab71656fa28185bdbd5e44f5614a242d93cc0a0a785309b8be6d6e7",
+    "/Users/fuzz/LevelScope-M1-qualification-2026-10-17/m1-qualification-2026-10-17/Tests/Reference/ebu-v05-manifest.json": "c86c133c21b9f47c1b89196bfeea282c11bc0014299c682486ad7ec584966ff2"
+  },
+  "fixtures_sha256": {
+    "/Users/fuzz/LevelScope-video-2026-10-17/candidate-tests-01/cfr-exact.mov": "ca0f64031788361e61c5c80eea7226aa87861fef2b52a18de4f0ae6f243cfad8",
+    "/Users/fuzz/LevelScope-video-2026-10-17/candidate-tests-01/vfr-exact.mov": "c8e48b93056d2848b8cc5d36b851ba4724c821ad895a8fa1359d697b57e16712",
+    "/Users/fuzz/LevelScope-video-2026-10-17/candidate-tests-01/two-streams-audio.mov": "9ec72e8fcd91bfeefa332fe5c129ab8518accacb05227da84473fdeec3eeca76",
+    "/Users/fuzz/LevelScope-video-2026-10-17/candidate-tests-01/timecode.mov": "7f08b006d6f08ad31e2a45bab620e422b30099f9b4639c0fd4c2d7342e1564e6",
+    "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/cfr-exact.mp4": "4eda0c99bd99ca6d9aa5d49a35e86c61d898f145d03035db1a3a215fe3c27d90",
+    "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/cfr-exact.m4v": "4eda0c99bd99ca6d9aa5d49a35e86c61d898f145d03035db1a3a215fe3c27d90",
+    "/Users/fuzz/LevelScope-video-2026-10-17/qualification-02/half-hour.mov": "d49d456ead9ce457026c4f002171d5dc901534d30950010820c93c828eb74da9"
+  },
+  "results": [
+    {
+      "suite": "video",
+      "argv": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/LevelScopeVideoTests",
+        "/Users/fuzz/LevelScope-video-2026-10-17/candidate-tests-01/cfr-exact.mov",
+        "/Users/fuzz/LevelScope-video-2026-10-17/candidate-tests-01/vfr-exact.mov",
+        "/Users/fuzz/LevelScope-video-2026-10-17/candidate-tests-01/two-streams-audio.mov",
+        "/Users/fuzz/LevelScope-video-2026-10-17/candidate-tests-01/timecode.mov",
+        "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/cfr-exact.mp4",
+        "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/cfr-exact.m4v",
+        "/Users/fuzz/LevelScope-video-2026-10-17/qualification-02/half-hour.mov"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 17.93004837
+    },
+    {
+      "suite": "measurement",
+      "argv": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/LevelScopeMeasurementTests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 30.216057195999998
+    },
+    {
+      "suite": "scaffold",
+      "argv": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/LevelScopeScaffoldTests"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.23223768999999805
+    },
+    {
+      "suite": "runner",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.8/bin/python3",
+        "-B",
+        "/Users/fuzz/LevelScope-M1-qualification-2026-10-17/m1-qualification-2026-10-17/Tests/EbuReferenceRunnerTests.py"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.16069669600000225
+    },
+    {
+      "suite": "itu",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.8/bin/python3",
+        "-B",
+        "/Users/fuzz/LevelScope-M1-qualification-2026-10-17/m1-qualification-2026-10-17/Tests/run_reference_measurements.py",
+        "--binary",
+        "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/LevelScopeMeasurementTests",
+        "--vectors",
+        "/Users/fuzz/LevelScope-M1-qualification-2026-10-17/m1-qualification-2026-10-17/vectors/itu",
+        "--report",
+        "/Users/fuzz/LevelScope-video-integration-2026-10-17/regressions/itu.json",
+        "--compare",
+        "/Users/fuzz/LevelScope-M1-qualification-2026-10-17/m1-qualification-2026-10-17/baseline/itu.json",
+        "--arch",
+        "x86_64"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 42.270645207
+    },
+    {
+      "suite": "ebu",
+      "argv": [
+        "/Library/Frameworks/Python.framework/Versions/3.8/bin/python3",
+        "-B",
+        "/Users/fuzz/LevelScope-M1-qualification-2026-10-17/m1-qualification-2026-10-17/Tests/run_ebu_measurements.py",
+        "--binary",
+        "/Users/fuzz/LevelScope-video-2026-10-17/candidate-06/LevelScopeMeasurementTests",
+        "--vectors",
+        "/Users/fuzz/LevelScope-M1-qualification-2026-10-17/m1-qualification-2026-10-17/vectors/ebu",
+        "--report",
+        "/Users/fuzz/LevelScope-video-integration-2026-10-17/regressions/ebu.json",
+        "--compare",
+        "/Users/fuzz/LevelScope-M1-qualification-2026-10-17/m1-qualification-2026-10-17/baseline/ebu.json",
+        "--arch",
+        "x86_64"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 20.743126700999994
+    }
+  ],
+  "finished_utc": "2026-10-17T17:08:52.691247+00:00",
+  "passed": true
+}
