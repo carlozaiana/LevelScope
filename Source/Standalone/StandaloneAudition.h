@@ -1,6 +1,7 @@
 #pragma once
 
 #include "StandaloneMedia.h"
+#include "AudioPresentationClock.h"
 #include <juce_audio_devices/juce_audio_devices.h>
 #include <thread>
 
@@ -48,14 +49,21 @@ public:
     juce::StringArray outputNames() const;
     juce::String connect (double sourceRate);
     void disconnect();
-    juce::String play (const juce::File&, const MediaInfo&, const ChannelLayout&, const OutputRouting&);
+    juce::String play (const juce::File&, const MediaInfo&, const ChannelLayout&, const OutputRouting&, bool restart = false, bool allowAllMuted = false);
+    juce::String seek (int64_t frame, const juce::File&, const MediaInfo&, const ChannelLayout&, const OutputRouting&);
+    void sourceChanged (const MediaInfo&);
     void stop();
-    void poll(); // message thread; finish/failed notifications and worker join
+    void poll (bool picturePrerolled = true); // message thread; finish/failed notifications and worker join
     void setMonitorGainDb (float db) { fifo.gain.store (juce::Decibels::decibelsToGain (juce::jlimit (-60.0f, 0.0f, db))); }
     bool connected() const { return device != nullptr && device->isOpen(); }
     AuditionState getState() const { return state; }
     bool active() const { return state == AuditionState::buffering || state == AuditionState::playing; }
-    double positionSeconds() const { return rate > 0 ? static_cast<double> (fifo.playedFrames()) / rate : 0; }
+    int64_t positionFrames() const;
+    double positionSeconds() const { return sourceRate > 0 ? static_cast<double> (positionFrames()) / sourceRate : 0; }
+    uint64_t transportGeneration() const { return generation; }
+    int outputLatencyFrames() const { return latencyFrames; }
+    bool hasHardwareClock() const { return hardwareClock.load(); }
+    static uint64_t hostTimeNs() noexcept;
     uint64_t underruns() const { return fifo.underrunBlocks(); }
     const juce::String& status() const { return message; }
 private:
@@ -68,6 +76,12 @@ private:
     AuditionState state = AuditionState::disconnected;
     juce::String message = "Device closed. Select an output explicitly.";
     double rate = 0;
+    int64_t sourceRate = 0, startFrame = 0, heldFrame = 0, sourceFrames = 0;
+    juce::String sourceHash;
+    uint64_t generation = 1;
+    AudioPresentationClock presentationClock;
+    int latencyFrames = 0, hardwareLatencyFrames = -1;
+    std::atomic<bool> hardwareClock { false };
     int expectedOutputs = 0;
     void stopWorker();
     void audioDeviceIOCallbackWithContext (const float* const*, int, float* const*, int, int,

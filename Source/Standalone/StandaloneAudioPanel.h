@@ -21,6 +21,8 @@ private:
     juce::ComboBox typeBox, deviceBox;
     juce::TextButton scanButton { "Scan devices" }, openButton { "Open device" }, closeButton { "Close device" };
     juce::TextButton playButton { "Play source" }, stopButton { "Stop" }, confirmButton { "Confirm roles" };
+    juce::TextButton restartButton { "Restart" }, seekButton { "Seek" };
+    juce::TextEditor seekPosition;
     juce::Slider gain;
     juce::Label statusLabel, heading;
     juce::Viewport viewport;

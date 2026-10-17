@@ -4,6 +4,17 @@ namespace levelscope::standalone
 {
 namespace
 {
+class ReferenceWindow final : public juce::DocumentWindow
+{
+public:
+    explicit ReferenceWindow (juce::Component& panel)
+        : DocumentWindow ("LevelScope - Reference picture", juce::Colour (0xff181b20), DocumentWindow::allButtons)
+    {
+        setUsingNativeTitleBar (true); setResizable (true, false); setResizeLimits (620, 480, 2400, 1600);
+        setContentNonOwned (&panel, true); centreWithSize (700, 600); setVisible (true);
+    }
+    void closeButtonPressed() override { setVisible (false); }
+};
 juce::String metricText (const measurement::Metric& metric, const juce::String& unit)
 {
     if (metric.value) return juce::String (*metric.value, 1) + " " + unit;
@@ -51,6 +62,12 @@ StandaloneMainComponent::StandaloneMainComponent()
     addAndMakeVisible (currentStateBox);
     addAndMakeVisible (pageDetailBox);
     addAndMakeVisible (audioPanel);
+    addAndMakeVisible (videoButton);
+    videoButton.onClick = [this]
+    {
+        if (!videoWindow) videoWindow = std::make_unique<ReferenceWindow> (videoPanel);
+        videoWindow->setVisible (true); videoWindow->toFront (true);
+    };
     addAndMakeVisible (jobLabel);
     addAndMakeVisible (cancelJobButton);
     cancelJobButton.onClick = [this]
@@ -70,6 +87,7 @@ StandaloneMainComponent::StandaloneMainComponent()
 StandaloneMainComponent::~StandaloneMainComponent()
 {
     stopTimer();
+    videoWindow.reset();
     if (importControl) importControl->cancel.store (true);
     if (importResult.valid()) importResult.wait();
     if (analysisResult.valid()) analysisResult.wait();
@@ -98,7 +116,8 @@ void StandaloneMainComponent::beginImport (const juce::File& file)
 
 void StandaloneMainComponent::timerCallback()
 {
-    audition.poll();
+    videoPanel.synchronize(); // observes new seek/play generation before audio preroll can finish
+    audition.poll (videoPanel.prerollReady());
     audioPanel.refresh();
     if (analysisResult.valid() && analysisResult.wait_for (std::chrono::seconds (0)) == std::future_status::ready)
     {
@@ -559,6 +578,8 @@ void StandaloneMainComponent::resized()
     currentStateButton.setBounds (navRow.removeFromLeft (140));
     navRow.removeFromLeft (8);
     exportButton.setBounds (navRow.removeFromLeft (120));
+    navRow.removeFromLeft (12);
+    videoButton.setBounds (navRow.removeFromLeft (180));
 
     bounds.removeFromTop (10);
 

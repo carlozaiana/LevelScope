@@ -206,9 +206,16 @@ add_library(LevelScopeStandaloneSupport STATIC
     Source/Standalone/StandaloneMedia.cpp
     Source/Standalone/StandaloneAudition.cpp
     Source/Standalone/StandaloneMeasurementService.cpp
+    Source/Standalone/StandaloneVideo.cpp
 )
+if (APPLE)
+    enable_language(OBJCXX)
+    target_sources(LevelScopeStandaloneSupport PRIVATE Source/Standalone/StandaloneVideo_mac.mm)
+    set_source_files_properties(Source/Standalone/StandaloneVideo_mac.mm PROPERTIES COMPILE_FLAGS "-fobjc-arc -Wno-deprecated-declarations")
+    target_link_libraries(LevelScopeStandaloneSupport PUBLIC "-framework AVFoundation" "-framework CoreMedia" "-framework CoreVideo")
+endif()
 target_include_directories(LevelScopeStandaloneSupport PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Source)
-file(GLOB_RECURSE _measurement_identity_sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/Source/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Source/*.h")
+file(GLOB_RECURSE _measurement_identity_sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/Source/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Source/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/Source/*.mm")
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${_measurement_identity_sources})
 set(_measurement_identity_text "${CMAKE_CXX_COMPILER_ID};${CMAKE_CXX_COMPILER_VERSION};${CMAKE_BUILD_TYPE};${CMAKE_CXX_FLAGS};${CMAKE_CXX_FLAGS_RELEASE};no-fast-math;fp-contract-off")
 foreach(_measurement_source IN LISTS _measurement_identity_sources)
@@ -223,7 +230,7 @@ if (NOT MSVC)
 endif()
 target_compile_definitions(LevelScopeStandaloneSupport PUBLIC JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0)
 target_link_libraries(LevelScopeStandaloneSupport PUBLIC
-    LevelScopeMeasurementCore juce::juce_audio_formats juce::juce_audio_devices juce::juce_cryptography)
+    LevelScopeMeasurementCore juce::juce_audio_formats juce::juce_audio_devices juce::juce_cryptography juce::juce_graphics)
 
 juce_add_gui_app(LevelScopeStandalone
     PRODUCT_NAME "LevelScope Standalone"
@@ -242,6 +249,7 @@ target_sources(LevelScopeStandalone
         Source/Standalone/StandaloneAudioPanel.cpp
         Source/Standalone/StandaloneAudioPanel.h
         Source/Standalone/StandaloneServices.h
+        Source/Standalone/StandaloneVideoPanel.cpp
 )
 
 target_compile_definitions(LevelScopeStandalone
@@ -266,6 +274,21 @@ if (MSVC)
 else()
     target_compile_options(LevelScopeStandalone PRIVATE -Wall -Wextra -Wpedantic)
     target_compile_options(LevelScopeStandaloneSupport PRIVATE -Wall -Wextra -Wpedantic)
+endif()
+
+option(LEVELSCOPE_BUILD_VIDEO_TESTS "Build hardware-independent video/transport tests" OFF)
+if (LEVELSCOPE_BUILD_VIDEO_TESTS)
+    enable_testing()
+    juce_add_console_app(LevelScopeVideoTests PRODUCT_NAME "LevelScope Video Tests")
+    target_sources(LevelScopeVideoTests PRIVATE Tests/VideoTests.cpp)
+    target_link_libraries(LevelScopeVideoTests PRIVATE LevelScopeStandaloneSupport)
+    add_test(NAME video-timing COMMAND LevelScopeVideoTests)
+    set_tests_properties(video-timing PROPERTIES TIMEOUT 60)
+    # Manual opt-in only: never register a physical audio test with CTest.
+    juce_add_gui_app(LevelScopeVideoQualification PRODUCT_NAME "LevelScope Video Qualification"
+        BUNDLE_ID "com.studioparadiso.levelscope.videoqualification")
+    target_sources(LevelScopeVideoQualification PRIVATE Tests/VideoPlaybackQualification.cpp)
+    target_link_libraries(LevelScopeVideoQualification PRIVATE LevelScopeStandaloneSupport juce::juce_gui_basics)
 endif()
 
 option(LEVELSCOPE_BUILD_MEASUREMENT_TESTS "Build hardware-independent offline measurement checks" OFF)

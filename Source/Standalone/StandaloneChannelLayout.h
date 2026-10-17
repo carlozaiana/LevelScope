@@ -53,7 +53,7 @@ struct OutputRouting
     std::array<int, maxChannels> fileToDevice;
     OutputRouting() { fileToDevice.fill (-1); }
 
-    juce::String validate (int fileChannels, int deviceChannels) const
+    juce::String validate (int fileChannels, int deviceChannels, bool allowAllMuted = false) const
     {
         if (fileChannels < 1 || fileChannels > maxChannels || deviceChannels < 1)
             return "Select validated media and an output device.";
@@ -70,7 +70,7 @@ struct OutputRouting
                 if (fileToDevice[j] == output)
                     return "Assign each output once; implicit summing is unavailable.";
         }
-        return audible ? juce::String() : "All channels are muted. Assign an output explicitly.";
+        return audible || allowAllMuted ? juce::String() : "All channels are muted. Assign an output explicitly.";
     }
 };
 // [END LS-STANDALONE-CHANNEL-CONTRACT]

@@ -1,9 +1,81 @@
 #include "StandaloneAudition.h"
 #include <cmath>
 #include <chrono>
+#if JUCE_MAC
+#include <mach/mach_time.h>
+#include <CoreAudio/CoreAudio.h>
+#endif
 
 namespace levelscope::standalone
 {
+namespace
+{
+#if JUCE_MAC
+// Read-only lookup. HAL output timestamps already include scheduling/buffering;
+// only the device + stream hardware delay is added to that timestamp.
+int hardwareDelay (const juce::AudioIODevice& device)
+{
+    if (device.getTypeName() != "CoreAudio") return -1;
+    AudioObjectPropertyAddress address { kAudioHardwarePropertyDevices, kAudioObjectPropertyScopeGlobal, 0 };
+    UInt32 size = 0;
+    if (AudioObjectGetPropertyDataSize (kAudioObjectSystemObject, &address, 0, nullptr, &size)) return -1;
+    std::vector<AudioDeviceID> ids (size / sizeof (AudioDeviceID));
+    if (AudioObjectGetPropertyData (kAudioObjectSystemObject, &address, 0, nullptr, &size, ids.data())) return -1;
+    int result = -1;
+    for (auto id : ids)
+    {
+        address = { kAudioObjectPropertyName, kAudioObjectPropertyScopeGlobal, 0 };
+        CFStringRef name = nullptr; size = sizeof name;
+        if (AudioObjectGetPropertyData (id, &address, 0, nullptr, &size, &name) || name == nullptr) continue;
+        const auto matches = juce::String::fromCFString (name) == device.getName(); CFRelease (name);
+        if (!matches) continue;
+        address = { kAudioDevicePropertyStreams, kAudioDevicePropertyScopeOutput, 0 };
+        if (AudioObjectGetPropertyDataSize (id, &address, 0, nullptr, &size) || size == 0) continue;
+        std::vector<AudioStreamID> streams (size / sizeof (AudioStreamID));
+        if (AudioObjectGetPropertyData (id, &address, 0, nullptr, &size, streams.data())) return -1;
+        address = { kAudioDevicePropertyLatency, kAudioDevicePropertyScopeOutput, 0 };
+        UInt32 delay = 0; size = sizeof delay;
+        if (AudioObjectGetPropertyData (id, &address, 0, nullptr, &size, &delay)) return -1;
+        UInt32 longest = 0;
+        for (auto stream : streams)
+        {
+            UInt32 streamDelay = 0; size = sizeof streamDelay;
+            address = { kAudioStreamPropertyLatency, kAudioObjectPropertyScopeGlobal, 0 };
+            if (AudioObjectGetPropertyData (stream, &address, 0, nullptr, &size, &streamDelay)) return -1;
+            longest = std::max (longest, streamDelay);
+        }
+        if (result != -1 || static_cast<uint64_t> (delay) + longest > INT_MAX) return -1;
+        result = static_cast<int> (delay + longest);
+    }
+    return result;
+}
+#endif
+}
+
+uint64_t StandaloneAudition::hostTimeNs() noexcept
+{
+#if JUCE_MAC
+    static const auto scale = [] { mach_timebase_info_data_t s; mach_timebase_info (&s); return s; }();
+    return static_cast<uint64_t> ((__uint128_t) mach_absolute_time() * scale.numer / scale.denom);
+#else
+    return static_cast<uint64_t> (std::chrono::duration_cast<std::chrono::nanoseconds>
+        (std::chrono::steady_clock::now().time_since_epoch()).count());
+#endif
+}
+
+int64_t StandaloneAudition::positionFrames() const
+{
+    if (state != AuditionState::playing || sourceRate <= 0) return heldFrame;
+    return std::min (sourceFrames, presentationClock.position (hostTimeNs(), sourceRate, generation, startFrame));
+}
+
+void StandaloneAudition::sourceChanged (const MediaInfo& media)
+{
+    stop();
+    sourceRate = static_cast<int64_t> (media.sampleRate);
+    sourceFrames = media.frames; sourceHash = media.sha256;
+    heldFrame = startFrame = 0;
+}
 // [BEGIN LS-STANDALONE-AUDITION-IMPLEMENTATION]
 void AuditionBuffer::reset (int channels, const OutputRouting& map)
 {
@@ -105,6 +177,11 @@ juce::String StandaloneAudition::connect (double sourceRate)
         return message;
     }
     rate = sourceRate;
+    latencyFrames = std::max (0, device->getOutputLatencyInSamples());
+#if JUCE_MAC
+    hardwareLatencyFrames = hardwareDelay (*device);
+#endif
+    (void) hostTimeNs(); // initialize timebase on the message thread, never first-use in RT
     expectedOutputs = outputs.countNumberOfSetBits();
     state = AuditionState::ready;
     message = "Device open at " + juce::String (rate, 0) + " Hz; stopped";
@@ -121,14 +198,17 @@ void StandaloneAudition::stopWorker()
 
 void StandaloneAudition::stop()
 {
+    heldFrame = positionFrames();
     stopWorker();
+    ++generation;
+    presentationClock.reset();
     state = connected() ? AuditionState::ready : AuditionState::disconnected;
-    message = connected() ? "Stopped; Play starts at the beginning" : "Device closed";
+    message = connected() ? "Stopped; Play resumes, Restart begins at zero" : "Device closed";
 }
 
 void StandaloneAudition::disconnect()
 {
-    stopWorker();
+    stop();
     if (device) device->close();
     rate = 0;
     state = AuditionState::disconnected;
@@ -136,8 +216,9 @@ void StandaloneAudition::disconnect()
 }
 
 juce::String StandaloneAudition::play (const juce::File& file, const MediaInfo& media,
-                                     const ChannelLayout& layout, const OutputRouting& routing)
+                                     const ChannelLayout& layout, const OutputRouting& routing, bool restart, bool allowAllMuted)
 {
+    const bool atEnd = state == AuditionState::finished;
     stop();
     if (! connected()) return "Open the selected device first";
     if (media.channels != layout.count || ! layout.confirmed || ! layout.isValid())
@@ -145,8 +226,13 @@ juce::String StandaloneAudition::play (const juce::File& file, const MediaInfo& 
     if (! media.matchesFileStamp (file)) return "Source changed; import again";
     if (std::abs (media.sampleRate - device->getCurrentSampleRate()) > 0.01)
         return "Device and source sample rates must match";
-    const auto routingError = routing.validate (media.channels, outputNames().size());
+    const auto routingError = routing.validate (media.channels, outputNames().size(), allowAllMuted);
     if (routingError.isNotEmpty()) return routingError;
+    if (media.sampleRate != std::floor (media.sampleRate)) return "Transport requires an integer source sample rate";
+    if (sourceHash != media.sha256) sourceChanged (media);
+    sourceRate = static_cast<int64_t> (media.sampleRate); sourceFrames = media.frames;
+    if (restart || atEnd || heldFrame >= sourceFrames) heldFrame = 0;
+    startFrame = heldFrame;
     juce::AudioFormatManager formats;
     registerSourceFormats (formats);
     std::unique_ptr<juce::AudioFormatReader> reader (formats.createReaderFor (file.createInputStream()));
@@ -159,7 +245,7 @@ juce::String StandaloneAudition::play (const juce::File& file, const MediaInfo& 
     {
         constexpr int blockSize = 2048;
         juce::AudioBuffer<float> block (media.channels, blockSize);
-        juce::int64 position = 0;
+        juce::int64 position = startFrame;
         while (position < media.frames && ! cancel.load())
         {
             const auto count = static_cast<int> (juce::jmin<juce::int64> (blockSize, media.frames - position));
@@ -189,10 +275,22 @@ juce::String StandaloneAudition::play (const juce::File& file, const MediaInfo& 
     return {};
 }
 
-void StandaloneAudition::poll()
+juce::String StandaloneAudition::seek (int64_t frame, const juce::File& file, const MediaInfo& media,
+                                     const ChannelLayout& layout, const OutputRouting& routing)
+{
+    if (frame < 0 || frame > media.frames) return "Seek is outside the selected audio";
+    const bool resume = active();
+    stop();
+    sourceRate = static_cast<int64_t> (media.sampleRate); sourceFrames = media.frames; sourceHash = media.sha256;
+    heldFrame = startFrame = frame;
+    if (frame == media.frames) { state = AuditionState::finished; message = "Audio EOF"; return {}; }
+    return resume ? play (file, media, layout, routing) : juce::String();
+}
+
+void StandaloneAudition::poll (bool picturePrerolled)
 {
     if (! active()) return;
-    if (state == AuditionState::buffering && ! decodeFailed.load() && connected()
+    if (state == AuditionState::buffering && picturePrerolled && ! decodeFailed.load() && connected()
         && (fifo.writable() <= AuditionBuffer::capacity - 4096 || fifo.endOfFile.load()))
     {
         device->start (this);
@@ -201,17 +299,20 @@ void StandaloneAudition::poll()
     }
     const bool failed = decodeFailed.load() || deviceStopped.load() || ! connected()
         || (state == AuditionState::playing && ! device->isPlaying());
-    if (failed || (fifo.endOfFile.load() && fifo.drained()))
+    if (failed || (fifo.endOfFile.load() && fifo.drained() && positionFrames() >= sourceFrames))
     {
+        heldFrame = failed ? positionFrames() : sourceFrames;
         stopWorker();
+        ++generation;
         state = failed ? AuditionState::failed : AuditionState::finished;
         message = failed ? "Audition stopped: source read failed or device stopped" : "Audition finished";
     }
 }
 
 void StandaloneAudition::audioDeviceIOCallbackWithContext (const float* const*, int,
-    float* const* outputs, int outputCount, int frames, const juce::AudioIODeviceCallbackContext&)
+    float* const* outputs, int outputCount, int frames, const juce::AudioIODeviceCallbackContext& context)
 {
+    const auto callbackTime = hostTimeNs();
     if (outputCount < expectedOutputs) deviceStopped.store (true, std::memory_order_relaxed);
     if (decodeFailed.load (std::memory_order_relaxed) || deviceStopped.load (std::memory_order_relaxed))
     {
@@ -219,7 +320,15 @@ void StandaloneAudition::audioDeviceIOCallbackWithContext (const float* const*, 
             if (outputs[channel]) juce::FloatVectorOperations::clear (outputs[channel], frames);
         return;
     }
+    const auto before = fifo.playedFrames();
     fifo.render (outputs, outputCount, frames);
+    const bool useHardware = hardwareLatencyFrames >= 0 && context.hostTimeNs != nullptr && *context.hostTimeNs != 0;
+    const auto clockOrigin = useHardware ? *context.hostTimeNs : callbackTime;
+    const auto delay = useHardware ? hardwareLatencyFrames : latencyFrames;
+    const auto presentation = clockOrigin + static_cast<uint64_t> (static_cast<int64_t> (delay) * 1000000000 / sourceRate);
+    hardwareClock.store (useHardware, std::memory_order_relaxed);
+    presentationClock.submit ({ generation, presentation, startFrame + static_cast<int64_t> (before),
+                                static_cast<int> (fifo.playedFrames() - before) });
 }
 // [END LS-STANDALONE-AUDITION-IMPLEMENTATION]
 }

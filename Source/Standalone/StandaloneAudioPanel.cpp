@@ -9,7 +9,7 @@ StandaloneAudioPanel::StandaloneAudioPanel (StandaloneSessionModel& model, Stand
 {
     for (auto* component : std::initializer_list<juce::Component*> {
         &typeBox, &deviceBox, &scanButton, &openButton, &closeButton, &playButton,
-        &stopButton, &confirmButton, &gain, &statusLabel, &heading, &viewport })
+        &stopButton, &restartButton, &seekButton, &seekPosition, &confirmButton, &gain, &statusLabel, &heading, &viewport })
         addAndMakeVisible (*component);
     const auto& types = audio.deviceTypes();
     for (int i = 0; i < types.size(); ++i) typeBox.addItem (types[i]->getTypeName(), i + 1);
@@ -33,6 +33,24 @@ StandaloneAudioPanel::StandaloneAudioPanel (StandaloneSessionModel& model, Stand
         refresh();
     };
     stopButton.onClick = [this] { audio.stop(); actionError.clear(); refresh(); };
+    restartButton.onClick = [this]
+    {
+        const auto& s = session.sourceDocument;
+        actionError = audio.play (s.file, s.media, s.layout, s.routing, true); refresh();
+    };
+    seekPosition.setText ("0"); seekPosition.setTooltip ("Audio timeline in seconds or an exact fraction; seek rounds down to a source sample.");
+    seekButton.onClick = [this]
+    {
+        try
+        {
+            const auto& s = session.sourceDocument;
+            const auto frame = video::Time::parse (seekPosition.getText().trim().toStdString()).floorTicks (static_cast<int64_t> (s.media.sampleRate));
+            actionError = audio.seek (frame, s.file, s.media, s.layout, s.routing);
+        }
+        catch (const std::exception& e) { actionError = e.what(); }
+        refresh();
+    };
+    seekPosition.onReturnKey = [this] { seekButton.triggerClick(); };
     confirmButton.onClick = [this] { session.confirmLayout(); onChanged(); };
     gain.setRange (-60, 0, 0.5);
     gain.setSliderStyle (juce::Slider::LinearHorizontal);
@@ -100,7 +118,7 @@ void StandaloneAudioPanel::rebuildOutputs()
 
 void StandaloneAudioPanel::sourceChanged()
 {
-    audio.stop();
+    audio.sourceChanged (session.sourceDocument.media);
     actionError.clear();
     rebuildOutputs();
     refresh();
@@ -120,6 +138,9 @@ void StandaloneAudioPanel::refresh()
     const auto routeError = source.routing.validate (source.layout.count, audio.outputNames().size());
     playButton.setEnabled (editable && audio.connected() && source.hasSource && source.layout.confirmed && routeError.isEmpty());
     stopButton.setEnabled (playing);
+    restartButton.setEnabled (!session.job.isActive() && audio.connected() && source.hasSource && source.layout.confirmed && routeError.isEmpty());
+    seekButton.setEnabled (!session.job.isActive() && source.hasSource);
+    seekPosition.setEnabled (seekButton.isEnabled());
     confirmButton.setEnabled (editable && source.hasSource && source.layout.isValid() && ! source.layout.confirmed);
     for (int channel = 0; channel < maxChannels; ++channel)
     {
@@ -155,6 +176,10 @@ void StandaloneAudioPanel::resized()
     playButton.setBounds (row.removeFromLeft (105).reduced (2));
     stopButton.setBounds (row.removeFromLeft (65).reduced (2));
     gain.setBounds (row.reduced (2));
+    row = area.removeFromTop (28);
+    restartButton.setBounds (row.removeFromLeft (90).reduced (2));
+    seekButton.setBounds (row.removeFromRight (65).reduced (2));
+    seekPosition.setBounds (row.reduced (2));
     statusLabel.setBounds (area.removeFromTop (55).reduced (2));
     row = area.removeFromTop (30);
     confirmButton.setBounds (row.removeFromRight (115).reduced (2));

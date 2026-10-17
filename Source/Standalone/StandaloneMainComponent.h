@@ -7,6 +7,7 @@
 
 #include "StandaloneSessionModel.h"
 #include "StandaloneAudioPanel.h"
+#include "StandaloneVideoPanel.h"
 
 namespace levelscope::standalone
 {
@@ -25,6 +26,9 @@ private:
     StandaloneSessionModel session;
     StandaloneAudition audition;
     StandaloneAudioPanel audioPanel { session, audition, [this] { refreshFromSession(); } };
+    StandaloneVideoPanel videoPanel { session, audition };
+    std::unique_ptr<juce::DocumentWindow> videoWindow;
+    juce::TextButton videoButton { "Reference picture..." };
     std::shared_ptr<JobControl> importControl;
     std::future<MediaValidationResult> importResult;
     std::future<ServiceResult<AnalysisSnapshot>> analysisResult;

@@ -8,6 +8,7 @@
 #include "StandaloneWorkflowReadiness.h"
 #include "StandaloneMedia.h"
 #include "StandaloneMeasurementService.h"
+#include "StandaloneVideo.h"
 
 namespace levelscope::standalone
 {
@@ -140,6 +141,7 @@ public:
 
     SourceDocument sourceDocument;
     CurrentStateDocument currentStateDocument;
+    video::Reference referenceVideo; // Independent of audio revision, processing and routing.
 
     MeasurementSummary source;
     MeasurementSummary currentState;
