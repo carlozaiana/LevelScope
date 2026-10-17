@@ -46,6 +46,12 @@ endif()
 #==============================
 # Core static library (no GUI)
 #==============================
+add_library(LevelScopeMeasurementCore STATIC
+    Source/Core/Measurement/OfflineMeasurement.cpp)
+target_include_directories(LevelScopeMeasurementCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Source)
+if (NOT MSVC)
+    target_compile_options(LevelScopeMeasurementCore PRIVATE -Wall -Wextra -Wpedantic -ffp-contract=off)
+endif()
 add_library(LevelScopeCore STATIC
     Source/Core/LevelScopeHistoryModel.cpp
     Source/Core/LevelScopeHistoryModel.h
@@ -114,6 +120,7 @@ target_include_directories(LevelScopeCore
 # [BEGIN MTDM-CMAKE-JUCE-DSP]
 target_link_libraries(LevelScopeCore
     PUBLIC
+        LevelScopeMeasurementCore
         juce::juce_core
         juce::juce_audio_basics       # ProcessContext uses AudioBuffer/AudioChannelSet
         juce::juce_data_structures    # IAudioModule uses ValueTree
@@ -198,11 +205,25 @@ endif()
 add_library(LevelScopeStandaloneSupport STATIC
     Source/Standalone/StandaloneMedia.cpp
     Source/Standalone/StandaloneAudition.cpp
+    Source/Standalone/StandaloneMeasurementService.cpp
 )
 target_include_directories(LevelScopeStandaloneSupport PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Source)
+file(GLOB_RECURSE _measurement_identity_sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/Source/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Source/*.h")
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${_measurement_identity_sources})
+set(_measurement_identity_text "${CMAKE_CXX_COMPILER_ID};${CMAKE_CXX_COMPILER_VERSION};${CMAKE_BUILD_TYPE};${CMAKE_CXX_FLAGS};${CMAKE_CXX_FLAGS_RELEASE};no-fast-math;fp-contract-off")
+foreach(_measurement_source IN LISTS _measurement_identity_sources)
+    file(SHA256 "${_measurement_source}" _measurement_source_hash)
+    string(APPEND _measurement_identity_text "${_measurement_source_hash};")
+endforeach()
+string(SHA256 _measurement_build_identity "${_measurement_identity_text}")
+target_compile_definitions(LevelScopeStandaloneSupport PUBLIC LEVELSCOPE_MEASUREMENT_BUILD="${_measurement_build_identity}")
+if (NOT MSVC)
+    target_compile_options(LevelScopeStandaloneSupport PRIVATE -fno-fast-math -ffp-contract=off)
+    target_compile_options(LevelScopeMeasurementCore PRIVATE -fno-fast-math)
+endif()
 target_compile_definitions(LevelScopeStandaloneSupport PUBLIC JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0)
 target_link_libraries(LevelScopeStandaloneSupport PUBLIC
-    juce::juce_audio_formats juce::juce_audio_devices juce::juce_cryptography)
+    LevelScopeMeasurementCore juce::juce_audio_formats juce::juce_audio_devices juce::juce_cryptography)
 
 juce_add_gui_app(LevelScopeStandalone
     PRODUCT_NAME "LevelScope Standalone"
@@ -245,6 +266,16 @@ if (MSVC)
 else()
     target_compile_options(LevelScopeStandalone PRIVATE -Wall -Wextra -Wpedantic)
     target_compile_options(LevelScopeStandaloneSupport PRIVATE -Wall -Wextra -Wpedantic)
+endif()
+
+option(LEVELSCOPE_BUILD_MEASUREMENT_TESTS "Build hardware-independent offline measurement checks" OFF)
+if (LEVELSCOPE_BUILD_MEASUREMENT_TESTS)
+    enable_testing()
+    juce_add_console_app(LevelScopeMeasurementTests PRODUCT_NAME "LevelScope Measurement Tests")
+    target_sources(LevelScopeMeasurementTests PRIVATE Tests/OfflineMeasurementTests.cpp)
+    target_link_libraries(LevelScopeMeasurementTests PRIVATE LevelScopeStandaloneSupport)
+    add_test(NAME offline-measurement COMMAND LevelScopeMeasurementTests)
+    set_tests_properties(offline-measurement PROPERTIES TIMEOUT 300)
 endif()
 
 option(LEVELSCOPE_BUILD_SCAFFOLD_TESTS "Build hardware-independent standalone checks" OFF)

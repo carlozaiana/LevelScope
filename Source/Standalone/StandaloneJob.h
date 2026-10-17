@@ -20,6 +20,8 @@ struct JobControl
 {
     std::atomic<bool> cancel { false };
     std::atomic<float> progress { 0.0f };
+    const std::atomic<bool>* parentCancel = nullptr; // worker-local child stage only
+    bool isCancelled() const { return cancel.load() || (parentCancel != nullptr && parentCancel->load()); }
 };
 
 struct JobTicket

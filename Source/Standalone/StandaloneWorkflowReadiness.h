@@ -96,7 +96,7 @@ struct WorkflowReadiness
         {
             if (! channelRolesConfirmed)
                 return "Next action: assign unique speaker roles to file channels and confirm.";
-            return "Next action: implement and run Source measurement.";
+            return "Next action: run Source measurement.";
         }
 
         if (! targetFamilySelected)
@@ -109,7 +109,7 @@ struct WorkflowReadiness
             return "Next action: initialize Current State from Source.";
 
         if (currentStateNeedsRemeasurement)
-            return "Next action: implement and run Current State re-measurement.";
+            return "Next action: re-measure Current State.";
 
         if (! currentStateMeasured)
             return "Next action: measure Current State.";

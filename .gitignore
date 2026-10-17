@@ -1,1 +1,3 @@
 /build/
+# Locally supplied EBU reference audio; keep manifests/results, not audio, in Git.
+/Tests/Ebu_Loudness_Testset_V05/

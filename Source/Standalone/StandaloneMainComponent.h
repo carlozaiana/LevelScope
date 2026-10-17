@@ -27,10 +27,12 @@ private:
     StandaloneAudioPanel audioPanel { session, audition, [this] { refreshFromSession(); } };
     std::shared_ptr<JobControl> importControl;
     std::future<MediaValidationResult> importResult;
+    std::future<ServiceResult<AnalysisSnapshot>> analysisResult;
+    JobTicket analysisTicket;
     JobTicket importTicket;
     juce::File importingFile;
     juce::Label jobLabel;
-    juce::TextButton cancelJobButton { "Cancel import" };
+    juce::TextButton cancelJobButton { "Cancel job" };
 
     juce::Label titleLabel;
     juce::Label subtitleLabel;
@@ -46,11 +48,12 @@ private:
 
     juce::TextButton chooseSourceButton { "Choose Source File..." };
     juce::TextButton clearSourceButton { "Clear Source" };
-    juce::TextButton measureSourceButton { "Measure Source (not implemented)" };
+    juce::TextButton measureSourceButton { "Measure Source" };
 
     juce::TextButton initializeCurrentStateButton { "Initialize Current From Source" };
     juce::TextButton clearCurrentStateButton { "Clear Current State" };
-    juce::TextButton remeasureCurrentStateButton { "Re-measure Current State (not implemented)" };
+    juce::TextButton remeasureCurrentStateButton { "Re-measure Current State" };
+    juce::Slider currentGain;
 
     juce::TextEditor sourceStateBox;
     juce::TextEditor targetStateBox;
@@ -71,6 +74,7 @@ private:
     void initializeCurrentStateFromSource();
     void clearCurrentState();
     void beginImport (const juce::File&);
+    void beginMeasurement (MeasurementDomain);
     void timerCallback() override;
 
     void setPage (WorkflowPage page);

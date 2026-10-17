@@ -2,6 +2,7 @@
 
 #include "StandaloneMedia.h"
 #include "StandaloneTargetProfiles.h"
+#include "Core/Measurement/OfflineMeasurement.h"
 #include <optional>
 #include <vector>
 
@@ -14,7 +15,8 @@ struct FrameRange { juce::int64 begin = 0, end = 0; }; // half-open, source-rate
 struct ProcessingPlan
 {
     int schemaVersion = 1;
-    juce::String engineVersion;
+    juce::String engineVersion = "static-gain-v1";
+    double staticGainDb = 0.0; // M1 typed plan; all file channels, including LFE.
     // Versioned module IDs/order/parameters/automation/freezes; no plugin state blob.
     juce::String graphJson;
 };
@@ -22,6 +24,7 @@ struct ProcessingPlan
 struct ServiceContext
 {
     JobTicket ticket;
+    juce::String sessionId;
     juce::File sourceFile;
     MediaInfo media;
     ChannelLayout fileLayout;
@@ -51,6 +54,8 @@ struct AnalysisSnapshot
     MeasurementDomain domain = MeasurementDomain::source;
     MeasuredMetrics measured;
     juce::String measurementVersion;
+    juce::String identity, measuredContentHash;
+    measurement::Result detail;
     // Analysis engine may extend with curves, gates, attribution and scene data.
 };
 struct ProposalRequest
@@ -77,6 +82,16 @@ struct RenderArtifact
     juce::File file;
     juce::String sha256;
     AnalysisSnapshot verifiedOutput;
+};
+
+// Identity binding only, not a compliance verdict or permission to publish.
+// A future exporter must additionally obtain a passing authoritative verdict,
+// recheck the artifact bytes, and reject destination aliases of original media.
+struct ExportApproval
+{
+    juce::String sessionId, analysisIdentity, outputHash, profileId, profileVersion;
+    uint64_t revision = 0;
+    bool matches (const ServiceContext&, const RenderArtifact&) const;
 };
 enum class ComplianceVerdict { notEvaluated, pass, fail, indeterminate };
 struct ReportRequest
@@ -120,6 +135,7 @@ public:
     virtual ~ReportService() = default;
     virtual ServiceResult<ReportArtifact> write (const ReportRequest&, JobControl&) = 0;
 };
-// No implementations registered in the scaffold. No pass/fail from placeholder profiles.
+// OfflineAnalysisService implements analysis. Proposal/render/report public services
+// remain unavailable. Placeholder profiles never produce a compliance verdict.
 // [END LS-STANDALONE-SERVICE-BOUNDARY]
 }

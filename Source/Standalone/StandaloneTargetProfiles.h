@@ -78,7 +78,7 @@ public:
                 profile.id = "none";
                 profile.displayName = "No target selected";
                 profile.familyName = "None";
-                profile.description = "Choose a target profile family before future measurement, proposal, or export checks are enabled.";
+                profile.description = "Source and Current State measurement do not require a delivery target. Select an authoritative profile when delivery evaluation becomes available.";
                 profile.isSelectableForWorkflow = false;
                 profile.limits.validationNote = "No target profile family selected.";
                 return profile;

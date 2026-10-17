@@ -1,4 +1,9 @@
 # yaml-language-server: $schema=./ComplianceMatrix.schema.json
+# Standalone continuation (2026-10-15): the historical entries below are not a
+# numerical qualification of plugin metrics. See ProjectIndex/13_StandaloneScaffoldHandover.md
+# and 14_OfflineMeasurementContract.md for the separate M1 kernel, test evidence and
+# official EBU v05 pass (66 normative + 4 supplementary files) and remaining
+# High-Sierra/UI qualification. No delivery verdict is enabled.
 
 schema_version: 1
 generated_at_utc: "2026-05-13T16:47:54Z"

@@ -2,6 +2,35 @@
 
 namespace levelscope::standalone
 {
+namespace
+{
+juce::String metricText (const measurement::Metric& metric, const juce::String& unit)
+{
+    if (metric.value) return juce::String (*metric.value, 1) + " " + unit;
+    switch (metric.status)
+    {
+        case measurement::Status::silence: return "-- (digital silence)";
+        case measurement::Status::belowGate: return "-- (no eligible loudness blocks)";
+        default: return "-- (insufficient duration)";
+    }
+}
+juce::String measurementsText (const MeasurementSummary& summary)
+{
+    if (! summary.analysis) return "Integrated: --\nLRA: --\nTrue peak: --\n";
+    const auto& r = summary.analysis->detail;
+    juce::String text;
+    text << "Integrated: " << metricText (r.integrated, "LUFS") << "\n"
+         << "LRA: " << metricText (r.lra, "LU") << (r.lra.value && ! r.lraStable ? " (under 60 s; unstable)" : "") << "\n"
+         << "True peak: " << metricText (r.truePeak, "dBTP") << "\n"
+         << "Sample peak: " << metricText (r.samplePeak, "dBFS") << "\n"
+         << "Max M: " << metricText (r.momentaryMax, "LUFS") << "\n"
+         << "Max S: " << metricText (r.shortTermMax, "LUFS") << "\n";
+    if (r.integratedRelativeGate) text << "I relative gate: " << juce::String (*r.integratedRelativeGate, 1) << " LUFS\n";
+    if (r.lraRelativeGate) text << "LRA relative gate: " << juce::String (*r.lraRelativeGate, 1) << " LUFS\n";
+    text << "Absolute gate: -70.0 LUFS\n" << "Engine: " << summary.analysis->measurementVersion << "\n";
+    return text;
+}
+}
 // [BEGIN LS-STANDALONE-WORKFLOW-SHELL]
 
 StandaloneMainComponent::StandaloneMainComponent()
@@ -43,6 +72,7 @@ StandaloneMainComponent::~StandaloneMainComponent()
     stopTimer();
     if (importControl) importControl->cancel.store (true);
     if (importResult.valid()) importResult.wait();
+    if (analysisResult.valid()) analysisResult.wait();
     audition.disconnect();
 }
 
@@ -70,6 +100,27 @@ void StandaloneMainComponent::timerCallback()
 {
     audition.poll();
     audioPanel.refresh();
+    if (analysisResult.valid() && analysisResult.wait_for (std::chrono::seconds (0)) == std::future_status::ready)
+    {
+        auto result = analysisResult.get();
+        if (session.job.finish (analysisTicket, session.revision, result.error, result.message))
+        {
+            if (! result.value || ! session.acceptMeasurement (std::move (*result.value)))
+            {
+                session.job.state = JobState::failed;
+                session.job.error = ErrorCode::staleRevision;
+                session.job.message = "Measurement identity no longer matches; result discarded";
+            }
+        }
+        else if (session.job.error == ErrorCode::sourceChanged)
+        {
+            session.source = MeasurementSummary();
+            session.clearCurrentState();
+            session.sourceDocument.importStatus = "Content changed; import the source again";
+        }
+        importControl.reset();
+        refreshFromSession();
+    }
     if (importResult.valid() && importResult.wait_for (std::chrono::seconds (0)) == std::future_status::ready)
     {
         const auto result = importResult.get();
@@ -95,6 +146,25 @@ void StandaloneMainComponent::timerCallback()
         text << "  " << juce::String (juce::roundToInt (100 * importControl->progress.load())) << "%";
     jobLabel.setText (text, juce::dontSendNotification);
 }
+
+void StandaloneMainComponent::beginMeasurement (MeasurementDomain domain)
+{
+    if (session.job.isActive()) return;
+    if (domain == MeasurementDomain::currentState && ! session.hasCurrentStateInitialized()) return;
+    auto context = session.measurementContext (domain);
+    if (OfflineAnalysisService::validateRequest (context, domain).isNotEmpty()) return;
+    audition.stop();
+    if (! session.job.begin (JobStage::analysis, session.revision)) return;
+    analysisTicket = session.job.ticket;
+    context.ticket = analysisTicket;
+    session.job.message = "Verifying source snapshot and measuring";
+    importControl = std::make_shared<JobControl>();
+    analysisResult = std::async (std::launch::async, [context, domain, control = importControl]
+    {
+        return OfflineAnalysisService().analyze (context, domain, *control);
+    });
+    refreshFromSession();
+}
 // [END LS-STANDALONE-IMPORT-LIFECYCLE]
 
 void StandaloneMainComponent::configureLabels()
@@ -105,7 +175,7 @@ void StandaloneMainComponent::configureLabels()
     titleLabel.setColour (juce::Label::textColourId, juce::Colours::white);
     addAndMakeVisible (titleLabel);
 
-    subtitleLabel.setText ("Validated media and source audition. Measurement, proposal, render and export are unavailable.",
+    subtitleLabel.setText ("Offline Source / Current State measurement. Source audition. Delivery compliance not evaluated.",
                            juce::dontSendNotification);
     subtitleLabel.setJustificationType (juce::Justification::centredLeft);
     subtitleLabel.setColour (juce::Label::textColourId, juce::Colour (0xffc6ccd7));
@@ -159,7 +229,7 @@ void StandaloneMainComponent::configureSourceControls()
     chooseSourceButton.onClick = [this] { chooseSourceFile(); };
     clearSourceButton.onClick = [this] { clearSourceFile(); };
 
-    measureSourceButton.setEnabled (false);
+    measureSourceButton.onClick = [this] { beginMeasurement (MeasurementDomain::source); };
 
     addAndMakeVisible (chooseSourceButton);
     addAndMakeVisible (clearSourceButton);
@@ -171,7 +241,14 @@ void StandaloneMainComponent::configureCurrentStateControls()
     initializeCurrentStateButton.onClick = [this] { initializeCurrentStateFromSource(); };
     clearCurrentStateButton.onClick = [this] { clearCurrentState(); };
 
-    remeasureCurrentStateButton.setEnabled (false);
+    remeasureCurrentStateButton.onClick = [this] { beginMeasurement (MeasurementDomain::currentState); };
+    currentGain.setRange (-60, 24, 0.1);
+    currentGain.setSliderStyle (juce::Slider::LinearHorizontal);
+    currentGain.setTextBoxStyle (juce::Slider::TextBoxRight, false, 100, 24);
+    currentGain.setTextValueSuffix (" dB trim");
+    currentGain.setTooltip ("Current State static gain, including LFE. Re-measure after editing. Source audition uses original audio.");
+    currentGain.onValueChange = [this] { session.setCurrentGainDb (currentGain.getValue()); refreshFromSession(); };
+    addAndMakeVisible (currentGain);
 
     addAndMakeVisible (initializeCurrentStateButton);
     addAndMakeVisible (clearCurrentStateButton);
@@ -259,7 +336,12 @@ void StandaloneMainComponent::refreshFromSession()
 
     initializeCurrentStateButton.setEnabled (! session.job.isActive() && session.canInitializeCurrentStateFromSource());
     clearCurrentStateButton.setEnabled (! session.job.isActive() && session.hasCurrentStateInitialized());
-    remeasureCurrentStateButton.setEnabled (false);
+    const auto measurementError = OfflineAnalysisService::validateRequest (session.measurementContext (MeasurementDomain::source), MeasurementDomain::source);
+    measureSourceButton.setEnabled (! session.job.isActive() && measurementError.isEmpty());
+    measureSourceButton.setTooltip (measurementError);
+    remeasureCurrentStateButton.setEnabled (! session.job.isActive() && session.hasCurrentStateInitialized() && measurementError.isEmpty());
+    currentGain.setEnabled (! session.job.isActive() && session.hasCurrentStateInitialized());
+    currentGain.setValue (session.currentStateDocument.staticGainDb, juce::dontSendNotification);
 
     sourceStateBox.setText (buildSourceStateText(), false);
     targetStateBox.setText (buildTargetStateText(), false);
@@ -312,18 +394,7 @@ juce::String StandaloneMainComponent::buildSourceStateText() const
         text << "Path: --\n\n";
     }
 
-    if (session.source.hasMeasurement)
-    {
-        text << "Integrated: " << session.source.integratedLufs << " LUFS\n";
-        text << "LRA: " << session.source.loudnessRangeLu << " LU\n";
-        text << "True Peak: " << session.source.truePeakDbtp << " dBTP\n";
-    }
-    else
-    {
-        text << "Integrated: --\n";
-        text << "LRA: --\n";
-        text << "True Peak: --\n";
-    }
+    text << measurementsText (session.source);
 
     return text;
 }
@@ -366,20 +437,8 @@ juce::String StandaloneMainComponent::buildCurrentStateText() const
 
     text << "Measurement status: " << session.currentState.statusText << "\n\n";
 
-    if (session.currentState.hasMeasurement)
-    {
-        text << "Integrated: " << session.currentState.integratedLufs << " LUFS\n";
-        text << "LRA: " << session.currentState.loudnessRangeLu << " LU\n";
-        text << "True Peak: " << session.currentState.truePeakDbtp << " dBTP\n";
-    }
-    else
-    {
-        text << "Integrated: --\n";
-        text << "LRA: --\n";
-        text << "True Peak: --\n";
-    }
-
-    text << "\nRe-measure flow: scaffold only\n";
+    text << "Static gain (all channels): " << juce::String (session.currentStateDocument.staticGainDb, 1) << " dB\n\n";
+    text << measurementsText (session.currentState);
 
     return text;
 }
@@ -407,7 +466,7 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
             {
                 text << "Selected source:\n";
                 text << session.sourceDocument.displayName << "\n\n";
-                text << "Next future step remains real source measurement.\n";
+                text << "Confirm roles, then use Measure Source.\n";
             }
             else
             {
@@ -418,59 +477,23 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
 
         case WorkflowPage::analyze:
         {
-            const auto readiness = session.getWorkflowReadiness();
-
-            text << "Measurement view scaffold.\n\n";
-
-            if (session.sourceDocument.hasSource)
-            {
-                text << "Validated source (confirmed roles are required for measurement):\n";
-                text << session.sourceDocument.displayName << "\n\n";
-                text << "Measurement gate open for future implementation: "
-                     << (readiness.isSourceReadyForFutureMeasurement() ? "yes" : "no") << "\n\n";
-
-                text << "The Measure Source button is intentionally disabled in this patch.\n\n";
-                text << "Future implementation:\n";
-                text << "- Consume the validated source and confirmed file-channel roles.\n";
-                text << "- Run loudness/peak measurement.\n";
-                text << "- Write measured values into Source state.\n";
-            }
-            else
-            {
-                text << "Import a source file before measurement can be implemented.\n";
-            }
+            text << "Full-program offline measurement.\n\n";
+            const auto error = OfflineAnalysisService::validateRequest (session.measurementContext (MeasurementDomain::source), MeasurementDomain::source);
+            text << (error.isEmpty() ? "Ready to measure Source." : error) << "\n\n";
+            text << "Supported: mono, stereo and 5.0/5.1 at 44.1/48/96/192 kHz.\n";
+            text << "LFE is excluded from loudness and included in peak measurement.\n";
+            text << "Measure Source reads a verified copy of the full original file.\n\n";
+            text << measurementsText (session.source);
 
             break;
         }
 
         case WorkflowPage::currentState:
-            text << "Current State re-measure scaffold.\n\n";
-            text << "Implemented now:\n";
-            text << "- Initialize a neutral Current State document from the selected Source metadata.\n";
-            text << "- Keep Current State separate from Source.\n";
-            text << "- Clear Current State independently.\n";
-            text << "- Show whether Current State needs re-measurement.\n\n";
-
-            if (! session.sourceDocument.hasSource)
-            {
-                text << "Import a Source before Current State can be initialized.\n";
-            }
-            else if (! session.currentStateDocument.isInitialized)
-            {
-                text << "Source is available, but Current State has not been initialized yet.\n\n";
-                text << "Use Initialize Current From Source to create the Current State scaffold.\n";
-            }
-            else
-            {
-                text << "Current State initialized from:\n";
-                text << session.currentStateDocument.basedOnSourceName << "\n\n";
-                text << "The Re-measure Current State button is intentionally disabled until a real measurement engine exists.\n";
-            }
-
-            text << "\nFuture implementation:\n";
-            text << "- Re-measure Current State after user edits.\n";
-            text << "- Keep measured Current State separate from any future predicted proposal state.\n";
-            text << "- A future proposal must start from measured Current State, not stale predictions.\n";
+            text << "Initialize Current State, adjust static gain, then re-measure.\n\n";
+            text << "Static gain applies to every file channel, including LFE.\n";
+            text << "Editing gain invalidates the previous Current State measurement.\n";
+            text << "Source audition plays the original audio with monitor gain only.\n\n";
+            text << measurementsText (session.currentState);
             break;
 
         case WorkflowPage::exportResults:
@@ -490,7 +513,7 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
             text << "- Render/export available: no\n";
             text << "- Export: blocked\n\n";
 
-            text << "No render, export, compliance validation, re-measurement, or proposal logic is implemented in this patch.\n";
+            text << "Source and Current State measurements are available. Delivery profiles, proposals and public export remain unavailable.\n";
             break;
         }
 
@@ -554,6 +577,8 @@ void StandaloneMainComponent::resized()
     clearCurrentStateButton.setBounds (currentStateActionRow.removeFromLeft (150));
     currentStateActionRow.removeFromLeft (8);
     remeasureCurrentStateButton.setBounds (currentStateActionRow.removeFromLeft (300));
+    currentStateActionRow.removeFromLeft (8);
+    currentGain.setBounds (currentStateActionRow);
 
     bounds.removeFromTop (14);
 

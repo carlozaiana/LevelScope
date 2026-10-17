@@ -1,10 +1,13 @@
 #pragma once
 
 #include <juce_core/juce_core.h>
+#include <cmath>
+#include <memory>
 
 #include "StandaloneTargetProfiles.h"
 #include "StandaloneWorkflowReadiness.h"
 #include "StandaloneMedia.h"
+#include "StandaloneMeasurementService.h"
 
 namespace levelscope::standalone
 {
@@ -22,9 +25,8 @@ struct MeasurementSummary
 {
     bool hasMeasurement = false;
 
-    double integratedLufs = 0.0;
-    double loudnessRangeLu = 0.0;
-    double truePeakDbtp = 0.0;
+    std::optional<double> integratedLufs, loudnessRangeLu, truePeakDbtp;
+    std::shared_ptr<const AnalysisSnapshot> analysis;
 
     juce::String statusText = "Not measured";
 };
@@ -95,6 +97,7 @@ struct CurrentStateDocument
 
     bool needsRemeasurement = false;
     int revision = 0;
+    double staticGainDb = 0.0;
 
     bool initializeFromSource (const SourceDocument& sourceDocument)
     {
@@ -110,7 +113,8 @@ struct CurrentStateDocument
         needsRemeasurement = true;
         ++revision;
 
-        statusText = "Initialized from Source; re-measure not implemented";
+        staticGainDb = 0;
+        statusText = "Identity processing; ready to measure";
 
         return true;
     }
@@ -123,6 +127,7 @@ struct CurrentStateDocument
         sourcePathSnapshot = juce::String();
         needsRemeasurement = false;
         revision = 0;
+        staticGainDb = 0;
     }
 };
 
@@ -141,7 +146,67 @@ public:
 
     int selectedTargetProfileIndex = 0;
     uint64_t revision = 0;
+    const juce::String sessionId = juce::Uuid().toString();
     SessionJob job;
+
+    ServiceContext measurementContext (MeasurementDomain domain) const
+    {
+        ServiceContext c;
+        c.ticket = job.ticket; c.ticket.sessionRevision = revision; c.sessionId = sessionId;
+        c.sourceFile = sourceDocument.file; c.media = sourceDocument.media;
+        c.fileLayout = sourceDocument.layout; c.range = { 0, c.media.frames };
+        c.processing.staticGainDb = domain == MeasurementDomain::source ? 0 : currentStateDocument.staticGainDb;
+        c.profile = getSelectedTargetProfile();
+#ifdef LEVELSCOPE_MEASUREMENT_BUILD
+        c.buildVersion = LEVELSCOPE_MEASUREMENT_BUILD;
+#else
+        c.buildVersion = "unidentified-development-build";
+#endif
+        c.platformAndFloatingPointMode = juce::SystemStats::getOperatingSystemName()
+#if defined(__aarch64__) || defined(__arm64__)
+            + ";arm64";
+#else
+            + ";x86_64";
+#endif
+        c.platformAndFloatingPointMode += ";float32-samples;float64-analysis;no-fast-math;fp-contract-off";
+        return c;
+    }
+
+    bool setCurrentGainDb (double gain)
+    {
+        if (! currentStateDocument.isInitialized || ! std::isfinite (gain) || gain < -60 || gain > 24) return false;
+        if (gain == currentStateDocument.staticGainDb) return true;
+        ++revision; ++currentStateDocument.revision;
+        currentStateDocument.staticGainDb = gain;
+        currentStateDocument.needsRemeasurement = true;
+        currentStateDocument.statusText = "Gain changed; re-measure Current State";
+        currentState = MeasurementSummary();
+        return true;
+    }
+
+    bool acceptMeasurement (AnalysisSnapshot result)
+    {
+        if (result.domain == MeasurementDomain::renderedOutput || ! sourceDocument.hasSource
+            || result.context.sessionId != sessionId || result.context.ticket.sessionRevision != revision
+            || result.context.ticket.id != job.ticket.id || job.state != JobState::succeeded
+            || (result.domain == MeasurementDomain::currentState && ! currentStateDocument.isInitialized)) return false;
+        const auto expected = measurementContext (result.domain);
+        if (result.measuredContentHash != sourceDocument.media.sha256
+            || result.identity != OfflineAnalysisService::identityFor (expected, result.domain, sourceDocument.media.sha256)) return false;
+        auto& summary = result.domain == MeasurementDomain::source ? source : currentState;
+        summary.hasMeasurement = true;
+        summary.integratedLufs = result.measured.integratedLufs;
+        summary.loudnessRangeLu = result.measured.loudnessRangeLu;
+        summary.truePeakDbtp = result.measured.truePeakDbtp;
+        summary.statusText = "Measured; delivery compliance not evaluated";
+        if (result.domain == MeasurementDomain::currentState)
+        {
+            currentStateDocument.needsRemeasurement = false;
+            currentStateDocument.statusText = "Measured current revision";
+        }
+        summary.analysis = std::make_shared<const AnalysisSnapshot> (std::move (result));
+        return true;
+    }
 
     bool setValidatedSource (const juce::File& file, const MediaInfo& media)
     {

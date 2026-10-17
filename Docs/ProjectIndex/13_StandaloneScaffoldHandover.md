@@ -2,7 +2,112 @@
 
 Prepared 14 October 2026 for a fresh development chat in `/Users/fuzz/Developer/LevelScope`.
 
-Updated 15 October 2026 after scaffold implementation and software validation.
+Updated 17 October 2026 while completing cross-platform qualification and preparing
+the separate video and VST3 parity handovers. Final qualification remains pending
+until the High Sierra execution and both UI checklists are recorded as passed.
+
+## Logic-module continuation (15 October 2026)
+
+The first measurement implementation is now on `codex/logic-module`, created from
+the scaffold tag. See [14_OfflineMeasurementContract.md](14_OfflineMeasurementContract.md)
+for accepted measurement boundaries, channel/LFE policy, identity, tolerances and
+video/transport design. The sections below describe the preserved scaffold checkpoint;
+this section records subsequent work, not a change to that checkpoint.
+
+Implemented in the continuation:
+
+- Separate worker-only `LevelScopeMeasurementCore` with published 48 kHz K coefficients,
+  qualified-rate coefficient design, exact integrated block gating, independent LRA
+  population/gate, M/S curves and sample-resolution maxima, all-channel sample peaks,
+  and 8x/64-tap-per-phase Blackman-sinc true-peak estimation. Existing plugin analysis,
+  parameter IDs, APVTS and processing behavior remain unchanged.
+- Mono, stereo and conventional 5.0/5.1 measurement at 44.1/48/96/192 kHz. Unqualified
+  roles/rates are refused for measurement while the broader import contract remains.
+  Confirmed file order remains authoritative; no Core sorted-layout adaptation is used.
+- Source and Current State measurement buttons, cancellable jobs, per-metric missing
+  values/reasons, numeric gates, short-program LRA instability indication, and Current
+  State static gain (-60 to +24 dB) applied to all file channels including LFE. This
+  gain does not change original-source audition or monitor gain.
+- A private source snapshot, SHA-256 matched to the imported bytes and revalidated
+  before decoding. Same-size/same-time edits fail the hash check. Temporary snapshots
+  are cleaned up on ordinary success/error/cancel. Abrupt termination may leave files.
+- Session UUID and content/role/range/plan/engine/build/platform measurement identity.
+  Current edits invalidate measured values; stale worker results cannot publish.
+  An export-approval identity-binding primitive rejects changed revisions, plans,
+  output hashes or profile editions/limits. This is not a compliance verdict or a
+  public exporter; those services remain unavailable.
+- An internal PCM24 render/reopen/measure harness verifies actual encoded samples,
+  rejects clipping and uses only owned temporary paths. Public output path/alias
+  validation is still required when public rendering is implemented.
+
+Evidence so far: 184 new hardware-independent checks plus the original 205 scaffold
+checks pass on arm64 Sequoia. All 39 downloaded ITU BS.2217 vectors pass their published
+file-based integrated-loudness tolerance of ±0.1 LU; maximum observed error is about
+0.04845 LU. The new tests also independently synthesize multirate filter/level signals,
+Tech 3342 cases 1–4 and Tech 3341 true-peak cases 15–23, plus content-probed AIFF/FLAC
+snapshot decoding. Synthesized tests are labelled separately from the original
+downloaded files.
+
+**Official EBU v05 qualification (15 October 2026):** the user supplied the archive
+under `Tests/Ebu_Loudness_Testset_V05` after the automated download failed. All 70 WAVs
+were measured on macOS 15.7.9 arm64. **66/66 minimum-requirements files pass** (Tech
+3341 cases 1–23 and Tech 3342 cases 1–6; 72 metric rules, 1,052 checked readings).
+The remaining **4/4 supplementary alignment/listening-level files pass** project
+sanity checks at ±0.1 LU; that tolerance is not an additional official EBU criterion.
+Eight tests of the new runner's failure detection also pass. No measurement-kernel
+correction was necessary; changes for this qualification are in the test harness,
+manifest, runner and evidence. The kernel remains `bs1770-5-ebu2023-m1.1`.
+
+Maximum absolute errors across normative checks: I 0.04645 LU, M 0.04648 LU,
+S 0.04646 LU, LRA 0.02339 LU, TP 0.11699 dB (an under-read). Programme LRA results
+are 4.97662 LU and 14.98460 LU against 5/15 LU ±1 LU. Cases 9/12 check constant
+curves; cases 11/14 check all 20 successive maxima without resetting the original
+engine. The latter are offline kernel checks, not live-meter UI/scheduling qualification.
+
+The archive CRC passes and every extracted file matches its archive bytes. Archive,
+README and file SHA-256 values, metadata, roles and acceptance rules are pinned in
+`Tests/Reference/ebu-v05-manifest.json`; the saved report is
+`Tests/Reference/results/ebu-v05-sequoia-arm64-2026-10-15.json`. The runner records
+binary/build/engine/manifest/runner identity and actual execution architecture. All
+official EBU files are 48 kHz. Missing/modified input or missing readings fail the run.
+
+The universal app and named tests build with the original deployment minimums. GUI
+launch/layout was observed silently, but automated clicks did not operate the window;
+an interactive import/measure/gain smoke test remains outstanding. No physical device
+was opened. Intel High Sierra execution of the **new measurement suite** remains
+outstanding; the earlier scaffold smoke test does not qualify this engine.
+
+Build and run:
+
+```sh
+cmake -S . -B build/scaffold -DLEVELSCOPE_BUILD_SCAFFOLD_TESTS=ON -DLEVELSCOPE_BUILD_MEASUREMENT_TESTS=ON -DFETCHCONTENT_SOURCE_DIR_JUCE=/Users/fuzz/Developer/LevelScope/build/juce-7.0.12
+cmake --build build/scaffold --target LevelScopeStandalone LevelScopeMeasurementTests LevelScopeScaffoldTests -j 6
+ctest --test-dir build/scaffold --output-on-failure
+python3 Tests/run_reference_measurements.py --binary build/scaffold/LevelScopeMeasurementTests_artefacts/Release/LevelScopeMeasurementTests --vectors build/measurement-reference/itu --report build/measurement-reference/sequoia-arm64.json
+python3 Tests/run_ebu_measurements.py --binary build/scaffold/LevelScopeMeasurementTests_artefacts/Release/LevelScopeMeasurementTests --vectors Tests/Ebu_Loudness_Testset_V05/ebu-loudness-test-setv05 --report build/measurement-reference/ebu-sequoia-arm64.json
+python3 -B Tests/EbuReferenceRunnerTests.py
+```
+
+The tests use macOS's temporary directory; a restricted shell may require approval
+for that filesystem access. No audio device is needed. Download provenance, archive
+and per-file hashes and expected results are in `Tests/Reference/itu-bs2217-manifest.json`.
+External ITU audio stays in ignored build storage; the supplied EBU directory is also
+ignored. Neither is shipped. The reference runners
+fail missing/hash-mismatched fixtures; `--compare` checks another platform's report
+against the proposed 0.01 LU/dB and 0.1 LU LRA budgets. Reports include binary hashes.
+
+Logs: `build/measurement-build.log`, `build/scaffold/Testing/Temporary/LastTest.log`,
+`build/measurement-reference/itu-run.log`, `build/measurement-reference/ebu-run.log`.
+M1's official EBU numeric qualification now passes on arm64 Sequoia, but full
+qualification is pending the evidence gaps above. No delivery-compliance claim is made.
+Next: finish qualification, then synchronized reference picture before polished UI.
+ATSC A/85:2026-07 long-form dialogue measurement needs its own later work item.
+
+The final qualification harness, portable packaging and generated UI fixtures are
+documented in `Tests/Reference/README.md`. Future work is split into
+[15_VideoImplementationHandover.md](15_VideoImplementationHandover.md) and
+[16_Vst3MeasurementParityMilestone.md](16_Vst3MeasurementParityMilestone.md).
+Video implementation has not started; the plugin remains unchanged/uninstalled.
 
 ## Objective and scope
 

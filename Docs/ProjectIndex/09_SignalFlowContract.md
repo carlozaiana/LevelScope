@@ -59,3 +59,14 @@ When changing flow order, latency, or transport semantics, update:
 ## 6) Standalone scaffold source audition (15 October 2026)
 
 This is a separate path from the plugin chain above. A decoder worker reads original media into a bounded SPSC buffer. After prefill, an explicitly selected output-only device callback clears its outputs, copies file channels according to the confirmed physical-output map and applies monitor gain. There is no Core processing, measurement, automatic downmix or sample-rate conversion in this path. Underruns produce silence without skipping source frames and are counted. Stop/EOF/device failure quiesces the callback before worker teardown. Play always restarts at source frame zero. Monitor gain is not a processing-plan parameter and cannot affect future render output. See the scaffold handover for validation and outstanding listening checks.
+
+## 7) Standalone offline measurement (15 October 2026)
+
+Worker: private byte snapshot → content hash/payload validation → decode in original
+file order → identity or explicit all-channel static gain → OfflineMeasurement.
+Source measurement requires identity processing. Current State measures actual gain-
+processed samples. The internal render harness encodes PCM24, closes/reopens the file
+and measures the encoded samples with the same kernel. Full-program measurement uses
+the source sample clock and its own reset/window/finalization rules, not plugin host
+transport guards or the audition ring. No callback processing path was changed.
+See [14_OfflineMeasurementContract.md](14_OfflineMeasurementContract.md).

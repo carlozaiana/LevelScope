@@ -23,10 +23,10 @@ public:
     juce::int64 getTotalLength() override { return source.getTotalLength(); }
     juce::int64 getPosition() override { return source.getPosition(); }
     bool setPosition (juce::int64 position) override { return source.setPosition (position); }
-    bool isExhausted() override { return control.cancel.load() || source.isExhausted(); }
+    bool isExhausted() override { return control.isCancelled() || source.isExhausted(); }
     int read (void* destination, int bytes) override
     {
-        if (control.cancel.load()) return 0;
+        if (control.isCancelled()) return 0;
         const auto count = source.read (destination, bytes);
         if (checking && count != bytes) shortRead = true;
         return count;
@@ -44,10 +44,10 @@ public:
     juce::int64 getTotalLength() override { return source.getTotalLength(); }
     juce::int64 getPosition() override { return source.getPosition(); }
     bool setPosition (juce::int64 position) override { return source.setPosition (position); }
-    bool isExhausted() override { return control.cancel.load() || source.isExhausted(); }
+    bool isExhausted() override { return control.isCancelled() || source.isExhausted(); }
     int read (void* destination, int bytes) override
     {
-        if (control.cancel.load()) return 0;
+        if (control.isCancelled()) return 0;
         const auto count = source.read (destination, bytes);
         control.progress.store (0.8f + 0.2f * static_cast<float> (
             static_cast<double> (getPosition()) / juce::jmax<juce::int64> (1, getTotalLength())));
@@ -68,7 +68,7 @@ public:
     juce::int64 getTotalLength() override { return reader.lengthInSamples * reader.numChannels * bytesPerSample; }
     juce::int64 getPosition() override { return position; }
     bool setPosition (juce::int64 next) override { return next == position; }
-    bool isExhausted() override { return control.cancel.load() || position == getTotalLength() || failed; }
+    bool isExhausted() override { return control.isCancelled() || position == getTotalLength() || failed; }
     int read (void* destination, int requested) override
     {
         int copied = 0;
@@ -121,7 +121,7 @@ MediaValidationResult validateMedia (const juce::File& file, JobControl& control
         result.message = message;
         return result;
     };
-    if (control.cancel.load()) return fail (ErrorCode::cancelled, "Import cancelled");
+    if (control.isCancelled()) return fail (ErrorCode::cancelled, "Import cancelled");
     if (! file.existsAsFile()) return fail (ErrorCode::missingFile, "Source file is missing");
     auto& media = result.media;
     media.bytes = file.getSize();
@@ -133,7 +133,7 @@ MediaValidationResult validateMedia (const juce::File& file, JobControl& control
     auto checkedInput = std::make_unique<CheckedInput> (file, control);
     auto* checked = checkedInput.get();
     std::unique_ptr<juce::AudioFormatReader> reader (formats.createReaderFor (std::move (checkedInput)));
-    if (control.cancel.load()) return fail (ErrorCode::cancelled, "Import cancelled");
+    if (control.isCancelled()) return fail (ErrorCode::cancelled, "Import cancelled");
     if (! reader) return fail (ErrorCode::unsupportedMedia, "Cannot decode source as WAV, AIFF or FLAC");
     media.sampleRate = reader->sampleRate;
     media.frames = reader->lengthInSamples;
@@ -178,11 +178,11 @@ MediaValidationResult validateMedia (const juce::File& file, JobControl& control
     juce::AudioBuffer<float> block (media.channels, blockSize);
     for (juce::int64 position = 0; position < media.frames;)
     {
-        if (control.cancel.load()) return fail (ErrorCode::cancelled, "Import cancelled");
+        if (control.isCancelled()) return fail (ErrorCode::cancelled, "Import cancelled");
         const auto count = static_cast<int> (juce::jmin<juce::int64> (blockSize, media.frames - position));
         if (! reader->read (block.getArrayOfWritePointers(), media.channels, position, count))
             return fail (ErrorCode::decodeFailed, "Audio decoder reported a read failure");
-        if (control.cancel.load()) return fail (ErrorCode::cancelled, "Import cancelled");
+        if (control.isCancelled()) return fail (ErrorCode::cancelled, "Import cancelled");
         if (checked->shortRead)
             return fail (ErrorCode::decodeFailed, "Truncated audio payload");
         for (int channel = 0; channel < media.channels; ++channel)
@@ -196,7 +196,7 @@ MediaValidationResult validateMedia (const juce::File& file, JobControl& control
     {
         DecodedPcmStream pcm (*reader, control);
         const auto actual = juce::MD5 (pcm).toHexString();
-        if (control.cancel.load()) return fail (ErrorCode::cancelled, "Import cancelled");
+        if (control.isCancelled()) return fail (ErrorCode::cancelled, "Import cancelled");
         if (pcm.failed || actual != flacChecksum)
             return fail (ErrorCode::decodeFailed, "FLAC audio checksum mismatch (corrupt or truncated source)");
     }
@@ -204,7 +204,7 @@ MediaValidationResult validateMedia (const juce::File& file, JobControl& control
     if (! input) return fail (ErrorCode::missingFile, "Cannot reopen source for content hashing");
     CancellableInput stream (*input, control);
     media.sha256 = juce::SHA256 (stream).toHexString();
-    if (control.cancel.load()) return fail (ErrorCode::cancelled, "Import cancelled");
+    if (control.isCancelled()) return fail (ErrorCode::cancelled, "Import cancelled");
     if (input->getStatus().failed() || stream.getPosition() != media.bytes)
         return fail (ErrorCode::decodeFailed, "Cannot read the complete source for hashing");
     if (! media.matchesFileStamp (file)) return fail (ErrorCode::sourceChanged, "Source changed during validation; import again");

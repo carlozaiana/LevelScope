@@ -11,6 +11,16 @@ Anything marked **Planned** must not be assumed to exist until integrated.
 
 Last updated: **2026-04-23**
 
+**Standalone continuation, 15 October 2026:** the plugin contracts below remain
+unchanged. A separate worker-only `LevelScopeMeasurementCore` now supplies offline
+Source/Current State measurements and an internal encoded-output verification harness.
+Current State supports identity/static gain; public render/export, proposals and
+authoritative delivery profiles remain pending. See
+[the measurement contract](ProjectIndex/14_OfflineMeasurementContract.md) and
+[handover evidence](ProjectIndex/13_StandaloneScaffoldHandover.md) for supported layouts,
+rates, validation and remaining qualification. Existing plugin history/running metrics
+are not the new offline verification implementation.
+
 ---
 
 ## 1. Layers

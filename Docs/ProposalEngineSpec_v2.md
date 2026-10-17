@@ -45,6 +45,13 @@ Core philosophy:
 
 ## 3.1 Pass conditions
 
+Implementation clarification (15 October 2026): the defaults below are proposal-design
+examples, not authoritative EBU/ATSC profile values. Delivery limits, measurement
+method, content class and permitted tolerances must come from a versioned profile.
+In particular, A/85:2026-07 long-form dialogue measurement is distinct from level-gated
+full-mix loudness and from the later intelligibility feature. See the standalone
+[measurement contract](ProjectIndex/14_OfflineMeasurementContract.md).
+
 The engine succeeds only if final verified output is inside the profile limits.
 
 Typical default interpretation:

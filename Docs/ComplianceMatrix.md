@@ -21,6 +21,25 @@ Status legend: **Implemented** = present in current code/docs, **Partial** = som
 
 ## Validation Foundation Notes
 
-- Current compliance evidence is documentation- and implementation-contract-based; no dedicated automated compliance suite is present yet. Hardware-independent standalone scaffold tests (15 October 2026) validate media/routing/lifecycle plumbing only; see `ProjectIndex/13_StandaloneScaffoldHandover.md`. Existing numeric compliance statuses are unchanged.
+- **15 October 2026 standalone update:** a separate offline kernel now passes 39
+  official ITU BS.2217 integrated-loudness vectors (±0.1 LU) and 184 generated/integration
+  checks on arm64 Sequoia; the original 205 scaffold checks also pass. This evidence
+  applies to the new standalone measurement path, not the existing plugin algorithms.
+  The supplied official EBU v05 suite now also passes: 66/66 minimum-requirements files
+  (72 rules, 1,052 readings), plus 4/4 supplementary alignment sanity checks. Eight
+  runner failure-detection tests pass. No DSP correction was required. All official
+  EBU files are 48 kHz; live-signal cases test the offline kernel, not a live GUI.
+  Evidence: `../Tests/Reference/results/ebu-v05-sequoia-arm64-2026-10-15.json` and the
+  pinned manifest/runner in `../Tests/Reference` / `../Tests/run_ebu_measurements.py`.
+  Intel High Sierra measurement execution and interactive UI measurement testing
+  remain outstanding. See `ProjectIndex/13_StandaloneScaffoldHandover.md`
+  and `14_OfflineMeasurementContract.md`. No EBU/ATSC delivery-compliance verdict is
+  implemented. Earlier implemented/manual rows above describe historical primitives,
+  not completed numerical qualification of those algorithms.
+
+- Historical plugin evidence remains documentation- and implementation-contract-based.
+  The standalone M1 kernel now has the automated numeric evidence above. Scaffold tests
+  separately validate media/routing/lifecycle plumbing. No standalone result qualifies
+  the older plugin's measurement algorithms or enables delivery-compliance verdicts.
 - Short-term recommendation: keep this matrix updated whenever DSP behavior, transport semantics, sample-rate policy, or preset/state behavior changes.
 - Medium-term recommendation: add machine-readable mirror (YAML/JSON) of this table to drive automated checks and proposal gating.
