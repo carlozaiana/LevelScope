@@ -2,6 +2,8 @@
 
 Recorded 17 October 2026. This is future work; M1 does not update, build or install
 the plugin, and its standalone numerical qualification does not qualify plugin meters.
+Use `measurement-milestone-2026-10-17` as the preserved standalone reference; see
+[17_M1QualificationResults.md](17_M1QualificationResults.md) for its exact scope.
 
 ## Objective and preserved behavior
 

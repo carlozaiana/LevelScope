@@ -1,0 +1,73 @@
+{
+  "source_commit": "b3fe9dece6b9d4cd2d8f6a3aebca69b8d0534e9c",
+  "date": "2026-10-17",
+  "method": "Agent-operated native UI with accessibility and screenshot observations; initial EBU source selection completed with user assistance.",
+  "app_sha256": "2ae5ad2702d3b1a0e832c0866440ce8fba51726b5132522f28ffc4f5c4481f10",
+  "execution_arch": "arm64",
+  "status": "passed",
+  "safety": {
+    "device": "closed throughout",
+    "routing": "all muted",
+    "playback": "never started",
+    "system_audio_changes": false
+  },
+  "checks": [
+    [
+      "import_and_roles",
+      "EBU seq-3341-1-16bit.wav imported as 48000 Hz, stereo, 16 bit, 960000 frames. Measurement unavailable until Left/Right roles confirmed."
+    ],
+    [
+      "source_measurement",
+      "UI I/M/S -23.0 LUFS, LRA 0.0 LU with short-program warning, TP/SP -22.9 dB. Delivery compliance not evaluated."
+    ],
+    [
+      "current_zero",
+      "Initialized a separate unmeasured Current State at 0.0 dB; remeasurement matched all displayed Source metrics."
+    ],
+    [
+      "gain_invalidation",
+      "Set -6.0 dB. Revision advanced to 2, Needs re-measurement yes, Not measured and previous values cleared."
+    ],
+    [
+      "gain_remeasurement",
+      "UI I/M/S -29.0 LUFS, TP/SP -28.9 dB, LRA 0.0 LU. Source remained -23.0 LUFS."
+    ],
+    [
+      "replacement",
+      "Replacing with stereo.aiff cleared Current State, reset trim to 0 dB and required fresh role confirmation."
+    ],
+    [
+      "aiff",
+      "stereo.aiff imported, roles confirmed and source measured: I/M/S -23.0 LUFS, TP/SP -23.0 dB, LRA 1.3 LU flagged unstable."
+    ],
+    [
+      "flac",
+      "stereo.flac imported, roles confirmed and source measured with same displayed values as AIFF."
+    ],
+    [
+      "unsupported_layout",
+      "12-channel WAV imported with all roles confirmed; Measure Source disabled and supported-layout/rate restriction displayed. Channels 1-12 checked muted, including scrolling to final channels."
+    ],
+    [
+      "cancel",
+      "Started long-stereo.wav measurement at visible 15% progress; Cancel job produced Job cancelled; result discarded. No measurement published."
+    ],
+    [
+      "clear",
+      "A subsequent long-source measurement completed. Clear Source removed source/roles and returned to Import view with No source selected yet."
+    ],
+    [
+      "close_during_measurement",
+      "Reimported long-stereo.wav, confirmed roles, started measurement (visible 15%), clicked window close. Process absent on pgrep; clean relaunch showed empty session and No job started."
+    ],
+    [
+      "export",
+      "Export view showed Render/export available no, Can export no, and no verification or approval."
+    ]
+  ],
+  "observations": [
+    "The initial native chooser path entry/confirmation stalled during mixed manual/automated input. After clean restart and exclusive interaction, EBU/AIFF/FLAC/12-channel/long-WAV selections worked repeatedly without a code change. No reproducible product defect remained.",
+    "An initial portable-suite attempt in the restricted shell failed while creating a generated fixture. Re-running outside that sandbox passed all suites; failed attempt is not counted as qualification.",
+    "Displayed values have 0.1-unit precision; exact numerical parity is covered separately by saved reference reports."
+  ]
+}

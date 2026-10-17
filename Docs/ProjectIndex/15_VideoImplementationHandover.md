@@ -5,13 +5,17 @@ implementation is included in the measurement milestone.
 
 ## Starting checkpoint and qualification gate
 
-Work continues on `codex/logic-module` from scaffold commit
-`f192a8553e139d390056c9755f25eeb123bbc5e6`. The final measurement starting commit/tag
-will be recorded here after actual Intel High Sierra and silent interactive UI
-qualification pass. Until then, this is a draft handover, not a qualified release.
+Start from annotated tag **`measurement-milestone-2026-10-17`** on
+`codex/logic-module`. Resolve its exact starting commit with
+`git rev-parse measurement-milestone-2026-10-17^{commit}`. Its tested implementation
+is `b3fe9dece6b9d4cd2d8f6a3aebca69b8d0534e9c`; subsequent checkpoint changes contain
+qualification evidence and documentation only. Actual Intel High Sierra 10.13.6
+(17G66) and arm64 Sequoia 15.7.9 (24G830) passed all M1 numeric and silent UI checks.
+Read [17_M1QualificationResults.md](17_M1QualificationResults.md) for the complete
+scope, artifact hashes, comparisons and observed checklists.
 See [the measurement contract](14_OfflineMeasurementContract.md),
 [the milestone handover](13_StandaloneScaffoldHandover.md), and
-`Tests/Reference/README.md` for evidence and outstanding checks.
+`Tests/Reference/README.md` for evidence and remaining product limitations.
 
 Preserve `main` at `556d387ad772dc5e604ead95f1525f60e66fd5f9` and the annotated tags
 `high-sierra-pre-scaffold-2026-10-15` and `standalone-scaffold-2026-10-15`.
@@ -119,3 +123,17 @@ installation enabled. Downloaded reference audio and build products stay outside
 Preserve the pinned manifests. Run actual High Sierra tests, not just the Intel slice
 under Sequoia. VST3 measurement parity is a separate milestone in
 [16_Vst3MeasurementParityMilestone.md](16_Vst3MeasurementParityMilestone.md).
+
+## Starter message for the dedicated chat
+
+> Continue LevelScope from `measurement-milestone-2026-10-17` on `codex/logic-module`.
+> Read ProjectIndex documents 14, 15 and 17 before changing code. M1 measurement is
+> qualified on actual Intel High Sierra 10.13.6 and arm64 Sequoia 15.7.9. Implement the
+> first video milestone: synchronized reference-picture playback and signed offset
+> adjustment, with selected audio authoritative and embedded video audio muted.
+> Carry forward the rational timing, audio presentation-clock and transport-generation
+> contract. First inspect backend compatibility on both OS versions and define the
+> measurable synchronization tests in document 15. Preserve M1 results, the original
+> main branch and baseline tags, installed apps/plugins, and all Pro40/system audio
+> configuration. Build only named standalone/test targets. Keep VST3 parity separate
+> (document 16), and coordinate any audible tests before opening an audio device.

@@ -2,9 +2,13 @@
 
 Prepared 14 October 2026 for a fresh development chat in `/Users/fuzz/Developer/LevelScope`.
 
-Updated 17 October 2026 while completing cross-platform qualification and preparing
-the separate video and VST3 parity handovers. Final qualification remains pending
-until the High Sierra execution and both UI checklists are recorded as passed.
+Updated 17 October 2026: M1 qualification **passes** on actual Intel High Sierra
+10.13.6 (17G66) and arm64 Sequoia 15.7.9 (24G830), including both official suites and
+both silent interactive UI checklists. The checkpoint is
+`measurement-milestone-2026-10-17` on `codex/logic-module`. See
+[17_M1QualificationResults.md](17_M1QualificationResults.md) for final evidence and
+[15_VideoImplementationHandover.md](15_VideoImplementationHandover.md) for the next chat.
+Historical scaffold observations below remain scoped to their original dates.
 
 ## Logic-module continuation (15 October 2026)
 
@@ -71,11 +75,11 @@ README and file SHA-256 values, metadata, roles and acceptance rules are pinned 
 binary/build/engine/manifest/runner identity and actual execution architecture. All
 official EBU files are 48 kHz. Missing/modified input or missing readings fail the run.
 
-The universal app and named tests build with the original deployment minimums. GUI
-launch/layout was observed silently, but automated clicks did not operate the window;
-an interactive import/measure/gain smoke test remains outstanding. No physical device
-was opened. Intel High Sierra execution of the **new measurement suite** remains
-outstanding; the earlier scaffold smoke test does not qualify this engine.
+The universal app and named tests build with the original deployment minimums. The
+17 October qualification closes the earlier interactive-UI and actual High Sierra
+evidence gaps: all named regressions, official suites, comparisons and UI checklists
+passed on both systems. No physical device was opened. The earlier scaffold smoke
+report is separate from this new measurement qualification.
 
 Build and run:
 
@@ -98,9 +102,10 @@ against the proposed 0.01 LU/dB and 0.1 LU LRA budgets. Reports include binary h
 
 Logs: `build/measurement-build.log`, `build/scaffold/Testing/Temporary/LastTest.log`,
 `build/measurement-reference/itu-run.log`, `build/measurement-reference/ebu-run.log`.
-M1's official EBU numeric qualification now passes on arm64 Sequoia, but full
-qualification is pending the evidence gaps above. No delivery-compliance claim is made.
-Next: finish qualification, then synchronized reference picture before polished UI.
+M1's defined qualification now passes on both required platforms; final logs and
+identities are in `Tests/Reference/results/m1-qualification-2026-10-17`.
+No delivery-compliance claim is made.
+Next: synchronized reference picture before polished UI.
 ATSC A/85:2026-07 long-form dialogue measurement needs its own later work item.
 
 The final qualification harness, portable packaging and generated UI fixtures are

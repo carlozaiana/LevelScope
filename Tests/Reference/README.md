@@ -86,6 +86,12 @@ unsupported measurement. No playback is needed for this checklist.
 
 ## Portable final-qualification run
 
+Completed 17 October 2026 on actual High Sierra 10.13.6 x86_64 and Sequoia 15.7.9
+arm64. Both official suites, 184 measurement checks, 205 scaffold checks, eight runner
+tests and both silent UI checklists passed. Exact evidence is in
+[`results/m1-qualification-2026-10-17`](results/m1-qualification-2026-10-17);
+see [the qualification report](../../Docs/ProjectIndex/17_M1QualificationResults.md).
+
 `LevelScopeMeasurementTests --write-ui-fixtures /absolute/new-directory` generates
 WAV/AIFF/FLAC stereo tones, a ten-minute WAV for cancellation/close tests, and an
 explicitly tagged 12-channel WAV outside M1's measurement layouts. It refuses an
@@ -116,3 +122,14 @@ the complete delivered artifact inventory and runs both executable suites, the r
 tests and both official suites with comparisons to the pinned Sequoia reports.
 The folder receives logs plus OS build, CPU, architecture, dependency and source/build
 identity evidence. The silent UI checklist remains a separate observed/manual check.
+
+For transfers to older macOS, Python's archive writer avoids Sequoia-specific extended
+attributes that High Sierra's tar warns about. From `build`, before adding run results:
+
+```sh
+python3 -m tarfile -c m1-qualification-2026-10-17.tar.gz m1-qualification-2026-10-17
+```
+
+Verify the archive hash at the destination and require the bundle runner's complete
+artifact-hash check to pass before accepting any test evidence. Do not transfer SSH
+credentials or install the bundle over an existing working app/plugin.

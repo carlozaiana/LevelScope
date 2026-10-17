@@ -1,0 +1,17 @@
+Analysis of sampling LevelScope Standalone (pid 4065) every 1 millisecond
+Process:         LevelScope Standalone [4065]
+Path:            /Users/USER/*/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone
+Load Address:    0x1021b4000
+Identifier:      com.studioparadiso.levelscope.standalone
+Version:         1.0.0 (1.0.0)
+Code Type:       ARM64
+Platform:        macOS
+Parent Process:  launchd [1]
+Target Type:     live task
+
+Date/Time:       2026-10-17 14:06:55.537 +0200
+Launch Time:     2026-10-17 14:03:58.374 +0200
+OS Version:      macOS 15.7.9 (24G830)
+Report Version:  7
+Analysis Tool:   /usr/bin/sample
+

@@ -1,0 +1,48 @@
+{
+  "tolerances": {
+    "I": 0.01,
+    "M": 0.01,
+    "S": 0.01,
+    "TP": 0.01,
+    "SP": 0.01,
+    "LRA": 0.1
+  },
+  "comparison": "Actual High Sierra x86_64 versus Sequoia arm64, same delivered universal binaries and pinned inputs",
+  "suites": {
+    "ebu": {
+      "files": 70,
+      "passed": true,
+      "errors": [],
+      "max_absolute_difference": {
+        "I": 0.0,
+        "M": 0.0,
+        "S": 0.0,
+        "TP": 0.0,
+        "SP": 0.0,
+        "LRA": 0.0
+      },
+      "sequoia_execution_arch": "arm64",
+      "high_sierra_execution_arch": "x86_64",
+      "same_binary_sha256": true,
+      "same_manifest_sha256": true,
+      "time_series_comparison": "All M/S curve timestamps/values, successive-max checkpoints and criterion min/max readings checked by compare_results; no differences outside tolerance."
+    },
+    "itu": {
+      "files": 39,
+      "passed": true,
+      "errors": [],
+      "max_absolute_difference": {
+        "I": 0.0,
+        "M": 0.0,
+        "S": 0.0,
+        "TP": 1.7763568394002505e-15,
+        "SP": 0.0,
+        "LRA": 0.0
+      },
+      "sequoia_execution_arch": "arm64",
+      "high_sierra_execution_arch": "x86_64",
+      "same_binary_sha256": true,
+      "same_manifest_sha256": true
+    }
+  }
+}

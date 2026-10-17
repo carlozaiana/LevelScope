@@ -90,7 +90,12 @@ four separately labelled supplementary sanity checks. Official files are 48 kHz;
 generated multirate checks remain separate. Cases 11/14 validate successive kernel
 maxima, without claiming live display/scheduler behavior. See the manifest, runner and
 saved report under `Tests/Reference` and the updated handover for exact evidence.
-Intel High Sierra execution and interactive UI qualification remain outstanding.
+Final qualification update (17 October 2026): actual Intel High Sierra 10.13.6 and
+arm64 Sequoia 15.7.9 both pass the 184 measurement checks, 205 scaffold checks,
+eight runner tests, both pinned official suites and the silent interactive UI checklist.
+Cross-platform comparisons have zero errors within the budgets above. See
+[17_M1QualificationResults.md](17_M1QualificationResults.md) for exact identities,
+results and scope. The measurement checkpoint is `measurement-milestone-2026-10-17`.
 
 ## Video and transport contract (design only)
 

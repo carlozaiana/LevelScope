@@ -1,0 +1,73 @@
+{
+  "source_commit": "b3fe9dece6b9d4cd2d8f6a3aebca69b8d0534e9c",
+  "date": "2026-10-17",
+  "method": "Agent-operated Screen Sharing session with visual observations of the actual High Sierra UI; source folder/process verified through SSH.",
+  "app_sha256": "2ae5ad2702d3b1a0e832c0866440ce8fba51726b5132522f28ffc4f5c4481f10",
+  "execution_arch": "x86_64",
+  "status": "passed",
+  "safety": {
+    "device": "closed throughout",
+    "routing": "all muted",
+    "playback": "never started",
+    "system_audio_changes": false,
+    "isolation": "Dedicated LevelScope-M1-qualification-2026-10-17 folder; existing app/plugin installations preserved"
+  },
+  "checks": [
+    [
+      "import_and_roles",
+      "stereo.wav imported from isolated ui-fixtures folder; Measure Source disabled until Left/Right roles confirmed. Both outputs Muted."
+    ],
+    [
+      "source_measurement",
+      "UI I/M/S -23.0 LUFS, LRA 1.3 LU with under-60-second warning, TP/SP -23.0 dB. Delivery compliance not evaluated."
+    ],
+    [
+      "current_zero",
+      "Initialized unmeasured Current State at 0 dB. Re-measure matched displayed Source metrics; revision 1 measured."
+    ],
+    [
+      "gain_invalidation",
+      "Changed full gain text to -6.0 dB. Revision 2, Needs re-measurement yes, Not measured, metrics cleared."
+    ],
+    [
+      "gain_remeasurement",
+      "UI I/M/S -29.0 LUFS, TP/SP -29.0 dB, LRA 1.3 LU; Current State measured revision 2."
+    ],
+    [
+      "replacement",
+      "Replaced measured WAV with AIFF; Current State cleared, revision reset, trim 0.0 dB, role confirmation required again."
+    ],
+    [
+      "aiff",
+      "stereo.aiff imported, roles confirmed and measured. I/M/S -23.0 LUFS, TP/SP -23.0 dB, LRA 1.3 LU flagged unstable."
+    ],
+    [
+      "flac",
+      "stereo.flac imported, roles confirmed and measured with same displayed values as AIFF/WAV."
+    ],
+    [
+      "unsupported_layout",
+      "unsupported-12ch.wav imported. After role confirmation Measure Source stayed disabled and supported-layout/rate restriction displayed. Scrolled through all 12 routes; all Muted."
+    ],
+    [
+      "cancel",
+      "long-stereo.wav imported and roles confirmed. Measurement visibly in progress (7%) before cancellation. Job cancelled; result discarded, with no metrics published."
+    ],
+    [
+      "clear",
+      "Clear Source returned to Import, removed source and routes, reset Current State and showed No source selected yet."
+    ],
+    [
+      "export",
+      "Export view: Render/export available no, Exact rendered-output verification passed no, Export approved no, Can export no."
+    ],
+    [
+      "close_during_measurement",
+      "Reimported long-stereo.wav, confirmed roles, started measurement (visible 15%), closed window. Returned to Finder; pgrep found no app process. Relaunch showed empty Import state, No job started and Device closed."
+    ]
+  ],
+  "observations": [
+    "Original empty app window was closed before launching the copy inside the isolated test folder; its app bundle was not modified.",
+    "Displayed values have 0.1-unit precision; exact numerical parity is covered by the reference reports."
+  ]
+}

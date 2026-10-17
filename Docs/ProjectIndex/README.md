@@ -17,7 +17,8 @@ This folder is the persistent orientation layer for future development chats. Re
 - **Implement DSP/module behavior:** 02 + 03 + 06
 - **UI overhaul/localization:** 01 + 04 + 05
 - **Standalone implementation / next logic-module chat:** [13_StandaloneScaffoldHandover.md](13_StandaloneScaffoldHandover.md), then 00 + 09 + 11 and the proposal spec
-- **Video implementation:** [15_VideoImplementationHandover.md](15_VideoImplementationHandover.md), after the measurement qualification gate
+- **Video implementation:** [15_VideoImplementationHandover.md](15_VideoImplementationHandover.md), from the qualified `measurement-milestone-2026-10-17` checkpoint
+- **M1 qualification evidence:** [17_M1QualificationResults.md](17_M1QualificationResults.md)
 - **VST3 measurement parity:** [16_Vst3MeasurementParityMilestone.md](16_Vst3MeasurementParityMilestone.md), a separate future milestone
 - **Automation/preset/state compatibility:** 03 + 04 + 08
 
