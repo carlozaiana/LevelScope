@@ -1,0 +1,27 @@
+{
+  "attempt": "sequoia-01",
+  "qualified": false,
+  "reason": "Automation sandbox prevented JUCE temporary fixtures and CPU/model sysctl reads. M2, measurement and video fixture creation failed; scaffold, runner and official reference checks completed. Same candidate passed entire suite outside sandbox in sequoia-02.",
+  "artifact_identity_sha256": "2c53a2f6646015107ea690e0e11ef137aff14a177a6eddc2f79d5416d7b29d28",
+  "failed_logs": {
+    "compliance.log": "FAIL: M2 temporary fixture created\nFAIL: 73 M2 checks; no audio device opened\n",
+    "measurement.log": "FAIL: fixture encoder\n",
+    "video.log": "FAIL after 217935: transport fixture file\n"
+  },
+  "raw_artifacts_sha256": {
+    "summary.json": "16d4803b6f1304db2e4d5b7c70d915de1368cb70591aa0fd36e92c14dcd06115",
+    "runner.log": "f8f7b0ac7f2b53ac4e96000f166430c488f2c37e059ad5502b09d60f29d363b8",
+    "ebu.json": "e141ee23cd0c379963aadf3456fcc73d7f6c73a0eca13652215b37b8940e8833",
+    "measurement.log": "3325583f89d0494ad6a9987af3f2a4506e1351b912941c23c0dbea87f8704bf6",
+    "video.log": "b0116b206208e5e47f26d772b89aba0478ed0aec5e0c4a16c415457b7d2cf8a7",
+    "itu.log": "9571a299c82a4aa12593daf8b7ed82d5c1eb5874cfefdd6f4a5a56e0c6f1d16e",
+    "ebu.log": "18e65c40d2edcd18e30155f9ca4f7a49b0e066f90ea10aa588ab78922e03d313",
+    "identity.json": "2c53a2f6646015107ea690e0e11ef137aff14a177a6eddc2f79d5416d7b29d28",
+    "itu.json": "40d2016a34fdd3e95ef116d90baaa732feb9c50a3cf1d6548577a08253060732",
+    "compliance.log": "7dfd82d5bd508bec3a860693d2d3909482f3842d33840b5c3aa3c17298900bc2",
+    "compliance.json": "60f473dcc015522db90f81c1bd256cb079c867dbb9245299b3a166fb4d5d22f3",
+    "environment.json": "02ae77efdcb9fc87cf4c6ba9e5fcc272370f6683042695b02b520442ddba393b",
+    "runs.json": "c94479fbfad47d283de252d5ee7a31fc90b9bf88ff5543aac174aec1feb082bb",
+    "scaffold.log": "83c0192f04df4efeedb4aa0f4fa23fc885571ce221c6b6069f5ac8fa2ebc0e48"
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "status": "PASS_WITH_DISPLAY_FINDING",
+  "platform": "Intel High Sierra 10.13.6 (17G66), x86_64",
+  "method": "User performed initial WAV import. Agent confirmed roles and performed every subsequent checklist action through CUA and Screen Sharing after restoring foreground input delivery.",
+  "app_sha256": "c478bb945aa760fd3b49bd1d50d2bc5ba7f38d07fe8b8791f32c81cc34bb6d14",
+  "device": "Closed throughout",
+  "routing": "Muted throughout",
+  "playback": "Stopped throughout",
+  "candidate": "candidate-01",
+  "checks": [
+    {
+      "id": "source-import-roles",
+      "passed": true,
+      "observation": "User imported WAV. Agent observed decoded stereo.wav with Measure disabled, then clicked Confirm roles and observed Measure enabled."
+    },
+    {
+      "id": "unconfirmed-applicability",
+      "passed": true,
+      "observation": "Measured Source remains NOT EVALUATED until programme context confirmed."
+    },
+    {
+      "id": "source-pass",
+      "passed": true,
+      "observation": "Source PASS: I -22.993358 LUFS, TP -22.998804 dBTP; selected-rule wording visible."
+    },
+    {
+      "id": "current-zero",
+      "passed": true,
+      "observation": "Initialized 0 dB Current State measured PASS with identical displayed I/TP."
+    },
+    {
+      "id": "gain-invalidation",
+      "passed": true,
+      "observation": "-6 dB trim invalidated Current State; Source PASS remained."
+    },
+    {
+      "id": "gain-remeasurement",
+      "passed": true,
+      "observation": "Remeasured Current State FAIL: I -28.993358, TP -28.998804; individual rule outcomes visible."
+    },
+    {
+      "id": "profile-reuse",
+      "passed": true,
+      "observation": "None and ATSC placeholder NOT EVALUATED; returning to EBU immediately restored Source PASS/Current FAIL without Measure."
+    },
+    {
+      "id": "monitor-isolation",
+      "passed": true,
+      "observation": "Monitor -30 to -40 dB preserved outcomes with device closed and both routes muted."
+    },
+    {
+      "id": "picture-isolation",
+      "passed": true,
+      "observation": "Attached cfr-exact.mov, offset +1 s; stopped picture/excluded embedded audio; Source PASS/Current FAIL retained."
+    },
+    {
+      "id": "replacement",
+      "passed": true,
+      "observation": "AIFF replacement reset applicability, Source measurement and Current State."
+    },
+    {
+      "id": "formats",
+      "passed": true,
+      "observation": "AIFF and FLAC separately imported, roles confirmed, measurement completed; unconfirmed applicability blocked evaluation."
+    },
+    {
+      "id": "unsupported-layout",
+      "passed": true,
+      "observation": "12-channel source imported/roles confirmed; Measure disabled, supported-layout explanation displayed; no pass."
+    },
+    {
+      "id": "cancel",
+      "passed": true,
+      "observation": "10-minute WAV measurement cancelled at 15%; result discarded, NOT EVALUATED."
+    },
+    {
+      "id": "clear",
+      "passed": true,
+      "observation": "Clear Source removed source/current evidence and applicability."
+    },
+    {
+      "id": "close-running",
+      "passed": true,
+      "observation": "Reimported long stereo source, confirmed roles, started measurement and observed 15%; clicked the app close button. Window closed without a crash dialog; SSH ps/pgrep confirmed candidate PID 868 exited and no LevelScope app process remained."
+    },
+    {
+      "id": "clean-relaunch",
+      "passed": true,
+      "observation": "Relaunched isolated candidate-01 after close during measurement; fresh no-source/no-target session, Device closed and monitor -30 dB. Then closed the app again. Executable architecture was recorded separately in app-process.txt."
+    }
+  ],
+  "findings": [
+    {
+      "id": "stale-import-status-wording",
+      "severity": "display",
+      "observation": "Import status retained Not measured after successful measurement. The separately displayed measurement status and measured verdict were correct. Removed measurement wording from three import/role status strings; corrected candidate-02 requires qualification before completion."
+    }
+  ],
+  "input_workaround": "Open the local Screen Sharing View menu, read its AX state, cancel that menu, and perform the remote click within the same CUA call (100\u2013200 ms mouse-down). Keeping these actions together restores reliable foreground delivery. Type into fields, inspect the entered value, then commit by clicking a different control. No persistent system setting or audio configuration change.",
+  "evidence": {
+    "ui-high-sierra/aiff-measured.png": "cfe9393d4042d8fa4ce045a97c4809e15c3782c84aedfbf20ed97b34d4f9ca35",
+    "ui-high-sierra/cancelled.png": "830a91746c15566b3a1c5e9bba9cfca25b0fd15862f448c9de25cbc488a82486",
+    "ui-high-sierra/clean-relaunch.png": "7cd527907d31dc621ff8165d7def01c88c80ceec979086fc1acc0cd76c8f83d3",
+    "ui-high-sierra/close-measurement-active.png": "ee1b7779504b5e16178d8b052a2916c8fd626ee9fdff172636093b481b89a321",
+    "ui-high-sierra/closed-during-measurement.png": "d925d11c16e7927cc764fd90f7dda40ca08cfd7e3b2d8d3dad7f6b037179ecc3",
+    "ui-high-sierra/flac-measured.png": "f6560b5bdc8df9739d9d6bd1e8a01dd15d40563383435caeae2548b9dca2ae3b",
+    "ui-high-sierra/gain-fail.png": "ec53caa83684a18526d19724963381d891d77557794f8d08a3da69a42407a994",
+    "ui-high-sierra/gain-invalidated.png": "16df3c21203d4b680df2b6b0cac2d580b437f9a34e23da9d4b8ef1508432fcd2",
+    "ui-high-sierra/long-measurement-active.png": "de9193931c846b5ec7b3213ef12680adf8159b952476e51480d7c8aa04209484",
+    "ui-high-sierra/monitor-isolation.png": "89dcbe63f1e3238cfb7fa257d204e8f485d78027ba47188a46eb47a4af6418a7",
+    "ui-high-sierra/picture-isolation.png": "4c72598717802c1ff9e7b0b12bacd93338177e26bd92339dfa6092c6a8fca4d9",
+    "ui-high-sierra/picture-offset.png": "bc016188baca6394fb0101a05b186f12f7911450a48ab0609f2d8874dace937d",
+    "ui-high-sierra/profile-reuse.png": "4cf9fa15f00a91c8339bea82b577c64b8f0882f37cf05baadba19ba252bae80d",
+    "ui-high-sierra/source-cleared.png": "47a0af86ae10f63daeffccb85be4098926b4b0f3f176ad7bd814e246e4f681e7",
+    "ui-high-sierra/source-current-pass.png": "6dcbbd89220aa78e66a048f20ef8fc826fddd9fbb05ce267ad71430d5bedd990",
+    "ui-high-sierra/source-pass.png": "07afab5fd806229b4e34ebcb94a49775e88ae9bb1b78196110ec31d1917c6a3b",
+    "ui-high-sierra/source-replacement.png": "8fef1da5c4db50f1bfccebb03d91e6065eee0bd88d4056b38a5ee72141180573",
+    "ui-high-sierra/source-unconfirmed.png": "1ac3201cbc72929ca36a1203422f55e3a7d6eec4c1a87e1d2f46e7e48de87d41",
+    "ui-high-sierra/unsupported-layout.png": "f4df2383f15af5552be622f4e828158c8d64d1721bae77489449449c735bb9a8"
+  }
+}

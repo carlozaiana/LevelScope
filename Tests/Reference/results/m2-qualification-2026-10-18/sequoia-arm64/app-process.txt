@@ -1,0 +1,20 @@
+Analysis of sampling LevelScope Standalone (pid 6080) every 1 millisecond
+Process:         LevelScope Standalone [6080]
+Path:            /Users/USER/*/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone
+Load Address:    0x100a34000
+Identifier:      com.studioparadiso.levelscope.standalone
+Version:         1.0.0 (1.0.0)
+Code Type:       ARM64
+Platform:        macOS
+Parent Process:  launchd [1]
+Target Type:     live task
+
+Date/Time:       2026-10-18 11:54:15.606 +0200
+Launch Time:     2026-10-18 11:50:56.932 +0200
+OS Version:      macOS 15.7.9 (24G830)
+Report Version:  7
+Analysis Tool:   /usr/bin/sample
+
+Physical footprint:         35.6M
+Physical footprint (peak):  51.6M
+Idle exit:                  untracked

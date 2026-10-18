@@ -1,12 +1,13 @@
 # yaml-language-server: $schema=./ComplianceMatrix.schema.json
-# Standalone continuation (2026-10-15): the historical entries below are not a
-# numerical qualification of plugin metrics. See ProjectIndex/13_StandaloneScaffoldHandover.md
-# and 14_OfflineMeasurementContract.md for the separate M1 kernel, test evidence and
-# official EBU v05 pass (66 normative + 4 supplementary files) and remaining
-# High-Sierra/UI qualification. No delivery verdict is enabled.
+# Standalone status (2026-10-18): M1 qualification passed on actual High Sierra
+# and Sequoia, including both official suites and silent UI checks. See
+# ProjectIndex/17_M1QualificationResults.md and 20_MainIntegrationAcceptance.md.
+# Historical plugin primitive rows below do not claim standalone/plugin parity.
+# M2 bounded measured-rule evaluation is qualified on both actual platforms;
+# see 21_M2MeasuredCompliance.md for candidate identities, UI coverage and limits.
 
 schema_version: 1
-generated_at_utc: "2026-05-13T16:47:54Z"
+generated_at_utc: "2026-10-18T00:00:00Z"
 project: "LevelScope"
 profiles:
   - id: "ebu_r128"
@@ -49,7 +50,7 @@ requirements:
       - "Current: none"
       - "Planned: measured program loudness fields in compliance report"
     gaps:
-      - "No deterministic automated numeric regression suite yet."
+      - "Historical plugin path has no parity qualification; standalone M1 passed the automated suites on both actual platforms."
     next_actions:
       - action: "Add deterministic loudness regression vectors with pass/fail tolerances across 44.1/48/96/192 kHz."
         owner: "TBD"
@@ -149,33 +150,35 @@ requirements:
     notes: ""
 
   - req_id: "R-Profile-Targeting-005"
-    title: "Profile targeting (EBU R128 vs ATSC A/85)"
+    title: "Standalone versioned profile and measured-rule evaluation"
     profile_ids: ["ebu_r128", "atsc_a85"]
     category: "profile"
-    status: "planned"
-    summary: "Profiles are prioritized in roadmap documentation, but formal profile behavior/schema is not yet implemented."
+    status: "partial"
+    summary: "One bounded EBU R128-2023 whole-programme linear-audio QC profile; Source and Current State measured-rule evaluation. ATSC remains a placeholder."
     user_visible_controls:
-      - "TODO: profile-selection controls are not yet specified."
+      - "Target profile selector"
+      - "Programme applicability confirmation"
+      - "Separate Source and Current State rule results"
     validation:
-      method: "none"
+      method: "both"
       checks:
-        - name: "TODO: profile validation plan"
-          reference: ""
-          evidence: "TODO: no profile validator exists yet."
+        - name: "M2 implementation and qualification"
+          reference: "Docs/ProjectIndex/21_M2MeasuredCompliance.md"
+          evidence: "128 M2 checks, existing regression suites, both official reference suites and silent UI checks pass on actual High Sierra and arm64 Sequoia. Candidate-02 display correction rechecked on both; all automated suites rerun."
     implementation_refs:
-      - "Docs/ProjectIndex/07_StandardsCoverageAndRoadmap.md"
-      - "Docs/ComplianceMatrix.md"
+      - "Source/Core/Proposal/Model/TargetProfile.h"
+      - "Source/Core/Proposal/VerificationEngine.cpp"
+      - "Source/Standalone/StandaloneCompliance.cpp"
     export_report_outputs:
-      - "Current: none"
-      - "Planned: profile ID, target set, tolerance set"
+      - "Current: in-memory selected-rule results only; public export unavailable"
     gaps:
-      - "No formal profile schema or targeting engine contract yet."
+      - "No general profile editor, ATSC dialogue evaluation or complete delivery/export compliance."
     next_actions:
-      - action: "Define machine-readable profile schema for targets/tolerances/gating outputs."
-        owner: "TBD"
+      - action: "Continue only after approval of the next bounded milestone from m2-measured-compliance-2026-10-18; broader delivery/export compliance remains outside M2."
+        owner: "LogicModule"
         priority: "P1"
-    risk_level: "high"
-    notes: ""
+    risk_level: "medium"
+    notes: "M1 and accepted video remain separate preserved qualifications; VST3 parity is deferred."
 
   - req_id: "R-Compliance-Reporting-006"
     title: "Compliance reporting/export outputs"

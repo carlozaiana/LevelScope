@@ -1,39 +1,13 @@
 #pragma once
 
-#include <juce_core/juce_core.h>
+#include "Core/Proposal/Model/TargetProfile.h"
 
 namespace levelscope::standalone
 {
 // [BEGIN LS-STANDALONE-TARGET-PROFILES]
 
-struct TargetProfileLimits
-{
-    bool hasIntegratedLoudnessTarget = false;
-    double integratedLufs = 0.0;
-    double integratedToleranceLu = 0.0;
-
-    bool hasMaxLoudnessRange = false;
-    double maxLoudnessRangeLu = 0.0;
-
-    bool hasTruePeakCeiling = false;
-    double truePeakCeilingDbtp = 0.0;
-
-    bool valuesAreAuthoritative = false;
-
-    juce::String validationNote = "No authoritative compliance values loaded.";
-};
-
-struct TargetProfile
-{
-    juce::String id;
-    juce::String displayName;
-    juce::String familyName;
-    juce::String description;
-
-    bool isSelectableForWorkflow = false;
-
-    TargetProfileLimits limits;
-};
+using TargetProfileLimits = proposal::TargetProfileLimits;
+using TargetProfile = proposal::TargetProfile;
 
 class StandaloneTargetProfileCatalog
 {
@@ -47,13 +21,7 @@ public:
         switch (index)
         {
             case 1:
-                profile.id = "ebu-r128-family-placeholder";
-                profile.displayName = "EBU R128 family";
-                profile.familyName = "EBU R128";
-                profile.description = "Broadcast loudness target family placeholder. Numeric compliance values are intentionally not authoritative in this scaffold.";
-                profile.isSelectableForWorkflow = true;
-                profile.limits.validationNote = "Profile family selected. Authoritative EBU R128 compliance values are not loaded yet.";
-                return profile;
+                return proposal::ebuR128ProgrammeQc();
 
             case 2:
                 profile.id = "atsc-a85-family-placeholder";
@@ -78,7 +46,7 @@ public:
                 profile.id = "none";
                 profile.displayName = "No target selected";
                 profile.familyName = "None";
-                profile.description = "Source and Current State measurement do not require a delivery target. Select an authoritative profile when delivery evaluation becomes available.";
+                profile.description = "Source and Current State measurement do not require a delivery target. Select a profile to evaluate its supported measured rules.";
                 profile.isSelectableForWorkflow = false;
                 profile.limits.validationNote = "No target profile family selected.";
                 return profile;
@@ -89,7 +57,7 @@ public:
     {
         juce::String text;
 
-        text << "Authoritative compliance values loaded: ";
+        text << "Authoritative selected rules loaded: ";
         text << (profile.limits.valuesAreAuthoritative ? "yes" : "no");
         text << "\n";
 
@@ -119,7 +87,12 @@ public:
             text << "--";
         text << "\n\n";
 
-        text << "Profile note: " << profile.limits.validationNote;
+        text << "Edition: " << profile.standardEdition << "\n"
+             << "Definition: " << profile.definitionVersion << "\n"
+             << "Applicability: pre-produced whole-programme linear-audio QC only.\n"
+             << "LRA has no acceptance rule in the EBU programme QC profile.\n"
+             << profile.meterToleranceNote << "\n\n"
+             << "Profile note: " << profile.limits.validationNote;
 
         return text;
     }

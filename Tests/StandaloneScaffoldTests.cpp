@@ -242,7 +242,7 @@ void sessionChecks (const juce::File& directory)
         session.setSelectedTargetProfileIndex (profile);
         const auto gates = session.getWorkflowReadiness();
         expect (! gates.canDraftProposal() && ! gates.canExport()
-                && ! gates.targetLimitsAuthoritative, "placeholder profile cannot confer readiness");
+                && gates.targetLimitsAuthoritative == (profile == 1), "only EBU scalar rules authoritative; proposal/export remain unavailable");
     }
     session.confirmLayout();
     session.initializeCurrentStateFromSource();

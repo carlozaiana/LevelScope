@@ -194,7 +194,7 @@ void StandaloneMainComponent::configureLabels()
     titleLabel.setColour (juce::Label::textColourId, juce::Colours::white);
     addAndMakeVisible (titleLabel);
 
-    subtitleLabel.setText ("Offline Source / Current State measurement. Source audition. Delivery compliance not evaluated.",
+    subtitleLabel.setText ("Measured Source / Current State rules. Source audition. Complete delivery compliance is not evaluated.",
                            juce::dontSendNotification);
     subtitleLabel.setJustificationType (juce::Justification::centredLeft);
     subtitleLabel.setColour (juce::Label::textColourId, juce::Colour (0xffc6ccd7));
@@ -228,6 +228,14 @@ void StandaloneMainComponent::configureTargetProfileBox()
     };
 
     addAndMakeVisible (targetProfileBox);
+    applicabilityConfirmation.setTooltip ("Confirm programme context. Excludes live exceptions, deliberate lower targets, short-form supplements and distribution-specific requirements.");
+    applicabilityConfirmation.onClick = [this]
+    {
+        session.setProgrammeApplicability (applicabilityConfirmation.getToggleState()
+            ? proposal::Applicability::preProducedLinearProgramme : proposal::Applicability::unconfirmed);
+        refreshFromSession();
+    };
+    addAndMakeVisible (applicabilityConfirmation);
 }
 
 void StandaloneMainComponent::configureNavigationButtons()
@@ -347,6 +355,8 @@ void StandaloneMainComponent::refreshFromSession()
                                 juce::dontSendNotification);
 
     targetProfileBox.setSelectedId (session.selectedTargetProfileIndex + 1, juce::dontSendNotification);
+    applicabilityConfirmation.setToggleState (session.programmeApplicability == proposal::Applicability::preProducedLinearProgramme, juce::dontSendNotification);
+    applicabilityConfirmation.setEnabled (session.sourceDocument.hasSource && ! session.job.isActive());
 
     clearSourceButton.setEnabled (session.sourceDocument.hasSource || session.job.isActive());
     chooseSourceButton.setEnabled (! session.job.isActive());
@@ -391,6 +401,7 @@ juce::String StandaloneMainComponent::buildSourceStateText() const
     juce::String text;
 
     text << "SOURCE\n\n";
+    text << evaluationText (session.evaluation (MeasurementDomain::source)) << "\n";
     text << "File: " << session.sourceDocument.displayName << "\n";
     text << "Import status: " << session.sourceDocument.importStatus << "\n";
     text << "Measurement status: " << session.source.statusText << "\n\n";
@@ -437,7 +448,7 @@ juce::String StandaloneMainComponent::buildTargetStateText() const
     text << (profile.isSelectableForWorkflow ? "target family selected" : "no target family selected");
     text << "\n";
 
-    text << "Compliance enforcement: not implemented\n";
+    text << "Evaluation: selected measured rules only\n";
     text << "Proposal use: blocked; proposal engine not implemented\n";
 
     return text;
@@ -448,6 +459,7 @@ juce::String StandaloneMainComponent::buildCurrentStateText() const
     juce::String text;
 
     text << "CURRENT STATE\n\n";
+    text << evaluationText (session.evaluation (MeasurementDomain::currentState)) << "\n";
     text << "Initialized: " << (session.currentStateDocument.isInitialized ? "yes" : "no") << "\n";
     text << "Status: " << session.currentStateDocument.statusText << "\n";
     text << "Based on Source: " << session.currentStateDocument.basedOnSourceName << "\n";
@@ -497,6 +509,7 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
         case WorkflowPage::analyze:
         {
             text << "Full-program offline measurement.\n\n";
+            text << evaluationText (session.evaluation (MeasurementDomain::source)) << "\n";
             const auto error = OfflineAnalysisService::validateRequest (session.measurementContext (MeasurementDomain::source), MeasurementDomain::source);
             text << (error.isEmpty() ? "Ready to measure Source." : error) << "\n\n";
             text << "Supported: mono, stereo and 5.0/5.1 at 44.1/48/96/192 kHz.\n";
@@ -508,6 +521,7 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
         }
 
         case WorkflowPage::currentState:
+            text << evaluationText (session.evaluation (MeasurementDomain::currentState)) << "\n";
             text << "Initialize Current State, adjust static gain, then re-measure.\n\n";
             text << "Static gain applies to every file channel, including LFE.\n";
             text << "Editing gain invalidates the previous Current State measurement.\n";
@@ -532,7 +546,7 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
             text << "- Render/export available: no\n";
             text << "- Export: blocked\n\n";
 
-            text << "Source and Current State measurements are available. Delivery profiles, proposals and public export remain unavailable.\n";
+            text << "Selected Source/Current State rules are evaluated. A rule pass does not verify an encoded export. Proposals and public export remain unavailable.\n";
             break;
         }
 
@@ -567,6 +581,7 @@ void StandaloneMainComponent::resized()
     targetProfileLabel.setBounds (targetRow.removeFromLeft (120));
     targetProfileBox.setBounds (targetRow.removeFromLeft (360));
     workflowStateLabel.setBounds (targetRow.reduced (16, 0));
+    applicabilityConfirmation.setBounds (bounds.removeFromTop (28));
 
     bounds.removeFromTop (14);
 

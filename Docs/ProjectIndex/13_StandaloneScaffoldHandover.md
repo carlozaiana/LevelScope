@@ -12,6 +12,15 @@ Historical scaffold observations below remain scoped to their original dates.
 
 ## Current integration handover (17 October 2026)
 
+M2 continuation (18 October): the approved bounded EBU programme QC definition and
+measured-rule evaluator are implemented and qualified on actual High Sierra and
+arm64 Sequoia, saved as `m2-measured-compliance-2026-10-18` on the logic branch
+and fast-forwarded into main. The final main revision at publication is this tag's
+peeled commit; its annotation records the full SHA. See
+[21_M2MeasuredCompliance.md](21_M2MeasuredCompliance.md) for candidate-02 identity,
+automated/UI coverage, exact rule semantics and remaining limits. The historical descriptions below
+do not override that continuation.
+
 The qualified measurement and video milestones are integrated into main, with
 accepted video integration base `247bf97c5872d435def205592acdb6889d3091f8` and a subsequent documentation/evidence
 follow-up. Start subsequent logic-module work from the latest fetched `origin/main`;

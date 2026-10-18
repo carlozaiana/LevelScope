@@ -1,0 +1,96 @@
+{
+  "status": "PASS",
+  "platform": "arm64 Sequoia 15.7.9 (24G830)",
+  "method": "Direct silent interaction through CUA; screenshots/text retained locally",
+  "app_sha256": "c478bb945aa760fd3b49bd1d50d2bc5ba7f38d07fe8b8791f32c81cc34bb6d14",
+  "device": "Closed throughout",
+  "routing": "Muted throughout",
+  "playback": "Stopped throughout",
+  "checks": [
+    {
+      "id": "source-import-roles",
+      "passed": true,
+      "observation": "WAV imports; measurement unavailable until channel roles confirmed."
+    },
+    {
+      "id": "unconfirmed-applicability",
+      "passed": true,
+      "observation": "Measured Source remains NOT EVALUATED until programme context confirmed."
+    },
+    {
+      "id": "source-pass",
+      "passed": true,
+      "observation": "Source PASS: I -22.993358 LUFS, TP -22.998804 dBTP; selected-rule wording visible."
+    },
+    {
+      "id": "current-zero",
+      "passed": true,
+      "observation": "Initialized 0 dB Current State measured PASS with identical displayed I/TP."
+    },
+    {
+      "id": "gain-invalidation",
+      "passed": true,
+      "observation": "-6 dB trim invalidated Current State; Source PASS remained."
+    },
+    {
+      "id": "gain-remeasurement",
+      "passed": true,
+      "observation": "Remeasured Current State FAIL: I -28.993358, TP -28.998804; individual rule outcomes visible."
+    },
+    {
+      "id": "profile-reuse",
+      "passed": true,
+      "observation": "None and ATSC placeholder NOT EVALUATED; returning to EBU immediately restored Source PASS/Current FAIL without Measure."
+    },
+    {
+      "id": "monitor-isolation",
+      "passed": true,
+      "observation": "Monitor -30 to -40 dB preserved outcomes with device closed and both routes muted."
+    },
+    {
+      "id": "picture-isolation",
+      "passed": true,
+      "observation": "Attached cfr-exact.mov, offset +1 s; stopped picture/excluded embedded audio; Source PASS/Current FAIL retained."
+    },
+    {
+      "id": "replacement",
+      "passed": true,
+      "observation": "AIFF replacement reset applicability, Source measurement and Current State."
+    },
+    {
+      "id": "formats",
+      "passed": true,
+      "observation": "AIFF and FLAC separately imported, roles confirmed, measurement completed; unconfirmed applicability blocked evaluation."
+    },
+    {
+      "id": "unsupported-layout",
+      "passed": true,
+      "observation": "12-channel source imported/roles confirmed; Measure disabled, supported-layout explanation displayed; no pass."
+    },
+    {
+      "id": "cancel",
+      "passed": true,
+      "observation": "10-minute WAV measurement cancelled at 15%; result discarded, NOT EVALUATED."
+    },
+    {
+      "id": "clear",
+      "passed": true,
+      "observation": "Clear Source removed source/current evidence and applicability."
+    },
+    {
+      "id": "close-running",
+      "passed": true,
+      "observation": "Restarted long measurement, observed 15%, quit; process exited, no crash dialog observed; pgrep confirmed absent."
+    },
+    {
+      "id": "clean-relaunch",
+      "passed": true,
+      "observation": "Relaunched isolated candidate after close during measurement; fresh no-source/no-target session, Device closed, then quit. Actual ARM64 app process header captured."
+    }
+  ],
+  "evidence": {
+    "ui-sequoia/gain-fail.png": "8deb83892925128a1c179a8104cfee2f94e67064665d233b1953e789a8edba5d",
+    "ui-sequoia/source-current-pass.txt": "5a2e044acfee6d6bfd58c55bcaac4b34c9f9874d729b388090a3011e7e2a9f9f",
+    "ui-sequoia/source-current-pass.png": "abcf0c22d62d8b76d76b7a30fbbe76738d61d115bcf21872780491d597d9d7ce"
+  }
+}

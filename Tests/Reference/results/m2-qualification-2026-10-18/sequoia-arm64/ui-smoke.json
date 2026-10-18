@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "candidate": "candidate-02",
+  "platform": "arm64 Sequoia 15.7.9 (24G830)",
+  "app_sha256": "af0b45770102e69aac195066d371086dc832c189f7be94938a5ae0455edba305",
+  "device": "Closed throughout",
+  "routing": "Muted throughout",
+  "playback": "Stopped throughout",
+  "qualification_basis": {
+    "full_functional_checklist": "16 checks passed on candidate-01; see ../candidate-01/sequoia-arm64/ui-smoke.json",
+    "final_change": "Only three static import/role messages changed, removing stale measurement wording. No processing, evaluation, worker, transport or audio-device behavior changed.",
+    "affected_ui_recheck": "Candidate-02 WAV import, role confirmation and measurement completion checked on this platform. Import wording accurately describes import/roles before and after measurement. The separate measurement status changes to Measured snapshot; selected rules evaluated separately.",
+    "regression_suites": "All automated suites rerun on candidate-02, including both official reference sets."
+  },
+  "checks": [
+    {
+      "id": "corrected-import-role-status",
+      "passed": true
+    },
+    {
+      "id": "corrected-status-after-measurement",
+      "passed": true
+    },
+    {
+      "id": "no-profile-remains-not-evaluated",
+      "passed": true
+    },
+    {
+      "id": "silent-device-routing-transport",
+      "passed": true
+    },
+    {
+      "id": "candidate-02-closed-after-check",
+      "passed": true
+    }
+  ],
+  "method": "CUA native app interaction",
+  "evidence": {
+    "ui-sequoia-candidate-02/corrected-measured-status.png": "d40b494a9fb538485de20c2a17857512b1028801795ef15beb3214b778e40a4e",
+    "ui-sequoia-candidate-02/corrected-measured-status.txt": "f9c884303954bc2dc2178d37fd68f6f2cb88e19261b7a7eace2e5df071dcd6bb"
+  }
+}

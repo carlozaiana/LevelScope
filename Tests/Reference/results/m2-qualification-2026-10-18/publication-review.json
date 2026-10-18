@@ -1,0 +1,96 @@
+{
+  "date": "2026-10-18",
+  "phase": "Pre-publication qualification and preservation review",
+  "accepted_checkpoint_tag": "m2-measured-compliance-2026-10-18",
+  "final_main_revision_at_publication": "m2-measured-compliance-2026-10-18^{commit}",
+  "full_revision_record": "The immutable annotated tag records the full checkpoint/final-main SHA after commit creation.",
+  "main_before": "514b7bce25a34ccd02af28a6a24100a44f8189a4",
+  "integration": "Fast-forward; no integration fixes or implementation changes",
+  "qualification_status": "PASS",
+  "source_digest": "9efedef8a34cab28971a60d7723d16bb50dc763fc1b649a3c3e4ed8c7d9229ea",
+  "source_files_verified": 91,
+  "source_file_set_complete": true,
+  "packaged_artifacts_verified": 230,
+  "original_evidence_files_verified": 73,
+  "identity_sha256": "9060672020a66a238328beb429a9022bf1fc1ea9f0fb8b050722c8afdfb29ab6",
+  "app_sha256": "af0b45770102e69aac195066d371086dc832c189f7be94938a5ae0455edba305",
+  "reused_evidence": "Actual Intel High Sierra and arm64 Sequoia candidate-02 automated results; full candidate-01 silent UI checklist plus both-platform affected candidate-02 display checks.",
+  "reuse_reason": "All manifested source/build inputs match the final qualified candidate. Publication changes only documentation/evidence metadata.",
+  "cross_platform_recheck": {
+    "passed": true,
+    "errors": [],
+    "maximum_differences": {
+      "itu": {
+        "I": 0,
+        "M": 0,
+        "S": 0,
+        "TP": 1.7763568394002505e-15,
+        "LRA": 0
+      },
+      "ebu": {
+        "I": 0,
+        "M": 0,
+        "S": 0,
+        "TP": 0,
+        "LRA": 0
+      }
+    },
+    "tolerances": {
+      "I": 0.01,
+      "M": 0.01,
+      "S": 0.01,
+      "TP": 0.01,
+      "LRA": 0.1
+    }
+  },
+  "existing_checkpoints": {
+    "high-sierra-pre-scaffold-2026-10-15": {
+      "tag_object": "b3c6e845482dbe8a0ec9778d5a9ad7953e614609",
+      "commit": "556d387ad772dc5e604ead95f1525f60e66fd5f9"
+    },
+    "measurement-milestone-2026-10-17": {
+      "tag_object": "76affb667b6dab066cb36b2a2c741525b9b6eeac",
+      "commit": "b29bc7c183743f35c6271d2d7ec8fb5ba1464591"
+    },
+    "standalone-scaffold-2026-10-15": {
+      "tag_object": "4c8bc35b788969e1f6e97dcdc57a601b01fff7cd",
+      "commit": "f192a8553e139d390056c9755f25eeb123bbc5e6"
+    },
+    "video-checkpoint-2026-10-17": {
+      "tag_object": "06f57524bedca1912c0d5c454f13561cec9ce5b4",
+      "commit": "700b9e77e439a8ca9bb7583adf826fac01dbe924"
+    }
+  },
+  "unrelated_untracked_sha256": {
+    ".DS_Store": "6ca403b297a61dc4c643069b18084a172392aced4831050cbb23257c48f57f8a",
+    "Docs/.DS_Store": "d2193e75b51bbf258a8ee6f65876d7a36bb3eac856f5bce5dbba0ae19122870a",
+    "Source/.DS_Store": "36ed587cf52612227481e30c7b7760c9039f79d03d7f7b9db2b31a486a2a4adb",
+    "Source/Core/.DS_Store": "1aa3d725fd3db21bacbbc4a908f8b561b598682209fc8119359b588e2c36e10a",
+    "Source/Core/Processing/.DS_Store": "ad1a60ff6db582810365ba9056c69006adb8046e1f5689330c1f4a8a0d19ac69",
+    "Tests/.DS_Store": "cf2818fc373fdf900db218f585a5dec6f3636e29b0e119626a8075435801d1f1",
+    "Tests/Reference/.DS_Store": "7a62af0700ce7ab15de9857c53d209afa436a0428a2592c7b7f225b48b4db6d8"
+  },
+  "video_worktree": {
+    "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation",
+    "head": "514b7bce25a34ccd02af28a6a24100a44f8189a4",
+    "status": "?? .DS_Store\n?? Source/.DS_Store\n?? Source/Core/.DS_Store\n?? Source/Core/Processing/.DS_Store\n?? Tests/.DS_Store\n?? Tests/Video/.DS_Store\n?? Tests/Video/results/.DS_Store\n",
+    "untracked_sha256": {
+      ".DS_Store": "5104722830cd289850589c37293945eac9041b7bb7c6172ee41f5131511b063c",
+      "Source/.DS_Store": "de55dd8c6b48276afb0b5b67475d8415c5a688dc9e7942e0d281b174828ec036",
+      "Source/Core/.DS_Store": "59c7ae7c01a93df4d0520f812d057729fdc7f4102a82c0a8a2ffa6cf24a99a99",
+      "Source/Core/Processing/.DS_Store": "59fecc4495769458121b76a56c8ed5cc510894b38d7c97f01444cd3623c055d8",
+      "Tests/.DS_Store": "aa3e316a14c55b3f75daead856638ff2331c5fc4a5c96ce8174bf22abaf81a62",
+      "Tests/Video/.DS_Store": "574673441d006ec6370ba43082dd2dd1e635832d91b52047f2464a96398d4eea",
+      "Tests/Video/results/.DS_Store": "20d3743ace48bb7273f9ec82185f25cc1a181cc528f76af3b3232416b125f333"
+    }
+  },
+  "excluded": "Downloaded media, build products, credentials and unrelated files. No plugin build/install, installed application changes, Pro40/system audio changes or changes to preserved Golem copies.",
+  "unresolved_qualification_issues": [],
+  "staged_review": {
+    "files": 96,
+    "manifested_source_and_evidence_match_index": true,
+    "excluded_media_builds_unrelated_files_absent": true,
+    "source_and_documentation_whitespace_check": "PASS",
+    "raw_evidence_whitespace": "Original JUCE CRLF JSON and EBU runner trailing spaces retained byte-for-byte to preserve recorded hashes; eight raw evidence files trigger generic git diff --check."
+  }
+}

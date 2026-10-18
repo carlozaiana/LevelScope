@@ -1,0 +1,84 @@
+{
+  "status": "PASS",
+  "date": "2026-10-18",
+  "candidate": "candidate-02",
+  "branch": "codex/logic-module",
+  "base_commit": "514b7bce25a34ccd02af28a6a24100a44f8189a4",
+  "source_digest": "9efedef8a34cab28971a60d7723d16bb50dc763fc1b649a3c3e4ed8c7d9229ea",
+  "identity_sha256": "9060672020a66a238328beb429a9022bf1fc1ea9f0fb8b050722c8afdfb29ab6",
+  "scope": "Versioned EBU R128-2023 pre-produced whole-programme linear-audio QC profile and measured Source/Current State rule evaluation.",
+  "profile": {
+    "id": "ebu-r128-2023-programme-linear-qc",
+    "version": "1.0.0",
+    "target_lufs": -23,
+    "qc_allowance_lu": 0.2,
+    "true_peak_ceiling_dbtp": -1,
+    "lra": "Informative; no ceiling"
+  },
+  "platforms": {
+    "sequoia-arm64": {
+      "automated": "PASS",
+      "m2_checks": 128,
+      "measurement_checks": 184,
+      "scaffold_checks": 205,
+      "video_checks": 329054,
+      "runner_tests": 8,
+      "itu_files": 39,
+      "ebu_normative_files": 66,
+      "ebu_rules": 72,
+      "ebu_readings": 1052,
+      "ebu_supplementary_files": 4,
+      "silent_ui": "PASS: full candidate-01 checklist plus affected candidate-02 display recheck; see ui-smoke.json",
+      "runtime": "15.7.9",
+      "architecture": "arm64",
+      "build": "321e6230d26129f41c62d9c0a22171be2e28ef4851dcbf3872d39fdc40a393ea"
+    },
+    "high-sierra-x86_64": {
+      "automated": "PASS",
+      "m2_checks": 128,
+      "measurement_checks": 184,
+      "scaffold_checks": 205,
+      "video_checks": 329054,
+      "runner_tests": 8,
+      "itu_files": 39,
+      "ebu_normative_files": 66,
+      "ebu_rules": 72,
+      "ebu_readings": 1052,
+      "ebu_supplementary_files": 4,
+      "silent_ui": "PASS: full candidate-01 checklist plus affected candidate-02 display recheck; see ui-smoke.json",
+      "runtime": "10.13.6",
+      "architecture": "x86_64",
+      "build": "321e6230d26129f41c62d9c0a22171be2e28ef4851dcbf3872d39fdc40a393ea"
+    }
+  },
+  "cross_platform_comparison": "cross-platform-comparison.json",
+  "unresolved_qualification_issues": [],
+  "checkpoint_ready": true,
+  "exclusions": [
+    "Proposal generation",
+    "Public export or complete delivery compliance",
+    "General profile editor",
+    "Embedded video soundtrack playback",
+    "VST3 measurement parity"
+  ],
+  "preservation": "Pre-publication preservation-audit.json records the qualification state. Publication advances main by authorized fast-forward only; existing tags, video worktree and unrelated files are preserved. No VST3 target built/installed; no installed app, Pro40, driver, service, system audio or preserved Golem copy changes.",
+  "process_shutdown_checks": {
+    "sequoia": {
+      "candidate_pid": 6080,
+      "pgrep_exit_code": 1,
+      "output": ""
+    },
+    "high_sierra": {
+      "candidate_pid": 1177,
+      "pgrep_exit_code": 1,
+      "output": ""
+    }
+  },
+  "checkpoint": {
+    "annotated_tag": "m2-measured-compliance-2026-10-18",
+    "revision": "m2-measured-compliance-2026-10-18^{commit}",
+    "final_main_revision_at_publication": "m2-measured-compliance-2026-10-18^{commit}",
+    "handover": "Docs/ProjectIndex/21_M2MeasuredCompliance.md",
+    "publication_audit": "publication-review.json"
+  }
+}

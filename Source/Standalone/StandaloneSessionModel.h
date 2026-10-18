@@ -9,6 +9,7 @@
 #include "StandaloneMedia.h"
 #include "StandaloneMeasurementService.h"
 #include "StandaloneVideo.h"
+#include "StandaloneCompliance.h"
 
 namespace levelscope::standalone
 {
@@ -69,7 +70,7 @@ struct SourceDocument
         media = info;
         layout = info.suggestedLayout;
         routing = OutputRouting();
-        importStatus = "Source decoded; confirm channel roles. Measurement not run.";
+        importStatus = "Source decoded; confirm channel roles.";
     }
 
     void clear()
@@ -147,6 +148,7 @@ public:
     MeasurementSummary currentState;
 
     int selectedTargetProfileIndex = 0;
+    proposal::Applicability programmeApplicability = proposal::Applicability::unconfirmed;
     uint64_t revision = 0;
     const juce::String sessionId = juce::Uuid().toString();
     SessionJob job;
@@ -159,6 +161,7 @@ public:
         c.fileLayout = sourceDocument.layout; c.range = { 0, c.media.frames };
         c.processing.staticGainDb = domain == MeasurementDomain::source ? 0 : currentStateDocument.staticGainDb;
         c.profile = getSelectedTargetProfile();
+        c.profileVersion = c.profile.definitionVersion;
 #ifdef LEVELSCOPE_MEASUREMENT_BUILD
         c.buildVersion = LEVELSCOPE_MEASUREMENT_BUILD;
 #else
@@ -200,7 +203,7 @@ public:
         summary.integratedLufs = result.measured.integratedLufs;
         summary.loudnessRangeLu = result.measured.loudnessRangeLu;
         summary.truePeakDbtp = result.measured.truePeakDbtp;
-        summary.statusText = "Measured; delivery compliance not evaluated";
+        summary.statusText = "Measured snapshot; selected rules evaluated separately";
         if (result.domain == MeasurementDomain::currentState)
         {
             currentStateDocument.needsRemeasurement = false;
@@ -219,6 +222,7 @@ public:
         source = MeasurementSummary();
         currentState = MeasurementSummary();
         currentStateDocument.clear();
+        programmeApplicability = proposal::Applicability::unconfirmed;
 
         if (sourceDocument.hasSource)
         {
@@ -233,6 +237,7 @@ public:
         ++revision;
         sourceDocument.clear();
         currentStateDocument.clear();
+        programmeApplicability = proposal::Applicability::unconfirmed;
 
         source = MeasurementSummary();
         currentState = MeasurementSummary();
@@ -281,8 +286,20 @@ public:
 
     void setSelectedTargetProfileIndex (int newIndex)
     {
-        ++revision;
+        // Profile selection does not change samples or cancel a compatible audio
+        // measurement. Evaluations are derived from the current profile on demand.
         selectedTargetProfileIndex = juce::jlimit (0, numTargetProfiles - 1, newIndex);
+    }
+
+    void setProgrammeApplicability (proposal::Applicability value) { programmeApplicability = value; }
+
+    proposal::Evaluation evaluation (MeasurementDomain domain) const
+    {
+        const auto& summary = domain == MeasurementDomain::source ? source : currentState;
+        const bool available = summary.hasMeasurement
+            && (domain == MeasurementDomain::source || (currentStateDocument.isInitialized && ! currentStateDocument.needsRemeasurement));
+        return evaluateSnapshot (available ? summary.analysis.get() : nullptr, measurementContext (domain),
+                                 domain, getSelectedTargetProfile(), programmeApplicability);
     }
 
     void setChannelRole (int channel, ChannelRole role)
@@ -291,7 +308,7 @@ public:
         ++revision;
         sourceDocument.layout.roles[channel] = role;
         sourceDocument.layout.confirmed = false;
-        sourceDocument.importStatus = "File-channel roles changed; confirmation required. Not measured.";
+        sourceDocument.importStatus = "File-channel roles changed; confirmation required.";
         source = MeasurementSummary();
         currentState = MeasurementSummary();
         currentStateDocument.clear();
@@ -302,7 +319,7 @@ public:
         if (! sourceDocument.hasSource || ! sourceDocument.layout.isValid()) return false;
         ++revision;
         sourceDocument.layout.confirmed = true;
-        sourceDocument.importStatus = "Source decoded; file-channel roles confirmed. Not measured.";
+        sourceDocument.importStatus = "Source decoded; file-channel roles confirmed.";
         return true;
     }
 
@@ -319,7 +336,7 @@ public:
 
     bool hasAuthoritativeTargetLimits() const
     {
-        return getSelectedTargetProfile().limits.valuesAreAuthoritative;
+        return getSelectedTargetProfile().validationError().isEmpty();
     }
 
     WorkflowReadiness getWorkflowReadiness() const

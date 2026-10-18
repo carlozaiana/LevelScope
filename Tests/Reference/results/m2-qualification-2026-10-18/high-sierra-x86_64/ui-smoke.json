@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "candidate": "candidate-02",
+  "platform": "Intel High Sierra 10.13.6 (17G66), x86_64",
+  "app_sha256": "af0b45770102e69aac195066d371086dc832c189f7be94938a5ae0455edba305",
+  "device": "Closed throughout",
+  "routing": "Muted throughout",
+  "playback": "Stopped throughout",
+  "qualification_basis": {
+    "full_functional_checklist": "16 checks passed on candidate-01; see ../candidate-01/high-sierra-x86_64/ui-smoke.json",
+    "final_change": "Only three static import/role messages changed, removing stale measurement wording. No processing, evaluation, worker, transport or audio-device behavior changed.",
+    "affected_ui_recheck": "Candidate-02 WAV import, role confirmation and measurement completion checked on this platform. Import wording accurately describes import/roles before and after measurement. The separate measurement status changes to Measured snapshot; selected rules evaluated separately.",
+    "regression_suites": "All automated suites rerun on candidate-02, including both official reference sets."
+  },
+  "checks": [
+    {
+      "id": "corrected-import-role-status",
+      "passed": true
+    },
+    {
+      "id": "corrected-status-after-measurement",
+      "passed": true
+    },
+    {
+      "id": "no-profile-remains-not-evaluated",
+      "passed": true
+    },
+    {
+      "id": "silent-device-routing-transport",
+      "passed": true
+    },
+    {
+      "id": "candidate-02-closed-after-check",
+      "passed": true
+    }
+  ],
+  "method": "CUA through Screen Sharing, using the local View-menu focus sequence; no manual checklist substitution",
+  "evidence": {
+    "ui-high-sierra-candidate-02/corrected-measured-status.png": "703cc342b6615a77624aaa02dc7953b54b9ad4d662ee2cd36e9a54c76c6d01b0"
+  }
+}

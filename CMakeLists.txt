@@ -203,6 +203,9 @@ endif()
 #==============================
 
 add_library(LevelScopeStandaloneSupport STATIC
+    Source/Core/Proposal/Model/TargetProfile.cpp
+    Source/Core/Proposal/VerificationEngine.cpp
+    Source/Standalone/StandaloneCompliance.cpp
     Source/Standalone/StandaloneMedia.cpp
     Source/Standalone/StandaloneAudition.cpp
     Source/Standalone/StandaloneMeasurementService.cpp
@@ -299,6 +302,16 @@ if (LEVELSCOPE_BUILD_MEASUREMENT_TESTS)
     target_link_libraries(LevelScopeMeasurementTests PRIVATE LevelScopeStandaloneSupport)
     add_test(NAME offline-measurement COMMAND LevelScopeMeasurementTests)
     set_tests_properties(offline-measurement PROPERTIES TIMEOUT 300)
+endif()
+
+option(LEVELSCOPE_BUILD_COMPLIANCE_TESTS "Build M2 profile/evaluation checks" OFF)
+if (LEVELSCOPE_BUILD_COMPLIANCE_TESTS)
+    enable_testing()
+    juce_add_console_app(LevelScopeComplianceTests PRODUCT_NAME "LevelScope Compliance Tests")
+    target_sources(LevelScopeComplianceTests PRIVATE Tests/ComplianceTests.cpp)
+    target_link_libraries(LevelScopeComplianceTests PRIVATE LevelScopeStandaloneSupport)
+    add_test(NAME measured-compliance COMMAND LevelScopeComplianceTests)
+    set_tests_properties(measured-compliance PROPERTIES TIMEOUT 60)
 endif()
 
 option(LEVELSCOPE_BUILD_SCAFFOLD_TESTS "Build hardware-independent standalone checks" OFF)

@@ -1,0 +1,13 @@
+{
+  "changed_source_files": [
+    "Source/Standalone/StandaloneSessionModel.h"
+  ],
+  "added_packaged_tools": [
+    "Tests/compare_m2_reports.py"
+  ],
+  "change": "Remove obsolete measurement claims from import-status text. MeasurementSummary remains authoritative for measurement status.",
+  "affected_checks": "Import, role confirmation and completed-measurement status observed in candidate-02 on actual High Sierra and arm64 Sequoia. All automated suites rerun on both.",
+  "full_ui_evidence_preserved": "candidate-01/",
+  "source_digest": "9efedef8a34cab28971a60d7723d16bb50dc763fc1b649a3c3e4ed8c7d9229ea",
+  "app_sha256": "af0b45770102e69aac195066d371086dc832c189f7be94938a5ae0455edba305"
+}

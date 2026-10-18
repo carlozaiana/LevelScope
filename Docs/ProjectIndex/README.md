@@ -14,6 +14,7 @@ This folder is the persistent orientation layer for future development chats. Re
 9. `08_TestingBuildAndRiskNotes.md`
 
 ## Task-based quick start
+- **M2 profiles and measured rules:** [21_M2MeasuredCompliance.md](21_M2MeasuredCompliance.md)
 - **Accepted milestones on main / subsequent logic-module work:** [20_MainIntegrationAcceptance.md](20_MainIntegrationAcceptance.md)
 - **Working-copy locations, GitHub video checkpoint and preserved artifacts:** [19_DevelopmentWorkflow.md](19_DevelopmentWorkflow.md)
 - **Implement DSP/module behavior:** 02 + 03 + 06
