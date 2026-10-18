@@ -9,17 +9,32 @@ This document is a **contract** for parallel development chats.
 Anything marked **Implemented** must be preserved.  
 Anything marked **Planned** must not be assumed to exist until integrated.
 
-Last updated: **2026-04-23**
+Last updated: **2026-10-18**
 
-**Standalone continuation, 15 October 2026:** the plugin contracts below remain
-unchanged. A separate worker-only `LevelScopeMeasurementCore` now supplies offline
-Source/Current State measurements and an internal encoded-output verification harness.
-Current State supports identity/static gain; public render/export, proposals and
-authoritative delivery profiles remain pending. See
-[the measurement contract](ProjectIndex/14_OfflineMeasurementContract.md) and
-[handover evidence](ProjectIndex/13_StandaloneScaffoldHandover.md) for supported layouts,
-rates, validation and remaining qualification. Existing plugin history/running metrics
-are not the new offline verification implementation.
+**Standalone continuation, 18 October 2026:** qualified M1 offline measurement,
+M2 versioned programme-rule evaluation and M3 deterministic global trim with
+explicit Apply and measured verification are integrated into main at
+`62ab420cb15b3ce5e1c821c963a749a9a56ae4a7`. These standalone components are separate
+from historical plugin metering and processing. M4 adds read-only measured
+programme diagnostics and the first reusable measurement timeline. Its bounded
+scope, including three-hour inspection, is qualified on actual Intel High Sierra
+and arm64 Sequoia and is published as `m4-measured-diagnostics-2026-10-18`,
+fast-forwarded into main. Exact implementation/qualification status is recorded in
+[the M4 handover](ProjectIndex/23_M4MeasuredDiagnostics.md).
+
+The M4 analysis consumes immutable M1 Source/Current State snapshots. Exact gate
+population predicates are shared with the measurement kernel; descriptive
+analysis has no profile or processing dependency. Profile annotations bind
+separately through M2. A cancellable diagnostic worker and read-only timeline
+cannot change session jobs, gain, verdicts, proposals, transport or devices.
+Predicted M3 values cannot populate measured diagnostic views. The timeline uses
+audio-source frames and window-end positions, independent of video offset.
+
+The qualified measurement contract remains in
+[14_OfflineMeasurementContract.md](ProjectIndex/14_OfflineMeasurementContract.md).
+Public render/export, processed audition, dynamics integration, scenes/freezes,
+standalone persistence and embedded soundtrack remain deferred. VST3 measurement
+parity is a separate milestone; its parameters, state and DSP remain unchanged.
 
 ---
 

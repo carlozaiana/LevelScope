@@ -4,6 +4,19 @@ namespace levelscope::standalone
 {
 namespace
 {
+class DiagnosticsWindow final : public juce::DocumentWindow
+{
+public:
+    explicit DiagnosticsWindow (StandaloneDiagnosticsPanel& p)
+        : DocumentWindow ("LevelScope - Measured diagnostics", juce::Colour (0xff151b24), DocumentWindow::allButtons), panel (p)
+    {
+        setUsingNativeTitleBar (true); setResizable (true, false); setResizeLimits (900, 800, 2400, 1600);
+        setContentNonOwned (&panel, true); centreWithSize (1040, 850); setVisible (true);
+    }
+    void closeButtonPressed() override { panel.suspend(); setVisible (false); }
+private:
+    StandaloneDiagnosticsPanel& panel;
+};
 class ReferenceWindow final : public juce::DocumentWindow
 {
 public:
@@ -63,6 +76,13 @@ StandaloneMainComponent::StandaloneMainComponent()
     addAndMakeVisible (pageDetailBox);
     addAndMakeVisible (audioPanel);
     addAndMakeVisible (videoButton);
+    addAndMakeVisible (diagnosticsButton);
+    diagnosticsButton.onClick = [this]
+    {
+        if (! diagnosticsPanel) diagnosticsPanel = std::make_unique<StandaloneDiagnosticsPanel> (session);
+        if (! diagnosticsWindow) diagnosticsWindow = std::make_unique<DiagnosticsWindow> (*diagnosticsPanel);
+        diagnosticsPanel->resume(); diagnosticsWindow->setVisible (true); diagnosticsWindow->toFront (true);
+    };
     videoButton.onClick = [this]
     {
         if (!videoWindow) videoWindow = std::make_unique<ReferenceWindow> (videoPanel);
@@ -88,6 +108,7 @@ StandaloneMainComponent::~StandaloneMainComponent()
 {
     stopTimer();
     videoWindow.reset();
+    diagnosticsWindow.reset(); diagnosticsPanel.reset();
     if (importControl) importControl->cancel.store (true);
     if (importResult.valid()) importResult.wait();
     if (analysisResult.valid()) analysisResult.wait();
@@ -417,6 +438,7 @@ void StandaloneMainComponent::refreshFromSession()
     targetStateBox.setText (buildTargetStateText(), false);
     currentStateBox.setText (buildCurrentStateText(), false);
     pageDetailBox.setText (buildPageDetailText(), false);
+    if (diagnosticsPanel) diagnosticsPanel->synchronize();
     audioPanel.refresh();
 }
 
@@ -637,6 +659,8 @@ void StandaloneMainComponent::resized()
     exportButton.setBounds (navRow.removeFromLeft (120));
     navRow.removeFromLeft (12);
     videoButton.setBounds (navRow.removeFromLeft (180));
+    navRow.removeFromLeft (8);
+    diagnosticsButton.setBounds (navRow.removeFromLeft (190));
 
     bounds.removeFromTop (10);
 

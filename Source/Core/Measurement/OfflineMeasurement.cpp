@@ -1,4 +1,5 @@
 #include "OfflineMeasurement.h"
+#include "GatePopulation.h"
 #include <algorithm>
 #include <cmath>
 #include <stdexcept>
@@ -188,32 +189,30 @@ const Result& OfflineMeasurement::finish()
     const double sp = *std::max_element (result.channelSamplePeaks.begin(), result.channelSamplePeaks.end());
     const double tp = *std::max_element (result.channelTruePeaks.begin(), result.channelTruePeaks.end());
     result.samplePeak = fromPeak (sp); result.truePeak = fromPeak (tp);
-    const double absGateEnergy = std::pow (10.0, (-70 + 0.691)/10);
-    double sum = 0; size_t count = 0;
-    for (auto w : result.momentary) if (w.energy > absGateEnergy) { sum += w.energy; ++count; }
-    if (count > 0)
+    double sum = 0;
+    const auto integratedGate = relativeGateEnergy (result.momentary, false);
+    if (integratedGate)
     {
-        const double relative = sum / static_cast<double> (count) / 10;
+        const double relative = *integratedGate;
         result.integratedRelativeGate = loudness (relative);
         sum = 0;
         for (auto w : result.momentary)
-            if (w.energy > absGateEnergy && w.energy > relative) { sum += w.energy; ++result.integratedIncluded; }
+            if (includedInPopulation (w.energy, relative, false)) { sum += w.energy; ++result.integratedIncluded; }
         result.integrated = fromEnergy (sum / static_cast<double> (result.integratedIncluded), true);
     }
     else result.integrated = { {}, result.frames < mLength ? Status::insufficientDuration : sp == 0 ? Status::silence : Status::belowGate };
-    sum = 0; count = 0;
-    for (auto w : result.lraWindows) if (w.energy >= absGateEnergy) { sum += w.energy; ++count; }
+    const auto lraGate = relativeGateEnergy (result.lraWindows, true);
     // A source shorter than 3 s does not acquire an LRA merely through drain padding.
-    if (count > 0 && result.frames >= sLength)
+    if (lraGate && result.frames >= sLength)
     {
-        const double relative = sum / static_cast<double> (count) / 100;
+        const double relative = *lraGate;
         result.lraRelativeGate = loudness (relative);
         std::vector<double> population;
         for (auto w : result.lraWindows)
-            if (w.energy >= absGateEnergy && w.energy >= relative) population.push_back (loudness (w.energy));
+            if (includedInPopulation (w.energy, relative, true)) population.push_back (loudness (w.energy));
         std::sort (population.begin(), population.end());
         result.lraIncluded = population.size();
-        auto percentile = [&] (double p) { return population[static_cast<size_t> (std::floor ((population.size()-1)*p + 0.5))]; };
+        auto percentile = [&] (double p) { return population[percentileIndex (population.size(), p)]; };
         result.p10 = percentile (0.10); result.p95 = percentile (0.95);
         result.lra = { *result.p95 - *result.p10, Status::available };
         result.lraStable = result.frames >= static_cast<int64_t> (result.sampleRate) * 60;

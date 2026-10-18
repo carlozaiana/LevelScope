@@ -1,0 +1,65 @@
+{
+  "suite": "M4 measured diagnostics",
+  "passed": false,
+  "checks": [
+    {
+      "name": "integrated absolute boundary excluded",
+      "passed": true
+    },
+    {
+      "name": "LRA absolute boundary included",
+      "passed": true
+    },
+    {
+      "name": "one ULP below absolute excluded",
+      "passed": true
+    },
+    {
+      "name": "one ULP above absolute included",
+      "passed": true
+    },
+    {
+      "name": "relative exact comparison preserves distinct I and LRA convention",
+      "passed": true
+    },
+    {
+      "name": "relative one ULP below excluded",
+      "passed": true
+    },
+    {
+      "name": "relative one ULP above included",
+      "passed": true
+    },
+    {
+      "name": "one ULP below absolute excluded",
+      "passed": true
+    },
+    {
+      "name": "one ULP above absolute included",
+      "passed": true
+    },
+    {
+      "name": "relative exact comparison preserves distinct I and LRA convention",
+      "passed": true
+    },
+    {
+      "name": "relative one ULP below excluded",
+      "passed": true
+    },
+    {
+      "name": "relative one ULP above included",
+      "passed": true
+    },
+    {
+      "name": "percentile reference rounding at half index",
+      "passed": true
+    }
+  ],
+  "performance": {
+  },
+  "method": "measured-diagnostics-m4.1",
+  "build": "bc5feaea07a9aa223887eb2a1c8fe9345e702637b4a2a88efa3e05b744c43d24",
+  "engine": "bs1770-5-ebu2023-m1.1",
+  "os": "Mac OSX 15.7.9",
+  "architecture": "arm64"
+}

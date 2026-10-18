@@ -1,0 +1,267 @@
+[
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-01/01-source.png",
+    "sha256": "f1c76942c64ec4db23d1f20504697e69ce55fd2d2bdb64aac070389112ceb32e",
+    "bytes": 177930
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-01/01-source.txt",
+    "sha256": "72f3661a3a7746df5e61e62df9fc2d894b649ef33d761f3c1269401ae8d2551e",
+    "bytes": 99
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-01/02-peaks.png",
+    "sha256": "f80f62003f51108dbdf847d3acafe33027206b18f7ebfb5ff8a1df9abbaf27ff",
+    "bytes": 197307
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-01/03-current-unity.png",
+    "sha256": "f5d83c8f3f2ca40156c9e1c930a83ff9c988d58369f5f3710e4499003a221277",
+    "bytes": 168119
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-01/04-unconfirmed-profile.png",
+    "sha256": "da8bbce8ea1cb9c558ed7cb2f4b44c52507a2f934ff49b6d9a7a971ed070de4d",
+    "bytes": 164351
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-01/05-current-invalidated.png",
+    "sha256": "8dcff3b2f6614dff9fe8d8de2c683229167a4324438c76c23a222958ead37f03",
+    "bytes": 89384
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-01/06-current-minus6.png",
+    "sha256": "2bc1cc340532bdd91dd5fb7c85069399ded5bdb57da90dfd9588f30df2295b80",
+    "bytes": 169235
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-01/07-lra-lower-tail.png",
+    "sha256": "afee894310295eed23de0d28a6525d8fb2641be8aa2b9acf501542fff7b0ccca",
+    "bytes": 191745
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-01/08-lra-upper-tail.png",
+    "sha256": "d6aa59c706b4e6037b214d54be7fa8efe10a795ee45a8a13ff4ee0b41402ae12",
+    "bytes": 192455
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-01/09-excluded.png",
+    "sha256": "08c0f3f9e0df9e9166bd8cfd1eed7dfdc06b9faa60106b3361cfbb460e599691",
+    "bytes": 189646
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-01/10-draft-preserved.png",
+    "sha256": "83ee93d037d4da13828ffd367b5062ae9a781f42608817c27c5f1f162b986080",
+    "bytes": 277309
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-01/11-video-offset.png",
+    "sha256": "2dcbad87d3c520924eac645193185324fdcd30acf424f93f865bb65d2a411f02",
+    "bytes": 72956
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-01/12-video-independent-peaks.png",
+    "sha256": "deab2de8d1fa72e8641cc55b3f832c9c084392e8fdb71c30397a212c4e779356",
+    "bytes": 194687
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-01/app-process.sample",
+    "sha256": "3948c5444bbc897e419919218dbcb15d0602a0433792c091d1881d0ea5bae511",
+    "bytes": 207713
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-02/01-three-hour-source.png",
+    "sha256": "b4f5b04bdef22fc60aa6ae308dd2def9c330650fb9096efe2f4953ec0d5f3a65",
+    "bytes": 237308
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-02/02-three-hour-cancel-attempt.png",
+    "sha256": "8f0af7f268aa48407c5b959dcda3fe0dafbca80e5af1ff036be52979673e3758",
+    "bytes": 237051
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-02/03-final-second.png",
+    "sha256": "aca81385c81e415289a4e3713428605fe2ffc0ce57f97bdb97efe30418040664",
+    "bytes": 194723
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-02/04-offscreen-selection.png",
+    "sha256": "763af15fae14c93e1f4dc7f019843b2489d3ed97de0e03dc873074daddbcafd8",
+    "bytes": 198172
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-02/05-source-replaced.png",
+    "sha256": "3c3e9d8c8c1b128d92217dd2d5e0d7fbce1d4f1d57030f35bb4efabbe942bc87",
+    "bytes": 88819
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-02/06-short-programme.png",
+    "sha256": "cf3e2d83224329229127705ca050884f7a5796016e316e8128b97b67d88db752",
+    "bytes": 173462
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-02/07-long-silence.png",
+    "sha256": "b49b728f8b74eec47927aaf669ca32bfde929bbe859db1323a5067d9e9fbccd4",
+    "bytes": 139158
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-02/08-eof-padding.png",
+    "sha256": "f12e2d792ebf39430a6b8fe7fc220f418d04447c9131755a0f83fa143ab4d573",
+    "bytes": 201366
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-02/09-source-cleared.png",
+    "sha256": "64148d654319e454b3b619e1ece981d23ab84d053af6b59515c852e0a59cbf97",
+    "bytes": 88371
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-02/10-final-stopped.png",
+    "sha256": "5911234680b6df058bf156d07861520c7ce721701e424751e3b3c8e83ef6be4f",
+    "bytes": 228717
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-02/app-process.sample",
+    "sha256": "405114f40021466650366e23d12736607969d26da0284eee1935254b5d462c2b",
+    "bytes": 208698
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-02/measurement-completion-observed.txt",
+    "sha256": "efb80b02ff9899eb203ffed3624a598ef2b53569c0f61f9fe422246a2554b55f",
+    "bytes": 24
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-sequoia-02/measurement-start.txt",
+    "sha256": "5f44e5ce5d226de3c0bc142bdc97771db99841d6fbae8ccefa394a5adb196cbe",
+    "bytes": 24
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-high-sierra-02/01-three-hour-source.png",
+    "sha256": "90e0d34de1bdf648135c7e9caa1a750aea0bd1d266166c2d37191a988bbd12dc",
+    "bytes": 373683
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-high-sierra-02/02-three-hour-final-second.png",
+    "sha256": "d4a8b5ae5d8a62e40853c050e647e1104609201f0bd0d7663326021443ef8ddf",
+    "bytes": 342708
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-high-sierra-02/03-offscreen-selection.png",
+    "sha256": "67eff227b7704097b1c77602fbb36294e185afe4a9d52e189bc678febca83bf3",
+    "bytes": 349578
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-high-sierra-02/04-lower-tail.png",
+    "sha256": "f96269b52b3aad00939e76efc2602af55a1c921e95c77b9edc5e09dc3c291931",
+    "bytes": 340014
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-high-sierra-02/05-upper-tail.png",
+    "sha256": "1934c6efdfab47ebbaf79f0f9b27b678cbb18743783f4a136f9f63b6dcb7c859",
+    "bytes": 340548
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-high-sierra-02/06-excluded.png",
+    "sha256": "405d7071fa804e8bdd3abb6aa60f4dc4abf465272025a37181a5402da5a8ee7c",
+    "bytes": 334649
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-high-sierra-02/07-peaks.png",
+    "sha256": "556e23f4e4f5796b37c9cd5b338a2f16dc09ba2b4c8cdebd2ed339026c307818",
+    "bytes": 333579
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-high-sierra-02/08-profile-monitor-preserved.png",
+    "sha256": "0b347c98830da8d56a734eff6afe15623ae4df16296578c4541adb6979b46f47",
+    "bytes": 368544
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-high-sierra-02/09-source-replaced.png",
+    "sha256": "2a2e7a4a36a6077ceb20f620c3dcc37389dbffdf298b6149c8e841d6d6e97456",
+    "bytes": 238724
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-high-sierra-02/10-current-unity.png",
+    "sha256": "4537dd9c4dc12f0401147020f90fef6a7b38f5d87bc17fa6b9cfc06c3a0356cc",
+    "bytes": 322136
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-high-sierra-02/11-eof-padding.png",
+    "sha256": "7e5990fce841412a7b901ba665fd6db4316d4b9069c1de1d2203819eed3668be",
+    "bytes": 354876
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-high-sierra-02/12-already-passes.png",
+    "sha256": "21281957f181ffac9e1087715d696f914bc5ec462d870afdd5aa8bd2bbfeaf40",
+    "bytes": 370525
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-high-sierra-02/13-noop-preserved.png",
+    "sha256": "2cbbe7f1f1065f703c609fb90a3a30c3a8df6eb1110490dcd00bb49890554a92",
+    "bytes": 381185
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-high-sierra-02/14-current-invalidated.png",
+    "sha256": "e52d0e165c4b387c59233ff197802d93fd496067cad7f8c554b420a0e46e9a85",
+    "bytes": 241576
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-high-sierra-02/15-current-minus6.png",
+    "sha256": "c0ebf5e96697c86ead883333ae18b4023c555a02a506693f3781a0cd23fa684a",
+    "bytes": 334750
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-high-sierra-02/16-applicability-unconfirmed.png",
+    "sha256": "45ac6ec1cb03ac453a3d84763916a6bccd7e01532353ddff2a8b09bac85b72ac",
+    "bytes": 331385
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-high-sierra-02/17-video-offset.png",
+    "sha256": "5b4c39b7c5119c8e8edf5c9efce81b31e2aa12017a8e331ba997e5664d3c2957",
+    "bytes": 337630
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-high-sierra-02/18-video-independent-diagnostics.png",
+    "sha256": "93f4e6a09ff33e01229258f679538f89c5780029f742d0f4068c6d3b980828a4",
+    "bytes": 334414
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-high-sierra-02/19-draft-preserved.png",
+    "sha256": "ef7147cbb178f21af539f961f5145d33a0be5f22efaf1819f80c58abca8df5ba",
+    "bytes": 383548
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-high-sierra-02/20-long-silence.png",
+    "sha256": "eab74335d0e99b1b460939485a2efd1b1abb1ff534b6150a1d2322ab08fd0083",
+    "bytes": 290574
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-high-sierra-02/21-short-programme.png",
+    "sha256": "378fd8193193fb8ba8d255cac7f66749d64b0d8b3159d52b9a629af0f53fd1c4",
+    "bytes": 298451
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-high-sierra-02/22-source-cleared.png",
+    "sha256": "7eba6c8172fcc9822240d598b37d98d9b7f950b8cc0f15595227fdd3c25645ee",
+    "bytes": 238638
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-high-sierra-02/23-final-stopped.png",
+    "sha256": "28bda20dbf559fd7ac46e6ff027abad8bb6e19d756cc43bc5f4c11072f6d7cd4",
+    "bytes": 350008
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-high-sierra-02/app-process-02.sample",
+    "sha256": "629a1f004a7cd7d32cff69017ecd2e7fb79ac26fa83bf399288141c2f106b3f9",
+    "bytes": 86606
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-high-sierra-02/measurement-complete-observed.txt",
+    "sha256": "fd80ec1d8dbc4be257a3b3b8756b1b4d822e0b0079368a0681e51e25258ab82f",
+    "bytes": 24
+  },
+  {
+    "local_path": "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/ui-high-sierra-02/measurement-start.txt",
+    "sha256": "cc81e0bbc053b28edf73ae639d94b119e325ca4b4d2bfc2aad9ab50b43ae59cd",
+    "bytes": 24
+  }
+]

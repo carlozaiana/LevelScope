@@ -203,6 +203,9 @@ endif()
 #==============================
 
 add_library(LevelScopeStandaloneSupport STATIC
+    Source/Core/Proposal/AnalysisEngine.cpp
+    Source/Core/Proposal/AttributionEngine.cpp
+    Source/Standalone/StandaloneDiagnostics.cpp
     Source/Core/Proposal/Methods/RuleBasedMethod.cpp
     Source/Standalone/StandaloneProposal.cpp
     Source/Core/Proposal/Model/TargetProfile.cpp
@@ -237,11 +240,18 @@ target_compile_definitions(LevelScopeStandaloneSupport PUBLIC JUCE_WEB_BROWSER=0
 target_link_libraries(LevelScopeStandaloneSupport PUBLIC
     LevelScopeMeasurementCore juce::juce_audio_formats juce::juce_audio_devices juce::juce_cryptography juce::juce_graphics)
 
+add_library(LevelScopeDiagnosticsUI STATIC
+    Source/Standalone/MeasurementTimeline.cpp
+    Source/Standalone/StandaloneDiagnosticsPanel.cpp)
+target_link_libraries(LevelScopeDiagnosticsUI PUBLIC LevelScopeStandaloneSupport juce::juce_gui_basics)
+
 juce_add_gui_app(LevelScopeStandalone
     PRODUCT_NAME "LevelScope Standalone"
     COMPANY_NAME "Studio Paradiso"
     BUNDLE_ID "com.studioparadiso.levelscope.standalone"
 )
+
+target_link_libraries(LevelScopeStandalone PRIVATE LevelScopeDiagnosticsUI)
 
 target_sources(LevelScopeStandalone
     PRIVATE
@@ -324,6 +334,16 @@ if (LEVELSCOPE_BUILD_PROPOSAL_TESTS)
     target_link_libraries(LevelScopeProposalTests PRIVATE LevelScopeStandaloneSupport)
     add_test(NAME global-trim-proposals COMMAND LevelScopeProposalTests)
     set_tests_properties(global-trim-proposals PROPERTIES TIMEOUT 120)
+endif()
+
+option(LEVELSCOPE_BUILD_DIAGNOSTICS_TESTS "Build M4 measured diagnostics checks" OFF)
+if (LEVELSCOPE_BUILD_DIAGNOSTICS_TESTS)
+    enable_testing()
+    juce_add_console_app(LevelScopeDiagnosticsTests PRODUCT_NAME "LevelScope Diagnostics Tests")
+    target_sources(LevelScopeDiagnosticsTests PRIVATE Tests/DiagnosticsTests.cpp)
+    target_link_libraries(LevelScopeDiagnosticsTests PRIVATE LevelScopeDiagnosticsUI)
+    add_test(NAME measured-diagnostics COMMAND LevelScopeDiagnosticsTests)
+    set_tests_properties(measured-diagnostics PROPERTIES TIMEOUT 120)
 endif()
 
 option(LEVELSCOPE_BUILD_SCAFFOLD_TESTS "Build hardware-independent standalone checks" OFF)

@@ -1,0 +1,15 @@
+{
+  "source_files_verified": 118,
+  "json_files_parsed": 31,
+  "run_logs_verified": 22,
+  "candidate_binaries_match": true,
+  "ui_capture_hashes_match": true,
+  "six_existing_tags_unchanged": true,
+  "registered_worktrees_unchanged": true,
+  "main_unchanged": true,
+  "isolated_app_processes_exited": {
+    "sequoia_pid_23632": true,
+    "high_sierra_pid_2336": true
+  },
+  "source_digest": "59bc7a5f17cbcce63c86254e72dbba21ae280d475a19b801bc45c9089d20d9cc"
+}

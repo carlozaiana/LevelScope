@@ -1,0 +1,156 @@
+[
+  {
+    "name": "diagnostics",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/candidate-03/bin/LevelScopeDiagnosticsTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/sequoia-03b/diagnostics.json"
+    ],
+    "exit_code": 0,
+    "seconds": 3.186806583,
+    "log_sha256": "1fcc0038f5c6830c1ef6a5b4d9036e912fda8e59639d1fd1eaa58cc64b88232d"
+  },
+  {
+    "name": "proposal",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/candidate-03/bin/LevelScopeProposalTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/sequoia-03b/proposal.json"
+    ],
+    "exit_code": 0,
+    "seconds": 13.030742416999999,
+    "log_sha256": "d2297d0dbe58d37196eda1d4c7762c78c7185ec2eb18c77cf4307e7e32ba1531"
+  },
+  {
+    "name": "compliance",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/candidate-03/bin/LevelScopeComplianceTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/sequoia-03b/compliance.json"
+    ],
+    "exit_code": 0,
+    "seconds": 0.8230002089999999,
+    "log_sha256": "b75d0d424ac5e8e502c9cc3f4d1cb859d1b488a1b4c1b68ad17b8d4461c9d339"
+  },
+  {
+    "name": "measurement",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/candidate-03/bin/LevelScopeMeasurementTests"
+    ],
+    "exit_code": 0,
+    "seconds": 13.924931499999996,
+    "log_sha256": "693ec25505d8a388521025eedf57085a86503c9ccda9586e86f6f315285c4e6c"
+  },
+  {
+    "name": "scaffold",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/candidate-03/bin/LevelScopeScaffoldTests"
+    ],
+    "exit_code": 0,
+    "seconds": 0.605213458999998,
+    "log_sha256": "83c0192f04df4efeedb4aa0f4fa23fc885571ce221c6b6069f5ac8fa2ebc0e48"
+  },
+  {
+    "name": "video",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/candidate-03/bin/LevelScopeVideoTests",
+      "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/candidate-03/video-fixtures/cfr-exact.mov",
+      "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/candidate-03/video-fixtures/vfr-exact.mov",
+      "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/candidate-03/video-fixtures/two-streams-audio.mov",
+      "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/candidate-03/video-fixtures/timecode.mov",
+      "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/candidate-03/video-fixtures/cfr-exact.mp4",
+      "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/candidate-03/video-fixtures/cfr-exact.m4v",
+      "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/candidate-03/video-fixtures/half-hour.mov"
+    ],
+    "exit_code": 0,
+    "seconds": 5.746621999999995,
+    "log_sha256": "30cc4210bf59f098d37683bbf3d9922693308424765c765120448bb289dfd68c"
+  },
+  {
+    "name": "runner",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/EbuReferenceRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "seconds": 0.07630041699999879,
+    "log_sha256": "f8f7b0ac7f2b53ac4e96000f166430c488f2c37e059ad5502b09d60f29d363b8"
+  },
+  {
+    "name": "m3-runner",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/M3QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "seconds": 0.12512579200000573,
+    "log_sha256": "0797a603f79e55a5612211749887a547eca16fda33260dc9b3baf57657cc4f17"
+  },
+  {
+    "name": "m4-runner",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/M4QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "seconds": 0.1268030419999988,
+    "log_sha256": "713972b30bbbb93930114261a846150033bb4ae557443bb0167e5db8710ff990"
+  },
+  {
+    "name": "itu",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/run_reference_measurements.py",
+      "--binary",
+      "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/candidate-03/bin/LevelScopeMeasurementTests",
+      "--vectors",
+      "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/candidate-03/vectors/itu",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/sequoia-03b/itu.json",
+      "--compare",
+      "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/candidate-03/baseline/itu.json",
+      "--arch",
+      "arm64"
+    ],
+    "exit_code": 0,
+    "seconds": 22.823231250000006,
+    "log_sha256": "9571a299c82a4aa12593daf8b7ed82d5c1eb5874cfefdd6f4a5a56e0c6f1d16e"
+  },
+  {
+    "name": "ebu",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/run_ebu_measurements.py",
+      "--binary",
+      "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/candidate-03/bin/LevelScopeMeasurementTests",
+      "--vectors",
+      "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/candidate-03/vectors/ebu",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/sequoia-03b/ebu.json",
+      "--compare",
+      "/Users/fuzz/Developer/LevelScope/build/m4-qualification-2026-10-18/candidate-03/baseline/ebu.json",
+      "--arch",
+      "arm64"
+    ],
+    "exit_code": 0,
+    "seconds": 10.538357000000005,
+    "log_sha256": "18e65c40d2edcd18e30155f9ca4f7a49b0e066f90ea10aa588ab78922e03d313"
+  }
+]

@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-18",
+  "accepted_candidate": "candidate-03",
+  "interactive_app_candidate": "candidate-02",
+  "standalone_sha256": "aeb88e145945a305fec9be3be962ea888d127baae63f37c0cb8b2e7e3efb96d3",
+  "candidate_03_same_app": true,
+  "audio_device": "closed throughout",
+  "routing": "Muted throughout; mapping identity mutation covered hardware-independently",
+  "playback": "stopped throughout; no diagnostic action sought or played",
+  "cancellation_evidence": {
+    "manual_sequoia": "Agent and user attempts completed rebuilding before Cancel could be clicked. Not recorded as interactive active cancellation.",
+    "deterministic_native_panel": "369-check final suite on both actual OSes invokes real Build/Cancel and close/suspend/reopen bindings while completion is pending; checks cleared plots and rejection of publication. No production delays or test hooks.",
+    "active_worker": "Three-hour active cancellation meets 1000 ms deadline on both OSes."
+  },
+  "platform": "Intel x86_64 High Sierra 10.13.6 (17G66)",
+  "passed": true,
+  "coverage": [
+    "candidate-02: actual 10800 s stereo48k PCM imported/roles confirmed/measured. I -19.694926 LUFS, LRA 23.994468 LU; programme duration exactly 10800 s. Completion observed after Screen Sharing refresh; elapsed observation time is not a measurement benchmark.",
+    "Whole programme, six zoom steps, scroll to [10631.25,10800] s, numeric 10799.9 s; exact values/intervals match Sequoia. Ranked row auto-scrolls to [89.8,90.2); panning away gives no false edge highlight.",
+    "Lower [9.1,12.1), upper [10767.2,10770.2), excluded [0,.4) and channel maxima inspected. Right SP/TP remains at 90.05 s; left SP 80.00025 s / TP 99.999752604 s.",
+    "Selecting EBU profile/confirming applicability adds strict -1 dBTP headroom annotations; monitor gain -36 dB retains measured three-hour values. No device was opened.",
+    "Replacement with 8 s stereo.wav removes old diagnostics. Source/Current at 0 dB both I -22.993358, LRA 1.346943, TP -22.998804; unstable short-programme label present. Lower-tail [6.5,9.5) labelled padding, graph ends at 8 s.",
+    "M3 already-passes no-op survives diagnostic navigation; gain stays 0. Explicit Current gain -6 clears previous diagnostics/evaluation; remeasurement gives I -28.993358 and TP -28.998804, with unchanged LRA.",
+    "Unchecking applicability removes annotations while preserving measured values. Rechecking permits draft; draft target I -23 is distinct from measured -28.993358, gain remains -6 after navigation.",
+    "cfr-exact.mov attached; +12 s offset, stopped/outside video coverage at audio0. Current timeline remains [0,8] s with unchanged values/EOF intervals and M3 draft.",
+    "120 s silence: unavailable digital-silence metrics, no zero-valued curve, no false short-programme warning. 2 s fixture: available I, insufficient-duration LRA/S, explicit short-programme interpretation.",
+    "Clear Source removes all plots and detail; final window/device remains closed/stopped; isolated app closed successfully."
+  ]
+}

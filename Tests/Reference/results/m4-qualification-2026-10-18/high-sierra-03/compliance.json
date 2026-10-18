@@ -1,0 +1,524 @@
+{
+  "suite": "M2 measured compliance",
+  "passed": true,
+  "checks": [
+    {
+      "name": "placeholder profile never passes",
+      "passed": true
+    },
+    {
+      "name": "placeholder profile never passes",
+      "passed": true
+    },
+    {
+      "name": "placeholder profile never passes",
+      "passed": true
+    },
+    {
+      "name": "definition version changes profile identity",
+      "passed": true
+    },
+    {
+      "name": "standard edition changes identity",
+      "passed": true
+    },
+    {
+      "name": "provenance changes identity",
+      "passed": true
+    },
+    {
+      "name": "limits change identity",
+      "passed": true
+    },
+    {
+      "name": "unsupported profile applicability refused",
+      "passed": true
+    },
+    {
+      "name": "invalid profile rejected before evaluation",
+      "passed": true
+    },
+    {
+      "name": "invalid profile rejected before evaluation",
+      "passed": true
+    },
+    {
+      "name": "invalid profile rejected before evaluation",
+      "passed": true
+    },
+    {
+      "name": "invalid profile rejected before evaluation",
+      "passed": true
+    },
+    {
+      "name": "invalid profile rejected before evaluation",
+      "passed": true
+    },
+    {
+      "name": "invalid profile rejected before evaluation",
+      "passed": true
+    },
+    {
+      "name": "invalid profile rejected before evaluation",
+      "passed": true
+    },
+    {
+      "name": "invalid profile rejected before evaluation",
+      "passed": true
+    },
+    {
+      "name": "invalid profile rejected before evaluation",
+      "passed": true
+    },
+    {
+      "name": "invalid profile rejected before evaluation",
+      "passed": true
+    },
+    {
+      "name": "invalid profile rejected before evaluation",
+      "passed": true
+    },
+    {
+      "name": "invalid profile rejected before evaluation",
+      "passed": true
+    },
+    {
+      "name": "built-in profile valid",
+      "passed": true
+    },
+    {
+      "name": "pinned R128 scalar rules",
+      "passed": true
+    },
+    {
+      "name": "documentary meter tolerance has explicit bandwidth",
+      "passed": true
+    },
+    {
+      "name": "missing informative LRA allows pass",
+      "passed": true
+    },
+    {
+      "name": "narrow success wording",
+      "passed": true
+    },
+    {
+      "name": "deterministic evaluation",
+      "passed": true
+    },
+    {
+      "name": "integrated exact boundary inclusive",
+      "passed": true
+    },
+    {
+      "name": "integrated one ULP inside",
+      "passed": true
+    },
+    {
+      "name": "integrated one ULP outside with no epsilon",
+      "passed": true
+    },
+    {
+      "name": "display-equivalent integrated values retain distinct verdicts",
+      "passed": true
+    },
+    {
+      "name": "integrated exact boundary inclusive",
+      "passed": true
+    },
+    {
+      "name": "integrated one ULP inside",
+      "passed": true
+    },
+    {
+      "name": "integrated one ULP outside with no epsilon",
+      "passed": true
+    },
+    {
+      "name": "display-equivalent integrated values retain distinct verdicts",
+      "passed": true
+    },
+    {
+      "name": "strict peak boundary including meter-tolerance trap",
+      "passed": true
+    },
+    {
+      "name": "strict peak boundary including meter-tolerance trap",
+      "passed": true
+    },
+    {
+      "name": "strict peak boundary including meter-tolerance trap",
+      "passed": true
+    },
+    {
+      "name": "strict peak boundary including meter-tolerance trap",
+      "passed": true
+    },
+    {
+      "name": "engine test tolerance cannot extend QC allowance",
+      "passed": true
+    },
+    {
+      "name": "non-finite required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "non-finite required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "non-finite required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "missing required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "missing required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "missing required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "inconsistent metric status cannot pass",
+      "passed": true
+    },
+    {
+      "name": "non-finite required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "non-finite required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "non-finite required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "missing required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "missing required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "missing required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "inconsistent metric status cannot pass",
+      "passed": true
+    },
+    {
+      "name": "known failure takes precedence without hiding indeterminate rule",
+      "passed": true
+    },
+    {
+      "name": "unused non-finite LRA is not a required rule",
+      "passed": true
+    },
+    {
+      "name": "predictions cannot satisfy measured rules",
+      "passed": true
+    },
+    {
+      "name": "M2 cannot certify an encoded export",
+      "passed": true
+    },
+    {
+      "name": "domain is explicit and identity bound",
+      "passed": true
+    },
+    {
+      "name": "stale snapshot cannot pass",
+      "passed": true
+    },
+    {
+      "name": "missing snapshot binding cannot pass",
+      "passed": true
+    },
+    {
+      "name": "unsupported measurement semantics refused",
+      "passed": true
+    },
+    {
+      "name": "unsupported or unconfirmed programme context refused",
+      "passed": true
+    },
+    {
+      "name": "unsupported or unconfirmed programme context refused",
+      "passed": true
+    },
+    {
+      "name": "unsupported or unconfirmed programme context refused",
+      "passed": true
+    },
+    {
+      "name": "unsupported or unconfirmed programme context refused",
+      "passed": true
+    },
+    {
+      "name": "unsupported or unconfirmed programme context refused",
+      "passed": true
+    },
+    {
+      "name": "snapshot change changes evaluation binding",
+      "passed": true
+    },
+    {
+      "name": "actual values participate in evaluation binding",
+      "passed": true
+    },
+    {
+      "name": "required optional LRA cannot be missing",
+      "passed": true
+    },
+    {
+      "name": "explicit LRA ceiling inclusive",
+      "passed": true
+    },
+    {
+      "name": "explicit LRA ceiling one ULP outside",
+      "passed": true
+    },
+    {
+      "name": "required unstable LRA refused",
+      "passed": true
+    },
+    {
+      "name": "M2 temporary fixture created",
+      "passed": true
+    },
+    {
+      "name": "M2 PCM writer created",
+      "passed": true
+    },
+    {
+      "name": "M2 fixture encoded",
+      "passed": true
+    },
+    {
+      "name": "M2 source validates",
+      "passed": true
+    },
+    {
+      "name": "M2 source imports",
+      "passed": true
+    },
+    {
+      "name": "roles explicitly confirmed",
+      "passed": true
+    },
+    {
+      "name": "profile version populated in request",
+      "passed": true
+    },
+    {
+      "name": "measurement job begins",
+      "passed": true
+    },
+    {
+      "name": "actual snapshot measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "session accepts current worker result",
+      "passed": true
+    },
+    {
+      "name": "unconfirmed programme context cannot pass",
+      "passed": true
+    },
+    {
+      "name": "real Source measurements pass selected rules",
+      "passed": true
+    },
+    {
+      "name": "exact snapshot and profile bound",
+      "passed": true
+    },
+    {
+      "name": "Source display domain identified",
+      "passed": true
+    },
+    {
+      "name": "profile selection reuses measurement with no new audio job",
+      "passed": true
+    },
+    {
+      "name": "profile selection reevaluates immediately",
+      "passed": true
+    },
+    {
+      "name": "profile selection reuses measurement with no new audio job",
+      "passed": true
+    },
+    {
+      "name": "profile selection reevaluates immediately",
+      "passed": true
+    },
+    {
+      "name": "profile selection reuses measurement with no new audio job",
+      "passed": true
+    },
+    {
+      "name": "profile selection reevaluates immediately",
+      "passed": true
+    },
+    {
+      "name": "profile selection reuses measurement with no new audio job",
+      "passed": true
+    },
+    {
+      "name": "profile selection reevaluates immediately",
+      "passed": true
+    },
+    {
+      "name": "returning to exact profile restores deterministic evaluation",
+      "passed": true
+    },
+    {
+      "name": "compatible different profile reuses exact snapshot and changes verdict binding",
+      "passed": true
+    },
+    {
+      "name": "measurement job begins",
+      "passed": true
+    },
+    {
+      "name": "actual snapshot measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "session accepts current worker result",
+      "passed": true
+    },
+    {
+      "name": "0 dB measured Current State parity",
+      "passed": true
+    },
+    {
+      "name": "Current State display domain identified",
+      "passed": true
+    },
+    {
+      "name": "video offset/stream, routing and monitor gain preserve measured evaluation identity with device closed",
+      "passed": true
+    },
+    {
+      "name": "gain edit accepted",
+      "passed": true
+    },
+    {
+      "name": "gain edit removes Current State measurement and evaluation",
+      "passed": true
+    },
+    {
+      "name": "processing edit preserves Source evaluation",
+      "passed": true
+    },
+    {
+      "name": "stale worker result rejected after gain edit",
+      "passed": true
+    },
+    {
+      "name": "measurement job begins",
+      "passed": true
+    },
+    {
+      "name": "actual snapshot measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "session accepts current worker result",
+      "passed": true
+    },
+    {
+      "name": "remeasured gain change evaluates actual samples",
+      "passed": true
+    },
+    {
+      "name": "M3 valid measured inputs allow drafting; export remains unavailable",
+      "passed": true
+    },
+    {
+      "name": "incompatible snapshot/request rejected",
+      "passed": true
+    },
+    {
+      "name": "incompatible snapshot/request rejected",
+      "passed": true
+    },
+    {
+      "name": "incompatible snapshot/request rejected",
+      "passed": true
+    },
+    {
+      "name": "incompatible snapshot/request rejected",
+      "passed": true
+    },
+    {
+      "name": "incompatible snapshot/request rejected",
+      "passed": true
+    },
+    {
+      "name": "incompatible snapshot/request rejected",
+      "passed": true
+    },
+    {
+      "name": "cancelled measurement job begins",
+      "passed": true
+    },
+    {
+      "name": "cancelled result cannot replace accepted snapshot",
+      "passed": true
+    },
+    {
+      "name": "cancel retains previous valid measurement",
+      "passed": true
+    },
+    {
+      "name": "role edit invalidates both domains",
+      "passed": true
+    },
+    {
+      "name": "replacement accepted",
+      "passed": true
+    },
+    {
+      "name": "replacement clears snapshots and applicability confirmation",
+      "passed": true
+    },
+    {
+      "name": "old source result rejected after replacement",
+      "passed": true
+    },
+    {
+      "name": "clear source removes evaluation",
+      "passed": true
+    }
+  ],
+  "profile_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+  "engine": "bs1770-5-ebu2023-m1.1",
+  "evaluator": "measured-programme-rules-m2.1",
+  "os": "Mac OSX 10.13.6",
+  "build": "efd7f8afaf7817642ab2b302b2420bcec1edce4dcd481fb6ac6b85546e15bfed",
+  "architecture": "x86_64"
+}

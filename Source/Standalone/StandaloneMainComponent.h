@@ -8,6 +8,7 @@
 #include "StandaloneSessionModel.h"
 #include "StandaloneAudioPanel.h"
 #include "StandaloneVideoPanel.h"
+#include "StandaloneDiagnosticsPanel.h"
 
 namespace levelscope::standalone
 {
@@ -29,6 +30,9 @@ private:
     StandaloneVideoPanel videoPanel { session, audition };
     std::unique_ptr<juce::DocumentWindow> videoWindow;
     juce::TextButton videoButton { "Reference picture..." };
+    juce::TextButton diagnosticsButton { "Measured diagnostics..." };
+    std::unique_ptr<StandaloneDiagnosticsPanel> diagnosticsPanel;
+    std::unique_ptr<juce::DocumentWindow> diagnosticsWindow;
     std::shared_ptr<JobControl> importControl;
     std::future<MediaValidationResult> importResult;
     std::future<ServiceResult<AnalysisSnapshot>> analysisResult;

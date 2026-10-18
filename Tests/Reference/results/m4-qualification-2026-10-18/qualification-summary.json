@@ -1,0 +1,72 @@
+{
+  "status": "PASS for bounded M4 scope; published checkpoint",
+  "published": true,
+  "branch": "codex/logic-module",
+  "base_commit": "62ab420cb15b3ce5e1c821c963a749a9a56ae4a7",
+  "source_digest": "59bc7a5f17cbcce63c86254e72dbba21ae280d475a19b801bc45c9089d20d9cc",
+  "identity_sha256": "6ba208d0a4760d4c77a8e70272c7dd35e8523d6c7334ce9ab97a5c14b554187d",
+  "build_fingerprint": "efd7f8afaf7817642ab2b302b2420bcec1edce4dcd481fb6ac6b85546e15bfed",
+  "standalone_sha256": "aeb88e145945a305fec9be3be962ea888d127baae63f37c0cb8b2e7e3efb96d3",
+  "automated_both_actual_platforms": true,
+  "interactive_both_actual_platforms": true,
+  "per_platform_checks": {
+    "M4": 369,
+    "M3": 302,
+    "M2": 128,
+    "measurement": 184,
+    "scaffold": 205,
+    "video": 329054,
+    "ebu_runner": 8,
+    "m3_runner": 7,
+    "m4_runner": 8,
+    "ITU_pinned_vectors": 39,
+    "EBU_vectors": 70
+  },
+  "ctest": "6/6 passed",
+  "comparison": "PASS; I/M/S/TP <=0.01 dB and LRA <=0.1 LU, exact M2/M3/M4 outcomes; maximum observed difference 1.7763568394002505e-15 dB TP",
+  "performance": {
+    "sequoia-03b": {
+      "generated_fixture_seconds": 10800,
+      "analysis_ms": 11.5173333324492,
+      "analysis_storage_bytes": 21030048,
+      "worker_including_identity_ms": 147.058749999851,
+      "viewport_prepare_p95_ms": 0.1454166695475578,
+      "offscreen_timeline_paint_p95_ms": 5.785208333283663,
+      "diagnostics_peak_rss_growth_bytes": 96976896,
+      "active_cancel_ms": 1.340083334594965
+    },
+    "high-sierra-03": {
+      "generated_fixture_seconds": 10800,
+      "analysis_ms": 29.12568099796772,
+      "analysis_storage_bytes": 21030048,
+      "worker_including_identity_ms": 306.2166340015829,
+      "viewport_prepare_p95_ms": 0.2323459982872009,
+      "offscreen_timeline_paint_p95_ms": 19.89891799911857,
+      "diagnostics_peak_rss_growth_bytes": 72974336,
+      "active_cancel_ms": 1.575439997017384
+    }
+  },
+  "outstanding_functional_acceptance_gaps": [],
+  "evidence_limitations": [
+    "Manual cancel race completed before click; native action bindings and active worker cancellation tested deterministically on both actual platforms.",
+    "Format/unsupported-layout UI evidence inherited from unchanged M2/M3 paths; no new physical audio or picture-sync claim.",
+    "Three-hour six-channel192k benchmark uses measurement-sized synthetic data; separate three-hour stereo48k PCM fully measured and inspected on both actual platforms.",
+    "Candidate manifests and preservation audits describe pre-publication state. Published source matches the tested source manifest; binaries were not rebuilt after documentation finalization."
+  ],
+  "deferred": [
+    "scene editing",
+    "gain automation",
+    "dynamics",
+    "LRA steering",
+    "T0-T3 placement",
+    "freezes",
+    "processed audition",
+    "persistence",
+    "public export",
+    "embedded soundtrack",
+    "VST3 parity"
+  ],
+  "checkpoint_tag": "m4-measured-diagnostics-2026-10-18",
+  "accepted_revision": "Peeled checkpoint tag; full commit SHA recorded in annotated tag",
+  "main_at_publication": "Same commit as checkpoint tag; fast-forward from base_commit with no integration source changes"
+}

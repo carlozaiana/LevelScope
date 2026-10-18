@@ -1,0 +1,42 @@
+{
+  "01-to-02": {
+    "source_files_sha256": [
+      "Source/Standalone/MeasurementTimeline.cpp",
+      "Source/Standalone/MeasurementTimeline.h",
+      "Source/Standalone/StandaloneDiagnosticsPanel.cpp",
+      "Tests/DiagnosticsTests.cpp",
+      "Tests/generate_m4_ui_fixtures.py",
+      "Tests/package_m4_qualification.py"
+    ],
+    "artifacts_sha256": [
+      "LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone",
+      "bin/LevelScopeComplianceTests",
+      "bin/LevelScopeDiagnosticsTests",
+      "bin/LevelScopeMeasurementTests",
+      "bin/LevelScopeProposalTests",
+      "bin/LevelScopeScaffoldTests",
+      "bin/LevelScopeVideoTests",
+      "source/Source/Standalone/MeasurementTimeline.cpp",
+      "source/Source/Standalone/MeasurementTimeline.h",
+      "source/Source/Standalone/StandaloneDiagnosticsPanel.cpp",
+      "source/Tests/DiagnosticsTests.cpp",
+      "source/Tests/generate_m4_ui_fixtures.py",
+      "source/Tests/package_m4_qualification.py",
+      "ui-fixtures/diagnostic-long-silence.wav",
+      "ui-fixtures/diagnostic-three-hour.wav"
+    ]
+  },
+  "02-to-03": {
+    "source_files_sha256": [
+      "Tests/DiagnosticsTests.cpp"
+    ],
+    "artifacts_sha256": [
+      "bin/LevelScopeDiagnosticsTests",
+      "source/Tests/DiagnosticsTests.cpp"
+    ]
+  },
+  "review": {
+    "01-to-02": "Fix offscreen selection painting and distinguish long silence from under-60-second interpretation. Rerun all automated and official suites on both actual OSes; affected UI checks rerun on candidate-02.",
+    "02-to-03": "Tests only: actual panel Build/Cancel and close/reopen action bindings at a deterministic event boundary. No production hooks/delays. Standalone and other executable hashes unchanged. All automated and official suites rerun on both actual OSes. Candidate-02 UI applies to identical candidate-03 app."
+  }
+}

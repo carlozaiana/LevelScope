@@ -12,6 +12,21 @@ Historical scaffold observations below remain scoped to their original dates.
 
 ## Current integration handover (17 October 2026)
 
+M4 continuation (18 October): measured diagnostics and a reusable read-only
+audio-source timeline are implemented on the existing logic branch, based on
+qualified M3/main `62ab420cb15b3ce5e1c821c963a749a9a56ae4a7`. M4 qualification
+**passes on actual Intel High Sierra and arm64 Sequoia**, including **three hours**.
+See the [qualification report](../../Tests/Reference/results/m4-qualification-2026-10-18/README.md)
+for exact source/binary identities, test results and the distinction between manual
+completion-before-cancel and deterministic native-control/active-worker cancellation tests. See
+[23_M4MeasuredDiagnostics.md](23_M4MeasuredDiagnostics.md) for location, availability,
+gate/population, profile annotation, performance and silent UI acceptance contracts.
+M4 is published as the annotated checkpoint `m4-measured-diagnostics-2026-10-18`
+on the logic branch and fast-forwarded into main. The exact checkpoint/main
+revision at publication is the tag's peeled commit, recorded in its annotation.
+The tested implementation is unchanged by publication/integration. Earlier
+checkpoint tags, the video working copy and existing installations are preserved.
+
 M3 continuation (18 October): deterministic global-trim proposals, explicit Apply
 and actual measured verification are implemented and qualified on actual Intel
 High Sierra and arm64 Sequoia in the existing logic workspace. The annotated

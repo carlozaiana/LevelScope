@@ -1,0 +1,59 @@
+{
+  "source_manifest_verified": 118,
+  "qualified_m3": "62ab420cb15b3ce5e1c821c963a749a9a56ae4a7",
+  "reviewed_unchanged_files": {
+    "Source/Core/Proposal/Model/TargetProfile.cpp": {
+      "sha256": "578736b0daa64d7d654506a3d81a4715b093f5ea8c15610f2b5a930ee566fcda",
+      "unchanged_from_m3": true
+    },
+    "Source/Core/Proposal/Model/TargetProfile.h": {
+      "sha256": "54b2637bc231647e7ededa584b894a83976f0f05777d46d2330cd97ddc82ab67",
+      "unchanged_from_m3": true
+    },
+    "Source/Standalone/StandaloneAudioPanel.cpp": {
+      "sha256": "1b53e3f4c7972d84d02382f0d5a6356de082c3392aa2d3243a8fa09d8d7bfc73",
+      "unchanged_from_m3": true
+    },
+    "Source/Standalone/StandaloneAudioPanel.h": {
+      "sha256": "cfefbf11eb337d71d5622107b5bec1d3f67ea2d972be181752eaadb83a5b8262",
+      "unchanged_from_m3": true
+    },
+    "Source/Standalone/StandaloneTargetProfiles.h": {
+      "sha256": "78148721bd755ba34084f679e68f2da4a7f9b120b4872161095db64d887471fe",
+      "unchanged_from_m3": true
+    },
+    "Source/Standalone/StandaloneVideo.cpp": {
+      "sha256": "7b5aee564de7dba96e9557f784a8d03dce60ca8022b4736a0a84eb7097e458cb",
+      "unchanged_from_m3": true
+    },
+    "Source/Standalone/StandaloneVideo.h": {
+      "sha256": "3409e56d0ad8a20be23632105fe64c1bd69b7c049a78fc2c5c04196d4cc91220",
+      "unchanged_from_m3": true
+    },
+    "Source/Standalone/StandaloneVideoPanel.cpp": {
+      "sha256": "c9ce3f4abad826c39474e6427121c49084ede64b3ca38c51fb1229cd9ceb7402",
+      "unchanged_from_m3": true
+    },
+    "Source/Standalone/StandaloneVideoPanel.h": {
+      "sha256": "304702e150a6e66298859134090d222459ac7c8643c4ef244f8f1d0b39f1354e",
+      "unchanged_from_m3": true
+    },
+    "Source/Standalone/StandaloneVideo_mac.mm": {
+      "sha256": "7e71dedb93bf29117405bcfec727b1d32fd0c0e1599e0e8312eaa3c0f136c02e",
+      "unchanged_from_m3": true
+    },
+    "Source/Standalone/VideoTiming.h": {
+      "sha256": "69dc05d1f03a0d17d5b83ce317829135c1cd28305e5dd769327b830b7c6eb7bb",
+      "unchanged_from_m3": true
+    },
+    "Tests/VideoPlaybackQualification.cpp": {
+      "sha256": "cf6067238a6b48392946a4a9b957862163b5933917fcf79ea0ff5135bc77a791",
+      "unchanged_from_m3": true
+    },
+    "Tests/VideoTests.cpp": {
+      "sha256": "1ff32b2c12ffc630e8d096f188e743b06764bb12acd4c78383072291e7886a1a",
+      "unchanged_from_m3": true
+    }
+  },
+  "format_coverage": "Reuse published M2/M3 silent WAV/AIFF/FLAC and unsupported-layout evidence for unchanged import/layout/audio UI. Shared measurement gate extraction was rerun against all automated and official references on both actual OSes. No new physical audio/device/synchronization claim."
+}

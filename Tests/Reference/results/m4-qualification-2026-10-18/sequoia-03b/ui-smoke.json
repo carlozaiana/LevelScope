@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-18",
+  "accepted_candidate": "candidate-03",
+  "interactive_app_candidate": "candidate-02",
+  "standalone_sha256": "aeb88e145945a305fec9be3be962ea888d127baae63f37c0cb8b2e7e3efb96d3",
+  "candidate_03_same_app": true,
+  "audio_device": "closed throughout",
+  "routing": "Muted throughout; mapping identity mutation covered hardware-independently",
+  "playback": "stopped throughout; no diagnostic action sought or played",
+  "cancellation_evidence": {
+    "manual_sequoia": "Agent and user attempts completed rebuilding before Cancel could be clicked. Not recorded as interactive active cancellation.",
+    "deterministic_native_panel": "369-check final suite on both actual OSes invokes real Build/Cancel and close/suspend/reopen bindings while completion is pending; checks cleared plots and rejection of publication. No production delays or test hooks.",
+    "active_worker": "Three-hour active cancellation meets 1000 ms deadline on both OSes."
+  },
+  "platform": "arm64 Sequoia 15.7.9 (24G830)",
+  "passed": true,
+  "coverage": [
+    "candidate-01: 120 s scenes imported/roles confirmed; Source and Current at 0 dB agree; gates, distribution, full-resolution ranked intervals and per-channel maxima inspected.",
+    "candidate-01: integrated/lower/upper/excluded selections, horizontal zoom/scroll and numerical inspection; Current -6 dB immediately invalidates displayed result, remeasurement updates I/TP by -6 dB while LRA stays 23.994468 LU.",
+    "candidate-01: unconfirmed applicability removes profile annotations while preserving descriptive data; monitor gain -30 to -36 dB and reference attachment/+12 s offset preserve audio positions/results.",
+    "candidate-01: M3 draft remains prediction-only and unchanged after diagnostic navigation; no Apply or audio revision from inspection.",
+    "candidate-02: actual 10800 s stereo48k PCM import/full measurement; whole-programme extrema, 6 zoom steps, scroll to [10631.25,10800] s; numeric 10799.9 s reports M [10799.5,10799.9), S [10796.9,10799.9), both -34.992474 LUFS (M excluded).",
+    "candidate-02: ranked integrated interval [89.8,90.2) auto-scrolls into view; subsequent pan to programme end retains row details without false edge highlight.",
+    "candidate-02: source replacement/clear removes plots and old details; 2 s fixture gives available I and insufficient-duration LRA/S; 120 s silence gives unavailable I/LRA/M/S and no fabricated zero values or false under-60 s warning.",
+    "candidate-02: 8 s fixture LRA unstable; lower-tail [6.5,9.5) explicitly labels EOF padding and highlights only through 8 s; close/reopen and final app close work."
+  ],
+  "reuse": "Candidate-01 unaffected functional checks reused after focused display-only candidate-02 changes; those changed paths rechecked on candidate-02. Candidate-03 standalone is identical to candidate-02. See candidate-change-review.json."
+}
