@@ -1,0 +1,18 @@
+--- candidate-03/Source/Standalone/StandaloneMainComponent.cpp
++++ candidate-04/Source/Standalone/StandaloneMainComponent.cpp
+@@ -123,11 +123,10 @@
+     if (proposalResult.valid() && proposalResult.wait_for (std::chrono::seconds (0)) == std::future_status::ready)
+     {
+         const auto result = proposalResult.get();
+-        const auto message = result.status == proposal::TrimStatus::draft ? "Proposal drafted; review before Apply"
+-            : result.status == proposal::TrimStatus::noChange ? "Already passes; no audio change or new measurement required"
+-            : result.status == proposal::TrimStatus::noSolution ? "No predicted trim-only solution; no audio change"
+-            : "Proposal unavailable; no audio change";
+-        if (session.job.finish (proposalTicket, session.revision, ErrorCode::none, message))
++        // Job history may outlive its inputs. Keep verdicts and actionable advice
++        // in trimNotice, which is invalidated with the proposal binding.
++        if (session.job.finish (proposalTicket, session.revision, ErrorCode::none,
++                                "Proposal calculation complete; see Current State"))
+             if (! session.acceptTrimProposal (result))
+             {
+                 session.job.state = JobState::failed;

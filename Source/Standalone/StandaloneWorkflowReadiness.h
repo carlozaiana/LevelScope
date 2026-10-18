@@ -20,6 +20,7 @@ struct WorkflowReadiness
     bool currentStateMeasured = false;
 
     bool proposalEngineAvailable = false;
+    bool proposalInputsValidated = false;
     bool renderExportAvailable = false;
     bool exactVerificationPassed = false;
     bool exportApproved = false;
@@ -47,6 +48,7 @@ struct WorkflowReadiness
     bool canDraftProposal() const
     {
         return proposalEngineAvailable
+            && proposalInputsValidated
             && areProposalInputsSatisfied();
     }
 
@@ -77,6 +79,7 @@ struct WorkflowReadiness
         text << "- Current State needs re-measurement: " << yesNo (currentStateNeedsRemeasurement) << "\n";
         text << "- Current State measured: " << yesNo (currentStateMeasured) << "\n";
         text << "- Proposal engine available: " << yesNo (proposalEngineAvailable) << "\n";
+        text << "- Matching measured proposal inputs and applicability: " << yesNo (proposalInputsValidated) << "\n";
         text << "- Render/export available: " << yesNo (renderExportAvailable) << "\n\n";
         text << "- Exact rendered-output verification passed: " << yesNo (exactVerificationPassed) << "\n";
         text << "- Export approved for this revision: " << yesNo (exportApproved) << "\n\n";
@@ -117,8 +120,11 @@ struct WorkflowReadiness
         if (! proposalEngineAvailable)
             return "Next action: proposal engine remains intentionally unavailable in this scaffold.";
 
+        if (! proposalInputsValidated)
+            return "Next action: confirm applicability and valid matching Source/Current State measurements.";
+
         if (! renderExportAvailable)
-            return "Next action: render/export remains intentionally unavailable in this scaffold.";
+            return "Next action: draft a global trim, review it, then Apply explicitly. Export remains unavailable.";
 
         return "Next action: workflow gates are satisfied.";
     }

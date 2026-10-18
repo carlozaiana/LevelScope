@@ -18,6 +18,7 @@ Standards priority: EBU R128 and ATSC A/85.
 - Processing modules present: Leveler, Upward compressor (spectral + broadband mode), Downward compressor, Lookahead limiter (optional oversampling)
 - Preset/snapshot infrastructure and APVTS-based parameter system
 - Standalone scaffold: validated background media import, confirmed file-channel roles, explicit output mapping/device selection and original-source audition; cancellable jobs and future service interfaces. See [scaffold handover](13_StandaloneScaffoldHandover.md) for actual validation and limitations.
+- Qualified standalone M1 measurement, synchronized reference picture, M2 measured programme rules and [M3 global trim](22_M3GlobalTrimProposals.md) are published on main. M3 adds deterministic proposals, explicit application and actual measured verification; its handover records the checkpoint and qualification evidence. Processed audition, public export and VST3 parity remain deferred.
 
 ## Medium-term direction
 - Standalone app with analyze/propose/apply/export workflow

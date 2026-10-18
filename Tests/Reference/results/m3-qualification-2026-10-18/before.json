@@ -1,0 +1,15 @@
+{
+  "base_commit": "01a34833ec06a0d237e098faadb23b398581e8f9",
+  "branch": "codex/logic-module",
+  "tags": "b3c6e845482dbe8a0ec9778d5a9ad7953e614609 refs/tags/high-sierra-pre-scaffold-2026-10-15\n556d387ad772dc5e604ead95f1525f60e66fd5f9 refs/tags/high-sierra-pre-scaffold-2026-10-15^{}\n673e382feeaa7e29e6e6abedbd56677aa2163ef3 refs/tags/m2-measured-compliance-2026-10-18\n01a34833ec06a0d237e098faadb23b398581e8f9 refs/tags/m2-measured-compliance-2026-10-18^{}\n76affb667b6dab066cb36b2a2c741525b9b6eeac refs/tags/measurement-milestone-2026-10-17\nb29bc7c183743f35c6271d2d7ec8fb5ba1464591 refs/tags/measurement-milestone-2026-10-17^{}\n4c8bc35b788969e1f6e97dcdc57a601b01fff7cd refs/tags/standalone-scaffold-2026-10-15\nf192a8553e139d390056c9755f25eeb123bbc5e6 refs/tags/standalone-scaffold-2026-10-15^{}\n06f57524bedca1912c0d5c454f13561cec9ce5b4 refs/tags/video-checkpoint-2026-10-17\n700b9e77e439a8ca9bb7583adf826fac01dbe924 refs/tags/video-checkpoint-2026-10-17^{}\n",
+  "worktrees": "worktree /Users/fuzz/Developer/LevelScope\nHEAD 01a34833ec06a0d237e098faadb23b398581e8f9\nbranch refs/heads/codex/logic-module\n\nworktree /Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation\nHEAD 514b7bce25a34ccd02af28a6a24100a44f8189a4\nbranch refs/heads/codex/video-implementation\n\n",
+  "untracked": {
+    ".DS_Store": "d52a9f89b081ef8c97ffcd0b8e93d66afbdc6b161dabcd3c4c00a4383eb60daf",
+    "Docs/.DS_Store": "790fd3bf69c32589645d02d8074b751a9105edb93467abe72378b96c2ce14725",
+    "Source/.DS_Store": "cc58d278c22bbda5884c7926d607e1c87597be3640829641959de68c5fb628a2",
+    "Source/Core/.DS_Store": "1aa3d725fd3db21bacbbc4a908f8b561b598682209fc8119359b588e2c36e10a",
+    "Source/Core/Processing/.DS_Store": "ad1a60ff6db582810365ba9056c69006adb8046e1f5689330c1f4a8a0d19ac69",
+    "Tests/.DS_Store": "d2e3f4bc2c667237b278b5c0a43ae17f310b524f8de8990c5dad1242011c0f0e",
+    "Tests/Reference/.DS_Store": "7a62af0700ce7ab15de9857c53d209afa436a0428a2592c7b7f225b48b4db6d8"
+  }
+}

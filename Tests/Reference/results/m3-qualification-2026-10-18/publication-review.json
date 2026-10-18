@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-18",
+  "status": "PASS",
+  "checkpoint_tag": "m3-global-trim-2026-10-18",
+  "checkpoint_and_final_main": "m3-global-trim-2026-10-18^{commit}",
+  "latest_fetched_origin_main": "01a34833ec06a0d237e098faadb23b398581e8f9",
+  "integration": "Fast-forward; no integration fixes or tested implementation changes. Never rewrite history or move prior tags.",
+  "source_artifact_evidence_audit": {
+    "status": "PASS",
+    "candidate_identity_sha256": "14d52b1a03d068cd0875d87f458a9fa80de3b4154fb320afbdd74bcc6229581a",
+    "source_files_checked": 100,
+    "evidence_files_checked": 52,
+    "artifact_files_checked": 245,
+    "source_digest": "5f66aafc81be73b8184a88f662f1494c9059dfc25cefe43e8e42aac7629f38fd",
+    "failures": []
+  },
+  "cross_platform_recheck": {
+    "left": "Tests/Reference/results/m3-qualification-2026-10-18/sequoia-04",
+    "right": "Tests/Reference/results/m3-qualification-2026-10-18/high-sierra-04",
+    "errors": [],
+    "maximum_differences": {
+      "itu": {
+        "I": 0,
+        "M": 0,
+        "S": 0,
+        "TP": 1.7763568394002505e-15,
+        "LRA": 0
+      },
+      "ebu": {
+        "I": 0,
+        "M": 0,
+        "S": 0,
+        "TP": 0,
+        "LRA": 0
+      }
+    },
+    "tolerances": {
+      "I": 0.01,
+      "M": 0.01,
+      "S": 0.01,
+      "TP": 0.01,
+      "LRA": 0.1
+    },
+    "passed": true
+  },
+  "qualification_reuse": "All actual-platform automated and silent UI evidence retained with original candidate identities; final implementation byte-identical. Documentation/evidence publication does not require another build or UI run.",
+  "acceptance_clarifications": {
+    "matching_inputs": "PASS: individually valid mismatched content, ordered roles, programme range, sample rate and current processing plan rejected.",
+    "unsuccessful_verification": "PASS: actual worker cancellation/missing source/changed source leave applied gain retained and Current State unverified. Gate-crossing fixture displays actual measured FAIL (-23.854939 LUFS) despite predicted -23; no rollback/retry/correction.",
+    "already_passes": "PASS: no gain, audio revision, snapshot pointer, evaluation identity or measurement ticket change; Apply disabled in both silent UIs."
+  },
+  "prior_checkpoint_tags": {
+    "high-sierra-pre-scaffold-2026-10-15": {
+      "tag_object": "b3c6e845482dbe8a0ec9778d5a9ad7953e614609",
+      "peeled_commit": "556d387ad772dc5e604ead95f1525f60e66fd5f9"
+    },
+    "m2-measured-compliance-2026-10-18": {
+      "tag_object": "673e382feeaa7e29e6e6abedbd56677aa2163ef3",
+      "peeled_commit": "01a34833ec06a0d237e098faadb23b398581e8f9"
+    },
+    "measurement-milestone-2026-10-17": {
+      "tag_object": "76affb667b6dab066cb36b2a2c741525b9b6eeac",
+      "peeled_commit": "b29bc7c183743f35c6271d2d7ec8fb5ba1464591"
+    },
+    "standalone-scaffold-2026-10-15": {
+      "tag_object": "4c8bc35b788969e1f6e97dcdc57a601b01fff7cd",
+      "peeled_commit": "f192a8553e139d390056c9755f25eeb123bbc5e6"
+    },
+    "video-checkpoint-2026-10-17": {
+      "tag_object": "06f57524bedca1912c0d5c454f13561cec9ce5b4",
+      "peeled_commit": "700b9e77e439a8ca9bb7583adf826fac01dbe924"
+    }
+  },
+  "preserved_video_worktree": {
+    "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation",
+    "branch": "codex/video-implementation",
+    "head": "514b7bce25a34ccd02af28a6a24100a44f8189a4",
+    "unrelated_status": "?? .DS_Store\n?? Source/.DS_Store\n?? Source/Core/.DS_Store\n?? Source/Core/Processing/.DS_Store\n?? Tests/.DS_Store\n?? Tests/Video/.DS_Store\n?? Tests/Video/results/.DS_Store"
+  },
+  "excluded_from_commit": [
+    "Downloaded/generated reference media",
+    "Build products and binaries",
+    "Credentials and connection sockets",
+    "Unrelated Finder metadata"
+  ],
+  "unresolved_acceptance_issues": []
+}

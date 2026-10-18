@@ -203,6 +203,8 @@ endif()
 #==============================
 
 add_library(LevelScopeStandaloneSupport STATIC
+    Source/Core/Proposal/Methods/RuleBasedMethod.cpp
+    Source/Standalone/StandaloneProposal.cpp
     Source/Core/Proposal/Model/TargetProfile.cpp
     Source/Core/Proposal/VerificationEngine.cpp
     Source/Standalone/StandaloneCompliance.cpp
@@ -312,6 +314,16 @@ if (LEVELSCOPE_BUILD_COMPLIANCE_TESTS)
     target_link_libraries(LevelScopeComplianceTests PRIVATE LevelScopeStandaloneSupport)
     add_test(NAME measured-compliance COMMAND LevelScopeComplianceTests)
     set_tests_properties(measured-compliance PROPERTIES TIMEOUT 60)
+endif()
+
+option(LEVELSCOPE_BUILD_PROPOSAL_TESTS "Build M3 global-trim checks" OFF)
+if (LEVELSCOPE_BUILD_PROPOSAL_TESTS)
+    enable_testing()
+    juce_add_console_app(LevelScopeProposalTests PRODUCT_NAME "LevelScope Proposal Tests")
+    target_sources(LevelScopeProposalTests PRIVATE Tests/ProposalTests.cpp)
+    target_link_libraries(LevelScopeProposalTests PRIVATE LevelScopeStandaloneSupport)
+    add_test(NAME global-trim-proposals COMMAND LevelScopeProposalTests)
+    set_tests_properties(global-trim-proposals PROPERTIES TIMEOUT 120)
 endif()
 
 option(LEVELSCOPE_BUILD_SCAFFOLD_TESTS "Build hardware-independent standalone checks" OFF)

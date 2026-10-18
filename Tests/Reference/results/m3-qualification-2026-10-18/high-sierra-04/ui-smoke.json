@@ -1,0 +1,149 @@
+{
+  "status": "PASS",
+  "date": "2026-10-18",
+  "execution_architecture": "x86_64",
+  "final_candidate": "candidate-04",
+  "final_app_sha256": "4a88b2b3c70e2887633a3202018f804754377657d0d2374b910df1239d8868f5",
+  "functional_candidate": "candidate-03",
+  "functional_app_sha256": "a92d09c6b6e8b3c23e47345847ea21d98a246ff5574a3c1070d544d523e9e65f",
+  "method": "CUA through Screen Sharing with View-menu focus sequence; all listed checks agent-observed",
+  "basis": "Full functional M3 paths exercised on candidate-03. Candidate-04 changes only neutral proposal-completion job-history text (see candidate-03-to-04.diff); affected draft, Apply, measured PASS, no-change, applicability and processing invalidation rechecked on final candidate. All automated suites rerun on final candidate.",
+  "checks": [
+    {
+      "id": "import-role-confirmation",
+      "passed": true,
+      "observed": "trim-required.wav imported; roles confirmed; Source and Current measured at 0 dB. Both fail loudness; no prediction substitutes for measurement."
+    },
+    {
+      "id": "draft-deterministic-no-mutation",
+      "passed": true,
+      "observed": "Draft at 0 dB proposes total gain 2.993302236425 dB and clearly labels predictions. Gain and measured FAIL remain unchanged until Apply. Discard and redraft retain the same proposal."
+    },
+    {
+      "id": "explicit-apply",
+      "passed": true,
+      "observed": "Apply changes gain and immediately clears the old Current verdict, showing UNVERIFIED; Source measurement remains unchanged."
+    },
+    {
+      "id": "actual-worker-verification",
+      "passed": true,
+      "observed": "Re-measure Current State produces measured -23.000000 LUFS and -23.006244 dBTP, selected-rule PASS. Source remains -25.993302 LUFS."
+    },
+    {
+      "id": "already-pass-no-op",
+      "passed": true,
+      "observed": "Draft passing Current returns NO CHANGE; Apply disabled, gain and measurements retained, no new measurement requested. Audio revision/pointer preservation separately asserted by unit tests."
+    },
+    {
+      "id": "profile-applicability-reuse",
+      "passed": true,
+      "observed": "Unchecked applicability and ATSC placeholder produce NOT EVALUATED and discard draft; returning to confirmed EBU reuses existing measured values without another measurement."
+    },
+    {
+      "id": "processing-invalidation",
+      "passed": true,
+      "observed": "Changing gain to -6 dB removes Current measurement/verdict and draft; Source remains measured."
+    },
+    {
+      "id": "monitor-video-isolation",
+      "passed": true,
+      "observed": "With valid draft, monitor gain changed while routes remained Muted; cfr-exact.mov attached and offset set to +1 s. Draft remains applicable with unchanged predicted plan and measured Source/Current values. Picture remains stopped; embedded soundtrack excluded."
+    },
+    {
+      "id": "prediction-disagreement",
+      "passed": true,
+      "observed": "gate-crossing.wav Source -19.879170 LUFS; Current measured at -50 dB. Proposal total -3.975769027009 dB predicts -23 LUFS, -22.975311 dBTP. Actual verification gives -23.854939 LUFS and selected-rule FAIL. Applied gain retained, no retry/rollback/correction."
+    },
+    {
+      "id": "cancel-after-apply",
+      "passed": true,
+      "observed": "long-stereo.wav measured at -6 dB; draft applied total -0.006645507424 dB. Verification cancelled while active. Current explicitly UNVERIFIED, applied gain retained, no old PASS or automatic work."
+    },
+    {
+      "id": "replacement-and-clear",
+      "passed": true,
+      "observed": "Successful replacement requires role/applicability confirmation and removes previous Current state/results. Clear Source removes both measured snapshots and draft; stale results do not return."
+    },
+    {
+      "id": "close-during-measurement",
+      "passed": true,
+      "observed": "Closed candidate-03 while long-file Source measurement was active (about 15%). Its process exited. Candidate-04 relaunched cleanly with no source, gain 0, device closed and playback stopped."
+    },
+    {
+      "id": "final-status-wording",
+      "passed": true,
+      "observed": "Candidate-04 draft/no-change banner is neutral: Proposal calculation complete; see Current State. After applicability and gain edits no stale PASS/Already passes advice survives in job history or Current panels."
+    },
+    {
+      "id": "silent-throughout",
+      "passed": true,
+      "observed": "Device closed, all displayed routes Muted and playback stopped throughout. No device scan/open or Play action; no audible tests."
+    },
+    {
+      "id": "test-apps-closed",
+      "passed": true,
+      "observed": "Candidate test apps closed after final UI checks; process exit verified."
+    }
+  ],
+  "inherited_format_regression": {
+    "report": "../../m2-qualification-2026-10-18/candidate-01/high-sierra-x86_64/ui-smoke.json",
+    "checks": [
+      "formats",
+      "unsupported-layout"
+    ],
+    "reason": "M3 does not change the decoder, file patterns or supported channel-layout rules; M3 scaffold/measurement suites rerun on final candidate. No claim these inherited format UI checks were repeated in M3."
+  },
+  "evidence_storage": "Screenshots and AX text kept under ignored build/m3-qualification-2026-10-18. Only hashes are included; they show local desktop content and are not shipped.",
+  "evidence_sha256": {
+    "ui-high-sierra-candidate-03/01-draft.png": "47f14bcc23c5ceb9a72384db879fbb5feb760c83336e380377e55098ef002664",
+    "ui-high-sierra-candidate-03/01-draft.txt": "a8585b03002b03e53181818d979dbeeb0e91a63ca06931808997ecdd4289d804",
+    "ui-high-sierra-candidate-03/02-discard.png": "6a918edd72ea94128c946012e2d3c560679832e4d4878540bfd5358cfddb1cb8",
+    "ui-high-sierra-candidate-03/02-discard.txt": "a8585b03002b03e53181818d979dbeeb0e91a63ca06931808997ecdd4289d804",
+    "ui-high-sierra-candidate-03/03-applied-unverified.png": "221f0db97aace17685964beace7e97dd299aa28b708520d81abd6777ca90730a",
+    "ui-high-sierra-candidate-03/03-applied-unverified.txt": "a8585b03002b03e53181818d979dbeeb0e91a63ca06931808997ecdd4289d804",
+    "ui-high-sierra-candidate-03/04-measured-pass.png": "13232c7939fb055e8243d6294acb65109248c8b6bf42d550936f67443bfeefe5",
+    "ui-high-sierra-candidate-03/04-measured-pass.txt": "a8585b03002b03e53181818d979dbeeb0e91a63ca06931808997ecdd4289d804",
+    "ui-high-sierra-candidate-03/05-no-change.png": "59163f95432b6db11d086dd30836ec02ef4dd1b43d96dc7e4c6655d8fa2afe7c",
+    "ui-high-sierra-candidate-03/05-no-change.txt": "a8585b03002b03e53181818d979dbeeb0e91a63ca06931808997ecdd4289d804",
+    "ui-high-sierra-candidate-03/06-applicability-invalidated.png": "5873532203ee2198efd0c0a699389c08cb7dfe59802b898e101cefa6aa7d66e4",
+    "ui-high-sierra-candidate-03/06-applicability-invalidated.txt": "a8585b03002b03e53181818d979dbeeb0e91a63ca06931808997ecdd4289d804",
+    "ui-high-sierra-candidate-03/07-applicability-reuse.png": "b2cbe046aa2250de276cb7342c7e95b5b6f9db920e99c31f9a599f70f4f53a2b",
+    "ui-high-sierra-candidate-03/07-applicability-reuse.txt": "a8585b03002b03e53181818d979dbeeb0e91a63ca06931808997ecdd4289d804",
+    "ui-high-sierra-candidate-03/08-gain-invalidated.png": "04b6977b4758255578086d8f0bec6ae0fb778875a6ce838208a74bb59aece4f5",
+    "ui-high-sierra-candidate-03/08-gain-invalidated.txt": "a8585b03002b03e53181818d979dbeeb0e91a63ca06931808997ecdd4289d804",
+    "ui-high-sierra-candidate-03/09-video-offset-monitor-preserve.png": "5ea0e0efd753784c9dba903f7d3aef4d4e3f4743081c8fb10ee75f69664216d1",
+    "ui-high-sierra-candidate-03/09-video-offset-monitor-preserve.txt": "a8585b03002b03e53181818d979dbeeb0e91a63ca06931808997ecdd4289d804",
+    "ui-high-sierra-candidate-03/10-placeholder-profile.png": "8341ffba9c247cd8c900f077f7edb4f22c3b8327b910c2a3bdfdac8d53d0d010",
+    "ui-high-sierra-candidate-03/10-placeholder-profile.txt": "a8585b03002b03e53181818d979dbeeb0e91a63ca06931808997ecdd4289d804",
+    "ui-high-sierra-candidate-03/11-profile-reuse.png": "fd29fd9d76921b666a7731c0a62ff4d8219c874dddebe49d51bcea575b57b764",
+    "ui-high-sierra-candidate-03/11-profile-reuse.txt": "a8585b03002b03e53181818d979dbeeb0e91a63ca06931808997ecdd4289d804",
+    "ui-high-sierra-candidate-03/12-gate-draft-prediction.png": "c3f2c684d1af21ffa0af3013a2bf9ca12fc9dda18e92c8e8dbb556a5ba93898a",
+    "ui-high-sierra-candidate-03/12-gate-draft-prediction.txt": "a8585b03002b03e53181818d979dbeeb0e91a63ca06931808997ecdd4289d804",
+    "ui-high-sierra-candidate-03/13-gate-applied-unverified.png": "1a85d434f0ec52ba350d583f81f7d3974c3021ca3553d9d20ae3b432f79ae507",
+    "ui-high-sierra-candidate-03/13-gate-applied-unverified.txt": "a8585b03002b03e53181818d979dbeeb0e91a63ca06931808997ecdd4289d804",
+    "ui-high-sierra-candidate-03/14-gate-actual-fail-retained-gain.png": "5afcc227f0ab15bc661c9370754abca9f28b415eab37a81f016df41584acad77",
+    "ui-high-sierra-candidate-03/14-gate-actual-fail-retained-gain.txt": "a8585b03002b03e53181818d979dbeeb0e91a63ca06931808997ecdd4289d804",
+    "ui-high-sierra-candidate-03/15-long-applied-unverified.png": "d9b87de07d3f7cf2688e5bd526988bdd56df9e50ea402437e703c52a73a272a9",
+    "ui-high-sierra-candidate-03/15-long-applied-unverified.txt": "a8585b03002b03e53181818d979dbeeb0e91a63ca06931808997ecdd4289d804",
+    "ui-high-sierra-candidate-03/16-cancel-unverified-retained-gain.png": "25bfbce8e27ceedb1dbc8d088d7031b281b84b91fd3d4e669a6fe7c27b2f12c7",
+    "ui-high-sierra-candidate-03/16-cancel-unverified-retained-gain.txt": "a8585b03002b03e53181818d979dbeeb0e91a63ca06931808997ecdd4289d804",
+    "ui-high-sierra-candidate-03/17-clear-source.png": "6f7e9ad22d9e9d0ee9d97b76312e7da7695236908aaceab30cc02e546b7321f5",
+    "ui-high-sierra-candidate-03/17-clear-source.txt": "a8585b03002b03e53181818d979dbeeb0e91a63ca06931808997ecdd4289d804",
+    "ui-high-sierra-candidate-03/18-measurement-active-before-close.png": "f348c0b37dfc8fd8ea20cb3688b8491c841478b41009c0d6449d50b181e269be",
+    "ui-high-sierra-candidate-03/18-measurement-active-before-close.txt": "a8585b03002b03e53181818d979dbeeb0e91a63ca06931808997ecdd4289d804",
+    "ui-high-sierra-candidate-03/19-closed-during-measurement.png": "7e70df9b6b97ee94e227fa6b3e8db097a309f683d4756f59f37c6c27ecd9d64f",
+    "ui-high-sierra-candidate-03/19-closed-during-measurement.txt": "a8585b03002b03e53181818d979dbeeb0e91a63ca06931808997ecdd4289d804",
+    "ui-high-sierra-candidate-04/01-clean-relaunch.png": "96f37d4e96487c21b3d0204543cebb90f485a054ef98e4ac58103058fd82ba17",
+    "ui-high-sierra-candidate-04/01-clean-relaunch.txt": "a8585b03002b03e53181818d979dbeeb0e91a63ca06931808997ecdd4289d804",
+    "ui-high-sierra-candidate-04/02-final-draft-banner.png": "33811e3bd4bfc8f30bcb9e0515e22982d50be0bc2a720bf6ef028e7d99886aea",
+    "ui-high-sierra-candidate-04/02-final-draft-banner.txt": "a8585b03002b03e53181818d979dbeeb0e91a63ca06931808997ecdd4289d804",
+    "ui-high-sierra-candidate-04/03-final-measured-pass.png": "a92b998b2f4648ebf3550f56cf20f9f38f1f6774862ef7c0637a2ff7f4a74e44",
+    "ui-high-sierra-candidate-04/03-final-measured-pass.txt": "a8585b03002b03e53181818d979dbeeb0e91a63ca06931808997ecdd4289d804",
+    "ui-high-sierra-candidate-04/04-final-no-change.png": "5974c4b0679f284518f5a56cbee6f8ad00ea256132511add594d0097925dc581",
+    "ui-high-sierra-candidate-04/04-final-no-change.txt": "a8585b03002b03e53181818d979dbeeb0e91a63ca06931808997ecdd4289d804",
+    "ui-high-sierra-candidate-04/05-context-invalidated-no-stale-pass.png": "4ae8a61bd6d2852372e56b0d91df290574f0d8431edd9dd960737371826462af",
+    "ui-high-sierra-candidate-04/05-context-invalidated-no-stale-pass.txt": "a8585b03002b03e53181818d979dbeeb0e91a63ca06931808997ecdd4289d804",
+    "ui-high-sierra-candidate-04/06-gain-invalidated-no-stale-pass.png": "e80bb91f834e97651e01712f2bc2bf65a0ef4c17280b6c338dcd92b464d838ad",
+    "ui-high-sierra-candidate-04/06-gain-invalidated-no-stale-pass.txt": "a8585b03002b03e53181818d979dbeeb0e91a63ca06931808997ecdd4289d804"
+  }
+}

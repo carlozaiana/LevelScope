@@ -32,6 +32,9 @@ private:
     std::shared_ptr<JobControl> importControl;
     std::future<MediaValidationResult> importResult;
     std::future<ServiceResult<AnalysisSnapshot>> analysisResult;
+    std::future<proposal::TrimProposal> proposalResult;
+    JobTicket proposalTicket;
+    MeasurementDomain analysisDomain = MeasurementDomain::source;
     JobTicket analysisTicket;
     JobTicket importTicket;
     juce::File importingFile;
@@ -59,6 +62,9 @@ private:
     juce::TextButton clearCurrentStateButton { "Clear Current State" };
     juce::TextButton remeasureCurrentStateButton { "Re-measure Current State" };
     juce::Slider currentGain;
+    juce::TextButton draftTrimButton { "Draft global trim" };
+    juce::TextButton applyTrimButton { "Apply trim" };
+    juce::TextButton discardTrimButton { "Discard draft" };
 
     juce::TextEditor sourceStateBox;
     juce::TextEditor targetStateBox;
@@ -80,6 +86,7 @@ private:
     void clearCurrentState();
     void beginImport (const juce::File&);
     void beginMeasurement (MeasurementDomain);
+    void beginTrimProposal();
     void timerCallback() override;
 
     void setPage (WorkflowPage page);

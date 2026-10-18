@@ -91,6 +91,7 @@ StandaloneMainComponent::~StandaloneMainComponent()
     if (importControl) importControl->cancel.store (true);
     if (importResult.valid()) importResult.wait();
     if (analysisResult.valid()) analysisResult.wait();
+    if (proposalResult.valid()) proposalResult.wait();
     audition.disconnect();
 }
 
@@ -119,6 +120,21 @@ void StandaloneMainComponent::timerCallback()
     videoPanel.synchronize(); // observes new seek/play generation before audio preroll can finish
     audition.poll (videoPanel.prerollReady());
     audioPanel.refresh();
+    if (proposalResult.valid() && proposalResult.wait_for (std::chrono::seconds (0)) == std::future_status::ready)
+    {
+        const auto result = proposalResult.get();
+        // Job history may outlive its inputs. Keep verdicts and actionable advice
+        // in trimNotice, which is invalidated with the proposal binding.
+        if (session.job.finish (proposalTicket, session.revision, ErrorCode::none,
+                                "Proposal calculation complete; see Current State"))
+            if (! session.acceptTrimProposal (result))
+            {
+                session.job.state = JobState::failed;
+                session.job.error = ErrorCode::staleRevision;
+                session.job.message = "Proposal inputs changed; draft discarded";
+            }
+        importControl.reset(); refreshFromSession();
+    }
     if (analysisResult.valid() && analysisResult.wait_for (std::chrono::seconds (0)) == std::future_status::ready)
     {
         auto result = analysisResult.get();
@@ -129,14 +145,10 @@ void StandaloneMainComponent::timerCallback()
                 session.job.state = JobState::failed;
                 session.job.error = ErrorCode::staleRevision;
                 session.job.message = "Measurement identity no longer matches; result discarded";
+                session.measurementUnsuccessful (analysisDomain, ErrorCode::staleRevision);
             }
         }
-        else if (session.job.error == ErrorCode::sourceChanged)
-        {
-            session.source = MeasurementSummary();
-            session.clearCurrentState();
-            session.sourceDocument.importStatus = "Content changed; import the source again";
-        }
+        else session.measurementUnsuccessful (analysisDomain, session.job.error);
         importControl.reset();
         refreshFromSession();
     }
@@ -168,13 +180,14 @@ void StandaloneMainComponent::timerCallback()
 
 void StandaloneMainComponent::beginMeasurement (MeasurementDomain domain)
 {
-    if (session.job.isActive()) return;
+    if (session.job.isActive() || session.sourceContentInvalid) return;
     if (domain == MeasurementDomain::currentState && ! session.hasCurrentStateInitialized()) return;
     auto context = session.measurementContext (domain);
     if (OfflineAnalysisService::validateRequest (context, domain).isNotEmpty()) return;
     audition.stop();
     if (! session.job.begin (JobStage::analysis, session.revision)) return;
     analysisTicket = session.job.ticket;
+    analysisDomain = domain;
     context.ticket = analysisTicket;
     session.job.message = "Verifying source snapshot and measuring";
     importControl = std::make_shared<JobControl>();
@@ -182,6 +195,24 @@ void StandaloneMainComponent::beginMeasurement (MeasurementDomain domain)
     {
         return OfflineAnalysisService().analyze (context, domain, *control);
     });
+    refreshFromSession();
+}
+
+void StandaloneMainComponent::beginTrimProposal()
+{
+    if (! session.getWorkflowReadiness().canDraftProposal()) return;
+    const auto request = session.currentTrimRequest();
+    session.discardTrim();
+    if (! session.job.begin (JobStage::proposal, session.revision)) return;
+    proposalTicket = session.job.ticket;
+    session.job.message = "Drafting global trim; audio unchanged";
+    importControl = std::make_shared<JobControl>();
+    proposalResult = std::async (std::launch::async, [request]
+    {
+        try { return proposal::draftGlobalTrim (request); }
+        catch (...) { return proposal::TrimProposal(); }
+    });
+    session.selectedPage = WorkflowPage::currentState;
     refreshFromSession();
 }
 // [END LS-STANDALONE-IMPORT-LIFECYCLE]
@@ -269,7 +300,8 @@ void StandaloneMainComponent::configureCurrentStateControls()
     clearCurrentStateButton.onClick = [this] { clearCurrentState(); };
 
     remeasureCurrentStateButton.onClick = [this] { beginMeasurement (MeasurementDomain::currentState); };
-    currentGain.setRange (-60, 24, 0.1);
+    currentGain.setRange (-60, 24, 0); // Continuous double value; Apply must not quantize to tenths.
+    currentGain.setNumDecimalPlacesToDisplay (12);
     currentGain.setSliderStyle (juce::Slider::LinearHorizontal);
     currentGain.setTextBoxStyle (juce::Slider::TextBoxRight, false, 100, 24);
     currentGain.setTextValueSuffix (" dB trim");
@@ -280,6 +312,12 @@ void StandaloneMainComponent::configureCurrentStateControls()
     addAndMakeVisible (initializeCurrentStateButton);
     addAndMakeVisible (clearCurrentStateButton);
     addAndMakeVisible (remeasureCurrentStateButton);
+    draftTrimButton.onClick = [this] { beginTrimProposal(); };
+    applyTrimButton.onClick = [this] { session.applyTrim(); refreshFromSession(); };
+    discardTrimButton.onClick = [this] { session.discardTrim(); refreshFromSession(); };
+    addAndMakeVisible (draftTrimButton);
+    addAndMakeVisible (applyTrimButton);
+    addAndMakeVisible (discardTrimButton);
 }
 
 void StandaloneMainComponent::configureReadOnlyBox (juce::TextEditor& box)
@@ -351,7 +389,7 @@ void StandaloneMainComponent::setPage (WorkflowPage page)
 void StandaloneMainComponent::refreshFromSession()
 {
     workflowStateLabel.setText ("Workflow page: " + getPageName (session.selectedPage)
-                                    + "   |   Proposal engine: not implemented",
+                                    + "   |   Global-trim proposals",
                                 juce::dontSendNotification);
 
     targetProfileBox.setSelectedId (session.selectedTargetProfileIndex + 1, juce::dontSendNotification);
@@ -366,11 +404,14 @@ void StandaloneMainComponent::refreshFromSession()
     initializeCurrentStateButton.setEnabled (! session.job.isActive() && session.canInitializeCurrentStateFromSource());
     clearCurrentStateButton.setEnabled (! session.job.isActive() && session.hasCurrentStateInitialized());
     const auto measurementError = OfflineAnalysisService::validateRequest (session.measurementContext (MeasurementDomain::source), MeasurementDomain::source);
-    measureSourceButton.setEnabled (! session.job.isActive() && measurementError.isEmpty());
+    measureSourceButton.setEnabled (! session.job.isActive() && ! session.sourceContentInvalid && measurementError.isEmpty());
     measureSourceButton.setTooltip (measurementError);
-    remeasureCurrentStateButton.setEnabled (! session.job.isActive() && session.hasCurrentStateInitialized() && measurementError.isEmpty());
+    remeasureCurrentStateButton.setEnabled (! session.job.isActive() && ! session.sourceContentInvalid && session.hasCurrentStateInitialized() && measurementError.isEmpty());
     currentGain.setEnabled (! session.job.isActive() && session.hasCurrentStateInitialized());
     currentGain.setValue (session.currentStateDocument.staticGainDb, juce::dontSendNotification);
+    draftTrimButton.setEnabled (session.getWorkflowReadiness().canDraftProposal());
+    applyTrimButton.setEnabled (session.canApplyTrim());
+    discardTrimButton.setEnabled (! session.job.isActive() && session.trimDraft.has_value());
 
     sourceStateBox.setText (buildSourceStateText(), false);
     targetStateBox.setText (buildTargetStateText(), false);
@@ -449,7 +490,7 @@ juce::String StandaloneMainComponent::buildTargetStateText() const
     text << "\n";
 
     text << "Evaluation: selected measured rules only\n";
-    text << "Proposal use: blocked; proposal engine not implemented\n";
+    text << "Proposal use: measured global trim only; explicit Apply and remeasurement required\n";
 
     return text;
 }
@@ -468,7 +509,7 @@ juce::String StandaloneMainComponent::buildCurrentStateText() const
 
     text << "Measurement status: " << session.currentState.statusText << "\n\n";
 
-    text << "Static gain (all channels): " << juce::String (session.currentStateDocument.staticGainDb, 1) << " dB\n\n";
+    text << "Static gain (all channels): " << juce::String (session.currentStateDocument.staticGainDb, 12) << " dB\n\n";
     text << measurementsText (session.currentState);
 
     return text;
@@ -521,6 +562,7 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
         }
 
         case WorkflowPage::currentState:
+            text << session.trimNotice << "\n\n";
             text << evaluationText (session.evaluation (MeasurementDomain::currentState)) << "\n";
             text << "Initialize Current State, adjust static gain, then re-measure.\n\n";
             text << "Static gain applies to every file channel, including LFE.\n";
@@ -539,14 +581,14 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
 
             text << "Proposal gate:\n";
             text << "- Inputs satisfied: " << (readiness.areProposalInputsSatisfied() ? "yes" : "no") << "\n";
-            text << "- Proposal engine available: no\n";
-            text << "- Draft proposal: blocked\n\n";
+            text << "- Global-trim proposal engine available: yes\n";
+            text << "- Draft proposal: " << (readiness.canDraftProposal() ? "available" : "blocked; inputs required") << "\n\n";
 
             text << "Export gate:\n";
             text << "- Render/export available: no\n";
             text << "- Export: blocked\n\n";
 
-            text << "Selected Source/Current State rules are evaluated. A rule pass does not verify an encoded export. Proposals and public export remain unavailable.\n";
+            text << "Selected Source/Current State rules are evaluated. A rule pass does not verify an encoded export. Global-trim drafts require explicit Apply and measurement; public export remains unavailable.\n";
             break;
         }
 
@@ -616,7 +658,14 @@ void StandaloneMainComponent::resized()
     currentStateActionRow.removeFromLeft (8);
     currentGain.setBounds (currentStateActionRow);
 
-    bounds.removeFromTop (14);
+    bounds.removeFromTop (8);
+    auto proposalRow = bounds.removeFromTop (30);
+    draftTrimButton.setBounds (proposalRow.removeFromLeft (180));
+    proposalRow.removeFromLeft (8);
+    applyTrimButton.setBounds (proposalRow.removeFromLeft (120));
+    proposalRow.removeFromLeft (8);
+    discardTrimButton.setBounds (proposalRow.removeFromLeft (140));
+    bounds.removeFromTop (8);
 
     auto jobRow = bounds.removeFromTop (28);
     cancelJobButton.setBounds (jobRow.removeFromRight (120));

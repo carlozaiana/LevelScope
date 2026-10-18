@@ -1,0 +1,143 @@
+{
+  "status": "PASS",
+  "date": "2026-10-18",
+  "execution_architecture": "arm64",
+  "final_candidate": "candidate-04",
+  "final_app_sha256": "4a88b2b3c70e2887633a3202018f804754377657d0d2374b910df1239d8868f5",
+  "functional_candidate": "candidate-03",
+  "functional_app_sha256": "a92d09c6b6e8b3c23e47345847ea21d98a246ff5574a3c1070d544d523e9e65f",
+  "method": "CUA native app controls",
+  "basis": "Full functional M3 paths exercised on candidate-03. Candidate-04 changes only neutral proposal-completion job-history text (see candidate-03-to-04.diff); affected draft, Apply, measured PASS, no-change, applicability and processing invalidation rechecked on final candidate. All automated suites rerun on final candidate.",
+  "checks": [
+    {
+      "id": "import-role-confirmation",
+      "passed": true,
+      "observed": "trim-required.wav imported; roles confirmed; Source and Current measured at 0 dB. Both fail loudness; no prediction substitutes for measurement."
+    },
+    {
+      "id": "draft-deterministic-no-mutation",
+      "passed": true,
+      "observed": "Draft at 0 dB proposes total gain 2.993302236425 dB and clearly labels predictions. Gain and measured FAIL remain unchanged until Apply. Discard and redraft retain the same proposal."
+    },
+    {
+      "id": "explicit-apply",
+      "passed": true,
+      "observed": "Apply changes gain and immediately clears the old Current verdict, showing UNVERIFIED; Source measurement remains unchanged."
+    },
+    {
+      "id": "actual-worker-verification",
+      "passed": true,
+      "observed": "Re-measure Current State produces measured -23.000000 LUFS and -23.006244 dBTP, selected-rule PASS. Source remains -25.993302 LUFS."
+    },
+    {
+      "id": "already-pass-no-op",
+      "passed": true,
+      "observed": "Draft passing Current returns NO CHANGE; Apply disabled, gain and measurements retained, no new measurement requested. Audio revision/pointer preservation separately asserted by unit tests."
+    },
+    {
+      "id": "profile-applicability-reuse",
+      "passed": true,
+      "observed": "Unchecked applicability and ATSC placeholder produce NOT EVALUATED and discard draft; returning to confirmed EBU reuses existing measured values without another measurement."
+    },
+    {
+      "id": "processing-invalidation",
+      "passed": true,
+      "observed": "Changing gain to -6 dB removes Current measurement/verdict and draft; Source remains measured."
+    },
+    {
+      "id": "monitor-video-isolation",
+      "passed": true,
+      "observed": "With valid draft, monitor gain changed while routes remained Muted; cfr-exact.mov attached and offset set to +1 s. Draft remains applicable with unchanged predicted plan and measured Source/Current values. Picture remains stopped; embedded soundtrack excluded."
+    },
+    {
+      "id": "prediction-disagreement",
+      "passed": true,
+      "observed": "gate-crossing.wav Source -19.879170 LUFS; Current measured at -50 dB. Proposal total -3.975769027009 dB predicts -23 LUFS, -22.975311 dBTP. Actual verification gives -23.854939 LUFS and selected-rule FAIL. Applied gain retained, no retry/rollback/correction."
+    },
+    {
+      "id": "cancel-after-apply",
+      "passed": true,
+      "observed": "long-stereo.wav measured at -6 dB; draft applied total -0.006645507424 dB. Verification cancelled while active. Current explicitly UNVERIFIED, applied gain retained, no old PASS or automatic work."
+    },
+    {
+      "id": "replacement-and-clear",
+      "passed": true,
+      "observed": "Successful replacement requires role/applicability confirmation and removes previous Current state/results. Clear Source removes both measured snapshots and draft; stale results do not return."
+    },
+    {
+      "id": "close-during-measurement",
+      "passed": true,
+      "observed": "Closed candidate-03 while long-file Source measurement was active (about 15%). Its process exited. Candidate-04 relaunched cleanly with no source, gain 0, device closed and playback stopped."
+    },
+    {
+      "id": "final-status-wording",
+      "passed": true,
+      "observed": "Candidate-04 draft/no-change banner is neutral: Proposal calculation complete; see Current State. After applicability and gain edits no stale PASS/Already passes advice survives in job history or Current panels."
+    },
+    {
+      "id": "silent-throughout",
+      "passed": true,
+      "observed": "Device closed, all displayed routes Muted and playback stopped throughout. No device scan/open or Play action; no audible tests."
+    },
+    {
+      "id": "test-apps-closed",
+      "passed": true,
+      "observed": "Candidate test apps closed after final UI checks; process exit verified."
+    }
+  ],
+  "inherited_format_regression": {
+    "report": "../../m2-qualification-2026-10-18/candidate-01/sequoia-arm64/ui-smoke.json",
+    "checks": [
+      "formats",
+      "unsupported-layout"
+    ],
+    "reason": "M3 does not change the decoder, file patterns or supported channel-layout rules; M3 scaffold/measurement suites rerun on final candidate. No claim these inherited format UI checks were repeated in M3."
+  },
+  "evidence_storage": "Screenshots and AX text kept under ignored build/m3-qualification-2026-10-18. Only hashes are included; they show local desktop content and are not shipped.",
+  "evidence_sha256": {
+    "ui-sequoia-candidate-03/01-draft.png": "a9a6d60b50a2f121154547c6e4d6988610f72e359d4009bd9b66f424a9c2303e",
+    "ui-sequoia-candidate-03/01-draft.txt": "42a7b5fbc20900c37c7e457e3e0e4015b9d5857e872fa1f8d29cedd2f8393522",
+    "ui-sequoia-candidate-03/02-discard.png": "740ea9af6410ebe6175b208b207a3a3ae0f677f98d104c61425cffad5e6aba13",
+    "ui-sequoia-candidate-03/02-discard.txt": "61054b20a6c79d4992c3df0f1f88098db651dad4b2d0e878519ac7fac0c7fc18",
+    "ui-sequoia-candidate-03/03-applied-unverified.png": "4fb4ac0cc54872552108acfba93867e0b0d06c80b67498fd4eb04ef71e41749a",
+    "ui-sequoia-candidate-03/03-applied-unverified.txt": "0b09683db3dc8ecd679199e6cd07721f02698cfb3404d83ce08e5fd74d586f96",
+    "ui-sequoia-candidate-03/04-measured-pass.png": "50b138f035459f17b0190a57592d58e0698a1571d57da0acac5ae68d302e1e06",
+    "ui-sequoia-candidate-03/04-measured-pass.txt": "eeb501b8366278570f86c318e709186a9d3add0dc5a36b94caa4b035ba3f77bb",
+    "ui-sequoia-candidate-03/05-no-change.png": "174408611f88e77c17d3348f859c856d4dc5a213cc7124e8f59fc9d605963bc1",
+    "ui-sequoia-candidate-03/05-no-change.txt": "4705f0b40634c37ea22b74384956d477138b54efa76e5dac88d6900b066e8f43",
+    "ui-sequoia-candidate-03/06-context-invalidated.png": "e4ee813fb8e3b23d69bc3abacbef7b2b276137736787b62ec078c2f32b2315ec",
+    "ui-sequoia-candidate-03/06-context-invalidated.txt": "e97e9273a9da5a5b79dcaa172c19c43f7e3c196554dcd878783bdd7442f221d3",
+    "ui-sequoia-candidate-03/07-video-offset.png": "9676908b8c19e7e83dcaf86125a49cfb7ac1f25eb835753545b9c35946b48ef2",
+    "ui-sequoia-candidate-03/07-video-offset.txt": "74c1234436c2292634eb7f44ef751b51382f6ca61f1378f625559e1184aa7261",
+    "ui-sequoia-candidate-03/08-video-monitor-preserve-draft.png": "62be7d2bdc34937b5a84259290ff4bcca1e0e0ebadc6cc2e9175badc490205c0",
+    "ui-sequoia-candidate-03/08-video-monitor-preserve-draft.txt": "7c977b073ee672d25ce7ce0cfbbecc66840d9674bc9ffe79adaf96519c2e5cc4",
+    "ui-sequoia-candidate-03/09-placeholder-profile.png": "b9c2747178e0c2388c8b523c351a8de339ebbc43a778dc7383f739271685a7de",
+    "ui-sequoia-candidate-03/09-placeholder-profile.txt": "5d7b3131cc73dcce5c0f8346d9b11f7fbc6b46e2aac45ebd3910085a967d1f27",
+    "ui-sequoia-candidate-03/10-profile-reuse.png": "4040a2971d6151228ac2e32fa61cba18f927ec7814017fce73fbccdc3ee1aca7",
+    "ui-sequoia-candidate-03/10-profile-reuse.txt": "3a84a482a29594458e311ef8ac2a4b94baf179a87303be9c7843e964c08c75dd",
+    "ui-sequoia-candidate-03/11-long-applied.png": "15678111c6ebc602b1f68bbbaa464bfdb4ede3c00af64c503c310651dea88169",
+    "ui-sequoia-candidate-03/11-long-applied.txt": "e53e05247e79d10c4b0d7a39a03c45095280cff13e812e09473726ea4240b5c6",
+    "ui-sequoia-candidate-03/12-cancelled-unverified.png": "2c5747119b29a4237a747280c1dfb62e7830d60e2e1daceb8171b8f173f805bb",
+    "ui-sequoia-candidate-03/12-cancelled-unverified.txt": "aff1e577249d2ead439bb54a5e3f337dee16c64a508269372dcecea3a8532d03",
+    "ui-sequoia-candidate-03/13-source-clear.png": "29404db5ede126545c44410972db238f48322637f1102fff10d75c3a86983ceb",
+    "ui-sequoia-candidate-03/13-source-clear.txt": "906fc61d80dcfa8a59db20e6b72223ed6ff8ac5a2c1d72833b3b1d05ddc84fac",
+    "ui-sequoia-candidate-03/14-gate-prediction.png": "efc8a8717bad00cd43e1fdbfcada9b4faac496316faaca366ec886b6595f2186",
+    "ui-sequoia-candidate-03/14-gate-prediction.txt": "70fbcb3d56277a38ae5ac04e3a41eecaa12364074139d7400e47506e168e9ecf",
+    "ui-sequoia-candidate-03/15-gate-measured-failure.png": "474ab31de573ae05bdcde163f1ed806d06618caf3f071e2af80fa390c2aef3e2",
+    "ui-sequoia-candidate-03/15-gate-measured-failure.txt": "d1b05874ae1cb03b9b4e17c27665fd3088ebcf2f4a41cfc525d5a7ee12c7a9f3",
+    "ui-sequoia-candidate-03/16-close-during-measurement.png": "1b23d2d816c661c502f3403bf2fda319807a9254887f1b8b5880b2dd078048a1",
+    "ui-sequoia-candidate-03/16-close-during-measurement.txt": "513793166509bc2c393f618f7966b6c872d5913c7ffb41ccfdaf6c9a6177a832",
+    "ui-sequoia-candidate-04/01-clean-relaunch.png": "52edfcae8141dc41e1c183a06199f8b141be82f854e210d91e5ba92bb987aa1a",
+    "ui-sequoia-candidate-04/01-clean-relaunch.txt": "ef86bbb3ac09ce108192f65e3214ae801f1aa7e45d778a4b07394b735dd2af9c",
+    "ui-sequoia-candidate-04/02-final-draft-banner.png": "64d6e433d2754732e5460c191fb60f024236f4186bb009f9b62da339d2a266b7",
+    "ui-sequoia-candidate-04/02-final-draft-banner.txt": "bb1c3d934009f6c4d3dff52e81e8ed123f7983b9d38a22fac49d71b6fdd1d247",
+    "ui-sequoia-candidate-04/03-final-measured-pass.png": "f1a843b35334c6cab35be837345b9ec1fa217cbb7875e2ecf28f262b0c6d545d",
+    "ui-sequoia-candidate-04/03-final-measured-pass.txt": "eeb501b8366278570f86c318e709186a9d3add0dc5a36b94caa4b035ba3f77bb",
+    "ui-sequoia-candidate-04/04-final-no-change.png": "b557a03630a710b88fc57024da389ee191350cc23478cacf913293b39e20dbfa",
+    "ui-sequoia-candidate-04/04-final-no-change.txt": "92e87da2f55807e0fcc951710cc3bbd0954be357d40d02d609c34e8e51e11c39",
+    "ui-sequoia-candidate-04/05-context-invalidated-no-stale-pass.png": "bb275e1437304550c59671b761b38ad0d77fac174c34bc1818adddb17fb0f874",
+    "ui-sequoia-candidate-04/05-context-invalidated-no-stale-pass.txt": "60b399930d3517b72b2fab4125bc12d6527b501a6baa8c6812e7c18e05ebc5bf",
+    "ui-sequoia-candidate-04/06-gain-invalidated-no-stale-pass.png": "1125c9410df92b0e8d2deb80bae55a3d6eccdc8b911dcaccc8d37ae5aedf75b2",
+    "ui-sequoia-candidate-04/06-gain-invalidated-no-stale-pass.txt": "ee7ef80d77bc01a35652709e7d7a46b181c0c9e45aff64d056842483cfebe9ca"
+  }
+}

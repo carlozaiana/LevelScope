@@ -1,0 +1,18 @@
+{
+  "source_matches_final_candidate": true,
+  "source_errors": [],
+  "source_digest": "5f66aafc81be73b8184a88f662f1494c9059dfc25cefe43e8e42aac7629f38fd",
+  "tags_unchanged": true,
+  "worktrees_unchanged": true,
+  "base_commit_unchanged": true,
+  "unrelated_untracked_present": true,
+  "unrelated_untracked_hashes_changed": [
+    ".DS_Store",
+    "Docs/.DS_Store",
+    "Source/.DS_Store"
+  ],
+  "remote_existing_tags_unchanged": true,
+  "remote_main": "01a34833ec06a0d237e098faadb23b398581e8f9",
+  "remote_logic": "01a34833ec06a0d237e098faadb23b398581e8f9",
+  "unrelated_metadata_note": "Three Finder .DS_Store hashes differ from initial inventory; existing files retained in place and excluded from milestone changes."
+}

@@ -12,6 +12,15 @@ Historical scaffold observations below remain scoped to their original dates.
 
 ## Current integration handover (17 October 2026)
 
+M3 continuation (18 October): deterministic global-trim proposals, explicit Apply
+and actual measured verification are implemented and qualified on actual Intel
+High Sierra and arm64 Sequoia in the existing logic workspace. The annotated
+checkpoint is `m3-global-trim-2026-10-18`, fast-forwarded into main; the final main
+revision at publication is the tag's peeled commit, recorded in its annotation.
+See [22_M3GlobalTrimProposals.md](22_M3GlobalTrimProposals.md) for current
+qualification status, identity/no-change/failure semantics, build instructions and
+remaining exclusions. M1, M2 and reference-video acceptance remain preserved.
+
 M2 continuation (18 October): the approved bounded EBU programme QC definition and
 measured-rule evaluator are implemented and qualified on actual High Sierra and
 arm64 Sequoia, saved as `m2-measured-compliance-2026-10-18` on the logic branch

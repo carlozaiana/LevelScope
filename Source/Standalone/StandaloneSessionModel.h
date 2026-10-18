@@ -10,6 +10,7 @@
 #include "StandaloneMeasurementService.h"
 #include "StandaloneVideo.h"
 #include "StandaloneCompliance.h"
+#include "StandaloneProposal.h"
 
 namespace levelscope::standalone
 {
@@ -152,6 +153,71 @@ public:
     uint64_t revision = 0;
     const juce::String sessionId = juce::Uuid().toString();
     SessionJob job;
+    bool sourceContentInvalid = false;
+    std::optional<proposal::TrimProposal> trimDraft;
+    juce::String trimNotice = "No proposal drafted.";
+
+    proposal::TrimRequest currentTrimRequest() const
+    {
+        return trimRequest (source.hasMeasurement && ! sourceContentInvalid ? source.analysis.get() : nullptr,
+                            currentState.hasMeasurement && ! currentStateNeedsRemeasurement() ? currentState.analysis.get() : nullptr,
+                            measurementContext (MeasurementDomain::source), measurementContext (MeasurementDomain::currentState),
+                            getSelectedTargetProfile(), programmeApplicability);
+    }
+
+    bool acceptTrimProposal (const proposal::TrimProposal& result)
+    {
+        if (job.isActive()) return false;
+        const auto fresh = proposal::draftGlobalTrim (currentTrimRequest());
+        if (result.identity != fresh.identity) return false;
+        trimDraft = fresh; // Reconstructed plan; never trust editable result fields.
+        trimNotice = proposal::trimProposalText (fresh);
+        return true;
+    }
+
+    bool canApplyTrim() const
+    {
+        return ! job.isActive() && trimDraft && trimDraft->status == proposal::TrimStatus::draft
+            && trimDraft->identity == proposal::draftGlobalTrim (currentTrimRequest()).identity;
+    }
+
+    bool applyTrim()
+    {
+        if (job.isActive() || ! trimDraft) return false;
+        const auto fresh = proposal::draftGlobalTrim (currentTrimRequest());
+        if (trimDraft->identity != fresh.identity) { discardTrim(); return false; }
+        if (fresh.status == proposal::TrimStatus::noChange) return true; // No audio mutation or remeasurement.
+        if (fresh.status != proposal::TrimStatus::draft || ! fresh.totalGainDb) return false;
+        if (! setCurrentGainDb (*fresh.totalGainDb)) return false;
+        trimNotice = "Applied explicitly. Current State is UNVERIFIED; re-measure Current State. No automatic retry or rollback.\n"
+                   + proposal::trimProposalText (fresh);
+        return true;
+    }
+
+    void discardTrim()
+    {
+        trimDraft.reset();
+        trimNotice = "No current proposal. Draft again from valid measured Current State.";
+    }
+
+    void measurementUnsuccessful (MeasurementDomain domain, ErrorCode error)
+    {
+        if (error == ErrorCode::sourceChanged)
+        {
+            ++revision; sourceContentInvalid = true; source = MeasurementSummary();
+            currentState = MeasurementSummary(); discardTrim();
+            sourceDocument.importStatus = "Content changed; import the source again";
+            if (currentStateDocument.isInitialized) currentStateDocument.needsRemeasurement = true;
+        }
+        if (currentStateDocument.isInitialized && currentStateDocument.needsRemeasurement
+            && (domain == MeasurementDomain::currentState || error == ErrorCode::sourceChanged))
+        {
+            currentState = MeasurementSummary();
+            currentState.statusText = "UNVERIFIED: measurement did not complete successfully";
+            currentStateDocument.statusText = "UNVERIFIED; applied gain retained. Explicit user action required.";
+            trimNotice = "Verification unsuccessful. Applied gain retained; no automatic rollback, retry or correction.";
+        }
+    }
 
     ServiceContext measurementContext (MeasurementDomain domain) const
     {
@@ -181,11 +247,13 @@ public:
     {
         if (! currentStateDocument.isInitialized || ! std::isfinite (gain) || gain < -60 || gain > 24) return false;
         if (gain == currentStateDocument.staticGainDb) return true;
+        discardTrim();
         ++revision; ++currentStateDocument.revision;
         currentStateDocument.staticGainDb = gain;
         currentStateDocument.needsRemeasurement = true;
-        currentStateDocument.statusText = "Gain changed; re-measure Current State";
+        currentStateDocument.statusText = "UNVERIFIED: gain changed; re-measure Current State";
         currentState = MeasurementSummary();
+        currentState.statusText = "UNVERIFIED: audio changed; previous measurement discarded";
         return true;
     }
 
@@ -210,6 +278,14 @@ public:
             currentStateDocument.statusText = "Measured current revision";
         }
         summary.analysis = std::make_shared<const AnalysisSnapshot> (std::move (result));
+        discardTrim();
+        if (summary.analysis->domain == MeasurementDomain::currentState)
+        {
+            // The selected-profile verdict is derived above the status text; do
+            // not cache it here across profile or applicability changes.
+            currentStateDocument.statusText = "Measured current revision; selected rules evaluated separately";
+            trimNotice = "Measurement complete. Actual Current State evaluation is authoritative. Gain retained; no automatic correction.";
+        }
         return true;
     }
 
@@ -217,6 +293,7 @@ public:
     {
         if (! media.matchesFileStamp (file)) return false;
         ++revision;
+        discardTrim(); sourceContentInvalid = false;
         sourceDocument.setValidatedFile (file, media);
 
         source = MeasurementSummary();
@@ -235,6 +312,7 @@ public:
     void clearSourceFile()
     {
         ++revision;
+        discardTrim(); sourceContentInvalid = false;
         sourceDocument.clear();
         currentStateDocument.clear();
         programmeApplicability = proposal::Applicability::unconfirmed;
@@ -247,6 +325,8 @@ public:
 
     bool initializeCurrentStateFromSource()
     {
+        if (sourceContentInvalid) return false;
+        discardTrim();
         ++revision;
         const auto didInitialize = currentStateDocument.initializeFromSource (sourceDocument);
 
@@ -263,6 +343,7 @@ public:
 
     void clearCurrentState()
     {
+        discardTrim();
         ++revision;
         currentStateDocument.clear();
         currentState = MeasurementSummary();
@@ -270,7 +351,7 @@ public:
 
     bool canInitializeCurrentStateFromSource() const
     {
-        return sourceDocument.hasSource && sourceDocument.layout.confirmed && sourceDocument.layout.isValid();
+        return ! sourceContentInvalid && sourceDocument.hasSource && sourceDocument.layout.confirmed && sourceDocument.layout.isValid();
     }
 
     bool hasCurrentStateInitialized() const
@@ -288,10 +369,16 @@ public:
     {
         // Profile selection does not change samples or cancel a compatible audio
         // measurement. Evaluations are derived from the current profile on demand.
-        selectedTargetProfileIndex = juce::jlimit (0, numTargetProfiles - 1, newIndex);
+        const auto index = juce::jlimit (0, numTargetProfiles - 1, newIndex);
+        if (selectedTargetProfileIndex != index) discardTrim();
+        selectedTargetProfileIndex = index;
     }
 
-    void setProgrammeApplicability (proposal::Applicability value) { programmeApplicability = value; }
+    void setProgrammeApplicability (proposal::Applicability value)
+    {
+        if (programmeApplicability != value) discardTrim();
+        programmeApplicability = value;
+    }
 
     proposal::Evaluation evaluation (MeasurementDomain domain) const
     {
@@ -305,6 +392,7 @@ public:
     void setChannelRole (int channel, ChannelRole role)
     {
         if (! juce::isPositiveAndBelow (channel, sourceDocument.layout.count)) return;
+        discardTrim();
         ++revision;
         sourceDocument.layout.roles[channel] = role;
         sourceDocument.layout.confirmed = false;
@@ -317,6 +405,7 @@ public:
     bool confirmLayout()
     {
         if (! sourceDocument.hasSource || ! sourceDocument.layout.isValid()) return false;
+        discardTrim();
         ++revision;
         sourceDocument.layout.confirmed = true;
         sourceDocument.importStatus = "Source decoded; file-channel roles confirmed.";
@@ -354,7 +443,9 @@ public:
         readiness.currentStateNeedsRemeasurement = currentStateNeedsRemeasurement();
         readiness.currentStateMeasured = currentState.hasMeasurement;
 
-        readiness.proposalEngineAvailable = false;
+        readiness.proposalEngineAvailable = true;
+        readiness.proposalInputsValidated = ! job.isActive()
+            && proposal::draftGlobalTrim (currentTrimRequest()).status != proposal::TrimStatus::unavailable;
         readiness.renderExportAvailable = false;
 
         return readiness;

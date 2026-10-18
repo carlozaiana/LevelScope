@@ -1,0 +1,83 @@
+Start testing: Oct 18 13:28 CEST
+----------------------------------------------------------
+1/5 Testing: video-timing
+1/5 Test: video-timing
+Command: "/Users/fuzz/Developer/LevelScope/build/logic-m3/LevelScopeVideoTests_artefacts/Release/LevelScopeVideoTests"
+Directory: /Users/fuzz/Developer/LevelScope/build/logic-m3
+"video-timing" start time: Oct 18 13:28 CEST
+Output:
+----------------------------------------------------------
+PASS: 217968 video timing/transport checks; no audio device opened
+<end of output>
+Test time =   0.83 sec
+----------------------------------------------------------
+Test Passed.
+"video-timing" end time: Oct 18 13:28 CEST
+"video-timing" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/5 Testing: offline-measurement
+2/5 Test: offline-measurement
+Command: "/Users/fuzz/Developer/LevelScope/build/logic-m3/LevelScopeMeasurementTests_artefacts/Release/LevelScopeMeasurementTests"
+Directory: /Users/fuzz/Developer/LevelScope/build/logic-m3
+"offline-measurement" start time: Oct 18 13:28 CEST
+Output:
+----------------------------------------------------------
+184 measurement checks passed
+<end of output>
+Test time =  13.84 sec
+----------------------------------------------------------
+Test Passed.
+"offline-measurement" end time: Oct 18 13:28 CEST
+"offline-measurement" time elapsed: 00:00:13
+----------------------------------------------------------
+
+3/5 Testing: measured-compliance
+3/5 Test: measured-compliance
+Command: "/Users/fuzz/Developer/LevelScope/build/logic-m3/LevelScopeComplianceTests_artefacts/Release/LevelScopeComplianceTests"
+Directory: /Users/fuzz/Developer/LevelScope/build/logic-m3
+"measured-compliance" start time: Oct 18 13:28 CEST
+Output:
+----------------------------------------------------------
+PASS: 128 M2 checks; no audio device opened
+<end of output>
+Test time =   0.84 sec
+----------------------------------------------------------
+Test Passed.
+"measured-compliance" end time: Oct 18 13:28 CEST
+"measured-compliance" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/5 Testing: global-trim-proposals
+4/5 Test: global-trim-proposals
+Command: "/Users/fuzz/Developer/LevelScope/build/logic-m3/LevelScopeProposalTests_artefacts/Release/LevelScopeProposalTests"
+Directory: /Users/fuzz/Developer/LevelScope/build/logic-m3
+"global-trim-proposals" start time: Oct 18 13:28 CEST
+Output:
+----------------------------------------------------------
+PASS: 302 M3 checks; no audio device opened
+<end of output>
+Test time =  12.68 sec
+----------------------------------------------------------
+Test Passed.
+"global-trim-proposals" end time: Oct 18 13:28 CEST
+"global-trim-proposals" time elapsed: 00:00:12
+----------------------------------------------------------
+
+5/5 Testing: standalone-scaffold
+5/5 Test: standalone-scaffold
+Command: "/Users/fuzz/Developer/LevelScope/build/logic-m3/LevelScopeScaffoldTests_artefacts/Release/LevelScopeScaffoldTests"
+Directory: /Users/fuzz/Developer/LevelScope/build/logic-m3
+"standalone-scaffold" start time: Oct 18 13:28 CEST
+Output:
+----------------------------------------------------------
+PASS: 205 hardware-independent scaffold checks
+<end of output>
+Test time =   0.51 sec
+----------------------------------------------------------
+Test Passed.
+"standalone-scaffold" end time: Oct 18 13:28 CEST
+"standalone-scaffold" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 18 13:28 CEST

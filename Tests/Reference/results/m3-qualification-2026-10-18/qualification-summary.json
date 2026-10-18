@@ -1,0 +1,47 @@
+{
+  "milestone": "M3 deterministic global trim, explicit Apply and measured verification",
+  "status": "PASS",
+  "publication_status": "Saved as annotated checkpoint m3-global-trim-2026-10-18 on codex/logic-module and fast-forwarded into main; final main at publication is the tag peeled commit.",
+  "base_commit": "01a34833ec06a0d237e098faadb23b398581e8f9",
+  "source_digest": "5f66aafc81be73b8184a88f662f1494c9059dfc25cefe43e8e42aac7629f38fd",
+  "identity_sha256": "14d52b1a03d068cd0875d87f458a9fa80de3b4154fb320afbdd74bcc6229581a",
+  "build_fingerprint": "556349482888d4a86ebea83d1f15403045475a67d787fe422f54abaffdbb88ef",
+  "standalone_binary_sha256": "4a88b2b3c70e2887633a3202018f804754377657d0d2374b910df1239d8868f5",
+  "platforms": {
+    "sequoia": "macOS 15.7.9 (24G830), Apple M1 Max, arm64 execution",
+    "high_sierra": "Mac OS X 10.13.6 (17G66), Intel Core i7-3770K, x86_64 execution on Golem"
+  },
+  "checks_per_platform": {
+    "M3": 302,
+    "M2": 128,
+    "measurement": 184,
+    "scaffold": 205,
+    "video_timing_transport": 329054,
+    "video_native_media_fixtures": 7,
+    "EBU_runner": 8,
+    "M3_runner": 7,
+    "ITU_reference_files": 39,
+    "EBU_normative_files": 66,
+    "EBU_normative_rules": 72,
+    "EBU_normative_readings": 1052,
+    "EBU_supplementary_files": 4
+  },
+  "ctest": "5/5 PASS on final candidate Sequoia build; individual corresponding suites also passed on actual High Sierra",
+  "cross_platform": "PASS; exact M2/M3 outcomes and all eight scalar proposal identities. EBU maximum delta 0; ITU max TP delta 1.7763568394002505e-15 dB, all other metrics 0.",
+  "silent_UI": "PASS both actual platforms; see separate ui-smoke.json files for candidate attribution and inherited format coverage.",
+  "unresolved_M3_acceptance_issues": [],
+  "limitations": [
+    "Static global gain only, -60 to +24 dB, all channels including LFE",
+    "Scalar predictions can disagree with gated measurements; explicit measured verification is required",
+    "Source audition remains original audio; no processed audition",
+    "In-memory workflow only: no persistence, public export, dynamics, scenes, LRA steering or freezes",
+    "Embedded soundtrack remains deferred and VST3 measurement parity separate",
+    "No new audible/device/physical video synchronization qualification; existing reference-picture limits remain",
+    "Cooperative filesystem-read cancellation may wait for a read"
+  ],
+  "preservation": "All five prior tag objects/targets and the video working copy preserved. Main advances by fast-forward. Unrelated files, installations, preserved Golem copies, Pro40 and system audio configuration untouched.",
+  "checkpoint_tag": "m3-global-trim-2026-10-18",
+  "final_main_at_publication": "m3-global-trim-2026-10-18^{commit}",
+  "integration_base": "01a34833ec06a0d237e098faadb23b398581e8f9",
+  "integration_implementation_changes": false
+}

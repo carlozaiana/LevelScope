@@ -227,7 +227,7 @@ void lifecycle()
     expect (! session.acceptMeasurement (current), "stale worker result rejected after gain edit");
     measureSession (session, MeasurementDomain::currentState);
     expect (session.evaluation (MeasurementDomain::currentState).verdict == Verdict::fail, "remeasured gain change evaluates actual samples");
-    expect (! session.getWorkflowReadiness().canDraftProposal() && ! session.getWorkflowReadiness().canExport(), "evaluation does not enable proposal/export");
+    expect (session.getWorkflowReadiness().canDraftProposal() && ! session.getWorkflowReadiness().canExport(), "M3 valid measured inputs allow drafting; export remains unavailable");
     for (int invalid = 0; invalid < 6; ++invalid)
     {
         auto context = session.measurementContext (MeasurementDomain::source);

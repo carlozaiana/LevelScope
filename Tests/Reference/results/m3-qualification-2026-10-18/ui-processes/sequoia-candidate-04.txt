@@ -1,0 +1,23 @@
+Observed executable via pgrep: /Users/fuzz/Developer/LevelScope/build/m3-qualification-2026-10-18/candidate-04/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone
+Analysis of sampling LevelScope Standalone (pid 14497) every 1 millisecond
+Process:         LevelScope Standalone [14497]
+Path:            /Users/USER/*/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone
+Load Address:    0x100030000
+Identifier:      com.studioparadiso.levelscope.standalone
+Version:         1.0.0 (1.0.0)
+Code Type:       ARM64
+Platform:        macOS
+Parent Process:  launchd [1]
+Target Type:     live task
+
+Date/Time:       2026-10-18 13:42:43.596 +0200
+Launch Time:     2026-10-18 13:30:08.929 +0200
+OS Version:      macOS 15.7.9 (24G830)
+Report Version:  7
+Analysis Tool:   /usr/bin/sample
+
+Physical footprint:         41.8M
+Physical footprint (peak):  59.0M
+Idle exit:                  untracked
+----
+

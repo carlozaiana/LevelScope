@@ -1,0 +1,45 @@
+{
+  "baseline_commit": "01a34833ec06a0d237e098faadb23b398581e8f9",
+  "inherited_checks": [
+    "M2 silent AIFF/FLAC import and unsupported-layout rejection on each actual OS"
+  ],
+  "reason": "Unchanged decoder/layout/rules and existing audio panel; M3 import/roles/source replacement, measurement and cancellation UI exercised again. Final candidate also reran all relevant automated suites.",
+  "files": {
+    "Source/Standalone/StandaloneMedia.cpp": {
+      "unchanged": true,
+      "sha256": "db3d06fd4a2a4d1174358d3a8b176a414dde018b4fa51d73739d363ab6442592"
+    },
+    "Source/Standalone/StandaloneMedia.h": {
+      "unchanged": true,
+      "sha256": "2197bce9773ac548161e59244ac08f84863331242b2510505ca47f19383ba673"
+    },
+    "Source/Standalone/StandaloneChannelLayout.h": {
+      "unchanged": true,
+      "sha256": "55e12f22c95b9da55089362b91d84b6aa4d0995e79ffc46698140f92ee45456c"
+    },
+    "Source/Standalone/StandaloneMeasurementService.cpp": {
+      "unchanged": true,
+      "sha256": "7870398ee22b56c643d63d278509fbb72f0bfbb4f4acea6e8759056f697a4f1b"
+    },
+    "Source/Standalone/StandaloneMeasurementService.h": {
+      "unchanged": true,
+      "sha256": "1ce2baad67ba0a421bd32c21b85e784a661e241cacd8ad31e32ba3fce84b59ed"
+    },
+    "Source/Standalone/StandaloneAudioPanel.cpp": {
+      "unchanged": true,
+      "sha256": "1b53e3f4c7972d84d02382f0d5a6356de082c3392aa2d3243a8fa09d8d7bfc73"
+    },
+    "Source/Core/Measurement/OfflineMeasurement.cpp": {
+      "unchanged": true,
+      "sha256": "8447aa0dbe7f426ca84124a23ba73ad95452ba5bb40ab4c27a5ad90219aa931e"
+    },
+    "Source/Core/Proposal/Model/TargetProfile.cpp": {
+      "unchanged": true,
+      "sha256": "578736b0daa64d7d654506a3d81a4715b093f5ea8c15610f2b5a930ee566fcda"
+    },
+    "Source/Core/Proposal/VerificationEngine.cpp": {
+      "unchanged": true,
+      "sha256": "e45d2d24e6e585290d40a378be285d751b4eaa1efe8b12115075ae953f4c74c8"
+    }
+  }
+}

@@ -37,8 +37,8 @@ bool sameValue (std::optional<double> a, std::optional<double> b)
 }
 }
 
-proposal::Evaluation evaluateSnapshot (const AnalysisSnapshot* analysis, const ServiceContext& expected,
-                                      MeasurementDomain domain, const TargetProfile& profile, proposal::Applicability applicability)
+proposal::MeasuredProgramme measuredProgrammeForSnapshot (const AnalysisSnapshot* analysis, const ServiceContext& expected,
+                                                          MeasurementDomain domain, proposal::Applicability applicability)
 {
     proposal::MeasuredProgramme input;
     input.domain = domain == MeasurementDomain::source ? proposal::SnapshotDomain::source
@@ -66,7 +66,13 @@ proposal::Evaluation evaluateSnapshot (const AnalysisSnapshot* analysis, const S
             && sameValue (a.measured.loudnessRangeLu, a.detail.lra.value)
             && sameValue (a.measured.samplePeakDbfs, a.detail.samplePeak.value);
     }
-    return proposal::evaluateMeasuredProgramme (profile, input);
+    return input;
+}
+
+proposal::Evaluation evaluateSnapshot (const AnalysisSnapshot* analysis, const ServiceContext& expected,
+                                      MeasurementDomain domain, const TargetProfile& profile, proposal::Applicability applicability)
+{
+    return proposal::evaluateMeasuredProgramme (profile, measuredProgrammeForSnapshot (analysis, expected, domain, applicability));
 }
 
 juce::String evaluationText (const proposal::Evaluation& e)

@@ -1,0 +1,24 @@
+{
+  "candidate_01": {
+    "automated": "Passed both actual platforms and direct comparator",
+    "ui": "Partial Sequoia workflow completed; found wording issues before acceptance"
+  },
+  "candidate_02": {
+    "changes": [
+      "No-change message explicitly says no new measurement",
+      "Current State status no longer caches a profile verdict",
+      "Proposal completion status distinguishes no-change/no-solution"
+    ],
+    "ctest": "Four targets passed; M3 stopped at obsolete status-text expectation, while authoritative measured-failure assertion passed. Not qualifying.",
+    "retained_log": "ctest-candidate-02-failure.log"
+  },
+  "candidate_03": {
+    "change_from_02": "Test assertion uses measured verdict plus actual Current State snapshot instead of removed cached status text",
+    "implementation_identical_to_02": true,
+    "qualification": "Automated suites pass on both actual platforms; UI found stale no-change job-history message after applicability/processing edits."
+  },
+  "candidate_04": {
+    "change_from_03": "Only proposal completion job-history wording becomes neutral; current verdict/advice remains in invalidated Current State panels. Full automated rerun and affected UI recheck required.",
+    "qualification": "PASS: all automated suites on actual arm64 Sequoia and x86_64 High Sierra; direct comparison; final affected UI recheck on both. Functional UI evidence from candidate-03 is retained for unchanged paths."
+  }
+}

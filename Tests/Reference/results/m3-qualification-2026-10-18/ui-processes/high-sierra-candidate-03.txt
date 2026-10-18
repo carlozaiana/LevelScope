@@ -1,0 +1,19 @@
+Analysis of sampling LevelScope Standalone (pid 1669) every 1 millisecond
+Process:         LevelScope Standalone [1669]
+Path:            /Users/fuzz/LevelScope-M3-qualification-2026-10-18/candidate-03/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone
+Load Address:    0x108276000
+Identifier:      com.studioparadiso.levelscope.standalone
+Version:         1.0.0 (1.0.0)
+Code Type:       X86-64
+Parent Process:  ??? [1]
+
+Date/Time:       2026-10-18 13:38:59.579 +0200
+Launch Time:     2026-10-18 13:24:14.376 +0200
+OS Version:      Mac OS X 10.13.6 (17G66)
+Report Version:  7
+Analysis Tool:   /usr/bin/sample
+
+Physical footprint:         59.6M
+Physical footprint (peak):  65.4M
+----
+
