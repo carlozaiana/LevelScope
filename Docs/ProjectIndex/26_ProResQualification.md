@@ -202,6 +202,24 @@ No historical report is rewritten to pretend its package identity changed.
   failures remain failures under their original method. Final candidate 04 contains
   no relief calls and passes fresh stabilization and all six fresh endurance runs.
 
+## Publication and preservation audit
+
+The annotated checkpoint resolves locally and on GitHub to
+`dcc34aabba6b5b3ca4805e2965d21ffebf2e4d0a`. The [publication audit](../../Tests/Video/results/prores-2026-10-20/preservation-after.json)
+verifies all eight pre-existing tag objects and commit targets unchanged, all 286
+candidate-04 artifacts on each Mac unchanged, the exact tested source files, and
+the original movie hash. The original checkout remains `codex/logic-module` at
+`ae88e187d288c53dbca1287e8341b74b9b5b2619`, with no tracked or staged differences.
+Six `.DS_Store` metadata differences were observed and left as found; their before/
+after hashes are recorded rather than reverted. Main remains
+`6d304dbecd8fa47f56b0260105aa9d07f96ba1bc`.
+
+The [audio configuration comparison](../../Tests/Video/results/prores-2026-10-20/audio-configuration-after.json)
+confirms unchanged exposed device/default/rate/source settings on both Macs after
+the tests closed their devices. It does not claim to inventory every CoreAudio
+property. The follow-up commit adds this publication audit and handover detail only;
+the tested source and annotated checkpoint target remain unchanged.
+
 ## Preserved locations and limitations
 
 Source: `/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation`,

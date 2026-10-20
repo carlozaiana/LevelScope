@@ -14,6 +14,7 @@ measurement regressions, and three fresh 30-minute runs per Mac.
 
 Checkpoint: [video-prores-checkpoint-2026-10-21](https://github.com/carlozaiana/LevelScope/tree/video-prores-checkpoint-2026-10-21) on
 [codex/video-implementation](https://github.com/carlozaiana/LevelScope/tree/codex/video-implementation).
+Published checkpoint commit: `dcc34aabba6b5b3ca4805e2965d21ffebf2e4d0a`.
 Exact frozen tested source: `6662091f1dfaff948a4a3eb3f000f47e37cfdc21`.
 Production last changed at `3920d08f849d2420509e1d789c5b8208e50d79af`; the later
 source commit changes the approved memory harness/runner/verifier. Checkpoint

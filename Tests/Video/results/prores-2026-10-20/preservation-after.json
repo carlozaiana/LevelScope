@@ -1,0 +1,109 @@
+{
+  "checkpoint_tags": [
+    {
+      "ref": "refs/tags/high-sierra-pre-scaffold-2026-10-15",
+      "tag_object": "b3c6e845482dbe8a0ec9778d5a9ad7953e614609",
+      "commit": "556d387ad772dc5e604ead95f1525f60e66fd5f9",
+      "unchanged_local_and_remote": true
+    },
+    {
+      "ref": "refs/tags/m2-measured-compliance-2026-10-18",
+      "tag_object": "673e382feeaa7e29e6e6abedbd56677aa2163ef3",
+      "commit": "01a34833ec06a0d237e098faadb23b398581e8f9",
+      "unchanged_local_and_remote": true
+    },
+    {
+      "ref": "refs/tags/m3-global-trim-2026-10-18",
+      "tag_object": "4063ca0e73c5b24dfa079eb894f85e398e9fee50",
+      "commit": "62ab420cb15b3ce5e1c821c963a749a9a56ae4a7",
+      "unchanged_local_and_remote": true
+    },
+    {
+      "ref": "refs/tags/m4-measured-diagnostics-2026-10-18",
+      "tag_object": "cc64c771a70ccf95e779a7fe7260749a4530c285",
+      "commit": "9a22749901d9f6d4b9c194c9c22c0a231f2494f6",
+      "unchanged_local_and_remote": true
+    },
+    {
+      "ref": "refs/tags/m5-programme-sections-2026-10-20",
+      "tag_object": "e36b4308374256ad36eff6c01d4d92325a06d3b0",
+      "commit": "ae88e187d288c53dbca1287e8341b74b9b5b2619",
+      "unchanged_local_and_remote": true
+    },
+    {
+      "ref": "refs/tags/measurement-milestone-2026-10-17",
+      "tag_object": "76affb667b6dab066cb36b2a2c741525b9b6eeac",
+      "commit": "b29bc7c183743f35c6271d2d7ec8fb5ba1464591",
+      "unchanged_local_and_remote": true
+    },
+    {
+      "ref": "refs/tags/standalone-scaffold-2026-10-15",
+      "tag_object": "4c8bc35b788969e1f6e97dcdc57a601b01fff7cd",
+      "commit": "f192a8553e139d390056c9755f25eeb123bbc5e6",
+      "unchanged_local_and_remote": true
+    },
+    {
+      "ref": "refs/tags/video-checkpoint-2026-10-17",
+      "tag_object": "06f57524bedca1912c0d5c454f13561cec9ce5b4",
+      "commit": "700b9e77e439a8ca9bb7583adf826fac01dbe924",
+      "unchanged_local_and_remote": true
+    }
+  ],
+  "published_checkpoint": {
+    "ref": "refs/tags/video-prores-checkpoint-2026-10-21",
+    "tag_object": "d62c1159eeb2ffbb8b7ffc7c31014b842642d195",
+    "commit": "dcc34aabba6b5b3ca4805e2965d21ffebf2e4d0a",
+    "verified_local_and_remote": true
+  },
+  "original_head_before": "ae88e187d288c53dbca1287e8341b74b9b5b2619",
+  "original_head_now": "ae88e187d288c53dbca1287e8341b74b9b5b2619",
+  "original_branch_now": "codex/logic-module",
+  "original_inventory_changes": [
+    {
+      "path": ".DS_Store",
+      "before": "d40e29c8ae89f2764c28d40e19ba68fe5310d21ebb8fff81723d4c2898a7bfb5",
+      "after": "17e760e9b549443e65e5d4b26cd66f57a6c65c79642082b12f675162b030e607"
+    },
+    {
+      "path": "Docs/.DS_Store",
+      "before": "f78b39cc9a45961e603b9ebd621d745a865ffde7453b66f122a829ab86d1a3f3",
+      "after": "ff642a3e8b407e9740f78574084ac43450daf3aa67170b2d728669b3a1d4fb9b"
+    },
+    {
+      "path": "Source/.DS_Store",
+      "before": "004d4817b995599730e4d4f14dd49a36c6156f3c67ac0fdf4f2ccae0bdf34507",
+      "after": "491170b5810f85cf5fe34a41e214885a4a2baee46c43c290bb3652f521b9b503"
+    },
+    {
+      "path": "Source/Core/.DS_Store",
+      "before": "6451df8518d4ad918915994a89066db8c4f8e2831731eb5cd3c9c4d1b127f1a7",
+      "after": "05aa686cd8a9e54b65388fc4dce1ea2c91ab5cd5fd1af8bfe6ad73055d06100d"
+    },
+    {
+      "path": "Tests/.DS_Store",
+      "before": "fd56f7a6aaeb1caf7ff163486d85d6f18b19126b1eb4a50e70233204d6bc4b38",
+      "after": "88598959035d401e514a2da8569acfa41927480ac42051c7f41dcff1aa74b8f2"
+    },
+    {
+      "path": "Tests/Reference/.DS_Store",
+      "before": "92d71d22546fdb8a22eb34ab63acaf3f1c23e1eb589412f69aadb8da7876a565",
+      "after": "88c8dd35f4e96ca62970c308ed57ed408a9610e88787d669e6c009f76b4da56c"
+    }
+  ],
+  "original_tracked_diff": "",
+  "original_index_diff": "",
+  "actual_movie_sha256": "0870d5ab93d1492f23524ed1fff9319af1a6a9cf71882543f2190929afeb8e24",
+  "tested_source_matches_candidate": true,
+  "local_verified_artifact_count": 286,
+  "golem_final_candidate_verification": {
+    "verified_artifact_count": 286,
+    "mismatches": [],
+    "identity_sha256": "45219de9006b845230c5e1296859bff2c483beb49c4b827b8c33c552f8381285"
+  },
+  "video_branch": "codex/video-implementation",
+  "video_head": "dcc34aabba6b5b3ca4805e2965d21ffebf2e4d0a",
+  "remote_main": "6d304dbecd8fa47f56b0260105aa9d07f96ba1bc",
+  "remote_video": "dcc34aabba6b5b3ca4805e2965d21ffebf2e4d0a",
+  "worktrees": "worktree /Users/fuzz/Developer/LevelScope\nHEAD ae88e187d288c53dbca1287e8341b74b9b5b2619\nbranch refs/heads/codex/logic-module\n\nworktree /Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation\nHEAD dcc34aabba6b5b3ca4805e2965d21ffebf2e4d0a\nbranch refs/heads/codex/video-implementation",
+  "preservation_note": "No metadata differences are reverted. No installed products, Pro40 settings or historical qualification bundles were modified by this task."
+}

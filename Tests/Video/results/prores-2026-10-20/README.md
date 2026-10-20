@@ -45,6 +45,13 @@ Base main: `6d304dbecd8fa47f56b0260105aa9d07f96ba1bc`.
   all six full-duration runs, including raw memory-snapshot recomputation.
 - `process-highwater-candidate04.json` additionally checks the OS process RSS peak,
   including loading, against 768 MiB in all 38 final reports.
+- `preservation-after.json` records publication at checkpoint commit
+  `dcc34aabba6b5b3ca4805e2965d21ffebf2e4d0a`: all eight previous tags, exact source,
+  all 286 candidate artifacts on each Mac, original movie and original tracked
+  checkout verified. Finder metadata differences are recorded and left as found.
+  The following documentation-only commit adds this audit without retargeting the tag.
+- `audio-configuration-after.json` compares the exposed device/default/rate/source
+  snapshots after all test devices closed; both platforms match their baselines.
 - `reproduction/` retains session scripts for fixture generation/correction,
   lossless transfer, and the explicit identical-binary regression comparison.
   They contain historical absolute paths. Adapt them only for a fresh artifact root;
