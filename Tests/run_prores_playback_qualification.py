@@ -35,7 +35,8 @@ for movie,duration in cases:
     proc.terminate();proc.wait();raise RuntimeError('Playback watchdog timeout: '+name)
    time.sleep(1)
  rc=proc.wait();data=json.loads(report.read_text()) if report.exists() else {}
- result=dict(name=name,exit_code=rc,passed=rc==0 and data.get('passed',False),
+ result=dict(name=name,exit_code=rc,passed=rc==0 and data.get('passed',False) and data.get('qualification_eligible') is True
+                 and data.get('memory_method')=='prores-memory-v2-user-approved-2026-10-20',
              elapsed_seconds=time.monotonic()-start,argv=cmd)
  results.append(result);(a.output/'runs.json').write_text(json.dumps(results,indent=2)+'\n')
  print('FINISH',name,'PASS' if result['passed'] else 'FAIL','seconds',round(result['elapsed_seconds'],2),

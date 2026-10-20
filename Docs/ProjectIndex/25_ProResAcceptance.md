@@ -12,7 +12,7 @@ Rec.709 SDR; existing 8-bit reference preview. Required real-time combinations:
 and High Sierra x86_64. 3840x2160 and 60000/1001 probes are exploratory only.
 Selected audio owns the clock. Embedded audio remains undecoded and unrouted.
 
-## Frozen acceptance limits (defined before qualification)
+## Original acceptance limits (defined before qualification)
 
 - After the existing two-second preroll, **zero skipped source frames at actual UI
   paints** for required combinations. At <=30 fps on the existing 60 Hz displays
@@ -32,10 +32,45 @@ Selected audio owns the clock. Embedded audio remains undecoded and unrouted.
 - Peak RSS <=768 MiB for required 1080p playback; after warmup, last-minute mean RSS
   must be within 32 MiB of first-minute mean. The bounded queue remains <=8 images.
   Report attachment peak separately, including any temporary double indexing in tests.
+  **The RSS growth subcriterion is superseded by the explicit approved revision below.**
+  Earlier runs retain their original verdicts; the peak ceiling is unchanged.
 - Picture tests: dominant RGB patch component >210, other components <40; neutral
   128 patch within 12 eight-bit levels in every channel. These allow lossy Proxy
   and decoder rounding, while detecting channel/range errors. Independent burn-in
   identity must match exactly; actual-file sequential/seek pixel samples must match.
+
+## Explicit memory-method revision — approved 20 October 2026
+
+The user approved this correction after the Sequoia diagnostic demonstrated that
+RSS growth was accounted for by OS-reusable pages. In the 180-second diagnostic,
+first/last-minute RSS increased 48.964 MiB and reusable pages increased 50.047 MiB;
+physical footprint decreased 1.266 MiB and live heap decreased 4.900 MiB.
+The original failed reports are preserved and are **not** retroactively accepted.
+See [26_ProResQualification.md](26_ProResQualification.md) and the raw memory-investigation evidence.
+
+For fresh final-candidate qualification, retain total sampled playback RSS <=768 MiB.
+Require last-minute mean minus first-minute mean <=32 MiB **independently for both**:
+
+- non-reusable resident memory: `TASK_VM_INFO.resident_size - reusable`;
+- physical footprint: `TASK_VM_INFO.phys_footprint`, including the OS accounting
+  for compressed/private memory and relevant mappings.
+
+One coherent VM snapshot per playback second is collected on a background thread.
+Record every raw sample, total RSS and reusable pages as well as both growth metrics.
+The growth windows remain seconds 2..61 and strictly later than duration minus 60;
+require at least 55 valid samples in each window for runs >=120 seconds. Any VM
+query failure, incomplete snapshot, invalid counters or insufficient samples fails
+the gate. Short matrix runs retain the total-RSS ceiling; the 1800-second runs
+assess both growth limits. The queue bound and all timing/skip gates are unchanged.
+No allocator pressure relief, forced cache purge or artificial memory pressure is
+requested in qualification or production. The diagnostic-only allocator experiments
+remain separately labelled and ineligible. All six endurance runs must be fresh.
+
+This distinguishes reclaimable resident pages from memory still held by the process;
+it does not remove raw RSS reporting or the original total-memory ceiling. Apple's
+[task ledger definitions](https://github.com/apple-oss-distributions/xnu/blob/xnu-11417.140.69/osfmk/kern/task.c#L1175-L1213)
+and [reusable-page reclamation](https://github.com/apple-oss-distributions/xnu/blob/xnu-11417.140.69/osfmk/vm/vm_resident.c#L6762-L6780)
+provide the accounting context; the actual two-platform runtime samples decide acceptance.
 
 ## Colour interpretation
 

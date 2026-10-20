@@ -142,15 +142,42 @@ private:
             {
                 lastRssSecond = second;
                 const auto start = StandaloneAudition::hostTimeNs();
-                mach_task_basic_info_data_t info {}; mach_msg_type_number_t size = MACH_TASK_BASIC_INFO_COUNT;
-                if (task_info (mach_task_self(), MACH_TASK_BASIC_INFO, reinterpret_cast<task_info_t> (&info), &size) == KERN_SUCCESS)
+                // Read one coherent VM snapshot. Reusable pages remain in RSS but
+                // macOS can reclaim them; retain raw RSS and footprint independently.
+                task_vm_info_data_t info {}; mach_msg_type_number_t size = TASK_VM_INFO_REV1_COUNT;
+                const auto result = task_info (mach_task_self(), TASK_VM_INFO,
+                    reinterpret_cast<task_info_t> (&info), &size);
+                maximumMemoryQueryMs = std::max (maximumMemoryQueryMs, (StandaloneAudition::hostTimeNs() - start) / 1e6);
+                if (result != KERN_SUCCESS || size < TASK_VM_INFO_REV1_COUNT
+                    || info.resident_size == 0 || info.phys_footprint == 0 || info.reusable > info.resident_size)
                 {
-                    maximumMemoryQueryMs = std::max (maximumMemoryQueryMs, (StandaloneAudition::hostTimeNs() - start) / 1e6);
-                    const auto rss = static_cast<double> (info.resident_size);
-                    maxPlaybackRss = std::max (maxPlaybackRss, rss);
-                    if (second < 62) { firstRssSum += rss; ++firstRssCount; }
-                    if (second > duration - 60) { lastRssSum += rss; ++lastRssCount; }
+                    ++memoryQueryFailures;
+                    return;
                 }
+                const auto rss = static_cast<double> (info.resident_size);
+                const auto reusable = static_cast<double> (info.reusable);
+                const auto retained = rss - reusable;
+                const auto footprint = static_cast<double> (info.phys_footprint);
+                maxPlaybackRss = std::max (maxPlaybackRss, rss);
+                maxRetainedRss = std::max (maxRetainedRss, retained);
+                maxFootprint = std::max (maxFootprint, footprint);
+                if (second < 62)
+                {
+                    firstRssSum += rss; firstRetainedSum += retained;
+                    firstFootprintSum += footprint; ++firstRssCount;
+                }
+                if (second > duration - 60)
+                {
+                    lastRssSum += rss; lastRetainedSum += retained;
+                    lastFootprintSum += footprint; ++lastRssCount;
+                }
+                juce::DynamicObject::Ptr sample = new juce::DynamicObject();
+                sample->setProperty ("seconds", second);
+                sample->setProperty ("rss_bytes", rss);
+                sample->setProperty ("reusable_bytes", reusable);
+                sample->setProperty ("non_reusable_resident_bytes", retained);
+                sample->setProperty ("physical_footprint_bytes", footprint);
+                memorySamples.add (juce::var (sample.get()));
             }
 #endif
     }
@@ -160,8 +187,15 @@ private:
         const auto seconds = audio.positionSeconds(); const auto underruns = audio.underruns();
         const auto firstRssMean = firstRssCount ? firstRssSum / firstRssCount : 0;
         const auto lastRssMean = lastRssCount ? lastRssSum / lastRssCount : 0;
-        const bool memoryPassed = maxPlaybackRss > 0 && maxPlaybackRss <= 768.0 * 1024 * 1024
-            && (duration < 120 || (firstRssCount && lastRssCount && lastRssMean - firstRssMean <= 32.0 * 1024 * 1024));
+        const auto firstRetainedMean = firstRssCount ? firstRetainedSum / firstRssCount : 0;
+        const auto lastRetainedMean = lastRssCount ? lastRetainedSum / lastRssCount : 0;
+        const auto firstFootprintMean = firstRssCount ? firstFootprintSum / firstRssCount : 0;
+        const auto lastFootprintMean = lastRssCount ? lastFootprintSum / lastRssCount : 0;
+        const bool memoryPassed = memoryQueryFailures == 0 && maxPlaybackRss > 0
+            && maxPlaybackRss <= 768.0 * 1024 * 1024
+            && (duration < 120 || (firstRssCount >= 55 && lastRssCount >= 55
+                && lastRetainedMean - firstRetainedMean <= 32.0 * 1024 * 1024
+                && lastFootprintMean - firstFootprintMean <= 32.0 * 1024 * 1024));
         const bool hardware = audio.hasHardwareClock(); const auto latency = audio.outputLatencyFrames();
         audio.disconnect();
         juce::DynamicObject::Ptr report = new juce::DynamicObject();
@@ -207,6 +241,19 @@ private:
         set ("memory_passed", memoryPassed);
         set ("memory_sampling", "Background sampler; no Mach memory query on the paint/timer thread");
         set ("maximum_memory_query_ms", maximumMemoryQueryMs);
+        set ("qualification_eligible", true);
+        set ("memory_method", "prores-memory-v2-user-approved-2026-10-20");
+        set ("allocator_relief_requested", false);
+        set ("memory_query_failures", memoryQueryFailures);
+        set ("memory_samples", memorySamples);
+        set ("first_minute_memory_sample_count", firstRssCount);
+        set ("last_minute_memory_sample_count", lastRssCount);
+        set ("peak_non_reusable_resident_bytes", maxRetainedRss);
+        set ("peak_physical_footprint_bytes", maxFootprint);
+        set ("first_minute_mean_non_reusable_resident_bytes", firstRetainedMean);
+        set ("last_minute_mean_non_reusable_resident_bytes", lastRetainedMean);
+        set ("first_minute_mean_physical_footprint_bytes", firstFootprintMean);
+        set ("last_minute_mean_physical_footprint_bytes", lastFootprintMean);
 #if JUCE_MAC
         struct rusage usage {};
         getrusage (RUSAGE_SELF, &usage);
@@ -254,6 +301,10 @@ private:
     std::atomic<bool> samplingClosed { false };
     std::atomic<double> observedSeconds { 0 };
     double maximumMemoryQueryMs = 0;
+    int memoryQueryFailures = 0;
+    double maxRetainedRss = 0, maxFootprint = 0;
+    double firstRetainedSum = 0, lastRetainedSum = 0, firstFootprintSum = 0, lastFootprintSum = 0;
+    juce::Array<juce::var> memorySamples;
     StandaloneAudition audio;
     video::Player player;
     video::Player::View view;
