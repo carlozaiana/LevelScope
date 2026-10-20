@@ -56,8 +56,16 @@ public:
         audio.setMonitorGainDb (-30);
         player.attach (videoFile); startedNs = attachmentStartedNs = StandaloneAudition::hostTimeNs();
         setSize (800, 520); startTimerHz (120);
+        rssSampler = std::thread ([this]
+        {
+            while (!samplingClosed.load())
+            {
+                sampleMemory();
+                std::this_thread::sleep_for (std::chrono::milliseconds (50));
+            }
+        });
     }
-    ~Run() override { stopTimer(); audio.disconnect(); }
+    ~Run() override { stopTimer(); stopSampling(); audio.disconnect(); }
     void paint (juce::Graphics& g) override
     {
         const auto paintStart = StandaloneAudition::hostTimeNs();
@@ -72,7 +80,25 @@ public:
             if (view.picture)
             {
                 const auto index = view.picture->index;
-                if (lastPainted && index > *lastPainted + 1) paintedSkippedFrames += index - *lastPainted - 1;
+                if (lastPainted && index > *lastPainted + 1)
+                {
+                    paintedSkippedFrames += index - *lastPainted - 1;
+                    if (skipEvents.size() < 256)
+                    {
+                        juce::DynamicObject::Ptr event = new juce::DynamicObject();
+                        event->setProperty ("previous_frame", static_cast<juce::int64> (*lastPainted));
+                        event->setProperty ("frame", static_cast<juce::int64> (index));
+                        event->setProperty ("audio_seconds", paintTime.seconds());
+                        event->setProperty ("previous_paint_audio_seconds", previousPaintAudioSeconds);
+                        event->setProperty ("paint_interval_ms", previousPaintNs ? (paintStart - previousPaintNs) / 1e6 : 0);
+                        event->setProperty ("queued_pictures", static_cast<int> (view.queued));
+                        event->setProperty ("worker_selection_skips", static_cast<juce::int64> (view.droppedFrames));
+                        skipEvents.add (juce::var (event.get()));
+                    }
+                }
+                if (previousPaintNs) maximumPaintIntervalMs = std::max (maximumPaintIntervalMs, (paintStart - previousPaintNs) / 1e6);
+                previousPaintNs = paintStart;
+                previousPaintAudioSeconds = paintTime.seconds();
                 if (!lastPainted || index != *lastPainted) ++uniquePaintedFrames;
                 lastPainted = index;
             }
@@ -103,9 +129,34 @@ public:
             getLocalBounds().removeFromBottom (65), juce::Justification::centred, 3);
     }
 private:
+    void stopSampling()
+    {
+        samplingClosed.store (true);
+        if (rssSampler.joinable()) rssSampler.join();
+    }
+    void sampleMemory()
+    {
+#if JUCE_MAC
+            const auto second = static_cast<int> (observedSeconds.load());
+            if (second >= 2 && second != lastRssSecond)
+            {
+                lastRssSecond = second;
+                const auto start = StandaloneAudition::hostTimeNs();
+                mach_task_basic_info_data_t info {}; mach_msg_type_number_t size = MACH_TASK_BASIC_INFO_COUNT;
+                if (task_info (mach_task_self(), MACH_TASK_BASIC_INFO, reinterpret_cast<task_info_t> (&info), &size) == KERN_SUCCESS)
+                {
+                    maximumMemoryQueryMs = std::max (maximumMemoryQueryMs, (StandaloneAudition::hostTimeNs() - start) / 1e6);
+                    const auto rss = static_cast<double> (info.resident_size);
+                    maxPlaybackRss = std::max (maxPlaybackRss, rss);
+                    if (second < 62) { firstRssSum += rss; ++firstRssCount; }
+                    if (second > duration - 60) { lastRssSum += rss; ++lastRssCount; }
+                }
+            }
+#endif
+    }
     void finish (juce::String error)
     {
-        stopTimer();
+        stopTimer(); stopSampling();
         const auto seconds = audio.positionSeconds(); const auto underruns = audio.underruns();
         const auto firstRssMean = firstRssCount ? firstRssSum / firstRssCount : 0;
         const auto lastRssMean = lastRssCount ? lastRssSum / lastRssCount : 0;
@@ -138,6 +189,8 @@ private:
         set ("underrun_blocks", static_cast<juce::int64> (underruns));
         set ("late_polls", static_cast<juce::int64> (view.latePolls)); set ("skipped_frames", static_cast<juce::int64> (view.droppedFrames));
         set ("skipped_frame_limit", 0);
+        set ("maximum_paint_interval_ms", maximumPaintIntervalMs);
+        set ("skip_events", skipEvents);
         set ("actual_paint_skipped_frames", static_cast<juce::int64> (paintedSkippedFrames));
         set ("unique_painted_frames", static_cast<juce::int64> (uniquePaintedFrames));
         set ("hash_ms", view.asset ? view.asset->hashMilliseconds : 0);
@@ -152,6 +205,8 @@ private:
         set ("last_minute_mean_rss_bytes", lastRssMean);
         set ("memory_growth_assessed", duration >= 120);
         set ("memory_passed", memoryPassed);
+        set ("memory_sampling", "Background sampler; no Mach memory query on the paint/timer thread");
+        set ("maximum_memory_query_ms", maximumMemoryQueryMs);
 #if JUCE_MAC
         struct rusage usage {};
         getrusage (RUSAGE_SELF, &usage);
@@ -186,21 +241,7 @@ private:
                 view = player.update (video::Time (audio.positionFrames(), static_cast<int64_t> (media.sampleRate)), audio.transportGeneration());
             }
             audio.poll (player.prerollReady()); repaint();
-#if JUCE_MAC
-            const auto second = static_cast<int> (audio.positionSeconds());
-            if (opened && second >= 2 && second != lastRssSecond)
-            {
-                lastRssSecond = second;
-                mach_task_basic_info_data_t info {}; mach_msg_type_number_t size = MACH_TASK_BASIC_INFO_COUNT;
-                if (task_info (mach_task_self(), MACH_TASK_BASIC_INFO, reinterpret_cast<task_info_t> (&info), &size) == KERN_SUCCESS)
-                {
-                    const auto rss = static_cast<double> (info.resident_size);
-                    maxPlaybackRss = std::max (maxPlaybackRss, rss);
-                    if (second < 62) { firstRssSum += rss; ++firstRssCount; }
-                    if (second > duration - 60) { lastRssSum += rss; ++lastRssCount; }
-                }
-            }
-#endif
+            observedSeconds.store (audio.positionSeconds());
             if (audio.getState() == AuditionState::failed) { finish (audio.status()); return; }
             if (opened && audio.positionSeconds() >= duration) { finish ({}); return; }
             if ((!manualStart || requestedStart) && (StandaloneAudition::hostTimeNs() - (opened ? playbackStartedNs : startedNs)) / 1e9
@@ -209,6 +250,10 @@ private:
         }
         catch (const std::exception& error) { finish (error.what()); }
     }
+    std::thread rssSampler;
+    std::atomic<bool> samplingClosed { false };
+    std::atomic<double> observedSeconds { 0 };
+    double maximumMemoryQueryMs = 0;
     StandaloneAudition audio;
     video::Player player;
     video::Player::View view;
@@ -222,6 +267,9 @@ private:
     bool attachmentPassed = false;
     uint64_t playbackStartedNs = 0, attachmentStartedNs = 0;
     int lastRssSecond = -1, firstRssCount = 0, lastRssCount = 0;
+    juce::Array<juce::var> skipEvents;
+    uint64_t previousPaintNs = 0;
+    double maximumPaintIntervalMs = 0, previousPaintAudioSeconds = 0;
     std::optional<size_t> lastPainted;
     uint64_t paintedSkippedFrames = 0, uniquePaintedFrames = 0;
     double duration = 0, maximumPaintMs = 0, maximumSkew = 0, skewSum = 0, firstSum = 0, lastSum = 0;
