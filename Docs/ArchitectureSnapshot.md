@@ -9,7 +9,7 @@ This document is a **contract** for parallel development chats.
 Anything marked **Implemented** must be preserved.  
 Anything marked **Planned** must not be assumed to exist until integrated.
 
-Last updated: **2026-10-18**
+Last updated: **2026-10-20**
 
 **Standalone continuation, 18 October 2026:** qualified M1 offline measurement,
 M2 versioned programme-rule evaluation and M3 deterministic global trim with
@@ -29,6 +29,17 @@ separately through M2. A cancellable diagnostic worker and read-only timeline
 cannot change session jobs, gain, verdicts, proposals, transport or devices.
 Predicted M3 values cannot populate measured diagnostic views. The timeline uses
 audio-source frames and window-end positions, independent of video offset.
+
+M5 is implemented, qualified and published: explicit source-frame
+sections and full-resolution measured section summaries, with an independent
+annotation revision and no processing changes. Sequoia stabilization was followed
+by actual High Sierra qualification of the identical candidate, including all
+regressions, official suites and silent three-hour inspection. See
+[the M5 handover](ProjectIndex/24_M5ProgrammeSections.md) for exact tested source
+and binary identities. The annotated checkpoint `m5-programme-sections-2026-10-20`
+is saved on the logic branch and fast-forwarded into main without changing the
+tested implementation. Sections are in-memory annotations; persistence, section
+processing and processed audition remain deferred.
 
 The qualified measurement contract remains in
 [14_OfflineMeasurementContract.md](ProjectIndex/14_OfflineMeasurementContract.md).

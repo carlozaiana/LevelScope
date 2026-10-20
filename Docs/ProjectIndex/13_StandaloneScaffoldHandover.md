@@ -12,6 +12,23 @@ Historical scaffold observations below remain scoped to their original dates.
 
 ## Current integration handover (17 October 2026)
 
+M5 continuation (completed 20 October): explicit programme sections and measured
+section diagnostics are implemented on the established logic branch, based on
+qualified M4/main `9a22749901d9f6d4b9c194c9c22c0a231f2494f6`. **Qualification passes
+on arm64 Sequoia and actual Intel High Sierra**, using the same candidate after
+Sequoia stabilization. All M5/regression/official-reference checks and silent UI
+checks pass, including a fully measured three-hour source on both Macs. M5 is
+published as the annotated checkpoint `m5-programme-sections-2026-10-20` and
+fast-forwarded into main without changes to the tested implementation. The exact
+checkpoint/main revision at publication is the tag's peeled commit, recorded in
+its annotation. The original pre-commit source manifest remains unchanged; every
+recorded source hash matches the checkpoint. Sections remain in-memory annotations;
+persistence, section processing and processed audition are unavailable.
+See [24_M5ProgrammeSections.md](24_M5ProgrammeSections.md) and the
+[qualification report](../../Tests/Reference/results/m5-qualification-2026-10-19/README.md)
+for source/binary identities, semantics, evidence and deferred work. All seven
+existing checkpoint tags and the video working copy remain unchanged.
+
 M4 continuation (18 October): measured diagnostics and a reusable read-only
 audio-source timeline are implemented on the existing logic branch, based on
 qualified M3/main `62ab420cb15b3ce5e1c821c963a749a9a56ae4a7`. M4 qualification

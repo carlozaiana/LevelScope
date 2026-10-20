@@ -1,0 +1,90 @@
+{
+  "milestone": "M5 explicit programme sections and measured section diagnostics",
+  "candidate": "candidate-01",
+  "date": "2026-10-20",
+  "qualified": true,
+  "publication": "Published annotated checkpoint m5-programme-sections-2026-10-20 on codex/logic-module, fast-forwarded into main; the tag's peeled commit is the exact checkpoint and main revision at publication",
+  "checkpoint_tag": "m5-programme-sections-2026-10-20",
+  "checkpoint_identity": "All 130 source files match the original pre-commit candidate manifest. Its base_commit and working-candidate wording remain historical evidence. The annotated tag records the full checkpoint commit SHA.",
+  "publication_preflight": "publication-preflight.json",
+  "base_commit": "9a22749901d9f6d4b9c194c9c22c0a231f2494f6",
+  "source_digest": "4973465a63bb59ec6c07667f96c6ad579856d89e57c213b5037067be8076d0f2",
+  "platforms": {
+    "sequoia-01b": {
+      "os": "15.7.9",
+      "os_build": "24G830",
+      "cpu": "Apple M1 Max",
+      "execution_arch": "arm64",
+      "automated_passed": true,
+      "interactive_passed": true,
+      "pending": [],
+      "m5_checks": 2457,
+      "m5_performance": {
+        "generated_fixture_seconds": 10800,
+        "section_count": 1000,
+        "aggregation_ms": 3.145958333276212,
+        "additional_section_storage_bytes": 1747195,
+        "interaction_p95_ms": 7.262083333916962,
+        "active_cancel_ms": 0.8293750006705523
+      },
+      "m4_performance": {
+        "generated_fixture_seconds": 10800,
+        "analysis_ms": 14.16825000010431,
+        "analysis_storage_bytes": 21030048,
+        "worker_including_identity_ms": 147.793000000529,
+        "viewport_prepare_p95_ms": 0.1608750000596046,
+        "offscreen_timeline_paint_p95_ms": 6.015250000171363,
+        "diagnostics_peak_rss_growth_bytes": 101023744,
+        "active_cancel_ms": 1.330500000156462
+      },
+      "evidence": "sequoia-01b/summary.json",
+      "interactive_evidence": "sequoia-01b/ui-smoke.json"
+    },
+    "high-sierra-01": {
+      "os": "10.13.6",
+      "os_build": "17G66",
+      "cpu": "Intel(R) Core(TM) i7-3770K CPU @ 3.50GHz",
+      "execution_arch": "x86_64",
+      "automated_passed": true,
+      "interactive_passed": true,
+      "pending": [],
+      "m5_checks": 2457,
+      "m5_performance": {
+        "generated_fixture_seconds": 10800,
+        "section_count": 1000,
+        "aggregation_ms": 6.302926999982446,
+        "additional_section_storage_bytes": 1747195,
+        "interaction_p95_ms": 20.30242600000929,
+        "active_cancel_ms": 1.758277999935672
+      },
+      "m4_performance": {
+        "generated_fixture_seconds": 10800,
+        "analysis_ms": 28.77866700000595,
+        "analysis_storage_bytes": 21030048,
+        "worker_including_identity_ms": 305.0870489999652,
+        "viewport_prepare_p95_ms": 0.2321849999716505,
+        "offscreen_timeline_paint_p95_ms": 19.60776799998712,
+        "diagnostics_peak_rss_growth_bytes": 72445952,
+        "active_cancel_ms": 1.577105000033043
+      },
+      "evidence": "high-sierra-01/summary.json",
+      "interactive_evidence": "high-sierra-01/ui-smoke.json"
+    }
+  },
+  "cross_platform_passed": true,
+  "section_maximum_numeric_differences": {
+    "minimum": 0,
+    "median": 0,
+    "maximum": 0,
+    "share": 0
+  },
+  "limitations": [
+    "In-memory explicit annotations only; no persistence",
+    "No section I/LRA, section compliance or local peak-safety inference",
+    "No section processing, automatic classification, protection/freezes or proxy refinement",
+    "No processed audition, public export, embedded soundtrack or VST3 parity",
+    "Long PCM import/snapshot verification is outside diagnostic responsiveness budgets"
+  ],
+  "unresolved_acceptance_issues": [],
+  "ready_for_saved_checkpoint": true
+}

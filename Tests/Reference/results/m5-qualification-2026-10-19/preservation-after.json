@@ -1,0 +1,32 @@
+{
+  "checked_date": "2026-10-20",
+  "source_files_checked": 130,
+  "source_mismatches": [],
+  "source_digest": "4973465a63bb59ec6c07667f96c6ad579856d89e57c213b5037067be8076d0f2",
+  "base_commit": "9a22749901d9f6d4b9c194c9c22c0a231f2494f6",
+  "branch": "codex/logic-module",
+  "main": "9a22749901d9f6d4b9c194c9c22c0a231f2494f6",
+  "origin_main_at_fetch": "9a22749901d9f6d4b9c194c9c22c0a231f2494f6",
+  "tags": "high-sierra-pre-scaffold-2026-10-15 b3c6e845482dbe8a0ec9778d5a9ad7953e614609 556d387ad772dc5e604ead95f1525f60e66fd5f9\nm2-measured-compliance-2026-10-18 673e382feeaa7e29e6e6abedbd56677aa2163ef3 01a34833ec06a0d237e098faadb23b398581e8f9\nm3-global-trim-2026-10-18 4063ca0e73c5b24dfa079eb894f85e398e9fee50 62ab420cb15b3ce5e1c821c963a749a9a56ae4a7\nm4-measured-diagnostics-2026-10-18 cc64c771a70ccf95e779a7fe7260749a4530c285 9a22749901d9f6d4b9c194c9c22c0a231f2494f6\nmeasurement-milestone-2026-10-17 76affb667b6dab066cb36b2a2c741525b9b6eeac b29bc7c183743f35c6271d2d7ec8fb5ba1464591\nstandalone-scaffold-2026-10-15 4c8bc35b788969e1f6e97dcdc57a601b01fff7cd f192a8553e139d390056c9755f25eeb123bbc5e6\nvideo-checkpoint-2026-10-17 06f57524bedca1912c0d5c454f13561cec9ce5b4 700b9e77e439a8ca9bb7583adf826fac01dbe924",
+  "worktrees": "worktree /Users/fuzz/Developer/LevelScope\nHEAD 9a22749901d9f6d4b9c194c9c22c0a231f2494f6\nbranch refs/heads/codex/logic-module\n\nworktree /Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation\nHEAD 514b7bce25a34ccd02af28a6a24100a44f8189a4\nbranch refs/heads/codex/video-implementation",
+  "tags_unchanged": true,
+  "worktrees_unchanged": true,
+  "main_unchanged": true,
+  "unrelated_untracked_preserved": [
+    ".DS_Store",
+    "Docs/.DS_Store",
+    "Source/.DS_Store",
+    "Source/Core/.DS_Store",
+    "Source/Core/Processing/.DS_Store",
+    "Tests/.DS_Store",
+    "Tests/51_SyncTest.mov",
+    "Tests/Reference/.DS_Store"
+  ],
+  "passed": true,
+  "remote_verified_2026_10_20": {
+    "main": "9a22749901d9f6d4b9c194c9c22c0a231f2494f6",
+    "codex/logic-module": "9a22749901d9f6d4b9c194c9c22c0a231f2494f6",
+    "all_seven_tag_objects_and_peeled_commits_match_before": true,
+    "method": "git ls-remote origin refs/heads/main refs/heads/codex/logic-module refs/tags/*; read-only"
+  }
+}

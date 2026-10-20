@@ -1,0 +1,12 @@
+{
+  "rejected_run": "build/m5-qualification-2026-10-19/sequoia-01",
+  "reason": "Execution sandbox denied temporary fixture creation; no implementation change. Same bundle rerun outside sandbox in sequoia-01b.",
+  "failures": {
+    "sections": "FAIL: actual section worker fixture created\nFAIL: 2373 M5 checks; no audio device opened",
+    "diagnostics": "FAIL: actual worker fixture created\nFAIL: 325 M4 checks; no audio device opened",
+    "proposal": "FAIL: fixture stream created\nFAIL: 53 M3 checks; no audio device opened",
+    "compliance": "FAIL: M2 temporary fixture created\nFAIL: 73 M2 checks; no audio device opened",
+    "measurement": "FAIL: fixture encoder",
+    "video": "FAIL after 217935: transport fixture file"
+  }
+}

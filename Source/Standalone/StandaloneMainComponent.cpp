@@ -28,6 +28,19 @@ public:
     }
     void closeButtonPressed() override { setVisible (false); }
 };
+class SectionsWindow final : public juce::DocumentWindow
+{
+public:
+    explicit SectionsWindow (StandaloneSectionsPanel& p)
+        : DocumentWindow ("LevelScope - Programme sections", juce::Colour (0xff151b24), DocumentWindow::allButtons), panel (p)
+    {
+        setUsingNativeTitleBar (true); setResizable (true, false); setResizeLimits (1000, 820, 2400, 1800);
+        setContentNonOwned (&panel, true); centreWithSize (1080, 850); setVisible (true);
+    }
+    void closeButtonPressed() override { panel.suspend(); setVisible (false); }
+private:
+    StandaloneSectionsPanel& panel;
+};
 juce::String metricText (const measurement::Metric& metric, const juce::String& unit)
 {
     if (metric.value) return juce::String (*metric.value, 1) + " " + unit;
@@ -80,6 +93,12 @@ StandaloneMainComponent::StandaloneMainComponent()
     diagnosticsButton.onClick = [this]
     {
         if (! diagnosticsPanel) diagnosticsPanel = std::make_unique<StandaloneDiagnosticsPanel> (session);
+        diagnosticsPanel->onOpenSections = [this]
+        {
+            if (! sectionsPanel) sectionsPanel = std::make_unique<StandaloneSectionsPanel> (session);
+            if (! sectionsWindow) sectionsWindow = std::make_unique<SectionsWindow> (*sectionsPanel);
+            sectionsPanel->resume(); sectionsWindow->setVisible (true); sectionsWindow->toFront (true);
+        };
         if (! diagnosticsWindow) diagnosticsWindow = std::make_unique<DiagnosticsWindow> (*diagnosticsPanel);
         diagnosticsPanel->resume(); diagnosticsWindow->setVisible (true); diagnosticsWindow->toFront (true);
     };
@@ -109,6 +128,7 @@ StandaloneMainComponent::~StandaloneMainComponent()
     stopTimer();
     videoWindow.reset();
     diagnosticsWindow.reset(); diagnosticsPanel.reset();
+    sectionsWindow.reset(); sectionsPanel.reset();
     if (importControl) importControl->cancel.store (true);
     if (importResult.valid()) importResult.wait();
     if (analysisResult.valid()) analysisResult.wait();
@@ -439,6 +459,7 @@ void StandaloneMainComponent::refreshFromSession()
     currentStateBox.setText (buildCurrentStateText(), false);
     pageDetailBox.setText (buildPageDetailText(), false);
     if (diagnosticsPanel) diagnosticsPanel->synchronize();
+    if (sectionsPanel) sectionsPanel->synchronize();
     audioPanel.refresh();
 }
 

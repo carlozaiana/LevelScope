@@ -15,6 +15,7 @@ public:
     void synchronize() { timerCallback(); }
     void paint (juce::Graphics&) override;
     void resized() override;
+    std::function<void()> onOpenSections;
 private:
     const StandaloneSessionModel& session; // observation only
     DiagnosticsController controller;
@@ -23,6 +24,7 @@ private:
     juce::String annotationKey;
     juce::ComboBox domainBox, rankingBox;
     juce::TextButton rebuildButton { "Build diagnostics" }, cancelButton { "Cancel diagnostics" };
+    juce::TextButton sectionsButton { "Programme sections..." };
     juce::Label status;
     juce::TextEditor summary, details;
     MeasurementTimeline timeline;

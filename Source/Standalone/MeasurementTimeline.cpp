@@ -179,6 +179,12 @@ void MeasurementTimeline::paint (juce::Graphics& g)
     }
     g.setColour (juce::Colours::lightgreen.withAlpha (.75f)); g.drawHorizontalLine (static_cast<int> (y(-70)), static_cast<float> (graph.getX()), static_cast<float> (graph.getRight()));
     if (analysis->integratedGate) g.drawHorizontalLine (static_cast<int> (y(*analysis->integratedGate)), static_cast<float> (graph.getX()), static_cast<float> (graph.getRight()));
+    // Source-frame annotations are independent of video offset and plot reduction.
+    // Do not clamp offscreen boundaries into fabricated edge markers.
+    g.setColour (juce::Colours::violet.withAlpha (.7f));
+    for (auto boundary : sectionBoundaries)
+        if (boundary > 0 && boundary < analysis->frames && boundary >= viewBegin && boundary <= viewEnd)
+            g.drawVerticalLine (static_cast<int> (x (static_cast<double> (boundary))), static_cast<float> (graph.getY()), static_cast<float> (graph.getBottom()));
     g.restoreState(); g.setColour (juce::Colours::lightgrey);
     for (int n = 0; n <= 4; ++n)
     {

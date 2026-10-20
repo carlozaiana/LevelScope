@@ -16,6 +16,8 @@ StandaloneDiagnosticsPanel::StandaloneDiagnosticsPanel (const StandaloneSessionM
     rankingBox.onChange = [this] { ranking.deselectAllRows(); timeline.clearHighlight(); details.clear(); ranking.updateContent(); ranking.repaint(); };
     rebuildButton.onClick = [this] { controller.retry(); timerCallback(); };
     cancelButton.onClick = [this] { controller.cancel(); timerCallback(); };
+    sectionsButton.onClick = [this] { if (onOpenSections) onOpenSections(); };
+    addAndMakeVisible (sectionsButton);
     timeline.onInspect = [this] (const juce::String& text) { ranking.deselectAllRows(); details.setText (text, false); };
     for (auto* box : { &summary, &details })
     {
@@ -140,6 +142,7 @@ void StandaloneDiagnosticsPanel::resized()
 {
     auto b = getLocalBounds().reduced (12); auto row = b.removeFromTop (28);
     domainBox.setBounds (row.removeFromLeft (225)); row.removeFromLeft (12); rebuildButton.setBounds (row.removeFromLeft (160)); cancelButton.setBounds (row.removeFromLeft (160));
+    row.removeFromLeft (12); sectionsButton.setBounds (row.removeFromLeft (190));
     status.setBounds (b.removeFromTop (25)); summary.setBounds (b.removeFromTop (105)); b.removeFromTop (6);
     timeline.setBounds (b.removeFromTop (std::max (210, b.getHeight() * 46 / 100))); b.removeFromTop (6);
     distributionBounds = b.removeFromTop (135); b.removeFromTop (6);

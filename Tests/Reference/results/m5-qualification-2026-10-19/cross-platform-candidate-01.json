@@ -1,0 +1,50 @@
+{
+  "left": "build/m5-qualification-2026-10-19/sequoia-01b",
+  "right": "build/m5-qualification-2026-10-19/high-sierra-01",
+  "errors": [],
+  "maximum_differences": {
+    "itu": {
+      "I": 0,
+      "M": 0,
+      "S": 0,
+      "TP": 1.7763568394002505e-15,
+      "LRA": 0
+    },
+    "ebu": {
+      "I": 0,
+      "M": 0,
+      "S": 0,
+      "TP": 0,
+      "LRA": 0
+    }
+  },
+  "tolerances": {
+    "I": 0.01,
+    "M": 0.01,
+    "S": 0.01,
+    "TP": 0.01,
+    "LRA": 0.1
+  },
+  "passed": true,
+  "performance_limits": {
+    "analysis_ms": 2000,
+    "worker_including_identity_ms": 2000,
+    "analysis_storage_bytes": 67108864,
+    "viewport_prepare_p95_ms": 50,
+    "offscreen_timeline_paint_p95_ms": 100,
+    "diagnostics_peak_rss_growth_bytes": 134217728,
+    "active_cancel_ms": 1000
+  },
+  "section_performance_limits": {
+    "aggregation_ms": 2000,
+    "additional_section_storage_bytes": 16777216,
+    "interaction_p95_ms": 100,
+    "active_cancel_ms": 1000
+  },
+  "section_value_tolerances": {
+    "minimum": 1e-09,
+    "median": 1e-09,
+    "maximum": 1e-09,
+    "share": 1e-12
+  }
+}

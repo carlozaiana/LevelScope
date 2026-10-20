@@ -1,0 +1,31 @@
+{
+  "platform": "Intel High Sierra 10.13.6 (17G66), native x86_64",
+  "candidate": "candidate-01",
+  "standalone_sha256": "c5689afab976fc5d04ab4b47208c022b74b9882ec152a3f345441182b3fc02e9",
+  "interactive_app_path": "/Users/fuzz/LevelScope-M5-qualification-2026-10-19/candidate-01/LevelScope Standalone.app",
+  "same_app_as_bundle": true,
+  "passed": true,
+  "pending": [],
+  "audio_device": "closed throughout",
+  "routing": "Both routes Muted; routing-map identity mutation covered by native tests without opening devices",
+  "playback": "stopped throughout",
+  "coverage": [
+    "120 s stereo scene fixture imported, roles confirmed; Source and Current measured at 0 dB. Whole programme [0,5760000), 1197 M and 1171 S contained windows; 15 LRA EOF windows separate.",
+    "Split at 1440000; move to 1440001; rename left section opening; invalid boundary 0 and fractional 1.5 rejected. Exact intervals and violet boundary move by one frame. Merge retains left name and whole coverage.",
+    "Boundary-crossing M [29.7,30.1) inspected separately with original gate inclusion; LRA [117.1,120.1) shows EOF padding and source intersection at 120 s. Programme maximum locations and local-peak limitation visible.",
+    "Source/Current selector reuses the same map. Closing/reopening retains map. Section edits preserve unapplied M3 draft at -3.305074118944 dB and actual Current gain 0 dB; no Apply performed.",
+    "Current gain -6 dB clears Current timeline/summaries; remeasurement yields programme I -25.694926 and TP -6.766574. Section [1440001,5760000) and Source measurements retained.",
+    "Unchecked applicability removes only profile annotation; monitor gain -36 dB and attached CFR video with +12 s offset leave source-frame positions and valid measured results intact. Video remains stopped.",
+    "Two-second source resets map, retains unavailable S/LRA and short-programme warning; a one-frame section has no complete window metrics. Four-second digital silence shows missing windows, digital-silence status and unavailable contribution denominator.",
+    "Clear Source removes bound map and plots, disables section edit/build controls.",
+    "Actual 10800 s stereo48k PCM imported and fully measured. Whole map [0,518400000); 107997 M and 107971 S contained windows. Split final second [518352000,518400000), six zoom steps then selection scrolls to [10631.25,10800] s. Final section: 7 contained M, 3 crossing M; 0 contained S and 10 crossing S. Numeric 10799.9 s gives M [10799.5,10799.9), S [10796.9,10799.9), both -34.992474 LUFS; M excluded. Duration stays 10800 s. Final main window confirms device closed, routes Muted and source position 0; test app closed."
+  ],
+  "cancellation_evidence": {
+    "interactive_attempt": "Build then Cancel visibly produced Section diagnostics cancelled, removed section summaries/window rows, retained source-bound map and valid measured programme timeline. Explicit Build retry restored measured section summaries. This observes cancellation of pending publication, not worker CPU timing.",
+    "native_control_test": "2457-check suite invokes real Build/Cancel and suspend/resume bindings while completion is pending; verifies no stale publication and preserved audio identity.",
+    "active_worker": "Three-hour active section cancellation completed in 1.758278 ms on actual High Sierra."
+  },
+  "completed_local_date": "2026-10-20",
+  "final_process_check": "PID 650 absent after closing only the isolated M5 app",
+  "final_executable_sha256": "c5689afab976fc5d04ab4b47208c022b74b9882ec152a3f345441182b3fc02e9"
+}

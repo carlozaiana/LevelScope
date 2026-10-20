@@ -203,6 +203,8 @@ endif()
 #==============================
 
 add_library(LevelScopeStandaloneSupport STATIC
+    Source/Core/Proposal/SectionAnalysis.cpp
+    Source/Standalone/StandaloneSections.cpp
     Source/Core/Proposal/AnalysisEngine.cpp
     Source/Core/Proposal/AttributionEngine.cpp
     Source/Standalone/StandaloneDiagnostics.cpp
@@ -241,6 +243,7 @@ target_link_libraries(LevelScopeStandaloneSupport PUBLIC
     LevelScopeMeasurementCore juce::juce_audio_formats juce::juce_audio_devices juce::juce_cryptography juce::juce_graphics)
 
 add_library(LevelScopeDiagnosticsUI STATIC
+    Source/Standalone/StandaloneSectionsPanel.cpp
     Source/Standalone/MeasurementTimeline.cpp
     Source/Standalone/StandaloneDiagnosticsPanel.cpp)
 target_link_libraries(LevelScopeDiagnosticsUI PUBLIC LevelScopeStandaloneSupport juce::juce_gui_basics)
@@ -344,6 +347,16 @@ if (LEVELSCOPE_BUILD_DIAGNOSTICS_TESTS)
     target_link_libraries(LevelScopeDiagnosticsTests PRIVATE LevelScopeDiagnosticsUI)
     add_test(NAME measured-diagnostics COMMAND LevelScopeDiagnosticsTests)
     set_tests_properties(measured-diagnostics PROPERTIES TIMEOUT 120)
+endif()
+
+option(LEVELSCOPE_BUILD_SECTIONS_TESTS "Build M5 programme section checks" OFF)
+if (LEVELSCOPE_BUILD_SECTIONS_TESTS)
+    enable_testing()
+    juce_add_console_app(LevelScopeSectionsTests PRODUCT_NAME "LevelScope Sections Tests")
+    target_sources(LevelScopeSectionsTests PRIVATE Tests/SectionsTests.cpp)
+    target_link_libraries(LevelScopeSectionsTests PRIVATE LevelScopeDiagnosticsUI)
+    add_test(NAME programme-sections COMMAND LevelScopeSectionsTests)
+    set_tests_properties(programme-sections PROPERTIES TIMEOUT 120)
 endif()
 
 option(LEVELSCOPE_BUILD_SCAFFOLD_TESTS "Build hardware-independent standalone checks" OFF)

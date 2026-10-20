@@ -1,0 +1,70 @@
+{
+  "date": "2026-10-20",
+  "phase": "Publication preflight before checkpoint commit",
+  "passed": true,
+  "checkpoint_tag": "m5-programme-sections-2026-10-20",
+  "source_digest": "4973465a63bb59ec6c07667f96c6ad579856d89e57c213b5037067be8076d0f2",
+  "source_files_checked": 130,
+  "source_file_set_and_hashes_match": true,
+  "candidate_artifacts_checked": 286,
+  "artifact_mismatches": [],
+  "candidate_manifest_sha256": "3f4af3ab14252ec678272d5a6fac727eafa1adafca9a4c9f2efa4459b64f87c4",
+  "original_candidate_manifest_preserved": true,
+  "retained_successful_runs_and_log_hashes_checked": 26,
+  "actual_platform_automated_and_ui_records_complete": true,
+  "cross_platform_comparison_rerun": {
+    "left": "Tests/Reference/results/m5-qualification-2026-10-19/sequoia-01b",
+    "right": "Tests/Reference/results/m5-qualification-2026-10-19/high-sierra-01",
+    "errors": [],
+    "maximum_differences": {
+      "itu": {
+        "I": 0,
+        "M": 0,
+        "S": 0,
+        "TP": 1.7763568394002505e-15,
+        "LRA": 0
+      },
+      "ebu": {
+        "I": 0,
+        "M": 0,
+        "S": 0,
+        "TP": 0,
+        "LRA": 0
+      }
+    },
+    "tolerances": {
+      "I": 0.01,
+      "M": 0.01,
+      "S": 0.01,
+      "TP": 0.01,
+      "LRA": 0.1
+    },
+    "passed": true,
+    "performance_limits": {
+      "analysis_ms": 2000,
+      "worker_including_identity_ms": 2000,
+      "analysis_storage_bytes": 67108864,
+      "viewport_prepare_p95_ms": 50,
+      "offscreen_timeline_paint_p95_ms": 100,
+      "diagnostics_peak_rss_growth_bytes": 134217728,
+      "active_cancel_ms": 1000
+    },
+    "section_performance_limits": {
+      "aggregation_ms": 2000,
+      "additional_section_storage_bytes": 16777216,
+      "interaction_p95_ms": 100,
+      "active_cancel_ms": 1000
+    },
+    "section_value_tolerances": {
+      "minimum": 1e-09,
+      "median": 1e-09,
+      "maximum": 1e-09,
+      "share": 1e-12
+    }
+  },
+  "implementation_changes_since_qualification": false,
+  "latest_fetched_main": "9a22749901d9f6d4b9c194c9c22c0a231f2494f6",
+  "integration_method": "Fast-forward from qualified M4; no implementation merge changes required",
+  "qualification_reuse": "Both actual-platform runs and silent UI records remain valid because every tested source file and candidate artifact is unchanged. This preflight is not a new native execution.",
+  "checkpoint_identity": "The annotated checkpoint tag resolves the accepted commit; verify its source blobs against candidate-01/identity.json. The manifest base commit remains the historical pre-M5 ancestor."
+}

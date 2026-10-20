@@ -14,6 +14,7 @@ public:
     void setViewRange (double beginFrame, double endFrame);
     void highlight (double beginFrame, double endFrame, bool reveal = true);
     void clearHighlight() { selection.reset(); repaint(); }
+    void setSectionBoundaries (std::vector<int64_t> frames) { sectionBoundaries = std::move (frames); repaint(); }
     bool inspectSeconds (double seconds);
     juce::String inspectionText() const { return inspection; }
     const proposal::TimelinePlot& displayedPlot() const { return plot; }
@@ -27,6 +28,7 @@ private:
     proposal::TimelinePlot plot;
     double viewBegin = 0, viewEnd = 1;
     std::optional<std::pair<double, double>> selection;
+    std::vector<int64_t> sectionBoundaries; // read-only annotations, never seeks or edits
     juce::Rectangle<int> graph;
     juce::TextButton zoomIn { "Zoom +" }, zoomOut { "Zoom -" }, fit { "Whole programme" }, inspect { "Inspect seconds" };
     juce::TextEditor seconds;
