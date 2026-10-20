@@ -4,6 +4,13 @@
 #include <iostream>
 #include <chrono>
 
+#if JUCE_MAC
+void beginVideoReaderAudit();
+int videoReaderAuditCount (int);
+#else
+void beginVideoReaderAudit() {}
+int videoReaderAuditCount (int) { return 0; }
+#endif
 using namespace levelscope::standalone;
 using namespace levelscope::standalone::video;
 namespace
@@ -184,9 +191,9 @@ void transportChecks()
     audio->play (file, media.media, layout, routing); fake->close(); audio->poll();
     expect (audio->getState() == AuditionState::failed && !audio->active(), "device error stops and invalidates transport");
 }
-Player::View awaitPicture (Player& player, Time time, uint64_t generation)
+Player::View awaitPicture (Player& player, Time time, uint64_t generation, int timeoutSeconds = 15)
 {
-    const auto end = std::chrono::steady_clock::now() + std::chrono::seconds (15);
+    const auto end = std::chrono::steady_clock::now() + std::chrono::seconds (timeoutSeconds);
     Player::View view;
     do
     {
@@ -307,11 +314,34 @@ void longIndexChecks (const juce::File& file)
     std::cout << "LONG_INDEX " << file.getFileName() << " sha256=" << asset->sha256
               << " frames=" << asset->frames.size() << " exact_pts_and_coverage=PASS\n";
 }
+#include "ProResChecks.h"
 }
 int main (int argc, char** argv)
 {
     try
     {
+        if (argc >= 3 && juce::String (argv[1]).startsWith ("--"))
+        {
+            const juce::String mode (argv[1]); const juce::File file { juce::String (argv[2]) };
+            if (mode == "--prores" && argc == 7)
+                proResChecks (file, std::stoll (argv[3]), std::stoll (argv[4]), std::stoll (argv[5]), true, juce::String (argv[6]) == "vfr");
+            else if (mode == "--actual") proResChecks (file, 2772, 25, 1, false, false);
+            else if (mode == "--isolation") isolationChecks (file);
+            else if (mode == "--loading") loadingChecks (file);
+            else if (mode == "--reject")
+            {
+                auto decoder = makeDecoder(); bool rejected = false;
+                try { decoder->load (file, 0, [] { return false; }); }
+                catch (const std::exception& e) {
+                    rejected = true; std::cout << "EXPECTED_REJECTION " << e.what() << '\n';
+                    if (argc >= 4) expect (juce::String(e.what()).contains(argv[3]), "understandable expected rejection reason");
+                }
+                expect (rejected, "unsupported ProRes policy must reject");
+            }
+            else throw std::runtime_error ("Unknown ProRes test arguments");
+            std::cout << "PASS: " << checks << " ProRes checks; controlled sink only, no physical audio device\n";
+            return 0;
+        }
         timing(); clockChecks(); independence(); transportChecks();
         for (int i = 1; i < argc; ++i)
         {

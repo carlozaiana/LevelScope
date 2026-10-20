@@ -4,6 +4,10 @@
 #include "Standalone/StandaloneAudition.h"
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <iostream>
+#if JUCE_MAC
+#include <mach/mach.h>
+#include <sys/resource.h>
+#endif
 
 using namespace levelscope::standalone;
 namespace
@@ -50,7 +54,7 @@ public:
         if (!found) throw std::runtime_error ("Requested device was not found");
         if (audio.outputNames().size() != 2) throw std::runtime_error ("Use an explicitly coordinated two-output ordinary device");
         audio.setMonitorGainDb (-30);
-        player.attach (videoFile); startedNs = StandaloneAudition::hostTimeNs();
+        player.attach (videoFile); startedNs = attachmentStartedNs = StandaloneAudition::hostTimeNs();
         setSize (800, 520); startTimerHz (120);
     }
     ~Run() override { stopTimer(); audio.disconnect(); }
@@ -65,6 +69,13 @@ public:
         if (audio.getState() == AuditionState::playing && view.asset && audio.positionSeconds() >= 2)
         {
             ++paintCount;
+            if (view.picture)
+            {
+                const auto index = view.picture->index;
+                if (lastPainted && index > *lastPainted + 1) paintedSkippedFrames += index - *lastPainted - 1;
+                if (!lastPainted || index != *lastPainted) ++uniquePaintedFrames;
+                lastPainted = index;
+            }
             const auto time = paintTime;
             const auto expected = video::frameAt (view.asset->frames, time);
             if (expected && view.picture)
@@ -96,12 +107,16 @@ private:
     {
         stopTimer();
         const auto seconds = audio.positionSeconds(); const auto underruns = audio.underruns();
+        const auto firstRssMean = firstRssCount ? firstRssSum / firstRssCount : 0;
+        const auto lastRssMean = lastRssCount ? lastRssSum / lastRssCount : 0;
+        const bool memoryPassed = maxPlaybackRss > 0 && maxPlaybackRss <= 768.0 * 1024 * 1024
+            && (duration < 120 || (firstRssCount && lastRssCount && lastRssMean - firstRssMean <= 32.0 * 1024 * 1024));
         const bool hardware = audio.hasHardwareClock(); const auto latency = audio.outputLatencyFrames();
         audio.disconnect();
         juce::DynamicObject::Ptr report = new juce::DynamicObject();
         auto set = [&] (const char* key, juce::var value) { report->setProperty (key, std::move (value)); };
         set ("scope", "Internal audio-clock and UI paint selection; no optical/acoustic measurement");
-        set ("passed", error.isEmpty() && boundFailures == 0 && paintDeadlineFailures == 0 && blankPaints == 0 && underruns == 0 && seconds >= duration && skewCount > 0);
+        set ("passed", error.isEmpty() && memoryPassed && attachmentPassed && boundFailures == 0 && paintedSkippedFrames == 0 && paintDeadlineFailures == 0 && blankPaints == 0 && underruns == 0 && seconds >= duration && skewCount > 0);
         set ("error", error); set ("os", juce::SystemStats::getOperatingSystemName());
 #if defined(__arm64__)
         set ("architecture", "arm64");
@@ -122,8 +137,26 @@ private:
         set ("last_minute_mean_skew_seconds", lastCount ? lastSum / lastCount : 0);
         set ("underrun_blocks", static_cast<juce::int64> (underruns));
         set ("late_polls", static_cast<juce::int64> (view.latePolls)); set ("skipped_frames", static_cast<juce::int64> (view.droppedFrames));
-        set ("embedded_audio_outputs", 0);
+        set ("skipped_frame_limit", 0);
+        set ("actual_paint_skipped_frames", static_cast<juce::int64> (paintedSkippedFrames));
+        set ("unique_painted_frames", static_cast<juce::int64> (uniquePaintedFrames));
+        set ("hash_ms", view.asset ? view.asset->hashMilliseconds : 0);
+        set ("index_ms", view.asset ? view.asset->indexMilliseconds : 0);
+        set ("embedded_audio_policy", "Excluded by video-only backend; independent nonzero-sink audit is a separate test");
         set ("all_routes_muted", muted);
+        set ("attachment_first_picture_s", attachmentSeconds);
+        set ("attachment_budget_s", attachmentBudget);
+        set ("attachment_within_budget", attachmentPassed);
+        set ("peak_sampled_playback_rss_bytes", maxPlaybackRss);
+        set ("first_minute_mean_rss_bytes", firstRssMean);
+        set ("last_minute_mean_rss_bytes", lastRssMean);
+        set ("memory_growth_assessed", duration >= 120);
+        set ("memory_passed", memoryPassed);
+#if JUCE_MAC
+        struct rusage usage {};
+        getrusage (RUSAGE_SELF, &usage);
+        set ("process_peak_rss_including_load_bytes", static_cast<juce::int64> (usage.ru_maxrss));
+#endif
         const auto json = juce::JSON::toString (juce::var (report.get()));
         const bool saved = reportFile.replaceWithText (json + "\n"); std::cout << json << '\n';
         juce::JUCEApplication::getInstance()->setApplicationReturnValue (saved && static_cast<bool> (report->getProperty ("passed")) ? 0 : 1);
@@ -135,6 +168,13 @@ private:
         {
             view = player.update (video::Time (audio.positionFrames(), static_cast<int64_t> (media.sampleRate)), audio.transportGeneration());
             if (view.state == video::Player::State::failed) { finish (view.message); return; }
+            if (view.picture && attachmentSeconds == 0)
+            {
+                attachmentSeconds = (StandaloneAudition::hostTimeNs() - attachmentStartedNs) / 1e9;
+                attachmentBudget = 30.0 + double (view.asset->bytes) / (64 * 1024 * 1024)
+                    + 10.0 * view.asset->frames.size() / 100000.0;
+                attachmentPassed = attachmentSeconds <= attachmentBudget;
+            }
             if (!opened && view.picture && view.queued >= 3 && (!manualStart || requestedStart))
             {
                 if (view.asset->frames.back().end < video::Time (static_cast<int64_t> (duration), 1))
@@ -142,12 +182,29 @@ private:
                 auto error = audio.connect (media.sampleRate);
                 if (error.isEmpty()) error = audio.play (audioFile, media, layout, routing, true, muted);
                 if (error.isNotEmpty()) throw std::runtime_error (error.toStdString()); opened = true;
+                playbackStartedNs = StandaloneAudition::hostTimeNs();
                 view = player.update (video::Time (audio.positionFrames(), static_cast<int64_t> (media.sampleRate)), audio.transportGeneration());
             }
             audio.poll (player.prerollReady()); repaint();
+#if JUCE_MAC
+            const auto second = static_cast<int> (audio.positionSeconds());
+            if (opened && second >= 2 && second != lastRssSecond)
+            {
+                lastRssSecond = second;
+                mach_task_basic_info_data_t info {}; mach_msg_type_number_t size = MACH_TASK_BASIC_INFO_COUNT;
+                if (task_info (mach_task_self(), MACH_TASK_BASIC_INFO, reinterpret_cast<task_info_t> (&info), &size) == KERN_SUCCESS)
+                {
+                    const auto rss = static_cast<double> (info.resident_size);
+                    maxPlaybackRss = std::max (maxPlaybackRss, rss);
+                    if (second < 62) { firstRssSum += rss; ++firstRssCount; }
+                    if (second > duration - 60) { lastRssSum += rss; ++lastRssCount; }
+                }
+            }
+#endif
             if (audio.getState() == AuditionState::failed) { finish (audio.status()); return; }
             if (opened && audio.positionSeconds() >= duration) { finish ({}); return; }
-            if ((!manualStart || requestedStart) && (StandaloneAudition::hostTimeNs() - startedNs) / 1e9 > duration + 120)
+            if ((!manualStart || requestedStart) && (StandaloneAudition::hostTimeNs() - (opened ? playbackStartedNs : startedNs)) / 1e9
+                > (opened ? duration + 120 : 230.0 + double (videoFile.getSize()) / (64 * 1024 * 1024)))
                 finish ("Qualification timed out");
         }
         catch (const std::exception& error) { finish (error.what()); }
@@ -161,6 +218,12 @@ private:
     juce::TextButton startButton;
     bool opened = false, muted = false, manualStart = false, requestedStart = false;
     uint64_t startedNs = 0, paintCount = 0, boundFailures = 0, blankPaints = 0, paintDeadlineFailures = 0;
+    double attachmentSeconds = 0, attachmentBudget = 0, maxPlaybackRss = 0, firstRssSum = 0, lastRssSum = 0;
+    bool attachmentPassed = false;
+    uint64_t playbackStartedNs = 0, attachmentStartedNs = 0;
+    int lastRssSecond = -1, firstRssCount = 0, lastRssCount = 0;
+    std::optional<size_t> lastPainted;
+    uint64_t paintedSkippedFrames = 0, uniquePaintedFrames = 0;
     double duration = 0, maximumPaintMs = 0, maximumSkew = 0, skewSum = 0, firstSum = 0, lastSum = 0;
     int64_t skewCount = 0, firstCount = 0, lastCount = 0;
 };

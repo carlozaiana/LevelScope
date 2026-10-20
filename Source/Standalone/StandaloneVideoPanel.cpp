@@ -80,6 +80,8 @@ void StandaloneVideoPanel::timerCallback()
                  << "\n" << (asset.variableRate ? "VFR" : "CFR") << " | " << asset.frames.size() << " frames"
                  << " | nominal/minimum-duration rate " << selected->nominalRate.text() << " fps | timebase 1/" << selected->timeScale
                  << "\nCoverage " << asset.frames.front().pts.text() << " to " << asset.frames.back().end.text() << " s"
+                 << "\nHash " << juce::String (asset.hashMilliseconds, 1) << " ms | index " << juce::String (asset.indexMilliseconds, 1) << " ms"
+                 << (selected->codec.startsWith ("ProRes") ? "\nRec.709 SDR ProRes | 8-bit reference preview" : "")
                  << "\n" << asset.timecodeStatus << "\nEmbedded audio tracks: " << asset.embeddedAudioTracks << " (excluded from playback)";
             metadata.setText (text, false);
         }

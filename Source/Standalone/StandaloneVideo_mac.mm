@@ -1,6 +1,7 @@
 #include "StandaloneVideo.h"
 #include <juce_cryptography/juce_cryptography.h>
 #import <AVFoundation/AVFoundation.h>
+#include <chrono>
 
 namespace levelscope::standalone::video
 {
@@ -30,17 +31,90 @@ struct Sample
 class HashInput final : public juce::InputStream
 {
 public:
-    HashInput (juce::FileInputStream& in, const Cancelled& fn) : input (in), cancelled (fn) {}
+    HashInput (juce::InputStream& in, const Cancelled& fn) : input (in), cancelled (fn) {}
     juce::int64 getTotalLength() override { return input.getTotalLength(); }
     juce::int64 getPosition() override { return input.getPosition(); }
     bool setPosition (juce::int64 n) override { return input.setPosition (n); }
     bool isExhausted() override { return cancelled() || input.isExhausted(); }
     int read (void* data, int n) override { return cancelled() ? 0 : input.read (data, std::min (n, 65536)); }
 private:
-    juce::FileInputStream& input;
+    juce::InputStream& input;
     const Cancelled& cancelled;
 };
 
+
+bool isProRes (CMVideoCodecType codec)
+{
+    return codec == kCMVideoCodecType_AppleProRes422Proxy
+        || codec == kCMVideoCodecType_AppleProRes422LT
+        || codec == kCMVideoCodecType_AppleProRes422;
+}
+bool is709 (CFTypeRef value)
+{
+    return value && CFGetTypeID (value) == CFStringGetTypeID()
+        && CFEqual (value, kCVImageBufferColorPrimaries_ITU_R_709_2);
+}
+// ProRes uses an explicit, conservative interpretation: all three effective
+// format-description colour tags must identify Rec.709. Missing tags are not
+// inferred from the codec, raster, filename, or bit depth.
+juce::String proResRejection (CMFormatDescriptionRef description)
+{
+    // AVFoundation can supply default effective tags when the sample entry has
+    // none. Require the actual nclc/nclx declaration as well, so missing container
+    // tags cannot silently become an assumed Rec.709 interpretation.
+    const auto raw = CMFormatDescriptionGetExtension (description, kCMFormatDescriptionExtension_VerbatimSampleDescription);
+    bool declared709 = false;
+    if (raw && CFGetTypeID (raw) == CFDataGetTypeID())
+    {
+        const auto data = (CFDataRef) raw;
+        const auto* bytes = CFDataGetBytePtr (data);
+        const auto length = static_cast<size_t> (CFDataGetLength (data));
+        auto u32 = [&] (size_t p) { return (uint32_t (bytes[p]) << 24) | (uint32_t (bytes[p+1]) << 16) | (uint32_t (bytes[p+2]) << 8) | bytes[p+3]; };
+        int colourAtoms = 0;
+        for (size_t p = 86; p + 8 <= length;)
+        {
+            const auto size = u32 (p);
+            if (size < 8 || size > length - p) break;
+            if (!std::memcmp (bytes + p + 4, "colr", 4))
+            {
+                ++colourAtoms;
+                declared709 = size >= 18 && (!std::memcmp (bytes + p + 8, "nclc", 4)
+                    || (size >= 19 && !std::memcmp (bytes + p + 8, "nclx", 4) && !(bytes[p+18] & 0x80)))
+                    && bytes[p+12] == 0 && bytes[p+13] == 1
+                    && bytes[p+14] == 0 && bytes[p+15] == 1
+                    && bytes[p+16] == 0 && bytes[p+17] == 1;
+            }
+            p += size;
+        }
+        declared709 = declared709 && colourAtoms == 1;
+    }
+    if (!declared709)
+        return "ProRes requires one explicit Rec.709 SDR colr declaration (primaries, transfer and matrix 1/1/1); missing or contradictory colour metadata is unsupported";
+    for (const auto key : { kCMFormatDescriptionExtension_ColorPrimaries,
+                            kCMFormatDescriptionExtension_TransferFunction,
+                            kCMFormatDescriptionExtension_YCbCrMatrix })
+        if (!is709 (CMFormatDescriptionGetExtension (description, key)))
+            return "ProRes requires explicit, consistent Rec.709 primaries, transfer and matrix tags; missing, HDR or other colour tags are unsupported";
+    const auto field = CMFormatDescriptionGetExtension (description, kCMFormatDescriptionExtension_FieldCount);
+    int count = 0;
+    if (!field || CFGetTypeID (field) != CFNumberGetTypeID()
+        || !CFNumberGetValue ((CFNumberRef) field, kCFNumberIntType, &count) || count != 1)
+        return "ProRes requires explicit progressive (one-field) metadata; interlaced or unspecified field structure is unsupported";
+    const auto dimensions = CMVideoFormatDescriptionGetDimensions (description);
+    const auto aperture = CMVideoFormatDescriptionGetCleanAperture (description, false);
+    const auto presentation = CMVideoFormatDescriptionGetPresentationDimensions (description, true, true);
+    if (std::abs (aperture.size.width - dimensions.width) > 0.01
+        || std::abs (aperture.size.height - dimensions.height) > 0.01
+        || std::abs (aperture.origin.x) > 0.01 || std::abs (aperture.origin.y) > 0.01
+        || std::abs (presentation.width - dimensions.width) > 0.01
+        || std::abs (presentation.height - dimensions.height) > 0.01)
+        return "ProRes requires square pixels and full, centred aperture";
+    return {};
+}
+double elapsedMs (std::chrono::steady_clock::time_point start)
+{
+    return std::chrono::duration<double, std::milli> (std::chrono::steady_clock::now() - start).count();
+}
 class AppleDecoder final : public Decoder
 {
 public:
@@ -52,9 +126,15 @@ public:
             if (!file.existsAsFile()) throw std::runtime_error ("Local video file is missing");
             auto result = std::make_shared<Asset>(); result->file = file;
             result->bytes = file.getSize(); result->modifiedMs = file.getLastModificationTime().toMilliseconds();
-            if (!file.hasFileExtension ("mov;mp4;m4v")) throw std::runtime_error ("Supported containers: MOV, MP4 and M4V with SDR H.264 video");
-            juce::FileInputStream input (file); HashInput hashInput (input, cancelled);
+            if (!file.hasFileExtension ("mov;mp4;m4v")) throw std::runtime_error ("Supported containers: MOV with SDR H.264 or Rec.709 ProRes Proxy/LT/422; MP4/M4V with SDR H.264");
+            const auto hashStart = std::chrono::steady_clock::now();
+            juce::FileInputStream input (file);
+            // SHA256 requests 64-byte blocks; amortize filesystem reads without
+            // changing the complete-file hash or cancellation between blocks.
+            juce::BufferedInputStream buffered (input, 65536);
+            HashInput hashInput (buffered, cancelled);
             result->sha256 = juce::SHA256 (hashInput).toHexString();
+            result->hashMilliseconds = elapsedMs (hashStart);
             if (cancelled()) throw std::runtime_error ("Video load cancelled");
             if (input.getStatus().failed() || input.getPosition() != result->bytes) throw std::runtime_error ("Cannot hash the complete video file");
             nativeAsset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:[NSString stringWithUTF8String:file.getFullPathName().toRawUTF8()]]
@@ -80,7 +160,18 @@ public:
                     const auto dimensions = CMVideoFormatDescriptionGetDimensions (description);
                     auto transfer = CMFormatDescriptionGetExtension (description, kCMFormatDescriptionExtension_TransferFunction);
                     const bool hdr = transfer && (CFEqual (transfer, CFSTR ("SMPTE_ST_2084_PQ")) || CFEqual (transfer, CFSTR ("ITU_R_2100_HLG")));
-                    acceptable = acceptable && codec == kCMVideoCodecType_H264 && !hdr
+                    const bool prores = isProRes (codec);
+                    if (prores)
+                    {
+                        info.codec = codec == kCMVideoCodecType_AppleProRes422Proxy ? "ProRes 422 Proxy"
+                                   : codec == kCMVideoCodecType_AppleProRes422LT ? "ProRes 422 LT" : "ProRes 422";
+                        info.unsupportedReason = file.hasFileExtension ("mov") ? proResRejection (description)
+                            : "ProRes reference picture requires a MOV container";
+                    }
+                    else if (codec != kCMVideoCodecType_H264)
+                        info.unsupportedReason = "Supported codecs: SDR H.264 and Rec.709 ProRes 422 Proxy, LT or standard 422";
+                    acceptable = acceptable && (codec == kCMVideoCodecType_H264 || prores)
+                        && info.unsupportedReason.isEmpty() && !hdr
                         && std::abs (presentation.width - dimensions.width) < 0.01
                         && std::abs (presentation.height - dimensions.height) < 0.01;
                 }
@@ -91,13 +182,19 @@ public:
                 for (const auto& info : result->streams) if (info.supported) { streamId = info.id; break; }
             const auto selected = std::find_if (result->streams.begin(), result->streams.end(), [streamId] (const Stream& s) { return s.id == streamId; });
             if (selected == result->streams.end() || !selected->supported)
-                throw std::runtime_error ("Unsupported stream: use square-pixel SDR H.264 up to 3840x2160");
+            {
+                const auto& rejected = selected != result->streams.end() ? *selected : result->streams.front();
+                throw std::runtime_error (rejected.unsupportedReason.isNotEmpty() ? rejected.unsupportedReason.toStdString()
+                    : "Unsupported stream: use square-pixel full-aperture SDR H.264 or progressive Rec.709 ProRes Proxy/LT/422 up to 3840x2160");
+            }
+            selectedProRes = selected->codec.startsWith ("ProRes");
             track = [nativeAsset trackWithTrackID:streamId]; result->selectedStream = streamId;
             const auto t = track.preferredTransform;
             transform = juce::AffineTransform (static_cast<float> (t.a), static_cast<float> (t.c), static_cast<float> (t.tx),
                                                static_cast<float> (t.b), static_cast<float> (t.d), static_cast<float> (t.ty));
             if (!std::isfinite (t.a + t.b + t.c + t.d + t.tx + t.ty) || std::abs (t.a * t.d - t.b * t.c) < 0.5)
                 throw std::runtime_error ("Unsupported video transform");
+            const auto indexStart = std::chrono::steady_clock::now();
             NSError* error = nil;
             auto indexReader = [[AVAssetReader alloc] initWithAsset:nativeAsset error:&error];
             auto indexOutput = [[AVAssetReaderTrackOutput alloc] initWithTrack:track outputSettings:nil];
@@ -152,6 +249,7 @@ public:
                 if (i && frames[i].end - frames[i].pts != frames[0].end - frames[0].pts) result->variableRate = true;
             }
             readTimecode (*result, cancelled);
+            result->indexMilliseconds = elapsedMs (indexStart);
             if (!result->unchanged()) throw std::runtime_error ("Video file changed during indexing");
             asset = result;
             return result;
@@ -189,6 +287,13 @@ public:
             if (!index || asset->frames[*index].pts != pts) throw std::runtime_error ("Decoded PTS is absent from the source index");
             auto pixel = CMSampleBufferGetImageBuffer (sample.value);
             if (!pixel || CVPixelBufferGetPixelFormatType (pixel) != kCVPixelFormatType_32BGRA) throw std::runtime_error ("Unsupported decoded pixel format");
+            if (selectedProRes)
+                for (const auto key : { kCVImageBufferColorPrimariesKey, kCVImageBufferTransferFunctionKey, kCVImageBufferYCbCrMatrixKey })
+                {
+                    const auto tag = CVBufferGetAttachment (pixel, key, nullptr);
+                    if (tag && !is709 (tag))
+                        throw std::runtime_error ("Decoded ProRes colour tags contradict the required Rec.709 stream metadata");
+                }
             const auto width = static_cast<int> (CVPixelBufferGetWidth (pixel)), height = static_cast<int> (CVPixelBufferGetHeight (pixel));
             if (width <= 0 || height <= 0 || width > 3840 || height > 2160) throw std::runtime_error ("Decoded picture exceeds size limit");
             juce::Image image (juce::Image::ARGB, width, height, true, juce::SoftwareImageType());
@@ -270,6 +375,7 @@ private:
     AVAssetReaderTrackOutput* output = nil;
     std::shared_ptr<const Asset> asset;
     juce::AffineTransform transform;
+    bool selectedProRes = false;
 };
 }
 std::unique_ptr<Decoder> makeDecoder() { return std::make_unique<AppleDecoder>(); }

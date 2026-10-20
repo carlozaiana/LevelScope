@@ -13,7 +13,7 @@ namespace levelscope::standalone::video
 struct Stream
 {
     int id = 0, width = 0, height = 0, timeScale = 0;
-    juce::String codec;
+    juce::String codec, unsupportedReason;
     Time nominalRate;
     bool supported = false;
 };
@@ -25,6 +25,7 @@ struct Asset
     std::vector<Stream> streams;
     int selectedStream = 0, embeddedAudioTracks = 0;
     bool variableRate = false;
+    double hashMilliseconds = 0, indexMilliseconds = 0;
     std::optional<Timecode> timecode;
     juce::String timecodeStatus = "No timecode track";
     std::vector<FrameTime> frames;

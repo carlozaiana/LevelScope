@@ -1,3 +1,5 @@
 /build/
+# User-supplied reference movie; qualification records its hash, never its payload.
+/Tests/51_SyncTest.mov
 # Locally supplied EBU reference audio; keep manifests/results, not audio, in Git.
 /Tests/Ebu_Loudness_Testset_V05/
