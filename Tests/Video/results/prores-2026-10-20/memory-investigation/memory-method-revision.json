@@ -1,0 +1,34 @@
+{
+  "rss_bytes": {
+    "first_mean_bytes": 494205883.73333335,
+    "last_mean_bytes": 545548878.101695,
+    "delta_bytes": 51342994.36836159
+  },
+  "reusable_bytes": {
+    "first_mean_bytes": 268464674.1333333,
+    "last_mean_bytes": 320943121.3559322,
+    "delta_bytes": 52478447.22259885
+  },
+  "physical_footprint_bytes": {
+    "first_mean_bytes": 72948630.4,
+    "last_mean_bytes": 71621564.7457627,
+    "delta_bytes": -1327065.6542373002
+  },
+  "heap_in_use_bytes": {
+    "first_mean_bytes": 134486825.33333334,
+    "last_mean_bytes": 129349143.05084746,
+    "delta_bytes": -5137682.282485887
+  },
+  "heap_reserved_bytes": {
+    "first_mean_bytes": 142702455.46666667,
+    "last_mean_bytes": 141848784.27118644,
+    "delta_bytes": -853671.1954802275
+  },
+  "scope": "Diagnostic accounting explanation only. Original RSS gate failed; no retroactive qualification.",
+  "approved_revision": "User explicitly approved non-reusable resident and physical-footprint mean growth <=32 MiB each, retaining total RSS peak <=768 MiB, on 2026-10-20. Fresh endurance required.",
+  "diagnostic_report_sha256": "85939aaca04d5fc95c5128fba5d835812725a114b7ee3619300d5283b2a9b536",
+  "apple_sources": [
+    "https://github.com/apple-oss-distributions/xnu/blob/xnu-11417.140.69/osfmk/kern/task.c#L1175-L1213",
+    "https://github.com/apple-oss-distributions/xnu/blob/xnu-11417.140.69/osfmk/vm/vm_resident.c#L6762-L6780"
+  ]
+}

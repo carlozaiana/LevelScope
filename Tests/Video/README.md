@@ -29,6 +29,27 @@ decoded burn-ins across the long fixture. Compressed indexing uses Core Media's
 **output** timing, including container edit-list offsets; raw media timestamps
 are not interchangeable with the decoded presentation timeline.
 
+## Bounded ProRes extension
+
+The 20–21 October qualified ProRes extension and its exact identities are documented in
+[26_ProResQualification.md](../../Docs/ProjectIndex/26_ProResQualification.md).
+Its new artifacts are inside the video worktree at `build/prores-20261020`, with
+separate frozen `candidate-01` through `candidate-04` folders. Older H.264 evidence and
+its original paths remain unchanged.
+
+`Tests/ProResFixtureBuilder.mm` generates detailed Rec.709 ProRes pictures and
+retimes/repeats compressed samples with exact timestamps. Session fixture scripts,
+corrected metadata negatives and exact hashes are retained in
+[the ProRes evidence directory](results/prores-2026-10-20/README.md).
+`run_prores_native_qualification.py` runs native picture/seek/policy checks, the
+nonzero selected-audio test sink, and optional large-file loading/cancellation.
+`run_prores_playback_qualification.py` runs the required rate matrix or three
+30-minute profile runs with physical routes muted. Use fresh output directories.
+The final harness counts actual-paint skipped frames separately from worker
+selection skips, records paint-gap events, and samples coherent RSS/reusable/physical-footprint
+VM counters off the UI thread. `verify_prores_playback_evidence.py` independently
+recomputes the approved memory gates and validates media identity and painted coverage.
+
 ## Generated fixtures
 
 Build the native fixture tool on macOS (universal when transferring to High Sierra):

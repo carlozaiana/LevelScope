@@ -1,0 +1,8 @@
+{
+  "scope": "Diagnostic only, reusable-page accounting; not eligible for qualification",
+  "production_source_commit": "3920d08f849d2420509e1d789c5b8208e50d79af",
+  "candidate03_identity_sha256": "649142fc5064e1e735f6dbf1bd3996894ed1a57bc3536511366fb8a8f110c820",
+  "diagnostic_harness_source_sha256": "8abb9e5d14a08ac49d9f07e4fab4c518473625b60287fa3ded740ef32c0c5f19",
+  "executable_sha256": "a9302c7f36c4c673c383cd3863b8376b9fba598b2850a323b83d15ac7781528c",
+  "diagnostic_fixture_sha256": "fa0ff22210d0d54b0ae8c97215f603d5e19e943ba402ca2ba1f96679e01973b2"
+}

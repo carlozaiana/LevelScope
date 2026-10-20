@@ -1,0 +1,2 @@
+EXPECTED_REJECTION ProRes requires explicit progressive (one-field) metadata; interlaced or unspecified field structure is unsupported
+PASS: 2 ProRes checks; controlled sink only, no physical audio device

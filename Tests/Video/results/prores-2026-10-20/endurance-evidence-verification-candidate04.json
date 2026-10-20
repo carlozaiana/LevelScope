@@ -1,0 +1,58 @@
+{
+  "passed": true,
+  "phase": "endurance",
+  "candidate": "04",
+  "errors": [],
+  "runs": [
+    {
+      "platform": "sequoia",
+      "name": "422-1800",
+      "passed": true,
+      "painted_frames": 53887,
+      "minimum_painted_frames": 53885,
+      "report_sha256": "28cb70fc65a554e760b5a1794f11129c1f8565fa3b7d008f261a6eab2904a483"
+    },
+    {
+      "platform": "sequoia",
+      "name": "lt-1800",
+      "passed": true,
+      "painted_frames": 53887,
+      "minimum_painted_frames": 53885,
+      "report_sha256": "ead906c73c804a1cb8375d216d877ef28e6a776b73c794ff77acedfad3893b64"
+    },
+    {
+      "platform": "sequoia",
+      "name": "proxy-1800",
+      "passed": true,
+      "painted_frames": 53887,
+      "minimum_painted_frames": 53885,
+      "report_sha256": "16c716ec0fdd04acfd672cf5730e48e34005b69f062512149e021f7b22df3782"
+    },
+    {
+      "platform": "high-sierra",
+      "name": "422-1800",
+      "passed": true,
+      "painted_frames": 53887,
+      "minimum_painted_frames": 53885,
+      "report_sha256": "33d556ac468d22c6457c7ee03b01fcb3025123431249c5e97f1872d805e61174"
+    },
+    {
+      "platform": "high-sierra",
+      "name": "lt-1800",
+      "passed": true,
+      "painted_frames": 53887,
+      "minimum_painted_frames": 53885,
+      "report_sha256": "8ccc3ad3ee2ef6612841f5cbceb726b36317c56c08b446e53ec1a875752fbf11"
+    },
+    {
+      "platform": "high-sierra",
+      "name": "proxy-1800",
+      "passed": true,
+      "painted_frames": 53887,
+      "minimum_painted_frames": 53885,
+      "report_sha256": "cccdd21b174566e64e4f5218f56b0addb3477aa159cb32f16105eddceaed4c34"
+    }
+  ],
+  "zero_interior_skip_limit": 0,
+  "endpoint_coverage_allowance_frames": 1
+}

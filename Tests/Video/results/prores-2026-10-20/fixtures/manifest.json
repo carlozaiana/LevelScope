@@ -1,0 +1,546 @@
+{
+  "embedded-distinctive-1973hz.wav": {
+    "bytes": 2304044,
+    "sha256": "2d8b4512e607f0bf2c5075b40d08a8224d716abf5b375e593e2e0e38e644720b",
+    "role": "Distinctive embedded 1973 Hz tone; never physically played"
+  },
+  "proxy-seed.mov": {
+    "bytes": 48968999,
+    "sha256": "ca7d3525dd6797a229a51613aceabcb27a5eb8bab05280faef289894c99718d9",
+    "profile": "proxy",
+    "frames": 256,
+    "scale": 30000,
+    "step": 1001,
+    "generated": true
+  },
+  "proxy-24000-1001.mov": {
+    "bytes": 91816187,
+    "sha256": "7be1f173919f5dc8b10f9464ce9d795837fedefad34f83baa3f7c4fe59db86f2",
+    "profile": "proxy",
+    "frames": 480,
+    "scale": 24000,
+    "step": 1001,
+    "generated": true,
+    "required": true
+  },
+  "proxy-24-1.mov": {
+    "bytes": 91816187,
+    "sha256": "8f1929fb3e944d566697ad1ddec6672bdfb1e178faf067407eeb986ac6dd9ca2",
+    "profile": "proxy",
+    "frames": 480,
+    "scale": 24,
+    "step": 1,
+    "generated": true,
+    "required": true
+  },
+  "proxy-25-1.mov": {
+    "bytes": 95641035,
+    "sha256": "1e407f2556ab8cd863fe761dcd74dd9e53d05ea6571028f0686a94c223b194dc",
+    "profile": "proxy",
+    "frames": 500,
+    "scale": 25,
+    "step": 1,
+    "generated": true,
+    "required": true
+  },
+  "proxy-30000-1001.mov": {
+    "bytes": 114768107,
+    "sha256": "0accb458468aceb948f349188998e1b2aac8d3b79ec02d6cb7f8e25f96177c2f",
+    "profile": "proxy",
+    "frames": 600,
+    "scale": 30000,
+    "step": 1001,
+    "generated": true,
+    "required": true
+  },
+  "proxy-30-1.mov": {
+    "bytes": 114768107,
+    "sha256": "7d809063101a721c4dc76beb14777b04bf5c45763a00e8f16b777e851bffcb7c",
+    "profile": "proxy",
+    "frames": 600,
+    "scale": 30,
+    "step": 1,
+    "generated": true,
+    "required": true
+  },
+  "proxy-with-tone.mov": {
+    "bytes": 99578571,
+    "sha256": "2e71840323ee047b6701d40570f57963ee67c71640b37f5af72913c2644824c8",
+    "profile": "proxy",
+    "frames": 256,
+    "embedded_tone_hz": 1973,
+    "generated": true
+  },
+  "proxy-vfr.mov": {
+    "bytes": 22964107,
+    "sha256": "2785a6e7e6c2bc2f0021177ff2ac2284819434c82686922ecdd465c29662b604",
+    "profile": "proxy",
+    "frames": 120,
+    "scale": 30000,
+    "step": 1001,
+    "generated": true,
+    "vfr": true
+  },
+  "proxy-missing-colour.mov": {
+    "bytes": 48968999,
+    "sha256": "7cf4052352fe93048380058378b8b4fbbbdbb7fec4ceec4b38a3cf4711312ebb",
+    "profile": "proxy",
+    "expect": "reject",
+    "variant": "missing-colour",
+    "reason": "Rec.709"
+  },
+  "proxy-conflicting-colour.mov": {
+    "bytes": 48968999,
+    "sha256": "795067c77c4e20b7abd570bb76b6a57693837626b28f76c27905b3f8314b8799",
+    "profile": "proxy",
+    "expect": "reject",
+    "variant": "conflicting-colour",
+    "reason": "Rec.709"
+  },
+  "proxy-interlaced.mov": {
+    "bytes": 48968999,
+    "sha256": "4d63b53169e74a7378a850bc39865cf758898f9b6d1e0dde4e243fa77059393e",
+    "profile": "proxy",
+    "expect": "reject",
+    "variant": "interlaced",
+    "reason": "progressive"
+  },
+  "lt-seed.mov": {
+    "bytes": 109773531,
+    "sha256": "41b80d4ee2c16e832b4cca5aedd7a0cd220eb6869d1cb69cff62ce243db025eb",
+    "profile": "lt",
+    "frames": 256,
+    "scale": 30000,
+    "step": 1001,
+    "generated": true
+  },
+  "lt-24000-1001.mov": {
+    "bytes": 205823979,
+    "sha256": "d3e0fbefcd2e61b6e4e38587ad2431b82b34038795f48a918cd1c51b419e4254",
+    "profile": "lt",
+    "frames": 480,
+    "scale": 24000,
+    "step": 1001,
+    "generated": true,
+    "required": true
+  },
+  "lt-24-1.mov": {
+    "bytes": 205823979,
+    "sha256": "58617a8b7b86afefcf883bdb40cbb310ace04a8600d3b062c2375a68492c69c5",
+    "profile": "lt",
+    "frames": 480,
+    "scale": 24,
+    "step": 1,
+    "generated": true,
+    "required": true
+  },
+  "lt-25-1.mov": {
+    "bytes": 214400451,
+    "sha256": "f83aff8b26b21a2f70ee7fced2d5fbfb91abbcb4f31dfa7ed9febedd792da57e",
+    "profile": "lt",
+    "frames": 500,
+    "scale": 25,
+    "step": 1,
+    "generated": true,
+    "required": true
+  },
+  "lt-30000-1001.mov": {
+    "bytes": 257279595,
+    "sha256": "3db6443384eeffe6a927427a0e30cf162af3a3a8727cd84ff130ae0856b50c7b",
+    "profile": "lt",
+    "frames": 600,
+    "scale": 30000,
+    "step": 1001,
+    "generated": true,
+    "required": true
+  },
+  "lt-30-1.mov": {
+    "bytes": 257279595,
+    "sha256": "6b53bacf8f57a123389a2f7a37aa0754a6c0483f0e8b0929d34a6e63477f63b8",
+    "profile": "lt",
+    "frames": 600,
+    "scale": 30,
+    "step": 1,
+    "generated": true,
+    "required": true
+  },
+  "lt-with-tone.mov": {
+    "bytes": 221188499,
+    "sha256": "fff80a69f6a51a44f6c4616564b9afaf1e67a9bab1f172321c7b4ef78639a7b1",
+    "profile": "lt",
+    "frames": 256,
+    "embedded_tone_hz": 1973,
+    "generated": true
+  },
+  "lt-vfr.mov": {
+    "bytes": 51451499,
+    "sha256": "c3427bb6bde460008d906f4f3dcc2c845740c4bdb8cf1e63fe9aecba55c91ecc",
+    "profile": "lt",
+    "frames": 120,
+    "scale": 30000,
+    "step": 1001,
+    "generated": true,
+    "vfr": true
+  },
+  "lt-missing-colour.mov": {
+    "bytes": 109773531,
+    "sha256": "09428ae6d9ca532e66d0d9b08357ad67c571cf2505653a4046881a977a2a0704",
+    "profile": "lt",
+    "expect": "reject",
+    "variant": "missing-colour",
+    "reason": "Rec.709"
+  },
+  "lt-conflicting-colour.mov": {
+    "bytes": 109773531,
+    "sha256": "c4dfdacf2f049aaae40ae4bcdb53342027eb5a4accc6fe6b1e370e857ade319a",
+    "profile": "lt",
+    "expect": "reject",
+    "variant": "conflicting-colour",
+    "reason": "Rec.709"
+  },
+  "lt-interlaced.mov": {
+    "bytes": 109773531,
+    "sha256": "829c1f7ee80a3b59a61011e12dd1a5b7a75604ac22f86224a811ac22e7c3b4f3",
+    "profile": "lt",
+    "expect": "reject",
+    "variant": "interlaced",
+    "reason": "progressive"
+  },
+  "422-seed.mov": {
+    "bytes": 156485803,
+    "sha256": "8bd1db00a2bf75ea479cdc0c359eec2c03cf5908447c17101839d45a89615b8c",
+    "profile": "422",
+    "frames": 256,
+    "scale": 30000,
+    "step": 1001,
+    "generated": true
+  },
+  "422-24000-1001.mov": {
+    "bytes": 293412091,
+    "sha256": "ee7eb9045a429b02f3c5fb7be5b140d4624c397a77ac47804df04785ac5018f5",
+    "profile": "422",
+    "frames": 480,
+    "scale": 24000,
+    "step": 1001,
+    "generated": true,
+    "required": true
+  },
+  "422-24-1.mov": {
+    "bytes": 293412091,
+    "sha256": "9cd03051bb51d54ac0bca0a3ee3ef1af9c6d32f71f2b37fbfd9944a1ab78d164",
+    "profile": "422",
+    "frames": 480,
+    "scale": 24,
+    "step": 1,
+    "generated": true,
+    "required": true
+  },
+  "422-25-1.mov": {
+    "bytes": 305635819,
+    "sha256": "4664c1750e42cc4b07eed488ed2bce87fc995723fd35655f04b608ed4c897e94",
+    "profile": "422",
+    "frames": 500,
+    "scale": 25,
+    "step": 1,
+    "generated": true,
+    "required": true
+  },
+  "422-30000-1001.mov": {
+    "bytes": 366765211,
+    "sha256": "25208233dc147bb14539667c1e92abe1f26ac42d559eaa2e020399ae8a553cfa",
+    "profile": "422",
+    "frames": 600,
+    "scale": 30000,
+    "step": 1001,
+    "generated": true,
+    "required": true
+  },
+  "422-30-1.mov": {
+    "bytes": 366765211,
+    "sha256": "144fe1486384bf510b4d6a4b4306baa595c3ed887055c1788f7c6ab8985dd3a2",
+    "profile": "422",
+    "frames": 600,
+    "scale": 30,
+    "step": 1,
+    "generated": true,
+    "required": true
+  },
+  "422-with-tone.mov": {
+    "bytes": 314612179,
+    "sha256": "afb80b10cc13943b56f9334e7a35f808ab84c6873fa3ce30817dcf2b839ec4b1",
+    "profile": "422",
+    "frames": 256,
+    "embedded_tone_hz": 1973,
+    "generated": true
+  },
+  "422-vfr.mov": {
+    "bytes": 73354251,
+    "sha256": "f2bbff77b756b776420410dd8318436627444bc8fe61463ded0aed131e2e1e35",
+    "profile": "422",
+    "frames": 120,
+    "scale": 30000,
+    "step": 1001,
+    "generated": true,
+    "vfr": true
+  },
+  "422-missing-colour.mov": {
+    "bytes": 156485803,
+    "sha256": "39f9575d0c6e73fe1b0d06b780c6bfb138952e9c955c8d64e6d0c806e16e04e7",
+    "profile": "422",
+    "expect": "reject",
+    "variant": "missing-colour",
+    "reason": "Rec.709"
+  },
+  "422-conflicting-colour.mov": {
+    "bytes": 156485803,
+    "sha256": "42014525aded7c7e195f1381c390a9d8d6a8c5a560b29358e60c565af03acbd8",
+    "profile": "422",
+    "expect": "reject",
+    "variant": "conflicting-colour",
+    "reason": "Rec.709"
+  },
+  "422-interlaced.mov": {
+    "bytes": 156485803,
+    "sha256": "ec312bad78af88b29347c4daaac0d53b118dbb92346346e82733a49c49ac8b29",
+    "profile": "422",
+    "expect": "reject",
+    "variant": "interlaced",
+    "reason": "progressive"
+  },
+  "selected-clock-44100.wav": {
+    "bytes": 317837564,
+    "sha256": "8b795ab831a57ce81c3142621b4b65edb26faf1224da2c78a41b26a796bcea97",
+    "role": "Selected source clock fixture, routes physically muted",
+    "sample_rate": 44100
+  },
+  "selected-clock-48000.wav": {
+    "bytes": 345945644,
+    "sha256": "4709852fdf45b43636171c07868ad6d0c7199cec2f9a5ae18c2ce33094d1a528",
+    "role": "Selected source clock fixture, routes physically muted",
+    "sample_rate": 48000
+  },
+  "proxy-1800.mov": {
+    "profile": "proxy",
+    "frames": 54000,
+    "scale": 30000,
+    "step": 1001,
+    "generated": true,
+    "sha256": "a539099eeff5ae8b42ed42224a06dd239fbb0d3b66e69a6f9014ba83b6b5d269",
+    "bytes": 10329269771,
+    "generation_seconds": 8.797314417,
+    "content": "256 detailed moving frames repeated with exact unique PTS and 8-bit modulo-256 burn-in"
+  },
+  "lt-1800.mov": {
+    "profile": "lt",
+    "frames": 54000,
+    "scale": 30000,
+    "step": 1001,
+    "generated": true,
+    "sha256": "bc933df3a66b1f80add067b51b5af421d1e6b7afab267a43ae0c0661ee62b64d",
+    "bytes": 23155290283,
+    "generation_seconds": 54.826035916,
+    "content": "256 detailed moving frames repeated with exact unique PTS and 8-bit modulo-256 burn-in"
+  },
+  "422-1800.mov": {
+    "profile": "422",
+    "frames": 54000,
+    "scale": 30000,
+    "step": 1001,
+    "generated": true,
+    "sha256": "cd6a9d062ba82909c5a996f57132d08e6752ba686fcc62116777ec1719a5b410",
+    "bytes": 33008769739,
+    "generation_seconds": 74.10254154199998,
+    "content": "256 detailed moving frames repeated with exact unique PTS and 8-bit modulo-256 burn-in"
+  },
+  "proxy-hdr.mov": {
+    "bytes": 48968999,
+    "sha256": "41795c67b61256ba76771cc3fd6fe131f4253030b7e9abffb9f6b5df410e7430",
+    "profile": "proxy",
+    "expect": "reject",
+    "reason": "Rec.709",
+    "variant": "hdr"
+  },
+  "proxy-nclx-full-range.mov": {
+    "bytes": 48969000,
+    "sha256": "dc4d0469caee8991c626a1d8de9c4c71c01298d791c9458e98b19c3c2de245fd",
+    "profile": "proxy",
+    "expect": "reject",
+    "reason": "Rec.709",
+    "variant": "nclx-full-range"
+  },
+  "proxy-duplicate-colour.mov": {
+    "bytes": 48969017,
+    "sha256": "af5ee9c551ce50c1c22de824cb24af5a96c7b3bd203c54420f37ee02eb5aee69",
+    "profile": "proxy",
+    "expect": "reject",
+    "reason": "Rec.709",
+    "variant": "duplicate-colour"
+  },
+  "proxy-nonsquare.mov": {
+    "bytes": 48968999,
+    "sha256": "a9649ba8b70b124828820d67839405736db9f11fa14e186c88e4cdac195f2b17",
+    "profile": "proxy",
+    "expect": "reject",
+    "reason": "square pixels",
+    "variant": "nonsquare"
+  },
+  "proxy-cropped.mov": {
+    "bytes": 48968999,
+    "sha256": "ca7d3525dd6797a229a51613aceabcb27a5eb8bab05280faef289894c99718d9",
+    "profile": "proxy",
+    "reason": "full, centred aperture",
+    "variant": "cropped",
+    "invalid_negative_fixture": true,
+    "note": "Superseded test data: no clap atom existed to mutate, so this is identical to the valid seed."
+  },
+  "proxy-nclx-709.mov": {
+    "bytes": 48969000,
+    "sha256": "820bceca04aea7b73a6be2f4393cfae80ff1d1f7242561f5e87970edf42430d7",
+    "profile": "proxy",
+    "frames": 256,
+    "scale": 30000,
+    "step": 1001,
+    "generated": true,
+    "positive_policy": true
+  },
+  "lt-hdr.mov": {
+    "bytes": 109773531,
+    "sha256": "88dd9d124d720d1d64db460c3a5efac22cc190560be01b7fceefb76296f3a35a",
+    "profile": "lt",
+    "expect": "reject",
+    "reason": "Rec.709",
+    "variant": "hdr"
+  },
+  "lt-nclx-full-range.mov": {
+    "bytes": 109773532,
+    "sha256": "feb5bfcb31bf630b1ddb3938fe622c152bf25277d0a2b118dd19115d94053ca6",
+    "profile": "lt",
+    "expect": "reject",
+    "reason": "Rec.709",
+    "variant": "nclx-full-range"
+  },
+  "lt-duplicate-colour.mov": {
+    "bytes": 109773549,
+    "sha256": "cb28e64952f92c8a61ee360a94ad73042828a4dedef17b1fcf4d6603012217ee",
+    "profile": "lt",
+    "expect": "reject",
+    "reason": "Rec.709",
+    "variant": "duplicate-colour"
+  },
+  "lt-nonsquare.mov": {
+    "bytes": 109773531,
+    "sha256": "94e48f06262af1f4314c9f9883a915749cc4b6269546d57fd6e2b8494bcf04f8",
+    "profile": "lt",
+    "expect": "reject",
+    "reason": "square pixels",
+    "variant": "nonsquare"
+  },
+  "lt-cropped.mov": {
+    "bytes": 109773531,
+    "sha256": "41b80d4ee2c16e832b4cca5aedd7a0cd220eb6869d1cb69cff62ce243db025eb",
+    "profile": "lt",
+    "reason": "full, centred aperture",
+    "variant": "cropped",
+    "invalid_negative_fixture": true,
+    "note": "Superseded test data: no clap atom existed to mutate, so this is identical to the valid seed."
+  },
+  "lt-nclx-709.mov": {
+    "bytes": 109773532,
+    "sha256": "ee824934c4ad2cd0cfe06e52d29d58e7f041607195164492df6726197c9e909b",
+    "profile": "lt",
+    "frames": 256,
+    "scale": 30000,
+    "step": 1001,
+    "generated": true,
+    "positive_policy": true
+  },
+  "422-hdr.mov": {
+    "bytes": 156485803,
+    "sha256": "25fb2dbd05f103aa1868a9b1c05f05cdaadcec36f8d8cd382269b1bd26a2c645",
+    "profile": "422",
+    "expect": "reject",
+    "reason": "Rec.709",
+    "variant": "hdr"
+  },
+  "422-nclx-full-range.mov": {
+    "bytes": 156485804,
+    "sha256": "22f1776213cc0deb976e66fb16a67b057c1870db6c8ee0bf3d2fd69f4f72adf4",
+    "profile": "422",
+    "expect": "reject",
+    "reason": "Rec.709",
+    "variant": "nclx-full-range"
+  },
+  "422-duplicate-colour.mov": {
+    "bytes": 156485821,
+    "sha256": "6d41f84521f7046776e8dda5ad7883477525385601ee7d626d7290953fbd7ae2",
+    "profile": "422",
+    "expect": "reject",
+    "reason": "Rec.709",
+    "variant": "duplicate-colour"
+  },
+  "422-nonsquare.mov": {
+    "bytes": 156485803,
+    "sha256": "670e42343c41cb41f62155af634adc3114ca4b19e10a1ec4991db83a429eb03e",
+    "profile": "422",
+    "expect": "reject",
+    "reason": "square pixels",
+    "variant": "nonsquare"
+  },
+  "422-cropped.mov": {
+    "bytes": 156485803,
+    "sha256": "8bd1db00a2bf75ea479cdc0c359eec2c03cf5908447c17101839d45a89615b8c",
+    "profile": "422",
+    "reason": "full, centred aperture",
+    "variant": "cropped",
+    "invalid_negative_fixture": true,
+    "note": "Superseded test data: no clap atom existed to mutate, so this is identical to the valid seed."
+  },
+  "422-nclx-709.mov": {
+    "bytes": 156485804,
+    "sha256": "d3da3d15374c8fb41c0c5ad4804445da3585dac842803c31f330c01ec7c823fc",
+    "profile": "422",
+    "frames": 256,
+    "scale": 30000,
+    "step": 1001,
+    "generated": true,
+    "positive_policy": true
+  },
+  "excluded-hq.mov": {
+    "bytes": 3676123,
+    "sha256": "c7017fadb59f7137c8721a1ce13f8bfc1af9b9ad481321a9b40fb2c8622538c3",
+    "expect": "reject",
+    "reason": "Supported codecs",
+    "variant": "excluded-hq"
+  },
+  "excluded-4444.mov": {
+    "bytes": 5569931,
+    "sha256": "6fb1ce9b93ed01f7a341220216b2d28ae98ad5e0eb514261e63fdbf911f81106",
+    "expect": "reject",
+    "reason": "Supported codecs",
+    "variant": "excluded-4444"
+  },
+  "proxy-cropped-v2.mov": {
+    "bytes": 48969039,
+    "sha256": "9e55c0b4346ac7fb1623a566e94011a9cd44f56f0511a39385bb9ea329b08755",
+    "profile": "proxy",
+    "expect": "reject",
+    "reason": "full, centred aperture",
+    "variant": "explicit-1918-clean-aperture"
+  },
+  "lt-cropped-v2.mov": {
+    "bytes": 109773571,
+    "sha256": "061f77770d5761f8aa259a5124e563a83462fe5c19e01211301710033ffb535c",
+    "profile": "lt",
+    "expect": "reject",
+    "reason": "full, centred aperture",
+    "variant": "explicit-1918-clean-aperture"
+  },
+  "422-cropped-v2.mov": {
+    "bytes": 156485843,
+    "sha256": "768828c0de3663e3624dcd76f6e05774cb28beb24fbe2fbbecd5b465b83c1af1",
+    "profile": "422",
+    "expect": "reject",
+    "reason": "full, centred aperture",
+    "variant": "explicit-1918-clean-aperture"
+  }
+}

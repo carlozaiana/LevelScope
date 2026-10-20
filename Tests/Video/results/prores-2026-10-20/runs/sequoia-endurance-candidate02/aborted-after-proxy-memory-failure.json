@@ -1,0 +1,14 @@
+{
+  "reason": "Proxy completed with zero playback failures but exceeded the unchanged 32 MiB RSS growth gate. LT was stopped during investigation; no LT/422 pass is claimed. Preserve this failed candidate.",
+  "utc": "2026-10-20T20:27:35.055135+00:00",
+  "processes": [
+    {
+      "pid": 11005,
+      "command": "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python -B Tests/run_prores_playback_qualification.py --binary build/prores-20261020/candidate-02/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification --fixtures build/prores-20261020/fixtures --actual /Users/fuzz/Developer/LevelScope/Tests/51_SyncTest.mov --output build/prores-20261020/evidence/sequoia-endurance-candidate02 --phase endurance --device Mac Studio Speakers --sample-rate 48000"
+    },
+    {
+      "pid": 11703,
+      "command": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/candidate-02/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification --allow-audio --muted --device Mac Studio Speakers --seconds 1800 --audio /Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/selected-clock-48000.wav --video /Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/lt-1800.mov --report /Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/sequoia-endurance-candidate02/lt-1800.json"
+    }
+  ]
+}

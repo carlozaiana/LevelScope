@@ -1,0 +1,2 @@
+PRORES proxy-vfr.mov sha256=2785a6e7e6c2bc2f0021177ff2ac2284819434c82686922ecdd465c29662b604 frames=120 hash_ms=124.373 index_ms=9.21567 observed_video_outputs=15 observed_audio_outputs=0 timecode=No timecode track
+PASS: 514 ProRes checks; controlled sink only, no physical audio device

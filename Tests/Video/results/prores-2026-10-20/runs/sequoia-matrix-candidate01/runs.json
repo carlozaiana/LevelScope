@@ -1,0 +1,338 @@
+[
+  {
+    "name": "proxy-24000-1001",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 30.085899083,
+    "argv": [
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/candidate-01/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Mac Studio Speakers",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/selected-clock-48000.wav",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/proxy-24000-1001.mov",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/sequoia-matrix-candidate01/proxy-24000-1001.json"
+    ]
+  },
+  {
+    "name": "proxy-24-1",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 30.102886708000003,
+    "argv": [
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/candidate-01/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Mac Studio Speakers",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/selected-clock-48000.wav",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/proxy-24-1.mov",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/sequoia-matrix-candidate01/proxy-24-1.json"
+    ]
+  },
+  {
+    "name": "proxy-25-1",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 30.141709833,
+    "argv": [
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/candidate-01/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Mac Studio Speakers",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/selected-clock-48000.wav",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/proxy-25-1.mov",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/sequoia-matrix-candidate01/proxy-25-1.json"
+    ]
+  },
+  {
+    "name": "proxy-30000-1001",
+    "exit_code": 1,
+    "passed": false,
+    "elapsed_seconds": 30.121007250000005,
+    "argv": [
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/candidate-01/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Mac Studio Speakers",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/selected-clock-48000.wav",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/proxy-30000-1001.mov",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/sequoia-matrix-candidate01/proxy-30000-1001.json"
+    ]
+  },
+  {
+    "name": "proxy-30-1",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 30.10566320800001,
+    "argv": [
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/candidate-01/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Mac Studio Speakers",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/selected-clock-48000.wav",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/proxy-30-1.mov",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/sequoia-matrix-candidate01/proxy-30-1.json"
+    ]
+  },
+  {
+    "name": "lt-24000-1001",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 30.128492792000003,
+    "argv": [
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/candidate-01/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Mac Studio Speakers",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/selected-clock-48000.wav",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/lt-24000-1001.mov",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/sequoia-matrix-candidate01/lt-24000-1001.json"
+    ]
+  },
+  {
+    "name": "lt-24-1",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 30.11642875000001,
+    "argv": [
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/candidate-01/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Mac Studio Speakers",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/selected-clock-48000.wav",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/lt-24-1.mov",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/sequoia-matrix-candidate01/lt-24-1.json"
+    ]
+  },
+  {
+    "name": "lt-25-1",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 30.12123145800001,
+    "argv": [
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/candidate-01/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Mac Studio Speakers",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/selected-clock-48000.wav",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/lt-25-1.mov",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/sequoia-matrix-candidate01/lt-25-1.json"
+    ]
+  },
+  {
+    "name": "lt-30000-1001",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 31.106877791999977,
+    "argv": [
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/candidate-01/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Mac Studio Speakers",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/selected-clock-48000.wav",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/lt-30000-1001.mov",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/sequoia-matrix-candidate01/lt-30000-1001.json"
+    ]
+  },
+  {
+    "name": "lt-30-1",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 31.12776333300002,
+    "argv": [
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/candidate-01/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Mac Studio Speakers",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/selected-clock-48000.wav",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/lt-30-1.mov",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/sequoia-matrix-candidate01/lt-30-1.json"
+    ]
+  },
+  {
+    "name": "422-24000-1001",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 31.131878709000034,
+    "argv": [
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/candidate-01/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Mac Studio Speakers",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/selected-clock-48000.wav",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/422-24000-1001.mov",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/sequoia-matrix-candidate01/422-24000-1001.json"
+    ]
+  },
+  {
+    "name": "422-24-1",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 31.125860415999966,
+    "argv": [
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/candidate-01/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Mac Studio Speakers",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/selected-clock-48000.wav",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/422-24-1.mov",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/sequoia-matrix-candidate01/422-24-1.json"
+    ]
+  },
+  {
+    "name": "422-25-1",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 31.134320082999977,
+    "argv": [
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/candidate-01/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Mac Studio Speakers",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/selected-clock-48000.wav",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/422-25-1.mov",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/sequoia-matrix-candidate01/422-25-1.json"
+    ]
+  },
+  {
+    "name": "422-30000-1001",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 31.11409950000001,
+    "argv": [
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/candidate-01/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Mac Studio Speakers",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/selected-clock-48000.wav",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/422-30000-1001.mov",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/sequoia-matrix-candidate01/422-30000-1001.json"
+    ]
+  },
+  {
+    "name": "422-30-1",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 31.117347042000006,
+    "argv": [
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/candidate-01/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Mac Studio Speakers",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/selected-clock-48000.wav",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/422-30-1.mov",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/sequoia-matrix-candidate01/422-30-1.json"
+    ]
+  },
+  {
+    "name": "51_SyncTest",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 113.393908834,
+    "argv": [
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/candidate-01/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Mac Studio Speakers",
+      "--seconds",
+      "100",
+      "--audio",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/selected-clock-48000.wav",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope/Tests/51_SyncTest.mov",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/sequoia-matrix-candidate01/51_SyncTest.json"
+    ]
+  }
+]

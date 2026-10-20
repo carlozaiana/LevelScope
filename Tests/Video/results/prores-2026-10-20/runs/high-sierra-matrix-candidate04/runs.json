@@ -1,0 +1,338 @@
+[
+  {
+    "name": "proxy-24000-1001",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 51.397626325,
+    "argv": [
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/candidate-04/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Built-in Output",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/selected-clock-44100.wav",
+      "--video",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/proxy-24000-1001.mov",
+      "--report",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/evidence/high-sierra-matrix-candidate04/proxy-24000-1001.json"
+    ]
+  },
+  {
+    "name": "proxy-24-1",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 50.300360168999994,
+    "argv": [
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/candidate-04/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Built-in Output",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/selected-clock-44100.wav",
+      "--video",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/proxy-24-1.mov",
+      "--report",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/evidence/high-sierra-matrix-candidate04/proxy-24-1.json"
+    ]
+  },
+  {
+    "name": "proxy-25-1",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 51.342961126000006,
+    "argv": [
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/candidate-04/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Built-in Output",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/selected-clock-44100.wav",
+      "--video",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/proxy-25-1.mov",
+      "--report",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/evidence/high-sierra-matrix-candidate04/proxy-25-1.json"
+    ]
+  },
+  {
+    "name": "proxy-30000-1001",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 51.36889995499999,
+    "argv": [
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/candidate-04/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Built-in Output",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/selected-clock-44100.wav",
+      "--video",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/proxy-30000-1001.mov",
+      "--report",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/evidence/high-sierra-matrix-candidate04/proxy-30000-1001.json"
+    ]
+  },
+  {
+    "name": "proxy-30-1",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 50.35470471099998,
+    "argv": [
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/candidate-04/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Built-in Output",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/selected-clock-44100.wav",
+      "--video",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/proxy-30-1.mov",
+      "--report",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/evidence/high-sierra-matrix-candidate04/proxy-30-1.json"
+    ]
+  },
+  {
+    "name": "lt-24000-1001",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 52.35829140200002,
+    "argv": [
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/candidate-04/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Built-in Output",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/selected-clock-44100.wav",
+      "--video",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/lt-24000-1001.mov",
+      "--report",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/evidence/high-sierra-matrix-candidate04/lt-24000-1001.json"
+    ]
+  },
+  {
+    "name": "lt-24-1",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 51.39066925100002,
+    "argv": [
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/candidate-04/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Built-in Output",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/selected-clock-44100.wav",
+      "--video",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/lt-24-1.mov",
+      "--report",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/evidence/high-sierra-matrix-candidate04/lt-24-1.json"
+    ]
+  },
+  {
+    "name": "lt-25-1",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 51.343799589000014,
+    "argv": [
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/candidate-04/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Built-in Output",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/selected-clock-44100.wav",
+      "--video",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/lt-25-1.mov",
+      "--report",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/evidence/high-sierra-matrix-candidate04/lt-25-1.json"
+    ]
+  },
+  {
+    "name": "lt-30000-1001",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 51.34872491600004,
+    "argv": [
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/candidate-04/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Built-in Output",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/selected-clock-44100.wav",
+      "--video",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/lt-30000-1001.mov",
+      "--report",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/evidence/high-sierra-matrix-candidate04/lt-30000-1001.json"
+    ]
+  },
+  {
+    "name": "lt-30-1",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 52.42767530799995,
+    "argv": [
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/candidate-04/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Built-in Output",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/selected-clock-44100.wav",
+      "--video",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/lt-30-1.mov",
+      "--report",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/evidence/high-sierra-matrix-candidate04/lt-30-1.json"
+    ]
+  },
+  {
+    "name": "422-24000-1001",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 52.34125213899995,
+    "argv": [
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/candidate-04/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Built-in Output",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/selected-clock-44100.wav",
+      "--video",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/422-24000-1001.mov",
+      "--report",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/evidence/high-sierra-matrix-candidate04/422-24000-1001.json"
+    ]
+  },
+  {
+    "name": "422-24-1",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 52.350525972000014,
+    "argv": [
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/candidate-04/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Built-in Output",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/selected-clock-44100.wav",
+      "--video",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/422-24-1.mov",
+      "--report",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/evidence/high-sierra-matrix-candidate04/422-24-1.json"
+    ]
+  },
+  {
+    "name": "422-25-1",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 52.31541919000006,
+    "argv": [
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/candidate-04/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Built-in Output",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/selected-clock-44100.wav",
+      "--video",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/422-25-1.mov",
+      "--report",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/evidence/high-sierra-matrix-candidate04/422-25-1.json"
+    ]
+  },
+  {
+    "name": "422-30000-1001",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 52.343242492999934,
+    "argv": [
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/candidate-04/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Built-in Output",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/selected-clock-44100.wav",
+      "--video",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/422-30000-1001.mov",
+      "--report",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/evidence/high-sierra-matrix-candidate04/422-30000-1001.json"
+    ]
+  },
+  {
+    "name": "422-30-1",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 53.342487438000035,
+    "argv": [
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/candidate-04/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Built-in Output",
+      "--seconds",
+      "18",
+      "--audio",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/selected-clock-44100.wav",
+      "--video",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/422-30-1.mov",
+      "--report",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/evidence/high-sierra-matrix-candidate04/422-30-1.json"
+    ]
+  },
+  {
+    "name": "51_SyncTest",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 135.18877442199994,
+    "argv": [
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/candidate-04/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Built-in Output",
+      "--seconds",
+      "100",
+      "--audio",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/selected-clock-44100.wav",
+      "--video",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/51_SyncTest.mov",
+      "--report",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/evidence/high-sierra-matrix-candidate04/51_SyncTest.json"
+    ]
+  }
+]

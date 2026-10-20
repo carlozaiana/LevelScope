@@ -1,0 +1,91 @@
+{
+  "passed": true,
+  "source_report_sha256": "1424e7d116774c7b559e7f9a89d5b4e01192cd02629d7e249c7651b148c8f784",
+  "verifier_sha256": "c1e92933823a23b5e23f6015c54ed98ac2572cdceca1ea596d7abb90bd6d96eb",
+  "tests": [
+    {
+      "name": "unaltered final 300-second report",
+      "expected_pass": true,
+      "observed_pass": true,
+      "errors": []
+    },
+    {
+      "name": "diagnostic report cannot qualify",
+      "expected_pass": false,
+      "observed_pass": false,
+      "errors": [
+        "diagnostic/allocator exclusion"
+      ]
+    },
+    {
+      "name": "allocator relief cannot qualify",
+      "expected_pass": false,
+      "observed_pass": false,
+      "errors": [
+        "diagnostic/allocator exclusion"
+      ]
+    },
+    {
+      "name": "VM query failure fails closed",
+      "expected_pass": false,
+      "observed_pass": false,
+      "errors": [
+        "VM query failure"
+      ]
+    },
+    {
+      "name": "missing raw samples fails closed",
+      "expected_pass": false,
+      "observed_pass": false,
+      "errors": [
+        "missing memory samples"
+      ]
+    },
+    {
+      "name": "falsified mean fails independent recomputation",
+      "expected_pass": false,
+      "observed_pass": false,
+      "errors": [
+        "memory rollup last_minute_mean_rss_bytes"
+      ]
+    },
+    {
+      "name": "non-reusable growth above limit rejected",
+      "expected_pass": false,
+      "observed_pass": false,
+      "errors": [
+        "growth gate non_reusable_resident_bytes"
+      ]
+    },
+    {
+      "name": "physical footprint growth above limit rejected",
+      "expected_pass": false,
+      "observed_pass": false,
+      "errors": [
+        "growth gate physical_footprint_bytes"
+      ]
+    },
+    {
+      "name": "reusable-only growth allowed below unchanged RSS ceiling",
+      "expected_pass": true,
+      "observed_pass": true,
+      "errors": []
+    },
+    {
+      "name": "total RSS ceiling remains enforced for reusable memory",
+      "expected_pass": false,
+      "observed_pass": false,
+      "errors": [
+        "raw RSS peak ceiling"
+      ]
+    },
+    {
+      "name": "insufficient first-window samples rejected",
+      "expected_pass": false,
+      "observed_pass": false,
+      "errors": [
+        "insufficient growth-window samples"
+      ]
+    }
+  ]
+}

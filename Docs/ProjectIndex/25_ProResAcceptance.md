@@ -1,6 +1,7 @@
 # Bounded SDR ProRes acceptance — 20 October 2026
 
-Status: implementation and qualification in progress; no acceptance claim yet.
+Status: qualified on both Macs, including all six final 30-minute runs.
+Results and exact identities: [26_ProResQualification.md](26_ProResQualification.md).
 Base: published main 6d304dbecd8fa47f56b0260105aa9d07f96ba1bc (includes qualified M5).
 The prior video checkpoint and all other tags, installed products and historical evidence remain immutable.
 

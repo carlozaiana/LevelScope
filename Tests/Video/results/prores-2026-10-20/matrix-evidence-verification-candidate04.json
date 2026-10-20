@@ -1,0 +1,266 @@
+{
+  "passed": true,
+  "phase": "matrix",
+  "candidate": "04",
+  "errors": [],
+  "runs": [
+    {
+      "platform": "sequoia",
+      "name": "422-24-1",
+      "passed": true,
+      "painted_frames": 384,
+      "minimum_painted_frames": 383,
+      "report_sha256": "aabd5c02d7c30080eba8511db43d008e6cc1e85d7a3fe79f1696dc1c94ca6833"
+    },
+    {
+      "platform": "sequoia",
+      "name": "422-24000-1001",
+      "passed": true,
+      "painted_frames": 384,
+      "minimum_painted_frames": 382,
+      "report_sha256": "df4466618892a449f26263fe1f0dd205a180475ff04503ada107e63671aefbaa"
+    },
+    {
+      "platform": "sequoia",
+      "name": "422-25-1",
+      "passed": true,
+      "painted_frames": 400,
+      "minimum_painted_frames": 399,
+      "report_sha256": "716d92371cad7c8756b138a8c9d603290ff1f5484d567e3a32f2200492a419cf"
+    },
+    {
+      "platform": "sequoia",
+      "name": "422-30-1",
+      "passed": true,
+      "painted_frames": 480,
+      "minimum_painted_frames": 479,
+      "report_sha256": "6f9b61a5f85483baa5b64befc9b07b236aa48430d505720a1aaaaf65b55ca6fe"
+    },
+    {
+      "platform": "sequoia",
+      "name": "422-30000-1001",
+      "passed": true,
+      "painted_frames": 480,
+      "minimum_painted_frames": 478,
+      "report_sha256": "0abcb4ac4a1e030504841e8a5af9916f9f0de9ca4c058a0f0aee6c89c3305e75"
+    },
+    {
+      "platform": "sequoia",
+      "name": "51_SyncTest",
+      "passed": true,
+      "painted_frames": 2450,
+      "minimum_painted_frames": 2449,
+      "report_sha256": "9ee3ae98b63be725403a5d76494e12cb1593ebe1a49104114546764e89653634"
+    },
+    {
+      "platform": "sequoia",
+      "name": "lt-24-1",
+      "passed": true,
+      "painted_frames": 384,
+      "minimum_painted_frames": 383,
+      "report_sha256": "44656f14c829f32c8e310eca3018a4ef38cef784aa8caddb29a3eb5d6b651e1b"
+    },
+    {
+      "platform": "sequoia",
+      "name": "lt-24000-1001",
+      "passed": true,
+      "painted_frames": 384,
+      "minimum_painted_frames": 382,
+      "report_sha256": "f1a12bf4b39e1116deb9aeb4060771e3813dfbfa2bd1875f70977fbd15ced7d6"
+    },
+    {
+      "platform": "sequoia",
+      "name": "lt-25-1",
+      "passed": true,
+      "painted_frames": 401,
+      "minimum_painted_frames": 399,
+      "report_sha256": "e6cb2ecce542903eabf6bb436dd5d47a3ef5cce6f2f48cfe02276d9b0b310bd3"
+    },
+    {
+      "platform": "sequoia",
+      "name": "lt-30-1",
+      "passed": true,
+      "painted_frames": 481,
+      "minimum_painted_frames": 479,
+      "report_sha256": "65214ad639d0bccbf4b9a9703f53738555a1f000cd437dfbfa041451c95b4c95"
+    },
+    {
+      "platform": "sequoia",
+      "name": "lt-30000-1001",
+      "passed": true,
+      "painted_frames": 480,
+      "minimum_painted_frames": 478,
+      "report_sha256": "39d68623da1bb9c1ef31c6071ae6d04ff291718530dd67d519f99123c43ab86b"
+    },
+    {
+      "platform": "sequoia",
+      "name": "proxy-24-1",
+      "passed": true,
+      "painted_frames": 385,
+      "minimum_painted_frames": 383,
+      "report_sha256": "65121c22e2585cfabe0a2d4f24d2cbaab884b8954d73f2c3037449af2466b405"
+    },
+    {
+      "platform": "sequoia",
+      "name": "proxy-24000-1001",
+      "passed": true,
+      "painted_frames": 384,
+      "minimum_painted_frames": 382,
+      "report_sha256": "820627cb1fb0f6765bc21ae41ab0deee6928b2ef1a82690b44ac99a4d3e42e70"
+    },
+    {
+      "platform": "sequoia",
+      "name": "proxy-25-1",
+      "passed": true,
+      "painted_frames": 401,
+      "minimum_painted_frames": 399,
+      "report_sha256": "568189808a8c214b9e51ec0baa695dd608ac6fde48cf5118c1baef7834aac209"
+    },
+    {
+      "platform": "sequoia",
+      "name": "proxy-30-1",
+      "passed": true,
+      "painted_frames": 481,
+      "minimum_painted_frames": 479,
+      "report_sha256": "78271eff1c6038e3f4d81244fdf79d0eeb769737842d4ba4b116a8b09d6f5364"
+    },
+    {
+      "platform": "sequoia",
+      "name": "proxy-30000-1001",
+      "passed": true,
+      "painted_frames": 480,
+      "minimum_painted_frames": 478,
+      "report_sha256": "784a6bec25e4af936b822f5da6ea20a0d7d3e2a5bf3cf0a28407f5a655b93014"
+    },
+    {
+      "platform": "high-sierra",
+      "name": "422-24-1",
+      "passed": true,
+      "painted_frames": 384,
+      "minimum_painted_frames": 383,
+      "report_sha256": "89c2041a26337982883d5628f14eab6d57886b34af80e7dcd9ea8aa73f08e629"
+    },
+    {
+      "platform": "high-sierra",
+      "name": "422-24000-1001",
+      "passed": true,
+      "painted_frames": 384,
+      "minimum_painted_frames": 382,
+      "report_sha256": "95c1eb09172bf1a840e4c80c4fd4f9c3c49f98ffdee60dfc3f779e3b11f29b4a"
+    },
+    {
+      "platform": "high-sierra",
+      "name": "422-25-1",
+      "passed": true,
+      "painted_frames": 400,
+      "minimum_painted_frames": 399,
+      "report_sha256": "81af6a4c8c5a14ca7a81e529616ecffcc8683518dae5a1850fa4c2ea73296453"
+    },
+    {
+      "platform": "high-sierra",
+      "name": "422-30-1",
+      "passed": true,
+      "painted_frames": 480,
+      "minimum_painted_frames": 479,
+      "report_sha256": "0d99dd6c3bcc314496e7c27d1b8ce1fff5376e716483bd90451f139f039d8dea"
+    },
+    {
+      "platform": "high-sierra",
+      "name": "422-30000-1001",
+      "passed": true,
+      "painted_frames": 480,
+      "minimum_painted_frames": 478,
+      "report_sha256": "597c21d5ee201c612540c804e632dd547d42e593c4f50dc30514e3f3fb77ba4c"
+    },
+    {
+      "platform": "high-sierra",
+      "name": "51_SyncTest",
+      "passed": true,
+      "painted_frames": 2450,
+      "minimum_painted_frames": 2449,
+      "report_sha256": "3891b18927d5f102415b4a7517779dc424c9706fd398ba1ca94621dcedc2f719"
+    },
+    {
+      "platform": "high-sierra",
+      "name": "lt-24-1",
+      "passed": true,
+      "painted_frames": 384,
+      "minimum_painted_frames": 383,
+      "report_sha256": "59456a970c61e4cc987240f063d2588446ab8e6a05fb85ebb6aca881187c6a61"
+    },
+    {
+      "platform": "high-sierra",
+      "name": "lt-24000-1001",
+      "passed": true,
+      "painted_frames": 384,
+      "minimum_painted_frames": 382,
+      "report_sha256": "65b9d92f56726ba1329756f91c92e0a885c38fcf19f142c4c44a89d92a9c0d7b"
+    },
+    {
+      "platform": "high-sierra",
+      "name": "lt-25-1",
+      "passed": true,
+      "painted_frames": 400,
+      "minimum_painted_frames": 399,
+      "report_sha256": "c018d9c15126fd0344d8cdc67d4271454a2832a6f066e16e9bf522d46892d43f"
+    },
+    {
+      "platform": "high-sierra",
+      "name": "lt-30-1",
+      "passed": true,
+      "painted_frames": 481,
+      "minimum_painted_frames": 479,
+      "report_sha256": "287d1cefaee00530020fb510f3cc026b27136af67e3e667d1aa34613f76df176"
+    },
+    {
+      "platform": "high-sierra",
+      "name": "lt-30000-1001",
+      "passed": true,
+      "painted_frames": 480,
+      "minimum_painted_frames": 478,
+      "report_sha256": "aa9aebb68bf7c5fdd0bdc1282234e427896d13c04b603f8bfdf1691bf04c6226"
+    },
+    {
+      "platform": "high-sierra",
+      "name": "proxy-24-1",
+      "passed": true,
+      "painted_frames": 384,
+      "minimum_painted_frames": 383,
+      "report_sha256": "892091436727ab739d5e572a87d18e09ef8f8bb104dfa335f0883807c7cb46b9"
+    },
+    {
+      "platform": "high-sierra",
+      "name": "proxy-24000-1001",
+      "passed": true,
+      "painted_frames": 384,
+      "minimum_painted_frames": 382,
+      "report_sha256": "58d9905d8dca7664dbaf173a8e31f86237c3e533b381d75d2c0a90a1982eacad"
+    },
+    {
+      "platform": "high-sierra",
+      "name": "proxy-25-1",
+      "passed": true,
+      "painted_frames": 400,
+      "minimum_painted_frames": 399,
+      "report_sha256": "48ea4d561a2a87f8d0dd251693c6c6dba8d2826d731a03c9166c9c9a9b867966"
+    },
+    {
+      "platform": "high-sierra",
+      "name": "proxy-30-1",
+      "passed": true,
+      "painted_frames": 480,
+      "minimum_painted_frames": 479,
+      "report_sha256": "9c2a55bf1613962858ba020b5e06fd29234a63d16595242ab38ab5f6f39d0166"
+    },
+    {
+      "platform": "high-sierra",
+      "name": "proxy-30000-1001",
+      "passed": true,
+      "painted_frames": 480,
+      "minimum_painted_frames": 478,
+      "report_sha256": "0dec52f054bb980086cc5c1e047ea9a0727e326e4d6c67d6d73f2b6e0909f75f"
+    }
+  ],
+  "zero_interior_skip_limit": 0,
+  "endpoint_coverage_allowance_frames": 1
+}

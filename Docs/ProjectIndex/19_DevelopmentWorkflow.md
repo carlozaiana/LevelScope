@@ -4,6 +4,40 @@ Recorded 17 October 2026 after publishing the video checkpoint and moving its
 registered Git worktree. This is a documentation-only continuation of the tested
 checkpoint; no source was rebuilt or requalified for the move.
 
+## ProRes build continuation (20 October 2026)
+
+The fresh ProRes build uses
+`/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020`.
+The external JUCE dependency has now been provisioned at
+`/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12`, verified at
+`4f43011b96eb0636104cb3e433894cda98243626`. The older relocation description below
+records the prerequisite as it stood on 17 October; its historical cache remains
+unusable for new builds.
+
+Candidates 01–04 preserve application/test executables, exact source manifests
+and caches under the new build root. Candidate 04 is the qualified
+package; diagnostic-memory-01/02 are explicitly ineligible experiments. Fixtures
+and raw evidence are adjacent. Golem holds candidates 01, 02 and 04; candidate 03
+was local only.
+Golem's new bundle is `/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20`;
+earlier video and M1–M5 bundles remain in their original locations.
+See [the ProRes qualification report](26_ProResQualification.md) for the current
+acceptance status, exact identities and artifact inventory.
+
+For subsequent work, choose another fresh directory under the video worktree's
+`build/`, and use
+`-DFETCHCONTENT_SOURCE_DIR_JUCE=/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12`.
+Alongside the video, measurement and scaffold test options in the example below,
+enable `LEVELSCOPE_BUILD_COMPLIANCE_TESTS`, `LEVELSCOPE_BUILD_PROPOSAL_TESTS`,
+`LEVELSCOPE_BUILD_DIAGNOSTICS_TESTS` and `LEVELSCOPE_BUILD_SECTIONS_TESTS` with `ON`
+for current M1–M5 regression coverage. Build only explicitly named targets:
+`LevelScopeStandalone`, `LevelScopeVideoTests`, `LevelScopeVideoQualification`,
+`LevelScopeMeasurementTests`, `LevelScopeScaffoldTests`, `LevelScopeComplianceTests`,
+`LevelScopeProposalTests`, `LevelScopeDiagnosticsTests`, and `LevelScopeSectionsTests`.
+Never build the default/all target, which can include VST3 installation.
+New builds need new hashes and affected checks; frozen candidate directories are
+evidence, not destinations for further builds.
+
 ## Current integration continuation
 
 The later user-authorized staged main integration is recorded in

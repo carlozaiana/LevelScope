@@ -1,0 +1,84 @@
+{
+  "passed": true,
+  "numeric_and_regression_comparison_passed": true,
+  "ordinary_comparator": {
+    "left": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/sequoia-regressions-candidate03",
+    "right": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/high-sierra-regressions-candidate04",
+    "errors": [
+      "environment: identity_sha256",
+      "environment: source_digest"
+    ],
+    "maximum_differences": {
+      "itu": {
+        "I": 0,
+        "M": 0,
+        "S": 0,
+        "TP": 1.7763568394002505e-15,
+        "LRA": 0
+      },
+      "ebu": {
+        "I": 0,
+        "M": 0,
+        "S": 0,
+        "TP": 0,
+        "LRA": 0
+      }
+    },
+    "tolerances": {
+      "I": 0.01,
+      "M": 0.01,
+      "S": 0.01,
+      "TP": 0.01,
+      "LRA": 0.1
+    },
+    "passed": false,
+    "performance_limits": {
+      "analysis_ms": 2000,
+      "worker_including_identity_ms": 2000,
+      "analysis_storage_bytes": 67108864,
+      "viewport_prepare_p95_ms": 50,
+      "offscreen_timeline_paint_p95_ms": 100,
+      "diagnostics_peak_rss_growth_bytes": 134217728,
+      "active_cancel_ms": 1000
+    },
+    "section_performance_limits": {
+      "aggregation_ms": 2000,
+      "additional_section_storage_bytes": 16777216,
+      "interaction_p95_ms": 100,
+      "active_cancel_ms": 1000
+    },
+    "section_value_tolerances": {
+      "minimum": 1e-09,
+      "median": 1e-09,
+      "maximum": 1e-09,
+      "share": 1e-12
+    }
+  },
+  "accepted_identity_mismatches": [
+    "environment: identity_sha256",
+    "environment: source_digest"
+  ],
+  "source_differences": [
+    "Tests/VideoPlaybackQualification.cpp",
+    "Tests/run_prores_playback_qualification.py",
+    "Tests/verify_prores_playback_evidence.py"
+  ],
+  "artifact_differences": [
+    "LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+    "Tests/run_prores_playback_qualification.py",
+    "Tests/verify_prores_playback_evidence.py",
+    "source/Tests/VideoPlaybackQualification.cpp",
+    "source/Tests/run_prores_playback_qualification.py",
+    "source/Tests/verify_prores_playback_evidence.py"
+  ],
+  "reuse_proof_sha256": "34cc9b9b313818a50e8575ea5a5bfd763e411ddce6e784f8de65ca3a3a91ae12",
+  "evidence_directories": [
+    "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/sequoia-regressions-candidate03",
+    "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/high-sierra-regressions-candidate04"
+  ],
+  "candidate_identity_sha256": [
+    "649142fc5064e1e735f6dbf1bd3996894ed1a57bc3536511366fb8a8f110c820",
+    "45219de9006b845230c5e1296859bff2c483beb49c4b827b8c33c552f8381285"
+  ],
+  "reuse_reason": "All production source and 8 Standalone/native/M1-M5 binaries are identical; only the unused playback harness and its runner/verifier differ. No historical report is rewritten."
+}

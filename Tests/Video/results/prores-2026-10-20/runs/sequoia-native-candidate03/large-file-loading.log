@@ -1,0 +1,2 @@
+LOADING bytes=33008769739 hash_ms=171332 index_ms=13153.8 loaded_s=184.496 first_picture_s=184.637 budget_s=527.269 hash_cancel_s=0.000189834 index_cancel_s=0.000502208 clear_join_s=0.00136392 cache_state=uncontrolled_OS_cache
+PASS: 7 ProRes checks; controlled sink only, no physical audio device

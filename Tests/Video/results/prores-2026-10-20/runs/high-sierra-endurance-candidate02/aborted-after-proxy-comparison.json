@@ -1,0 +1,15 @@
+{
+  "reason": "Completed Proxy baseline retained. Remaining candidate02 sequence stopped for candidate03 requalification after Sequoia memory failure. No LT/422 result claimed.",
+  "proxy_passed": true,
+  "utc": "2026-10-20T20:42:04.055801+00:00",
+  "processes": [
+    {
+      "pid": 2907,
+      "command": "/Library/Frameworks/Python.framework/Versions/3.8/Resources/Python.app/Contents/MacOS/Python -B /Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/candidate-02/Tests/run_prores_playback_qualification.py --binary /Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/candidate-02/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification --fixtures /Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures --actual /Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/51_SyncTest.mov --output /Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/evidence/high-sierra-endurance-candidate02 --phase endurance --device Built-in Output --sample-rate 44100"
+    },
+    {
+      "pid": 2951,
+      "command": "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/candidate-02/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification --allow-audio --muted --device Built-in Output --seconds 1800 --audio /Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/selected-clock-44100.wav --video /Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/lt-1800.mov --report /Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/evidence/high-sierra-endurance-candidate02/lt-1800.json"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "platform": "High Sierra 10.13.6 x86_64",
+  "candidate": "candidate-04",
+  "source_commit": "6662091f1dfaff948a4a3eb3f000f47e37cfdc21",
+  "binary_sha256": "5c26cb8faacb1e7b26b117f1b89b7d53049012a3da947c422f760e32fe257208",
+  "observed_via": "CUA Screen Sharing of actual Golem Display 1, 2026-10-20 21:15\u201321:21 UTC",
+  "passed": true,
+  "device_closed": true,
+  "monitor_gain_db": -30,
+  "observations": [
+    "Actual 51_SyncTest.mov: visible PICTURE START, frame 0, PTS 0/1, TC 00:00:00:00; full expected SHA-256 shown; embedded audio track excluded",
+    "Offset -1: frame 25, PTS 1/1, TC 00:00:01:00",
+    "Offset +1: blank outside reference coverage",
+    "Clear: no reference picture",
+    "01-untagged.mov alias: explicit readable missing/contradictory Rec.709 declaration rejection",
+    "02-lt-two-streams.mov alias: recovery with visible ramp/RGB/detail; stream 2 selected with its decoded picture",
+    "Device closed and monitor -30 dB before movie attachment; no device or routing control operated; candidate quit through its own menu"
+  ],
+  "limits": [
+    "Stopped-device UI observation only; timing comes from separate playback tests",
+    "No subjective listening or optical/acoustic synchronization measurement"
+  ],
+  "process_id": 3013
+}

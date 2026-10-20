@@ -1,0 +1,36 @@
+{
+  "scope": "Agent-observed product UI; no listening or physical synchronization measurement",
+  "product_sha256": "352db9c03e8af8e6bda1555af54c46225a6ce194f10969279cb1366bd579517d",
+  "actual_movie_sha256": "0870d5ab93d1492f23524ed1fff9319af1a6a9cf71882543f2190929afeb8e24",
+  "passed": true,
+  "observations": [
+    "Actual movie loads as ProRes 422 1920x1080, 2772 frames at 25 fps, with PICTURE START visible.",
+    "Actual movie timecode begins 00:00:00:00; embedded audio track count is 1, excluded from playback.",
+    "Offset -1 at stopped audio zero selects frame 25, PTS 1/1, timecode 00:00:01:00.",
+    "Offset +1 at stopped audio zero displays no picture outside reference coverage.",
+    "Clear removes the reference and resets its independent offset.",
+    "Missing colr metadata is rejected with an explanatory Rec.709 declaration error.",
+    "Loading a supported two-stream LT movie after the rejection restores the picture.",
+    "Selecting LT stream 2 displays that stream while retaining excluded embedded audio.",
+    "Physical audio device stays closed and monitor gain stays -30 dB throughout these GUI observations.",
+    "The candidate product was closed after checking; no installation was changed."
+  ],
+  "evidence_note": "Screen Sharing captures include unrelated desktop material and remain private in the local temporary evidence folder; no raw remote desktop screenshots are committed.",
+  "platform": "sequoia",
+  "candidate": "candidate-01",
+  "capture_hashes": {
+    "sequoia-ui-actual.png": "ef9463062b882532bc5f30964a587e28eafaea050d9d595c99ef32794e0d9d26",
+    "sequoia-ui-actual.txt": "824820edc95543495a2896a231799a9b58dfd4facda71dcfa16ae445a76eeee4",
+    "sequoia-ui-audio-closed.txt": "17ddf92ece36b0feaf31dab889523da4b4dca695e8c73cf997928d0d27360a41",
+    "sequoia-ui-invalid-offset.txt": "0150e7eba459acce6e078b93469382788592b008ac6ccd238964eb69d3cf5566",
+    "sequoia-ui-negative-offset.txt": "452b583987fe45a4a8d6916c7a198ce024d6811101128be96ef094e861614ebf",
+    "sequoia-ui-positive-offset.png": "036ec1ffff5a710159a6aa72879d6868803ef2864b23912ccc4a6bbaaf1dc2ab",
+    "sequoia-ui-positive-offset.txt": "316371b51ffd7a8faf735a284f66a59bd32c9171254126b17d7224ab4a1e1349",
+    "sequoia-ui-rejection.png": "d138676b88686721fa8a775c68e0278b4a9897b3d5a03a63255a37f81743817b",
+    "sequoia-ui-rejection.txt": "18ab855718ac8b3c90d13eeb8db519ef894239ea284aac4ca3bd6916df4a6e71",
+    "sequoia-ui-stream2.png": "71086c320c15a10b3e3598216fa153d552417a9ce58f905032dfa1995133dc1b",
+    "sequoia-ui-stream2.txt": "15308ebcd1f5a459ff755d407fb131dcb15e5632b0a403f5ff3c93afb0bc6949"
+  },
+  "additional_observation": "Invalid offset text is rejected without changing the current mapping.",
+  "interaction": "Native accessibility and screenshots"
+}

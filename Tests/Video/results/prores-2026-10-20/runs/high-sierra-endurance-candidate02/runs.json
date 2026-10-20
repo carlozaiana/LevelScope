@@ -1,0 +1,23 @@
+[
+  {
+    "name": "proxy-1800",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 1920.552951353,
+    "argv": [
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/candidate-02/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Built-in Output",
+      "--seconds",
+      "1800",
+      "--audio",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/selected-clock-44100.wav",
+      "--video",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures/proxy-1800.mov",
+      "--report",
+      "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/evidence/high-sierra-endurance-candidate02/proxy-1800.json"
+    ]
+  }
+]

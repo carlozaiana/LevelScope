@@ -1,0 +1,87 @@
+{
+  "passed": true,
+  "ordinary_comparator": {
+    "left": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/sequoia-regressions-candidate01",
+    "right": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/high-sierra-regressions-candidate02",
+    "errors": [
+      "environment: identity_sha256",
+      "environment: source_digest"
+    ],
+    "maximum_differences": {
+      "itu": {
+        "I": 0,
+        "M": 0,
+        "S": 0,
+        "TP": 1.7763568394002505e-15,
+        "LRA": 0
+      },
+      "ebu": {
+        "I": 0,
+        "M": 0,
+        "S": 0,
+        "TP": 0,
+        "LRA": 0
+      }
+    },
+    "tolerances": {
+      "I": 0.01,
+      "M": 0.01,
+      "S": 0.01,
+      "TP": 0.01,
+      "LRA": 0.1
+    },
+    "passed": false,
+    "performance_limits": {
+      "analysis_ms": 2000,
+      "worker_including_identity_ms": 2000,
+      "analysis_storage_bytes": 67108864,
+      "viewport_prepare_p95_ms": 50,
+      "offscreen_timeline_paint_p95_ms": 100,
+      "diagnostics_peak_rss_growth_bytes": 134217728,
+      "active_cancel_ms": 1000
+    },
+    "section_performance_limits": {
+      "aggregation_ms": 2000,
+      "additional_section_storage_bytes": 16777216,
+      "interaction_p95_ms": 100,
+      "active_cancel_ms": 1000
+    },
+    "section_value_tolerances": {
+      "minimum": 1e-09,
+      "median": 1e-09,
+      "maximum": 1e-09,
+      "share": 1e-12
+    }
+  },
+  "numeric_and_regression_comparison_passed": true,
+  "reuse_reason": "Only the unused playback harness changed. All regression executables and product source/binaries are byte-identical and hash-verified.",
+  "source_differences": [
+    "Tests/VideoPlaybackQualification.cpp"
+  ],
+  "artifact_differences": [
+    "LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+    "source/Tests/VideoPlaybackQualification.cpp"
+  ],
+  "accepted_identity_mismatches": [
+    "environment: identity_sha256",
+    "environment: source_digest"
+  ],
+  "candidate_identity_sha256": [
+    "fd84fe85f1c312ef755d5d9aba08ed8a7880b3663ee56c23c7bf52e70363651f",
+    "0f7d90822a3d0cc9a0196a9e9a32f25a7b8bdb6c865901fdbceb8b7d36f148f5"
+  ],
+  "evidence_directories": [
+    "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/sequoia-regressions-candidate01",
+    "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/high-sierra-regressions-candidate02"
+  ],
+  "unchanged_executables": {
+    "LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone": "352db9c03e8af8e6bda1555af54c46225a6ce194f10969279cb1366bd579517d",
+    "bin/LevelScopeComplianceTests": "941c96a0c0305651ce1aa93f9bae727713f1fbf60a850b95cf8796677a6b8783",
+    "bin/LevelScopeDiagnosticsTests": "f41e626f3f8bfc9ee4d979f0dc0c9118e5230fda2a693256539f22414aadaf0a",
+    "bin/LevelScopeMeasurementTests": "a961dd09f6114bd78b7b81826fa954a950c10f283d8d4e7fef2a7a914849c878",
+    "bin/LevelScopeProposalTests": "f412d0dc832b441e5b1306c7278722f98a262058e90dcce2a67981a75b0ef6bf",
+    "bin/LevelScopeScaffoldTests": "98b6d785bd31b6b3c21541d47b2096439e156ee03e61f606f26917224f7288c3",
+    "bin/LevelScopeSectionsTests": "206d5cb3f2c1dfccfb76de45824c02350517cb71bc5a8eff8bf68ae8f91125d4",
+    "bin/LevelScopeVideoTests": "a08ed357f2e73d3073266984de53f806b2944def84640d50aa134f9fee969664"
+  }
+}

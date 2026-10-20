@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "runs": [
+    {
+      "fixture": "proxy-cropped-v2.mov",
+      "sha256": "9e55c0b4346ac7fb1623a566e94011a9cd44f56f0511a39385bb9ea329b08755",
+      "exit_code": 0,
+      "seconds": 0.293945875
+    },
+    {
+      "fixture": "lt-cropped-v2.mov",
+      "sha256": "061f77770d5761f8aa259a5124e563a83462fe5c19e01211301710033ffb535c",
+      "exit_code": 0,
+      "seconds": 0.6334532079999999
+    },
+    {
+      "fixture": "422-cropped-v2.mov",
+      "sha256": "768828c0de3663e3624dcd76f6e05774cb28beb24fbe2fbbecd5b465b83c1af1",
+      "exit_code": 0,
+      "seconds": 0.899591625
+    }
+  ],
+  "binary_sha256": "a08ed357f2e73d3073266984de53f806b2944def84640d50aa134f9fee969664",
+  "fixture_manifest_sha256": "398bb706268afea61b33529de55f6eda30bb61499495a47bcae3c2b7c24814ce",
+  "reason": "The original negative fixtures were byte-identical to valid seeds. Explicit clap atoms now declare a cropped aperture. Implementation and binary unchanged."
+}

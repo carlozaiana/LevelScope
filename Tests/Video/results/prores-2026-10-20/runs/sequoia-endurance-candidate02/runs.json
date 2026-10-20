@@ -1,0 +1,23 @@
+[
+  {
+    "name": "proxy-1800",
+    "exit_code": 1,
+    "passed": false,
+    "elapsed_seconds": 1866.9023929169998,
+    "argv": [
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/candidate-02/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Mac Studio Speakers",
+      "--seconds",
+      "1800",
+      "--audio",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/selected-clock-48000.wav",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/proxy-1800.mov",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/sequoia-endurance-candidate02/proxy-1800.json"
+    ]
+  }
+]

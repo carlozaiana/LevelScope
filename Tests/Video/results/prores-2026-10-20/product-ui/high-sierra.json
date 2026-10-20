@@ -1,0 +1,27 @@
+{
+  "scope": "Agent-observed product UI; no listening or physical synchronization measurement",
+  "product_sha256": "352db9c03e8af8e6bda1555af54c46225a6ce194f10969279cb1366bd579517d",
+  "actual_movie_sha256": "0870d5ab93d1492f23524ed1fff9319af1a6a9cf71882543f2190929afeb8e24",
+  "passed": true,
+  "observations": [
+    "Actual movie loads as ProRes 422 1920x1080, 2772 frames at 25 fps, with PICTURE START visible.",
+    "Actual movie timecode begins 00:00:00:00; embedded audio track count is 1, excluded from playback.",
+    "Offset -1 at stopped audio zero selects frame 25, PTS 1/1, timecode 00:00:01:00.",
+    "Offset +1 at stopped audio zero displays no picture outside reference coverage.",
+    "Clear removes the reference and resets its independent offset.",
+    "Missing colr metadata is rejected with an explanatory Rec.709 declaration error.",
+    "Loading a supported two-stream LT movie after the rejection restores the picture.",
+    "Selecting LT stream 2 displays that stream while retaining excluded embedded audio.",
+    "Physical audio device stays closed and monitor gain stays -30 dB throughout these GUI observations.",
+    "The candidate product was closed after checking; no installation was changed."
+  ],
+  "evidence_note": "Screen Sharing captures include unrelated desktop material and remain private in the local temporary evidence folder; no raw remote desktop screenshots are committed.",
+  "platform": "high-sierra",
+  "candidate": "candidate-02",
+  "capture_hashes": {
+    "high-sierra-ui-actual-private.png": "a85bcc96e0cf71944a00119f9eb249ca0f9b3874a0cd27994d1c8b942343b752",
+    "high-sierra-ui-rejection-private.png": "4423d5628a38137bed4883fee391446490bd867d89b16f8fa398a9a2de8452e2",
+    "high-sierra-ui-stream2-private.png": "a45534325b040df05b3161bd5c95be2c429224567fa9e4516e61a3c7c6ee64a4"
+  },
+  "interaction": "Screen Sharing Display 1; screenshots and visible UI controls"
+}

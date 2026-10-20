@@ -3,6 +3,47 @@
 Prepared 17 October 2026. This document is a handover specification; no video
 implementation is included in the measurement milestone.
 
+## Qualified ProRes continuation (20–21 October 2026)
+
+The bounded AVFoundation extension is qualified on actual Sequoia arm64 and
+High Sierra x86_64: local MOV with ProRes 422 Proxy, LT or standard 422,
+progressive, square-pixel, full-aperture Rec.709 SDR, in the existing 8-bit preview.
+All required 1080p rates (24000/1001, 24, 25, 30000/1001 and 30) pass on both Macs,
+including the user's original movie, nonzero selected-audio isolation, native/UI/
+measurement regressions, and three fresh 30-minute runs per Mac.
+
+Checkpoint: [video-prores-checkpoint-2026-10-21](https://github.com/carlozaiana/LevelScope/tree/video-prores-checkpoint-2026-10-21) on
+[codex/video-implementation](https://github.com/carlozaiana/LevelScope/tree/codex/video-implementation).
+Exact frozen tested source: `6662091f1dfaff948a4a3eb3f000f47e37cfdc21`.
+Production last changed at `3920d08f849d2420509e1d789c5b8208e50d79af`; the later
+source commit changes the approved memory harness/runner/verifier. Checkpoint
+follow-up changes contain documentation and text evidence only.
+
+See [the qualification report](26_ProResQualification.md) for source, executable
+and fixture hashes, all measured results, exact evidence reuse and retained failures.
+[The acceptance record](25_ProResAcceptance.md) preserves the original criteria
+and the explicitly approved memory-method revision. No earlier failure was
+retroactively accepted, and the zero-skipped-frame limit stayed unchanged.
+
+This work incorporated published main
+`6d304dbecd8fa47f56b0260105aa9d07f96ba1bc`, including qualified M5, before implementation.
+The ProRes extension is published on the video branch; this task does not integrate
+it into main or change the logic-module branch. Subsequent integration must preserve
+the exact tested identities and check any affected combined changes.
+
+Source remains `/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation`.
+Local preserved binaries, fixtures and raw evidence are under
+`build/prores-20261020`; the accepted package is `candidate-04`.
+Golem's separate bundle is `/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20`,
+also with `candidate-04`. Earlier candidates and historical caches remain preserved.
+Use a fresh build directory for later work; never rebuild over these packages.
+
+Embedded movie audio remains undecoded and unrouted. Optional soundtrack playback,
+VLC, other codecs and VST3 parity remain separate future milestones.
+Physical optical/acoustic synchronization remains unmeasured; current qualification
+uses internal selected-audio-clock/paint timing with all physical routes muted.
+Existing checkpoint tags and installations are preserved.
+
 ## Integration continuation (17 October 2026)
 
 Measurement and video are integrated into main, with accepted video integration

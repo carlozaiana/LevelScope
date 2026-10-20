@@ -1,0 +1,8 @@
+{
+  "passed": true,
+  "identity_sha256": "45219de9006b845230c5e1296859bff2c483beb49c4b827b8c33c552f8381285",
+  "fixture_manifest_sha256": "398bb706268afea61b33529de55f6eda30bb61499495a47bcae3c2b7c24814ce",
+  "artifacts_checked": 286,
+  "production_source_commit": "3920d08f849d2420509e1d789c5b8208e50d79af",
+  "candidate_commit": "6662091f1dfaff948a4a3eb3f000f47e37cfdc21"
+}

@@ -1,0 +1,7 @@
+{
+  "previous_manifest_sha256": "850002e559bd89fe15eef93fe14c004569aaff3714bc637ba16c8582764bd059",
+  "corrected_manifest_sha256": "398bb706268afea61b33529de55f6eda30bb61499495a47bcae3c2b7c24814ce",
+  "implementation_changed": false,
+  "binaries_changed": false,
+  "affected_checks": "Three cropped-aperture negative fixture checks; all previous fixture bytes preserved."
+}

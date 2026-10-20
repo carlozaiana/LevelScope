@@ -1,0 +1,65 @@
+[
+  {
+    "name": "proxy-1800",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 1865.5095423330001,
+    "argv": [
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/candidate-04/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Mac Studio Speakers",
+      "--seconds",
+      "1800",
+      "--audio",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/selected-clock-48000.wav",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/proxy-1800.mov",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/sequoia-endurance-candidate04/proxy-1800.json"
+    ]
+  },
+  {
+    "name": "lt-1800",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 1937.309714625,
+    "argv": [
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/candidate-04/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Mac Studio Speakers",
+      "--seconds",
+      "1800",
+      "--audio",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/selected-clock-48000.wav",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/lt-1800.mov",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/sequoia-endurance-candidate04/lt-1800.json"
+    ]
+  },
+  {
+    "name": "422-1800",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 1997.573498583,
+    "argv": [
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/candidate-04/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Mac Studio Speakers",
+      "--seconds",
+      "1800",
+      "--audio",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/selected-clock-48000.wav",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/422-1800.mov",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/evidence/sequoia-endurance-candidate04/422-1800.json"
+    ]
+  }
+]

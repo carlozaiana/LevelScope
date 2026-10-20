@@ -1,0 +1,7 @@
+{
+  "scope": "Diagnostic only; not eligible for qualification",
+  "production_source_commit": "3920d08f849d2420509e1d789c5b8208e50d79af",
+  "candidate03_identity_sha256": "649142fc5064e1e735f6dbf1bd3996894ed1a57bc3536511366fb8a8f110c820",
+  "diagnostic_harness_source_sha256": "3fc736e2cb4bf9812ba18eda97cf724b9d3e7f54626ef566f480fd0667b2876b",
+  "executable_sha256": "49c6c4bc013cfef2afc42e54719fca6d7677a1291b3bb9a0a9dd8b5d140c0e27"
+}

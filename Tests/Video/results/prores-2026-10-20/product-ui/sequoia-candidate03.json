@@ -1,0 +1,22 @@
+{
+  "platform": "Sequoia 15.7.9 arm64",
+  "candidate": "candidate-03",
+  "source_commit": "3920d08f849d2420509e1d789c5b8208e50d79af",
+  "binary_sha256": "5c26cb8faacb1e7b26b117f1b89b7d53049012a3da947c422f760e32fe257208",
+  "observed_via": "CUA actual standalone UI, 2026-10-20 ~21:00 UTC",
+  "passed": true,
+  "device_closed": true,
+  "monitor_gain_db": -30,
+  "observations": [
+    "Original 51_SyncTest movie: visible PICTURE START, frame 0, PTS 0/1, TC 00:00:00:00, embedded audio track excluded",
+    "Offset -1: frame 25, PTS 1/1, TC 00:00:01:00",
+    "Offset +1: blank outside reference coverage",
+    "Clear: no reference picture",
+    "proxy-missing-colour.mov: explicit understandable Rec.709 metadata rejection",
+    "lt-with-tone.mov: visible ramp/RGB/detail picture; recovery after rejected file; stream 2 selectable and picture displayed"
+  ],
+  "limits": [
+    "Stopped-device UI observation only; timing comes from separate playback tests",
+    "No subjective listening or optical/acoustic synchronization measurement"
+  ]
+}
