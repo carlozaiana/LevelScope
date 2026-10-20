@@ -296,7 +296,18 @@ public:
                 }
             const auto width = static_cast<int> (CVPixelBufferGetWidth (pixel)), height = static_cast<int> (CVPixelBufferGetHeight (pixel));
             if (width <= 0 || height <= 0 || width > 3840 || height > 2160) throw std::runtime_error ("Decoded picture exceeds size limit");
-            juce::Image image (juce::Image::ARGB, width, height, true, juce::SoftwareImageType());
+            // CoreGraphics copies a SoftwareImage into a new CFData on every
+            // paint. Native images retain immutable backing storage and cache
+            // their CGImage instead, avoiding repeated 1080p presentation copies.
+            // Each decoded picture still owns separate pixels; never reuse or
+            // mutate a published image while the UI may retain it.
+            auto makePictureImage = [this] (int w, int h)
+            {
+                if (selectedProRes)
+                    return juce::Image (juce::Image::ARGB, w, h, true, juce::NativeImageType());
+                return juce::Image (juce::Image::ARGB, w, h, true, juce::SoftwareImageType());
+            };
+            juce::Image image = makePictureImage (width, height);
             if (CVPixelBufferLockBaseAddress (pixel, kCVPixelBufferLock_ReadOnly) != kCVReturnSuccess) throw std::runtime_error ("Cannot access decoded picture");
             {
                 juce::Image::BitmapData target (image, juce::Image::BitmapData::writeOnly);
@@ -309,7 +320,7 @@ public:
             {
                 const auto bounds = juce::Rectangle<float> (0, 0, static_cast<float> (width), static_cast<float> (height)).transformedBy (transform).getSmallestIntegerContainer();
                 if (bounds.getWidth() > 3840 || bounds.getHeight() > 3840 || bounds.isEmpty()) throw std::runtime_error ("Transformed picture exceeds size limit");
-                juce::Image rotated (juce::Image::ARGB, bounds.getWidth(), bounds.getHeight(), true, juce::SoftwareImageType());
+                juce::Image rotated = makePictureImage (bounds.getWidth(), bounds.getHeight());
                 juce::Graphics g (rotated); g.drawImageTransformed (image, transform.translated (-static_cast<float> (bounds.getX()), -static_cast<float> (bounds.getY())));
                 image = rotated;
             }
