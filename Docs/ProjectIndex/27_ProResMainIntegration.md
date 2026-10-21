@@ -7,6 +7,17 @@ which must contain this accepted revision, qualified M5 and the fixed ProRes tag
 Bring main into the existing logic development branch while preserving unmerged work.
 This task does not switch or alter that branch or implement another feature.
 
+## Publication verification
+
+Main and the video branch were first published at
+`83bc6adc64fc495f5a2ada3e2974e6fe508d583f`. GitHub
+[run 39560275560](https://github.com/carlozaiana/LevelScope/actions/runs/39560275560)
+passes the universal standalone/test build and all seven CTest suites, then uploads
+only `LevelScope-standalone-macOS`. CI artifacts are separate build checks; they do
+not replace the frozen endurance-qualified package. The final publication-audit
+follow-up changes documentation/evidence only and skips a redundant CI rebuild;
+production, test code, CMake and the verified workflow remain byte-identical.
+
 ## Integration and scope
 
 Fetched main was `6d304dbecd8fa47f56b0260105aa9d07f96ba1bc`, already an ancestor of
@@ -65,7 +76,11 @@ Video source: `/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation`,
 `codex/video-implementation`. Original logic checkout:
 `/Users/fuzz/Developer/LevelScope`, `codex/logic-module`, remains at
 `ae88e187d288c53dbca1287e8341b74b9b5b2619`; tracked, staged and untracked files are
-preserved. Registered worktrees stay at their existing locations.
+preserved. The final byte inventory detected a change only to the original root
+`.DS_Store` Finder metadata; its before/after hashes are recorded in the publication
+audit, and its current contents were left untouched. The strict inventory result
+is retained as a mismatch, not overwritten with a blanket pass. Registered
+worktrees stay at their existing locations.
 
 Preserved tested local package:
 `/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/candidate-04`.
@@ -77,6 +92,12 @@ Fresh integration build/logs/results:
 Fresh Golem results: `/Users/fuzz/LevelScope-ProRes-integration-2026-10-21`.
 Use a new build directory under the video working copy for later builds; do not
 reuse or rebuild over preserved qualification directories or historical caches.
+
+The 33 GB fixture requires 184.637 s on Sequoia and 277.960 s on High Sierra before
+the first decoded frame is available, predominantly for whole-file hashing. This is
+initial attachment time, not an on-screen measurement or a playback sync offset.
+It satisfies the declared size-based test budget but remains a loading usability
+limitation. See the clarification in document 26; no loading feature is added here.
 
 The next logic milestone should read the measurement contract, M5 handover and
 `ProposalEngineSpec_v2.md` and preserve measurement/source identity, video timing

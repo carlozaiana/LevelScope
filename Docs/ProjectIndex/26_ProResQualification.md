@@ -149,6 +149,16 @@ OS-reported process RSS high-water mark, including loading, against the same
 The fully materialized standard-422 file is 33,008,769,739 bytes. The predeclared
 size-scaled first-picture budget is 527.269 seconds; both Macs pass.
 
+Clarification added during integration: `first_picture_s` is elapsed time from the
+start of native attachment until `decoder->next()` returns the first decoded frame,
+including the complete-file SHA-256 and full timestamp index. It is not a measured
+on-screen appearance time or an audio/video synchronization offset. The earlier
+candidate-01 Sequoia result was 187.535 s (reported conversationally as 188 s);
+the accepted result below is 184.637 s. Passing the declared size-based budget does
+not make the approximately three-minute Sequoia/four-and-a-half-minute High Sierra
+initial wait a low-latency user experience. Large-file initial loading remains a
+usability limitation; no loading optimization is implemented by this integration.
+
 | Measurement | Sequoia | High Sierra |
 | --- | ---: | ---: |
 | Whole-file hash | 171.332 s | 264.735 s |

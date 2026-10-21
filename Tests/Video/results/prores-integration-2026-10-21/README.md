@@ -22,3 +22,14 @@ paths and tested identities. Media, compiled products and credentials are exclud
 
 See `Docs/ProjectIndex/27_ProResMainIntegration.md` for integration disposition and
 remaining limits. The handover follow-up changes documentation/evidence only.
+
+Publication audit: `preservation-published-strict.json` retains the strict inventory
+mismatch for the original root `.DS_Store`. `publication-audit.json` records the
+before/after Finder metadata hashes and distinguishes that unrelated change from
+the unchanged source, candidate, other files, branches and nine checkpoint tags.
+The current metadata was not reverted.
+
+`github-ci.json`, `github-ci-artifacts.json` and `github-ci-tests.log` record the
+successful GitHub run for integration publication `83bc6adc64fc495f5a2ada3e2974e6fe508d583f`.
+The full build log is retained locally with its SHA-256; CI uploads only the
+standalone artifact. The final follow-up changes documentation/evidence only.

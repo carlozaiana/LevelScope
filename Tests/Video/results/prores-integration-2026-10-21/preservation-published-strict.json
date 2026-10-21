@@ -1,0 +1,79 @@
+{
+  "main_before": "ae88e187d288c53dbca1287e8341b74b9b5b2619",
+  "local_main": "83bc6adc64fc495f5a2ada3e2974e6fe508d583f",
+  "remote_main": "83bc6adc64fc495f5a2ada3e2974e6fe508d583f",
+  "video_head": "83bc6adc64fc495f5a2ada3e2974e6fe508d583f",
+  "remote_video": "83bc6adc64fc495f5a2ada3e2974e6fe508d583f",
+  "checkpoint_tags": [
+    {
+      "ref": "refs/tags/high-sierra-pre-scaffold-2026-10-15",
+      "object": "b3c6e845482dbe8a0ec9778d5a9ad7953e614609",
+      "commit": "556d387ad772dc5e604ead95f1525f60e66fd5f9",
+      "unchanged": true
+    },
+    {
+      "ref": "refs/tags/m2-measured-compliance-2026-10-18",
+      "object": "673e382feeaa7e29e6e6abedbd56677aa2163ef3",
+      "commit": "01a34833ec06a0d237e098faadb23b398581e8f9",
+      "unchanged": true
+    },
+    {
+      "ref": "refs/tags/m3-global-trim-2026-10-18",
+      "object": "4063ca0e73c5b24dfa079eb894f85e398e9fee50",
+      "commit": "62ab420cb15b3ce5e1c821c963a749a9a56ae4a7",
+      "unchanged": true
+    },
+    {
+      "ref": "refs/tags/m4-measured-diagnostics-2026-10-18",
+      "object": "cc64c771a70ccf95e779a7fe7260749a4530c285",
+      "commit": "9a22749901d9f6d4b9c194c9c22c0a231f2494f6",
+      "unchanged": true
+    },
+    {
+      "ref": "refs/tags/m5-programme-sections-2026-10-20",
+      "object": "e36b4308374256ad36eff6c01d4d92325a06d3b0",
+      "commit": "ae88e187d288c53dbca1287e8341b74b9b5b2619",
+      "unchanged": true
+    },
+    {
+      "ref": "refs/tags/measurement-milestone-2026-10-17",
+      "object": "76affb667b6dab066cb36b2a2c741525b9b6eeac",
+      "commit": "b29bc7c183743f35c6271d2d7ec8fb5ba1464591",
+      "unchanged": true
+    },
+    {
+      "ref": "refs/tags/standalone-scaffold-2026-10-15",
+      "object": "4c8bc35b788969e1f6e97dcdc57a601b01fff7cd",
+      "commit": "f192a8553e139d390056c9755f25eeb123bbc5e6",
+      "unchanged": true
+    },
+    {
+      "ref": "refs/tags/video-checkpoint-2026-10-17",
+      "object": "06f57524bedca1912c0d5c454f13561cec9ce5b4",
+      "commit": "700b9e77e439a8ca9bb7583adf826fac01dbe924",
+      "unchanged": true
+    },
+    {
+      "ref": "refs/tags/video-prores-checkpoint-2026-10-21",
+      "object": "d62c1159eeb2ffbb8b7ffc7c31014b842642d195",
+      "commit": "dcc34aabba6b5b3ca4805e2965d21ffebf2e4d0a",
+      "unchanged": true
+    }
+  ],
+  "original_head": "ae88e187d288c53dbca1287e8341b74b9b5b2619",
+  "original_branch": "codex/logic-module",
+  "original_status": "?? .DS_Store\n?? Docs/.DS_Store\n?? Source/.DS_Store\n?? Source/Core/.DS_Store\n?? Source/Core/Processing/.DS_Store\n?? Tests/.DS_Store\n?? Tests/51_SyncTest.mov\n?? Tests/Reference/.DS_Store",
+  "original_inventory_changes": [
+    ".DS_Store"
+  ],
+  "video_untracked_changes": [],
+  "tested_source": "6662091f1dfaff948a4a3eb3f000f47e37cfdc21",
+  "source_count": 135,
+  "source_mismatches": [],
+  "source_diff_since_candidate": "",
+  "artifact_count": 286,
+  "artifact_mismatches": [],
+  "candidate_identity_sha256": "45219de9006b845230c5e1296859bff2c483beb49c4b827b8c33c552f8381285",
+  "worktrees": "worktree /Users/fuzz/Developer/LevelScope\nHEAD ae88e187d288c53dbca1287e8341b74b9b5b2619\nbranch refs/heads/codex/logic-module\n\nworktree /Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation\nHEAD 83bc6adc64fc495f5a2ada3e2974e6fe508d583f\nbranch refs/heads/codex/video-implementation",
+  "passed": false
+}

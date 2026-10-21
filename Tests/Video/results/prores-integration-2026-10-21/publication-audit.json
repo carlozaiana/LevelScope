@@ -1,0 +1,17 @@
+{
+  "published_main": "83bc6adc64fc495f5a2ada3e2974e6fe508d583f",
+  "original_strict_inventory_passed": false,
+  "disclosed_metadata_difference": {
+    "path": "/Users/fuzz/Developer/LevelScope/.DS_Store",
+    "before_sha256": "50ee4e6354c0740ab79aa632c38ae9fea6c7c5d5d52d67e08a88b5a22f81275c",
+    "after_sha256": "6b0c1dec4bd7f4a6d34a7efea2f2e813dfe1b0ee822c66e466e4d455cd8eb3cd",
+    "action": "Left current Finder metadata untouched; no restoration or overwrite",
+    "cause": "Not attributed by this audit"
+  },
+  "all_other_original_inventory_hashes_unchanged": true,
+  "original_head_and_branch_unchanged": true,
+  "video_untracked_files_unchanged": true,
+  "tested_source_and_local_candidate_unchanged": true,
+  "all_nine_local_and_remote_checkpoint_objects_and_targets_unchanged": true,
+  "source_and_qualification_preserved": true
+}

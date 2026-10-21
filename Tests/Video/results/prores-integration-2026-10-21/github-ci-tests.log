@@ -1,0 +1,23 @@
+build	Run hardware-independent regressions	﻿2026-10-21T07:28:40.1632450Z ##[group]Run ctest --test-dir build --build-config Release --output-on-failure
+build	Run hardware-independent regressions	2026-10-21T07:28:40.1633020Z ^[[36;1mctest --test-dir build --build-config Release --output-on-failure^[[0m
+build	Run hardware-independent regressions	2026-10-21T07:28:40.1852690Z shell: /bin/bash -e {0}
+build	Run hardware-independent regressions	2026-10-21T07:28:40.1852960Z ##[endgroup]
+build	Run hardware-independent regressions	2026-10-21T07:28:40.3160010Z Test project /Users/runner/work/LevelScope/LevelScope/build
+build	Run hardware-independent regressions	2026-10-21T07:28:40.3183530Z     Start 1: video-timing
+build	Run hardware-independent regressions	2026-10-21T07:28:40.9453570Z 1/7 Test #1: video-timing .....................   Passed    0.63 sec
+build	Run hardware-independent regressions	2026-10-21T07:28:40.9454280Z     Start 2: offline-measurement
+build	Run hardware-independent regressions	2026-10-21T07:28:59.8905540Z 2/7 Test #2: offline-measurement ..............   Passed   18.94 sec
+build	Run hardware-independent regressions	2026-10-21T07:28:59.8907300Z     Start 3: measured-compliance
+build	Run hardware-independent regressions	2026-10-21T07:29:00.5328260Z 3/7 Test #3: measured-compliance ..............   Passed    0.64 sec
+build	Run hardware-independent regressions	2026-10-21T07:29:00.5423490Z     Start 4: global-trim-proposals
+build	Run hardware-independent regressions	2026-10-21T07:29:17.2009760Z 4/7 Test #4: global-trim-proposals ............   Passed   16.67 sec
+build	Run hardware-independent regressions	2026-10-21T07:29:17.2012440Z     Start 5: measured-diagnostics
+build	Run hardware-independent regressions	2026-10-21T07:29:20.2725550Z 5/7 Test #5: measured-diagnostics .............   Passed    3.07 sec
+build	Run hardware-independent regressions	2026-10-21T07:29:20.2828540Z     Start 6: programme-sections
+build	Run hardware-independent regressions	2026-10-21T07:29:24.7089520Z 6/7 Test #6: programme-sections ...............   Passed    4.44 sec
+build	Run hardware-independent regressions	2026-10-21T07:29:24.7148190Z     Start 7: standalone-scaffold
+build	Run hardware-independent regressions	2026-10-21T07:29:25.0020810Z 7/7 Test #7: standalone-scaffold ..............   Passed    0.29 sec
+build	Run hardware-independent regressions	2026-10-21T07:29:25.0102330Z 
+build	Run hardware-independent regressions	2026-10-21T07:29:25.0106730Z 100% tests passed out of 7
+build	Run hardware-independent regressions	2026-10-21T07:29:25.0107560Z 
+build	Run hardware-independent regressions	2026-10-21T07:29:25.0107770Z Total Test time (real) =  44.69 sec
