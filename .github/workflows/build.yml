@@ -22,20 +22,34 @@ jobs:
           cmake -B build -G "Unix Makefiles" \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" \
-            -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13 \
+            -DLEVELSCOPE_BUILD_VIDEO_TESTS=ON \
+            -DLEVELSCOPE_BUILD_MEASUREMENT_TESTS=ON \
+            -DLEVELSCOPE_BUILD_SCAFFOLD_TESTS=ON \
+            -DLEVELSCOPE_BUILD_COMPLIANCE_TESTS=ON \
+            -DLEVELSCOPE_BUILD_PROPOSAL_TESTS=ON \
+            -DLEVELSCOPE_BUILD_DIAGNOSTICS_TESTS=ON \
+            -DLEVELSCOPE_BUILD_SECTIONS_TESTS=ON
 
-      - name: Build
+      # The default target also builds and installs VST3. Keep plugin parity separate.
+      - name: Build standalone and tests
         run: |
-          cmake --build build --config Release -- -j 3
+          cmake --build build --config Release --target \
+            LevelScopeStandalone LevelScopeVideoTests LevelScopeVideoQualification \
+            LevelScopeMeasurementTests LevelScopeScaffoldTests \
+            LevelScopeComplianceTests LevelScopeProposalTests \
+            LevelScopeDiagnosticsTests LevelScopeSectionsTests --parallel 3
+
+      - name: Run hardware-independent regressions
+        run: ctest --test-dir build --build-config Release --output-on-failure
 
       - name: Collect Build Artefacts
         run: |
           mkdir -p artifacts
-          find build -name "LevelScope.vst3" -print -exec cp -R {} artifacts/ \;
           find build -name "LevelScope Standalone.app" -print -exec cp -R {} artifacts/ \;
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: LevelScope-macOS
+          name: LevelScope-standalone-macOS
           path: artifacts
