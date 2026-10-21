@@ -1,0 +1,1704 @@
+[
+  {
+    "name": "proxy-24000-1001.mov",
+    "argv": [
+      "--prores",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/proxy-24000-1001.mov",
+      "480",
+      "24000",
+      "1001",
+      "normal"
+    ],
+    "exit_code": 0,
+    "seconds": 3.054391292,
+    "peak_rss_bytes": 148504576,
+    "rss_samples": [
+      [
+        0.0045095,
+        32768
+      ],
+      [
+        0.511922792,
+        7651328
+      ],
+      [
+        1.020189542,
+        21626880
+      ],
+      [
+        1.530008667,
+        148504576
+      ],
+      [
+        2.0402695,
+        142655488
+      ],
+      [
+        2.548900792,
+        125222912
+      ]
+    ]
+  },
+  {
+    "name": "proxy-24-1.mov",
+    "argv": [
+      "--prores",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/proxy-24-1.mov",
+      "480",
+      "24",
+      "1",
+      "normal"
+    ],
+    "exit_code": 0,
+    "seconds": 3.0665425830000004,
+    "peak_rss_bytes": 179552256,
+    "rss_samples": [
+      [
+        0.012573666999999844,
+        425984
+      ],
+      [
+        0.5215996669999998,
+        13402112
+      ],
+      [
+        1.0292144170000004,
+        164134912
+      ],
+      [
+        1.543892167,
+        179552256
+      ],
+      [
+        2.0526874169999996,
+        150061056
+      ],
+      [
+        2.561055625,
+        169115648
+      ]
+    ]
+  },
+  {
+    "name": "proxy-25-1.mov",
+    "argv": [
+      "--prores",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/proxy-25-1.mov",
+      "500",
+      "25",
+      "1",
+      "normal"
+    ],
+    "exit_code": 0,
+    "seconds": 3.065258040999999,
+    "peak_rss_bytes": 162250752,
+    "rss_samples": [
+      [
+        0.01312437499999941,
+        475136
+      ],
+      [
+        0.5217813749999998,
+        7995392
+      ],
+      [
+        1.0322254579999992,
+        156958720
+      ],
+      [
+        1.546139083,
+        162250752
+      ],
+      [
+        2.0552690829999998,
+        139722752
+      ],
+      [
+        2.559318791,
+        138919936
+      ]
+    ]
+  },
+  {
+    "name": "proxy-30000-1001.mov",
+    "argv": [
+      "--prores",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/proxy-30000-1001.mov",
+      "600",
+      "30000",
+      "1001",
+      "normal"
+    ],
+    "exit_code": 0,
+    "seconds": 3.574989125,
+    "peak_rss_bytes": 167985152,
+    "rss_samples": [
+      [
+        0.013497167000000587,
+        409600
+      ],
+      [
+        0.5221892500000003,
+        7602176
+      ],
+      [
+        1.0316705000000006,
+        156090368
+      ],
+      [
+        1.544500000000001,
+        167985152
+      ],
+      [
+        2.0535960000000006,
+        163692544
+      ],
+      [
+        2.5623548750000005,
+        132513792
+      ],
+      [
+        3.0690747500000004,
+        153288704
+      ]
+    ]
+  },
+  {
+    "name": "proxy-30-1.mov",
+    "argv": [
+      "--prores",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/proxy-30-1.mov",
+      "600",
+      "30",
+      "1",
+      "normal"
+    ],
+    "exit_code": 0,
+    "seconds": 3.0692312499999996,
+    "peak_rss_bytes": 167936000,
+    "rss_samples": [
+      [
+        0.012765417000000667,
+        491520
+      ],
+      [
+        0.5213029169999999,
+        7602176
+      ],
+      [
+        1.0305293750000004,
+        157794304
+      ],
+      [
+        1.5411370420000008,
+        167936000
+      ],
+      [
+        2.055350542000001,
+        122224640
+      ],
+      [
+        2.5640646670000002,
+        140640256
+      ]
+    ]
+  },
+  {
+    "name": "proxy-with-tone.mov",
+    "argv": [
+      "--isolation",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/proxy-with-tone.mov"
+    ],
+    "exit_code": 0,
+    "seconds": 1.527240374999998,
+    "peak_rss_bytes": 44482560,
+    "rss_samples": [
+      [
+        0.005086083999998436,
+        327680
+      ],
+      [
+        0.5136935839999985,
+        9469952
+      ],
+      [
+        1.0217611250000012,
+        44482560
+      ]
+    ]
+  },
+  {
+    "name": "proxy-vfr.mov",
+    "argv": [
+      "--prores",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/proxy-vfr.mov",
+      "120",
+      "30000",
+      "1001",
+      "vfr"
+    ],
+    "exit_code": 0,
+    "seconds": 1.0279803339999987,
+    "peak_rss_bytes": 165691392,
+    "rss_samples": [
+      [
+        0.013486291999999622,
+        425984
+      ],
+      [
+        0.5227995000000014,
+        165691392
+      ]
+    ]
+  },
+  {
+    "name": "proxy-missing-colour.mov",
+    "argv": [
+      "--reject",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/proxy-missing-colour.mov",
+      "Rec.709"
+    ],
+    "exit_code": 0,
+    "seconds": 0.507841458999998,
+    "peak_rss_bytes": 409600,
+    "rss_samples": [
+      [
+        0.004933041999997556,
+        409600
+      ]
+    ]
+  },
+  {
+    "name": "proxy-conflicting-colour.mov",
+    "argv": [
+      "--reject",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/proxy-conflicting-colour.mov",
+      "Rec.709"
+    ],
+    "exit_code": 0,
+    "seconds": 0.5057874590000004,
+    "peak_rss_bytes": 262144,
+    "rss_samples": [
+      [
+        0.004864583999999894,
+        262144
+      ]
+    ]
+  },
+  {
+    "name": "proxy-interlaced.mov",
+    "argv": [
+      "--reject",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/proxy-interlaced.mov",
+      "progressive"
+    ],
+    "exit_code": 0,
+    "seconds": 0.518622624999999,
+    "peak_rss_bytes": 409600,
+    "rss_samples": [
+      [
+        0.013164416999998707,
+        409600
+      ]
+    ]
+  },
+  {
+    "name": "lt-24000-1001.mov",
+    "argv": [
+      "--prores",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/lt-24000-1001.mov",
+      "480",
+      "24000",
+      "1001",
+      "normal"
+    ],
+    "exit_code": 0,
+    "seconds": 4.079887374999998,
+    "peak_rss_bytes": 194412544,
+    "rss_samples": [
+      [
+        0.01290333299999702,
+        409600
+      ],
+      [
+        0.5183024159999974,
+        7602176
+      ],
+      [
+        1.0269274579999994,
+        7602176
+      ],
+      [
+        1.5400409159999988,
+        166100992
+      ],
+      [
+        2.0484110829999977,
+        194412544
+      ],
+      [
+        2.5572644999999987,
+        156352512
+      ],
+      [
+        3.0658692499999987,
+        147128320
+      ],
+      [
+        3.574472790999998,
+        147128320
+      ]
+    ]
+  },
+  {
+    "name": "lt-24-1.mov",
+    "argv": [
+      "--prores",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/lt-24-1.mov",
+      "480",
+      "24",
+      "1",
+      "normal"
+    ],
+    "exit_code": 0,
+    "seconds": 4.07390075,
+    "peak_rss_bytes": 211877888,
+    "rss_samples": [
+      [
+        0.012251292000001968,
+        393216
+      ],
+      [
+        0.5208595840000001,
+        7602176
+      ],
+      [
+        1.0293770000000002,
+        7602176
+      ],
+      [
+        1.5382894590000014,
+        196886528
+      ],
+      [
+        2.050238583999999,
+        211877888
+      ],
+      [
+        2.5545726249999987,
+        160563200
+      ],
+      [
+        3.0630651250000014,
+        160563200
+      ],
+      [
+        3.567891124999999,
+        192643072
+      ]
+    ]
+  },
+  {
+    "name": "lt-25-1.mov",
+    "argv": [
+      "--prores",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/lt-25-1.mov",
+      "500",
+      "25",
+      "1",
+      "normal"
+    ],
+    "exit_code": 0,
+    "seconds": 4.083696957999997,
+    "peak_rss_bytes": 178962432,
+    "rss_samples": [
+      [
+        0.015044124999999298,
+        425984
+      ],
+      [
+        0.5238752079999998,
+        7602176
+      ],
+      [
+        1.032577542000002,
+        7602176
+      ],
+      [
+        1.5431421669999992,
+        164036608
+      ],
+      [
+        2.056185375000002,
+        178962432
+      ],
+      [
+        2.565400792000002,
+        134234112
+      ],
+      [
+        3.0739474579999992,
+        139198464
+      ],
+      [
+        3.578479583,
+        139198464
+      ]
+    ]
+  },
+  {
+    "name": "lt-30000-1001.mov",
+    "argv": [
+      "--prores",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/lt-30000-1001.mov",
+      "600",
+      "30000",
+      "1001",
+      "normal"
+    ],
+    "exit_code": 0,
+    "seconds": 5.083470458000001,
+    "peak_rss_bytes": 198524928,
+    "rss_samples": [
+      [
+        0.005540707999998062,
+        409600
+      ],
+      [
+        0.5115545829999988,
+        7602176
+      ],
+      [
+        1.0201014579999992,
+        7602176
+      ],
+      [
+        1.5283902920000045,
+        113377280
+      ],
+      [
+        2.038414207999999,
+        183451648
+      ],
+      [
+        2.546326083000004,
+        198524928
+      ],
+      [
+        3.0549132499999985,
+        144523264
+      ],
+      [
+        3.563485749999998,
+        141131776
+      ],
+      [
+        4.0719892500000014,
+        141131776
+      ],
+      [
+        4.581882624999999,
+        178044928
+      ]
+    ]
+  },
+  {
+    "name": "lt-30-1.mov",
+    "argv": [
+      "--prores",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/lt-30-1.mov",
+      "600",
+      "30",
+      "1",
+      "normal"
+    ],
+    "exit_code": 0,
+    "seconds": 4.583647333000002,
+    "peak_rss_bytes": 205570048,
+    "rss_samples": [
+      [
+        0.013671791000000155,
+        262144
+      ],
+      [
+        0.5221419579999989,
+        7602176
+      ],
+      [
+        1.031034916000003,
+        7602176
+      ],
+      [
+        1.5398710830000013,
+        138788864
+      ],
+      [
+        2.0493075410000046,
+        190988288
+      ],
+      [
+        2.5607361249999983,
+        205570048
+      ],
+      [
+        3.065692541000004,
+        154648576
+      ],
+      [
+        3.574189416000003,
+        150224896
+      ],
+      [
+        4.078458875000003,
+        150224896
+      ]
+    ]
+  },
+  {
+    "name": "lt-with-tone.mov",
+    "argv": [
+      "--isolation",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/lt-with-tone.mov"
+    ],
+    "exit_code": 0,
+    "seconds": 3.0523121250000003,
+    "peak_rss_bytes": 37814272,
+    "rss_samples": [
+      [
+        0.006494750000001659,
+        425984
+      ],
+      [
+        0.5151903339999961,
+        9486336
+      ],
+      [
+        1.0237374169999995,
+        9486336
+      ],
+      [
+        1.528867499999997,
+        37273600
+      ],
+      [
+        2.037589333999996,
+        37273600
+      ],
+      [
+        2.5461213339999986,
+        37814272
+      ]
+    ]
+  },
+  {
+    "name": "lt-vfr.mov",
+    "argv": [
+      "--prores",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/lt-vfr.mov",
+      "120",
+      "30000",
+      "1001",
+      "vfr"
+    ],
+    "exit_code": 0,
+    "seconds": 1.5368842920000034,
+    "peak_rss_bytes": 149815296,
+    "rss_samples": [
+      [
+        0.013900374999998633,
+        425984
+      ],
+      [
+        0.5230602920000038,
+        149815296
+      ],
+      [
+        1.0314911250000023,
+        121176064
+      ]
+    ]
+  },
+  {
+    "name": "lt-missing-colour.mov",
+    "argv": [
+      "--reject",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/lt-missing-colour.mov",
+      "Rec.709"
+    ],
+    "exit_code": 0,
+    "seconds": 1.0263216669999977,
+    "peak_rss_bytes": 7553024,
+    "rss_samples": [
+      [
+        0.01222583399999877,
+        262144
+      ],
+      [
+        0.5208605839999976,
+        7553024
+      ]
+    ]
+  },
+  {
+    "name": "lt-conflicting-colour.mov",
+    "argv": [
+      "--reject",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/lt-conflicting-colour.mov",
+      "Rec.709"
+    ],
+    "exit_code": 0,
+    "seconds": 1.0270972089999972,
+    "peak_rss_bytes": 7553024,
+    "rss_samples": [
+      [
+        0.012226124999997978,
+        409600
+      ],
+      [
+        0.5209708339999963,
+        7553024
+      ]
+    ]
+  },
+  {
+    "name": "lt-interlaced.mov",
+    "argv": [
+      "--reject",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/lt-interlaced.mov",
+      "progressive"
+    ],
+    "exit_code": 0,
+    "seconds": 1.0275535000000033,
+    "peak_rss_bytes": 7618560,
+    "rss_samples": [
+      [
+        0.013013792000002411,
+        409600
+      ],
+      [
+        0.5215829999999997,
+        7618560
+      ]
+    ]
+  },
+  {
+    "name": "422-24000-1001.mov",
+    "argv": [
+      "--prores",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/422-24000-1001.mov",
+      "480",
+      "24000",
+      "1001",
+      "normal"
+    ],
+    "exit_code": 0,
+    "seconds": 5.087981042000003,
+    "peak_rss_bytes": 264929280,
+    "rss_samples": [
+      [
+        0.013246042000005787,
+        425984
+      ],
+      [
+        0.5219087500000015,
+        7602176
+      ],
+      [
+        1.0303838750000054,
+        7602176
+      ],
+      [
+        1.5399577080000029,
+        16826368
+      ],
+      [
+        2.049571667000002,
+        209010688
+      ],
+      [
+        2.5584047080000047,
+        264929280
+      ],
+      [
+        3.0655815830000037,
+        185434112
+      ],
+      [
+        3.569675958000005,
+        179830784
+      ],
+      [
+        4.0782990830000045,
+        179830784
+      ],
+      [
+        4.582448083000003,
+        214515712
+      ]
+    ]
+  },
+  {
+    "name": "422-24-1.mov",
+    "argv": [
+      "--prores",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/422-24-1.mov",
+      "480",
+      "24",
+      "1",
+      "normal"
+    ],
+    "exit_code": 0,
+    "seconds": 5.100078500000002,
+    "peak_rss_bytes": 208371712,
+    "rss_samples": [
+      [
+        0.013734499999998206,
+        262144
+      ],
+      [
+        0.5222987499999974,
+        7667712
+      ],
+      [
+        1.0308234580000004,
+        7667712
+      ],
+      [
+        1.5393675420000008,
+        8142848
+      ],
+      [
+        2.0514514580000025,
+        188153856
+      ],
+      [
+        2.5643517079999967,
+        208371712
+      ],
+      [
+        3.073362375000002,
+        143310848
+      ],
+      [
+        3.583433499999998,
+        137134080
+      ],
+      [
+        4.087389707999996,
+        137134080
+      ],
+      [
+        4.5946059580000025,
+        133218304
+      ]
+    ]
+  },
+  {
+    "name": "422-25-1.mov",
+    "argv": [
+      "--prores",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/422-25-1.mov",
+      "500",
+      "25",
+      "1",
+      "normal"
+    ],
+    "exit_code": 0,
+    "seconds": 5.0997085000000055,
+    "peak_rss_bytes": 216760320,
+    "rss_samples": [
+      [
+        0.013313207999999577,
+        409600
+      ],
+      [
+        0.5218133750000007,
+        7651328
+      ],
+      [
+        1.0303310000000039,
+        7651328
+      ],
+      [
+        1.5384758329999997,
+        7651328
+      ],
+      [
+        2.0478057919999983,
+        200605696
+      ],
+      [
+        2.5606772080000013,
+        216760320
+      ],
+      [
+        3.069800167000004,
+        159318016
+      ],
+      [
+        3.5785063750000035,
+        145637376
+      ],
+      [
+        4.085110833000002,
+        145637376
+      ],
+      [
+        4.593693791999996,
+        145637376
+      ]
+    ]
+  },
+  {
+    "name": "422-30000-1001.mov",
+    "argv": [
+      "--prores",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/422-30000-1001.mov",
+      "600",
+      "30000",
+      "1001",
+      "normal"
+    ],
+    "exit_code": 0,
+    "seconds": 6.111691291,
+    "peak_rss_bytes": 217579520,
+    "rss_samples": [
+      [
+        0.014227499999989845,
+        262144
+      ],
+      [
+        0.5228554159999987,
+        7667712
+      ],
+      [
+        1.0314844999999906,
+        7667712
+      ],
+      [
+        1.5398478749999924,
+        7667712
+      ],
+      [
+        2.0484054159999943,
+        19038208
+      ],
+      [
+        2.5578703329999968,
+        216662016
+      ],
+      [
+        3.0701531249999903,
+        217579520
+      ],
+      [
+        3.579227457999991,
+        125894656
+      ],
+      [
+        4.087884124999988,
+        149487616
+      ],
+      [
+        4.596517332999994,
+        149487616
+      ],
+      [
+        5.101454832999991,
+        149487616
+      ],
+      [
+        5.6105467499999975,
+        180486144
+      ]
+    ]
+  },
+  {
+    "name": "422-30-1.mov",
+    "argv": [
+      "--prores",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/422-30-1.mov",
+      "600",
+      "30",
+      "1",
+      "normal"
+    ],
+    "exit_code": 0,
+    "seconds": 6.107081250000007,
+    "peak_rss_bytes": 223625216,
+    "rss_samples": [
+      [
+        0.014381541000005882,
+        262144
+      ],
+      [
+        0.5231684160000043,
+        7602176
+      ],
+      [
+        1.0318256660000031,
+        7602176
+      ],
+      [
+        1.5405501660000027,
+        7602176
+      ],
+      [
+        2.0490020000000015,
+        17547264
+      ],
+      [
+        2.5618746659999942,
+        200884224
+      ],
+      [
+        3.070118375000007,
+        223625216
+      ],
+      [
+        3.5741223750000017,
+        159268864
+      ],
+      [
+        4.082835916000008,
+        148062208
+      ],
+      [
+        4.586757665999997,
+        148062208
+      ],
+      [
+        5.095608333000001,
+        148062208
+      ],
+      [
+        5.601289957999995,
+        188416000
+      ]
+    ]
+  },
+  {
+    "name": "422-with-tone.mov",
+    "argv": [
+      "--isolation",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/422-with-tone.mov"
+    ],
+    "exit_code": 0,
+    "seconds": 4.068451834000001,
+    "peak_rss_bytes": 37158912,
+    "rss_samples": [
+      [
+        0.013473000000004731,
+        262144
+      ],
+      [
+        0.5219966249999999,
+        9437184
+      ],
+      [
+        1.0281954590000026,
+        9437184
+      ],
+      [
+        1.5328902090000014,
+        9437184
+      ],
+      [
+        2.0416257500000086,
+        37158912
+      ],
+      [
+        2.550191084000005,
+        37158912
+      ],
+      [
+        3.0539607500000017,
+        37158912
+      ],
+      [
+        3.5626205420000048,
+        0
+      ]
+    ]
+  },
+  {
+    "name": "422-vfr.mov",
+    "argv": [
+      "--prores",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/422-vfr.mov",
+      "120",
+      "30000",
+      "1001",
+      "vfr"
+    ],
+    "exit_code": 0,
+    "seconds": 2.039483500000003,
+    "peak_rss_bytes": 195264512,
+    "rss_samples": [
+      [
+        0.012158917000007818,
+        409600
+      ],
+      [
+        0.5205006249999968,
+        18202624
+      ],
+      [
+        1.0254468340000074,
+        142983168
+      ],
+      [
+        1.5335502500000047,
+        195264512
+      ]
+    ]
+  },
+  {
+    "name": "422-missing-colour.mov",
+    "argv": [
+      "--reject",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/422-missing-colour.mov",
+      "Rec.709"
+    ],
+    "exit_code": 0,
+    "seconds": 1.0268627500000065,
+    "peak_rss_bytes": 7602176,
+    "rss_samples": [
+      [
+        0.012858416000000261,
+        262144
+      ],
+      [
+        0.5213991250000021,
+        7602176
+      ]
+    ]
+  },
+  {
+    "name": "422-conflicting-colour.mov",
+    "argv": [
+      "--reject",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/422-conflicting-colour.mov",
+      "Rec.709"
+    ],
+    "exit_code": 0,
+    "seconds": 1.0265158750000012,
+    "peak_rss_bytes": 7553024,
+    "rss_samples": [
+      [
+        0.0131986669999975,
+        425984
+      ],
+      [
+        0.5213279590000042,
+        7553024
+      ]
+    ]
+  },
+  {
+    "name": "422-interlaced.mov",
+    "argv": [
+      "--reject",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/422-interlaced.mov",
+      "progressive"
+    ],
+    "exit_code": 0,
+    "seconds": 1.0216467089999952,
+    "peak_rss_bytes": 7553024,
+    "rss_samples": [
+      [
+        0.007481667000007519,
+        409600
+      ],
+      [
+        0.5161678750000078,
+        7553024
+      ]
+    ]
+  },
+  {
+    "name": "proxy-hdr.mov",
+    "argv": [
+      "--reject",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/proxy-hdr.mov",
+      "Rec.709"
+    ],
+    "exit_code": 0,
+    "seconds": 0.5147298329999899,
+    "peak_rss_bytes": 262144,
+    "rss_samples": [
+      [
+        0.008818957999991994,
+        262144
+      ]
+    ]
+  },
+  {
+    "name": "proxy-nclx-full-range.mov",
+    "argv": [
+      "--reject",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/proxy-nclx-full-range.mov",
+      "Rec.709"
+    ],
+    "exit_code": 0,
+    "seconds": 0.5169904170000024,
+    "peak_rss_bytes": 409600,
+    "rss_samples": [
+      [
+        0.010757167000008394,
+        409600
+      ]
+    ]
+  },
+  {
+    "name": "proxy-duplicate-colour.mov",
+    "argv": [
+      "--reject",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/proxy-duplicate-colour.mov",
+      "Rec.709"
+    ],
+    "exit_code": 0,
+    "seconds": 0.5159539159999866,
+    "peak_rss_bytes": 409600,
+    "rss_samples": [
+      [
+        0.013269874999991771,
+        409600
+      ]
+    ]
+  },
+  {
+    "name": "proxy-nonsquare.mov",
+    "argv": [
+      "--reject",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/proxy-nonsquare.mov",
+      "square pixels"
+    ],
+    "exit_code": 0,
+    "seconds": 0.5203685419999999,
+    "peak_rss_bytes": 688128,
+    "rss_samples": [
+      [
+        0.014963166999990563,
+        688128
+      ]
+    ]
+  },
+  {
+    "name": "proxy-nclx-709.mov",
+    "argv": [
+      "--prores",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/proxy-nclx-709.mov",
+      "256",
+      "30000",
+      "1001",
+      "normal"
+    ],
+    "exit_code": 0,
+    "seconds": 2.0503738339999984,
+    "peak_rss_bytes": 158728192,
+    "rss_samples": [
+      [
+        0.011519583999998417,
+        737280
+      ],
+      [
+        0.5212902920000033,
+        132431872
+      ],
+      [
+        1.0356754590000037,
+        158728192
+      ],
+      [
+        1.5444440840000055,
+        155648000
+      ]
+    ]
+  },
+  {
+    "name": "lt-hdr.mov",
+    "argv": [
+      "--reject",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/lt-hdr.mov",
+      "Rec.709"
+    ],
+    "exit_code": 0,
+    "seconds": 1.0285810000000026,
+    "peak_rss_bytes": 7553024,
+    "rss_samples": [
+      [
+        0.014010124999998652,
+        409600
+      ],
+      [
+        0.5226784169999945,
+        7553024
+      ]
+    ]
+  },
+  {
+    "name": "lt-nclx-full-range.mov",
+    "argv": [
+      "--reject",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/lt-nclx-full-range.mov",
+      "Rec.709"
+    ],
+    "exit_code": 0,
+    "seconds": 1.027690333999999,
+    "peak_rss_bytes": 7553024,
+    "rss_samples": [
+      [
+        0.013298083999998767,
+        409600
+      ],
+      [
+        0.5217828340000068,
+        7553024
+      ]
+    ]
+  },
+  {
+    "name": "lt-duplicate-colour.mov",
+    "argv": [
+      "--reject",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/lt-duplicate-colour.mov",
+      "Rec.709"
+    ],
+    "exit_code": 0,
+    "seconds": 1.024777209000007,
+    "peak_rss_bytes": 7553024,
+    "rss_samples": [
+      [
+        0.014537375000003294,
+        671744
+      ],
+      [
+        0.5188022920000037,
+        7553024
+      ]
+    ]
+  },
+  {
+    "name": "lt-nonsquare.mov",
+    "argv": [
+      "--reject",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/lt-nonsquare.mov",
+      "square pixels"
+    ],
+    "exit_code": 0,
+    "seconds": 1.0276993340000047,
+    "peak_rss_bytes": 7553024,
+    "rss_samples": [
+      [
+        0.013158083999996961,
+        425984
+      ],
+      [
+        0.5219024999999959,
+        7553024
+      ]
+    ]
+  },
+  {
+    "name": "lt-nclx-709.mov",
+    "argv": [
+      "--prores",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/lt-nclx-709.mov",
+      "256",
+      "30000",
+      "1001",
+      "normal"
+    ],
+    "exit_code": 0,
+    "seconds": 2.5526851249999964,
+    "peak_rss_bytes": 209043456,
+    "rss_samples": [
+      [
+        0.01363266699999599,
+        409600
+      ],
+      [
+        0.5223234999999988,
+        7602176
+      ],
+      [
+        1.0328489580000024,
+        209043456
+      ],
+      [
+        1.541609207999997,
+        164986880
+      ],
+      [
+        2.046711541999997,
+        158351360
+      ]
+    ]
+  },
+  {
+    "name": "422-hdr.mov",
+    "argv": [
+      "--reject",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/422-hdr.mov",
+      "Rec.709"
+    ],
+    "exit_code": 0,
+    "seconds": 1.025746208000001,
+    "peak_rss_bytes": 7618560,
+    "rss_samples": [
+      [
+        0.01357637499999953,
+        393216
+      ],
+      [
+        0.5204401660000002,
+        7618560
+      ]
+    ]
+  },
+  {
+    "name": "422-nclx-full-range.mov",
+    "argv": [
+      "--reject",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/422-nclx-full-range.mov",
+      "Rec.709"
+    ],
+    "exit_code": 0,
+    "seconds": 1.0236053340000097,
+    "peak_rss_bytes": 7553024,
+    "rss_samples": [
+      [
+        0.010937917000006792,
+        409600
+      ],
+      [
+        0.5195632500000045,
+        7553024
+      ]
+    ]
+  },
+  {
+    "name": "422-duplicate-colour.mov",
+    "argv": [
+      "--reject",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/422-duplicate-colour.mov",
+      "Rec.709"
+    ],
+    "exit_code": 0,
+    "seconds": 1.0232196670000064,
+    "peak_rss_bytes": 7553024,
+    "rss_samples": [
+      [
+        0.01301058399999988,
+        409600
+      ],
+      [
+        0.5177596249999965,
+        7553024
+      ]
+    ]
+  },
+  {
+    "name": "422-nonsquare.mov",
+    "argv": [
+      "--reject",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/422-nonsquare.mov",
+      "square pixels"
+    ],
+    "exit_code": 0,
+    "seconds": 1.025456124999991,
+    "peak_rss_bytes": 7553024,
+    "rss_samples": [
+      [
+        0.011552291999990416,
+        507904
+      ],
+      [
+        0.5202219999999897,
+        7553024
+      ]
+    ]
+  },
+  {
+    "name": "422-nclx-709.mov",
+    "argv": [
+      "--prores",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/422-nclx-709.mov",
+      "256",
+      "30000",
+      "1001",
+      "normal"
+    ],
+    "exit_code": 0,
+    "seconds": 3.056116375000002,
+    "peak_rss_bytes": 187088896,
+    "rss_samples": [
+      [
+        0.00905137499999853,
+        409600
+      ],
+      [
+        0.5175843749999984,
+        7667712
+      ],
+      [
+        1.0241914589999936,
+        154173440
+      ],
+      [
+        1.5331953749999911,
+        178176000
+      ],
+      [
+        2.0417470419999972,
+        139083776
+      ],
+      [
+        2.550605417,
+        187088896
+      ]
+    ]
+  },
+  {
+    "name": "excluded-hq.mov",
+    "argv": [
+      "--reject",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/excluded-hq.mov",
+      "Supported codecs"
+    ],
+    "exit_code": 0,
+    "seconds": 0.5167798749999974,
+    "peak_rss_bytes": 262144,
+    "rss_samples": [
+      [
+        0.011338082999998278,
+        262144
+      ]
+    ]
+  },
+  {
+    "name": "excluded-4444.mov",
+    "argv": [
+      "--reject",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/excluded-4444.mov",
+      "Supported codecs"
+    ],
+    "exit_code": 0,
+    "seconds": 0.5110167090000033,
+    "peak_rss_bytes": 409600,
+    "rss_samples": [
+      [
+        0.0050720839999911504,
+        409600
+      ]
+    ]
+  },
+  {
+    "name": "proxy-cropped-v2.mov",
+    "argv": [
+      "--reject",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/proxy-cropped-v2.mov",
+      "full, centred aperture"
+    ],
+    "exit_code": 0,
+    "seconds": 0.5188777500000015,
+    "peak_rss_bytes": 425984,
+    "rss_samples": [
+      [
+        0.012642333000002282,
+        425984
+      ]
+    ]
+  },
+  {
+    "name": "lt-cropped-v2.mov",
+    "argv": [
+      "--reject",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/lt-cropped-v2.mov",
+      "full, centred aperture"
+    ],
+    "exit_code": 0,
+    "seconds": 1.02797529099999,
+    "peak_rss_bytes": 7553024,
+    "rss_samples": [
+      [
+        0.013612707999996587,
+        425984
+      ],
+      [
+        0.5221857909999983,
+        7553024
+      ]
+    ]
+  },
+  {
+    "name": "422-cropped-v2.mov",
+    "argv": [
+      "--reject",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/422-cropped-v2.mov",
+      "full, centred aperture"
+    ],
+    "exit_code": 0,
+    "seconds": 1.0266873750000087,
+    "peak_rss_bytes": 7602176,
+    "rss_samples": [
+      [
+        0.013162000000008334,
+        425984
+      ],
+      [
+        0.5217444590000042,
+        7602176
+      ]
+    ]
+  },
+  {
+    "name": "actual-file",
+    "argv": [
+      "--actual",
+      "/Users/fuzz/Developer/LevelScope/Tests/51_SyncTest.mov"
+    ],
+    "exit_code": 0,
+    "seconds": 11.231989083000002,
+    "peak_rss_bytes": 183730176,
+    "rss_samples": [
+      [
+        0.012840416000003074,
+        393216
+      ],
+      [
+        0.5214582079999985,
+        7602176
+      ],
+      [
+        1.0301314160000032,
+        7602176
+      ],
+      [
+        1.538626665999999,
+        7602176
+      ],
+      [
+        2.0471414579999987,
+        19382272
+      ],
+      [
+        2.554818499999996,
+        170934272
+      ],
+      [
+        3.0673049159999977,
+        168361984
+      ],
+      [
+        3.5802387499999924,
+        173703168
+      ],
+      [
+        4.091287291,
+        174931968
+      ],
+      [
+        4.605810790999996,
+        173981696
+      ],
+      [
+        5.119259165999992,
+        171687936
+      ],
+      [
+        5.633728665999996,
+        180895744
+      ],
+      [
+        6.140835791000001,
+        175702016
+      ],
+      [
+        6.649799708000003,
+        175816704
+      ],
+      [
+        7.157138790999994,
+        183222272
+      ],
+      [
+        7.671685749999995,
+        183730176
+      ],
+      [
+        8.183896165999997,
+        177094656
+      ],
+      [
+        8.69161408299999,
+        151535616
+      ],
+      [
+        9.200374874999994,
+        149274624
+      ],
+      [
+        9.707936457999992,
+        149274624
+      ],
+      [
+        10.218088457999997,
+        149274624
+      ],
+      [
+        10.725970790999995,
+        152797184
+      ]
+    ]
+  },
+  {
+    "name": "actual-file-isolation",
+    "argv": [
+      "--isolation",
+      "/Users/fuzz/Developer/LevelScope/Tests/51_SyncTest.mov"
+    ],
+    "exit_code": 0,
+    "seconds": 4.568994916000008,
+    "peak_rss_bytes": 38486016,
+    "rss_samples": [
+      [
+        0.014044333000001075,
+        245760
+      ],
+      [
+        0.5185662079999958,
+        9469952
+      ],
+      [
+        1.0221930410000084,
+        9469952
+      ],
+      [
+        1.5277259580000049,
+        9469952
+      ],
+      [
+        2.0363759159999972,
+        18022400
+      ],
+      [
+        2.5418207499999994,
+        38486016
+      ],
+      [
+        3.046096165999998,
+        38469632
+      ],
+      [
+        3.5548759579999967,
+        38469632
+      ],
+      [
+        4.063623000000007,
+        38469632
+      ]
+    ]
+  }
+]

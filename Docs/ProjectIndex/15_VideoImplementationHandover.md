@@ -28,9 +28,11 @@ retroactively accepted, and the zero-skipped-frame limit stayed unchanged.
 
 This work incorporated published main
 `6d304dbecd8fa47f56b0260105aa9d07f96ba1bc`, including qualified M5, before implementation.
-The ProRes extension is published on the video branch; this task does not integrate
-it into main or change the logic-module branch. Subsequent integration must preserve
-the exact tested identities and check any affected combined changes.
+The later authorized integration accepts main revision `af7ed751ab869f7829c65e7736939e45425c0d54` plus its
+documentation/evidence follow-up. Both Macs pass fresh inaudible regressions using
+the unchanged frozen candidate, and a separate fresh universal build passes CTest.
+See [the ProRes main integration handover](27_ProResMainIntegration.md). Continue
+logic work from latest fetched `origin/main`; the logic-module branch is untouched.
 
 Source remains `/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation`.
 Local preserved binaries, fixtures and raw evidence are under

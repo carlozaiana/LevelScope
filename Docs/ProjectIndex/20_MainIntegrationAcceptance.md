@@ -3,6 +3,15 @@
 Integration continuation, 17 October 2026. Historical M1 and video reports remain
 unchanged; this document records the additional gate and subsequent integration.
 
+## ProRes continuation — 21 October 2026
+
+Qualified M5 and bounded SDR ProRes are now included in the accepted main
+integration revision `af7ed751ab869f7829c65e7736939e45425c0d54` and its handover follow-up. Use latest fetched
+`origin/main` for subsequent logic work. See
+[27_ProResMainIntegration.md](27_ProResMainIntegration.md) for fresh two-Mac regressions,
+checkpoint preservation, unchanged tested binaries and limitations. The original
+17 October records below retain their historical scope and exact identities.
+
 ## Measurement stage completed
 
 `main` was fast-forwarded from `556d387ad772dc5e604ead95f1525f60e66fd5f9` to qualified

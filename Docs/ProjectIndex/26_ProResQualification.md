@@ -9,7 +9,9 @@ their original verdicts; the zero-skipped-frame gate was never relaxed.
 
 The source and evidence checkpoint is [video-prores-checkpoint-2026-10-21](https://github.com/carlozaiana/LevelScope/tree/video-prores-checkpoint-2026-10-21)
 on [codex/video-implementation](https://github.com/carlozaiana/LevelScope/tree/codex/video-implementation).
-This extension is not integrated into main by this task.
+At this checkpoint publication it was not yet integrated into main. The later
+authorized integration is recorded in [27_ProResMainIntegration.md](27_ProResMainIntegration.md);
+all historical tested identities and results below remain unchanged.
 
 ## Scope and exact candidate
 
@@ -211,7 +213,7 @@ candidate-04 artifacts on each Mac unchanged, the exact tested source files, and
 the original movie hash. The original checkout remains `codex/logic-module` at
 `ae88e187d288c53dbca1287e8341b74b9b5b2619`, with no tracked or staged differences.
 Six `.DS_Store` metadata differences were observed and left as found; their before/
-after hashes are recorded rather than reverted. Main remains
+after hashes are recorded rather than reverted. At that publication stage main remained
 `6d304dbecd8fa47f56b0260105aa9d07f96ba1bc`.
 
 The [audio configuration comparison](../../Tests/Video/results/prores-2026-10-20/audio-configuration-after.json)

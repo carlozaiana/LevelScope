@@ -1,5 +1,15 @@
 # Development workflow and video checkpoint locations
 
+## ProRes main integration — 21 October 2026
+
+[The integration handover](27_ProResMainIntegration.md) identifies the accepted main
+revision. The fresh integration build is under the video working copy at
+`build/prores-integration-20261021/build`; preserved ProRes packages remain in
+`build/prores-20261020`. Future builds need another fresh directory. CI builds only
+named standalone/test targets, runs hardware-independent CTest, and uploads only
+standalone. VST3 parity and installation remain separate work.
+
+
 Recorded 17 October 2026 after publishing the video checkpoint and moving its
 registered Git worktree. This is a documentation-only continuation of the tested
 checkpoint; no source was rebuilt or requalified for the move.

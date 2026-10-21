@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="(empty)"
+	tests="7"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname=""
+	time="33"
+	timestamp="2026-10-21T09:06:25"
+	>
+	<testcase name="video-timing" classname="video-timing" time="0.86144" status="run">
+		<properties/>
+		<system-out>PASS: 217968 video timing/transport checks; no audio device opened
+</system-out>
+	</testcase>
+	<testcase name="offline-measurement" classname="offline-measurement" time="13.3648" status="run">
+		<properties/>
+		<system-out>184 measurement checks passed
+</system-out>
+	</testcase>
+	<testcase name="measured-compliance" classname="measured-compliance" time="0.762354" status="run">
+		<properties/>
+		<system-out>PASS: 128 M2 checks; no audio device opened
+</system-out>
+	</testcase>
+	<testcase name="global-trim-proposals" classname="global-trim-proposals" time="12.2314" status="run">
+		<properties/>
+		<system-out>PASS: 302 M3 checks; no audio device opened
+</system-out>
+	</testcase>
+	<testcase name="measured-diagnostics" classname="measured-diagnostics" time="2.18681" status="run">
+		<properties/>
+		<system-out>PASS: 369 M4 checks; no audio device opened
+</system-out>
+	</testcase>
+	<testcase name="programme-sections" classname="programme-sections" time="3.41917" status="run">
+		<properties/>
+		<system-out>PASS: 2457 M5 checks; no audio device opened
+</system-out>
+	</testcase>
+	<testcase name="standalone-scaffold" classname="standalone-scaffold" time="0.537141" status="run">
+		<properties/>
+		<system-out>PASS: 205 hardware-independent scaffold checks
+</system-out>
+	</testcase>
+</testsuite>

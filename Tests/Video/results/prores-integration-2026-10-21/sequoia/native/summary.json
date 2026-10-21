@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "identity": {
+    "binary_sha256": "5aa80e7800e2bb8207563627e31f33cb924616e1d923e45efe915bc1c393c8e1",
+    "architecture": "arm64",
+    "os": "ProductName:\t\tmacOS\nProductVersion:\t\t15.7.9\nBuildVersion:\t\t24G830\n",
+    "fixtures_manifest_sha256": "398bb706268afea61b33529de55f6eda30bb61499495a47bcae3c2b7c24814ce",
+    "actual_sha256": "0870d5ab93d1492f23524ed1fff9319af1a6a9cf71882543f2190929afeb8e24"
+  },
+  "test_count": 52
+}

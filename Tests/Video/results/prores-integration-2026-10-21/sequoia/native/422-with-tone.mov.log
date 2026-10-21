@@ -1,0 +1,2 @@
+ISOLATION PASS nonzero_selected_peak=0.00312296 exact_compared_samples=2048 physical_outputs=0 observed_audio_reader_outputs=0
+PASS: 2079 ProRes checks; controlled sink only, no physical audio device

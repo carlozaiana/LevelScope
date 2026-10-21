@@ -15,7 +15,7 @@ This folder is the persistent orientation layer for future development chats. Re
 
 ## Task-based quick start
 
-- **Bounded SDR ProRes extension / qualified on the video branch:** [26_ProResQualification.md](26_ProResQualification.md), with [frozen acceptance criteria](25_ProResAcceptance.md)
+- **Bounded SDR ProRes / qualified and integrated into main:** [27_ProResMainIntegration.md](27_ProResMainIntegration.md) and [26_ProResQualification.md](26_ProResQualification.md), with [frozen acceptance criteria](25_ProResAcceptance.md)
 - **M5 programme sections / qualified, published and integrated into main:** [24_M5ProgrammeSections.md](24_M5ProgrammeSections.md)
 - **M4 measured diagnostics / published checkpoint:** [23_M4MeasuredDiagnostics.md](23_M4MeasuredDiagnostics.md)
 - **M3 global trim checkpoint:** [22_M3GlobalTrimProposals.md](22_M3GlobalTrimProposals.md)

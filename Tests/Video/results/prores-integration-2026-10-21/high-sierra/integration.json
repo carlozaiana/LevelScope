@@ -1,0 +1,43 @@
+{
+  "start_utc": "2026-10-21T07:00:15.000945+00:00",
+  "platform": "high-sierra",
+  "machine": "x86_64",
+  "candidate": "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/candidate-04",
+  "identity_sha256": "45219de9006b845230c5e1296859bff2c483beb49c4b827b8c33c552f8381285",
+  "verified_artifacts": 286,
+  "artifact_mismatches": [],
+  "actual_sha256": "0870d5ab93d1492f23524ed1fff9319af1a6a9cf71882543f2190929afeb8e24",
+  "fixture_manifest_sha256": "398bb706268afea61b33529de55f6eda30bb61499495a47bcae3c2b7c24814ce",
+  "audio_devices_opened": false,
+  "runs": [
+    {
+      "name": "native",
+      "argv": [
+        "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/candidate-04/Tests/run_prores_native_qualification.py",
+        "--binary",
+        "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/candidate-04/bin/LevelScopeVideoTests",
+        "--fixtures",
+        "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/fixtures",
+        "--actual",
+        "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/51_SyncTest.mov",
+        "--output",
+        "/Users/fuzz/LevelScope-ProRes-integration-2026-10-21/high-sierra/native"
+      ],
+      "exit_code": 0
+    },
+    {
+      "name": "regressions",
+      "argv": [
+        "/Users/fuzz/LevelScope-ProRes-qualification-2026-10-20/candidate-04/Tests/run_m5_qualification.py",
+        "--platform",
+        "high-sierra",
+        "--output",
+        "/Users/fuzz/LevelScope-ProRes-integration-2026-10-21/high-sierra/regressions"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "artifact_mismatches_after": [],
+  "completed_utc": "2026-10-21T07:06:54.024949+00:00",
+  "passed": true
+}

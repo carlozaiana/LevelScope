@@ -1,0 +1,133 @@
+{
+  "passed": true,
+  "source_commit": "6662091f1dfaff948a4a3eb3f000f47e37cfdc21",
+  "integration_revision": "af7ed751ab869f7829c65e7736939e45425c0d54",
+  "source_changed": false,
+  "configuration": "Release; universal x86_64/arm64; CMAKE_OSX_DEPLOYMENT_TARGET=10.13; all seven standalone test options ON",
+  "dependency": "/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12",
+  "dependency_commit": "4f43011b96eb0636104cb3e433894cda98243626",
+  "targets": [
+    "LevelScopeStandalone",
+    "LevelScopeVideoTests",
+    "LevelScopeVideoQualification",
+    "LevelScopeMeasurementTests",
+    "LevelScopeScaffoldTests",
+    "LevelScopeComplianceTests",
+    "LevelScopeProposalTests",
+    "LevelScopeDiagnosticsTests",
+    "LevelScopeSectionsTests"
+  ],
+  "executable_identities": [
+    {
+      "target": "LevelScopeStandalone",
+      "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-integration-20261021/build/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone",
+      "sha256": "7a39381ad8011b2c058bd5ad87d4c4cf6f1e81e7e731fd60b45ac86af40f223d",
+      "architectures": "x86_64 arm64"
+    },
+    {
+      "target": "LevelScopeVideoTests",
+      "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-integration-20261021/build/LevelScopeVideoTests_artefacts/Release/LevelScopeVideoTests",
+      "sha256": "93bee33fb48683cc821fd8b5e9d0ef47e3794a2769c55adf7c053ce7d2134339",
+      "architectures": "x86_64 arm64"
+    },
+    {
+      "target": "LevelScopeVideoQualification",
+      "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-integration-20261021/build/LevelScopeVideoQualification_artefacts/Release/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "sha256": "c5cb01982c3b64b50242608e0397a1b51336d659543335b0f9e0097232b425c5",
+      "architectures": "x86_64 arm64"
+    },
+    {
+      "target": "LevelScopeMeasurementTests",
+      "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-integration-20261021/build/LevelScopeMeasurementTests_artefacts/Release/LevelScopeMeasurementTests",
+      "sha256": "8f824b43560e22ed500bef7d1846ce6bac5e171a0d7e244fed6943a7da25da2f",
+      "architectures": "x86_64 arm64"
+    },
+    {
+      "target": "LevelScopeScaffoldTests",
+      "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-integration-20261021/build/LevelScopeScaffoldTests_artefacts/Release/LevelScopeScaffoldTests",
+      "sha256": "7b5735ab9c341b61e9beabbe0a67d8fa582f15e3b7f99db836dcbe7d802a3fc9",
+      "architectures": "x86_64 arm64"
+    },
+    {
+      "target": "LevelScopeComplianceTests",
+      "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-integration-20261021/build/LevelScopeComplianceTests_artefacts/Release/LevelScopeComplianceTests",
+      "sha256": "0cadc4422a79477f7c40092500bbcbe1d052504f1e86a94d587bfc79c3eb6a52",
+      "architectures": "x86_64 arm64"
+    },
+    {
+      "target": "LevelScopeProposalTests",
+      "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-integration-20261021/build/LevelScopeProposalTests_artefacts/Release/LevelScopeProposalTests",
+      "sha256": "cadcaa4115a50194c9629c5d5032c276c68fe3791e29cbf1934c9dbeb4a9c5d0",
+      "architectures": "x86_64 arm64"
+    },
+    {
+      "target": "LevelScopeDiagnosticsTests",
+      "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-integration-20261021/build/LevelScopeDiagnosticsTests_artefacts/Release/LevelScopeDiagnosticsTests",
+      "sha256": "1bac43d54a2e9ea31cdb07f47840a7857698f2f4fa265c47350a878f2a06007d",
+      "architectures": "x86_64 arm64"
+    },
+    {
+      "target": "LevelScopeSectionsTests",
+      "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-integration-20261021/build/LevelScopeSectionsTests_artefacts/Release/LevelScopeSectionsTests",
+      "sha256": "d6f16657a620bb8f721efaefa9d1910671ec37b1abe5d9dce074b4583add91e0",
+      "architectures": "x86_64 arm64"
+    }
+  ],
+  "ctest_count": 7,
+  "ctest_tests": [
+    {
+      "name": "video-timing",
+      "classname": "video-timing",
+      "time": "0.86144",
+      "status": "run"
+    },
+    {
+      "name": "offline-measurement",
+      "classname": "offline-measurement",
+      "time": "13.3648",
+      "status": "run"
+    },
+    {
+      "name": "measured-compliance",
+      "classname": "measured-compliance",
+      "time": "0.762354",
+      "status": "run"
+    },
+    {
+      "name": "global-trim-proposals",
+      "classname": "global-trim-proposals",
+      "time": "12.2314",
+      "status": "run"
+    },
+    {
+      "name": "measured-diagnostics",
+      "classname": "measured-diagnostics",
+      "time": "2.18681",
+      "status": "run"
+    },
+    {
+      "name": "programme-sections",
+      "classname": "programme-sections",
+      "time": "3.41917",
+      "status": "run"
+    },
+    {
+      "name": "standalone-scaffold",
+      "classname": "standalone-scaffold",
+      "time": "0.537141",
+      "status": "run"
+    }
+  ],
+  "ctest_architecture": "arm64 on actual Sequoia",
+  "physical_audio_devices_opened": false,
+  "vst3_executables": [],
+  "vst3_configuration_placeholders": [
+    "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-integration-20261021/build/LevelScope_artefacts/Release/VST3/LevelScope.vst3"
+  ],
+  "vst3_note": "CMake generated an Info.plist and empty Contents/MacOS directory only; no plugin target, executable or installation",
+  "build_log": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-integration-20261021/build.log",
+  "build_log_sha256": "289f197b001885a6c2775e9cc6bdb956680b9d000eac35dcb65230b993f3659f",
+  "configure_log_sha256": "405a9c6e7f1ce15f33138741cb518ffadfba820f0c4b7e23db2f48fc3e1b47e8",
+  "workflow_sha256": "49753655f9cc2b81dec73bd07bd69777dc6d504454fe8947eed1341d1c11779c",
+  "scope_note": "Fresh CI build and CTest regression only. Does not replace or inherit the frozen candidate04 two-platform playback/endurance qualification."
+}

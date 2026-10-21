@@ -1,0 +1,19 @@
+Test project /Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-integration-20261021/build
+    Start 1: video-timing
+1/7 Test #1: video-timing .....................   Passed    0.86 sec
+    Start 2: offline-measurement
+2/7 Test #2: offline-measurement ..............   Passed   13.36 sec
+    Start 3: measured-compliance
+3/7 Test #3: measured-compliance ..............   Passed    0.76 sec
+    Start 4: global-trim-proposals
+4/7 Test #4: global-trim-proposals ............   Passed   12.23 sec
+    Start 5: measured-diagnostics
+5/7 Test #5: measured-diagnostics .............   Passed    2.19 sec
+    Start 6: programme-sections
+6/7 Test #6: programme-sections ...............   Passed    3.42 sec
+    Start 7: standalone-scaffold
+7/7 Test #7: standalone-scaffold ..............   Passed    0.54 sec
+
+100% tests passed out of 7
+
+Total Test time (real) =  33.37 sec
