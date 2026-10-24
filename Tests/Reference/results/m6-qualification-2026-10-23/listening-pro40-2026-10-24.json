@@ -1,0 +1,24 @@
+{
+  "candidate": "candidate-01",
+  "source_digest": "0702768309e7328549fb86b677ec295fdc197d0382c45f0487b9060053b9a286",
+  "platform": "Intel High Sierra 10.13.6",
+  "device": "Saffire Pro 40",
+  "sample_rate": 48000,
+  "outputs": [
+    1,
+    2
+  ],
+  "monitor_gain_db": -15,
+  "current_gain_db": "-6.02059991328",
+  "fixture": "candidate-01/ui-fixtures/stereo.wav",
+  "fixture_seconds": 8,
+  "passed": true,
+  "user_reports": [
+    "Source is louder",
+    "Yes\u2014clean playback, UNVERIFIED, now stopped/muted/device closed"
+  ],
+  "observed_final_ui": "Current State processing -6.020599913280 dB, UNVERIFIED; monitor -15.0 dB, device closed and both routes muted",
+  "scope": "User-reported listening supplement; separate from captured sample parity and formal video timing. No agent changes to Pro40 controls, drivers, services or system audio configuration.",
+  "fixture_sha256": "27de311628abee0f19c3643b241594a4124b019cb469d7ef900d5efcdf820ba8",
+  "standalone_executable_sha256": "caf2b25bc13cfeee16cb59f17684227cbf1cb4822f84126bc18b78cba76024b6"
+}

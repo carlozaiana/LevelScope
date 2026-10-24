@@ -1,0 +1,101 @@
+{
+  "qualified": true,
+  "candidate": "candidate-01",
+  "source_digest": "0702768309e7328549fb86b677ec295fdc197d0382c45f0487b9060053b9a286",
+  "automated_platform_suites_passed": [
+    "arm64 Sequoia 15.7.9",
+    "x86_64 High Sierra 10.13.6"
+  ],
+  "outstanding": [],
+  "native_prores_passed": {
+    "sequoia": 53,
+    "high_sierra": 53
+  },
+  "audible_authorization": "User confirmed requested Source/Current listening comparison on both Macs; monitor requested -15 dB; later Golem level exaggeration was a separate deliberate test.",
+  "physical_prores_matrix_passed": {
+    "sequoia_source": 16,
+    "sequoia_current": 16,
+    "high_sierra_source": 16,
+    "high_sierra_current": 16
+  },
+  "work_status": "qualified_published_integrated",
+  "pause_date": "2026-10-23",
+  "listening": {
+    "user_reported_pass": true,
+    "platforms": [
+      "Sequoia",
+      "High Sierra"
+    ],
+    "observation": "Current clearly quieter, no clicks/dropouts, remains UNVERIFIED",
+    "evidence_type": "user-reported listening observation, not sample capture or synchronization measurement",
+    "corrected_golem_continuous_tone_repeat": "not performed before user-requested pause"
+  },
+  "runner_state": "Both complete physical runners exited with code 0; no candidate process remains on either Mac.",
+  "device_pause_state": {
+    "sequoia": "Device closed verified in UI",
+    "high_sierra": "Stopped at eight-second EOF observed; close-device action could not be confirmed after Screen Sharing became unavailable"
+  },
+  "resume_date": "2026-10-24",
+  "additional_listening_setup": {
+    "device": "Saffire Pro 40 on Golem",
+    "outputs": [
+      1,
+      2
+    ],
+    "sample_rate": 48000,
+    "monitor_db": -15,
+    "state": "passed",
+    "scope": "separate listening repeat; built-in devices retained for previously approved muted timing runs; no driver/service/system settings changes",
+    "user_observation": "Source is louder; both plays clean without clicks/dropouts; Current UNVERIFIED; stopped, routes muted and device closed",
+    "evidence_type": "user listening report plus assistant inspection of final UI, not instrumented sample or optical/acoustic timing evidence"
+  },
+  "physical_h264_passed": {
+    "sequoia": [
+      "cfr-source",
+      "vfr-source",
+      "cfr-current",
+      "vfr-current"
+    ],
+    "high_sierra": [
+      "cfr-source",
+      "vfr-source",
+      "cfr-current",
+      "vfr-current"
+    ]
+  },
+  "interactive_ui_passed": [
+    "Sequoia",
+    "High Sierra"
+  ],
+  "physical_endurance_passed": {
+    "sequoia": [
+      "proxy-1800",
+      "lt-1800",
+      "422-1800"
+    ],
+    "high_sierra": [
+      "proxy-1800",
+      "lt-1800",
+      "422-1800"
+    ]
+  },
+  "qualification_date": "2026-10-24",
+  "published": true,
+  "checkpoint_tag": "m6-verified-current-state-audition-2026-10-24",
+  "physical_evidence_summary": "physical-evidence-summary.json",
+  "preservation_audit": "final-preservation-audit.json",
+  "final_device_state": {
+    "sequoia": "Test processes exited; test device released",
+    "high_sierra": "Standalone closed after silent UI; physical test processes exited; test device released"
+  },
+  "limitations": [
+    "Current State retains the M1 layout/rate boundary; wider Source audition is separate",
+    "Source-sized ephemeral verified copy requires temporary disk space; abrupt termination may leave temporary files",
+    "Timing evidence is internal audio-clock/UI-paint evidence, not optical/acoustic synchronization measurement",
+    "Section processing, dynamics, persistence, export, embedded soundtrack, 7.1/7.1.4 Current qualification and VST3 parity remain deferred"
+  ],
+  "evidence_hash_manifest": "evidence-files-sha256.json",
+  "checkpoint_commit_ref": "refs/tags/m6-verified-current-state-audition-2026-10-24^{commit}",
+  "main_at_publication_ref": "refs/tags/m6-verified-current-state-audition-2026-10-24^{commit}",
+  "publication_preflight": "publication-preflight.json"
+}

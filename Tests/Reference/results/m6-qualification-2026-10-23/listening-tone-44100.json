@@ -1,0 +1,10 @@
+{
+  "file": "stereo-tone-44100-eight-seconds.wav",
+  "sha256": "ae4f7b2ffc58a60aa35b28bc114c8115d0dde264c3a71111a75e0236115920c5",
+  "sample_rate": 44100,
+  "frames": 352800,
+  "channels": 2,
+  "duration_seconds": 8,
+  "kind": "continuous 1 kHz stereo sine, approximately -23 dBFS peak",
+  "purpose": "Coordinated brief listening only; replaces sparse-pulse fixture for audibility, no candidate code changes"
+}

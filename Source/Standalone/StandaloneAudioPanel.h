@@ -13,14 +13,17 @@ public:
     StandaloneAudioPanel (StandaloneSessionModel&, StandaloneAudition&, std::function<void()> changed);
     void refresh();
     void sourceChanged();
+    void synchronize();
     void resized() override;
 private:
     StandaloneSessionModel& session;
     StandaloneAudition& audio;
     std::function<void()> onChanged;
-    juce::ComboBox typeBox, deviceBox;
+    juce::ComboBox typeBox, deviceBox, domainBox;
     juce::TextButton scanButton { "Scan devices" }, openButton { "Open device" }, closeButton { "Close device" };
-    juce::TextButton playButton { "Play source" }, stopButton { "Stop" }, confirmButton { "Confirm roles" };
+    juce::TextButton prepareButton { "Prepare audition" };
+    juce::Label auditionLabel;
+    juce::TextButton playButton { "Play selected" }, stopButton { "Stop" }, confirmButton { "Confirm roles" };
     juce::TextButton restartButton { "Restart" }, seekButton { "Seek" };
     juce::TextEditor seekPosition;
     juce::Slider gain;

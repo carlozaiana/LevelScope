@@ -37,6 +37,18 @@ Status legend: **Implemented** = present in current code/docs, **Partial** = som
   See `ProjectIndex/21_M2MeasuredCompliance.md` for applicability, identity, exact
   comparisons and the current qualification status. A scalar rule pass is not a
   broadcaster delivery, metadata or encoded-export compliance claim.
+- **M6 candidate 01 qualified and published, 24 October 2026:** actual
+  Intel High Sierra and arm64 Sequoia passed 4,736 M6 assertions each, separate
+  three-hour checks, M1–M5 regressions and both pinned official suites. All 124
+  captured pre-monitor sample streams were bit-identical across platforms.
+  Silent UI checks, coordinated listening, all 78 physical video cases (including
+  six 30-minute Current endurance runs) and package/source integrity audits passed.
+  See `ProjectIndex/30_M6QualificationAndHandover.md` for scope and exact evidence.
+  Source/Current audition uses the shared all-channel gain operation; monitor
+  controls remain outside measurement identity. UNVERIFIED playback does not
+  establish a measured rule pass. Monitor-overload stopping is not a limiter or
+  a true-peak protection claim. Current retains the M1 layout/rate boundary, and
+  VST3 measurement parity remains separate.
 
 - Historical plugin evidence remains documentation- and implementation-contract-based.
   The standalone M1 kernel now has the automated numeric evidence above. Scaffold tests

@@ -1,0 +1,2 @@
+PRORES lt-vfr.mov sha256=c3427bb6bde460008d906f4f3dcc2c845740c4bdb8cf1e63fe9aecba55c91ecc frames=120 hash_ms=412.94 index_ms=19.9478 observed_video_outputs=15 observed_audio_outputs=0 timecode=No timecode track
+PASS: 514 ProRes checks; controlled sink only, no physical audio device

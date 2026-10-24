@@ -124,7 +124,7 @@ public:
     bool opened = false;
     juce::AudioIODeviceCallback* callback = nullptr;
 };
-void transportChecks()
+void transportChecks(bool current = false)
 {
     auto file = juce::File::getSpecialLocation (juce::File::tempDirectory).getNonexistentChildFile ("levelscope-video-transport", ".wav", false);
     struct Remove { juce::File file; ~Remove() { file.deleteFile(); } } cleanup { file };
@@ -144,11 +144,20 @@ void transportChecks()
     auto device = std::make_unique<FakeDevice>(); auto* fake = device.get();
     auto audio = std::make_unique<StandaloneAudition> (std::move (device));
     audio->sourceChanged (media.media);
+    auto request = AuditionRequest::source(file, media.media, layout);
+    request.currentInitialized = true;
+    if (current) { request.domain = MeasurementDomain::currentState; request.context.processing.staticGainDb = -6.020599913279624; request.context.ticket.sessionRevision = 1; }
+    auto play = [&](const OutputRouting& map, bool restart = false, bool muted = false)
+    { audio->synchronize(request,map); return audio->play(request,map,restart,muted); };
+    auto seek = [&](int64_t frame)
+    { audio->synchronize(request,routing); return audio->seek(frame,request,routing); };
+
     expect (!audio->connected(), "source replacement does not open device");
-    expect (audio->seek (4000, file, media.media, layout, routing).isEmpty() && audio->positionFrames() == 4000 && !audio->active(), "seek while device closed retains stopped position");
+    expect (seek (4000).isEmpty() && audio->positionFrames() == 4000 && !audio->active(), "seek while device closed retains stopped position");
     expect (audio->connect (48000).isEmpty(), "injected output open");
-    expect (audio->play (file, media.media, layout, routing).isEmpty(), "resume at stopped seek");
-    std::this_thread::sleep_for (std::chrono::milliseconds (25)); audio->poll (false);
+    expect (play (routing).isEmpty(), "resume at stopped seek");
+    for (int i = 0; i < 5000 && audio->preparing(); ++i)
+    { audio->poll (false); std::this_thread::sleep_for (std::chrono::milliseconds (1)); }
     expect (!fake->isPlaying() && audio->getState() == AuditionState::buffering, "picture preroll gates callback start");
     auto start = [&]
     {
@@ -157,38 +166,40 @@ void transportChecks()
         expect (fake->isPlaying(), "preroll starts callback");
     };
     start(); juce::AudioBuffer<float> block (2, 256); fake->tick (block);
-    const auto scale = juce::Decibels::decibelsToGain (-30.0f) * 0.002f;
+    const auto scale = juce::Decibels::decibelsToGain (-30.0f) * 0.002f * (current ? 0.5f : 1.0f);
     expect (std::abs (block.getSample (0, 0) - 0.4f * scale) < 1e-8f, "seek decodes selected source frame");
     expect (block.getSample (0, 0) == -block.getSample (1, 0), "channel routing preserved");
     std::this_thread::sleep_for (std::chrono::milliseconds (25));
     expect (audio->positionFrames() == 4256, "clock stops at last submitted frame");
     const auto generation = audio->transportGeneration(); audio->stop();
     expect (audio->positionFrames() == 4256 && !fake->isPlaying() && audio->transportGeneration() > generation, "stop retains presented position and flushes generation");
-    audio->play (file, media.media, layout, routing); start(); fake->tick (block);
+    play (routing); start(); fake->tick (block);
     expect (std::abs (block.getSample (0, 0) - 0.4256f * scale) < 1e-8f, "resume starts at retained frame");
-    expect (audio->seek (1000, file, media.media, layout, routing).isEmpty() && audio->getState() == AuditionState::buffering, "playing seek enters preroll");
+    expect (seek (1000).isEmpty() && audio->getState() == AuditionState::buffering, "playing seek enters preroll");
     start(); fake->tick (block);
     expect (std::abs (block.getSample (0, 0) - 0.1f * scale) < 1e-8f, "playing seek flushes old audio samples");
-    for (int frame : { 2000, 7000, 200, 5000 }) audio->seek (frame, file, media.media, layout, routing);
+    for (int frame : { 2000, 7000, 200, 5000 }) seek (frame);
     start(); fake->tick (block);
     expect (std::abs (block.getSample (0, 0) - 0.5f * scale) < 1e-8f, "repeated seek publishes only final request");
-    audio->play (file, media.media, layout, routing, true); start(); fake->tick (block);
+    play (routing, true); start(); fake->tick (block);
     expect (block.getSample (0, 0) == 0, "restart seeks zero");
-    audio->seek (9000, file, media.media, layout, routing);
+    seek (9000);
     expect (!audio->active() && audio->getState() == AuditionState::finished && audio->positionFrames() == 9000, "seek to EOF stops transport");
-    expect (audio->seek (-1, file, media.media, layout, routing).isNotEmpty(), "negative audio seek rejected");
-    audio->seek (8800, file, media.media, layout, routing);
-    audio->play (file, media.media, layout, routing); start(); fake->tick (block);
+    expect (seek (-1).isNotEmpty(), "negative audio seek rejected");
+    seek (8800);
+    play (routing); start(); fake->tick (block);
     std::this_thread::sleep_for (std::chrono::milliseconds (25)); audio->poll();
     expect (audio->getState() == AuditionState::finished && audio->positionFrames() == 9000 && !fake->isPlaying(), "natural EOF drains presentation before stopping");
     OutputRouting muted;
-    expect (audio->play (file, media.media, layout, muted).isNotEmpty(), "normal audition refuses all-muted routes");
-    expect (audio->play (file, media.media, layout, muted, true, true).isEmpty(), "explicit silent timing run accepts all-muted routes");
+    expect (play (muted).isNotEmpty(), "normal audition refuses all-muted routes");
+    expect (play (muted, true, true).isEmpty(), "explicit silent timing run accepts all-muted routes");
     start(); fake->tick (block);
     expect (block.getMagnitude (0, 256) == 0, "silent timing run delivers only zero output");
     const auto beforeReplace = audio->transportGeneration(); audio->sourceChanged (media.media);
     expect (!fake->isPlaying() && audio->positionFrames() == 0 && audio->transportGeneration() > beforeReplace, "source replacement stops and resets the transport");
-    audio->play (file, media.media, layout, routing); fake->close(); audio->poll();
+    play (routing); fake->close(); audio->poll();
+    for (int i = 0; i < 5000 && audio->preparing(); ++i)
+    { audio->poll(); std::this_thread::sleep_for (std::chrono::milliseconds (1)); }
     expect (audio->getState() == AuditionState::failed && !audio->active(), "device error stops and invalidates transport");
 }
 Player::View awaitPicture (Player& player, Time time, uint64_t generation, int timeoutSeconds = 15)
@@ -342,7 +353,7 @@ int main (int argc, char** argv)
             std::cout << "PASS: " << checks << " ProRes checks; controlled sink only, no physical audio device\n";
             return 0;
         }
-        timing(); clockChecks(); independence(); transportChecks();
+        timing(); clockChecks(); independence(); transportChecks(); transportChecks(true);
         for (int i = 1; i < argc; ++i)
         {
             const juce::File file { juce::String (argv[i]) };

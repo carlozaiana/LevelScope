@@ -1,0 +1,2 @@
+PRORES proxy-nclx-709.mov sha256=820bceca04aea7b73a6be2f4393cfae80ff1d1f7242561f5e87970edf42430d7 frames=256 hash_ms=392.796 index_ms=26.6079 observed_video_outputs=15 observed_audio_outputs=0 timecode=No timecode track
+PASS: 1058 ProRes checks; controlled sink only, no physical audio device

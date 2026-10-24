@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-24",
+  "source_digest": "0702768309e7328549fb86b677ec295fdc197d0382c45f0487b9060053b9a286",
+  "source_files": 143,
+  "source_mismatches": [],
+  "head": "6d1c22a23244b4e421dd2773862451ac8a863992",
+  "main": "a7fec0d6e7e8ef5da7f56819722d73d96dd10f78",
+  "head_unchanged": true,
+  "tags_unchanged": true,
+  "worktrees_unchanged": true,
+  "tag_count": 9,
+  "local_package_audit": "sequoia-complete-integrity.json",
+  "remote_package_audit": "high-sierra-complete-integrity.json",
+  "publication": "Not published; no M6 commit, tag, push or merge performed",
+  "passed": true
+}

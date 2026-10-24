@@ -203,6 +203,7 @@ endif()
 #==============================
 
 add_library(LevelScopeStandaloneSupport STATIC
+    Source/Standalone/VerifiedSource.cpp
     Source/Core/Proposal/SectionAnalysis.cpp
     Source/Standalone/StandaloneSections.cpp
     Source/Core/Proposal/AnalysisEngine.cpp
@@ -361,6 +362,16 @@ if (LEVELSCOPE_BUILD_SECTIONS_TESTS)
     target_link_libraries(LevelScopeSectionsTests PRIVATE LevelScopeDiagnosticsUI)
     add_test(NAME programme-sections COMMAND LevelScopeSectionsTests)
     set_tests_properties(programme-sections PROPERTIES TIMEOUT 120)
+endif()
+
+option(LEVELSCOPE_BUILD_AUDITION_TESTS "Build M6 verified audition checks" OFF)
+if (LEVELSCOPE_BUILD_AUDITION_TESTS)
+    enable_testing()
+    juce_add_console_app(LevelScopeAuditionTests PRODUCT_NAME "LevelScope Audition Tests")
+    target_sources(LevelScopeAuditionTests PRIVATE Tests/AuditionTests.cpp Source/Standalone/StandaloneAudioPanel.cpp)
+    target_link_libraries(LevelScopeAuditionTests PRIVATE LevelScopeStandaloneSupport juce::juce_gui_basics)
+    add_test(NAME verified-audition COMMAND LevelScopeAuditionTests)
+    set_tests_properties(verified-audition PROPERTIES TIMEOUT 300)
 endif()
 
 option(LEVELSCOPE_BUILD_SCAFFOLD_TESTS "Build hardware-independent standalone checks" OFF)

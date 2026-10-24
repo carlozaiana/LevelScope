@@ -1,0 +1,37 @@
+{
+  "platform": "actual Intel High Sierra 10.13.6 17G66",
+  "candidate": "candidate-01",
+  "source_digest": "0702768309e7328549fb86b677ec295fdc197d0382c45f0487b9060053b9a286",
+  "scope": "Completed silent product UI observations, 23\u201324 October 2026",
+  "device": "closed",
+  "routing": "both muted",
+  "checks_completed": [
+    "Source stereo import and ordered-role confirmation",
+    "Verified Source preparation with device closed",
+    "Source measurement",
+    "Initialized Current at 0 dB selected as UNVERIFIED",
+    "Current preparation reuses verified copy",
+    "Current 0 dB remeasurement",
+    "Processing gain -18 dB invalidates Current only",
+    "Actual Current failure displayed after remeasurement",
+    "Monitor volume change preserves measurements",
+    "M3 draft remains unapplied prediction",
+    "Explicit Apply changes gain and restores UNVERIFIED",
+    "Remeasure applied result through measurement worker: PASS",
+    "Stopped Source selection preserves Current gain and measurements",
+    "24 October: Source and Current at zero gain measured; H.264 attachment, stopped audio seek 3/2 and offset -1001/30000 retain both measurements; held frame 45 observed",
+    "24 October: Clear Source removes imported source and Current, with device closed and no playback",
+    "24 October: imported three-hour fixture, confirmed roles and selected Source; preparation showed progress",
+    "24 October: Stop cancelled preparation; displayed Source preparation cancelled: stopped; controls responsive, routes muted",
+    "24 October: started preparation again and closed the app during preparation; window closed and candidate process absent by SSH inspection"
+  ],
+  "manual_assistance": "User opened candidate; source import/roles initially automated in this run. Screen Sharing blue control arrow required; some forwarded input needed repeated action. Later listening setup assistance recorded separately. On 24 October user completed measurement, video attachment, exact rational seek and offset entry; assistant inspected frame 45, Source measured snapshot, Current measured current revision, stopped/device-closed and muted state.",
+  "remaining": [],
+  "resume_video_evidence": [
+    "06-video-offset-held-frame.png",
+    "07-measurements-after-video.png"
+  ],
+  "passed": true,
+  "qualification_scope": "Interactive UI only; overall M6 physical timing/endurance qualification is tracked separately",
+  "shutdown_verification": "Candidate PID 698 and any candidate-01 LevelScope process absent after window-close action; no forced termination used"
+}

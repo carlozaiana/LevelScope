@@ -34,6 +34,22 @@ public:
         if (media.channels != 2 || (media.sampleRate != 48000 && media.sampleRate != 44100) || media.durationSeconds() < duration)
             throw std::runtime_error ("Qualification requires a sufficiently long 44.1 or 48 kHz stereo source");
         layout.count = 2; layout.roles[0] = juce::AudioChannelSet::left; layout.roles[1] = juce::AudioChannelSet::right; layout.confirmed = true;
+        request = AuditionRequest::source (audioFile, media, layout);
+        const auto auditionState = argument ("--audition-state");
+        if (auditionState.isNotEmpty() && auditionState != "source" && auditionState != "current")
+            throw std::runtime_error ("Audition state must be source or current");
+        if (auditionState == "current")
+        {
+            request.domain = MeasurementDomain::currentState; request.currentInitialized = true;
+            request.context.ticket.sessionRevision = 1;
+            const auto gainText = argument ("--processing-gain");
+            if (gainText.isEmpty()) throw std::runtime_error ("Current qualification requires explicit --processing-gain");
+            size_t used = 0; request.context.processing.staticGainDb = std::stod (gainText.toStdString(), &used);
+            if (used != gainText.toStdString().size()) throw std::runtime_error ("Invalid processing gain");
+        }
+        else if (argument ("--processing-gain").isNotEmpty()) throw std::runtime_error ("Source has identity gain only");
+        const auto requestError = request.validationError();
+        if (requestError.isNotEmpty()) throw std::runtime_error (requestError.toStdString());
         routing.fileToDevice[0] = 0; routing.fileToDevice[1] = 1;
         muted = args.contains ("--muted");
         manualStart = args.contains ("--manual-start");
@@ -54,6 +70,9 @@ public:
         if (!found) throw std::runtime_error ("Requested device was not found");
         if (audio.outputNames().size() != 2) throw std::runtime_error ("Use an explicitly coordinated two-output ordinary device");
         audio.setMonitorGainDb (-30);
+        audio.synchronize (request, routing);
+        const auto preparationError = audio.prepare (request);
+        if (preparationError.isNotEmpty()) throw std::runtime_error (preparationError.toStdString());
         player.attach (videoFile); startedNs = attachmentStartedNs = StandaloneAudition::hostTimeNs();
         setSize (800, 520); startTimerHz (120);
         rssSampler = std::thread ([this]
@@ -209,6 +228,11 @@ private:
         set ("architecture", "x86_64");
 #endif
         set ("sample_rate", media.sampleRate); set ("device", deviceName); set ("audio_sha256", media.sha256);
+        set ("audition_state", request.domain == MeasurementDomain::source ? "Source" : "Current State");
+        set ("processing_gain_db", request.context.processing.staticGainDb);
+        set ("audition_identity", request.identity());
+        set ("measurement_build", LEVELSCOPE_MEASUREMENT_BUILD);
+        set ("measurement_status", "UNVERIFIED; timing qualification does not measure compliance");
         set ("video_sha256", view.asset ? view.asset->sha256 : juce::String());
         set ("backend", view.asset ? view.asset->backend : juce::String());
         set ("source_seconds", seconds); set ("requested_seconds", duration); set ("latency_frames", latency);
@@ -277,12 +301,12 @@ private:
                     + 10.0 * view.asset->frames.size() / 100000.0;
                 attachmentPassed = attachmentSeconds <= attachmentBudget;
             }
-            if (!opened && view.picture && view.queued >= 3 && (!manualStart || requestedStart))
+            if (!opened && !audio.preparing() && audio.preparedCopy() && view.picture && view.queued >= 3 && (!manualStart || requestedStart))
             {
                 if (view.asset->frames.back().end < video::Time (static_cast<int64_t> (duration), 1))
                     throw std::runtime_error ("Video does not cover the requested run");
                 auto error = audio.connect (media.sampleRate);
-                if (error.isEmpty()) error = audio.play (audioFile, media, layout, routing, true, muted);
+                if (error.isEmpty()) error = audio.play (request, routing, true, muted);
                 if (error.isNotEmpty()) throw std::runtime_error (error.toStdString()); opened = true;
                 playbackStartedNs = StandaloneAudition::hostTimeNs();
                 view = player.update (video::Time (audio.positionFrames(), static_cast<int64_t> (media.sampleRate)), audio.transportGeneration());
@@ -306,6 +330,7 @@ private:
     double firstRetainedSum = 0, lastRetainedSum = 0, firstFootprintSum = 0, lastFootprintSum = 0;
     juce::Array<juce::var> memorySamples;
     StandaloneAudition audio;
+    AuditionRequest request;
     video::Player player;
     video::Player::View view;
     MediaInfo media; ChannelLayout layout; OutputRouting routing;

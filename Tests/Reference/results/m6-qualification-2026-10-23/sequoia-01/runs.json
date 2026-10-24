@@ -1,0 +1,221 @@
+[
+  {
+    "name": "audition",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/bin/LevelScopeAuditionTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/sequoia-01/audition.json",
+      "--samples",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/sequoia-01/samples"
+    ],
+    "exit_code": 0,
+    "seconds": 35.201526167,
+    "log_sha256": "6e5f1fe5813ebf6acd2d19d5d4c32031259852ac6a194e8f33cba69070ef3c99"
+  },
+  {
+    "name": "audition-long",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/bin/LevelScopeAuditionTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/sequoia-01/audition-long.json",
+      "--long-source",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/ui-fixtures/diagnostic-three-hour.wav"
+    ],
+    "exit_code": 0,
+    "seconds": 51.833528083,
+    "log_sha256": "e42262ed2beeaf59b936e0810db29c0e0d9f31b2d10eb27792ce653f17004c8f"
+  },
+  {
+    "name": "sections",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/bin/LevelScopeSectionsTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/sequoia-01/sections.json"
+    ],
+    "exit_code": 0,
+    "seconds": 3.51493233299999,
+    "log_sha256": "14aface59735f91ec48ca1d16a227418386019ee35b9c2a4a48ff860e08f1ee9"
+  },
+  {
+    "name": "diagnostics",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/bin/LevelScopeDiagnosticsTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/sequoia-01/diagnostics.json"
+    ],
+    "exit_code": 0,
+    "seconds": 2.191737833000005,
+    "log_sha256": "1fcc0038f5c6830c1ef6a5b4d9036e912fda8e59639d1fd1eaa58cc64b88232d"
+  },
+  {
+    "name": "proposal",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/bin/LevelScopeProposalTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/sequoia-01/proposal.json"
+    ],
+    "exit_code": 0,
+    "seconds": 9.089270375000012,
+    "log_sha256": "d2297d0dbe58d37196eda1d4c7762c78c7185ec2eb18c77cf4307e7e32ba1531"
+  },
+  {
+    "name": "compliance",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/bin/LevelScopeComplianceTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/sequoia-01/compliance.json"
+    ],
+    "exit_code": 0,
+    "seconds": 0.7572137079999948,
+    "log_sha256": "b75d0d424ac5e8e502c9cc3f4d1cb859d1b488a1b4c1b68ad17b8d4461c9d339"
+  },
+  {
+    "name": "measurement",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/bin/LevelScopeMeasurementTests"
+    ],
+    "exit_code": 0,
+    "seconds": 13.597780708999991,
+    "log_sha256": "693ec25505d8a388521025eedf57085a86503c9ccda9586e86f6f315285c4e6c"
+  },
+  {
+    "name": "scaffold",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/bin/LevelScopeScaffoldTests"
+    ],
+    "exit_code": 0,
+    "seconds": 0.5036612500000075,
+    "log_sha256": "79c972489bdfa0d6402a9777301f77578b39a63f9552d31bf148544bef2b5f35"
+  },
+  {
+    "name": "video",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/bin/LevelScopeVideoTests",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/video-fixtures/cfr-exact.mov",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/video-fixtures/vfr-exact.mov",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/video-fixtures/two-streams-audio.mov",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/video-fixtures/timecode.mov",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/video-fixtures/cfr-exact.mp4",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/video-fixtures/cfr-exact.m4v",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/video-fixtures/half-hour.mov"
+    ],
+    "exit_code": 0,
+    "seconds": 4.410923917000005,
+    "log_sha256": "dbca510cc7abcdeec10de3b42c2a293820a36024f7d24541cc81686bf64d824c"
+  },
+  {
+    "name": "runner",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/EbuReferenceRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "seconds": 0.07184912499999996,
+    "log_sha256": "f8f7b0ac7f2b53ac4e96000f166430c488f2c37e059ad5502b09d60f29d363b8"
+  },
+  {
+    "name": "m3-runner",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/M3QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "seconds": 0.1269624589999978,
+    "log_sha256": "0797a603f79e55a5612211749887a547eca16fda33260dc9b3baf57657cc4f17"
+  },
+  {
+    "name": "m4-runner",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/M4QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "seconds": 0.12558741700000553,
+    "log_sha256": "713972b30bbbb93930114261a846150033bb4ae557443bb0167e5db8710ff990"
+  },
+  {
+    "name": "m5-runner",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/M5QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "seconds": 0.13218520800000988,
+    "log_sha256": "f5faa6d4210668051af1e1aa950c6d1267fd7ba43fadaee830160a2274d7c6b1"
+  },
+  {
+    "name": "m6-runner",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/M6QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "seconds": 0.07205716699999698,
+    "log_sha256": "feabb4add9e2ca3374e538560634d1ec97dc4f4ce89aab12f3d726e36ea9b2f6"
+  },
+  {
+    "name": "itu",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/run_reference_measurements.py",
+      "--binary",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/bin/LevelScopeMeasurementTests",
+      "--vectors",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/vectors/itu",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/sequoia-01/itu.json",
+      "--compare",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/baseline/itu.json",
+      "--arch",
+      "arm64"
+    ],
+    "exit_code": 0,
+    "seconds": 22.828157165999997,
+    "log_sha256": "9571a299c82a4aa12593daf8b7ed82d5c1eb5874cfefdd6f4a5a56e0c6f1d16e"
+  },
+  {
+    "name": "ebu",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/run_ebu_measurements.py",
+      "--binary",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/bin/LevelScopeMeasurementTests",
+      "--vectors",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/vectors/ebu",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/sequoia-01/ebu.json",
+      "--compare",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/baseline/ebu.json",
+      "--arch",
+      "arm64"
+    ],
+    "exit_code": 0,
+    "seconds": 10.499439208000013,
+    "log_sha256": "18e65c40d2edcd18e30155f9ca4f7a49b0e066f90ea10aa588ab78922e03d313"
+  }
+]

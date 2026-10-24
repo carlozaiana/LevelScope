@@ -1,0 +1,9 @@
+{
+  "automated_passed": true,
+  "qualification_complete": false,
+  "physical_video_and_ui": "Separate required evidence; these suites alone do not qualify M6",
+  "interactive_ui": "Separate evidence required",
+  "platform": "high-sierra",
+  "source_digest": "0702768309e7328549fb86b677ec295fdc197d0382c45f0487b9060053b9a286",
+  "identity_sha256": "ab7440f4d06275ea55055f59eec98c4f5872a775342e5b31777cefdf1dfdb4dd"
+}

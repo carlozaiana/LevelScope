@@ -158,9 +158,12 @@ void StandaloneMainComponent::beginImport (const juce::File& file)
 
 void StandaloneMainComponent::timerCallback()
 {
+    audioPanel.synchronize(); // reject unexpectedly invalidated audition before any completion publishes
     videoPanel.synchronize(); // observes new seek/play generation before audio preroll can finish
+    const auto audioStateBeforePoll = audition.getState();
     audition.poll (videoPanel.prerollReady());
     audioPanel.refresh();
+    if (audition.getState() != audioStateBeforePoll) refreshFromSession();
     if (proposalResult.valid() && proposalResult.wait_for (std::chrono::seconds (0)) == std::future_status::ready)
     {
         const auto result = proposalResult.get();
@@ -266,7 +269,7 @@ void StandaloneMainComponent::configureLabels()
     titleLabel.setColour (juce::Label::textColourId, juce::Colours::white);
     addAndMakeVisible (titleLabel);
 
-    subtitleLabel.setText ("Measured Source / Current State rules. Source audition. Complete delivery compliance is not evaluated.",
+    subtitleLabel.setText ("Measured Source / Current State rules. Source / Current State audition. Complete delivery compliance is not evaluated.",
                            juce::dontSendNotification);
     subtitleLabel.setJustificationType (juce::Justification::centredLeft);
     subtitleLabel.setColour (juce::Label::textColourId, juce::Colour (0xffc6ccd7));
@@ -346,7 +349,7 @@ void StandaloneMainComponent::configureCurrentStateControls()
     currentGain.setSliderStyle (juce::Slider::LinearHorizontal);
     currentGain.setTextBoxStyle (juce::Slider::TextBoxRight, false, 100, 24);
     currentGain.setTextValueSuffix (" dB trim");
-    currentGain.setTooltip ("Current State static gain, including LFE. Re-measure after editing. Source audition uses original audio.");
+    currentGain.setTooltip ("Current State static gain, including LFE. Re-measure after editing. Audition selection is separate; Stop before editing processing gain.");
     currentGain.onValueChange = [this] { session.setCurrentGainDb (currentGain.getValue()); refreshFromSession(); };
     addAndMakeVisible (currentGain);
 
@@ -442,13 +445,13 @@ void StandaloneMainComponent::refreshFromSession()
     targetProfileBox.setEnabled (! session.job.isActive());
     cancelJobButton.setEnabled (session.job.state == JobState::running);
 
-    initializeCurrentStateButton.setEnabled (! session.job.isActive() && session.canInitializeCurrentStateFromSource());
-    clearCurrentStateButton.setEnabled (! session.job.isActive() && session.hasCurrentStateInitialized());
+    initializeCurrentStateButton.setEnabled (! session.audioEditsBlocked() && ! session.job.isActive() && session.canInitializeCurrentStateFromSource());
+    clearCurrentStateButton.setEnabled (! session.audioEditsBlocked() && ! session.job.isActive() && session.hasCurrentStateInitialized());
     const auto measurementError = OfflineAnalysisService::validateRequest (session.measurementContext (MeasurementDomain::source), MeasurementDomain::source);
     measureSourceButton.setEnabled (! session.job.isActive() && ! session.sourceContentInvalid && measurementError.isEmpty());
     measureSourceButton.setTooltip (measurementError);
     remeasureCurrentStateButton.setEnabled (! session.job.isActive() && ! session.sourceContentInvalid && session.hasCurrentStateInitialized() && measurementError.isEmpty());
-    currentGain.setEnabled (! session.job.isActive() && session.hasCurrentStateInitialized());
+    currentGain.setEnabled (! session.audioEditsBlocked() && ! session.job.isActive() && session.hasCurrentStateInitialized());
     currentGain.setValue (session.currentStateDocument.staticGainDb, juce::dontSendNotification);
     draftTrimButton.setEnabled (session.getWorkflowReadiness().canDraftProposal());
     applyTrimButton.setEnabled (session.canApplyTrim());
@@ -610,7 +613,7 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
             text << "Initialize Current State, adjust static gain, then re-measure.\n\n";
             text << "Static gain applies to every file channel, including LFE.\n";
             text << "Editing gain invalidates the previous Current State measurement.\n";
-            text << "Source audition plays the original audio with monitor gain only.\n\n";
+            text << "Audition Source or the explicitly applied Current State; monitor gain is separate.\n\n";
             text << measurementsText (session.currentState);
             break;
 
@@ -640,7 +643,7 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
             break;
     }
 
-    text << "\n\nSource audition uses original audio with monitor gain only. No processing or compliance claim.";
+    text << "\n\nSelected audition uses Source or Current State processing, followed by separate monitor gain. Playback is not measurement or compliance.";
 
     return text;
 }

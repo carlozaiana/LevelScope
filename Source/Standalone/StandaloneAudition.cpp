@@ -1,6 +1,7 @@
 #include "StandaloneAudition.h"
 #include <cmath>
 #include <chrono>
+#include <stdexcept>
 #if JUCE_MAC
 #include <mach/mach_time.h>
 #include <CoreAudio/CoreAudio.h>
@@ -72,6 +73,8 @@ int64_t StandaloneAudition::positionFrames() const
 void StandaloneAudition::sourceChanged (const MediaInfo& media)
 {
     stop();
+    preparedSource.reset(); expectedIdentity.clear();
+    fault = ErrorCode::none;
     sourceRate = static_cast<int64_t> (media.sampleRate);
     sourceFrames = media.frames; sourceHash = media.sha256;
     heldFrame = startFrame = 0;
@@ -83,7 +86,8 @@ void AuditionBuffer::reset (int channels, const OutputRouting& map)
     routing = map;
     read.store (0); written.store (0); underruns.store (0);
     endOfFile.store (false);
-    lastGain = 0;
+    lastGain = 0; // Every explicit restart uses a fresh ramp, including overload recovery.
+    monitorOverload.store (false); overloadChannel.store (-1); overloadFrame.store (0);
 }
 
 int AuditionBuffer::writable() const noexcept
@@ -104,11 +108,43 @@ void AuditionBuffer::render (float* const* output, int outputCount, int frames) 
 {
     for (int channel = 0; channel < outputCount; ++channel)
         if (output[channel] != nullptr) juce::FloatVectorOperations::clear (output[channel], frames);
+    if (monitorOverload.load()) return;
     const auto start = read.load (std::memory_order_relaxed);
     const auto available = written.load (std::memory_order_acquire) - start;
     const auto count = static_cast<int> (juce::jmin<uint64_t> (static_cast<uint64_t> (frames), available));
     if (count < frames && ! endOfFile.load()) underruns.fetch_add (1, std::memory_order_relaxed);
     const auto target = gain.load (std::memory_order_relaxed);
+    // Validate the ENTIRE routed callback first, without consuming or changing
+    // ramp/clock state. The already-cleared outputs stay entirely silent on fault.
+    float ramp = lastGain;
+    for (int frame = 0; frame < count; ++frame)
+    {
+        ramp += (target - ramp) * 0.002f;
+        for (int channel = 0; channel < channelCount; ++channel)
+        {
+            const auto destination = routing.fileToDevice[channel];
+            if (destination < 0 || destination >= outputCount || output[destination] == nullptr) continue;
+            const float value = samples[channel][(start + static_cast<uint64_t> (frame)) % capacity] * ramp;
+            if (! std::isfinite (value) || std::abs (value) > 1.0f)
+            {
+                overloadChannel.store (channel); overloadFrame.store (start + static_cast<uint64_t> (frame));
+                monitorOverload.store (true); return;
+            }
+        }
+    }
+    if (observer && count > 0)
+    {
+        std::array<const float*, maxChannels> pointers {};
+        int offset = 0;
+        while (offset < count)
+        {
+            const auto index = static_cast<int> ((start + static_cast<uint64_t> (offset)) % capacity);
+            const int n = std::min (count - offset, capacity - index);
+            for (int ch = 0; ch < channelCount; ++ch) pointers[ch] = samples[ch].data() + index;
+            observer->observe (pointers.data(), channelCount, n, captureStart + static_cast<int64_t> (start) + offset);
+            offset += n;
+        }
+    }
     for (int frame = 0; frame < count; ++frame)
     {
         lastGain += (target - lastGain) * 0.002f;
@@ -122,7 +158,11 @@ void AuditionBuffer::render (float* const* output, int outputCount, int frames) 
     read.store (start + static_cast<uint64_t> (count), std::memory_order_release);
 }
 
-StandaloneAudition::~StandaloneAudition() { disconnect(); }
+StandaloneAudition::~StandaloneAudition()
+{
+    disconnect();
+    if (preparation.valid()) { preparation.wait(); preparation.get(); }
+}
 
 const juce::OwnedArray<juce::AudioIODeviceType>& StandaloneAudition::deviceTypes()
 {
@@ -159,6 +199,7 @@ juce::StringArray StandaloneAudition::outputNames() const
 
 juce::String StandaloneAudition::connect (double sourceRate)
 {
+    if (preparation.valid()) return "Wait for source preparation or cancellation before opening a device";
     stop();
     if (! device || ! std::isfinite (sourceRate) || sourceRate <= 0) return "Select a device and validated source";
     device->close();
@@ -199,11 +240,13 @@ void StandaloneAudition::stopWorker()
 void StandaloneAudition::stop()
 {
     heldFrame = positionFrames();
+    if (preparationControl) preparationControl->cancel.store (true);
+    playAfterPreparation = false;
     stopWorker();
     ++generation;
     presentationClock.reset();
-    state = connected() ? AuditionState::ready : AuditionState::disconnected;
-    message = connected() ? "Stopped; Play resumes, Restart begins at zero" : "Device closed";
+    state = preparation.valid() ? AuditionState::cancelling : connected() ? AuditionState::ready : AuditionState::disconnected;
+    message = preparation.valid() ? "Cancelling source preparation; stopped" : connected() ? "Stopped; Play resumes, Restart begins at zero" : "Device closed";
 }
 
 void StandaloneAudition::disconnect()
@@ -211,101 +254,199 @@ void StandaloneAudition::disconnect()
     stop();
     if (device) device->close();
     rate = 0;
-    state = AuditionState::disconnected;
-    message = "Device closed";
+    state = preparation.valid() ? AuditionState::cancelling : AuditionState::disconnected;
+    message = preparation.valid() ? "Cancelling preparation; device closed" : "Device closed";
+}
+
+void StandaloneAudition::synchronize (const AuditionRequest& request, const OutputRouting& routing)
+{
+    const auto key = request.identity();
+    if (active() && (key != expectedIdentity
+        || ((state == AuditionState::playing || state == AuditionState::buffering) && routing.fileToDevice != playingRouting.fileToDevice)
+        || (state == AuditionState::preparing && playAfterPreparation && routing.fileToDevice != pendingRouting.fileToDevice)))
+    {
+        stop(); message = "Audition stopped: source, roles, processing or routing changed";
+    }
+    expectedIdentity = key;
+    if (preparedSource && ! preparedSource->matches (request.context.media)) preparedSource.reset();
+}
+
+juce::String StandaloneAudition::startPreparation (const AuditionRequest& request)
+{
+    const auto error = request.validationError();
+    if (error.isNotEmpty()) return error;
+    if (request.identity() != expectedIdentity) return "Stale audition request; select the current state again";
+    if (preparation.valid()) return "Wait for source preparation cancellation";
+    if (! request.context.media.matchesFileStamp (request.context.sourceFile))
+    { fault = ErrorCode::sourceChanged; return "Source changed; import again"; }
+    fault = ErrorCode::none;
+    pendingRequest = request;
+    if (preparedSource && preparedSource->matches (request.context.media)) return {};
+    preparationControl = std::make_shared<JobControl>();
+    preparationFailure.clear();
+    preparationGeneration = generation;
+    preparation = std::async (std::launch::async, [request, storage = snapshotStorage, control = preparationControl]
+    { return prepareVerifiedSource (request.context, *control, storage); });
+    state = AuditionState::preparing;
+    message = "Preparing verified source copy (copy / hash / payload validation)";
+    return {};
+}
+
+juce::String StandaloneAudition::prepare (const AuditionRequest& request)
+{
+    if (active()) return "Stop before preparing a different audition";
+    stop();
+    const auto error = startPreparation (request);
+    if (error.isEmpty() && ! preparation.valid()) message = "Verified source ready; device and playback unchanged";
+    return error;
 }
 
 juce::String StandaloneAudition::play (const juce::File& file, const MediaInfo& media,
                                      const ChannelLayout& layout, const OutputRouting& routing, bool restart, bool allowAllMuted)
 {
+    const auto request = AuditionRequest::source (file, media, layout);
+    synchronize (request, routing);
+    return play (request, routing, restart, allowAllMuted);
+}
+
+juce::String StandaloneAudition::play (const AuditionRequest& request, const OutputRouting& routing, bool restart, bool allowAllMuted)
+{
+    const auto error = request.validationError();
+    if (error.isNotEmpty()) return error;
+    if (request.identity() != expectedIdentity) return "Stale audition request";
+    if (preparation.valid()) return "Wait for preparation or cancel it";
     const bool atEnd = state == AuditionState::finished;
     stop();
     if (! connected()) return "Open the selected device first";
-    if (media.channels != layout.count || ! layout.confirmed || ! layout.isValid())
-        return "Confirm valid file-channel roles first";
-    if (! media.matchesFileStamp (file)) return "Source changed; import again";
+    const auto& media = request.context.media;
     if (std::abs (media.sampleRate - device->getCurrentSampleRate()) > 0.01)
         return "Device and source sample rates must match";
     const auto routingError = routing.validate (media.channels, outputNames().size(), allowAllMuted);
     if (routingError.isNotEmpty()) return routingError;
-    if (media.sampleRate != std::floor (media.sampleRate)) return "Transport requires an integer source sample rate";
-    if (sourceHash != media.sha256) sourceChanged (media);
-    sourceRate = static_cast<int64_t> (media.sampleRate); sourceFrames = media.frames;
+    if (sourceHash != media.sha256) { heldFrame = startFrame = 0; if (preparedSource && ! preparedSource->matches (media)) preparedSource.reset(); }
+    sourceHash = media.sha256; sourceRate = static_cast<int64_t> (media.sampleRate); sourceFrames = media.frames;
     if (restart || atEnd || heldFrame >= sourceFrames) heldFrame = 0;
     startFrame = heldFrame;
-    juce::AudioFormatManager formats;
-    registerSourceFormats (formats);
-    std::unique_ptr<juce::AudioFormatReader> reader (formats.createReaderFor (file.createInputStream()));
-    if (! reader || reader->sampleRate != media.sampleRate || reader->lengthInSamples != media.frames
-        || static_cast<int> (reader->numChannels) != media.channels) return "Source cannot be reopened consistently";
+    pendingRouting = routing;
+    const auto preparationError = startPreparation (request);
+    if (preparationError.isNotEmpty()) return preparationError;
+    if (preparation.valid()) playAfterPreparation = true;
+    else startDecoder (request, routing);
+    return {};
+}
 
+void StandaloneAudition::startDecoder (const AuditionRequest& request, const OutputRouting& routing)
+{
+    playingRequest = request; playingRouting = routing;
+    const auto media = request.context.media;
     fifo.reset (media.channels, routing);
-    cancel.store (false); decodeFailed.store (false); deviceStopped.store (false);
-    decoder = std::thread ([this, source = std::move (reader), media, file] () mutable
+    fifo.setObserver (capture, startFrame);
+    cancel.store (false); decodeFailed.store (false); deviceStopped.store (false); workerError.clear(); workerFailure = ErrorCode::decodeFailed;
+    decoder = std::thread ([this, request, copy = preparedSource, media, begin = startFrame] ()
     {
-        constexpr int blockSize = 2048;
-        juce::AudioBuffer<float> block (media.channels, blockSize);
-        juce::int64 position = startFrame;
-        while (position < media.frames && ! cancel.load())
+        try
         {
-            const auto count = static_cast<int> (juce::jmin<juce::int64> (blockSize, media.frames - position));
-            if (fifo.writable() < count)
+            juce::AudioFormatManager formats; registerSourceFormats (formats);
+            std::unique_ptr<juce::AudioFormatReader> source (formats.createReaderFor (copy->file().createInputStream()));
+            if (! source || source->sampleRate != media.sampleRate || source->lengthInSamples != media.frames
+                || static_cast<int> (source->numChannels) != media.channels)
+                throw std::runtime_error ("Verified source cannot be reopened consistently");
+            constexpr int blockSize = 2048;
+            juce::AudioBuffer<float> block (media.channels, blockSize);
+            const StaticGainProcessor processing (request.context.processing.staticGainDb);
+            juce::int64 position = begin;
+            while (position < media.frames && ! cancel.load())
             {
-                std::this_thread::sleep_for (std::chrono::milliseconds (2));
-                continue;
+                const auto count = static_cast<int> (juce::jmin<juce::int64> (blockSize, media.frames - position));
+                if (fifo.writable() < count) { std::this_thread::sleep_for (std::chrono::milliseconds (2)); continue; }
+                if (! media.matchesFileStamp (request.context.sourceFile))
+                { workerFailure = ErrorCode::sourceChanged; throw std::runtime_error ("Source changed; import again"); }
+                if (! source->read (block.getArrayOfWritePointers(), media.channels, position, count))
+                    throw std::runtime_error ("Verified source decode failed");
+                if (! processing.process (block.getArrayOfWritePointers(), media.channels, count))
+                    throw std::runtime_error ("Non-finite processed audition sample");
+                fifo.push (block.getArrayOfReadPointers(), count);
+                position += count;
             }
-            if (! media.matchesFileStamp (file)
-                || ! source->read (block.getArrayOfWritePointers(), media.channels, position, count))
-            {
-                decodeFailed.store (true);
-                break;
-            }
-            bool finite = true;
-            for (int channel = 0; channel < media.channels; ++channel)
-                for (int frame = 0; frame < count; ++frame)
-                    finite = finite && std::isfinite (block.getSample (channel, frame));
-            if (! finite) { decodeFailed.store (true); break; }
-            fifo.push (block.getArrayOfReadPointers(), count);
-            position += count;
         }
+        catch (const std::exception& e) { workerError = e.what(); decodeFailed.store (true); }
         fifo.endOfFile.store (true);
     });
     state = AuditionState::buffering;
-    message = "Buffering source";
-    return {};
+    message = "Buffering " + juce::String (request.domain == MeasurementDomain::source ? "Source" : "Current State");
 }
 
 juce::String StandaloneAudition::seek (int64_t frame, const juce::File& file, const MediaInfo& media,
                                      const ChannelLayout& layout, const OutputRouting& routing)
 {
+    const auto request = AuditionRequest::source (file, media, layout);
+    synchronize (request, routing);
+    return seek (frame, request, routing);
+}
+
+juce::String StandaloneAudition::seek (int64_t frame, const AuditionRequest& request, const OutputRouting& routing)
+{
+    if (request.identity().isEmpty() || request.identity() != expectedIdentity) return "Invalid or stale audition request";
+    const auto& media = request.context.media;
     if (frame < 0 || frame > media.frames) return "Seek is outside the selected audio";
+    if (preparation.valid()) return "Wait for preparation or cancel it before seeking";
     const bool resume = active();
     stop();
     sourceRate = static_cast<int64_t> (media.sampleRate); sourceFrames = media.frames; sourceHash = media.sha256;
     heldFrame = startFrame = frame;
     if (frame == media.frames) { state = AuditionState::finished; message = "Audio EOF"; return {}; }
-    return resume ? play (file, media, layout, routing) : juce::String();
+    return resume ? play (request, routing) : juce::String();
 }
 
 void StandaloneAudition::poll (bool picturePrerolled)
 {
+    if (preparation.valid())
+    {
+        if (playAfterPreparation && ! connected())
+        {
+            stop();
+            preparationFailure = "Device closed during source preparation; stopped";
+        }
+        if (preparation.wait_for (std::chrono::seconds (0)) != std::future_status::ready) return;
+        auto result = preparation.get();
+        const bool accepted = preparationGeneration == generation && ! preparationControl->isCancelled()
+            && pendingRequest.identity() == expectedIdentity;
+        state = connected() ? AuditionState::ready : AuditionState::disconnected;
+        if (! accepted)
+        {
+            playAfterPreparation = false;
+            message = preparationFailure.isEmpty() ? "Source preparation cancelled; stopped" : preparationFailure;
+            if (preparationFailure.isNotEmpty()) state = AuditionState::failed;
+            return;
+        }
+        if (! result.value) { playAfterPreparation = false; fault = result.error; state = AuditionState::failed; message = result.message + "; stopped; session retained"; return; }
+        preparedSource = *result.value;
+        if (! playAfterPreparation) { message = "Verified source ready; playback stopped"; return; }
+        playAfterPreparation = false;
+        if (! connected()) { state = AuditionState::failed; message = "Device closed during preparation; stopped"; return; }
+        startDecoder (pendingRequest, pendingRouting);
+    }
     if (! active()) return;
     if (state == AuditionState::buffering && picturePrerolled && ! decodeFailed.load() && connected()
         && (fifo.writable() <= AuditionBuffer::capacity - 4096 || fifo.endOfFile.load()))
     {
         device->start (this);
         state = AuditionState::playing;
-        message = "Auditioning original source (monitor gain only)";
+        message = "Auditioning " + juce::String (playingRequest.domain == MeasurementDomain::source ? "Source" : "Current State") + "; playback is not measurement or compliance";
     }
-    const bool failed = decodeFailed.load() || deviceStopped.load() || ! connected()
+    const bool failed = fifo.overloaded() || decodeFailed.load() || deviceStopped.load() || ! connected()
         || (state == AuditionState::playing && ! device->isPlaying());
     if (failed || (fifo.endOfFile.load() && fifo.drained() && positionFrames() >= sourceFrames))
     {
+        if (decodeFailed.load()) fault = workerFailure;
         heldFrame = failed ? positionFrames() : sourceFrames;
         stopWorker();
         ++generation;
         state = failed ? AuditionState::failed : AuditionState::finished;
-        message = failed ? "Audition stopped: source read failed or device stopped" : "Audition finished";
+        message = fifo.overloaded() ? "Monitor overload at channel " + juce::String (fifo.faultChannel() + 1)
+            + ", source frame " + juce::String (startFrame + static_cast<int64_t> (fifo.faultFrame()))
+            + ". Reduce monitor volume and explicitly Play/Restart; processing gain retained."
+            : failed ? (workerError.isNotEmpty() ? workerError : "Audition stopped: device unavailable") : "Audition finished";
     }
 }
 
@@ -314,7 +455,7 @@ void StandaloneAudition::audioDeviceIOCallbackWithContext (const float* const*, 
 {
     const auto callbackTime = hostTimeNs();
     if (outputCount < expectedOutputs) deviceStopped.store (true, std::memory_order_relaxed);
-    if (decodeFailed.load (std::memory_order_relaxed) || deviceStopped.load (std::memory_order_relaxed))
+    if (fifo.overloaded() || decodeFailed.load (std::memory_order_relaxed) || deviceStopped.load (std::memory_order_relaxed))
     {
         for (int channel = 0; channel < outputCount; ++channel)
             if (outputs[channel]) juce::FloatVectorOperations::clear (outputs[channel], frames);
@@ -322,6 +463,7 @@ void StandaloneAudition::audioDeviceIOCallbackWithContext (const float* const*, 
     }
     const auto before = fifo.playedFrames();
     fifo.render (outputs, outputCount, frames);
+    if (fifo.overloaded()) return; // Suppressed callback never advances the presentation clock.
     const bool useHardware = hardwareLatencyFrames >= 0 && context.hostTimeNs != nullptr && *context.hostTimeNs != 0;
     const auto clockOrigin = useHardware ? *context.hostTimeNs : callbackTime;
     const auto delay = useHardware ? hardwareLatencyFrames : latencyFrames;

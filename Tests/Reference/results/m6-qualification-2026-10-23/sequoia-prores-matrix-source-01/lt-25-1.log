@@ -1,0 +1,179 @@
+{
+  "scope": "Internal audio-clock and UI paint selection; no optical/acoustic measurement",
+  "passed": true,
+  "error": "",
+  "os": "Mac OSX 15.7.9",
+  "architecture": "arm64",
+  "sample_rate": 48000.0,
+  "device": "Mac Studio Speakers",
+  "audio_sha256": "4709852fdf45b43636171c07868ad6d0c7199cec2f9a5ae18c2ce33094d1a528",
+  "audition_state": "Source",
+  "processing_gain_db": 0.0,
+  "audition_identity": "source-transport:383c2e2ca4e0aa1b11ebe714a045fb0dcbbcdbc3b7c1d8db970ab89b9eaf3dfd",
+  "measurement_build": "afe72a024daea1a94ff298567bb185d2c054dcdaea61a38bcdfc36b9a1df5e06",
+  "measurement_status": "UNVERIFIED; timing qualification does not measure compliance",
+  "video_sha256": "f83aff8b26b21a2f70ee7fced2d5fbfb91abbcb4f31dfa7ed9febedd792da57e",
+  "backend": "AVAssetReader / BGRA / JUCE image",
+  "source_seconds": 18.0141875,
+  "requested_seconds": 18.0,
+  "latency_frames": 829,
+  "hal_output_timestamp": true,
+  "paints": 959,
+  "blank_paints": 0,
+  "bound_failures": 0,
+  "maximum_frame_pts_skew_seconds": 0.0,
+  "maximum_cpu_paint_ms": 0.50025,
+  "paint_deadline_failures": 0,
+  "mean_skew_seconds": 0.0,
+  "first_minute_mean_skew_seconds": 0.0,
+  "last_minute_mean_skew_seconds": 0.0,
+  "underrun_blocks": 0,
+  "late_polls": 20,
+  "skipped_frames": 0,
+  "skipped_frame_limit": 0,
+  "maximum_paint_interval_ms": 18.385625,
+  "skip_events": [],
+  "actual_paint_skipped_frames": 0,
+  "unique_painted_frames": 400,
+  "hash_ms": 1147.961333,
+  "index_ms": 27.75925,
+  "embedded_audio_policy": "Excluded by video-only backend; independent nonzero-sink audit is a separate test",
+  "all_routes_muted": true,
+  "attachment_first_picture_s": 1.286974,
+  "attachment_budget_s": 33.24481568038463,
+  "attachment_within_budget": true,
+  "peak_sampled_playback_rss_bytes": 5.37509888e8,
+  "first_minute_mean_rss_bytes": 5.05255936e8,
+  "last_minute_mean_rss_bytes": 5.05255936e8,
+  "memory_growth_assessed": false,
+  "memory_passed": true,
+  "memory_sampling": "Background sampler; no Mach memory query on the paint/timer thread",
+  "maximum_memory_query_ms": 0.041792,
+  "qualification_eligible": true,
+  "memory_method": "prores-memory-v2-user-approved-2026-10-20",
+  "allocator_relief_requested": false,
+  "memory_query_failures": 0,
+  "memory_samples": [
+    {
+      "seconds": 2,
+      "rss_bytes": 4.43990016e8,
+      "reusable_bytes": 1.99294976e8,
+      "non_reusable_resident_bytes": 2.4469504e8,
+      "physical_footprint_bytes": 9.1311424e7
+    },
+    {
+      "seconds": 3,
+      "rss_bytes": 4.69172224e8,
+      "reusable_bytes": 2.2552576e8,
+      "non_reusable_resident_bytes": 2.43646464e8,
+      "physical_footprint_bytes": 8.8444288e7
+    },
+    {
+      "seconds": 4,
+      "rss_bytes": 4.69090304e8,
+      "reusable_bytes": 2.42171904e8,
+      "non_reusable_resident_bytes": 2.269184e8,
+      "physical_footprint_bytes": 7.022528e7
+    },
+    {
+      "seconds": 5,
+      "rss_bytes": 4.85998592e8,
+      "reusable_bytes": 2.42286592e8,
+      "non_reusable_resident_bytes": 2.43712e8,
+      "physical_footprint_bytes": 9.0344832e7
+    },
+    {
+      "seconds": 6,
+      "rss_bytes": 4.85605376e8,
+      "reusable_bytes": 2.50609664e8,
+      "non_reusable_resident_bytes": 2.34995712e8,
+      "physical_footprint_bytes": 8.1661312e7
+    },
+    {
+      "seconds": 7,
+      "rss_bytes": 4.94403584e8,
+      "reusable_bytes": 2.5952256e8,
+      "non_reusable_resident_bytes": 2.34881024e8,
+      "physical_footprint_bytes": 8.1546624e7
+    },
+    {
+      "seconds": 8,
+      "rss_bytes": 5.02792192e8,
+      "reusable_bytes": 2.67845632e8,
+      "non_reusable_resident_bytes": 2.3494656e8,
+      "physical_footprint_bytes": 8.1628608e7
+    },
+    {
+      "seconds": 9,
+      "rss_bytes": 5.19012352e8,
+      "reusable_bytes": 2.8450816e8,
+      "non_reusable_resident_bytes": 2.34504192e8,
+      "physical_footprint_bytes": 8.1202688e7
+    },
+    {
+      "seconds": 10,
+      "rss_bytes": 5.27826944e8,
+      "reusable_bytes": 2.8450816e8,
+      "non_reusable_resident_bytes": 2.43318784e8,
+      "physical_footprint_bytes": 9.001728e7
+    },
+    {
+      "seconds": 11,
+      "rss_bytes": 5.27876096e8,
+      "reusable_bytes": 2.92831232e8,
+      "non_reusable_resident_bytes": 2.35044864e8,
+      "physical_footprint_bytes": 7.9908352e7
+    },
+    {
+      "seconds": 12,
+      "rss_bytes": 5.22600448e8,
+      "reusable_bytes": 2.92831232e8,
+      "non_reusable_resident_bytes": 2.29769216e8,
+      "physical_footprint_bytes": 7.314176e7
+    },
+    {
+      "seconds": 13,
+      "rss_bytes": 5.206016e8,
+      "reusable_bytes": 2.9294592e8,
+      "non_reusable_resident_bytes": 2.2765568e8,
+      "physical_footprint_bytes": 7.1028224e7
+    },
+    {
+      "seconds": 14,
+      "rss_bytes": 5.206016e8,
+      "reusable_bytes": 2.94240256e8,
+      "non_reusable_resident_bytes": 2.26361344e8,
+      "physical_footprint_bytes": 6.9733888e7
+    },
+    {
+      "seconds": 15,
+      "rss_bytes": 5.28498688e8,
+      "reusable_bytes": 2.94240256e8,
+      "non_reusable_resident_bytes": 2.34258432e8,
+      "physical_footprint_bytes": 7.5795968e7
+    },
+    {
+      "seconds": 16,
+      "rss_bytes": 5.28515072e8,
+      "reusable_bytes": 3.02563328e8,
+      "non_reusable_resident_bytes": 2.25951744e8,
+      "physical_footprint_bytes": 6.9324288e7
+    },
+    {
+      "seconds": 17,
+      "rss_bytes": 5.37509888e8,
+      "reusable_bytes": 3.02563328e8,
+      "non_reusable_resident_bytes": 2.3494656e8,
+      "physical_footprint_bytes": 8.1645056e7
+    }
+  ],
+  "first_minute_memory_sample_count": 16,
+  "last_minute_memory_sample_count": 16,
+  "peak_non_reusable_resident_bytes": 2.4469504e8,
+  "peak_physical_footprint_bytes": 9.1311424e7,
+  "first_minute_mean_non_reusable_resident_bytes": 2.34725376e8,
+  "last_minute_mean_non_reusable_resident_bytes": 2.34725376e8,
+  "first_minute_mean_physical_footprint_bytes": 7.9809992e7,
+  "last_minute_mean_physical_footprint_bytes": 7.9809992e7,
+  "process_peak_rss_including_load_bytes": 546062336
+}

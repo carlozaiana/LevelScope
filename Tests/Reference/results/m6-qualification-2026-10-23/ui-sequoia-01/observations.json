@@ -1,0 +1,28 @@
+{
+  "platform": "arm64 Sequoia 15.7.9 24G830",
+  "candidate": "candidate-01",
+  "source_digest": "0702768309e7328549fb86b677ec295fdc197d0382c45f0487b9060053b9a286",
+  "date": "2026-10-23",
+  "scope": "Silent product UI observations only",
+  "passed": true,
+  "device": "closed",
+  "routing": "muted",
+  "checks_completed": [
+    "Stereo Source import, role confirmation, verified preparation and measurement",
+    "Current initialized at zero gain and labelled UNVERIFIED before measurement; preparation reused copy",
+    "Current zero-gain measurement; gain edit invalidated only Current; actual measured failure displayed after remeasurement",
+    "Monitor changes and stopped audition selection preserved measurements",
+    "Stopped seek 3/2 and H.264 offset -1001/30000 changed held frame 44 to 45 without invalidating audio measurements",
+    "Unapplied M3 draft remained prediction; explicit Apply produced UNVERIFIED; real remeasurement passed",
+    "Replacement with three-hour source cleared old Current; preparation showed progress and cancelled to a clear stopped status",
+    "Subsequent preparation followed by application close exited cleanly"
+  ],
+  "evidence": [
+    "01-source-prepared.txt",
+    "02-current-unverified.txt",
+    "03-measured-failure.png",
+    "04-video-offset.png",
+    "05-m3-measured-verification.png",
+    "06-preparation-cancelled.png"
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "date": "2026-10-24",
+  "passed": true,
+  "checkpoint_tag": "m6-verified-current-state-audition-2026-10-24",
+  "checkpoint_commit_ref": "refs/tags/m6-verified-current-state-audition-2026-10-24^{commit}",
+  "fetched_main": "6d1c22a23244b4e421dd2773862451ac8a863992",
+  "source_digest": "0702768309e7328549fb86b677ec295fdc197d0382c45f0487b9060053b9a286",
+  "integrity": {
+    "source": {
+      "count": 143,
+      "mismatches": []
+    },
+    "package": {
+      "count": 308,
+      "mismatches": []
+    },
+    "evidence": {
+      "count": 394,
+      "mismatches": []
+    }
+  },
+  "platform_qualification": {
+    "sequoia": {
+      "automated_passed": true,
+      "m6_checks": 4736,
+      "ui_passed": true,
+      "reused_unchanged_candidate": true
+    },
+    "high-sierra": {
+      "automated_passed": true,
+      "m6_checks": 4736,
+      "ui_passed": true,
+      "reused_unchanged_candidate": true
+    }
+  },
+  "capture_recheck": {
+    "passed": true,
+    "cases": 124,
+    "maximum_float32_ulp": 0,
+    "matches_recorded_report": true
+  },
+  "physical_recheck": {
+    "complete": true,
+    "passed": true,
+    "cases": 78,
+    "matches_recorded_report": true
+  },
+  "pre_existing_local_tags": {
+    "high-sierra-pre-scaffold-2026-10-15": {
+      "object": "b3c6e845482dbe8a0ec9778d5a9ad7953e614609",
+      "commit": "556d387ad772dc5e604ead95f1525f60e66fd5f9"
+    },
+    "m2-measured-compliance-2026-10-18": {
+      "object": "673e382feeaa7e29e6e6abedbd56677aa2163ef3",
+      "commit": "01a34833ec06a0d237e098faadb23b398581e8f9"
+    },
+    "m3-global-trim-2026-10-18": {
+      "object": "4063ca0e73c5b24dfa079eb894f85e398e9fee50",
+      "commit": "62ab420cb15b3ce5e1c821c963a749a9a56ae4a7"
+    },
+    "m4-measured-diagnostics-2026-10-18": {
+      "object": "cc64c771a70ccf95e779a7fe7260749a4530c285",
+      "commit": "9a22749901d9f6d4b9c194c9c22c0a231f2494f6"
+    },
+    "m5-programme-sections-2026-10-20": {
+      "object": "e36b4308374256ad36eff6c01d4d92325a06d3b0",
+      "commit": "ae88e187d288c53dbca1287e8341b74b9b5b2619"
+    },
+    "measurement-milestone-2026-10-17": {
+      "object": "76affb667b6dab066cb36b2a2c741525b9b6eeac",
+      "commit": "b29bc7c183743f35c6271d2d7ec8fb5ba1464591"
+    },
+    "standalone-scaffold-2026-10-15": {
+      "object": "4c8bc35b788969e1f6e97dcdc57a601b01fff7cd",
+      "commit": "f192a8553e139d390056c9755f25eeb123bbc5e6"
+    },
+    "video-checkpoint-2026-10-17": {
+      "object": "06f57524bedca1912c0d5c454f13561cec9ce5b4",
+      "commit": "700b9e77e439a8ca9bb7583adf826fac01dbe924"
+    },
+    "video-prores-checkpoint-2026-10-21": {
+      "object": "d62c1159eeb2ffbb8b7ffc7c31014b842642d195",
+      "commit": "dcc34aabba6b5b3ca4805e2965d21ffebf2e4d0a"
+    }
+  },
+  "pre_existing_remote_tags": {
+    "high-sierra-pre-scaffold-2026-10-15": {
+      "object": "b3c6e845482dbe8a0ec9778d5a9ad7953e614609",
+      "commit": "556d387ad772dc5e604ead95f1525f60e66fd5f9"
+    },
+    "m2-measured-compliance-2026-10-18": {
+      "object": "673e382feeaa7e29e6e6abedbd56677aa2163ef3",
+      "commit": "01a34833ec06a0d237e098faadb23b398581e8f9"
+    },
+    "m3-global-trim-2026-10-18": {
+      "object": "4063ca0e73c5b24dfa079eb894f85e398e9fee50",
+      "commit": "62ab420cb15b3ce5e1c821c963a749a9a56ae4a7"
+    },
+    "m4-measured-diagnostics-2026-10-18": {
+      "object": "cc64c771a70ccf95e779a7fe7260749a4530c285",
+      "commit": "9a22749901d9f6d4b9c194c9c22c0a231f2494f6"
+    },
+    "m5-programme-sections-2026-10-20": {
+      "object": "e36b4308374256ad36eff6c01d4d92325a06d3b0",
+      "commit": "ae88e187d288c53dbca1287e8341b74b9b5b2619"
+    },
+    "measurement-milestone-2026-10-17": {
+      "object": "76affb667b6dab066cb36b2a2c741525b9b6eeac",
+      "commit": "b29bc7c183743f35c6271d2d7ec8fb5ba1464591"
+    },
+    "standalone-scaffold-2026-10-15": {
+      "object": "4c8bc35b788969e1f6e97dcdc57a601b01fff7cd",
+      "commit": "f192a8553e139d390056c9755f25eeb123bbc5e6"
+    },
+    "video-checkpoint-2026-10-17": {
+      "object": "06f57524bedca1912c0d5c454f13561cec9ce5b4",
+      "commit": "700b9e77e439a8ca9bb7583adf826fac01dbe924"
+    },
+    "video-prores-checkpoint-2026-10-21": {
+      "object": "d62c1159eeb2ffbb8b7ffc7c31014b842642d195",
+      "commit": "dcc34aabba6b5b3ca4805e2965d21ffebf2e4d0a"
+    }
+  },
+  "integration": "Fast-forward from exact qualified base; no tested implementation changes; reuse completed two-platform qualification.",
+  "preserved_packages": "No rebuild, artifact replacement or installation performed.",
+  "historical_audits": "Original qualification audits and identity retained verbatim; commit ancestry therein precedes M6 publication."
+}

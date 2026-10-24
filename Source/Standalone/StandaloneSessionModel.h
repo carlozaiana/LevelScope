@@ -11,6 +11,8 @@
 #include "StandaloneVideo.h"
 #include "StandaloneCompliance.h"
 #include "StandaloneProposal.h"
+#include "StandaloneAuditionRequest.h"
+#include <functional>
 
 namespace levelscope::standalone
 {
@@ -137,6 +139,30 @@ struct CurrentStateDocument
 class StandaloneSessionModel
 {
 public:
+    // Live controller guard; programmatic actions obey the same stopped-only rule.
+    std::function<bool()> auditionBusy;
+    MeasurementDomain auditionDomain = MeasurementDomain::source;
+    bool audioEditsBlocked() const { return auditionBusy && auditionBusy(); }
+    bool selectAuditionDomain (MeasurementDomain domain)
+    {
+        if (domain != MeasurementDomain::source && domain != MeasurementDomain::currentState) return false;
+        if (domain == auditionDomain) return true;
+        if (audioEditsBlocked()) return false;
+        auditionDomain = domain; return true;
+    }
+    bool setOutputRoute (int channel, int output)
+    {
+        if (audioEditsBlocked() || ! juce::isPositiveAndBelow (channel, sourceDocument.layout.count)
+            || output < -1 || output >= maxChannels) return false;
+        sourceDocument.routing.fileToDevice[channel] = output; return true;
+    }
+    AuditionRequest auditionRequest() const
+    {
+        AuditionRequest r; r.context = measurementContext (auditionDomain); r.domain = auditionDomain;
+        r.currentInitialized = currentStateDocument.isInitialized && ! sourceContentInvalid;
+        if (sourceContentInvalid) r.context.media.sha256.clear();
+        return r;
+    }
     static constexpr int numTargetProfiles = StandaloneTargetProfileCatalog::numProfiles;
 
     WorkflowPage selectedPage = WorkflowPage::importSource;
@@ -177,13 +203,13 @@ public:
 
     bool canApplyTrim() const
     {
-        return ! job.isActive() && trimDraft && trimDraft->status == proposal::TrimStatus::draft
+        return ! audioEditsBlocked() && ! job.isActive() && trimDraft && trimDraft->status == proposal::TrimStatus::draft
             && trimDraft->identity == proposal::draftGlobalTrim (currentTrimRequest()).identity;
     }
 
     bool applyTrim()
     {
-        if (job.isActive() || ! trimDraft) return false;
+        if (audioEditsBlocked() || job.isActive() || ! trimDraft) return false;
         const auto fresh = proposal::draftGlobalTrim (currentTrimRequest());
         if (trimDraft->identity != fresh.identity) { discardTrim(); return false; }
         if (fresh.status == proposal::TrimStatus::noChange) return true; // No audio mutation or remeasurement.
@@ -247,6 +273,7 @@ public:
     {
         if (! currentStateDocument.isInitialized || ! std::isfinite (gain) || gain < -60 || gain > 24) return false;
         if (gain == currentStateDocument.staticGainDb) return true;
+        if (audioEditsBlocked()) return false;
         discardTrim();
         ++revision; ++currentStateDocument.revision;
         currentStateDocument.staticGainDb = gain;
@@ -291,7 +318,7 @@ public:
 
     bool setValidatedSource (const juce::File& file, const MediaInfo& media)
     {
-        if (! media.matchesFileStamp (file)) return false;
+        if (audioEditsBlocked() || ! media.matchesFileStamp (file)) return false;
         ++revision;
         discardTrim(); sourceContentInvalid = false;
         sourceDocument.setValidatedFile (file, media);
@@ -311,6 +338,7 @@ public:
 
     void clearSourceFile()
     {
+        if (audioEditsBlocked()) return;
         ++revision;
         discardTrim(); sourceContentInvalid = false;
         sourceDocument.clear();
@@ -325,7 +353,7 @@ public:
 
     bool initializeCurrentStateFromSource()
     {
-        if (sourceContentInvalid) return false;
+        if (audioEditsBlocked() || sourceContentInvalid) return false;
         discardTrim();
         ++revision;
         const auto didInitialize = currentStateDocument.initializeFromSource (sourceDocument);
@@ -343,6 +371,7 @@ public:
 
     void clearCurrentState()
     {
+        if (audioEditsBlocked()) return;
         discardTrim();
         ++revision;
         currentStateDocument.clear();
@@ -391,7 +420,7 @@ public:
 
     void setChannelRole (int channel, ChannelRole role)
     {
-        if (! juce::isPositiveAndBelow (channel, sourceDocument.layout.count)) return;
+        if (audioEditsBlocked() || ! juce::isPositiveAndBelow (channel, sourceDocument.layout.count)) return;
         discardTrim();
         ++revision;
         sourceDocument.layout.roles[channel] = role;
@@ -404,7 +433,7 @@ public:
 
     bool confirmLayout()
     {
-        if (! sourceDocument.hasSource || ! sourceDocument.layout.isValid()) return false;
+        if (audioEditsBlocked() || ! sourceDocument.hasSource || ! sourceDocument.layout.isValid()) return false;
         discardTrim();
         ++revision;
         sourceDocument.layout.confirmed = true;

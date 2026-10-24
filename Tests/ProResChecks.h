@@ -104,8 +104,14 @@ void isolationChecks (const juce::File& movie)
     auto device=std::make_unique<FakeDevice>();auto* fake=device.get();
     StandaloneAudition audio (std::move(device));audio.sourceChanged(media);
     expect (audio.connect(48000).isEmpty(),"controlled sink connected");
+    for (bool current : { false, true })
+    {
+    auto request=AuditionRequest::source(selectedFile,media,layout);
+    request.currentInitialized=true;
+    if(current){request.domain=MeasurementDomain::currentState;request.context.processing.staticGainDb=-3.305074118944;request.context.ticket.sessionRevision=1;}
+    audio.synchronize(request,routing);
     auto capture=[&] {
-        expect (audio.play(selectedFile,media,layout,routing,true).isEmpty(),"selected audio restart");
+        expect (audio.play(request,routing,true).isEmpty(),"selected audio restart");
         for(int n=0;n<2000 && !fake->isPlaying();++n){audio.poll();std::this_thread::sleep_for(std::chrono::milliseconds(1));}
         expect(fake->isPlaying(),"controlled sink started");
         juce::AudioBuffer<float> block(2,256);fake->tick(block);audio.stop();
@@ -133,7 +139,8 @@ void isolationChecks (const juce::File& movie)
     }
     expect(videoReaderAuditCount(0)>0 && videoReaderAuditCount(1)==0,"runtime audit: no embedded audio reader output");
     independence();
-    std::cout<<"ISOLATION PASS nonzero_selected_peak="<<baseline.getMagnitude(0,256)<<" exact_compared_samples=2048 physical_outputs=0 observed_audio_reader_outputs="<<videoReaderAuditCount(1)<<'\n';
+    std::cout<<"ISOLATION PASS domain="<<(current?"Current":"Source")<<" nonzero_selected_peak="<<baseline.getMagnitude(0,256)<<" exact_compared_samples=2048 physical_outputs=0 observed_audio_reader_outputs="<<videoReaderAuditCount(1)<<'\n';
+    }
 }
 
 void loadingChecks (const juce::File& file)

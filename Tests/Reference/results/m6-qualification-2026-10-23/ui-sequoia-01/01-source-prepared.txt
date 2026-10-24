@@ -1,0 +1,101 @@
+Window: "LevelScope Standalone", App: LevelScope Standalone.
+0 standard window LevelScope Standalone, Secondary Actions: Raise
+	1 text (settable) LevelScope Standalone Measured Source / Current State rules. Source / Current State audition. Complete delivery compliance is not evaluated. Target profile:
+	2 pop up button (settable) No target selected
+	3 text (settable) Workflow page: Analyze   |   Global-trim proposals
+	4 toggle button (settable, boolean) Confirm pre-produced whole-programme linear-audio QC, Value: off, Help: Confirm programme context. Excludes live exceptions, deliberate lower targets, short-form supplements and distribution-specific requirements.
+	5 button Import
+	6 button Analyze
+	7 button Current State
+	8 button Export
+	9 button Reference picture...
+	10 button Measured diagnostics...
+	11 button Choose Source File...
+	12 button Clear Source
+	13 button Measure Source
+	14 button Initialize Current From Source
+	15 text (settable) Source validation succeeded SOURCE
+
+Source evaluation: NOT EVALUATED
+No authoritative profile selected.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+File: stereo.wav
+Import status: Source decoded; file-channel roles confirmed.
+Measurement status: Validated source; measurement not run
+
+Extension: wav
+Size: 1536104 bytes
+Path: /Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/ui-fixtures/stereo.wav
+
+W
+	16 scroll bar (settable) Value: 0, Secondary Actions: Delete
+	17 text TARGET
+
+Profile: No target selected
+Family: None
+ID: none
+
+Source and Current State measurement do not require a delivery target. Select a profile to evaluate its supported measured rules.
+
+Authoritative selected rules loaded: no
+Integrated loudness target: --
+Max loudness range: --
+True peak ceiling: --
+
+Edition: 
+Definition: 
+Applicability: pre-produced whole-programme linear-audio QC only.
+LRA has no acceptance rule in the EBU programme QC profile.
+
+
+Profile note: No target profile family selected.
+
+Work
+	18 scroll bar (settable) Value: 4, Secondary Actions: Delete
+	19 text
+	20 scroll bar (settable) Value: 0, Secondary Actions: Delete
+	21 text ANALYZE VIEW
+
+Full-program offline measurement.
+
+Source evaluation: NOT EVALUATED
+No authoritative profile selected.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Ready to measure Source.
+
+Supported: mono, stereo and 5.0/5.1 at 44.1/48/96/192 kHz.
+LFE is excluded from loudness and included in peak measurement.
+Measure Source reads a verified copy of the full original file.
+
+Integrated: --
+LRA: --
+True 
+	22 scroll bar (settable) Value: 0, Secondary Actions: Delete
+	23 pop up button (settable) Source
+	24 button Prepare audition
+	25 text (settable) Source | Processing 0.000000000000 dB | UNVERIFIED: measurements unavailable
+Playback does not measure or establish compliance.
+	26 pop up button (settable) CoreAudio
+	27 pop up button (settable)
+	28 button Scan devices
+	29 slider (settable) Help: Monitor gain only. Adjust smoothly during playback. Processing and measurements are unaffected., Value: -30.0 dB, Secondary Actions: Delete
+	30 text entry area (settable) Help: Audio timeline in seconds or an exact fraction; seek rounds down to a source sample., Value: 0, Secondary Actions: Delete
+	31 button Seek
+	32 text (settable) Verified source ready; playback stopped
+Roles confirmed. Select validated media and an output device. File channel / Speaker role / Device output (no downmix)
+	33 text (settable) File 1
+	34 pop up button (settable) Left
+	35 pop up button (settable) Muted
+	36 text (settable) File 2
+	37 pop up button (settable) Right
+	38 pop up button (settable) Muted
+	39 close button
+	40 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	41 minimize button
+	42 text LevelScope Standalone
+43 menu bar
+	44 LevelScope Standalone

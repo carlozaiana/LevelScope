@@ -1,0 +1,77 @@
+[
+  {
+    "name": "proxy-1800",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 1858.130857834,
+    "argv": [
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Mac Studio Speakers",
+      "--seconds",
+      "1800",
+      "--audio",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/selected-clock-48000.wav",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/proxy-1800.mov",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/sequoia-video-resume-2026-10-24-01/prores-endurance-current/proxy-1800.json",
+      "--audition-state",
+      "current",
+      "--processing-gain",
+      "-3.305074118944"
+    ]
+  },
+  {
+    "name": "lt-1800",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 1926.3474640420002,
+    "argv": [
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Mac Studio Speakers",
+      "--seconds",
+      "1800",
+      "--audio",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/selected-clock-48000.wav",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/lt-1800.mov",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/sequoia-video-resume-2026-10-24-01/prores-endurance-current/lt-1800.json",
+      "--audition-state",
+      "current",
+      "--processing-gain",
+      "-3.305074118944"
+    ]
+  },
+  {
+    "name": "422-1800",
+    "exit_code": 0,
+    "passed": true,
+    "elapsed_seconds": 1990.8670890409999,
+    "argv": [
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Mac Studio Speakers",
+      "--seconds",
+      "1800",
+      "--audio",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/selected-clock-48000.wav",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/422-1800.mov",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/sequoia-video-resume-2026-10-24-01/prores-endurance-current/422-1800.json",
+      "--audition-state",
+      "current",
+      "--processing-gain",
+      "-3.305074118944"
+    ]
+  }
+]

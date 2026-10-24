@@ -1,0 +1,6 @@
+{
+  "purpose": "Existing H264 VFR regression fixture, 53.3866666667 seconds",
+  "sha256": {
+    "vfr-1200.mov": "1ed750ae483aa5dd19d631f3f086216102c342b379c33e8e95c64d381aef4322"
+  }
+}

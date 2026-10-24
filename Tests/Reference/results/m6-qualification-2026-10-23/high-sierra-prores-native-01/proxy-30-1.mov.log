@@ -1,0 +1,2 @@
+PRORES proxy-30-1.mov sha256=7d809063101a721c4dc76beb14777b04bf5c45763a00e8f16b777e851bffcb7c frames=600 hash_ms=919.202 index_ms=51.1769 observed_video_outputs=15 observed_audio_outputs=0 timecode=No timecode track
+PASS: 2434 ProRes checks; controlled sink only, no physical audio device

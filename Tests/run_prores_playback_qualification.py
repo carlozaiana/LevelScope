@@ -6,6 +6,7 @@ p=argparse.ArgumentParser()
 for name in ['binary','fixtures','actual','output']:p.add_argument('--'+name,type=Path,required=True)
 p.add_argument('--device',required=True);p.add_argument('--sample-rate',type=int,choices=[44100,48000],required=True)
 p.add_argument('--phase',choices=['matrix','endurance'],required=True)
+p.add_argument('--audition-state',choices=['source','current'],default='source');p.add_argument('--processing-gain',type=float)
 a=p.parse_args();a.output.mkdir(parents=True,exist_ok=False)
 def sha(path):
  h=hashlib.sha256()
@@ -14,7 +15,7 @@ def sha(path):
  return h.hexdigest()
 identity=dict(binary_sha256=sha(a.binary),architecture=platform.machine(),os=subprocess.check_output(['/usr/bin/sw_vers'],text=True),
               fixture_manifest_sha256=sha(a.fixtures/'manifest.json'),actual_sha256=sha(a.actual),device=a.device,
-              sample_rate=a.sample_rate,all_routes_muted=True)
+              sample_rate=a.sample_rate,all_routes_muted=True,audition_state=a.audition_state,processing_gain_db=a.processing_gain)
 (a.output/'identity.json').write_text(json.dumps(identity,indent=2)+'\n')
 manifest=json.loads((a.fixtures/'manifest.json').read_text())
 cases=[(a.fixtures/name,18) for name,m in manifest.items() if m.get('required')]
@@ -26,6 +27,8 @@ for movie,duration in cases:
  cmd=[str(a.binary.resolve()),'--allow-audio','--muted','--device',a.device,'--seconds',str(duration),
       '--audio',str((a.fixtures/('selected-clock-'+str(a.sample_rate)+'.wav')).resolve()),
       '--video',str(movie.resolve()),'--report',str(report.resolve())]
+ cmd += ['--audition-state',a.audition_state]
+ if a.processing_gain is not None:cmd += ['--processing-gain',str(a.processing_gain)]
  start=time.monotonic()
  print('START',name,'requested_seconds',duration,flush=True)
  with (a.output/(name+'.log')).open('w') as log:

@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-24",
+  "source_digest": "0702768309e7328549fb86b677ec295fdc197d0382c45f0487b9060053b9a286",
+  "identity_sha256": "ab7440f4d06275ea55055f59eec98c4f5872a775342e5b31777cefdf1dfdb4dd",
+  "artifact_count": 308,
+  "artifact_mismatches": [],
+  "packaged_source_count": 143,
+  "packaged_source_mismatches": [],
+  "os": "ProductName:\tMac OS X\nProductVersion:\t10.13.6\nBuildVersion:\t17G66\n",
+  "cpu": "Intel(R) Core(TM) i7-3770K CPU @ 3.50GHz",
+  "architecture": "x86_64",
+  "candidate_processes_remaining": [],
+  "executable_file_identification": "/Users/fuzz/LevelScope-M6-qualification-2026-10-23/candidate-01/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone: Mach-O universal binary with 2 architectures: [x86_64:Mach-O 64-bit executable x86_64] [arm64]\n/Users/fuzz/LevelScope-M6-qualification-2026-10-23/candidate-01/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone (for architecture x86_64):\tMach-O 64-bit executable x86_64\n/Users/fuzz/LevelScope-M6-qualification-2026-10-23/candidate-01/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone (for architecture arm64):\tMach-O 64-bit executable arm64",
+  "passed": true
+}

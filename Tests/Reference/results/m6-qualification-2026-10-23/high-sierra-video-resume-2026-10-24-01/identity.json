@@ -1,0 +1,13 @@
+{
+  "source_digest": "0702768309e7328549fb86b677ec295fdc197d0382c45f0487b9060053b9a286",
+  "binary_sha256": "c8efc1a6d0b760206c8f99105e553542a4d32fdb9722dc3e19b2172f60bb36e9",
+  "architecture": "x86_64",
+  "os": "ProductName:\tMac OS X\nProductVersion:\t10.13.6\nBuildVersion:\t17G66\n",
+  "device": "Built-in Output",
+  "sample_rate": 44100,
+  "all_routes_muted": true,
+  "monitor_gain_db": -30,
+  "helper_sha256": "8b8373428cdae4c19dfe36577b6db0b30f907110dc5763d74a36b94d573d9f99",
+  "vfr_sha256": "1ed750ae483aa5dd19d631f3f086216102c342b379c33e8e95c64d381aef4322",
+  "fixture_manifest_sha256": "398bb706268afea61b33529de55f6eda30bb61499495a47bcae3c2b7c24814ce"
+}

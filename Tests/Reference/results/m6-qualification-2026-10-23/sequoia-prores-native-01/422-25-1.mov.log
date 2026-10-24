@@ -1,0 +1,2 @@
+PRORES 422-25-1.mov sha256=4664c1750e42cc4b07eed488ed2bce87fc995723fd35655f04b608ed4c897e94 frames=500 hash_ms=1634.28 index_ms=40.0515 observed_video_outputs=15 observed_audio_outputs=0 timecode=No timecode track
+PASS: 2034 ProRes checks; controlled sink only, no physical audio device

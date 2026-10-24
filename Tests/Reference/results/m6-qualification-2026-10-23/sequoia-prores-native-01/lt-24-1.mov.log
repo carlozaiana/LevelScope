@@ -1,0 +1,2 @@
+PRORES lt-24-1.mov sha256=58617a8b7b86afefcf883bdb40cbb310ace04a8600d3b062c2375a68492c69c5 frames=480 hash_ms=1095.63 index_ms=29.4276 observed_video_outputs=15 observed_audio_outputs=0 timecode=No timecode track
+PASS: 1954 ProRes checks; controlled sink only, no physical audio device

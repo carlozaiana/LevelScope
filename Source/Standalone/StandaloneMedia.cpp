@@ -40,8 +40,9 @@ private:
 class CancellableInput final : public juce::InputStream
 {
 public:
-    CancellableInput (juce::FileInputStream& input, JobControl& job) : source (input), control (job) {}
-    juce::int64 getTotalLength() override { return source.getTotalLength(); }
+    CancellableInput (juce::FileInputStream& input, JobControl& job)
+        : source (input, 65536), control (job), length (input.getTotalLength()) {}
+    juce::int64 getTotalLength() override { return length; }
     juce::int64 getPosition() override { return source.getPosition(); }
     bool setPosition (juce::int64 position) override { return source.setPosition (position); }
     bool isExhausted() override { return control.isCancelled() || source.isExhausted(); }
@@ -49,13 +50,14 @@ public:
     {
         if (control.isCancelled()) return 0;
         const auto count = source.read (destination, bytes);
-        control.progress.store (0.8f + 0.2f * static_cast<float> (
+        control.setProgress (0.8f + 0.2f * static_cast<float> (
             static_cast<double> (getPosition()) / juce::jmax<juce::int64> (1, getTotalLength())));
         return count;
     }
 private:
-    juce::FileInputStream& source;
+    juce::BufferedInputStream source;
     JobControl& control;
+    const juce::int64 length;
 };
 
 // FLAC readers also pad on missing frames. Verify the STREAMINFO PCM MD5 so
@@ -190,7 +192,7 @@ MediaValidationResult validateMedia (const juce::File& file, JobControl& control
                 if (! std::isfinite (block.getSample (channel, frame)))
                     return fail (ErrorCode::nonFiniteAudio, "Source contains non-finite audio samples");
         position += count;
-        control.progress.store (0.8f * static_cast<float> (static_cast<double> (position) / media.frames));
+        control.setProgress (0.8f * static_cast<float> (static_cast<double> (position) / media.frames));
     }
     if (flacChecksum.isNotEmpty())
     {
@@ -209,7 +211,7 @@ MediaValidationResult validateMedia (const juce::File& file, JobControl& control
         return fail (ErrorCode::decodeFailed, "Cannot read the complete source for hashing");
     if (! media.matchesFileStamp (file)) return fail (ErrorCode::sourceChanged, "Source changed during validation; import again");
     result.message = "Source validation succeeded";
-    control.progress.store (1.0f);
+    control.setProgress (1.0f);
     return result;
 }
 // [END LS-STANDALONE-MEDIA-VALIDATION]

@@ -1,0 +1,8 @@
+{
+  "source_sha256": "8b795ab831a57ce81c3142621b4b65edb26faf1224da2c78a41b26a796bcea97",
+  "derived_file": "stereo-44100-eight-seconds.wav",
+  "sha256": "65d8935e2acb0be8be94022e21c627a6fef76cdb38dd7d9d06b531394fa2d543",
+  "sample_rate": 44100,
+  "frames": 352800,
+  "derivation": "First eight seconds, unchanged PCM, selected-clock-44100.wav"
+}

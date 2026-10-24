@@ -1,0 +1,29 @@
+{
+  "left": "build/m6-qualification-2026-10-23/sequoia-01",
+  "right": "build/m6-qualification-2026-10-23/high-sierra-01",
+  "errors": [],
+  "maximum_differences": {
+    "itu": {
+      "I": 0,
+      "M": 0,
+      "S": 0,
+      "TP": 1.7763568394002505e-15,
+      "LRA": 0
+    },
+    "ebu": {
+      "I": 0,
+      "M": 0,
+      "S": 0,
+      "TP": 0,
+      "LRA": 0
+    }
+  },
+  "tolerances": {
+    "I": 0.01,
+    "M": 0.01,
+    "S": 0.01,
+    "TP": 0.01,
+    "LRA": 0.1
+  },
+  "passed": true
+}

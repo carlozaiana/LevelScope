@@ -7,9 +7,10 @@ StandaloneAudioPanel::StandaloneAudioPanel (StandaloneSessionModel& model, Stand
                                            std::function<void()> changed)
     : session (model), audio (engine), onChanged (std::move (changed))
 {
+    session.auditionBusy = [&engine] { return engine.active() && engine.getState() != AuditionState::cancelling; };
     for (auto* component : std::initializer_list<juce::Component*> {
         &typeBox, &deviceBox, &scanButton, &openButton, &closeButton, &playButton,
-        &stopButton, &restartButton, &seekButton, &seekPosition, &confirmButton, &gain, &statusLabel, &heading, &viewport })
+        &stopButton, &restartButton, &seekButton, &seekPosition, &confirmButton, &gain, &statusLabel, &heading, &viewport, &domainBox, &prepareButton, &auditionLabel })
         addAndMakeVisible (*component);
     const auto& types = audio.deviceTypes();
     for (int i = 0; i < types.size(); ++i) typeBox.addItem (types[i]->getTypeName(), i + 1);
@@ -25,18 +26,28 @@ StandaloneAudioPanel::StandaloneAudioPanel (StandaloneSessionModel& model, Stand
         refresh();
     };
     openButton.onClick = [this] { actionError = audio.connect (session.sourceDocument.media.sampleRate); refresh(); };
-    closeButton.onClick = [this] { audio.disconnect(); actionError.clear(); refresh(); };
+    closeButton.onClick = [this] { audio.disconnect(); actionError.clear(); refresh(); onChanged(); };
+    domainBox.addItem ("Source", 1); domainBox.addItem ("Current State", 2);
+    domainBox.setSelectedId (1, juce::dontSendNotification);
+    domainBox.onChange = [this]
+    {
+        session.selectAuditionDomain (domainBox.getSelectedId() == 2 ? MeasurementDomain::currentState : MeasurementDomain::source);
+        actionError.clear(); synchronize(); onChanged();
+    };
+    prepareButton.onClick = [this]
+    {
+        synchronize(); actionError = audio.prepare (session.auditionRequest()); refresh(); onChanged();
+    };
     playButton.onClick = [this]
     {
-        const auto& source = session.sourceDocument;
-        actionError = audio.play (source.file, source.media, source.layout, source.routing);
-        refresh();
+        synchronize(); actionError = audio.play (session.auditionRequest(), session.sourceDocument.routing);
+        refresh(); onChanged();
     };
-    stopButton.onClick = [this] { audio.stop(); actionError.clear(); refresh(); };
+    stopButton.onClick = [this] { audio.stop(); actionError.clear(); refresh(); onChanged(); };
     restartButton.onClick = [this]
     {
-        const auto& s = session.sourceDocument;
-        actionError = audio.play (s.file, s.media, s.layout, s.routing, true); refresh();
+        synchronize();
+        actionError = audio.play (session.auditionRequest(), session.sourceDocument.routing, true); refresh(); onChanged();
     };
     seekPosition.setText ("0"); seekPosition.setTooltip ("Audio timeline in seconds or an exact fraction; seek rounds down to a source sample.");
     seekButton.onClick = [this]
@@ -45,7 +56,7 @@ StandaloneAudioPanel::StandaloneAudioPanel (StandaloneSessionModel& model, Stand
         {
             const auto& s = session.sourceDocument;
             const auto frame = video::Time::parse (seekPosition.getText().trim().toStdString()).floorTicks (static_cast<int64_t> (s.media.sampleRate));
-            actionError = audio.seek (frame, s.file, s.media, s.layout, s.routing);
+            actionError = audio.seek (frame, session.auditionRequest(), s.routing);
         }
         catch (const std::exception& e) { actionError = e.what(); }
         refresh();
@@ -56,7 +67,7 @@ StandaloneAudioPanel::StandaloneAudioPanel (StandaloneSessionModel& model, Stand
     gain.setSliderStyle (juce::Slider::LinearHorizontal);
     gain.setTextBoxStyle (juce::Slider::TextBoxRight, false, 80, 24);
     gain.setTextValueSuffix (" dB");
-    gain.setTooltip ("Monitor gain only. Original source and future render settings are unaffected.");
+    gain.setTooltip ("Monitor gain only. Adjust smoothly during playback. Processing and measurements are unaffected.");
     gain.setValue (-30, juce::dontSendNotification);
     gain.onValueChange = [this] { audio.setMonitorGainDb (static_cast<float> (gain.getValue())); };
     heading.setText ("File channel / Speaker role / Device output (no downmix)", juce::dontSendNotification);
@@ -82,7 +93,7 @@ StandaloneAudioPanel::StandaloneAudioPanel (StandaloneSessionModel& model, Stand
         };
         outputBoxes[channel].onChange = [this, channel]
         {
-            session.sourceDocument.routing.fileToDevice[channel] = outputBoxes[channel].getSelectedId() - 2;
+            session.setOutputRoute (channel, outputBoxes[channel].getSelectedId() - 2);
             actionError.clear();
             refresh();
         };
@@ -125,21 +136,47 @@ void StandaloneAudioPanel::sourceChanged()
     resized();
 }
 
+void StandaloneAudioPanel::synchronize()
+{
+    if (audio.failureCode() == ErrorCode::sourceChanged && ! session.sourceContentInvalid)
+        session.measurementUnsuccessful (session.auditionDomain, ErrorCode::sourceChanged);
+    audio.synchronize (session.auditionRequest(), session.sourceDocument.routing);
+}
+
 void StandaloneAudioPanel::refresh()
 {
+    synchronize();
     const auto& source = session.sourceDocument;
     const bool playing = audio.active();
     const bool editable = ! playing && ! session.job.isActive();
+    const auto request = session.auditionRequest();
+    const auto requestError = request.validationError();
+    domainBox.setEnabled (editable);
+    domainBox.setSelectedId (session.auditionDomain == MeasurementDomain::source ? 1 : 2, juce::dontSendNotification);
+    prepareButton.setEnabled (editable && requestError.isEmpty());
+    prepareButton.setTooltip (requestError);
+    const bool current = session.auditionDomain == MeasurementDomain::currentState;
+    const auto& summary = current ? session.currentState : session.source;
+    const auto expected = requestError.isEmpty() ? OfflineAnalysisService::identityFor (request.context, request.domain, request.context.media.sha256) : juce::String();
+    const bool measured = summary.hasMeasurement && summary.analysis && ! session.sourceContentInvalid
+        && summary.analysis->identity == expected && (! current || ! session.currentStateNeedsRemeasurement());
+    juce::String measurementStatus = measured ? "Measurements current" : summary.hasMeasurement
+        ? "UNVERIFIED: measurements stale" : current && session.currentStateNeedsRemeasurement()
+        ? "UNVERIFIED: measurements unavailable; remeasure Current State" : "UNVERIFIED: measurements unavailable";
+    auditionLabel.setText ((current ? "Current State" : "Source") + juce::String (" | Processing ")
+        + juce::String (request.context.processing.staticGainDb, 12) + " dB | " + measurementStatus
+        + "\n" + (requestError.isNotEmpty() ? requestError : "Playback does not measure or establish compliance."), juce::dontSendNotification);
+    gain.setEnabled (true); // Listening volume remains live, even after an overload fault.
     typeBox.setEnabled (editable);
     deviceBox.setEnabled (editable);
     scanButton.setEnabled (editable);
     openButton.setEnabled (editable && source.hasSource && deviceBox.getSelectedId() > 0);
     closeButton.setEnabled (audio.connected());
     const auto routeError = source.routing.validate (source.layout.count, audio.outputNames().size());
-    playButton.setEnabled (editable && audio.connected() && source.hasSource && source.layout.confirmed && routeError.isEmpty());
+    playButton.setEnabled (editable && audio.connected() && requestError.isEmpty() && routeError.isEmpty());
     stopButton.setEnabled (playing);
-    restartButton.setEnabled (!session.job.isActive() && audio.connected() && source.hasSource && source.layout.confirmed && routeError.isEmpty());
-    seekButton.setEnabled (!session.job.isActive() && source.hasSource);
+    restartButton.setEnabled (!session.job.isActive() && ! audio.preparing() && audio.connected() && requestError.isEmpty() && routeError.isEmpty());
+    seekButton.setEnabled (!session.job.isActive() && ! audio.preparing() && requestError.isEmpty());
     seekPosition.setEnabled (seekButton.isEnabled());
     confirmButton.setEnabled (editable && source.hasSource && source.layout.isValid() && ! source.layout.confirmed);
     for (int channel = 0; channel < maxChannels; ++channel)
@@ -156,6 +193,7 @@ void StandaloneAudioPanel::refresh()
         roleBoxes[channel].setSelectedId (selected, juce::dontSendNotification);
     }
     juce::String status = actionError.isNotEmpty() ? actionError : audio.status();
+    if (audio.preparing()) status << " | " << juce::String (juce::roundToInt (100 * audio.preparationProgress())) << "%";
     if (playing || audio.getState() == AuditionState::finished)
         status << "  |  " << juce::String (audio.positionSeconds(), 1) << " s  |  underruns " << juce::String (audio.underruns());
     status << "\n" << (source.layout.confirmed ? "Roles confirmed. " : "Review decoder-suggested roles; then confirm. ");
@@ -167,6 +205,10 @@ void StandaloneAudioPanel::resized()
 {
     auto area = getLocalBounds();
     auto row = area.removeFromTop (28);
+    domainBox.setBounds (row.removeFromLeft (165).reduced (2));
+    prepareButton.setBounds (row.removeFromLeft (150).reduced (2));
+    auditionLabel.setBounds (area.removeFromTop (45).reduced (2));
+    row = area.removeFromTop (28);
     typeBox.setBounds (row.removeFromLeft (115).reduced (2));
     scanButton.setBounds (row.removeFromRight (110).reduced (2));
     deviceBox.setBounds (row.reduced (2));

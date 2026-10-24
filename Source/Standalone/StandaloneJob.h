@@ -13,7 +13,8 @@ enum class ErrorCode
 {
     none, cancelled, unavailable, missingFile, unsupportedMedia, invalidMetadata,
     unsupportedChannels, decodeFailed, nonFiniteAudio, sourceChanged, invalidLayout,
-    staleRevision, invalidRequest, deviceUnavailable, sampleRateMismatch
+    staleRevision, invalidRequest, deviceUnavailable, sampleRateMismatch,
+    insufficientDiskSpace, writeFailed
 };
 
 struct JobControl
@@ -21,7 +22,16 @@ struct JobControl
     std::atomic<bool> cancel { false };
     std::atomic<float> progress { 0.0f };
     const std::atomic<bool>* parentCancel = nullptr; // worker-local child stage only
-    bool isCancelled() const { return cancel.load() || (parentCancel != nullptr && parentCancel->load()); }
+    const JobControl* parent = nullptr;
+    std::atomic<float>* parentProgress = nullptr;
+    float progressBase = 0, progressScale = 1;
+    bool isCancelled() const { return cancel.load() || (parentCancel != nullptr && parentCancel->load())
+        || (parent != nullptr && parent->isCancelled()); }
+    void setProgress (float value)
+    {
+        progress.store (value);
+        if (parentProgress) parentProgress->store (progressBase + progressScale * value);
+    }
 };
 
 struct JobTicket

@@ -1,0 +1,16 @@
+{
+  "qualification_passed": false,
+  "candidate": "candidate-01",
+  "monitor_requested_db": -15,
+  "status": "User confirmed comparisons on both Macs, then requested pause",
+  "setup_correction": "Initial derived Golem fixture used sparse synchronization pulses (RMS -50.290254 dBFS) and was unsuitable for a clear loudness comparison. Retained as setup history; replaced by continuous 1 kHz stereo tone, 8 seconds at 44100 Hz, about -23 dBFS peak. No implementation changes.",
+  "observed_golem_setup": "Source reached EOF at 8.0 s, zero displayed underruns. Observed processing -14.370370... dB and monitor -5 dB differed from the planned comparison; this is not acceptance evidence.",
+  "planned_current_gain_db": -6.02059991328,
+  "planned_source_gain_db": 0,
+  "requires_user_listening_observations": false,
+  "listening_user_reported_pass": true,
+  "user_observation": "Current is clearly quieter on both macs with no clicks/dropouts and remains labelled UNVERIFIED",
+  "user_clarification": "Later exaggerated gain/monitor settings were a second deliberate level-difference check, all confirmed as expected.",
+  "corrected_tone_repeat": "Prepared but not performed before pause; no result claimed",
+  "qualification_passed_scope": "Overall M6 remains incomplete; user-reported listening comparison passed."
+}

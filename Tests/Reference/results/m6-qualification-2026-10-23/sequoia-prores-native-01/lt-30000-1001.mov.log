@@ -1,0 +1,2 @@
+PRORES lt-30000-1001.mov sha256=3db6443384eeffe6a927427a0e30cf162af3a3a8727cd84ff130ae0856b50c7b frames=600 hash_ms=1379.36 index_ms=37.9524 observed_video_outputs=15 observed_audio_outputs=0 timecode=No timecode track
+PASS: 2434 ProRes checks; controlled sink only, no physical audio device

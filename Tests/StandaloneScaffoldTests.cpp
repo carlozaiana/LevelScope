@@ -327,7 +327,7 @@ void auditionChecks (const juce::File& directory)
     expect (audio->play (file, result.media, layout, map).isNotEmpty(), "unconfirmed roles block playback");
     layout.confirmed = true;
     expect (audio->play (file, result.media, layout, map).isEmpty(), "source audition starts buffering");
-    expect (audio->getState() == AuditionState::buffering && ! fake->isPlaying(), "prefill before audio callback");
+    expect (audio->getState() == AuditionState::preparing && ! fake->isPlaying(), "verified preparation before audio callback");
     juce::AudioBuffer<float> block (12, 256);
     bool received = false;
     const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds (5);
