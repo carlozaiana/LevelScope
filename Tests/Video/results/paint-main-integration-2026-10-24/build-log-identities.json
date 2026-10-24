@@ -1,0 +1,12 @@
+{
+  "configure.log": {
+    "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-main-integration-20261024-01/logs/configure.log",
+    "sha256": "8a58b6638c8e3c771bd9f99e29bbd1a6c19aa906423d0f6df42f2533e61b44dd",
+    "bytes": 4356
+  },
+  "build.log": {
+    "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-main-integration-20261024-01/logs/build.log",
+    "sha256": "94bac8cb60a334a966cbfdb01f103147cf223da664f701d14f1d91dbd41a98d2",
+    "bytes": 29444
+  }
+}

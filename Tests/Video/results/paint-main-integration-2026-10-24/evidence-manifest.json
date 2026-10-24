@@ -1,0 +1,23 @@
+{
+  "scope": "New device-closed integration evidence for c154b469fd8ebcea972d04e284ddde01dbc6df40; earlier evidence and frozen packages preserved.",
+  "handover_path": "Docs/VideoPaintDiagnosticMainIntegration-2026-10-24.md",
+  "handover_sha256": "de7453ba1bf4054a42fa9ca3e78d3488d47cfbdc270881d8499b9276f3645df9",
+  "files_sha256": {
+    "binary-identities.json": "ef6e3fa4b1076ce81475f8bb617cd94f32b8fd1071fb495d6f74f57a31504b85",
+    "build-invocation.json": "ebb072701d9b6333b3c6cde408abb0c50f13939482d4353a7957812a9bd53064",
+    "build-log-identities.json": "9dfeb2399982e9bb5a85b6f8d6f32fcd231e0942155014ad93ea6f2c9252a988",
+    "ctest-details.log": "6de8bcb76c09a7e94bbb7154d2d149fbbb1f13ac132e3c8754bcd9153d476ef7",
+    "ctest.log": "28192aba086a89c01eb111ef6201667dd1688935f040bd32ff77e60d6a057e97",
+    "diagnostic-offline-startup.log": "82c5e6779fa32f0127117537817f3c24ba17d846fdb874afcca3f442f721d06a",
+    "evidence-reuse.json": "8bf763a616b7044f267b4ff064e3c394902226b56e6acd8e8b99d7c3c936ff0f",
+    "exclusive-output-guard.log": "20fbfa6060a0055e23732676cb4be9837b3ec72d56259ae90db520fe9562a210",
+    "integration-checks.json": "1b0af28c205634a9228e0455ada354e087ba9ff616151a189efe2f108fcdcc21",
+    "integration-record.json": "5b06792b78c47a28bd123f2fc57da8c0a27d074c1403f5f7bf0246e826411655",
+    "offline-trace.json": "7bf90ea259d827d5adb23d5341d69e0d6292f861cedae1deb8629cc384d15ecf",
+    "preservation-before-publication.json": "83a547b06f8c467aa49cb7f1e2c2c0af6d4f49da3b8dad09ffa66c67bedf8757",
+    "protected-tags.json": "90c15772cb432168e13bb4c703ee7ce4735827ba47720d9681c5c84a528d9017",
+    "run_integration_checks.py": "8b9bd70488e9fdd0808ce0ac7d23e2f43a333db7a434c0e7fe866caa77be5431",
+    "runner-guards.log": "9e915bb136519af1e78c79379163ea7585bf803cbdd9b7d215b8c45ab01a9a0b",
+    "trace-buffer.log": "5cb0b2155aebf13f2bb2c61a50df896b4f7b1e9f0ee40a5dc09e4cf59ee9389a"
+  }
+}

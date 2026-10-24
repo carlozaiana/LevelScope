@@ -1,0 +1,28 @@
+{
+  "recorded_utc": "2026-10-24T20:19:04.774243+00:00",
+  "original_worktree": "/Users/fuzz/Developer/LevelScope",
+  "original_branch": "codex/logic-module",
+  "original_head": "b57a1ed23cbe7d74afe98ed16ec8fd615db9d171",
+  "original_status_unchanged": true,
+  "original_file_hashes_verified_unchanged": 2235,
+  "unrelated_metadata_changes_left_untouched": [],
+  "local_tag_objects_and_targets_unchanged": true,
+  "preserved_packages": {
+    "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01": {
+      "identity_sha256": "ab7440f4d06275ea55055f59eec98c4f5872a775342e5b31777cefdf1dfdb4dd",
+      "artifact_count": 308
+    },
+    "/Users/fuzz/Developer/LevelScope/build/m7-qualification-2026-10-24/candidate-02": {
+      "identity_sha256": "ca3eda67d2ab4505237075a0f9ff41968ff88f0d5e615652891f886c7a94d59b",
+      "artifact_count": 339
+    },
+    "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-diagnostic-20261024-01/candidate-03": {
+      "identity_sha256": "35081f6e31cd02f202162525699ecd87912f4cabbc7177a2919f4c53497cad1c",
+      "artifact_count": 143
+    }
+  },
+  "preserved_artifacts_verified": 790,
+  "golem_packages_touched": false,
+  "m7": "frozen, unqualified and unpublished",
+  "installed_app_plugin_or_audio_configuration_actions": false
+}

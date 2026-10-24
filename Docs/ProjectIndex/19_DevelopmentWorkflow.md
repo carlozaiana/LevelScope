@@ -1,5 +1,17 @@
 # Development workflow and video checkpoint locations
 
+## Diagnostic integration continuation — 24 October 2026
+
+[The diagnostic integration handover](../VideoPaintDiagnosticMainIntegration-2026-10-24.md)
+records the tooling-only main integration, new regression evidence and open
+frame-skip finding. Source remains in the VideoImplementation working copy;
+its fresh integration build is `build/paint-main-integration-20261024-01/cmake`.
+Use another new build directory for subsequent builds. Preserve the M6, M7 and
+diagnostic candidate packages and every checkpoint tag. M7 remains frozen.
+Tracing is opt-in through `LEVELSCOPE_BUILD_VIDEO_PAINT_DIAGNOSTIC`; the normal
+app has no automatic trace recording. Physical diagnostic runs need fresh user
+coordination. VST3 and default/all targets remain outside this workflow.
+
 ## ProRes main integration — 21 October 2026
 
 [The integration handover](27_ProResMainIntegration.md) identifies the accepted main

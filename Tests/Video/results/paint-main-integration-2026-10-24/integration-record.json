@@ -1,0 +1,14 @@
+{
+  "recorded_utc": "2026-10-24T20:20:50.878238+00:00",
+  "main_before": "b57a1ed23cbe7d74afe98ed16ec8fd615db9d171",
+  "implementation_commit": "c154b469fd8ebcea972d04e284ddde01dbc6df40",
+  "integration_method": "fast-forward; no conflict or implementation edits",
+  "follow_up_scope": "Documentation and text evidence only",
+  "fresh_checks_passed": true,
+  "new_physical_playback": false,
+  "prior_two_mac_evidence_reused_for_unchanged_source": true,
+  "m7": "frozen, unqualified and unpublished",
+  "unresolved_issue": "Intermittent missed painted frames; no scheduling correction established; no acceptance limit relaxed.",
+  "physical_optical_acoustic_synchronization_measured": false,
+  "main_publication_verification": "Remote verification follows the documentation/evidence commit; exact published revision is in Git history and the publication receipt."
+}

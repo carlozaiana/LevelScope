@@ -1,0 +1,83 @@
+{
+  "source_commit": "c154b469fd8ebcea972d04e284ddde01dbc6df40",
+  "started_utc": "2026-10-24T20:18:47.584978+00:00",
+  "native_machine": "arm64",
+  "physical_playback": false,
+  "audio_devices_opened": false,
+  "checks": [
+    {
+      "name": "ctest",
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-main-integration-20261024-01/cmake",
+        "--output-on-failure",
+        "--parallel",
+        "1"
+      ],
+      "expected_exit_code": 0,
+      "exit_code": 0
+    },
+    {
+      "name": "trace-buffer",
+      "argv": [
+        "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-main-integration-20261024-01/cmake/LevelScopeVideoPaintTraceTests"
+      ],
+      "expected_exit_code": 0,
+      "exit_code": 0
+    },
+    {
+      "name": "runner-guards",
+      "argv": [
+        "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+        "-B",
+        "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/Tests/VideoPaint/RunnerTests.py"
+      ],
+      "expected_exit_code": 0,
+      "exit_code": 0
+    },
+    {
+      "name": "diagnostic-offline-startup",
+      "argv": [
+        "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-main-integration-20261024-01/cmake/LevelScopeVideoPaintDiagnostic_artefacts/Release/LevelScope Video Paint Diagnostic.app/Contents/MacOS/LevelScope Video Paint Diagnostic",
+        "--diagnostic-offline-check",
+        "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-main-integration-20261024-01/checks/offline-trace.json"
+      ],
+      "expected_exit_code": 0,
+      "exit_code": 0
+    },
+    {
+      "name": "exclusive-output-guard",
+      "argv": [
+        "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-main-integration-20261024-01/cmake/LevelScopeVideoPaintDiagnostic_artefacts/Release/LevelScope Video Paint Diagnostic.app/Contents/MacOS/LevelScope Video Paint Diagnostic",
+        "--diagnostic-offline-check",
+        "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-main-integration-20261024-01/checks/offline-trace.json"
+      ],
+      "expected_exit_code": 1,
+      "exit_code": 1
+    }
+  ],
+  "all_passed": true,
+  "tested_source_files_identical": 121,
+  "reused_candidate_source_digest": "0760e080d2e5daa8c89612029236308e134237a142c879003b53c7da1d3727cf",
+  "ctest_names": [
+    "video-timing",
+    "offline-measurement",
+    "measured-compliance",
+    "global-trim-proposals",
+    "measured-diagnostics",
+    "programme-sections",
+    "verified-audition",
+    "standalone-scaffold"
+  ],
+  "offline_trace_intentionally_not_qualification_evidence": true,
+  "instrumentation_target_isolation": {
+    "LevelScopeStandalone": false,
+    "LevelScopeVideoQualification": false,
+    "LevelScopeVideoPaintDiagnostic": true
+  },
+  "fresh_binary_count": 12,
+  "vst3_executables_built": [],
+  "vst3_configure_metadata_only": true,
+  "completed_utc": "2026-10-24T20:19:52.630029+00:00"
+}

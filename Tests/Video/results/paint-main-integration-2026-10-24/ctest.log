@@ -1,0 +1,21 @@
+Test project /Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-main-integration-20261024-01/cmake
+    Start 1: video-timing
+1/8 Test #1: video-timing .....................   Passed    0.83 sec
+    Start 2: offline-measurement
+2/8 Test #2: offline-measurement ..............   Passed   13.07 sec
+    Start 3: measured-compliance
+3/8 Test #3: measured-compliance ..............   Passed    0.72 sec
+    Start 4: global-trim-proposals
+4/8 Test #4: global-trim-proposals ............   Passed    8.60 sec
+    Start 5: measured-diagnostics
+5/8 Test #5: measured-diagnostics .............   Passed    2.15 sec
+    Start 6: programme-sections
+6/8 Test #6: programme-sections ...............   Passed    3.19 sec
+    Start 7: verified-audition
+7/8 Test #7: verified-audition ................   Passed   33.55 sec
+    Start 8: standalone-scaffold
+8/8 Test #8: standalone-scaffold ..............   Passed    0.53 sec
+
+100% tests passed out of 8
+
+Total Test time (real) =  62.64 sec

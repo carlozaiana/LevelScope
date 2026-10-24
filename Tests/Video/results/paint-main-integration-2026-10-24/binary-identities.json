@@ -1,0 +1,110 @@
+{
+  "LevelScopeStandalone": {
+    "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-main-integration-20261024-01/cmake/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone",
+    "sha256": "d98e92bba4214f3fc214d0f4c24ef2d8cb4b69f56959cea5d5d0eda5a4c4142f",
+    "architectures": [
+      "x86_64",
+      "arm64"
+    ],
+    "x86_64_deployment_target": "10.13"
+  },
+  "LevelScopeVideoQualification": {
+    "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-main-integration-20261024-01/cmake/LevelScopeVideoQualification_artefacts/Release/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+    "sha256": "4e7140fb21e8f967f9e243cf44cdea1c14062293b54dd33c0ea87984c45ced33",
+    "architectures": [
+      "x86_64",
+      "arm64"
+    ],
+    "x86_64_deployment_target": "10.13"
+  },
+  "LevelScopeVideoPaintDiagnostic": {
+    "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-main-integration-20261024-01/cmake/LevelScopeVideoPaintDiagnostic_artefacts/Release/LevelScope Video Paint Diagnostic.app/Contents/MacOS/LevelScope Video Paint Diagnostic",
+    "sha256": "d718d00c91b26855aee19c8e80ea4e2ebed336274c1f3063e8e2cd07fbc526aa",
+    "architectures": [
+      "x86_64",
+      "arm64"
+    ],
+    "x86_64_deployment_target": "10.13"
+  },
+  "LevelScopeVideoPaintTraceTests": {
+    "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-main-integration-20261024-01/cmake/LevelScopeVideoPaintTraceTests",
+    "sha256": "1244d7a235b3ea29ce9e20f00e19e5f8245f0d376266d1cf071fa4546dc96f7f",
+    "architectures": [
+      "x86_64",
+      "arm64"
+    ],
+    "x86_64_deployment_target": "10.13"
+  },
+  "LevelScopeVideoTests": {
+    "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-main-integration-20261024-01/cmake/LevelScopeVideoTests_artefacts/Release/LevelScopeVideoTests",
+    "sha256": "12d93060e4727b5327c0e94474af27f25943912970cd828f58ffdd0d026a882f",
+    "architectures": [
+      "x86_64",
+      "arm64"
+    ],
+    "x86_64_deployment_target": "10.13"
+  },
+  "LevelScopeMeasurementTests": {
+    "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-main-integration-20261024-01/cmake/LevelScopeMeasurementTests_artefacts/Release/LevelScopeMeasurementTests",
+    "sha256": "806432f955a8d7d8e80f527239949ba5c9e3653db01500fc8ff0ed9513996922",
+    "architectures": [
+      "x86_64",
+      "arm64"
+    ],
+    "x86_64_deployment_target": "10.13"
+  },
+  "LevelScopeScaffoldTests": {
+    "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-main-integration-20261024-01/cmake/LevelScopeScaffoldTests_artefacts/Release/LevelScopeScaffoldTests",
+    "sha256": "32e787b425b89fc931d5e65007e87011a7340b30007bb0a8470edaefef2af774",
+    "architectures": [
+      "x86_64",
+      "arm64"
+    ],
+    "x86_64_deployment_target": "10.13"
+  },
+  "LevelScopeComplianceTests": {
+    "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-main-integration-20261024-01/cmake/LevelScopeComplianceTests_artefacts/Release/LevelScopeComplianceTests",
+    "sha256": "cd93c28df7ffc7aefbb20a336df48e85a867bb9cc83b349eaf243d46f19bc802",
+    "architectures": [
+      "x86_64",
+      "arm64"
+    ],
+    "x86_64_deployment_target": "10.13"
+  },
+  "LevelScopeProposalTests": {
+    "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-main-integration-20261024-01/cmake/LevelScopeProposalTests_artefacts/Release/LevelScopeProposalTests",
+    "sha256": "464b424195897955ce8d4bed08b863e2fc4c42db9d785d659dc62a9191b08ab8",
+    "architectures": [
+      "x86_64",
+      "arm64"
+    ],
+    "x86_64_deployment_target": "10.13"
+  },
+  "LevelScopeDiagnosticsTests": {
+    "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-main-integration-20261024-01/cmake/LevelScopeDiagnosticsTests_artefacts/Release/LevelScopeDiagnosticsTests",
+    "sha256": "5c1220c3746017a60f4e1fabc4df50b1537eed76d214f97d132b8bd3e6119037",
+    "architectures": [
+      "x86_64",
+      "arm64"
+    ],
+    "x86_64_deployment_target": "10.13"
+  },
+  "LevelScopeSectionsTests": {
+    "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-main-integration-20261024-01/cmake/LevelScopeSectionsTests_artefacts/Release/LevelScopeSectionsTests",
+    "sha256": "118aff59670d91b5c7c43b8de3018c6c834f7557fdcc6993291c2021a43989f3",
+    "architectures": [
+      "x86_64",
+      "arm64"
+    ],
+    "x86_64_deployment_target": "10.13"
+  },
+  "LevelScopeAuditionTests": {
+    "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-main-integration-20261024-01/cmake/LevelScopeAuditionTests_artefacts/Release/LevelScopeAuditionTests",
+    "sha256": "1ac3a08cfdb3c27a4f95c031d1fee79ffb6a467602670208265118830c1a3c3d",
+    "architectures": [
+      "x86_64",
+      "arm64"
+    ],
+    "x86_64_deployment_target": "10.13"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "source_commit": "c154b469fd8ebcea972d04e284ddde01dbc6df40",
+  "same_tested_source_files": 121,
+  "candidate_source_digest": "0760e080d2e5daa8c89612029236308e134237a142c879003b53c7da1d3727cf",
+  "candidate_identity_sha256": "35081f6e31cd02f202162525699ecd87912f4cabbc7177a2919f4c53497cad1c",
+  "prior_two_platform_device_closed_checks_passed": true,
+  "prior_physical_comparisons": 12,
+  "prior_physical_comparisons_passed": 12,
+  "evidence_manifests_verified_entries": 92,
+  "prior_physical_candidate_unchanged": true,
+  "new_physical_playback_required_for_this_unchanged_source_integration": false,
+  "fresh_build_runtime_coverage": "Sequoia native; existing actual High Sierra evidence retained for unchanged frozen candidate"
+}

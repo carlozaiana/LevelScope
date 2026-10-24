@@ -15,6 +15,7 @@ This folder is the persistent orientation layer for future development chats. Re
 
 ## Task-based quick start
 
+- **Video paint diagnostics / integrated tooling; intermittent skips unresolved; M7 frozen:** [Diagnostic integration handover](../VideoPaintDiagnosticMainIntegration-2026-10-24.md)
 - **M6 verified Current State audition / qualified, published and integrated into main:** [28_M6VerifiedCurrentStateAudition.md](28_M6VerifiedCurrentStateAudition.md)
 - **M6 candidate identity, completed qualification and publication handover:** [30_M6QualificationAndHandover.md](30_M6QualificationAndHandover.md)
 - **Future channel-based multichannel support / deferred:** [29_MultichannelPcmMilestone.md](29_MultichannelPcmMilestone.md)

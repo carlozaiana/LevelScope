@@ -1,5 +1,17 @@
 # Video implementation handover
 
+## Diagnostic tooling integration — 24 October 2026
+
+The diagnostic tooling and its two-Mac evidence are integrated into main at
+`c154b469fd8ebcea972d04e284ddde01dbc6df40`, followed by integration checks and
+this documentation/evidence continuation. Read the
+[current diagnostic integration handover](../VideoPaintDiagnosticMainIntegration-2026-10-24.md)
+for exact identities, fresh device-closed checks and preserved package locations.
+Intermittent missed paints remain unresolved; M7 stays frozen, unqualified and
+unpublished. The normal app does not automatically collect diagnostic traces.
+No acceptance limit was relaxed, and no physical synchronization measurement or
+playback correction is claimed. Earlier qualification records below remain intact.
+
 Prepared 17 October 2026. This document is a handover specification; no video
 implementation is included in the measurement milestone.
 
