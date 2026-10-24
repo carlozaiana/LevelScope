@@ -76,6 +76,7 @@ public:
     View update (Time videoTime, uint64_t transportGeneration);
     bool prerollReady() const;
 private:
+    friend struct DiagnosticPlayerProbe; // Read-only test instrumentation; no production behaviour.
     void run();
     mutable std::mutex mutex;
     std::condition_variable wake;

@@ -1,0 +1,27 @@
+{
+  "scope": "Diagnostic preparation only; no playback qualification",
+  "files_sha256": {
+    "candidate-01-failed-preview.log": "9516eb21d1df52a22da0019d01ea7e80096f8a05aa102ecdeb9ec21c332f6a9f",
+    "candidate-03-identity.json": "35081f6e31cd02f202162525699ecd87912f4cabbc7177a2919f4c53497cad1c",
+    "high-sierra/diagnostic-offline-startup.log": "82c5e6779fa32f0127117537817f3c24ba17d846fdb874afcca3f442f721d06a",
+    "high-sierra/exclusive-output.log": "20fbfa6060a0055e23732676cb4be9837b3ec72d56259ae90db520fe9562a210",
+    "high-sierra/offline-measurement.log": "693ec25505d8a388521025eedf57085a86503c9ccda9586e86f6f315285c4e6c",
+    "high-sierra/offline-trace.json": "3806809e77c70b6351cb1e789dcdbce75a561ef64448fe52abcd572afa61e3d5",
+    "high-sierra/preview.log": "247e45b8fe729d0c2e08944f95ea7b3930e78907029d9ae0968a9af9d3092eaf",
+    "high-sierra/runner-guards.log": "9d93138d8678defc78aa5bd262be365f5f51a9a29031c1e5d649517e05963a45",
+    "high-sierra/summary.json": "ebe8a8fedbfa585b076ebcd80dbf8db84e30ca009cbb41d798781fbeb53b7da8",
+    "high-sierra/trace-buffer.log": "5cb0b2155aebf13f2bb2c61a50df896b4f7b1e9f0ee40a5dc09e4cf59ee9389a",
+    "high-sierra/verified-audition.log": "b1ab9cc0022d1ab8f3c0ccff2dd6754d616eb3249a2bf0c224f212986f953b7e",
+    "high-sierra/video-timing.log": "dea3f854057fa0706f9ed7a9068864ba8ce01b6885182f2fccc4392795a65bb7",
+    "preparation-summary.json": "c4ff2c5b077609cd3b24dd11c9f9b565c2f471eb0e6601b541f5d32950fafb20",
+    "preservation-check.json": "3e0ac6bce2b1e9e2d605874a5952ba2a98d9cf7aedd44932df6208c3d0ebd460",
+    "sequoia/diagnostic-offline-startup.log": "82c5e6779fa32f0127117537817f3c24ba17d846fdb874afcca3f442f721d06a",
+    "sequoia/exclusive-output.log": "20fbfa6060a0055e23732676cb4be9837b3ec72d56259ae90db520fe9562a210",
+    "sequoia/offline-trace.json": "a30b9dcdce1f4bb82a50b616eadc437f7c03989879b5fe24a963eab263883d2c",
+    "sequoia/preview.log": "f4deb5d93e918affbb3cef65c4403a11082bade53fcff99a5626b300dac64333",
+    "sequoia/runner-guards.log": "36817b52d96b062063c13a67804a30f8d725a674af7c1dd47be6814bd9044734",
+    "sequoia/summary.json": "a875facb78641b8b54bb135ed6f9119b208288a933a99a4512897c2b4a9eb5b9",
+    "sequoia/trace-buffer.log": "5cb0b2155aebf13f2bb2c61a50df896b4f7b1e9f0ee40a5dc09e4cf59ee9389a",
+    "sequoia-closed-regressions.log": "631df518af9bed7ff9c0d501650a57920757b868c3e6b7a2f15b8b244e70b0c2"
+  }
+}

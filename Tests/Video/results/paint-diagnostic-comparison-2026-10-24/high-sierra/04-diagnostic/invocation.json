@@ -1,0 +1,106 @@
+{
+  "argv": [
+    "/Users/fuzz/LevelScope-VideoPaintDiagnostic-2026-10-24/candidate-03/LevelScope Video Paint Diagnostic.app/Contents/MacOS/LevelScope Video Paint Diagnostic",
+    "--allow-audio",
+    "--muted",
+    "--device",
+    "Built-in Output",
+    "--seconds",
+    "100",
+    "--audio",
+    "/Users/fuzz/LevelScope-VideoPaintDiagnostic-2026-10-24/candidate-03/fixtures/selected-clock-44100.wav",
+    "--video",
+    "/Users/fuzz/LevelScope-VideoPaintDiagnostic-2026-10-24/candidate-03/fixtures/51_SyncTest.mov",
+    "--report",
+    "/Users/fuzz/LevelScope-VideoPaintDiagnostic-2026-10-24/high-sierra-comparison-01/04-diagnostic/report.json",
+    "--audition-state",
+    "source",
+    "--trace",
+    "/Users/fuzz/LevelScope-VideoPaintDiagnostic-2026-10-24/high-sierra-comparison-01/04-diagnostic/trace.json"
+  ],
+  "audio_before": [
+    [
+      {
+        "_items": [
+          {
+            "_name": "Built-in Input",
+            "coreaudio_device_input": 2,
+            "coreaudio_device_manufacturer": "Apple Inc.",
+            "coreaudio_device_srate": 44100.0,
+            "coreaudio_device_transport": "coreaudio_device_type_builtin",
+            "coreaudio_input_source": "Internal Microphone"
+          },
+          {
+            "_name": "Built-in Line Input",
+            "coreaudio_device_input": 2,
+            "coreaudio_device_manufacturer": "Apple Inc.",
+            "coreaudio_device_srate": 44100.0,
+            "coreaudio_device_transport": "coreaudio_device_type_builtin",
+            "coreaudio_input_source": "Line In"
+          },
+          {
+            "_name": "Built-in Output",
+            "_properties": "coreaudio_default_audio_system_device",
+            "coreaudio_default_audio_system_device": "spaudio_yes",
+            "coreaudio_device_manufacturer": "Apple Inc.",
+            "coreaudio_device_output": 2,
+            "coreaudio_device_srate": 44100.0,
+            "coreaudio_device_transport": "coreaudio_device_type_builtin",
+            "coreaudio_output_source": "Headphones"
+          },
+          {
+            "_name": "Built-in Line Output",
+            "coreaudio_device_manufacturer": "Apple Inc.",
+            "coreaudio_device_output": 2,
+            "coreaudio_device_srate": 44100.0,
+            "coreaudio_device_transport": "coreaudio_device_type_builtin",
+            "coreaudio_output_source": "Line Out"
+          },
+          {
+            "_name": "Built-in Line Output",
+            "coreaudio_device_manufacturer": "Apple Inc.",
+            "coreaudio_device_output": 2,
+            "coreaudio_device_srate": 44100.0,
+            "coreaudio_device_transport": "coreaudio_device_type_builtin",
+            "coreaudio_output_source": "Line Out"
+          },
+          {
+            "_name": "Built-in Digital Output",
+            "coreaudio_device_manufacturer": "Apple Inc.",
+            "coreaudio_device_output": 2,
+            "coreaudio_device_srate": 44100.0,
+            "coreaudio_device_transport": "coreaudio_device_type_builtin",
+            "coreaudio_output_source": "Digital Out"
+          },
+          {
+            "_name": "Saffire",
+            "coreaudio_default_audio_input_device": "spaudio_yes",
+            "coreaudio_default_audio_output_device": "spaudio_yes",
+            "coreaudio_device_input": 20,
+            "coreaudio_device_manufacturer": "Focusrite A.E.",
+            "coreaudio_device_output": 20,
+            "coreaudio_device_srate": 48000.0,
+            "coreaudio_device_transport": "coreaudio_device_type_firewire",
+            "coreaudio_input_source": "spaudio_default",
+            "coreaudio_output_source": "spaudio_default"
+          },
+          {
+            "_name": "Adobe Encore DVD 6.0",
+            "coreaudio_device_manufacturer": "Apple Inc.",
+            "coreaudio_device_srate": 0.0,
+            "coreaudio_device_transport": "coreaudio_device_type_unknown"
+          },
+          {
+            "_name": "Premiere Pro 6.0",
+            "coreaudio_device_manufacturer": "Apple Inc.",
+            "coreaudio_device_srate": 0.0,
+            "coreaudio_device_transport": "coreaudio_device_type_unknown"
+          }
+        ],
+        "_name": "coreaudio_device"
+      }
+    ]
+  ],
+  "binary_sha256": "3fd0fe58bbba684c06ac55acaf1618c318812396e3a121434e54a7dcfde1f93b",
+  "started_utc": "2026-10-24T17:43:38.231120+00:00"
+}

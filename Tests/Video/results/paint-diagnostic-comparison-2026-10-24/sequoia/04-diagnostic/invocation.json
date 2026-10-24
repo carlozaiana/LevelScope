@@ -1,0 +1,62 @@
+{
+  "argv": [
+    "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-diagnostic-20261024-01/candidate-03/LevelScope Video Paint Diagnostic.app/Contents/MacOS/LevelScope Video Paint Diagnostic",
+    "--allow-audio",
+    "--muted",
+    "--device",
+    "Mac Studio Speakers",
+    "--seconds",
+    "100",
+    "--audio",
+    "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-diagnostic-20261024-01/candidate-03/fixtures/selected-clock-48000.wav",
+    "--video",
+    "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-diagnostic-20261024-01/candidate-03/fixtures/51_SyncTest.mov",
+    "--report",
+    "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-diagnostic-20261024-01/sequoia-comparison-01/04-diagnostic/report.json",
+    "--audition-state",
+    "source",
+    "--trace",
+    "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-diagnostic-20261024-01/sequoia-comparison-01/04-diagnostic/trace.json"
+  ],
+  "audio_before": [
+    [
+      {
+        "_items": [
+          {
+            "_name": "PB248",
+            "coreaudio_device_manufacturer": "ACI",
+            "coreaudio_device_output": 2,
+            "coreaudio_device_srate": 48000.0,
+            "coreaudio_device_transport": "coreaudio_device_type_hdmi",
+            "coreaudio_output_source": "spaudio_default"
+          },
+          {
+            "_name": "Mac Studio Speakers",
+            "_properties": "coreaudio_default_audio_system_device",
+            "coreaudio_default_audio_output_device": "spaudio_yes",
+            "coreaudio_default_audio_system_device": "spaudio_yes",
+            "coreaudio_device_manufacturer": "Apple Inc.",
+            "coreaudio_device_output": 2,
+            "coreaudio_device_srate": 48000.0,
+            "coreaudio_device_transport": "coreaudio_device_type_builtin",
+            "coreaudio_output_source": "Mac Studio Speakers"
+          },
+          {
+            "_name": "Saffire Pro 40 (Experimental)",
+            "coreaudio_default_audio_input_device": "spaudio_yes",
+            "coreaudio_device_input": 8,
+            "coreaudio_device_manufacturer": "Local Pro40 Development",
+            "coreaudio_device_output": 12,
+            "coreaudio_device_srate": 48000.0,
+            "coreaudio_device_transport": "coreaudio_device_type_virtual",
+            "coreaudio_input_source": "spaudio_default",
+            "coreaudio_output_source": "spaudio_default"
+          }
+        ],
+        "_name": "coreaudio_device"
+      }
+    ]
+  ],
+  "binary_sha256": "3fd0fe58bbba684c06ac55acaf1618c318812396e3a121434e54a7dcfde1f93b",
+  "started_utc": "2026-10-24T17:30:41.429641+00:00"
+}

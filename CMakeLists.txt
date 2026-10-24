@@ -314,6 +314,20 @@ if (LEVELSCOPE_BUILD_VIDEO_TESTS)
     target_link_libraries(LevelScopeVideoQualification PRIVATE LevelScopeStandaloneSupport juce::juce_gui_basics)
 endif()
 
+# Explicit diagnostic target, never a replacement for the frozen qualification harness.
+option(LEVELSCOPE_BUILD_VIDEO_PAINT_DIAGNOSTIC "Build bounded video paint tracing tests" OFF)
+if (LEVELSCOPE_BUILD_VIDEO_PAINT_DIAGNOSTIC)
+    if (NOT APPLE)
+        message(FATAL_ERROR "Video paint diagnostic currently requires macOS")
+    endif()
+    juce_add_gui_app(LevelScopeVideoPaintDiagnostic PRODUCT_NAME "LevelScope Video Paint Diagnostic"
+        BUNDLE_ID "com.studioparadiso.levelscope.videopaintdiagnostic")
+    target_sources(LevelScopeVideoPaintDiagnostic PRIVATE Tests/VideoPlaybackQualification.cpp Tests/VideoPaint/Trace_mac.mm)
+    target_compile_definitions(LevelScopeVideoPaintDiagnostic PRIVATE LEVELSCOPE_VIDEO_PAINT_DIAGNOSTICS=1)
+    target_link_libraries(LevelScopeVideoPaintDiagnostic PRIVATE LevelScopeStandaloneSupport juce::juce_gui_basics)
+    add_executable(LevelScopeVideoPaintTraceTests Tests/VideoPaint/TraceBufferTests.cpp)
+endif()
+
 option(LEVELSCOPE_BUILD_MEASUREMENT_TESTS "Build hardware-independent offline measurement checks" OFF)
 if (LEVELSCOPE_BUILD_MEASUREMENT_TESTS)
     enable_testing()

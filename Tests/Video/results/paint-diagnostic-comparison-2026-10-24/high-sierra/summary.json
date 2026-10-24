@@ -1,0 +1,340 @@
+{
+  "scope": "Fixed diagnostic comparison; no milestone acceptance or fix claim",
+  "runs": [
+    {
+      "number": 1,
+      "role": "control",
+      "exit_code": 0,
+      "wall_seconds": 111.78876457,
+      "gate_passed": true,
+      "paint_skips": 0,
+      "report_sha256": "fe211f72ddaed7174f53773456390e891756efbd0291142f31377b15c57e7152"
+    },
+    {
+      "number": 2,
+      "role": "diagnostic",
+      "exit_code": 0,
+      "wall_seconds": 110.395234593,
+      "gate_passed": true,
+      "paint_skips": 0,
+      "report_sha256": "dd4e0a9c8ce0a2f95363784715c76093d5422b9e682f1b20727b2faab14fb1c9",
+      "trace": {
+        "trace_sha256": "d60c5dbecee766edf00d1d39a49559bb4d0fbd47cf1ff4f49308accd6f1f639d",
+        "ui_events": 65891,
+        "display_events": 6342,
+        "allocated_buffer_bytes": 17039360,
+        "nominal_hz": 60.0,
+        "display_id": 188852210,
+        "scope": "Callback timing, not scanout; independent display-link observer is not JUCE internal callback",
+        "timer_max_interval_ms": 332.807492,
+        "paint_max_interval_ms": 326.749202,
+        "main_vblank_max_interval_ms": 326.739038,
+        "independent_display_max_interval_ms": 18.662715,
+        "full_paint_max_ms": 2.088697,
+        "full_timer_max_ms": 6.250952,
+        "window_transitions": [
+          [
+            37797047121556,
+            9,
+            1,
+            0,
+            1,
+            4,
+            3,
+            -1,
+            -1,
+            -1,
+            -1,
+            0,
+            188852210,
+            0
+          ],
+          [
+            37797049161690,
+            9,
+            13,
+            0,
+            1,
+            4,
+            3,
+            -1,
+            -1,
+            -1,
+            -1,
+            0,
+            188852210,
+            0
+          ],
+          [
+            37797075344927,
+            9,
+            15,
+            0,
+            1,
+            4,
+            3,
+            -1,
+            -1,
+            -1,
+            -1,
+            0,
+            188852210,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "number": 3,
+      "role": "control",
+      "exit_code": 0,
+      "wall_seconds": 109.86446087399997,
+      "gate_passed": true,
+      "paint_skips": 0,
+      "report_sha256": "79dd84c4a36110d1931f17adac8a41ca9255d8a15b76bdc79a385da0b48862a7"
+    },
+    {
+      "number": 4,
+      "role": "diagnostic",
+      "exit_code": 0,
+      "wall_seconds": 111.14789929900002,
+      "gate_passed": true,
+      "paint_skips": 0,
+      "report_sha256": "39acc45adf430985c921057bd91391315712840eeb65165427293207a3e50b14",
+      "trace": {
+        "trace_sha256": "c7f889788378ddc23317ad40b845dbf616fc3dfd22ab10e7eeea8fa5bc439dde",
+        "ui_events": 67332,
+        "display_events": 6445,
+        "allocated_buffer_bytes": 17039360,
+        "nominal_hz": 60.0,
+        "display_id": 188852210,
+        "scope": "Callback timing, not scanout; independent display-link observer is not JUCE internal callback",
+        "timer_max_interval_ms": 20.252601,
+        "paint_max_interval_ms": 40.041807,
+        "main_vblank_max_interval_ms": 18.96818,
+        "independent_display_max_interval_ms": 18.672927,
+        "full_paint_max_ms": 2.044323,
+        "full_timer_max_ms": 6.308457,
+        "window_transitions": [
+          [
+            38017005027526,
+            9,
+            1,
+            0,
+            1,
+            4,
+            3,
+            -1,
+            -1,
+            -1,
+            -1,
+            0,
+            188852210,
+            0
+          ],
+          [
+            38017009658470,
+            9,
+            13,
+            0,
+            1,
+            4,
+            3,
+            -1,
+            -1,
+            -1,
+            -1,
+            0,
+            188852210,
+            0
+          ],
+          [
+            38017037700431,
+            9,
+            15,
+            0,
+            1,
+            4,
+            3,
+            -1,
+            -1,
+            -1,
+            -1,
+            0,
+            188852210,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "number": 5,
+      "role": "control",
+      "exit_code": 0,
+      "wall_seconds": 110.02440091200003,
+      "gate_passed": true,
+      "paint_skips": 0,
+      "report_sha256": "afcc4e036b261061b32a0b52b990acfdf99e6994136a55e58ccb83e67c1da0c4"
+    },
+    {
+      "number": 6,
+      "role": "diagnostic",
+      "exit_code": 0,
+      "wall_seconds": 110.11728378999999,
+      "gate_passed": true,
+      "paint_skips": 0,
+      "report_sha256": "6b17cd5e50446c2390a146df15fa111f5c03f808789eb616e431eee10e901d84",
+      "trace": {
+        "trace_sha256": "21daae9cd108d303653e0998c0f3200c50c35724563e7b5839d35037f25bdde9",
+        "ui_events": 66635,
+        "display_events": 6387,
+        "allocated_buffer_bytes": 17039360,
+        "nominal_hz": 60.0,
+        "display_id": 188852210,
+        "scope": "Callback timing, not scanout; independent display-link observer is not JUCE internal callback",
+        "timer_max_interval_ms": 26.315208,
+        "paint_max_interval_ms": 44.156316,
+        "main_vblank_max_interval_ms": 19.576212,
+        "independent_display_max_interval_ms": 18.680887,
+        "full_paint_max_ms": 1.449404,
+        "full_timer_max_ms": 6.576056,
+        "window_transitions": [
+          [
+            38238888872878,
+            9,
+            1,
+            0,
+            1,
+            4,
+            3,
+            -1,
+            -1,
+            -1,
+            -1,
+            0,
+            188852210,
+            0
+          ],
+          [
+            38238893706563,
+            9,
+            13,
+            0,
+            1,
+            4,
+            3,
+            -1,
+            -1,
+            -1,
+            -1,
+            0,
+            188852210,
+            0
+          ],
+          [
+            38238919372982,
+            9,
+            15,
+            0,
+            1,
+            4,
+            3,
+            -1,
+            -1,
+            -1,
+            -1,
+            0,
+            188852210,
+            0
+          ]
+        ]
+      }
+    }
+  ],
+  "all_existing_gates_passed": true,
+  "audio_after": [
+    [
+      {
+        "_items": [
+          {
+            "_name": "Built-in Input",
+            "coreaudio_device_input": 2,
+            "coreaudio_device_manufacturer": "Apple Inc.",
+            "coreaudio_device_srate": 44100.0,
+            "coreaudio_device_transport": "coreaudio_device_type_builtin",
+            "coreaudio_input_source": "Internal Microphone"
+          },
+          {
+            "_name": "Built-in Line Input",
+            "coreaudio_device_input": 2,
+            "coreaudio_device_manufacturer": "Apple Inc.",
+            "coreaudio_device_srate": 44100.0,
+            "coreaudio_device_transport": "coreaudio_device_type_builtin",
+            "coreaudio_input_source": "Line In"
+          },
+          {
+            "_name": "Built-in Output",
+            "_properties": "coreaudio_default_audio_system_device",
+            "coreaudio_default_audio_system_device": "spaudio_yes",
+            "coreaudio_device_manufacturer": "Apple Inc.",
+            "coreaudio_device_output": 2,
+            "coreaudio_device_srate": 44100.0,
+            "coreaudio_device_transport": "coreaudio_device_type_builtin",
+            "coreaudio_output_source": "Headphones"
+          },
+          {
+            "_name": "Built-in Line Output",
+            "coreaudio_device_manufacturer": "Apple Inc.",
+            "coreaudio_device_output": 2,
+            "coreaudio_device_srate": 44100.0,
+            "coreaudio_device_transport": "coreaudio_device_type_builtin",
+            "coreaudio_output_source": "Line Out"
+          },
+          {
+            "_name": "Built-in Line Output",
+            "coreaudio_device_manufacturer": "Apple Inc.",
+            "coreaudio_device_output": 2,
+            "coreaudio_device_srate": 44100.0,
+            "coreaudio_device_transport": "coreaudio_device_type_builtin",
+            "coreaudio_output_source": "Line Out"
+          },
+          {
+            "_name": "Built-in Digital Output",
+            "coreaudio_device_manufacturer": "Apple Inc.",
+            "coreaudio_device_output": 2,
+            "coreaudio_device_srate": 44100.0,
+            "coreaudio_device_transport": "coreaudio_device_type_builtin",
+            "coreaudio_output_source": "Digital Out"
+          },
+          {
+            "_name": "Saffire",
+            "coreaudio_default_audio_input_device": "spaudio_yes",
+            "coreaudio_default_audio_output_device": "spaudio_yes",
+            "coreaudio_device_input": 20,
+            "coreaudio_device_manufacturer": "Focusrite A.E.",
+            "coreaudio_device_output": 20,
+            "coreaudio_device_srate": 48000.0,
+            "coreaudio_device_transport": "coreaudio_device_type_firewire",
+            "coreaudio_input_source": "spaudio_default",
+            "coreaudio_output_source": "spaudio_default"
+          },
+          {
+            "_name": "Adobe Encore DVD 6.0",
+            "coreaudio_device_manufacturer": "Apple Inc.",
+            "coreaudio_device_srate": 0.0,
+            "coreaudio_device_transport": "coreaudio_device_type_unknown"
+          },
+          {
+            "_name": "Premiere Pro 6.0",
+            "coreaudio_device_manufacturer": "Apple Inc.",
+            "coreaudio_device_srate": 0.0,
+            "coreaudio_device_transport": "coreaudio_device_type_unknown"
+          }
+        ],
+        "_name": "coreaudio_device"
+      }
+    ]
+  ],
+  "audio_configuration_unchanged": true,
+  "identity_sha256": "35081f6e31cd02f202162525699ecd87912f4cabbc7177a2919f4c53497cad1c"
+}

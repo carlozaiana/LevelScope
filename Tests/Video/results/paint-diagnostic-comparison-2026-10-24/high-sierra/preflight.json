@@ -1,0 +1,321 @@
+{
+  "mode": "preview; no test launched",
+  "profile": {
+    "device": "Built-in Output",
+    "rate": 44100,
+    "arch": "x86_64",
+    "os_prefix": "10.13."
+  },
+  "order": [
+    "control",
+    "diagnostic",
+    "control",
+    "diagnostic",
+    "control",
+    "diagnostic"
+  ],
+  "seconds_per_run": 100,
+  "identity_sha256": "35081f6e31cd02f202162525699ecd87912f4cabbc7177a2919f4c53497cad1c",
+  "source_digest": "0760e080d2e5daa8c89612029236308e134237a142c879003b53c7da1d3727cf",
+  "audio_configuration": [
+    [
+      {
+        "_items": [
+          {
+            "_name": "Built-in Input",
+            "coreaudio_device_input": 2,
+            "coreaudio_device_manufacturer": "Apple Inc.",
+            "coreaudio_device_srate": 44100.0,
+            "coreaudio_device_transport": "coreaudio_device_type_builtin",
+            "coreaudio_input_source": "Internal Microphone"
+          },
+          {
+            "_name": "Built-in Line Input",
+            "coreaudio_device_input": 2,
+            "coreaudio_device_manufacturer": "Apple Inc.",
+            "coreaudio_device_srate": 44100.0,
+            "coreaudio_device_transport": "coreaudio_device_type_builtin",
+            "coreaudio_input_source": "Line In"
+          },
+          {
+            "_name": "Built-in Output",
+            "_properties": "coreaudio_default_audio_system_device",
+            "coreaudio_default_audio_system_device": "spaudio_yes",
+            "coreaudio_device_manufacturer": "Apple Inc.",
+            "coreaudio_device_output": 2,
+            "coreaudio_device_srate": 44100.0,
+            "coreaudio_device_transport": "coreaudio_device_type_builtin",
+            "coreaudio_output_source": "Headphones"
+          },
+          {
+            "_name": "Built-in Line Output",
+            "coreaudio_device_manufacturer": "Apple Inc.",
+            "coreaudio_device_output": 2,
+            "coreaudio_device_srate": 44100.0,
+            "coreaudio_device_transport": "coreaudio_device_type_builtin",
+            "coreaudio_output_source": "Line Out"
+          },
+          {
+            "_name": "Built-in Line Output",
+            "coreaudio_device_manufacturer": "Apple Inc.",
+            "coreaudio_device_output": 2,
+            "coreaudio_device_srate": 44100.0,
+            "coreaudio_device_transport": "coreaudio_device_type_builtin",
+            "coreaudio_output_source": "Line Out"
+          },
+          {
+            "_name": "Built-in Digital Output",
+            "coreaudio_device_manufacturer": "Apple Inc.",
+            "coreaudio_device_output": 2,
+            "coreaudio_device_srate": 44100.0,
+            "coreaudio_device_transport": "coreaudio_device_type_builtin",
+            "coreaudio_output_source": "Digital Out"
+          },
+          {
+            "_name": "Saffire",
+            "coreaudio_default_audio_input_device": "spaudio_yes",
+            "coreaudio_default_audio_output_device": "spaudio_yes",
+            "coreaudio_device_input": 20,
+            "coreaudio_device_manufacturer": "Focusrite A.E.",
+            "coreaudio_device_output": 20,
+            "coreaudio_device_srate": 48000.0,
+            "coreaudio_device_transport": "coreaudio_device_type_firewire",
+            "coreaudio_input_source": "spaudio_default",
+            "coreaudio_output_source": "spaudio_default"
+          },
+          {
+            "_name": "Adobe Encore DVD 6.0",
+            "coreaudio_device_manufacturer": "Apple Inc.",
+            "coreaudio_device_srate": 0.0,
+            "coreaudio_device_transport": "coreaudio_device_type_unknown"
+          },
+          {
+            "_name": "Premiere Pro 6.0",
+            "coreaudio_device_manufacturer": "Apple Inc.",
+            "coreaudio_device_srate": 0.0,
+            "coreaudio_device_transport": "coreaudio_device_type_unknown"
+          }
+        ],
+        "_name": "coreaudio_device"
+      }
+    ]
+  ],
+  "coordination_note": "User explicitly approved: Start Sequoia, then Golem. Sequoia has completed. Six 100-second Golem comparisons; Built-in Output at 44.1 kHz, muted outputs, no inputs; hands-off and test windows visible.",
+  "recorded_utc": "2026-10-24T17:38:04.609928+00:00",
+  "display_snapshot": [
+    {
+      "_SPCommandLineArguments": [
+        "/usr/sbin/system_profiler",
+        "-nospawn",
+        "-xml",
+        "SPDisplaysDataType",
+        "-detailLevel",
+        "full"
+      ],
+      "_SPCompletionInterval": 0.12741100788116455,
+      "_SPResponseTime": 0.2104569673538208,
+      "_dataType": "SPDisplaysDataType",
+      "_detailLevel": -1,
+      "_items": [
+        {
+          "_name": "NVIDIA GeForce GTX 670",
+          "_spdisplays_vram": "2047 MB",
+          "spdisplays_device-id": "0x1189",
+          "spdisplays_metal": "spdisplays_metalfeaturesetfamily13",
+          "spdisplays_ndrvs": [
+            {
+              "_IODisplayEDID": "b'\\x00\\xff\\xff\\xff\\xff\\xff\\xff\\x00\\x04i\\xa3$\\x01\\x01\\x01\\x01/\\x17\\x01\\x03\\x804 x\\xeaL\\xa5\\xa7UM\\xa2&\\x10PT#\\x08\\x00\\x81\\x80\\x81@\\x95\\x00\\xa9@\\xb3\\x00\\xd1\\xc0\\x01\\x01\\x01\\x01(<\\x80\\xa0p\\xb0#@0 6\\x00\\x06D!\\x00\\x00\\x1a\\x00\\x00\\x00\\xfd\\x002=\\x1eS\\x11\\x00\\n      \\x00\\x00\\x00\\xfc\\x00PB248\\n       \\x00\\x00\\x00\\xff\\x00DBLMQS072312\\n\\x00\\n'",
+              "_name": "PB248",
+              "_spdisplays_display-product-id": "24a3",
+              "_spdisplays_display-vendor-id": "469",
+              "_spdisplays_display-week": "47",
+              "_spdisplays_display-year": "2013",
+              "_spdisplays_edid": "0x00ffffffffffff000469a324010101012f17010380342078ea4ca5a7554da226105054230800818081409500a940b300d1c001010101283c80a070b023403020360006442100001a000000fd00323d1e5311000a202020202020000000fc0050423234380a20202020202020000000ff0044424c4d51533037323331320a000a",
+              "_spdisplays_pixels": "1920 x 1200",
+              "_spdisplays_resolution": "1920 x 1200 @ 60 Hz",
+              "spdisplays_ambient_brightness": "spdisplays_no",
+              "spdisplays_depth": "CGSThirtytwoBitColor",
+              "spdisplays_display-serial-number": "DBLMQS072312",
+              "spdisplays_mirror": "spdisplays_off",
+              "spdisplays_online": "spdisplays_yes",
+              "spdisplays_pixelresolution": "spdisplays_wuxga",
+              "spdisplays_resolution": "1920 x 1200 @ 60 Hz",
+              "spdisplays_rotation": "spdisplays_supported"
+            },
+            {
+              "_IODisplayEDID": "b'\\x00\\xff\\xff\\xff\\xff\\xff\\xff\\x00L-W\\x0632HW&\\x14\\x01\\x03\\x80\\x10\\tx*\\xee\\x91\\xa3TL\\x99&\\x0fPT#\\x08\\x00\\xa9@\\x81\\x80\\x81@\\x81\\x00\\x95\\x00\\xb3\\x00\\x01\\x01\\x01\\x01\\x02:\\x80\\x18q8-@X,E\\x00\\xa0Z\\x00\\x00\\x00\\x1e\\x01\\x1d\\x00rQ\\xd0\\x1e n(U\\x00\\xa0Z\\x00\\x00\\x00\\x1e\\x00\\x00\\x00\\xfd\\x002<\\x1bQ\\x11\\x00\\n      \\x00\\x00\\x00\\xfc\\x00SyncMaster\\n  \\x01\\x1d\\x02\\x03\\x1c\\xf3H\\x90\\x04\\x1f\\x05\\x14\\x13\\x03\\x12#\\t\\x07\\x07\\x83\\x01\\x00\\x00f\\x03\\x0c\\x00\\x10\\x00\\x80\\x01\\x1d\\x80\\xd0r\\x1c\\x16 \\x10,%\\x80\\xa0Z\\x00\\x00\\x00\\x9e\\x01\\x1d\\x80\\x18q\\x1c\\x16 X,%\\x00\\xa0Z\\x00\\x00\\x00\\x9e\\x01\\x1d\\x00\\xbcR\\xd0\\x1e \\xb8(U@\\xa0Z\\x00\\x00\\x00\\x1e\\x01\\x1d\\x00rQ\\xd0\\x1e n(U\\x00\\xa0Z\\x00\\x00\\x00\\x1e\\x8c\\n\\xd0\\x90 @1 \\x0c@U\\x00\\xa0Z\\x00\\x00\\x00\\x18\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00u'",
+              "_name": "SyncMaster",
+              "_spdisplays_display-product-id": "657",
+              "_spdisplays_display-serial-number": "57483233",
+              "_spdisplays_display-vendor-id": "4c2d",
+              "_spdisplays_display-week": "38",
+              "_spdisplays_display-year": "2010",
+              "_spdisplays_edid": "0x00ffffffffffff004c2d57063332485726140103801009782aee91a3544c99260f5054230800a9408180814081009500b30001010101023a801871382d40582c4500a05a0000001e011d007251d01e206e285500a05a0000001e000000fd00323c1b5111000a202020202020000000fc0053796e634d61737465720a2020011d02031cf34890041f0514130312230907078301000066030c00100080011d80d0721c1620102c2580a05a0000009e011d8018711c1620582c2500a05a0000009e011d00bc52d01e20b8285540a05a0000001e011d007251d01e206e285500a05a0000001e8c0ad090204031200c405500a05a0000001800000000000000000075",
+              "_spdisplays_pixels": "1920 x 1080",
+              "_spdisplays_projector": "spdisplays_yes",
+              "_spdisplays_resolution": "1920 x 1080 @ 60 Hz",
+              "spdisplays_ambient_brightness": "spdisplays_no",
+              "spdisplays_depth": "CGSThirtytwoBitColor",
+              "spdisplays_main": "spdisplays_yes",
+              "spdisplays_mirror": "spdisplays_off",
+              "spdisplays_online": "spdisplays_yes",
+              "spdisplays_pixelresolution": "spdisplays_1080p",
+              "spdisplays_resolution": "1920 x 1080 @ 60 Hz",
+              "spdisplays_rotation": "spdisplays_supported"
+            }
+          ],
+          "spdisplays_pcie_width": "x16",
+          "spdisplays_revision-id": "0x00a2",
+          "spdisplays_rom-revision": "VBIOS 80.04.4b.00.70",
+          "spdisplays_vendor": "sppci_vendor_Nvidia",
+          "spdisplays_vram_shared": "2047 MB",
+          "sppci_bus": "spdisplays_pcie_device",
+          "sppci_device_type": "spdisplays_gpu",
+          "sppci_model": "NVIDIA GeForce GTX 670"
+        }
+      ],
+      "_parentDataType": "SPHardwareDataType",
+      "_properties": {
+        "_name": {
+          "_isColumn": "YES",
+          "_order": "0"
+        },
+        "spdisplays_automatic_graphics_switching": {
+          "_order": "176"
+        },
+        "spdisplays_coreimage": {
+          "_order": "164"
+        },
+        "spdisplays_depth": {
+          "_order": "150"
+        },
+        "spdisplays_device-id": {
+          "_order": "165"
+        },
+        "spdisplays_display-product-id": {
+          "_order": "159"
+        },
+        "spdisplays_display-serial-number": {
+          "_order": "161"
+        },
+        "spdisplays_display-vendor-id": {
+          "_order": "160"
+        },
+        "spdisplays_display-week": {
+          "_order": "162"
+        },
+        "spdisplays_display-year": {
+          "_order": "163"
+        },
+        "spdisplays_display_type": {
+          "_order": "130"
+        },
+        "spdisplays_displayport_device": {
+          "_order": "171"
+        },
+        "spdisplays_efi-version": {
+          "_order": "174"
+        },
+        "spdisplays_gmux-version": {
+          "_order": "177"
+        },
+        "spdisplays_main": {
+          "_order": "165"
+        },
+        "spdisplays_mirror": {
+          "_order": "166"
+        },
+        "spdisplays_mirror_status": {
+          "_order": "167"
+        },
+        "spdisplays_online": {
+          "_order": "168"
+        },
+        "spdisplays_pcie_width": {
+          "_order": "40"
+        },
+        "spdisplays_pixelresolution": {
+          "_order": "144"
+        },
+        "spdisplays_quartzextreme": {
+          "_order": "169"
+        },
+        "spdisplays_resolution": {
+          "_order": "145"
+        },
+        "spdisplays_retina": {
+          "_order": "146"
+        },
+        "spdisplays_revision-id": {
+          "_order": "170"
+        },
+        "spdisplays_rom-revision": {
+          "_order": "172"
+        },
+        "spdisplays_rotation": {
+          "_order": "170"
+        },
+        "spdisplays_vbios-version": {
+          "_order": "173"
+        },
+        "spdisplays_vendor": {
+          "_order": "155"
+        },
+        "spdisplays_vram": {
+          "_order": "135"
+        },
+        "spdisplays_vram_shared": {
+          "_order": "136"
+        },
+        "sppci_bus": {
+          "_isColumn": "YES",
+          "_order": "25"
+        },
+        "sppci_device-id": {
+          "_order": "50"
+        },
+        "sppci_device_type": {
+          "_isColumn": "YES",
+          "_order": "20"
+        },
+        "sppci_kextinfo": {
+          "_order": "185"
+        },
+        "sppci_model": {
+          "_order": "1"
+        },
+        "sppci_name": {
+          "_order": "10"
+        },
+        "sppci_revision-id": {
+          "_order": "90"
+        },
+        "sppci_rom-revision": {
+          "_order": "80"
+        },
+        "sppci_slot_name": {
+          "_isColumn": "YES",
+          "_order": "30"
+        },
+        "sppci_subsystem-id": {
+          "_order": "70"
+        },
+        "sppci_subsystem-vendor-id": {
+          "_order": "60"
+        },
+        "sppci_vendor-id": {
+          "_order": "35"
+        },
+        "volumes": {
+          "_detailLevel": "0"
+        }
+      },
+      "_timeStamp": "2026-10-24 17:38:04",
+      "_versionInfo": {
+        "com.apple.SystemProfiler.SPDisplaysReporter": "514"
+      }
+    }
+  ],
+  "power_settings": "AC Power:\n hibernatemode        0\n womp                 0\n networkoversleep     0\n sleep                0\n Sleep On Power Button 1\n ttyskeepawake        1\n hibernatefile        /var/vm/sleepimage\n autorestart          0\n disksleep            0\n displaysleep         0\n",
+  "process_inventory": "    1 /sbin/launchd\n   42 /usr/libexec/UserEventAgent\n   43 /usr/sbin/syslogd\n   46 /System/Library/PrivateFrameworks/Uninstall.framework/Resources/uninstalld\n   47 /usr/libexec/kextd\n   48 /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/FSEvents.framework/Versions/A/Support/fseventsd\n   50 /System/Library/PrivateFrameworks/MediaRemote.framework/Support/mediaremoted\n   53 /usr/sbin/systemstats\n   55 /System/Library/CoreServices/appleeventsd\n   56 /usr/libexec/configd\n   57 /System/Library/CoreServices/powerd.bundle/powerd\n   60 /usr/libexec/keybagd\n   61 /usr/libexec/logd\n   65 /usr/libexec/warmd\n   66 /System/Library/Frameworks/CoreServices.framework/Frameworks/Metadata.framework/Support/mds\n   72 /System/Library/CoreServices/iconservicesd\n   73 /System/Library/CoreServices/iconservicesagent\n   74 /usr/libexec/diskarbitrationd\n   75 /Library/Application Support/Red Giant/Services/Red Giant Service.app/Contents/MacOS/Red Giant Service\n   76 /Library/Little Snitch/Little Snitch Daemon.bundle/Contents/_MASReceipt/Hooker\n   78 /usr/libexec/coreduetd\n   79 /System/Library/CoreServices/backupd.bundle/Contents/Resources/backupd-helper\n   83 /usr/libexec/opendirectoryd\n   86 /usr/libexec/timed\n   87 /System/Library/PrivateFrameworks/Noticeboard.framework/Versions/A/Resources/nbstated\n   88 /System/Library/CoreServices/launchservicesd\n   89 /System/Library/PrivateFrameworks/MobileDevice.framework/Versions/A/Resources/usbmuxd\n   90 /usr/sbin/securityd\n   91 /usr/libexec/locationd\n   94 /usr/libexec/displaypolicyd\n   95 autofsd\n   97 /System/Library/PrivateFrameworks/Heimdal.framework/Helpers/kdc\n   98 /usr/libexec/dasd\n  100 /System/Library/PrivateFrameworks/GenerationalStorage.framework/Versions/A/Support/revisiond\n  101 /System/Library/CoreServices/loginwindow.app/Contents/MacOS/loginwindow\n  102 /System/Library/CoreServices/logind\n  103 /usr/sbin/KernelEventAgent\n  105 /usr/sbin/bluetoothd\n  106 /usr/libexec/hidd\n  107 /usr/libexec/corebrightnessd\n  108 /usr/libexec/AirPlayXPCHelper\n  109 /usr/libexec/amfid\n  110 /usr/sbin/notifyd\n  112 /usr/sbin/distnoted\n  115 /usr/sbin/cfprefsd\n  133 /System/Library/Frameworks/Security.framework/Versions/A/XPCServices/authd.xpc/Contents/MacOS/authd\n  134 /System/Library/CoreServices/coreservicesd\n  135 aslmanager\n  139 /usr/libexec/taskgated\n  148 /usr/libexec/nehelper\n  152 /System/Library/Frameworks/PCSC.framework/Versions/A/XPCServices/com.apple.ctkpcscd.xpc/Contents/MacOS/com.apple.ctkpcscd\n  160 /usr/libexec/trustd\n  162 /usr/sbin/coreaudiod\n  165 /System/Library/Frameworks/CryptoTokenKit.framework/ctkd\n  180 /System/Library/Frameworks/CoreAudio.framework/Versions/A/XPCServices/com.apple.audio.DriverHelper.xpc/Contents/MacOS/com.apple.audio.DriverHelper\n  191 /usr/libexec/sandboxd\n  196 /usr/libexec/nsurlsessiond\n  219 /usr/libexec/lsd\n  228 /usr/libexec/mobileassetd\n  236 /usr/libexec/syspolicyd\n  241 /System/Library/Frameworks/AudioToolbox.framework/AudioComponentRegistrar\n  250 /System/Library/Frameworks/AudioToolbox.framework/XPCServices/com.apple.audio.SandboxHelper.xpc/Contents/MacOS/com.apple.audio.SandboxHelper\n  251 /usr/libexec/symptomsd\n  252 /System/Library/PrivateFrameworks/SkyLight.framework/Resources/WindowServer\n  253 /usr/sbin/mDNSResponder\n  254 /usr/sbin/mDNSResponderHelper\n  255 /System/Library/PrivateFrameworks/SystemAdministration.framework/XPCServices/writeconfig.xpc/Contents/MacOS/writeconfig\n  256 /usr/libexec/corestoraged\n  257 /usr/libexec/usbd\n  258 /System/Library/CryptoTokenKit/com.apple.ifdreader.slotd/Contents/MacOS/com.apple.ifdreader\n  260 /usr/libexec/watchdogd\n  262 /usr/libexec/nsurlstoraged\n  267 /System/Library/PrivateFrameworks/CoreSymbolication.framework/coresymbolicationd\n  269 /Library/Little Snitch/Little Snitch Daemon.bundle/Contents/MacOS/Little Snitch Daemon\n  271 /usr/libexec/airportd\n  272 /System/Library/PrivateFrameworks/WirelessDiagnostics.framework/Support/awdd\n  273 /System/Library/PrivateFrameworks/CoreAnalytics.framework/Support/analyticsd\n  274 /System/Library/PrivateFrameworks/SignpostNotification.framework/Versions/A/XPCServices/signpost_notificationd.xpc/Contents/MacOS/signpost_notificationd\n  275 /usr/libexec/secinitd\n  284 /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/CVMServer\n  285 /usr/libexec/colorsync.displayservices\n  291 /usr/libexec/colorsyncd\n  292 /usr/libexec/sysmond\n  294 /System/Library/Frameworks/Security.framework/Versions/A/XPCServices/com.apple.CodeSigningHelper.xpc/Contents/MacOS/com.apple.CodeSigningHelper\n  295 /usr/sbin/systemstats\n  298 /System/Library/CoreServices/sharedfilelistd\n  299 /usr/libexec/bootinstalld\n  303 /usr/libexec/corecaptured\n  304 /System/Library/Frameworks/CryptoTokenKit.framework/ctkahp.bundle/Contents/MacOS/ctkahp\n  309 /System/Library/PrivateFrameworks/PerformanceAnalysis.framework/Versions/A/XPCServices/com.apple.PerformanceAnalysis.animationperfd.xpc/Contents/MacOS/com.apple.PerformanceAnalysis.animationperfd\n  310 /System/Library/PrivateFrameworks/AccountPolicy.framework/XPCServices/com.apple.AccountPolicyHelper.xpc/Contents/MacOS/com.apple.AccountPolicyHelper\n  311 /System/Library/Frameworks/LocalAuthentication.framework/Support/coreauthd\n  313 /usr/sbin/systemsoundserverd\n  314 /System/Library/PrivateFrameworks/TCC.framework/Resources/tccd\n  315 /usr/libexec/periodic-wrapper\n  316 /System/Library/CoreServices/Software Update.app/Contents/Resources/softwareupdated\n  348 /System/Library/CoreServices/Software Update.app/Contents/Resources/suhelperd\n  383 /System/Library/PrivateFrameworks/AmbientDisplay.framework/Versions/A/XPCServices/com.apple.AmbientDisplayAgent.xpc/Contents/MacOS/com.apple.AmbientDisplayAgent\n  410 /System/Library/Frameworks/GSS.framework/Helpers/GSSCred\n  413 /usr/libexec/securityd_service\n  414 /usr/sbin/cfprefsd\n  415 /usr/libexec/UserEventAgent\n  417 /usr/sbin/distnoted\n  418 /usr/sbin/universalaccessd\n  419 /System/Library/Frameworks/CoreTelephony.framework/Support/CommCenter\n  420 /usr/libexec/lsd\n  421 /usr/libexec/trustd\n  423 /Library/Little Snitch/Little Snitch Agent.app/Contents/MacOS/Little Snitch Agent\n  424 /System/Library/CoreServices/Dock.app/Contents/MacOS/Dock\n  425 /System/Library/CoreServices/talagent\n  426 /System/Library/CoreServices/SystemUIServer.app/Contents/MacOS/SystemUIServer\n  427 /System/Library/CoreServices/Finder.app/Contents/MacOS/Finder\n  428 /usr/libexec/secd\n  431 /System/Library/PrivateFrameworks/CloudDocsDaemon.framework/Versions/A/Support/bird\n  432 /usr/libexec/pboard\n  434 /System/Library/CoreServices/sharedfilelistd\n  435 /usr/libexec/pkd\n  436 /System/Library/Frameworks/ApplicationServices.framework/Frameworks/ATS.framework/Support/fontd\n  439 /System/Library/PrivateFrameworks/TCC.framework/Resources/tccd\n  443 /System/Library/PrivateFrameworks/CloudKitDaemon.framework/Support/cloudd\n  444 /System/Library/PrivateFrameworks/UserActivity.framework/Agents/useractivityd\n  445 /usr/sbin/usernoted\n  446 /System/Library/CoreServices/Dock.app/Contents/XPCServices/com.apple.dock.extra.xpc/Contents/MacOS/com.apple.dock.extra\n  447 /System/Library/CoreServices/iconservicesagent\n  449 /usr/sbin/WirelessRadioManagerd\n  450 /System/Library/PrivateFrameworks/TelephonyUtilities.framework/callservicesd\n  452 /System/Library/Frameworks/Accounts.framework/Versions/A/Support/accountsd\n  453 /System/Library/PrivateFrameworks/IDS.framework/identityservicesd.app/Contents/MacOS/identityservicesd\n  454 /usr/sbin/filecoordinationd\n  455 /usr/libexec/nsurlstoraged\n  456 /System/Library/PrivateFrameworks/IMCore.framework/imagent.app/Contents/MacOS/imagent\n  457 /usr/libexec/nsurlsessiond\n  458 /System/Library/CoreServices/NotificationCenter.app/Contents/MacOS/NotificationCenter\n  459 /System/Library/PrivateFrameworks/ApplePushService.framework/apsd\n  460 /System/Library/PrivateFrameworks/PassKitCore.framework/passd\n  461 /System/Library/Frameworks/AddressBook.framework/Executables/ContactsAccountsService\n  462 /usr/libexec/secinitd\n  463 /usr/libexec/nfcd\n  464 /System/Library/CoreServices/mapspushd\n  465 /System/Library/Frameworks/Security.framework/Versions/A/Resources/CloudKeychainProxy.bundle/Contents/MacOS/CloudKeychainProxy\n  466 /usr/libexec/sharingd\n  467 /System/Library/PrivateFrameworks/AssistantServices.framework/Versions/A/Support/assistantd\n  468 /System/Library/CoreServices/SafariSupport.bundle/Contents/MacOS/SafariBookmarksSyncAgent\n  469 /usr/libexec/keyboardservicesd\n  470 /System/Library/PrivateFrameworks/AuthKit.framework/Versions/A/Support/akd\n  471 /usr/libexec/fmfd\n  472 /System/Library/PrivateFrameworks/CoreSuggestions.framework/Versions/A/Support/suggestd\n  473 /System/Library/PrivateFrameworks/CoreCDP.framework/Versions/A/Resources/cdpd\n  474 /System/Library/PrivateFrameworks/IMDPersistence.framework/XPCServices/IMDPersistenceAgent.xpc/Contents/MacOS/IMDPersistenceAgent\n  475 /System/Library/PrivateFrameworks/MessagesKit.framework/Resources/soagent.app/Contents/MacOS/soagent\n  476 /usr/libexec/findmydeviced\n  477 /System/Library/PrivateFrameworks/CommerceKit.framework/Versions/A/Resources/storeaccountd\n  478 /System/Library/PrivateFrameworks/ProtectedCloudStorage.framework/Helpers/ProtectedCloudKeySyncing\n  480 /usr/libexec/rapportd\n  481 /System/Library/PrivateFrameworks/CalendarAgent.framework/Executables/CalendarAgent\n  482 /System/Library/PrivateFrameworks/CallHistory.framework/Support/CallHistoryPluginHelper\n  483 /usr/libexec/knowledge-agent\n  484 /usr/sbin/wirelessproxd\n  485 /System/Library/PrivateFrameworks/GeoServices.framework/Versions/A/XPCServices/com.apple.geod.xpc/Contents/MacOS/com.apple.geod\n  486 /System/Library/PrivateFrameworks/IMFoundation.framework/XPCServices/IMRemoteURLConnectionAgent.xpc/Contents/MacOS/IMRemoteURLConnectionAgent\n  487 /System/Library/PrivateFrameworks/CalendarNotification.framework/Versions/A/XPCServices/CalNCService.xpc/Contents/MacOS/CalNCService\n  488 /usr/libexec/routined\n  489 /System/Library/PrivateFrameworks/IMFoundation.framework/XPCServices/IMRemoteURLConnectionAgent.xpc/Contents/MacOS/IMRemoteURLConnectionAgent\n  490 /System/Library/CoreServices/CrashReporterSupportHelper\n  491 /usr/libexec/networkserviceproxy\n  492 /System/Library/PrivateFrameworks/MediaRemote.framework/Support/mediaremoteagent\n  494 /System/Library/PrivateFrameworks/IMFoundation.framework/XPCServices/IMRemoteURLConnectionAgent.xpc/Contents/MacOS/IMRemoteURLConnectionAgent\n  496 /System/Library/PrivateFrameworks/CoreFollowUp.framework/Versions/A/Support/followupd\n  497 /usr/libexec/silhouette\n  498 /System/Library/PrivateFrameworks/PhotoAnalysis.framework/Versions/A/Support/photoanalysisd\n  501 /System/Library/Frameworks/CoreServices.framework/Frameworks/Metadata.framework/Versions/A/Support/corespotlightd\n  502 /System/Library/CoreServices/cloudphotosd.app/Contents/MacOS/cloudphotosd\n  503 /System/Library/PrivateFrameworks/CacheDelete.framework/deleted\n  506 /System/Library/PrivateFrameworks/PhotoLibraryPrivate.framework/Versions/A/Support/photolibraryd\n  507 /System/Library/PrivateFrameworks/QuickLookThumbnailing.framework/Support/com.apple.quicklook.ThumbnailsAgent\n  518 /usr/libexec/swcd\n  519 /System/Library/PrivateFrameworks/CommerceKit.framework/Versions/A/Resources/commerce\n  520 /System/Library/CoreServices/NotificationCenter.app/Contents/XPCServices/com.apple.notificationcenterui.WeatherSummary.xpc/Contents/MacOS/com.apple.notificationcenterui.WeatherSummary\n  522 /System/Library/Frameworks/CryptoTokenKit.framework/ctkahp.bundle/Contents/MacOS/ctkahp\n  523 /System/Library/CoreServices/backgroundtaskmanagementagent\n  524 /System/Library/PrivateFrameworks/FileProvider.framework/Support/fileproviderd\n  526 /usr/sbin/ckkeyrolld\n  529 /Library/Little Snitch/Little Snitch Helper.app/Contents/MacOS/Little Snitch Helper\n  531 /System/Library/CoreServices/SocialPushAgent.app/Contents/MacOS/SocialPushAgent\n  535 /usr/libexec/dmd\n  536 /System/Library/Frameworks/InputMethodKit.framework/Resources/imklaunchagent\n  537 /System/Library/Image Capture/Support/icdd\n  540 /Library/Application Support/Paragon Software/com.paragon-software.extfs.notification-agent.app/Contents/MacOS/NotificationAgent\n  541 /Library/Application Support/Paragon Software/com.paragon-software.ntfs.notification-agent.app/Contents/MacOS/NotificationAgent\n  542 /Library/Application Support/Adobe/AdobeGCClient/Adobe Genuine Software Monitor Service\n  543 /System/Library/CoreServices/AirPlayUIAgent.app/Contents/MacOS/AirPlayUIAgent\n  544 /System/Library/CoreServices/cloudpaird\n  547 /System/Library/PrivateFrameworks/Noticeboard.framework/Versions/A/Resources/nbagent.app/Contents/MacOS/nbagent\n  548 /System/Library/CoreServices/diagnostics_agent\n  551 /System/Library/Frameworks/CryptoTokenKit.framework/ctkd\n  552 /System/Library/PrivateFrameworks/CoreADI.framework/adid\n  553 /System/Library/CoreServices/Spotlight.app/Contents/MacOS/Spotlight\n  554 /Applications/NeoFinder.app/Contents/Resources/NeoFinder Global QuickFind.app/Contents/MacOS/NeoFinder Global QuickFind\n  555 /System/Library/Frameworks/LocalAuthentication.framework/Support/coreauthd\n  558 /Users/fuzz/Library/Application Support/Google/Android File Transfer/Android File Transfer Agent.app/Contents/MacOS/Android File Transfer Agent\n  559 /System/Library/PrivateFrameworks/PrintingPrivate.framework/Versions/A/PrintUITool\n  560 /System/Library/Input Methods/PressAndHold.app/Contents/PlugIns/PAH_Extension.appex/Contents/MacOS/PAH_Extension\n  564 /System/Library/CoreServices/CoreLocationAgent.app/Contents/MacOS/CoreLocationAgent\n  569 /System/Library/PrivateFrameworks/ViewBridge.framework/Versions/A/XPCServices/ViewBridgeAuxiliary.xpc/Contents/MacOS/ViewBridgeAuxiliary\n  573 /System/Library/PrivateFrameworks/AssistantServices.framework/Versions/A/XPCServices/media-indexer.xpc/Contents/MacOS/media-indexer\n  579 /System/Library/CoreServices/RemoteManagement/SSMenuAgent.app/Contents/MacOS/SSMenuAgent\n  580 SafeEjectGPUAgent\n  582 /System/Library/CoreServices/Menu Extras/SafeEjectGPUExtra.menu/Contents/XPCServices/SafeEjectGPUService.xpc/Contents/MacOS/SafeEjectGPUService\n  584 /Library/Little Snitch/Little Snitch Network Monitor.app/Contents/MacOS/Little Snitch Network Monitor\n  586 /System/Library/CoreServices/pbs\n  587 /Library/Application Support/Paragon Software/com.paragon-software.ntfsd\n  588 /Library/PrivilegedHelperTools/com.paragon-software.installer\n  589 /Library/Application Support/Paragon Software/com.paragon-software.extfsd\n  590 /Applications/NTFS for Mac.app/Contents/Resources/FSMenuApp.app/Contents/MacOS/FSMenuApp\n  591 /Applications/extFS for Mac.app/Contents/Resources/FSMenuApp.app/Contents/MacOS/FSMenuApp\n  596 /usr/libexec/diskmanagementd\n  602 /Library/PrivilegedHelperTools/com.simplexsolutionsinc.vpnguardMac.vpnservice\n  605 /Library/Frameworks/iTunesLibrary.framework/Versions/A/XPCServices/com.apple.iTunesLibraryService.xpc/Contents/MacOS/com.apple.iTunesLibraryService\n  608 /System/Library/PrivateFrameworks/PhotoLibraryPrivate.framework/Versions/A/Frameworks/PhotoLibraryServices.framework/Versions/A/XPCServices/com.apple.photomodel.xpc/Contents/MacOS/com.apple.photomodel\n  609 /usr/libexec/dmd\n  619 /System/Library/CoreServices/SubmitDiagInfo\n  620 /System/Library/CoreServices/ScopedBookmarkAgent\n  622 /System/Library/PrivateFrameworks/PhotoLibraryPrivate.framework/Versions/A/Frameworks/PhotoLibraryServices.framework/Versions/A/XPCServices/com.apple.photomoments.xpc/Contents/MacOS/com.apple.photomoments\n  623 /System/Library/PrivateFrameworks/CloudPhotoServices.framework/Versions/A/Frameworks/CloudPhotosConfigurationXPC.framework/Versions/A/XPCServices/com.apple.CloudPhotosConfiguration.xpc/Contents/MacOS/com.apple.CloudPhotosConfiguration\n  624 /usr/bin/sysdiagnose\n  626 /usr/libexec/AssetCache/AssetCache\n  638 /System/Library/CoreServices/Software Update.app/Contents/Resources/softwareupdate_notify_agent\n  639 /System/Library/PrivateFrameworks/FindMyMac.framework/Resources/FindMyMacd\n  641 /System/Library/CoreServices/ReportCrash\n  642 /usr/sbin/spindump\n  649 /usr/libexec/spindump_agent\n  650 /System/Library/PrivateFrameworks/CoreParsec.framework/parsecd\n  651 /System/Library/PrivateFrameworks/IMDPersistence.framework/IMAutomaticHistoryDeletionAgent.app/Contents/MacOS/IMAutomaticHistoryDeletionAgent\n  652 /System/Library/PrivateFrameworks/StorageManagement.framework/Resources/diskspaced\n  654 /System/Library/CoreServices/EscrowSecurityAlert.app/Contents/MacOS/EscrowSecurityAlert\n  655 /System/Library/PrivateFrameworks/PackageKit.framework/Resources/installd\n  656 /System/Library/PrivateFrameworks/PackageKit.framework/Resources/system_installd\n  657 /System/Library/PrivateFrameworks/CommerceKit.framework/Versions/A/Resources/storedownloadd\n  659 /System/Library/Frameworks/MediaLibrary.framework/Versions/A/XPCServices/com.apple.MediaLibraryService.xpc/Contents/MacOS/com.apple.MediaLibraryService\n  717 /System/Library/Frameworks/AudioToolbox.framework/AudioComponentRegistrar\n 1220 /usr/libexec/applessdstatistics\n 3310 /usr/sbin/ocspd\n 5508 /usr/sbin/netbiosd\n 5697 /System/Library/CoreServices/RemoteManagement/screensharingd.bundle/Contents/MacOS/screensharingd\n 5698 /System/Library/CoreServices/RemoteManagement/ScreensharingAgent.bundle/Contents/MacOS/ScreensharingAgent\n 5709 sshd: fuzz [priv]\n 5712 sshd: fuzz@ttys000\n 5749 sshd: fuzz [priv]\n 5752 sshd: fuzz@ttys001\n 5784 /System/Library/CoreServices/CoreServicesUIAgent.app/Contents/MacOS/CoreServicesUIAgent\n 5818 /System/Library/Frameworks/QuickLook.framework/Resources/quicklookd.app/Contents/MacOS/quicklookd\n 5819 /Library/Frameworks/Python.framework/Versions/3.8/Resources/Python.app/Contents/MacOS/Python\n 5821 /Library/Frameworks/Python.framework/Versions/3.8/Resources/Python.app/Contents/MacOS/Python\n 5829 /bin/ps\n 5713 -bash\n 5748 ssh\n 5753 -bash\n"
+}

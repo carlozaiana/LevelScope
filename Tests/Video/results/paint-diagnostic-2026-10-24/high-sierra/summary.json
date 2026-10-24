@@ -1,0 +1,71 @@
+{
+  "all_passed": true,
+  "no_audio_devices_opened": true,
+  "identity_sha256": "35081f6e31cd02f202162525699ecd87912f4cabbc7177a2919f4c53497cad1c",
+  "checks": [
+    {
+      "name": "trace-buffer",
+      "exit_code": 0,
+      "argv": [
+        "/Users/fuzz/LevelScope-VideoPaintDiagnostic-2026-10-24/candidate-03/bin/LevelScopeVideoPaintTraceTests"
+      ]
+    },
+    {
+      "name": "diagnostic-offline-startup",
+      "exit_code": 0,
+      "argv": [
+        "/Users/fuzz/LevelScope-VideoPaintDiagnostic-2026-10-24/candidate-03/LevelScope Video Paint Diagnostic.app/Contents/MacOS/LevelScope Video Paint Diagnostic",
+        "--diagnostic-offline-check",
+        "/Users/fuzz/LevelScope-VideoPaintDiagnostic-2026-10-24/high-sierra-preparation-03/offline-trace.json"
+      ]
+    },
+    {
+      "name": "video-timing",
+      "exit_code": 0,
+      "argv": [
+        "/Users/fuzz/LevelScope-VideoPaintDiagnostic-2026-10-24/candidate-03/bin/LevelScopeVideoTests"
+      ]
+    },
+    {
+      "name": "offline-measurement",
+      "exit_code": 0,
+      "argv": [
+        "/Users/fuzz/LevelScope-VideoPaintDiagnostic-2026-10-24/candidate-03/bin/LevelScopeMeasurementTests"
+      ]
+    },
+    {
+      "name": "verified-audition",
+      "exit_code": 0,
+      "argv": [
+        "/Users/fuzz/LevelScope-VideoPaintDiagnostic-2026-10-24/candidate-03/bin/LevelScopeAuditionTests"
+      ]
+    },
+    {
+      "name": "runner-guards",
+      "exit_code": 0,
+      "argv": [
+        "/usr/local/bin/python3",
+        "-B",
+        "/Users/fuzz/LevelScope-VideoPaintDiagnostic-2026-10-24/candidate-03/Tests/RunnerTests.py"
+      ]
+    },
+    {
+      "name": "preview",
+      "exit_code": 0,
+      "argv": [
+        "/usr/local/bin/python3",
+        "-B",
+        "/Users/fuzz/LevelScope-VideoPaintDiagnostic-2026-10-24/candidate-03/Tests/run_comparison.py",
+        "--package",
+        "/Users/fuzz/LevelScope-VideoPaintDiagnostic-2026-10-24/candidate-03",
+        "--platform",
+        "high-sierra"
+      ]
+    },
+    {
+      "name": "exclusive-output-refuses-overwrite",
+      "expected_exit": 1,
+      "exit_code": 1
+    }
+  ]
+}

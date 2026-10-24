@@ -1,0 +1,20 @@
+{
+  "completed_utc": "2026-10-24T19:17:59.345600+00:00",
+  "authorization": "User explicitly requested: Retry the repository save",
+  "source_bundle": "/private/tmp/levelscope-paint-comparison-20261024-results",
+  "destination": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/Tests/Video/results/paint-diagnostic-comparison-2026-10-24",
+  "status": "Complete; evidence and current handover saved and verified",
+  "original_evidence_files_verified": 70,
+  "existing_identical_files_preserved": 34,
+  "new_evidence_files_including_manifest": 37,
+  "evidence_manifest_sha256": "02bfbbf2785bf0cd1d7c3ce84f4da38d43e1c938e544b10788b410365dd73c3c",
+  "handover_path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/Docs/VideoPaintDiagnosticComparison-2026-10-24.md",
+  "handover_sha256": "01c9b35b7e2e7ffc3ccb36c2c5c29960ae3f26e9a3f55aa58ab324816547c489",
+  "historical_source_handover_sha256": "630f00b6b01b5c37cf504ec0397c3b9dd34133e0eb3d53f7b1f5d3b93a4e0f5c",
+  "git_head": "b57a1ed23cbe7d74afe98ed16ec8fd615db9d171",
+  "checkpoint_tags_unchanged": true,
+  "tracked_changes_unchanged": true,
+  "playback_rerun": false,
+  "tested_packages_modified": false,
+  "committed_or_pushed": false
+}

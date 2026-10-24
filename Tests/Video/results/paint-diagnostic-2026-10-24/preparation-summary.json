@@ -1,0 +1,16 @@
+{
+  "recorded_utc": "2026-10-24T17:23:17.745315+00:00",
+  "status": "Prepared; physical comparisons await fresh user coordination",
+  "base_commit": "b57a1ed23cbe7d74afe98ed16ec8fd615db9d171",
+  "source_digest": "0760e080d2e5daa8c89612029236308e134237a142c879003b53c7da1d3727cf",
+  "candidate_identity_sha256": "35081f6e31cd02f202162525699ecd87912f4cabbc7177a2919f4c53497cad1c",
+  "diagnostic_sha256": "3fd0fe58bbba684c06ac55acaf1618c318812396e3a121434e54a7dcfde1f93b",
+  "local_package": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-diagnostic-20261024-01/candidate-03",
+  "golem_package": "/Users/fuzz/LevelScope-VideoPaintDiagnostic-2026-10-24/candidate-03",
+  "device_closed_checks_passed_on_both": true,
+  "physical_playback_runs": 0,
+  "M7": "frozen, unqualified, unpublished",
+  "source_changes_committed": false,
+  "tags_unchanged": true,
+  "handover_sha256": "c8c1f5c4460d6ac41f4c52e42b4c0173f2de3ebae875a2c1b16c682450b73978"
+}

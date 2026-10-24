@@ -1,0 +1,209 @@
+[
+  {
+    "run": 1,
+    "role": "control",
+    "passed": true,
+    "skips": 0,
+    "maximum_qualified_paint_gap_ms": 19.970312,
+    "trace": {}
+  },
+  {
+    "run": 2,
+    "role": "diagnostic",
+    "passed": true,
+    "skips": 0,
+    "maximum_qualified_paint_gap_ms": 19.991644,
+    "trace": {
+      "scope": "Derived callback observations within the >=2 second playback paint span; not physical presentation",
+      "trace_sha256": "d60c5dbecee766edf00d1d39a49559bb4d0fbd47cf1ff4f49308accd6f1f639d",
+      "ui_events_total": 65891,
+      "independent_ticks_total": 6342,
+      "trace_loss": {
+        "ui": 0,
+        "display": 0
+      },
+      "nominal_hz": 60.0,
+      "display_id": 188852210,
+      "qualified_paints_derived": 5880,
+      "qualified_paints_reported": 5880,
+      "paint_count_matches_report": true,
+      "paint_skips_derived": 0,
+      "paint_skips_match_report": true,
+      "maximum_full_paint_ms": 2.088697,
+      "maximum_full_timer_ms": 2.1944,
+      "paint": {
+        "events": 5880,
+        "maximum_interval_ms": 19.991015,
+        "mean_interval_ms": 16.666766302092192
+      },
+      "timer": {
+        "events": 9341,
+        "maximum_interval_ms": 15.654476,
+        "mean_interval_ms": 10.489904269271948
+      },
+      "main_vblank": {
+        "events": 5879,
+        "maximum_interval_ms": 18.756543,
+        "mean_interval_ms": 16.66674293943518
+      },
+      "independent_display": {
+        "events": 5879,
+        "maximum_interval_ms": 18.662715,
+        "mean_interval_ms": 16.666740624532153
+      },
+      "transport_generations": [
+        6
+      ],
+      "view_epochs": [
+        4
+      ],
+      "window_flags_at_paint": [
+        15
+      ],
+      "display_ids_at_paint": [
+        188852210
+      ],
+      "missing_picture_selections": 0,
+      "selection_mismatches": 0,
+      "maximum_queue_count": 8
+    }
+  },
+  {
+    "run": 3,
+    "role": "control",
+    "passed": true,
+    "skips": 0,
+    "maximum_qualified_paint_gap_ms": 19.409971,
+    "trace": {}
+  },
+  {
+    "run": 4,
+    "role": "diagnostic",
+    "passed": true,
+    "skips": 0,
+    "maximum_qualified_paint_gap_ms": 19.661736,
+    "trace": {
+      "scope": "Derived callback observations within the >=2 second playback paint span; not physical presentation",
+      "trace_sha256": "c7f889788378ddc23317ad40b845dbf616fc3dfd22ab10e7eeea8fa5bc439dde",
+      "ui_events_total": 67332,
+      "independent_ticks_total": 6445,
+      "trace_loss": {
+        "ui": 0,
+        "display": 0
+      },
+      "nominal_hz": 60.0,
+      "display_id": 188852210,
+      "qualified_paints_derived": 5881,
+      "qualified_paints_reported": 5881,
+      "paint_count_matches_report": true,
+      "paint_skips_derived": 0,
+      "paint_skips_match_report": true,
+      "maximum_full_paint_ms": 2.044323,
+      "maximum_full_timer_ms": 0.271441,
+      "paint": {
+        "events": 5881,
+        "maximum_interval_ms": 19.661494,
+        "mean_interval_ms": 16.66660927414966
+      },
+      "timer": {
+        "events": 9336,
+        "maximum_interval_ms": 15.545982,
+        "mean_interval_ms": 10.496538240707016
+      },
+      "main_vblank": {
+        "events": 5880,
+        "maximum_interval_ms": 18.729212,
+        "mean_interval_ms": 16.66661124085729
+      },
+      "independent_display": {
+        "events": 5880,
+        "maximum_interval_ms": 18.672927,
+        "mean_interval_ms": 16.66660790678687
+      },
+      "transport_generations": [
+        6
+      ],
+      "view_epochs": [
+        4
+      ],
+      "window_flags_at_paint": [
+        15
+      ],
+      "display_ids_at_paint": [
+        188852210
+      ],
+      "missing_picture_selections": 0,
+      "selection_mismatches": 0,
+      "maximum_queue_count": 8
+    }
+  },
+  {
+    "run": 5,
+    "role": "control",
+    "passed": true,
+    "skips": 0,
+    "maximum_qualified_paint_gap_ms": 19.410855,
+    "trace": {}
+  },
+  {
+    "run": 6,
+    "role": "diagnostic",
+    "passed": true,
+    "skips": 0,
+    "maximum_qualified_paint_gap_ms": 19.380418,
+    "trace": {
+      "scope": "Derived callback observations within the >=2 second playback paint span; not physical presentation",
+      "trace_sha256": "21daae9cd108d303653e0998c0f3200c50c35724563e7b5839d35037f25bdde9",
+      "ui_events_total": 66635,
+      "independent_ticks_total": 6387,
+      "trace_loss": {
+        "ui": 0,
+        "display": 0
+      },
+      "nominal_hz": 60.0,
+      "display_id": 188852210,
+      "qualified_paints_derived": 5880,
+      "qualified_paints_reported": 5880,
+      "paint_count_matches_report": true,
+      "paint_skips_derived": 0,
+      "paint_skips_match_report": true,
+      "maximum_full_paint_ms": 1.449404,
+      "maximum_full_timer_ms": 0.092019,
+      "paint": {
+        "events": 5880,
+        "maximum_interval_ms": 19.380192,
+        "mean_interval_ms": 16.66657610767137
+      },
+      "timer": {
+        "events": 9332,
+        "maximum_interval_ms": 15.192017,
+        "mean_interval_ms": 10.500012424391812
+      },
+      "main_vblank": {
+        "events": 5879,
+        "maximum_interval_ms": 18.766946,
+        "mean_interval_ms": 16.666562415277305
+      },
+      "independent_display": {
+        "events": 5879,
+        "maximum_interval_ms": 18.680887,
+        "mean_interval_ms": 16.66656599336509
+      },
+      "transport_generations": [
+        6
+      ],
+      "view_epochs": [
+        4
+      ],
+      "window_flags_at_paint": [
+        15
+      ],
+      "display_ids_at_paint": [
+        188852210
+      ],
+      "missing_picture_selections": 0,
+      "selection_mismatches": 0,
+      "maximum_queue_count": 8
+    }
+  }
+]

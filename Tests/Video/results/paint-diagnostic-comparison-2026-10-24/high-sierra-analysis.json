@@ -1,0 +1,561 @@
+{
+  "scope": "Read-only derived comparison analysis; no additional test runs",
+  "comparison_path": "/private/tmp/levelscope-paint-comparison-20261024-results/high-sierra",
+  "summary_sha256": "4b64cca26bb43370af24d6e2df41d0c59dbafd1bc7efecb049dda75fb6d4ac84",
+  "candidate_identity_sha256": "35081f6e31cd02f202162525699ecd87912f4cabbc7177a2919f4c53497cad1c",
+  "audio_configuration_unchanged": true,
+  "runs": [
+    {
+      "number": 1,
+      "role": "control",
+      "report_sha256": "fe211f72ddaed7174f53773456390e891756efbd0291142f31377b15c57e7152",
+      "passed": true,
+      "device": "Built-in Output",
+      "sample_rate": 44100.0,
+      "all_routes_muted": true,
+      "source_seconds": 100.0414058956916,
+      "paints": 5880,
+      "actual_paint_skipped_frames": 0,
+      "blank_paints": 0,
+      "bound_failures": 0,
+      "paint_deadline_failures": 0,
+      "underrun_blocks": 0,
+      "maximum_paint_interval_ms": 19.970312,
+      "maximum_cpu_paint_ms": 0.08122,
+      "hal_output_timestamp": true,
+      "memory_passed": true,
+      "memory_growth_assessed": false,
+      "peak_sampled_playback_rss_bytes": 141688832.0,
+      "audio_sha256": "8b795ab831a57ce81c3142621b4b65edb26faf1224da2c78a41b26a796bcea97",
+      "video_sha256": "0870d5ab93d1492f23524ed1fff9319af1a6a9cf71882543f2190929afeb8e24"
+    },
+    {
+      "number": 2,
+      "role": "diagnostic",
+      "report_sha256": "dd4e0a9c8ce0a2f95363784715c76093d5422b9e682f1b20727b2faab14fb1c9",
+      "passed": true,
+      "device": "Built-in Output",
+      "sample_rate": 44100.0,
+      "all_routes_muted": true,
+      "source_seconds": 100.0407256235828,
+      "paints": 5880,
+      "actual_paint_skipped_frames": 0,
+      "blank_paints": 0,
+      "bound_failures": 0,
+      "paint_deadline_failures": 0,
+      "underrun_blocks": 0,
+      "maximum_paint_interval_ms": 19.991644,
+      "maximum_cpu_paint_ms": 0.107243,
+      "hal_output_timestamp": true,
+      "memory_passed": true,
+      "memory_growth_assessed": false,
+      "peak_sampled_playback_rss_bytes": 154177536.0,
+      "audio_sha256": "8b795ab831a57ce81c3142621b4b65edb26faf1224da2c78a41b26a796bcea97",
+      "video_sha256": "0870d5ab93d1492f23524ed1fff9319af1a6a9cf71882543f2190929afeb8e24",
+      "trace": {
+        "scope": "Derived callback observations within the >=2 second playback paint span; not physical presentation",
+        "trace_sha256": "d60c5dbecee766edf00d1d39a49559bb4d0fbd47cf1ff4f49308accd6f1f639d",
+        "ui_events_total": 65891,
+        "independent_ticks_total": 6342,
+        "trace_loss": {
+          "ui": 0,
+          "display": 0
+        },
+        "nominal_hz": 60.0,
+        "display_id": 188852210,
+        "qualified_paints_derived": 5880,
+        "qualified_paints_reported": 5880,
+        "paint_count_matches_report": true,
+        "paint_skips_derived": 0,
+        "paint_skips_match_report": true,
+        "maximum_full_paint_ms": 2.088697,
+        "maximum_full_timer_ms": 2.1944,
+        "paint": {
+          "events": 5880,
+          "maximum_interval_ms": 19.991015,
+          "mean_interval_ms": 16.666766302092192
+        },
+        "timer": {
+          "events": 9341,
+          "maximum_interval_ms": 15.654476,
+          "mean_interval_ms": 10.489904269271948
+        },
+        "main_vblank": {
+          "events": 5879,
+          "maximum_interval_ms": 18.756543,
+          "mean_interval_ms": 16.66674293943518
+        },
+        "independent_display": {
+          "events": 5879,
+          "maximum_interval_ms": 18.662715,
+          "mean_interval_ms": 16.666740624532153
+        },
+        "transport_generations": [
+          6
+        ],
+        "view_epochs": [
+          4
+        ],
+        "window_flags_at_paint": [
+          15
+        ],
+        "display_ids_at_paint": [
+          188852210
+        ],
+        "missing_picture_selections": 0,
+        "selection_mismatches": 0,
+        "maximum_queue_count": 8,
+        "largest_paint_gaps": [
+          {
+            "gap_ms": 19.991015,
+            "previous_frame": 1925,
+            "frame": 1926,
+            "audio_seconds": 77.04664399092971,
+            "audio_elapsed_ms": 20.000000000010232,
+            "timer_entries_between": 2,
+            "repaint_requests_between": 2,
+            "main_vblanks_between": 1,
+            "independent_ticks_between": 1,
+            "selected_frames_between": [
+              1925,
+              1926
+            ],
+            "missing_picture_selections_between": 0
+          },
+          {
+            "gap_ms": 19.328044,
+            "previous_frame": 1787,
+            "frame": 1788,
+            "audio_seconds": 71.52918367346939,
+            "audio_elapsed_ms": 19.319727891158323,
+            "timer_entries_between": 2,
+            "repaint_requests_between": 2,
+            "main_vblanks_between": 1,
+            "independent_ticks_between": 1,
+            "selected_frames_between": [
+              1787,
+              1788
+            ],
+            "missing_picture_selections_between": 0
+          },
+          {
+            "gap_ms": 19.07953,
+            "previous_frame": 429,
+            "frame": 430,
+            "audio_seconds": 17.21201814058957,
+            "audio_elapsed_ms": 19.070294784583552,
+            "timer_entries_between": 2,
+            "repaint_requests_between": 2,
+            "main_vblanks_between": 1,
+            "independent_ticks_between": 1,
+            "selected_frames_between": [
+              429,
+              430
+            ],
+            "missing_picture_selections_between": 0
+          },
+          {
+            "gap_ms": 18.950218,
+            "previous_frame": 1947,
+            "frame": 1948,
+            "audio_seconds": 77.92884353741496,
+            "audio_elapsed_ms": 18.956916099767795,
+            "timer_entries_between": 2,
+            "repaint_requests_between": 2,
+            "main_vblanks_between": 1,
+            "independent_ticks_between": 1,
+            "selected_frames_between": [
+              1947,
+              1948
+            ],
+            "missing_picture_selections_between": 0
+          },
+          {
+            "gap_ms": 18.925024,
+            "previous_frame": 301,
+            "frame": 302,
+            "audio_seconds": 12.095147392290249,
+            "audio_elapsed_ms": 18.934240362812105,
+            "timer_entries_between": 1,
+            "repaint_requests_between": 1,
+            "main_vblanks_between": 1,
+            "independent_ticks_between": 1,
+            "selected_frames_between": [
+              301,
+              302
+            ],
+            "missing_picture_selections_between": 0
+          }
+        ]
+      }
+    },
+    {
+      "number": 3,
+      "role": "control",
+      "report_sha256": "79dd84c4a36110d1931f17adac8a41ca9255d8a15b76bdc79a385da0b48862a7",
+      "passed": true,
+      "device": "Built-in Output",
+      "sample_rate": 44100.0,
+      "all_routes_muted": true,
+      "source_seconds": 100.0068027210884,
+      "paints": 5880,
+      "actual_paint_skipped_frames": 0,
+      "blank_paints": 0,
+      "bound_failures": 0,
+      "paint_deadline_failures": 0,
+      "underrun_blocks": 0,
+      "maximum_paint_interval_ms": 19.409971,
+      "maximum_cpu_paint_ms": 0.136471,
+      "hal_output_timestamp": true,
+      "memory_passed": true,
+      "memory_growth_assessed": false,
+      "peak_sampled_playback_rss_bytes": 140378112.0,
+      "audio_sha256": "8b795ab831a57ce81c3142621b4b65edb26faf1224da2c78a41b26a796bcea97",
+      "video_sha256": "0870d5ab93d1492f23524ed1fff9319af1a6a9cf71882543f2190929afeb8e24"
+    },
+    {
+      "number": 4,
+      "role": "diagnostic",
+      "report_sha256": "39acc45adf430985c921057bd91391315712840eeb65165427293207a3e50b14",
+      "passed": true,
+      "device": "Built-in Output",
+      "sample_rate": 44100.0,
+      "all_routes_muted": true,
+      "source_seconds": 100.0291383219955,
+      "paints": 5881,
+      "actual_paint_skipped_frames": 0,
+      "blank_paints": 0,
+      "bound_failures": 0,
+      "paint_deadline_failures": 0,
+      "underrun_blocks": 0,
+      "maximum_paint_interval_ms": 19.661736,
+      "maximum_cpu_paint_ms": 0.639552,
+      "hal_output_timestamp": true,
+      "memory_passed": true,
+      "memory_growth_assessed": false,
+      "peak_sampled_playback_rss_bytes": 158228480.0,
+      "audio_sha256": "8b795ab831a57ce81c3142621b4b65edb26faf1224da2c78a41b26a796bcea97",
+      "video_sha256": "0870d5ab93d1492f23524ed1fff9319af1a6a9cf71882543f2190929afeb8e24",
+      "trace": {
+        "scope": "Derived callback observations within the >=2 second playback paint span; not physical presentation",
+        "trace_sha256": "c7f889788378ddc23317ad40b845dbf616fc3dfd22ab10e7eeea8fa5bc439dde",
+        "ui_events_total": 67332,
+        "independent_ticks_total": 6445,
+        "trace_loss": {
+          "ui": 0,
+          "display": 0
+        },
+        "nominal_hz": 60.0,
+        "display_id": 188852210,
+        "qualified_paints_derived": 5881,
+        "qualified_paints_reported": 5881,
+        "paint_count_matches_report": true,
+        "paint_skips_derived": 0,
+        "paint_skips_match_report": true,
+        "maximum_full_paint_ms": 2.044323,
+        "maximum_full_timer_ms": 0.271441,
+        "paint": {
+          "events": 5881,
+          "maximum_interval_ms": 19.661494,
+          "mean_interval_ms": 16.66660927414966
+        },
+        "timer": {
+          "events": 9336,
+          "maximum_interval_ms": 15.545982,
+          "mean_interval_ms": 10.496538240707016
+        },
+        "main_vblank": {
+          "events": 5880,
+          "maximum_interval_ms": 18.729212,
+          "mean_interval_ms": 16.66661124085729
+        },
+        "independent_display": {
+          "events": 5880,
+          "maximum_interval_ms": 18.672927,
+          "mean_interval_ms": 16.66660790678687
+        },
+        "transport_generations": [
+          6
+        ],
+        "view_epochs": [
+          4
+        ],
+        "window_flags_at_paint": [
+          15
+        ],
+        "display_ids_at_paint": [
+          188852210
+        ],
+        "missing_picture_selections": 0,
+        "selection_mismatches": 0,
+        "maximum_queue_count": 8,
+        "largest_paint_gaps": [
+          {
+            "gap_ms": 19.661494,
+            "previous_frame": 600,
+            "frame": 601,
+            "audio_seconds": 24.054897959183673,
+            "audio_elapsed_ms": 19.65986394557717,
+            "timer_entries_between": 2,
+            "repaint_requests_between": 2,
+            "main_vblanks_between": 1,
+            "independent_ticks_between": 1,
+            "selected_frames_between": [
+              600,
+              601
+            ],
+            "missing_picture_selections_between": 0
+          },
+          {
+            "gap_ms": 19.364381,
+            "previous_frame": 834,
+            "frame": 835,
+            "audio_seconds": 33.40480725623583,
+            "audio_elapsed_ms": 19.365079365080362,
+            "timer_entries_between": 2,
+            "repaint_requests_between": 2,
+            "main_vblanks_between": 1,
+            "independent_ticks_between": 1,
+            "selected_frames_between": [
+              834,
+              835
+            ],
+            "missing_picture_selections_between": 0
+          },
+          {
+            "gap_ms": 19.095209,
+            "previous_frame": 1922,
+            "frame": 1923,
+            "audio_seconds": 76.93798185941043,
+            "audio_elapsed_ms": 19.115646258498487,
+            "timer_entries_between": 2,
+            "repaint_requests_between": 2,
+            "main_vblanks_between": 1,
+            "independent_ticks_between": 1,
+            "selected_frames_between": [
+              1922,
+              1923
+            ],
+            "missing_picture_selections_between": 0
+          },
+          {
+            "gap_ms": 18.840316,
+            "previous_frame": 1236,
+            "frame": 1237,
+            "audio_seconds": 49.487687074829935,
+            "audio_elapsed_ms": 18.84353741496625,
+            "timer_entries_between": 2,
+            "repaint_requests_between": 2,
+            "main_vblanks_between": 1,
+            "independent_ticks_between": 1,
+            "selected_frames_between": [
+              1236,
+              1237
+            ],
+            "missing_picture_selections_between": 0
+          },
+          {
+            "gap_ms": 18.822113,
+            "previous_frame": 544,
+            "frame": 545,
+            "audio_seconds": 21.804195011337868,
+            "audio_elapsed_ms": 18.82086167800523,
+            "timer_entries_between": 2,
+            "repaint_requests_between": 2,
+            "main_vblanks_between": 1,
+            "independent_ticks_between": 1,
+            "selected_frames_between": [
+              544,
+              545
+            ],
+            "missing_picture_selections_between": 0
+          }
+        ]
+      }
+    },
+    {
+      "number": 5,
+      "role": "control",
+      "report_sha256": "afcc4e036b261061b32a0b52b990acfdf99e6994136a55e58ccb83e67c1da0c4",
+      "passed": true,
+      "device": "Built-in Output",
+      "sample_rate": 44100.0,
+      "all_routes_muted": true,
+      "source_seconds": 100.0096598639456,
+      "paints": 5881,
+      "actual_paint_skipped_frames": 0,
+      "blank_paints": 0,
+      "bound_failures": 0,
+      "paint_deadline_failures": 0,
+      "underrun_blocks": 0,
+      "maximum_paint_interval_ms": 19.410855,
+      "maximum_cpu_paint_ms": 0.270207,
+      "hal_output_timestamp": true,
+      "memory_passed": true,
+      "memory_growth_assessed": false,
+      "peak_sampled_playback_rss_bytes": 140349440.0,
+      "audio_sha256": "8b795ab831a57ce81c3142621b4b65edb26faf1224da2c78a41b26a796bcea97",
+      "video_sha256": "0870d5ab93d1492f23524ed1fff9319af1a6a9cf71882543f2190929afeb8e24"
+    },
+    {
+      "number": 6,
+      "role": "diagnostic",
+      "report_sha256": "6b17cd5e50446c2390a146df15fa111f5c03f808789eb616e431eee10e901d84",
+      "passed": true,
+      "device": "Built-in Output",
+      "sample_rate": 44100.0,
+      "all_routes_muted": true,
+      "source_seconds": 100.0291383219955,
+      "paints": 5880,
+      "actual_paint_skipped_frames": 0,
+      "blank_paints": 0,
+      "bound_failures": 0,
+      "paint_deadline_failures": 0,
+      "underrun_blocks": 0,
+      "maximum_paint_interval_ms": 19.380418,
+      "maximum_cpu_paint_ms": 0.647292,
+      "hal_output_timestamp": true,
+      "memory_passed": true,
+      "memory_growth_assessed": false,
+      "peak_sampled_playback_rss_bytes": 154370048.0,
+      "audio_sha256": "8b795ab831a57ce81c3142621b4b65edb26faf1224da2c78a41b26a796bcea97",
+      "video_sha256": "0870d5ab93d1492f23524ed1fff9319af1a6a9cf71882543f2190929afeb8e24",
+      "trace": {
+        "scope": "Derived callback observations within the >=2 second playback paint span; not physical presentation",
+        "trace_sha256": "21daae9cd108d303653e0998c0f3200c50c35724563e7b5839d35037f25bdde9",
+        "ui_events_total": 66635,
+        "independent_ticks_total": 6387,
+        "trace_loss": {
+          "ui": 0,
+          "display": 0
+        },
+        "nominal_hz": 60.0,
+        "display_id": 188852210,
+        "qualified_paints_derived": 5880,
+        "qualified_paints_reported": 5880,
+        "paint_count_matches_report": true,
+        "paint_skips_derived": 0,
+        "paint_skips_match_report": true,
+        "maximum_full_paint_ms": 1.449404,
+        "maximum_full_timer_ms": 0.092019,
+        "paint": {
+          "events": 5880,
+          "maximum_interval_ms": 19.380192,
+          "mean_interval_ms": 16.66657610767137
+        },
+        "timer": {
+          "events": 9332,
+          "maximum_interval_ms": 15.192017,
+          "mean_interval_ms": 10.500012424391812
+        },
+        "main_vblank": {
+          "events": 5879,
+          "maximum_interval_ms": 18.766946,
+          "mean_interval_ms": 16.666562415277305
+        },
+        "independent_display": {
+          "events": 5879,
+          "maximum_interval_ms": 18.680887,
+          "mean_interval_ms": 16.66656599336509
+        },
+        "transport_generations": [
+          6
+        ],
+        "view_epochs": [
+          4
+        ],
+        "window_flags_at_paint": [
+          15
+        ],
+        "display_ids_at_paint": [
+          188852210
+        ],
+        "missing_picture_selections": 0,
+        "selection_mismatches": 0,
+        "maximum_queue_count": 8,
+        "largest_paint_gaps": [
+          {
+            "gap_ms": 19.380192,
+            "previous_frame": 720,
+            "frame": 721,
+            "audio_seconds": 28.849410430839,
+            "audio_elapsed_ms": 19.36507936507681,
+            "timer_entries_between": 2,
+            "repaint_requests_between": 2,
+            "main_vblanks_between": 1,
+            "independent_ticks_between": 1,
+            "selected_frames_between": [
+              720,
+              721
+            ],
+            "missing_picture_selections_between": 0
+          },
+          {
+            "gap_ms": 19.191562,
+            "previous_frame": 364,
+            "frame": 365,
+            "audio_seconds": 14.615668934240363,
+            "audio_elapsed_ms": 19.20634920634967,
+            "timer_entries_between": 2,
+            "repaint_requests_between": 2,
+            "main_vblanks_between": 1,
+            "independent_ticks_between": 1,
+            "selected_frames_between": [
+              364,
+              365
+            ],
+            "missing_picture_selections_between": 0
+          },
+          {
+            "gap_ms": 18.916178,
+            "previous_frame": 614,
+            "frame": 615,
+            "audio_seconds": 24.615578231292517,
+            "audio_elapsed_ms": 18.91156462584931,
+            "timer_entries_between": 2,
+            "repaint_requests_between": 2,
+            "main_vblanks_between": 1,
+            "independent_ticks_between": 1,
+            "selected_frames_between": [
+              614,
+              615
+            ],
+            "missing_picture_selections_between": 0
+          },
+          {
+            "gap_ms": 18.885691,
+            "previous_frame": 712,
+            "frame": 713,
+            "audio_seconds": 28.532154195011337,
+            "audio_elapsed_ms": 18.88888888888829,
+            "timer_entries_between": 1,
+            "repaint_requests_between": 1,
+            "main_vblanks_between": 1,
+            "independent_ticks_between": 1,
+            "selected_frames_between": [
+              712,
+              713
+            ],
+            "missing_picture_selections_between": 0
+          },
+          {
+            "gap_ms": 18.825254,
+            "previous_frame": 694,
+            "frame": 695,
+            "audio_seconds": 27.81532879818594,
+            "audio_elapsed_ms": 18.82086167800523,
+            "timer_entries_between": 2,
+            "repaint_requests_between": 2,
+            "main_vblanks_between": 1,
+            "independent_ticks_between": 1,
+            "selected_frames_between": [
+              694,
+              695
+            ],
+            "missing_picture_selections_between": 0
+          }
+        ]
+      }
+    }
+  ]
+}

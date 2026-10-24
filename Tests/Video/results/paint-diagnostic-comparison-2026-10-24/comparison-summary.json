@@ -1,0 +1,19 @@
+{
+  "recorded_utc": "2026-10-24T18:01:06.919238+00:00",
+  "scope": "Fixed 100-second diagnostic comparisons only; not M7 acceptance",
+  "candidate_identity_sha256": "35081f6e31cd02f202162525699ecd87912f4cabbc7177a2919f4c53497cad1c",
+  "source_digest": "0760e080d2e5daa8c89612029236308e134237a142c879003b53c7da1d3727cf",
+  "runs": 12,
+  "passed": 12,
+  "control_runs": 6,
+  "diagnostic_runs": 6,
+  "skipped_painted_frames": 0,
+  "audio_underruns": 0,
+  "valid_complete_diagnostic_traces": 6,
+  "audio_configurations_unchanged_on_both": true,
+  "earlier_failure_reproduced": false,
+  "fix_established": false,
+  "M7_status": "frozen, unqualified, unpublished",
+  "repository_copy_status": "Sequoia evidence saved; Golem evidence copy and final handover save blocked by two automatic approval-review timeouts; complete bundle in /private/tmp",
+  "complete_bundle": "/private/tmp/levelscope-paint-comparison-20261024-results"
+}

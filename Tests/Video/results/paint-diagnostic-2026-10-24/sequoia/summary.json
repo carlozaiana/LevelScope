@@ -1,0 +1,50 @@
+{
+  "all_passed": true,
+  "no_audio_devices_opened": true,
+  "checks": [
+    {
+      "name": "trace-buffer",
+      "exit_code": 0,
+      "argv": [
+        "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-diagnostic-20261024-01/candidate-03/bin/LevelScopeVideoPaintTraceTests"
+      ]
+    },
+    {
+      "name": "diagnostic-offline-startup",
+      "exit_code": 0,
+      "argv": [
+        "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-diagnostic-20261024-01/candidate-03/LevelScope Video Paint Diagnostic.app/Contents/MacOS/LevelScope Video Paint Diagnostic",
+        "--diagnostic-offline-check",
+        "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-diagnostic-20261024-01/sequoia-preparation-03/offline-trace.json"
+      ]
+    },
+    {
+      "name": "runner-guards",
+      "exit_code": 0,
+      "argv": [
+        "/usr/bin/python3",
+        "-B",
+        "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-diagnostic-20261024-01/candidate-03/Tests/RunnerTests.py"
+      ]
+    },
+    {
+      "name": "preview",
+      "exit_code": 0,
+      "argv": [
+        "/usr/bin/python3",
+        "-B",
+        "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-diagnostic-20261024-01/candidate-03/Tests/run_comparison.py",
+        "--package",
+        "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/paint-diagnostic-20261024-01/candidate-03",
+        "--platform",
+        "sequoia"
+      ]
+    },
+    {
+      "name": "exclusive-output-refuses-overwrite",
+      "expected_exit": 1,
+      "exit_code": 1
+    }
+  ],
+  "regressions": "../local-closed-regressions.log; same packaged binary hashes"
+}

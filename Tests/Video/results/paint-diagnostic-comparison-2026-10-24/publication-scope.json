@@ -1,0 +1,15 @@
+{
+  "recorded_utc": "2026-10-24T19:28:14.734575+00:00",
+  "scope": "User-authorized diagnostic code, evidence and handover publication on codex/video-implementation only; no playback fix or M7 acceptance.",
+  "pre_publication_handover": "Tests/Video/results/paint-diagnostic-comparison-2026-10-24/pre-publication-handover.md",
+  "pre_publication_handover_sha256": "01c9b35b7e2e7ffc3ccb36c2c5c29960ae3f26e9a3f55aa58ab324816547c489",
+  "handover_path": "Docs/VideoPaintDiagnosticComparison-2026-10-24.md",
+  "handover_sha256": "6e60747861461cba716bce1f3d909a257878a5e3b016665ef1ae7f66fbe490c0",
+  "candidate_source_digest": "0760e080d2e5daa8c89612029236308e134237a142c879003b53c7da1d3727cf",
+  "earlier_manifests_unchanged": true,
+  "playback_rerun": false,
+  "tested_packages_modified": false,
+  "main_merge_authorized": false,
+  "checkpoint_tag_changes_authorized": false,
+  "m7_disposition": "Frozen, unqualified and unpublished; intermittent paint failure remains unresolved."
+}

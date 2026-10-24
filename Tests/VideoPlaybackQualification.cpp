@@ -4,6 +4,10 @@
 #include "Standalone/StandaloneAudition.h"
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <iostream>
+#if LEVELSCOPE_VIDEO_PAINT_DIAGNOSTICS
+#include "VideoPaint/Trace.h"
+namespace paintdiag = levelscope::paintdiagnostic;
+#endif
 #if JUCE_MAC
 #include <mach/mach.h>
 #include <sys/resource.h>
@@ -28,6 +32,12 @@ public:
         duration = argument ("--seconds").getDoubleValue();
         if (deviceName.isEmpty() || duration <= 0 || duration > 7200 || reportFile.exists())
             throw std::runtime_error ("Specify --device, --seconds (1..7200) and a new --report file");
+#if LEVELSCOPE_VIDEO_PAINT_DIAGNOSTICS
+        traceFile=juce::File(argument("--trace"));
+        if (!args.contains("--muted") || argument("--trace").isEmpty() || traceFile.exists()
+            || duration>100 || args.contains("--manual-start"))
+            throw std::runtime_error("Diagnostic requires muted routes, <=100 seconds and a new --trace file");
+#endif
         JobControl job; auto result = validateMedia (audioFile, job);
         if (!result.succeeded()) throw std::runtime_error (result.message.toStdString());
         media = result.media;
@@ -84,12 +94,22 @@ public:
             }
         });
     }
-    ~Run() override { stopTimer(); stopSampling(); audio.disconnect(); }
+    ~Run() override { stopTimer(); stopSampling(); audio.disconnect();
+#if LEVELSCOPE_VIDEO_PAINT_DIAGNOSTICS
+        trace.stop();
+#endif
+    }
     void paint (juce::Graphics& g) override
     {
+#if LEVELSCOPE_VIDEO_PAINT_DIAGNOSTICS
+        paintdiag::Trace::Span paintSpan(trace,paintdiag::Kind::paintEnter,paintdiag::Kind::paintExit);
+#endif
         const auto paintStart = StandaloneAudition::hostTimeNs();
         const video::Time paintTime (audio.positionFrames(), static_cast<int64_t> (media.sampleRate));
         view = player.update (paintTime, audio.transportGeneration());
+#if LEVELSCOPE_VIDEO_PAINT_DIAGNOSTICS
+        trace.selection(player,view,paintTime);
+#endif
         g.fillAll (juce::Colours::black);
         if (view.picture)
             g.drawImageWithin (view.picture->image, 0, 0, getWidth(), getHeight() - 65, juce::RectanglePlacement::centred);
@@ -217,6 +237,11 @@ private:
                 && lastFootprintMean - firstFootprintMean <= 32.0 * 1024 * 1024));
         const bool hardware = audio.hasHardwareClock(); const auto latency = audio.outputLatencyFrames();
         audio.disconnect();
+#if LEVELSCOPE_VIDEO_PAINT_DIAGNOSTICS
+        trace.stop();
+        const auto traceError=trace.save(traceFile,media.sampleRate);
+        if (traceError.isNotEmpty()) error += " Diagnostic: " + traceError;
+#endif
         juce::DynamicObject::Ptr report = new juce::DynamicObject();
         auto set = [&] (const char* key, juce::var value) { report->setProperty (key, std::move (value)); };
         set ("scope", "Internal audio-clock and UI paint selection; no optical/acoustic measurement");
@@ -265,7 +290,15 @@ private:
         set ("memory_passed", memoryPassed);
         set ("memory_sampling", "Background sampler; no Mach memory query on the paint/timer thread");
         set ("maximum_memory_query_ms", maximumMemoryQueryMs);
+#if LEVELSCOPE_VIDEO_PAINT_DIAGNOSTICS
+        set ("qualification_eligible", false);
+        set ("diagnostic_only", true);
+        set ("diagnostic_trace_valid", trace.valid() && traceError.isEmpty());
+        set ("diagnostic_trace_error", trace.error());
+        set ("diagnostic_trace_file", traceFile.getFullPathName());
+#else
         set ("qualification_eligible", true);
+#endif
         set ("memory_method", "prores-memory-v2-user-approved-2026-10-20");
         set ("allocator_relief_requested", false);
         set ("memory_query_failures", memoryQueryFailures);
@@ -290,9 +323,19 @@ private:
     }
     void timerCallback() override
     {
+#if LEVELSCOPE_VIDEO_PAINT_DIAGNOSTICS
+        paintdiag::Trace::Span timerSpan(trace,paintdiag::Kind::timerEnter,paintdiag::Kind::timerExit);
+#endif
         try
         {
-            view = player.update (video::Time (audio.positionFrames(), static_cast<int64_t> (media.sampleRate)), audio.transportGeneration());
+#if LEVELSCOPE_VIDEO_PAINT_DIAGNOSTICS
+            if (!trace.start(*this)) { finish(trace.error()); return; }
+#endif
+            const video::Time timerTime(audio.positionFrames(),static_cast<int64_t>(media.sampleRate));
+            view = player.update (timerTime, audio.transportGeneration());
+#if LEVELSCOPE_VIDEO_PAINT_DIAGNOSTICS
+            trace.selection(player,view,timerTime);
+#endif
             if (view.state == video::Player::State::failed) { finish (view.message); return; }
             if (view.picture && attachmentSeconds == 0)
             {
@@ -309,9 +352,17 @@ private:
                 if (error.isEmpty()) error = audio.play (request, routing, true, muted);
                 if (error.isNotEmpty()) throw std::runtime_error (error.toStdString()); opened = true;
                 playbackStartedNs = StandaloneAudition::hostTimeNs();
-                view = player.update (video::Time (audio.positionFrames(), static_cast<int64_t> (media.sampleRate)), audio.transportGeneration());
+                const video::Time startTime(audio.positionFrames(),static_cast<int64_t>(media.sampleRate));
+                view = player.update (startTime, audio.transportGeneration());
+#if LEVELSCOPE_VIDEO_PAINT_DIAGNOSTICS
+                trace.selection(player,view,startTime);
+#endif
             }
-            audio.poll (player.prerollReady()); repaint();
+            audio.poll (player.prerollReady());
+#if LEVELSCOPE_VIDEO_PAINT_DIAGNOSTICS
+            trace.mark(paintdiag::Kind::repaintRequest);
+#endif
+            repaint();
             observedSeconds.store (audio.positionSeconds());
             if (audio.getState() == AuditionState::failed) { finish (audio.status()); return; }
             if (opened && audio.positionSeconds() >= duration) { finish ({}); return; }
@@ -321,6 +372,10 @@ private:
         }
         catch (const std::exception& error) { finish (error.what()); }
     }
+#if LEVELSCOPE_VIDEO_PAINT_DIAGNOSTICS
+    paintdiag::Trace trace;
+    juce::File traceFile;
+#endif
     std::thread rssSampler;
     std::atomic<bool> samplingClosed { false };
     std::atomic<double> observedSeconds { 0 };
@@ -367,6 +422,20 @@ public:
     void initialise (const juce::String& command) override
     {
         try { juce::StringArray args; args.addTokens (command, true); args.removeEmptyStrings(); args = unquote (args);
+#if LEVELSCOPE_VIDEO_PAINT_DIAGNOSTICS
+              const auto offline=args.indexOf("--diagnostic-offline-check");
+              if (offline>=0)
+              {
+                  if (offline+1>=args.size()) throw std::runtime_error("Offline check needs a new trace path");
+                  paintdiag::Trace trace;
+                  trace.mark(paintdiag::Kind::timerEnter);
+                  trace.mark(paintdiag::Kind::timerExit);
+                  const auto failure=trace.save(juce::File(args[offline+1]),48000);
+                  if (failure.isNotEmpty()) throw std::runtime_error(failure.toStdString());
+                  std::cout<<"PASS diagnostic startup and trace export; no window or audio device opened\n";
+                  setApplicationReturnValue(0); quit(); return;
+              }
+#endif
               window = std::make_unique<Window> (new Run (args)); }
         catch (const std::exception& e) { std::cerr << e.what() << '\n'; setApplicationReturnValue (1); quit(); }
     }

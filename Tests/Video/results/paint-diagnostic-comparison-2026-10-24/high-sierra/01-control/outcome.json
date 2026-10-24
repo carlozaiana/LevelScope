@@ -1,0 +1,9 @@
+{
+  "number": 1,
+  "role": "control",
+  "exit_code": 0,
+  "wall_seconds": 111.78876457,
+  "gate_passed": true,
+  "paint_skips": 0,
+  "report_sha256": "fe211f72ddaed7174f53773456390e891756efbd0291142f31377b15c57e7152"
+}

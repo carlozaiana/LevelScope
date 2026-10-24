@@ -1,0 +1,296 @@
+{
+  "scope": "Fixed diagnostic comparison; no milestone acceptance or fix claim",
+  "runs": [
+    {
+      "number": 1,
+      "role": "control",
+      "exit_code": 0,
+      "wall_seconds": 107.615311208,
+      "gate_passed": true,
+      "paint_skips": 0,
+      "report_sha256": "6037ea712c9cf6128fdd2bc689934ff34b8c5ca4b64b5cfb97ee87e68d9401b1"
+    },
+    {
+      "number": 2,
+      "role": "diagnostic",
+      "exit_code": 0,
+      "wall_seconds": 106.42008866700002,
+      "gate_passed": true,
+      "paint_skips": 0,
+      "report_sha256": "8a7c89288d2599e201248ae46ef74772c76273a62764b828a645a89cbe19d922",
+      "trace": {
+        "trace_sha256": "bdc09600b6588a81ff9b5a5416fd27e31c475fd7d83eeec20ab22ed1b8895045",
+        "ui_events": 68402,
+        "display_events": 6232,
+        "allocated_buffer_bytes": 17039360,
+        "nominal_hz": 60.0,
+        "display_id": 1,
+        "scope": "Callback timing, not scanout; independent display-link observer is not JUCE internal callback",
+        "timer_max_interval_ms": 69.337917,
+        "paint_max_interval_ms": 63.1225,
+        "main_vblank_max_interval_ms": 69.413958,
+        "independent_display_max_interval_ms": 17.699,
+        "full_paint_max_ms": 3.83575,
+        "full_timer_max_ms": 26.3255,
+        "window_transitions": [
+          [
+            8780427067250,
+            9,
+            1,
+            0,
+            1,
+            4,
+            3,
+            -1,
+            -1,
+            -1,
+            -1,
+            0,
+            1,
+            0
+          ],
+          [
+            8780456178791,
+            9,
+            13,
+            0,
+            1,
+            4,
+            3,
+            -1,
+            -1,
+            -1,
+            -1,
+            0,
+            1,
+            0
+          ],
+          [
+            8780525127000,
+            9,
+            15,
+            0,
+            1,
+            4,
+            3,
+            -1,
+            -1,
+            -1,
+            -1,
+            0,
+            1,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "number": 3,
+      "role": "control",
+      "exit_code": 0,
+      "wall_seconds": 106.32709620900002,
+      "gate_passed": true,
+      "paint_skips": 0,
+      "report_sha256": "117879b0712d1cd747c3e81e8598ab7134a81e20df9301f9a3b1570a9b7ec064"
+    },
+    {
+      "number": 4,
+      "role": "diagnostic",
+      "exit_code": 0,
+      "wall_seconds": 106.274865041,
+      "gate_passed": true,
+      "paint_skips": 0,
+      "report_sha256": "0b69426f052fab9da55c4a07da516f1220c2e3d5690376edebd9a527a7720d1f",
+      "trace": {
+        "trace_sha256": "5be8c73bd1f2aa64a65acc2b430b14d4756ad234c4af6bfd78d02133e5ae13e6",
+        "ui_events": 63948,
+        "display_events": 6232,
+        "allocated_buffer_bytes": 17039360,
+        "nominal_hz": 60.0,
+        "display_id": 1,
+        "scope": "Callback timing, not scanout; independent display-link observer is not JUCE internal callback",
+        "timer_max_interval_ms": 31.178125,
+        "paint_max_interval_ms": 38.33975,
+        "main_vblank_max_interval_ms": 37.127791,
+        "independent_display_max_interval_ms": 18.749833,
+        "full_paint_max_ms": 3.252333,
+        "full_timer_max_ms": 28.1505,
+        "window_transitions": [
+          [
+            8993448576708,
+            9,
+            1,
+            0,
+            1,
+            4,
+            3,
+            -1,
+            -1,
+            -1,
+            -1,
+            0,
+            1,
+            0
+          ],
+          [
+            8993472986083,
+            9,
+            13,
+            0,
+            1,
+            4,
+            3,
+            -1,
+            -1,
+            -1,
+            -1,
+            0,
+            1,
+            0
+          ],
+          [
+            8993493275625,
+            9,
+            15,
+            0,
+            1,
+            4,
+            3,
+            -1,
+            -1,
+            -1,
+            -1,
+            0,
+            1,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "number": 5,
+      "role": "control",
+      "exit_code": 0,
+      "wall_seconds": 106.25290420799996,
+      "gate_passed": true,
+      "paint_skips": 0,
+      "report_sha256": "ccac89fa2652221c931e4e0d5a5d4e9ea527f1efa4b118a59649a606d53f873e"
+    },
+    {
+      "number": 6,
+      "role": "diagnostic",
+      "exit_code": 0,
+      "wall_seconds": 106.33774058400002,
+      "gate_passed": true,
+      "paint_skips": 0,
+      "report_sha256": "c30adcedecf36cca756fba46042640fe537d0a2133c2120ab6244e78167a7dc9",
+      "trace": {
+        "trace_sha256": "f9acf76754a3ffd60a077b7a363584702205aff7497877a41afca3222d88dc14",
+        "ui_events": 63979,
+        "display_events": 6234,
+        "allocated_buffer_bytes": 17039360,
+        "nominal_hz": 60.0,
+        "display_id": 1,
+        "scope": "Callback timing, not scanout; independent display-link observer is not JUCE internal callback",
+        "timer_max_interval_ms": 28.064334,
+        "paint_max_interval_ms": 44.786208,
+        "main_vblank_max_interval_ms": 36.094584,
+        "independent_display_max_interval_ms": 18.722583,
+        "full_paint_max_ms": 3.170209,
+        "full_timer_max_ms": 26.758583,
+        "window_transitions": [
+          [
+            9206369155416,
+            9,
+            1,
+            0,
+            1,
+            4,
+            3,
+            -1,
+            -1,
+            -1,
+            -1,
+            0,
+            1,
+            0
+          ],
+          [
+            9206377926375,
+            9,
+            13,
+            0,
+            1,
+            4,
+            3,
+            -1,
+            -1,
+            -1,
+            -1,
+            0,
+            1,
+            0
+          ],
+          [
+            9206405730041,
+            9,
+            15,
+            0,
+            1,
+            4,
+            3,
+            -1,
+            -1,
+            -1,
+            -1,
+            0,
+            1,
+            0
+          ]
+        ]
+      }
+    }
+  ],
+  "all_existing_gates_passed": true,
+  "audio_after": [
+    [
+      {
+        "_items": [
+          {
+            "_name": "PB248",
+            "coreaudio_device_manufacturer": "ACI",
+            "coreaudio_device_output": 2,
+            "coreaudio_device_srate": 48000.0,
+            "coreaudio_device_transport": "coreaudio_device_type_hdmi",
+            "coreaudio_output_source": "spaudio_default"
+          },
+          {
+            "_name": "Mac Studio Speakers",
+            "_properties": "coreaudio_default_audio_system_device",
+            "coreaudio_default_audio_output_device": "spaudio_yes",
+            "coreaudio_default_audio_system_device": "spaudio_yes",
+            "coreaudio_device_manufacturer": "Apple Inc.",
+            "coreaudio_device_output": 2,
+            "coreaudio_device_srate": 48000.0,
+            "coreaudio_device_transport": "coreaudio_device_type_builtin",
+            "coreaudio_output_source": "Mac Studio Speakers"
+          },
+          {
+            "_name": "Saffire Pro 40 (Experimental)",
+            "coreaudio_default_audio_input_device": "spaudio_yes",
+            "coreaudio_device_input": 8,
+            "coreaudio_device_manufacturer": "Local Pro40 Development",
+            "coreaudio_device_output": 12,
+            "coreaudio_device_srate": 48000.0,
+            "coreaudio_device_transport": "coreaudio_device_type_virtual",
+            "coreaudio_input_source": "spaudio_default",
+            "coreaudio_output_source": "spaudio_default"
+          }
+        ],
+        "_name": "coreaudio_device"
+      }
+    ]
+  ],
+  "audio_configuration_unchanged": true,
+  "identity_sha256": "35081f6e31cd02f202162525699ecd87912f4cabbc7177a2919f4c53497cad1c"
+}
