@@ -1,0 +1,2381 @@
+{
+  "passed": true,
+  "source_build": "facfe596c7126188b24627dfeab06dec907332b96442634c9ad8ee29675ea069",
+  "sample_cases": [
+    {
+      "case": "0.f32",
+      "kind": "muted highest peak 4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "lra": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0,
+        "short_term": 0.0
+      }
+    },
+    {
+      "case": "1.f32",
+      "kind": "muted highest peak 3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "lra": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0,
+        "short_term": 0.0
+      }
+    },
+    {
+      "case": "2.f32",
+      "kind": "M7 format 0",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "3.f32",
+      "kind": "M7 format 0",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "4.f32",
+      "kind": "M7 format 0",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "5.f32",
+      "kind": "M7 format 0",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "6.f32",
+      "kind": "M7 format 0",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "7.f32",
+      "kind": "M7 format 0",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "8.f32",
+      "kind": "M7 format 1",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "9.f32",
+      "kind": "M7 format 1",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "10.f32",
+      "kind": "M7 format 1",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "11.f32",
+      "kind": "M7 format 1",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "12.f32",
+      "kind": "M7 format 1",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "13.f32",
+      "kind": "M7 format 1",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "14.f32",
+      "kind": "M7 format 2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "15.f32",
+      "kind": "M7 format 2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "16.f32",
+      "kind": "M7 format 2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "17.f32",
+      "kind": "M7 format 2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "18.f32",
+      "kind": "M7 format 2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "19.f32",
+      "kind": "M7 format 2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "20.f32",
+      "kind": "M7 format 3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "21.f32",
+      "kind": "M7 format 3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "22.f32",
+      "kind": "M7 format 3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "23.f32",
+      "kind": "M7 format 3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "24.f32",
+      "kind": "M7 format 3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "25.f32",
+      "kind": "M7 format 3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "26.f32",
+      "kind": "M7 format 4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "27.f32",
+      "kind": "M7 format 4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "28.f32",
+      "kind": "M7 format 4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "29.f32",
+      "kind": "M7 format 4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "30.f32",
+      "kind": "M7 format 4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "31.f32",
+      "kind": "M7 format 4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "32.f32",
+      "kind": "M7 format 5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "33.f32",
+      "kind": "M7 format 5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "34.f32",
+      "kind": "M7 format 5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "35.f32",
+      "kind": "M7 format 5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "36.f32",
+      "kind": "M7 format 5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "37.f32",
+      "kind": "M7 format 5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "38.f32",
+      "kind": "M7 format 6",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "39.f32",
+      "kind": "M7 format 6",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "40.f32",
+      "kind": "M7 format 6",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "41.f32",
+      "kind": "M7 format 6",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "42.f32",
+      "kind": "M7 format 6",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "43.f32",
+      "kind": "M7 format 6",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "44.f32",
+      "kind": "M7 format 7",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "45.f32",
+      "kind": "M7 format 7",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "46.f32",
+      "kind": "M7 format 7",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "47.f32",
+      "kind": "M7 format 7",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "48.f32",
+      "kind": "M7 format 7",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "49.f32",
+      "kind": "M7 format 7",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "50.f32",
+      "kind": "M7 format 8",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "51.f32",
+      "kind": "M7 format 8",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "52.f32",
+      "kind": "M7 format 8",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "53.f32",
+      "kind": "M7 format 8",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "54.f32",
+      "kind": "M7 format 8",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "55.f32",
+      "kind": "M7 format 8",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "56.f32",
+      "kind": "M7 format 0",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "57.f32",
+      "kind": "M7 format 0",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "58.f32",
+      "kind": "M7 format 0",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "59.f32",
+      "kind": "M7 format 0",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "60.f32",
+      "kind": "M7 format 0",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "61.f32",
+      "kind": "M7 format 0",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "62.f32",
+      "kind": "M7 format 1",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "63.f32",
+      "kind": "M7 format 1",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "64.f32",
+      "kind": "M7 format 1",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "65.f32",
+      "kind": "M7 format 1",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "66.f32",
+      "kind": "M7 format 1",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "67.f32",
+      "kind": "M7 format 1",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "68.f32",
+      "kind": "M7 format 2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "69.f32",
+      "kind": "M7 format 2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "70.f32",
+      "kind": "M7 format 2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "71.f32",
+      "kind": "M7 format 2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "72.f32",
+      "kind": "M7 format 2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "73.f32",
+      "kind": "M7 format 2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "74.f32",
+      "kind": "M7 format 3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "75.f32",
+      "kind": "M7 format 3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "76.f32",
+      "kind": "M7 format 3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "77.f32",
+      "kind": "M7 format 3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "78.f32",
+      "kind": "M7 format 3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "79.f32",
+      "kind": "M7 format 3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "80.f32",
+      "kind": "M7 format 4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "81.f32",
+      "kind": "M7 format 4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "82.f32",
+      "kind": "M7 format 4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "83.f32",
+      "kind": "M7 format 4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "84.f32",
+      "kind": "M7 format 4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "85.f32",
+      "kind": "M7 format 4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "86.f32",
+      "kind": "M7 format 5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "87.f32",
+      "kind": "M7 format 5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "88.f32",
+      "kind": "M7 format 5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "89.f32",
+      "kind": "M7 format 5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "90.f32",
+      "kind": "M7 format 5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "91.f32",
+      "kind": "M7 format 5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "92.f32",
+      "kind": "M7 format 6",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "93.f32",
+      "kind": "M7 format 6",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "94.f32",
+      "kind": "M7 format 6",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "95.f32",
+      "kind": "M7 format 6",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "96.f32",
+      "kind": "M7 format 6",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "97.f32",
+      "kind": "M7 format 6",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "98.f32",
+      "kind": "M7 format 7",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "99.f32",
+      "kind": "M7 format 7",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "100.f32",
+      "kind": "M7 format 7",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "101.f32",
+      "kind": "M7 format 7",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "102.f32",
+      "kind": "M7 format 7",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "103.f32",
+      "kind": "M7 format 7",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "104.f32",
+      "kind": "M7 format 8",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "105.f32",
+      "kind": "M7 format 8",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "106.f32",
+      "kind": "M7 format 8",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "107.f32",
+      "kind": "M7 format 8",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "108.f32",
+      "kind": "M7 format 8",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "109.f32",
+      "kind": "M7 format 8",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "110.f32",
+      "kind": "M7 format 0",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "111.f32",
+      "kind": "M7 format 0",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "112.f32",
+      "kind": "M7 format 0",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "113.f32",
+      "kind": "M7 format 0",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "114.f32",
+      "kind": "M7 format 0",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "115.f32",
+      "kind": "M7 format 0",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "116.f32",
+      "kind": "M7 format 1",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "117.f32",
+      "kind": "M7 format 1",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "118.f32",
+      "kind": "M7 format 1",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "119.f32",
+      "kind": "M7 format 1",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "120.f32",
+      "kind": "M7 format 1",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "121.f32",
+      "kind": "M7 format 1",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "122.f32",
+      "kind": "M7 format 2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "123.f32",
+      "kind": "M7 format 2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "124.f32",
+      "kind": "M7 format 2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "125.f32",
+      "kind": "M7 format 2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "126.f32",
+      "kind": "M7 format 2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "127.f32",
+      "kind": "M7 format 2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "128.f32",
+      "kind": "M7 format 3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "129.f32",
+      "kind": "M7 format 3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "130.f32",
+      "kind": "M7 format 3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "131.f32",
+      "kind": "M7 format 3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "132.f32",
+      "kind": "M7 format 3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "133.f32",
+      "kind": "M7 format 3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "134.f32",
+      "kind": "M7 format 4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "135.f32",
+      "kind": "M7 format 4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "136.f32",
+      "kind": "M7 format 4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "137.f32",
+      "kind": "M7 format 4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "138.f32",
+      "kind": "M7 format 4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "139.f32",
+      "kind": "M7 format 4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "140.f32",
+      "kind": "M7 format 5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "141.f32",
+      "kind": "M7 format 5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "142.f32",
+      "kind": "M7 format 5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "143.f32",
+      "kind": "M7 format 5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "144.f32",
+      "kind": "M7 format 5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "145.f32",
+      "kind": "M7 format 5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "146.f32",
+      "kind": "M7 format 6",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "147.f32",
+      "kind": "M7 format 6",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "148.f32",
+      "kind": "M7 format 6",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "149.f32",
+      "kind": "M7 format 6",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "150.f32",
+      "kind": "M7 format 6",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "151.f32",
+      "kind": "M7 format 6",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "152.f32",
+      "kind": "M7 format 7",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "153.f32",
+      "kind": "M7 format 7",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "154.f32",
+      "kind": "M7 format 7",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "155.f32",
+      "kind": "M7 format 7",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "156.f32",
+      "kind": "M7 format 7",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "157.f32",
+      "kind": "M7 format 7",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "158.f32",
+      "kind": "M7 format 8",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "159.f32",
+      "kind": "M7 format 8",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "160.f32",
+      "kind": "M7 format 8",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "161.f32",
+      "kind": "M7 format 8",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "162.f32",
+      "kind": "M7 format 8",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "163.f32",
+      "kind": "M7 format 8",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "164.f32",
+      "kind": "M7 format 0",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "165.f32",
+      "kind": "M7 format 0",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "166.f32",
+      "kind": "M7 format 0",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "167.f32",
+      "kind": "M7 format 0",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "168.f32",
+      "kind": "M7 format 0",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "169.f32",
+      "kind": "M7 format 0",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "170.f32",
+      "kind": "M7 format 1",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "171.f32",
+      "kind": "M7 format 1",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "172.f32",
+      "kind": "M7 format 1",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "173.f32",
+      "kind": "M7 format 1",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "174.f32",
+      "kind": "M7 format 1",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "175.f32",
+      "kind": "M7 format 1",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "176.f32",
+      "kind": "M7 format 2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "177.f32",
+      "kind": "M7 format 2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "178.f32",
+      "kind": "M7 format 2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "179.f32",
+      "kind": "M7 format 2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "180.f32",
+      "kind": "M7 format 2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "181.f32",
+      "kind": "M7 format 2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "182.f32",
+      "kind": "M7 format 3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "183.f32",
+      "kind": "M7 format 3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "184.f32",
+      "kind": "M7 format 3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "185.f32",
+      "kind": "M7 format 3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "186.f32",
+      "kind": "M7 format 3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "187.f32",
+      "kind": "M7 format 3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "188.f32",
+      "kind": "M7 format 4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "189.f32",
+      "kind": "M7 format 4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "190.f32",
+      "kind": "M7 format 4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "191.f32",
+      "kind": "M7 format 4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "192.f32",
+      "kind": "M7 format 4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "193.f32",
+      "kind": "M7 format 4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "194.f32",
+      "kind": "M7 format 5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "195.f32",
+      "kind": "M7 format 5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "196.f32",
+      "kind": "M7 format 5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "197.f32",
+      "kind": "M7 format 5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "198.f32",
+      "kind": "M7 format 5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "199.f32",
+      "kind": "M7 format 5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "200.f32",
+      "kind": "M7 format 6",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "201.f32",
+      "kind": "M7 format 6",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "202.f32",
+      "kind": "M7 format 6",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "203.f32",
+      "kind": "M7 format 6",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "204.f32",
+      "kind": "M7 format 6",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "205.f32",
+      "kind": "M7 format 6",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "206.f32",
+      "kind": "M7 format 7",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "207.f32",
+      "kind": "M7 format 7",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "208.f32",
+      "kind": "M7 format 7",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "209.f32",
+      "kind": "M7 format 7",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "210.f32",
+      "kind": "M7 format 7",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "211.f32",
+      "kind": "M7 format 7",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "212.f32",
+      "kind": "M7 format 8",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "213.f32",
+      "kind": "M7 format 8",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "214.f32",
+      "kind": "M7 format 8",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "215.f32",
+      "kind": "M7 format 8",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "216.f32",
+      "kind": "M7 format 8",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "217.f32",
+      "kind": "M7 format 8",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    }
+  ],
+  "maximum_float32_ulp": 0,
+  "scope": "Captured sample parity only; OS, metrics, UI and physical video require separate evidence",
+  "native_video": {
+    "passed": true,
+    "native_cases": 5,
+    "selected_channels": 8,
+    "observed_embedded_audio_outputs": 0
+  },
+  "long_programme": "Separately reused: long-programme-reuse.json"
+}

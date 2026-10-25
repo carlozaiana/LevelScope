@@ -1,0 +1,725 @@
+{
+  "previous_source_digest": "c3df888f567a69adb83cbb6c7d2c7a1dcdf1da9498d43d688ffe890786c0e43e",
+  "previous_identity_sha256": "ca3eda67d2ab4505237075a0f9ff41968ff88f0d5e615652891f886c7a94d59b",
+  "incorporated_main": "5e07bbd29930db34236d6dfcede7fea14983f90a",
+  "production_inputs": [
+    {
+      "path": "Source/Core/BS1770KWeighting.h",
+      "old_sha256": "e5a4a405fd71b631549ce29ce26b1b6833ea6d1b5c06cb75391a37ff79203ee7",
+      "new_sha256": "e5a4a405fd71b631549ce29ce26b1b6833ea6d1b5c06cb75391a37ff79203ee7",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/LevelScopeHistoryModel.cpp",
+      "old_sha256": "0495ed804982830ed8e3abac200dfbab0489ca9100d32a3bbb44ab46d9098f40",
+      "new_sha256": "0495ed804982830ed8e3abac200dfbab0489ca9100d32a3bbb44ab46d9098f40",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/LevelScopeHistoryModel.h",
+      "old_sha256": "bd3abd986086ad890065bcb064a45aad5f0fc58f7a092a61ff609284dff2e4aa",
+      "new_sha256": "bd3abd986086ad890065bcb064a45aad5f0fc58f7a092a61ff609284dff2e4aa",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Measurement/GatePopulation.h",
+      "old_sha256": "56c32bea23a332f811433c0977d07de9b3401b12cf8629d92aa78ceb58060c3e",
+      "new_sha256": "56c32bea23a332f811433c0977d07de9b3401b12cf8629d92aa78ceb58060c3e",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Measurement/OfflineMeasurement.cpp",
+      "old_sha256": "a72cbe46461c8d7589eebb644ba28f0ece0f0e7b8f0565ae1a3858125e584cf7",
+      "new_sha256": "a72cbe46461c8d7589eebb644ba28f0ece0f0e7b8f0565ae1a3858125e584cf7",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Measurement/OfflineMeasurement.h",
+      "old_sha256": "296958549aef56a4717deaace9cba7a6e2d85a7bb34c99906c321b21f75d7020",
+      "new_sha256": "296958549aef56a4717deaace9cba7a6e2d85a7bb34c99906c321b21f75d7020",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Processing/DSP/BS1770MomentaryLufsDetector.h",
+      "old_sha256": "ce3244119e6ac8d36c48d9b69c9b7421c2c81dcc73e47bd135178b498910da6f",
+      "new_sha256": "ce3244119e6ac8d36c48d9b69c9b7421c2c81dcc73e47bd135178b498910da6f",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Processing/DSP/BroadbandDownwardCompressor.cpp",
+      "old_sha256": "47a1580c9c73e21bf2d50ac8d5d96b6da73ee764795614259c3a1343255f993b",
+      "new_sha256": "47a1580c9c73e21bf2d50ac8d5d96b6da73ee764795614259c3a1343255f993b",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Processing/DSP/BroadbandDownwardCompressor.h",
+      "old_sha256": "d490dd72b88e4f2549f64af4727e34461e523614b4c8025eeb86646f55617a63",
+      "new_sha256": "d490dd72b88e4f2549f64af4727e34461e523614b4c8025eeb86646f55617a63",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Processing/DSP/BroadbandUpwardCompressor.cpp",
+      "old_sha256": "ba73d0c937472fcbb7674ab616c4097814295d6cf79e05aab31cdcaf354b13c6",
+      "new_sha256": "ba73d0c937472fcbb7674ab616c4097814295d6cf79e05aab31cdcaf354b13c6",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Processing/DSP/BroadbandUpwardCompressor.h",
+      "old_sha256": "5601110d1e3ad20a9e04fdf1741d2aa2a638173866dbfbd726f05ae1f8de5483",
+      "new_sha256": "5601110d1e3ad20a9e04fdf1741d2aa2a638173866dbfbd726f05ae1f8de5483",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Processing/DSP/LookaheadLimiter.cpp",
+      "old_sha256": "360ccd04a44cf83d52a17c99f893ab661f2fd560c8f4c4a4bc2e609368cb319c",
+      "new_sha256": "360ccd04a44cf83d52a17c99f893ab661f2fd560c8f4c4a4bc2e609368cb319c",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Processing/DSP/LookaheadLimiter.h",
+      "old_sha256": "cfa3a5a44c5f6858aca11179f26c96adb1c066cfb7ae7aa714b4d079a6f17c66",
+      "new_sha256": "cfa3a5a44c5f6858aca11179f26c96adb1c066cfb7ae7aa714b4d079a6f17c66",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Processing/DSP/SpectralUpwardCompressor.cpp",
+      "old_sha256": "506a9aabf4fd22c022372c49306da6b40034399a9bcf7056a23a79ed3330a0cf",
+      "new_sha256": "506a9aabf4fd22c022372c49306da6b40034399a9bcf7056a23a79ed3330a0cf",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Processing/DSP/SpectralUpwardCompressor.h",
+      "old_sha256": "a6488b85cfabc66c3a073aaaf7a6c356372fbc91b258943579b3045c78f65db7",
+      "new_sha256": "a6488b85cfabc66c3a073aaaf7a6c356372fbc91b258943579b3045c78f65db7",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Processing/DSP/UpwardGainLaw.h",
+      "old_sha256": "c76ee1dc5f36b7e59e8c82fedc3858dc70edfd3444009803002681bf11f19881",
+      "new_sha256": "c76ee1dc5f36b7e59e8c82fedc3858dc70edfd3444009803002681bf11f19881",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Processing/IAudioModule.h",
+      "old_sha256": "5696083035028c8ccc8da4aed8ed28f3fd89a057f7064f4bb75069b00d338dc6",
+      "new_sha256": "5696083035028c8ccc8da4aed8ed28f3fd89a057f7064f4bb75069b00d338dc6",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Processing/Modules/LevelerModule.cpp",
+      "old_sha256": "9a989ab0581a0136f8a6302e0bab2986afeaa1a136139428d43d332bd071cd15",
+      "new_sha256": "9a989ab0581a0136f8a6302e0bab2986afeaa1a136139428d43d332bd071cd15",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Processing/Modules/LevelerModule.h",
+      "old_sha256": "e671df99d228ed7843c8a4021ba37de831981db0bc43ff0647a51e5e610970ba",
+      "new_sha256": "e671df99d228ed7843c8a4021ba37de831981db0bc43ff0647a51e5e610970ba",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Processing/Modules/LevelerParamIDs.h",
+      "old_sha256": "bb71fc7c804b0fb94d69ecd2f98f3166747bac1862817d01c091694b155c7be8",
+      "new_sha256": "bb71fc7c804b0fb94d69ecd2f98f3166747bac1862817d01c091694b155c7be8",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Processing/Modules/MultiThresholdDynamicsModule.cpp",
+      "old_sha256": "0cdc402e5d7b60e8e05a11aa76cfed8aa4dc6a4b33efe97e8ad755aad7ebc973",
+      "new_sha256": "0cdc402e5d7b60e8e05a11aa76cfed8aa4dc6a4b33efe97e8ad755aad7ebc973",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Processing/Modules/MultiThresholdDynamicsModule.h",
+      "old_sha256": "8be81698b0afb5292a612b3769a2d5a1f51754bcd1e25ce2e0bbccc0492e4ac3",
+      "new_sha256": "8be81698b0afb5292a612b3769a2d5a1f51754bcd1e25ce2e0bbccc0492e4ac3",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Processing/Modules/MultiThresholdDynamicsParamGroups.h",
+      "old_sha256": "bdfaef5a125e238e35e08970fdb94a72cc017877e6b7871bc38af78509771e46",
+      "new_sha256": "bdfaef5a125e238e35e08970fdb94a72cc017877e6b7871bc38af78509771e46",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Processing/Modules/MultiThresholdDynamicsParamIDs.h",
+      "old_sha256": "64b614f2c6f6173a1370551964f5a349f93305ff03cdb831042ce6e208efe18e",
+      "new_sha256": "64b614f2c6f6173a1370551964f5a349f93305ff03cdb831042ce6e208efe18e",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Processing/ProcessContext.h",
+      "old_sha256": "654df1fccda8187b888922091430e4db5d48ad0eb2636b201f86ba8ffa34f330",
+      "new_sha256": "654df1fccda8187b888922091430e4db5d48ad0eb2636b201f86ba8ffa34f330",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Processing/ProcessorCore.h",
+      "old_sha256": "64b32626c0e4a757d866682eba25effb82c4f4daa6464d47418348e60b79b53e",
+      "new_sha256": "64b32626c0e4a757d866682eba25effb82c4f4daa6464d47418348e60b79b53e",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Proposal/AnalysisEngine.cpp",
+      "old_sha256": "af70b743ad8c3e06f26de85ea3d211e4e5d4b60cd638ce56ef232fbe06f9b567",
+      "new_sha256": "af70b743ad8c3e06f26de85ea3d211e4e5d4b60cd638ce56ef232fbe06f9b567",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Proposal/AnalysisEngine.h",
+      "old_sha256": "45a2ecd7beecd4f68083af48a16c2ce4d874af181df6cd7c7231c4efb60fd0da",
+      "new_sha256": "45a2ecd7beecd4f68083af48a16c2ce4d874af181df6cd7c7231c4efb60fd0da",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Proposal/AttributionEngine.cpp",
+      "old_sha256": "26601d948cef90b8bda0fc62f1e55e5bd69c4dc81a383efa50208f2751c741ea",
+      "new_sha256": "26601d948cef90b8bda0fc62f1e55e5bd69c4dc81a383efa50208f2751c741ea",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Proposal/AttributionEngine.h",
+      "old_sha256": "3c4d0d012775ca95860b25e18c8c9853da10bfddaa6aac3fd4e32947bb7406c1",
+      "new_sha256": "3c4d0d012775ca95860b25e18c8c9853da10bfddaa6aac3fd4e32947bb7406c1",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Proposal/Methods/RuleBasedMethod.cpp",
+      "old_sha256": "ce26548bf9465cf62044e5ee2806ac841bf6337092b46e2165a9588e928566ce",
+      "new_sha256": "ce26548bf9465cf62044e5ee2806ac841bf6337092b46e2165a9588e928566ce",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Proposal/Methods/RuleBasedMethod.h",
+      "old_sha256": "a9f71cdae373b03d13c708ae7b18685e5d762b3a5d6086634f004f1fdba7a119",
+      "new_sha256": "a9f71cdae373b03d13c708ae7b18685e5d762b3a5d6086634f004f1fdba7a119",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Proposal/Model/ProgramAnalysis.h",
+      "old_sha256": "10f5a0d7249b83224734e2a4a4912b337ebb44a1dd04f584b95807bf60092cb3",
+      "new_sha256": "10f5a0d7249b83224734e2a4a4912b337ebb44a1dd04f584b95807bf60092cb3",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Proposal/Model/ProgrammeSections.h",
+      "old_sha256": "33c5d2c3c3031b660ea5d7c317086a004a06e68c63c29313f572e4356beeeabc",
+      "new_sha256": "33c5d2c3c3031b660ea5d7c317086a004a06e68c63c29313f572e4356beeeabc",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Proposal/Model/TargetProfile.cpp",
+      "old_sha256": "578736b0daa64d7d654506a3d81a4715b093f5ea8c15610f2b5a930ee566fcda",
+      "new_sha256": "578736b0daa64d7d654506a3d81a4715b093f5ea8c15610f2b5a930ee566fcda",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Proposal/Model/TargetProfile.h",
+      "old_sha256": "54b2637bc231647e7ededa584b894a83976f0f05777d46d2330cd97ddc82ab67",
+      "new_sha256": "54b2637bc231647e7ededa584b894a83976f0f05777d46d2330cd97ddc82ab67",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Proposal/SectionAnalysis.cpp",
+      "old_sha256": "f202b0570c077d2a49c566ad6d620a8b6b4423514e6b3011ddb7f71055139ac3",
+      "new_sha256": "f202b0570c077d2a49c566ad6d620a8b6b4423514e6b3011ddb7f71055139ac3",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Proposal/SectionAnalysis.h",
+      "old_sha256": "e2cceff43728ffce4463eedcbfed688d100224c1322988db6f0393f79cbc292a",
+      "new_sha256": "e2cceff43728ffce4463eedcbfed688d100224c1322988db6f0393f79cbc292a",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Proposal/VerificationEngine.cpp",
+      "old_sha256": "e45d2d24e6e585290d40a378be285d751b4eaa1efe8b12115075ae953f4c74c8",
+      "new_sha256": "e45d2d24e6e585290d40a378be285d751b4eaa1efe8b12115075ae953f4c74c8",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/Proposal/VerificationEngine.h",
+      "old_sha256": "c6847ea9c329ed4a9f9906804eecef38bc96dd02bacd3fe1e009422105eee113",
+      "new_sha256": "c6847ea9c329ed4a9f9906804eecef38bc96dd02bacd3fe1e009422105eee113",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/PublicAPI.h",
+      "old_sha256": "df5681f91e2ab5ffbeef132521bd674914840bbc05c5f62a4f73993e0749071a",
+      "new_sha256": "df5681f91e2ab5ffbeef132521bd674914840bbc05c5f62a4f73993e0749071a",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/RunningLoudnessStats.cpp",
+      "old_sha256": "bc7c98bc72b3c818f254545127b0f6b72dbfcae964e78d4b8abb89d846b45c98",
+      "new_sha256": "bc7c98bc72b3c818f254545127b0f6b72dbfcae964e78d4b8abb89d846b45c98",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Core/RunningLoudnessStats.h",
+      "old_sha256": "9027ba4b57b7382b5f29fa4faa70996394e5f295123b7f8cb681d9064e36bb02",
+      "new_sha256": "9027ba4b57b7382b5f29fa4faa70996394e5f295123b7f8cb681d9064e36bb02",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/DynamicsCurveComponent.cpp",
+      "old_sha256": "0325dca1fbab7205b7a123e7b4f06b44ea8f1df2314d57626ce753fdbf02ce59",
+      "new_sha256": "0325dca1fbab7205b7a123e7b4f06b44ea8f1df2314d57626ce753fdbf02ce59",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/DynamicsCurveComponent.h",
+      "old_sha256": "c3d4afcf8827861daacde707f3d0476cf18d8e01cb85d2f95800b9cbd91ac817",
+      "new_sha256": "c3d4afcf8827861daacde707f3d0476cf18d8e01cb85d2f95800b9cbd91ac817",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/LevelerCurveComponent.cpp",
+      "old_sha256": "67130fe0fe6b3c36ca11830e2758fdca070bce31c1223d1d516d4bbddd8f5814",
+      "new_sha256": "67130fe0fe6b3c36ca11830e2758fdca070bce31c1223d1d516d4bbddd8f5814",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/LevelerCurveComponent.h",
+      "old_sha256": "feb2d2b6dc7ac23b1f3921993aa082240a7bed0d55618f5e750cbe196626a10e",
+      "new_sha256": "feb2d2b6dc7ac23b1f3921993aa082240a7bed0d55618f5e750cbe196626a10e",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/LoudnessStatsComponent.cpp",
+      "old_sha256": "8e8df6ac534c3744305e126bdac02ba44bc1485f92f73dfc517c75f346e191d8",
+      "new_sha256": "8e8df6ac534c3744305e126bdac02ba44bc1485f92f73dfc517c75f346e191d8",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/LoudnessStatsComponent.h",
+      "old_sha256": "65244cec7d2785fdf688cbb93cc7488efc7ae4cd63253c87583cbbebcbf1a522",
+      "new_sha256": "65244cec7d2785fdf688cbb93cc7488efc7ae4cd63253c87583cbbebcbf1a522",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/PluginEditor.cpp",
+      "old_sha256": "02b201e9fea79fb1df37260bcaca3a777348188664a57b0c7645eb714cd687fc",
+      "new_sha256": "02b201e9fea79fb1df37260bcaca3a777348188664a57b0c7645eb714cd687fc",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/PluginEditor.h",
+      "old_sha256": "d49915204d781a6872a80dc917a407709c907f8220bd4362cb3a44906ff847c6",
+      "new_sha256": "d49915204d781a6872a80dc917a407709c907f8220bd4362cb3a44906ff847c6",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/PluginProcessor.cpp",
+      "old_sha256": "d5b95bc3a7871495ebca9d3815465fbc1e88a157ad35547676236dacc87882bc",
+      "new_sha256": "d5b95bc3a7871495ebca9d3815465fbc1e88a157ad35547676236dacc87882bc",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/PluginProcessor.h",
+      "old_sha256": "bb2f887e5bcd96ce2e9add28b7aa8968c4e74dbcc93e81b62d7e820e8690bb8d",
+      "new_sha256": "bb2f887e5bcd96ce2e9add28b7aa8968c4e74dbcc93e81b62d7e820e8690bb8d",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/AudioPresentationClock.h",
+      "old_sha256": "d5f2ea390f8a9ec8f5c68472452d8ec865bf38252da5b78ede884defd017dc79",
+      "new_sha256": "d5f2ea390f8a9ec8f5c68472452d8ec865bf38252da5b78ede884defd017dc79",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/MeasurementTimeline.cpp",
+      "old_sha256": "2bea768c4c6dcbca1ada70a61a75c439d5cbc1a8057a624194fca55bfaacb4e7",
+      "new_sha256": "2bea768c4c6dcbca1ada70a61a75c439d5cbc1a8057a624194fca55bfaacb4e7",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/MeasurementTimeline.h",
+      "old_sha256": "4b2422bc970e6ee554329236d0515994f6f10bb4ec4c6ca671ce25f0ba559878",
+      "new_sha256": "4b2422bc970e6ee554329236d0515994f6f10bb4ec4c6ca671ce25f0ba559878",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneApp.cpp",
+      "old_sha256": "3af1714f09a51c1aca1e9d40432b0c4210450ec9b927856905417652d5f75383",
+      "new_sha256": "3af1714f09a51c1aca1e9d40432b0c4210450ec9b927856905417652d5f75383",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneAudioPanel.cpp",
+      "old_sha256": "3b8c8ab136a7289adb2a8ef9f51be0171430673ad8a56ab78ea528dad28da25b",
+      "new_sha256": "3b8c8ab136a7289adb2a8ef9f51be0171430673ad8a56ab78ea528dad28da25b",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneAudioPanel.h",
+      "old_sha256": "03e3ea53644409ba25a3914fdac4cf718d5796665155d10ce3936c900ea755c7",
+      "new_sha256": "03e3ea53644409ba25a3914fdac4cf718d5796665155d10ce3936c900ea755c7",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneAudition.cpp",
+      "old_sha256": "1d7ddf823b7dd477cb5ead1f8fdff0b89f8a03550db161c2b08213cfe615ff95",
+      "new_sha256": "1d7ddf823b7dd477cb5ead1f8fdff0b89f8a03550db161c2b08213cfe615ff95",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneAudition.h",
+      "old_sha256": "034300c4faa35a91dd45ac3f27675f92dd9c59120cf492b77f831fcde70ca22b",
+      "new_sha256": "034300c4faa35a91dd45ac3f27675f92dd9c59120cf492b77f831fcde70ca22b",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneAuditionRequest.h",
+      "old_sha256": "3344c81e283c93896d53047d56b27954e6da8333ca0f7b1e4c2c16cc4ade9d51",
+      "new_sha256": "3344c81e283c93896d53047d56b27954e6da8333ca0f7b1e4c2c16cc4ade9d51",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneChannelLayout.h",
+      "old_sha256": "bb8160f6e997e955b9a1a112e43ecf1af7d9b1b410dadcf84ea585a163115ff1",
+      "new_sha256": "bb8160f6e997e955b9a1a112e43ecf1af7d9b1b410dadcf84ea585a163115ff1",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneCompliance.cpp",
+      "old_sha256": "00152b2627093210577a49cd9933651277c9ff455c0097b11896a596fd036635",
+      "new_sha256": "00152b2627093210577a49cd9933651277c9ff455c0097b11896a596fd036635",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneCompliance.h",
+      "old_sha256": "291c2f7558a0134ec1ceaf87f8084a9c9a5c9d0d3dc5932b4ceaa6cfae2184c5",
+      "new_sha256": "291c2f7558a0134ec1ceaf87f8084a9c9a5c9d0d3dc5932b4ceaa6cfae2184c5",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneDiagnostics.cpp",
+      "old_sha256": "6b4081b7c8b6d667f1d65f5c7a680215e01164079205ddd60e6c133a7b8b2aa4",
+      "new_sha256": "6b4081b7c8b6d667f1d65f5c7a680215e01164079205ddd60e6c133a7b8b2aa4",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneDiagnostics.h",
+      "old_sha256": "f5b2c21c1677e334d987ce15f43490a17cd77530a83ed83d096623ff611805d0",
+      "new_sha256": "f5b2c21c1677e334d987ce15f43490a17cd77530a83ed83d096623ff611805d0",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneDiagnosticsPanel.cpp",
+      "old_sha256": "56243eacdf7c79377f51ef6a81c078a269a24f0cb5993b01ebfbd1de5422ad02",
+      "new_sha256": "56243eacdf7c79377f51ef6a81c078a269a24f0cb5993b01ebfbd1de5422ad02",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneDiagnosticsPanel.h",
+      "old_sha256": "9a7695fe0b999e41e4c2366811b2c39713d218397ac60d01aa8306a2a5550ae3",
+      "new_sha256": "9a7695fe0b999e41e4c2366811b2c39713d218397ac60d01aa8306a2a5550ae3",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneJob.h",
+      "old_sha256": "abc906894d72ab7675d0dda71c6ae71ce873c38e2981c82d59193d2909470aba",
+      "new_sha256": "abc906894d72ab7675d0dda71c6ae71ce873c38e2981c82d59193d2909470aba",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneMainComponent.cpp",
+      "old_sha256": "22d168e20d9c4f3f03d8f645dfdd61a324622b463e2b2636c581590c42a2ba84",
+      "new_sha256": "22d168e20d9c4f3f03d8f645dfdd61a324622b463e2b2636c581590c42a2ba84",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneMainComponent.h",
+      "old_sha256": "bd4559fa0c3817d4796a31a5348a22c25d0e84707d237637598a74e0700f533e",
+      "new_sha256": "bd4559fa0c3817d4796a31a5348a22c25d0e84707d237637598a74e0700f533e",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneMeasurementLayout.h",
+      "old_sha256": "d36871613a6d98cdd6455e883657fa1b8a2594d6ebbdcc6b36fd46b5e21defb8",
+      "new_sha256": "d36871613a6d98cdd6455e883657fa1b8a2594d6ebbdcc6b36fd46b5e21defb8",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneMeasurementService.cpp",
+      "old_sha256": "4bbbdf6f3a41cccd1029507fb819a9b124a7a0c31d38670f628cfcf58d853f66",
+      "new_sha256": "4bbbdf6f3a41cccd1029507fb819a9b124a7a0c31d38670f628cfcf58d853f66",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneMeasurementService.h",
+      "old_sha256": "9ef24f01ac3a644488c85ad707a8edbe20b70675e6d41a796a1778aaef5f5ec2",
+      "new_sha256": "9ef24f01ac3a644488c85ad707a8edbe20b70675e6d41a796a1778aaef5f5ec2",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneMedia.cpp",
+      "old_sha256": "9a9bbb3c9fb4cd9d4b78657d2bc83f0fcb4cc6de8c863ad692cbbaeb258a84bb",
+      "new_sha256": "9a9bbb3c9fb4cd9d4b78657d2bc83f0fcb4cc6de8c863ad692cbbaeb258a84bb",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneMedia.h",
+      "old_sha256": "b8c68cc8af3c078344121b5705d1771a5f1765819c85478b6148c5c36853ef5d",
+      "new_sha256": "b8c68cc8af3c078344121b5705d1771a5f1765819c85478b6148c5c36853ef5d",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneProcessing.h",
+      "old_sha256": "9fc170a6d37c27e16b9c256307d5bdf2f2766d5c70fa2ca3a946713925befa05",
+      "new_sha256": "9fc170a6d37c27e16b9c256307d5bdf2f2766d5c70fa2ca3a946713925befa05",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneProposal.cpp",
+      "old_sha256": "7bdb2f6f205d39ba0607e2a161e4ec17935fb9510d87c89abffa237cfb418854",
+      "new_sha256": "7bdb2f6f205d39ba0607e2a161e4ec17935fb9510d87c89abffa237cfb418854",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneProposal.h",
+      "old_sha256": "f4ca73eb34ce4dea0516bd55998973176def9190030340e6cc26fcca24c48825",
+      "new_sha256": "f4ca73eb34ce4dea0516bd55998973176def9190030340e6cc26fcca24c48825",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneSections.cpp",
+      "old_sha256": "90e318c881d72ef12f892791996ab7f42ef61cf4758038afd2b85a1c5e2045d0",
+      "new_sha256": "90e318c881d72ef12f892791996ab7f42ef61cf4758038afd2b85a1c5e2045d0",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneSections.h",
+      "old_sha256": "c2228d1c1378b03fe04ca1b65594e246497293b674c5d3edcdbf671ae7be00ad",
+      "new_sha256": "c2228d1c1378b03fe04ca1b65594e246497293b674c5d3edcdbf671ae7be00ad",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneSectionsPanel.cpp",
+      "old_sha256": "a593233a6ec797cb7e431ffa0113a1e1899575db1cb913c3df49768dbf33f015",
+      "new_sha256": "a593233a6ec797cb7e431ffa0113a1e1899575db1cb913c3df49768dbf33f015",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneSectionsPanel.h",
+      "old_sha256": "f9cb000dc6511b1f2b79f68b0f8b96a27e15b52a233ff4b8eda2ad35d9089464",
+      "new_sha256": "f9cb000dc6511b1f2b79f68b0f8b96a27e15b52a233ff4b8eda2ad35d9089464",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneServices.h",
+      "old_sha256": "7212e6ca5a91d80113bd0d098a38947d25a6edb6a84379af0e249a766e611fe7",
+      "new_sha256": "7212e6ca5a91d80113bd0d098a38947d25a6edb6a84379af0e249a766e611fe7",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneSessionModel.h",
+      "old_sha256": "5861670b08bb9b213d88cb5be67ba28136dacfe4cf804d19cf82ee7942d35bfa",
+      "new_sha256": "5861670b08bb9b213d88cb5be67ba28136dacfe4cf804d19cf82ee7942d35bfa",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneTargetProfiles.h",
+      "old_sha256": "78148721bd755ba34084f679e68f2da4a7f9b120b4872161095db64d887471fe",
+      "new_sha256": "78148721bd755ba34084f679e68f2da4a7f9b120b4872161095db64d887471fe",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneVideo.cpp",
+      "old_sha256": "7b5aee564de7dba96e9557f784a8d03dce60ca8022b4736a0a84eb7097e458cb",
+      "new_sha256": "7b5aee564de7dba96e9557f784a8d03dce60ca8022b4736a0a84eb7097e458cb",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneVideo.h",
+      "old_sha256": "9c24e54162fad62d9bfb4ac1a2d0221761954cfae646cacb4fb79a1210ba4b01",
+      "new_sha256": "97279ff2b6d8fb20fc8d3f230eea44949df8dc9666590aef03efbe01b7721e34",
+      "identical": false,
+      "allowed_change": "Read-only diagnostic friend declaration only"
+    },
+    {
+      "path": "Source/Standalone/StandaloneVideoPanel.cpp",
+      "old_sha256": "9a27c9414d001630d0c00def36b07cf1827018412a241d5456a6194724927c8e",
+      "new_sha256": "9a27c9414d001630d0c00def36b07cf1827018412a241d5456a6194724927c8e",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneVideoPanel.h",
+      "old_sha256": "304702e150a6e66298859134090d222459ac7c8643c4ef244f8f1d0b39f1354e",
+      "new_sha256": "304702e150a6e66298859134090d222459ac7c8643c4ef244f8f1d0b39f1354e",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneVideo_mac.mm",
+      "old_sha256": "004e02878e75fcf3ff8e48de3a5f83a6d200f1a3e60117bb3b32f212df754e53",
+      "new_sha256": "004e02878e75fcf3ff8e48de3a5f83a6d200f1a3e60117bb3b32f212df754e53",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/StandaloneWorkflowReadiness.h",
+      "old_sha256": "3f99097a1f51346c2a77b9ba4b8aa1f622c43d0eabb924530923fa5dcb42e4ab",
+      "new_sha256": "3f99097a1f51346c2a77b9ba4b8aa1f622c43d0eabb924530923fa5dcb42e4ab",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/VerifiedSource.cpp",
+      "old_sha256": "78dd3170bc4d140a7f21e027176978e99d9b2cfd17ad5894c50be3f08cf79835",
+      "new_sha256": "78dd3170bc4d140a7f21e027176978e99d9b2cfd17ad5894c50be3f08cf79835",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/VerifiedSource.h",
+      "old_sha256": "dcd6afed332637bd574bc31940d2015f9bb8962632f28791335c41d2df5f568f",
+      "new_sha256": "dcd6afed332637bd574bc31940d2015f9bb8962632f28791335c41d2df5f568f",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/Standalone/VideoTiming.h",
+      "old_sha256": "69dc05d1f03a0d17d5b83ce317829135c1cd28305e5dd769327b830b7c6eb7bb",
+      "new_sha256": "69dc05d1f03a0d17d5b83ce317829135c1cd28305e5dd769327b830b7c6eb7bb",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/VolumeHistoryComponent.cpp",
+      "old_sha256": "ce960d6b9c7f8ce093f41bfb8c68f11bbeebd7ba420852b0a97e7e06cea88a80",
+      "new_sha256": "ce960d6b9c7f8ce093f41bfb8c68f11bbeebd7ba420852b0a97e7e06cea88a80",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/VolumeHistoryComponent.h",
+      "old_sha256": "7e050df296f4a9e0bc0816912c989748b8bed09fb70d936f22ee8da40078a35a",
+      "new_sha256": "7e050df296f4a9e0bc0816912c989748b8bed09fb70d936f22ee8da40078a35a",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/VolumeHistoryComponent_History.cpp",
+      "old_sha256": "f8aa1db46bf51afa133d15158f6f2a9741354c9326d0cfa1549a895cd9374570",
+      "new_sha256": "f8aa1db46bf51afa133d15158f6f2a9741354c9326d0cfa1549a895cd9374570",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/VolumeHistoryComponent_Render.cpp",
+      "old_sha256": "72ab2afd78a585cc4e563e87b77cf299113e1847ce31f831fb8569b048505899",
+      "new_sha256": "72ab2afd78a585cc4e563e87b77cf299113e1847ce31f831fb8569b048505899",
+      "identical": true,
+      "allowed_change": null
+    },
+    {
+      "path": "Source/VolumeHistoryComponent_ViewNav.cpp",
+      "old_sha256": "90bf3bc9fc9f0da90711476e903d25dc04866fa608f37e853dddcf2422bee625",
+      "new_sha256": "90bf3bc9fc9f0da90711476e903d25dc04866fa608f37e853dddcf2422bee625",
+      "identical": true,
+      "allowed_change": null
+    }
+  ],
+  "compile_flags_unchanged": [
+    "CXX_FLAGSx86_64 = -O3 -DNDEBUG -std=gnu++17 -arch x86_64 -mmacosx-version-min=10.13 -fno-fast-math -ffp-contract=off -Wall -Wextra -Wpedantic",
+    "CXX_FLAGSarm64 = -O3 -DNDEBUG -std=gnu++17 -arch arm64 -mmacosx-version-min=10.13 -fno-fast-math -ffp-contract=off -Wall -Wextra -Wpedantic",
+    "CXX_FLAGS = -O3 -DNDEBUG -std=gnu++17 -arch x86_64 -arch arm64 -mmacosx-version-min=10.13 -fno-fast-math -ffp-contract=off -Wall -Wextra -Wpedantic",
+    "OBJCXX_FLAGSx86_64 = -O3 -DNDEBUG -std=gnu++17 -arch x86_64 -mmacosx-version-min=10.13 -fno-fast-math -ffp-contract=off -Wall -Wextra -Wpedantic",
+    "OBJCXX_FLAGSarm64 = -O3 -DNDEBUG -std=gnu++17 -arch arm64 -mmacosx-version-min=10.13 -fno-fast-math -ffp-contract=off -Wall -Wextra -Wpedantic",
+    "OBJCXX_FLAGS = -O3 -DNDEBUG -std=gnu++17 -arch x86_64 -arch arm64 -mmacosx-version-min=10.13 -fno-fast-math -ffp-contract=off -Wall -Wextra -Wpedantic"
+  ],
+  "cmake_diff": "--- \n+++ \n@@ -314,6 +314,20 @@\n     target_link_libraries(LevelScopeVideoQualification PRIVATE LevelScopeStandaloneSupport juce::juce_gui_basics)\n endif()\n \n+# Explicit diagnostic target, never a replacement for the frozen qualification harness.\n+option(LEVELSCOPE_BUILD_VIDEO_PAINT_DIAGNOSTIC \"Build bounded video paint tracing tests\" OFF)\n+if (LEVELSCOPE_BUILD_VIDEO_PAINT_DIAGNOSTIC)\n+    if (NOT APPLE)\n+        message(FATAL_ERROR \"Video paint diagnostic currently requires macOS\")\n+    endif()\n+    juce_add_gui_app(LevelScopeVideoPaintDiagnostic PRODUCT_NAME \"LevelScope Video Paint Diagnostic\"\n+        BUNDLE_ID \"com.studioparadiso.levelscope.videopaintdiagnostic\")\n+    target_sources(LevelScopeVideoPaintDiagnostic PRIVATE Tests/VideoPlaybackQualification.cpp Tests/VideoPaint/Trace_mac.mm)\n+    target_compile_definitions(LevelScopeVideoPaintDiagnostic PRIVATE LEVELSCOPE_VIDEO_PAINT_DIAGNOSTICS=1)\n+    target_link_libraries(LevelScopeVideoPaintDiagnostic PRIVATE LevelScopeStandaloneSupport juce::juce_gui_basics)\n+    add_executable(LevelScopeVideoPaintTraceTests Tests/VideoPaint/TraceBufferTests.cpp)\n+endif()\n+\n option(LEVELSCOPE_BUILD_MEASUREMENT_TESTS \"Build hardware-independent offline measurement checks\" OFF)\n if (LEVELSCOPE_BUILD_MEASUREMENT_TESTS)\n     enable_testing()\n",
+  "reuse_rationale": "Measurement, verified source, processing, audition, channel mapping, profiles, diagnostics and section implementations are byte-identical. The only production header delta is a friend declaration with no data layout or runtime effect. Toolchain and FP flags unchanged. Full source digest/build identity changes and all binaries are newly identified. Fresh short suites, official vectors, native video, UI smoke and required Current/H264/endurance runs qualify integration. Prior actual three-hour PCM runs/long seeks and Source matrices retain original binary provenance.",
+  "reviewed_normal_harness_changes": "Conditional optional trace hooks plus equivalent named local Time temporaries and whitespace; ordinary semantics and strict raw gates retained. Normal binary trace-symbol absence checked on each platform."
+}

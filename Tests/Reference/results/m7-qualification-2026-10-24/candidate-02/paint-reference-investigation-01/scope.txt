@@ -1,0 +1,1 @@
+Bounded diagnostic comparison only, not replacement passing M7 evidence. Original failures retained. Same reference movie, approved output, all routes muted. No code or gate changes.

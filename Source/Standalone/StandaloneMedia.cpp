@@ -1,4 +1,5 @@
 #include "StandaloneMedia.h"
+#include "StandaloneMeasurementLayout.h"
 #include <juce_cryptography/juce_cryptography.h>
 #include <cmath>
 
@@ -14,6 +15,118 @@ void registerSourceFormats (juce::AudioFormatManager& formats)
 
 namespace
 {
+// Read only bounded metadata, never the PCM payload. JUCE's native FLAC reader
+// does not expose Vorbis channel-mask overrides. Skipping a large unrelated
+// comment is O(1), and cancellation is checked at each block/comment boundary.
+juce::String flacChannelMask (const juce::File& file, JobControl& control, std::optional<uint32_t>& mask)
+{
+    juce::FileInputStream input (file);
+    if (! input.setPosition (4)) return "Cannot read FLAC metadata";
+    bool last = false;
+    while (! last)
+    {
+        if (control.isCancelled()) return "Import cancelled";
+        uint8_t header[4];
+        if (input.read (header, 4) != 4) return "Truncated FLAC metadata header";
+        last = (header[0] & 128) != 0;
+        const auto length = (uint32_t (header[1]) << 16) | (uint32_t (header[2]) << 8) | header[3];
+        const auto end = input.getPosition() + length;
+        if (end > input.getTotalLength()) return "Truncated FLAC metadata block";
+        if ((header[0] & 127) == 4)
+        {
+            const auto readLength = [&] (uint32_t& n)
+            {
+                if (end - input.getPosition() < 4) return false;
+                n = static_cast<uint32_t> (input.readInt()); return true;
+            };
+            uint32_t vendor = 0, entries = 0;
+            if (! readLength (vendor) || vendor > end - input.getPosition()
+                || ! input.setPosition (input.getPosition() + vendor) || ! readLength (entries)
+                || entries > (end - input.getPosition()) / 4) return "Malformed FLAC Vorbis comments";
+            for (uint32_t i = 0; i < entries; ++i)
+            {
+                if (control.isCancelled()) return "Import cancelled";
+                uint32_t size = 0;
+                if (! readLength (size) || size > end - input.getPosition()) return "Malformed FLAC comment length";
+                const auto next = input.getPosition() + size;
+                char prefix[129] {};
+                const int count = static_cast<int> (std::min<uint32_t> (128, size));
+                if (input.read (prefix, count) != count) return "Truncated FLAC comment";
+                const auto text = juce::String::fromUTF8 (prefix, count);
+                if (text.upToFirstOccurrenceOf ("=", false, false).equalsIgnoreCase ("WAVEFORMATEXTENSIBLE_CHANNEL_MASK"))
+                {
+                    if (mask || size > 128 || text.getNumBytesAsUTF8() != size || ! text.contains ("="))
+                        return "Duplicate or malformed FLAC channel mask";
+                    const auto value = text.fromFirstOccurrenceOf ("=", false, false);
+                    const auto digits = value.substring (2);
+                    if (! value.startsWithIgnoreCase ("0x") || digits.isEmpty() || digits.length() > 8
+                        || ! digits.containsOnly ("0123456789abcdefABCDEF")) return "Malformed FLAC channel mask";
+                    mask = static_cast<uint32_t> (digits.getHexValue64());
+                }
+                if (! input.setPosition (next)) return "Cannot skip FLAC comment";
+            }
+            if (input.getPosition() != end) return "Malformed FLAC comment block size";
+        }
+        if (! input.setPosition (end)) return "Cannot skip FLAC metadata block";
+    }
+    return {};
+}
+
+juce::String interpretEightChannels (const juce::File& file, MediaInfo& media, JobControl& control)
+{
+    media.suggestedLayout = {}; media.suggestedLayout.count = 8;
+    juce::FileInputStream container (file); char magic[4] {};
+    container.read (magic, 4);
+    if (std::memcmp (magic, "RF64", 4) == 0 || std::memcmp (magic, "BW64", 4) == 0)
+        media.measurementRestriction = "M7 does not qualify RF64/BW64 container extensions; use supported ordinary PCM containers.";
+    std::optional<uint32_t> mask;
+    const bool flac = media.format.containsIgnoreCase ("flac");
+    if (flac)
+    {
+        const auto error = flacChannelMask (file, control, mask);
+        if (error.isNotEmpty()) return error;
+        if (! mask)
+        {
+            media.suggestedLayout = systemILayout();
+            media.layoutProvenance = "Native FLAC default: L R C LFE Lrs Rrs Lss Rss (RFC 9639). Confirm roles.";
+            return {};
+        }
+    }
+    else if (media.format.containsIgnoreCase ("wav") && media.tags.containsKey ("ChannelMask"))
+        mask = static_cast<uint32_t> (media.tags["ChannelMask"].getLargeIntValue());
+    if (mask && *mask != 0)
+    {
+        auto bits = *mask; int count = 0;
+        while (bits) { count += static_cast<int> (bits & 1); bits >>= 1; }
+        if (count != 8) return "Channel mask does not describe eight file channels";
+        if (*mask == 0x63f)
+        {
+            media.suggestedLayout = systemILayout();
+            media.layoutProvenance = (flac ? "FLAC override" : "WAVEFORMATEXTENSIBLE")
+                + juce::String (" mask 0x63f: L R C LFE Lrs Rrs Lss Rss. Confirm roles.");
+        }
+        else media.layoutProvenance = "Unsupported channel mask 0x" + juce::String::toHexString (*mask)
+            + ". Explicit manual interpretation required; no layout inferred.";
+        return {};
+    }
+    media.layoutProvenance = "Unlabelled eight-channel PCM: assign roles or an explicit order preset, then confirm.";
+    if (media.format.containsIgnoreCase ("aiff"))
+    {
+        juce::FileInputStream input (file); input.setPosition (12);
+        while (input.getTotalLength() - input.getPosition() >= 8)
+        {
+            if (control.isCancelled()) return "Import cancelled";
+            char id[4]; input.read (id, 4);
+            const auto size = static_cast<uint32_t> (input.readIntBigEndian());
+            if (std::memcmp (id, "CHAN", 4) == 0)
+                media.layoutProvenance = "AIFF CHAN metadata is not interpreted. Explicit manual interpretation required.";
+            const auto next = input.getPosition() + size + (size & 1);
+            if (next > input.getTotalLength() || ! input.setPosition (next)) break;
+        }
+    }
+    return {};
+}
+
 // JUCE PCM readers may report success after padding a short stream read. Track
 // actual reads during decode so a truncated payload cannot validate as silence.
 class CheckedInput final : public juce::InputStream
@@ -175,6 +288,12 @@ MediaValidationResult validateMedia (const juce::File& file, JobControl& control
     media.suggestedLayout.count = media.channels;
     for (int channel = 0; channel < juce::jmin (layout.size(), media.channels); ++channel)
         media.suggestedLayout.roles[channel] = layout.getTypeOfChannel (channel);
+    media.layoutProvenance = "Legacy decoder role suggestions; confirm file-channel interpretation.";
+    if (media.channels == 8)
+    {
+        const auto error = interpretEightChannels (file, media, control);
+        if (error.isNotEmpty()) return fail (control.isCancelled() ? ErrorCode::cancelled : ErrorCode::invalidMetadata, error);
+    }
 
     constexpr int blockSize = 4096;
     juce::AudioBuffer<float> block (media.channels, blockSize);

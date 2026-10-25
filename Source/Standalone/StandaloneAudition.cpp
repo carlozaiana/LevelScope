@@ -353,6 +353,21 @@ void StandaloneAudition::startDecoder (const AuditionRequest& request, const Out
                 throw std::runtime_error ("Verified source cannot be reopened consistently");
             constexpr int blockSize = 2048;
             juce::AudioBuffer<float> block (media.channels, blockSize);
+            // JUCE 7's FLAC reader can scan for tens of seconds when a fresh
+            // reader seeks into the final partial block. Seek before that block
+            // and decode a bounded prefix instead. Discarded PCM never reaches
+            // processing, the FIFO, capture observers or the presentation clock.
+            // 65536 exceeds FLAC's maximum block size; cancellation stays checked
+            // between normal 2048-frame reads. Other formats retain their path.
+            if (media.format.containsIgnoreCase ("flac") && begin > 0)
+                for (juce::int64 prefix = std::max<juce::int64> (0, begin - 65536);
+                     prefix < begin && ! cancel.load();)
+                {
+                    const int count = static_cast<int> (std::min<juce::int64> (blockSize, begin - prefix));
+                    if (! source->read (block.getArrayOfWritePointers(), media.channels, prefix, count))
+                        throw std::runtime_error ("Verified source seek pre-roll failed");
+                    prefix += count;
+                }
             const StaticGainProcessor processing (request.context.processing.staticGainDb);
             juce::int64 position = begin;
             while (position < media.frames && ! cancel.load())

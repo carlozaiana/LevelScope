@@ -1,0 +1,19 @@
+{
+  "candidate03_source_digest": "7abc7587514b7f0f750720ac7853abeaf55b21c90697b25de7740cec2df034bf",
+  "unchanged_ui_implementation": true,
+  "equivalence": "integration-equivalence-review.json",
+  "retained_ui_records": [
+    {
+      "path": "Tests/Reference/results/m7-qualification-2026-10-24/ui-observations-candidate01-addendum.md",
+      "sha256": "a45c6275de02c75a7e17fae5c627a7ae7550dd1169028b47ed1089087659e5bc"
+    },
+    {
+      "path": "Tests/Reference/results/m7-qualification-2026-10-24/candidate-02/ui-observations.md",
+      "sha256": "66fc91545eff5845576efa9d2d33916e6f46926c4699150354bae3f3c70a43e6"
+    }
+  ],
+  "scope": "Reuse unchanged full M7 UI scenarios; fresh candidate03 integration smoke is separately required on both actual Macs",
+  "candidate03_sequoia_smoke": "sequoia-ui-smoke.json",
+  "candidate03_high_sierra_smoke": "high-sierra-ui-smoke.json",
+  "candidate03_integration_smoke_passed": true
+}

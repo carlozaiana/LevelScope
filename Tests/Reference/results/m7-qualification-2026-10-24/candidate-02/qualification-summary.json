@@ -1,0 +1,254 @@
+{
+  "recorded_utc": "2026-10-24T14:50:16.734354+00:00",
+  "milestone": "M7 channel-based PCM System I 7.1",
+  "candidate": "candidate-02",
+  "status": "frozen; required physical video qualification failed/incomplete; video handover prepared",
+  "qualified": false,
+  "ready_for_checkpoint_publication": false,
+  "ready_for_main_integration": false,
+  "user_direction": "Prepare video handover; keep M7 frozen",
+  "identity": {
+    "base_commit": "b57a1ed23cbe7d74afe98ed16ec8fd615db9d171",
+    "source_state": "Working candidate; exact files below, not base commit alone",
+    "source_digest": "c3df888f567a69adb83cbb6c7d2c7a1dcdf1da9498d43d688ffe890786c0e43e",
+    "measurement_build": "4c12ce29addf7149641df1af27f136b933cf575c69757e91f61ee39c9a7e144e",
+    "manifest": {
+      "path": "identity.json",
+      "sha256": "ca3eda67d2ab4505237075a0f9ff41968ff88f0d5e615652891f886c7a94d59b"
+    },
+    "source_input_count": 155,
+    "artifact_count": 339,
+    "standalone_sha256": "c1686278deb2ea36b926ccb5cb9df10b169bec903594e38680fc5cbfa4817248",
+    "video_qualification_sha256": "7b0113714b90fa582dd6ae725652630e7bd4f601fecc608fcb4dd15acd0d512e"
+  },
+  "actual_platforms": {
+    "sequoia": {
+      "os": "15.7.9",
+      "os_build": "24G830",
+      "execution_architecture": "arm64",
+      "cpu": "Apple M1 Max",
+      "offline_measurement_processing": "passed",
+      "injected_audition_routing": "passed",
+      "m1_m6_regressions": "passed",
+      "pinned_itu_ebu_references": "passed",
+      "real_three_hour_71_measurements_and_seeks": "passed",
+      "native_h264_prores_tests": "passed",
+      "native_prores_case_count": 53,
+      "reports": [
+        {
+          "path": "sequoia/environment.json",
+          "sha256": "19db9b5607e7e6a50ea99bc19041329ce02c0d240578fa7543249a1d25e60fe9"
+        },
+        {
+          "path": "sequoia/summary.json",
+          "sha256": "02c2898f9bb774c39620afd9011bc586ab507e44369081e8726ecd1573675006"
+        },
+        {
+          "path": "sequoia/multichannel.json",
+          "sha256": "8af8db0b36777fc4c8c218a788206523aa2a34d0f4f42ae69b18cfc44ae96dae"
+        },
+        {
+          "path": "sequoia/multichannel-long.json",
+          "sha256": "708ed1badc1da400f8914069d8c77552d44b8c44e2b666f0572e7922ad250484"
+        },
+        {
+          "path": "sequoia/multichannel-video.json",
+          "sha256": "84efe10ecac993f4027073b7b0b74ba7caf7b175638dbc4aed87609cf4e7db7c"
+        },
+        {
+          "path": "sequoia/itu.json",
+          "sha256": "7103c628b227a151323e7bc5222aeb04eddc93b14087f0987bc905f4a9b8d63e"
+        },
+        {
+          "path": "sequoia/ebu.json",
+          "sha256": "5e974b2b57b3c6e6f61a4302bf2e8e6460ebca40f3763ee3565b0160e39f5c57"
+        },
+        {
+          "path": "sequoia-prores-native/summary.json",
+          "sha256": "ba4ea03a7197b889ab516567f20f1f69da7536df12b46d26f8ec02ba8ca959a8"
+        }
+      ]
+    },
+    "high-sierra": {
+      "os": "10.13.6",
+      "os_build": "17G66",
+      "execution_architecture": "x86_64",
+      "cpu": "Intel(R) Core(TM) i7-3770K CPU @ 3.50GHz",
+      "offline_measurement_processing": "passed",
+      "injected_audition_routing": "passed",
+      "m1_m6_regressions": "passed",
+      "pinned_itu_ebu_references": "passed",
+      "real_three_hour_71_measurements_and_seeks": "passed",
+      "native_h264_prores_tests": "passed",
+      "native_prores_case_count": 53,
+      "reports": [
+        {
+          "path": "high-sierra/environment.json",
+          "sha256": "99f06ad0194a8ef6566bdb7fe8230aba67468741e2579f9d419ba13efaf6fba3"
+        },
+        {
+          "path": "high-sierra/summary.json",
+          "sha256": "98c26874301cbe88edffc9770439aae5c413d57133aeaa107e0367f405e32187"
+        },
+        {
+          "path": "high-sierra/multichannel.json",
+          "sha256": "9e55be6b70f4b3a316f6ad1778df81a9a601cf62cc6a07b70be0a152a1862c1a"
+        },
+        {
+          "path": "high-sierra/multichannel-long.json",
+          "sha256": "cc0b658045b8e4c5a7002a885a8b4d2926e98b3c0f669c522327097601082d20"
+        },
+        {
+          "path": "high-sierra/multichannel-video.json",
+          "sha256": "0832e7e969a4ec14213732e6a92e107a33d33898cf134b6215749ad3ab990a53"
+        },
+        {
+          "path": "high-sierra/itu.json",
+          "sha256": "829e5856786926ac227da7e5d5e335bd04ee6ab94981098ee14832e9fb13e824"
+        },
+        {
+          "path": "high-sierra/ebu.json",
+          "sha256": "bb195412ea22131861f73df19f48a42ff084f40a317157cff7fb61fd9bf96dab"
+        },
+        {
+          "path": "high-sierra-prores-native/summary.json",
+          "sha256": "67b5ea1c28949122d686803e7c613b5cb2f0b3329caac09775cb6068d689e54a"
+        }
+      ]
+    }
+  },
+  "cross_platform": {
+    "m5": {
+      "passed": true,
+      "report": {
+        "path": "m5-cross-platform.json",
+        "sha256": "614f0cc7a837cac4c3af96a2c21ea5a0426cc6a9baba77fdbd6f3ebb1c61d6f6"
+      }
+    },
+    "m6": {
+      "passed": true,
+      "report": {
+        "path": "m6-cross-platform.json",
+        "sha256": "0a7a4ba609fa6f7a1825f2a3dd4b5feaf3ab126b5836bdb7af7ec60acbff37b0"
+      },
+      "sample_capture_cases": 124,
+      "maximum_float32_ulp": 0
+    },
+    "m7": {
+      "passed": true,
+      "report": {
+        "path": "m7-cross-platform.json",
+        "sha256": "60de96a8dbac990e5e8517f971175f04be8b88d90270b1c763897883489b0160"
+      },
+      "sample_capture_cases": 218,
+      "maximum_float32_ulp": 0
+    }
+  },
+  "silent_ui": {
+    "status": "passed both actual Macs",
+    "basis": "Unchanged candidate-01 UI implementation reused with candidate-02 affected preparation, seek, identity and lifecycle checks repeated",
+    "evidence": {
+      "path": "ui-observations.md",
+      "sha256": "66fc91545eff5845576efa9d2d33916e6f46926c4699150354bae3f3c70a43e6"
+    }
+  },
+  "physical_video": {
+    "status": "failed/incomplete",
+    "required_for_combined_m7": true,
+    "sequoia_first_source_matrix": {
+      "passed_cases": 14,
+      "total_cases": 16,
+      "skipped_ui_frames": 3,
+      "evidence": {
+        "path": "sequoia-muted-video-first-attempt/prores-matrix-source/summary.json",
+        "sha256": "aec25cd7a7e1e82c95a83962f69fa8c48ec2424a97d69ad68e48cd06e42ee5e1"
+      }
+    },
+    "sequoia_controlled_source_matrix": {
+      "passed_cases": 15,
+      "total_cases": 16,
+      "skipped_ui_frames": 1,
+      "evidence": {
+        "path": "sequoia-muted-video-controlled/prores-matrix-source/summary.json",
+        "sha256": "aec25cd7a7e1e82c95a83962f69fa8c48ec2424a97d69ad68e48cd06e42ee5e1"
+      }
+    },
+    "high_sierra_source_matrix": {
+      "passed_cases": 16,
+      "total_cases": 16,
+      "skipped_ui_frames": 0,
+      "evidence": {
+        "path": "high-sierra-muted-video/prores-matrix-source/summary.json",
+        "sha256": "8723a7ef2329e0349982d3144fd1838a87f7b3cfe7f27ef6e794ff28067c5e6c"
+      }
+    },
+    "reference_movie_diagnosis": {
+      "preserved_m6_stereo_skipped_ui_frames": 2,
+      "m7_stereo_skipped_ui_frames": 1,
+      "conclusion": "Eight-channel processing is not required to reproduce the failure; root cause is not established. Prior M6 qualification records remain unchanged.",
+      "evidence": [
+        {
+          "path": "paint-reference-investigation-01/m6-stereo-reference.json",
+          "sha256": "37e2cce637ce60dffe28ca15d4903f0c9f7f4f15b62c20fe2989275bc261293f"
+        },
+        {
+          "path": "paint-reference-investigation-01/m7-stereo-reference.json",
+          "sha256": "f2fc7444b0f02f4e7e12e30bd4c0f307a88ceeeea57b969e8274c26c8458ccd0"
+        }
+      ]
+    },
+    "deferred_on_each_platform": {
+      "current_state_prores_matrix_cases": 16,
+      "h264_cfr_vfr_source_current_cases": 4,
+      "prores_current_endurance_runs": 3,
+      "endurance_seconds_each": 1800
+    },
+    "audit": {
+      "path": "muted-video-audit-final.json",
+      "sha256": "be282fe60a4dc43d592efcc1b0121e5de615796832fe818dd9c5b04f8eee12ab"
+    },
+    "evidence_scope": "Internal audio-clock and UI-paint observations; not optical/acoustic synchronization or spatial listening"
+  },
+  "physical_71_listening": {
+    "status": "pending",
+    "blocks_approved_offline_and_automated_scope": false,
+    "qualified": false
+  },
+  "preservation": {
+    "status": "passed",
+    "existing_tags_preserved": 10,
+    "all_test_processes_exited": true,
+    "device_closure_basis": "Completed physical harnesses disconnect devices before writing reports; final process audits show none active. No later groups scheduled.",
+    "reports": [
+      {
+        "path": "preservation-final-candidate02.json",
+        "sha256": "f1bf47b1aa3a6b07a86cb3b400dd8c084098caf8e7348946f09a4472dd719692"
+      },
+      {
+        "path": "high-sierra-integrity-final.json",
+        "sha256": "44dd108baf0b0a3fd7cc221746788d451a6d06b4a1471b49d5acd004e1720e70"
+      },
+      {
+        "path": "sequoia-shutdown-final.json",
+        "sha256": "5a1a120e74529df4a8b8329f9edb44396c6d102ca7153f0d1a5810a71e7fffed"
+      },
+      {
+        "path": "remote-preservation-final.json",
+        "sha256": "7bb53eff083e79cdffc23d0b99936b8347981e29bcbb971e887cb61a65292d66"
+      }
+    ]
+  },
+  "publication": {
+    "m7_commit_created": false,
+    "m7_tag_created": false,
+    "pushed": false,
+    "merged": false,
+    "main_unchanged": "b57a1ed23cbe7d74afe98ed16ec8fd615db9d171"
+  },
+  "handover": "../../../../../Docs/ProjectIndex/33_M7VideoPaintTimingHandover.md",
+  "limitations": [
+    "Full physical 7.1 routing/listening remains pending.",
+    "No implicit downmix or silent channel reassignment.",
+    "7.1.4, Atmos, RF64/BW64, separate-file import, section processing, dynamics, persistence, export and VST3 parity remain deferred."
+  ]
+}

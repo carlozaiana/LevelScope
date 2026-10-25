@@ -15,9 +15,11 @@ This folder is the persistent orientation layer for future development chats. Re
 
 ## Task-based quick start
 
-- **Video paint diagnostics / integrated tooling; intermittent skips unresolved; M7 frozen:** [Diagnostic integration handover](../VideoPaintDiagnosticMainIntegration-2026-10-24.md)
+- **M7 channel-based PCM 7.1 / qualified, published and integrated into main:** [checkpoint](https://github.com/carlozaiana/LevelScope/tree/m7-pcm-7.1-2026-10-25); [proposal](31_M7ChannelBasedPcm71Proposal.md); [qualification record](32_M7QualificationAndHandover.md); [completion decision](34_M7CompletionAcceptance.md)
+- **Optional video paint diagnostics / integrated investigation tooling:** [diagnostic integration handover](../VideoPaintDiagnosticMainIntegration-2026-10-24.md); [historical M7 video handover](33_M7VideoPaintTimingHandover.md)
 - **M6 verified Current State audition / qualified, published and integrated into main:** [28_M6VerifiedCurrentStateAudition.md](28_M6VerifiedCurrentStateAudition.md)
 - **M6 candidate identity, completed qualification and publication handover:** [30_M6QualificationAndHandover.md](30_M6QualificationAndHandover.md)
+- **Post-M7 stereo/5.1 workflow / proposal only:** [35_PostM7BroadcastWorkflowProposal.md](35_PostM7BroadcastWorkflowProposal.md)
 - **Future channel-based multichannel support / deferred:** [29_MultichannelPcmMilestone.md](29_MultichannelPcmMilestone.md)
 - **Bounded SDR ProRes / qualified and integrated into main:** [27_ProResMainIntegration.md](27_ProResMainIntegration.md) and [26_ProResQualification.md](26_ProResQualification.md), with [frozen acceptance criteria](25_ProResAcceptance.md)
 - **M5 programme sections / qualified, published and integrated into main:** [24_M5ProgrammeSections.md](24_M5ProgrammeSections.md)

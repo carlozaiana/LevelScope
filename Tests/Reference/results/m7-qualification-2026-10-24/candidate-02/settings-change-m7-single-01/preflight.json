@@ -1,0 +1,104 @@
+{
+  "recorded_utc": "2026-10-24T16:23:50.765787+00:00",
+  "purpose": "One frozen M7 stereo reference test after user-reported Mac Studio settings changes; 100 seconds, muted output, no retries. Record rather than assume unchanged configuration.",
+  "user_report": "User requested one further test now after changing Mac Studio settings. Exact changes requested separately; current local settings and connections observed. No remote work is initiated.",
+  "boot_time": "kern.boottime: { sec = 1792854055, usec = 873256 } Sat Oct 24 17:00:55 2026",
+  "os": "ProductName:\t\tmacOS\nProductVersion:\t\t15.7.9\nBuildVersion:\t\t24G830",
+  "architecture": "arm64",
+  "cpu": "Apple M1 Max",
+  "power_settings_read_only": "AC Power:\n Sleep On Power Button 1\n standby              0\n ttyskeepawake        1\n powernap             1\n womp                 1\n displaysleep         0\n networkoversleep     0\n sleep                0\n tcpkeepalive         1\n autorestart          0\n disksleep            10",
+  "display_configuration_read_only": {
+    "SPDisplaysDataType": [
+      {
+        "_name": "Apple M1 Max",
+        "spdisplays_mtlgpufamilysupport": "spdisplays_metal3",
+        "spdisplays_ndrvs": [
+          {
+            "_name": "PB248",
+            "_spdisplays_display-product-id": "24a3",
+            "_spdisplays_display-serial-number": "1010101",
+            "_spdisplays_display-vendor-id": "469",
+            "_spdisplays_display-week": "47",
+            "_spdisplays_display-year": "2013",
+            "_spdisplays_displayID": "1",
+            "_spdisplays_pixels": "1920 x 1200",
+            "_spdisplays_resolution": "1920 x 1200 @ 60.00Hz",
+            "spdisplays_main": "spdisplays_yes",
+            "spdisplays_mirror": "spdisplays_off",
+            "spdisplays_online": "spdisplays_yes",
+            "spdisplays_pixelresolution": "spdisplays_wuxga",
+            "spdisplays_resolution": "1920 x 1200 @ 60.00Hz",
+            "spdisplays_rotation": "spdisplays_supported"
+          }
+        ],
+        "spdisplays_vendor": "sppci_vendor_Apple",
+        "sppci_bus": "spdisplays_builtin",
+        "sppci_cores": "24",
+        "sppci_device_type": "spdisplays_gpu",
+        "sppci_model": "Apple M1 Max"
+      }
+    ]
+  },
+  "relevant_processes_before": [
+    {
+      "pid": 1604,
+      "executable": "/System/Applications/Utilities/Screen Sharing.app/Contents/MacOS/Screen Sharing"
+    },
+    {
+      "pid": 2043,
+      "executable": "ssh"
+    }
+  ],
+  "connections_before": {
+    "recorded_utc": "2026-10-24T16:23:51.167208+00:00",
+    "viewer_processes": [
+      {
+        "pid": 1604,
+        "executable": "/System/Applications/Utilities/Screen Sharing.app/Contents/MacOS/Screen Sharing"
+      }
+    ],
+    "ssh_client_processes": [
+      {
+        "pid": 2043,
+        "executable": "ssh"
+      }
+    ],
+    "forbidden_candidate_processes": [],
+    "connection_counts": [
+      {
+        "kind": "screen_sharing",
+        "pid": 1604,
+        "established_tcp_connections": 1,
+        "lsof_exit_code": 0
+      },
+      {
+        "kind": "ssh",
+        "pid": 2043,
+        "established_tcp_connections": 1,
+        "lsof_exit_code": 0
+      }
+    ],
+    "shared_destination_host": true,
+    "all_ssh_destinations_match_viewer_hosts": true,
+    "both_connected_to_same_host": true,
+    "idle_ssh_basis": "User confirmed idle remote shell; no remote command sent by runner. Boundary socket observations do not measure remote activity."
+  },
+  "head": "b57a1ed23cbe7d74afe98ed16ec8fd615db9d171",
+  "tag_objects_and_targets": "high-sierra-pre-scaffold-2026-10-15 b3c6e845482dbe8a0ec9778d5a9ad7953e614609 556d387ad772dc5e604ead95f1525f60e66fd5f9\nm2-measured-compliance-2026-10-18 673e382feeaa7e29e6e6abedbd56677aa2163ef3 01a34833ec06a0d237e098faadb23b398581e8f9\nm3-global-trim-2026-10-18 4063ca0e73c5b24dfa079eb894f85e398e9fee50 62ab420cb15b3ce5e1c821c963a749a9a56ae4a7\nm4-measured-diagnostics-2026-10-18 cc64c771a70ccf95e779a7fe7260749a4530c285 9a22749901d9f6d4b9c194c9c22c0a231f2494f6\nm5-programme-sections-2026-10-20 e36b4308374256ad36eff6c01d4d92325a06d3b0 ae88e187d288c53dbca1287e8341b74b9b5b2619\nm6-verified-current-state-audition-2026-10-24 7f54eb1098471dc55bd75484f873a9f90e68ac05 b57a1ed23cbe7d74afe98ed16ec8fd615db9d171\nmeasurement-milestone-2026-10-17 76affb667b6dab066cb36b2a2c741525b9b6eeac b29bc7c183743f35c6271d2d7ec8fb5ba1464591\nstandalone-scaffold-2026-10-15 4c8bc35b788969e1f6e97dcdc57a601b01fff7cd f192a8553e139d390056c9755f25eeb123bbc5e6\nvideo-checkpoint-2026-10-17 06f57524bedca1912c0d5c454f13561cec9ce5b4 700b9e77e439a8ca9bb7583adf826fac01dbe924\nvideo-prores-checkpoint-2026-10-21 d62c1159eeb2ffbb8b7ffc7c31014b842642d195 dcc34aabba6b5b3ca4805e2965d21ffebf2e4d0a",
+  "source_digest": "c3df888f567a69adb83cbb6c7d2c7a1dcdf1da9498d43d688ffe890786c0e43e",
+  "source_inputs_checked": 155,
+  "source_errors": [],
+  "m7_artifacts_checked": 339,
+  "artifact_errors": [],
+  "binaries_sha256": {
+    "m6": "c8efc1a6d0b760206c8f99105e553542a4d32fdb9722dc3e19b2172f60bb36e9",
+    "m7": "7b0113714b90fa582dd6ae725652630e7bd4f601fecc608fcb4dd15acd0d512e"
+  },
+  "audio_sha256": "4709852fdf45b43636171c07868ad6d0c7199cec2f9a5ae18c2ce33094d1a528",
+  "video_sha256": "0870d5ab93d1492f23524ed1fff9319af1a6a9cf71882543f2190929afeb8e24",
+  "runner_sha256": "614026e54819a5d3057847d97cf58dbea5e8cb3b36f9d1d5b0e724197ab02c52",
+  "scope": "Internal audio-clock/UI-paint reproduction only; no full M7 qualification or physical 7.1 listening claim.",
+  "sequence": [
+    "m7-stereo-1"
+  ]
+}

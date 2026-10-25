@@ -1,5 +1,6 @@
 #include "StandaloneMeasurementService.h"
 #include "StandaloneProcessing.h"
+#include "StandaloneMeasurementLayout.h"
 #include "VerifiedSource.h"
 #include <juce_cryptography/juce_cryptography.h>
 #include <cmath>
@@ -79,6 +80,7 @@ std::vector<measurement::Role> OfflineAnalysisService::measurementRoles (const C
     using C = juce::AudioChannelSet;
     std::vector<R> roles;
     if (! layout.isValid()) return roles;
+    if (layout.count == 8 && ! isSystemI (layout)) return roles;
     const auto has = [&] (ChannelRole role) { return std::find (layout.roles.begin(), layout.roles.begin() + layout.count, role) != layout.roles.begin() + layout.count; };
     if (has (C::leftSurround) != has (C::rightSurround)
         || has (C::leftSurroundSide) != has (C::rightSurroundSide)) return roles;
@@ -92,6 +94,8 @@ std::vector<measurement::Role> OfflineAnalysisService::measurementRoles (const C
             case C::LFE: roles.push_back (R::lfe); break;
             case C::leftSurround: case C::leftSurroundSide: roles.push_back (R::surroundLeft); break;
             case C::rightSurround: case C::rightSurroundSide: roles.push_back (R::surroundRight); break;
+            case C::leftSurroundRear: if (! isSystemI (layout)) return {}; roles.push_back (R::rearLeft); break;
+            case C::rightSurroundRear: if (! isSystemI (layout)) return {}; roles.push_back (R::rearRight); break;
             default: return {};
         }
     }
@@ -100,10 +104,11 @@ std::vector<measurement::Role> OfflineAnalysisService::measurementRoles (const C
 juce::String OfflineAnalysisService::validateRequest (const ServiceContext& c, MeasurementDomain domain)
 {
     if (! c.isValid() || ! c.isFullProgram() || c.sessionId.isEmpty()) return "Full program, session identity and confirmed roles required";
+    if (c.media.measurementRestriction.isNotEmpty()) return c.media.measurementRestriction;
     if (! std::isfinite (c.media.sampleRate) || c.media.sampleRate < 1 || c.media.sampleRate > 192000
         || c.media.sampleRate != std::floor (c.media.sampleRate)
         || ! measurement::OfflineMeasurement::supports (static_cast<int> (c.media.sampleRate), measurementRoles (c.fileLayout)))
-        return "Measurement supports mono, stereo, 5.0/5.1 at 44.1/48/96/192 kHz";
+        return "Measurement supports mono, stereo, 5.0/5.1 and explicit BS.2051 System I 7.1 at 44.1/48/96/192 kHz";
     if (! StaticGainProcessor::supports (c.processing))
         return "Unsupported processing plan; M1 accepts static gain from -60 to +24 dB";
     if (domain == MeasurementDomain::source && c.processing.staticGainDb != 0)
@@ -113,7 +118,9 @@ juce::String OfflineAnalysisService::validateRequest (const ServiceContext& c, M
 juce::String OfflineAnalysisService::identityFor (const ServiceContext& c, MeasurementDomain domain, const juce::String& hash)
 {
     std::ostringstream key; key.imbue (std::locale::classic());
-    key << measurement::version << '\n' << c.media.sha256 << '\n' << hash << '\n'
+    key << measurement::version << '\n' << layoutMappingVersion << '\n'
+        << (isSystemI (c.fileLayout) ? systemICapability : "m1-layouts-v1") << '\n'
+        << c.media.sha256 << '\n' << hash << '\n'
         << static_cast<int> (domain) << '\n' << std::hexfloat << c.media.sampleRate << '\n'
         << c.range.begin << ':' << c.range.end << '\n' << c.processing.schemaVersion << '\n'
         << c.processing.engineVersion << '\n' << c.processing.staticGainDb << '\n'

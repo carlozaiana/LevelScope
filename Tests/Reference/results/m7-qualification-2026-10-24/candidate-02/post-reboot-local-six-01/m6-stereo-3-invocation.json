@@ -1,0 +1,22 @@
+{
+  "name": "m6-stereo-3",
+  "started_utc": "2026-10-24T15:13:27.458122+00:00",
+  "binary_sha256": "c8efc1a6d0b760206c8f99105e553542a4d32fdb9722dc3e19b2172f60bb36e9",
+  "argv": [
+    "/Users/fuzz/Developer/LevelScope/build/m6-qualification-2026-10-23/candidate-01/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+    "--allow-audio",
+    "--muted",
+    "--device",
+    "Mac Studio Speakers",
+    "--seconds",
+    "100",
+    "--audio",
+    "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/selected-clock-48000.wav",
+    "--video",
+    "/Users/fuzz/Developer/LevelScope/Tests/51_SyncTest.mov",
+    "--report",
+    "/Users/fuzz/Developer/LevelScope/build/m7-qualification-2026-10-24/post-reboot-local-six-01/m6-stereo-3.json",
+    "--audition-state",
+    "source"
+  ]
+}

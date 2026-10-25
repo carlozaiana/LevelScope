@@ -16,7 +16,7 @@ public:
     {
         setUsingNativeTitleBar (true);
         setResizable (true, true);
-        setResizeLimits (1120, 760, 2400, 1600);
+        setResizeLimits (1120, 800, 2400, 1600);
         setContentOwned (new levelscope::standalone::StandaloneMainComponent(), true);
         centreWithSize (getWidth(), getHeight());
         setVisible (true);

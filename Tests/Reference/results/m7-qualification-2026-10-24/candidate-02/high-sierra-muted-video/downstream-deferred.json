@@ -1,0 +1,8 @@
+{
+  "recorded_utc": "2026-10-24T14:30:25.450761+00:00",
+  "reason": "Controlled Sequoia Source matrix reproduced a mandatory paint-skip failure. Allow the already-started High Sierra Source matrix to finish normally; defer Current/H264/endurance pending investigation.",
+  "supervisor_pid": 5419,
+  "source_matrix_pid": 5420,
+  "source_matrix_action": "Continue normally; preserve every report and let each app close its device",
+  "downstream_action": "Stop only the waiting top-level supervisor so it cannot start later phases"
+}

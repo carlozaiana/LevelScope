@@ -1,0 +1,25 @@
+{
+  "source_digests": {
+    "candidate_01": "dd9f3392c3744c246951e33ca426545eb9d1aa8b97cafdf1ec0a2d21e73cad45",
+    "candidate_02": "c3df888f567a69adb83cbb6c7d2c7a1dcdf1da9498d43d688ffe890786c0e43e"
+  },
+  "changed_inputs": {
+    "Source/Standalone/StandaloneAudition.cpp": {
+      "candidate_01": "73ac055b3d4404d3a7bf9461b7c8f74516cc16e10154aade26307e012e6fbd7a",
+      "candidate_02": "1d7ddf823b7dd477cb5ead1f8fdff0b89f8a03550db161c2b08213cfe615ff95"
+    },
+    "Tests/M7QualificationRunnerTests.py": {
+      "candidate_01": "ead4eea20cd6ea37d27f528e8574d1dfd045f6d7fc67d2aeff60c810f0c9c79c",
+      "candidate_02": "16dfb4073bd8cf58aeb5c9bf111e006d85d7f538ca38afc65767bff08af9d36c"
+    },
+    "Tests/MultichannelTests.cpp": {
+      "candidate_01": "142881135d7de7cfd67c77c3636e56de7c241ced54ad6384c483b62217294264",
+      "candidate_02": "0fbf0ade7a71c9fe0e4c702d143babb619eb4661027cba16029ce1cf3f5ba7d3"
+    },
+    "Tests/compare_m7_reports.py": {
+      "candidate_01": "c7422e52b8a7e23f2f51a577e43dbffc4a0c7aaf72cd8579230f5a04a476549c",
+      "candidate_02": "f1e046ebf8a5edf68976f44bb862de834fa8ef6e06c518825774e24900ef0bbf"
+    }
+  },
+  "ui_reuse": "Candidate-01 non-audition UI checks may be reused: all UI, measurement, profile, diagnostics and sections implementation inputs are identical. Repeat affected audition preparation/seek/lifecycle on candidate-02; all automated suites are rerun."
+}

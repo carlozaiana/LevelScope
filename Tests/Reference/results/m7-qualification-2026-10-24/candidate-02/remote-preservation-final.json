@@ -1,0 +1,10 @@
+{
+  "recorded_utc": "2026-10-24T14:38:14.728573+00:00",
+  "scope": "Read-only remote preservation check; no M7 publication",
+  "main": "b57a1ed23cbe7d74afe98ed16ec8fd615db9d171",
+  "logic_branch": "b57a1ed23cbe7d74afe98ed16ec8fd615db9d171",
+  "baseline_main": "b57a1ed23cbe7d74afe98ed16ec8fd615db9d171",
+  "existing_tag_count": 10,
+  "existing_tag_mismatches": [],
+  "passed": true
+}

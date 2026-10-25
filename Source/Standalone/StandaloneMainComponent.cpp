@@ -584,6 +584,11 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
             {
                 text << "Selected source:\n";
                 text << session.sourceDocument.displayName << "\n\n";
+                text << session.sourceDocument.media.layoutProvenance << "\n";
+                if (session.sourceDocument.layout.manuallyInterpreted)
+                    text << "Explicit manual interpretation selected; original metadata remains recorded.\n";
+                if (session.sourceDocument.media.measurementRestriction.isNotEmpty())
+                    text << session.sourceDocument.media.measurementRestriction << "\n";
                 text << "Confirm roles, then use Measure Source.\n";
             }
             else
@@ -599,7 +604,8 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
             text << evaluationText (session.evaluation (MeasurementDomain::source)) << "\n";
             const auto error = OfflineAnalysisService::validateRequest (session.measurementContext (MeasurementDomain::source), MeasurementDomain::source);
             text << (error.isEmpty() ? "Ready to measure Source." : error) << "\n\n";
-            text << "Supported: mono, stereo and 5.0/5.1 at 44.1/48/96/192 kHz.\n";
+            text << "Supported: mono, stereo, 5.0/5.1 and explicit BS.2051 System I 7.1 at 44.1/48/96/192 kHz.\n";
+            text << "7.1 requires distinct side/rear roles and confirmation; monitor muting never excludes a channel from measurement.\n";
             text << "LFE is excluded from loudness and included in peak measurement.\n";
             text << "Measure Source reads a verified copy of the full original file.\n\n";
             text << measurementsText (session.source);
@@ -719,7 +725,10 @@ void StandaloneMainComponent::resized()
     cancelJobButton.setBounds (jobRow.removeFromRight (120));
     jobLabel.setBounds (jobRow);
     bounds.removeFromTop (8);
-    auto summaryArea = bounds.removeFromTop (180);
+    // Keep the audition controls and a usable channel viewport at smaller window
+    // heights. The workflow detail box also contains each state's full summary.
+    const int availableSummary = juce::jlimit (0, 180, bounds.getHeight() - 14 - 390);
+    auto summaryArea = bounds.removeFromTop (availableSummary >= 80 ? availableSummary : 0);
     const auto gap = 12;
     const auto columnWidth = (summaryArea.getWidth() - (2 * gap)) / 3;
 

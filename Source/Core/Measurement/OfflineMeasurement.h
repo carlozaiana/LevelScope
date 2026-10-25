@@ -8,8 +8,11 @@
 namespace levelscope::measurement
 {
 // Independent of plugin detectors/history, GUI and device state. Worker-thread only.
-inline constexpr const char* version = "bs1770-5-ebu2023-m1.1";
-enum class Role { left, right, centre, surroundLeft, surroundRight, lfe };
+inline constexpr const char* version = "bs1770-5-ebu2023-m7.1";
+// Legacy 5.x surrounds and System I sides retain 1.41. Only the explicitly
+// identified System I rear pair uses 1.00 (BS.1770-5 Annex 3, Table 5).
+enum class Role { left, right, centre, surroundLeft, surroundRight, lfe, rearLeft, rearRight };
+inline constexpr int channelCapacity = 12; // storage capacity, not a layout claim
 enum class Status { available, silence, insufficientDuration, belowGate };
 struct Metric
 {

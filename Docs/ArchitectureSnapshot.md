@@ -9,7 +9,30 @@ This document is a **contract** for parallel development chats.
 Anything marked **Implemented** must be preserved.  
 Anything marked **Planned** must not be assumed to exist until integrated.
 
-Last updated: **2026-10-20**
+Last updated: **2026-10-25**
+
+**M7 qualified and published, 25 October 2026:**
+annotated checkpoint [`m7-pcm-7.1-2026-10-25`](https://github.com/carlozaiana/LevelScope/tree/m7-pcm-7.1-2026-10-25)
+is integrated into main. The
+explicit System I 7.1 preserves original ordered channels and uses versioned layout
+capability independently of the unchanged EBU programme profile. Side roles retain
+1.41 loudness weighting; System I rears use 1.00 and LFE remains excluded only from
+loudness, never peaks or processing. Legacy 5.1 mapping remains qualified. All eight
+channels reach shared full-precision processing and pre-monitor capture, irrespective
+of partial monitoring. Main's optional paint diagnostic executable is integrated
+with tracing absent from normal binaries. It is not a scheduling fix. See
+[the completion acceptance](ProjectIndex/34_M7CompletionAcceptance.md) and
+[qualification/handover](ProjectIndex/32_M7QualificationAndHandover.md). Full physical
+7.1 listening is separately pending; 7.1.4 and further immersive expansion are
+now deferred in favor of the practical stereo/5.1 workflow.
+Combined candidate-03 passed actual arm64 Sequoia and Intel High Sierra regression,
+reference, UI and video qualification: 20 fresh short device cases plus three
+30-minute Current ProRes runs per Mac. All 46 fresh physical cases recorded zero
+skips; earlier strict failures remain historical results under the separately
+recorded development acceptance. Existing three-hour and Source-matrix evidence
+is reused only through the documented implementation-equivalence review.
+The next proposed milestone is safe session saving/reopening, followed by verified
+PCM export/artifact QC and reports; none of that roadmap is implemented here.
 
 **Standalone continuation, 18 October 2026:** qualified M1 offline measurement,
 M2 versioned programme-rule evaluation and M3 deterministic global trim with

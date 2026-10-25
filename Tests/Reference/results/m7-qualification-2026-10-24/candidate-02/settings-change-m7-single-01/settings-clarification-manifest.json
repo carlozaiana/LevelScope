@@ -1,0 +1,14 @@
+{
+  "recorded_utc": "2026-10-24T16:33:30.930163+00:00",
+  "scope": "Later user-provided settings clarification; no change to prior raw evidence or M7 qualification status",
+  "source": "Direct user reply in this chat on 2026-10-24",
+  "note": {
+    "path": "user-settings-clarification-2026-10-24.md",
+    "sha256": "ccdbcfdac69845191c4247de82203c55e5c0d0226c58c8565c207e0f007f98ee"
+  },
+  "associated_report": {
+    "path": "m7-stereo-1.json",
+    "sha256": "8949e7dcb612f266d99579af6302d1dee1bb093e483821cfa6a9c8db8853e166"
+  },
+  "original_evidence_manifest_sha256": "a89bb6697d9fdf2efcaba9baa49f9e80b982f4cc4779102e6ad5d45ac55135ef"
+}

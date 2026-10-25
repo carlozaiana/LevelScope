@@ -1,0 +1,184 @@
+{
+  "scope": "Internal audio-clock and UI paint selection; no optical/acoustic measurement",
+  "passed": true,
+  "error": "",
+  "os": "Mac OSX 15.7.9",
+  "architecture": "arm64",
+  "sample_rate": 48000.0,
+  "device": "Mac Studio Speakers",
+  "audio_sha256": "15637c068e120ab8af3393d4515b4e9a4922aa709e84847fa3598a96132bc817",
+  "audition_state": "Source",
+  "processing_gain_db": 0.0,
+  "audition_identity": "source-transport:78a99daa57cdb2fdb4a7cdcdeff3c6b5e72bc6054e1b9f1d88cd5b6c9112168a",
+  "measurement_build": "4c12ce29addf7149641df1af27f136b933cf575c69757e91f61ee39c9a7e144e",
+  "measurement_status": "UNVERIFIED; timing qualification does not measure compliance",
+  "video_sha256": "9cd03051bb51d54ac0bca0a3ee3ef1af9c6d32f71f2b37fbfd9944a1ab78d164",
+  "backend": "AVAssetReader / BGRA / JUCE image",
+  "source_seconds": 18.0416875,
+  "requested_seconds": 18.0,
+  "latency_frames": 829,
+  "hal_output_timestamp": true,
+  "paints": 959,
+  "blank_paints": 0,
+  "bound_failures": 0,
+  "maximum_frame_pts_skew_seconds": 0.0,
+  "maximum_cpu_paint_ms": 0.07975,
+  "paint_deadline_failures": 0,
+  "mean_skew_seconds": 0.0,
+  "first_minute_mean_skew_seconds": 0.0,
+  "last_minute_mean_skew_seconds": 0.0,
+  "underrun_blocks": 0,
+  "late_polls": 19,
+  "skipped_frames": 0,
+  "skipped_frame_limit": 0,
+  "maximum_paint_interval_ms": 29.157667,
+  "skip_events": [],
+  "actual_paint_skipped_frames": 0,
+  "unique_painted_frames": 385,
+  "hash_ms": 1547.758875,
+  "index_ms": 35.306042,
+  "embedded_audio_policy": "Excluded by video-only backend; independent nonzero-sink audit is a separate test",
+  "all_routes_muted": true,
+  "selected_audio_channels": 8,
+  "layout_capability": "pcm-7.1-bs2051-system-i-v1",
+  "pre_monitor_frames_observed": 867328,
+  "pre_monitor_nonzero_channel_mask": 255,
+  "pre_monitor_channel_count_valid": true,
+  "attachment_first_picture_s": 1.68235725,
+  "attachment_budget_s": 34.4201808642149,
+  "attachment_within_budget": true,
+  "peak_sampled_playback_rss_bytes": 5.02104064e8,
+  "first_minute_mean_rss_bytes": 4.76553216e8,
+  "last_minute_mean_rss_bytes": 4.76553216e8,
+  "memory_growth_assessed": false,
+  "memory_passed": true,
+  "memory_sampling": "Background sampler; no Mach memory query on the paint/timer thread",
+  "maximum_memory_query_ms": 0.018917,
+  "qualification_eligible": true,
+  "memory_method": "prores-memory-v2-user-approved-2026-10-20",
+  "allocator_relief_requested": false,
+  "memory_query_failures": 0,
+  "memory_samples": [
+    {
+      "seconds": 2,
+      "rss_bytes": 4.40877056e8,
+      "reusable_bytes": 1.91594496e8,
+      "non_reusable_resident_bytes": 2.4928256e8,
+      "physical_footprint_bytes": 9.7324224e7
+    },
+    {
+      "seconds": 3,
+      "rss_bytes": 4.4212224e8,
+      "reusable_bytes": 1.92692224e8,
+      "non_reusable_resident_bytes": 2.49430016e8,
+      "physical_footprint_bytes": 9.7307904e7
+    },
+    {
+      "seconds": 4,
+      "rss_bytes": 4.42220544e8,
+      "reusable_bytes": 2.01015296e8,
+      "non_reusable_resident_bytes": 2.41205248e8,
+      "physical_footprint_bytes": 8.9083136e7
+    },
+    {
+      "seconds": 5,
+      "rss_bytes": 4.68303872e8,
+      "reusable_bytes": 2.10468864e8,
+      "non_reusable_resident_bytes": 2.57835008e8,
+      "physical_footprint_bytes": 1.05729344e8
+    },
+    {
+      "seconds": 6,
+      "rss_bytes": 4.76626944e8,
+      "reusable_bytes": 2.3543808e8,
+      "non_reusable_resident_bytes": 2.41188864e8,
+      "physical_footprint_bytes": 8.9099648e7
+    },
+    {
+      "seconds": 7,
+      "rss_bytes": 4.76758016e8,
+      "reusable_bytes": 2.3543808e8,
+      "non_reusable_resident_bytes": 2.41319936e8,
+      "physical_footprint_bytes": 8.923072e7
+    },
+    {
+      "seconds": 8,
+      "rss_bytes": 4.76758016e8,
+      "reusable_bytes": 2.3543808e8,
+      "non_reusable_resident_bytes": 2.41319936e8,
+      "physical_footprint_bytes": 8.923072e7
+    },
+    {
+      "seconds": 9,
+      "rss_bytes": 4.76889088e8,
+      "reusable_bytes": 2.3543808e8,
+      "non_reusable_resident_bytes": 2.41451008e8,
+      "physical_footprint_bytes": 8.923072e7
+    },
+    {
+      "seconds": 10,
+      "rss_bytes": 4.76954624e8,
+      "reusable_bytes": 2.3543808e8,
+      "non_reusable_resident_bytes": 2.41516544e8,
+      "physical_footprint_bytes": 8.9247104e7
+    },
+    {
+      "seconds": 11,
+      "rss_bytes": 4.8529408e8,
+      "reusable_bytes": 2.43761152e8,
+      "non_reusable_resident_bytes": 2.41532928e8,
+      "physical_footprint_bytes": 8.9263488e7
+    },
+    {
+      "seconds": 12,
+      "rss_bytes": 4.8529408e8,
+      "reusable_bytes": 2.43761152e8,
+      "non_reusable_resident_bytes": 2.41532928e8,
+      "physical_footprint_bytes": 8.9263488e7
+    },
+    {
+      "seconds": 13,
+      "rss_bytes": 4.85310464e8,
+      "reusable_bytes": 2.43761152e8,
+      "non_reusable_resident_bytes": 2.41549312e8,
+      "physical_footprint_bytes": 8.9279872e7
+    },
+    {
+      "seconds": 14,
+      "rss_bytes": 4.85310464e8,
+      "reusable_bytes": 2.43761152e8,
+      "non_reusable_resident_bytes": 2.41549312e8,
+      "physical_footprint_bytes": 8.9279872e7
+    },
+    {
+      "seconds": 15,
+      "rss_bytes": 5.01972992e8,
+      "reusable_bytes": 2.43761152e8,
+      "non_reusable_resident_bytes": 2.5821184e8,
+      "physical_footprint_bytes": 1.05958848e8
+    },
+    {
+      "seconds": 16,
+      "rss_bytes": 5.02054912e8,
+      "reusable_bytes": 2.60390912e8,
+      "non_reusable_resident_bytes": 2.41664e8,
+      "physical_footprint_bytes": 8.9394624e7
+    },
+    {
+      "seconds": 17,
+      "rss_bytes": 5.02104064e8,
+      "reusable_bytes": 2.60390912e8,
+      "non_reusable_resident_bytes": 2.41713152e8,
+      "physical_footprint_bytes": 8.9443776e7
+    }
+  ],
+  "first_minute_memory_sample_count": 16,
+  "last_minute_memory_sample_count": 16,
+  "peak_non_reusable_resident_bytes": 2.5821184e8,
+  "peak_physical_footprint_bytes": 1.05958848e8,
+  "first_minute_mean_non_reusable_resident_bytes": 2.44518912e8,
+  "last_minute_mean_non_reusable_resident_bytes": 2.44518912e8,
+  "first_minute_mean_physical_footprint_bytes": 9.2335468e7,
+  "last_minute_mean_physical_footprint_bytes": 9.2335468e7,
+  "process_peak_rss_including_load_bytes": 518995968
+}

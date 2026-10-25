@@ -1,0 +1,2 @@
+EXPECTED_REJECTION ProRes requires square pixels and full, centred aperture
+PASS: 2 ProRes checks; controlled sink only, no physical audio device

@@ -1,0 +1,31 @@
+{
+  "passed": true,
+  "symbols": [
+    {
+      "binary": "LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone",
+      "sha256": "14ba35d2f6ddc0bded680df267e81996f768c1537be1d6d360da87376b6889db",
+      "architecture": "arm64",
+      "trace_symbols_present": false,
+      "expected": false,
+      "passed": true
+    },
+    {
+      "binary": "LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "sha256": "dbeb25405e6d2ee7fc8f54ad425675830656a29e8103529651df92432fa8f89d",
+      "architecture": "arm64",
+      "trace_symbols_present": false,
+      "expected": false,
+      "passed": true
+    },
+    {
+      "binary": "LevelScope Video Paint Diagnostic.app/Contents/MacOS/LevelScope Video Paint Diagnostic",
+      "sha256": "3e5ea907484a1888c97162d107edf0fca2796f696ebc73b2faa75146533ade58",
+      "architecture": "arm64",
+      "trace_symbols_present": true,
+      "expected": true,
+      "passed": true
+    }
+  ],
+  "offline_trace_sha256": "f771ff618d7230457a075d6d6fbd37b13d70a1de7cdfc5654def632ce58e630d",
+  "overwrite_preserved": true
+}

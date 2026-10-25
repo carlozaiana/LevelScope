@@ -425,7 +425,8 @@ public:
         ++revision;
         sourceDocument.layout.roles[channel] = role;
         sourceDocument.layout.confirmed = false;
-        sourceDocument.importStatus = "File-channel roles changed; confirmation required.";
+        sourceDocument.layout.manuallyInterpreted = true;
+        sourceDocument.importStatus = "Manual file-channel interpretation; confirmation required.";
         source = MeasurementSummary();
         currentState = MeasurementSummary();
         currentStateDocument.clear();
@@ -437,7 +438,9 @@ public:
         discardTrim();
         ++revision;
         sourceDocument.layout.confirmed = true;
-        sourceDocument.importStatus = "Source decoded; file-channel roles confirmed.";
+        sourceDocument.importStatus = sourceDocument.layout.manuallyInterpreted
+            ? "Source decoded; explicit manual file-channel interpretation confirmed."
+            : "Source decoded; format-suggested file-channel roles confirmed.";
         return true;
     }
 

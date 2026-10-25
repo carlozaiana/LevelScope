@@ -1,0 +1,30 @@
+[
+  {
+    "name": "prores-matrix-source",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "/Users/fuzz/Developer/LevelScope/build/m7-qualification-2026-10-24/candidate-02/Tests/run_prores_playback_qualification.py",
+      "--binary",
+      "/Users/fuzz/Developer/LevelScope/build/m7-qualification-2026-10-24/candidate-02/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--fixtures",
+      "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures",
+      "--actual",
+      "/Users/fuzz/Developer/LevelScope/Tests/51_SyncTest.mov",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m7-qualification-2026-10-24/sequoia-muted-video-02/prores-matrix-source",
+      "--device",
+      "Mac Studio Speakers",
+      "--sample-rate",
+      "48000",
+      "--phase",
+      "matrix",
+      "--audition-state",
+      "source",
+      "--audio",
+      "/Users/fuzz/Developer/LevelScope/build/m7-qualification-2026-10-24/candidate-02/m7-fixtures/clock-71-48000.flac"
+    ],
+    "exit_code": 1,
+    "seconds": 856.822706125
+  }
+]

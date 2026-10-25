@@ -1,0 +1,42 @@
+{
+  "name": "m7-stereo-1",
+  "ended_utc": "2026-10-24T15:30:37.111731+00:00",
+  "exit_code": 0,
+  "wall_seconds": 106.34502187500001,
+  "binary_sha256": "7b0113714b90fa582dd6ae725652630e7bd4f601fecc608fcb4dd15acd0d512e",
+  "passed": true,
+  "error": "",
+  "source_seconds": 100.02575,
+  "requested_seconds": 100.0,
+  "sample_rate": 48000.0,
+  "all_routes_muted": true,
+  "actual_paint_skipped_frames": 0,
+  "maximum_paint_interval_ms": 29.872708,
+  "bound_failures": 0,
+  "underrun_blocks": 0,
+  "blank_paints": 0,
+  "paint_deadline_failures": 0,
+  "maximum_frame_pts_skew_seconds": 0.0,
+  "memory_passed": true,
+  "attachment_within_budget": true,
+  "skip_events": [],
+  "report_sha256": "9ee8e2a42110b7143febb830dc05217d8af9645061bfc980e6a623e1d6e48b57",
+  "connection_after": {
+    "recorded_utc": "2026-10-24T15:30:37.192734+00:00",
+    "viewer_processes": [
+      {
+        "pid": 1604,
+        "executable": "/System/Applications/Utilities/Screen Sharing.app/Contents/MacOS/Screen Sharing"
+      }
+    ],
+    "forbidden_ssh_or_candidate_processes": [],
+    "connection_counts": [
+      {
+        "viewer_pid": 1604,
+        "established_tcp_connections": 1,
+        "lsof_exit_code": 0
+      }
+    ],
+    "connected_and_no_ssh": true
+  }
+}

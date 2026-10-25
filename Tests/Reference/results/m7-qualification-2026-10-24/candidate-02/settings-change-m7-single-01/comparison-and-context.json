@@ -1,0 +1,24 @@
+{
+  "scope": "One user-requested frozen M7 stereo reference test after user-reported settings changes, not another six-run condition.",
+  "baseline": "../screen-sharing-idle-ssh-local-six-01",
+  "same_recorded_fields": {
+    "boot_time": true,
+    "os": true,
+    "architecture": true,
+    "cpu": true,
+    "power_settings_read_only": true,
+    "display_configuration_read_only": true,
+    "head": true,
+    "tag_objects_and_targets": true,
+    "source_digest": true,
+    "binaries_sha256": true,
+    "audio_sha256": true,
+    "video_sha256": true
+  },
+  "user_reported_settings_change": "Exact changed settings requested; description not yet received at evidence collection.",
+  "settings_inventory_limit": "Display and pmset snapshots are limited observations, not a complete inventory of macOS or application settings.",
+  "passed": true,
+  "wall_seconds": 106.928233125,
+  "m7_qualified": false,
+  "m7_frozen": true
+}

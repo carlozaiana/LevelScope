@@ -1,0 +1,91 @@
+{
+  "suite": "M7 generated extension vectors; not an official EBU/ITU suite",
+  "generator": "Tests/MultichannelTests.cpp makeLong/createUiFixtures",
+  "layout": "pcm-7.1-bs2051-system-i-v1",
+  "long_programme": {
+    "file": "three-hour-71-48000.flac",
+    "sample_rate": 48000,
+    "channels": 8,
+    "frames": 518400000,
+    "seconds": 10800,
+    "container": "native FLAC PCM16",
+    "signal": "Eight distinct integer triangle periods/amplitudes, minute-scale levels, unique late per-channel impulses"
+  },
+  "clock_programmes": {
+    "seconds": 1801,
+    "sample_rates": [
+      44100,
+      48000
+    ],
+    "channels": 8,
+    "container": "native FLAC PCM16"
+  },
+  "files": [
+    {
+      "file": "clock-71-44100.flac",
+      "group": "fixtures",
+      "sha256": "a09b3876db06d0f4a75c690efa242c89b21ce488f3fe89fc0946792a661a504c",
+      "bytes": 96435635
+    },
+    {
+      "file": "clock-71-48000.flac",
+      "group": "fixtures",
+      "sha256": "15637c068e120ab8af3393d4515b4e9a4922aa709e84847fa3598a96132bc817",
+      "bytes": 104958962
+    },
+    {
+      "file": "three-hour-71-48000.flac",
+      "group": "fixtures",
+      "sha256": "81f2fa91dedac473eefb9285b738b09bb4606bc6827aa9a035497c051e67b99c",
+      "bytes": 629476570
+    },
+    {
+      "file": "invalid-mask.wav",
+      "group": "ui-fixtures",
+      "sha256": "88e68a444faa159752a9070d94097b2c72ed9f9abfb5ab10146bae0956e69b06",
+      "bytes": 9216068
+    },
+    {
+      "file": "legacy-51.flac",
+      "group": "ui-fixtures",
+      "sha256": "0b40abaade6625a5103ed7ef5e74fc05ac392638af2639d13a97ac9e40363c51",
+      "bytes": 1307258
+    },
+    {
+      "file": "legacy-51.wav",
+      "group": "ui-fixtures",
+      "sha256": "ebf6dab111a7d7aad006dd68f8fa1e9a39043dd4a95523acaf0138c32422f431",
+      "bytes": 6912068
+    },
+    {
+      "file": "system-i-default.flac",
+      "group": "ui-fixtures",
+      "sha256": "6969d45f4f9a7d0364ce91dfd5b9d522ca29c7eedb1ebabccb42a657a5752740",
+      "bytes": 2028636
+    },
+    {
+      "file": "system-i-manual.aiff",
+      "group": "ui-fixtures",
+      "sha256": "255fc6d7a69d5d0c8cbe79b274f2ee2967cc09bcdccaf1d6e3388b568be0d8f0",
+      "bytes": 9216054
+    },
+    {
+      "file": "system-i-mask.wav",
+      "group": "ui-fixtures",
+      "sha256": "7f3a0ee3c0a978dc9e79a29c5d4b674840ca9d2f12d4c2491ff70cef65b5867b",
+      "bytes": 9216068
+    },
+    {
+      "file": "system-i-unlabelled.wav",
+      "group": "ui-fixtures",
+      "sha256": "3637e1418c2243073fa506127836b2d2ea0c1353e5e6c55a1492de8263eee570",
+      "bytes": 9216044
+    },
+    {
+      "file": "unsupported-sdds.wav",
+      "group": "ui-fixtures",
+      "sha256": "e9d02027277e427fd310c612b0aa471c310c0318b8d45f6e65a0faa208374339",
+      "bytes": 9216068
+    }
+  ]
+}

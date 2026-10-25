@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "scope": "Same-platform candidate02/03 measurement and pre-monitor capture regression",
+  "cases": 218,
+  "original_build": "4c12ce29addf7149641df1af27f136b933cf575c69757e91f61ee39c9a7e144e",
+  "new_build": "facfe596c7126188b24627dfeab06dec907332b96442634c9ad8ee29675ea069",
+  "exact_metrics_and_capture_hashes": true,
+  "errors": [],
+  "old_report_sha256": "8af8db0b36777fc4c8c218a788206523aa2a34d0f4f42ae69b18cfc44ae96dae",
+  "new_report_sha256": "ad9b94fe3bafd135cb5148cdcc8b7cab867a7c5c37a979c334d1258373235d10"
+}

@@ -1,4 +1,5 @@
 #include "StandaloneAudioPanel.h"
+#include "StandaloneMeasurementLayout.h"
 
 namespace levelscope::standalone
 {
@@ -10,7 +11,7 @@ StandaloneAudioPanel::StandaloneAudioPanel (StandaloneSessionModel& model, Stand
     session.auditionBusy = [&engine] { return engine.active() && engine.getState() != AuditionState::cancelling; };
     for (auto* component : std::initializer_list<juce::Component*> {
         &typeBox, &deviceBox, &scanButton, &openButton, &closeButton, &playButton,
-        &stopButton, &restartButton, &seekButton, &seekPosition, &confirmButton, &gain, &statusLabel, &heading, &viewport, &domainBox, &prepareButton, &auditionLabel })
+        &stopButton, &restartButton, &seekButton, &seekPosition, &confirmButton, &gain, &statusLabel, &heading, &viewport, &domainBox, &prepareButton, &auditionLabel, &layoutPreset })
         addAndMakeVisible (*component);
     const auto& types = audio.deviceTypes();
     for (int i = 0; i < types.size(); ++i) typeBox.addItem (types[i]->getTypeName(), i + 1);
@@ -63,6 +64,17 @@ StandaloneAudioPanel::StandaloneAudioPanel (StandaloneSessionModel& model, Stand
     };
     seekPosition.onReturnKey = [this] { seekButton.triggerClick(); };
     confirmButton.onClick = [this] { session.confirmLayout(); onChanged(); };
+    layoutPreset.setTextWhenNothingSelected ("Explicit System I order preset (then confirm)");
+    layoutPreset.addItem ("L R C LFE Lrs Rrs Lss Rss — WAVE / FLAC order", 1);
+    layoutPreset.addItem ("L R C LFE Lss Rss Lrs Rrs — side before rear", 2);
+    layoutPreset.onChange = [this]
+    {
+        if (session.sourceDocument.layout.count != 8 || layoutPreset.getSelectedId() == 0) return;
+        const auto layout = systemILayout (layoutPreset.getSelectedId() == 2);
+        for (int i = 0; i < layout.count; ++i) session.setChannelRole (i, layout.roles[i]);
+        layoutPreset.setSelectedId (0, juce::dontSendNotification);
+        onChanged();
+    };
     gain.setRange (-60, 0, 0.5);
     gain.setSliderStyle (juce::Slider::LinearHorizontal);
     gain.setTextBoxStyle (juce::Slider::TextBoxRight, false, 80, 24);
@@ -80,7 +92,7 @@ StandaloneAudioPanel::StandaloneAudioPanel (StandaloneSessionModel& model, Stand
         rows.addAndMakeVisible (channelLabels[channel]);
         rows.addAndMakeVisible (roleBoxes[channel]);
         rows.addAndMakeVisible (outputBoxes[channel]);
-        channelLabels[channel].setText ("File " + juce::String (channel + 1), juce::dontSendNotification);
+        channelLabels[channel].setText ("Channel " + juce::String (channel + 1), juce::dontSendNotification);
         roleBoxes[channel].addItem ("Unassigned", 1);
         for (size_t role = 0; role < supportedRoles.size(); ++role)
             roleBoxes[channel].addItem (juce::AudioChannelSet::getChannelTypeName (supportedRoles[role]), static_cast<int> (role) + 2);
@@ -88,7 +100,8 @@ StandaloneAudioPanel::StandaloneAudioPanel (StandaloneSessionModel& model, Stand
         {
             const auto index = roleBoxes[channel].getSelectedId() - 2;
             session.setChannelRole (channel, juce::isPositiveAndBelow (index, static_cast<int> (supportedRoles.size()))
-                ? supportedRoles[static_cast<size_t> (index)] : juce::AudioChannelSet::unknown);
+                ? supportedRoles[static_cast<size_t> (index)] : session.sourceDocument.layout.count == 8
+                ? systemIRoleForAlias (roleBoxes[channel].getText()) : juce::AudioChannelSet::unknown);
             onChanged();
         };
         outputBoxes[channel].onChange = [this, channel]
@@ -179,6 +192,8 @@ void StandaloneAudioPanel::refresh()
     seekButton.setEnabled (!session.job.isActive() && ! audio.preparing() && requestError.isEmpty());
     seekPosition.setEnabled (seekButton.isEnabled());
     confirmButton.setEnabled (editable && source.hasSource && source.layout.isValid() && ! source.layout.confirmed);
+    layoutPreset.setEnabled (editable && source.hasSource && source.layout.count == 8);
+    layoutPreset.setTooltip (source.media.layoutProvenance);
     for (int channel = 0; channel < maxChannels; ++channel)
     {
         const bool visible = channel < source.layout.count;
@@ -186,11 +201,17 @@ void StandaloneAudioPanel::refresh()
         roleBoxes[channel].setVisible (visible);
         outputBoxes[channel].setVisible (visible);
         roleBoxes[channel].setEnabled (editable);
+        roleBoxes[channel].setEditableText (source.layout.count == 8);
+        roleBoxes[channel].setTooltip (source.layout.count == 8
+            ? "Select a role or enter a documented System I alias (L/R/C/LFE/Lss/Rss/Lrs/Rrs). Confirm roles afterwards."
+            : "Select the original file-channel speaker role, then confirm.");
         outputBoxes[channel].setEnabled (editable);
         int selected = 1;
         for (size_t role = 0; role < supportedRoles.size(); ++role)
             if (source.layout.roles[channel] == supportedRoles[role]) selected = static_cast<int> (role) + 2;
-        roleBoxes[channel].setSelectedId (selected, juce::dontSendNotification);
+        // A timer refresh must not erase an alias while the user is typing it.
+        if (! roleBoxes[channel].hasKeyboardFocus (true))
+            roleBoxes[channel].setSelectedId (selected, juce::dontSendNotification);
     }
     juce::String status = actionError.isNotEmpty() ? actionError : audio.status();
     if (audio.preparing()) status << " | " << juce::String (juce::roundToInt (100 * audio.preparationProgress())) << "%";
@@ -198,6 +219,8 @@ void StandaloneAudioPanel::refresh()
         status << "  |  " << juce::String (audio.positionSeconds(), 1) << " s  |  underruns " << juce::String (audio.underruns());
     status << "\n" << (source.layout.confirmed ? "Roles confirmed. " : "Review decoder-suggested roles; then confirm. ");
     if (routeError.isNotEmpty()) status << routeError;
+    status << "\n" << (isSystemI (source.layout) ? "BS.2051 System I 7.1 | " : "") << monitoringCoverage (source.layout, source.routing);
+    statusLabel.setTooltip (source.media.layoutProvenance + (source.layout.manuallyInterpreted ? "\nExplicit manual interpretation selected." : ""));
     statusLabel.setText (status, juce::dontSendNotification);
 }
 
@@ -222,7 +245,8 @@ void StandaloneAudioPanel::resized()
     restartButton.setBounds (row.removeFromLeft (90).reduced (2));
     seekButton.setBounds (row.removeFromRight (65).reduced (2));
     seekPosition.setBounds (row.reduced (2));
-    statusLabel.setBounds (area.removeFromTop (55).reduced (2));
+    statusLabel.setBounds (area.removeFromTop (72).reduced (2));
+    layoutPreset.setBounds (area.removeFromTop (28).reduced (2));
     row = area.removeFromTop (30);
     confirmButton.setBounds (row.removeFromRight (115).reduced (2));
     heading.setBounds (row.reduced (2));
@@ -231,7 +255,7 @@ void StandaloneAudioPanel::resized()
     for (int channel = 0; channel < maxChannels; ++channel)
     {
         auto bounds = juce::Rectangle<int> (0, channel * 28, rows.getWidth(), 28).reduced (2);
-        channelLabels[channel].setBounds (bounds.removeFromLeft (60));
+        channelLabels[channel].setBounds (bounds.removeFromLeft (80));
         roleBoxes[channel].setBounds (bounds.removeFromLeft (210).reduced (2, 0));
         outputBoxes[channel].setBounds (bounds.reduced (2, 0));
     }

@@ -1,0 +1,58 @@
+{
+  "name": "m7-stereo-1",
+  "ended_utc": "2026-10-24T15:52:58.718196+00:00",
+  "exit_code": 0,
+  "wall_seconds": 106.314712584,
+  "binary_sha256": "7b0113714b90fa582dd6ae725652630e7bd4f601fecc608fcb4dd15acd0d512e",
+  "passed": true,
+  "error": "",
+  "source_seconds": 100.0485208333333,
+  "requested_seconds": 100.0,
+  "sample_rate": 48000.0,
+  "all_routes_muted": true,
+  "actual_paint_skipped_frames": 0,
+  "maximum_paint_interval_ms": 32.117875,
+  "bound_failures": 0,
+  "underrun_blocks": 0,
+  "blank_paints": 0,
+  "paint_deadline_failures": 0,
+  "maximum_frame_pts_skew_seconds": 0.0,
+  "memory_passed": true,
+  "attachment_within_budget": true,
+  "skip_events": [],
+  "report_sha256": "5675db5825e273d83fc91b6e2c8f704042b06627b64fd4568fb5cbe678c066bd",
+  "connection_after": {
+    "recorded_utc": "2026-10-24T15:52:58.874594+00:00",
+    "viewer_processes": [
+      {
+        "pid": 1604,
+        "executable": "/System/Applications/Utilities/Screen Sharing.app/Contents/MacOS/Screen Sharing"
+      }
+    ],
+    "ssh_client_processes": [
+      {
+        "pid": 2043,
+        "executable": "ssh"
+      }
+    ],
+    "forbidden_candidate_processes": [],
+    "connection_counts": [
+      {
+        "kind": "screen_sharing",
+        "pid": 1604,
+        "established_tcp_connections": 1,
+        "lsof_exit_code": 0
+      },
+      {
+        "kind": "ssh",
+        "pid": 2043,
+        "established_tcp_connections": 1,
+        "lsof_exit_code": 0
+      }
+    ],
+    "shared_destination_host": true,
+    "all_ssh_destinations_match_viewer_hosts": true,
+    "both_connected_to_same_host": true,
+    "idle_ssh_basis": "User confirmed idle remote shell; no remote command sent by runner. Boundary socket observations do not measure remote activity."
+  }
+}

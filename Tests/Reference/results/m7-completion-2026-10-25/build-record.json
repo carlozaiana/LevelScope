@@ -1,0 +1,27 @@
+{
+  "base_commit": "5e07bbd29930db34236d6dfcede7fea14983f90a",
+  "branch": "codex/logic-module",
+  "source_digest": "7abc7587514b7f0f750720ac7853abeaf55b21c90697b25de7740cec2df034bf",
+  "measurement_build": "facfe596c7126188b24627dfeab06dec907332b96442634c9ad8ee29675ea069",
+  "identity_sha256": "b2cf915f2f6b644993782363b0a0c243c49b43198100ae39ff6be870eff35f9e",
+  "build_log_sha256": "47bbf0bef1e1e9be9c79fee1240966d168bf5ed1ab563d7dd8c41221a150e116",
+  "configure_log_sha256": "ce91fdb6cf927ec0e404498ee053b0f20ace3a6e15c5e381be7989cdb6df9d29",
+  "explicit_targets": [
+    "LevelScopeStandalone",
+    "LevelScopeMeasurementTests",
+    "LevelScopeScaffoldTests",
+    "LevelScopeComplianceTests",
+    "LevelScopeProposalTests",
+    "LevelScopeDiagnosticsTests",
+    "LevelScopeSectionsTests",
+    "LevelScopeAuditionTests",
+    "LevelScopeMultichannelTests",
+    "LevelScopeVideoTests",
+    "LevelScopeVideoQualification",
+    "LevelScopeVideoPaintDiagnostic",
+    "LevelScopeVideoPaintTraceTests"
+  ],
+  "build_success": true,
+  "plugin_built": false,
+  "installations_changed": false
+}

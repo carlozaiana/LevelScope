@@ -14,6 +14,8 @@ struct MediaInfo
     int channels = 0, bitsPerSample = 0;
     juce::Time modified;
     juce::String format, sha256;
+    juce::String layoutProvenance;
+    juce::String measurementRestriction; // Broader Source audition may remain available.
     juce::StringPairArray tags;
     ChannelLayout suggestedLayout;
 

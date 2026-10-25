@@ -2,6 +2,7 @@
 // default device. No installed app/plugin or system default is modified.
 #include "Standalone/StandaloneVideo.h"
 #include "Standalone/StandaloneAudition.h"
+#include "Standalone/StandaloneMeasurementLayout.h"
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <iostream>
 #if LEVELSCOPE_VIDEO_PAINT_DIAGNOSTICS
@@ -16,6 +17,23 @@ namespace paintdiag = levelscope::paintdiagnostic;
 using namespace levelscope::standalone;
 namespace
 {
+struct ProcessingPresence final : ProcessedAudioObserver
+{
+    // Bounded callback evidence; full sample parity is qualified by M7's injected
+    // capture suite. Sample both ends of each callback on every original channel.
+    std::atomic<int64_t> frames { 0 };
+    std::atomic<unsigned> seen { 0 };
+    std::atomic<bool> valid { true };
+    int expected = 0;
+    void observe (const float* const* data, int channels, int count, int64_t) noexcept override
+    {
+        if (channels != expected || count <= 0) { valid.store (false); return; }
+        unsigned present = seen.load();
+        for (int c = 0; c < channels; ++c)
+            if (data[c][0] != 0 || data[c][count - 1] != 0) present |= (1u << c);
+        seen.store (present); frames.fetch_add (count);
+    }
+};
 class Run final : public juce::Component, private juce::Timer
 {
 public:
@@ -41,10 +59,14 @@ public:
         JobControl job; auto result = validateMedia (audioFile, job);
         if (!result.succeeded()) throw std::runtime_error (result.message.toStdString());
         media = result.media;
-        if (media.channels != 2 || (media.sampleRate != 48000 && media.sampleRate != 44100) || media.durationSeconds() < duration)
-            throw std::runtime_error ("Qualification requires a sufficiently long 44.1 or 48 kHz stereo source");
-        layout.count = 2; layout.roles[0] = juce::AudioChannelSet::left; layout.roles[1] = juce::AudioChannelSet::right; layout.confirmed = true;
+        if ((media.channels != 2 && ! isSystemI (media.suggestedLayout))
+            || (media.sampleRate != 48000 && media.sampleRate != 44100) || media.durationSeconds() < duration)
+            throw std::runtime_error ("Qualification requires a sufficiently long 44.1 or 48 kHz stereo or explicit System I source");
+        layout = media.suggestedLayout;
+        if (media.channels == 2) { layout.roles[0] = juce::AudioChannelSet::left; layout.roles[1] = juce::AudioChannelSet::right; }
+        layout.confirmed = true;
         request = AuditionRequest::source (audioFile, media, layout);
+        request.context.buildVersion = LEVELSCOPE_MEASUREMENT_BUILD;
         const auto auditionState = argument ("--audition-state");
         if (auditionState.isNotEmpty() && auditionState != "source" && auditionState != "current")
             throw std::runtime_error ("Audition state must be source or current");
@@ -62,6 +84,7 @@ public:
         if (requestError.isNotEmpty()) throw std::runtime_error (requestError.toStdString());
         routing.fileToDevice[0] = 0; routing.fileToDevice[1] = 1;
         muted = args.contains ("--muted");
+        if (media.channels == 8 && ! muted) throw std::runtime_error ("M7 video qualification requires all eight monitor routes muted");
         manualStart = args.contains ("--manual-start");
         startButton.setButtonText ("Start " + juce::String (duration, 0) + "-second check");
         addChildComponent (startButton); startButton.setVisible (manualStart); startButton.setBounds (10, 10, 195, 30);
@@ -81,6 +104,8 @@ public:
         if (audio.outputNames().size() != 2) throw std::runtime_error ("Use an explicitly coordinated two-output ordinary device");
         audio.setMonitorGainDb (-30);
         audio.synchronize (request, routing);
+        processingPresence.expected = media.channels;
+        if (! audio.setCaptureObserver (&processingPresence)) throw std::runtime_error ("Cannot attach processing-presence observer");
         const auto preparationError = audio.prepare (request);
         if (preparationError.isNotEmpty()) throw std::runtime_error (preparationError.toStdString());
         player.attach (videoFile); startedNs = attachmentStartedNs = StandaloneAudition::hostTimeNs();
@@ -245,7 +270,9 @@ private:
         juce::DynamicObject::Ptr report = new juce::DynamicObject();
         auto set = [&] (const char* key, juce::var value) { report->setProperty (key, std::move (value)); };
         set ("scope", "Internal audio-clock and UI paint selection; no optical/acoustic measurement");
-        set ("passed", error.isEmpty() && memoryPassed && attachmentPassed && boundFailures == 0 && paintedSkippedFrames == 0 && paintDeadlineFailures == 0 && blankPaints == 0 && underruns == 0 && seconds >= duration && skewCount > 0);
+        set ("passed", error.isEmpty() && memoryPassed && attachmentPassed && boundFailures == 0 && paintedSkippedFrames == 0 && paintDeadlineFailures == 0 && blankPaints == 0 && underruns == 0 && seconds >= duration && skewCount > 0
+            && processingPresence.valid.load() && processingPresence.frames.load() > 0
+            && (media.channels != 8 || processingPresence.seen.load() == 255));
         set ("error", error); set ("os", juce::SystemStats::getOperatingSystemName());
 #if defined(__arm64__)
         set ("architecture", "arm64");
@@ -280,6 +307,12 @@ private:
         set ("index_ms", view.asset ? view.asset->indexMilliseconds : 0);
         set ("embedded_audio_policy", "Excluded by video-only backend; independent nonzero-sink audit is a separate test");
         set ("all_routes_muted", muted);
+        set ("selected_audio_channels", media.channels);
+        set ("measurement_build", LEVELSCOPE_MEASUREMENT_BUILD);
+        set ("layout_capability", isSystemI (layout) ? systemICapability : "stereo");
+        set ("pre_monitor_frames_observed", static_cast<juce::int64> (processingPresence.frames.load()));
+        set ("pre_monitor_nonzero_channel_mask", static_cast<int> (processingPresence.seen.load()));
+        set ("pre_monitor_channel_count_valid", processingPresence.valid.load());
         set ("attachment_first_picture_s", attachmentSeconds);
         set ("attachment_budget_s", attachmentBudget);
         set ("attachment_within_budget", attachmentPassed);
@@ -384,6 +417,7 @@ private:
     double maxRetainedRss = 0, maxFootprint = 0;
     double firstRetainedSum = 0, lastRetainedSum = 0, firstFootprintSum = 0, lastFootprintSum = 0;
     juce::Array<juce::var> memorySamples;
+    ProcessingPresence processingPresence; // Outlives audio and its callback.
     StandaloneAudition audio;
     AuditionRequest request;
     video::Player player;

@@ -107,7 +107,7 @@ juce::String StandaloneDiagnosticsPanel::rowText (int row) const
     else if (rankingBox.getSelectedId() == 5 && static_cast<size_t> (row) < a.peaks.size())
     {
         const auto& p = a.peaks[static_cast<size_t> (row)];
-        s << "File channel " << juce::String (row + 1) << " " << juce::AudioChannelSet::getAbbreviatedChannelTypeName (displayed->snapshot->context.fileLayout.roles[row]);
+        s << "Channel " << juce::String (row + 1) << " " << juce::AudioChannelSet::getAbbreviatedChannelTypeName (displayed->snapshot->context.fileLayout.roles[row]);
         if (p.sampleDbfs) s << " | SP " << juce::String (*p.sampleDbfs, 6) << " dBFS @ " << juce::String (static_cast<double> (p.sampleFrame) / a.sampleRate, 9) << " s (frame " << juce::String (p.sampleFrame) << ")";
         else s << " | SP unavailable (silence; no location)";
         if (p.trueDbtp)

@@ -1,0 +1,15 @@
+{
+  "scope": "Single settings-change test addendum; not overall M7 qualification",
+  "files_sha256": {
+    "README.md": "51dc2d506972e943e72448eb3ff04002cafc313288a2eb479890ac94ead0197f",
+    "comparison-and-context.json": "0bdcac58dfffd19e89170369052f9e7f6e1f51e294b0578e5e7f71f6e081bc2f",
+    "final-integrity.json": "c5a7edee8033acec6492161b20572dcee327bb5427262e658adfe1b10e34edd5",
+    "m7-stereo-1-invocation.json": "07e0c0a17c4ff2c97bcbd7f036c869969e17212b12e051fb06c8f67c540b3080",
+    "m7-stereo-1-outcome.json": "d5fc150fe79e9eac64aed464319191a72955fa1dd03cb88710347df84cc02273",
+    "m7-stereo-1.json": "8949e7dcb612f266d99579af6302d1dee1bb093e483821cfa6a9c8db8853e166",
+    "m7-stereo-1.log": "fc7de889883eb494536e9ee44c273b52a54ec7efdf22ef224bfdf6786afb3d15",
+    "preflight.json": "7b85ddffe238984fa46f7bc6306f4a44990fc41c09e505c971978262d42f3425",
+    "run_settings_change_m7_single.py": "614026e54819a5d3057847d97cf58dbea5e8cb3b36f9d1d5b0e724197ab02c52",
+    "summary.json": "3f86427584e0a30344c415bc10ab765136ba1975f31fc8840f01e27ff587a31a"
+  }
+}

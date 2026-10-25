@@ -1,0 +1,2 @@
+EXPECTED_REJECTION ProRes requires one explicit Rec.709 SDR colr declaration (primaries, transfer and matrix 1/1/1); missing or contradictory colour metadata is unsupported
+PASS: 2 ProRes checks; controlled sink only, no physical audio device

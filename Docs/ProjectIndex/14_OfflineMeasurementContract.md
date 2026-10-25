@@ -19,10 +19,24 @@ level-gated full-mix loudness cannot be relabelled as that measurement.
 
 Initial measurement layouts: mono C/L/R, stereo L/R, 5.0/5.1 L/R/C/Ls/Rs with optional
 LFE. Surround and surround-side pairs are explicit accepted aliases for conventional
-5.1; rear pairs and height/extended layouts require a future position mapping. File
+5.1; those legacy decoder labels keep their 1.41 coefficient, including WAVE back
+bits and native FLAC's conventional 5.1 assignment. File
 order is retained. L/R/C energy weights are 1; Ls/Rs are 1.41; LFE is 0 for loudness.
 All channels enter sample/true peak. Rates: 44100, 48000, 96000, 192000 Hz; reject
 other rates rather than substitute a fallback. Import support remains broader.
+
+M7 implementation under qualification adds only explicitly identified BS.2051
+System I 7.1, capability `pcm-7.1-bs2051-system-i-v1`, role mapping
+`ordered-pcm-roles-m7.1` and measurement method `bs1770-5-ebu2023-m7.1`.
+L/R/C and the distinct M±135 rear pair use 1.00, M±090 sides use 1.41, LFE uses
+0 for loudness. All eight channels enter peaks and the unchanged full-precision
+static-gain operation, regardless of monitor routes. The original file order is
+retained; channel count alone never establishes System I. See the exact metadata,
+alias and confirmation rules in [31](31_M7ChannelBasedPcm71Proposal.md).
+Height layouts and RF64/BW64 capability extensions remain outside this scope.
+The EBU profile's definition and digest are unchanged; evaluation requires the
+compatible versioned measurement. Qualification status belongs in the M7 report,
+separately for offline processing, injected routing and physical 7.1 listening.
 
 ## Numerical and boundary contract
 

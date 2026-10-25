@@ -1,0 +1,10 @@
+{
+  "automated_passed": true,
+  "qualification_complete": false,
+  "physical_video_and_ui": "Separate required evidence; these suites alone do not qualify M7",
+  "interactive_ui": "Separate evidence required",
+  "platform": "sequoia",
+  "long_programme": "Not rerun; separate equivalence evidence required",
+  "source_digest": "7abc7587514b7f0f750720ac7853abeaf55b21c90697b25de7740cec2df034bf",
+  "identity_sha256": "b2cf915f2f6b644993782363b0a0c243c49b43198100ae39ff6be870eff35f9e"
+}

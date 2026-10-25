@@ -85,7 +85,7 @@ std::shared_ptr<const ProgramAnalysis> analyzeProgramme (const measurement::Resu
     }
     else require (! r.p10 && ! r.p95 && ! r.lra.value);
     const auto channels = r.channelSamplePeaks.size();
-    require (channels > 0 && channels <= 6 && r.channelTruePeaks.size() == channels
+    require (channels > 0 && channels <= measurement::channelCapacity && r.channelTruePeaks.size() == channels
              && r.samplePeakFrames.size() == channels && r.truePeakEighthFrames.size() == channels);
     for (size_t n = 0; n < channels; ++n)
     {

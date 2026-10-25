@@ -40,7 +40,8 @@ bool OfflineMeasurement::supports (int rate, const std::vector<Role>& roles)
     if (roles.size() == 1) return roles[0] == Role::left || roles[0] == Role::right || roles[0] == Role::centre;
     if (roles.size() == 2) return sorted == std::vector<Role> { Role::left, Role::right };
     return sorted == std::vector<Role> { Role::left, Role::right, Role::centre, Role::surroundLeft, Role::surroundRight }
-        || sorted == std::vector<Role> { Role::left, Role::right, Role::centre, Role::surroundLeft, Role::surroundRight, Role::lfe };
+        || sorted == std::vector<Role> { Role::left, Role::right, Role::centre, Role::surroundLeft, Role::surroundRight, Role::lfe }
+        || sorted == std::vector<Role> { Role::left, Role::right, Role::centre, Role::surroundLeft, Role::surroundRight, Role::lfe, Role::rearLeft, Role::rearRight };
 }
 
 OfflineMeasurement::OfflineMeasurement (int rate, const std::vector<Role>& roles)

@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "source_sha256": "81f2fa91dedac473eefb9285b738b09bb4606bc6827aa9a035497c051e67b99c",
+  "frames": 518400000,
+  "metric_errors": {
+    "source": {
+      "integrated_lufs": 0.0,
+      "true_peak_dbtp": 0.0,
+      "lra_lu": 0.0
+    },
+    "current": {
+      "integrated_lufs": 0.0,
+      "true_peak_dbtp": 0.0,
+      "lra_lu": 0.0
+    }
+  },
+  "reused_not_rerun": true,
+  "original_source_digest": "c3df888f567a69adb83cbb6c7d2c7a1dcdf1da9498d43d688ffe890786c0e43e",
+  "evidence": {
+    "Tests/Reference/results/m7-qualification-2026-10-24/candidate-02/sequoia/multichannel-long.json": "708ed1badc1da400f8914069d8c77552d44b8c44e2b666f0572e7922ad250484",
+    "Tests/Reference/results/m7-qualification-2026-10-24/candidate-02/high-sierra/multichannel-long.json": "cc0b658045b8e4c5a7002a885a8b4d2926e98b3c0f669c522327097601082d20",
+    "Tests/Reference/results/m7-qualification-2026-10-24/candidate-02/sequoia/environment.json": "19db9b5607e7e6a50ea99bc19041329ce02c0d240578fa7543249a1d25e60fe9",
+    "Tests/Reference/results/m7-qualification-2026-10-24/candidate-02/high-sierra/environment.json": "99f06ad0194a8ef6566bdb7fe8230aba67468741e2579f9d419ba13efaf6fba3",
+    "Tests/Reference/results/m7-completion-2026-10-25/integration-equivalence-review.json": "808c14ee91bd1d583d62aa1d19cd6cd6e1316379d7c42984ebd791bcb36fe80b"
+  }
+}

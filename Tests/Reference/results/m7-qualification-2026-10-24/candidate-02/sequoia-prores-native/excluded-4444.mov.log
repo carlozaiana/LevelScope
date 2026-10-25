@@ -1,0 +1,2 @@
+EXPECTED_REJECTION Supported codecs: SDR H.264 and Rec.709 ProRes 422 Proxy, LT or standard 422
+PASS: 2 ProRes checks; controlled sink only, no physical audio device

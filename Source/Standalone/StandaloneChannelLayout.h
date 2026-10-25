@@ -30,6 +30,7 @@ struct ChannelLayout
     // Indexed by ORIGINAL FILE channel, never by AudioChannelSet's sorted order.
     std::array<ChannelRole, maxChannels> roles {};
     bool confirmed = false;
+    bool manuallyInterpreted = false;
 
     bool isValid() const
     {

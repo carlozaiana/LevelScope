@@ -5,8 +5,18 @@ M6 retains 12-channel capacity and ordered height-role interfaces but restricts
 Current State to the existing M1 measurement matrix. Unsupported layouts must fail
 explicitly, without downmix, fallback to Source or expanded measurement claims.
 
-Stage one should qualify eight-channel 7.1; stage two should qualify twelve-channel
-7.1.4. Each is independently bounded and requires approval, source/binary manifests,
+The concrete [M7 7.1 proposal](31_M7ChannelBasedPcm71Proposal.md), prepared
+24 October 2026 and approved for implementation, separates offline, automated routing and
+physical listening evidence. Its proposed offline qualification does not require
+eight physical outputs; stage-two 7.1.4 remains deferred.
+Its [qualification record](32_M7QualificationAndHandover.md) now documents passed
+offline/automated evidence. Completion resumed on 25 October under the
+[revised picture-skip acceptance](34_M7CompletionAcceptance.md); all earlier
+packages and strict failures are preserved. No incomplete candidate is qualified.
+
+Stage one qualifies eight-channel 7.1. Twelve-channel 7.1.4 is deferred after M7
+in favor of [the stereo/5.1 workflow](35_PostM7BroadcastWorkflowProposal.md). A later
+immersive milestone remains independently bounded and requires approval, source/binary manifests,
 actual arm64 Sequoia and Intel High Sierra execution, and coordinated device tests.
 
 Before implementation, specify exact speaker positions and accepted role aliases,

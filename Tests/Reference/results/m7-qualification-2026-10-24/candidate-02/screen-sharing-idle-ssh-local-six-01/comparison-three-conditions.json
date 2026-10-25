@@ -1,0 +1,57 @@
+{
+  "scope": "Same-boot fixed six local stereo runs per condition: disconnected, Screen Sharing only, Screen Sharing plus user-confirmed idle SSH.",
+  "prior_conditions": [
+    {
+      "baseline": "../post-reboot-local-six-01",
+      "summary_sha256": "865a385e3254f16d47e3d084957db14599dc6d7b5f019395354b14906f29b3a2",
+      "same_configuration": {
+        "boot_time": true,
+        "os": true,
+        "architecture": true,
+        "cpu": true,
+        "power_settings_read_only": true,
+        "display_configuration_read_only": true,
+        "head": true,
+        "tag_objects_and_targets": true,
+        "source_digest": true,
+        "binaries_sha256": true,
+        "audio_sha256": true,
+        "video_sha256": true,
+        "sequence": true
+      },
+      "baseline_passed_runs": 6,
+      "baseline_skipped_frames": 0
+    },
+    {
+      "baseline": "../screen-sharing-local-six-01",
+      "summary_sha256": "972611dbeb45aeae6b33b457c58c664f63f409e3f3942119cdd02d85b0f95b8f",
+      "same_configuration": {
+        "boot_time": true,
+        "os": true,
+        "architecture": true,
+        "cpu": true,
+        "power_settings_read_only": true,
+        "display_configuration_read_only": true,
+        "head": true,
+        "tag_objects_and_targets": true,
+        "source_digest": true,
+        "binaries_sha256": true,
+        "audio_sha256": true,
+        "video_sha256": true,
+        "sequence": true
+      },
+      "baseline_passed_runs": 6,
+      "baseline_skipped_frames": 0
+    }
+  ],
+  "current_passed_runs": 6,
+  "current_skipped_frames": 0,
+  "total_post_reboot_runs": 18,
+  "all_18_passed": true,
+  "connected_boundary_observations": 14,
+  "every_boundary_both_connected_to_same_host": true,
+  "remote_activity_basis": "User confirmed idle shell/desktop; no remote commands sent by the runner. Local socket observations are boundary checks, not continuous activity measurement.",
+  "interpretation": "No paint skips reproduced in any of the three fixed samples. An idle Screen Sharing connection, with or without an idle SSH connection, is not supported as the sole explanation under these post-reboot conditions. Active remote work/content and other session/load conditions remain untested. No root cause or permanent fix is established.",
+  "m7_qualified": false,
+  "m7_frozen": true
+}

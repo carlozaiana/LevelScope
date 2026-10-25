@@ -1,0 +1,17 @@
+{
+  "policy": "m7-development-picture-skips-2026-10-25",
+  "source_digest": "7abc7587514b7f0f750720ac7853abeaf55b21c90697b25de7740cec2df034bf",
+  "identity_sha256": "b2cf915f2f6b644993782363b0a0c243c49b43198100ae39ff6be870eff35f9e",
+  "binary_sha256": "dbeb25405e6d2ee7fc8f54ad425675830656a29e8103529651df92432fa8f89d",
+  "architecture": "arm64",
+  "os": "ProductName:\t\tmacOS\nProductVersion:\t\t15.7.9\nBuildVersion:\t\t24G830\n",
+  "cpu": "Apple M1 Max",
+  "fixture_manifest_sha256": "398bb706268afea61b33529de55f6eda30bb61499495a47bcae3c2b7c24814ce",
+  "device": "Mac Studio Speakers",
+  "sample_rate": 48000,
+  "all_routes_muted": true,
+  "phase": "endurance",
+  "script_sha256": "0cb6ce407a4cb82380e2c379f36ab7e54eb2ca6f190dd294a7b100aad6ee4438",
+  "audio_configuration_before_sha256": "67348e4e1c6b00d24b20e526b554f0b95809f5332c165f0c7e37107d5e1c08bc",
+  "started_utc": "2026-10-25T00:32:09.389077+00:00"
+}

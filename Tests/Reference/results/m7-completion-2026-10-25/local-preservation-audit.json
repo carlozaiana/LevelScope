@@ -1,0 +1,61 @@
+{
+  "observed_utc": "2026-10-25T02:10:48.481022+00:00",
+  "packages": {
+    "m6": {
+      "identity_sha256": "ab7440f4d06275ea55055f59eec98c4f5872a775342e5b31777cefdf1dfdb4dd",
+      "artifacts_checked": 308,
+      "unchanged": true,
+      "errors": []
+    },
+    "m7-01": {
+      "identity_sha256": "61aceec3c430e5d57abe06b0c7d9b39f0a9e6514efb4c43af8ac58c75cfa76fe",
+      "artifacts_checked": 339,
+      "unchanged": true,
+      "errors": []
+    },
+    "m7-02": {
+      "identity_sha256": "ca3eda67d2ab4505237075a0f9ff41968ff88f0d5e615652891f886c7a94d59b",
+      "artifacts_checked": 339,
+      "unchanged": true,
+      "errors": []
+    }
+  },
+  "errors": [],
+  "candidate03": {
+    "identity_sha256": "b2cf915f2f6b644993782363b0a0c243c49b43198100ae39ff6be870eff35f9e",
+    "artifacts_checked": 365,
+    "errors": [],
+    "unchanged": true
+  },
+  "historical_evidence": {
+    "files_checked": 1184,
+    "unchanged": true,
+    "errors": []
+  },
+  "unrelated_finder_metadata": {
+    "files_checked": 7,
+    "unchanged": true,
+    "errors": []
+  },
+  "candidate_source_manifest": {
+    "files_checked": 165,
+    "unchanged": true,
+    "errors": []
+  },
+  "local_tags_unchanged": true,
+  "tags": [
+    "high-sierra-pre-scaffold-2026-10-15 b3c6e845482dbe8a0ec9778d5a9ad7953e614609 556d387ad772dc5e604ead95f1525f60e66fd5f9",
+    "m2-measured-compliance-2026-10-18 673e382feeaa7e29e6e6abedbd56677aa2163ef3 01a34833ec06a0d237e098faadb23b398581e8f9",
+    "m3-global-trim-2026-10-18 4063ca0e73c5b24dfa079eb894f85e398e9fee50 62ab420cb15b3ce5e1c821c963a749a9a56ae4a7",
+    "m4-measured-diagnostics-2026-10-18 cc64c771a70ccf95e779a7fe7260749a4530c285 9a22749901d9f6d4b9c194c9c22c0a231f2494f6",
+    "m5-programme-sections-2026-10-20 e36b4308374256ad36eff6c01d4d92325a06d3b0 ae88e187d288c53dbca1287e8341b74b9b5b2619",
+    "m6-verified-current-state-audition-2026-10-24 7f54eb1098471dc55bd75484f873a9f90e68ac05 b57a1ed23cbe7d74afe98ed16ec8fd615db9d171",
+    "measurement-milestone-2026-10-17 76affb667b6dab066cb36b2a2c741525b9b6eeac b29bc7c183743f35c6271d2d7ec8fb5ba1464591",
+    "standalone-scaffold-2026-10-15 4c8bc35b788969e1f6e97dcdc57a601b01fff7cd f192a8553e139d390056c9755f25eeb123bbc5e6",
+    "video-checkpoint-2026-10-17 06f57524bedca1912c0d5c454f13561cec9ce5b4 700b9e77e439a8ca9bb7583adf826fac01dbe924",
+    "video-prores-checkpoint-2026-10-21 d62c1159eeb2ffbb8b7ffc7c31014b842642d195 dcc34aabba6b5b3ca4805e2965d21ffebf2e4d0a"
+  ],
+  "video_worktree_head_unchanged": true,
+  "video_worktree_status_unchanged": true,
+  "passed": true
+}

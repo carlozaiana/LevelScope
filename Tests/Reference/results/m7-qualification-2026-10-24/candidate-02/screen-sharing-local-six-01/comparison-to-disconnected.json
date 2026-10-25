@@ -1,0 +1,84 @@
+{
+  "scope": "Fixed six local stereo tests with Screen Sharing to idle Golem versus same-boot disconnected baseline; no SSH in either condition.",
+  "baseline": "../post-reboot-local-six-01",
+  "baseline_summary_sha256": "865a385e3254f16d47e3d084957db14599dc6d7b5f019395354b14906f29b3a2",
+  "connected_summary_sha256": "972611dbeb45aeae6b33b457c58c664f63f409e3f3942119cdd02d85b0f95b8f",
+  "same_configuration": {
+    "boot_time": true,
+    "os": true,
+    "architecture": true,
+    "cpu": true,
+    "power_settings_read_only": true,
+    "display_configuration_read_only": true,
+    "head": true,
+    "tag_objects_and_targets": true,
+    "source_digest": true,
+    "binaries_sha256": true,
+    "audio_sha256": true,
+    "video_sha256": true,
+    "sequence": true
+  },
+  "disconnected_passed_runs": 6,
+  "connected_passed_runs": 6,
+  "connected_boundary_observations": 14,
+  "every_boundary_connected_and_no_ssh": true,
+  "paired_runs": [
+    {
+      "name": "m6-stereo-1",
+      "disconnected_passed": true,
+      "connected_passed": true,
+      "disconnected_skips": 0,
+      "connected_skips": 0,
+      "disconnected_elapsed_seconds": 106.86371125,
+      "connected_elapsed_seconds": 106.867423334
+    },
+    {
+      "name": "m7-stereo-1",
+      "disconnected_passed": true,
+      "connected_passed": true,
+      "disconnected_skips": 0,
+      "connected_skips": 0,
+      "disconnected_elapsed_seconds": 106.326102,
+      "connected_elapsed_seconds": 106.34502187500001
+    },
+    {
+      "name": "m6-stereo-2",
+      "disconnected_passed": true,
+      "connected_passed": true,
+      "disconnected_skips": 0,
+      "connected_skips": 0,
+      "disconnected_elapsed_seconds": 106.29224629200002,
+      "connected_elapsed_seconds": 106.28741000000002
+    },
+    {
+      "name": "m7-stereo-2",
+      "disconnected_passed": true,
+      "connected_passed": true,
+      "disconnected_skips": 0,
+      "connected_skips": 0,
+      "disconnected_elapsed_seconds": 106.321045417,
+      "connected_elapsed_seconds": 106.40073370799996
+    },
+    {
+      "name": "m6-stereo-3",
+      "disconnected_passed": true,
+      "connected_passed": true,
+      "disconnected_skips": 0,
+      "connected_skips": 0,
+      "disconnected_elapsed_seconds": 106.28564591699995,
+      "connected_elapsed_seconds": 106.24889070799998
+    },
+    {
+      "name": "m7-stereo-3",
+      "disconnected_passed": true,
+      "connected_passed": true,
+      "disconnected_skips": 0,
+      "connected_skips": 0,
+      "disconnected_elapsed_seconds": 106.31590512500009,
+      "connected_elapsed_seconds": 106.31256904200006
+    }
+  ],
+  "interpretation": "The failure did not reproduce in either fixed six-run condition. This does not support blaming the presence of an idle Screen Sharing connection alone. Active remote-screen content, SSH or concurrent remote workloads were not tested here; no root cause or permanent fix is established.",
+  "m7_qualified": false,
+  "m7_frozen": true
+}

@@ -1,0 +1,318 @@
+{
+  "passed": false,
+  "source_digest": "c3df888f567a69adb83cbb6c7d2c7a1dcdf1da9498d43d688ffe890786c0e43e",
+  "binary_sha256": "7b0113714b90fa582dd6ae725652630e7bd4f601fecc608fcb4dd15acd0d512e",
+  "memory_verifier_sha256": "c1e92933823a23b5e23f6015c54ed98ac2572cdceca1ea596d7abb90bd6d96eb",
+  "sequoia_physical": "build/m7-qualification-2026-10-24/sequoia-muted-video-02-controlled",
+  "high_sierra_physical": "build/m7-qualification-2026-10-24/high-sierra-muted-video-02",
+  "scope": "Muted physical audio-clock/UI-paint evidence only; not optical/acoustic sync or physical 7.1 listening",
+  "errors": [
+    "build/m7-qualification-2026-10-24/sequoia-muted-video-02-controlled/prores-matrix-source: summary failed",
+    "build/m7-qualification-2026-10-24/sequoia-muted-video-02-controlled/prores-matrix-source/51_SyncTest.json: passed",
+    "build/m7-qualification-2026-10-24/sequoia-muted-video-02-controlled/prores-matrix-source/51_SyncTest.json: actual_paint_skipped_frames",
+    "build/m7-qualification-2026-10-24/sequoia-muted-video-02-controlled/prores-matrix-current: [Errno 2] No such file or directory: 'build/m7-qualification-2026-10-24/sequoia-muted-video-02-controlled/prores-matrix-current/identity.json'",
+    "build/m7-qualification-2026-10-24/sequoia-muted-video-02-controlled/prores-endurance-current: [Errno 2] No such file or directory: 'build/m7-qualification-2026-10-24/sequoia-muted-video-02-controlled/prores-endurance-current/identity.json'",
+    "build/m7-qualification-2026-10-24/sequoia-muted-video-02-controlled/h264-cfr-source.json: missing required report",
+    "build/m7-qualification-2026-10-24/sequoia-muted-video-02-controlled/h264-vfr-source.json: missing required report",
+    "build/m7-qualification-2026-10-24/sequoia-muted-video-02-controlled/h264-cfr-current.json: missing required report",
+    "build/m7-qualification-2026-10-24/sequoia-muted-video-02-controlled/h264-vfr-current.json: missing required report",
+    "build/m7-qualification-2026-10-24/sequoia-muted-video-02-controlled: [Errno 2] No such file or directory: 'build/m7-qualification-2026-10-24/sequoia-muted-video-02-controlled/summary.json'",
+    "build/m7-qualification-2026-10-24/high-sierra-muted-video-02/prores-matrix-current: [Errno 2] No such file or directory: 'build/m7-qualification-2026-10-24/high-sierra-muted-video-02/prores-matrix-current/identity.json'",
+    "build/m7-qualification-2026-10-24/high-sierra-muted-video-02/prores-endurance-current: [Errno 2] No such file or directory: 'build/m7-qualification-2026-10-24/high-sierra-muted-video-02/prores-endurance-current/identity.json'",
+    "build/m7-qualification-2026-10-24/high-sierra-muted-video-02/h264-cfr-source.json: missing required report",
+    "build/m7-qualification-2026-10-24/high-sierra-muted-video-02/h264-vfr-source.json: missing required report",
+    "build/m7-qualification-2026-10-24/high-sierra-muted-video-02/h264-cfr-current.json: missing required report",
+    "build/m7-qualification-2026-10-24/high-sierra-muted-video-02/h264-vfr-current.json: missing required report",
+    "build/m7-qualification-2026-10-24/high-sierra-muted-video-02: [Errno 2] No such file or directory: 'build/m7-qualification-2026-10-24/high-sierra-muted-video-02/summary.json'"
+  ],
+  "reports": [
+    {
+      "report": "sequoia-muted-video-02-controlled/prores-matrix-source/proxy-24000-1001.json",
+      "sha256": "e6ba2d7b81aa89bbfd655fb450cbf74b456a39dfbd5fd4f6c6d36bd35cbd6871",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 443760640.0
+    },
+    {
+      "report": "sequoia-muted-video-02-controlled/prores-matrix-source/proxy-24-1.json",
+      "sha256": "de7b5f000a7e19b8f675ed8784b964d86e9806940392d083a9bc69866b74b37d",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 470269952.0
+    },
+    {
+      "report": "sequoia-muted-video-02-controlled/prores-matrix-source/proxy-25-1.json",
+      "sha256": "1f06b048febb96ce3e9cd74b2ada927a49e3ad4c9259c454dff7c27235ea32f0",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 485998592.0
+    },
+    {
+      "report": "sequoia-muted-video-02-controlled/prores-matrix-source/proxy-30000-1001.json",
+      "sha256": "8c07e669ef341f8e89d85a955c54c510ee340bb773de3e1755f4575e74fa758d",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 500563968.0
+    },
+    {
+      "report": "sequoia-muted-video-02-controlled/prores-matrix-source/proxy-30-1.json",
+      "sha256": "75546bc85d8fcd99440060fdadf3462d7947e70bb2431d716750636928135266",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 470482944.0
+    },
+    {
+      "report": "sequoia-muted-video-02-controlled/prores-matrix-source/lt-24000-1001.json",
+      "sha256": "56b5fdcc567c22b5ec78fdc686bd6d2ecf58d2a505251f7b53b72d9a62327266",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 503119872.0
+    },
+    {
+      "report": "sequoia-muted-video-02-controlled/prores-matrix-source/lt-24-1.json",
+      "sha256": "3915dc9c0fe258bf1cc917378272140ce7ca6df61d20ae635d383f24d0aec5f6",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 529793024.0
+    },
+    {
+      "report": "sequoia-muted-video-02-controlled/prores-matrix-source/lt-25-1.json",
+      "sha256": "171bb222b2c3f7754b9a2ce00b43ccb90bbcb9dd125e1fda7baecd9c1bb6b0b7",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 487702528.0
+    },
+    {
+      "report": "sequoia-muted-video-02-controlled/prores-matrix-source/lt-30000-1001.json",
+      "sha256": "d597e571f7ce9258c9b4af5b259b4f59a1f19c22b827427505d881d2f8bea29a",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 505708544.0
+    },
+    {
+      "report": "sequoia-muted-video-02-controlled/prores-matrix-source/lt-30-1.json",
+      "sha256": "284b90a40dc4027fff10252383ee5c4e50ccef5e60b179561d3e3e2598febcd9",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 491880448.0
+    },
+    {
+      "report": "sequoia-muted-video-02-controlled/prores-matrix-source/422-24000-1001.json",
+      "sha256": "9859f3ffac6991fe7706979c038a8c23ff4cde0f224d6316e258b2b235cb6746",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 528515072.0
+    },
+    {
+      "report": "sequoia-muted-video-02-controlled/prores-matrix-source/422-24-1.json",
+      "sha256": "3c98ea6b70081ca21c87d0bf3d92fe03897ce12b1f7f598e77acd7831097b80b",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 474382336.0
+    },
+    {
+      "report": "sequoia-muted-video-02-controlled/prores-matrix-source/422-25-1.json",
+      "sha256": "68e97eb9fb90b693ed56450749485c3c72733ab15b1a4178a41b4525b6ebcb07",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 529940480.0
+    },
+    {
+      "report": "sequoia-muted-video-02-controlled/prores-matrix-source/422-30000-1001.json",
+      "sha256": "bcc7539de36e4b1d9e399efd6b7aa7476cc1919a3816cdb07572b0be0d4b3aa4",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 497385472.0
+    },
+    {
+      "report": "sequoia-muted-video-02-controlled/prores-matrix-source/422-30-1.json",
+      "sha256": "f0350eac2c9a48a1889681665ec93f337ae6bb7682f536624236df8a45b30137",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 498827264.0
+    },
+    {
+      "report": "sequoia-muted-video-02-controlled/prores-matrix-source/51_SyncTest.json",
+      "sha256": "5894e67d1926f9a5b68c8f143af093255280b520897673f8f44f2b7ec1d3a2bd",
+      "passed": false,
+      "duration": 100,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 1,
+      "peak_rss_bytes": 556040192.0
+    },
+    {
+      "report": "high-sierra-muted-video-02/prores-matrix-source/proxy-24000-1001.json",
+      "sha256": "3f4730be4524480d1c7e58997c33eafb22d56b101715d21cc7204f21861beb13",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 132161536.0
+    },
+    {
+      "report": "high-sierra-muted-video-02/prores-matrix-source/proxy-24-1.json",
+      "sha256": "2b517635687729956fa21ae6b59896643072e36dc7566102100a9cdbe01305dd",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 128540672.0
+    },
+    {
+      "report": "high-sierra-muted-video-02/prores-matrix-source/proxy-25-1.json",
+      "sha256": "d56a28a0b2dd6a1dbdc3c15f7f6b317ed95a4404f2d6057266079ac0ffb1ca6a",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 136278016.0
+    },
+    {
+      "report": "high-sierra-muted-video-02/prores-matrix-source/proxy-30000-1001.json",
+      "sha256": "ffbfc277a387b74f284f3edf95c7f40cd7f7cf94f1ec96def97790be978adae5",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 129605632.0
+    },
+    {
+      "report": "high-sierra-muted-video-02/prores-matrix-source/proxy-30-1.json",
+      "sha256": "301aa2fbcb406367c639010d80adf5201ddba63f79aeac497b2d17a416c2bc85",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 132419584.0
+    },
+    {
+      "report": "high-sierra-muted-video-02/prores-matrix-source/lt-24000-1001.json",
+      "sha256": "34e391c4a80379937ba238db09cee35757773e0d7c523a5fe0e892a21be7d2c6",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 135237632.0
+    },
+    {
+      "report": "high-sierra-muted-video-02/prores-matrix-source/lt-24-1.json",
+      "sha256": "0e897b491076f5a34796b6d254f59562b79bbd50a5ced044d8bd1e7b4a5c842a",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 142262272.0
+    },
+    {
+      "report": "high-sierra-muted-video-02/prores-matrix-source/lt-25-1.json",
+      "sha256": "4ea225c29deeb92241de537d31a0020d0522f9aa07bb001eff7bf9022c683c43",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 137281536.0
+    },
+    {
+      "report": "high-sierra-muted-video-02/prores-matrix-source/lt-30000-1001.json",
+      "sha256": "576c7f6f2da8ed3e68ec1dc5b7d15f8dca3bf04c0cf39ec65b2af924e3df4416",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 140328960.0
+    },
+    {
+      "report": "high-sierra-muted-video-02/prores-matrix-source/lt-30-1.json",
+      "sha256": "3c0d5400e3c6f392cbfcb648850a07b32875dd9b35fd11a93342d5fd652d26ec",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 140148736.0
+    },
+    {
+      "report": "high-sierra-muted-video-02/prores-matrix-source/422-24000-1001.json",
+      "sha256": "7adbbc52549bc6400d7e5d3c61ce808c40a01f0c4a8046a718aa3e8ab820ef44",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 143552512.0
+    },
+    {
+      "report": "high-sierra-muted-video-02/prores-matrix-source/422-24-1.json",
+      "sha256": "ecaa128f7e63d7f7432fb7495ca4b46489a47349eafb89c6013f18d9ff13bce6",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 147087360.0
+    },
+    {
+      "report": "high-sierra-muted-video-02/prores-matrix-source/422-25-1.json",
+      "sha256": "6c1e028f4d850683ce6de6a423194f20ba717154069a72dcd1906c962fd0b309",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 142569472.0
+    },
+    {
+      "report": "high-sierra-muted-video-02/prores-matrix-source/422-30000-1001.json",
+      "sha256": "00198712208cd69a313138beb936602a2872a7755543e0745987b481f623f9f7",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 147177472.0
+    },
+    {
+      "report": "high-sierra-muted-video-02/prores-matrix-source/422-30-1.json",
+      "sha256": "99a44b257bf6e0e9bf5f915450ebeec60604d89fe359ce174ce236634bdd2e94",
+      "passed": true,
+      "duration": 18,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 146472960.0
+    },
+    {
+      "report": "high-sierra-muted-video-02/prores-matrix-source/51_SyncTest.json",
+      "sha256": "cb58d52ba3182865e9c881a6d30fbed471acd7094fde467eb0408849a510f374",
+      "passed": true,
+      "duration": 100,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "actual_paint_skipped_frames": 0,
+      "peak_rss_bytes": 141344768.0
+    }
+  ]
+}

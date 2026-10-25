@@ -19,7 +19,7 @@ private:
     StandaloneSessionModel& session;
     StandaloneAudition& audio;
     std::function<void()> onChanged;
-    juce::ComboBox typeBox, deviceBox, domainBox;
+    juce::ComboBox typeBox, deviceBox, domainBox, layoutPreset;
     juce::TextButton scanButton { "Scan devices" }, openButton { "Open device" }, closeButton { "Close device" };
     juce::TextButton prepareButton { "Prepare audition" };
     juce::Label auditionLabel;

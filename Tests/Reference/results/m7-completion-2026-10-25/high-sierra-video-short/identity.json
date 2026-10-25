@@ -1,0 +1,17 @@
+{
+  "policy": "m7-development-picture-skips-2026-10-25",
+  "source_digest": "7abc7587514b7f0f750720ac7853abeaf55b21c90697b25de7740cec2df034bf",
+  "identity_sha256": "b2cf915f2f6b644993782363b0a0c243c49b43198100ae39ff6be870eff35f9e",
+  "binary_sha256": "dbeb25405e6d2ee7fc8f54ad425675830656a29e8103529651df92432fa8f89d",
+  "architecture": "x86_64",
+  "os": "ProductName:\tMac OS X\nProductVersion:\t10.13.6\nBuildVersion:\t17G66\n",
+  "cpu": "Intel(R) Core(TM) i7-3770K CPU @ 3.50GHz",
+  "fixture_manifest_sha256": "398bb706268afea61b33529de55f6eda30bb61499495a47bcae3c2b7c24814ce",
+  "device": "Built-in Output",
+  "sample_rate": 44100,
+  "all_routes_muted": true,
+  "phase": "short",
+  "script_sha256": "0cb6ce407a4cb82380e2c379f36ab7e54eb2ca6f190dd294a7b100aad6ee4438",
+  "audio_configuration_before_sha256": "344e5dea410dd024026a020bd08c86bb9f7311efa4b399b2e1038ec529068c1c",
+  "started_utc": "2026-10-25T00:28:27.900198+00:00"
+}

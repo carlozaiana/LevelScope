@@ -1,0 +1,61 @@
+{
+  "completed_utc": "2026-10-25T02:37:13.905563+00:00",
+  "candidate": "M7 combined candidate-03",
+  "qualified_approved_scope": true,
+  "ready_for_checkpoint_publication": true,
+  "ready_for_main_integration_of_unchanged_candidate": true,
+  "published": false,
+  "branch": "codex/logic-module",
+  "base_commit": "5e07bbd29930db34236d6dfcede7fea14983f90a",
+  "source_digest": "7abc7587514b7f0f750720ac7853abeaf55b21c90697b25de7740cec2df034bf",
+  "measurement_build": "facfe596c7126188b24627dfeab06dec907332b96442634c9ad8ee29675ea069",
+  "identity_sha256": "b2cf915f2f6b644993782363b0a0c243c49b43198100ae39ff6be870eff35f9e",
+  "checks": {
+    "sequoia_automated": true,
+    "sequoia_native_prores": true,
+    "sequoia_ui": true,
+    "sequoia_diagnostic_isolation": true,
+    "high-sierra_automated": true,
+    "high-sierra_native_prores": true,
+    "high-sierra_ui": true,
+    "high-sierra_diagnostic_isolation": true,
+    "m1-m5-cross-platform": true,
+    "m6-cross-platform": true,
+    "m7-cross-platform": true,
+    "long-programme-reuse": true,
+    "local-preservation-audit": true,
+    "high-sierra-preservation-audit": true,
+    "fresh_physical": true,
+    "source_matrix_reuse": true,
+    "remote_tags": true,
+    "sequoia_shutdown": true
+  },
+  "fresh_physical": {
+    "cases": 46,
+    "short_cases_per_platform": 20,
+    "endurance_cases_per_platform": 3,
+    "endurance_seconds_each": 1800,
+    "picture_skips": 0,
+    "underrun_blocks": 0,
+    "bound_failures": 0,
+    "all_memory_checks_passed": true,
+    "all_audio_configurations_unchanged": true
+  },
+  "reused_source_matrix": {
+    "cases": 32,
+    "original_strict_failures": 2,
+    "recorded_picture_skips": 3,
+    "original_results_unchanged": true
+  },
+  "long_programme": "Prior actual three-hour eight-channel measurements and long seeks reused with original identity under exact implementation/FP equivalence review; not rerun or relabelled",
+  "ui": "Fresh candidate-03 integration smoke on both actual Macs plus identified unchanged earlier UI scenarios",
+  "optional_diagnostics": "Integrated investigation aid; tracing absent from normal binaries; no playback fix claimed",
+  "physical_71_listening": "Pending; separately outside the approved offline/automated completion gate",
+  "limitations": [
+    "Occasional picture skips accepted during development; sustained stalls, drift, audio interruptions, identity and memory/lifecycle failures remain failures",
+    "Internal clock/frame-selection evidence is not optical/acoustic synchronization proof",
+    "No full physical eight-channel routing/spatial listening qualification",
+    "No 7.1.4/Atmos, RF64/large-container extensions, separate-file import, section processing, dynamics, persistence, public export or VST3 parity"
+  ],
+  "next_milestone": "Proposed M8 reproducible sessions and safe reopening; then verified PCM export/artifact QC and reporting; no implementation started"
+}

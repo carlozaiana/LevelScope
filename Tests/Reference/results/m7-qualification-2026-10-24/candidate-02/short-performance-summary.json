@@ -1,0 +1,37 @@
+{
+  "scope": "Completed short M7 suites and synthetic downstream benchmark only; full qualification is pending",
+  "platforms": {
+    "sequoia": {
+      "source_digest": "c3df888f567a69adb83cbb6c7d2c7a1dcdf1da9498d43d688ffe890786c0e43e",
+      "passed": true,
+      "checks": 45377,
+      "synthetic_three_hour_192k_diagnostics": {
+        "core_ms": 11.98020833358169,
+        "worker_ms": 145.3774166665971,
+        "storage_bytes": 21030048,
+        "plot_p95_ms": 0.1683750003576279,
+        "paint_p95_ms": 5.849583331495523,
+        "edit_p95_ms": 3.359875001013279,
+        "section_ms": 3.279749996960163,
+        "section_workspace_bytes": 1747195,
+        "additional_peak_rss_bytes": 19873792
+      }
+    },
+    "high-sierra": {
+      "source_digest": "c3df888f567a69adb83cbb6c7d2c7a1dcdf1da9498d43d688ffe890786c0e43e",
+      "passed": true,
+      "checks": 45377,
+      "synthetic_three_hour_192k_diagnostics": {
+        "core_ms": 25.07680900022388,
+        "worker_ms": 320.637037999928,
+        "storage_bytes": 21030048,
+        "plot_p95_ms": 0.3148449994623661,
+        "paint_p95_ms": 26.73266400024295,
+        "edit_p95_ms": 7.545064002275467,
+        "section_ms": 7.232406001538038,
+        "section_workspace_bytes": 1747195,
+        "additional_peak_rss_bytes": 50126848
+      }
+    }
+  }
+}

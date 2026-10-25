@@ -1,0 +1,56 @@
+{
+  "name": "m7-stereo-1",
+  "started_utc": "2026-10-24T15:51:12.402663+00:00",
+  "binary_sha256": "7b0113714b90fa582dd6ae725652630e7bd4f601fecc608fcb4dd15acd0d512e",
+  "argv": [
+    "/Users/fuzz/Developer/LevelScope/build/m7-qualification-2026-10-24/candidate-02/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+    "--allow-audio",
+    "--muted",
+    "--device",
+    "Mac Studio Speakers",
+    "--seconds",
+    "100",
+    "--audio",
+    "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/build/prores-20261020/fixtures/selected-clock-48000.wav",
+    "--video",
+    "/Users/fuzz/Developer/LevelScope/Tests/51_SyncTest.mov",
+    "--report",
+    "/Users/fuzz/Developer/LevelScope/build/m7-qualification-2026-10-24/screen-sharing-idle-ssh-local-six-01/m7-stereo-1.json",
+    "--audition-state",
+    "source"
+  ],
+  "connection_before": {
+    "recorded_utc": "2026-10-24T15:51:12.402585+00:00",
+    "viewer_processes": [
+      {
+        "pid": 1604,
+        "executable": "/System/Applications/Utilities/Screen Sharing.app/Contents/MacOS/Screen Sharing"
+      }
+    ],
+    "ssh_client_processes": [
+      {
+        "pid": 2043,
+        "executable": "ssh"
+      }
+    ],
+    "forbidden_candidate_processes": [],
+    "connection_counts": [
+      {
+        "kind": "screen_sharing",
+        "pid": 1604,
+        "established_tcp_connections": 1,
+        "lsof_exit_code": 0
+      },
+      {
+        "kind": "ssh",
+        "pid": 2043,
+        "established_tcp_connections": 1,
+        "lsof_exit_code": 0
+      }
+    ],
+    "shared_destination_host": true,
+    "all_ssh_destinations_match_viewer_hosts": true,
+    "both_connected_to_same_host": true,
+    "idle_ssh_basis": "User confirmed idle remote shell; no remote command sent by runner. Boundary socket observations do not measure remote activity."
+  }
+}

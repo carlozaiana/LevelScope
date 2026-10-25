@@ -1,0 +1,25 @@
+{
+  "platform": "arm64 Sequoia",
+  "observed_utc": "2026-10-24T23:49:15.780326+00:00",
+  "binary_sha256": "14ba35d2f6ddc0bded680df267e81996f768c1537be1d6d360da87376b6889db",
+  "launch_location": "build/logic-m7-completion-20261025/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone",
+  "device_opened": false,
+  "playback_started": false,
+  "routes": "All eight muted",
+  "steps": [
+    "Native FLAC explicit System I roles confirmed; Channel N labels",
+    "Source measured with no target and no selected device",
+    "Current initialized; full-precision gain -3.305074118944 invalidated result; remeasurement completed at revision 2",
+    "Audition selection Current State displayed full gain and Measurements current; no compliance implied",
+    "CFR held reference attached; exact audio seek 3/2 showed frame 44, PTS 11011/7500; offset -1001/30000 showed frame 45, PTS 3003/2000",
+    "Both audio measurements remained current after attach/offset",
+    "Prepare audition completed as Verified source ready; playback stopped without device",
+    "Measured Current diagnostics I -24.695050 LUFS; LRA 1.331596 LU unstable under60s; audio timeline8s unchanged; all eight per-channel peaks shown including Lrs/Rrs/Lss/Rss",
+    "Monitor set -15dB; Clear Source removed Current and measurements, device remained closed",
+    "Main window close requested"
+  ],
+  "limitations": [
+    "No new profile selection, partial physical route assignment or cancellation timing test in this smoke; unchanged earlier UI observations reused separately"
+  ],
+  "normal_close_confirmed": true
+}

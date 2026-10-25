@@ -1,0 +1,10 @@
+{
+  "recorded_utc": "2026-10-24T14:45:46.022904+00:00",
+  "scope": "Frozen candidate integrity and test-process shutdown; not overall M7 qualification",
+  "source_digest": "c3df888f567a69adb83cbb6c7d2c7a1dcdf1da9498d43d688ffe890786c0e43e",
+  "identity_sha256": "ca3eda67d2ab4505237075a0f9ff41968ff88f0d5e615652891f886c7a94d59b",
+  "artifact_count": 339,
+  "artifact_mismatches": [],
+  "active_candidate_processes": [],
+  "passed": true
+}

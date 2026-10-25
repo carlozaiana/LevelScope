@@ -22,6 +22,20 @@ Standards priority: EBU R128 and ATSC A/85.
 - [M6 verified Current State audition](28_M6VerifiedCurrentStateAudition.md) candidate 01 is qualified on actual Intel High Sierra and arm64 Sequoia, published as `m6-verified-current-state-audition-2026-10-24` and integrated into main. A shared static-gain sample operation serves offline measurement and the bounded playback worker. Source/Current selection, ordered roles, processing gain and routing are stopped-only; monitor volume remains live. Playback never establishes measurement or compliance. [The handover](30_M6QualificationAndHandover.md) records exact source/binary identity and completed evidence. Section processing, persistence, public export and VST3 parity remain deferred.
 
 ## Medium-term direction
+- Approved M7 implementation extends the standalone measurement/Current path to
+  explicitly confirmed BS.2051 System I PCM 7.1. Combined candidate-03 is qualified
+  on both actual Macs as of 25 October, including main's optional diagnostic tools;
+  candidate-02 and earlier evidence remain preserved. The annotated checkpoint
+  [`m7-pcm-7.1-2026-10-25`](https://github.com/carlozaiana/LevelScope/tree/m7-pcm-7.1-2026-10-25)
+  is published and integrated into main.
+  [The revised acceptance](34_M7CompletionAcceptance.md) permits occasional picture
+  skips while retaining audio, synchronization, identity and resource gates.
+  [The qualification record](32_M7QualificationAndHandover.md) distinguishes offline,
+  injected routing, video/UI and separately pending full physical 7.1 listening.
+- After M7, defer 7.1.4/immersive expansion and prioritize the practical stereo/5.1
+  workflow. [The next bounded milestone proposal](35_PostM7BroadcastWorkflowProposal.md)
+  recommends safe session saving/reopening, then verified PCM export and reports;
+  no implementation of that roadmap is part of M7.
 - Standalone app with analyze/propose/apply/export workflow
 - Intelligent logic/policy engine for minimal-intervention target matching
 - Later: stem workflow + marker-track/scene-aware processing
