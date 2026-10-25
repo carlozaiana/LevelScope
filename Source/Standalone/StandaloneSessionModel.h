@@ -12,6 +12,7 @@
 #include "StandaloneCompliance.h"
 #include "StandaloneProposal.h"
 #include "StandaloneAuditionRequest.h"
+#include "StandaloneSections.h"
 #include <functional>
 
 namespace levelscope::standalone
@@ -142,13 +143,14 @@ public:
     // Live controller guard; programmatic actions obey the same stopped-only rule.
     std::function<bool()> auditionBusy;
     MeasurementDomain auditionDomain = MeasurementDomain::source;
-    bool audioEditsBlocked() const { return auditionBusy && auditionBusy(); }
+    bool persistenceLoading = false;
+    bool audioEditsBlocked() const { return persistenceLoading || (auditionBusy && auditionBusy()); }
     bool selectAuditionDomain (MeasurementDomain domain)
     {
         if (domain != MeasurementDomain::source && domain != MeasurementDomain::currentState) return false;
         if (domain == auditionDomain) return true;
         if (audioEditsBlocked()) return false;
-        auditionDomain = domain; return true;
+        auditionDomain = domain; documentChanged(); return true;
     }
     bool setOutputRoute (int channel, int output)
     {
@@ -177,7 +179,25 @@ public:
     int selectedTargetProfileIndex = 0;
     proposal::Applicability programmeApplicability = proposal::Applicability::unconfirmed;
     uint64_t revision = 0;
-    const juce::String sessionId = juce::Uuid().toString();
+    juce::String sessionId = juce::Uuid().toString(); // unique runtime opening, never loaded from disk
+    juce::String documentId = juce::Uuid().toString(), programmeId = juce::Uuid().toString();
+    uint64_t documentRevision = 0, savedDocumentRevision = 0;
+    juce::File documentFile;
+    juce::String restoredProfileId, restoredProfileVersion, restoredProfileDigest;
+    bool videoUnresolved = false;
+    proposal::SectionDocument sectionDocument;
+    void documentChanged() { ++documentRevision; }
+    bool documentDirty() const { return documentRevision != savedDocumentRevision; }
+    void synchronizeSections()
+    {
+        const auto c = measurementContext (MeasurementDomain::source);
+        sectionDocument.bind (sectionInputIdentity (c), static_cast<int> (c.media.sampleRate), c.media.frames);
+    }
+    void newDocument()
+    {
+        const auto guard = auditionBusy;
+        *this = StandaloneSessionModel(); auditionBusy = guard;
+    }
     SessionJob job;
     bool sourceContentInvalid = false;
     std::optional<proposal::TrimProposal> trimDraft;
@@ -230,7 +250,7 @@ public:
     {
         if (error == ErrorCode::sourceChanged)
         {
-            ++revision; sourceContentInvalid = true; source = MeasurementSummary();
+            ++revision; documentChanged(); sourceContentInvalid = true; source = MeasurementSummary();
             currentState = MeasurementSummary(); discardTrim();
             sourceDocument.importStatus = "Content changed; import the source again";
             if (currentStateDocument.isInitialized) currentStateDocument.needsRemeasurement = true;
@@ -275,7 +295,7 @@ public:
         if (gain == currentStateDocument.staticGainDb) return true;
         if (audioEditsBlocked()) return false;
         discardTrim();
-        ++revision; ++currentStateDocument.revision;
+        ++revision; ++currentStateDocument.revision; documentChanged();
         currentStateDocument.staticGainDb = gain;
         currentStateDocument.needsRemeasurement = true;
         currentStateDocument.statusText = "UNVERIFIED: gain changed; re-measure Current State";
@@ -305,6 +325,7 @@ public:
             currentStateDocument.statusText = "Measured current revision";
         }
         summary.analysis = std::make_shared<const AnalysisSnapshot> (std::move (result));
+        documentChanged();
         discardTrim();
         if (summary.analysis->domain == MeasurementDomain::currentState)
         {
@@ -319,7 +340,7 @@ public:
     bool setValidatedSource (const juce::File& file, const MediaInfo& media)
     {
         if (audioEditsBlocked() || ! media.matchesFileStamp (file)) return false;
-        ++revision;
+        ++revision; documentChanged(); programmeId = juce::Uuid().toString();
         discardTrim(); sourceContentInvalid = false;
         sourceDocument.setValidatedFile (file, media);
 
@@ -339,7 +360,7 @@ public:
     void clearSourceFile()
     {
         if (audioEditsBlocked()) return;
-        ++revision;
+        ++revision; documentChanged(); programmeId = juce::Uuid().toString();
         discardTrim(); sourceContentInvalid = false;
         sourceDocument.clear();
         currentStateDocument.clear();
@@ -355,7 +376,7 @@ public:
     {
         if (audioEditsBlocked() || sourceContentInvalid) return false;
         discardTrim();
-        ++revision;
+        ++revision; documentChanged();
         const auto didInitialize = currentStateDocument.initializeFromSource (sourceDocument);
 
         currentState = MeasurementSummary();
@@ -373,7 +394,7 @@ public:
     {
         if (audioEditsBlocked()) return;
         discardTrim();
-        ++revision;
+        ++revision; documentChanged();
         currentStateDocument.clear();
         currentState = MeasurementSummary();
     }
@@ -396,33 +417,55 @@ public:
 
     void setSelectedTargetProfileIndex (int newIndex)
     {
+        if (persistenceLoading) return;
         // Profile selection does not change samples or cancel a compatible audio
         // measurement. Evaluations are derived from the current profile on demand.
         const auto index = juce::jlimit (0, numTargetProfiles - 1, newIndex);
-        if (selectedTargetProfileIndex != index) discardTrim();
+        if (selectedTargetProfileIndex != index || restoredProfileId.isNotEmpty())
+        { discardTrim(); documentChanged(); restoredProfileId.clear(); restoredProfileVersion.clear(); restoredProfileDigest.clear(); }
         selectedTargetProfileIndex = index;
     }
 
     void setProgrammeApplicability (proposal::Applicability value)
     {
-        if (programmeApplicability != value) discardTrim();
+        if (persistenceLoading) return;
+        if (programmeApplicability != value) { discardTrim(); documentChanged(); }
         programmeApplicability = value;
     }
 
+    // Accepted analyses are immutable. Cache only their derived evaluation, keyed
+    // by the exact live context and profile; never deserialize a saved verdict.
+    struct EvaluationCache
+    {
+        std::shared_ptr<const AnalysisSnapshot> snapshot;
+        juce::String key;
+        proposal::Evaluation value;
+    };
+    mutable std::array<EvaluationCache, 2> evaluations;
     proposal::Evaluation evaluation (MeasurementDomain domain) const
     {
         const auto& summary = domain == MeasurementDomain::source ? source : currentState;
-        const bool available = summary.hasMeasurement
+        const bool available = !sourceContentInvalid && summary.hasMeasurement
             && (domain == MeasurementDomain::source || (currentStateDocument.isInitialized && ! currentStateDocument.needsRemeasurement));
-        return evaluateSnapshot (available ? summary.analysis.get() : nullptr, measurementContext (domain),
-                                 domain, getSelectedTargetProfile(), programmeApplicability);
+        const auto analysis = available ? summary.analysis : nullptr;
+        const auto context = measurementContext(domain);
+        const auto profile = getSelectedTargetProfile();
+        const auto key = context.sessionId + ":" + OfflineAnalysisService::identityFor(context, domain, context.media.sha256)
+            + ":" + profile.digest() + ":" + juce::String(static_cast<int>(programmeApplicability));
+        auto& cached = evaluations[domain == MeasurementDomain::source ? 0 : 1];
+        if (cached.key != key || cached.snapshot != analysis)
+        {
+            cached.value = evaluateSnapshot(analysis.get(), context, domain, profile, programmeApplicability);
+            cached.key = key; cached.snapshot = analysis;
+        }
+        return cached.value;
     }
 
     void setChannelRole (int channel, ChannelRole role)
     {
         if (audioEditsBlocked() || ! juce::isPositiveAndBelow (channel, sourceDocument.layout.count)) return;
         discardTrim();
-        ++revision;
+        ++revision; documentChanged();
         sourceDocument.layout.roles[channel] = role;
         sourceDocument.layout.confirmed = false;
         sourceDocument.layout.manuallyInterpreted = true;
@@ -436,7 +479,7 @@ public:
     {
         if (audioEditsBlocked() || ! sourceDocument.hasSource || ! sourceDocument.layout.isValid()) return false;
         discardTrim();
-        ++revision;
+        ++revision; documentChanged();
         sourceDocument.layout.confirmed = true;
         sourceDocument.importStatus = sourceDocument.layout.manuallyInterpreted
             ? "Source decoded; explicit manual file-channel interpretation confirmed."

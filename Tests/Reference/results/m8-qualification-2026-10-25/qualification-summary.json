@@ -1,0 +1,196 @@
+{
+  "milestone": "M8 reproducible sessions and safe reopening",
+  "status": "qualified; ready for checkpoint publication",
+  "qualification_complete": true,
+  "date": "2026-10-25",
+  "candidate": "candidate-01",
+  "base_commit": "cfbf3f981dece326d2363b911e5914ea61f1796c",
+  "tested_source_identity": "Exact frozen working-source manifest; base commit is ancestry only",
+  "source_digest": "1c591122c03f40cdc7035d20837e4e39f9cf0a1c62de640149c0b6427d225229",
+  "measurement_build": "77cf1c7a5052442d4c938ed82ff1158b2bf6557d28bf99880666ec417f4c7c05",
+  "identity_sha256": "dd625b0e2241afde0e6cbd5bbe36f733d8e23bdd9afc3bba92cd62fc556e8b9f",
+  "standalone_sha256": "146b9a79e12387a5f1c368e1543f50e581bcd6ceea63cde2111ca4e4d9161740",
+  "publication": {
+    "committed": false,
+    "tagged": false,
+    "merged": false
+  },
+  "gates": {
+    "sequoia_automated": true,
+    "sequoia_silent_ui": true,
+    "high-sierra_automated": true,
+    "high-sierra_silent_ui": true,
+    "comparison-m1-m5": true,
+    "comparison-m8": true,
+    "comparison-m6": true,
+    "comparison-m7": true,
+    "exchange-from-sequoia": true,
+    "exchange-from-high-sierra": true,
+    "preservation-local": true,
+    "preservation-high-sierra": true,
+    "documented_engine_equivalence": true
+  },
+  "platforms": {
+    "sequoia": {
+      "os": "15.7.9",
+      "os_build": "24G830",
+      "cpu": "Apple M1 Max",
+      "hardware_model": "Mac13,1",
+      "execution_arch": "arm64",
+      "session_assertions": 2073,
+      "restored_playback_assertions": 2431,
+      "restored_sample_cases": 48,
+      "restored_reference_cases": 5,
+      "performance": {
+        "fixture": "Synthetic three-hour full-resolution Source/Current caches and 1000 sections; media hashing separately qualified",
+        "capture_ms": 0.1305833328515291,
+        "worker_preparation_ms": 377.9020416680723,
+        "ui_adoption_ms": 0.2062500007450581,
+        "save_ms": 65.4053750000894,
+        "parse_ms": 325.7443749997765,
+        "active_cancel_ms": 0.401208333671093,
+        "rss_growth_bytes": 70926336,
+        "session_bytes": 7310527,
+        "ui_callback_p95_ms": 6.314500000327826,
+        "ui_callback_count": 127
+      },
+      "long_media": {
+        "source_sha256": "81f2fa91dedac473eefb9285b738b09bb4606bc6827aa9a035497c051e67b99c",
+        "frames": 518400000,
+        "rate": 48000.0,
+        "channels": 8,
+        "initial_verification_ms": 84608.67504166625,
+        "reopen_verification_ms": 85405.29370833375,
+        "active_cancel_ms": 0.645666666328907,
+        "cancel_progress": 0.01001307647675276
+      }
+    },
+    "high-sierra": {
+      "os": "10.13.6",
+      "os_build": "17G66",
+      "cpu": "Intel(R) Core(TM) i7-3770K CPU @ 3.50GHz",
+      "hardware_model": "iMac14,2",
+      "execution_arch": "x86_64",
+      "session_assertions": 2073,
+      "restored_playback_assertions": 2431,
+      "restored_sample_cases": 48,
+      "restored_reference_cases": 5,
+      "performance": {
+        "fixture": "Synthetic three-hour full-resolution Source/Current caches and 1000 sections; media hashing separately qualified",
+        "capture_ms": 0.2824229896068573,
+        "worker_preparation_ms": 770.2455430030823,
+        "ui_adoption_ms": 0.2529439926147461,
+        "save_ms": 147.8199470043182,
+        "parse_ms": 740.6537550091743,
+        "active_cancel_ms": 0.1922570019960403,
+        "rss_growth_bytes": 46768128,
+        "session_bytes": 7310519,
+        "ui_callback_p95_ms": 6.048038989305496,
+        "ui_callback_count": 311
+      },
+      "long_media": {
+        "source_sha256": "81f2fa91dedac473eefb9285b738b09bb4606bc6827aa9a035497c051e67b99c",
+        "frames": 518400000,
+        "rate": 48000.0,
+        "channels": 8,
+        "initial_verification_ms": 113799.8591839969,
+        "reopen_verification_ms": 113305.4461280107,
+        "active_cancel_ms": 0.2693570107221603,
+        "cancel_progress": 0.01000422704964876
+      }
+    }
+  },
+  "comparisons": {
+    "comparison-m1-m5": {
+      "report": "comparison-m1-m5.json",
+      "sha256": "b896804777ffe41c23ef9a1d765b0dd2ccd6324a4a75084509d392d0cb998315",
+      "maximum_float32_ulp": null
+    },
+    "comparison-m8": {
+      "report": "comparison-m8.json",
+      "sha256": "7a6c51410bb20517a04687e4b449eca63adbae869da45ba03d0ed58d276af346",
+      "maximum_float32_ulp": 0
+    },
+    "comparison-m6": {
+      "report": "comparison-m6.json",
+      "sha256": "02d2356369592c9eec2eaa7ed09a173ca6c93d5da5a824b102ab58cb7c9b95ce",
+      "maximum_float32_ulp": 0
+    },
+    "comparison-m7": {
+      "report": "comparison-m7.json",
+      "sha256": "6f88bf8ed2695e655c3053c4ee155cc1ed7235247631634c5c892859a2aeb105",
+      "maximum_float32_ulp": 0
+    }
+  },
+  "bidirectional_exchange": {
+    "sequoia_to_high-sierra": {
+      "report": "exchange-from-sequoia.json",
+      "report_sha256": "1100a0044e9a1c711368d077f43ed1501b97b2e7c6f195180a5f95dda13cbcb8",
+      "input_session_sha256": "04ee447b8737e9d0209d01a29de9a034d60a75ace9f4f87b54710f84f1978d5d",
+      "input_media_sha256": "3fc9eaadca15f00ab8f63753da3eb9cdcd72a50010937096f85568986fb1761a",
+      "assertions": 2042,
+      "architecture": "x86_64",
+      "passed": true,
+      "executable": "candidate-01/bin/LevelScopeSessionTests",
+      "arguments": [
+        "--exchange-in",
+        "from-sequoia",
+        "--output",
+        "exchange-from-sequoia.json"
+      ],
+      "verified": [
+        "Foreign cache records readable with original provenance",
+        "Transferred audio verified per file after relink",
+        "Both foreign-platform caches rejected",
+        "Exact processing gain and section digest preserved",
+        "Current initialized and UNVERIFIED"
+      ]
+    },
+    "high-sierra_to_sequoia": {
+      "report": "exchange-from-high-sierra.json",
+      "report_sha256": "002d540ab894f5d955406fe39c844ad54b8606d31e4bf4cfe8241ef49242fd4f",
+      "input_session_sha256": "98579173c35443570de9e79470a4dab4bd0e228097433f3a3421bb250d350f52",
+      "input_media_sha256": "3fc9eaadca15f00ab8f63753da3eb9cdcd72a50010937096f85568986fb1761a",
+      "assertions": 2042,
+      "architecture": "arm64",
+      "passed": true,
+      "executable": "candidate-01/bin/LevelScopeSessionTests",
+      "arguments": [
+        "--exchange-in",
+        "high-sierra/exchange-out",
+        "--output",
+        "exchange-from-high-sierra.json"
+      ],
+      "verified": [
+        "Foreign cache records readable with original provenance",
+        "Transferred audio verified per file after relink",
+        "Both foreign-platform caches rejected",
+        "Exact processing gain and section digest preserved",
+        "Current initialized and UNVERIFIED"
+      ]
+    }
+  },
+  "physical_devices_opened": false,
+  "reused_evidence": {
+    "review": "m7-reuse-review.json",
+    "scope": "Historical M7 actual three-hour measurement and physical video timing/endurance for byte-identical engine paths; fresh M8 lifecycle/model/UI/restored sample/video gates above",
+    "fresh_m8_physical_runs": false
+  },
+  "outstanding_m8_qualification": [],
+  "separate_pending": [
+    "Physical full eight-channel 7.1 routing/listening remains pending independently of M8"
+  ],
+  "accepted_limitations": [
+    "Occasional picture skips accepted for development; no sustained freeze, accumulating drift, audio interruption, identity or lifecycle failure accepted",
+    "Exact build/platform cache compatibility can require remeasurement",
+    "Documents reference media; they do not bundle or archive it",
+    "Single interleaved source only; multiple-file representation reserved, importer deferred",
+    "Explicit app Open only; no OS document association, autosave or crash recovery journal",
+    "Section processing, export/reporting, stems/dialogue analysis, immersive expansion and VST3 parity remain separate"
+  ],
+  "notes": [
+    "Raw automated summaries retain qualification_complete=false; this composite record adds the separate UI, exchange, comparison and equivalence gates.",
+    "Expected measured FAIL fixture verdicts and intentional rejected malformed/failure-injection cases do not represent failed qualification.",
+    "No implementation changes occurred after freezing candidate-01."
+  ]
+}

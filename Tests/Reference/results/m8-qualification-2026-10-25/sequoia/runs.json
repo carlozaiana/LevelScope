@@ -1,0 +1,65 @@
+[
+  {
+    "name": "regressions",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/run_m7_qualification.py",
+      "--platform",
+      "sequoia",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m8-qualification-2026-10-25/sequoia/regressions",
+      "--completion-regressions"
+    ],
+    "exit_code": 0,
+    "seconds": 237.723248917,
+    "log_sha256": "0fc84b1408daed8b5cd4128676febda9f80ea54b5b180dabe8d89b9bcf4c9bd5"
+  },
+  {
+    "name": "sessions",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m8-qualification-2026-10-25/candidate-01/bin/LevelScopeSessionTests",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m8-qualification-2026-10-25/sequoia/sessions.json",
+      "--exchange-out",
+      "/Users/fuzz/Developer/LevelScope/build/m8-qualification-2026-10-25/sequoia/exchange-out",
+      "--long-media",
+      "/Users/fuzz/Developer/LevelScope/build/m8-qualification-2026-10-25/candidate-01/m7-fixtures/three-hour-71-48000.flac"
+    ],
+    "exit_code": 0,
+    "seconds": 179.40520791699998,
+    "log_sha256": "8bcf724417abfecb5e0835a580dfa0772b6d51d0b336014477c22a1dce2a349d"
+  },
+  {
+    "name": "restored-playback",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m8-qualification-2026-10-25/candidate-01/bin/LevelScopeSessionPlaybackTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m8-qualification-2026-10-25/sequoia/restored-playback.json",
+      "--samples",
+      "/Users/fuzz/Developer/LevelScope/build/m8-qualification-2026-10-25/sequoia/restored-samples",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope/build/m8-qualification-2026-10-25/candidate-01/video-fixtures",
+      "--prores",
+      "/Users/fuzz/Developer/LevelScope/build/m8-qualification-2026-10-25/candidate-01/m7-video-fixtures"
+    ],
+    "exit_code": 0,
+    "seconds": 14.747789959000045,
+    "log_sha256": "3d8ca732651441d49f49dc34ca5c05e04ea0a10de41ace71b765a00572aeeba8"
+  },
+  {
+    "name": "m8-runner",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/M8QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "seconds": 0.07535470900000973,
+    "log_sha256": "c6b9b1f09add0403cc07e90bfdf272129b1ddfa2f8f7675ea8218862f2516371"
+  }
+]

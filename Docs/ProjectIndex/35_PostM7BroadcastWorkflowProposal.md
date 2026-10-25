@@ -1,13 +1,13 @@
 # After M7 — practical stereo/5.1 workflow
 
-Proposal only; no implementation is authorized by this document. The user deferred
+M8 approved 25 October 2026, including the session, replaceable-cache and coherent-save clarifications below. Implementation and qualification are authorized; publication remains a separate checkpoint action. The user deferred
 7.1.4 and further immersive expansion after M7. Preserve the extensible channel
 interfaces and qualified 7.1 behavior, but optimize subsequent work for practical
 stereo/5.1 broadcast use. Read with `ProposalEngineSpec_v2.md`; its broad future
 engine design does not expand the existing versioned profile or imply a universal
 LRA ceiling.
 
-## Recommended M8: reproducible sessions and safe reopening
+## Approved M8: reproducible sessions and safe reopening
 
 Save the work already supported by M1–M7 so a long programme can be resumed without
 reconstructing its channel interpretation, global trim, sections, target and video
@@ -67,25 +67,66 @@ Acceptance tests on arm64 Sequoia, then the same candidate on actual High Sierra
    Coordinate any device use separately. No physical listening is needed to qualify
    session persistence.
 
-Decisions to settle at approval: session filename/extension; whether retaining
-validated measurement caches is in the first M8 candidate (recommended for long
-programmes); exact resource bounds. Existing build identity is deliberately
-conservative: an incompatible build invalidates cached measured reuse.
+Approved defaults: `.levelscope`, measurement caches included, exact conservative
+build/platform compatibility. Budgets on each Mac: three-hour Source + Current
+with 1,000 sections; save and core/cache parsing each <=5 seconds on local disk,
+additional persistence memory <=256 MiB, UI interaction p95 <=100 ms, cancellation
+acknowledgement <=1 second, document <=128 MiB. Full-media verification and video
+indexing are separately timed, asynchronous, bounded and cancellable.
+
+## M8 implementation contract
+
+One programme is distinct from its physical files. Version 1 records a programme
+ID, a file table (stable ID, locator, content SHA-256 and format description), and
+ordered channel assignments (file ID, channel index, explicit role). M8 supports
+only `interleaved` assembly with one file and identity channel ordering. Unsupported
+assembly versions/modes fail safely; multiple-file importing is not implemented.
+Programme identity uses content, channel mapping, alignment and range, not pathname.
+M8 retains the qualified single-file measurement binding behind this representation;
+future assembly support must version that binding and cannot reuse it by accident.
+
+The `.levelscope` container has a bounded, independently checksummed core and
+separately framed/checksummed replaceable measurement records. Invalid core data
+fails atomically. Absent, truncated, damaged or incompatible caches are discarded
+with an explanation when core framing is intact. They cannot prevent recovery of
+valid settings, annotations and references. Keep original measurement provenance;
+recompute evaluation from validated records. Missing media opens explicitly
+unresolved; no measurement, audition or inherited pass is available until verified.
+
+Save captures one immutable message-thread snapshot. Persistent document revision
+covers settings, annotations, video references and accepted measurement changes;
+audio revision remains separate. Save completion records only the captured revision:
+new edits or measurement completions stay dirty. A persistent document UUID does
+not replace the unique runtime opening/job identity. Old completions cannot install
+results after New/Open, including reopening the same document.
+
+Save uses an owned same-directory temporary and checked atomic replacement. It
+must not overwrite media (including aliases), leave partials on cancellation, or
+replace the previous document on create/write/flush/rename failure. No autosave,
+media copying or automatic device opening. Open/New requires stopped transport;
+installed sessions start device-closed and routes-muted. Measurements remain
+independent of monitor settings and reference picture offsets.
 
 ## Following dependency order
 
-1. **Verified PCM export and an artifact-bound QC report.** Render explicit Current
+1. **Separate-file stereo/5.1 import (next after M8).** Two mono files form stereo,
+   or six mono files form 5.1. Explicit ordered roles, matching sample rates and
+   frame counts, confirmed alignment, per-file verification, filenames beside roles,
+   grouped save/reopen/relink and an explicitly incomplete group when any file is
+   missing. No silent channel reassignment, padding, resampling or mix summing.
+   This importer is not implemented by M8.
+
+2. **Verified PCM export and an artifact-bound QC report.** Render explicit Current
    State through the shared full-precision path, pin output format/channel order,
    remeasure the actual written artifact and evaluate that artifact. Never export
    monitor gain/routing. Define full-scale/quantization/dither and file-size limits
    before implementation; write failures must not publish a misleading result.
    Keep report wording as narrow as M2 and identify exact exported hashes.
-2. **Workflow reporting and handoff improvements.** A concise human-readable report
+3. **Workflow reporting and handoff improvements.** A concise human-readable report
    can compare measured Source, Current and exported audio with diagnostic context,
    profile provenance and unresolved limitations. Reports require stable session
    and artifact identity; they must not imply complete broadcaster compliance.
-3. **Import/container work driven by actual delivery media.** Add separate-file
-   grouping with explicit ordering/alignment when needed. Add RF64/other large-file
+4. **Container work driven by actual delivery media.** Add RF64/other large-file
    support when selected export rates/layouts exceed existing container limits,
    potentially as a prerequisite to a broad long-programme export claim.
 
@@ -93,3 +134,28 @@ Section processing, dynamics, automatic correction, additional video features,
 7.1.4, Atmos and VST3 parity remain separate proposals. The existing optional paint
 diagnostic executable remains an investigation aid for a later reproduction;
 occasional accepted picture skips alone do not start another investigation cycle.
+
+## Future component purposes and independent invalidation
+
+Channel assembly places channels of one mix; it does not sum stems. Stem composition
+would explicitly sum/route selected components, such as M&E and one language dialogue
+stem. Analysis references assist analysis of an existing mix and contribute no audio
+to playback, processing or export. Future component records need stable ID, purpose,
+language/version, per-file identities, exact rational/source-frame alignment, channel
+mapping and explicit audible/analysis-only participation. Unknown purposes remain
+unsupported, never silently audible.
+
+Audible programme identity includes every audible component's bytes, alignment,
+selection, channel mapping and composition operation. Changes invalidate ordinary
+programme measurements, processing verification, proposals and audition preparation.
+Analysis-reference identity is separate: changes invalidate only dependent dialogue
+analysis and its reports; unchanged audible programme measurements remain current.
+Paths and relinking alone do not change either identity after bytes are verified.
+Profile annotations remain separately bound to the applicable measured analysis.
+
+Dialogue-stem loudness, speech-gated measurements of a final mix, and dialogue/
+background diagnostics are distinct products with distinct input/method identities.
+No speech detection, stem mixing or dialogue analysis is authorized in M8. Any
+intelligibility score or delivery-specific dialogue-gated method needs its own
+specification, primary-reference review and validation. These follow separate-file
+import and verified export/reporting as bounded proposals. 7.1.4 remains deferred.

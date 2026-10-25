@@ -29,6 +29,12 @@ class SectionDocument
 public:
     bool bind (const juce::String& inputIdentity, int sampleRate, int64_t frames);
     const SectionMap& map() const { return value; }
+    // Persistence installs a validated annotation map, never a measured result.
+    bool restore (const SectionMap& map, const juce::String& expectedInput)
+    {
+        if (! map.valid() || map.inputIdentity != expectedInput) return false;
+        value = map; return true;
+    }
     bool split (uint64_t id, int64_t frame, juce::String& error);
     bool moveEnd (uint64_t id, int64_t frame, juce::String& error);
     bool mergeNext (uint64_t id, juce::String& error);

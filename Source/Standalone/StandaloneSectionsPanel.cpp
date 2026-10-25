@@ -22,7 +22,7 @@ juce::String summaryText (const char* name, const proposal::SectionWindowSummary
     return text + "\n";
 }
 }
-StandaloneSectionsPanel::StandaloneSectionsPanel (const StandaloneSessionModel& s) : session (s)
+StandaloneSectionsPanel::StandaloneSectionsPanel (StandaloneSessionModel& s) : session (s), document (s.sectionDocument)
 {
     domainBox.addItem ("Measured Source", 1); domainBox.addItem ("Measured Current State", 2); domainBox.setSelectedId (1, juce::dontSendNotification);
     domainBox.setName ("Section measured state"); domainBox.onChange = [this] { synchronize(); };
@@ -52,7 +52,7 @@ void StandaloneSectionsPanel::timerCallback()
 {
     const auto context = session.measurementContext (MeasurementDomain::source);
     const auto input = session.sourceContentInvalid ? juce::String() : sectionInputIdentity (context);
-    if (document.bind (input, input.isNotEmpty() ? static_cast<int> (context.media.sampleRate) : 0, input.isNotEmpty() ? context.media.frames : 0))
+    if (! session.sourceContentInvalid && document.bind (input, input.isNotEmpty() ? static_cast<int> (context.media.sampleRate) : 0, input.isNotEmpty() ? context.media.frames : 0))
     { selectedId = 0; editNotice.clear(); }
     const auto key = document.map().valid() ? document.map().digest() : juce::String();
     const bool mapChanged = key != mapKey;
@@ -98,6 +98,7 @@ const proposal::DiagnosticWindow* StandaloneSectionsPanel::windowAt (int row) co
 }
 void StandaloneSectionsPanel::performEdit (int operation)
 {
+    if (session.persistenceLoading) return;
     const auto* row = selectedSection(); if (! row) return;
     int64_t frame = 0;
     if (operation < 2)
@@ -108,8 +109,10 @@ void StandaloneSectionsPanel::performEdit (int operation)
         { editNotice = "Enter a whole audio-source frame number; fractional or rounded seconds are not accepted."; synchronize(); return; }
     }
     juce::String error;
+    const auto previousRevision = document.map().revision;
     const bool ok = operation == 0 ? document.split (row->id, frame, error) : operation == 1 ? document.moveEnd (row->id, frame, error)
         : operation == 2 ? document.mergeNext (row->id, error) : document.rename (row->id, name.getText(), error);
+    if (ok && previousRevision != document.map().revision) session.documentChanged();
     editNotice = ok ? "Section edit accepted. Audio, measurements, verdicts and proposals unchanged." : error;
     synchronize();
 }
@@ -119,7 +122,7 @@ void StandaloneSectionsPanel::refreshDetails()
     const auto* row = selectedSection();
     for (auto* b : { &splitButton, &moveButton, &mergeButton, &renameButton }) b->setEnabled (row != nullptr);
     boundary.setEnabled (row != nullptr); name.setEnabled (row != nullptr);
-    if (! row) { boundary.clear(); name.clear(); summary.setText ("Import a source and confirm its channel roles. Sections are in-memory annotations; they do not change audio.", false); timeline.clearHighlight(); return; }
+    if (! row) { boundary.clear(); name.clear(); summary.setText ("Import a source and confirm its channel roles. Sections are session annotations; they do not change audio.", false); timeline.clearHighlight(); return; }
     boundary.setText (juce::String (row->end), false); name.setText (row->name, false);
     timeline.highlight (static_cast<double> (row->begin), static_cast<double> (row->end), false);
     juce::String text = row->name + " | " + intervalText (*row, document.map().sampleRate) + "\n";

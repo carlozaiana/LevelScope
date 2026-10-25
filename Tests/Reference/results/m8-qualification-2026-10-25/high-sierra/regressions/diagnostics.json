@@ -1,0 +1,1497 @@
+{
+  "suite": "M4 measured diagnostics",
+  "passed": true,
+  "checks": [
+    {
+      "name": "integrated absolute boundary excluded",
+      "passed": true
+    },
+    {
+      "name": "LRA absolute boundary included",
+      "passed": true
+    },
+    {
+      "name": "one ULP below absolute excluded",
+      "passed": true
+    },
+    {
+      "name": "one ULP above absolute included",
+      "passed": true
+    },
+    {
+      "name": "relative exact comparison preserves distinct I and LRA convention",
+      "passed": true
+    },
+    {
+      "name": "relative one ULP below excluded",
+      "passed": true
+    },
+    {
+      "name": "relative one ULP above included",
+      "passed": true
+    },
+    {
+      "name": "one ULP below absolute excluded",
+      "passed": true
+    },
+    {
+      "name": "one ULP above absolute included",
+      "passed": true
+    },
+    {
+      "name": "relative exact comparison preserves distinct I and LRA convention",
+      "passed": true
+    },
+    {
+      "name": "relative one ULP below excluded",
+      "passed": true
+    },
+    {
+      "name": "relative one ULP above included",
+      "passed": true
+    },
+    {
+      "name": "percentile reference rounding at half index",
+      "passed": true
+    },
+    {
+      "name": "three-hour diagnostics core completes within 2 seconds",
+      "passed": true
+    },
+    {
+      "name": "three-hour additional analysis storage within 64 MiB",
+      "passed": true
+    },
+    {
+      "name": "three-hour 192k peak locations retain more than 32-bit eighth-frame coordinates",
+      "passed": true
+    },
+    {
+      "name": "three-hour contribution ranks preserve full-resolution energy order and deterministic ties",
+      "passed": true
+    },
+    {
+      "name": "LRA tails contain only the exact eligible full-resolution percentiles",
+      "passed": true
+    },
+    {
+      "name": "three-hour padding keeps actual interval with explicit label",
+      "passed": true
+    },
+    {
+      "name": "three-hour worker including snapshot identity completes within 2 seconds",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "viewport storage bounded by display columns",
+      "passed": true
+    },
+    {
+      "name": "three-hour viewport p95 within 50 ms",
+      "passed": true
+    },
+    {
+      "name": "mixed included and excluded membership survives reduction",
+      "passed": true
+    },
+    {
+      "name": "single-bin three-hour view retains spikes and quiet extremes",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF uses exact full-resolution population counts",
+      "passed": true
+    },
+    {
+      "name": "CDF reaches complete eligible population",
+      "passed": true
+    },
+    {
+      "name": "three-hour numerical inspection reaches final second",
+      "passed": true
+    },
+    {
+      "name": "numeric inspection displays exact source interval",
+      "passed": true
+    },
+    {
+      "name": "invalid and out-of-range inspection rejected",
+      "passed": true
+    },
+    {
+      "name": "offscreen half-open selection does not leave a fabricated viewport edge marker",
+      "passed": true
+    },
+    {
+      "name": "long silence is unavailable without a false short-programme label",
+      "passed": true
+    },
+    {
+      "name": "short unavailable LRA keeps both distinct explanations",
+      "passed": true
+    },
+    {
+      "name": "three-hour offscreen timeline paint p95 within 100 ms",
+      "passed": true
+    },
+    {
+      "name": "three-hour diagnostic pipeline peak RSS growth within 128 MiB",
+      "passed": true
+    },
+    {
+      "name": "active three-hour analysis cancellation settles within one second",
+      "passed": true
+    },
+    {
+      "name": "diagnostic construction preserves actual measured value",
+      "passed": true
+    },
+    {
+      "name": "M actual half-open start/end",
+      "passed": true
+    },
+    {
+      "name": "S actual half-open start/end",
+      "passed": true
+    },
+    {
+      "name": "LRA padding does not extend programme timeline",
+      "passed": true
+    },
+    {
+      "name": "qualified population counts and percentiles preserved",
+      "passed": true
+    },
+    {
+      "name": "overlapping gated block energy shares sum to one",
+      "passed": true
+    },
+    {
+      "name": "same snapshot has deterministic analysis identity",
+      "passed": true
+    },
+    {
+      "name": "different snapshot identity binds separately",
+      "passed": true
+    },
+    {
+      "name": "single display bucket preserves exact extrema",
+      "passed": true
+    },
+    {
+      "name": "inspection tie chooses earlier full-resolution window",
+      "passed": true
+    },
+    {
+      "name": "nonfinite window refused",
+      "passed": true
+    },
+    {
+      "name": "malformed location refused",
+      "passed": true
+    },
+    {
+      "name": "inconsistent measured population refused",
+      "passed": true
+    },
+    {
+      "name": "inconsistent percentile refused",
+      "passed": true
+    },
+    {
+      "name": "diagnostic construction preserves actual measured value",
+      "passed": true
+    },
+    {
+      "name": "M actual half-open start/end",
+      "passed": true
+    },
+    {
+      "name": "S actual half-open start/end",
+      "passed": true
+    },
+    {
+      "name": "LRA padding does not extend programme timeline",
+      "passed": true
+    },
+    {
+      "name": "qualified population counts and percentiles preserved",
+      "passed": true
+    },
+    {
+      "name": "overlapping gated block energy shares sum to one",
+      "passed": true
+    },
+    {
+      "name": "same snapshot has deterministic analysis identity",
+      "passed": true
+    },
+    {
+      "name": "different snapshot identity binds separately",
+      "passed": true
+    },
+    {
+      "name": "single display bucket preserves exact extrema",
+      "passed": true
+    },
+    {
+      "name": "inspection tie chooses earlier full-resolution window",
+      "passed": true
+    },
+    {
+      "name": "nonfinite window refused",
+      "passed": true
+    },
+    {
+      "name": "malformed location refused",
+      "passed": true
+    },
+    {
+      "name": "inconsistent measured population refused",
+      "passed": true
+    },
+    {
+      "name": "inconsistent percentile refused",
+      "passed": true
+    },
+    {
+      "name": "diagnostic construction preserves actual measured value",
+      "passed": true
+    },
+    {
+      "name": "M actual half-open start/end",
+      "passed": true
+    },
+    {
+      "name": "S actual half-open start/end",
+      "passed": true
+    },
+    {
+      "name": "LRA padding does not extend programme timeline",
+      "passed": true
+    },
+    {
+      "name": "qualified population counts and percentiles preserved",
+      "passed": true
+    },
+    {
+      "name": "overlapping gated block energy shares sum to one",
+      "passed": true
+    },
+    {
+      "name": "same snapshot has deterministic analysis identity",
+      "passed": true
+    },
+    {
+      "name": "different snapshot identity binds separately",
+      "passed": true
+    },
+    {
+      "name": "single display bucket preserves exact extrema",
+      "passed": true
+    },
+    {
+      "name": "inspection tie chooses earlier full-resolution window",
+      "passed": true
+    },
+    {
+      "name": "nonfinite window refused",
+      "passed": true
+    },
+    {
+      "name": "malformed location refused",
+      "passed": true
+    },
+    {
+      "name": "inconsistent measured population refused",
+      "passed": true
+    },
+    {
+      "name": "inconsistent percentile refused",
+      "passed": true
+    },
+    {
+      "name": "diagnostic construction preserves actual measured value",
+      "passed": true
+    },
+    {
+      "name": "M actual half-open start/end",
+      "passed": true
+    },
+    {
+      "name": "S actual half-open start/end",
+      "passed": true
+    },
+    {
+      "name": "LRA padding does not extend programme timeline",
+      "passed": true
+    },
+    {
+      "name": "qualified population counts and percentiles preserved",
+      "passed": true
+    },
+    {
+      "name": "overlapping gated block energy shares sum to one",
+      "passed": true
+    },
+    {
+      "name": "same snapshot has deterministic analysis identity",
+      "passed": true
+    },
+    {
+      "name": "different snapshot identity binds separately",
+      "passed": true
+    },
+    {
+      "name": "single display bucket preserves exact extrema",
+      "passed": true
+    },
+    {
+      "name": "inspection tie chooses earlier full-resolution window",
+      "passed": true
+    },
+    {
+      "name": "nonfinite window refused",
+      "passed": true
+    },
+    {
+      "name": "malformed location refused",
+      "passed": true
+    },
+    {
+      "name": "inconsistent measured population refused",
+      "passed": true
+    },
+    {
+      "name": "inconsistent percentile refused",
+      "passed": true
+    },
+    {
+      "name": "availability and stability survive analysis",
+      "passed": true
+    },
+    {
+      "name": "channel maximum locations preserved at eighth-frame precision",
+      "passed": true
+    },
+    {
+      "name": "channel maximum locations preserved at eighth-frame precision",
+      "passed": true
+    },
+    {
+      "name": "channel maximum locations preserved at eighth-frame precision",
+      "passed": true
+    },
+    {
+      "name": "channel maximum locations preserved at eighth-frame precision",
+      "passed": true
+    },
+    {
+      "name": "channel maximum locations preserved at eighth-frame precision",
+      "passed": true
+    },
+    {
+      "name": "channel maximum locations preserved at eighth-frame precision",
+      "passed": true
+    },
+    {
+      "name": "silence never invents zero-valued loudness",
+      "passed": true
+    },
+    {
+      "name": "silent maxima have no finite values or plotted points",
+      "passed": true
+    },
+    {
+      "name": "availability and stability survive analysis",
+      "passed": true
+    },
+    {
+      "name": "channel maximum locations preserved at eighth-frame precision",
+      "passed": true
+    },
+    {
+      "name": "channel maximum locations preserved at eighth-frame precision",
+      "passed": true
+    },
+    {
+      "name": "channel maximum locations preserved at eighth-frame precision",
+      "passed": true
+    },
+    {
+      "name": "channel maximum locations preserved at eighth-frame precision",
+      "passed": true
+    },
+    {
+      "name": "channel maximum locations preserved at eighth-frame precision",
+      "passed": true
+    },
+    {
+      "name": "channel maximum locations preserved at eighth-frame precision",
+      "passed": true
+    },
+    {
+      "name": "excluded faint windows retain descriptive values without passing gates",
+      "passed": true
+    },
+    {
+      "name": "availability and stability survive analysis",
+      "passed": true
+    },
+    {
+      "name": "channel maximum locations preserved at eighth-frame precision",
+      "passed": true
+    },
+    {
+      "name": "channel maximum locations preserved at eighth-frame precision",
+      "passed": true
+    },
+    {
+      "name": "channel maximum locations preserved at eighth-frame precision",
+      "passed": true
+    },
+    {
+      "name": "channel maximum locations preserved at eighth-frame precision",
+      "passed": true
+    },
+    {
+      "name": "channel maximum locations preserved at eighth-frame precision",
+      "passed": true
+    },
+    {
+      "name": "channel maximum locations preserved at eighth-frame precision",
+      "passed": true
+    },
+    {
+      "name": "availability and stability survive analysis",
+      "passed": true
+    },
+    {
+      "name": "channel maximum locations preserved at eighth-frame precision",
+      "passed": true
+    },
+    {
+      "name": "channel maximum locations preserved at eighth-frame precision",
+      "passed": true
+    },
+    {
+      "name": "channel maximum locations preserved at eighth-frame precision",
+      "passed": true
+    },
+    {
+      "name": "channel maximum locations preserved at eighth-frame precision",
+      "passed": true
+    },
+    {
+      "name": "channel maximum locations preserved at eighth-frame precision",
+      "passed": true
+    },
+    {
+      "name": "channel maximum locations preserved at eighth-frame precision",
+      "passed": true
+    },
+    {
+      "name": "LFE peak remains available without loudness contribution",
+      "passed": true
+    },
+    {
+      "name": "short input does not acquire LRA through padding",
+      "passed": true
+    },
+    {
+      "name": "short metric explicitly unavailable",
+      "passed": true
+    },
+    {
+      "name": "short input does not acquire LRA through padding",
+      "passed": true
+    },
+    {
+      "name": "short metric explicitly unavailable",
+      "passed": true
+    },
+    {
+      "name": "short input does not acquire LRA through padding",
+      "passed": true
+    },
+    {
+      "name": "short metric explicitly unavailable",
+      "passed": true
+    },
+    {
+      "name": "actual worker fixture created",
+      "passed": true
+    },
+    {
+      "name": "actual worker fixture written",
+      "passed": true
+    },
+    {
+      "name": "source imported",
+      "passed": true
+    },
+    {
+      "name": "roles confirmed",
+      "passed": true
+    },
+    {
+      "name": "measurement job begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker measured actual fixture",
+      "passed": true
+    },
+    {
+      "name": "actual measured snapshot accepted",
+      "passed": true
+    },
+    {
+      "name": "measurement job begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker measured actual fixture",
+      "passed": true
+    },
+    {
+      "name": "actual measured snapshot accepted",
+      "passed": true
+    },
+    {
+      "name": "native diagnostics controls and measured summary are present",
+      "passed": true
+    },
+    {
+      "name": "native diagnostics action settles within deadline",
+      "passed": true
+    },
+    {
+      "name": "native panel publishes measured Source and timeline",
+      "passed": true
+    },
+    {
+      "name": "native rebuild action is enabled for a valid measured snapshot",
+      "passed": true
+    },
+    {
+      "name": "native cancel action is enabled while completion remains pending",
+      "passed": true
+    },
+    {
+      "name": "native diagnostics action settles within deadline",
+      "passed": true
+    },
+    {
+      "name": "native Cancel clears diagnostics and refuses pending publication",
+      "passed": true
+    },
+    {
+      "name": "native diagnostics action settles within deadline",
+      "passed": true
+    },
+    {
+      "name": "native Build explicitly retries after cancellation",
+      "passed": true
+    },
+    {
+      "name": "native close test starts with pending diagnostic completion",
+      "passed": true
+    },
+    {
+      "name": "native diagnostics action settles within deadline",
+      "passed": true
+    },
+    {
+      "name": "diagnostic window close binding cancels pending completion and leaves no stale view",
+      "passed": true
+    },
+    {
+      "name": "native diagnostics action settles within deadline",
+      "passed": true
+    },
+    {
+      "name": "reopening diagnostics rebuilds from the still-valid measurement",
+      "passed": true
+    },
+    {
+      "name": "native cancellation close and reopen preserve measurements evaluations proposals and processing",
+      "passed": true
+    },
+    {
+      "name": "diagnostic worker terminates within deadline",
+      "passed": true
+    },
+    {
+      "name": "actual Current State diagnostics available",
+      "passed": true
+    },
+    {
+      "name": "separate strict profile headroom annotations",
+      "passed": true
+    },
+    {
+      "name": "video offset and routing preserve diagnostic positions and reuse",
+      "passed": true
+    },
+    {
+      "name": "profile annotations bound separately from descriptive identity",
+      "passed": true
+    },
+    {
+      "name": "invalid profile or applicability cannot supply evaluated annotations",
+      "passed": true
+    },
+    {
+      "name": "diagnostics preserve audio revisions snapshots verdict and M3 proposal",
+      "passed": true
+    },
+    {
+      "name": "timeline navigation cannot mutate processing or start jobs",
+      "passed": true
+    },
+    {
+      "name": "processing change clears displayed stale diagnostics immediately",
+      "passed": true
+    },
+    {
+      "name": "diagnostic worker terminates within deadline",
+      "passed": true
+    },
+    {
+      "name": "stale current plan rejected even with retained snapshot pointer",
+      "passed": true
+    },
+    {
+      "name": "diagnostic worker terminates within deadline",
+      "passed": true
+    },
+    {
+      "name": "cancelled completion cannot publish",
+      "passed": true
+    },
+    {
+      "name": "diagnostic worker terminates within deadline",
+      "passed": true
+    },
+    {
+      "name": "explicit retry reuses measured source",
+      "passed": true
+    },
+    {
+      "name": "diagnostic worker terminates within deadline",
+      "passed": true
+    },
+    {
+      "name": "source clear discards in-flight result",
+      "passed": true
+    },
+    {
+      "name": "diagnostic worker terminates within deadline",
+      "passed": true
+    },
+    {
+      "name": "unsupported domain cannot masquerade as measured Source or Current State",
+      "passed": true
+    },
+    {
+      "name": "controller close cancels and joins without session mutation",
+      "passed": true
+    }
+  ],
+  "performance": {
+    "generated_fixture_seconds": 10800,
+    "analysis_ms": 32.86305299401283,
+    "analysis_storage_bytes": 21030048,
+    "worker_including_identity_ms": 308.2915019989014,
+    "viewport_prepare_p95_ms": 0.2788489907979965,
+    "offscreen_timeline_paint_p95_ms": 22.16588300466537,
+    "diagnostics_peak_rss_growth_bytes": 72884224,
+    "active_cancel_ms": 1.173748001456261
+  },
+  "method": "measured-diagnostics-m4.1",
+  "build": "77cf1c7a5052442d4c938ed82ff1158b2bf6557d28bf99880666ec417f4c7c05",
+  "engine": "bs1770-5-ebu2023-m7.1",
+  "os": "Mac OSX 10.13.6",
+  "architecture": "x86_64"
+}

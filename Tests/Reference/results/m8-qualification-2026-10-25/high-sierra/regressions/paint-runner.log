@@ -1,0 +1,30 @@
+......
+----------------------------------------------------------------------
+Ran 6 tests in 0.010s
+
+OK
+{
+  "mode": "preview; no test launched",
+  "profile": {
+    "device": "Mac Studio Speakers",
+    "rate": 48000,
+    "arch": "arm64",
+    "os_prefix": "15."
+  },
+  "order": [
+    "control",
+    "diagnostic",
+    "control",
+    "diagnostic",
+    "control",
+    "diagnostic"
+  ],
+  "seconds_per_run": 100,
+  "identity_sha256": "test",
+  "source_digest": "test",
+  "audio_configuration": [
+    {
+      "recorded": "2026-10-24 00:00:00"
+    }
+  ]
+}

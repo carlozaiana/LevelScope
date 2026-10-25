@@ -159,7 +159,7 @@ void measuredState(StandaloneSessionModel& s,MeasurementDomain domain){expect(s.
 template<class C>void settle(C& c){auto start=now();do{c.poll();std::this_thread::sleep_for(std::chrono::milliseconds(1));}while(c.busy()&&now()-start<5000);expect(!c.busy(),"worker settles within deadline");}
 template<class T>T* control(juce::Component& parent,const juce::String& name){for(auto* c:parent.getChildren())if(auto* p=dynamic_cast<T*>(c))if(p->getName()==name)return p;return nullptr;}
 juce::TextButton* button(juce::Component& p,const juce::String& text){for(auto* c:p.getChildren())if(auto* b=dynamic_cast<juce::TextButton*>(c))if(b->getButtonText()==text)return b;return nullptr;}
-void nativePanel(const StandaloneSessionModel& session){
+void nativePanel(StandaloneSessionModel& session){
     StandaloneSectionsPanel p(session);p.setSize(1000,820);auto* split=button(p,"Split at frame");auto* move=button(p,"Move end");auto* merge=button(p,"Merge next");auto* rename=button(p,"Rename");auto* build=button(p,"Build sections");auto* cancel=button(p,"Cancel sections");
     auto* frame=control<juce::TextEditor>(p,"Section boundary source frame");auto* name=control<juce::TextEditor>(p,"Section name");auto* summary=control<juce::TextEditor>(p,"Measured section summary");auto* list=control<juce::ListBox>(p,"Programme sections");auto* domain=control<juce::ComboBox>(p,"Section measured state");
     expect(split&&move&&merge&&rename&&build&&cancel&&frame&&name&&summary&&list&&domain,"native section controls are present");
@@ -167,6 +167,7 @@ void nativePanel(const StandaloneSessionModel& session){
     auto wait=[&]{auto start=now();do{p.synchronize();std::this_thread::sleep_for(std::chrono::milliseconds(1));}while(cancel->isEnabled()&&now()-start<5000);expect(!cancel->isEnabled(),"native section worker settles");};wait();
     expect(summary->getText().contains("SOURCE")&&list->getListBoxModel()->getNumRows()==1,"native panel initializes whole programme measured Source");
     frame->setText("192000",false);split->onClick();wait();expect(list->getListBoxModel()->getNumRows()==2&&summary->getText().contains("[0, 192000) frames"),"native split updates exact frame interval");
+    expect(session.sectionDocument.map().sections.size()==2&&session.documentDirty(),"section edits belong to persistent session and mark it unsaved");
     frame->setText("192001",false);move->onClick();wait();expect(summary->getText().contains("[0, 192001) frames"),"native boundary move retains sample precision");
     name->setText("Opening",false);rename->onClick();wait();expect(summary->getText().startsWith("Opening"),"native rename is applied explicitly");
     frame->setText("nan",false);split->onClick();expect(list->getListBoxModel()->getNumRows()==2,"invalid numeric boundary cannot mutate sections");

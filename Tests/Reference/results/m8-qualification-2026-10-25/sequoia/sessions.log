@@ -1,0 +1,32 @@
+{
+  "suite": "M8 sessions",
+  "passed": true,
+  "checks": 2073,
+  "failure": "",
+  "performance": {
+    "fixture": "Synthetic three-hour full-resolution Source/Current caches and 1000 sections; media hashing separately qualified",
+    "capture_ms": 0.1305833328515291,
+    "worker_preparation_ms": 377.9020416680723,
+    "ui_adoption_ms": 0.2062500007450581,
+    "save_ms": 65.40537500008941,
+    "parse_ms": 325.7443749997765,
+    "active_cancel_ms": 0.401208333671093,
+    "rss_growth_bytes": 70926336,
+    "session_bytes": 7310527,
+    "ui_callback_p95_ms": 6.314500000327826,
+    "ui_callback_count": 127
+  },
+  "long_media": {
+    "source_sha256": "81f2fa91dedac473eefb9285b738b09bb4606bc6827aa9a035497c051e67b99c",
+    "frames": 518400000,
+    "rate": 48000.0,
+    "channels": 8,
+    "initial_verification_ms": 84608.67504166625,
+    "reopen_verification_ms": 85405.29370833375,
+    "active_cancel_ms": 0.645666666328907,
+    "cancel_progress": 0.01001307647675276
+  },
+  "build": "77cf1c7a5052442d4c938ed82ff1158b2bf6557d28bf99880666ec417f4c7c05",
+  "os": "Mac OSX 15.7.9",
+  "architecture": "arm64"
+}

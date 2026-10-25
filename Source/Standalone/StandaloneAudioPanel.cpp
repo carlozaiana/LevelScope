@@ -21,12 +21,13 @@ StandaloneAudioPanel::StandaloneAudioPanel (StandaloneSessionModel& model, Stand
     scanButton.onClick = [this] { scan(); };
     deviceBox.onChange = [this]
     {
+        if (session.persistenceLoading) return;
         actionError = audio.selectDevice (typeBox.getSelectedId() - 1, deviceBox.getText());
         gain.setValue (-30, juce::sendNotificationSync);
         rebuildOutputs();
         refresh();
     };
-    openButton.onClick = [this] { actionError = audio.connect (session.sourceDocument.media.sampleRate); refresh(); };
+    openButton.onClick = [this] { if (session.persistenceLoading) return; actionError = audio.connect (session.sourceDocument.media.sampleRate); refresh(); };
     closeButton.onClick = [this] { audio.disconnect(); actionError.clear(); refresh(); onChanged(); };
     domainBox.addItem ("Source", 1); domainBox.addItem ("Current State", 2);
     domainBox.setSelectedId (1, juce::dontSendNotification);
@@ -37,22 +38,26 @@ StandaloneAudioPanel::StandaloneAudioPanel (StandaloneSessionModel& model, Stand
     };
     prepareButton.onClick = [this]
     {
+        if (session.persistenceLoading) return;
         synchronize(); actionError = audio.prepare (session.auditionRequest()); refresh(); onChanged();
     };
     playButton.onClick = [this]
     {
+        if (session.persistenceLoading) return;
         synchronize(); actionError = audio.play (session.auditionRequest(), session.sourceDocument.routing);
         refresh(); onChanged();
     };
     stopButton.onClick = [this] { audio.stop(); actionError.clear(); refresh(); onChanged(); };
     restartButton.onClick = [this]
     {
+        if (session.persistenceLoading) return;
         synchronize();
         actionError = audio.play (session.auditionRequest(), session.sourceDocument.routing, true); refresh(); onChanged();
     };
     seekPosition.setText ("0"); seekPosition.setTooltip ("Audio timeline in seconds or an exact fraction; seek rounds down to a source sample.");
     seekButton.onClick = [this]
     {
+        if (session.persistenceLoading) return;
         try
         {
             const auto& s = session.sourceDocument;
@@ -117,6 +122,7 @@ StandaloneAudioPanel::StandaloneAudioPanel (StandaloneSessionModel& model, Stand
 
 void StandaloneAudioPanel::scan()
 {
+    if (session.persistenceLoading) return;
     audio.disconnect();
     deviceBox.clear (juce::dontSendNotification);
     const auto devices = audio.scanOutputs (typeBox.getSelectedId() - 1);
@@ -161,7 +167,7 @@ void StandaloneAudioPanel::refresh()
     synchronize();
     const auto& source = session.sourceDocument;
     const bool playing = audio.active();
-    const bool editable = ! playing && ! session.job.isActive();
+    const bool editable = ! playing && ! session.job.isActive() && !session.persistenceLoading;
     const auto request = session.auditionRequest();
     const auto requestError = request.validationError();
     domainBox.setEnabled (editable);
@@ -188,8 +194,8 @@ void StandaloneAudioPanel::refresh()
     const auto routeError = source.routing.validate (source.layout.count, audio.outputNames().size());
     playButton.setEnabled (editable && audio.connected() && requestError.isEmpty() && routeError.isEmpty());
     stopButton.setEnabled (playing);
-    restartButton.setEnabled (!session.job.isActive() && ! audio.preparing() && audio.connected() && requestError.isEmpty() && routeError.isEmpty());
-    seekButton.setEnabled (!session.job.isActive() && ! audio.preparing() && requestError.isEmpty());
+    restartButton.setEnabled (!session.persistenceLoading && !session.job.isActive() && ! audio.preparing() && audio.connected() && requestError.isEmpty() && routeError.isEmpty());
+    seekButton.setEnabled (!session.persistenceLoading && !session.job.isActive() && ! audio.preparing() && requestError.isEmpty());
     seekPosition.setEnabled (seekButton.isEnabled());
     confirmButton.setEnabled (editable && source.hasSource && source.layout.isValid() && ! source.layout.confirmed);
     layoutPreset.setEnabled (editable && source.hasSource && source.layout.count == 8);

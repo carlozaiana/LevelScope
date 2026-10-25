@@ -56,6 +56,7 @@ juce::String measurementsText (const MeasurementSummary& summary)
     if (! summary.analysis) return "Integrated: --\nLRA: --\nTrue peak: --\n";
     const auto& r = summary.analysis->detail;
     juce::String text;
+    if (summary.analysis->restoredFromSession) text << "Restored measurement; original provenance retained.\n";
     text << "Integrated: " << metricText (r.integrated, "LUFS") << "\n"
          << "LRA: " << metricText (r.lra, "LU") << (r.lra.value && ! r.lraStable ? " (under 60 s; unstable)" : "") << "\n"
          << "True peak: " << metricText (r.truePeak, "dBTP") << "\n"
@@ -72,6 +73,7 @@ juce::String measurementsText (const MeasurementSummary& summary)
 
 StandaloneMainComponent::StandaloneMainComponent()
 {
+    configureSessionControls();
     configureLabels();
     configureTargetProfileBox();
     configureNavigationButtons();
@@ -118,7 +120,7 @@ StandaloneMainComponent::StandaloneMainComponent()
 
     refreshFromSession();
 
-    setSize (1200, 900);
+    setSize (1200, 950);
     startTimerHz (10);
 }
 
@@ -126,6 +128,8 @@ StandaloneMainComponent::StandaloneMainComponent()
 StandaloneMainComponent::~StandaloneMainComponent()
 {
     stopTimer();
+    if (documentControl) documentControl->cancel.store(true);
+    if (documentResult.valid()) documentResult.wait();
     videoWindow.reset();
     diagnosticsWindow.reset(); diagnosticsPanel.reset();
     sectionsWindow.reset(); sectionsPanel.reset();
@@ -138,7 +142,7 @@ StandaloneMainComponent::~StandaloneMainComponent()
 
 void StandaloneMainComponent::beginImport (const juce::File& file)
 {
-    if (session.job.isActive()) return;
+    if (session.job.isActive() || session.persistenceLoading) return;
     audition.stop();
     // Replacement keeps the previous validated source until success.
     if (! session.job.begin (JobStage::ingest, session.revision)) return;
@@ -158,6 +162,7 @@ void StandaloneMainComponent::beginImport (const juce::File& file)
 
 void StandaloneMainComponent::timerCallback()
 {
+    pollSessionOperation();
     audioPanel.synchronize(); // reject unexpectedly invalidated audition before any completion publishes
     videoPanel.synchronize(); // observes new seek/play generation before audio preroll can finish
     const auto audioStateBeforePoll = audition.getState();
@@ -220,11 +225,12 @@ void StandaloneMainComponent::timerCallback()
     if (session.job.isActive() && importControl)
         text << "  " << juce::String (juce::roundToInt (100 * importControl->progress.load())) << "%";
     jobLabel.setText (text, juce::dontSendNotification);
+    refreshSessionControls();
 }
 
 void StandaloneMainComponent::beginMeasurement (MeasurementDomain domain)
 {
-    if (session.job.isActive() || session.sourceContentInvalid) return;
+    if (session.job.isActive() || session.sourceContentInvalid || session.persistenceLoading) return;
     if (domain == MeasurementDomain::currentState && ! session.hasCurrentStateInitialized()) return;
     auto context = session.measurementContext (domain);
     if (OfflineAnalysisService::validateRequest (context, domain).isNotEmpty()) return;
@@ -244,7 +250,7 @@ void StandaloneMainComponent::beginMeasurement (MeasurementDomain domain)
 
 void StandaloneMainComponent::beginTrimProposal()
 {
-    if (! session.getWorkflowReadiness().canDraftProposal()) return;
+    if (session.persistenceLoading || ! session.getWorkflowReadiness().canDraftProposal()) return;
     const auto request = session.currentTrimRequest();
     session.discardTrim();
     if (! session.job.begin (JobStage::proposal, session.revision)) return;
@@ -404,6 +410,7 @@ void StandaloneMainComponent::chooseSourceFile()
 
 void StandaloneMainComponent::clearSourceFile()
 {
+    if (session.persistenceLoading) return;
     audition.stop();
     session.job.requestCancel();
     if (importControl) importControl->cancel.store (true);
@@ -432,30 +439,31 @@ void StandaloneMainComponent::setPage (WorkflowPage page)
 
 void StandaloneMainComponent::refreshFromSession()
 {
+    refreshSessionControls();
     workflowStateLabel.setText ("Workflow page: " + getPageName (session.selectedPage)
                                     + "   |   Global-trim proposals",
                                 juce::dontSendNotification);
 
     targetProfileBox.setSelectedId (session.selectedTargetProfileIndex + 1, juce::dontSendNotification);
     applicabilityConfirmation.setToggleState (session.programmeApplicability == proposal::Applicability::preProducedLinearProgramme, juce::dontSendNotification);
-    applicabilityConfirmation.setEnabled (session.sourceDocument.hasSource && ! session.job.isActive());
+    applicabilityConfirmation.setEnabled (session.sourceDocument.hasSource && ! session.job.isActive() && !session.persistenceLoading);
 
-    clearSourceButton.setEnabled (session.sourceDocument.hasSource || session.job.isActive());
-    chooseSourceButton.setEnabled (! session.job.isActive());
-    targetProfileBox.setEnabled (! session.job.isActive());
+    clearSourceButton.setEnabled (!session.persistenceLoading && (session.sourceDocument.hasSource || session.job.isActive()));
+    chooseSourceButton.setEnabled (! session.job.isActive() && !session.persistenceLoading);
+    targetProfileBox.setEnabled (! session.job.isActive() && !session.persistenceLoading);
     cancelJobButton.setEnabled (session.job.state == JobState::running);
 
     initializeCurrentStateButton.setEnabled (! session.audioEditsBlocked() && ! session.job.isActive() && session.canInitializeCurrentStateFromSource());
     clearCurrentStateButton.setEnabled (! session.audioEditsBlocked() && ! session.job.isActive() && session.hasCurrentStateInitialized());
     const auto measurementError = OfflineAnalysisService::validateRequest (session.measurementContext (MeasurementDomain::source), MeasurementDomain::source);
-    measureSourceButton.setEnabled (! session.job.isActive() && ! session.sourceContentInvalid && measurementError.isEmpty());
+    measureSourceButton.setEnabled (!session.persistenceLoading && ! session.job.isActive() && ! session.sourceContentInvalid && measurementError.isEmpty());
     measureSourceButton.setTooltip (measurementError);
-    remeasureCurrentStateButton.setEnabled (! session.job.isActive() && ! session.sourceContentInvalid && session.hasCurrentStateInitialized() && measurementError.isEmpty());
+    remeasureCurrentStateButton.setEnabled (!session.persistenceLoading && ! session.job.isActive() && ! session.sourceContentInvalid && session.hasCurrentStateInitialized() && measurementError.isEmpty());
     currentGain.setEnabled (! session.audioEditsBlocked() && ! session.job.isActive() && session.hasCurrentStateInitialized());
     currentGain.setValue (session.currentStateDocument.staticGainDb, juce::dontSendNotification);
-    draftTrimButton.setEnabled (session.getWorkflowReadiness().canDraftProposal());
+    draftTrimButton.setEnabled (!session.persistenceLoading && session.getWorkflowReadiness().canDraftProposal());
     applyTrimButton.setEnabled (session.canApplyTrim());
-    discardTrimButton.setEnabled (! session.job.isActive() && session.trimDraft.has_value());
+    discardTrimButton.setEnabled (!session.persistenceLoading && ! session.job.isActive() && session.trimDraft.has_value());
 
     sourceStateBox.setText (buildSourceStateText(), false);
     targetStateBox.setText (buildTargetStateText(), false);
@@ -666,6 +674,10 @@ void StandaloneMainComponent::resized()
 {
     auto bounds = getLocalBounds().reduced (24);
 
+    auto sessionRow = bounds.removeFromTop(30);
+    for (auto* button : { &newSessionButton, &openSessionButton, &saveSessionButton, &saveAsSessionButton, &relinkAudioButton, &relinkVideoButton, &cancelSessionButton })
+        button->setBounds(sessionRow.removeFromLeft(button == &saveSessionButton ? 70 : 135).reduced(2));
+    sessionStatus.setBounds(bounds.removeFromTop(24));
     titleLabel.setBounds (bounds.removeFromTop (40));
     subtitleLabel.setBounds (bounds.removeFromTop (28));
 

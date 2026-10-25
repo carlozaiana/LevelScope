@@ -1,0 +1,51 @@
+{
+  "status": "passed",
+  "candidate": "candidate-01",
+  "source_digest": "1c591122c03f40cdc7035d20837e4e39f9cf0a1c62de640149c0b6427d225229",
+  "binary_sha256": "146b9a79e12387a5f1c368e1543f50e581bcd6ceea63cde2111ca4e4d9161740",
+  "runtime_binary": "/Users/fuzz/LevelScope-M8-qualification-2026-10-25/candidate-01/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone",
+  "os": "10.13.6 (17G66)",
+  "architecture": "x86_64",
+  "physical_devices_opened": false,
+  "method": "Silent native UI through Screen Sharing using computer-use; stored documents independently inspected over existing SSH",
+  "cases": [
+    "Opened Sequoia-produced 5.1 document with missing original locator; explicit unresolved-media choice preserved exact gain, ordered roles, profile/applicability and sections; no measured result inherited",
+    "Wrong-content audio relink rejected and unresolved previous session retained; exact-content copied audio accepted, locator marked UNSAVED, measurements unavailable until explicit remeasurement",
+    "Explicit Source and Current measurement completed: expected measured loudness FAIL at -23.838338 and -29.858938 LUFS; gain -6.020599913279624 retained",
+    "Current State audition selected without playback; Save As to golem-ui.levelscope captured both measured caches",
+    "Source diagnostics rebuilt from authoritative measurement; LRA 2.218481 marked unstable; two sections preserved at frames 0/96000/192000",
+    "Section renamed golem m8 opening; New/Cancel retained dirty session; New/Save wrote revision before creating blank stopped/device-closed/routes-muted session",
+    "Opened golem-ui.levelscope; exact gain, roles, applicability, section names/boundaries and Current audition restored; measured Source/Current FAIL reconstructed with no new measurement job",
+    "Independently corrupted Current cache discarded with checksum explanation; valid Source measurement retained, Current UNVERIFIED and gain retained",
+    "Core checksum damage rejected; previous session and its Source measurement retained",
+    "Three-hour Open displayed live verification progress (observed 29 percent); processing, roles, routing and transport controls blocked; Cancel explicitly reported previous session retained",
+    "Processing gain changed to -6 dB; UNSAVED and Current UNVERIFIED; Save As golem-unverified.levelscope omitted unavailable Current cache and retained Source cache",
+    "New/Open of golem-unverified.levelscope restored -6 dB and Current audition UNVERIFIED, with Source measurement retained; stopped/device closed/all routes muted",
+    "Closed candidate cleanly; no physical device was opened or playback started"
+  ],
+  "session_sha256": "ee850fb68353a9c07c8f86301500984753f23b96d8f0aeb935c2392eecaef0fc",
+  "gain_bits": "c018151824c7587f",
+  "sections": [
+    [
+      "1",
+      "0",
+      "96000",
+      "golem m8 opening"
+    ],
+    [
+      "2",
+      "96000",
+      "192000",
+      "Section 2"
+    ]
+  ],
+  "offset": "-1001/30000",
+  "unverified_session_sha256": "4b9ef618c108de96ff9259575280db4cc7142e1e76428240d7ffa3bc17319d34",
+  "unverified_gain_bits": "c018000000000000",
+  "notes": [
+    "Screen Sharing initially showed stale/disabled controls; user reconnected and enabled control. Actual successful interactions followed a fresh binding and dismissal of the stale menu.",
+    "Remote text input was unreliable: the final gain edit reached -6 dB, not the attempted -5.12345678912345. This record uses the observed/stored value. Exact arbitrary-gain round trips are independently covered by native tests.",
+    "Signed offset was retained in the document without an attached picture in this interactive sequence. Fresh restored H.264/ProRes attachment/seek/offset checks ran in the native M8 playback suite; Sequoia additionally exercised them interactively.",
+    "The fixture loudness FAIL results are expected measured outcomes, not qualification failures."
+  ]
+}

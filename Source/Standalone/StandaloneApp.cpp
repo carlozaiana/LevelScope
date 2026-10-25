@@ -61,7 +61,9 @@ public:
 
     void systemRequestedQuit() override
     {
-        quit();
+        if (auto* content = dynamic_cast<levelscope::standalone::StandaloneMainComponent*>(mainWindow->getContentComponent()))
+            content->requestClose([] { quit(); });
+        else quit();
     }
 
     void anotherInstanceStarted (const juce::String&) override

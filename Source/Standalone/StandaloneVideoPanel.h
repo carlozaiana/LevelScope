@@ -13,6 +13,7 @@ public:
     ~StandaloneVideoPanel() override;
     bool prerollReady() const { return player.prerollReady(); }
     void synchronize() { timerCallback(); }
+    void restoreSessionReference();
     void paint (juce::Graphics&) override;
     void resized() override;
 private:

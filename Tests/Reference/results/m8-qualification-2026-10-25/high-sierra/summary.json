@@ -1,0 +1,10 @@
+{
+  "automated_passed": true,
+  "error": "",
+  "qualification_complete": false,
+  "interactive_ui": "Separate evidence required",
+  "cross_mac_reopen": "Bidirectional exchange is separate required evidence",
+  "physical_devices_opened": false,
+  "source_digest": "1c591122c03f40cdc7035d20837e4e39f9cf0a1c62de640149c0b6427d225229",
+  "identity_sha256": "dd625b0e2241afde0e6cbd5bbe36f733d8e23bdd9afc3bba92cd62fc556e8b9f"
+}

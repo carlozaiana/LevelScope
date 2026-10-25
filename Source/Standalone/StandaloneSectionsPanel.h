@@ -8,7 +8,7 @@ namespace levelscope::standalone
 class StandaloneSectionsPanel final : public juce::Component, private juce::Timer, private juce::ListBoxModel
 {
 public:
-    explicit StandaloneSectionsPanel (const StandaloneSessionModel&);
+    explicit StandaloneSectionsPanel (StandaloneSessionModel&);
     ~StandaloneSectionsPanel() override;
     void synchronize() { timerCallback(); }
     void suspend();
@@ -16,8 +16,8 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
 private:
-    const StandaloneSessionModel& session;
-    proposal::SectionDocument document;
+    StandaloneSessionModel& session;
+    proposal::SectionDocument& document;
     DiagnosticsController diagnostics;
     SectionsController sections;
     std::shared_ptr<const MeasuredDiagnostics> measured;

@@ -203,6 +203,7 @@ endif()
 #==============================
 
 add_library(LevelScopeStandaloneSupport STATIC
+    Source/Standalone/SessionDocument.cpp
     Source/Standalone/VerifiedSource.cpp
     Source/Core/Proposal/SectionAnalysis.cpp
     Source/Standalone/StandaloneSections.cpp
@@ -259,6 +260,7 @@ target_link_libraries(LevelScopeStandalone PRIVATE LevelScopeDiagnosticsUI)
 
 target_sources(LevelScopeStandalone
     PRIVATE
+        Source/Standalone/StandaloneSessionUI.cpp
         Source/Standalone/StandaloneApp.cpp
         Source/Standalone/StandaloneMainComponent.cpp
         Source/Standalone/StandaloneMainComponent.h
@@ -409,4 +411,23 @@ if (LEVELSCOPE_BUILD_SCAFFOLD_TESTS)
     target_link_libraries(LevelScopeScaffoldTests PRIVATE LevelScopeStandaloneSupport)
     add_test(NAME standalone-scaffold COMMAND LevelScopeScaffoldTests)
     set_tests_properties(standalone-scaffold PROPERTIES TIMEOUT 60)
+endif()
+
+option(LEVELSCOPE_BUILD_SESSION_TESTS "Build M8 reproducible-session checks" OFF)
+if (LEVELSCOPE_BUILD_SESSION_TESTS)
+    enable_testing()
+    juce_add_console_app(LevelScopeSessionTests PRODUCT_NAME "LevelScope Session Tests")
+    target_sources(LevelScopeSessionTests PRIVATE Tests/SessionTests.cpp)
+    target_compile_definitions(LevelScopeSessionTests PRIVATE JUCE_MODAL_LOOPS_PERMITTED=1)
+    target_link_libraries(LevelScopeSessionTests PRIVATE LevelScopeStandaloneSupport)
+    add_test(NAME reproducible-sessions COMMAND LevelScopeSessionTests)
+    set_tests_properties(reproducible-sessions PROPERTIES TIMEOUT 300)
+    juce_add_console_app(LevelScopeSessionPlaybackTests PRODUCT_NAME "LevelScope Session Playback Tests")
+    target_sources(LevelScopeSessionPlaybackTests PRIVATE Tests/SessionPlaybackTests.cpp Source/Standalone/StandaloneAudioPanel.cpp)
+    if (APPLE)
+        target_sources(LevelScopeSessionPlaybackTests PRIVATE Tests/VideoReaderAudit_mac.mm)
+    endif()
+    target_link_libraries(LevelScopeSessionPlaybackTests PRIVATE LevelScopeStandaloneSupport juce::juce_gui_basics)
+    add_test(NAME restored-session-audition COMMAND LevelScopeSessionPlaybackTests)
+    set_tests_properties(restored-session-audition PROPERTIES TIMEOUT 300)
 endif()

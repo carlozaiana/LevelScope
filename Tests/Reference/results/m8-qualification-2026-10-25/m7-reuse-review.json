@@ -1,0 +1,45 @@
+{
+  "baseline_package_identity_sha256": "b2cf915f2f6b644993782363b0a0c243c49b43198100ae39ff6be870eff35f9e",
+  "groups": {
+    "measurement": {
+      "files": {
+        "Source/Core/Measurement/GatePopulation.h": "56c32bea23a332f811433c0977d07de9b3401b12cf8629d92aa78ceb58060c3e",
+        "Source/Core/Measurement/OfflineMeasurement.cpp": "a72cbe46461c8d7589eebb644ba28f0ece0f0e7b8f0565ae1a3858125e584cf7",
+        "Source/Core/Measurement/OfflineMeasurement.h": "296958549aef56a4717deaace9cba7a6e2d85a7bb34c99906c321b21f75d7020",
+        "Source/Standalone/StandaloneMeasurementLayout.h": "d36871613a6d98cdd6455e883657fa1b8a2594d6ebbdcc6b36fd46b5e21defb8",
+        "Source/Standalone/StandaloneMeasurementService.cpp": "4bbbdf6f3a41cccd1029507fb819a9b124a7a0c31d38670f628cfcf58d853f66",
+        "Source/Standalone/StandaloneMeasurementService.h": "9ef24f01ac3a644488c85ad707a8edbe20b70675e6d41a796a1778aaef5f5ec2"
+      },
+      "unchanged": true
+    },
+    "processing_audition": {
+      "files": {
+        "Source/Standalone/StandaloneAudition.cpp": "1d7ddf823b7dd477cb5ead1f8fdff0b89f8a03550db161c2b08213cfe615ff95",
+        "Source/Standalone/StandaloneAudition.h": "034300c4faa35a91dd45ac3f27675f92dd9c59120cf492b77f831fcde70ca22b",
+        "Source/Standalone/StandaloneAuditionRequest.h": "3344c81e283c93896d53047d56b27954e6da8333ca0f7b1e4c2c16cc4ade9d51",
+        "Source/Standalone/StandaloneMedia.cpp": "9a9bbb3c9fb4cd9d4b78657d2bc83f0fcb4cc6de8c863ad692cbbaeb258a84bb",
+        "Source/Standalone/StandaloneMedia.h": "b8c68cc8af3c078344121b5705d1771a5f1765819c85478b6148c5c36853ef5d",
+        "Source/Standalone/VerifiedSource.cpp": "78dd3170bc4d140a7f21e027176978e99d9b2cfd17ad5894c50be3f08cf79835",
+        "Source/Standalone/VerifiedSource.h": "dcd6afed332637bd574bc31940d2015f9bb8962632f28791335c41d2df5f568f"
+      },
+      "unchanged": true
+    },
+    "video_engine": {
+      "files": {
+        "Source/Standalone/StandaloneVideo.cpp": "7b5aee564de7dba96e9557f784a8d03dce60ca8022b4736a0a84eb7097e458cb",
+        "Source/Standalone/StandaloneVideo.h": "97279ff2b6d8fb20fc8d3f230eea44949df8dc9666590aef03efbe01b7721e34",
+        "Source/Standalone/StandaloneVideo_mac.mm": "004e02878e75fcf3ff8e48de3a5f83a6d200f1a3e60117bb3b32f212df754e53"
+      },
+      "unchanged": true
+    },
+    "profiles": {
+      "files": {
+        "Source/Core/Proposal/Model/TargetProfile.cpp": "578736b0daa64d7d654506a3d81a4715b093f5ea8c15610f2b5a930ee566fcda",
+        "Source/Core/Proposal/Model/TargetProfile.h": "54b2637bc231647e7ededa584b894a83976f0f05777d46d2330cd97ddc82ab67",
+        "Source/Standalone/StandaloneTargetProfiles.h": "78148721bd755ba34084f679e68f2da4a7f9b120b4872161095db64d887471fe"
+      },
+      "unchanged": true
+    }
+  },
+  "scope": "Numerical engine, processing, verified source and native video timing unchanged; new session/model/UI lifecycle requires fresh M8, M1-M7 and stopped-video tests. M7 physical timing/endurance remains historical evidence, not a new M8 physical run."
+}

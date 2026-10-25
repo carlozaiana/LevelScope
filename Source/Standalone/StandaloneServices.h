@@ -56,6 +56,10 @@ struct AnalysisSnapshot
     juce::String measurementVersion;
     juce::String identity, measuredContentHash;
     measurement::Result detail;
+    // Original measurement provenance survives runtime rebinding on session reopen.
+    juce::String originSessionId;
+    uint64_t originJobId = 0, originSessionRevision = 0;
+    bool restoredFromSession = false;
     // Analysis engine may extend with curves, gates, attribution and scene data.
 };
 struct ProposalRequest

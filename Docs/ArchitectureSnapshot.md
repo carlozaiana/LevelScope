@@ -31,8 +31,11 @@ reference, UI and video qualification: 20 fresh short device cases plus three
 skips; earlier strict failures remain historical results under the separately
 recorded development acceptance. Existing three-hour and Source-matrix evidence
 is reused only through the documented implementation-equivalence review.
-The next proposed milestone is safe session saving/reopening, followed by verified
-PCM export/artifact QC and reports; none of that roadmap is implemented here.
+M8 session persistence candidate-01 is qualified on actual arm64 Sequoia and Intel
+High Sierra, published as `m8-reproducible-sessions-2026-10-25` and fast-forwarded
+into main with the tested implementation unchanged. See [36](ProjectIndex/36_M8SessionsQualificationAndHandover.md).
+The next roadmap order is separate-file stereo/5.1 assembly, then verified PCM
+export/artifact QC and reports, followed by bounded stem/dialogue-analysis work.
 
 **Standalone continuation, 18 October 2026:** qualified M1 offline measurement,
 M2 versioned programme-rule evaluation and M3 deterministic global trim with
@@ -61,13 +64,15 @@ regressions, official suites and silent three-hour inspection. See
 [the M5 handover](ProjectIndex/24_M5ProgrammeSections.md) for exact tested source
 and binary identities. The annotated checkpoint `m5-programme-sections-2026-10-20`
 is saved on the logic branch and fast-forwarded into main without changing the
-tested implementation. Sections are in-memory annotations; persistence, section
-processing and processed audition remain deferred.
+tested implementation. Sections are annotations independent of audio processing. M8 adds their session
+persistence; section processing remains deferred. M6 already provides qualified
+global-trim Current State audition.
 
 The qualified measurement contract remains in
 [14_OfflineMeasurementContract.md](ProjectIndex/14_OfflineMeasurementContract.md).
-Public render/export, processed audition, dynamics integration, scenes/freezes,
-standalone persistence and embedded soundtrack remain deferred. VST3 measurement
+Public render/export, dynamics integration, scenes/freezes and embedded soundtrack
+remain deferred. M6 audition and M8 persistence are qualified and published with
+their separate candidate/evidence identities. VST3 measurement
 parity is a separate milestone; its parameters, state and DSP remain unchanged.
 
 ---
@@ -245,6 +250,15 @@ Required methods:
 ---
 
 ## 6. Persistence Strategy (Additive, Versioned)
+
+**Standalone M8 (separate from plugin state):** `.levelscope` stores a versioned
+programme/file/channel core and independently replaceable measured caches. Coherent
+immutable saves, atomic replacement, per-file verification, new runtime opening IDs
+and stopped/device-closed/routes-muted adoption preserve the measurement contract.
+Caches require exact build/platform compatibility; evaluations are reconstructed.
+Programme components and future channel assembly are distinct from stem summing
+and analysis references. See [36](ProjectIndex/36_M8SessionsQualificationAndHandover.md)
+for schema, qualification and limitations. Existing plugin formats below are untouched.
 
 **Implemented (baseline, preserved):**
 - Chunked gzip plugin state container with stable IDs.

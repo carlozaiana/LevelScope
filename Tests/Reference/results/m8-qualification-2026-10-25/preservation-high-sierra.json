@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "source_digest": "1c591122c03f40cdc7035d20837e4e39f9cf0a1c62de640149c0b6427d225229",
+  "identity_sha256": "dd625b0e2241afde0e6cbd5bbe36f733d8e23bdd9afc3bba92cd62fc556e8b9f",
+  "artifact_files_checked": 379,
+  "artifact_errors": [],
+  "candidate_app_closed": true,
+  "m7_baseline_identity_sha256": "b2cf915f2f6b644993782363b0a0c243c49b43198100ae39ff6be870eff35f9e"
+}

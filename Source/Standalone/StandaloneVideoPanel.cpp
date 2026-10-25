@@ -13,12 +13,14 @@ StandaloneVideoPanel::StandaloneVideoPanel (StandaloneSessionModel& s, Standalon
     streams.setTextWhenNothingSelected ("Video stream");
     attach.onClick = [this]
     {
+        if (session.persistenceLoading) return;
         chooser = std::make_unique<juce::FileChooser> ("Attach a local reference picture", juce::File(), "*.mov;*.mp4;*.m4v");
         juce::Component::SafePointer<StandaloneVideoPanel> safe (this);
         chooser->launchAsync (juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles,
             [safe] (const juce::FileChooser& picker)
             {
-                if (!safe || picker.getResult() == juce::File()) return;
+                if (!safe || safe->session.persistenceLoading || picker.getResult() == juce::File()) return;
+                safe->session.documentChanged(); safe->session.videoUnresolved = false;
                 safe->session.referenceVideo.file = picker.getResult();
                 safe->session.referenceVideo.sha256.clear(); safe->session.referenceVideo.streamId = 0;
                 safe->actionError.clear(); safe->displayedMetadata = nullptr;
@@ -28,17 +30,21 @@ StandaloneVideoPanel::StandaloneVideoPanel (StandaloneSessionModel& s, Standalon
     };
     clear.onClick = [this]
     {
+        if (session.persistenceLoading) return;
+        session.documentChanged(); session.videoUnresolved = false;
         player.clear(); session.referenceVideo = {}; offset.setText ("0");
         streams.clear (juce::dontSendNotification); metadata.clear(); displayedMetadata = nullptr; actionError.clear();
     };
     apply.onClick = [this]
     {
+        if (session.persistenceLoading) return;
         try
         {
             const auto time = video::Time::parse (offset.getText().trim().toStdString());
             // Validate the current mapping before accepting the edit.
             const auto rate = session.sourceDocument.media.sampleRate;
             (void) (video::Time (audio.positionFrames(), rate > 0 ? static_cast<int64_t> (rate) : 48000) - time);
+            if (session.referenceVideo.startOnAudio != time) session.documentChanged();
             session.referenceVideo.startOnAudio = time; player.invalidate(); actionError.clear();
         }
         catch (const std::exception& error) { actionError = error.what(); }
@@ -46,13 +52,23 @@ StandaloneVideoPanel::StandaloneVideoPanel (StandaloneSessionModel& s, Standalon
     offset.onReturnKey = [this] { apply.triggerClick(); };
     streams.onChange = [this]
     {
+        if (session.persistenceLoading) return;
         const int id = streams.getSelectedId(); if (id <= 0) return;
+        if (session.referenceVideo.streamId != id) session.documentChanged();
         session.referenceVideo.streamId = id; displayedMetadata = nullptr; actionError.clear(); metadata.clear();
         player.attach (session.referenceVideo.file, id);
     };
     setSize (700, 600); startTimerHz (120);
 }
 StandaloneVideoPanel::~StandaloneVideoPanel() { stopTimer(); }
+void StandaloneVideoPanel::restoreSessionReference()
+{
+    player.clear(); displayedMetadata = nullptr; view = {}; metadata.clear(); streams.clear(juce::dontSendNotification);
+    offset.setText(juce::String(session.referenceVideo.startOnAudio.text()), false);
+    actionError = session.videoUnresolved ? "Reference picture unresolved; relink identical content. Audio remains authoritative." : juce::String();
+    if (! session.videoUnresolved && session.referenceVideo.file != juce::File())
+        player.attach(session.referenceVideo.file, session.referenceVideo.streamId);
+}
 void StandaloneVideoPanel::timerCallback()
 {
     try
@@ -65,6 +81,9 @@ void StandaloneVideoPanel::timerCallback()
         {
             displayedMetadata = view.asset.get();
             const auto& asset = *view.asset;
+            if (session.referenceVideo.sha256.isNotEmpty() && session.referenceVideo.sha256 != asset.sha256)
+            { session.videoUnresolved = true; player.clear(); displayedMetadata = nullptr; actionError = "Reference picture changed; relink identical content or attach explicitly"; return; }
+            if (session.referenceVideo.sha256 != asset.sha256 || session.referenceVideo.streamId != asset.selectedStream) session.documentChanged();
             session.referenceVideo.sha256 = asset.sha256; session.referenceVideo.streamId = asset.selectedStream;
             streams.clear (juce::dontSendNotification);
             for (const auto& stream : asset.streams)

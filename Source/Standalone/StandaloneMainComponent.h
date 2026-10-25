@@ -1,4 +1,5 @@
 #pragma once
+#include "SessionDocument.h"
 
 #include <memory>
 #include <future>
@@ -20,12 +21,36 @@ class StandaloneMainComponent final : public juce::Component, private juce::Time
 public:
     StandaloneMainComponent();
     ~StandaloneMainComponent() override;
+    void requestClose (std::function<void()>);
 
     void paint (juce::Graphics& g) override;
     void resized() override;
 
 private:
     StandaloneSessionModel session;
+    juce::TextButton newSessionButton { "New session" }, openSessionButton { "Open session..." },
+        saveSessionButton { "Save" }, saveAsSessionButton { "Save as..." },
+        relinkAudioButton { "Relink audio..." }, relinkVideoButton { "Relink video..." }, cancelSessionButton { "Cancel file job" };
+    juce::Label sessionStatus;
+    std::unique_ptr<juce::FileChooser> sessionChooser;
+    std::future<sessionfile::Outcome> documentResult;
+    std::shared_ptr<JobControl> documentControl;
+    std::optional<sessionfile::Document> capturedSave;
+    juce::File pendingDocumentFile;
+    std::function<void()> afterSave;
+    juce::String documentNotice;
+    bool relinkingVideo = false;
+    enum class FileOperation { none, save, open, relink } fileOperation = FileOperation::none;
+    void configureSessionControls();
+    void pollSessionOperation();
+    void refreshSessionControls();
+    void confirmDiscard (std::function<void()>);
+    void beginSaveSession (bool saveAs, std::function<void()> = {});
+    void beginOpenSession (const juce::File&);
+    void chooseRelink (bool video);
+    void installDocument (sessionfile::Document, bool relinking, std::shared_ptr<sessionfile::Prepared>);
+    bool canReplaceSession() const;
+
     StandaloneAudition audition;
     StandaloneAudioPanel audioPanel { session, audition, [this] { refreshFromSession(); } };
     StandaloneVideoPanel videoPanel { session, audition };

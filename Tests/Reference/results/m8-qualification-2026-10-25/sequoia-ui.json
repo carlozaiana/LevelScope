@@ -1,0 +1,51 @@
+{
+  "status": "passed",
+  "candidate": "candidate-01",
+  "source_digest": "1c591122c03f40cdc7035d20837e4e39f9cf0a1c62de640149c0b6427d225229",
+  "binary_sha256": "146b9a79e12387a5f1c368e1543f50e581bcd6ceea63cde2111ca4e4d9161740",
+  "runtime_binary": "build/logic-m8/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone",
+  "physical_devices_opened": false,
+  "method": "Native accessibility UI through computer-use; stored file inspected independently",
+  "cases": [
+    "Source imported, Left/Right explicitly confirmed, EBU applicability confirmed; measured Source PASS",
+    "Current gain -6.020599913279624 applied and measured; actual loudness FAIL, true peak PASS",
+    "Save As; exact stored gain c018151824c7587f; Source and Current measured caches included",
+    "Sections split at frame 192001, renamed M8 Opening; UNSAVED without audio invalidation",
+    "H.264 reference attached, offset -1001/30000 applied; embedded audio excluded",
+    "New followed by Open restored profile, applicability, roles, gain, caches and derived verdicts stopped/device closed/all routes muted",
+    "Restored video seek 3/2 selected frame 45, PTS 3003/2000; exact offset retained",
+    "Restored diagnostics and M8 Opening section boundary/name inspected",
+    "Gain edit marked UNSAVED; New/Cancel retained edit; Open/Discard restored original saved gain and measured result",
+    "Core checksum damage rejected; previous session and results retained",
+    "Damaged Current cache discarded with explanation; Source PASS retained, Current UNVERIFIED gain retained",
+    "Damaged Source cache discarded independently; Current measured FAIL retained",
+    "Missing audio explicitly opened unresolved; settings preserved, both measurements unavailable",
+    "Relink different audio rejected; identical copied audio accepted, locator dirty and measurements remain unavailable",
+    "Close/Save wrote relinked coherent revision then exited; stored gain/sections verified",
+    "Active three-hour Open verification displayed progress; processing/roles/routing controls blocked; Cancel retained previous valid measured session stopped/device closed/muted",
+    "Missing video explicitly opened unresolved with measured Source PASS and measured Current FAIL unchanged; identical-video relink restored availability and kept audio evaluations current"
+  ],
+  "session_sha256": "634c8fdf9aa28ab2e7c453a9271a2d720598bc91305886ecc9863517fa0d5bab",
+  "gain_bits": "c018151824c7587f",
+  "sections": [
+    [
+      "1",
+      "0",
+      "192001",
+      "M8 Opening"
+    ],
+    [
+      "2",
+      "192001",
+      "384000",
+      "Section 2"
+    ]
+  ],
+  "offset": "-1001/30000",
+  "notes": [
+    "Native save picker interpreted slash in filename as colon; saved again through Go To folder. Single owned accidental file moved into qualification folder.",
+    "Hand-created non-canonical JSON missing-media fixture correctly rejected; canonical fixture used for missing-media recovery.",
+    "After close/relaunch, automation helper retained old app binding and opened a second byte-identical app. Rebound to owning app, verified active cancellation; no crash. Extra copy closed."
+  ],
+  "additional_runtime_binary": "build/m8-qualification-2026-10-25/candidate-01/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone"
+}
