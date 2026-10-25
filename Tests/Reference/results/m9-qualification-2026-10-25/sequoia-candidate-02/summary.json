@@ -1,0 +1,11 @@
+{
+  "automated_passed": true,
+  "error": "",
+  "qualification_complete": false,
+  "interactive_ui": "Separate required evidence",
+  "cross_mac_exchange": "Separate bidirectional required evidence",
+  "physical_video": "Separate coordinated required evidence",
+  "physical_multichannel_listening": "Separate, not claimed",
+  "source_digest": "367f667b23e193ff4b233ca9c5a3db966304511f03bdb5caa584e5b4a17ffbf3",
+  "identity_sha256": "16ac81d6b4a740a32486bc5610841f02300ecbfa05e5c27baf21640229d00f2e"
+}

@@ -54,16 +54,25 @@ void StandaloneMainComponent::requestClose(std::function<void()> close)
 void StandaloneMainComponent::beginSaveSession(bool saveAs,std::function<void()> continuation)
 {
     if(documentResult.valid()||session.persistenceLoading||audition.active()){documentNotice="Stop audition and finish the file operation before saving";return;}
+    if(session.openedSessionSchema==1&&!saveAs&&!migrationSaveApproved&&session.documentFile!=juce::File())
+    {
+        juce::Component::SafePointer<StandaloneMainComponent> safe(this);
+        juce::AlertWindow::showAsync(juce::MessageBoxOptions().withIconType(juce::MessageBoxIconType::WarningIcon).withTitle("Session format upgrade")
+            .withMessage("Saving writes the M9 session format and requires an M9 reader. Choose Save As to retain your original M8-readable copy.")
+            .withButton("Save As").withButton("Upgrade original").withButton("Cancel"),[safe,continuation](int choice)
+            {if(!safe)return;if(choice==1)safe->beginSaveSession(true,continuation);else if(choice==2){safe->migrationSaveApproved=true;safe->beginSaveSession(false,continuation);safe->migrationSaveApproved=false;}});
+        return;
+    }
     if(saveAs||session.documentFile==juce::File())
     {
-        sessionChooser=std::make_unique<juce::FileChooser>("Save LevelScope session",session.documentFile==juce::File()?juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile("Untitled.levelscope"):session.documentFile,"*.levelscope");
+        sessionChooser=std::make_unique<juce::FileChooser>("Save LevelScope session",session.documentFile==juce::File()?juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile("Untitled.levelscope"):(session.openedSessionSchema==1?session.documentFile.getSiblingFile(session.documentFile.getFileNameWithoutExtension()+"-M9.levelscope"):session.documentFile),"*.levelscope");
         juce::Component::SafePointer<StandaloneMainComponent> safe(this);
         sessionChooser->launchAsync(juce::FileBrowserComponent::saveMode|juce::FileBrowserComponent::canSelectFiles|juce::FileBrowserComponent::warnAboutOverwriting,[safe,continuation](const auto& picker)
         {
             if(!safe||picker.getResult()==juce::File())return;
             // Setting the destination is not a successful save; restore it until completion.
             auto original=safe->session.documentFile;safe->session.documentFile=picker.getResult();
-            safe->beginSaveSession(false,continuation);safe->session.documentFile=original;
+            safe->migrationSaveApproved=true;safe->beginSaveSession(false,continuation);safe->migrationSaveApproved=false;safe->session.documentFile=original;
         });return;
     }
     try { capturedSave=sessionfile::capture(session); }
@@ -80,15 +89,24 @@ void StandaloneMainComponent::beginOpenSession(const juce::File& file)
         auto r=sessionfile::read(file,*c);if(!r.document)return r;return sessionfile::verify(std::move(*r.document),*c);
     });refreshFromSession();
 }
-void StandaloneMainComponent::chooseRelink(bool video)
+void StandaloneMainComponent::chooseRelink(bool video,juce::String slot)
 {
     if(!canReplaceSession())return;
+    if(!video&&session.sourceDocument.assembly&&slot.isEmpty())
+    {
+        juce::PopupMenu menu;const auto members=session.sourceDocument.assembly->members;
+        for(size_t i=0;i<members.size();++i)menu.addItem(static_cast<int>(i)+1,juce::AudioChannelSet::getAbbreviatedChannelTypeName(members[i].role)+": "+members[i].file.getFileName());
+        juce::Component::SafePointer<StandaloneMainComponent> safe(this);
+        menu.showMenuAsync(juce::PopupMenu::Options().withTargetComponent(&relinkAudioButton),[safe,members](int choice)
+        {if(safe&&choice>0&&choice<=static_cast<int>(members.size()))safe->chooseRelink(false,members[static_cast<size_t>(choice-1)].id);});return;
+    }
     sessionChooser=std::make_unique<juce::FileChooser>(video?"Relink identical reference picture":"Relink identical source audio",juce::File(),video?"*.mov;*.mp4;*.m4v":getSourceFileWildcard());
     juce::Component::SafePointer<StandaloneMainComponent> safe(this);
-    sessionChooser->launchAsync(juce::FileBrowserComponent::openMode|juce::FileBrowserComponent::canSelectFiles,[safe,video](const auto& picker)
+    sessionChooser->launchAsync(juce::FileBrowserComponent::openMode|juce::FileBrowserComponent::canSelectFiles,[safe,video,slot](const auto& picker)
     {
         if(!safe||picker.getResult()==juce::File()||!safe->canReplaceSession())return;
-        auto d=sessionfile::capture(safe->session);if(video)sessionfile::relinkVideo(d,picker.getResult());else sessionfile::relinkAudio(d,picker.getResult());
+        auto d=sessionfile::capture(safe->session);if(video)sessionfile::relinkVideo(d,picker.getResult());else if(slot.isNotEmpty())sessionfile::relinkAudioMember(d,slot,picker.getResult());else sessionfile::relinkAudio(d,picker.getResult());
+        safe->relinkingMember=slot;
         safe->audition.disconnect();safe->session.persistenceLoading=true;safe->relinkingVideo=video;safe->pendingDocumentFile=safe->session.documentFile;safe->fileOperation=FileOperation::relink;safe->documentControl=std::make_shared<JobControl>();
         safe->documentResult=std::async(std::launch::async,[d=std::move(d),c=safe->documentControl]{return sessionfile::verify(d,*c);});safe->refreshFromSession();
     });
@@ -123,7 +141,13 @@ void StandaloneMainComponent::pollSessionOperation()
     else
     {
         auto d=std::move(*result.document);const bool unresolved=!d.audioResolved||!d.videoResolved;
-        if(operation==FileOperation::relink&&!(relinkingVideo?d.videoResolved:d.audioResolved)){documentNotice=d.notices.joinIntoString("\n");}
+        if(operation==FileOperation::relink&&!(relinkingVideo?d.videoResolved:(relinkingMember.isNotEmpty()?d.verifiedAudioMembers.contains(relinkingMember):d.audioResolved)))
+        {
+            // These notices describe the rejected replacement, not the still-valid
+            // session on screen. Never suggest that its retained pass is stale.
+            d.notices.removeString("Whole programme incomplete: no partial audition, processing or measurement; settings retained.");
+            documentNotice="Relink rejected; previous session retained.\n"+d.notices.joinIntoString("\n");
+        }
         else if(unresolved && operation != FileOperation::relink)
         {
             session.persistenceLoading=true;

@@ -1,0 +1,49 @@
+[
+  {
+    "name": "prores-current-30min",
+    "argv": [
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/candidate-03/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Built-in Output",
+      "--programme",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/high-sierra-physical-endurance-candidate-03/programme.levelscope",
+      "--video",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/candidate-03/m9-fixtures/physical-video/proxy-1800.mov",
+      "--seconds",
+      "1800",
+      "--report",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/high-sierra-physical-endurance-candidate-03/prores-current-30min.json",
+      "--audition-state",
+      "current",
+      "--processing-gain",
+      "-3.305074118944"
+    ],
+    "seconds": 1939.96094051,
+    "report_sha256": "9220a2d443cb972c3031bc7ca5a416857cea80b74507222e3ffaa543418aeefa",
+    "expected": {
+      "architecture": "x86_64",
+      "device": "Built-in Output",
+      "sample_rate": 44100,
+      "audition_state": "Current State",
+      "processing_gain_db": -3.305074118944,
+      "measurement_build": "6cdc517ca6618832430a7dbe678c37d3c459888674a112aa2643c2a25186f329",
+      "video_sha256": "a539099eeff5ae8b42ed42224a06dd239fbb0d3b66e69a6f9014ba83b6b5d269",
+      "audio_sha256": "d79164e8e83ec0d186386f200ab0c572dc326f96c17668a9fbbe61640bf3d899",
+      "requested_seconds": 1800,
+      "programme_assembly": "mono-channel-assembly-v2",
+      "alignment_confirmation": "d79164e8e83ec0d186386f200ab0c572dc326f96c17668a9fbbe61640bf3d899"
+    },
+    "fps": 25,
+    "policy": "m7-development-picture-skips-2026-10-25",
+    "accepted": true,
+    "failures": [],
+    "strict_harness_passed": true,
+    "strict_exit_code": 0,
+    "accepted_picture_skips": 0,
+    "maximum_paint_interval_ms": 34.684562,
+    "maximum_frame_pts_skew_seconds": 0.0,
+    "scope": "Internal audio-clock / UI selection; not optical sync or physical 7.1 listening"
+  }
+]

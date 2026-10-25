@@ -1,0 +1,14 @@
+Starting approved muted block short
+Traceback (most recent call last):
+  File "/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/candidate-02/Tests/run_m9_muted_video.py", line 69, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+  File "/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/candidate-02/Tests/run_m9_muted_video.py", line 50, in main
+    device=device,sample_rate=rate,all_routes_muted=True,phase=args.phase,script_sha256=sha256(__file__),programme_identity=group_identity,
+  File "/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/candidate-02/Tests/collect_m1_environment.py", line 21, in sha256
+    with path.open('rb') as stream:
+AttributeError: 'str' object has no attribute 'open'
+Traceback (most recent call last):
+  File "<stdin>", line 12, in <module>
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 528, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/Applications/Xcode.app/Contents/Developer/usr/bin/python3', '-B', '/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/candidate-02/Tests/run_m9_muted_video.py', '--candidate', '/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/candidate-02', '--output', '/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/sequoia-physical-short-candidate-02', '--platform', 'sequoia', '--phase', 'short', '--allow-audio']' returned non-zero exit status 1.

@@ -1,0 +1,65 @@
+[
+  {
+    "name": "regressions",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "Tests/run_m7_qualification.py",
+      "--platform",
+      "high-sierra",
+      "--output",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/high-sierra-candidate-02/regressions/regressions",
+      "--completion-regressions"
+    ],
+    "exit_code": 0,
+    "seconds": 566.861117559,
+    "log_sha256": "0fc84b1408daed8b5cd4128676febda9f80ea54b5b180dabe8d89b9bcf4c9bd5"
+  },
+  {
+    "name": "sessions",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/candidate-02/bin/LevelScopeSessionTests",
+      "--output",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/high-sierra-candidate-02/regressions/sessions.json",
+      "--exchange-out",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/high-sierra-candidate-02/regressions/exchange-out",
+      "--long-media",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/candidate-02/m7-fixtures/three-hour-71-48000.flac"
+    ],
+    "exit_code": 0,
+    "seconds": 245.202639256,
+    "log_sha256": "d8dcd85b7962a721c1afd74747649a097804728b0c5b473bc0cb3ada85d11a33"
+  },
+  {
+    "name": "restored-playback",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/candidate-02/bin/LevelScopeSessionPlaybackTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/high-sierra-candidate-02/regressions/restored-playback.json",
+      "--samples",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/high-sierra-candidate-02/regressions/restored-samples",
+      "--video",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/candidate-02/video-fixtures",
+      "--prores",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/candidate-02/m7-video-fixtures"
+    ],
+    "exit_code": 0,
+    "seconds": 31.00780885100005,
+    "log_sha256": "3d8ca732651441d49f49dc34ca5c05e04ea0a10de41ace71b765a00572aeeba8"
+  },
+  {
+    "name": "m8-runner",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "Tests/M8QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "seconds": 0.16884188399990308,
+    "log_sha256": "65378dcad145da2497120819bebfc3c46534dce9714ce064b3d809a56654aca2"
+  }
+]

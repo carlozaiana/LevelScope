@@ -277,7 +277,7 @@ juce::String StandaloneAudition::startPreparation (const AuditionRequest& reques
     if (error.isNotEmpty()) return error;
     if (request.identity() != expectedIdentity) return "Stale audition request; select the current state again";
     if (preparation.valid()) return "Wait for source preparation cancellation";
-    if (! request.context.media.matchesFileStamp (request.context.sourceFile))
+    if (! request.context.sourceFilesMatch())
     { fault = ErrorCode::sourceChanged; return "Source changed; import again"; }
     fault = ErrorCode::none;
     pendingRequest = request;
@@ -346,8 +346,7 @@ void StandaloneAudition::startDecoder (const AuditionRequest& request, const Out
     {
         try
         {
-            juce::AudioFormatManager formats; registerSourceFormats (formats);
-            std::unique_ptr<juce::AudioFormatReader> source (formats.createReaderFor (copy->file().createInputStream()));
+            auto source = copy->createReader();
             if (! source || source->sampleRate != media.sampleRate || source->lengthInSamples != media.frames
                 || static_cast<int> (source->numChannels) != media.channels)
                 throw std::runtime_error ("Verified source cannot be reopened consistently");
@@ -359,7 +358,7 @@ void StandaloneAudition::startDecoder (const AuditionRequest& request, const Out
             // processing, the FIFO, capture observers or the presentation clock.
             // 65536 exceeds FLAC's maximum block size; cancellation stays checked
             // between normal 2048-frame reads. Other formats retain their path.
-            if (media.format.containsIgnoreCase ("flac") && begin > 0)
+            if (source->hasFlac && begin > 0)
                 for (juce::int64 prefix = std::max<juce::int64> (0, begin - 65536);
                      prefix < begin && ! cancel.load();)
                 {
@@ -374,7 +373,7 @@ void StandaloneAudition::startDecoder (const AuditionRequest& request, const Out
             {
                 const auto count = static_cast<int> (juce::jmin<juce::int64> (blockSize, media.frames - position));
                 if (fifo.writable() < count) { std::this_thread::sleep_for (std::chrono::milliseconds (2)); continue; }
-                if (! media.matchesFileStamp (request.context.sourceFile))
+                if (! request.context.sourceFilesMatch())
                 { workerFailure = ErrorCode::sourceChanged; throw std::runtime_error ("Source changed; import again"); }
                 if (! source->read (block.getArrayOfWritePointers(), media.channels, position, count))
                     throw std::runtime_error ("Verified source decode failed");

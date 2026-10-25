@@ -1,0 +1,12 @@
+{
+  "accepted": true,
+  "purpose": "Expected compatibility rejection, not a failed M9 regression",
+  "preserved_reader_sha256": "a7c10a9aceb6b779bc3090847b6a7c51722ea0a4b2d5209487c7708fbdca2e5a",
+  "reader_build": "77cf1c7a5052442d4c938ed82ff1158b2bf6557d28bf99880666ec417f4c7c05",
+  "new_document_sha256": "b29dc3c252675511d8ea5a98eaf5bdbb849ed1335737d3c76692314cc31ec93d",
+  "new_core_schema": 2,
+  "observed_exit_code": 1,
+  "observed_assertion": "foreign-platform cache record remains readable",
+  "explanation": "Preserved M8 reader core parser only accepts schema 1 (SessionDocument.cpp:199). It returns no document for this schema-2 input; the exchange-positive assertion deliberately fails. Original M8 tests passed before that assertion.",
+  "raw_report_sha256": "573fb7ba1d0becec21b59098439698c4df1684ec6ad3022c446301787822b9d4"
+}

@@ -1,0 +1,16 @@
+{
+  "supplemental_passed": true,
+  "source_digest": "ecf819093af35debedfed260a28a972183cf8484af677f6fbca749f4dbea0d34",
+  "identity_sha256": "374bfa3b5003d7a67651ccfea71b2a3ceceaf8edc17398573a4862ac82b27898",
+  "programme_binary_sha256": "2df730e816029b3a91c9fa539de31baa431db2c7a4d53a8ef14ec57718bc9d99",
+  "architecture": "arm64",
+  "extended_cases": 32,
+  "extended_assertions": 370,
+  "baseline_assertions": 5261,
+  "baseline_capture_cases": 56,
+  "prior_long_report_sha256": "e2d1483e776ba4601b1c23eb0ae524a872575888d8a64dd769609a7e442b8995",
+  "prior_long_note": "Original candidate-02 three-hour evidence reused via unchanged application/source equivalence, not rerun or relabelled.",
+  "runner_sha256": "ecc8c3ba9e559882346ac8e8f191fefdb74c754cdea353425e1311a753bd33e6",
+  "completed_utc": "2026-10-25T15:45:09.506724+00:00",
+  "qualification_complete": false
+}

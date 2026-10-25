@@ -1,0 +1,74 @@
+[
+  {
+    "name": "environment",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/candidate-04/Tests/collect_m1_environment.py",
+      "--output",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/high-sierra-supplement-candidate-04/environment.json",
+      "--identity",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/candidate-04/identity.json",
+      "--measurement",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/candidate-04/bin/LevelScopeMeasurementTests",
+      "--scaffold",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/candidate-04/bin/LevelScopeScaffoldTests",
+      "--app",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/candidate-04/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone",
+      "--require-os",
+      "high-sierra"
+    ],
+    "exit_code": 0,
+    "seconds": 58.031649623999996,
+    "log_sha256": "54c5b5b9703e6a553c0753730bfb22b10da66f6959aa6d5b9b715c7d5f948016"
+  },
+  {
+    "name": "extended-oracles",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/candidate-04/bin/LevelScopeProgrammeTests",
+      "--only",
+      "--extended-oracle",
+      "--output",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/high-sierra-supplement-candidate-04/extended-oracles.json"
+    ],
+    "exit_code": 0,
+    "seconds": 421.595965416,
+    "log_sha256": "b65ee9f1d4b365475b1f99042e94def746c2ede496bf2f44d4b10aa003e16fb8"
+  },
+  {
+    "name": "programmes",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/candidate-04/bin/LevelScopeProgrammeTests",
+      "--output",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/high-sierra-supplement-candidate-04/programmes.json",
+      "--samples",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/high-sierra-supplement-candidate-04/samples",
+      "--video",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/candidate-04/video-fixtures",
+      "--prores",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/candidate-04/m7-video-fixtures",
+      "--exchange-out",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/high-sierra-supplement-candidate-04/exchange-out",
+      "--m8-session",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/candidate-04/m9-fixtures/m8-sessions"
+    ],
+    "exit_code": 0,
+    "seconds": 71.89334431200001,
+    "log_sha256": "c4eac4331e7c7db68b0b50127fa65fe971d4e360bbab1f6130bde7ee847eef02"
+  },
+  {
+    "name": "runner-guards",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/candidate-04/Tests/M9QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "seconds": 2.3955325560000347,
+    "log_sha256": "3650fb91beb15fbbc73c084e0c0b1bcd297534b370b950a03eee996c7a8d4a3a"
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "source_digest": "ecf819093af35debedfed260a28a972183cf8484af677f6fbca749f4dbea0d34",
+  "cases": 32,
+  "full_resolution_windows": 31168,
+  "per_channel_peak_pairs": 128,
+  "maximum_linear_true_peak_difference": 1.3877787807814457e-17,
+  "maximum_per_channel_true_peak_db_difference": 3.857309866213148e-15,
+  "allowed_peak_difference_db": 0.01,
+  "peak_locations_exact": true,
+  "note": "Supplemental detail only; original comparator/report identities preserved. Profile acceptance allowances are unchanged."
+}

@@ -1,0 +1,35 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "package": "m8",
+      "identity_sha256": "dd625b0e2241afde0e6cbd5bbe36f733d8e23bdd9afc3bba92cd62fc556e8b9f",
+      "artifacts_verified": 379,
+      "passed": true
+    },
+    {
+      "package": "m9-01",
+      "identity_sha256": "16f694650b41545d89e52c6d6972b00aec4f53671de5cc0c1af19fa322d66cae",
+      "artifacts_verified": 439,
+      "passed": true
+    },
+    {
+      "package": "m9-02",
+      "identity_sha256": "16ac81d6b4a740a32486bc5610841f02300ecbfa05e5c27baf21640229d00f2e",
+      "artifacts_verified": 439,
+      "passed": true
+    },
+    {
+      "package": "m9-03",
+      "identity_sha256": "c50ec54a87018254f98fee61d57b1522b5c5bc8f3cc9f88343bef4f028869c35",
+      "artifacts_verified": 439,
+      "passed": true
+    },
+    {
+      "package": "m9-04",
+      "identity_sha256": "374bfa3b5003d7a67651ccfea71b2a3ceceaf8edc17398573a4862ac82b27898",
+      "artifacts_verified": 442,
+      "passed": true
+    }
+  ]
+}

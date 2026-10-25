@@ -1,0 +1,18 @@
+{
+  "checked_utc": "2026-10-25T17:25:01.866111+00:00",
+  "candidate": "candidate-04",
+  "source_digest": "ecf819093af35debedfed260a28a972183cf8484af677f6fbca749f4dbea0d34",
+  "identity_sha256": "374bfa3b5003d7a67651ccfea71b2a3ceceaf8edc17398573a4862ac82b27898",
+  "source_files_checked": 187,
+  "source_mismatches": [],
+  "artifacts_checked": 442,
+  "artifact_mismatches": [],
+  "head": "8e984889c5e73670f370c6c568c8ea1d7902a35c",
+  "branch": "codex/logic-module",
+  "tags_unchanged": true,
+  "preexisting_tags": 12,
+  "staged_changes": false,
+  "worktrees": "worktree /Users/fuzz/Developer/LevelScope\nHEAD 8e984889c5e73670f370c6c568c8ea1d7902a35c\nbranch refs/heads/codex/logic-module\n\nworktree /Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation\nHEAD 5e07bbd29930db34236d6dfcede7fea14983f90a\nbranch refs/heads/codex/video-implementation",
+  "publication_performed": false,
+  "passed": true
+}

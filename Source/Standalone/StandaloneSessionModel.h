@@ -47,13 +47,29 @@ struct SourceDocument
     juce::String extension;
     juce::int64 fileSizeBytes = 0;
     MediaInfo media;
+    std::optional<ProgrammeAssembly> assembly;
     ChannelLayout layout;
     OutputRouting routing;
 
     juce::String importStatus = "No source imported";
+    bool matchesFileStamps() const { return assembly ? assembly->matchesFileStamps() : media.matchesFileStamp(file); }
+    juce::String channelName (int channel) const
+    {
+        return assembly && juce::isPositiveAndBelow(channel, static_cast<int>(assembly->members.size()))
+            ? assembly->members[static_cast<size_t>(channel)].file.getFileName() : "Channel " + juce::String(channel+1);
+    }
+    void setValidatedProgramme (const ProgrammeAssembly& group)
+    {
+        clear(); assembly = group; media = group.summary(); layout = group.layout();
+        hasSource = true; fileSizeBytes = media.bytes; extension = "programme";
+        displayName = juce::String(media.channels) + "-file " + (media.channels == 2 ? "stereo" : "5.1") + " programme";
+        fullPath = "Assembled programme";
+        importStatus = "Complete aligned group confirmed; metadata offsets are not applied";
+    }
 
     void setValidatedFile (const juce::File& newFile, const MediaInfo& info)
     {
+        assembly.reset();
         file = newFile;
         hasSource = file.existsAsFile();
 
@@ -79,6 +95,7 @@ struct SourceDocument
 
     void clear()
     {
+        assembly.reset();
         hasSource = false;
         file = juce::File();
         displayName = "No source imported";
@@ -175,6 +192,7 @@ public:
 
     MeasurementSummary source;
     MeasurementSummary currentState;
+    std::shared_ptr<const AnalysisSnapshot> unresolvedSourceCache, unresolvedCurrentCache;
 
     int selectedTargetProfileIndex = 0;
     proposal::Applicability programmeApplicability = proposal::Applicability::unconfirmed;
@@ -183,6 +201,7 @@ public:
     juce::String documentId = juce::Uuid().toString(), programmeId = juce::Uuid().toString();
     uint64_t documentRevision = 0, savedDocumentRevision = 0;
     juce::File documentFile;
+    int openedSessionSchema = 2;
     juce::String restoredProfileId, restoredProfileVersion, restoredProfileDigest;
     bool videoUnresolved = false;
     proposal::SectionDocument sectionDocument;
@@ -250,6 +269,11 @@ public:
     {
         if (error == ErrorCode::sourceChanged)
         {
+            if (sourceDocument.assembly)
+            {
+                unresolvedSourceCache = source.analysis;
+                unresolvedCurrentCache = currentState.analysis;
+            }
             ++revision; documentChanged(); sourceContentInvalid = true; source = MeasurementSummary();
             currentState = MeasurementSummary(); discardTrim();
             sourceDocument.importStatus = "Content changed; import the source again";
@@ -269,7 +293,7 @@ public:
     {
         ServiceContext c;
         c.ticket = job.ticket; c.ticket.sessionRevision = revision; c.sessionId = sessionId;
-        c.sourceFile = sourceDocument.file; c.media = sourceDocument.media;
+        c.sourceFile = sourceDocument.file; c.media = sourceDocument.media; c.assembly = sourceDocument.assembly;
         c.fileLayout = sourceDocument.layout; c.range = { 0, c.media.frames };
         c.processing.staticGainDb = domain == MeasurementDomain::source ? 0 : currentStateDocument.staticGainDb;
         c.profile = getSelectedTargetProfile();
@@ -296,6 +320,7 @@ public:
         if (audioEditsBlocked()) return false;
         discardTrim();
         ++revision; ++currentStateDocument.revision; documentChanged();
+        unresolvedCurrentCache.reset();
         currentStateDocument.staticGainDb = gain;
         currentStateDocument.needsRemeasurement = true;
         currentStateDocument.statusText = "UNVERIFIED: gain changed; re-measure Current State";
@@ -310,6 +335,8 @@ public:
             || result.context.sessionId != sessionId || result.context.ticket.sessionRevision != revision
             || result.context.ticket.id != job.ticket.id || job.state != JobState::succeeded
             || (result.domain == MeasurementDomain::currentState && ! currentStateDocument.isInitialized)) return false;
+        if (sourceDocument.assembly && !sourceDocument.matchesFileStamps())
+        { measurementUnsuccessful(result.domain, ErrorCode::sourceChanged); return false; }
         const auto expected = measurementContext (result.domain);
         if (result.measuredContentHash != sourceDocument.media.sha256
             || result.identity != OfflineAnalysisService::identityFor (expected, result.domain, sourceDocument.media.sha256)) return false;
@@ -341,7 +368,7 @@ public:
     {
         if (audioEditsBlocked() || ! media.matchesFileStamp (file)) return false;
         ++revision; documentChanged(); programmeId = juce::Uuid().toString();
-        discardTrim(); sourceContentInvalid = false;
+        discardTrim(); sourceContentInvalid = false; unresolvedSourceCache.reset(); unresolvedCurrentCache.reset();
         sourceDocument.setValidatedFile (file, media);
 
         source = MeasurementSummary();
@@ -357,11 +384,22 @@ public:
         return true;
     }
 
+    bool setValidatedProgramme (const ProgrammeAssembly& group)
+    {
+        if (audioEditsBlocked() || group.validate().isNotEmpty() || !group.matchesFileStamps()) return false;
+        ++revision; documentChanged(); programmeId = juce::Uuid().toString();
+        discardTrim(); sourceContentInvalid = false; unresolvedSourceCache.reset(); unresolvedCurrentCache.reset(); sourceDocument.setValidatedProgramme(group);
+        source = MeasurementSummary(); currentState = MeasurementSummary(); currentStateDocument.clear();
+        programmeApplicability = proposal::Applicability::unconfirmed;
+        source.statusText = "Complete aligned programme; measurement not run";
+        return true;
+    }
+
     void clearSourceFile()
     {
         if (audioEditsBlocked()) return;
         ++revision; documentChanged(); programmeId = juce::Uuid().toString();
-        discardTrim(); sourceContentInvalid = false;
+        discardTrim(); sourceContentInvalid = false; unresolvedSourceCache.reset(); unresolvedCurrentCache.reset();
         sourceDocument.clear();
         currentStateDocument.clear();
         programmeApplicability = proposal::Applicability::unconfirmed;
@@ -393,6 +431,7 @@ public:
     void clearCurrentState()
     {
         if (audioEditsBlocked()) return;
+        unresolvedCurrentCache.reset();
         discardTrim();
         ++revision; documentChanged();
         currentStateDocument.clear();
@@ -463,6 +502,9 @@ public:
 
     void setChannelRole (int channel, ChannelRole role)
     {
+        // Assembly role reassignment is staged and explicitly reconfirmed as a
+        // whole group, never performed through the interleaved role editor.
+        if (sourceDocument.assembly) return;
         if (audioEditsBlocked() || ! juce::isPositiveAndBelow (channel, sourceDocument.layout.count)) return;
         discardTrim();
         ++revision; documentChanged();
@@ -477,6 +519,7 @@ public:
 
     bool confirmLayout()
     {
+        if (sourceDocument.assembly) return sourceDocument.assembly->validate().isEmpty();
         if (audioEditsBlocked() || ! sourceDocument.hasSource || ! sourceDocument.layout.isValid()) return false;
         discardTrim();
         ++revision; documentChanged();

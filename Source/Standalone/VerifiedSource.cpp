@@ -29,7 +29,7 @@ public:
     {
         checkCancel (control);
         const auto got = stream.read (dst, n);
-        control.progress.store (0.15f + 0.15f * static_cast<float> (static_cast<double> (stream.getPosition()) / std::max<juce::int64> (1, length)));
+        control.setProgress (0.15f + 0.15f * static_cast<float> (static_cast<double> (stream.getPosition()) / std::max<juce::int64> (1, length)));
         return got;
     }
 private:
@@ -38,11 +38,19 @@ private:
     const juce::int64 length;
 };
 }
-VerifiedSource::~VerifiedSource() { ownedFile.setReadOnly (false); ownedFile.deleteFile(); }
+VerifiedSource::~VerifiedSource() { if (ownedFile != juce::File()) { ownedFile.setReadOnly (false); ownedFile.deleteFile(); } }
+std::vector<juce::File> VerifiedSource::files() const
+{
+    if (members.empty()) return { ownedFile };
+    std::vector<juce::File> result; for (const auto& m : members) result.push_back(m->file()); return result;
+}
+std::unique_ptr<ProgrammeReader> VerifiedSource::createReader() const { return ProgrammeReader::open(files(), media); }
 bool VerifiedSource::matches (const MediaInfo& other) const
 {
     return media.sha256 == other.sha256 && media.bytes == other.bytes && media.frames == other.frames
-        && media.channels == other.channels && media.sampleRate == other.sampleRate && ownedFile.existsAsFile();
+        && media.channels == other.channels && media.sampleRate == other.sampleRate
+        && media.bitsPerSample == other.bitsPerSample && media.format == other.format
+        && (members.empty() ? ownedFile.existsAsFile() : std::all_of(members.begin(), members.end(), [](const auto& m) { return m->file().existsAsFile(); }));
 }
 VerifiedSourceResult prepareVerifiedSource (const ServiceContext& context, JobControl& control, const SnapshotStorage& storage)
 {
@@ -56,6 +64,28 @@ VerifiedSourceResult prepareVerifiedSource (const ServiceContext& context, JobCo
         const auto free = storage.availableBytes ? storage.availableBytes (storage.directory) : storage.directory.getBytesFreeOnVolume();
         if (free >= 0 && (free < context.media.bytes || free - context.media.bytes < 65536))
             throw Failure { ErrorCode::insufficientDiskSpace, "Insufficient temporary disk space for a verified source copy" };
+        if (context.assembly)
+        {
+            if (!context.isValid()) throw Failure { ErrorCode::invalidRequest, "Confirmed exact programme assembly required" };
+            if (!context.sourceFilesMatch()) throw Failure { ErrorCode::sourceChanged, "A programme member changed, disappeared or aliases another member" };
+            auto group = std::shared_ptr<VerifiedSource>(new VerifiedSource({}, context.media));
+            juce::int64 completeBytes = 0;
+            for (const auto& member : context.assembly->members)
+            {
+                checkCancel(control);
+                ServiceContext part = context; part.assembly.reset(); part.sourceFile = member.file; part.media = member.media;
+                JobControl child; child.parent = &control; child.parentProgress = &control.progress;
+                child.progressBase = 0.5f * static_cast<float>(static_cast<double>(completeBytes) / context.media.bytes);
+                child.progressScale = static_cast<float>(static_cast<double>(member.media.bytes) / context.media.bytes);
+                const auto copy = prepareVerifiedSource(part, child, storage);
+                if (!copy.value) throw Failure { copy.error, member.file.getFileName() + ": " + copy.message };
+                group->members.push_back(*copy.value); completeBytes += member.media.bytes;
+                control.setProgress(0.5f * static_cast<float>(static_cast<double>(completeBytes) / context.media.bytes));
+            }
+            checkCancel(control);
+            if (!context.sourceFilesMatch()) throw Failure { ErrorCode::sourceChanged, "A programme member changed during preparation" };
+            return { std::shared_ptr<const VerifiedSource>(std::move(group)), ErrorCode::none, "Complete programme group verified" };
+        }
         auto input = context.sourceFile.createInputStream();
         if (! input) throw Failure { ErrorCode::missingFile, "Source is unavailable" };
         if (input->getTotalLength() != context.media.bytes)
@@ -75,7 +105,7 @@ VerifiedSourceResult prepareVerifiedSource (const ServiceContext& context, JobCo
             if (! output->write (buffer.data(), static_cast<size_t> (wanted)))
                 throw Failure { ErrorCode::writeFailed, "Temporary source copy write failed; check available disk space" };
             copied += wanted;
-            control.progress.store (0.15f * static_cast<float> (static_cast<double> (copied) / context.media.bytes));
+            control.setProgress (0.15f * static_cast<float> (static_cast<double> (copied) / context.media.bytes));
         }
         if (! output->flush()) throw Failure { ErrorCode::writeFailed, "Temporary source copy flush failed" };
         output.reset();
@@ -99,7 +129,7 @@ VerifiedSourceResult prepareVerifiedSource (const ServiceContext& context, JobCo
         if (! verified.succeeded()) throw Failure { verified.error, verified.message };
         if (! owned->matches (verified.media))
             throw Failure { ErrorCode::sourceChanged, "Source copy metadata differs from imported source" };
-        control.progress.store (0.5f);
+        control.setProgress (0.5f);
         return { std::shared_ptr<const VerifiedSource> (std::move (owned)), ErrorCode::none, "Source copy verified" };
     }
     catch (const Failure& e) { return { {}, e.code, e.message }; }

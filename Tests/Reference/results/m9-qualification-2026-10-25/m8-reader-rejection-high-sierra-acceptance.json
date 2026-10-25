@@ -1,0 +1,14 @@
+{
+  "accepted": true,
+  "purpose": "Expected schema incompatibility rejection; raw failing positive-exchange report retained",
+  "architecture": "x86_64",
+  "os": "Mac OSX 10.13.6",
+  "reader_build": "77cf1c7a5052442d4c938ed82ff1158b2bf6557d28bf99880666ec417f4c7c05",
+  "preserved_reader_sha256": "a7c10a9aceb6b779bc3090847b6a7c51722ea0a4b2d5209487c7708fbdca2e5a",
+  "new_document_sha256": "81457712cd3a98375ca56772b1d29adbe9a56e5e3f6f0d98a947c48cffb95632",
+  "new_core_schema": 2,
+  "observed_exit_code": 1,
+  "observed_assertion": "foreign-platform cache record remains readable",
+  "raw_report_sha256": "98408dc142260538d063b0c93410342281b443d4d8e0887262dd52a70ed09399",
+  "explanation": "Preserved M8 reader core parser only accepts schema 1 (SessionDocument.cpp:199). It returns no document for this schema-2 input; the exchange-positive assertion deliberately fails. Original M8 tests passed before that assertion."
+}

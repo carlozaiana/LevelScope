@@ -1,0 +1,375 @@
+{
+  "passed": true,
+  "build": "6cdc517ca6618832430a7dbe678c37d3c459888674a112aa2643c2a25186f329",
+  "cases": [
+    {
+      "channels": 2,
+      "rate": 44100,
+      "silence": false,
+      "domain": "Source",
+      "metric_errors": {
+        "integrated": 0.0,
+        "lra": 0.0,
+        "momentary": 0.0,
+        "short_term": 0.0,
+        "sample_peak": 0.0,
+        "true_peak": 0.0
+      },
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 2,
+      "rate": 44100,
+      "silence": false,
+      "domain": "Current State",
+      "metric_errors": {
+        "integrated": 0.0,
+        "lra": 0.0,
+        "momentary": 0.0,
+        "short_term": 0.0,
+        "sample_peak": 0.0,
+        "true_peak": 0.0
+      },
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 2,
+      "rate": 44100,
+      "silence": true,
+      "domain": "Source",
+      "metric_errors": {},
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 2,
+      "rate": 44100,
+      "silence": true,
+      "domain": "Current State",
+      "metric_errors": {},
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 2,
+      "rate": 48000,
+      "silence": false,
+      "domain": "Source",
+      "metric_errors": {
+        "integrated": 0.0,
+        "lra": 0.0,
+        "momentary": 0.0,
+        "short_term": 0.0,
+        "sample_peak": 0.0,
+        "true_peak": 0.0
+      },
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 2,
+      "rate": 48000,
+      "silence": false,
+      "domain": "Current State",
+      "metric_errors": {
+        "integrated": 0.0,
+        "lra": 0.0,
+        "momentary": 0.0,
+        "short_term": 0.0,
+        "sample_peak": 0.0,
+        "true_peak": 0.0
+      },
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 2,
+      "rate": 48000,
+      "silence": true,
+      "domain": "Source",
+      "metric_errors": {},
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 2,
+      "rate": 48000,
+      "silence": true,
+      "domain": "Current State",
+      "metric_errors": {},
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 2,
+      "rate": 96000,
+      "silence": false,
+      "domain": "Source",
+      "metric_errors": {
+        "integrated": 0.0,
+        "lra": 0.0,
+        "momentary": 0.0,
+        "short_term": 0.0,
+        "sample_peak": 0.0,
+        "true_peak": 0.0
+      },
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 2,
+      "rate": 96000,
+      "silence": false,
+      "domain": "Current State",
+      "metric_errors": {
+        "integrated": 0.0,
+        "lra": 0.0,
+        "momentary": 0.0,
+        "short_term": 0.0,
+        "sample_peak": 0.0,
+        "true_peak": 0.0
+      },
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 2,
+      "rate": 96000,
+      "silence": true,
+      "domain": "Source",
+      "metric_errors": {},
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 2,
+      "rate": 96000,
+      "silence": true,
+      "domain": "Current State",
+      "metric_errors": {},
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 2,
+      "rate": 192000,
+      "silence": false,
+      "domain": "Source",
+      "metric_errors": {
+        "integrated": 0.0,
+        "lra": 0.0,
+        "momentary": 0.0,
+        "short_term": 0.0,
+        "sample_peak": 0.0,
+        "true_peak": 0.0
+      },
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 2,
+      "rate": 192000,
+      "silence": false,
+      "domain": "Current State",
+      "metric_errors": {
+        "integrated": 0.0,
+        "lra": 0.0,
+        "momentary": 0.0,
+        "short_term": 0.0,
+        "sample_peak": 0.0,
+        "true_peak": 0.0
+      },
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 2,
+      "rate": 192000,
+      "silence": true,
+      "domain": "Source",
+      "metric_errors": {},
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 2,
+      "rate": 192000,
+      "silence": true,
+      "domain": "Current State",
+      "metric_errors": {},
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 6,
+      "rate": 44100,
+      "silence": false,
+      "domain": "Source",
+      "metric_errors": {
+        "integrated": 0.0,
+        "lra": 0.0,
+        "momentary": 0.0,
+        "short_term": 0.0,
+        "sample_peak": 0.0,
+        "true_peak": 0.0
+      },
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 6,
+      "rate": 44100,
+      "silence": false,
+      "domain": "Current State",
+      "metric_errors": {
+        "integrated": 0.0,
+        "lra": 0.0,
+        "momentary": 0.0,
+        "short_term": 0.0,
+        "sample_peak": 0.0,
+        "true_peak": 0.0
+      },
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 6,
+      "rate": 44100,
+      "silence": true,
+      "domain": "Source",
+      "metric_errors": {},
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 6,
+      "rate": 44100,
+      "silence": true,
+      "domain": "Current State",
+      "metric_errors": {},
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 6,
+      "rate": 48000,
+      "silence": false,
+      "domain": "Source",
+      "metric_errors": {
+        "integrated": 0.0,
+        "lra": 0.0,
+        "momentary": 0.0,
+        "short_term": 0.0,
+        "sample_peak": 0.0,
+        "true_peak": 0.0
+      },
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 6,
+      "rate": 48000,
+      "silence": false,
+      "domain": "Current State",
+      "metric_errors": {
+        "integrated": 0.0,
+        "lra": 0.0,
+        "momentary": 0.0,
+        "short_term": 0.0,
+        "sample_peak": 0.0,
+        "true_peak": 0.0
+      },
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 6,
+      "rate": 48000,
+      "silence": true,
+      "domain": "Source",
+      "metric_errors": {},
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 6,
+      "rate": 48000,
+      "silence": true,
+      "domain": "Current State",
+      "metric_errors": {},
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 6,
+      "rate": 96000,
+      "silence": false,
+      "domain": "Source",
+      "metric_errors": {
+        "integrated": 0.0,
+        "lra": 0.0,
+        "momentary": 0.0,
+        "short_term": 0.0,
+        "sample_peak": 0.0,
+        "true_peak": 0.0
+      },
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 6,
+      "rate": 96000,
+      "silence": false,
+      "domain": "Current State",
+      "metric_errors": {
+        "integrated": 0.0,
+        "lra": 0.0,
+        "momentary": 0.0,
+        "short_term": 0.0,
+        "sample_peak": 0.0,
+        "true_peak": 0.0
+      },
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 6,
+      "rate": 96000,
+      "silence": true,
+      "domain": "Source",
+      "metric_errors": {},
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 6,
+      "rate": 96000,
+      "silence": true,
+      "domain": "Current State",
+      "metric_errors": {},
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 6,
+      "rate": 192000,
+      "silence": false,
+      "domain": "Source",
+      "metric_errors": {
+        "integrated": 0.0,
+        "lra": 0.0,
+        "momentary": 0.0,
+        "short_term": 0.0,
+        "sample_peak": 0.0,
+        "true_peak": 0.0
+      },
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 6,
+      "rate": 192000,
+      "silence": false,
+      "domain": "Current State",
+      "metric_errors": {
+        "integrated": 0.0,
+        "lra": 0.0,
+        "momentary": 0.0,
+        "short_term": 0.0,
+        "sample_peak": 0.0,
+        "true_peak": 0.0
+      },
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 6,
+      "rate": 192000,
+      "silence": true,
+      "domain": "Source",
+      "metric_errors": {},
+      "maximum_window_lu_difference": 0.0
+    },
+    {
+      "channels": 6,
+      "rate": 192000,
+      "silence": true,
+      "domain": "Current State",
+      "metric_errors": {},
+      "maximum_window_lu_difference": 0.0
+    }
+  ],
+  "scope": "32 full-resolution Source/Current dynamic/silence interleaved oracles; no playback/device claim"
+}

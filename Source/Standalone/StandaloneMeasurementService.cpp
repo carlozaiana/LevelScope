@@ -25,19 +25,10 @@ struct OwnedFile
     ~OwnedFile() { file.setReadOnly (false); file.deleteFile(); }
 };
 
-std::unique_ptr<juce::AudioFormatReader> readerFor (const juce::File& file)
-{
-    juce::AudioFormatManager formats; registerSourceFormats (formats);
-    // Snapshot names are private implementation details. Probe bytes, not suffix:
-    // AIFF/FLAC snapshots deliberately share the same temporary naming convention.
-    auto reader = std::unique_ptr<juce::AudioFormatReader> (formats.createReaderFor (file.createInputStream()));
-    if (! reader) throw Failure { ErrorCode::decodeFailed, "Cannot decode verified snapshot" };
-    return reader;
-}
 AnalysisSnapshot measure (const ServiceContext& context, MeasurementDomain domain,
-                          const juce::File& file, const juce::String& hash, double gainDb, JobControl& control, ProcessedAudioObserver* observer)
+                          std::unique_ptr<ProgrammeReader> reader, const juce::String& hash, double gainDb, JobControl& control, ProcessedAudioObserver* observer)
 {
-    auto reader = readerFor (file);
+    if (!reader) throw Failure { ErrorCode::decodeFailed, "Cannot decode complete verified programme" };
     measurement::OfflineMeasurement engine (static_cast<int> (reader->sampleRate), OfflineAnalysisService::measurementRoles (context.fileLayout));
     constexpr int blockSize = 4096;
     juce::AudioBuffer<float> audio (context.media.channels, blockSize);
@@ -60,6 +51,8 @@ AnalysisSnapshot measure (const ServiceContext& context, MeasurementDomain domai
     result.measurementVersion = measurement::version;
     result.identity = OfflineAnalysisService::identityFor (context, domain, hash);
     result.detail = engine.finish();
+    if (context.assembly && !context.sourceFilesMatch())
+        throw Failure { ErrorCode::sourceChanged, "A programme member changed during measurement; result discarded" };
     checkCancel (control);
     result.measured = { result.detail.integrated.value, result.detail.lra.value,
                         result.detail.truePeak.value, result.detail.samplePeak.value };
@@ -118,6 +111,7 @@ juce::String OfflineAnalysisService::validateRequest (const ServiceContext& c, M
 juce::String OfflineAnalysisService::identityFor (const ServiceContext& c, MeasurementDomain domain, const juce::String& hash)
 {
     std::ostringstream key; key.imbue (std::locale::classic());
+    if (c.assembly) key << "mono-channel-assembly-v2\n" << c.assembly->definitionIdentity() << '\n';
     key << measurement::version << '\n' << layoutMappingVersion << '\n'
         << (isSystemI (c.fileLayout) ? systemICapability : "m1-layouts-v1") << '\n'
         << c.media.sha256 << '\n' << hash << '\n'
@@ -139,7 +133,7 @@ ServiceResult<AnalysisSnapshot> OfflineAnalysisService::analyze (const ServiceCo
         const auto prepared = prepareVerifiedSource (context, control);
         if (! prepared.value) throw Failure { prepared.error, prepared.message };
         const auto& source = *prepared.value;
-        return measure (context, domain, source->file(), context.media.sha256, context.processing.staticGainDb, control, observer);
+        return measure (context, domain, source->createReader(), context.media.sha256, context.processing.staticGainDb, control, observer);
     });
 }
 bool ExportApproval::matches (const ServiceContext& context, const RenderArtifact& artifact) const
@@ -174,7 +168,8 @@ ServiceResult<AnalysisSnapshot> OfflineAnalysisService::verifyTemporaryRender (c
         const auto prepared = prepareVerifiedSource (context, control);
         if (! prepared.value) throw Failure { prepared.error, prepared.message };
         const auto& source = *prepared.value;
-        auto reader = readerFor (source->file());
+        auto reader = source->createReader();
+        if (!reader) throw Failure { ErrorCode::decodeFailed, "Cannot decode verified programme" };
         OwnedFile output;
         auto stream = output.file.createOutputStream();
         if (! stream) throw Failure { ErrorCode::unavailable, "Cannot create private render" };
@@ -211,7 +206,7 @@ ServiceResult<AnalysisSnapshot> OfflineAnalysisService::verifyTemporaryRender (c
             || validation.media.channels != context.media.channels || validation.media.sampleRate != context.media.sampleRate
             || validation.media.bitsPerSample != 24)
             throw Failure { ErrorCode::decodeFailed, "Rendered artifact validation failed" };
-        return measure (context, MeasurementDomain::renderedOutput, output.file, validation.media.sha256, 0, control, observer);
+        return measure (context, MeasurementDomain::renderedOutput, ProgrammeReader::open({output.file}, validation.media), validation.media.sha256, 0, control, observer);
     });
 }
 }

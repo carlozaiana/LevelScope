@@ -3,6 +3,7 @@
 #include "Standalone/StandaloneVideo.h"
 #include "Standalone/StandaloneAudition.h"
 #include "Standalone/StandaloneMeasurementLayout.h"
+#include "Standalone/SessionDocument.h"
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <iostream>
 #if LEVELSCOPE_VIDEO_PAINT_DIAGNOSTICS
@@ -56,7 +57,20 @@ public:
             || duration>100 || args.contains("--manual-start"))
             throw std::runtime_error("Diagnostic requires muted routes, <=100 seconds and a new --trace file");
 #endif
-        JobControl job; auto result = validateMedia (audioFile, job);
+        JobControl job;
+        if (argument("--programme").isNotEmpty())
+        {
+            if (argument("--audio").isNotEmpty()) throw std::runtime_error("Choose either --audio or --programme");
+            auto loaded=sessionfile::read(juce::File(argument("--programme")),job);
+            if(!loaded.document)throw std::runtime_error(loaded.message.toStdString());
+            auto verified=sessionfile::verify(*loaded.document,job);
+            if(!verified.document||!verified.document->audioResolved||!verified.document->source.assembly)
+                throw std::runtime_error("A complete confirmed M9 programme is required");
+            request=verified.prepared->model.auditionRequest();request.domain=MeasurementDomain::source;request.context.processing.staticGainDb=0;
+            media=request.context.media;layout=request.context.fileLayout;
+        }
+        else {
+        auto result = validateMedia (audioFile, job);
         if (!result.succeeded()) throw std::runtime_error (result.message.toStdString());
         media = result.media;
         if ((media.channels != 2 && ! isSystemI (media.suggestedLayout))
@@ -66,6 +80,9 @@ public:
         if (media.channels == 2) { layout.roles[0] = juce::AudioChannelSet::left; layout.roles[1] = juce::AudioChannelSet::right; }
         layout.confirmed = true;
         request = AuditionRequest::source (audioFile, media, layout);
+        }
+        if ((media.sampleRate != 48000 && media.sampleRate != 44100) || media.durationSeconds() < duration)
+            throw std::runtime_error("Qualification programme must cover the requested duration at 44.1 or 48 kHz");
         request.context.buildVersion = LEVELSCOPE_MEASUREMENT_BUILD;
         const auto auditionState = argument ("--audition-state");
         if (auditionState.isNotEmpty() && auditionState != "source" && auditionState != "current")
@@ -84,7 +101,7 @@ public:
         if (requestError.isNotEmpty()) throw std::runtime_error (requestError.toStdString());
         routing.fileToDevice[0] = 0; routing.fileToDevice[1] = 1;
         muted = args.contains ("--muted");
-        if (media.channels == 8 && ! muted) throw std::runtime_error ("M7 video qualification requires all eight monitor routes muted");
+        if ((media.channels == 8 || request.context.assembly) && ! muted) throw std::runtime_error ("Multichannel video qualification requires all monitor routes muted");
         manualStart = args.contains ("--manual-start");
         startButton.setButtonText ("Start " + juce::String (duration, 0) + "-second check");
         addChildComponent (startButton); startButton.setVisible (manualStart); startButton.setBounds (10, 10, 195, 30);
@@ -308,8 +325,10 @@ private:
         set ("embedded_audio_policy", "Excluded by video-only backend; independent nonzero-sink audit is a separate test");
         set ("all_routes_muted", muted);
         set ("selected_audio_channels", media.channels);
+        set ("programme_assembly", request.context.assembly ? "mono-channel-assembly-v2" : "interleaved");
+        if(request.context.assembly)set("alignment_confirmation",request.context.assembly->alignmentConfirmation);
         set ("measurement_build", LEVELSCOPE_MEASUREMENT_BUILD);
-        set ("layout_capability", isSystemI (layout) ? systemICapability : "stereo");
+        set ("layout_capability", isSystemI (layout) ? systemICapability : request.context.assembly ? "mono-channel-assembly-v2" : "stereo");
         set ("pre_monitor_frames_observed", static_cast<juce::int64> (processingPresence.frames.load()));
         set ("pre_monitor_nonzero_channel_mask", static_cast<int> (processingPresence.seen.load()));
         set ("pre_monitor_channel_count_valid", processingPresence.valid.load());

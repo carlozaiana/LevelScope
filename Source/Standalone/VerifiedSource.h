@@ -24,10 +24,13 @@ public:
     ~VerifiedSource();
     const juce::File& file() const { return ownedFile; }
     bool matches (const MediaInfo&) const;
+    std::unique_ptr<ProgrammeReader> createReader() const;
+    std::vector<juce::File> files() const;
 private:
     VerifiedSource (juce::File f, MediaInfo m) : ownedFile (std::move (f)), media (std::move (m)) {}
     juce::File ownedFile;
     MediaInfo media;
+    std::vector<std::shared_ptr<const VerifiedSource>> members;
     friend ServiceResult<std::shared_ptr<const VerifiedSource>> prepareVerifiedSource (const ServiceContext&, JobControl&, const SnapshotStorage&);
 };
 using VerifiedSourceResult = ServiceResult<std::shared_ptr<const VerifiedSource>>;

@@ -1,0 +1,201 @@
+{
+  "milestone": "M9 separate-file stereo/5.1 programme import",
+  "qualified": true,
+  "candidate": "candidate-04",
+  "base_commit": "8e984889c5e73670f370c6c568c8ea1d7902a35c",
+  "source_digest": "ecf819093af35debedfed260a28a972183cf8484af677f6fbca749f4dbea0d34",
+  "identity_sha256": "374bfa3b5003d7a67651ccfea71b2a3ceceaf8edc17398573a4862ac82b27898",
+  "measurement_build": "6cdc517ca6618832430a7dbe678c37d3c459888674a112aa2643c2a25186f329",
+  "application_sha256": "dd15614194cb4bb40b86415ff6a93e0ddc0dd35455e5ae03adff4f4748bc6938",
+  "accepted_utc": "2026-10-25T17:30:19.293961+00:00",
+  "gates": [
+    {
+      "name": "Both actual platforms: baseline M9 and M1-M8 regression runners",
+      "passed": true,
+      "evidence": [
+        {
+          "path": "sequoia-candidate-02/summary.json",
+          "sha256": "ca7ed3f354554e23b8b052f3e481440dd3318e54a242e7d7558e8139778c98c1",
+          "required_true_field": "automated_passed"
+        },
+        {
+          "path": "high-sierra-candidate-02/summary.json",
+          "sha256": "ca7ed3f354554e23b8b052f3e481440dd3318e54a242e7d7558e8139778c98c1",
+          "required_true_field": "automated_passed"
+        }
+      ]
+    },
+    {
+      "name": "Both actual platforms: candidate-04 full-resolution oracles and repeated baseline",
+      "passed": true,
+      "evidence": [
+        {
+          "path": "sequoia-supplement-candidate-04/summary.json",
+          "sha256": "48b34a68d03728a8f565b8e48aa3ab3b208424c6334951ed93b6313933091820",
+          "required_true_field": "supplemental_passed"
+        },
+        {
+          "path": "high-sierra-supplement-candidate-04/summary.json",
+          "sha256": "91ebd387ed28f77d527c81d435a1794ac8343491f7d3ff92425e11eb17570b05",
+          "required_true_field": "supplemental_passed"
+        }
+      ]
+    },
+    {
+      "name": "Cross-platform comparisons",
+      "passed": true,
+      "evidence": [
+        {
+          "path": "m1-m5-cross-platform-candidate-02.json",
+          "sha256": "7d93a4401ad755588750883378a59e67cfa66126724f1535a91ab6f3d2eea519",
+          "required_true_field": "passed"
+        },
+        {
+          "path": "m6-cross-platform-candidate-02.json",
+          "sha256": "0ec8e70f1395305656e1946f3616ca7d91d9f584b6253f77edfbe29b23e3c778",
+          "required_true_field": "passed"
+        },
+        {
+          "path": "m7-cross-platform-candidate-02.json",
+          "sha256": "42a4e604584e57c55e038277643ecceb83b607782016ed2d0d4098bdf3f0796f",
+          "required_true_field": "passed"
+        },
+        {
+          "path": "m8-cross-platform-candidate-02.json",
+          "sha256": "441126c45256f967a91c7ddb74ab16dcd0a03e99b57013371f863c574eb49893",
+          "required_true_field": "passed"
+        },
+        {
+          "path": "m9-cross-platform-candidate-02.json",
+          "sha256": "09154ccf52b10e5d7692bdbc2bb239699df5868e7b8a9390d2e0fca770e816ec",
+          "required_true_field": "passed"
+        },
+        {
+          "path": "m9-extended-cross-platform-candidate-04.json",
+          "sha256": "2f0d9085b708bb9b21719cf9f9477ef8efad77f8840565c5cccde84a6c6a7ab8",
+          "required_true_field": "passed"
+        }
+      ]
+    },
+    {
+      "name": "Both actual platforms: three-hour six-file resource tests",
+      "passed": true,
+      "evidence": [
+        {
+          "path": "sequoia-candidate-02/long-programme.json",
+          "sha256": "e2d1483e776ba4601b1c23eb0ae524a872575888d8a64dd769609a7e442b8995",
+          "required_true_field": "passed"
+        },
+        {
+          "path": "high-sierra-candidate-02/long-programme.json",
+          "sha256": "e92e78554b00e244f230a844f344e6f9753a376811befa445194e138bb0eab2d",
+          "required_true_field": "passed"
+        }
+      ]
+    },
+    {
+      "name": "Bidirectional grouped session exchange",
+      "passed": true,
+      "evidence": [
+        {
+          "path": "exchange-sequoia-to-high-sierra-candidate-02.json",
+          "sha256": "fa536412a7202214529d6039546aed7c4d522cec28145fc91bd3e953923a993f",
+          "required_true_field": "passed"
+        },
+        {
+          "path": "exchange-high-sierra-to-sequoia-candidate-02.json",
+          "sha256": "7ad6b0691205519db75871bef1ce97f19c93ef4a8cba91751220fc52d4b6c641",
+          "required_true_field": "passed"
+        }
+      ]
+    },
+    {
+      "name": "Preserved M8 readers reject schema 2 as expected",
+      "passed": true,
+      "evidence": [
+        {
+          "path": "m8-reader-rejection-acceptance.json",
+          "sha256": "44426977e298a50202db8e2f6360c7e452ccda067114566b1c617dee0fecb552",
+          "required_true_field": "accepted"
+        },
+        {
+          "path": "m8-reader-rejection-high-sierra-acceptance.json",
+          "sha256": "16edb344389560a1cefc4c7f274338b9e4e41e1946759e247c333b7d2ad29002",
+          "required_true_field": "accepted"
+        }
+      ]
+    },
+    {
+      "name": "Both actual platforms: silent interactive UI",
+      "passed": true,
+      "evidence": [
+        {
+          "path": "sequoia-ui-candidate-02-observations.json",
+          "sha256": "816232ab980b8d04eaa9b2ee707f9d481625fceb5cb721b7e41a5ea809d207c8",
+          "required_true_field": "local_ui_passed"
+        },
+        {
+          "path": "high-sierra-ui-candidate-04-observations.json",
+          "sha256": "8db33098b8f560eadc734e181dac2835b293fb893def4967b17ef0d46372f037",
+          "required_true_field": "local_ui_passed"
+        }
+      ]
+    },
+    {
+      "name": "All 22 approved muted physical video cases under accepted skip policy",
+      "passed": true,
+      "evidence": [
+        {
+          "path": "physical-video-summary-candidate-03.json",
+          "sha256": "fd980bcddf1af1af2a2e1f595b7b3f91f9c83d941e6c05aeb63781d7aa1225b8",
+          "required_true_field": "accepted"
+        }
+      ]
+    },
+    {
+      "name": "Source/artifact and repository preservation",
+      "passed": true,
+      "evidence": [
+        {
+          "path": "final-candidate-04-integrity.json",
+          "sha256": "6f15015dfd6050c560a2f9d0738897d1198e3375f07dea8c0ac665ade81fddd8",
+          "required_true_field": "passed"
+        },
+        {
+          "path": "repository-preservation-candidate-04.json",
+          "sha256": "21157bab758d47cf7ad85b58391de0545947c2a5600c73cd0d120377e84abadf",
+          "required_true_field": "passed"
+        },
+        {
+          "path": "local-package-preservation-candidate-04.json",
+          "sha256": "0541499aec0f177956f875d172bc8998293b806fdc864a8b9b02d02085f1a0d9",
+          "required_true_field": "passed"
+        }
+      ]
+    }
+  ],
+  "reuse_records": [
+    "candidate-02-equivalence.json",
+    "candidate-03-equivalence.json",
+    "candidate-04-equivalence.json",
+    "interleaved-long-equivalence-current.json"
+  ],
+  "reuse_note": "Candidate-02 full baseline/long/UI and candidate-03 physical reports remain original. Candidate-04 changes tests/tooling only; the application, production source and fixtures are identical. Candidate-04 supplemental tests and repeated baseline ran on both actual platforms. Older per-run qualification_complete=false fields describe their separate scope and are not rewritten.",
+  "historical_failures": "Strict zero-skip physical failures and the candidate-02 runner preflight failure remain preserved, with separate corrected-run/policy assessments. No retry was made merely to obtain zero skips.",
+  "evidence_levels": {
+    "offline_measurement_processing": "qualified",
+    "automated_audition_routing_sample_captures": "qualified",
+    "silent_UI_and_muted_two_output_video": "qualified within documented clock/paint evidence",
+    "physical_full_5_1_or_7_1_listening": "separate; not claimed by M9 and not a completion gate"
+  },
+  "accepted_limitations": [
+    "Occasional picture skips: five recorded across Sequoia short/endurance runs; zero on High Sierra. Audio, timing, identity, lifecycle and memory gates pass. This is not optical synchronization certification.",
+    "Only two mono stereo or six mono conventional 5.1 files with explicit sample-zero alignment; no resampling, offsets, summing, padding or truncation.",
+    "M9 saves schema 2 requiring an M9 reader. M8 can open only the preserved original; incompatible caches require remeasurement.",
+    "Raw media remains external and every member must verify before programme use.",
+    "Export/reporting, RF64/BW64, stems, dialogue analysis, 7.1.4, section processing and VST3 parity remain deferred."
+  ],
+  "ready_for_checkpoint_review": true,
+  "published": false,
+  "merged": false
+}

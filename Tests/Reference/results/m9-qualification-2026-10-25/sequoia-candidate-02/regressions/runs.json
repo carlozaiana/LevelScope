@@ -1,0 +1,65 @@
+[
+  {
+    "name": "regressions",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/run_m7_qualification.py",
+      "--platform",
+      "sequoia",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/sequoia-candidate-02/regressions/regressions",
+      "--completion-regressions"
+    ],
+    "exit_code": 0,
+    "seconds": 244.403395292,
+    "log_sha256": "0fc84b1408daed8b5cd4128676febda9f80ea54b5b180dabe8d89b9bcf4c9bd5"
+  },
+  {
+    "name": "sessions",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/candidate-02/bin/LevelScopeSessionTests",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/sequoia-candidate-02/regressions/sessions.json",
+      "--exchange-out",
+      "/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/sequoia-candidate-02/regressions/exchange-out",
+      "--long-media",
+      "/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/candidate-02/m7-fixtures/three-hour-71-48000.flac"
+    ],
+    "exit_code": 0,
+    "seconds": 178.70727424999998,
+    "log_sha256": "beae4fde73d2e78729956ab489fc016b3f20f68ce0c81117fe88e28db55b5a7a"
+  },
+  {
+    "name": "restored-playback",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/candidate-02/bin/LevelScopeSessionPlaybackTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/sequoia-candidate-02/regressions/restored-playback.json",
+      "--samples",
+      "/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/sequoia-candidate-02/regressions/restored-samples",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/candidate-02/video-fixtures",
+      "--prores",
+      "/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/candidate-02/m7-video-fixtures"
+    ],
+    "exit_code": 0,
+    "seconds": 14.730932042000006,
+    "log_sha256": "3d8ca732651441d49f49dc34ca5c05e04ea0a10de41ace71b765a00572aeeba8"
+  },
+  {
+    "name": "m8-runner",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/M8QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "seconds": 0.07625699999999824,
+    "log_sha256": "c6b9b1f09add0403cc07e90bfdf272129b1ddfa2f8f7675ea8218862f2516371"
+  }
+]

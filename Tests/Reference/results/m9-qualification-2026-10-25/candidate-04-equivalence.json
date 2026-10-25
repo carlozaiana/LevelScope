@@ -1,0 +1,33 @@
+{
+  "previous_source_digest": "1f30ab7ca0fcd0e10ff5bf21b00b22227ed7e5bd9f7514ee00d65810e9260551",
+  "candidate_source_digest": "ecf819093af35debedfed260a28a972183cf8484af677f6fbca749f4dbea0d34",
+  "candidate_identity_sha256": "374bfa3b5003d7a67651ccfea71b2a3ceceaf8edc17398573a4862ac82b27898",
+  "measurement_build": "6cdc517ca6618832430a7dbe678c37d3c459888674a112aa2643c2a25186f329",
+  "changed_source_files": [
+    "Tests/M9QualificationRunnerTests.py",
+    "Tests/ProgrammeAssemblyTests.cpp",
+    "Tests/ProgrammeExtendedOracle.h",
+    "Tests/compare_m9_extended_oracles.py",
+    "Tests/package_m9_qualification.py",
+    "Tests/run_m9_qualification.py"
+  ],
+  "changed_package_artifacts": [
+    "Tests/M9QualificationRunnerTests.py",
+    "Tests/compare_m9_extended_oracles.py",
+    "Tests/run_m9_qualification.py",
+    "bin/LevelScopeProgrammeTests",
+    "source/Tests/M9QualificationRunnerTests.py",
+    "source/Tests/ProgrammeAssemblyTests.cpp",
+    "source/Tests/ProgrammeExtendedOracle.h",
+    "source/Tests/compare_m9_extended_oracles.py",
+    "source/Tests/package_m9_qualification.py",
+    "source/Tests/run_m9_qualification.py"
+  ],
+  "all_application_binaries_identical": true,
+  "all_other_test_binaries_identical": true,
+  "all_fixtures_identical": true,
+  "application_binary_sha256": "dd15614194cb4bb40b86415ff6a93e0ddc0dd35455e5ae03adff4f4748bc6938",
+  "reason": "Candidate-04 adds full-resolution stable-LRA/silence interleaved-oracle coverage and runner guards. Only ProgrammeTests rebuilt; all application and other test executables are preserved byte-for-byte.",
+  "reuse": "Candidate-02 actual-platform regressions, three-hour tests, grouped exchange and UI evidence, plus candidate-03 physical video evidence, apply to identical production binaries. Preserve original report identities. The new ProgrammeTests and runner coverage must pass on both actual platforms.",
+  "qualified": false
+}

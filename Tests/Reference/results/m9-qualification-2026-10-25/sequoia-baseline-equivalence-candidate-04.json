@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "platform": "arm64 Sequoia",
+  "candidate": "candidate-04",
+  "prior": "candidate-02",
+  "capture_cases_exact": 56,
+  "assertions_exact": 5261,
+  "native_video_cases": 10,
+  "source_digest": "ecf819093af35debedfed260a28a972183cf8484af677f6fbca749f4dbea0d34",
+  "reason": "New ProgrammeTests retains all prior case identities, metric statuses/values, peak locations and capture hashes; each new capture hash verified. Original two-platform candidate-02 numerical comparison remains valid by exact equivalence."
+}

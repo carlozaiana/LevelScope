@@ -1,0 +1,148 @@
+{
+  "candidate": "candidate-04",
+  "executed_package": "candidate-02",
+  "equivalence": "candidate-04-equivalence.json: identical production source and standalone executable",
+  "source_digest": "ecf819093af35debedfed260a28a972183cf8484af677f6fbca749f4dbea0d34",
+  "measurement_build": "6cdc517ca6618832430a7dbe678c37d3c459888674a112aa2643c2a25186f329",
+  "binary_sha256": "dd15614194cb4bb40b86415ff6a93e0ddc0dd35455e5ae03adff4f4748bc6938",
+  "platform": "actual Intel High Sierra 10.13.6 (17G66)",
+  "method": "Live Screen Sharing observations in this chat, with user-assisted native multi-file selection; no physical device opened",
+  "checks": [
+    {
+      "name": "stereo_staging",
+      "observed": true,
+      "detail": "User selected mono-0.wav and mono-1.aiff together. Staging showed 24-bit WAV and 16-bit AIFF, each 48000 Hz and 192001 frames; no implicit role assignment."
+    },
+    {
+      "name": "duplicate_roles",
+      "observed": true,
+      "detail": "Assigned Left to both files and checked alignment; complete import remained disabled."
+    },
+    {
+      "name": "mapping_invalidates_confirmation",
+      "observed": true,
+      "detail": "Changing the second role from Left to Right cleared alignment confirmation and kept import disabled until explicitly reconfirmed."
+    },
+    {
+      "name": "stereo_adoption",
+      "observed": true,
+      "detail": "Explicitly confirmed exact aligned mix and imported. Both filenames appeared alongside ordered Left/Right roles; all routes Muted, no output device selected or opened."
+    },
+    {
+      "name": "measurement_applicability",
+      "observed": true,
+      "detail": "Measured Source while EBU R128-2023 profile selected but applicability unchecked: NOT EVALUATED, measurements current. Confirming applicability reevaluated without measuring to FAIL at -34.146427 LUFS. Unchecking/rechecking preserved measurement validity."
+    },
+    {
+      "name": "zero_gain_current",
+      "observed": true,
+      "detail": "Initialized Current at zero and measured. Same -34.146427 LUFS/-30.134363 dBTP; LRA 2.217844 LU marked unstable under 60 seconds."
+    },
+    {
+      "name": "explicit_trim_verification",
+      "observed": true,
+      "detail": "Draft proposed +11.146426694935 dB with prediction -23 LUFS/-18.987936 dBTP; existing gain zero and measured FAIL unchanged. Apply explicitly set gain, Current UNVERIFIED/NOT EVALUATED, Source unchanged. Actual remeasurement PASS -23.000000 LUFS/-18.987936 dBTP with narrow selected-rule wording; no automatic correction."
+    },
+    {
+      "name": "device_closed_preparation",
+      "observed": true,
+      "detail": "Selected Current State; exact gain and measurements-current status shown with playback-not-measurement disclaimer. Prepare audition completed verified source ready/playback stopped, all routes muted, no output device selected/opened."
+    },
+    {
+      "name": "stereo_diagnostics",
+      "observed": true,
+      "detail": "Source and Current read-only diagnostics retained 4.000021-second source axis, separate LRA distribution and unstable-short-programme warning. Ranked [0.5,0.9) interval highlighted correctly; horizontal zoom and whole-programme restore worked. Both per-channel sample/true-peak locations labelled filename and role. Current loudness -23 and LRA 2.217844; inspection did not alter measured verdicts or processing."
+    },
+    {
+      "name": "stereo_save_reopen",
+      "observed": true,
+      "detail": "User completed native Save As to stereo-ui.levelscope.levelscope. Unchanged reopening restored exact gain +11.146426694935, roles, applicability and compatible Source FAIL/Current PASS caches without remeasurement, stopped/device closed/routes muted."
+    },
+    {
+      "name": "missing_member_recovery",
+      "observed": true,
+      "detail": "Moved only disposable Left fixture to moved-left.wav; identical SHA-256 2bbc3ede4178499d5c6edb70b65ff45bbe7f6c2eb12312d231e21da659cc1882 before/after. Missing-member warning explicitly described whole programme incomplete and no partial audition/processing/measurement. Open unresolved recovered settings/gain with NOT EVALUATED/UNVERIFIED and measurement/preparation disabled."
+    },
+    {
+      "name": "identical_content_relink",
+      "observed": true,
+      "detail": "Explicit Left-slot relink to moved-left.wav verified identical content and restored eligible Source FAIL/Current PASS caches without remeasurement or renewed alignment confirmation. Exact gain preserved, locator change marked UNSAVED; saved owned test session afterward."
+    },
+    {
+      "name": "mismatched_relink_rejection",
+      "observed": true,
+      "detail": "Selected wrong-one-frame-short.wav for Left slot. Notice explicitly said Relink rejected; previous session retained. Previous moved-left.wav/mono-1.aiff group, exact gain and current measured verdicts remained intact; stopped/device closed/routes muted."
+    },
+    {
+      "name": "six_file_staging_and_adoption",
+      "observed": true,
+      "detail": "Selected all six owned 48000 Hz/192001-frame mono WAV/AIFF/FLAC fixtures, with mixed 16/24-bit formats. Each role initially unassigned. Explicitly assigned L/R/C/LFE/Ls/Rs; complete import remained disabled until aligned-mix confirmation. Adoption replaced the stereo group atomically, cleared its Current gain/results/applicability, and showed six filenames with all routes Muted."
+    },
+    {
+      "name": "six_file_measured_trim",
+      "observed": true,
+      "detail": "Source and zero-gain Current measured -20.403533 LUFS/-20.764817 dBTP. Draft predicted -23 LUFS/-23.361284 dBTP at -2.596466531665 dB, retaining measured FAIL and gain zero until Apply. Apply marked Current UNVERIFIED/NOT EVALUATED. Actual remeasurement then PASS at -23.000000 LUFS/-23.361284 dBTP; Source unchanged; no automatic retry or correction."
+    },
+    {
+      "name": "six_file_preparation_diagnostics",
+      "observed": true,
+      "detail": "Current audition preparation completed verified source ready/playback stopped without selecting or opening an output device. Source and Current diagnostics retained 4.000021-second source axis, separate LRA distribution, and unstable-under-60-seconds warning (2.218312 LU). Inspected all six filename/role sample/true-peak rows, including LFE and both surrounds, in both states; inspection left processing and verdicts unchanged."
+    },
+    {
+      "name": "six_file_save_reopen",
+      "observed": true,
+      "detail": "Saved ui-work/six-ui.levelscope and reopened. Exact -2.596466531665 dB gain, ordered filenames/roles, alignment confirmation, profile/applicability and compatible Source FAIL/Current PASS measurements returned without remeasurement. Opened stopped, device closed and all routes muted."
+    },
+    {
+      "name": "active_open_close_and_cancel",
+      "observed": true,
+      "detail": "Opened owned long-ui.levelscope referencing the three-hour six-file group. Observed opening/verifying media progress at 0%, 15% and 33%; Close clicks while verification was active left the application running. Cancel file job produced Session opening cancelled; previous session retained, preserving six-ui exact gain/measurements. The transient close-notice text was not captured; app survival and subsequent cancellation were observed. Automated timing evidence separately supplies cancellation latency."
+    },
+    {
+      "name": "m8_migration_save_as",
+      "observed": true,
+      "detail": "Opened owned schema-1 m8-original-ui.levelscope. Notice explained in-memory migration, M9-only save and incompatible build/platform caches; gain -6.020599913280, role interpretation and profile/applicability recovered, Source/Current NOT EVALUATED and Current UNVERIFIED. Save displayed Session format upgrade with Save As/Upgrade original/Cancel. Save As suggested m8-original-ui-M9.levelscope; saved that distinct schema-2 copy. Original schema-1 hash remained ee850fb68353a9c07c8f86301500984753f23b96d8f0aeb935c2392eecaef0fc."
+    },
+    {
+      "name": "active_import_cancel",
+      "observed": true,
+      "detail": "Selected all six frozen long-48000 FLAC fixtures read-only in the six-mono staging workflow. Observed Verifying every member: 1%, then Cancel. Programme import cancelled; previous session retained; prior migrated interleaved programme/gain/settings unchanged and device closed."
+    },
+    {
+      "name": "clear_group_and_close",
+      "observed": true,
+      "detail": "Reopened saved six-ui.levelscope with Source FAIL/Current PASS caches; Clear Source removed the entire group, roles, Current state and measured authority, reset gain and applicability, disabled measurement/preparation, and marked UNSAVED. Close displayed the unsaved-session guard; discarded only this owned clear operation and app closed normally. Saved test sessions retained; no physical device opened in the UI block."
+    }
+  ],
+  "local_ui_passed": true,
+  "qualification_complete": true,
+  "pending": [],
+  "updated_utc": "2026-10-25T17:24:25.477988+00:00",
+  "unscored_attempts": [
+    "A previous long-session opening was accidentally selected during native-picker navigation. The application closed after delayed input; active-close rejection was not observed and is not scored. Active cancellation/close remains to be tested. Later controlled active-open/close/cancel observation completed successfully; the earlier attempt remains unscored."
+  ],
+  "qualification_complete_scope": "High Sierra interactive UI gate only; aggregate acceptance is in status.json",
+  "owned_session_artifacts": [
+    {
+      "file": "ui-work/stereo-ui.levelscope.levelscope",
+      "sha256": "cdfe7ce763fbd929c89d1c149407e68df3fb5289ef553d2bbd7d715a26cc0e6b",
+      "schema": 2
+    },
+    {
+      "file": "ui-work/six-ui.levelscope",
+      "sha256": "838e35a5d6d659e85f6de3eba8414e7d3779725091fa2bf70a9319e4a6a2f34a",
+      "schema": 2
+    },
+    {
+      "file": "ui-work/m8-original-ui.levelscope",
+      "sha256": "ee850fb68353a9c07c8f86301500984753f23b96d8f0aeb935c2392eecaef0fc",
+      "schema": 1,
+      "unchanged": true
+    },
+    {
+      "file": "ui-work/m8-original-ui-M9.levelscope",
+      "sha256": "c7cc21fdd7a045df1729b84ed4f086cf1b82caa4910a002d0275aa47f7ee123a",
+      "schema": 2
+    }
+  ]
+}

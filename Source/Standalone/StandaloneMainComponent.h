@@ -1,5 +1,6 @@
 #pragma once
 #include "SessionDocument.h"
+#include "StandaloneProgrammeImport.h"
 
 #include <memory>
 #include <future>
@@ -40,6 +41,8 @@ private:
     std::function<void()> afterSave;
     juce::String documentNotice;
     bool relinkingVideo = false;
+    juce::String relinkingMember;
+    bool migrationSaveApproved = false;
     enum class FileOperation { none, save, open, relink } fileOperation = FileOperation::none;
     void configureSessionControls();
     void pollSessionOperation();
@@ -47,7 +50,7 @@ private:
     void confirmDiscard (std::function<void()>);
     void beginSaveSession (bool saveAs, std::function<void()> = {});
     void beginOpenSession (const juce::File&);
-    void chooseRelink (bool video);
+    void chooseRelink (bool video, juce::String slot = {});
     void installDocument (sessionfile::Document, bool relinking, std::shared_ptr<sessionfile::Prepared>);
     bool canReplaceSession() const;
 
@@ -86,6 +89,10 @@ private:
     juce::TextButton currentStateButton { "Current State" };
     juce::TextButton exportButton { "Export" };
 
+    std::unique_ptr<ProgrammeImportPanel> programmePanel;
+    std::unique_ptr<juce::DocumentWindow> programmeWindow;
+    juce::TextButton chooseProgrammeButton { "Import channel files..." };
+    void chooseProgramme();
     juce::TextButton chooseSourceButton { "Choose Source File..." };
     juce::TextButton clearSourceButton { "Clear Source" };
     juce::TextButton measureSourceButton { "Measure Source" };

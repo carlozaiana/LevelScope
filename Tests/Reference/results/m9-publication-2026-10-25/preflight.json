@@ -1,0 +1,135 @@
+{
+  "verified_utc": "2026-10-25T18:14:01.356176+00:00",
+  "candidate": "candidate-04",
+  "source_digest": "ecf819093af35debedfed260a28a972183cf8484af677f6fbca749f4dbea0d34",
+  "measurement_build": "6cdc517ca6618832430a7dbe678c37d3c459888674a112aa2643c2a25186f329",
+  "source_files_verified": 187,
+  "qualification_files_verified": 244,
+  "qualification_manifest_sha256": "a617b6f8336e9a39676fc12c33b06809195fc61de29b60a3445d9ce09824732a",
+  "acceptance_record_sha256": "d06c1021c8704ce9c8e3563281e8e392de647eb5eb09bd62f9c1e7aff8e844c7",
+  "required_gate_groups_verified": 9,
+  "packages": [
+    {
+      "package": "m8",
+      "identity_sha256": "dd625b0e2241afde0e6cbd5bbe36f733d8e23bdd9afc3bba92cd62fc556e8b9f",
+      "verified_artifacts": 379
+    },
+    {
+      "package": "m9-01",
+      "identity_sha256": "16f694650b41545d89e52c6d6972b00aec4f53671de5cc0c1af19fa322d66cae",
+      "verified_artifacts": 439
+    },
+    {
+      "package": "m9-02",
+      "identity_sha256": "16ac81d6b4a740a32486bc5610841f02300ecbfa05e5c27baf21640229d00f2e",
+      "verified_artifacts": 439
+    },
+    {
+      "package": "m9-03",
+      "identity_sha256": "c50ec54a87018254f98fee61d57b1522b5c5bc8f3cc9f88343bef4f028869c35",
+      "verified_artifacts": 439
+    },
+    {
+      "package": "m9-04",
+      "identity_sha256": "374bfa3b5003d7a67651ccfea71b2a3ceceaf8edc17398573a4862ac82b27898",
+      "verified_artifacts": 442
+    }
+  ],
+  "remote_main_before": "8e984889c5e73670f370c6c568c8ea1d7902a35c",
+  "remote_logic_before": "8e984889c5e73670f370c6c568c8ea1d7902a35c",
+  "proposed_tag": "m9-separate-file-stereo-5.1-2026-10-25",
+  "existing_tags": [
+    {
+      "ref": "refs/tags/high-sierra-pre-scaffold-2026-10-15",
+      "tag_object": "b3c6e845482dbe8a0ec9778d5a9ad7953e614609",
+      "target_commit": "556d387ad772dc5e604ead95f1525f60e66fd5f9"
+    },
+    {
+      "ref": "refs/tags/m2-measured-compliance-2026-10-18",
+      "tag_object": "673e382feeaa7e29e6e6abedbd56677aa2163ef3",
+      "target_commit": "01a34833ec06a0d237e098faadb23b398581e8f9"
+    },
+    {
+      "ref": "refs/tags/m3-global-trim-2026-10-18",
+      "tag_object": "4063ca0e73c5b24dfa079eb894f85e398e9fee50",
+      "target_commit": "62ab420cb15b3ce5e1c821c963a749a9a56ae4a7"
+    },
+    {
+      "ref": "refs/tags/m4-measured-diagnostics-2026-10-18",
+      "tag_object": "cc64c771a70ccf95e779a7fe7260749a4530c285",
+      "target_commit": "9a22749901d9f6d4b9c194c9c22c0a231f2494f6"
+    },
+    {
+      "ref": "refs/tags/m5-programme-sections-2026-10-20",
+      "tag_object": "e36b4308374256ad36eff6c01d4d92325a06d3b0",
+      "target_commit": "ae88e187d288c53dbca1287e8341b74b9b5b2619"
+    },
+    {
+      "ref": "refs/tags/m6-verified-current-state-audition-2026-10-24",
+      "tag_object": "7f54eb1098471dc55bd75484f873a9f90e68ac05",
+      "target_commit": "b57a1ed23cbe7d74afe98ed16ec8fd615db9d171"
+    },
+    {
+      "ref": "refs/tags/m7-pcm-7.1-2026-10-25",
+      "tag_object": "04d0c836fcbc3a7af72638a7514faacd32ae48a9",
+      "target_commit": "cfbf3f981dece326d2363b911e5914ea61f1796c"
+    },
+    {
+      "ref": "refs/tags/m8-reproducible-sessions-2026-10-25",
+      "tag_object": "93908205c41de16c10b187bc00fcc1621e328c66",
+      "target_commit": "8e984889c5e73670f370c6c568c8ea1d7902a35c"
+    },
+    {
+      "ref": "refs/tags/measurement-milestone-2026-10-17",
+      "tag_object": "76affb667b6dab066cb36b2a2c741525b9b6eeac",
+      "target_commit": "b29bc7c183743f35c6271d2d7ec8fb5ba1464591"
+    },
+    {
+      "ref": "refs/tags/standalone-scaffold-2026-10-15",
+      "tag_object": "4c8bc35b788969e1f6e97dcdc57a601b01fff7cd",
+      "target_commit": "f192a8553e139d390056c9755f25eeb123bbc5e6"
+    },
+    {
+      "ref": "refs/tags/video-checkpoint-2026-10-17",
+      "tag_object": "06f57524bedca1912c0d5c454f13561cec9ce5b4",
+      "target_commit": "700b9e77e439a8ca9bb7583adf826fac01dbe924"
+    },
+    {
+      "ref": "refs/tags/video-prores-checkpoint-2026-10-21",
+      "tag_object": "d62c1159eeb2ffbb8b7ffc7c31014b842642d195",
+      "target_commit": "dcc34aabba6b5b3ca4805e2965d21ffebf2e4d0a"
+    }
+  ],
+  "implementation_changed_since_qualification": false,
+  "qualification_reuse": "All source bytes and original tested artifacts match the qualified candidate; no integration differences from latest origin/main. No rebuild or additional physical-device run required.",
+  "publication_authorized": true,
+  "passed": true,
+  "remote_branches_before": {
+    "refs/heads/codex/logic-module": "8e984889c5e73670f370c6c568c8ea1d7902a35c",
+    "refs/heads/codex/standalone-scaffold": "f192a8553e139d390056c9755f25eeb123bbc5e6",
+    "refs/heads/codex/video-implementation": "5e07bbd29930db34236d6dfcede7fea14983f90a",
+    "refs/heads/docs/compliance-harness": "8883928775dba56ac0bbd1dc1f6f3eef67b90d6f",
+    "refs/heads/main": "8e984889c5e73670f370c6c568c8ea1d7902a35c"
+  },
+  "worktrees_before": "worktree /Users/fuzz/Developer/LevelScope\nHEAD 8e984889c5e73670f370c6c568c8ea1d7902a35c\nbranch refs/heads/codex/logic-module\n\nworktree /Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation\nHEAD 5e07bbd29930db34236d6dfcede7fea14983f90a\nbranch refs/heads/codex/video-implementation\n\n",
+  "unrelated_files_sha256": {
+    ".DS_Store": "525415b30d69403e749551506d0a77a276fcf9efcc92ef842ec8e0c9ea81ced6",
+    "Docs/.DS_Store": "ff642a3e8b407e9740f78574084ac43450daf3aa67170b2d728669b3a1d4fb9b",
+    "Source/.DS_Store": "491170b5810f85cf5fe34a41e214885a4a2baee46c43c290bb3652f521b9b503",
+    "Source/Core/.DS_Store": "05aa686cd8a9e54b65388fc4dce1ea2c91ab5cd5fd1af8bfe6ad73055d06100d",
+    "Source/Core/Processing/.DS_Store": "ad1a60ff6db582810365ba9056c69006adb8046e1f5689330c1f4a8a0d19ac69",
+    "Tests/.DS_Store": "df0daa482a5c41cf9e319721566c76bcb532808cd67c885f44825102b2988eaa",
+    "Tests/Reference/.DS_Store": "2b84e62c3d1d79c0982670bfca8691f68c1f9874d3db3f960f64dec356bcef49"
+  },
+  "video_untracked_files_sha256": {
+    ".DS_Store": "2020c4d85914591e821fbbae7ee586e2956d6b35b655ed1b852d2a83cc428d72",
+    "Source/.DS_Store": "de55dd8c6b48276afb0b5b67475d8415c5a688dc9e7942e0d281b174828ec036",
+    "Source/Core/.DS_Store": "59c7ae7c01a93df4d0520f812d057729fdc7f4102a82c0a8a2ffa6cf24a99a99",
+    "Source/Core/Processing/.DS_Store": "59fecc4495769458121b76a56c8ed5cc510894b38d7c97f01444cd3623c055d8",
+    "Tests/.DS_Store": "ccfd0a588d0560be0a267546c6e5676d004371d9a2d679d820ea7b20e6f3e966",
+    "Tests/Video/.DS_Store": "688676d3a5072574ad5ed1f4ba64592077c71e12fdfde723b8f096c491625c1b",
+    "Tests/Video/results/.DS_Store": "20d3743ace48bb7273f9ec82185f25cc1a181cc528f76af3b3232416b125f333"
+  },
+  "video_worktree_status_before": "?? .DS_Store\n?? Source/.DS_Store\n?? Source/Core/.DS_Store\n?? Source/Core/Processing/.DS_Store\n?? Tests/.DS_Store\n?? Tests/Video/.DS_Store\n?? Tests/Video/results/.DS_Store\n",
+  "canonical_source_digest_verified": true
+}

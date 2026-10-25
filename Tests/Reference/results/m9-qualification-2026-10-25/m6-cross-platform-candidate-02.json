@@ -1,0 +1,1335 @@
+{
+  "passed": true,
+  "source_build": "6cdc517ca6618832430a7dbe678c37d3c459888674a112aa2643c2a25186f329",
+  "sample_cases": [
+    {
+      "case": "0.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "1.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "2.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "3.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "4.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "5.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "6.f32",
+      "kind": "Source matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "7.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "8.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "9.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "10.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "11.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "12.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "13.f32",
+      "kind": "Source matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "14.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "15.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "16.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "17.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "18.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "19.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "20.f32",
+      "kind": "Source matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "21.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "22.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 1.7763568394002505e-15,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "23.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "24.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "25.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "26.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "27.f32",
+      "kind": "Source matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "28.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "29.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "30.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "31.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "32.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "33.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "34.f32",
+      "kind": "Source matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "35.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "36.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "37.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "38.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "39.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "40.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "41.f32",
+      "kind": "Source matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "42.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "43.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "44.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "45.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "46.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "47.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "48.f32",
+      "kind": "Source matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "49.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "50.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "51.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "52.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "53.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "54.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "55.f32",
+      "kind": "Source matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "56.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "57.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "58.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "59.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "60.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "61.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "62.f32",
+      "kind": "Source matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "63.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "64.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "65.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "66.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "67.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "68.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "69.f32",
+      "kind": "Source matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "70.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "71.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "72.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "73.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "74.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "75.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "76.f32",
+      "kind": "Source matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "77.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "78.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "79.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "80.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "81.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "82.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 1.7763568394002505e-15,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "83.f32",
+      "kind": "Source matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "84.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "85.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "86.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "87.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "88.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "89.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "90.f32",
+      "kind": "Source matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "91.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "92.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "93.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "94.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "95.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "96.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "97.f32",
+      "kind": "Source matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "98.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "99.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "100.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "101.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "102.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "103.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "104.f32",
+      "kind": "Source matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "105.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "106.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "107.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "108.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "109.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "110.f32",
+      "kind": "Current matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 1.7763568394002505e-15,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "111.f32",
+      "kind": "Source matrix",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0
+      }
+    },
+    {
+      "case": "112.f32",
+      "kind": "signal-2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {}
+    },
+    {
+      "case": "113.f32",
+      "kind": "signal-2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {}
+    },
+    {
+      "case": "114.f32",
+      "kind": "signal-2",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {}
+    },
+    {
+      "case": "115.f32",
+      "kind": "signal-3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "116.f32",
+      "kind": "signal-3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "117.f32",
+      "kind": "signal-3",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "118.f32",
+      "kind": "signal-4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "119.f32",
+      "kind": "signal-4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "120.f32",
+      "kind": "signal-4",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "121.f32",
+      "kind": "signal-5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "lra": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0,
+        "short_term": 0.0
+      }
+    },
+    {
+      "case": "122.f32",
+      "kind": "signal-5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "lra": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0,
+        "short_term": 0.0
+      }
+    },
+    {
+      "case": "123.f32",
+      "kind": "signal-5",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "integrated": 0.0,
+        "lra": 0.0,
+        "true_peak": 0.0,
+        "sample_peak": 0.0,
+        "momentary": 0.0,
+        "short_term": 0.0
+      }
+    }
+  ],
+  "maximum_float32_ulp": 0,
+  "scope": "Captured sample parity only; OS, metrics, UI and physical video require separate evidence"
+}

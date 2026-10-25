@@ -108,6 +108,8 @@ juce::String StandaloneDiagnosticsPanel::rowText (int row) const
     {
         const auto& p = a.peaks[static_cast<size_t> (row)];
         s << "Channel " << juce::String (row + 1) << " " << juce::AudioChannelSet::getAbbreviatedChannelTypeName (displayed->snapshot->context.fileLayout.roles[row]);
+        if(displayed->snapshot->context.assembly)
+            s << " | " << displayed->snapshot->context.assembly->members[static_cast<size_t>(row)].file.getFileName();
         if (p.sampleDbfs) s << " | SP " << juce::String (*p.sampleDbfs, 6) << " dBFS @ " << juce::String (static_cast<double> (p.sampleFrame) / a.sampleRate, 9) << " s (frame " << juce::String (p.sampleFrame) << ")";
         else s << " | SP unavailable (silence; no location)";
         if (p.trueDbtp)

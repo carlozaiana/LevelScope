@@ -101,6 +101,22 @@ MediaInfo media (const V& v)
     m.modified=juce::Time(integer<int64_t>(get(v,"modified")));m.format=str(v,"format",128);m.sha256=str(v,"sha256",64);m.layoutProvenance=str(v,"provenance");m.measurementRestriction=str(v,"restriction");
     require(m.sampleRate>0&&m.sampleRate<=768000&&m.sampleRate==std::floor(m.sampleRate)&&m.frames>0&&m.frames<=INT64_MAX/8-64&&m.bytes>0&&hashValid(m.sha256),"Invalid source format/identity");return m;
 }
+V assemblyValue (const ProgrammeAssembly& group)
+{
+    auto v=object();put(v,"schema",ProgrammeAssembly::version);put(v,"confirmation",group.alignmentConfirmation);
+    juce::Array<V> rows;
+    for(const auto& m:group.members){auto row=object();put(row,"id",m.id);put(row,"locator",m.file.getFullPathName());put(row,"media",mediaValue(m.media));put(row,"role",static_cast<int>(m.role));put(row,"offset",signedValue(m.offsetFrames));rows.add(row);}
+    put(v,"members",rows);return v;
+}
+ProgrammeAssembly assembly (const V& v)
+{
+    ProgrammeAssembly group;number(get(v,"schema"),2,2);group.alignmentConfirmation=str(v,"confirmation",64);
+    for(const auto& row:array(get(v,"members"),6))
+    {
+        ProgrammeMember m;m.id=str(row,"id",128);auto path=str(row,"locator");require(juce::File::isAbsolutePath(path),"Invalid member locator");m.file=juce::File(path);m.media=media(get(row,"media"));m.role=static_cast<ChannelRole>(number(get(row,"role"),0,2048));m.offsetFrames=integer<int64_t>(get(row,"offset"));group.members.push_back(std::move(m));
+    }
+    require(group.validate().isEmpty(),group.validate());return group;
+}
 V sectionsValue (const proposal::SectionMap& s)
 {
     if(s.sections.empty())return V();
@@ -115,13 +131,14 @@ proposal::SectionMap sections (const V& v)
 }
 ServiceContext context (const Document& d,MeasurementDomain domain)
 {
-    ServiceContext c;c.sessionId=d.runtimeId;c.sourceFile=d.source.file;c.media=d.source.media;c.fileLayout=d.source.layout;c.range={0,c.media.frames};
+    ServiceContext c;c.sessionId=d.runtimeId;c.sourceFile=d.source.file;c.media=d.source.media;c.assembly=d.source.assembly;c.fileLayout=d.source.layout;c.range={0,c.media.frames};
     c.processing.staticGainDb=domain==MeasurementDomain::source?0:d.current.staticGainDb;return c;
 }
 void validateCore (const Document& d)
 {
     const auto uuidValid = [](const juce::String& id) { return id.length()==32 && id.containsOnly("0123456789abcdef"); };
     require(uuidValid(d.id)&&uuidValid(d.programmeId),"Invalid persistent identity");
+    if(d.source.assembly)require(context(d,MeasurementDomain::source).isValid(),"Invalid confirmed programme assembly");
     require(d.revision<UINT64_MAX,"Exhausted document revision");
     require(std::isfinite(d.current.staticGainDb)&&d.current.staticGainDb>=-60&&d.current.staticGainDb<=24,"Unsupported processing gain");
     require(!d.current.isInitialized||(d.source.hasSource&&d.source.layout.confirmed&&d.source.layout.isValid()),"Current State requires confirmed source roles");
@@ -142,7 +159,7 @@ measurement::Metric metric (Reader& r)
 Bytes cacheBytes (const AnalysisSnapshot& a,JobControl& control)
 {
     Bytes b;auto v=object();const auto& c=a.context;
-    put(v,"schema",1);put(v,"domain",static_cast<int>(a.domain));put(v,"media",mediaValue(c.media));put(v,"layout",layoutValue(c.fileLayout));put(v,"begin",signedValue(c.range.begin));put(v,"end",signedValue(c.range.end));
+    put(v,"schema",2);put(v,"assembly",c.assembly?assemblyValue(*c.assembly):V());put(v,"domain",static_cast<int>(a.domain));put(v,"media",mediaValue(c.media));put(v,"layout",layoutValue(c.fileLayout));put(v,"begin",signedValue(c.range.begin));put(v,"end",signedValue(c.range.end));
     put(v,"gain",realValue(c.processing.staticGainDb));put(v,"planSchema",c.processing.schemaVersion);put(v,"engine",c.processing.engineVersion);put(v,"build",c.buildVersion);put(v,"platform",c.platformAndFloatingPointMode);put(v,"method",a.measurementVersion);put(v,"identity",a.identity);put(v,"content",a.measuredContentHash);
     put(v,"session",a.originSessionId.isEmpty()?c.sessionId:a.originSessionId);put(v,"job",unsignedValue(a.originSessionId.isEmpty()?c.ticket.id:a.originJobId));put(v,"revision",unsignedValue(a.originSessionId.isEmpty()?c.ticket.sessionRevision:a.originSessionRevision));
     text(b,juce::JSON::toString(v,true));const auto& d=a.detail;u64(b,d.sampleRate);u64(b,d.frames);
@@ -156,8 +173,9 @@ Bytes cacheBytes (const AnalysisSnapshot& a,JobControl& control)
 }
 std::shared_ptr<const AnalysisSnapshot> cache (const Bytes& b,MeasurementDomain domain,JobControl& control)
 {
-    Reader r{b,0,control};auto v=parse(r.t().toStdString());require(number(get(v,"schema"),1,1)==1,"Cache version unsupported");
+    Reader r{b,0,control};auto v=parse(r.t().toStdString());const int cacheSchema=number(get(v,"schema"),1,2);
     auto a=std::make_shared<AnalysisSnapshot>();a->domain=static_cast<MeasurementDomain>(number(get(v,"domain"),0,1));require(a->domain==domain,"Cache domain mismatch");auto& c=a->context;
+    if(cacheSchema==2&&!get(v,"assembly").isVoid())c.assembly=assembly(get(v,"assembly"));
     c.media=media(get(v,"media"));c.fileLayout=layout(get(v,"layout"));c.range={integer<int64_t>(get(v,"begin")),integer<int64_t>(get(v,"end"))};c.processing.staticGainDb=real(get(v,"gain"));c.processing.schemaVersion=number(get(v,"planSchema"),1,1);c.processing.engineVersion=str(v,"engine",128);c.buildVersion=str(v,"build",128);c.platformAndFloatingPointMode=str(v,"platform",256);a->measurementVersion=str(v,"method",128);a->identity=str(v,"identity",64);a->measuredContentHash=str(v,"content",64);
     c.sessionId=str(v,"session",128);c.ticket={integer<uint64_t>(get(v,"job")),integer<uint64_t>(get(v,"revision"))};a->originSessionId=c.sessionId;a->originJobId=c.ticket.id;a->originSessionRevision=c.ticket.sessionRevision;a->restoredFromSession=true;
     auto& d=a->detail;auto rate=r.u();require(rate<=192000,"Invalid cached rate");d.sampleRate=static_cast<int>(rate);d.frames=r.i();require(d.frames>0&&d.frames==c.media.frames&&d.sampleRate==c.media.sampleRate,"Cached duration mismatch");
@@ -179,12 +197,23 @@ std::shared_ptr<const AnalysisSnapshot> cache (const Bytes& b,MeasurementDomain 
 V coreValue (const Document& d,const std::array<Bytes,2>& caches)
 {
     auto v=object();put(v,"schema",schemaVersion);put(v,"documentId",d.id);put(v,"revision",unsignedValue(d.revision));
-    auto p=object();put(p,"schema",programmeAssemblyVersion);put(p,"id",d.programmeId);put(p,"mode","interleaved");put(p,"purpose","programme_audio");put(p,"alignment","0/1");
+    auto p=object();put(p,"schema",programmeAssemblyVersion);put(p,"id",d.programmeId);put(p,"mode",d.source.assembly?"mono_files":"interleaved");put(p,"purpose","programme_audio");put(p,"alignment","0/1");
     juce::Array<V> files,channels;
     if(d.source.hasSource)
     {
+        if(d.source.assembly)
+        {
+            put(p,"assembly",assemblyValue(*d.source.assembly));
+            for(const auto& m:d.source.assembly->members)
+            {
+                auto f=object();put(f,"id",m.id);put(f,"locator",m.file.getFullPathName());put(f,"media",mediaValue(m.media));files.add(f);
+                auto a=object();put(a,"fileId",m.id);put(a,"fileChannel",0);put(a,"role",static_cast<int>(m.role));channels.add(a);
+            }
+        }
+        else {
         auto f=object();put(f,"id","audio-1");put(f,"locator",d.source.file.getFullPathName());put(f,"media",mediaValue(d.source.media));files.add(f);
         for(int n=0;n<d.source.layout.count;++n){auto a=object();put(a,"fileId","audio-1");put(a,"fileChannel",n);put(a,"role",static_cast<int>(d.source.layout.roles[n]));channels.add(a);}
+        }
         put(p,"layout",layoutValue(d.source.layout));put(p,"rangeBegin","0");put(p,"rangeEnd",signedValue(d.source.media.frames));
     }
     put(p,"files",files);put(p,"channels",channels);put(v,"programme",p);
@@ -196,17 +225,35 @@ V coreValue (const Document& d,const std::array<Bytes,2>& caches)
 }
 Document core (const V& v)
 {
-    Document d;number(get(v,"schema"),1,1);d.id=str(v,"documentId",36);d.revision=integer<uint64_t>(get(v,"revision"));auto p=get(v,"programme");number(get(p,"schema"),1,1);d.programmeId=str(p,"id",36);
-    require(str(p,"mode")=="interleaved"&&str(p,"purpose")=="programme_audio"&&str(p,"alignment")=="0/1","Unsupported programme assembly; separate-file/stem import is deferred");
-    auto files=array(get(p,"files"),1);auto channels=array(get(p,"channels"),maxChannels);
+    Document d;d.loadedSchema=number(get(v,"schema"),1,2);d.id=str(v,"documentId",36);d.revision=integer<uint64_t>(get(v,"revision"));auto p=get(v,"programme");require(number(get(p,"schema"),1,2)==d.loadedSchema,"Programme/core schema mismatch");d.programmeId=str(p,"id",36);
+    const auto mode=str(p,"mode");require((mode=="interleaved"||(mode=="mono_files"&&d.loadedSchema==2))&&str(p,"purpose")=="programme_audio"&&str(p,"alignment")=="0/1","Unsupported programme assembly");
+    auto files=array(get(p,"files"),mode=="interleaved"?1:6);auto channels=array(get(p,"channels"),maxChannels);
     if(!files.isEmpty())
     {
+        if(mode=="mono_files")
+        {
+            const auto group=assembly(get(p,"assembly"));d.source.setValidatedProgramme(group);
+            require(files.size()==static_cast<int>(group.members.size())&&channels.size()==files.size(),"Incomplete programme members/assignments");
+            for(int n=0;n<files.size();++n)
+            {
+                const auto& m=group.members[static_cast<size_t>(n)];
+                require(str(files[n],"id")==m.id&&str(files[n],"locator")==m.file.getFullPathName()
+                    &&juce::JSON::toString(get(files[n],"media"),true)==juce::JSON::toString(mediaValue(m.media),true)
+                    &&str(channels[n],"fileId")==m.id&&number(get(channels[n],"fileChannel"),0,0)==0
+                    &&number(get(channels[n],"role"),0,2048)==static_cast<int>(m.role),"Programme member/assignment mismatch");
+            }
+            const auto l=layout(get(p,"layout"));require(l.confirmed&&l.count==d.source.layout.count,"Invalid group layout");
+            for(int n=0;n<l.count;++n)require(l.roles[n]==d.source.layout.roles[n],"Group role mismatch");
+        }
+        else {
         auto f=files[0];require(str(f,"id")=="audio-1","Invalid source file ID");auto path=str(f,"locator");require(juce::File::isAbsolutePath(path),"Invalid source locator");d.source.file=juce::File(path);d.source.fullPath=path;d.source.displayName=d.source.file.getFileName();d.source.hasSource=true;d.source.media=media(get(f,"media"));d.source.fileSizeBytes=d.source.media.bytes;d.source.extension=d.source.file.getFileExtension().trimCharactersAtStart(".");d.source.layout=layout(get(p,"layout"));
         require(d.source.layout.count==d.source.media.channels&&channels.size()==d.source.media.channels,"Programme channel count mismatch");
         for(int n=0;n<channels.size();++n)require(str(channels[n],"fileId")=="audio-1"&&number(get(channels[n],"fileChannel"),0,maxChannels-1)==n&&number(get(channels[n],"role"),0,2048)==static_cast<int>(d.source.layout.roles[n]),"Invalid ordered file channel assignment");
+        }
         require(integer<int64_t>(get(p,"rangeBegin"))==0&&integer<int64_t>(get(p,"rangeEnd"))==d.source.media.frames,"Only whole-programme sessions are supported");
     }
-    else require(channels.isEmpty(),"Channels reference a missing file record");
+    else require(channels.isEmpty()&&mode=="interleaved","Channels reference a missing file record");
+    if(d.loadedSchema==1)d.notices.add("M8 session migrated in memory. Saving writes M9 format; use Save As to preserve the original M8-readable copy.");
     auto cur=get(v,"current");number(get(cur,"planSchema"),1,1);require(str(cur,"engine")=="static-gain-v1","Unsupported processing plan");d.current.isInitialized=boolean(get(cur,"initialized"));d.current.staticGainDb=real(get(cur,"gain"));d.current.needsRemeasurement=d.current.isInitialized;
     auto pr=get(v,"profile");d.profile={str(pr,"id",256),str(pr,"version",256),str(pr,"digest",64)};d.applicability=static_cast<proposal::Applicability>(number(get(pr,"applicability"),0,5));d.sections=sections(get(v,"sections"));d.audition=static_cast<MeasurementDomain>(number(get(v,"audition"),0,1));
     auto vid=get(v,"video");auto path=str(vid,"locator");require(path.isEmpty()||juce::File::isAbsolutePath(path),"Invalid video locator");d.reference.file=path.isEmpty()?juce::File():juce::File(path);d.reference.sha256=str(vid,"sha256",64);d.reference.streamId=number(get(vid,"stream"),0,INT32_MAX);d.reference.startOnAudio=video::Time::parse(str(vid,"offset",80).toStdString());validateCore(d);return d;
@@ -215,6 +262,12 @@ bool aliases (const juce::File& a,const juce::File& b)
 {
     if(b==juce::File())return false;if(a==b||a.getLinkedTarget()==b.getLinkedTarget())return true;
     struct stat x{},y{};return ::stat(a.getFullPathName().toRawUTF8(),&x)==0&&::stat(b.getFullPathName().toRawUTF8(),&y)==0&&x.st_dev==y.st_dev&&x.st_ino==y.st_ino;
+}
+bool aliasesMedia (const juce::File& file,const Document& d)
+{
+    if(aliases(file,d.source.file)||aliases(file,d.reference.file))return true;
+    if(d.source.assembly)for(const auto& m:d.source.assembly->members)if(aliases(file,m.file))return true;
+    return false;
 }
 void hook (const FileHooks& h,const char* stage){if(h.reached)h.reached(stage);if(h.fail&&h.fail(stage))throw Failure{juce::String(stage)=="space"?ErrorCode::insufficientDiskSpace:ErrorCode::writeFailed,"Injected session "+juce::String(stage)+" failure"};}
 template<class F> Outcome run (F f)
@@ -233,13 +286,14 @@ Document capture (StandaloneSessionModel& s)
            &&m.analysis->identity==OfflineAnalysisService::identityFor(s.measurementContext(domain),domain,s.sourceDocument.media.sha256))
             (domain==MeasurementDomain::source?d.sourceCache:d.currentCache)=m.analysis;
     }
+    if(s.sourceContentInvalid){d.sourceCache=s.unresolvedSourceCache;d.currentCache=s.unresolvedCurrentCache;}
     return d;
 }
 Outcome save (const Document& d,const juce::File& file,JobControl& c,const FileHooks& h)
 {
     return run([&]() -> Outcome
     {
-        check(c);validateCore(d);require(file.hasFileExtension("levelscope"),"Use a .levelscope session filename");require(!aliases(file,d.source.file)&&!aliases(file,d.reference.file),"A session cannot overwrite source audio or reference picture");
+        check(c);validateCore(d);require(file.hasFileExtension("levelscope"),"Use a .levelscope session filename");require(!aliasesMedia(file,d),"A session cannot overwrite source audio or reference picture");
         std::array<Bytes,2> caches;if(d.sourceCache)caches[0]=cacheBytes(*d.sourceCache,c);c.setProgress(.2f);if(d.currentCache)caches[1]=cacheBytes(*d.currentCache,c);
         auto json=juce::JSON::toString(coreValue(d,caches),true).toStdString();require(json.size()<=coreLimit,"Session core exceeds 4 MiB");
         uint64_t size=80+json.size()+caches[0].size()+caches[1].size();require(size<=maximumBytes,"Session exceeds 128 MiB");
@@ -252,7 +306,7 @@ Outcome save (const Document& d,const juce::File& file,JobControl& c,const FileH
         Bytes header{'L','S','S','E','S','S','0','1'};u64(header,json.size());auto hash=digest(json.data(),json.size()).toStdString();header.insert(header.end(),hash.begin(),hash.end());write(header.data(),header.size());write(json.data(),json.size());for(auto& b:caches)write(b.data(),b.size());
         check(c);hook(h,"flush");if(::fsync(owned.fd)!=0)throw Failure{ErrorCode::writeFailed,"Session flush failed; previous file retained"};
         if(::close(owned.fd)!=0){owned.fd=-1;throw Failure{ErrorCode::writeFailed,"Session close failed; previous file retained"};}owned.fd=-1;
-        check(c);hook(h,"replace");require(!aliases(file,d.source.file)&&!aliases(file,d.reference.file),"Destination now aliases source media");
+        check(c);hook(h,"replace");require(!aliasesMedia(file,d),"Destination now aliases source media");
         if(::rename(temp.getFullPathName().toRawUTF8(),file.getFullPathName().toRawUTF8())!=0)throw Failure{ErrorCode::writeFailed,"Atomic session replacement failed; previous file retained"};
         owned.created=false; // rename transferred ownership; never unlink a reused temporary path.
         c.setProgress(1);return{{},ErrorCode::none,"Session revision saved"};
@@ -288,14 +342,34 @@ Outcome verify (Document d,JobControl& c)
 {
     return run([&]() -> Outcome
     {
-        check(c);validateCore(d);c.setProgress(0);d.audioResolved=!d.source.hasSource;d.videoResolved=d.reference.file==juce::File();
+        check(c);validateCore(d);d.verifiedAudioMembers.clear();c.setProgress(0);d.audioResolved=!d.source.hasSource;d.videoResolved=d.reference.file==juce::File();
         if(d.source.hasSource)
         {
-            JobControl audioControl;audioControl.parent=&c;audioControl.parentProgress=&c.progress;audioControl.progressScale=.7f;
-            auto valid=validateMedia(d.source.file,audioControl);check(c);
-            if(valid.succeeded()&&valid.media.sha256==d.source.media.sha256&&valid.media.sampleRate==d.source.media.sampleRate&&valid.media.frames==d.source.media.frames&&valid.media.channels==d.source.media.channels&&valid.media.bitsPerSample==d.source.media.bitsPerSample&&valid.media.bytes==d.source.media.bytes&&valid.media.format==d.source.media.format)
-            {d.source.media=valid.media;d.audioResolved=true;}
-            else {d.sourceCache.reset();d.currentCache.reset();d.notices.add("Audio unresolved: missing, changed or unsupported source. Relink identical content; measurements unavailable.");}
+            const auto same=[](const MediaInfo& a,const MediaInfo& b){return a.sha256==b.sha256&&a.sampleRate==b.sampleRate&&a.frames==b.frames&&a.channels==b.channels&&a.bitsPerSample==b.bitsPerSample&&a.bytes==b.bytes&&a.format==b.format;};
+            if(d.source.assembly)
+            {
+                auto& group=*d.source.assembly;d.audioResolved=true;
+                for(size_t i=0;i<group.members.size();++i)
+                {
+                    auto& member=group.members[i];JobControl child;child.parent=&c;child.parentProgress=&c.progress;child.progressBase=.7f*static_cast<float>(i)/group.members.size();child.progressScale=.7f/group.members.size();
+                    const auto valid=validateMedia(member.file,child);check(c);
+                    bool ok=valid.succeeded()&&same(valid.media,member.media);
+                    for(size_t j=0;j<i;++j)if(samePhysicalFile(member.file,group.members[j].file))ok=false;
+                    if(ok){member.media=valid.media;d.verifiedAudioMembers.add(member.id);}
+                    else{d.audioResolved=false;d.notices.add("Unresolved "+member.id+" ("+member.file.getFileName()+"): missing, changed, unreadable or duplicate file. Relink identical verified content.");}
+                }
+                d.source.media=group.summary();
+                if(!d.audioResolved)d.notices.add("Whole programme incomplete: no partial audition, processing or measurement; settings retained.");
+            }
+            else
+            {
+                JobControl audioControl;audioControl.parent=&c;audioControl.parentProgress=&c.progress;audioControl.progressScale=.7f;
+                auto valid=validateMedia(d.source.file,audioControl);check(c);
+                if(valid.succeeded()&&same(valid.media,d.source.media)){d.source.media=valid.media;d.audioResolved=true;}
+                else d.notices.add("Audio unresolved: missing, changed or unsupported source. Relink identical content; measurements unavailable.");
+            }
+            // Group caches remain dormant until every member verifies; preserve the M8 single-file policy.
+            if(!d.audioResolved&&!d.source.assembly){d.sourceCache.reset();d.currentCache.reset();}
         }
         if(d.reference.file!=juce::File())
         {
@@ -318,9 +392,10 @@ bool install (const Document& d,StandaloneSessionModel& s,juce::String& error)
     try
     {
         validateCore(d);require(!s.audioEditsBlocked()&&!s.job.isActive(),"Stop audition and finish/cancel the current job before opening a session");
-        require(!d.source.hasSource || !d.audioResolved || d.source.media.matchesFileStamp(d.source.file),"Source changed after verification; previous session retained");
+        require(!d.source.hasSource || !d.audioResolved || d.source.matchesFileStamps(),"Source changed after verification; previous session retained");
         require(d.reference.file==juce::File() || !d.videoResolved || (d.reference.file.existsAsFile() && d.reference.file.getSize()==d.verifiedVideoBytes && d.reference.file.getLastModificationTime().toMilliseconds()==d.verifiedVideoModified),"Reference picture changed after verification; previous session retained");
-        StandaloneSessionModel next;next.documentId=d.id;next.programmeId=d.programmeId;next.documentRevision=next.savedDocumentRevision=d.revision;next.sourceDocument=d.source;next.sourceDocument.routing=OutputRouting();next.currentStateDocument=d.current;next.currentStateDocument.needsRemeasurement=d.current.isInitialized;next.programmeApplicability=d.applicability;next.auditionDomain=d.audition;next.referenceVideo=d.reference;next.videoUnresolved=!d.videoResolved;
+        StandaloneSessionModel next;next.openedSessionSchema=d.loadedSchema;next.documentId=d.id;next.programmeId=d.programmeId;next.documentRevision=next.savedDocumentRevision=d.revision;next.sourceDocument=d.source;next.sourceDocument.routing=OutputRouting();next.currentStateDocument=d.current;next.currentStateDocument.needsRemeasurement=d.current.isInitialized;next.programmeApplicability=d.applicability;next.auditionDomain=d.audition;next.referenceVideo=d.reference;next.videoUnresolved=!d.videoResolved;
+        if(!d.audioResolved){next.unresolvedSourceCache=d.sourceCache;next.unresolvedCurrentCache=d.currentCache;}
         next.sourceContentInvalid=d.source.hasSource&&!d.audioResolved;next.sourceDocument.importStatus=next.sourceContentInvalid?"Unresolved programme; relink identical audio":"Restored source; saved channel interpretation retained";
         next.currentStateDocument.sourcePathSnapshot=d.source.file.getFullPathName();next.currentStateDocument.basedOnSourceName=d.source.displayName;
         if(!d.sections.sections.empty())require(next.sectionDocument.restore(d.sections,sectionInputIdentity(next.measurementContext(MeasurementDomain::source))),"Invalid restored sections");
@@ -332,7 +407,7 @@ bool install (const Document& d,StandaloneSessionModel& s,juce::String& error)
             auto expected=next.measurementContext(domain);
             if(a->identity!=OfflineAnalysisService::identityFor(expected,domain,expected.media.sha256)||a->measurementVersion!=measurement::version||(domain==MeasurementDomain::currentState&&!d.current.isInitialized))
             {error+="\n"+juce::String(domain==MeasurementDomain::source?"Source":"Current State")+" cache incompatible with this build/platform/input. Remeasure.";continue;}
-            auto restored=*a;restored.context.sessionId=next.sessionId;restored.context.ticket={0,next.revision};restored.context.sourceFile=next.sourceDocument.file;restored.context.media.modified=next.sourceDocument.media.modified;restored.restoredFromSession=true;
+            auto restored=*a;restored.context.sessionId=next.sessionId;restored.context.ticket={0,next.revision};restored.context.sourceFile=next.sourceDocument.file;restored.context.media.modified=next.sourceDocument.media.modified;restored.context.assembly=next.sourceDocument.assembly;restored.restoredFromSession=true;
             require(measuredProgrammeForSnapshot(&restored,expected,domain,next.programmeApplicability).currentIdentityMatches,"Restored measurement failed identity validation");
             auto& m=domain==MeasurementDomain::source?next.source:next.currentState;m.hasMeasurement=true;m.analysis=std::make_shared<const AnalysisSnapshot>(std::move(restored));m.integratedLufs=a->measured.integratedLufs;m.loudnessRangeLu=a->measured.loudnessRangeLu;m.truePeakDbtp=a->measured.truePeakDbtp;m.statusText="Restored measurement; source and compatibility verified";
             if(domain==MeasurementDomain::currentState)next.currentStateDocument.needsRemeasurement=false;
@@ -347,7 +422,7 @@ bool adopt (const Document& d,Prepared& prepared,StandaloneSessionModel& s,juce:
     if(prepared.consumed||prepared.model.documentId!=d.id||prepared.model.documentRevision!=d.revision)
     {error="Prepared session is stale or belongs to a different document";return false;}
     if(s.audioEditsBlocked()||s.job.isActive()) {error="Stop and finish the current job before opening";return false;}
-    if((d.source.hasSource&&d.audioResolved&&!d.source.media.matchesFileStamp(d.source.file))
+    if((d.source.hasSource&&d.audioResolved&&!d.source.matchesFileStamps())
        ||(d.reference.file!=juce::File()&&d.videoResolved&&(!d.reference.file.existsAsFile()
           ||d.reference.file.getSize()!=d.verifiedVideoBytes||d.reference.file.getLastModificationTime().toMilliseconds()!=d.verifiedVideoModified)))
     {error="Media changed after verification; previous session retained";return false;}
@@ -356,10 +431,16 @@ bool adopt (const Document& d,Prepared& prepared,StandaloneSessionModel& s,juce:
 bool saved (StandaloneSessionModel& s,const Document& d,const juce::File& file)
 {
     if(s.sessionId!=d.runtimeId||s.documentId!=d.id||d.revision>s.documentRevision)return false;
-    s.documentFile=file;s.savedDocumentRevision=d.revision;return true;
+    s.documentFile=file;s.openedSessionSchema=schemaVersion;s.savedDocumentRevision=d.revision;return true;
 }
 bool relinkAudio (Document& d,const juce::File& f)
-{if(!d.source.hasSource)return false;d.source.file=f;d.source.fullPath=f.getFullPathName();d.source.displayName=f.getFileName();d.audioResolved=false;return true;}
+{if(!d.source.hasSource||d.source.assembly)return false;d.source.file=f;d.source.fullPath=f.getFullPathName();d.source.displayName=f.getFileName();d.audioResolved=false;return true;}
+bool relinkAudioMember (Document& d,const juce::String& id,const juce::File& file)
+{
+    if(!d.source.assembly)return false;
+    for(auto& member:d.source.assembly->members)if(member.id==id){member.file=file;d.audioResolved=false;return true;}
+    return false;
+}
 bool relinkVideo (Document& d,const juce::File& f)
 {if(d.reference.file==juce::File())return false;d.reference.file=f;d.videoResolved=false;return true;}
 }

@@ -203,6 +203,7 @@ endif()
 #==============================
 
 add_library(LevelScopeStandaloneSupport STATIC
+    Source/Standalone/ProgrammeSource.cpp
     Source/Standalone/SessionDocument.cpp
     Source/Standalone/VerifiedSource.cpp
     Source/Core/Proposal/SectionAnalysis.cpp
@@ -260,6 +261,7 @@ target_link_libraries(LevelScopeStandalone PRIVATE LevelScopeDiagnosticsUI)
 
 target_sources(LevelScopeStandalone
     PRIVATE
+        Source/Standalone/StandaloneProgrammeImport.cpp
         Source/Standalone/StandaloneSessionUI.cpp
         Source/Standalone/StandaloneApp.cpp
         Source/Standalone/StandaloneMainComponent.cpp
@@ -430,4 +432,18 @@ if (LEVELSCOPE_BUILD_SESSION_TESTS)
     target_link_libraries(LevelScopeSessionPlaybackTests PRIVATE LevelScopeStandaloneSupport juce::juce_gui_basics)
     add_test(NAME restored-session-audition COMMAND LevelScopeSessionPlaybackTests)
     set_tests_properties(restored-session-audition PROPERTIES TIMEOUT 300)
+endif()
+
+option(LEVELSCOPE_BUILD_PROGRAMME_TESTS "Build M9 separate-file programme checks" OFF)
+if (LEVELSCOPE_BUILD_PROGRAMME_TESTS)
+    enable_testing()
+    juce_add_console_app(LevelScopeProgrammeTests PRODUCT_NAME "LevelScope Programme Tests")
+    target_sources(LevelScopeProgrammeTests PRIVATE Tests/ProgrammeAssemblyTests.cpp Source/Standalone/StandaloneAudioPanel.cpp)
+    if(APPLE)
+        target_sources(LevelScopeProgrammeTests PRIVATE Tests/VideoReaderAudit_mac.mm)
+    endif()
+    target_compile_definitions(LevelScopeProgrammeTests PRIVATE JUCE_MODAL_LOOPS_PERMITTED=1)
+    target_link_libraries(LevelScopeProgrammeTests PRIVATE LevelScopeDiagnosticsUI)
+    add_test(NAME separate-file-programmes COMMAND LevelScopeProgrammeTests)
+    set_tests_properties(separate-file-programmes PROPERTIES TIMEOUT 600)
 endif()

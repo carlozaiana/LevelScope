@@ -1,0 +1,125 @@
+{
+  "candidate": "candidate-01",
+  "source_digest": "50335e571b597629c128df37c38d4a0bd78eb83da456c6a01d65230a6e0a0a00",
+  "measurement_build": "446678fa4f4fa470a25a84941d165bd37add721d336d4f148fd0f9bbebeeb090",
+  "binary_sha256": "07de2cd5af627231968a03ad615bc18430e684d583387f79491d646651a0b288",
+  "platform": "arm64 Sequoia 15.7.9",
+  "method": "Native computer-use observations in this chat; no physical device opened",
+  "checks": [
+    {
+      "name": "stereo_staging",
+      "observed": true,
+      "detail": "Two mixed-container mono files presented with rates/frame counts and initially unassigned roles; Import unavailable."
+    },
+    {
+      "name": "explicit_roles",
+      "observed": true,
+      "detail": "Selected files in reverse order; assigned Right to mono-1 and Left to mono-0. Active programme displayed canonical L/R order."
+    },
+    {
+      "name": "confirmation_binding",
+      "observed": true,
+      "detail": "Changing Left to duplicate Right cleared alignment confirmation. Even after checking confirmation, duplicate roles could not be imported; restoring Left required renewed confirmation."
+    },
+    {
+      "name": "applicability",
+      "observed": true,
+      "detail": "Measured Source before applicability confirmation: NOT EVALUATED. Confirming applicability reevaluated existing measurement to FAIL without another measurement."
+    },
+    {
+      "name": "stereo_zero_gain",
+      "observed": true,
+      "detail": "Source and zero-gain Current both displayed -34.146427 LUFS / -30.134363 dBTP."
+    },
+    {
+      "name": "m3_explicit_apply",
+      "observed": true,
+      "detail": "Draft at +11.146426694935 dB did not alter Current; explicit Apply changed gain and discarded the old Current result, showing UNVERIFIED."
+    },
+    {
+      "name": "m3_measured_verification",
+      "observed": true,
+      "detail": "Explicit remeasurement gave Current PASS (-23 LUFS / -18.987936 dBTP); Source remained unchanged."
+    },
+    {
+      "name": "device_closed_preparation",
+      "observed": true,
+      "detail": "Prepare audition verified the group with playback stopped and all routes Muted; no device was selected or opened."
+    },
+    {
+      "name": "save",
+      "observed": true,
+      "detail": "Saved stereo session to an owned UI work folder and observed saved/unchanged status."
+    },
+    {
+      "name": "missing_member",
+      "observed": true,
+      "detail": "Moved only the owned Left fixture. Both measurements/evaluations became unavailable, Current UNVERIFIED with gain retained, and measurement/preparation controls unavailable."
+    },
+    {
+      "name": "identical_relink",
+      "observed": true,
+      "detail": "Explicitly selected Left slot and moved identical file. Whole group verification restored eligible Source/Current measurements and Current PASS, without renewed alignment confirmation; opened stopped/device closed/routes muted."
+    },
+    {
+      "name": "changed_relink_rejected",
+      "observed": true,
+      "detail": "Selected one-frame-short replacement. Prior session, moved-left locator, gain and Current PASS remained unchanged. Notice wording ambiguity recorded separately for candidate-02 correction."
+    },
+    {
+      "name": "diagnostics",
+      "observed": true,
+      "detail": "Source and Current diagnostics displayed four-second source-time coordinates, unstable short-programme LRA warning, distinct LRA distribution, measured curves and per-channel filenames/roles/peak times. Current numerical inspection at 1.5 s highlighted [1.1,1.5] s; zoom/scroll worked without playback."
+    },
+    {
+      "name": "failed_group_import",
+      "observed": true,
+      "detail": "Staged two mono files differing by one frame. File-specific exact-frame-count mismatch rejected the group; Cancel preserved prior measured stereo session."
+    },
+    {
+      "name": "six_file_import",
+      "observed": true,
+      "detail": "Chose six files in reverse order; explicitly assigned Rs/Ls/LFE/C/R/L and confirmed. Active programme became canonical six-file 5.1, old results/Current cleared and applicability reset."
+    },
+    {
+      "name": "six_file_measurement",
+      "observed": true,
+      "detail": "Source -20.403533 LUFS / -20.764817 dBTP. Current at -3.305074118944 dB was remeasured and showed actual FAIL (-23.708608 LUFS / -24.069892 dBTP), gain retained."
+    },
+    {
+      "name": "six_file_audition",
+      "observed": true,
+      "detail": "Current selector showed full gain and Measurements current, with disclaimer that playback does not establish compliance. Verified-source preparation completed stopped with all routes muted."
+    },
+    {
+      "name": "six_file_save",
+      "observed": true,
+      "detail": "Saved separate 51-qualified-ui.levelscope with exact settings and both measured caches."
+    }
+  ],
+  "complete": false,
+  "remaining": [
+    "Candidate-02 rejected-relink message and identity/cache checks",
+    "Session reopen/migration UI",
+    "Six-channel peak-location UI",
+    "Active cancellation/close checks",
+    "Actual High Sierra UI"
+  ],
+  "issue": "Rejected-relink notice describes the rejected candidate as incomplete without clearly saying the previous session was retained. Fixed in source for candidate-02; candidate-01 preserved.",
+  "saved_sessions": [
+    {
+      "name": "stereo-qualified-ui.levelscope",
+      "sha256": "b1d2a146907163d5b3dd92781683bb288ee38c253588931252ac93f341eeac24",
+      "assembly_identity": "66fb61ed042fa91fd7481f1d65f889be094698b776adce5e4ddd69689aa9d688",
+      "gain": "40264af870940330",
+      "channels": 2
+    },
+    {
+      "name": "51-qualified-ui.levelscope",
+      "sha256": "491d675ca971432bc2b6a875545f365248d8333b08dbe720281d312d38efc3dd",
+      "assembly_identity": "bcd2cbb8f5b86619465fd6db30cf5e9ff68448ff74834f1885b01e5088a6effd",
+      "gain": "c00a70cab31dc392",
+      "channels": 6
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "qualified": true,
+  "candidate": "candidate-04",
+  "source_digest": "ecf819093af35debedfed260a28a972183cf8484af677f6fbca749f4dbea0d34",
+  "identity_sha256": "374bfa3b5003d7a67651ccfea71b2a3ceceaf8edc17398573a4862ac82b27898",
+  "application_sha256": "dd15614194cb4bb40b86415ff6a93e0ddc0dd35455e5ae03adff4f4748bc6938",
+  "reason": "All required M9 gates complete on actual arm64 Sequoia and Intel High Sierra; aggregate acceptance records original evidence and equivalence.",
+  "passed": [
+    "M1\u2013M8 regressions and official references on both actual platforms (candidate-02)",
+    "M9 5261 assertions, 56 captures, 10 native video and 3 M8 migrations on both platforms (candidate-02)",
+    "Cross-platform M9 captures bit-identical; bidirectional grouped exchange and preserved M8 reader rejection",
+    "Actual three-hour group/resource budgets on both platforms (candidate-02)",
+    "Sequoia silent UI (candidate-02 with explicit candidate-01 equivalence)",
+    "Sequoia ten muted short cases and 30-minute endurance (candidate-03, accepted picture-skip policy)",
+    "Candidate-04 Sequoia: 32 extended oracles/370 assertions, repeated baseline 5261 assertions/56 captures/10 native video/3 migrations and 9 runner guards",
+    "All 22 approved muted physical cases accepted across both Macs; zero audio underruns and zero selected-frame PTS skew; recorded picture skips retained separately.",
+    "Candidate-04 High Sierra supplemental gate and repeated M9 baseline pass; 32-case extended cross-platform comparison passes.",
+    "High Sierra 21 silent interactive UI observations: stereo/six-file workflows, recovery/relink, M8 Save As, cancellation/close and final clear; candidate-02 app byte-identical to candidate-04."
+  ],
+  "pending": [],
+  "publication_authorized": false,
+  "ready_for_checkpoint_publication": true,
+  "updated_utc": "2026-10-25T17:30:19.293961+00:00",
+  "published": false,
+  "merged": false,
+  "acceptance_record": "acceptance-candidate-04.json"
+}

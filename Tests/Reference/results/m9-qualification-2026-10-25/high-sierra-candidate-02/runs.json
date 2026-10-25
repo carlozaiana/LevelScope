@@ -1,0 +1,67 @@
+[
+  {
+    "name": "regressions",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "Tests/run_m8_qualification.py",
+      "--platform",
+      "high-sierra",
+      "--output",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/high-sierra-candidate-02/regressions"
+    ],
+    "exit_code": 0,
+    "seconds": 843.3488051559999,
+    "log_sha256": "156f6ea7c6db76b38fce8bd84b29aff29e65bfbb2c003659a6b1cbcfd75882de"
+  },
+  {
+    "name": "programmes",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/candidate-02/bin/LevelScopeProgrammeTests",
+      "--output",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/high-sierra-candidate-02/programmes.json",
+      "--samples",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/high-sierra-candidate-02/samples",
+      "--video",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/candidate-02/video-fixtures",
+      "--prores",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/candidate-02/m7-video-fixtures",
+      "--exchange-out",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/high-sierra-candidate-02/exchange-out",
+      "--m8-session",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/candidate-02/m9-fixtures/m8-sessions"
+    ],
+    "exit_code": 0,
+    "seconds": 71.49562791200003,
+    "log_sha256": "c4eac4331e7c7db68b0b50127fa65fe971d4e360bbab1f6130bde7ee847eef02"
+  },
+  {
+    "name": "long-programme",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/candidate-02/bin/LevelScopeProgrammeTests",
+      "--only",
+      "--long-programme",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/candidate-02/m9-fixtures/long-48000/programme.levelscope",
+      "--output",
+      "/Users/fuzz/LevelScope-M9-qualification-2026-10-25/high-sierra-candidate-02/long-programme.json"
+    ],
+    "exit_code": 0,
+    "seconds": 2935.816611806,
+    "log_sha256": "a87c7b1cb968d14b3c12590bf49c66d1e54360b5007f77d491b77dd3a61290fd"
+  },
+  {
+    "name": "m9-runner",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "Tests/M9QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "seconds": 0.18843478000007963,
+    "log_sha256": "1e43b905e11ca028139fe5078016515111aaf7cebf8d6a3e224b7d03b9cb6ac9"
+  }
+]

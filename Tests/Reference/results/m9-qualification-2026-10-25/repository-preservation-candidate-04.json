@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "head": "8e984889c5e73670f370c6c568c8ea1d7902a35c",
+  "branch": "codex/logic-module",
+  "tags_unchanged": true,
+  "tag_objects_and_targets": [
+    "refs/tags/high-sierra-pre-scaffold-2026-10-15 b3c6e845482dbe8a0ec9778d5a9ad7953e614609 556d387ad772dc5e604ead95f1525f60e66fd5f9",
+    "refs/tags/m2-measured-compliance-2026-10-18 673e382feeaa7e29e6e6abedbd56677aa2163ef3 01a34833ec06a0d237e098faadb23b398581e8f9",
+    "refs/tags/m3-global-trim-2026-10-18 4063ca0e73c5b24dfa079eb894f85e398e9fee50 62ab420cb15b3ce5e1c821c963a749a9a56ae4a7",
+    "refs/tags/m4-measured-diagnostics-2026-10-18 cc64c771a70ccf95e779a7fe7260749a4530c285 9a22749901d9f6d4b9c194c9c22c0a231f2494f6",
+    "refs/tags/m5-programme-sections-2026-10-20 e36b4308374256ad36eff6c01d4d92325a06d3b0 ae88e187d288c53dbca1287e8341b74b9b5b2619",
+    "refs/tags/m6-verified-current-state-audition-2026-10-24 7f54eb1098471dc55bd75484f873a9f90e68ac05 b57a1ed23cbe7d74afe98ed16ec8fd615db9d171",
+    "refs/tags/m7-pcm-7.1-2026-10-25 04d0c836fcbc3a7af72638a7514faacd32ae48a9 cfbf3f981dece326d2363b911e5914ea61f1796c",
+    "refs/tags/m8-reproducible-sessions-2026-10-25 93908205c41de16c10b187bc00fcc1621e328c66 8e984889c5e73670f370c6c568c8ea1d7902a35c",
+    "refs/tags/measurement-milestone-2026-10-17 76affb667b6dab066cb36b2a2c741525b9b6eeac b29bc7c183743f35c6271d2d7ec8fb5ba1464591",
+    "refs/tags/standalone-scaffold-2026-10-15 4c8bc35b788969e1f6e97dcdc57a601b01fff7cd f192a8553e139d390056c9755f25eeb123bbc5e6",
+    "refs/tags/video-checkpoint-2026-10-17 06f57524bedca1912c0d5c454f13561cec9ce5b4 700b9e77e439a8ca9bb7583adf826fac01dbe924",
+    "refs/tags/video-prores-checkpoint-2026-10-21 d62c1159eeb2ffbb8b7ffc7c31014b842642d195 dcc34aabba6b5b3ca4805e2965d21ffebf2e4d0a"
+  ],
+  "registered_worktrees_unchanged": true,
+  "staged_changes": false,
+  "published": false,
+  "merged": false,
+  "local_package_audit": "local-package-preservation-candidate-04.json",
+  "note": "Unrelated Finder metadata is excluded and not restored. Earlier packages, installations and video worktree remain unchanged."
+}

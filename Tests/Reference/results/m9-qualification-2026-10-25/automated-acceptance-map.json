@@ -1,0 +1,141 @@
+{
+  "passed": true,
+  "scope": "Traceability of selected approved M9 acceptance requirements to completed candidate-02 automated assertions; UI, physical and long-resource gates remain separate",
+  "reused_by": "candidate-03: identical compiled inputs and executables; see equivalence record",
+  "areas": [
+    {
+      "acceptance_area": "Explicit roles and alignment identity",
+      "passing_assertion_counts": {
+        "sequoia": {
+          "all picker permutations covered": 2,
+          "distinct files with equal hashes remain legitimate channels": 2,
+          "member content mapping alignment or format change invalidates confirmation": 10,
+          "equal-length different signal accepted only as unconfirmed candidate; no automatic alignment claim": 1
+        },
+        "high-sierra": {
+          "all picker permutations covered": 2,
+          "distinct files with equal hashes remain legitimate channels": 2,
+          "member content mapping alignment or format change invalidates confirmation": 10,
+          "equal-length different signal accepted only as unconfirmed candidate; no automatic alignment claim": 1
+        }
+      }
+    },
+    {
+      "acceptance_area": "Independent numerical and all-channel oracle",
+      "passing_assertion_counts": {
+        "sequoia": {
+          "all-channel samples and complete metrics exactly equal independent interleaved oracle": 48,
+          "all-channel pre-monitor capture bit-exact; gain changes reuse group": 48,
+          "Source zero processing capture exact": 8
+        },
+        "high-sierra": {
+          "all-channel samples and complete metrics exactly equal independent interleaved oracle": 48,
+          "all-channel pre-monitor capture bit-exact; gain changes reuse group": 48,
+          "Source zero processing capture exact": 8
+        }
+      }
+    },
+    {
+      "acceptance_area": "All-or-nothing I/O and cleanup",
+      "passing_assertion_counts": {
+        "sequoia": {
+          "aggregate free-space preflight": 1,
+          "first middle last snapshot failure refuses entire group": 12,
+          "first middle last short input read rejects entire group": 3,
+          "failed group cleans every owned partial copy": 12,
+          "failed preparation preserves previous live session": 12
+        },
+        "high-sierra": {
+          "aggregate free-space preflight": 1,
+          "first middle last snapshot failure refuses entire group": 12,
+          "first middle last short input read rejects entire group": 3,
+          "failed group cleans every owned partial copy": 12,
+          "failed preparation preserves previous live session": 12
+        }
+      }
+    },
+    {
+      "acceptance_area": "Freshness and no silent replacement",
+      "passing_assertion_counts": {
+        "sequoia": {
+          "member changed during measurement rejects obsolete result": 1,
+          "idle missing member immediately clears visible measured authority without opening a device": 1,
+          "incomplete group cannot audition substitute channels": 2,
+          "missing member cannot become silence": 3
+        },
+        "high-sierra": {
+          "member changed during measurement rejects obsolete result": 1,
+          "idle missing member immediately clears visible measured authority without opening a device": 1,
+          "incomplete group cannot audition substitute channels": 2,
+          "missing member cannot become silence": 3
+        }
+      }
+    },
+    {
+      "acceptance_area": "Measured proposal/application semantics",
+      "passing_assertion_counts": {
+        "sequoia": {
+          "explicit Apply alone changes group Current and clears old result": 1,
+          "group applied trim passes only after actual measured verification": 1,
+          "already-passing group retains gain revision and measurement": 1,
+          "individually valid mismatched groups cannot form matching proposal inputs": 1,
+          "cancelled group verification retains gain unverified": 2
+        },
+        "high-sierra": {
+          "explicit Apply alone changes group Current and clears old result": 1,
+          "group applied trim passes only after actual measured verification": 1,
+          "already-passing group retains gain revision and measurement": 1,
+          "individually valid mismatched groups cannot form matching proposal inputs": 1,
+          "cancelled group verification retains gain unverified": 2
+        }
+      }
+    },
+    {
+      "acceptance_area": "Muting is monitoring only",
+      "passing_assertion_counts": {
+        "sequoia": {
+          "muted LFE/surround remain present pre-monitor": 2,
+          "muted highest peak still constrains M3 proposal": 2
+        },
+        "high-sierra": {
+          "muted LFE/surround remain present pre-monitor": 2,
+          "muted highest peak still constrains M3 proposal": 2
+        }
+      }
+    },
+    {
+      "acceptance_area": "Session recovery",
+      "passing_assertion_counts": {
+        "sequoia": {
+          "complete identical-content relink retains original confirmation and compatible caches": 2,
+          "independently damaged cache preserves assembly and settings": 2,
+          "edits during group save remain unsaved": 2,
+          "gain bits sections rational video alignment preserved": 2
+        },
+        "high-sierra": {
+          "complete identical-content relink retains original confirmation and compatible caches": 2,
+          "independently damaged cache preserves assembly and settings": 2,
+          "edits during group save remain unsaved": 2,
+          "gain bits sections rational video alignment preserved": 2
+        }
+      }
+    },
+    {
+      "acceptance_area": "Preserved M8 migration",
+      "passing_assertion_counts": {
+        "sequoia": {
+          "M8 migration exact profile definition and applicability": 3,
+          "M8 migration exact settings sections rational alignment": 3,
+          "M8 migration preserves ordered channel interpretation and original content identity": 3,
+          "M8 caches not reused across changed build; upgrade remains explicit": 3
+        },
+        "high-sierra": {
+          "M8 migration exact profile definition and applicability": 3,
+          "M8 migration exact settings sections rational alignment": 3,
+          "M8 migration preserves ordered channel interpretation and original content identity": 3,
+          "M8 caches not reused across changed build; upgrade remains explicit": 3
+        }
+      }
+    }
+  ]
+}

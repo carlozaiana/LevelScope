@@ -1,0 +1,23 @@
+{
+  "suite": "M8 sessions",
+  "passed": false,
+  "checks": 2036,
+  "failure": "foreign-platform cache record remains readable",
+  "performance": {
+    "fixture": "Synthetic three-hour full-resolution Source/Current caches and 1000 sections; media hashing separately qualified",
+    "capture_ms": 0.1097916662693024,
+    "worker_preparation_ms": 369.5159583315253,
+    "ui_adoption_ms": 0.157166663557291,
+    "save_ms": 67.87845833227038,
+    "parse_ms": 322.1807916685939,
+    "active_cancel_ms": 0.6290833353996277,
+    "rss_growth_bytes": 61161472,
+    "session_bytes": 7310519,
+    "ui_callback_p95_ms": 6.316749997437,
+    "ui_callback_count": 126
+  },
+  "long_media": null,
+  "build": "77cf1c7a5052442d4c938ed82ff1158b2bf6557d28bf99880666ec417f4c7c05",
+  "os": "Mac OSX 15.7.9",
+  "architecture": "arm64"
+}

@@ -157,9 +157,14 @@ void StandaloneAudioPanel::sourceChanged()
 
 void StandaloneAudioPanel::synchronize()
 {
+    const bool previouslyInvalid = session.sourceContentInvalid;
+    if (session.sourceDocument.assembly && !session.sourceContentInvalid && !session.persistenceLoading
+        && !session.sourceDocument.matchesFileStamps())
+        session.measurementUnsuccessful(session.auditionDomain, ErrorCode::sourceChanged);
     if (audio.failureCode() == ErrorCode::sourceChanged && ! session.sourceContentInvalid)
         session.measurementUnsuccessful (session.auditionDomain, ErrorCode::sourceChanged);
     audio.synchronize (session.auditionRequest(), session.sourceDocument.routing);
+    if (!previouslyInvalid && session.sourceContentInvalid) onChanged();
 }
 
 void StandaloneAudioPanel::refresh()
@@ -206,7 +211,9 @@ void StandaloneAudioPanel::refresh()
         channelLabels[channel].setVisible (visible);
         roleBoxes[channel].setVisible (visible);
         outputBoxes[channel].setVisible (visible);
-        roleBoxes[channel].setEnabled (editable);
+        roleBoxes[channel].setEnabled (editable && !source.assembly);
+        channelLabels[channel].setText(source.channelName(channel),juce::dontSendNotification);
+        channelLabels[channel].setTooltip(source.channelName(channel));
         roleBoxes[channel].setEditableText (source.layout.count == 8);
         roleBoxes[channel].setTooltip (source.layout.count == 8
             ? "Select a role or enter a documented System I alias (L/R/C/LFE/Lss/Rss/Lrs/Rrs). Confirm roles afterwards."
@@ -261,7 +268,7 @@ void StandaloneAudioPanel::resized()
     for (int channel = 0; channel < maxChannels; ++channel)
     {
         auto bounds = juce::Rectangle<int> (0, channel * 28, rows.getWidth(), 28).reduced (2);
-        channelLabels[channel].setBounds (bounds.removeFromLeft (80));
+        channelLabels[channel].setBounds (bounds.removeFromLeft (session.sourceDocument.assembly ? 240 : 80));
         roleBoxes[channel].setBounds (bounds.removeFromLeft (210).reduced (2, 0));
         outputBoxes[channel].setBounds (bounds.reduced (2, 0));
     }

@@ -1,0 +1,249 @@
+{
+  "accepted": true,
+  "case_count": 22,
+  "cases": [
+    {
+      "platform": "sequoia",
+      "case": "h264-cfr-source",
+      "accepted": true,
+      "skips": 1,
+      "maximum_paint_interval_ms": 50.304,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "underrun_blocks": 0,
+      "memory_passed": true,
+      "raw_harness_passed": false
+    },
+    {
+      "platform": "sequoia",
+      "case": "h264-vfr-source",
+      "accepted": true,
+      "skips": 1,
+      "maximum_paint_interval_ms": 50.061084,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "underrun_blocks": 0,
+      "memory_passed": true,
+      "raw_harness_passed": false
+    },
+    {
+      "platform": "sequoia",
+      "case": "prores-proxy-source",
+      "accepted": true,
+      "skips": 0,
+      "maximum_paint_interval_ms": 34.277333,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "underrun_blocks": 0,
+      "memory_passed": true,
+      "raw_harness_passed": true
+    },
+    {
+      "platform": "sequoia",
+      "case": "prores-lt-source",
+      "accepted": true,
+      "skips": 0,
+      "maximum_paint_interval_ms": 25.111333,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "underrun_blocks": 0,
+      "memory_passed": true,
+      "raw_harness_passed": true
+    },
+    {
+      "platform": "sequoia",
+      "case": "prores-422-source",
+      "accepted": true,
+      "skips": 1,
+      "maximum_paint_interval_ms": 48.222458,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "underrun_blocks": 0,
+      "memory_passed": true,
+      "raw_harness_passed": false
+    },
+    {
+      "platform": "sequoia",
+      "case": "h264-cfr-current",
+      "accepted": true,
+      "skips": 0,
+      "maximum_paint_interval_ms": 44.049583,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "underrun_blocks": 0,
+      "memory_passed": true,
+      "raw_harness_passed": true
+    },
+    {
+      "platform": "sequoia",
+      "case": "h264-vfr-current",
+      "accepted": true,
+      "skips": 0,
+      "maximum_paint_interval_ms": 25.140167,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "underrun_blocks": 0,
+      "memory_passed": true,
+      "raw_harness_passed": true
+    },
+    {
+      "platform": "sequoia",
+      "case": "prores-proxy-current",
+      "accepted": true,
+      "skips": 0,
+      "maximum_paint_interval_ms": 49.447458,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "underrun_blocks": 0,
+      "memory_passed": true,
+      "raw_harness_passed": true
+    },
+    {
+      "platform": "sequoia",
+      "case": "prores-lt-current",
+      "accepted": true,
+      "skips": 0,
+      "maximum_paint_interval_ms": 50.327458,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "underrun_blocks": 0,
+      "memory_passed": true,
+      "raw_harness_passed": true
+    },
+    {
+      "platform": "sequoia",
+      "case": "prores-422-current",
+      "accepted": true,
+      "skips": 0,
+      "maximum_paint_interval_ms": 22.54,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "underrun_blocks": 0,
+      "memory_passed": true,
+      "raw_harness_passed": true
+    },
+    {
+      "platform": "sequoia",
+      "case": "prores-current-30min",
+      "accepted": true,
+      "skips": 2,
+      "maximum_paint_interval_ms": 50.377584,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "underrun_blocks": 0,
+      "memory_passed": true,
+      "raw_harness_passed": false
+    },
+    {
+      "platform": "high-sierra",
+      "case": "h264-cfr-source",
+      "accepted": true,
+      "skips": 0,
+      "maximum_paint_interval_ms": 18.769628,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "underrun_blocks": 0,
+      "memory_passed": true,
+      "raw_harness_passed": true
+    },
+    {
+      "platform": "high-sierra",
+      "case": "h264-vfr-source",
+      "accepted": true,
+      "skips": 0,
+      "maximum_paint_interval_ms": 25.613881,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "underrun_blocks": 0,
+      "memory_passed": true,
+      "raw_harness_passed": true
+    },
+    {
+      "platform": "high-sierra",
+      "case": "prores-proxy-source",
+      "accepted": true,
+      "skips": 0,
+      "maximum_paint_interval_ms": 19.120986,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "underrun_blocks": 0,
+      "memory_passed": true,
+      "raw_harness_passed": true
+    },
+    {
+      "platform": "high-sierra",
+      "case": "prores-lt-source",
+      "accepted": true,
+      "skips": 0,
+      "maximum_paint_interval_ms": 26.445626,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "underrun_blocks": 0,
+      "memory_passed": true,
+      "raw_harness_passed": true
+    },
+    {
+      "platform": "high-sierra",
+      "case": "prores-422-source",
+      "accepted": true,
+      "skips": 0,
+      "maximum_paint_interval_ms": 19.627755,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "underrun_blocks": 0,
+      "memory_passed": true,
+      "raw_harness_passed": true
+    },
+    {
+      "platform": "high-sierra",
+      "case": "h264-cfr-current",
+      "accepted": true,
+      "skips": 0,
+      "maximum_paint_interval_ms": 25.865071,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "underrun_blocks": 0,
+      "memory_passed": true,
+      "raw_harness_passed": true
+    },
+    {
+      "platform": "high-sierra",
+      "case": "h264-vfr-current",
+      "accepted": true,
+      "skips": 0,
+      "maximum_paint_interval_ms": 25.353259,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "underrun_blocks": 0,
+      "memory_passed": true,
+      "raw_harness_passed": true
+    },
+    {
+      "platform": "high-sierra",
+      "case": "prores-proxy-current",
+      "accepted": true,
+      "skips": 0,
+      "maximum_paint_interval_ms": 19.758722,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "underrun_blocks": 0,
+      "memory_passed": true,
+      "raw_harness_passed": true
+    },
+    {
+      "platform": "high-sierra",
+      "case": "prores-lt-current",
+      "accepted": true,
+      "skips": 0,
+      "maximum_paint_interval_ms": 25.94886,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "underrun_blocks": 0,
+      "memory_passed": true,
+      "raw_harness_passed": true
+    },
+    {
+      "platform": "high-sierra",
+      "case": "prores-422-current",
+      "accepted": true,
+      "skips": 0,
+      "maximum_paint_interval_ms": 19.58545,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "underrun_blocks": 0,
+      "memory_passed": true,
+      "raw_harness_passed": true
+    },
+    {
+      "platform": "high-sierra",
+      "case": "prores-current-30min",
+      "accepted": true,
+      "skips": 0,
+      "maximum_paint_interval_ms": 34.684562,
+      "maximum_frame_pts_skew_seconds": 0.0,
+      "underrun_blocks": 0,
+      "memory_passed": true,
+      "raw_harness_passed": true
+    }
+  ],
+  "scope": "Approved six-channel programme Source/Current, muted built-in two-output devices. No optical-sync or physical multichannel-listening claim. No run repeated to seek zero skips."
+}

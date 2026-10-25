@@ -1,0 +1,31 @@
+{
+  "checked_utc": "2026-10-25T17:25:39.749212+00:00",
+  "platform": "ProductName:\tMac OS X\nProductVersion:\t10.13.6\nBuildVersion:\t17G66",
+  "executed_package": "candidate-02",
+  "production_equivalent_to": "candidate-04",
+  "artifacts_sha256": {
+    "candidate-02/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone": "dd15614194cb4bb40b86415ff6a93e0ddc0dd35455e5ae03adff4f4748bc6938",
+    "candidate-04/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone": "dd15614194cb4bb40b86415ff6a93e0ddc0dd35455e5ae03adff4f4748bc6938",
+    "candidate-04/bin/LevelScopeProgrammeTests": "2df730e816029b3a91c9fa539de31baa431db2c7a4d53a8ef14ec57718bc9d99",
+    "candidate-04/identity.json": "374bfa3b5003d7a67651ccfea71b2a3ceceaf8edc17398573a4862ac82b27898",
+    "ui-work/stereo-ui.levelscope.levelscope": "cdfe7ce763fbd929c89d1c149407e68df3fb5289ef553d2bbd7d715a26cc0e6b",
+    "ui-work/six-ui.levelscope": "838e35a5d6d659e85f6de3eba8414e7d3779725091fa2bf70a9319e4a6a2f34a",
+    "ui-work/m8-original-ui.levelscope": "ee850fb68353a9c07c8f86301500984753f23b96d8f0aeb935c2392eecaef0fc",
+    "ui-work/m8-original-ui-M9.levelscope": "c7cc21fdd7a045df1729b84ed4f086cf1b82caa4910a002d0275aa47f7ee123a"
+  },
+  "m8_original_preserved_sha256": "ee850fb68353a9c07c8f86301500984753f23b96d8f0aeb935c2392eecaef0fc",
+  "m8_ui_copy_unchanged": true,
+  "schema_before_after": [
+    1,
+    2
+  ],
+  "migration_field_comparisons": {
+    "documentId": true,
+    "current": true,
+    "profile": true,
+    "sections": true,
+    "audition": true,
+    "video": true
+  },
+  "executable_architectures": "x86_64 arm64"
+}

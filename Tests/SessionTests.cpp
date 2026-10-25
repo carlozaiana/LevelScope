@@ -88,7 +88,7 @@ void roundtrip(const juce::File& root,int channels,int rate)
     d.source.file.setLastModificationTime(originalTime);
     auto bad=root.getChildFile("invalid-core.levelscope");
     std::vector<std::function<void(juce::var&)>> invalid {
-        [](auto& v){v.getDynamicObject()->setProperty("schema",2);},
+        [](auto& v){v.getDynamicObject()->setProperty("schema",3);},
         [](auto& v){v.getDynamicObject()->setProperty("documentId",juce::String::repeatedString("z",32));},
         [](auto& v){v["programme"]["channels"][1].getDynamicObject()->setProperty("fileChannel",0);},
         [](auto& v){v["programme"]["layout"]["roles"].getArray()->set(1,1);},

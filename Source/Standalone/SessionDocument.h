@@ -4,13 +4,14 @@
 namespace levelscope::standalone::sessionfile
 {
 inline constexpr uint64_t maximumBytes = 128 * 1024 * 1024;
-inline constexpr int schemaVersion = 1, programmeAssemblyVersion = 1;
+inline constexpr int schemaVersion = 2, programmeAssemblyVersion = 2;
 struct ProfileReference { juce::String id, version, digest; };
 // Value snapshot: each save owns one coherent revision; shared analyses are immutable.
 struct Document
 {
     juce::String id, programmeId, runtimeId;
     uint64_t revision = 0;
+    int loadedSchema = schemaVersion;
     SourceDocument source;
     CurrentStateDocument current;
     ProfileReference profile;
@@ -21,7 +22,7 @@ struct Document
     std::shared_ptr<const AnalysisSnapshot> sourceCache, currentCache;
     bool audioResolved = false, videoResolved = false;
     int64_t verifiedVideoBytes = 0, verifiedVideoModified = 0;
-    juce::StringArray notices;
+    juce::StringArray notices, verifiedAudioMembers;
 };
 struct Prepared
 {
@@ -53,5 +54,6 @@ bool adopt (const Document&, Prepared&, StandaloneSessionModel&, juce::String&);
 bool saved (StandaloneSessionModel&, const Document&, const juce::File&);
 // Relink changes only a locator; verification must still match saved bytes/format.
 bool relinkAudio (Document&, const juce::File&);
+bool relinkAudioMember (Document&, const juce::String& slotId, const juce::File&);
 bool relinkVideo (Document&, const juce::File&);
 }

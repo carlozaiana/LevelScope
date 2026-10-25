@@ -1,6 +1,7 @@
 #pragma once
 
 #include "StandaloneMedia.h"
+#include "ProgrammeSource.h"
 #include "StandaloneTargetProfiles.h"
 #include "Core/Measurement/OfflineMeasurement.h"
 #include <optional>
@@ -27,6 +28,7 @@ struct ServiceContext
     juce::String sessionId;
     juce::File sourceFile;
     MediaInfo media;
+    std::optional<ProgrammeAssembly> assembly;
     ChannelLayout fileLayout;
     FrameRange range;
     ProcessingPlan processing;
@@ -34,8 +36,17 @@ struct ServiceContext
     juce::String profileVersion, buildVersion, platformAndFloatingPointMode;
 
     bool isFullProgram() const { return range.begin == 0 && range.end == media.frames; }
+    bool sourceFilesMatch() const { return assembly ? assembly->matchesFileStamps() : media.matchesFileStamp(sourceFile); }
     bool isValid() const
     {
+        if (assembly)
+        {
+            if (assembly->validate().isNotEmpty()) return false;
+            const auto summary = assembly->summary();
+            if (media.sha256 != summary.sha256 || media.channels != summary.channels || media.bytes != summary.bytes
+                || media.frames != summary.frames || media.sampleRate != summary.sampleRate || fileLayout.count != summary.channels) return false;
+            for (int i=0; i<fileLayout.count; ++i) if (fileLayout.roles[i] != assembly->members[static_cast<size_t>(i)].role) return false;
+        }
         return ! media.sha256.isEmpty() && media.channels == fileLayout.count
             && fileLayout.confirmed && fileLayout.isValid()
             && range.begin >= 0 && range.end > range.begin && range.end <= media.frames;

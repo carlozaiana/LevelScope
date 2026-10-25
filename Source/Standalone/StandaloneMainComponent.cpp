@@ -4,6 +4,14 @@ namespace levelscope::standalone
 {
 namespace
 {
+class ProgrammeWindow final : public juce::DocumentWindow
+{
+public:
+    explicit ProgrammeWindow(ProgrammeImportPanel& p):DocumentWindow("Import channel files",juce::Colour(0xff181b20),DocumentWindow::closeButton),panel(p)
+    {setUsingNativeTitleBar(true);setContentNonOwned(&p,true);centreWithSize(820,520);setVisible(true);}
+    void closeButtonPressed() override {panel.cancel();}
+private:ProgrammeImportPanel& panel;
+};
 class DiagnosticsWindow final : public juce::DocumentWindow
 {
 public:
@@ -130,6 +138,7 @@ StandaloneMainComponent::~StandaloneMainComponent()
     stopTimer();
     if (documentControl) documentControl->cancel.store(true);
     if (documentResult.valid()) documentResult.wait();
+    programmeWindow.reset(); programmePanel.reset();
     videoWindow.reset();
     diagnosticsWindow.reset(); diagnosticsPanel.reset();
     sectionsWindow.reset(); sectionsPanel.reset();
@@ -334,6 +343,8 @@ void StandaloneMainComponent::configureNavigationButtons()
 
 void StandaloneMainComponent::configureSourceControls()
 {
+    chooseProgrammeButton.onClick = [this] { chooseProgramme(); };
+    addAndMakeVisible(chooseProgrammeButton);
     chooseSourceButton.onClick = [this] { chooseSourceFile(); };
     clearSourceButton.onClick = [this] { clearSourceFile(); };
 
@@ -449,6 +460,7 @@ void StandaloneMainComponent::refreshFromSession()
     applicabilityConfirmation.setEnabled (session.sourceDocument.hasSource && ! session.job.isActive() && !session.persistenceLoading);
 
     clearSourceButton.setEnabled (!session.persistenceLoading && (session.sourceDocument.hasSource || session.job.isActive()));
+    chooseProgrammeButton.setEnabled(canReplaceSession());
     chooseSourceButton.setEnabled (! session.job.isActive() && !session.persistenceLoading);
     targetProfileBox.setEnabled (! session.job.isActive() && !session.persistenceLoading);
     cancelJobButton.setEnabled (session.job.state == JobState::running);
@@ -472,6 +484,33 @@ void StandaloneMainComponent::refreshFromSession()
     if (diagnosticsPanel) diagnosticsPanel->synchronize();
     if (sectionsPanel) sectionsPanel->synchronize();
     audioPanel.refresh();
+}
+
+void StandaloneMainComponent::chooseProgramme()
+{
+    if(!canReplaceSession())return;
+    confirmDiscard([this]
+    {
+        if(!canReplaceSession())return;
+        audition.stop();session.persistenceLoading=true;
+        juce::Component::SafePointer<StandaloneMainComponent> safe(this);
+        programmePanel=std::make_unique<ProgrammeImportPanel>([safe](std::optional<ProgrammeAssembly> group)
+        {
+            juce::MessageManager::callAsync([safe,group=std::move(group)]
+            {
+                if(!safe)return;
+                safe->programmeWindow.reset();safe->programmePanel.reset();safe->session.persistenceLoading=false;
+                if(group)
+                {
+                    if(safe->session.setValidatedProgramme(*group)) {safe->audioPanel.sourceChanged();safe->documentNotice="Aligned programme imported; all routes muted";}
+                    else safe->documentNotice="Programme changed before adoption; previous session retained";
+                }
+                else safe->documentNotice="Programme import cancelled; previous session retained";
+                safe->refreshFromSession();
+            });
+        });
+        programmeWindow=std::make_unique<ProgrammeWindow>(*programmePanel);refreshFromSession();
+    });
 }
 
 juce::String StandaloneMainComponent::getSourceFileWildcard()
@@ -509,6 +548,9 @@ juce::String StandaloneMainComponent::buildSourceStateText() const
         const auto& media = session.sourceDocument.media;
         text << media.format << " | " << media.sampleRate << " Hz | " << media.channels << " ch | " << media.bitsPerSample << " bit\n";
         text << media.frames << " frames | " << juce::String (media.durationSeconds(), 3) << " seconds\n";
+        if(session.sourceDocument.assembly)
+            for(const auto& member:session.sourceDocument.assembly->members)
+                text << juce::AudioChannelSet::getAbbreviatedChannelTypeName(member.role) << ": " << member.file.getFileName() << "\n";
         text << "SHA-256: " << media.sha256 << "\n";
         text << "Channel roles: " << (session.sourceDocument.layout.confirmed ? "confirmed" : "confirmation required") << "\n\n";
     }
@@ -709,6 +751,8 @@ void StandaloneMainComponent::resized()
     auto sourceActionRow = bounds.removeFromTop (34);
     chooseSourceButton.setBounds (sourceActionRow.removeFromLeft (190));
     sourceActionRow.removeFromLeft (8);
+    chooseProgrammeButton.setBounds(sourceActionRow.removeFromLeft(190));
+    sourceActionRow.removeFromLeft(8);
     clearSourceButton.setBounds (sourceActionRow.removeFromLeft (120));
     sourceActionRow.removeFromLeft (8);
     measureSourceButton.setBounds (sourceActionRow.removeFromLeft (240));

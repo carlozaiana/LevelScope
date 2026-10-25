@@ -1,0 +1,10 @@
+{
+  "previous_source_digest": "50335e571b597629c128df37c38d4a0bd78eb83da456c6a01d65230a6e0a0a00",
+  "changed_files": [
+    "Source/Standalone/StandaloneSessionUI.cpp"
+  ],
+  "change": "Rejected-relink notice now states previous session retained and omits replacement-only incomplete-programme summary. No audio reader, measurement, processing, identity algorithm, session schema, video or diagnostics change. Build identity changes conservatively invalidate old caches.",
+  "policy": "Candidate-01 evidence retained as preliminary. Final automated suites rerun on candidate-02 on both platforms; unchanged UI interactions may be cited with this exact source comparison. Corrected notice and reopening are rechecked on candidate-02.",
+  "replacement_candidate_source_digest": "367f667b23e193ff4b233ca9c5a3db966304511f03bdb5caa584e5b4a17ffbf3",
+  "qualification_status": "In progress; this equivalence record is not final acceptance"
+}

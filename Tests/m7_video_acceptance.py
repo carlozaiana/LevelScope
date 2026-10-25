@@ -21,12 +21,12 @@ def memory_verifier():
     return namespace['verify_memory']
 
 
-def evaluate(report, expected, exit_code, fps=None):
+def evaluate(report, expected, exit_code, fps=None, *, channels=8, layout="pcm-7.1-bs2051-system-i-v1"):
     """Fail closed on missing/invalid evidence; preserve original strict verdict."""
     failures = [key for key, value in expected.items() if report.get(key) != value]
-    required = dict(error='', all_routes_muted=True, selected_audio_channels=8,
-        layout_capability='pcm-7.1-bs2051-system-i-v1',
-        pre_monitor_nonzero_channel_mask=255, pre_monitor_channel_count_valid=True,
+    required = dict(error='', all_routes_muted=True, selected_audio_channels=channels,
+        layout_capability=layout,
+        pre_monitor_nonzero_channel_mask=(1 << channels) - 1, pre_monitor_channel_count_valid=True,
         blank_paints=0, bound_failures=0, paint_deadline_failures=0, underrun_blocks=0,
         attachment_within_budget=True, memory_passed=True, hal_output_timestamp=True,
         skipped_frame_limit=0)

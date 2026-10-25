@@ -1,0 +1,23 @@
+{
+  "platform": "actual Intel High Sierra 10.13.6",
+  "candidate_application": "candidate-02; identical candidate-03/04 app binary",
+  "binary_sha256": "dd15614194cb4bb40b86415ff6a93e0ddc0dd35455e5ae03adff4f4748bc6938",
+  "local_ui_passed": false,
+  "qualification_complete": false,
+  "status": "Awaiting coordinated manual multi-file selection before remaining interactive workflow checks",
+  "observations": [
+    "App opened from separate M9 qualification folder, no source, stopped, device closed",
+    "Import channel files staging opened in Stereo mode; import disabled until files/roles/alignment complete",
+    "Native file picker navigated by mouse to owned ui-work/groups/2",
+    "Remote single clicks work; Shift-click and drag selection do not reach Golem, so no multi-file import completed"
+  ],
+  "required_remaining": [
+    "Stereo and six-file explicit assignment/alignment validation and import",
+    "Measured Source/Current and M3 explicit application/remeasurement workflow",
+    "Filename/role diagnostics and silent audition preparation",
+    "Save/reopen, missing-member identical relink and rejected changed replacement",
+    "M8 migration/Save As warning and active-operation cancellation/close"
+  ],
+  "user_action_requested": "Select mono-0.wav and mono-1.aiff together in the open picker, click Open, then leave roles unchanged and report ready.",
+  "physical_state": "The separate approved video processes finished; UI test app remains stopped/device-closed. No audible check requested."
+}

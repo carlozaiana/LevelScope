@@ -1,0 +1,68 @@
+{
+  "candidate": "candidate-02",
+  "source_digest": "367f667b23e193ff4b233ca9c5a3db966304511f03bdb5caa584e5b4a17ffbf3",
+  "measurement_build": "6cdc517ca6618832430a7dbe678c37d3c459888674a112aa2643c2a25186f329",
+  "binary_sha256": "dd15614194cb4bb40b86415ff6a93e0ddc0dd35455e5ae03adff4f4748bc6938",
+  "platform": "arm64 Sequoia 15.7.9",
+  "method": "Native computer-use observations in this chat; no physical device opened",
+  "checks": [
+    {
+      "name": "m8_migration",
+      "observed": true,
+      "detail": "Opened preserved M8 stereo session; roles, exact gain, profile and rational video restored; incompatible caches discarded. Save offered format warning and Save As. Wrote schema 2 outside package; original unchanged."
+    },
+    {
+      "name": "candidate_change_cache",
+      "observed": true,
+      "detail": "Opening candidate-01 group retained assembly confirmation, ordered roles and exact gain; incompatible caches discarded and Current UNVERIFIED."
+    },
+    {
+      "name": "remeasured_group",
+      "observed": true,
+      "detail": "Remeasured six-file Source -20.403533 LUFS/-20.764817 dBTP; Current at -3.305074118944 dB -23.708608 LUFS/-24.069892 dBTP. Actual measured FAIL retained, no correction or rollback."
+    },
+    {
+      "name": "rejected_relink_message",
+      "observed": true,
+      "detail": "One-frame-short replacement rejected. Notice explicitly says Relink rejected; previous session retained. Original valid measurements, gain and locators remained current."
+    },
+    {
+      "name": "unchanged_reopen",
+      "observed": true,
+      "detail": "Saved candidate-02 session reopened stopped, device closed and all routes muted. Eligible Source/Current caches and exact confirmation restored without remeasurement."
+    },
+    {
+      "name": "six_peak_locations",
+      "observed": true,
+      "detail": "Diagnostics showed all six filename/role maximum peak locations including LFE/Ls/Rs; 4.000021-second source axis, distinct distribution, short-programme LRA warning."
+    },
+    {
+      "name": "open_cancel_close",
+      "observed": true,
+      "detail": "During three-hour grouped opening, progress increased; Close refused while operation active with explicit cancel/finish instruction. Cancel restored the prior measured six-file session."
+    },
+    {
+      "name": "import_cancel_close",
+      "observed": true,
+      "detail": "Closed import window during three-hour six-file inspection; cancellation retained the previous valid measured session and gain."
+    },
+    {
+      "name": "missing_reopen",
+      "observed": true,
+      "detail": "Moved owned Rs fixture, then reopened saved session. Explicit unresolved audio member and whole-programme-incomplete warning; opening unresolved retained settings/gain but no measured pass, preparation or partial measurement."
+    },
+    {
+      "name": "identical_relink",
+      "observed": true,
+      "detail": "Selected Rs slot and identical moved-surround.flac. Whole-group verification restored Source/Current eligible caches with original measured FAIL values and alignment confirmation, without remeasurement. Device remained closed, routes muted."
+    },
+    {
+      "name": "clear_close",
+      "observed": true,
+      "detail": "Clear Source removed whole programme and Current measurements; Current UNVERIFIED at reset gain, no source, device closed. Closed app through explicit discard of test-only unsaved changes."
+    }
+  ],
+  "local_ui_passed": true,
+  "reused_evidence": "sequoia-ui-candidate-01-observations.json; unchanged paths established in candidate-02-equivalence.json; replaced rejected-relink wording explicitly retested",
+  "qualification_complete": false
+}
