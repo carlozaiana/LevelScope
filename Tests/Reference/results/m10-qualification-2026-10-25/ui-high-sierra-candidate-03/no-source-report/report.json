@@ -1,0 +1,70 @@
+{
+  "schema": "levelscope-measurement-report-v1",
+  "kind": "measurement-only-no-exported-audio",
+  "publication": "NO EXPORTED AUDIO",
+  "scope": "Selected whole-programme loudness and true-peak rules only. No complete broadcaster delivery, BWF/BW64, metadata, synchronization or future encoded-media certification.",
+  "document_id": "99ad1f32f74c495f9fc8406738ba14e7",
+  "programme_id": "dcdc5b99d3c8492f8ad922a0ac0eb2a7",
+  "document_revision": "0",
+  "session_unsaved": false,
+  "session_basename": "",
+  "runtime_id": "b049472526a84dce967cf4cef61d34be",
+  "app": "LevelScope Standalone M10",
+  "build": "f36567f5f38a47daef49bc9543252b42b3403e3bdcc2fe986b755bee1576cce9",
+  "platform": "Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off",
+  "cpu": "Intel(R) Core(TM) i7-3770K CPU @ 3.50GHz",
+  "processing_version": "static-gain-v1",
+  "processing_gain_db": 0,
+  "processing_gain_hex": "0x0p+0",
+  "programme_frames": "0",
+  "sample_rate": 0,
+  "duration_rational_seconds": "0/0",
+  "positions": "Audio-source frames; true-peak positions in eighth-frames. Video offsets and measurement EOF drain do not extend programme duration.",
+  "profile": {
+    "id": "none",
+    "definition_version": "",
+    "digest": "fa433257875da1510c2b47c5813a5bc85fe188f88500329bed3a9a751ed55ed9",
+    "edition": "",
+    "reference": "",
+    "applicability": 0,
+    "applicability_scope": "Pre-produced whole-programme linear-audio QC only; excludes live, deliberate lower targets, short-form and distribution-specific requirements.",
+    "meter_tolerance_documentary_only": ""
+  },
+  "source_members": [],
+  "ordered_input_roles": [],
+  "source": {
+    "domain": "Source",
+    "measurement_available": false,
+    "status": "unavailable",
+    "evaluation": {
+      "verdict": "NOT EVALUATED",
+      "message": "No authoritative profile selected.",
+      "identity": "761b6af36a8cfd26ec3d2920193519e6ebed740b09a893d9777ce0dd562a91c2",
+      "profile_digest": "fa433257875da1510c2b47c5813a5bc85fe188f88500329bed3a9a751ed55ed9",
+      "snapshot_identity": "",
+      "rules": []
+    },
+    "reason": "No valid measurement for this state"
+  },
+  "current": {
+    "domain": "Current State",
+    "measurement_available": false,
+    "status": "unavailable",
+    "evaluation": {
+      "verdict": "NOT EVALUATED",
+      "message": "No authoritative profile selected.",
+      "identity": "be20259d78a3871a717d9e8747c142a6334ccfb16e1651cf434d6cad63ceb142",
+      "profile_digest": "fa433257875da1510c2b47c5813a5bc85fe188f88500329bed3a9a751ed55ed9",
+      "snapshot_identity": "",
+      "rules": []
+    },
+    "reason": "No valid measurement for this state"
+  },
+  "sections_annotations_only": [],
+  "reference_picture_context": {
+    "basename": "",
+    "sha256": "",
+    "offset_rational": "0/1",
+    "is_sync_evidence": false
+  }
+}

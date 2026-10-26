@@ -8,8 +8,12 @@ Decision date: 15 October 2026. Development: `codex/logic-module`, from
 M1 adds a worker-only, reusable measurement kernel and source/current-state analysis.
 Current State supports identity and explicit static gain, applied to all file channels
 including LFE. This trim is distinct from dynamics detector/apply masks and monitor gain.
-An internal render/verification harness exercises encoded output; public delivery export,
-proposals, dialogue detection and full dynamics integration remain subsequent work.
+The original M1 internal render/verification harness remains a regression boundary.
+Subsequent M2-M9 milestones add measured rules, explicit global trim, diagnostics,
+audition, sessions and grouped import. M10 public PCM export/reporting candidate-03
+is qualified on both actual platforms, published and integrated into main; see
+[40](40_M10QualificationAndHandover.md) for its exact tested identity and scope.
+Dialogue detection and full dynamics integration remain deferred.
 
 Pinned measurement references: ITU-R BS.1770-5 (November 2023), EBU Tech 3341 v4
 (November 2023), EBU Tech 3342 v4 (November 2023). Delivery profiles are a separate
@@ -25,7 +29,7 @@ order is retained. L/R/C energy weights are 1; Ls/Rs are 1.41; LFE is 0 for loud
 All channels enter sample/true peak. Rates: 44100, 48000, 96000, 192000 Hz; reject
 other rates rather than substitute a fallback. Import support remains broader.
 
-M7 implementation under qualification adds only explicitly identified BS.2051
+Qualified M7 adds only explicitly identified BS.2051
 System I 7.1, capability `pcm-7.1-bs2051-system-i-v1`, role mapping
 `ordered-pcm-roles-m7.1` and measurement method `bs1770-5-ebu2023-m7.1`.
 L/R/C and the distinct M±135 rear pair use 1.00, M±090 sides use 1.41, LFE uses
@@ -33,9 +37,13 @@ L/R/C and the distinct M±135 rear pair use 1.00, M±090 sides use 1.41, LFE use
 static-gain operation, regardless of monitor routes. The original file order is
 retained; channel count alone never establishes System I. See the exact metadata,
 alias and confirmation rules in [31](31_M7ChannelBasedPcm71Proposal.md).
-Height layouts and RF64/BW64 capability extensions remain outside this scope.
+Height layouts and BW64 remain outside this scope. M10 adds a separately bounded
+PCM24 stereo/5.1 RF64 encoder and reimport validator; this does not expand 7.1 RF64
+or claim BWF/BW64 delivery capability. Qualification remains explicitly recorded
+in [40](40_M10QualificationAndHandover.md).
 The EBU profile's definition and digest are unchanged; evaluation requires the
-compatible versioned measurement. Qualification status belongs in the M7 report,
+compatible versioned measurement. M7 qualification status belongs in [32](32_M7QualificationAndHandover.md) and
+[34](34_M7CompletionAcceptance.md),
 separately for offline processing, injected routing and physical 7.1 listening.
 
 ## Numerical and boundary contract

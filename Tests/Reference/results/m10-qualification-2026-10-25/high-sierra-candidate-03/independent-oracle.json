@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "cases": 48,
+  "exact_codes": 196800,
+  "zero_gain_is_not_bit_identical": true,
+  "oracle": "independent Python integer container parser; binary64 TPDF and ties-even round"
+}

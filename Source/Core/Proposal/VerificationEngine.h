@@ -5,7 +5,7 @@
 
 namespace levelscope::proposal
 {
-inline constexpr const char* evaluationVersion = "measured-programme-rules-m2.1";
+inline constexpr const char* evaluationVersion = "measured-programme-rules-m10.1";
 enum class Verdict { notEvaluated, pass, fail, indeterminate };
 enum class SnapshotDomain { source, currentState, predicted, renderedOutput };
 struct MeasuredProgramme

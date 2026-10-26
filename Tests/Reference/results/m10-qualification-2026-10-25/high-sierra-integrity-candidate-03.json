@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "checked_utc": "2026-10-26T10:02:03.591066+00:00",
+  "records": [
+    {
+      "candidate": "candidate-01",
+      "source_digest": "37d67470921412a0318e76fa38e12be9e5b941cf9791d8931a8247be01302718",
+      "identity_sha256": "a6b587f7fe6b94508cc315675da4cc81ef153cbbeec8be2d486edb6cfebd3821",
+      "scope": "source, scripts, executables and app bundles; historical media not rehashed here",
+      "files_checked": 281,
+      "errors": [],
+      "passed": true
+    },
+    {
+      "candidate": "candidate-02",
+      "source_digest": "e0eb0497e2c5c8b1e629dc5747e260cf21c8ef77ef2b0e39094294820fc6f996",
+      "identity_sha256": "225fa11cd0274d1114c9f66dcc62e8bb8e189db77639f931f8b7559722b3d038",
+      "scope": "source, scripts, executables and app bundles; historical media not rehashed here",
+      "files_checked": 281,
+      "errors": [],
+      "passed": true
+    },
+    {
+      "candidate": "candidate-03",
+      "source_digest": "4ff89967e4927600d0b6defafabb28c372f4068870a0f1a9adb1ee84fe1781d8",
+      "identity_sha256": "0b0cd42a9f4ee917d6d62f25a903edd7ea354a7d1313d6dfa64341396453cbdd",
+      "scope": "entire recorded package",
+      "files_checked": 470,
+      "errors": [],
+      "passed": true
+    }
+  ]
+}

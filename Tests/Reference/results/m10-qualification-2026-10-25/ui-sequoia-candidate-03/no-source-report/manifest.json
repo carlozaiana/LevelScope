@@ -1,0 +1,8 @@
+{
+  "schema": "levelscope-export-manifest-v1",
+  "kind": "measurement-only-no-exported-audio",
+  "files_sha256": {
+    "report.json": "f3b1ac74724b9b85c5b7a4e218e57fc976e468f41359ce4b8f3d0cc695fe5424",
+    "report.html": "9ee518b27e479777438234a570262bba672aa9a781e4556aac2b4d50066c8e42"
+  }
+}

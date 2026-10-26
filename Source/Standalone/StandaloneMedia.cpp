@@ -1,5 +1,6 @@
 #include "StandaloneMedia.h"
 #include "StandaloneMeasurementLayout.h"
+#include "Pcm24Wave.h"
 #include <juce_cryptography/juce_cryptography.h>
 #include <cmath>
 
@@ -263,6 +264,25 @@ MediaValidationResult validateMedia (const juce::File& file, JobControl& control
         return fail (ErrorCode::unsupportedChannels, "Source must contain 1 to 12 non-ambisonic channels");
     if (media.bitsPerSample < 1 || media.bitsPerSample > 32)
         return fail (ErrorCode::unsupportedMedia, "Unsupported source bit depth");
+
+    // M10 qualifies a deliberately narrow RF64 PCM24 stereo/conventional-5.1
+    // subset. Independently check 64-bit bounds before trusting decoder length.
+    {
+        juce::FileInputStream header (file); char magic[4] {};
+        header.read (magic, 4);
+        if (std::memcmp (magic, "RF64", 4) == 0)
+        {
+            if ((media.channels == 2 || media.channels == 6) && media.bitsPerSample == 24)
+            {
+                pcm24::Format format; juce::String error;
+                if (!pcm24::inspect (file, format, error, control))
+                    return fail (control.isCancelled() ? ErrorCode::cancelled : ErrorCode::invalidMetadata, "RF64: " + error);
+                if (format.frames != media.frames || format.rate != media.sampleRate || format.channels != media.channels)
+                    return fail (ErrorCode::invalidMetadata, "RF64 decoder/header disagreement");
+            }
+            else media.measurementRestriction = "RF64 qualification is limited to PCM24 stereo/conventional 5.1 at the existing rates, up to three hours.";
+        }
+    }
 
     juce::String flacChecksum;
     if (media.format.containsIgnoreCase ("flac"))

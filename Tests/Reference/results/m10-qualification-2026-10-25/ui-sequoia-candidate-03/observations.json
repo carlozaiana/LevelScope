@@ -1,0 +1,63 @@
+{
+  "status": "passed",
+  "tested_app_path": "/Users/fuzz/Developer/LevelScope/build/logic-m10/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone",
+  "app_sha256": "92c013999bdecaf904af0888ce68dd59bcd1b3004934b9ddb36ce1a1bf511e15",
+  "build": "f36567f5f38a47daef49bc9543252b42b3403e3bdcc2fe986b755bee1576cce9",
+  "device_opened": false,
+  "observations": [
+    {
+      "check": "older build cache rejection",
+      "passed": true,
+      "observed": "Settings and roles restored; old Source/Current caches explicitly rejected. Both were remeasured on current build."
+    },
+    {
+      "check": "profile applicability live evaluation regression",
+      "passed": true,
+      "observed": "After render: PASS. Uncheck: NOT EVALUATED and Publish unavailable. Recheck: PASS and Publish available, without render/measurement. Same staged audio hash."
+    },
+    {
+      "check": "monitor separation",
+      "passed": true,
+      "observed": "Monitor -30 to -15 dB retained current measurements, staging and publish eligibility; device remained closed/routes-muted."
+    },
+    {
+      "check": "explicit publication",
+      "passed": true,
+      "observed": "Destination absent until explicit Publish. Published artifact SHA f53368854f7a4042a41a670962c1846d5e0badc55c3cec4e6788633d6d95a307; independent decoder/report hashes match."
+    },
+    {
+      "check": "progress cancellation and active-close guard",
+      "passed": true,
+      "observed": "30m10s reimported PCM source/current measured at 0 dB. Render showed progress; close request kept app open and required cancel/finish. Cancel completed visibly in the next UI observation; no destination or staging remained. Source/Current measurements, gain 0, stopped position 0, muted routes and closed device retained. Automated long test records precise cancellation latency."
+    },
+    {
+      "check": "no-source measurement-only report",
+      "passed": true,
+      "observed": "Empty session explicitly unavailable, render disabled; measurement-only report succeeded with no artifact/hash/verdict."
+    },
+    {
+      "check": "stale and failing Current measurement-only report",
+      "passed": true,
+      "observed": "Same-build session reopened with valid caches, stopped/closed/muted. -10 dB processing invalidated Current and disabled render. Remeasure showed actual FAIL at -33 LUFS; measurement-only report retained actual failure, no artifact. Gain retained."
+    },
+    {
+      "check": "existing destination rejection",
+      "passed": true,
+      "observed": "Application refused selected existing sentinel with new-folder warning; exact sentinel bytes preserved."
+    },
+    {
+      "check": "safe saved close",
+      "passed": true,
+      "observed": "Saved ui-failing.levelscope under new filename; closed while device remained closed and routes muted."
+    }
+  ],
+  "source_digest": "4ff89967e4927600d0b6defafabb28c372f4068870a0f1a9adb1ee84fe1781d8",
+  "identity_sha256": "0b0cd42a9f4ee917d6d62f25a903edd7ea354a7d1313d6dfa64341396453cbdd",
+  "tested_binary_matches_frozen_candidate": true,
+  "tested_additional_app_path": "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/LevelScope Standalone.app",
+  "physical_audio_used": false,
+  "report_visual_review": {
+    "evidence": "User confirmed readable verified-export and no-source HTML in candidate-02; Source/Standalone/StandaloneReport.cpp is byte-identical in candidate-03. Candidate-03 JSON/HTML/manifest independently validated on both Macs.",
+    "scope": "Static HTML readability, not a browser execution/decoder qualification claim"
+  }
+}

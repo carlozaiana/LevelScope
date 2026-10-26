@@ -21,6 +21,8 @@ This folder is the persistent orientation layer for future development chats. Re
 - **M6 candidate identity, completed qualification and publication handover:** [30_M6QualificationAndHandover.md](30_M6QualificationAndHandover.md)
 - **M8 sessions / qualified, published and integrated into main:** [checkpoint](https://github.com/carlozaiana/LevelScope/tree/m8-reproducible-sessions-2026-10-25); [36_M8SessionsQualificationAndHandover.md](36_M8SessionsQualificationAndHandover.md)
 - **M9 separate-file stereo/5.1 import — candidate-04 qualified, published and integrated into main:** [checkpoint](https://github.com/carlozaiana/LevelScope/tree/m9-separate-file-stereo-5.1-2026-10-25); [37_M9SeparateFileStereo51Import.md](37_M9SeparateFileStereo51Import.md); [38_M9QualificationAndHandover.md](38_M9QualificationAndHandover.md)
+- **M10 verified PCM export and reporting — candidate-03 qualified and published:** [39_M10VerifiedPcmExportAndReporting.md](39_M10VerifiedPcmExportAndReporting.md)
+- [40 - M10 qualification and handover](40_M10QualificationAndHandover.md) - actual Sequoia/High Sierra evidence, tested identities, published checkpoint/main mapping and limitations.
 - **Approved M8 contract and following stereo/5.1 roadmap:** [35_PostM7BroadcastWorkflowProposal.md](35_PostM7BroadcastWorkflowProposal.md)
 - **Future channel-based multichannel support / deferred:** [29_MultichannelPcmMilestone.md](29_MultichannelPcmMilestone.md)
 - **Bounded SDR ProRes / qualified and integrated into main:** [27_ProResMainIntegration.md](27_ProResMainIntegration.md) and [26_ProResQualification.md](26_ProResQualification.md), with [frozen acceptance criteria](25_ProResAcceptance.md)

@@ -1,0 +1,242 @@
+{
+  "milestone": "M10 verified PCM export and reporting",
+  "qualified": true,
+  "candidate": "candidate-03",
+  "source_digest": "4ff89967e4927600d0b6defafabb28c372f4068870a0f1a9adb1ee84fe1781d8",
+  "base_commit": "75843dcd017ec7990be2200454a10fc38beb44c4",
+  "measurement_build": "f36567f5f38a47daef49bc9543252b42b3403e3bdcc2fe986b755bee1576cce9",
+  "identity_sha256": "0b0cd42a9f4ee917d6d62f25a903edd7ea354a7d1313d6dfa64341396453cbdd",
+  "app_sha256": "92c013999bdecaf904af0888ce68dd59bcd1b3004934b9ddb36ce1a1bf511e15",
+  "gates": [
+    {
+      "name": "Both actual-platform core and regressions",
+      "passed": true,
+      "errors": [],
+      "evidence": [
+        {
+          "path": "sequoia-candidate-03/summary.json",
+          "sha256": "7ea53465c90d39bf06918d1c4cd10aaa0974079b2b310bbe5642d0fac95dabbb",
+          "required_field": "automated_passed",
+          "required_value": true
+        },
+        {
+          "path": "high-sierra-candidate-03/summary.json",
+          "sha256": "7ea53465c90d39bf06918d1c4cd10aaa0974079b2b310bbe5642d0fac95dabbb",
+          "required_field": "automated_passed",
+          "required_value": true
+        }
+      ]
+    },
+    {
+      "name": "Both real three-hour RF64 and independent decoder",
+      "passed": true,
+      "errors": [],
+      "evidence": [
+        {
+          "path": "sequoia-candidate-03-long/summary.json",
+          "sha256": "8c4f3a115f25e48ea1db5afca2edf41ae1ae454afa6d6e3d350f202a485a4fc0",
+          "required_field": "automated_passed",
+          "required_value": true
+        },
+        {
+          "path": "high-sierra-candidate-03-long/summary.json",
+          "sha256": "8c4f3a115f25e48ea1db5afca2edf41ae1ae454afa6d6e3d350f202a485a4fc0",
+          "required_field": "automated_passed",
+          "required_value": true
+        }
+      ]
+    },
+    {
+      "name": "Cross-platform measurements and captured samples",
+      "passed": true,
+      "errors": [],
+      "evidence": [
+        {
+          "path": "m10-cross-platform-candidate-03.json",
+          "sha256": "d9f3f53b4c5fe4ed8f7cded8b726d02f32f419650f3aa1b6278e893e332ef6bb",
+          "required_field": "passed",
+          "required_value": true
+        },
+        {
+          "path": "m10-long-cross-platform-candidate-03.json",
+          "sha256": "c2afbfa292869777a6fe64981def288adf88cedc40ab8fc5d88cb6495c85bac6",
+          "required_field": "passed",
+          "required_value": true
+        },
+        {
+          "path": "m1-m5-cross-platform-candidate-03.json",
+          "sha256": "9edd5953b8161dc4f00d755429059c379571540b747ebbd02d140d2e65a57af5",
+          "required_field": "passed",
+          "required_value": true
+        },
+        {
+          "path": "m6-cross-platform-candidate-03.json",
+          "sha256": "a8f3e647564452db5f616608963dc775ce7fcc6e105574c573d17059f19ccc65",
+          "required_field": "passed",
+          "required_value": true
+        },
+        {
+          "path": "m7-m9-core-captures-candidate-03.json",
+          "sha256": "ac45bdf0162d91b8029a3ffbfeda2c90a0cf8f1cddd1a4e669d7f358e510f4b6",
+          "required_field": "passed",
+          "required_value": true
+        },
+        {
+          "path": "m8-cross-platform-candidate-03.json",
+          "sha256": "893dc7b45e9e1a2966f80911b35bddfea48e05c8573a3d67b590bb44ab7d8917",
+          "required_field": "passed",
+          "required_value": true
+        },
+        {
+          "path": "m9-extended-cross-platform-candidate-03.json",
+          "sha256": "56ab8d34d709b332296e19bd0b8abdeca553b56dd3c5c6461da49edfdcfb5ed4",
+          "required_field": "passed",
+          "required_value": true
+        }
+      ]
+    },
+    {
+      "name": "Fresh bidirectional export exchange and independent recipient decoders",
+      "passed": true,
+      "errors": [],
+      "evidence": [
+        {
+          "path": "exchange-high-sierra-to-sequoia-candidate-03-acceptance.json",
+          "sha256": "527f8e0be27a49e203edbcaff4284f35a9e3aee15246222d256f27edfe0b0d7a",
+          "required_field": "passed",
+          "required_value": true
+        },
+        {
+          "path": "exchange-sequoia-to-high-sierra-candidate-03-acceptance.json",
+          "sha256": "ee2af18347bd3b64f29717162f625fc2acec7d3764a53e256d363182717cb7fa",
+          "required_field": "passed",
+          "required_value": true
+        }
+      ]
+    },
+    {
+      "name": "Silent actual-platform UI",
+      "passed": true,
+      "errors": [],
+      "evidence": [
+        {
+          "path": "ui-sequoia-candidate-03/observations.json",
+          "sha256": "19cad4493c2fb7e73b8aa36fbaf6442fe0b46d915a536b39c6187e18fa3384fa",
+          "required_field": "status",
+          "required_value": "passed"
+        },
+        {
+          "path": "ui-high-sierra-candidate-03/observations.json",
+          "sha256": "04bd388a92205cc913fa544710f3628edc08719cf0e48cd57d82389ff9a677e8",
+          "required_field": "status",
+          "required_value": "passed"
+        }
+      ]
+    },
+    {
+      "name": "Coordinated physical video under accepted skip policy",
+      "passed": true,
+      "errors": [],
+      "evidence": [
+        {
+          "path": "sequoia-physical-short-candidate-03/summary.json",
+          "sha256": "4b14b49fc62e56e7b34bbbe0b8cf7b264bc185159000915ca7ec3f9ee077e1b2",
+          "required_field": "accepted",
+          "required_value": true
+        },
+        {
+          "path": "sequoia-physical-endurance-candidate-03/summary.json",
+          "sha256": "eeabd5e5b26e8b1f9d0bf3710752ae01abc55377556b0311bafa13e97a70ec7d",
+          "required_field": "accepted",
+          "required_value": true
+        },
+        {
+          "path": "high-sierra-physical-short-candidate-03/summary.json",
+          "sha256": "4b14b49fc62e56e7b34bbbe0b8cf7b264bc185159000915ca7ec3f9ee077e1b2",
+          "required_field": "accepted",
+          "required_value": true
+        },
+        {
+          "path": "high-sierra-physical-endurance-candidate-03/summary.json",
+          "sha256": "eeabd5e5b26e8b1f9d0bf3710752ae01abc55377556b0311bafa13e97a70ec7d",
+          "required_field": "accepted",
+          "required_value": true
+        }
+      ]
+    },
+    {
+      "name": "Independent aggregate of original physical case receipts",
+      "passed": true,
+      "errors": [],
+      "evidence": [
+        {
+          "path": "physical-video-summary-candidate-03.json",
+          "sha256": "b1308bb8b47b350beabb8e945bb1312fc32461122c1053a1ec05ff8624481e22",
+          "required_field": "passed",
+          "required_value": true
+        }
+      ]
+    },
+    {
+      "name": "Long-file per-channel values and exact locations",
+      "passed": true,
+      "errors": [],
+      "evidence": [
+        {
+          "path": "m10-long-detail-comparison-candidate-03.json",
+          "sha256": "a88b74f85eb3ddc522695300cc6107fe282a6c3bcc543543f5ea16b33390ad63",
+          "required_field": "passed",
+          "required_value": true
+        }
+      ]
+    },
+    {
+      "name": "Frozen packages and current source integrity",
+      "passed": true,
+      "errors": [],
+      "evidence": [
+        {
+          "path": "local-integrity-candidate-03.json",
+          "sha256": "19a94822b9d0e395d82151b63dd253b13e0d8f59623369cf3c8b2415d2ddd82f",
+          "required_field": "passed",
+          "required_value": true
+        },
+        {
+          "path": "high-sierra-integrity-candidate-03.json",
+          "sha256": "ffdab423472ffbb48b3302459807404355a9b1da7664794605949e24342ba6b5",
+          "required_field": "passed",
+          "required_value": true
+        },
+        {
+          "path": "m9-package-preservation-candidate-03.json",
+          "sha256": "27bbc9341f37bcdc5f9049005b91ab558dcd606968807daa1e3660da5586ad24",
+          "required_field": "passed",
+          "required_value": true
+        }
+      ]
+    },
+    {
+      "name": "Existing tags, branches, worktrees and unrelated work",
+      "passed": true,
+      "evidence": [
+        {
+          "path": "repository-preservation-final-candidate-03.json",
+          "sha256": "f3364cd9bd0a72621601fe97298323cd8fe4f376dbfa6fdc700a14197c47e3c4"
+        }
+      ]
+    },
+    {
+      "name": "Exact actual-platform source/build identity",
+      "passed": true,
+      "errors": []
+    }
+  ],
+  "assessed_utc": "2026-10-26T11:32:50.302118+00:00",
+  "publication_and_merge": "Not performed; awaiting later user readiness approval",
+  "accepted_limitations": [
+    "Occasional picture skips accepted only with continuous audio and authoritative-clock synchronization; counts/timing retained.",
+    "Full physical multichannel listening remains separately pending.",
+    "Limited PCM24 stereo/conventional5.1 RIFF/RF64; no complete broadcaster/BWF/BW64/metadata certification.",
+    "No resampling, automatic correction, batch/network delivery, video/lossy export, or VST3 parity."
+  ]
+}

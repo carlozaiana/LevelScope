@@ -1,0 +1,241 @@
+{
+  "scope": "Index into actual core assertion evidence; not a substitute for long-file, UI or physical-video gates",
+  "platforms": [
+    {
+      "platform": "sequoia-candidate-03",
+      "source_digest": "4ff89967e4927600d0b6defafabb28c372f4068870a0f1a9adb1ee84fe1781d8",
+      "passed": true,
+      "total_assertions": 4985,
+      "export_cases": 16,
+      "native_injected_video_cases": 10,
+      "acceptance_groups": {
+        "PCM24/dither/container": {
+          "matching_assertions": 175,
+          "unique_assertion_names": [
+            "PCM output exact across block sizes and repeat writes",
+            "PCM24 zero without test dither",
+            "RF64 64-bit length parser",
+            "TPDF zero mean variance and channel decorrelation",
+            "bounded RF64 header",
+            "bounded TPDF",
+            "malformed RF64 byte injection",
+            "malformed RF64 size/count/table/mask/GUID/data rejected",
+            "non-finite output rejected",
+            "ordinary extensible RIFF",
+            "raw matrix full-precision shared gain oracle",
+            "raw matrix shared processing",
+            "restore RF64 test byte",
+            "three-hour 5.1 RF64 payload",
+            "total RIFF size above limit uses RF64 before data overflow",
+            "total RIFF size below limit"
+          ]
+        },
+        "measurement and sample parity": {
+          "matching_assertions": 90,
+          "unique_assertion_names": [
+            "explicit canonical output permutation preserves input role order",
+            "export pre-quantization exact offline sample parity at every channel/rate",
+            "group exact mapping and alignment explicitly confirmed",
+            "group export exact offline pre-quantization parity",
+            "injected device only for export parity",
+            "muted peak owner remains present exactly in render/offline samples",
+            "raw matrix full-precision shared gain oracle"
+          ]
+        },
+        "publication and identities": {
+          "matching_assertions": 56,
+          "unique_assertion_names": [
+            "actual measured artifact FAIL overrides passing Current; publication unavailable",
+            "audio/report destinations never overwrite a source or alias",
+            "cannot republish or overwrite",
+            "changed original content blocks publication",
+            "compatible profile version reevaluates the same measured artifact and refreshes approval",
+            "exclusive destination race never overwrites",
+            "explicit publication succeeds",
+            "failed publication leaves no misleading report",
+            "last-stage audio/report/manifest tamper blocks publication",
+            "new runtime inherits no export job/approval and deletes no unowned files",
+            "obsolete report approval rejected",
+            "owned source alias fixtures",
+            "processing change invalidates render and approval",
+            "publication failure fixture verified",
+            "publication failure/cancel retains verified audio without final set",
+            "rejected aliases preserve source bytes",
+            "render/publication failures preserve original source bytes",
+            "runtime reopening cannot inherit approval",
+            "video/report revision changes approval but preserves measured audio"
+          ]
+        },
+        "failure and cancellation": {
+          "matching_assertions": 64,
+          "unique_assertion_names": [
+            "controlled owned-byte tamper",
+            "crash exposes final bundle only after atomic commit",
+            "crash staging is identifiable and never auto-published",
+            "export failures never modify session measurements or processing",
+            "fresh measured artifact after tamper",
+            "identify measured-failure test staging",
+            "last-stage audio/report/manifest tamper blocks publication",
+            "measurement-only report retains actual measured failure before rendering",
+            "passing Current never overrides actual artifact failure",
+            "post-commit crash retains exact complete published bytes",
+            "publication failure fixture verified",
+            "publication failure/cancel retains verified audio without final set",
+            "remove only child-recorded owned snapshot after crash evidence",
+            "render finalized PCM and verify",
+            "render stage failure/cancellation publishes no candidate",
+            "render/publication failures preserve original source bytes",
+            "report-only write failure exposes no partial final set",
+            "start isolated crash simulation"
+          ]
+        },
+        "report semantics": {
+          "matching_assertions": 56,
+          "unique_assertion_names": [
+            "actual failing artifact report can be saved explicitly without publishing audio",
+            "actual measured artifact FAIL overrides passing Current; publication unavailable",
+            "audio/report destinations never overwrite a source or alias",
+            "blocked audio does not block bounded measurement-only report",
+            "complete audio/report bundle",
+            "encoded artifact measured without additional gain",
+            "failed publication leaves no misleading report",
+            "last-stage audio/report/manifest tamper blocks publication",
+            "measurement report available despite blocked export",
+            "measurement report independent of failing artifact",
+            "measurement-only report never invents artifact",
+            "measurement-only report retains actual measured failure before rendering",
+            "obsolete report approval rejected",
+            "passing Current never overrides actual artifact failure",
+            "plain report clearly labelled",
+            "published report binds exact actual PCM bytes",
+            "report HTML escapes user text; JSON roundtrips",
+            "report gain retains full double precision",
+            "report-only has no invented artifact/hash/verdict",
+            "report-only write failure exposes no partial final set",
+            "silent artifact unavailable loudness not invented zero",
+            "unsupported export layout retains measurement-only reporting",
+            "video/report revision changes approval but preserves measured audio"
+          ]
+        }
+      }
+    },
+    {
+      "platform": "high-sierra-candidate-03",
+      "source_digest": "4ff89967e4927600d0b6defafabb28c372f4068870a0f1a9adb1ee84fe1781d8",
+      "passed": true,
+      "total_assertions": 4985,
+      "export_cases": 16,
+      "native_injected_video_cases": 10,
+      "acceptance_groups": {
+        "PCM24/dither/container": {
+          "matching_assertions": 175,
+          "unique_assertion_names": [
+            "PCM output exact across block sizes and repeat writes",
+            "PCM24 zero without test dither",
+            "RF64 64-bit length parser",
+            "TPDF zero mean variance and channel decorrelation",
+            "bounded RF64 header",
+            "bounded TPDF",
+            "malformed RF64 byte injection",
+            "malformed RF64 size/count/table/mask/GUID/data rejected",
+            "non-finite output rejected",
+            "ordinary extensible RIFF",
+            "raw matrix full-precision shared gain oracle",
+            "raw matrix shared processing",
+            "restore RF64 test byte",
+            "three-hour 5.1 RF64 payload",
+            "total RIFF size above limit uses RF64 before data overflow",
+            "total RIFF size below limit"
+          ]
+        },
+        "measurement and sample parity": {
+          "matching_assertions": 90,
+          "unique_assertion_names": [
+            "explicit canonical output permutation preserves input role order",
+            "export pre-quantization exact offline sample parity at every channel/rate",
+            "group exact mapping and alignment explicitly confirmed",
+            "group export exact offline pre-quantization parity",
+            "injected device only for export parity",
+            "muted peak owner remains present exactly in render/offline samples",
+            "raw matrix full-precision shared gain oracle"
+          ]
+        },
+        "publication and identities": {
+          "matching_assertions": 56,
+          "unique_assertion_names": [
+            "actual measured artifact FAIL overrides passing Current; publication unavailable",
+            "audio/report destinations never overwrite a source or alias",
+            "cannot republish or overwrite",
+            "changed original content blocks publication",
+            "compatible profile version reevaluates the same measured artifact and refreshes approval",
+            "exclusive destination race never overwrites",
+            "explicit publication succeeds",
+            "failed publication leaves no misleading report",
+            "last-stage audio/report/manifest tamper blocks publication",
+            "new runtime inherits no export job/approval and deletes no unowned files",
+            "obsolete report approval rejected",
+            "owned source alias fixtures",
+            "processing change invalidates render and approval",
+            "publication failure fixture verified",
+            "publication failure/cancel retains verified audio without final set",
+            "rejected aliases preserve source bytes",
+            "render/publication failures preserve original source bytes",
+            "runtime reopening cannot inherit approval",
+            "video/report revision changes approval but preserves measured audio"
+          ]
+        },
+        "failure and cancellation": {
+          "matching_assertions": 64,
+          "unique_assertion_names": [
+            "controlled owned-byte tamper",
+            "crash exposes final bundle only after atomic commit",
+            "crash staging is identifiable and never auto-published",
+            "export failures never modify session measurements or processing",
+            "fresh measured artifact after tamper",
+            "identify measured-failure test staging",
+            "last-stage audio/report/manifest tamper blocks publication",
+            "measurement-only report retains actual measured failure before rendering",
+            "passing Current never overrides actual artifact failure",
+            "post-commit crash retains exact complete published bytes",
+            "publication failure fixture verified",
+            "publication failure/cancel retains verified audio without final set",
+            "remove only child-recorded owned snapshot after crash evidence",
+            "render finalized PCM and verify",
+            "render stage failure/cancellation publishes no candidate",
+            "render/publication failures preserve original source bytes",
+            "report-only write failure exposes no partial final set",
+            "start isolated crash simulation"
+          ]
+        },
+        "report semantics": {
+          "matching_assertions": 56,
+          "unique_assertion_names": [
+            "actual failing artifact report can be saved explicitly without publishing audio",
+            "actual measured artifact FAIL overrides passing Current; publication unavailable",
+            "audio/report destinations never overwrite a source or alias",
+            "blocked audio does not block bounded measurement-only report",
+            "complete audio/report bundle",
+            "encoded artifact measured without additional gain",
+            "failed publication leaves no misleading report",
+            "last-stage audio/report/manifest tamper blocks publication",
+            "measurement report available despite blocked export",
+            "measurement report independent of failing artifact",
+            "measurement-only report never invents artifact",
+            "measurement-only report retains actual measured failure before rendering",
+            "obsolete report approval rejected",
+            "passing Current never overrides actual artifact failure",
+            "plain report clearly labelled",
+            "published report binds exact actual PCM bytes",
+            "report HTML escapes user text; JSON roundtrips",
+            "report gain retains full double precision",
+            "report-only has no invented artifact/hash/verdict",
+            "report-only write failure exposes no partial final set",
+            "silent artifact unavailable loudness not invented zero",
+            "unsupported export layout retains measurement-only reporting",
+            "video/report revision changes approval but preserves measured audio"
+          ]
+        }
+      }
+    }
+  ]
+}

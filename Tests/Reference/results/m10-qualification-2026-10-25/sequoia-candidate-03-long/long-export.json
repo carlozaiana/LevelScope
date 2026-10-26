@@ -1,0 +1,544 @@
+{
+  "suite": "M10 verified PCM export and reporting",
+  "passed": true,
+  "message": "",
+  "build": "f36567f5f38a47daef49bc9543252b42b3403e3bdcc2fe986b755bee1576cce9",
+  "checks": [{
+      "name": "create owned fixture directory",
+      "passed": true
+    },{
+      "name": "fresh evidence artifact directory",
+      "passed": true
+    },{
+      "name": "long export grouped session parsed",
+      "passed": true
+    },{
+      "name": "three-hour group files verified",
+      "passed": true
+    },{
+      "name": "three-hour programme adopted",
+      "passed": true
+    },{
+      "name": "real three-hour 5.1 48 kHz scope",
+      "passed": true
+    },{
+      "name": "begin test measurement",
+      "passed": true
+    },{
+      "name": "test source/current measured",
+      "passed": true
+    },{
+      "name": "accept exact measured test state",
+      "passed": true
+    },{
+      "name": "long exact normalization gain",
+      "passed": true
+    },{
+      "name": "begin test measurement",
+      "passed": true
+    },{
+      "name": "test source/current measured",
+      "passed": true
+    },{
+      "name": "accept exact measured test state",
+      "passed": true
+    },{
+      "name": "save coherent long fixture for separate silent UI qualification",
+      "passed": true
+    },{
+      "name": "1000 annotations and measured export readiness",
+      "passed": true
+    },{
+      "name": "fresh long export destination",
+      "passed": true
+    },{
+      "name": "active three-hour preparation cancellation <=1 second",
+      "passed": true
+    },{
+      "name": "actual 9.33 GB RF64 rendered and fully remeasured",
+      "passed": true
+    },{
+      "name": "real RF64 complete physical size",
+      "passed": true
+    },{
+      "name": "real long actual PCM passes selected rules",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI uses accepted immutable caches",
+      "passed": true
+    },{
+      "name": "long export UI inspection p95 <=100ms",
+      "passed": true
+    },{
+      "name": "single output payload before report; no second interleaved render",
+      "passed": true
+    },{
+      "name": "real large export atomically published with reports",
+      "passed": true
+    },{
+      "name": "UI heartbeat during long offline work",
+      "passed": true
+    },{
+      "name": "three-hour memory/UI/report-size budgets",
+      "passed": true
+    },{
+      "name": "full three-hour preparation/render/verification within programme duration",
+      "passed": true
+    },{
+      "name": "successful long render releases only its owned private source copies",
+      "passed": true
+    },{
+      "name": "published RF64 reimports with validated metadata",
+      "passed": true
+    },{
+      "name": "RF64 verified copy prepares while device closed",
+      "passed": true
+    },{
+      "name": "RF64 source preparation completes without physical device",
+      "passed": true
+    },{
+      "name": "no input device opened",
+      "passed": true
+    },{
+      "name": "RF64 reader and injected device ready",
+      "passed": true
+    },{
+      "name": "RF64 exact sample seek",
+      "passed": true
+    },{
+      "name": "RF64 all-muted injected audition",
+      "passed": true
+    },{
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },{
+      "name": "RF64 expected seek samples read",
+      "passed": true
+    },{
+      "name": "RF64 shared full-precision oracle",
+      "passed": true
+    },{
+      "name": "RF64 first/middle/final Source/Current all-channel capture exact and copy reused",
+      "passed": true
+    },{
+      "name": "RF64 exact sample seek",
+      "passed": true
+    },{
+      "name": "RF64 all-muted injected audition",
+      "passed": true
+    },{
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },{
+      "name": "RF64 expected seek samples read",
+      "passed": true
+    },{
+      "name": "RF64 shared full-precision oracle",
+      "passed": true
+    },{
+      "name": "RF64 first/middle/final Source/Current all-channel capture exact and copy reused",
+      "passed": true
+    },{
+      "name": "RF64 exact sample seek",
+      "passed": true
+    },{
+      "name": "RF64 all-muted injected audition",
+      "passed": true
+    },{
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },{
+      "name": "RF64 expected seek samples read",
+      "passed": true
+    },{
+      "name": "RF64 shared full-precision oracle",
+      "passed": true
+    },{
+      "name": "RF64 first/middle/final Source/Current all-channel capture exact and copy reused",
+      "passed": true
+    },{
+      "name": "RF64 exact sample seek",
+      "passed": true
+    },{
+      "name": "RF64 all-muted injected audition",
+      "passed": true
+    },{
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },{
+      "name": "RF64 expected seek samples read",
+      "passed": true
+    },{
+      "name": "RF64 shared full-precision oracle",
+      "passed": true
+    },{
+      "name": "RF64 first/middle/final Source/Current all-channel capture exact and copy reused",
+      "passed": true
+    },{
+      "name": "RF64 exact sample seek",
+      "passed": true
+    },{
+      "name": "RF64 all-muted injected audition",
+      "passed": true
+    },{
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },{
+      "name": "RF64 expected seek samples read",
+      "passed": true
+    },{
+      "name": "RF64 shared full-precision oracle",
+      "passed": true
+    },{
+      "name": "RF64 first/middle/final Source/Current all-channel capture exact and copy reused",
+      "passed": true
+    },{
+      "name": "RF64 exact sample seek",
+      "passed": true
+    },{
+      "name": "RF64 all-muted injected audition",
+      "passed": true
+    },{
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },{
+      "name": "RF64 expected seek samples read",
+      "passed": true
+    },{
+      "name": "RF64 shared full-precision oracle",
+      "passed": true
+    },{
+      "name": "RF64 first/middle/final Source/Current all-channel capture exact and copy reused",
+      "passed": true
+    },{
+      "name": "complete long export and additional RF64 audition checks within three hours",
+      "passed": true
+    }],
+  "cases": [],
+  "long_export": {
+    "rf64_audition_cases": 6,
+    "rf64_reimport_audition_ms": 156539.50625000009,
+    "prerequisite_ms": 1500588.2115833331,
+    "render_verify_ms": 924821.60437499965,
+    "publish_ms": 115781.32583333319,
+    "stage_ms": {
+      "audio-create": 79839.647374999709,
+      "verify": 128378.9647083329,
+      "verified": 924816.63924999954
+    },
+    "cancel_ms": 10.055958332959563,
+    "ui_p95_ms": 15.04779166681692,
+    "inspection_p95_ms": 0.38362499978393316,
+    "ui_callbacks": 82996,
+    "rss_growth_bytes": 57212928,
+    "report_bytes": 381425,
+    "artifact_bytes": 9331200104,
+    "artifact_sha256": "b1d75b637bd8f6893109c61674ed8513a12721978eb850f1d1c5c855f3e5c2ff",
+    "cleanup_ms": 2.1064583333209157,
+    "source_bytes": 1014119716,
+    "exact_gain": -2.9395028226995876,
+    "seed_hex": "9bf81be6689561b0",
+    "frames": "518400000",
+    "annotations": 1000
+  },
+  "video_cases": 0,
+  "physical_devices_opened": false,
+  "architecture": "arm64"
+}

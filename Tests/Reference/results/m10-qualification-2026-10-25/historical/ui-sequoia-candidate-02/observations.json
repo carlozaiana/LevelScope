@@ -1,0 +1,51 @@
+{
+  "candidate": "candidate-02",
+  "source_digest": "e0eb0497e2c5c8b1e629dc5747e260cf21c8ef77ef2b0e39094294820fc6f996",
+  "build": "3e24a19f92e3b54738be169bc222c0a433414cca577687c42a648453e305d6ce",
+  "app_sha256": "ab9e4c4dedcf3c2c92992483216fb0a4af5206a04cca0bd2efd99bd3b63282e9",
+  "status": "failed-superseded",
+  "observations": [
+    {
+      "check": "initial safe state",
+      "passed": true,
+      "observed": "No source; Source selected, UNVERIFIED; monitor -30dB; device closed; routes muted; render/publish unavailable."
+    },
+    {
+      "check": "no-source measurement report",
+      "passed": true,
+      "observed": "Saved MEASUREMENT-ONLY / NO EXPORTED AUDIO. Source and Current unavailable; no artifact or audio file; report hashes verified."
+    },
+    {
+      "check": "existing report destination",
+      "passed": true,
+      "observed": "Native Replace confirmation followed by app no-overwrite rejection; original manifest hashes still match."
+    },
+    {
+      "check": "safe session reopening",
+      "passed": true,
+      "observed": "Candidate-02 core-generated ui-ready session reopened with current Source/Current, EBU profile confirmed; stopped, device closed, every route muted."
+    },
+    {
+      "check": "explicit render versus publish",
+      "passed": true,
+      "observed": "UI Render completed with NOT PUBLISHED and actual artifact PASS. Destination absent until explicit Publish; publication created complete bundle. Independent libsndfile read all 384000 sample codes; report/HTML/manifest hashes match.",
+      "evidence": "verified-ui-independent-decoder.json"
+    },
+    {
+      "check": "gain invalidation and failing Current report",
+      "passed": true,
+      "observed": "Setting -10 dB removed render eligibility. Remeasurement produced Current FAIL (-32.99999999481747 LUFS), Source remained PASS. Measurement-only report saved with no artifact fields/audio; processing gain retained."
+    },
+    {
+      "check": "profile applicability presentation",
+      "passed": false,
+      "observed": "Clearing confirmation correctly disabled Publish and retained artifact, but render-completion notice still displayed earlier PASS. Screenshot/AX confirmed stale duplicate verdict; candidate-03 removes cached evaluation and displays live current evaluation."
+    }
+  ],
+  "html_visual_review": {
+    "passed": true,
+    "observer": "User",
+    "reply": "Confirmed",
+    "scope": "Both named reports readable; Source, Current and exported audio distinct; unavailable report clearly measurement-only/no exported audio."
+  }
+}

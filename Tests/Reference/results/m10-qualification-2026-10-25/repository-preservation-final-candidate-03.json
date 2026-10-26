@@ -1,0 +1,17 @@
+{
+  "checked_utc": "2026-10-26T11:32:50.254270+00:00",
+  "current_source_digest": "4ff89967e4927600d0b6defafabb28c372f4068870a0f1a9adb1ee84fe1781d8",
+  "source_manifest_matches": true,
+  "source_files_checked": 208,
+  "source_errors": [],
+  "existing_tags_unchanged": true,
+  "existing_tag_count": 13,
+  "changed_existing_tags": [],
+  "extra_tags": [],
+  "worktrees_unchanged": true,
+  "head_unchanged": true,
+  "head": "75843dcd017ec7990be2200454a10fc38beb44c4",
+  "branch": "codex/logic-module",
+  "unrelated_unchanged": true,
+  "unrelated_errors": []
+}

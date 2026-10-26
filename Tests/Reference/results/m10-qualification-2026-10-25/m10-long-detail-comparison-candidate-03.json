@@ -1,0 +1,41 @@
+{
+  "passed": true,
+  "errors": [],
+  "domains": [
+    {
+      "domain": "source",
+      "passed": true,
+      "maximum_per_channel_difference_db": 0.0,
+      "roles_statuses_units_exact": true,
+      "exact_peak_locations_required": true,
+      "peak_locations_equal": true
+    },
+    {
+      "domain": "current",
+      "passed": true,
+      "maximum_per_channel_difference_db": 0.0,
+      "roles_statuses_units_exact": true,
+      "exact_peak_locations_required": true,
+      "peak_locations_equal": true
+    },
+    {
+      "domain": "artifact",
+      "passed": true,
+      "maximum_per_channel_difference_db": 0.0,
+      "roles_statuses_units_exact": true,
+      "exact_peak_locations_required": true,
+      "peak_locations_equal": true
+    }
+  ],
+  "evidence": [
+    {
+      "path": "sequoia-candidate-03-long/long-export/report.json",
+      "sha256": "f9d570e96a7962b64206daca0cb0cd60072ecb35cc69af05f93a7cb098069b1d"
+    },
+    {
+      "path": "high-sierra-candidate-03-long/long-export/report.json",
+      "sha256": "7b1087a12d3dfc087844ed882f4537ae1f001b53173adea23e284573ad83b8d3"
+    }
+  ],
+  "scope": "Additional long-file metric and exact per-channel location comparison; comparison tolerances do not alter profile allowances."
+}

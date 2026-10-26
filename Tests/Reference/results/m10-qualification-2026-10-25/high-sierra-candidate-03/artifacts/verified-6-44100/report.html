@@ -1,0 +1,611 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>LevelScope measurement report</title><style>body{font:16px system-ui,sans-serif;margin:2em;max-width:80em;color:#18212b}table{border-collapse:collapse}td,th{padding:.6em;border:1px solid #bbc}pre{white-space:pre-wrap;overflow-wrap:anywhere}h1{font-size:1.5em}</style><body><h1>VERIFIED ARTIFACT MEASUREMENT</h1><p>published-verified-pcm</p><p>Selected whole-programme loudness and true-peak rules only. No complete broadcaster delivery, BWF/BW64, metadata, synchronization or future encoded-media certification.</p><p>Programme: 5807adac7e784e43a9ac3c1251bffe56 | Processing gain: -8.199137355810844 dB | Unsaved captured session revision</p><table><tr><th>Measured state</th><th>Status / selected rules</th><th>Integrated LUFS</th><th>True peak dBTP</th><th>LRA LU</th></tr><tr><th>Source</th><td>valid_measured_snapshot / FAIL</td><td>-14.800863</td><td>-14.892429</td><td>2.218432</td></tr><tr><th>Current State</th><td>valid_measured_snapshot / PASS</td><td>-23.000000</td><td>-23.091567</td><td>2.218432</td></tr><tr><th>Exported artifact</th><td>valid_measured_snapshot / PASS</td><td>-23.000000</td><td>-23.091563</td><td>2.218432</td></tr></table><p>Display rounding does not determine a verdict. LRA is informative, with short-programme stability recorded below.</p><p>Actual PCM SHA-256: <code>ba174a61b6301f3c9b4ad8ca4e82e182ca611edb2e00e2d216c5805b1fc28cfb</code></p><p>TPDF applied once at final PCM24 quantization, outside Current State. Even zero-gain export is not a bit-identical copy.</p><h2>Exact measurements, reasons and provenance</h2><pre>{
+  &quot;schema&quot;: &quot;levelscope-measurement-report-v1&quot;,
+  &quot;kind&quot;: &quot;verified-artifact-measurement&quot;,
+  &quot;publication&quot;: &quot;published-verified-pcm&quot;,
+  &quot;scope&quot;: &quot;Selected whole-programme loudness and true-peak rules only. No complete broadcaster delivery, BWF/BW64, metadata, synchronization or future encoded-media certification.&quot;,
+  &quot;document_id&quot;: &quot;42815960ae844229bf9cf487b20412ba&quot;,
+  &quot;programme_id&quot;: &quot;5807adac7e784e43a9ac3c1251bffe56&quot;,
+  &quot;document_revision&quot;: &quot;18&quot;,
+  &quot;session_unsaved&quot;: true,
+  &quot;session_basename&quot;: &quot;&quot;,
+  &quot;runtime_id&quot;: &quot;1da4063130014b1b8409d6904af5bfba&quot;,
+  &quot;app&quot;: &quot;LevelScope Standalone M10&quot;,
+  &quot;build&quot;: &quot;f36567f5f38a47daef49bc9543252b42b3403e3bdcc2fe986b755bee1576cce9&quot;,
+  &quot;platform&quot;: &quot;Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off&quot;,
+  &quot;cpu&quot;: &quot;Intel(R) Core(TM) i7-3770K CPU @ 3.50GHz&quot;,
+  &quot;processing_version&quot;: &quot;static-gain-v1&quot;,
+  &quot;processing_gain_db&quot;: -8.1991373558108442,
+  &quot;processing_gain_hex&quot;: &quot;-0x1.065f554dd3d2ep+3&quot;,
+  &quot;programme_frames&quot;: &quot;176400&quot;,
+  &quot;sample_rate&quot;: 44100,
+  &quot;duration_rational_seconds&quot;: &quot;176400/44100&quot;,
+  &quot;positions&quot;: &quot;Audio-source frames; true-peak positions in eighth-frames. Video offsets and measurement EOF drain do not extend programme duration.&quot;,
+  &quot;profile&quot;: {
+    &quot;id&quot;: &quot;ebu-r128-2023-programme-linear-qc&quot;,
+    &quot;definition_version&quot;: &quot;1.0.0&quot;,
+    &quot;digest&quot;: &quot;ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66&quot;,
+    &quot;edition&quot;: &quot;EBU R128-2023 (November 2023)&quot;,
+    &quot;reference&quot;: &quot;https://tech.ebu.ch/docs/r/r128.pdf&quot;,
+    &quot;applicability&quot;: 1,
+    &quot;applicability_scope&quot;: &quot;Pre-produced whole-programme linear-audio QC only; excludes live, deliberate lower targets, short-form and distribution-specific requirements.&quot;,
+    &quot;meter_tolerance_documentary_only&quot;: &quot;Clause m separately permits +/-0.3 dB meter tolerance for signals band-limited to 20 kHz. Bandwidth is not certified here; this provision never relaxes the -1 dBTP evaluation ceiling.&quot;
+  },
+  &quot;source_members&quot;: [{
+      &quot;basename&quot;: &quot;source.wav&quot;,
+      &quot;sha256&quot;: &quot;d0affddc30b19ca36b39095e3fdeb1f94022c8fb6c32f05e6c4a1d3387f444bb&quot;
+    }],
+  &quot;ordered_input_roles&quot;: [&quot;Rs&quot;,&quot;Ls&quot;,&quot;Lfe&quot;,&quot;C&quot;,&quot;R&quot;,&quot;L&quot;],
+  &quot;source&quot;: {
+    &quot;domain&quot;: &quot;Source&quot;,
+    &quot;measurement_available&quot;: true,
+    &quot;status&quot;: &quot;valid_measured_snapshot&quot;,
+    &quot;evaluation&quot;: {
+      &quot;verdict&quot;: &quot;FAIL&quot;,
+      &quot;message&quot;: &quot;Fails one or more selected measured rules.&quot;,
+      &quot;identity&quot;: &quot;5dce7ff75c8003cf927199357cd4c8d487d96f0bdee09705c60e9ccbaaf0e338&quot;,
+      &quot;profile_digest&quot;: &quot;ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66&quot;,
+      &quot;snapshot_identity&quot;: &quot;302110685d122842f62ccd6966bb850712a1a66caf076138532c0f9343961f7f&quot;,
+      &quot;rules&quot;: [{
+          &quot;id&quot;: &quot;programme-loudness&quot;,
+          &quot;verdict&quot;: &quot;FAIL&quot;,
+          &quot;reason&quot;: &quot;Outside selected bounds.&quot;,
+          &quot;provenance&quot;: &quot;R128-2023 clauses h, i, k, l: -23 LUFS intended target; +/-0.2 LU QC allowance; whole-programme level gating.&quot;,
+          &quot;units&quot;: &quot;LUFS&quot;,
+          &quot;measured&quot;: -14.800862644189156,
+          &quot;lower&quot;: -23.199999999999999,
+          &quot;upper&quot;: -22.800000000000001,
+          &quot;delta&quot;: 8.1991373558108442
+        },{
+          &quot;id&quot;: &quot;true-peak&quot;,
+          &quot;verdict&quot;: &quot;PASS&quot;,
+          &quot;reason&quot;: &quot;Within selected bounds.&quot;,
+          &quot;provenance&quot;: &quot;R128-2023 clause m: maximum -1 dBTP for linear audio.&quot;,
+          &quot;units&quot;: &quot;dBTP&quot;,
+          &quot;measured&quot;: -14.892429246613258,
+          &quot;lower&quot;: null,
+          &quot;upper&quot;: -1,
+          &quot;delta&quot;: -13.892429246613258
+        }]
+    },
+    &quot;measurement_identity&quot;: &quot;30be62c97c33732aced3526d5c90b4a1b0290a20c6dfdb847e3d1a410302f7b3&quot;,
+    &quot;measured_content_sha256&quot;: &quot;d0affddc30b19ca36b39095e3fdeb1f94022c8fb6c32f05e6c4a1d3387f444bb&quot;,
+    &quot;measurement_method&quot;: &quot;bs1770-5-ebu2023-m7.1&quot;,
+    &quot;build&quot;: &quot;f36567f5f38a47daef49bc9543252b42b3403e3bdcc2fe986b755bee1576cce9&quot;,
+    &quot;platform&quot;: &quot;Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off&quot;,
+    &quot;original_runtime&quot;: &quot;&quot;,
+    &quot;restored_from_session&quot;: false,
+    &quot;frames&quot;: &quot;176400&quot;,
+    &quot;sample_rate&quot;: 44100,
+    &quot;lra_stable&quot;: false,
+    &quot;metrics&quot;: {
+      &quot;integrated&quot;: {
+        &quot;status&quot;: &quot;available&quot;,
+        &quot;unit&quot;: &quot;LUFS&quot;,
+        &quot;value&quot;: -14.800862644189156,
+        &quot;value_hex&quot;: &quot;-0x1.d9a0aab22c2d2p+3&quot;
+      },
+      &quot;true_peak&quot;: {
+        &quot;status&quot;: &quot;available&quot;,
+        &quot;unit&quot;: &quot;dBTP&quot;,
+        &quot;value&quot;: -14.892429246613258,
+        &quot;value_hex&quot;: &quot;-0x1.dc8ec7c78654ep+3&quot;
+      },
+      &quot;sample_peak&quot;: {
+        &quot;status&quot;: &quot;available&quot;,
+        &quot;unit&quot;: &quot;dBFS&quot;,
+        &quot;value&quot;: -14.894546676569529,
+        &quot;value_hex&quot;: &quot;-0x1.dca0205a13926p+3&quot;
+      },
+      &quot;lra&quot;: {
+        &quot;status&quot;: &quot;available&quot;,
+        &quot;unit&quot;: &quot;LU&quot;,
+        &quot;value&quot;: 2.2184321722713776,
+        &quot;value_hex&quot;: &quot;0x1.1bf595de266p+1&quot;
+      },
+      &quot;momentary_max&quot;: {
+        &quot;status&quot;: &quot;available&quot;,
+        &quot;unit&quot;: &quot;LUFS&quot;,
+        &quot;value&quot;: -14.79920052680758,
+        &quot;value_hex&quot;: &quot;-0x1.d9930cfbb2b47p+3&quot;
+      },
+      &quot;short_term_max&quot;: {
+        &quot;status&quot;: &quot;available&quot;,
+        &quot;unit&quot;: &quot;LUFS&quot;,
+        &quot;value&quot;: -14.800478547431982,
+        &quot;value_hex&quot;: &quot;-0x1.d99d852fcbd6ap+3&quot;
+      }
+    },
+    &quot;per_channel_peaks&quot;: [{
+        &quot;channel&quot;: 1,
+        &quot;role&quot;: &quot;Rs&quot;,
+        &quot;sample_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBFS&quot;,
+          &quot;value&quot;: -30.457548674531797,
+          &quot;value_hex&quot;: &quot;-0x1.e7521e8f17135p+4&quot;
+        },
+        &quot;true_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBTP&quot;,
+          &quot;value&quot;: -29.396838308145661,
+          &quot;value_hex&quot;: &quot;-0x1.d65973203491cp+4&quot;
+        },
+        &quot;sample_peak_frame&quot;: &quot;1386&quot;,
+        &quot;true_peak_eighth_frame&quot;: &quot;1411189&quot;
+      },{
+        &quot;channel&quot;: 2,
+        &quot;role&quot;: &quot;Ls&quot;,
+        &quot;sample_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBFS&quot;,
+          &quot;value&quot;: -24.436966018529414,
+          &quot;value_hex&quot;: &quot;-0x1.86fdd01470c13p+4&quot;
+        },
+        &quot;true_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBTP&quot;,
+          &quot;value&quot;: -24.436960579922943,
+          &quot;value_hex&quot;: &quot;-0x1.86fdca6086905p+4&quot;
+        },
+        &quot;sample_peak_frame&quot;: &quot;693&quot;,
+        &quot;true_peak_eighth_frame&quot;: &quot;1053727&quot;
+      },{
+        &quot;channel&quot;: 3,
+        &quot;role&quot;: &quot;Lfe&quot;,
+        &quot;sample_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBFS&quot;,
+          &quot;value&quot;: -20.915146589849151,
+          &quot;value_hex&quot;: &quot;-0x1.4ea470c0272b2p+4&quot;
+        },
+        &quot;true_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBTP&quot;,
+          &quot;value&quot;: -20.446720785341618,
+          &quot;value_hex&quot;: &quot;-0x1.4725c4b1b7c56p+4&quot;
+        },
+        &quot;sample_peak_frame&quot;: &quot;462&quot;,
+        &quot;true_peak_eighth_frame&quot;: &quot;1411189&quot;
+      },{
+        &quot;channel&quot;: 4,
+        &quot;role&quot;: &quot;C&quot;,
+        &quot;sample_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBFS&quot;,
+          &quot;value&quot;: -18.416374733901264,
+          &quot;value_hex&quot;: &quot;-0x1.26a9788d8fc94p+4&quot;
+        },
+        &quot;true_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBTP&quot;,
+          &quot;value&quot;: -18.416332993695576,
+          &quot;value_hex&quot;: &quot;-0x1.26a94cc902b14p+4&quot;
+        },
+        &quot;sample_peak_frame&quot;: &quot;34442&quot;,
+        &quot;true_peak_eighth_frame&quot;: &quot;185&quot;
+      },{
+        &quot;channel&quot;: 5,
+        &quot;role&quot;: &quot;R&quot;,
+        &quot;sample_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBFS&quot;,
+          &quot;value&quot;: -16.478169296548224,
+          &quot;value_hex&quot;: &quot;-0x1.07a694d92a03ep+4&quot;
+        },
+        &quot;true_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBTP&quot;,
+          &quot;value&quot;: -16.409263276834039,
+          &quot;value_hex&quot;: &quot;-0x1.068c57a6574bcp+4&quot;
+        },
+        &quot;sample_peak_frame&quot;: &quot;1386&quot;,
+        &quot;true_peak_eighth_frame&quot;: &quot;1411125&quot;
+      },{
+        &quot;channel&quot;: 6,
+        &quot;role&quot;: &quot;L&quot;,
+        &quot;sample_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBFS&quot;,
+          &quot;value&quot;: -14.894546676569529,
+          &quot;value_hex&quot;: &quot;-0x1.dca0205a13926p+3&quot;
+        },
+        &quot;true_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBTP&quot;,
+          &quot;value&quot;: -14.892429246613258,
+          &quot;value_hex&quot;: &quot;-0x1.dc8ec7c78654ep+3&quot;
+        },
+        &quot;sample_peak_frame&quot;: &quot;231&quot;,
+        &quot;true_peak_eighth_frame&quot;: &quot;1411006&quot;
+      }]
+  },
+  &quot;current&quot;: {
+    &quot;domain&quot;: &quot;Current State&quot;,
+    &quot;measurement_available&quot;: true,
+    &quot;status&quot;: &quot;valid_measured_snapshot&quot;,
+    &quot;evaluation&quot;: {
+      &quot;verdict&quot;: &quot;PASS&quot;,
+      &quot;message&quot;: &quot;Passes selected programme loudness and true-peak rules.&quot;,
+      &quot;identity&quot;: &quot;9fb44bc362af2b7db6df264bdaf655d40769b428417c09627977ec2957c38b8e&quot;,
+      &quot;profile_digest&quot;: &quot;ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66&quot;,
+      &quot;snapshot_identity&quot;: &quot;1f7075934d9976c78d17c051b8b5aaa3eea54d9772f27361dc87e28fb2095b33&quot;,
+      &quot;rules&quot;: [{
+          &quot;id&quot;: &quot;programme-loudness&quot;,
+          &quot;verdict&quot;: &quot;PASS&quot;,
+          &quot;reason&quot;: &quot;Within selected bounds.&quot;,
+          &quot;provenance&quot;: &quot;R128-2023 clauses h, i, k, l: -23 LUFS intended target; +/-0.2 LU QC allowance; whole-programme level gating.&quot;,
+          &quot;units&quot;: &quot;LUFS&quot;,
+          &quot;measured&quot;: -22.999999999201624,
+          &quot;lower&quot;: -23.199999999999999,
+          &quot;upper&quot;: -22.800000000000001,
+          &quot;delta&quot;: 7.9837647604108497e-10
+        },{
+          &quot;id&quot;: &quot;true-peak&quot;,
+          &quot;verdict&quot;: &quot;PASS&quot;,
+          &quot;reason&quot;: &quot;Within selected bounds.&quot;,
+          &quot;provenance&quot;: &quot;R128-2023 clause m: maximum -1 dBTP for linear audio.&quot;,
+          &quot;units&quot;: &quot;dBTP&quot;,
+          &quot;measured&quot;: -23.091566505408274,
+          &quot;lower&quot;: null,
+          &quot;upper&quot;: -1,
+          &quot;delta&quot;: -22.091566505408274
+        }]
+    },
+    &quot;measurement_identity&quot;: &quot;1b697da177c92c1672ccccebc6d3c0d17c451492f0ebe47ed34bbddc1f132477&quot;,
+    &quot;measured_content_sha256&quot;: &quot;d0affddc30b19ca36b39095e3fdeb1f94022c8fb6c32f05e6c4a1d3387f444bb&quot;,
+    &quot;measurement_method&quot;: &quot;bs1770-5-ebu2023-m7.1&quot;,
+    &quot;build&quot;: &quot;f36567f5f38a47daef49bc9543252b42b3403e3bdcc2fe986b755bee1576cce9&quot;,
+    &quot;platform&quot;: &quot;Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off&quot;,
+    &quot;original_runtime&quot;: &quot;&quot;,
+    &quot;restored_from_session&quot;: false,
+    &quot;frames&quot;: &quot;176400&quot;,
+    &quot;sample_rate&quot;: 44100,
+    &quot;lra_stable&quot;: false,
+    &quot;metrics&quot;: {
+      &quot;integrated&quot;: {
+        &quot;status&quot;: &quot;available&quot;,
+        &quot;unit&quot;: &quot;LUFS&quot;,
+        &quot;value&quot;: -22.999999999201624,
+        &quot;value_hex&quot;: &quot;-0x1.6fffffffc922dp+4&quot;
+      },
+      &quot;true_peak&quot;: {
+        &quot;status&quot;: &quot;available&quot;,
+        &quot;unit&quot;: &quot;dBTP&quot;,
+        &quot;value&quot;: -23.091566505408274,
+        &quot;value_hex&quot;: &quot;-0x1.71770e70a2336p+4&quot;
+      },
+      &quot;sample_peak&quot;: {
+        &quot;status&quot;: &quot;available&quot;,
+        &quot;unit&quot;: &quot;dBFS&quot;,
+        &quot;value&quot;: -23.093684016112633,
+        &quot;value_hex&quot;: &quot;-0x1.717fbacf95c98p+4&quot;
+      },
+      &quot;lra&quot;: {
+        &quot;status&quot;: &quot;available&quot;,
+        &quot;unit&quot;: &quot;LU&quot;,
+        &quot;value&quot;: 2.2184321725788223,
+        &quot;value_hex&quot;: &quot;0x1.1bf595decf65p+1&quot;
+      },
+      &quot;momentary_max&quot;: {
+        &quot;status&quot;: &quot;available&quot;,
+        &quot;unit&quot;: &quot;LUFS&quot;,
+        &quot;value&quot;: -22.99833788210309,
+        &quot;value_hex&quot;: &quot;-0x1.6ff931249fd9dp+4&quot;
+      },
+      &quot;short_term_max&quot;: {
+        &quot;status&quot;: &quot;available&quot;,
+        &quot;unit&quot;: &quot;LUFS&quot;,
+        &quot;value&quot;: -22.99961590244364,
+        &quot;value_hex&quot;: &quot;-0x1.6ffe6d3e98e95p+4&quot;
+      }
+    },
+    &quot;per_channel_peaks&quot;: [{
+        &quot;channel&quot;: 1,
+        &quot;role&quot;: &quot;Rs&quot;,
+        &quot;sample_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBFS&quot;,
+          &quot;value&quot;: -38.656685922930414,
+          &quot;value_hex&quot;: &quot;-0x1.3540e48c95d67p+5&quot;
+        },
+        &quot;true_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBTP&quot;,
+          &quot;value&quot;: -37.595975611687429,
+          &quot;value_hex&quot;: &quot;-0x1.2cc48edc8b49fp+5&quot;
+        },
+        &quot;sample_peak_frame&quot;: &quot;1386&quot;,
+        &quot;true_peak_eighth_frame&quot;: &quot;1411189&quot;
+      },{
+        &quot;channel&quot;: 2,
+        &quot;role&quot;: &quot;Ls&quot;,
+        &quot;sample_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBFS&quot;,
+          &quot;value&quot;: -32.63610333528635,
+          &quot;value_hex&quot;: &quot;-0x1.0516bd586f738p+5&quot;
+        },
+        &quot;true_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBTP&quot;,
+          &quot;value&quot;: -32.636098097624767,
+          &quot;value_hex&quot;: &quot;-0x1.0516ba9972c5p+5&quot;
+        },
+        &quot;sample_peak_frame&quot;: &quot;693&quot;,
+        &quot;true_peak_eighth_frame&quot;: &quot;1053727&quot;
+      },{
+        &quot;channel&quot;: 3,
+        &quot;role&quot;: &quot;Lfe&quot;,
+        &quot;sample_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBFS&quot;,
+          &quot;value&quot;: -29.114283929392258,
+          &quot;value_hex&quot;: &quot;-0x1.d1d41b62b32b8p+4&quot;
+        },
+        &quot;true_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBTP&quot;,
+          &quot;value&quot;: -28.6458581215668,
+          &quot;value_hex&quot;: &quot;-0x1.ca556f535fc43p+4&quot;
+        },
+        &quot;sample_peak_frame&quot;: &quot;462&quot;,
+        &quot;true_peak_eighth_frame&quot;: &quot;1411189&quot;
+      },{
+        &quot;channel&quot;: 4,
+        &quot;role&quot;: &quot;C&quot;,
+        &quot;sample_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBFS&quot;,
+          &quot;value&quot;: -26.615512431350879,
+          &quot;value_hex&quot;: &quot;-0x1.a9d923902eef8p+4&quot;
+        },
+        &quot;true_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBTP&quot;,
+          &quot;value&quot;: -26.615470173958357,
+          &quot;value_hex&quot;: &quot;-0x1.a9d8f740cd088p+4&quot;
+        },
+        &quot;sample_peak_frame&quot;: &quot;34442&quot;,
+        &quot;true_peak_eighth_frame&quot;: &quot;185&quot;
+      },{
+        &quot;channel&quot;: 5,
+        &quot;role&quot;: &quot;R&quot;,
+        &quot;sample_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBFS&quot;,
+          &quot;value&quot;: -24.677306904187418,
+          &quot;value_hex&quot;: &quot;-0x1.8ad63fc3ad708p+4&quot;
+        },
+        &quot;true_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBTP&quot;,
+          &quot;value&quot;: -24.60840062945978,
+          &quot;value_hex&quot;: &quot;-0x1.89bc024c66544p+4&quot;
+        },
+        &quot;sample_peak_frame&quot;: &quot;1386&quot;,
+        &quot;true_peak_eighth_frame&quot;: &quot;1411125&quot;
+      },{
+        &quot;channel&quot;: 6,
+        &quot;role&quot;: &quot;L&quot;,
+        &quot;sample_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBFS&quot;,
+          &quot;value&quot;: -23.093684016112633,
+          &quot;value_hex&quot;: &quot;-0x1.717fbacf95c98p+4&quot;
+        },
+        &quot;true_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBTP&quot;,
+          &quot;value&quot;: -23.091566505408274,
+          &quot;value_hex&quot;: &quot;-0x1.71770e70a2336p+4&quot;
+        },
+        &quot;sample_peak_frame&quot;: &quot;231&quot;,
+        &quot;true_peak_eighth_frame&quot;: &quot;1411006&quot;
+      }]
+  },
+  &quot;artifact&quot;: {
+    &quot;domain&quot;: &quot;Exported artifact&quot;,
+    &quot;measurement_available&quot;: true,
+    &quot;status&quot;: &quot;valid_measured_snapshot&quot;,
+    &quot;evaluation&quot;: {
+      &quot;verdict&quot;: &quot;PASS&quot;,
+      &quot;message&quot;: &quot;Passes selected programme loudness and true-peak rules.&quot;,
+      &quot;identity&quot;: &quot;1cd7a33aaf33bbf60df5940ec163932df21577681cda2e9cba60ed064be43905&quot;,
+      &quot;profile_digest&quot;: &quot;ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66&quot;,
+      &quot;snapshot_identity&quot;: &quot;0aa640d879be129ed7c5f523cd36aacad81191a5b28ed6ab111d662fdba7644a&quot;,
+      &quot;rules&quot;: [{
+          &quot;id&quot;: &quot;programme-loudness&quot;,
+          &quot;verdict&quot;: &quot;PASS&quot;,
+          &quot;reason&quot;: &quot;Within selected bounds.&quot;,
+          &quot;provenance&quot;: &quot;R128-2023 clauses h, i, k, l: -23 LUFS intended target; +/-0.2 LU QC allowance; whole-programme level gating.&quot;,
+          &quot;units&quot;: &quot;LUFS&quot;,
+          &quot;measured&quot;: -23.000000040648604,
+          &quot;lower&quot;: -23.199999999999999,
+          &quot;upper&quot;: -22.800000000000001,
+          &quot;delta&quot;: -4.0648604482385053e-08
+        },{
+          &quot;id&quot;: &quot;true-peak&quot;,
+          &quot;verdict&quot;: &quot;PASS&quot;,
+          &quot;reason&quot;: &quot;Within selected bounds.&quot;,
+          &quot;provenance&quot;: &quot;R128-2023 clause m: maximum -1 dBTP for linear audio.&quot;,
+          &quot;units&quot;: &quot;dBTP&quot;,
+          &quot;measured&quot;: -23.091563093625123,
+          &quot;lower&quot;: null,
+          &quot;upper&quot;: -1,
+          &quot;delta&quot;: -22.091563093625123
+        }]
+    },
+    &quot;measurement_identity&quot;: &quot;39b261953fee326e35db698e53a2392ac584b2dc97f1089a40969f582717bada&quot;,
+    &quot;measured_content_sha256&quot;: &quot;ba174a61b6301f3c9b4ad8ca4e82e182ca611edb2e00e2d216c5805b1fc28cfb&quot;,
+    &quot;measurement_method&quot;: &quot;bs1770-5-ebu2023-m7.1&quot;,
+    &quot;build&quot;: &quot;f36567f5f38a47daef49bc9543252b42b3403e3bdcc2fe986b755bee1576cce9&quot;,
+    &quot;platform&quot;: &quot;Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off&quot;,
+    &quot;original_runtime&quot;: &quot;&quot;,
+    &quot;restored_from_session&quot;: false,
+    &quot;frames&quot;: &quot;176400&quot;,
+    &quot;sample_rate&quot;: 44100,
+    &quot;lra_stable&quot;: false,
+    &quot;metrics&quot;: {
+      &quot;integrated&quot;: {
+        &quot;status&quot;: &quot;available&quot;,
+        &quot;unit&quot;: &quot;LUFS&quot;,
+        &quot;value&quot;: -23.000000040648604,
+        &quot;value_hex&quot;: &quot;-0x1.7000000ae959dp+4&quot;
+      },
+      &quot;true_peak&quot;: {
+        &quot;status&quot;: &quot;available&quot;,
+        &quot;unit&quot;: &quot;dBTP&quot;,
+        &quot;value&quot;: -23.091563093625123,
+        &quot;value_hex&quot;: &quot;-0x1.71770adcca3f7p+4&quot;
+      },
+      &quot;sample_peak&quot;: {
+        &quot;status&quot;: &quot;available&quot;,
+        &quot;unit&quot;: &quot;dBFS&quot;,
+        &quot;value&quot;: -23.093670155592207,
+        &quot;value_hex&quot;: &quot;-0x1.717fac46ee138p+4&quot;
+      },
+      &quot;lra&quot;: {
+        &quot;status&quot;: &quot;available&quot;,
+        &quot;unit&quot;: &quot;LU&quot;,
+        &quot;value&quot;: 2.2184321953735839,
+        &quot;value_hex&quot;: &quot;0x1.1bf5960fc2f28p+1&quot;
+      },
+      &quot;momentary_max&quot;: {
+        &quot;status&quot;: &quot;available&quot;,
+        &quot;unit&quot;: &quot;LUFS&quot;,
+        &quot;value&quot;: -22.998337990594045,
+        &quot;value_hex&quot;: &quot;-0x1.6ff93141bf4aep+4&quot;
+      },
+      &quot;short_term_max&quot;: {
+        &quot;status&quot;: &quot;available&quot;,
+        &quot;unit&quot;: &quot;LUFS&quot;,
+        &quot;value&quot;: -22.999615942397995,
+        &quot;value_hex&quot;: &quot;-0x1.6ffe6d49528dcp+4&quot;
+      }
+    },
+    &quot;per_channel_peaks&quot;: [{
+        &quot;channel&quot;: 1,
+        &quot;role&quot;: &quot;L&quot;,
+        &quot;sample_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBFS&quot;,
+          &quot;value&quot;: -23.093670155592207,
+          &quot;value_hex&quot;: &quot;-0x1.717fac46ee138p+4&quot;
+        },
+        &quot;true_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBTP&quot;,
+          &quot;value&quot;: -23.091563093625123,
+          &quot;value_hex&quot;: &quot;-0x1.71770adcca3f7p+4&quot;
+        },
+        &quot;sample_peak_frame&quot;: &quot;1771&quot;,
+        &quot;true_peak_eighth_frame&quot;: &quot;1411006&quot;
+      },{
+        &quot;channel&quot;: 2,
+        &quot;role&quot;: &quot;R&quot;,
+        &quot;sample_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBFS&quot;,
+          &quot;value&quot;: -24.67728916272938,
+          &quot;value_hex&quot;: &quot;-0x1.8ad62d293dbap+4&quot;
+        },
+        &quot;true_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBTP&quot;,
+          &quot;value&quot;: -24.608410169186996,
+          &quot;value_hex&quot;: &quot;-0x1.89bc0c4d33644p+4&quot;
+        },
+        &quot;sample_peak_frame&quot;: &quot;135994&quot;,
+        &quot;true_peak_eighth_frame&quot;: &quot;1411125&quot;
+      },{
+        &quot;channel&quot;: 3,
+        &quot;role&quot;: &quot;C&quot;,
+        &quot;sample_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBFS&quot;,
+          &quot;value&quot;: -26.615502728980644,
+          &quot;value_hex&quot;: &quot;-0x1.a9d91963b9214p+4&quot;
+        },
+        &quot;true_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBTP&quot;,
+          &quot;value&quot;: -26.61547684216146,
+          &quot;value_hex&quot;: &quot;-0x1.a9d8fe3ec8761p+4&quot;
+        },
+        &quot;sample_peak_frame&quot;: &quot;28436&quot;,
+        &quot;true_peak_eighth_frame&quot;: &quot;185&quot;
+      },{
+        &quot;channel&quot;: 4,
+        &quot;role&quot;: &quot;Lfe&quot;,
+        &quot;sample_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBFS&quot;,
+          &quot;value&quot;: -29.114270068871832,
+          &quot;value_hex&quot;: &quot;-0x1.d1d40cda0b758p+4&quot;
+        },
+        &quot;true_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBTP&quot;,
+          &quot;value&quot;: -28.645845403508932,
+          &quot;value_hex&quot;: &quot;-0x1.ca5561fd657c1p+4&quot;
+        },
+        &quot;sample_peak_frame&quot;: &quot;1078&quot;,
+        &quot;true_peak_eighth_frame&quot;: &quot;1411189&quot;
+      },{
+        &quot;channel&quot;: 5,
+        &quot;role&quot;: &quot;Ls&quot;,
+        &quot;sample_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBFS&quot;,
+          &quot;value&quot;: -32.636080465454704,
+          &quot;value_hex&quot;: &quot;-0x1.0516b15ae604fp+5&quot;
+        },
+        &quot;true_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBTP&quot;,
+          &quot;value&quot;: -32.63604997104612,
+          &quot;value_hex&quot;: &quot;-0x1.0516a15e021e6p+5&quot;
+        },
+        &quot;sample_peak_frame&quot;: &quot;1617&quot;,
+        &quot;true_peak_eighth_frame&quot;: &quot;429844&quot;
+      },{
+        &quot;channel&quot;: 6,
+        &quot;role&quot;: &quot;Rs&quot;,
+        &quot;sample_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBFS&quot;,
+          &quot;value&quot;: -38.656636025293075,
+          &quot;value_hex&quot;: &quot;-0x1.3540ca637012dp+5&quot;
+        },
+        &quot;true_peak&quot;: {
+          &quot;status&quot;: &quot;available&quot;,
+          &quot;unit&quot;: &quot;dBTP&quot;,
+          &quot;value&quot;: -37.596007532454891,
+          &quot;value_hex&quot;: &quot;-0x1.2cc49f98e081ep+5&quot;
+        },
+        &quot;sample_peak_frame&quot;: &quot;462&quot;,
+        &quot;true_peak_eighth_frame&quot;: &quot;1411189&quot;
+      }],
+    &quot;sha256&quot;: &quot;ba174a61b6301f3c9b4ad8ca4e82e182ca611edb2e00e2d216c5805b1fc28cfb&quot;,
+    &quot;basename&quot;: &quot;programme.wav&quot;,
+    &quot;container&quot;: &quot;RIFF/WAVE&quot;,
+    &quot;bits&quot;: 24,
+    &quot;channel_mask&quot;: &quot;3f&quot;,
+    &quot;file_bytes&quot;: &quot;3175268&quot;,
+    &quot;format_identity&quot;: &quot;866e6c3d344f33ec7f05f06f191ad9f2d725d869c76d09f82ddbbe424af6e199&quot;,
+    &quot;quantizer&quot;: &quot;pcm24-tpdf-splitmix64-counter-v1&quot;,
+    &quot;dither_seed_hex&quot;: &quot;866e6c3d344f33ec&quot;,
+    &quot;dither_applications&quot;: 1,
+    &quot;dither_note&quot;: &quot;TPDF applied once at final PCM24 quantization, outside Current State. Even zero-gain export is not a bit-identical copy.&quot;,
+    &quot;verification_gain_db&quot;: 0,
+    &quot;output_to_input_channels&quot;: [6,5,4,3,2,1]
+  },
+  &quot;sections_annotations_only&quot;: [],
+  &quot;reference_picture_context&quot;: {
+    &quot;basename&quot;: &quot;&quot;,
+    &quot;sha256&quot;: &quot;&quot;,
+    &quot;offset_rational&quot;: &quot;0/1&quot;,
+    &quot;is_sync_evidence&quot;: false
+  }
+}
+</pre></body></html>

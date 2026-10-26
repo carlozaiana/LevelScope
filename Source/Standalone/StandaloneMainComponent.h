@@ -1,6 +1,7 @@
 #pragma once
 #include "SessionDocument.h"
 #include "StandaloneProgrammeImport.h"
+#include "StandaloneExport.h"
 
 #include <memory>
 #include <future>
@@ -104,6 +105,24 @@ private:
     juce::TextButton draftTrimButton { "Draft global trim" };
     juce::TextButton applyTrimButton { "Apply trim" };
     juce::TextButton discardTrimButton { "Discard draft" };
+    juce::TextButton renderPcmButton { "Render and verify..." }, publishPcmButton { "Publish export" },
+        measurementReportButton { "Save measurement report..." }, artifactReportButton { "Save artifact report..." }, discardExportButton { "Discard rendered artifact" };
+    std::unique_ptr<juce::FileChooser> exportChooser;
+    std::future<ServiceResult<std::shared_ptr<exporting::Candidate>>> renderResult;
+    std::future<ServiceResult<juce::File>> exportWriteResult;
+    std::shared_ptr<exporting::Candidate> exportCandidate;
+    std::optional<exporting::Request> exportRequest;
+    JobTicket exportTicket;
+    juce::File exportDestination;
+    juce::String exportNotice = "No rendered artifact. Measurement-only reporting remains available without an export pass.";
+    std::shared_ptr<const VerifiedSource> exportSourceCopy;
+    bool publishingExport = false, savingArtifactReport = false;
+    void configureExportControls();
+    void chooseExportDestination (bool reportOnly, bool artifactOnly = false);
+    void publishExport();
+    void pollExport();
+    void refreshExportControls();
+    juce::String exportDetails() const;
 
     juce::TextEditor sourceStateBox;
     juce::TextEditor targetStateBox;

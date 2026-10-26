@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "frames": 518400000,
+  "channels": 6,
+  "sample_rate": 48000,
+  "maximum_metric_difference_by_domain": {
+    "source": 0.0,
+    "current": 0.0,
+    "artifact": 0.0
+  },
+  "artifact_sha256": [
+    "b1d75b637bd8f6893109c61674ed8513a12721978eb850f1d1c5c855f3e5c2ff",
+    "b1d75b637bd8f6893109c61674ed8513a12721978eb850f1d1c5c855f3e5c2ff"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "previous_source_digest": "e0eb0497e2c5c8b1e629dc5747e260cf21c8ef77ef2b0e39094294820fc6f996",
+  "new_source_digest": "4ff89967e4927600d0b6defafabb28c372f4068870a0f1a9adb1ee84fe1781d8",
+  "previous_identity_sha256": "225fa11cd0274d1114c9f66dcc62e8bb8e189db77639f931f8b7559722b3d038",
+  "new_identity_sha256": "0b0cd42a9f4ee917d6d62f25a903edd7ea354a7d1313d6dfa64341396453cbdd",
+  "changed_sources": [
+    "Source/Standalone/StandaloneExportUI.cpp",
+    "Tests/M10QualificationRunnerTests.py",
+    "Tests/compare_m10_reports.py",
+    "Tests/verify_m10_decoder.py"
+  ],
+  "implementation_change": "UI presentation only: derive current artifact evaluation instead of retaining render-time verdict",
+  "test_changes": "Peak comparator uses existing metric budget but exact role/status/positions; independent decoder bounds medium-file seeks; regression guards added",
+  "worker_equivalence": "All processing, measurement, export worker, quantizer, reader, session, diagnostics and video implementation files identical; build identity macro changes because UI is included in conservative whole-source fingerprint. Original candidate-02 long reports must retain original provenance.",
+  "required_new_evidence": "Candidate-03 actual-platform core suites, corrected UI checks, report verification, cross-platform exchange and bounded physical video."
+}

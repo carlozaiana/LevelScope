@@ -1,0 +1,12 @@
+[
+  {
+    "folder": "no-source-report",
+    "passed": true,
+    "report_sha256": "f3b1ac74724b9b85c5b7a4e218e57fc976e468f41359ce4b8f3d0cc695fe5424"
+  },
+  {
+    "folder": "failing-current-report",
+    "passed": true,
+    "report_sha256": "1672df416854146152894c8f0d842db0434cfc53da60b879df3e2c1abf138e41"
+  }
+]

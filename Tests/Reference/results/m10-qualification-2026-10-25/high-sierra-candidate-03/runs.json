@@ -1,0 +1,96 @@
+[
+  {
+    "name": "regressions",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "Tests/run_m8_qualification.py",
+      "--platform",
+      "high-sierra",
+      "--output",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/high-sierra-candidate-03/regressions"
+    ],
+    "exit_code": 0,
+    "seconds": 829.122087347,
+    "log_sha256": "156f6ea7c6db76b38fce8bd84b29aff29e65bfbb2c003659a6b1cbcfd75882de"
+  },
+  {
+    "name": "programmes",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/bin/LevelScopeProgrammeTests",
+      "--output",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/high-sierra-candidate-03/programmes.json",
+      "--samples",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/high-sierra-candidate-03/programme-samples",
+      "--video",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/video-fixtures",
+      "--prores",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/m7-video-fixtures",
+      "--exchange-out",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/high-sierra-candidate-03/programme-exchange",
+      "--m8-session",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/m9-fixtures/m8-sessions"
+    ],
+    "exit_code": 0,
+    "seconds": 70.85147059600001,
+    "log_sha256": "c4eac4331e7c7db68b0b50127fa65fe971d4e360bbab1f6130bde7ee847eef02"
+  },
+  {
+    "name": "programme-extended",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/bin/LevelScopeProgrammeTests",
+      "--only",
+      "--extended-oracle",
+      "--output",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/high-sierra-candidate-03/programme-extended.json"
+    ],
+    "exit_code": 0,
+    "seconds": 416.180967906,
+    "log_sha256": "b65ee9f1d4b365475b1f99042e94def746c2ede496bf2f44d4b10aa003e16fb8"
+  },
+  {
+    "name": "m9-runner",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "Tests/M9QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "seconds": 2.44350343300016,
+    "log_sha256": "f91252140b09b809ad037fc631434b3d20bcb361b88d9a18f06dddd11856430b"
+  },
+  {
+    "name": "export",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/bin/LevelScopeExportTests",
+      "--output",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/high-sierra-candidate-03/export.json",
+      "--artifacts",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/high-sierra-candidate-03/artifacts",
+      "--video",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/video-fixtures",
+      "--prores",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/m7-video-fixtures"
+    ],
+    "exit_code": 0,
+    "seconds": 121.56910178099997,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "m10-runner",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "Tests/M10QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "seconds": 0.17552223699999558,
+    "log_sha256": "1f11b6e880045ee35de832b81b45d06257342e13b5c79bbf0034379d4ca220b9"
+  }
+]

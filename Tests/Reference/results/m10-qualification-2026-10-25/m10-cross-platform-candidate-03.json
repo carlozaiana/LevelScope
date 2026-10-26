@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "cases": 16,
+  "maximum_metric_difference": 7.105427357601002e-15,
+  "distinct_artifact_hashes": 0,
+  "maximum_prequant_float_ulp": 0,
+  "maximum_same_seed_pcm24_code_difference": 0,
+  "allowances": "Metric comparisons only; never extra profile acceptance allowance"
+}

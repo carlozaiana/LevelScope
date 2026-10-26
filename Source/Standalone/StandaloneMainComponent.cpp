@@ -87,6 +87,7 @@ StandaloneMainComponent::StandaloneMainComponent()
     configureNavigationButtons();
     configureSourceControls();
     configureCurrentStateControls();
+    configureExportControls();
 
     configureReadOnlyBox (sourceStateBox);
     configureReadOnlyBox (targetStateBox);
@@ -138,6 +139,10 @@ StandaloneMainComponent::~StandaloneMainComponent()
     stopTimer();
     if (documentControl) documentControl->cancel.store(true);
     if (documentResult.valid()) documentResult.wait();
+    if (importControl) importControl->cancel.store (true);
+    if (renderResult.valid()) renderResult.wait();
+    if (exportWriteResult.valid()) exportWriteResult.wait();
+    exportCandidate.reset();
     programmeWindow.reset(); programmePanel.reset();
     videoWindow.reset();
     diagnosticsWindow.reset(); diagnosticsPanel.reset();
@@ -171,6 +176,7 @@ void StandaloneMainComponent::beginImport (const juce::File& file)
 
 void StandaloneMainComponent::timerCallback()
 {
+    pollExport();
     pollSessionOperation();
     audioPanel.synchronize(); // reject unexpectedly invalidated audition before any completion publishes
     videoPanel.synchronize(); // observes new seek/play generation before audio preroll can finish
@@ -451,6 +457,7 @@ void StandaloneMainComponent::setPage (WorkflowPage page)
 void StandaloneMainComponent::refreshFromSession()
 {
     refreshSessionControls();
+    refreshExportControls();
     workflowStateLabel.setText ("Workflow page: " + getPageName (session.selectedPage)
                                     + "   |   Global-trim proposals",
                                 juce::dontSendNotification);
@@ -675,22 +682,7 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
 
         case WorkflowPage::exportResults:
         {
-            const auto readiness = session.getWorkflowReadiness();
-
-            text << "Workflow readiness scaffold.\n\n";
-            text << readiness.buildChecklistText() << "\n\n";
-            text << readiness.buildNextActionText() << "\n\n";
-
-            text << "Proposal gate:\n";
-            text << "- Inputs satisfied: " << (readiness.areProposalInputsSatisfied() ? "yes" : "no") << "\n";
-            text << "- Global-trim proposal engine available: yes\n";
-            text << "- Draft proposal: " << (readiness.canDraftProposal() ? "available" : "blocked; inputs required") << "\n\n";
-
-            text << "Export gate:\n";
-            text << "- Render/export available: no\n";
-            text << "- Export: blocked\n\n";
-
-            text << "Selected Source/Current State rules are evaluated. A rule pass does not verify an encoded export. Global-trim drafts require explicit Apply and measurement; public export remains unavailable.\n";
+            text << exportDetails();
             break;
         }
 
@@ -775,6 +767,11 @@ void StandaloneMainComponent::resized()
     applyTrimButton.setBounds (proposalRow.removeFromLeft (120));
     proposalRow.removeFromLeft (8);
     discardTrimButton.setBounds (proposalRow.removeFromLeft (140));
+    bounds.removeFromTop (8);
+
+    auto exportRow = bounds.removeFromTop (30);
+    for (auto* button : { &renderPcmButton, &publishPcmButton, &measurementReportButton, &artifactReportButton, &discardExportButton })
+        button->setBounds (exportRow.removeFromLeft (button == &measurementReportButton ? 215 : 185).reduced (2,0));
     bounds.removeFromTop (8);
 
     auto jobRow = bounds.removeFromTop (28);

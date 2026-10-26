@@ -1,0 +1,21 @@
+[
+  {
+    "name": "long-export",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/bin/LevelScopeExportTests",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/sequoia-candidate-03-long/long-export.json",
+      "--artifacts",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/sequoia-candidate-03-long/long-artifacts",
+      "--long-session",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/m9-fixtures/long-48000/programme.levelscope",
+      "--long-destination",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/sequoia-candidate-03-long/long-export"
+    ],
+    "exit_code": 0,
+    "seconds": 2712.783772208,
+    "log_sha256": "419240427d49ca1a038bc98e0dc6b54eb1b6b43a59ecdae49486d225e6556591"
+  }
+]

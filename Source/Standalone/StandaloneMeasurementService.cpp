@@ -2,6 +2,7 @@
 #include "StandaloneProcessing.h"
 #include "StandaloneMeasurementLayout.h"
 #include "VerifiedSource.h"
+#include "Pcm24Wave.h"
 #include <juce_cryptography/juce_cryptography.h>
 #include <cmath>
 #include <iomanip>
@@ -207,6 +208,28 @@ ServiceResult<AnalysisSnapshot> OfflineAnalysisService::verifyTemporaryRender (c
             || validation.media.bitsPerSample != 24)
             throw Failure { ErrorCode::decodeFailed, "Rendered artifact validation failed" };
         return measure (context, MeasurementDomain::renderedOutput, ProgrammeReader::open({output.file}, validation.media), validation.media.sha256, 0, control, observer);
+    });
+}
+ServiceResult<AnalysisSnapshot> OfflineAnalysisService::verifyEncodedArtifact (const ServiceContext& context, JobControl& control)
+{
+    return run ([&]
+    {
+        const auto error = validateRequest (context, MeasurementDomain::renderedOutput);
+        if (error.isNotEmpty() || context.assembly || context.processing.staticGainDb != 0)
+            throw Failure { ErrorCode::invalidRequest, "Artifact measurement requires its own supported PCM context and zero additional gain. " + error };
+        pcm24::Format format; juce::String formatError;
+        if (!pcm24::inspect (context.sourceFile, format, formatError, control))
+            throw Failure { ErrorCode::invalidMetadata, formatError };
+        const auto validation = validateMedia (context.sourceFile, control);
+        if (!validation.succeeded() || validation.media.sha256 != context.media.sha256
+            || format.frames != context.media.frames || format.rate != context.media.sampleRate
+            || format.channels != context.media.channels)
+            throw Failure { ErrorCode::sourceChanged, "Encoded artifact bytes or format changed" };
+        auto result = measure (context, MeasurementDomain::renderedOutput,
+            ProgrammeReader::open ({context.sourceFile}, context.media), context.media.sha256, 0, control, observer);
+        if (pcm24::hashFile (context.sourceFile, control) != context.media.sha256)
+            throw Failure { ErrorCode::sourceChanged, "Artifact changed during measurement" };
+        return result;
     });
 }
 }

@@ -34,8 +34,9 @@ Evaluation evaluateMeasuredProgramme (const TargetProfile& profile, const Measur
     const auto bytes = s.str(); out.identity = juce::SHA256 (bytes.data(), bytes.size()).toHexString();
     out.message = profile.validationError();
     if (out.message.isNotEmpty()) return out;
-    if (input.domain != SnapshotDomain::source && input.domain != SnapshotDomain::currentState)
-    { out.message = "Only measured Source or Current State snapshots are supported."; return out; }
+    if (input.domain != SnapshotDomain::source && input.domain != SnapshotDomain::currentState
+        && input.domain != SnapshotDomain::renderedOutput)
+    { out.message = "Only measured Source, Current State or verified artifact snapshots are supported."; return out; }
     if (! input.currentIdentityMatches || input.snapshotIdentity.isEmpty())
     { out.message = "No valid current measured snapshot; measure this state first."; return out; }
     if (input.measurementVersion != measurement::version)

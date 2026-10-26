@@ -1,0 +1,5639 @@
+{
+  "schema": "levelscope-measurement-report-v1",
+  "kind": "verified-artifact-measurement",
+  "publication": "published-verified-pcm",
+  "scope": "Selected whole-programme loudness and true-peak rules only. No complete broadcaster delivery, BWF/BW64, metadata, synchronization or future encoded-media certification.",
+  "document_id": "4c25c51e101a4065915ff87851bd292c",
+  "programme_id": "3f8df858a4a644bd97cd5f50133a29c7",
+  "document_revision": "8",
+  "session_unsaved": true,
+  "session_basename": "",
+  "runtime_id": "95b11bdab3cb483ea0bdef3f18370bc7",
+  "app": "LevelScope Standalone M10",
+  "build": "f36567f5f38a47daef49bc9543252b42b3403e3bdcc2fe986b755bee1576cce9",
+  "platform": "Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off",
+  "cpu": "Intel(R) Core(TM) i7-3770K CPU @ 3.50GHz",
+  "processing_version": "static-gain-v1",
+  "processing_gain_db": -2.9395028226995876,
+  "processing_gain_hex": "-0x1.7841a0e4ff49p+1",
+  "programme_frames": "518400000",
+  "sample_rate": 48000,
+  "duration_rational_seconds": "518400000/48000",
+  "positions": "Audio-source frames; true-peak positions in eighth-frames. Video offsets and measurement EOF drain do not extend programme duration.",
+  "profile": {
+    "id": "ebu-r128-2023-programme-linear-qc",
+    "definition_version": "1.0.0",
+    "digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+    "edition": "EBU R128-2023 (November 2023)",
+    "reference": "https://tech.ebu.ch/docs/r/r128.pdf",
+    "applicability": 1,
+    "applicability_scope": "Pre-produced whole-programme linear-audio QC only; excludes live, deliberate lower targets, short-form and distribution-specific requirements.",
+    "meter_tolerance_documentary_only": "Clause m separately permits +/-0.3 dB meter tolerance for signals band-limited to 20 kHz. Bandwidth is not certified here; this provision never relaxes the -1 dBTP evaluation ceiling."
+  },
+  "assembly_definition": "6f1e78a8bef13626903e36ecea711f45a4b76411e6e796da72871c85ecc58b52",
+  "alignment_confirmation": "6f1e78a8bef13626903e36ecea711f45a4b76411e6e796da72871c85ecc58b52",
+  "source_members": [{
+      "basename": "mono-0.flac",
+      "sha256": "74cb7e4e3eefe519e95ef3683672f5dec64fa20ae2602fc02208f2a53124e57a",
+      "role": "L",
+      "sample_zero_offset_frames": "0"
+    },{
+      "basename": "mono-1.flac",
+      "sha256": "5c86da11565acf92a0d09d58d3857543b3a6555cb18cd4fa883cc6bdf4ab59d5",
+      "role": "R",
+      "sample_zero_offset_frames": "0"
+    },{
+      "basename": "mono-2.flac",
+      "sha256": "81b580ed798779a699b6f595c1c7d43eb555567c09f63ddd1b0d9316f8d50be9",
+      "role": "C",
+      "sample_zero_offset_frames": "0"
+    },{
+      "basename": "mono-3.flac",
+      "sha256": "dcc3ccbe29d02b5c17f82b5100a522b7f9334b6fcd66cbb337d454b047872e3c",
+      "role": "Lfe",
+      "sample_zero_offset_frames": "0"
+    },{
+      "basename": "mono-4.flac",
+      "sha256": "b3dff725138236b30f4d6e8793c614b555a64a3f75d06a2736a289b4477a188f",
+      "role": "Ls",
+      "sample_zero_offset_frames": "0"
+    },{
+      "basename": "mono-5.flac",
+      "sha256": "301d81a3003a089b15999f3987a73ff8811f18fce3f6cebaa2fcf5c0e9e24dfd",
+      "role": "Rs",
+      "sample_zero_offset_frames": "0"
+    }],
+  "ordered_input_roles": ["L","R","C","Lfe","Ls","Rs"],
+  "source": {
+    "domain": "Source",
+    "measurement_available": true,
+    "status": "valid_measured_snapshot",
+    "evaluation": {
+      "verdict": "FAIL",
+      "message": "Fails one or more selected measured rules.",
+      "identity": "a77d7daad8b2b7134394f30e9cf665d180e12250be6c49d21ea865d906284acc",
+      "profile_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+      "snapshot_identity": "c1c8d4e0693ccf352cca94a22419862b5b2dc4fc9e3ca221b51b548ba3f804f3",
+      "rules": [{
+          "id": "programme-loudness",
+          "verdict": "FAIL",
+          "reason": "Outside selected bounds.",
+          "provenance": "R128-2023 clauses h, i, k, l: -23 LUFS intended target; +/-0.2 LU QC allowance; whole-programme level gating.",
+          "units": "LUFS",
+          "measured": -20.060497177300412,
+          "lower": -23.199999999999999,
+          "upper": -22.800000000000001,
+          "delta": 2.9395028226995876
+        },{
+          "id": "true-peak",
+          "verdict": "PASS",
+          "reason": "Within selected bounds.",
+          "provenance": "R128-2023 clause m: maximum -1 dBTP for linear audio.",
+          "units": "dBTP",
+          "measured": -6.7871735180807331,
+          "lower": null,
+          "upper": -1,
+          "delta": -5.7871735180807331
+        }]
+    },
+    "measurement_identity": "79ff70bcd90230b80e01cb6dff8f70fa45ee0b143a294e2373d9294e7ccaa27a",
+    "measured_content_sha256": "6f1e78a8bef13626903e36ecea711f45a4b76411e6e796da72871c85ecc58b52",
+    "measurement_method": "bs1770-5-ebu2023-m7.1",
+    "build": "f36567f5f38a47daef49bc9543252b42b3403e3bdcc2fe986b755bee1576cce9",
+    "platform": "Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off",
+    "original_runtime": "",
+    "restored_from_session": false,
+    "frames": "518400000",
+    "sample_rate": 48000,
+    "lra_stable": true,
+    "metrics": {
+      "integrated": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -20.060497177300412,
+        "value_hex": "-0x1.40f7cbe36016ep+4"
+      },
+      "true_peak": {
+        "status": "available",
+        "unit": "dBTP",
+        "value": -6.7871735180807331,
+        "value_hex": "-0x1.b2610d091bc6ep+2"
+      },
+      "sample_peak": {
+        "status": "available",
+        "unit": "dBFS",
+        "value": -6.7871735180807331,
+        "value_hex": "-0x1.b2610d091bc6ep+2"
+      },
+      "lra": {
+        "status": "available",
+        "unit": "LU",
+        "value": 0,
+        "value_hex": "0x0p+0"
+      },
+      "momentary_max": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -20.016979180796902,
+        "value_hex": "-0x1.40458bf623c4ep+4"
+      },
+      "short_term_max": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -20.054669852236799,
+        "value_hex": "-0x1.40dfed7eb6f28p+4"
+      }
+    },
+    "per_channel_peaks": [{
+        "channel": 1,
+        "role": "L",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -10.308998699194358,
+          "value_hex": "-0x1.49e3513d717b6p+3"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -10.308998699194358,
+          "value_hex": "-0x1.49e3513d717b6p+3"
+        },
+        "sample_peak_frame": "518399999",
+        "true_peak_eighth_frame": "4147199992"
+      },{
+        "channel": 2,
+        "role": "R",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -9.4811449960298582,
+          "value_hex": "-0x1.2f658a30d2a22p+3"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -9.4811449960298582,
+          "value_hex": "-0x1.2f658a30d2a22p+3"
+        },
+        "sample_peak_frame": "518399999",
+        "true_peak_eighth_frame": "4147199992"
+      },{
+        "channel": 3,
+        "role": "C",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -8.7253737782418614,
+          "value_hex": "-0x1.17364311dd979p+3"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -8.7253737782418614,
+          "value_hex": "-0x1.17364311dd979p+3"
+        },
+        "sample_peak_frame": "518399999",
+        "true_peak_eighth_frame": "4147199992"
+      },{
+        "channel": 4,
+        "role": "Lfe",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -8.030131653057623,
+          "value_hex": "-0x1.00f6d6a80e9fp+3"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -8.030131653057623,
+          "value_hex": "-0x1.00f6d6a80e9fp+3"
+        },
+        "sample_peak_frame": "518399999",
+        "true_peak_eighth_frame": "4147199992"
+      },{
+        "channel": 5,
+        "role": "Ls",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -7.3864379856295983,
+          "value_hex": "-0x1.d8bb66638d85p+2"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -7.3864379856295983,
+          "value_hex": "-0x1.d8bb66638d85p+2"
+        },
+        "sample_peak_frame": "518399999",
+        "true_peak_eighth_frame": "4147199992"
+      },{
+        "channel": 6,
+        "role": "Rs",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -6.7871735180807331,
+          "value_hex": "-0x1.b2610d091bc6ep+2"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -6.7871735180807331,
+          "value_hex": "-0x1.b2610d091bc6ep+2"
+        },
+        "sample_peak_frame": "518399999",
+        "true_peak_eighth_frame": "4147199992"
+      }]
+  },
+  "current": {
+    "domain": "Current State",
+    "measurement_available": true,
+    "status": "valid_measured_snapshot",
+    "evaluation": {
+      "verdict": "PASS",
+      "message": "Passes selected programme loudness and true-peak rules.",
+      "identity": "76bce83fcd3df7f76ddd029dfb56a82668c18588fe48b23bd2d69c262cb20976",
+      "profile_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+      "snapshot_identity": "83a17aaaa95aeb21e3a427718ec9471a5695fc8003cb126b285b26673f3af63a",
+      "rules": [{
+          "id": "programme-loudness",
+          "verdict": "PASS",
+          "reason": "Within selected bounds.",
+          "provenance": "R128-2023 clauses h, i, k, l: -23 LUFS intended target; +/-0.2 LU QC allowance; whole-programme level gating.",
+          "units": "LUFS",
+          "measured": -23.000000033442493,
+          "lower": -23.199999999999999,
+          "upper": -22.800000000000001,
+          "delta": -3.3442493219126845e-08
+        },{
+          "id": "true-peak",
+          "verdict": "PASS",
+          "reason": "Within selected bounds.",
+          "provenance": "R128-2023 clause m: maximum -1 dBTP for linear audio.",
+          "units": "dBTP",
+          "measured": -9.7266765801902295,
+          "lower": null,
+          "upper": -1,
+          "delta": -8.7266765801902295
+        }]
+    },
+    "measurement_identity": "8cf1e1281d51d8bc3e38d0368d3d1a2ab98aa4b559997dfb21ee12dee072b461",
+    "measured_content_sha256": "6f1e78a8bef13626903e36ecea711f45a4b76411e6e796da72871c85ecc58b52",
+    "measurement_method": "bs1770-5-ebu2023-m7.1",
+    "build": "f36567f5f38a47daef49bc9543252b42b3403e3bdcc2fe986b755bee1576cce9",
+    "platform": "Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off",
+    "original_runtime": "",
+    "restored_from_session": false,
+    "frames": "518400000",
+    "sample_rate": 48000,
+    "lra_stable": true,
+    "metrics": {
+      "integrated": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -23.000000033442493,
+        "value_hex": "-0x1.70000008fa269p+4"
+      },
+      "true_peak": {
+        "status": "available",
+        "unit": "dBTP",
+        "value": -9.7266765801902295,
+        "value_hex": "-0x1.3740ef3e55f5p+3"
+      },
+      "sample_peak": {
+        "status": "available",
+        "unit": "dBFS",
+        "value": -9.7266765801902295,
+        "value_hex": "-0x1.3740ef3e55f5p+3"
+      },
+      "lra": {
+        "status": "available",
+        "unit": "LU",
+        "value": 0,
+        "value_hex": "0x0p+0"
+      },
+      "momentary_max": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -22.956482038101889,
+        "value_hex": "-0x1.6f4dc01c0dbeap+4"
+      },
+      "short_term_max": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -22.994172708534062,
+        "value_hex": "-0x1.6fe821a45bac3p+4"
+      }
+    },
+    "per_channel_peaks": [{
+        "channel": 1,
+        "role": "L",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -13.248501364689673,
+          "value_hex": "-0x1.a7f3b9224b5p+3"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -13.248501364689673,
+          "value_hex": "-0x1.a7f3b9224b5p+3"
+        },
+        "sample_peak_frame": "518399999",
+        "true_peak_eighth_frame": "4147199992"
+      },{
+        "channel": 2,
+        "role": "R",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -12.420647986027685,
+          "value_hex": "-0x1.8d75f2c3e3bfep+3"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -12.420647986027685,
+          "value_hex": "-0x1.8d75f2c3e3bfep+3"
+        },
+        "sample_peak_frame": "518399999",
+        "true_peak_eighth_frame": "4147199992"
+      },{
+        "channel": 3,
+        "role": "C",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -11.664877038658457,
+          "value_hex": "-0x1.7546ac361cc7ep+3"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -11.664877038658457,
+          "value_hex": "-0x1.7546ac361cc7ep+3"
+        },
+        "sample_peak_frame": "518399999",
+        "true_peak_eighth_frame": "4147199992"
+      },{
+        "channel": 4,
+        "role": "Lfe",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -10.969634227026591,
+          "value_hex": "-0x1.5f073e5bc52a9p+3"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -10.969634227026591,
+          "value_hex": "-0x1.5f073e5bc52a9p+3"
+        },
+        "sample_peak_frame": "518399999",
+        "true_peak_eighth_frame": "4147199992"
+      },{
+        "channel": 5,
+        "role": "Ls",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -10.325940821102417,
+          "value_hex": "-0x1.4a6e1b71e21eep+3"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -10.325940821102417,
+          "value_hex": "-0x1.4a6e1b71e21eep+3"
+        },
+        "sample_peak_frame": "518399999",
+        "true_peak_eighth_frame": "4147199992"
+      },{
+        "channel": 6,
+        "role": "Rs",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -9.7266765801902295,
+          "value_hex": "-0x1.3740ef3e55f5p+3"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -9.7266765801902295,
+          "value_hex": "-0x1.3740ef3e55f5p+3"
+        },
+        "sample_peak_frame": "518399999",
+        "true_peak_eighth_frame": "4147199992"
+      }]
+  },
+  "artifact": {
+    "domain": "Exported artifact",
+    "measurement_available": true,
+    "status": "valid_measured_snapshot",
+    "evaluation": {
+      "verdict": "PASS",
+      "message": "Passes selected programme loudness and true-peak rules.",
+      "identity": "4d552518ed7185c4758996637c003760930a2b8f23e228eb18599cc1114a0fae",
+      "profile_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+      "snapshot_identity": "4d8d076cf8577c3ee8a6ddccd7b5fde8d2fc156927d1cd070bbde643d693ea63",
+      "rules": [{
+          "id": "programme-loudness",
+          "verdict": "PASS",
+          "reason": "Within selected bounds.",
+          "provenance": "R128-2023 clauses h, i, k, l: -23 LUFS intended target; +/-0.2 LU QC allowance; whole-programme level gating.",
+          "units": "LUFS",
+          "measured": -23.000000033593452,
+          "lower": -23.199999999999999,
+          "upper": -22.800000000000001,
+          "delta": -3.3593451576052757e-08
+        },{
+          "id": "true-peak",
+          "verdict": "PASS",
+          "reason": "Within selected bounds.",
+          "provenance": "R128-2023 clause m: maximum -1 dBTP for linear audio.",
+          "units": "dBTP",
+          "measured": -9.7266773734186476,
+          "lower": null,
+          "upper": -1,
+          "delta": -8.7266773734186476
+        }]
+    },
+    "measurement_identity": "2b064086718b127e0d40de9e501ac28b5193c3d4f2f3a46ba32dea6268b94591",
+    "measured_content_sha256": "b1d75b637bd8f6893109c61674ed8513a12721978eb850f1d1c5c855f3e5c2ff",
+    "measurement_method": "bs1770-5-ebu2023-m7.1",
+    "build": "f36567f5f38a47daef49bc9543252b42b3403e3bdcc2fe986b755bee1576cce9",
+    "platform": "Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off",
+    "original_runtime": "",
+    "restored_from_session": false,
+    "frames": "518400000",
+    "sample_rate": 48000,
+    "lra_stable": true,
+    "metrics": {
+      "integrated": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -23.000000033593452,
+        "value_hex": "-0x1.7000000904864p+4"
+      },
+      "true_peak": {
+        "status": "available",
+        "unit": "dBTP",
+        "value": -9.7266773734186476,
+        "value_hex": "-0x1.3740f0e83270dp+3"
+      },
+      "sample_peak": {
+        "status": "available",
+        "unit": "dBFS",
+        "value": -9.7266773734186476,
+        "value_hex": "-0x1.3740f0e83270dp+3"
+      },
+      "lra": {
+        "status": "available",
+        "unit": "LU",
+        "value": 5.9488861836598517e-08,
+        "value_hex": "0x1.ff0164p-25"
+      },
+      "momentary_max": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -22.956482051176465,
+        "value_hex": "-0x1.6f4dc01f9039p+4"
+      },
+      "short_term_max": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -22.994172692171347,
+        "value_hex": "-0x1.6fe8219ff73c4p+4"
+      }
+    },
+    "per_channel_peaks": [{
+        "channel": 1,
+        "role": "L",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -13.248497795162857,
+          "value_hex": "-0x1.a7f3b1a5eb485p+3"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -13.248497795162857,
+          "value_hex": "-0x1.a7f3b1a5eb485p+3"
+        },
+        "sample_peak_frame": "518399999",
+        "true_peak_eighth_frame": "4147199992"
+      },{
+        "channel": 2,
+        "role": "R",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -12.420647986027685,
+          "value_hex": "-0x1.8d75f2c3e3bfep+3"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -12.420647986027685,
+          "value_hex": "-0x1.8d75f2c3e3bfep+3"
+        },
+        "sample_peak_frame": "518399999",
+        "true_peak_eighth_frame": "4147199992"
+      },{
+        "channel": 3,
+        "role": "C",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -11.664880013265462,
+          "value_hex": "-0x1.7546b27317a79p+3"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -11.664880013265462,
+          "value_hex": "-0x1.7546b27317a79p+3"
+        },
+        "sample_peak_frame": "518399999",
+        "true_peak_eighth_frame": "4147199992"
+      },{
+        "channel": 4,
+        "role": "Lfe",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -10.969636972817421,
+          "value_hex": "-0x1.5f07441de7c8dp+3"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -10.969636972817421,
+          "value_hex": "-0x1.5f07441de7c8dp+3"
+        },
+        "sample_peak_frame": "518399999",
+        "true_peak_eighth_frame": "4147199992"
+      },{
+        "channel": 5,
+        "role": "Ls",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -10.325939121327526,
+          "value_hex": "-0x1.4a6e17e152d6ap+3"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -10.325939121327526,
+          "value_hex": "-0x1.4a6e17e152d6ap+3"
+        },
+        "sample_peak_frame": "518399999",
+        "true_peak_eighth_frame": "4147199992"
+      },{
+        "channel": 6,
+        "role": "Rs",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -9.7266773734186476,
+          "value_hex": "-0x1.3740f0e83270dp+3"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -9.7266773734186476,
+          "value_hex": "-0x1.3740f0e83270dp+3"
+        },
+        "sample_peak_frame": "518399999",
+        "true_peak_eighth_frame": "4147199992"
+      }],
+    "sha256": "b1d75b637bd8f6893109c61674ed8513a12721978eb850f1d1c5c855f3e5c2ff",
+    "basename": "programme.wav",
+    "container": "RF64",
+    "bits": 24,
+    "channel_mask": "3f",
+    "file_bytes": "9331200104",
+    "format_identity": "9bf81be6689561b051fb39b770d40bdcfeeb760d42077434e637bdc1e45e94fd",
+    "quantizer": "pcm24-tpdf-splitmix64-counter-v1",
+    "dither_seed_hex": "9bf81be6689561b0",
+    "dither_applications": 1,
+    "dither_note": "TPDF applied once at final PCM24 quantization, outside Current State. Even zero-gain export is not a bit-identical copy.",
+    "verification_gain_db": 0,
+    "output_to_input_channels": [1,2,3,4,5,6]
+  },
+  "sections_annotations_only": [{
+      "id": "1",
+      "name": "Annotation 1",
+      "begin_frame": "0",
+      "end_frame": "518400"
+    },{
+      "id": "2",
+      "name": "Annotation 2",
+      "begin_frame": "518400",
+      "end_frame": "1036800"
+    },{
+      "id": "3",
+      "name": "Annotation 3",
+      "begin_frame": "1036800",
+      "end_frame": "1555200"
+    },{
+      "id": "4",
+      "name": "Annotation 4",
+      "begin_frame": "1555200",
+      "end_frame": "2073600"
+    },{
+      "id": "5",
+      "name": "Annotation 5",
+      "begin_frame": "2073600",
+      "end_frame": "2592000"
+    },{
+      "id": "6",
+      "name": "Annotation 6",
+      "begin_frame": "2592000",
+      "end_frame": "3110400"
+    },{
+      "id": "7",
+      "name": "Annotation 7",
+      "begin_frame": "3110400",
+      "end_frame": "3628800"
+    },{
+      "id": "8",
+      "name": "Annotation 8",
+      "begin_frame": "3628800",
+      "end_frame": "4147200"
+    },{
+      "id": "9",
+      "name": "Annotation 9",
+      "begin_frame": "4147200",
+      "end_frame": "4665600"
+    },{
+      "id": "10",
+      "name": "Annotation 10",
+      "begin_frame": "4665600",
+      "end_frame": "5184000"
+    },{
+      "id": "11",
+      "name": "Annotation 11",
+      "begin_frame": "5184000",
+      "end_frame": "5702400"
+    },{
+      "id": "12",
+      "name": "Annotation 12",
+      "begin_frame": "5702400",
+      "end_frame": "6220800"
+    },{
+      "id": "13",
+      "name": "Annotation 13",
+      "begin_frame": "6220800",
+      "end_frame": "6739200"
+    },{
+      "id": "14",
+      "name": "Annotation 14",
+      "begin_frame": "6739200",
+      "end_frame": "7257600"
+    },{
+      "id": "15",
+      "name": "Annotation 15",
+      "begin_frame": "7257600",
+      "end_frame": "7776000"
+    },{
+      "id": "16",
+      "name": "Annotation 16",
+      "begin_frame": "7776000",
+      "end_frame": "8294400"
+    },{
+      "id": "17",
+      "name": "Annotation 17",
+      "begin_frame": "8294400",
+      "end_frame": "8812800"
+    },{
+      "id": "18",
+      "name": "Annotation 18",
+      "begin_frame": "8812800",
+      "end_frame": "9331200"
+    },{
+      "id": "19",
+      "name": "Annotation 19",
+      "begin_frame": "9331200",
+      "end_frame": "9849600"
+    },{
+      "id": "20",
+      "name": "Annotation 20",
+      "begin_frame": "9849600",
+      "end_frame": "10368000"
+    },{
+      "id": "21",
+      "name": "Annotation 21",
+      "begin_frame": "10368000",
+      "end_frame": "10886400"
+    },{
+      "id": "22",
+      "name": "Annotation 22",
+      "begin_frame": "10886400",
+      "end_frame": "11404800"
+    },{
+      "id": "23",
+      "name": "Annotation 23",
+      "begin_frame": "11404800",
+      "end_frame": "11923200"
+    },{
+      "id": "24",
+      "name": "Annotation 24",
+      "begin_frame": "11923200",
+      "end_frame": "12441600"
+    },{
+      "id": "25",
+      "name": "Annotation 25",
+      "begin_frame": "12441600",
+      "end_frame": "12960000"
+    },{
+      "id": "26",
+      "name": "Annotation 26",
+      "begin_frame": "12960000",
+      "end_frame": "13478400"
+    },{
+      "id": "27",
+      "name": "Annotation 27",
+      "begin_frame": "13478400",
+      "end_frame": "13996800"
+    },{
+      "id": "28",
+      "name": "Annotation 28",
+      "begin_frame": "13996800",
+      "end_frame": "14515200"
+    },{
+      "id": "29",
+      "name": "Annotation 29",
+      "begin_frame": "14515200",
+      "end_frame": "15033600"
+    },{
+      "id": "30",
+      "name": "Annotation 30",
+      "begin_frame": "15033600",
+      "end_frame": "15552000"
+    },{
+      "id": "31",
+      "name": "Annotation 31",
+      "begin_frame": "15552000",
+      "end_frame": "16070400"
+    },{
+      "id": "32",
+      "name": "Annotation 32",
+      "begin_frame": "16070400",
+      "end_frame": "16588800"
+    },{
+      "id": "33",
+      "name": "Annotation 33",
+      "begin_frame": "16588800",
+      "end_frame": "17107200"
+    },{
+      "id": "34",
+      "name": "Annotation 34",
+      "begin_frame": "17107200",
+      "end_frame": "17625600"
+    },{
+      "id": "35",
+      "name": "Annotation 35",
+      "begin_frame": "17625600",
+      "end_frame": "18144000"
+    },{
+      "id": "36",
+      "name": "Annotation 36",
+      "begin_frame": "18144000",
+      "end_frame": "18662400"
+    },{
+      "id": "37",
+      "name": "Annotation 37",
+      "begin_frame": "18662400",
+      "end_frame": "19180800"
+    },{
+      "id": "38",
+      "name": "Annotation 38",
+      "begin_frame": "19180800",
+      "end_frame": "19699200"
+    },{
+      "id": "39",
+      "name": "Annotation 39",
+      "begin_frame": "19699200",
+      "end_frame": "20217600"
+    },{
+      "id": "40",
+      "name": "Annotation 40",
+      "begin_frame": "20217600",
+      "end_frame": "20736000"
+    },{
+      "id": "41",
+      "name": "Annotation 41",
+      "begin_frame": "20736000",
+      "end_frame": "21254400"
+    },{
+      "id": "42",
+      "name": "Annotation 42",
+      "begin_frame": "21254400",
+      "end_frame": "21772800"
+    },{
+      "id": "43",
+      "name": "Annotation 43",
+      "begin_frame": "21772800",
+      "end_frame": "22291200"
+    },{
+      "id": "44",
+      "name": "Annotation 44",
+      "begin_frame": "22291200",
+      "end_frame": "22809600"
+    },{
+      "id": "45",
+      "name": "Annotation 45",
+      "begin_frame": "22809600",
+      "end_frame": "23328000"
+    },{
+      "id": "46",
+      "name": "Annotation 46",
+      "begin_frame": "23328000",
+      "end_frame": "23846400"
+    },{
+      "id": "47",
+      "name": "Annotation 47",
+      "begin_frame": "23846400",
+      "end_frame": "24364800"
+    },{
+      "id": "48",
+      "name": "Annotation 48",
+      "begin_frame": "24364800",
+      "end_frame": "24883200"
+    },{
+      "id": "49",
+      "name": "Annotation 49",
+      "begin_frame": "24883200",
+      "end_frame": "25401600"
+    },{
+      "id": "50",
+      "name": "Annotation 50",
+      "begin_frame": "25401600",
+      "end_frame": "25920000"
+    },{
+      "id": "51",
+      "name": "Annotation 51",
+      "begin_frame": "25920000",
+      "end_frame": "26438400"
+    },{
+      "id": "52",
+      "name": "Annotation 52",
+      "begin_frame": "26438400",
+      "end_frame": "26956800"
+    },{
+      "id": "53",
+      "name": "Annotation 53",
+      "begin_frame": "26956800",
+      "end_frame": "27475200"
+    },{
+      "id": "54",
+      "name": "Annotation 54",
+      "begin_frame": "27475200",
+      "end_frame": "27993600"
+    },{
+      "id": "55",
+      "name": "Annotation 55",
+      "begin_frame": "27993600",
+      "end_frame": "28512000"
+    },{
+      "id": "56",
+      "name": "Annotation 56",
+      "begin_frame": "28512000",
+      "end_frame": "29030400"
+    },{
+      "id": "57",
+      "name": "Annotation 57",
+      "begin_frame": "29030400",
+      "end_frame": "29548800"
+    },{
+      "id": "58",
+      "name": "Annotation 58",
+      "begin_frame": "29548800",
+      "end_frame": "30067200"
+    },{
+      "id": "59",
+      "name": "Annotation 59",
+      "begin_frame": "30067200",
+      "end_frame": "30585600"
+    },{
+      "id": "60",
+      "name": "Annotation 60",
+      "begin_frame": "30585600",
+      "end_frame": "31104000"
+    },{
+      "id": "61",
+      "name": "Annotation 61",
+      "begin_frame": "31104000",
+      "end_frame": "31622400"
+    },{
+      "id": "62",
+      "name": "Annotation 62",
+      "begin_frame": "31622400",
+      "end_frame": "32140800"
+    },{
+      "id": "63",
+      "name": "Annotation 63",
+      "begin_frame": "32140800",
+      "end_frame": "32659200"
+    },{
+      "id": "64",
+      "name": "Annotation 64",
+      "begin_frame": "32659200",
+      "end_frame": "33177600"
+    },{
+      "id": "65",
+      "name": "Annotation 65",
+      "begin_frame": "33177600",
+      "end_frame": "33696000"
+    },{
+      "id": "66",
+      "name": "Annotation 66",
+      "begin_frame": "33696000",
+      "end_frame": "34214400"
+    },{
+      "id": "67",
+      "name": "Annotation 67",
+      "begin_frame": "34214400",
+      "end_frame": "34732800"
+    },{
+      "id": "68",
+      "name": "Annotation 68",
+      "begin_frame": "34732800",
+      "end_frame": "35251200"
+    },{
+      "id": "69",
+      "name": "Annotation 69",
+      "begin_frame": "35251200",
+      "end_frame": "35769600"
+    },{
+      "id": "70",
+      "name": "Annotation 70",
+      "begin_frame": "35769600",
+      "end_frame": "36288000"
+    },{
+      "id": "71",
+      "name": "Annotation 71",
+      "begin_frame": "36288000",
+      "end_frame": "36806400"
+    },{
+      "id": "72",
+      "name": "Annotation 72",
+      "begin_frame": "36806400",
+      "end_frame": "37324800"
+    },{
+      "id": "73",
+      "name": "Annotation 73",
+      "begin_frame": "37324800",
+      "end_frame": "37843200"
+    },{
+      "id": "74",
+      "name": "Annotation 74",
+      "begin_frame": "37843200",
+      "end_frame": "38361600"
+    },{
+      "id": "75",
+      "name": "Annotation 75",
+      "begin_frame": "38361600",
+      "end_frame": "38880000"
+    },{
+      "id": "76",
+      "name": "Annotation 76",
+      "begin_frame": "38880000",
+      "end_frame": "39398400"
+    },{
+      "id": "77",
+      "name": "Annotation 77",
+      "begin_frame": "39398400",
+      "end_frame": "39916800"
+    },{
+      "id": "78",
+      "name": "Annotation 78",
+      "begin_frame": "39916800",
+      "end_frame": "40435200"
+    },{
+      "id": "79",
+      "name": "Annotation 79",
+      "begin_frame": "40435200",
+      "end_frame": "40953600"
+    },{
+      "id": "80",
+      "name": "Annotation 80",
+      "begin_frame": "40953600",
+      "end_frame": "41472000"
+    },{
+      "id": "81",
+      "name": "Annotation 81",
+      "begin_frame": "41472000",
+      "end_frame": "41990400"
+    },{
+      "id": "82",
+      "name": "Annotation 82",
+      "begin_frame": "41990400",
+      "end_frame": "42508800"
+    },{
+      "id": "83",
+      "name": "Annotation 83",
+      "begin_frame": "42508800",
+      "end_frame": "43027200"
+    },{
+      "id": "84",
+      "name": "Annotation 84",
+      "begin_frame": "43027200",
+      "end_frame": "43545600"
+    },{
+      "id": "85",
+      "name": "Annotation 85",
+      "begin_frame": "43545600",
+      "end_frame": "44064000"
+    },{
+      "id": "86",
+      "name": "Annotation 86",
+      "begin_frame": "44064000",
+      "end_frame": "44582400"
+    },{
+      "id": "87",
+      "name": "Annotation 87",
+      "begin_frame": "44582400",
+      "end_frame": "45100800"
+    },{
+      "id": "88",
+      "name": "Annotation 88",
+      "begin_frame": "45100800",
+      "end_frame": "45619200"
+    },{
+      "id": "89",
+      "name": "Annotation 89",
+      "begin_frame": "45619200",
+      "end_frame": "46137600"
+    },{
+      "id": "90",
+      "name": "Annotation 90",
+      "begin_frame": "46137600",
+      "end_frame": "46656000"
+    },{
+      "id": "91",
+      "name": "Annotation 91",
+      "begin_frame": "46656000",
+      "end_frame": "47174400"
+    },{
+      "id": "92",
+      "name": "Annotation 92",
+      "begin_frame": "47174400",
+      "end_frame": "47692800"
+    },{
+      "id": "93",
+      "name": "Annotation 93",
+      "begin_frame": "47692800",
+      "end_frame": "48211200"
+    },{
+      "id": "94",
+      "name": "Annotation 94",
+      "begin_frame": "48211200",
+      "end_frame": "48729600"
+    },{
+      "id": "95",
+      "name": "Annotation 95",
+      "begin_frame": "48729600",
+      "end_frame": "49248000"
+    },{
+      "id": "96",
+      "name": "Annotation 96",
+      "begin_frame": "49248000",
+      "end_frame": "49766400"
+    },{
+      "id": "97",
+      "name": "Annotation 97",
+      "begin_frame": "49766400",
+      "end_frame": "50284800"
+    },{
+      "id": "98",
+      "name": "Annotation 98",
+      "begin_frame": "50284800",
+      "end_frame": "50803200"
+    },{
+      "id": "99",
+      "name": "Annotation 99",
+      "begin_frame": "50803200",
+      "end_frame": "51321600"
+    },{
+      "id": "100",
+      "name": "Annotation 100",
+      "begin_frame": "51321600",
+      "end_frame": "51840000"
+    },{
+      "id": "101",
+      "name": "Annotation 101",
+      "begin_frame": "51840000",
+      "end_frame": "52358400"
+    },{
+      "id": "102",
+      "name": "Annotation 102",
+      "begin_frame": "52358400",
+      "end_frame": "52876800"
+    },{
+      "id": "103",
+      "name": "Annotation 103",
+      "begin_frame": "52876800",
+      "end_frame": "53395200"
+    },{
+      "id": "104",
+      "name": "Annotation 104",
+      "begin_frame": "53395200",
+      "end_frame": "53913600"
+    },{
+      "id": "105",
+      "name": "Annotation 105",
+      "begin_frame": "53913600",
+      "end_frame": "54432000"
+    },{
+      "id": "106",
+      "name": "Annotation 106",
+      "begin_frame": "54432000",
+      "end_frame": "54950400"
+    },{
+      "id": "107",
+      "name": "Annotation 107",
+      "begin_frame": "54950400",
+      "end_frame": "55468800"
+    },{
+      "id": "108",
+      "name": "Annotation 108",
+      "begin_frame": "55468800",
+      "end_frame": "55987200"
+    },{
+      "id": "109",
+      "name": "Annotation 109",
+      "begin_frame": "55987200",
+      "end_frame": "56505600"
+    },{
+      "id": "110",
+      "name": "Annotation 110",
+      "begin_frame": "56505600",
+      "end_frame": "57024000"
+    },{
+      "id": "111",
+      "name": "Annotation 111",
+      "begin_frame": "57024000",
+      "end_frame": "57542400"
+    },{
+      "id": "112",
+      "name": "Annotation 112",
+      "begin_frame": "57542400",
+      "end_frame": "58060800"
+    },{
+      "id": "113",
+      "name": "Annotation 113",
+      "begin_frame": "58060800",
+      "end_frame": "58579200"
+    },{
+      "id": "114",
+      "name": "Annotation 114",
+      "begin_frame": "58579200",
+      "end_frame": "59097600"
+    },{
+      "id": "115",
+      "name": "Annotation 115",
+      "begin_frame": "59097600",
+      "end_frame": "59616000"
+    },{
+      "id": "116",
+      "name": "Annotation 116",
+      "begin_frame": "59616000",
+      "end_frame": "60134400"
+    },{
+      "id": "117",
+      "name": "Annotation 117",
+      "begin_frame": "60134400",
+      "end_frame": "60652800"
+    },{
+      "id": "118",
+      "name": "Annotation 118",
+      "begin_frame": "60652800",
+      "end_frame": "61171200"
+    },{
+      "id": "119",
+      "name": "Annotation 119",
+      "begin_frame": "61171200",
+      "end_frame": "61689600"
+    },{
+      "id": "120",
+      "name": "Annotation 120",
+      "begin_frame": "61689600",
+      "end_frame": "62208000"
+    },{
+      "id": "121",
+      "name": "Annotation 121",
+      "begin_frame": "62208000",
+      "end_frame": "62726400"
+    },{
+      "id": "122",
+      "name": "Annotation 122",
+      "begin_frame": "62726400",
+      "end_frame": "63244800"
+    },{
+      "id": "123",
+      "name": "Annotation 123",
+      "begin_frame": "63244800",
+      "end_frame": "63763200"
+    },{
+      "id": "124",
+      "name": "Annotation 124",
+      "begin_frame": "63763200",
+      "end_frame": "64281600"
+    },{
+      "id": "125",
+      "name": "Annotation 125",
+      "begin_frame": "64281600",
+      "end_frame": "64800000"
+    },{
+      "id": "126",
+      "name": "Annotation 126",
+      "begin_frame": "64800000",
+      "end_frame": "65318400"
+    },{
+      "id": "127",
+      "name": "Annotation 127",
+      "begin_frame": "65318400",
+      "end_frame": "65836800"
+    },{
+      "id": "128",
+      "name": "Annotation 128",
+      "begin_frame": "65836800",
+      "end_frame": "66355200"
+    },{
+      "id": "129",
+      "name": "Annotation 129",
+      "begin_frame": "66355200",
+      "end_frame": "66873600"
+    },{
+      "id": "130",
+      "name": "Annotation 130",
+      "begin_frame": "66873600",
+      "end_frame": "67392000"
+    },{
+      "id": "131",
+      "name": "Annotation 131",
+      "begin_frame": "67392000",
+      "end_frame": "67910400"
+    },{
+      "id": "132",
+      "name": "Annotation 132",
+      "begin_frame": "67910400",
+      "end_frame": "68428800"
+    },{
+      "id": "133",
+      "name": "Annotation 133",
+      "begin_frame": "68428800",
+      "end_frame": "68947200"
+    },{
+      "id": "134",
+      "name": "Annotation 134",
+      "begin_frame": "68947200",
+      "end_frame": "69465600"
+    },{
+      "id": "135",
+      "name": "Annotation 135",
+      "begin_frame": "69465600",
+      "end_frame": "69984000"
+    },{
+      "id": "136",
+      "name": "Annotation 136",
+      "begin_frame": "69984000",
+      "end_frame": "70502400"
+    },{
+      "id": "137",
+      "name": "Annotation 137",
+      "begin_frame": "70502400",
+      "end_frame": "71020800"
+    },{
+      "id": "138",
+      "name": "Annotation 138",
+      "begin_frame": "71020800",
+      "end_frame": "71539200"
+    },{
+      "id": "139",
+      "name": "Annotation 139",
+      "begin_frame": "71539200",
+      "end_frame": "72057600"
+    },{
+      "id": "140",
+      "name": "Annotation 140",
+      "begin_frame": "72057600",
+      "end_frame": "72576000"
+    },{
+      "id": "141",
+      "name": "Annotation 141",
+      "begin_frame": "72576000",
+      "end_frame": "73094400"
+    },{
+      "id": "142",
+      "name": "Annotation 142",
+      "begin_frame": "73094400",
+      "end_frame": "73612800"
+    },{
+      "id": "143",
+      "name": "Annotation 143",
+      "begin_frame": "73612800",
+      "end_frame": "74131200"
+    },{
+      "id": "144",
+      "name": "Annotation 144",
+      "begin_frame": "74131200",
+      "end_frame": "74649600"
+    },{
+      "id": "145",
+      "name": "Annotation 145",
+      "begin_frame": "74649600",
+      "end_frame": "75168000"
+    },{
+      "id": "146",
+      "name": "Annotation 146",
+      "begin_frame": "75168000",
+      "end_frame": "75686400"
+    },{
+      "id": "147",
+      "name": "Annotation 147",
+      "begin_frame": "75686400",
+      "end_frame": "76204800"
+    },{
+      "id": "148",
+      "name": "Annotation 148",
+      "begin_frame": "76204800",
+      "end_frame": "76723200"
+    },{
+      "id": "149",
+      "name": "Annotation 149",
+      "begin_frame": "76723200",
+      "end_frame": "77241600"
+    },{
+      "id": "150",
+      "name": "Annotation 150",
+      "begin_frame": "77241600",
+      "end_frame": "77760000"
+    },{
+      "id": "151",
+      "name": "Annotation 151",
+      "begin_frame": "77760000",
+      "end_frame": "78278400"
+    },{
+      "id": "152",
+      "name": "Annotation 152",
+      "begin_frame": "78278400",
+      "end_frame": "78796800"
+    },{
+      "id": "153",
+      "name": "Annotation 153",
+      "begin_frame": "78796800",
+      "end_frame": "79315200"
+    },{
+      "id": "154",
+      "name": "Annotation 154",
+      "begin_frame": "79315200",
+      "end_frame": "79833600"
+    },{
+      "id": "155",
+      "name": "Annotation 155",
+      "begin_frame": "79833600",
+      "end_frame": "80352000"
+    },{
+      "id": "156",
+      "name": "Annotation 156",
+      "begin_frame": "80352000",
+      "end_frame": "80870400"
+    },{
+      "id": "157",
+      "name": "Annotation 157",
+      "begin_frame": "80870400",
+      "end_frame": "81388800"
+    },{
+      "id": "158",
+      "name": "Annotation 158",
+      "begin_frame": "81388800",
+      "end_frame": "81907200"
+    },{
+      "id": "159",
+      "name": "Annotation 159",
+      "begin_frame": "81907200",
+      "end_frame": "82425600"
+    },{
+      "id": "160",
+      "name": "Annotation 160",
+      "begin_frame": "82425600",
+      "end_frame": "82944000"
+    },{
+      "id": "161",
+      "name": "Annotation 161",
+      "begin_frame": "82944000",
+      "end_frame": "83462400"
+    },{
+      "id": "162",
+      "name": "Annotation 162",
+      "begin_frame": "83462400",
+      "end_frame": "83980800"
+    },{
+      "id": "163",
+      "name": "Annotation 163",
+      "begin_frame": "83980800",
+      "end_frame": "84499200"
+    },{
+      "id": "164",
+      "name": "Annotation 164",
+      "begin_frame": "84499200",
+      "end_frame": "85017600"
+    },{
+      "id": "165",
+      "name": "Annotation 165",
+      "begin_frame": "85017600",
+      "end_frame": "85536000"
+    },{
+      "id": "166",
+      "name": "Annotation 166",
+      "begin_frame": "85536000",
+      "end_frame": "86054400"
+    },{
+      "id": "167",
+      "name": "Annotation 167",
+      "begin_frame": "86054400",
+      "end_frame": "86572800"
+    },{
+      "id": "168",
+      "name": "Annotation 168",
+      "begin_frame": "86572800",
+      "end_frame": "87091200"
+    },{
+      "id": "169",
+      "name": "Annotation 169",
+      "begin_frame": "87091200",
+      "end_frame": "87609600"
+    },{
+      "id": "170",
+      "name": "Annotation 170",
+      "begin_frame": "87609600",
+      "end_frame": "88128000"
+    },{
+      "id": "171",
+      "name": "Annotation 171",
+      "begin_frame": "88128000",
+      "end_frame": "88646400"
+    },{
+      "id": "172",
+      "name": "Annotation 172",
+      "begin_frame": "88646400",
+      "end_frame": "89164800"
+    },{
+      "id": "173",
+      "name": "Annotation 173",
+      "begin_frame": "89164800",
+      "end_frame": "89683200"
+    },{
+      "id": "174",
+      "name": "Annotation 174",
+      "begin_frame": "89683200",
+      "end_frame": "90201600"
+    },{
+      "id": "175",
+      "name": "Annotation 175",
+      "begin_frame": "90201600",
+      "end_frame": "90720000"
+    },{
+      "id": "176",
+      "name": "Annotation 176",
+      "begin_frame": "90720000",
+      "end_frame": "91238400"
+    },{
+      "id": "177",
+      "name": "Annotation 177",
+      "begin_frame": "91238400",
+      "end_frame": "91756800"
+    },{
+      "id": "178",
+      "name": "Annotation 178",
+      "begin_frame": "91756800",
+      "end_frame": "92275200"
+    },{
+      "id": "179",
+      "name": "Annotation 179",
+      "begin_frame": "92275200",
+      "end_frame": "92793600"
+    },{
+      "id": "180",
+      "name": "Annotation 180",
+      "begin_frame": "92793600",
+      "end_frame": "93312000"
+    },{
+      "id": "181",
+      "name": "Annotation 181",
+      "begin_frame": "93312000",
+      "end_frame": "93830400"
+    },{
+      "id": "182",
+      "name": "Annotation 182",
+      "begin_frame": "93830400",
+      "end_frame": "94348800"
+    },{
+      "id": "183",
+      "name": "Annotation 183",
+      "begin_frame": "94348800",
+      "end_frame": "94867200"
+    },{
+      "id": "184",
+      "name": "Annotation 184",
+      "begin_frame": "94867200",
+      "end_frame": "95385600"
+    },{
+      "id": "185",
+      "name": "Annotation 185",
+      "begin_frame": "95385600",
+      "end_frame": "95904000"
+    },{
+      "id": "186",
+      "name": "Annotation 186",
+      "begin_frame": "95904000",
+      "end_frame": "96422400"
+    },{
+      "id": "187",
+      "name": "Annotation 187",
+      "begin_frame": "96422400",
+      "end_frame": "96940800"
+    },{
+      "id": "188",
+      "name": "Annotation 188",
+      "begin_frame": "96940800",
+      "end_frame": "97459200"
+    },{
+      "id": "189",
+      "name": "Annotation 189",
+      "begin_frame": "97459200",
+      "end_frame": "97977600"
+    },{
+      "id": "190",
+      "name": "Annotation 190",
+      "begin_frame": "97977600",
+      "end_frame": "98496000"
+    },{
+      "id": "191",
+      "name": "Annotation 191",
+      "begin_frame": "98496000",
+      "end_frame": "99014400"
+    },{
+      "id": "192",
+      "name": "Annotation 192",
+      "begin_frame": "99014400",
+      "end_frame": "99532800"
+    },{
+      "id": "193",
+      "name": "Annotation 193",
+      "begin_frame": "99532800",
+      "end_frame": "100051200"
+    },{
+      "id": "194",
+      "name": "Annotation 194",
+      "begin_frame": "100051200",
+      "end_frame": "100569600"
+    },{
+      "id": "195",
+      "name": "Annotation 195",
+      "begin_frame": "100569600",
+      "end_frame": "101088000"
+    },{
+      "id": "196",
+      "name": "Annotation 196",
+      "begin_frame": "101088000",
+      "end_frame": "101606400"
+    },{
+      "id": "197",
+      "name": "Annotation 197",
+      "begin_frame": "101606400",
+      "end_frame": "102124800"
+    },{
+      "id": "198",
+      "name": "Annotation 198",
+      "begin_frame": "102124800",
+      "end_frame": "102643200"
+    },{
+      "id": "199",
+      "name": "Annotation 199",
+      "begin_frame": "102643200",
+      "end_frame": "103161600"
+    },{
+      "id": "200",
+      "name": "Annotation 200",
+      "begin_frame": "103161600",
+      "end_frame": "103680000"
+    },{
+      "id": "201",
+      "name": "Annotation 201",
+      "begin_frame": "103680000",
+      "end_frame": "104198400"
+    },{
+      "id": "202",
+      "name": "Annotation 202",
+      "begin_frame": "104198400",
+      "end_frame": "104716800"
+    },{
+      "id": "203",
+      "name": "Annotation 203",
+      "begin_frame": "104716800",
+      "end_frame": "105235200"
+    },{
+      "id": "204",
+      "name": "Annotation 204",
+      "begin_frame": "105235200",
+      "end_frame": "105753600"
+    },{
+      "id": "205",
+      "name": "Annotation 205",
+      "begin_frame": "105753600",
+      "end_frame": "106272000"
+    },{
+      "id": "206",
+      "name": "Annotation 206",
+      "begin_frame": "106272000",
+      "end_frame": "106790400"
+    },{
+      "id": "207",
+      "name": "Annotation 207",
+      "begin_frame": "106790400",
+      "end_frame": "107308800"
+    },{
+      "id": "208",
+      "name": "Annotation 208",
+      "begin_frame": "107308800",
+      "end_frame": "107827200"
+    },{
+      "id": "209",
+      "name": "Annotation 209",
+      "begin_frame": "107827200",
+      "end_frame": "108345600"
+    },{
+      "id": "210",
+      "name": "Annotation 210",
+      "begin_frame": "108345600",
+      "end_frame": "108864000"
+    },{
+      "id": "211",
+      "name": "Annotation 211",
+      "begin_frame": "108864000",
+      "end_frame": "109382400"
+    },{
+      "id": "212",
+      "name": "Annotation 212",
+      "begin_frame": "109382400",
+      "end_frame": "109900800"
+    },{
+      "id": "213",
+      "name": "Annotation 213",
+      "begin_frame": "109900800",
+      "end_frame": "110419200"
+    },{
+      "id": "214",
+      "name": "Annotation 214",
+      "begin_frame": "110419200",
+      "end_frame": "110937600"
+    },{
+      "id": "215",
+      "name": "Annotation 215",
+      "begin_frame": "110937600",
+      "end_frame": "111456000"
+    },{
+      "id": "216",
+      "name": "Annotation 216",
+      "begin_frame": "111456000",
+      "end_frame": "111974400"
+    },{
+      "id": "217",
+      "name": "Annotation 217",
+      "begin_frame": "111974400",
+      "end_frame": "112492800"
+    },{
+      "id": "218",
+      "name": "Annotation 218",
+      "begin_frame": "112492800",
+      "end_frame": "113011200"
+    },{
+      "id": "219",
+      "name": "Annotation 219",
+      "begin_frame": "113011200",
+      "end_frame": "113529600"
+    },{
+      "id": "220",
+      "name": "Annotation 220",
+      "begin_frame": "113529600",
+      "end_frame": "114048000"
+    },{
+      "id": "221",
+      "name": "Annotation 221",
+      "begin_frame": "114048000",
+      "end_frame": "114566400"
+    },{
+      "id": "222",
+      "name": "Annotation 222",
+      "begin_frame": "114566400",
+      "end_frame": "115084800"
+    },{
+      "id": "223",
+      "name": "Annotation 223",
+      "begin_frame": "115084800",
+      "end_frame": "115603200"
+    },{
+      "id": "224",
+      "name": "Annotation 224",
+      "begin_frame": "115603200",
+      "end_frame": "116121600"
+    },{
+      "id": "225",
+      "name": "Annotation 225",
+      "begin_frame": "116121600",
+      "end_frame": "116640000"
+    },{
+      "id": "226",
+      "name": "Annotation 226",
+      "begin_frame": "116640000",
+      "end_frame": "117158400"
+    },{
+      "id": "227",
+      "name": "Annotation 227",
+      "begin_frame": "117158400",
+      "end_frame": "117676800"
+    },{
+      "id": "228",
+      "name": "Annotation 228",
+      "begin_frame": "117676800",
+      "end_frame": "118195200"
+    },{
+      "id": "229",
+      "name": "Annotation 229",
+      "begin_frame": "118195200",
+      "end_frame": "118713600"
+    },{
+      "id": "230",
+      "name": "Annotation 230",
+      "begin_frame": "118713600",
+      "end_frame": "119232000"
+    },{
+      "id": "231",
+      "name": "Annotation 231",
+      "begin_frame": "119232000",
+      "end_frame": "119750400"
+    },{
+      "id": "232",
+      "name": "Annotation 232",
+      "begin_frame": "119750400",
+      "end_frame": "120268800"
+    },{
+      "id": "233",
+      "name": "Annotation 233",
+      "begin_frame": "120268800",
+      "end_frame": "120787200"
+    },{
+      "id": "234",
+      "name": "Annotation 234",
+      "begin_frame": "120787200",
+      "end_frame": "121305600"
+    },{
+      "id": "235",
+      "name": "Annotation 235",
+      "begin_frame": "121305600",
+      "end_frame": "121824000"
+    },{
+      "id": "236",
+      "name": "Annotation 236",
+      "begin_frame": "121824000",
+      "end_frame": "122342400"
+    },{
+      "id": "237",
+      "name": "Annotation 237",
+      "begin_frame": "122342400",
+      "end_frame": "122860800"
+    },{
+      "id": "238",
+      "name": "Annotation 238",
+      "begin_frame": "122860800",
+      "end_frame": "123379200"
+    },{
+      "id": "239",
+      "name": "Annotation 239",
+      "begin_frame": "123379200",
+      "end_frame": "123897600"
+    },{
+      "id": "240",
+      "name": "Annotation 240",
+      "begin_frame": "123897600",
+      "end_frame": "124416000"
+    },{
+      "id": "241",
+      "name": "Annotation 241",
+      "begin_frame": "124416000",
+      "end_frame": "124934400"
+    },{
+      "id": "242",
+      "name": "Annotation 242",
+      "begin_frame": "124934400",
+      "end_frame": "125452800"
+    },{
+      "id": "243",
+      "name": "Annotation 243",
+      "begin_frame": "125452800",
+      "end_frame": "125971200"
+    },{
+      "id": "244",
+      "name": "Annotation 244",
+      "begin_frame": "125971200",
+      "end_frame": "126489600"
+    },{
+      "id": "245",
+      "name": "Annotation 245",
+      "begin_frame": "126489600",
+      "end_frame": "127008000"
+    },{
+      "id": "246",
+      "name": "Annotation 246",
+      "begin_frame": "127008000",
+      "end_frame": "127526400"
+    },{
+      "id": "247",
+      "name": "Annotation 247",
+      "begin_frame": "127526400",
+      "end_frame": "128044800"
+    },{
+      "id": "248",
+      "name": "Annotation 248",
+      "begin_frame": "128044800",
+      "end_frame": "128563200"
+    },{
+      "id": "249",
+      "name": "Annotation 249",
+      "begin_frame": "128563200",
+      "end_frame": "129081600"
+    },{
+      "id": "250",
+      "name": "Annotation 250",
+      "begin_frame": "129081600",
+      "end_frame": "129600000"
+    },{
+      "id": "251",
+      "name": "Annotation 251",
+      "begin_frame": "129600000",
+      "end_frame": "130118400"
+    },{
+      "id": "252",
+      "name": "Annotation 252",
+      "begin_frame": "130118400",
+      "end_frame": "130636800"
+    },{
+      "id": "253",
+      "name": "Annotation 253",
+      "begin_frame": "130636800",
+      "end_frame": "131155200"
+    },{
+      "id": "254",
+      "name": "Annotation 254",
+      "begin_frame": "131155200",
+      "end_frame": "131673600"
+    },{
+      "id": "255",
+      "name": "Annotation 255",
+      "begin_frame": "131673600",
+      "end_frame": "132192000"
+    },{
+      "id": "256",
+      "name": "Annotation 256",
+      "begin_frame": "132192000",
+      "end_frame": "132710400"
+    },{
+      "id": "257",
+      "name": "Annotation 257",
+      "begin_frame": "132710400",
+      "end_frame": "133228800"
+    },{
+      "id": "258",
+      "name": "Annotation 258",
+      "begin_frame": "133228800",
+      "end_frame": "133747200"
+    },{
+      "id": "259",
+      "name": "Annotation 259",
+      "begin_frame": "133747200",
+      "end_frame": "134265600"
+    },{
+      "id": "260",
+      "name": "Annotation 260",
+      "begin_frame": "134265600",
+      "end_frame": "134784000"
+    },{
+      "id": "261",
+      "name": "Annotation 261",
+      "begin_frame": "134784000",
+      "end_frame": "135302400"
+    },{
+      "id": "262",
+      "name": "Annotation 262",
+      "begin_frame": "135302400",
+      "end_frame": "135820800"
+    },{
+      "id": "263",
+      "name": "Annotation 263",
+      "begin_frame": "135820800",
+      "end_frame": "136339200"
+    },{
+      "id": "264",
+      "name": "Annotation 264",
+      "begin_frame": "136339200",
+      "end_frame": "136857600"
+    },{
+      "id": "265",
+      "name": "Annotation 265",
+      "begin_frame": "136857600",
+      "end_frame": "137376000"
+    },{
+      "id": "266",
+      "name": "Annotation 266",
+      "begin_frame": "137376000",
+      "end_frame": "137894400"
+    },{
+      "id": "267",
+      "name": "Annotation 267",
+      "begin_frame": "137894400",
+      "end_frame": "138412800"
+    },{
+      "id": "268",
+      "name": "Annotation 268",
+      "begin_frame": "138412800",
+      "end_frame": "138931200"
+    },{
+      "id": "269",
+      "name": "Annotation 269",
+      "begin_frame": "138931200",
+      "end_frame": "139449600"
+    },{
+      "id": "270",
+      "name": "Annotation 270",
+      "begin_frame": "139449600",
+      "end_frame": "139968000"
+    },{
+      "id": "271",
+      "name": "Annotation 271",
+      "begin_frame": "139968000",
+      "end_frame": "140486400"
+    },{
+      "id": "272",
+      "name": "Annotation 272",
+      "begin_frame": "140486400",
+      "end_frame": "141004800"
+    },{
+      "id": "273",
+      "name": "Annotation 273",
+      "begin_frame": "141004800",
+      "end_frame": "141523200"
+    },{
+      "id": "274",
+      "name": "Annotation 274",
+      "begin_frame": "141523200",
+      "end_frame": "142041600"
+    },{
+      "id": "275",
+      "name": "Annotation 275",
+      "begin_frame": "142041600",
+      "end_frame": "142560000"
+    },{
+      "id": "276",
+      "name": "Annotation 276",
+      "begin_frame": "142560000",
+      "end_frame": "143078400"
+    },{
+      "id": "277",
+      "name": "Annotation 277",
+      "begin_frame": "143078400",
+      "end_frame": "143596800"
+    },{
+      "id": "278",
+      "name": "Annotation 278",
+      "begin_frame": "143596800",
+      "end_frame": "144115200"
+    },{
+      "id": "279",
+      "name": "Annotation 279",
+      "begin_frame": "144115200",
+      "end_frame": "144633600"
+    },{
+      "id": "280",
+      "name": "Annotation 280",
+      "begin_frame": "144633600",
+      "end_frame": "145152000"
+    },{
+      "id": "281",
+      "name": "Annotation 281",
+      "begin_frame": "145152000",
+      "end_frame": "145670400"
+    },{
+      "id": "282",
+      "name": "Annotation 282",
+      "begin_frame": "145670400",
+      "end_frame": "146188800"
+    },{
+      "id": "283",
+      "name": "Annotation 283",
+      "begin_frame": "146188800",
+      "end_frame": "146707200"
+    },{
+      "id": "284",
+      "name": "Annotation 284",
+      "begin_frame": "146707200",
+      "end_frame": "147225600"
+    },{
+      "id": "285",
+      "name": "Annotation 285",
+      "begin_frame": "147225600",
+      "end_frame": "147744000"
+    },{
+      "id": "286",
+      "name": "Annotation 286",
+      "begin_frame": "147744000",
+      "end_frame": "148262400"
+    },{
+      "id": "287",
+      "name": "Annotation 287",
+      "begin_frame": "148262400",
+      "end_frame": "148780800"
+    },{
+      "id": "288",
+      "name": "Annotation 288",
+      "begin_frame": "148780800",
+      "end_frame": "149299200"
+    },{
+      "id": "289",
+      "name": "Annotation 289",
+      "begin_frame": "149299200",
+      "end_frame": "149817600"
+    },{
+      "id": "290",
+      "name": "Annotation 290",
+      "begin_frame": "149817600",
+      "end_frame": "150336000"
+    },{
+      "id": "291",
+      "name": "Annotation 291",
+      "begin_frame": "150336000",
+      "end_frame": "150854400"
+    },{
+      "id": "292",
+      "name": "Annotation 292",
+      "begin_frame": "150854400",
+      "end_frame": "151372800"
+    },{
+      "id": "293",
+      "name": "Annotation 293",
+      "begin_frame": "151372800",
+      "end_frame": "151891200"
+    },{
+      "id": "294",
+      "name": "Annotation 294",
+      "begin_frame": "151891200",
+      "end_frame": "152409600"
+    },{
+      "id": "295",
+      "name": "Annotation 295",
+      "begin_frame": "152409600",
+      "end_frame": "152928000"
+    },{
+      "id": "296",
+      "name": "Annotation 296",
+      "begin_frame": "152928000",
+      "end_frame": "153446400"
+    },{
+      "id": "297",
+      "name": "Annotation 297",
+      "begin_frame": "153446400",
+      "end_frame": "153964800"
+    },{
+      "id": "298",
+      "name": "Annotation 298",
+      "begin_frame": "153964800",
+      "end_frame": "154483200"
+    },{
+      "id": "299",
+      "name": "Annotation 299",
+      "begin_frame": "154483200",
+      "end_frame": "155001600"
+    },{
+      "id": "300",
+      "name": "Annotation 300",
+      "begin_frame": "155001600",
+      "end_frame": "155520000"
+    },{
+      "id": "301",
+      "name": "Annotation 301",
+      "begin_frame": "155520000",
+      "end_frame": "156038400"
+    },{
+      "id": "302",
+      "name": "Annotation 302",
+      "begin_frame": "156038400",
+      "end_frame": "156556800"
+    },{
+      "id": "303",
+      "name": "Annotation 303",
+      "begin_frame": "156556800",
+      "end_frame": "157075200"
+    },{
+      "id": "304",
+      "name": "Annotation 304",
+      "begin_frame": "157075200",
+      "end_frame": "157593600"
+    },{
+      "id": "305",
+      "name": "Annotation 305",
+      "begin_frame": "157593600",
+      "end_frame": "158112000"
+    },{
+      "id": "306",
+      "name": "Annotation 306",
+      "begin_frame": "158112000",
+      "end_frame": "158630400"
+    },{
+      "id": "307",
+      "name": "Annotation 307",
+      "begin_frame": "158630400",
+      "end_frame": "159148800"
+    },{
+      "id": "308",
+      "name": "Annotation 308",
+      "begin_frame": "159148800",
+      "end_frame": "159667200"
+    },{
+      "id": "309",
+      "name": "Annotation 309",
+      "begin_frame": "159667200",
+      "end_frame": "160185600"
+    },{
+      "id": "310",
+      "name": "Annotation 310",
+      "begin_frame": "160185600",
+      "end_frame": "160704000"
+    },{
+      "id": "311",
+      "name": "Annotation 311",
+      "begin_frame": "160704000",
+      "end_frame": "161222400"
+    },{
+      "id": "312",
+      "name": "Annotation 312",
+      "begin_frame": "161222400",
+      "end_frame": "161740800"
+    },{
+      "id": "313",
+      "name": "Annotation 313",
+      "begin_frame": "161740800",
+      "end_frame": "162259200"
+    },{
+      "id": "314",
+      "name": "Annotation 314",
+      "begin_frame": "162259200",
+      "end_frame": "162777600"
+    },{
+      "id": "315",
+      "name": "Annotation 315",
+      "begin_frame": "162777600",
+      "end_frame": "163296000"
+    },{
+      "id": "316",
+      "name": "Annotation 316",
+      "begin_frame": "163296000",
+      "end_frame": "163814400"
+    },{
+      "id": "317",
+      "name": "Annotation 317",
+      "begin_frame": "163814400",
+      "end_frame": "164332800"
+    },{
+      "id": "318",
+      "name": "Annotation 318",
+      "begin_frame": "164332800",
+      "end_frame": "164851200"
+    },{
+      "id": "319",
+      "name": "Annotation 319",
+      "begin_frame": "164851200",
+      "end_frame": "165369600"
+    },{
+      "id": "320",
+      "name": "Annotation 320",
+      "begin_frame": "165369600",
+      "end_frame": "165888000"
+    },{
+      "id": "321",
+      "name": "Annotation 321",
+      "begin_frame": "165888000",
+      "end_frame": "166406400"
+    },{
+      "id": "322",
+      "name": "Annotation 322",
+      "begin_frame": "166406400",
+      "end_frame": "166924800"
+    },{
+      "id": "323",
+      "name": "Annotation 323",
+      "begin_frame": "166924800",
+      "end_frame": "167443200"
+    },{
+      "id": "324",
+      "name": "Annotation 324",
+      "begin_frame": "167443200",
+      "end_frame": "167961600"
+    },{
+      "id": "325",
+      "name": "Annotation 325",
+      "begin_frame": "167961600",
+      "end_frame": "168480000"
+    },{
+      "id": "326",
+      "name": "Annotation 326",
+      "begin_frame": "168480000",
+      "end_frame": "168998400"
+    },{
+      "id": "327",
+      "name": "Annotation 327",
+      "begin_frame": "168998400",
+      "end_frame": "169516800"
+    },{
+      "id": "328",
+      "name": "Annotation 328",
+      "begin_frame": "169516800",
+      "end_frame": "170035200"
+    },{
+      "id": "329",
+      "name": "Annotation 329",
+      "begin_frame": "170035200",
+      "end_frame": "170553600"
+    },{
+      "id": "330",
+      "name": "Annotation 330",
+      "begin_frame": "170553600",
+      "end_frame": "171072000"
+    },{
+      "id": "331",
+      "name": "Annotation 331",
+      "begin_frame": "171072000",
+      "end_frame": "171590400"
+    },{
+      "id": "332",
+      "name": "Annotation 332",
+      "begin_frame": "171590400",
+      "end_frame": "172108800"
+    },{
+      "id": "333",
+      "name": "Annotation 333",
+      "begin_frame": "172108800",
+      "end_frame": "172627200"
+    },{
+      "id": "334",
+      "name": "Annotation 334",
+      "begin_frame": "172627200",
+      "end_frame": "173145600"
+    },{
+      "id": "335",
+      "name": "Annotation 335",
+      "begin_frame": "173145600",
+      "end_frame": "173664000"
+    },{
+      "id": "336",
+      "name": "Annotation 336",
+      "begin_frame": "173664000",
+      "end_frame": "174182400"
+    },{
+      "id": "337",
+      "name": "Annotation 337",
+      "begin_frame": "174182400",
+      "end_frame": "174700800"
+    },{
+      "id": "338",
+      "name": "Annotation 338",
+      "begin_frame": "174700800",
+      "end_frame": "175219200"
+    },{
+      "id": "339",
+      "name": "Annotation 339",
+      "begin_frame": "175219200",
+      "end_frame": "175737600"
+    },{
+      "id": "340",
+      "name": "Annotation 340",
+      "begin_frame": "175737600",
+      "end_frame": "176256000"
+    },{
+      "id": "341",
+      "name": "Annotation 341",
+      "begin_frame": "176256000",
+      "end_frame": "176774400"
+    },{
+      "id": "342",
+      "name": "Annotation 342",
+      "begin_frame": "176774400",
+      "end_frame": "177292800"
+    },{
+      "id": "343",
+      "name": "Annotation 343",
+      "begin_frame": "177292800",
+      "end_frame": "177811200"
+    },{
+      "id": "344",
+      "name": "Annotation 344",
+      "begin_frame": "177811200",
+      "end_frame": "178329600"
+    },{
+      "id": "345",
+      "name": "Annotation 345",
+      "begin_frame": "178329600",
+      "end_frame": "178848000"
+    },{
+      "id": "346",
+      "name": "Annotation 346",
+      "begin_frame": "178848000",
+      "end_frame": "179366400"
+    },{
+      "id": "347",
+      "name": "Annotation 347",
+      "begin_frame": "179366400",
+      "end_frame": "179884800"
+    },{
+      "id": "348",
+      "name": "Annotation 348",
+      "begin_frame": "179884800",
+      "end_frame": "180403200"
+    },{
+      "id": "349",
+      "name": "Annotation 349",
+      "begin_frame": "180403200",
+      "end_frame": "180921600"
+    },{
+      "id": "350",
+      "name": "Annotation 350",
+      "begin_frame": "180921600",
+      "end_frame": "181440000"
+    },{
+      "id": "351",
+      "name": "Annotation 351",
+      "begin_frame": "181440000",
+      "end_frame": "181958400"
+    },{
+      "id": "352",
+      "name": "Annotation 352",
+      "begin_frame": "181958400",
+      "end_frame": "182476800"
+    },{
+      "id": "353",
+      "name": "Annotation 353",
+      "begin_frame": "182476800",
+      "end_frame": "182995200"
+    },{
+      "id": "354",
+      "name": "Annotation 354",
+      "begin_frame": "182995200",
+      "end_frame": "183513600"
+    },{
+      "id": "355",
+      "name": "Annotation 355",
+      "begin_frame": "183513600",
+      "end_frame": "184032000"
+    },{
+      "id": "356",
+      "name": "Annotation 356",
+      "begin_frame": "184032000",
+      "end_frame": "184550400"
+    },{
+      "id": "357",
+      "name": "Annotation 357",
+      "begin_frame": "184550400",
+      "end_frame": "185068800"
+    },{
+      "id": "358",
+      "name": "Annotation 358",
+      "begin_frame": "185068800",
+      "end_frame": "185587200"
+    },{
+      "id": "359",
+      "name": "Annotation 359",
+      "begin_frame": "185587200",
+      "end_frame": "186105600"
+    },{
+      "id": "360",
+      "name": "Annotation 360",
+      "begin_frame": "186105600",
+      "end_frame": "186624000"
+    },{
+      "id": "361",
+      "name": "Annotation 361",
+      "begin_frame": "186624000",
+      "end_frame": "187142400"
+    },{
+      "id": "362",
+      "name": "Annotation 362",
+      "begin_frame": "187142400",
+      "end_frame": "187660800"
+    },{
+      "id": "363",
+      "name": "Annotation 363",
+      "begin_frame": "187660800",
+      "end_frame": "188179200"
+    },{
+      "id": "364",
+      "name": "Annotation 364",
+      "begin_frame": "188179200",
+      "end_frame": "188697600"
+    },{
+      "id": "365",
+      "name": "Annotation 365",
+      "begin_frame": "188697600",
+      "end_frame": "189216000"
+    },{
+      "id": "366",
+      "name": "Annotation 366",
+      "begin_frame": "189216000",
+      "end_frame": "189734400"
+    },{
+      "id": "367",
+      "name": "Annotation 367",
+      "begin_frame": "189734400",
+      "end_frame": "190252800"
+    },{
+      "id": "368",
+      "name": "Annotation 368",
+      "begin_frame": "190252800",
+      "end_frame": "190771200"
+    },{
+      "id": "369",
+      "name": "Annotation 369",
+      "begin_frame": "190771200",
+      "end_frame": "191289600"
+    },{
+      "id": "370",
+      "name": "Annotation 370",
+      "begin_frame": "191289600",
+      "end_frame": "191808000"
+    },{
+      "id": "371",
+      "name": "Annotation 371",
+      "begin_frame": "191808000",
+      "end_frame": "192326400"
+    },{
+      "id": "372",
+      "name": "Annotation 372",
+      "begin_frame": "192326400",
+      "end_frame": "192844800"
+    },{
+      "id": "373",
+      "name": "Annotation 373",
+      "begin_frame": "192844800",
+      "end_frame": "193363200"
+    },{
+      "id": "374",
+      "name": "Annotation 374",
+      "begin_frame": "193363200",
+      "end_frame": "193881600"
+    },{
+      "id": "375",
+      "name": "Annotation 375",
+      "begin_frame": "193881600",
+      "end_frame": "194400000"
+    },{
+      "id": "376",
+      "name": "Annotation 376",
+      "begin_frame": "194400000",
+      "end_frame": "194918400"
+    },{
+      "id": "377",
+      "name": "Annotation 377",
+      "begin_frame": "194918400",
+      "end_frame": "195436800"
+    },{
+      "id": "378",
+      "name": "Annotation 378",
+      "begin_frame": "195436800",
+      "end_frame": "195955200"
+    },{
+      "id": "379",
+      "name": "Annotation 379",
+      "begin_frame": "195955200",
+      "end_frame": "196473600"
+    },{
+      "id": "380",
+      "name": "Annotation 380",
+      "begin_frame": "196473600",
+      "end_frame": "196992000"
+    },{
+      "id": "381",
+      "name": "Annotation 381",
+      "begin_frame": "196992000",
+      "end_frame": "197510400"
+    },{
+      "id": "382",
+      "name": "Annotation 382",
+      "begin_frame": "197510400",
+      "end_frame": "198028800"
+    },{
+      "id": "383",
+      "name": "Annotation 383",
+      "begin_frame": "198028800",
+      "end_frame": "198547200"
+    },{
+      "id": "384",
+      "name": "Annotation 384",
+      "begin_frame": "198547200",
+      "end_frame": "199065600"
+    },{
+      "id": "385",
+      "name": "Annotation 385",
+      "begin_frame": "199065600",
+      "end_frame": "199584000"
+    },{
+      "id": "386",
+      "name": "Annotation 386",
+      "begin_frame": "199584000",
+      "end_frame": "200102400"
+    },{
+      "id": "387",
+      "name": "Annotation 387",
+      "begin_frame": "200102400",
+      "end_frame": "200620800"
+    },{
+      "id": "388",
+      "name": "Annotation 388",
+      "begin_frame": "200620800",
+      "end_frame": "201139200"
+    },{
+      "id": "389",
+      "name": "Annotation 389",
+      "begin_frame": "201139200",
+      "end_frame": "201657600"
+    },{
+      "id": "390",
+      "name": "Annotation 390",
+      "begin_frame": "201657600",
+      "end_frame": "202176000"
+    },{
+      "id": "391",
+      "name": "Annotation 391",
+      "begin_frame": "202176000",
+      "end_frame": "202694400"
+    },{
+      "id": "392",
+      "name": "Annotation 392",
+      "begin_frame": "202694400",
+      "end_frame": "203212800"
+    },{
+      "id": "393",
+      "name": "Annotation 393",
+      "begin_frame": "203212800",
+      "end_frame": "203731200"
+    },{
+      "id": "394",
+      "name": "Annotation 394",
+      "begin_frame": "203731200",
+      "end_frame": "204249600"
+    },{
+      "id": "395",
+      "name": "Annotation 395",
+      "begin_frame": "204249600",
+      "end_frame": "204768000"
+    },{
+      "id": "396",
+      "name": "Annotation 396",
+      "begin_frame": "204768000",
+      "end_frame": "205286400"
+    },{
+      "id": "397",
+      "name": "Annotation 397",
+      "begin_frame": "205286400",
+      "end_frame": "205804800"
+    },{
+      "id": "398",
+      "name": "Annotation 398",
+      "begin_frame": "205804800",
+      "end_frame": "206323200"
+    },{
+      "id": "399",
+      "name": "Annotation 399",
+      "begin_frame": "206323200",
+      "end_frame": "206841600"
+    },{
+      "id": "400",
+      "name": "Annotation 400",
+      "begin_frame": "206841600",
+      "end_frame": "207360000"
+    },{
+      "id": "401",
+      "name": "Annotation 401",
+      "begin_frame": "207360000",
+      "end_frame": "207878400"
+    },{
+      "id": "402",
+      "name": "Annotation 402",
+      "begin_frame": "207878400",
+      "end_frame": "208396800"
+    },{
+      "id": "403",
+      "name": "Annotation 403",
+      "begin_frame": "208396800",
+      "end_frame": "208915200"
+    },{
+      "id": "404",
+      "name": "Annotation 404",
+      "begin_frame": "208915200",
+      "end_frame": "209433600"
+    },{
+      "id": "405",
+      "name": "Annotation 405",
+      "begin_frame": "209433600",
+      "end_frame": "209952000"
+    },{
+      "id": "406",
+      "name": "Annotation 406",
+      "begin_frame": "209952000",
+      "end_frame": "210470400"
+    },{
+      "id": "407",
+      "name": "Annotation 407",
+      "begin_frame": "210470400",
+      "end_frame": "210988800"
+    },{
+      "id": "408",
+      "name": "Annotation 408",
+      "begin_frame": "210988800",
+      "end_frame": "211507200"
+    },{
+      "id": "409",
+      "name": "Annotation 409",
+      "begin_frame": "211507200",
+      "end_frame": "212025600"
+    },{
+      "id": "410",
+      "name": "Annotation 410",
+      "begin_frame": "212025600",
+      "end_frame": "212544000"
+    },{
+      "id": "411",
+      "name": "Annotation 411",
+      "begin_frame": "212544000",
+      "end_frame": "213062400"
+    },{
+      "id": "412",
+      "name": "Annotation 412",
+      "begin_frame": "213062400",
+      "end_frame": "213580800"
+    },{
+      "id": "413",
+      "name": "Annotation 413",
+      "begin_frame": "213580800",
+      "end_frame": "214099200"
+    },{
+      "id": "414",
+      "name": "Annotation 414",
+      "begin_frame": "214099200",
+      "end_frame": "214617600"
+    },{
+      "id": "415",
+      "name": "Annotation 415",
+      "begin_frame": "214617600",
+      "end_frame": "215136000"
+    },{
+      "id": "416",
+      "name": "Annotation 416",
+      "begin_frame": "215136000",
+      "end_frame": "215654400"
+    },{
+      "id": "417",
+      "name": "Annotation 417",
+      "begin_frame": "215654400",
+      "end_frame": "216172800"
+    },{
+      "id": "418",
+      "name": "Annotation 418",
+      "begin_frame": "216172800",
+      "end_frame": "216691200"
+    },{
+      "id": "419",
+      "name": "Annotation 419",
+      "begin_frame": "216691200",
+      "end_frame": "217209600"
+    },{
+      "id": "420",
+      "name": "Annotation 420",
+      "begin_frame": "217209600",
+      "end_frame": "217728000"
+    },{
+      "id": "421",
+      "name": "Annotation 421",
+      "begin_frame": "217728000",
+      "end_frame": "218246400"
+    },{
+      "id": "422",
+      "name": "Annotation 422",
+      "begin_frame": "218246400",
+      "end_frame": "218764800"
+    },{
+      "id": "423",
+      "name": "Annotation 423",
+      "begin_frame": "218764800",
+      "end_frame": "219283200"
+    },{
+      "id": "424",
+      "name": "Annotation 424",
+      "begin_frame": "219283200",
+      "end_frame": "219801600"
+    },{
+      "id": "425",
+      "name": "Annotation 425",
+      "begin_frame": "219801600",
+      "end_frame": "220320000"
+    },{
+      "id": "426",
+      "name": "Annotation 426",
+      "begin_frame": "220320000",
+      "end_frame": "220838400"
+    },{
+      "id": "427",
+      "name": "Annotation 427",
+      "begin_frame": "220838400",
+      "end_frame": "221356800"
+    },{
+      "id": "428",
+      "name": "Annotation 428",
+      "begin_frame": "221356800",
+      "end_frame": "221875200"
+    },{
+      "id": "429",
+      "name": "Annotation 429",
+      "begin_frame": "221875200",
+      "end_frame": "222393600"
+    },{
+      "id": "430",
+      "name": "Annotation 430",
+      "begin_frame": "222393600",
+      "end_frame": "222912000"
+    },{
+      "id": "431",
+      "name": "Annotation 431",
+      "begin_frame": "222912000",
+      "end_frame": "223430400"
+    },{
+      "id": "432",
+      "name": "Annotation 432",
+      "begin_frame": "223430400",
+      "end_frame": "223948800"
+    },{
+      "id": "433",
+      "name": "Annotation 433",
+      "begin_frame": "223948800",
+      "end_frame": "224467200"
+    },{
+      "id": "434",
+      "name": "Annotation 434",
+      "begin_frame": "224467200",
+      "end_frame": "224985600"
+    },{
+      "id": "435",
+      "name": "Annotation 435",
+      "begin_frame": "224985600",
+      "end_frame": "225504000"
+    },{
+      "id": "436",
+      "name": "Annotation 436",
+      "begin_frame": "225504000",
+      "end_frame": "226022400"
+    },{
+      "id": "437",
+      "name": "Annotation 437",
+      "begin_frame": "226022400",
+      "end_frame": "226540800"
+    },{
+      "id": "438",
+      "name": "Annotation 438",
+      "begin_frame": "226540800",
+      "end_frame": "227059200"
+    },{
+      "id": "439",
+      "name": "Annotation 439",
+      "begin_frame": "227059200",
+      "end_frame": "227577600"
+    },{
+      "id": "440",
+      "name": "Annotation 440",
+      "begin_frame": "227577600",
+      "end_frame": "228096000"
+    },{
+      "id": "441",
+      "name": "Annotation 441",
+      "begin_frame": "228096000",
+      "end_frame": "228614400"
+    },{
+      "id": "442",
+      "name": "Annotation 442",
+      "begin_frame": "228614400",
+      "end_frame": "229132800"
+    },{
+      "id": "443",
+      "name": "Annotation 443",
+      "begin_frame": "229132800",
+      "end_frame": "229651200"
+    },{
+      "id": "444",
+      "name": "Annotation 444",
+      "begin_frame": "229651200",
+      "end_frame": "230169600"
+    },{
+      "id": "445",
+      "name": "Annotation 445",
+      "begin_frame": "230169600",
+      "end_frame": "230688000"
+    },{
+      "id": "446",
+      "name": "Annotation 446",
+      "begin_frame": "230688000",
+      "end_frame": "231206400"
+    },{
+      "id": "447",
+      "name": "Annotation 447",
+      "begin_frame": "231206400",
+      "end_frame": "231724800"
+    },{
+      "id": "448",
+      "name": "Annotation 448",
+      "begin_frame": "231724800",
+      "end_frame": "232243200"
+    },{
+      "id": "449",
+      "name": "Annotation 449",
+      "begin_frame": "232243200",
+      "end_frame": "232761600"
+    },{
+      "id": "450",
+      "name": "Annotation 450",
+      "begin_frame": "232761600",
+      "end_frame": "233280000"
+    },{
+      "id": "451",
+      "name": "Annotation 451",
+      "begin_frame": "233280000",
+      "end_frame": "233798400"
+    },{
+      "id": "452",
+      "name": "Annotation 452",
+      "begin_frame": "233798400",
+      "end_frame": "234316800"
+    },{
+      "id": "453",
+      "name": "Annotation 453",
+      "begin_frame": "234316800",
+      "end_frame": "234835200"
+    },{
+      "id": "454",
+      "name": "Annotation 454",
+      "begin_frame": "234835200",
+      "end_frame": "235353600"
+    },{
+      "id": "455",
+      "name": "Annotation 455",
+      "begin_frame": "235353600",
+      "end_frame": "235872000"
+    },{
+      "id": "456",
+      "name": "Annotation 456",
+      "begin_frame": "235872000",
+      "end_frame": "236390400"
+    },{
+      "id": "457",
+      "name": "Annotation 457",
+      "begin_frame": "236390400",
+      "end_frame": "236908800"
+    },{
+      "id": "458",
+      "name": "Annotation 458",
+      "begin_frame": "236908800",
+      "end_frame": "237427200"
+    },{
+      "id": "459",
+      "name": "Annotation 459",
+      "begin_frame": "237427200",
+      "end_frame": "237945600"
+    },{
+      "id": "460",
+      "name": "Annotation 460",
+      "begin_frame": "237945600",
+      "end_frame": "238464000"
+    },{
+      "id": "461",
+      "name": "Annotation 461",
+      "begin_frame": "238464000",
+      "end_frame": "238982400"
+    },{
+      "id": "462",
+      "name": "Annotation 462",
+      "begin_frame": "238982400",
+      "end_frame": "239500800"
+    },{
+      "id": "463",
+      "name": "Annotation 463",
+      "begin_frame": "239500800",
+      "end_frame": "240019200"
+    },{
+      "id": "464",
+      "name": "Annotation 464",
+      "begin_frame": "240019200",
+      "end_frame": "240537600"
+    },{
+      "id": "465",
+      "name": "Annotation 465",
+      "begin_frame": "240537600",
+      "end_frame": "241056000"
+    },{
+      "id": "466",
+      "name": "Annotation 466",
+      "begin_frame": "241056000",
+      "end_frame": "241574400"
+    },{
+      "id": "467",
+      "name": "Annotation 467",
+      "begin_frame": "241574400",
+      "end_frame": "242092800"
+    },{
+      "id": "468",
+      "name": "Annotation 468",
+      "begin_frame": "242092800",
+      "end_frame": "242611200"
+    },{
+      "id": "469",
+      "name": "Annotation 469",
+      "begin_frame": "242611200",
+      "end_frame": "243129600"
+    },{
+      "id": "470",
+      "name": "Annotation 470",
+      "begin_frame": "243129600",
+      "end_frame": "243648000"
+    },{
+      "id": "471",
+      "name": "Annotation 471",
+      "begin_frame": "243648000",
+      "end_frame": "244166400"
+    },{
+      "id": "472",
+      "name": "Annotation 472",
+      "begin_frame": "244166400",
+      "end_frame": "244684800"
+    },{
+      "id": "473",
+      "name": "Annotation 473",
+      "begin_frame": "244684800",
+      "end_frame": "245203200"
+    },{
+      "id": "474",
+      "name": "Annotation 474",
+      "begin_frame": "245203200",
+      "end_frame": "245721600"
+    },{
+      "id": "475",
+      "name": "Annotation 475",
+      "begin_frame": "245721600",
+      "end_frame": "246240000"
+    },{
+      "id": "476",
+      "name": "Annotation 476",
+      "begin_frame": "246240000",
+      "end_frame": "246758400"
+    },{
+      "id": "477",
+      "name": "Annotation 477",
+      "begin_frame": "246758400",
+      "end_frame": "247276800"
+    },{
+      "id": "478",
+      "name": "Annotation 478",
+      "begin_frame": "247276800",
+      "end_frame": "247795200"
+    },{
+      "id": "479",
+      "name": "Annotation 479",
+      "begin_frame": "247795200",
+      "end_frame": "248313600"
+    },{
+      "id": "480",
+      "name": "Annotation 480",
+      "begin_frame": "248313600",
+      "end_frame": "248832000"
+    },{
+      "id": "481",
+      "name": "Annotation 481",
+      "begin_frame": "248832000",
+      "end_frame": "249350400"
+    },{
+      "id": "482",
+      "name": "Annotation 482",
+      "begin_frame": "249350400",
+      "end_frame": "249868800"
+    },{
+      "id": "483",
+      "name": "Annotation 483",
+      "begin_frame": "249868800",
+      "end_frame": "250387200"
+    },{
+      "id": "484",
+      "name": "Annotation 484",
+      "begin_frame": "250387200",
+      "end_frame": "250905600"
+    },{
+      "id": "485",
+      "name": "Annotation 485",
+      "begin_frame": "250905600",
+      "end_frame": "251424000"
+    },{
+      "id": "486",
+      "name": "Annotation 486",
+      "begin_frame": "251424000",
+      "end_frame": "251942400"
+    },{
+      "id": "487",
+      "name": "Annotation 487",
+      "begin_frame": "251942400",
+      "end_frame": "252460800"
+    },{
+      "id": "488",
+      "name": "Annotation 488",
+      "begin_frame": "252460800",
+      "end_frame": "252979200"
+    },{
+      "id": "489",
+      "name": "Annotation 489",
+      "begin_frame": "252979200",
+      "end_frame": "253497600"
+    },{
+      "id": "490",
+      "name": "Annotation 490",
+      "begin_frame": "253497600",
+      "end_frame": "254016000"
+    },{
+      "id": "491",
+      "name": "Annotation 491",
+      "begin_frame": "254016000",
+      "end_frame": "254534400"
+    },{
+      "id": "492",
+      "name": "Annotation 492",
+      "begin_frame": "254534400",
+      "end_frame": "255052800"
+    },{
+      "id": "493",
+      "name": "Annotation 493",
+      "begin_frame": "255052800",
+      "end_frame": "255571200"
+    },{
+      "id": "494",
+      "name": "Annotation 494",
+      "begin_frame": "255571200",
+      "end_frame": "256089600"
+    },{
+      "id": "495",
+      "name": "Annotation 495",
+      "begin_frame": "256089600",
+      "end_frame": "256608000"
+    },{
+      "id": "496",
+      "name": "Annotation 496",
+      "begin_frame": "256608000",
+      "end_frame": "257126400"
+    },{
+      "id": "497",
+      "name": "Annotation 497",
+      "begin_frame": "257126400",
+      "end_frame": "257644800"
+    },{
+      "id": "498",
+      "name": "Annotation 498",
+      "begin_frame": "257644800",
+      "end_frame": "258163200"
+    },{
+      "id": "499",
+      "name": "Annotation 499",
+      "begin_frame": "258163200",
+      "end_frame": "258681600"
+    },{
+      "id": "500",
+      "name": "Annotation 500",
+      "begin_frame": "258681600",
+      "end_frame": "259200000"
+    },{
+      "id": "501",
+      "name": "Annotation 501",
+      "begin_frame": "259200000",
+      "end_frame": "259718400"
+    },{
+      "id": "502",
+      "name": "Annotation 502",
+      "begin_frame": "259718400",
+      "end_frame": "260236800"
+    },{
+      "id": "503",
+      "name": "Annotation 503",
+      "begin_frame": "260236800",
+      "end_frame": "260755200"
+    },{
+      "id": "504",
+      "name": "Annotation 504",
+      "begin_frame": "260755200",
+      "end_frame": "261273600"
+    },{
+      "id": "505",
+      "name": "Annotation 505",
+      "begin_frame": "261273600",
+      "end_frame": "261792000"
+    },{
+      "id": "506",
+      "name": "Annotation 506",
+      "begin_frame": "261792000",
+      "end_frame": "262310400"
+    },{
+      "id": "507",
+      "name": "Annotation 507",
+      "begin_frame": "262310400",
+      "end_frame": "262828800"
+    },{
+      "id": "508",
+      "name": "Annotation 508",
+      "begin_frame": "262828800",
+      "end_frame": "263347200"
+    },{
+      "id": "509",
+      "name": "Annotation 509",
+      "begin_frame": "263347200",
+      "end_frame": "263865600"
+    },{
+      "id": "510",
+      "name": "Annotation 510",
+      "begin_frame": "263865600",
+      "end_frame": "264384000"
+    },{
+      "id": "511",
+      "name": "Annotation 511",
+      "begin_frame": "264384000",
+      "end_frame": "264902400"
+    },{
+      "id": "512",
+      "name": "Annotation 512",
+      "begin_frame": "264902400",
+      "end_frame": "265420800"
+    },{
+      "id": "513",
+      "name": "Annotation 513",
+      "begin_frame": "265420800",
+      "end_frame": "265939200"
+    },{
+      "id": "514",
+      "name": "Annotation 514",
+      "begin_frame": "265939200",
+      "end_frame": "266457600"
+    },{
+      "id": "515",
+      "name": "Annotation 515",
+      "begin_frame": "266457600",
+      "end_frame": "266976000"
+    },{
+      "id": "516",
+      "name": "Annotation 516",
+      "begin_frame": "266976000",
+      "end_frame": "267494400"
+    },{
+      "id": "517",
+      "name": "Annotation 517",
+      "begin_frame": "267494400",
+      "end_frame": "268012800"
+    },{
+      "id": "518",
+      "name": "Annotation 518",
+      "begin_frame": "268012800",
+      "end_frame": "268531200"
+    },{
+      "id": "519",
+      "name": "Annotation 519",
+      "begin_frame": "268531200",
+      "end_frame": "269049600"
+    },{
+      "id": "520",
+      "name": "Annotation 520",
+      "begin_frame": "269049600",
+      "end_frame": "269568000"
+    },{
+      "id": "521",
+      "name": "Annotation 521",
+      "begin_frame": "269568000",
+      "end_frame": "270086400"
+    },{
+      "id": "522",
+      "name": "Annotation 522",
+      "begin_frame": "270086400",
+      "end_frame": "270604800"
+    },{
+      "id": "523",
+      "name": "Annotation 523",
+      "begin_frame": "270604800",
+      "end_frame": "271123200"
+    },{
+      "id": "524",
+      "name": "Annotation 524",
+      "begin_frame": "271123200",
+      "end_frame": "271641600"
+    },{
+      "id": "525",
+      "name": "Annotation 525",
+      "begin_frame": "271641600",
+      "end_frame": "272160000"
+    },{
+      "id": "526",
+      "name": "Annotation 526",
+      "begin_frame": "272160000",
+      "end_frame": "272678400"
+    },{
+      "id": "527",
+      "name": "Annotation 527",
+      "begin_frame": "272678400",
+      "end_frame": "273196800"
+    },{
+      "id": "528",
+      "name": "Annotation 528",
+      "begin_frame": "273196800",
+      "end_frame": "273715200"
+    },{
+      "id": "529",
+      "name": "Annotation 529",
+      "begin_frame": "273715200",
+      "end_frame": "274233600"
+    },{
+      "id": "530",
+      "name": "Annotation 530",
+      "begin_frame": "274233600",
+      "end_frame": "274752000"
+    },{
+      "id": "531",
+      "name": "Annotation 531",
+      "begin_frame": "274752000",
+      "end_frame": "275270400"
+    },{
+      "id": "532",
+      "name": "Annotation 532",
+      "begin_frame": "275270400",
+      "end_frame": "275788800"
+    },{
+      "id": "533",
+      "name": "Annotation 533",
+      "begin_frame": "275788800",
+      "end_frame": "276307200"
+    },{
+      "id": "534",
+      "name": "Annotation 534",
+      "begin_frame": "276307200",
+      "end_frame": "276825600"
+    },{
+      "id": "535",
+      "name": "Annotation 535",
+      "begin_frame": "276825600",
+      "end_frame": "277344000"
+    },{
+      "id": "536",
+      "name": "Annotation 536",
+      "begin_frame": "277344000",
+      "end_frame": "277862400"
+    },{
+      "id": "537",
+      "name": "Annotation 537",
+      "begin_frame": "277862400",
+      "end_frame": "278380800"
+    },{
+      "id": "538",
+      "name": "Annotation 538",
+      "begin_frame": "278380800",
+      "end_frame": "278899200"
+    },{
+      "id": "539",
+      "name": "Annotation 539",
+      "begin_frame": "278899200",
+      "end_frame": "279417600"
+    },{
+      "id": "540",
+      "name": "Annotation 540",
+      "begin_frame": "279417600",
+      "end_frame": "279936000"
+    },{
+      "id": "541",
+      "name": "Annotation 541",
+      "begin_frame": "279936000",
+      "end_frame": "280454400"
+    },{
+      "id": "542",
+      "name": "Annotation 542",
+      "begin_frame": "280454400",
+      "end_frame": "280972800"
+    },{
+      "id": "543",
+      "name": "Annotation 543",
+      "begin_frame": "280972800",
+      "end_frame": "281491200"
+    },{
+      "id": "544",
+      "name": "Annotation 544",
+      "begin_frame": "281491200",
+      "end_frame": "282009600"
+    },{
+      "id": "545",
+      "name": "Annotation 545",
+      "begin_frame": "282009600",
+      "end_frame": "282528000"
+    },{
+      "id": "546",
+      "name": "Annotation 546",
+      "begin_frame": "282528000",
+      "end_frame": "283046400"
+    },{
+      "id": "547",
+      "name": "Annotation 547",
+      "begin_frame": "283046400",
+      "end_frame": "283564800"
+    },{
+      "id": "548",
+      "name": "Annotation 548",
+      "begin_frame": "283564800",
+      "end_frame": "284083200"
+    },{
+      "id": "549",
+      "name": "Annotation 549",
+      "begin_frame": "284083200",
+      "end_frame": "284601600"
+    },{
+      "id": "550",
+      "name": "Annotation 550",
+      "begin_frame": "284601600",
+      "end_frame": "285120000"
+    },{
+      "id": "551",
+      "name": "Annotation 551",
+      "begin_frame": "285120000",
+      "end_frame": "285638400"
+    },{
+      "id": "552",
+      "name": "Annotation 552",
+      "begin_frame": "285638400",
+      "end_frame": "286156800"
+    },{
+      "id": "553",
+      "name": "Annotation 553",
+      "begin_frame": "286156800",
+      "end_frame": "286675200"
+    },{
+      "id": "554",
+      "name": "Annotation 554",
+      "begin_frame": "286675200",
+      "end_frame": "287193600"
+    },{
+      "id": "555",
+      "name": "Annotation 555",
+      "begin_frame": "287193600",
+      "end_frame": "287712000"
+    },{
+      "id": "556",
+      "name": "Annotation 556",
+      "begin_frame": "287712000",
+      "end_frame": "288230400"
+    },{
+      "id": "557",
+      "name": "Annotation 557",
+      "begin_frame": "288230400",
+      "end_frame": "288748800"
+    },{
+      "id": "558",
+      "name": "Annotation 558",
+      "begin_frame": "288748800",
+      "end_frame": "289267200"
+    },{
+      "id": "559",
+      "name": "Annotation 559",
+      "begin_frame": "289267200",
+      "end_frame": "289785600"
+    },{
+      "id": "560",
+      "name": "Annotation 560",
+      "begin_frame": "289785600",
+      "end_frame": "290304000"
+    },{
+      "id": "561",
+      "name": "Annotation 561",
+      "begin_frame": "290304000",
+      "end_frame": "290822400"
+    },{
+      "id": "562",
+      "name": "Annotation 562",
+      "begin_frame": "290822400",
+      "end_frame": "291340800"
+    },{
+      "id": "563",
+      "name": "Annotation 563",
+      "begin_frame": "291340800",
+      "end_frame": "291859200"
+    },{
+      "id": "564",
+      "name": "Annotation 564",
+      "begin_frame": "291859200",
+      "end_frame": "292377600"
+    },{
+      "id": "565",
+      "name": "Annotation 565",
+      "begin_frame": "292377600",
+      "end_frame": "292896000"
+    },{
+      "id": "566",
+      "name": "Annotation 566",
+      "begin_frame": "292896000",
+      "end_frame": "293414400"
+    },{
+      "id": "567",
+      "name": "Annotation 567",
+      "begin_frame": "293414400",
+      "end_frame": "293932800"
+    },{
+      "id": "568",
+      "name": "Annotation 568",
+      "begin_frame": "293932800",
+      "end_frame": "294451200"
+    },{
+      "id": "569",
+      "name": "Annotation 569",
+      "begin_frame": "294451200",
+      "end_frame": "294969600"
+    },{
+      "id": "570",
+      "name": "Annotation 570",
+      "begin_frame": "294969600",
+      "end_frame": "295488000"
+    },{
+      "id": "571",
+      "name": "Annotation 571",
+      "begin_frame": "295488000",
+      "end_frame": "296006400"
+    },{
+      "id": "572",
+      "name": "Annotation 572",
+      "begin_frame": "296006400",
+      "end_frame": "296524800"
+    },{
+      "id": "573",
+      "name": "Annotation 573",
+      "begin_frame": "296524800",
+      "end_frame": "297043200"
+    },{
+      "id": "574",
+      "name": "Annotation 574",
+      "begin_frame": "297043200",
+      "end_frame": "297561600"
+    },{
+      "id": "575",
+      "name": "Annotation 575",
+      "begin_frame": "297561600",
+      "end_frame": "298080000"
+    },{
+      "id": "576",
+      "name": "Annotation 576",
+      "begin_frame": "298080000",
+      "end_frame": "298598400"
+    },{
+      "id": "577",
+      "name": "Annotation 577",
+      "begin_frame": "298598400",
+      "end_frame": "299116800"
+    },{
+      "id": "578",
+      "name": "Annotation 578",
+      "begin_frame": "299116800",
+      "end_frame": "299635200"
+    },{
+      "id": "579",
+      "name": "Annotation 579",
+      "begin_frame": "299635200",
+      "end_frame": "300153600"
+    },{
+      "id": "580",
+      "name": "Annotation 580",
+      "begin_frame": "300153600",
+      "end_frame": "300672000"
+    },{
+      "id": "581",
+      "name": "Annotation 581",
+      "begin_frame": "300672000",
+      "end_frame": "301190400"
+    },{
+      "id": "582",
+      "name": "Annotation 582",
+      "begin_frame": "301190400",
+      "end_frame": "301708800"
+    },{
+      "id": "583",
+      "name": "Annotation 583",
+      "begin_frame": "301708800",
+      "end_frame": "302227200"
+    },{
+      "id": "584",
+      "name": "Annotation 584",
+      "begin_frame": "302227200",
+      "end_frame": "302745600"
+    },{
+      "id": "585",
+      "name": "Annotation 585",
+      "begin_frame": "302745600",
+      "end_frame": "303264000"
+    },{
+      "id": "586",
+      "name": "Annotation 586",
+      "begin_frame": "303264000",
+      "end_frame": "303782400"
+    },{
+      "id": "587",
+      "name": "Annotation 587",
+      "begin_frame": "303782400",
+      "end_frame": "304300800"
+    },{
+      "id": "588",
+      "name": "Annotation 588",
+      "begin_frame": "304300800",
+      "end_frame": "304819200"
+    },{
+      "id": "589",
+      "name": "Annotation 589",
+      "begin_frame": "304819200",
+      "end_frame": "305337600"
+    },{
+      "id": "590",
+      "name": "Annotation 590",
+      "begin_frame": "305337600",
+      "end_frame": "305856000"
+    },{
+      "id": "591",
+      "name": "Annotation 591",
+      "begin_frame": "305856000",
+      "end_frame": "306374400"
+    },{
+      "id": "592",
+      "name": "Annotation 592",
+      "begin_frame": "306374400",
+      "end_frame": "306892800"
+    },{
+      "id": "593",
+      "name": "Annotation 593",
+      "begin_frame": "306892800",
+      "end_frame": "307411200"
+    },{
+      "id": "594",
+      "name": "Annotation 594",
+      "begin_frame": "307411200",
+      "end_frame": "307929600"
+    },{
+      "id": "595",
+      "name": "Annotation 595",
+      "begin_frame": "307929600",
+      "end_frame": "308448000"
+    },{
+      "id": "596",
+      "name": "Annotation 596",
+      "begin_frame": "308448000",
+      "end_frame": "308966400"
+    },{
+      "id": "597",
+      "name": "Annotation 597",
+      "begin_frame": "308966400",
+      "end_frame": "309484800"
+    },{
+      "id": "598",
+      "name": "Annotation 598",
+      "begin_frame": "309484800",
+      "end_frame": "310003200"
+    },{
+      "id": "599",
+      "name": "Annotation 599",
+      "begin_frame": "310003200",
+      "end_frame": "310521600"
+    },{
+      "id": "600",
+      "name": "Annotation 600",
+      "begin_frame": "310521600",
+      "end_frame": "311040000"
+    },{
+      "id": "601",
+      "name": "Annotation 601",
+      "begin_frame": "311040000",
+      "end_frame": "311558400"
+    },{
+      "id": "602",
+      "name": "Annotation 602",
+      "begin_frame": "311558400",
+      "end_frame": "312076800"
+    },{
+      "id": "603",
+      "name": "Annotation 603",
+      "begin_frame": "312076800",
+      "end_frame": "312595200"
+    },{
+      "id": "604",
+      "name": "Annotation 604",
+      "begin_frame": "312595200",
+      "end_frame": "313113600"
+    },{
+      "id": "605",
+      "name": "Annotation 605",
+      "begin_frame": "313113600",
+      "end_frame": "313632000"
+    },{
+      "id": "606",
+      "name": "Annotation 606",
+      "begin_frame": "313632000",
+      "end_frame": "314150400"
+    },{
+      "id": "607",
+      "name": "Annotation 607",
+      "begin_frame": "314150400",
+      "end_frame": "314668800"
+    },{
+      "id": "608",
+      "name": "Annotation 608",
+      "begin_frame": "314668800",
+      "end_frame": "315187200"
+    },{
+      "id": "609",
+      "name": "Annotation 609",
+      "begin_frame": "315187200",
+      "end_frame": "315705600"
+    },{
+      "id": "610",
+      "name": "Annotation 610",
+      "begin_frame": "315705600",
+      "end_frame": "316224000"
+    },{
+      "id": "611",
+      "name": "Annotation 611",
+      "begin_frame": "316224000",
+      "end_frame": "316742400"
+    },{
+      "id": "612",
+      "name": "Annotation 612",
+      "begin_frame": "316742400",
+      "end_frame": "317260800"
+    },{
+      "id": "613",
+      "name": "Annotation 613",
+      "begin_frame": "317260800",
+      "end_frame": "317779200"
+    },{
+      "id": "614",
+      "name": "Annotation 614",
+      "begin_frame": "317779200",
+      "end_frame": "318297600"
+    },{
+      "id": "615",
+      "name": "Annotation 615",
+      "begin_frame": "318297600",
+      "end_frame": "318816000"
+    },{
+      "id": "616",
+      "name": "Annotation 616",
+      "begin_frame": "318816000",
+      "end_frame": "319334400"
+    },{
+      "id": "617",
+      "name": "Annotation 617",
+      "begin_frame": "319334400",
+      "end_frame": "319852800"
+    },{
+      "id": "618",
+      "name": "Annotation 618",
+      "begin_frame": "319852800",
+      "end_frame": "320371200"
+    },{
+      "id": "619",
+      "name": "Annotation 619",
+      "begin_frame": "320371200",
+      "end_frame": "320889600"
+    },{
+      "id": "620",
+      "name": "Annotation 620",
+      "begin_frame": "320889600",
+      "end_frame": "321408000"
+    },{
+      "id": "621",
+      "name": "Annotation 621",
+      "begin_frame": "321408000",
+      "end_frame": "321926400"
+    },{
+      "id": "622",
+      "name": "Annotation 622",
+      "begin_frame": "321926400",
+      "end_frame": "322444800"
+    },{
+      "id": "623",
+      "name": "Annotation 623",
+      "begin_frame": "322444800",
+      "end_frame": "322963200"
+    },{
+      "id": "624",
+      "name": "Annotation 624",
+      "begin_frame": "322963200",
+      "end_frame": "323481600"
+    },{
+      "id": "625",
+      "name": "Annotation 625",
+      "begin_frame": "323481600",
+      "end_frame": "324000000"
+    },{
+      "id": "626",
+      "name": "Annotation 626",
+      "begin_frame": "324000000",
+      "end_frame": "324518400"
+    },{
+      "id": "627",
+      "name": "Annotation 627",
+      "begin_frame": "324518400",
+      "end_frame": "325036800"
+    },{
+      "id": "628",
+      "name": "Annotation 628",
+      "begin_frame": "325036800",
+      "end_frame": "325555200"
+    },{
+      "id": "629",
+      "name": "Annotation 629",
+      "begin_frame": "325555200",
+      "end_frame": "326073600"
+    },{
+      "id": "630",
+      "name": "Annotation 630",
+      "begin_frame": "326073600",
+      "end_frame": "326592000"
+    },{
+      "id": "631",
+      "name": "Annotation 631",
+      "begin_frame": "326592000",
+      "end_frame": "327110400"
+    },{
+      "id": "632",
+      "name": "Annotation 632",
+      "begin_frame": "327110400",
+      "end_frame": "327628800"
+    },{
+      "id": "633",
+      "name": "Annotation 633",
+      "begin_frame": "327628800",
+      "end_frame": "328147200"
+    },{
+      "id": "634",
+      "name": "Annotation 634",
+      "begin_frame": "328147200",
+      "end_frame": "328665600"
+    },{
+      "id": "635",
+      "name": "Annotation 635",
+      "begin_frame": "328665600",
+      "end_frame": "329184000"
+    },{
+      "id": "636",
+      "name": "Annotation 636",
+      "begin_frame": "329184000",
+      "end_frame": "329702400"
+    },{
+      "id": "637",
+      "name": "Annotation 637",
+      "begin_frame": "329702400",
+      "end_frame": "330220800"
+    },{
+      "id": "638",
+      "name": "Annotation 638",
+      "begin_frame": "330220800",
+      "end_frame": "330739200"
+    },{
+      "id": "639",
+      "name": "Annotation 639",
+      "begin_frame": "330739200",
+      "end_frame": "331257600"
+    },{
+      "id": "640",
+      "name": "Annotation 640",
+      "begin_frame": "331257600",
+      "end_frame": "331776000"
+    },{
+      "id": "641",
+      "name": "Annotation 641",
+      "begin_frame": "331776000",
+      "end_frame": "332294400"
+    },{
+      "id": "642",
+      "name": "Annotation 642",
+      "begin_frame": "332294400",
+      "end_frame": "332812800"
+    },{
+      "id": "643",
+      "name": "Annotation 643",
+      "begin_frame": "332812800",
+      "end_frame": "333331200"
+    },{
+      "id": "644",
+      "name": "Annotation 644",
+      "begin_frame": "333331200",
+      "end_frame": "333849600"
+    },{
+      "id": "645",
+      "name": "Annotation 645",
+      "begin_frame": "333849600",
+      "end_frame": "334368000"
+    },{
+      "id": "646",
+      "name": "Annotation 646",
+      "begin_frame": "334368000",
+      "end_frame": "334886400"
+    },{
+      "id": "647",
+      "name": "Annotation 647",
+      "begin_frame": "334886400",
+      "end_frame": "335404800"
+    },{
+      "id": "648",
+      "name": "Annotation 648",
+      "begin_frame": "335404800",
+      "end_frame": "335923200"
+    },{
+      "id": "649",
+      "name": "Annotation 649",
+      "begin_frame": "335923200",
+      "end_frame": "336441600"
+    },{
+      "id": "650",
+      "name": "Annotation 650",
+      "begin_frame": "336441600",
+      "end_frame": "336960000"
+    },{
+      "id": "651",
+      "name": "Annotation 651",
+      "begin_frame": "336960000",
+      "end_frame": "337478400"
+    },{
+      "id": "652",
+      "name": "Annotation 652",
+      "begin_frame": "337478400",
+      "end_frame": "337996800"
+    },{
+      "id": "653",
+      "name": "Annotation 653",
+      "begin_frame": "337996800",
+      "end_frame": "338515200"
+    },{
+      "id": "654",
+      "name": "Annotation 654",
+      "begin_frame": "338515200",
+      "end_frame": "339033600"
+    },{
+      "id": "655",
+      "name": "Annotation 655",
+      "begin_frame": "339033600",
+      "end_frame": "339552000"
+    },{
+      "id": "656",
+      "name": "Annotation 656",
+      "begin_frame": "339552000",
+      "end_frame": "340070400"
+    },{
+      "id": "657",
+      "name": "Annotation 657",
+      "begin_frame": "340070400",
+      "end_frame": "340588800"
+    },{
+      "id": "658",
+      "name": "Annotation 658",
+      "begin_frame": "340588800",
+      "end_frame": "341107200"
+    },{
+      "id": "659",
+      "name": "Annotation 659",
+      "begin_frame": "341107200",
+      "end_frame": "341625600"
+    },{
+      "id": "660",
+      "name": "Annotation 660",
+      "begin_frame": "341625600",
+      "end_frame": "342144000"
+    },{
+      "id": "661",
+      "name": "Annotation 661",
+      "begin_frame": "342144000",
+      "end_frame": "342662400"
+    },{
+      "id": "662",
+      "name": "Annotation 662",
+      "begin_frame": "342662400",
+      "end_frame": "343180800"
+    },{
+      "id": "663",
+      "name": "Annotation 663",
+      "begin_frame": "343180800",
+      "end_frame": "343699200"
+    },{
+      "id": "664",
+      "name": "Annotation 664",
+      "begin_frame": "343699200",
+      "end_frame": "344217600"
+    },{
+      "id": "665",
+      "name": "Annotation 665",
+      "begin_frame": "344217600",
+      "end_frame": "344736000"
+    },{
+      "id": "666",
+      "name": "Annotation 666",
+      "begin_frame": "344736000",
+      "end_frame": "345254400"
+    },{
+      "id": "667",
+      "name": "Annotation 667",
+      "begin_frame": "345254400",
+      "end_frame": "345772800"
+    },{
+      "id": "668",
+      "name": "Annotation 668",
+      "begin_frame": "345772800",
+      "end_frame": "346291200"
+    },{
+      "id": "669",
+      "name": "Annotation 669",
+      "begin_frame": "346291200",
+      "end_frame": "346809600"
+    },{
+      "id": "670",
+      "name": "Annotation 670",
+      "begin_frame": "346809600",
+      "end_frame": "347328000"
+    },{
+      "id": "671",
+      "name": "Annotation 671",
+      "begin_frame": "347328000",
+      "end_frame": "347846400"
+    },{
+      "id": "672",
+      "name": "Annotation 672",
+      "begin_frame": "347846400",
+      "end_frame": "348364800"
+    },{
+      "id": "673",
+      "name": "Annotation 673",
+      "begin_frame": "348364800",
+      "end_frame": "348883200"
+    },{
+      "id": "674",
+      "name": "Annotation 674",
+      "begin_frame": "348883200",
+      "end_frame": "349401600"
+    },{
+      "id": "675",
+      "name": "Annotation 675",
+      "begin_frame": "349401600",
+      "end_frame": "349920000"
+    },{
+      "id": "676",
+      "name": "Annotation 676",
+      "begin_frame": "349920000",
+      "end_frame": "350438400"
+    },{
+      "id": "677",
+      "name": "Annotation 677",
+      "begin_frame": "350438400",
+      "end_frame": "350956800"
+    },{
+      "id": "678",
+      "name": "Annotation 678",
+      "begin_frame": "350956800",
+      "end_frame": "351475200"
+    },{
+      "id": "679",
+      "name": "Annotation 679",
+      "begin_frame": "351475200",
+      "end_frame": "351993600"
+    },{
+      "id": "680",
+      "name": "Annotation 680",
+      "begin_frame": "351993600",
+      "end_frame": "352512000"
+    },{
+      "id": "681",
+      "name": "Annotation 681",
+      "begin_frame": "352512000",
+      "end_frame": "353030400"
+    },{
+      "id": "682",
+      "name": "Annotation 682",
+      "begin_frame": "353030400",
+      "end_frame": "353548800"
+    },{
+      "id": "683",
+      "name": "Annotation 683",
+      "begin_frame": "353548800",
+      "end_frame": "354067200"
+    },{
+      "id": "684",
+      "name": "Annotation 684",
+      "begin_frame": "354067200",
+      "end_frame": "354585600"
+    },{
+      "id": "685",
+      "name": "Annotation 685",
+      "begin_frame": "354585600",
+      "end_frame": "355104000"
+    },{
+      "id": "686",
+      "name": "Annotation 686",
+      "begin_frame": "355104000",
+      "end_frame": "355622400"
+    },{
+      "id": "687",
+      "name": "Annotation 687",
+      "begin_frame": "355622400",
+      "end_frame": "356140800"
+    },{
+      "id": "688",
+      "name": "Annotation 688",
+      "begin_frame": "356140800",
+      "end_frame": "356659200"
+    },{
+      "id": "689",
+      "name": "Annotation 689",
+      "begin_frame": "356659200",
+      "end_frame": "357177600"
+    },{
+      "id": "690",
+      "name": "Annotation 690",
+      "begin_frame": "357177600",
+      "end_frame": "357696000"
+    },{
+      "id": "691",
+      "name": "Annotation 691",
+      "begin_frame": "357696000",
+      "end_frame": "358214400"
+    },{
+      "id": "692",
+      "name": "Annotation 692",
+      "begin_frame": "358214400",
+      "end_frame": "358732800"
+    },{
+      "id": "693",
+      "name": "Annotation 693",
+      "begin_frame": "358732800",
+      "end_frame": "359251200"
+    },{
+      "id": "694",
+      "name": "Annotation 694",
+      "begin_frame": "359251200",
+      "end_frame": "359769600"
+    },{
+      "id": "695",
+      "name": "Annotation 695",
+      "begin_frame": "359769600",
+      "end_frame": "360288000"
+    },{
+      "id": "696",
+      "name": "Annotation 696",
+      "begin_frame": "360288000",
+      "end_frame": "360806400"
+    },{
+      "id": "697",
+      "name": "Annotation 697",
+      "begin_frame": "360806400",
+      "end_frame": "361324800"
+    },{
+      "id": "698",
+      "name": "Annotation 698",
+      "begin_frame": "361324800",
+      "end_frame": "361843200"
+    },{
+      "id": "699",
+      "name": "Annotation 699",
+      "begin_frame": "361843200",
+      "end_frame": "362361600"
+    },{
+      "id": "700",
+      "name": "Annotation 700",
+      "begin_frame": "362361600",
+      "end_frame": "362880000"
+    },{
+      "id": "701",
+      "name": "Annotation 701",
+      "begin_frame": "362880000",
+      "end_frame": "363398400"
+    },{
+      "id": "702",
+      "name": "Annotation 702",
+      "begin_frame": "363398400",
+      "end_frame": "363916800"
+    },{
+      "id": "703",
+      "name": "Annotation 703",
+      "begin_frame": "363916800",
+      "end_frame": "364435200"
+    },{
+      "id": "704",
+      "name": "Annotation 704",
+      "begin_frame": "364435200",
+      "end_frame": "364953600"
+    },{
+      "id": "705",
+      "name": "Annotation 705",
+      "begin_frame": "364953600",
+      "end_frame": "365472000"
+    },{
+      "id": "706",
+      "name": "Annotation 706",
+      "begin_frame": "365472000",
+      "end_frame": "365990400"
+    },{
+      "id": "707",
+      "name": "Annotation 707",
+      "begin_frame": "365990400",
+      "end_frame": "366508800"
+    },{
+      "id": "708",
+      "name": "Annotation 708",
+      "begin_frame": "366508800",
+      "end_frame": "367027200"
+    },{
+      "id": "709",
+      "name": "Annotation 709",
+      "begin_frame": "367027200",
+      "end_frame": "367545600"
+    },{
+      "id": "710",
+      "name": "Annotation 710",
+      "begin_frame": "367545600",
+      "end_frame": "368064000"
+    },{
+      "id": "711",
+      "name": "Annotation 711",
+      "begin_frame": "368064000",
+      "end_frame": "368582400"
+    },{
+      "id": "712",
+      "name": "Annotation 712",
+      "begin_frame": "368582400",
+      "end_frame": "369100800"
+    },{
+      "id": "713",
+      "name": "Annotation 713",
+      "begin_frame": "369100800",
+      "end_frame": "369619200"
+    },{
+      "id": "714",
+      "name": "Annotation 714",
+      "begin_frame": "369619200",
+      "end_frame": "370137600"
+    },{
+      "id": "715",
+      "name": "Annotation 715",
+      "begin_frame": "370137600",
+      "end_frame": "370656000"
+    },{
+      "id": "716",
+      "name": "Annotation 716",
+      "begin_frame": "370656000",
+      "end_frame": "371174400"
+    },{
+      "id": "717",
+      "name": "Annotation 717",
+      "begin_frame": "371174400",
+      "end_frame": "371692800"
+    },{
+      "id": "718",
+      "name": "Annotation 718",
+      "begin_frame": "371692800",
+      "end_frame": "372211200"
+    },{
+      "id": "719",
+      "name": "Annotation 719",
+      "begin_frame": "372211200",
+      "end_frame": "372729600"
+    },{
+      "id": "720",
+      "name": "Annotation 720",
+      "begin_frame": "372729600",
+      "end_frame": "373248000"
+    },{
+      "id": "721",
+      "name": "Annotation 721",
+      "begin_frame": "373248000",
+      "end_frame": "373766400"
+    },{
+      "id": "722",
+      "name": "Annotation 722",
+      "begin_frame": "373766400",
+      "end_frame": "374284800"
+    },{
+      "id": "723",
+      "name": "Annotation 723",
+      "begin_frame": "374284800",
+      "end_frame": "374803200"
+    },{
+      "id": "724",
+      "name": "Annotation 724",
+      "begin_frame": "374803200",
+      "end_frame": "375321600"
+    },{
+      "id": "725",
+      "name": "Annotation 725",
+      "begin_frame": "375321600",
+      "end_frame": "375840000"
+    },{
+      "id": "726",
+      "name": "Annotation 726",
+      "begin_frame": "375840000",
+      "end_frame": "376358400"
+    },{
+      "id": "727",
+      "name": "Annotation 727",
+      "begin_frame": "376358400",
+      "end_frame": "376876800"
+    },{
+      "id": "728",
+      "name": "Annotation 728",
+      "begin_frame": "376876800",
+      "end_frame": "377395200"
+    },{
+      "id": "729",
+      "name": "Annotation 729",
+      "begin_frame": "377395200",
+      "end_frame": "377913600"
+    },{
+      "id": "730",
+      "name": "Annotation 730",
+      "begin_frame": "377913600",
+      "end_frame": "378432000"
+    },{
+      "id": "731",
+      "name": "Annotation 731",
+      "begin_frame": "378432000",
+      "end_frame": "378950400"
+    },{
+      "id": "732",
+      "name": "Annotation 732",
+      "begin_frame": "378950400",
+      "end_frame": "379468800"
+    },{
+      "id": "733",
+      "name": "Annotation 733",
+      "begin_frame": "379468800",
+      "end_frame": "379987200"
+    },{
+      "id": "734",
+      "name": "Annotation 734",
+      "begin_frame": "379987200",
+      "end_frame": "380505600"
+    },{
+      "id": "735",
+      "name": "Annotation 735",
+      "begin_frame": "380505600",
+      "end_frame": "381024000"
+    },{
+      "id": "736",
+      "name": "Annotation 736",
+      "begin_frame": "381024000",
+      "end_frame": "381542400"
+    },{
+      "id": "737",
+      "name": "Annotation 737",
+      "begin_frame": "381542400",
+      "end_frame": "382060800"
+    },{
+      "id": "738",
+      "name": "Annotation 738",
+      "begin_frame": "382060800",
+      "end_frame": "382579200"
+    },{
+      "id": "739",
+      "name": "Annotation 739",
+      "begin_frame": "382579200",
+      "end_frame": "383097600"
+    },{
+      "id": "740",
+      "name": "Annotation 740",
+      "begin_frame": "383097600",
+      "end_frame": "383616000"
+    },{
+      "id": "741",
+      "name": "Annotation 741",
+      "begin_frame": "383616000",
+      "end_frame": "384134400"
+    },{
+      "id": "742",
+      "name": "Annotation 742",
+      "begin_frame": "384134400",
+      "end_frame": "384652800"
+    },{
+      "id": "743",
+      "name": "Annotation 743",
+      "begin_frame": "384652800",
+      "end_frame": "385171200"
+    },{
+      "id": "744",
+      "name": "Annotation 744",
+      "begin_frame": "385171200",
+      "end_frame": "385689600"
+    },{
+      "id": "745",
+      "name": "Annotation 745",
+      "begin_frame": "385689600",
+      "end_frame": "386208000"
+    },{
+      "id": "746",
+      "name": "Annotation 746",
+      "begin_frame": "386208000",
+      "end_frame": "386726400"
+    },{
+      "id": "747",
+      "name": "Annotation 747",
+      "begin_frame": "386726400",
+      "end_frame": "387244800"
+    },{
+      "id": "748",
+      "name": "Annotation 748",
+      "begin_frame": "387244800",
+      "end_frame": "387763200"
+    },{
+      "id": "749",
+      "name": "Annotation 749",
+      "begin_frame": "387763200",
+      "end_frame": "388281600"
+    },{
+      "id": "750",
+      "name": "Annotation 750",
+      "begin_frame": "388281600",
+      "end_frame": "388800000"
+    },{
+      "id": "751",
+      "name": "Annotation 751",
+      "begin_frame": "388800000",
+      "end_frame": "389318400"
+    },{
+      "id": "752",
+      "name": "Annotation 752",
+      "begin_frame": "389318400",
+      "end_frame": "389836800"
+    },{
+      "id": "753",
+      "name": "Annotation 753",
+      "begin_frame": "389836800",
+      "end_frame": "390355200"
+    },{
+      "id": "754",
+      "name": "Annotation 754",
+      "begin_frame": "390355200",
+      "end_frame": "390873600"
+    },{
+      "id": "755",
+      "name": "Annotation 755",
+      "begin_frame": "390873600",
+      "end_frame": "391392000"
+    },{
+      "id": "756",
+      "name": "Annotation 756",
+      "begin_frame": "391392000",
+      "end_frame": "391910400"
+    },{
+      "id": "757",
+      "name": "Annotation 757",
+      "begin_frame": "391910400",
+      "end_frame": "392428800"
+    },{
+      "id": "758",
+      "name": "Annotation 758",
+      "begin_frame": "392428800",
+      "end_frame": "392947200"
+    },{
+      "id": "759",
+      "name": "Annotation 759",
+      "begin_frame": "392947200",
+      "end_frame": "393465600"
+    },{
+      "id": "760",
+      "name": "Annotation 760",
+      "begin_frame": "393465600",
+      "end_frame": "393984000"
+    },{
+      "id": "761",
+      "name": "Annotation 761",
+      "begin_frame": "393984000",
+      "end_frame": "394502400"
+    },{
+      "id": "762",
+      "name": "Annotation 762",
+      "begin_frame": "394502400",
+      "end_frame": "395020800"
+    },{
+      "id": "763",
+      "name": "Annotation 763",
+      "begin_frame": "395020800",
+      "end_frame": "395539200"
+    },{
+      "id": "764",
+      "name": "Annotation 764",
+      "begin_frame": "395539200",
+      "end_frame": "396057600"
+    },{
+      "id": "765",
+      "name": "Annotation 765",
+      "begin_frame": "396057600",
+      "end_frame": "396576000"
+    },{
+      "id": "766",
+      "name": "Annotation 766",
+      "begin_frame": "396576000",
+      "end_frame": "397094400"
+    },{
+      "id": "767",
+      "name": "Annotation 767",
+      "begin_frame": "397094400",
+      "end_frame": "397612800"
+    },{
+      "id": "768",
+      "name": "Annotation 768",
+      "begin_frame": "397612800",
+      "end_frame": "398131200"
+    },{
+      "id": "769",
+      "name": "Annotation 769",
+      "begin_frame": "398131200",
+      "end_frame": "398649600"
+    },{
+      "id": "770",
+      "name": "Annotation 770",
+      "begin_frame": "398649600",
+      "end_frame": "399168000"
+    },{
+      "id": "771",
+      "name": "Annotation 771",
+      "begin_frame": "399168000",
+      "end_frame": "399686400"
+    },{
+      "id": "772",
+      "name": "Annotation 772",
+      "begin_frame": "399686400",
+      "end_frame": "400204800"
+    },{
+      "id": "773",
+      "name": "Annotation 773",
+      "begin_frame": "400204800",
+      "end_frame": "400723200"
+    },{
+      "id": "774",
+      "name": "Annotation 774",
+      "begin_frame": "400723200",
+      "end_frame": "401241600"
+    },{
+      "id": "775",
+      "name": "Annotation 775",
+      "begin_frame": "401241600",
+      "end_frame": "401760000"
+    },{
+      "id": "776",
+      "name": "Annotation 776",
+      "begin_frame": "401760000",
+      "end_frame": "402278400"
+    },{
+      "id": "777",
+      "name": "Annotation 777",
+      "begin_frame": "402278400",
+      "end_frame": "402796800"
+    },{
+      "id": "778",
+      "name": "Annotation 778",
+      "begin_frame": "402796800",
+      "end_frame": "403315200"
+    },{
+      "id": "779",
+      "name": "Annotation 779",
+      "begin_frame": "403315200",
+      "end_frame": "403833600"
+    },{
+      "id": "780",
+      "name": "Annotation 780",
+      "begin_frame": "403833600",
+      "end_frame": "404352000"
+    },{
+      "id": "781",
+      "name": "Annotation 781",
+      "begin_frame": "404352000",
+      "end_frame": "404870400"
+    },{
+      "id": "782",
+      "name": "Annotation 782",
+      "begin_frame": "404870400",
+      "end_frame": "405388800"
+    },{
+      "id": "783",
+      "name": "Annotation 783",
+      "begin_frame": "405388800",
+      "end_frame": "405907200"
+    },{
+      "id": "784",
+      "name": "Annotation 784",
+      "begin_frame": "405907200",
+      "end_frame": "406425600"
+    },{
+      "id": "785",
+      "name": "Annotation 785",
+      "begin_frame": "406425600",
+      "end_frame": "406944000"
+    },{
+      "id": "786",
+      "name": "Annotation 786",
+      "begin_frame": "406944000",
+      "end_frame": "407462400"
+    },{
+      "id": "787",
+      "name": "Annotation 787",
+      "begin_frame": "407462400",
+      "end_frame": "407980800"
+    },{
+      "id": "788",
+      "name": "Annotation 788",
+      "begin_frame": "407980800",
+      "end_frame": "408499200"
+    },{
+      "id": "789",
+      "name": "Annotation 789",
+      "begin_frame": "408499200",
+      "end_frame": "409017600"
+    },{
+      "id": "790",
+      "name": "Annotation 790",
+      "begin_frame": "409017600",
+      "end_frame": "409536000"
+    },{
+      "id": "791",
+      "name": "Annotation 791",
+      "begin_frame": "409536000",
+      "end_frame": "410054400"
+    },{
+      "id": "792",
+      "name": "Annotation 792",
+      "begin_frame": "410054400",
+      "end_frame": "410572800"
+    },{
+      "id": "793",
+      "name": "Annotation 793",
+      "begin_frame": "410572800",
+      "end_frame": "411091200"
+    },{
+      "id": "794",
+      "name": "Annotation 794",
+      "begin_frame": "411091200",
+      "end_frame": "411609600"
+    },{
+      "id": "795",
+      "name": "Annotation 795",
+      "begin_frame": "411609600",
+      "end_frame": "412128000"
+    },{
+      "id": "796",
+      "name": "Annotation 796",
+      "begin_frame": "412128000",
+      "end_frame": "412646400"
+    },{
+      "id": "797",
+      "name": "Annotation 797",
+      "begin_frame": "412646400",
+      "end_frame": "413164800"
+    },{
+      "id": "798",
+      "name": "Annotation 798",
+      "begin_frame": "413164800",
+      "end_frame": "413683200"
+    },{
+      "id": "799",
+      "name": "Annotation 799",
+      "begin_frame": "413683200",
+      "end_frame": "414201600"
+    },{
+      "id": "800",
+      "name": "Annotation 800",
+      "begin_frame": "414201600",
+      "end_frame": "414720000"
+    },{
+      "id": "801",
+      "name": "Annotation 801",
+      "begin_frame": "414720000",
+      "end_frame": "415238400"
+    },{
+      "id": "802",
+      "name": "Annotation 802",
+      "begin_frame": "415238400",
+      "end_frame": "415756800"
+    },{
+      "id": "803",
+      "name": "Annotation 803",
+      "begin_frame": "415756800",
+      "end_frame": "416275200"
+    },{
+      "id": "804",
+      "name": "Annotation 804",
+      "begin_frame": "416275200",
+      "end_frame": "416793600"
+    },{
+      "id": "805",
+      "name": "Annotation 805",
+      "begin_frame": "416793600",
+      "end_frame": "417312000"
+    },{
+      "id": "806",
+      "name": "Annotation 806",
+      "begin_frame": "417312000",
+      "end_frame": "417830400"
+    },{
+      "id": "807",
+      "name": "Annotation 807",
+      "begin_frame": "417830400",
+      "end_frame": "418348800"
+    },{
+      "id": "808",
+      "name": "Annotation 808",
+      "begin_frame": "418348800",
+      "end_frame": "418867200"
+    },{
+      "id": "809",
+      "name": "Annotation 809",
+      "begin_frame": "418867200",
+      "end_frame": "419385600"
+    },{
+      "id": "810",
+      "name": "Annotation 810",
+      "begin_frame": "419385600",
+      "end_frame": "419904000"
+    },{
+      "id": "811",
+      "name": "Annotation 811",
+      "begin_frame": "419904000",
+      "end_frame": "420422400"
+    },{
+      "id": "812",
+      "name": "Annotation 812",
+      "begin_frame": "420422400",
+      "end_frame": "420940800"
+    },{
+      "id": "813",
+      "name": "Annotation 813",
+      "begin_frame": "420940800",
+      "end_frame": "421459200"
+    },{
+      "id": "814",
+      "name": "Annotation 814",
+      "begin_frame": "421459200",
+      "end_frame": "421977600"
+    },{
+      "id": "815",
+      "name": "Annotation 815",
+      "begin_frame": "421977600",
+      "end_frame": "422496000"
+    },{
+      "id": "816",
+      "name": "Annotation 816",
+      "begin_frame": "422496000",
+      "end_frame": "423014400"
+    },{
+      "id": "817",
+      "name": "Annotation 817",
+      "begin_frame": "423014400",
+      "end_frame": "423532800"
+    },{
+      "id": "818",
+      "name": "Annotation 818",
+      "begin_frame": "423532800",
+      "end_frame": "424051200"
+    },{
+      "id": "819",
+      "name": "Annotation 819",
+      "begin_frame": "424051200",
+      "end_frame": "424569600"
+    },{
+      "id": "820",
+      "name": "Annotation 820",
+      "begin_frame": "424569600",
+      "end_frame": "425088000"
+    },{
+      "id": "821",
+      "name": "Annotation 821",
+      "begin_frame": "425088000",
+      "end_frame": "425606400"
+    },{
+      "id": "822",
+      "name": "Annotation 822",
+      "begin_frame": "425606400",
+      "end_frame": "426124800"
+    },{
+      "id": "823",
+      "name": "Annotation 823",
+      "begin_frame": "426124800",
+      "end_frame": "426643200"
+    },{
+      "id": "824",
+      "name": "Annotation 824",
+      "begin_frame": "426643200",
+      "end_frame": "427161600"
+    },{
+      "id": "825",
+      "name": "Annotation 825",
+      "begin_frame": "427161600",
+      "end_frame": "427680000"
+    },{
+      "id": "826",
+      "name": "Annotation 826",
+      "begin_frame": "427680000",
+      "end_frame": "428198400"
+    },{
+      "id": "827",
+      "name": "Annotation 827",
+      "begin_frame": "428198400",
+      "end_frame": "428716800"
+    },{
+      "id": "828",
+      "name": "Annotation 828",
+      "begin_frame": "428716800",
+      "end_frame": "429235200"
+    },{
+      "id": "829",
+      "name": "Annotation 829",
+      "begin_frame": "429235200",
+      "end_frame": "429753600"
+    },{
+      "id": "830",
+      "name": "Annotation 830",
+      "begin_frame": "429753600",
+      "end_frame": "430272000"
+    },{
+      "id": "831",
+      "name": "Annotation 831",
+      "begin_frame": "430272000",
+      "end_frame": "430790400"
+    },{
+      "id": "832",
+      "name": "Annotation 832",
+      "begin_frame": "430790400",
+      "end_frame": "431308800"
+    },{
+      "id": "833",
+      "name": "Annotation 833",
+      "begin_frame": "431308800",
+      "end_frame": "431827200"
+    },{
+      "id": "834",
+      "name": "Annotation 834",
+      "begin_frame": "431827200",
+      "end_frame": "432345600"
+    },{
+      "id": "835",
+      "name": "Annotation 835",
+      "begin_frame": "432345600",
+      "end_frame": "432864000"
+    },{
+      "id": "836",
+      "name": "Annotation 836",
+      "begin_frame": "432864000",
+      "end_frame": "433382400"
+    },{
+      "id": "837",
+      "name": "Annotation 837",
+      "begin_frame": "433382400",
+      "end_frame": "433900800"
+    },{
+      "id": "838",
+      "name": "Annotation 838",
+      "begin_frame": "433900800",
+      "end_frame": "434419200"
+    },{
+      "id": "839",
+      "name": "Annotation 839",
+      "begin_frame": "434419200",
+      "end_frame": "434937600"
+    },{
+      "id": "840",
+      "name": "Annotation 840",
+      "begin_frame": "434937600",
+      "end_frame": "435456000"
+    },{
+      "id": "841",
+      "name": "Annotation 841",
+      "begin_frame": "435456000",
+      "end_frame": "435974400"
+    },{
+      "id": "842",
+      "name": "Annotation 842",
+      "begin_frame": "435974400",
+      "end_frame": "436492800"
+    },{
+      "id": "843",
+      "name": "Annotation 843",
+      "begin_frame": "436492800",
+      "end_frame": "437011200"
+    },{
+      "id": "844",
+      "name": "Annotation 844",
+      "begin_frame": "437011200",
+      "end_frame": "437529600"
+    },{
+      "id": "845",
+      "name": "Annotation 845",
+      "begin_frame": "437529600",
+      "end_frame": "438048000"
+    },{
+      "id": "846",
+      "name": "Annotation 846",
+      "begin_frame": "438048000",
+      "end_frame": "438566400"
+    },{
+      "id": "847",
+      "name": "Annotation 847",
+      "begin_frame": "438566400",
+      "end_frame": "439084800"
+    },{
+      "id": "848",
+      "name": "Annotation 848",
+      "begin_frame": "439084800",
+      "end_frame": "439603200"
+    },{
+      "id": "849",
+      "name": "Annotation 849",
+      "begin_frame": "439603200",
+      "end_frame": "440121600"
+    },{
+      "id": "850",
+      "name": "Annotation 850",
+      "begin_frame": "440121600",
+      "end_frame": "440640000"
+    },{
+      "id": "851",
+      "name": "Annotation 851",
+      "begin_frame": "440640000",
+      "end_frame": "441158400"
+    },{
+      "id": "852",
+      "name": "Annotation 852",
+      "begin_frame": "441158400",
+      "end_frame": "441676800"
+    },{
+      "id": "853",
+      "name": "Annotation 853",
+      "begin_frame": "441676800",
+      "end_frame": "442195200"
+    },{
+      "id": "854",
+      "name": "Annotation 854",
+      "begin_frame": "442195200",
+      "end_frame": "442713600"
+    },{
+      "id": "855",
+      "name": "Annotation 855",
+      "begin_frame": "442713600",
+      "end_frame": "443232000"
+    },{
+      "id": "856",
+      "name": "Annotation 856",
+      "begin_frame": "443232000",
+      "end_frame": "443750400"
+    },{
+      "id": "857",
+      "name": "Annotation 857",
+      "begin_frame": "443750400",
+      "end_frame": "444268800"
+    },{
+      "id": "858",
+      "name": "Annotation 858",
+      "begin_frame": "444268800",
+      "end_frame": "444787200"
+    },{
+      "id": "859",
+      "name": "Annotation 859",
+      "begin_frame": "444787200",
+      "end_frame": "445305600"
+    },{
+      "id": "860",
+      "name": "Annotation 860",
+      "begin_frame": "445305600",
+      "end_frame": "445824000"
+    },{
+      "id": "861",
+      "name": "Annotation 861",
+      "begin_frame": "445824000",
+      "end_frame": "446342400"
+    },{
+      "id": "862",
+      "name": "Annotation 862",
+      "begin_frame": "446342400",
+      "end_frame": "446860800"
+    },{
+      "id": "863",
+      "name": "Annotation 863",
+      "begin_frame": "446860800",
+      "end_frame": "447379200"
+    },{
+      "id": "864",
+      "name": "Annotation 864",
+      "begin_frame": "447379200",
+      "end_frame": "447897600"
+    },{
+      "id": "865",
+      "name": "Annotation 865",
+      "begin_frame": "447897600",
+      "end_frame": "448416000"
+    },{
+      "id": "866",
+      "name": "Annotation 866",
+      "begin_frame": "448416000",
+      "end_frame": "448934400"
+    },{
+      "id": "867",
+      "name": "Annotation 867",
+      "begin_frame": "448934400",
+      "end_frame": "449452800"
+    },{
+      "id": "868",
+      "name": "Annotation 868",
+      "begin_frame": "449452800",
+      "end_frame": "449971200"
+    },{
+      "id": "869",
+      "name": "Annotation 869",
+      "begin_frame": "449971200",
+      "end_frame": "450489600"
+    },{
+      "id": "870",
+      "name": "Annotation 870",
+      "begin_frame": "450489600",
+      "end_frame": "451008000"
+    },{
+      "id": "871",
+      "name": "Annotation 871",
+      "begin_frame": "451008000",
+      "end_frame": "451526400"
+    },{
+      "id": "872",
+      "name": "Annotation 872",
+      "begin_frame": "451526400",
+      "end_frame": "452044800"
+    },{
+      "id": "873",
+      "name": "Annotation 873",
+      "begin_frame": "452044800",
+      "end_frame": "452563200"
+    },{
+      "id": "874",
+      "name": "Annotation 874",
+      "begin_frame": "452563200",
+      "end_frame": "453081600"
+    },{
+      "id": "875",
+      "name": "Annotation 875",
+      "begin_frame": "453081600",
+      "end_frame": "453600000"
+    },{
+      "id": "876",
+      "name": "Annotation 876",
+      "begin_frame": "453600000",
+      "end_frame": "454118400"
+    },{
+      "id": "877",
+      "name": "Annotation 877",
+      "begin_frame": "454118400",
+      "end_frame": "454636800"
+    },{
+      "id": "878",
+      "name": "Annotation 878",
+      "begin_frame": "454636800",
+      "end_frame": "455155200"
+    },{
+      "id": "879",
+      "name": "Annotation 879",
+      "begin_frame": "455155200",
+      "end_frame": "455673600"
+    },{
+      "id": "880",
+      "name": "Annotation 880",
+      "begin_frame": "455673600",
+      "end_frame": "456192000"
+    },{
+      "id": "881",
+      "name": "Annotation 881",
+      "begin_frame": "456192000",
+      "end_frame": "456710400"
+    },{
+      "id": "882",
+      "name": "Annotation 882",
+      "begin_frame": "456710400",
+      "end_frame": "457228800"
+    },{
+      "id": "883",
+      "name": "Annotation 883",
+      "begin_frame": "457228800",
+      "end_frame": "457747200"
+    },{
+      "id": "884",
+      "name": "Annotation 884",
+      "begin_frame": "457747200",
+      "end_frame": "458265600"
+    },{
+      "id": "885",
+      "name": "Annotation 885",
+      "begin_frame": "458265600",
+      "end_frame": "458784000"
+    },{
+      "id": "886",
+      "name": "Annotation 886",
+      "begin_frame": "458784000",
+      "end_frame": "459302400"
+    },{
+      "id": "887",
+      "name": "Annotation 887",
+      "begin_frame": "459302400",
+      "end_frame": "459820800"
+    },{
+      "id": "888",
+      "name": "Annotation 888",
+      "begin_frame": "459820800",
+      "end_frame": "460339200"
+    },{
+      "id": "889",
+      "name": "Annotation 889",
+      "begin_frame": "460339200",
+      "end_frame": "460857600"
+    },{
+      "id": "890",
+      "name": "Annotation 890",
+      "begin_frame": "460857600",
+      "end_frame": "461376000"
+    },{
+      "id": "891",
+      "name": "Annotation 891",
+      "begin_frame": "461376000",
+      "end_frame": "461894400"
+    },{
+      "id": "892",
+      "name": "Annotation 892",
+      "begin_frame": "461894400",
+      "end_frame": "462412800"
+    },{
+      "id": "893",
+      "name": "Annotation 893",
+      "begin_frame": "462412800",
+      "end_frame": "462931200"
+    },{
+      "id": "894",
+      "name": "Annotation 894",
+      "begin_frame": "462931200",
+      "end_frame": "463449600"
+    },{
+      "id": "895",
+      "name": "Annotation 895",
+      "begin_frame": "463449600",
+      "end_frame": "463968000"
+    },{
+      "id": "896",
+      "name": "Annotation 896",
+      "begin_frame": "463968000",
+      "end_frame": "464486400"
+    },{
+      "id": "897",
+      "name": "Annotation 897",
+      "begin_frame": "464486400",
+      "end_frame": "465004800"
+    },{
+      "id": "898",
+      "name": "Annotation 898",
+      "begin_frame": "465004800",
+      "end_frame": "465523200"
+    },{
+      "id": "899",
+      "name": "Annotation 899",
+      "begin_frame": "465523200",
+      "end_frame": "466041600"
+    },{
+      "id": "900",
+      "name": "Annotation 900",
+      "begin_frame": "466041600",
+      "end_frame": "466560000"
+    },{
+      "id": "901",
+      "name": "Annotation 901",
+      "begin_frame": "466560000",
+      "end_frame": "467078400"
+    },{
+      "id": "902",
+      "name": "Annotation 902",
+      "begin_frame": "467078400",
+      "end_frame": "467596800"
+    },{
+      "id": "903",
+      "name": "Annotation 903",
+      "begin_frame": "467596800",
+      "end_frame": "468115200"
+    },{
+      "id": "904",
+      "name": "Annotation 904",
+      "begin_frame": "468115200",
+      "end_frame": "468633600"
+    },{
+      "id": "905",
+      "name": "Annotation 905",
+      "begin_frame": "468633600",
+      "end_frame": "469152000"
+    },{
+      "id": "906",
+      "name": "Annotation 906",
+      "begin_frame": "469152000",
+      "end_frame": "469670400"
+    },{
+      "id": "907",
+      "name": "Annotation 907",
+      "begin_frame": "469670400",
+      "end_frame": "470188800"
+    },{
+      "id": "908",
+      "name": "Annotation 908",
+      "begin_frame": "470188800",
+      "end_frame": "470707200"
+    },{
+      "id": "909",
+      "name": "Annotation 909",
+      "begin_frame": "470707200",
+      "end_frame": "471225600"
+    },{
+      "id": "910",
+      "name": "Annotation 910",
+      "begin_frame": "471225600",
+      "end_frame": "471744000"
+    },{
+      "id": "911",
+      "name": "Annotation 911",
+      "begin_frame": "471744000",
+      "end_frame": "472262400"
+    },{
+      "id": "912",
+      "name": "Annotation 912",
+      "begin_frame": "472262400",
+      "end_frame": "472780800"
+    },{
+      "id": "913",
+      "name": "Annotation 913",
+      "begin_frame": "472780800",
+      "end_frame": "473299200"
+    },{
+      "id": "914",
+      "name": "Annotation 914",
+      "begin_frame": "473299200",
+      "end_frame": "473817600"
+    },{
+      "id": "915",
+      "name": "Annotation 915",
+      "begin_frame": "473817600",
+      "end_frame": "474336000"
+    },{
+      "id": "916",
+      "name": "Annotation 916",
+      "begin_frame": "474336000",
+      "end_frame": "474854400"
+    },{
+      "id": "917",
+      "name": "Annotation 917",
+      "begin_frame": "474854400",
+      "end_frame": "475372800"
+    },{
+      "id": "918",
+      "name": "Annotation 918",
+      "begin_frame": "475372800",
+      "end_frame": "475891200"
+    },{
+      "id": "919",
+      "name": "Annotation 919",
+      "begin_frame": "475891200",
+      "end_frame": "476409600"
+    },{
+      "id": "920",
+      "name": "Annotation 920",
+      "begin_frame": "476409600",
+      "end_frame": "476928000"
+    },{
+      "id": "921",
+      "name": "Annotation 921",
+      "begin_frame": "476928000",
+      "end_frame": "477446400"
+    },{
+      "id": "922",
+      "name": "Annotation 922",
+      "begin_frame": "477446400",
+      "end_frame": "477964800"
+    },{
+      "id": "923",
+      "name": "Annotation 923",
+      "begin_frame": "477964800",
+      "end_frame": "478483200"
+    },{
+      "id": "924",
+      "name": "Annotation 924",
+      "begin_frame": "478483200",
+      "end_frame": "479001600"
+    },{
+      "id": "925",
+      "name": "Annotation 925",
+      "begin_frame": "479001600",
+      "end_frame": "479520000"
+    },{
+      "id": "926",
+      "name": "Annotation 926",
+      "begin_frame": "479520000",
+      "end_frame": "480038400"
+    },{
+      "id": "927",
+      "name": "Annotation 927",
+      "begin_frame": "480038400",
+      "end_frame": "480556800"
+    },{
+      "id": "928",
+      "name": "Annotation 928",
+      "begin_frame": "480556800",
+      "end_frame": "481075200"
+    },{
+      "id": "929",
+      "name": "Annotation 929",
+      "begin_frame": "481075200",
+      "end_frame": "481593600"
+    },{
+      "id": "930",
+      "name": "Annotation 930",
+      "begin_frame": "481593600",
+      "end_frame": "482112000"
+    },{
+      "id": "931",
+      "name": "Annotation 931",
+      "begin_frame": "482112000",
+      "end_frame": "482630400"
+    },{
+      "id": "932",
+      "name": "Annotation 932",
+      "begin_frame": "482630400",
+      "end_frame": "483148800"
+    },{
+      "id": "933",
+      "name": "Annotation 933",
+      "begin_frame": "483148800",
+      "end_frame": "483667200"
+    },{
+      "id": "934",
+      "name": "Annotation 934",
+      "begin_frame": "483667200",
+      "end_frame": "484185600"
+    },{
+      "id": "935",
+      "name": "Annotation 935",
+      "begin_frame": "484185600",
+      "end_frame": "484704000"
+    },{
+      "id": "936",
+      "name": "Annotation 936",
+      "begin_frame": "484704000",
+      "end_frame": "485222400"
+    },{
+      "id": "937",
+      "name": "Annotation 937",
+      "begin_frame": "485222400",
+      "end_frame": "485740800"
+    },{
+      "id": "938",
+      "name": "Annotation 938",
+      "begin_frame": "485740800",
+      "end_frame": "486259200"
+    },{
+      "id": "939",
+      "name": "Annotation 939",
+      "begin_frame": "486259200",
+      "end_frame": "486777600"
+    },{
+      "id": "940",
+      "name": "Annotation 940",
+      "begin_frame": "486777600",
+      "end_frame": "487296000"
+    },{
+      "id": "941",
+      "name": "Annotation 941",
+      "begin_frame": "487296000",
+      "end_frame": "487814400"
+    },{
+      "id": "942",
+      "name": "Annotation 942",
+      "begin_frame": "487814400",
+      "end_frame": "488332800"
+    },{
+      "id": "943",
+      "name": "Annotation 943",
+      "begin_frame": "488332800",
+      "end_frame": "488851200"
+    },{
+      "id": "944",
+      "name": "Annotation 944",
+      "begin_frame": "488851200",
+      "end_frame": "489369600"
+    },{
+      "id": "945",
+      "name": "Annotation 945",
+      "begin_frame": "489369600",
+      "end_frame": "489888000"
+    },{
+      "id": "946",
+      "name": "Annotation 946",
+      "begin_frame": "489888000",
+      "end_frame": "490406400"
+    },{
+      "id": "947",
+      "name": "Annotation 947",
+      "begin_frame": "490406400",
+      "end_frame": "490924800"
+    },{
+      "id": "948",
+      "name": "Annotation 948",
+      "begin_frame": "490924800",
+      "end_frame": "491443200"
+    },{
+      "id": "949",
+      "name": "Annotation 949",
+      "begin_frame": "491443200",
+      "end_frame": "491961600"
+    },{
+      "id": "950",
+      "name": "Annotation 950",
+      "begin_frame": "491961600",
+      "end_frame": "492480000"
+    },{
+      "id": "951",
+      "name": "Annotation 951",
+      "begin_frame": "492480000",
+      "end_frame": "492998400"
+    },{
+      "id": "952",
+      "name": "Annotation 952",
+      "begin_frame": "492998400",
+      "end_frame": "493516800"
+    },{
+      "id": "953",
+      "name": "Annotation 953",
+      "begin_frame": "493516800",
+      "end_frame": "494035200"
+    },{
+      "id": "954",
+      "name": "Annotation 954",
+      "begin_frame": "494035200",
+      "end_frame": "494553600"
+    },{
+      "id": "955",
+      "name": "Annotation 955",
+      "begin_frame": "494553600",
+      "end_frame": "495072000"
+    },{
+      "id": "956",
+      "name": "Annotation 956",
+      "begin_frame": "495072000",
+      "end_frame": "495590400"
+    },{
+      "id": "957",
+      "name": "Annotation 957",
+      "begin_frame": "495590400",
+      "end_frame": "496108800"
+    },{
+      "id": "958",
+      "name": "Annotation 958",
+      "begin_frame": "496108800",
+      "end_frame": "496627200"
+    },{
+      "id": "959",
+      "name": "Annotation 959",
+      "begin_frame": "496627200",
+      "end_frame": "497145600"
+    },{
+      "id": "960",
+      "name": "Annotation 960",
+      "begin_frame": "497145600",
+      "end_frame": "497664000"
+    },{
+      "id": "961",
+      "name": "Annotation 961",
+      "begin_frame": "497664000",
+      "end_frame": "498182400"
+    },{
+      "id": "962",
+      "name": "Annotation 962",
+      "begin_frame": "498182400",
+      "end_frame": "498700800"
+    },{
+      "id": "963",
+      "name": "Annotation 963",
+      "begin_frame": "498700800",
+      "end_frame": "499219200"
+    },{
+      "id": "964",
+      "name": "Annotation 964",
+      "begin_frame": "499219200",
+      "end_frame": "499737600"
+    },{
+      "id": "965",
+      "name": "Annotation 965",
+      "begin_frame": "499737600",
+      "end_frame": "500256000"
+    },{
+      "id": "966",
+      "name": "Annotation 966",
+      "begin_frame": "500256000",
+      "end_frame": "500774400"
+    },{
+      "id": "967",
+      "name": "Annotation 967",
+      "begin_frame": "500774400",
+      "end_frame": "501292800"
+    },{
+      "id": "968",
+      "name": "Annotation 968",
+      "begin_frame": "501292800",
+      "end_frame": "501811200"
+    },{
+      "id": "969",
+      "name": "Annotation 969",
+      "begin_frame": "501811200",
+      "end_frame": "502329600"
+    },{
+      "id": "970",
+      "name": "Annotation 970",
+      "begin_frame": "502329600",
+      "end_frame": "502848000"
+    },{
+      "id": "971",
+      "name": "Annotation 971",
+      "begin_frame": "502848000",
+      "end_frame": "503366400"
+    },{
+      "id": "972",
+      "name": "Annotation 972",
+      "begin_frame": "503366400",
+      "end_frame": "503884800"
+    },{
+      "id": "973",
+      "name": "Annotation 973",
+      "begin_frame": "503884800",
+      "end_frame": "504403200"
+    },{
+      "id": "974",
+      "name": "Annotation 974",
+      "begin_frame": "504403200",
+      "end_frame": "504921600"
+    },{
+      "id": "975",
+      "name": "Annotation 975",
+      "begin_frame": "504921600",
+      "end_frame": "505440000"
+    },{
+      "id": "976",
+      "name": "Annotation 976",
+      "begin_frame": "505440000",
+      "end_frame": "505958400"
+    },{
+      "id": "977",
+      "name": "Annotation 977",
+      "begin_frame": "505958400",
+      "end_frame": "506476800"
+    },{
+      "id": "978",
+      "name": "Annotation 978",
+      "begin_frame": "506476800",
+      "end_frame": "506995200"
+    },{
+      "id": "979",
+      "name": "Annotation 979",
+      "begin_frame": "506995200",
+      "end_frame": "507513600"
+    },{
+      "id": "980",
+      "name": "Annotation 980",
+      "begin_frame": "507513600",
+      "end_frame": "508032000"
+    },{
+      "id": "981",
+      "name": "Annotation 981",
+      "begin_frame": "508032000",
+      "end_frame": "508550400"
+    },{
+      "id": "982",
+      "name": "Annotation 982",
+      "begin_frame": "508550400",
+      "end_frame": "509068800"
+    },{
+      "id": "983",
+      "name": "Annotation 983",
+      "begin_frame": "509068800",
+      "end_frame": "509587200"
+    },{
+      "id": "984",
+      "name": "Annotation 984",
+      "begin_frame": "509587200",
+      "end_frame": "510105600"
+    },{
+      "id": "985",
+      "name": "Annotation 985",
+      "begin_frame": "510105600",
+      "end_frame": "510624000"
+    },{
+      "id": "986",
+      "name": "Annotation 986",
+      "begin_frame": "510624000",
+      "end_frame": "511142400"
+    },{
+      "id": "987",
+      "name": "Annotation 987",
+      "begin_frame": "511142400",
+      "end_frame": "511660800"
+    },{
+      "id": "988",
+      "name": "Annotation 988",
+      "begin_frame": "511660800",
+      "end_frame": "512179200"
+    },{
+      "id": "989",
+      "name": "Annotation 989",
+      "begin_frame": "512179200",
+      "end_frame": "512697600"
+    },{
+      "id": "990",
+      "name": "Annotation 990",
+      "begin_frame": "512697600",
+      "end_frame": "513216000"
+    },{
+      "id": "991",
+      "name": "Annotation 991",
+      "begin_frame": "513216000",
+      "end_frame": "513734400"
+    },{
+      "id": "992",
+      "name": "Annotation 992",
+      "begin_frame": "513734400",
+      "end_frame": "514252800"
+    },{
+      "id": "993",
+      "name": "Annotation 993",
+      "begin_frame": "514252800",
+      "end_frame": "514771200"
+    },{
+      "id": "994",
+      "name": "Annotation 994",
+      "begin_frame": "514771200",
+      "end_frame": "515289600"
+    },{
+      "id": "995",
+      "name": "Annotation 995",
+      "begin_frame": "515289600",
+      "end_frame": "515808000"
+    },{
+      "id": "996",
+      "name": "Annotation 996",
+      "begin_frame": "515808000",
+      "end_frame": "516326400"
+    },{
+      "id": "997",
+      "name": "Annotation 997",
+      "begin_frame": "516326400",
+      "end_frame": "516844800"
+    },{
+      "id": "998",
+      "name": "Annotation 998",
+      "begin_frame": "516844800",
+      "end_frame": "517363200"
+    },{
+      "id": "999",
+      "name": "Annotation 999",
+      "begin_frame": "517363200",
+      "end_frame": "517881600"
+    },{
+      "id": "1000",
+      "name": "Annotation 1000",
+      "begin_frame": "517881600",
+      "end_frame": "518400000"
+    }],
+  "reference_picture_context": {
+    "basename": "",
+    "sha256": "",
+    "offset_rational": "0/1",
+    "is_sync_evidence": false
+  }
+}

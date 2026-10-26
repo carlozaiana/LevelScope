@@ -1,0 +1,393 @@
+{
+  "passed": true,
+  "source_digest": "4ff89967e4927600d0b6defafabb28c372f4068870a0f1a9adb1ee84fe1781d8",
+  "source_build": "f36567f5f38a47daef49bc9543252b42b3403e3bdcc2fe986b755bee1576cce9",
+  "maximum_float32_ulp": 0,
+  "sample_cases": [
+    {
+      "case": "0.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "1.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "2.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "3.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "4.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "5.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "6.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "7.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 1.7763568394002505e-15,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "8.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "9.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "10.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "11.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "12.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "13.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "14.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "15.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "16.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "17.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "18.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "19.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 1.7763568394002505e-15,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "20.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "21.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "22.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "23.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "24.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "25.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "26.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "27.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "28.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "29.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "30.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "31.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 1.7763568394002505e-15,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "32.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "33.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "34.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "35.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "36.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "37.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "38.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "39.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "40.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "41.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "42.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "43.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 1.7763568394002505e-15,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "44.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "45.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "46.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    },
+    {
+      "case": "47.f32",
+      "maximum_float32_ulp": 0,
+      "metric_errors": {
+        "true_peak": 0.0,
+        "sample_peak": 0.0
+      }
+    }
+  ],
+  "scope": "M8 native/long-media/resource/sample comparison; UI and bidirectional session exchange are separate"
+}

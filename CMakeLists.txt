@@ -203,6 +203,9 @@ endif()
 #==============================
 
 add_library(LevelScopeStandaloneSupport STATIC
+    Source/Standalone/Pcm24Wave.cpp
+    Source/Standalone/StandaloneExport.cpp
+    Source/Standalone/StandaloneReport.cpp
     Source/Standalone/ProgrammeSource.cpp
     Source/Standalone/SessionDocument.cpp
     Source/Standalone/VerifiedSource.cpp
@@ -262,6 +265,7 @@ target_link_libraries(LevelScopeStandalone PRIVATE LevelScopeDiagnosticsUI)
 target_sources(LevelScopeStandalone
     PRIVATE
         Source/Standalone/StandaloneProgrammeImport.cpp
+        Source/Standalone/StandaloneExportUI.cpp
         Source/Standalone/StandaloneSessionUI.cpp
         Source/Standalone/StandaloneApp.cpp
         Source/Standalone/StandaloneMainComponent.cpp
@@ -446,4 +450,18 @@ if (LEVELSCOPE_BUILD_PROGRAMME_TESTS)
     target_link_libraries(LevelScopeProgrammeTests PRIVATE LevelScopeDiagnosticsUI)
     add_test(NAME separate-file-programmes COMMAND LevelScopeProgrammeTests)
     set_tests_properties(separate-file-programmes PROPERTIES TIMEOUT 600)
+endif()
+
+option(LEVELSCOPE_BUILD_EXPORT_TESTS "Build M10 offline PCM export/report checks" OFF)
+if (LEVELSCOPE_BUILD_EXPORT_TESTS)
+    enable_testing()
+    juce_add_console_app(LevelScopeExportTests PRODUCT_NAME "LevelScope Export Tests")
+    target_sources(LevelScopeExportTests PRIVATE Tests/ExportTests.cpp)
+    if(APPLE)
+        target_sources(LevelScopeExportTests PRIVATE Tests/VideoReaderAudit_mac.mm)
+    endif()
+    target_compile_definitions(LevelScopeExportTests PRIVATE JUCE_MODAL_LOOPS_PERMITTED=1)
+    target_link_libraries(LevelScopeExportTests PRIVATE LevelScopeStandaloneSupport juce::juce_gui_basics)
+    add_test(NAME verified-pcm-export COMMAND LevelScopeExportTests)
+    set_tests_properties(verified-pcm-export PROPERTIES TIMEOUT 600)
 endif()

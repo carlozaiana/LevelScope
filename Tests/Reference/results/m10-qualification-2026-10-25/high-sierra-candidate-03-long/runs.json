@@ -1,0 +1,21 @@
+[
+  {
+    "name": "long-export",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/bin/LevelScopeExportTests",
+      "--output",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/high-sierra-candidate-03-long/long-export.json",
+      "--artifacts",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/high-sierra-candidate-03-long/long-artifacts",
+      "--long-session",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/m9-fixtures/long-48000/programme.levelscope",
+      "--long-destination",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/high-sierra-candidate-03-long/long-export"
+    ],
+    "exit_code": 0,
+    "seconds": 5030.679521763,
+    "log_sha256": "e94f4f455f3365608c00cfafb7d03cc948cbb45b6ad6ba461b720462cae6fe96"
+  }
+]

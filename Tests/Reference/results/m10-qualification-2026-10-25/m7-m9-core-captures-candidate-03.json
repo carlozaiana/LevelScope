@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "source_digest": "4ff89967e4927600d0b6defafabb28c372f4068870a0f1a9adb1ee84fe1781d8",
+  "scope": "M7/M9 core captured samples only; long measurements are separate evidence",
+  "suites": [
+    {
+      "suite": "M7",
+      "cases": 218,
+      "maximum_float32_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "suite": "M9",
+      "cases": 56,
+      "maximum_float32_ulp": 0,
+      "maximum_metric_difference": 0.0
+    }
+  ],
+  "comparator_sha256": "a2684e2d58899676e9a588456ad50e05eec5d1669041409bdcf583beba8039b4"
+}

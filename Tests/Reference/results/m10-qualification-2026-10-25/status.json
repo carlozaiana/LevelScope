@@ -1,0 +1,31 @@
+{
+  "milestone": "M10",
+  "candidate": "candidate-03",
+  "status": "qualified; ready for checkpoint publication review",
+  "qualified": true,
+  "source_digest": "4ff89967e4927600d0b6defafabb28c372f4068870a0f1a9adb1ee84fe1781d8",
+  "measurement_build": "f36567f5f38a47daef49bc9543252b42b3403e3bdcc2fe986b755bee1576cce9",
+  "base_commit": "75843dcd017ec7990be2200454a10fc38beb44c4",
+  "completed": [
+    "Both actual-platform core suites and relevant M1\u2013M9 regressions with pinned EBU/ITU vectors",
+    "Both actual-platform three-hour 5.1 RF64, independent decoding, resource and reimport/audition checks",
+    "Cross-platform measurements, per-channel locations and sample comparisons",
+    "Bidirectional fresh import/measurement and independent decoding of sixteen bundles",
+    "Both silent UI records",
+    "Four short and one 30-minute muted video run per Mac: all ten accepted, zero skips and underruns",
+    "Final aggregate, source/package integrity and preservation checks"
+  ],
+  "outstanding_within_M10": [],
+  "outside_scope_pending": [
+    "Full physical multichannel listening qualification",
+    "Deferred formats/metadata, processing and VST3 parity listed in the handover"
+  ],
+  "publication": "No M10 commit, tag, push or merge; awaiting separate user approval",
+  "accepted_limitations": [
+    "Occasional picture skips accepted only with continuous audio and authoritative-clock synchronization; counts/timing retained.",
+    "Full physical multichannel listening remains separately pending.",
+    "Limited PCM24 stereo/conventional5.1 RIFF/RF64; no complete broadcaster/BWF/BW64/metadata certification.",
+    "No resampling, automatic correction, batch/network delivery, video/lossy export, or VST3 parity."
+  ],
+  "updated_utc": "2026-10-26T11:32:50.336115+00:00"
+}

@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "checkpoint": "75843dcd017ec7990be2200454a10fc38beb44c4",
+  "candidate": "M9 candidate-04",
+  "identity_sha256": "374bfa3b5003d7a67651ccfea71b2a3ceceaf8edc17398573a4862ac82b27898",
+  "files_checked": 212,
+  "scope": "preserved source, binaries and app bundles; historical media untouched, not rehashed here",
+  "errors": []
+}

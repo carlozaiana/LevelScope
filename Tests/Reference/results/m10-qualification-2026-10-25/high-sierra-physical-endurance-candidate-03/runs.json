@@ -1,0 +1,47 @@
+[
+  {
+    "name": "prores-current-30min",
+    "argv": [
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Built-in Output",
+      "--audio",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/clock-high-sierra-continuous-export/programme.wav",
+      "--video",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/m9-fixtures/physical-video/proxy-1800.mov",
+      "--seconds",
+      "1800",
+      "--report",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/high-sierra-physical-endurance-candidate-03/prores-current-30min.json",
+      "--audition-state",
+      "current",
+      "--processing-gain",
+      "-3.305074118944"
+    ],
+    "seconds": 1929.986405674,
+    "report_sha256": "3716cde61821fba4b61560b1ab93f62acb19a0af31d32e2f75d80585be734de5",
+    "expected": {
+      "architecture": "x86_64",
+      "device": "Built-in Output",
+      "sample_rate": 44100,
+      "audition_state": "Current State",
+      "processing_gain_db": -3.305074118944,
+      "measurement_build": "f36567f5f38a47daef49bc9543252b42b3403e3bdcc2fe986b755bee1576cce9",
+      "video_sha256": "a539099eeff5ae8b42ed42224a06dd239fbb0d3b66e69a6f9014ba83b6b5d269",
+      "audio_sha256": "68cfa526cba69300f2cabe2151d71e7e9c84f5276609d5dac505c9afb6a90f59",
+      "requested_seconds": 1800
+    },
+    "fps": 25,
+    "policy": "m7-development-picture-skips-2026-10-25",
+    "accepted": true,
+    "failures": [],
+    "strict_harness_passed": true,
+    "strict_exit_code": 0,
+    "accepted_picture_skips": 0,
+    "maximum_paint_interval_ms": 20.382397,
+    "maximum_frame_pts_skew_seconds": 0.0,
+    "scope": "Internal audio-clock / UI selection; not optical sync or physical 7.1 listening"
+  }
+]

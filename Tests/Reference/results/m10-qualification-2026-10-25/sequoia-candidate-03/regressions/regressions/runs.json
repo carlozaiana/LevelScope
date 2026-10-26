@@ -1,0 +1,353 @@
+[
+  {
+    "name": "multichannel",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/bin/LevelScopeMultichannelTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/sequoia-candidate-03/regressions/regressions/multichannel.json",
+      "--samples",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/sequoia-candidate-03/regressions/regressions/m7-samples"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 74.63155,
+    "log_sha256": "4984a7f6a6974b01f0b11cbd3ae4091e80549c987695b33df032bb63ad0836c1"
+  },
+  {
+    "name": "multichannel-video",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/bin/LevelScopeMultichannelTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/sequoia-candidate-03/regressions/regressions/multichannel-video.json",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/video-fixtures/two-streams-audio.mov",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/video-fixtures/vfr-exact.mov",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/m7-video-fixtures/proxy-with-tone.mov",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/m7-video-fixtures/lt-with-tone.mov",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/m7-video-fixtures/422-with-tone.mov"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 5.412471959000001,
+    "log_sha256": "ca59ea03cf20f088487a3f1b7a90f2a8b86bcb7baf51f0f71898b96832d4f639"
+  },
+  {
+    "name": "audition",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/bin/LevelScopeAuditionTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/sequoia-candidate-03/regressions/regressions/audition.json",
+      "--samples",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/sequoia-candidate-03/regressions/regressions/samples"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 32.840883625000004,
+    "log_sha256": "6e5f1fe5813ebf6acd2d19d5d4c32031259852ac6a194e8f33cba69070ef3c99"
+  },
+  {
+    "name": "audition-long",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/bin/LevelScopeAuditionTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/sequoia-candidate-03/regressions/regressions/audition-long.json",
+      "--long-source",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/ui-fixtures/diagnostic-three-hour.wav"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 50.91295541600002,
+    "log_sha256": "7888262550512eab07087b4d93d030e6ab222c6f0d2e072f7b2446bb6cd232bf"
+  },
+  {
+    "name": "sections",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/bin/LevelScopeSectionsTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/sequoia-candidate-03/regressions/regressions/sections.json"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 3.6423421659999917,
+    "log_sha256": "ea3431c7f7a2166da4b65711268db8b1f432ae162e08c6ba1f03c1a746d3f0fe"
+  },
+  {
+    "name": "diagnostics",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/bin/LevelScopeDiagnosticsTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/sequoia-candidate-03/regressions/regressions/diagnostics.json"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 2.353362500000003,
+    "log_sha256": "1fcc0038f5c6830c1ef6a5b4d9036e912fda8e59639d1fd1eaa58cc64b88232d"
+  },
+  {
+    "name": "proposal",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/bin/LevelScopeProposalTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/sequoia-candidate-03/regressions/regressions/proposal.json"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 8.86434275000002,
+    "log_sha256": "d2297d0dbe58d37196eda1d4c7762c78c7185ec2eb18c77cf4307e7e32ba1531"
+  },
+  {
+    "name": "compliance",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/bin/LevelScopeComplianceTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/sequoia-candidate-03/regressions/regressions/compliance.json"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.6599586669999837,
+    "log_sha256": "387e97462de36fb405471706290ea69618f1678a02bd985cf1139744b5649cc1"
+  },
+  {
+    "name": "measurement",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/bin/LevelScopeMeasurementTests"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 13.206873041999984,
+    "log_sha256": "693ec25505d8a388521025eedf57085a86503c9ccda9586e86f6f315285c4e6c"
+  },
+  {
+    "name": "scaffold",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/bin/LevelScopeScaffoldTests"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.5109291670000005,
+    "log_sha256": "a4ef83ee217a412273da4466ec1ab8b4402d26e4a2c7974c9f0b654f48af3621"
+  },
+  {
+    "name": "video",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/bin/LevelScopeVideoTests",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/video-fixtures/cfr-exact.mov",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/video-fixtures/vfr-exact.mov",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/video-fixtures/two-streams-audio.mov",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/video-fixtures/timecode.mov",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/video-fixtures/cfr-exact.mp4",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/video-fixtures/cfr-exact.m4v",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/video-fixtures/half-hour.mov"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 4.110570124999981,
+    "log_sha256": "dbca510cc7abcdeec10de3b42c2a293820a36024f7d24541cc81686bf64d824c"
+  },
+  {
+    "name": "runner",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/EbuReferenceRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.12815187500001457,
+    "log_sha256": "f8f7b0ac7f2b53ac4e96000f166430c488f2c37e059ad5502b09d60f29d363b8"
+  },
+  {
+    "name": "m3-runner",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/M3QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.131352416999988,
+    "log_sha256": "77ecdaf76b0a4f9f157b08dc741287943417847cdfae17660c5fea600de76490"
+  },
+  {
+    "name": "m4-runner",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/M4QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.13263287500001297,
+    "log_sha256": "74202dc09a3347400de94f86db7081b0c92ff6270bca74570c143aa53888e576"
+  },
+  {
+    "name": "m5-runner",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/M5QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.12806662500000243,
+    "log_sha256": "a0aaba130eea8aace6734b8ea10f4aff5e3ba82cd903b1dd93563a9be28ea53b"
+  },
+  {
+    "name": "m6-runner",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/M6QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.04068287499998746,
+    "log_sha256": "feabb4add9e2ca3374e538560634d1ec97dc4f4ce89aab12f3d726e36ea9b2f6"
+  },
+  {
+    "name": "itu",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/run_reference_measurements.py",
+      "--binary",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/bin/LevelScopeMeasurementTests",
+      "--vectors",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/vectors/itu",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/sequoia-candidate-03/regressions/regressions/itu.json",
+      "--compare",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/baseline/itu.json",
+      "--arch",
+      "arm64"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 22.72292620799999,
+    "log_sha256": "9571a299c82a4aa12593daf8b7ed82d5c1eb5874cfefdd6f4a5a56e0c6f1d16e"
+  },
+  {
+    "name": "ebu",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/run_ebu_measurements.py",
+      "--binary",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/bin/LevelScopeMeasurementTests",
+      "--vectors",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/vectors/ebu",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/sequoia-candidate-03/regressions/regressions/ebu.json",
+      "--compare",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/baseline/ebu.json",
+      "--arch",
+      "arm64"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 10.430521542000008,
+    "log_sha256": "18e65c40d2edcd18e30155f9ca4f7a49b0e066f90ea10aa588ab78922e03d313"
+  },
+  {
+    "name": "m7-runner",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/M7QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.40117775000001643,
+    "log_sha256": "ec52647a1ab6747df07c953b7e62aa4f189f50b42218419ac8f2ee3644fdd994"
+  },
+  {
+    "name": "m7-video-acceptance",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/M7VideoAcceptanceTests.py"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.1306077499999958,
+    "log_sha256": "b3e6ba03c66ed598fe3f99d418edd76293bf4011ab7d5f2c76f78f3bb6de5253"
+  },
+  {
+    "name": "paint-trace-buffer",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/bin/LevelScopeVideoPaintTraceTests"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.44012716599999635,
+    "log_sha256": "5cb0b2155aebf13f2bb2c61a50df896b4f7b1e9f0ee40a5dc09e4cf59ee9389a"
+  },
+  {
+    "name": "paint-runner",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/VideoPaint/RunnerTests.py"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.07405995799999232,
+    "log_sha256": "9e915bb136519af1e78c79379163ea7585bf803cbdd9b7d215b8c45ab01a9a0b"
+  },
+  {
+    "name": "paint-offline-export",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/LevelScope Video Paint Diagnostic.app/Contents/MacOS/LevelScope Video Paint Diagnostic",
+      "--diagnostic-offline-check",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/sequoia-candidate-03/regressions/regressions/offline-trace.json"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.5662380830000018,
+    "log_sha256": "82c5e6779fa32f0127117537817f3c24ba17d846fdb874afcca3f442f721d06a"
+  },
+  {
+    "name": "paint-exclusive-output",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/LevelScope Video Paint Diagnostic.app/Contents/MacOS/LevelScope Video Paint Diagnostic",
+      "--diagnostic-offline-check",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/sequoia-candidate-03/regressions/regressions/offline-trace.json"
+    ],
+    "exit_code": 1,
+    "expected_exit": 1,
+    "seconds": 0.0742483330000141,
+    "log_sha256": "20fbfa6060a0055e23732676cb4be9837b3ec72d56259ae90db520fe9562a210"
+  }
+]

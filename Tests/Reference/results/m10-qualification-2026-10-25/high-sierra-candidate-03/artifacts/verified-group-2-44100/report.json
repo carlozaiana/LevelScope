@@ -1,0 +1,415 @@
+{
+  "schema": "levelscope-measurement-report-v1",
+  "kind": "verified-artifact-measurement",
+  "publication": "published-verified-pcm",
+  "scope": "Selected whole-programme loudness and true-peak rules only. No complete broadcaster delivery, BWF/BW64, metadata, synchronization or future encoded-media certification.",
+  "document_id": "fa9002ce4bed48aaaa089de81f693f04",
+  "programme_id": "aa4039d584014a10bea5a94ddcefab67",
+  "document_revision": "7",
+  "session_unsaved": true,
+  "session_basename": "",
+  "runtime_id": "b300a9f8af844022bba3dc658f2cc54a",
+  "app": "LevelScope Standalone M10",
+  "build": "f36567f5f38a47daef49bc9543252b42b3403e3bdcc2fe986b755bee1576cce9",
+  "platform": "Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off",
+  "cpu": "Intel(R) Core(TM) i7-3770K CPU @ 3.50GHz",
+  "processing_version": "static-gain-v1",
+  "processing_gain_db": 4.4565472106763657,
+  "processing_gain_hex": "0x1.1d3811cabbd74p+2",
+  "programme_frames": "176400",
+  "sample_rate": 44100,
+  "duration_rational_seconds": "176400/44100",
+  "positions": "Audio-source frames; true-peak positions in eighth-frames. Video offsets and measurement EOF drain do not extend programme duration.",
+  "profile": {
+    "id": "ebu-r128-2023-programme-linear-qc",
+    "definition_version": "1.0.0",
+    "digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+    "edition": "EBU R128-2023 (November 2023)",
+    "reference": "https://tech.ebu.ch/docs/r/r128.pdf",
+    "applicability": 1,
+    "applicability_scope": "Pre-produced whole-programme linear-audio QC only; excludes live, deliberate lower targets, short-form and distribution-specific requirements.",
+    "meter_tolerance_documentary_only": "Clause m separately permits +/-0.3 dB meter tolerance for signals band-limited to 20 kHz. Bandwidth is not certified here; this provision never relaxes the -1 dBTP evaluation ceiling."
+  },
+  "assembly_definition": "e65552a2194d217b2e1161d4cf86d27da7e502f57f3ee7f1dc424a3620315619",
+  "alignment_confirmation": "e65552a2194d217b2e1161d4cf86d27da7e502f57f3ee7f1dc424a3620315619",
+  "source_members": [{
+      "basename": "mono-1.wav",
+      "sha256": "0b6b62e9cb4444e9bb29025440861315bf75c75fed43ac50dd5ca18fbdde2cb7",
+      "role": "L",
+      "sample_zero_offset_frames": "0"
+    },{
+      "basename": "mono-0.wav",
+      "sha256": "4cc51434fa2a988a5bd47704093d2b5eed09c23cfa9baba2f0a86e6c702ede7e",
+      "role": "R",
+      "sample_zero_offset_frames": "0"
+    }],
+  "ordered_input_roles": ["L","R"],
+  "source": {
+    "domain": "Source",
+    "measurement_available": true,
+    "status": "valid_measured_snapshot",
+    "evaluation": {
+      "verdict": "FAIL",
+      "message": "Fails one or more selected measured rules.",
+      "identity": "8b7ca2bba32e98c453f1ac28429d51bb14395e5bf9d8e8366f793dce869c5bee",
+      "profile_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+      "snapshot_identity": "b19b9495d3541dc883b8aa08ffa5246bf9d88ff7561cbd11866655517ea9ee2e",
+      "rules": [{
+          "id": "programme-loudness",
+          "verdict": "FAIL",
+          "reason": "Outside selected bounds.",
+          "provenance": "R128-2023 clauses h, i, k, l: -23 LUFS intended target; +/-0.2 LU QC allowance; whole-programme level gating.",
+          "units": "LUFS",
+          "measured": -27.456547210676366,
+          "lower": -23.199999999999999,
+          "upper": -22.800000000000001,
+          "delta": -4.4565472106763657
+        },{
+          "id": "true-peak",
+          "verdict": "PASS",
+          "reason": "Within selected bounds.",
+          "provenance": "R128-2023 clause m: maximum -1 dBTP for linear audio.",
+          "units": "dBTP",
+          "measured": -24.436960579922943,
+          "lower": null,
+          "upper": -1,
+          "delta": -23.436960579922943
+        }]
+    },
+    "measurement_identity": "b0f1c6c87acfcd75f991fab7d5224a399d271a2957cc368befbbf340e4b43a7c",
+    "measured_content_sha256": "e65552a2194d217b2e1161d4cf86d27da7e502f57f3ee7f1dc424a3620315619",
+    "measurement_method": "bs1770-5-ebu2023-m7.1",
+    "build": "f36567f5f38a47daef49bc9543252b42b3403e3bdcc2fe986b755bee1576cce9",
+    "platform": "Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off",
+    "original_runtime": "",
+    "restored_from_session": false,
+    "frames": "176400",
+    "sample_rate": 44100,
+    "lra_stable": false,
+    "metrics": {
+      "integrated": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -27.456547210676366,
+        "value_hex": "-0x1.b74e0472aef5dp+4"
+      },
+      "true_peak": {
+        "status": "available",
+        "unit": "dBTP",
+        "value": -24.436960579922943,
+        "value_hex": "-0x1.86fdca6086905p+4"
+      },
+      "sample_peak": {
+        "status": "available",
+        "unit": "dBFS",
+        "value": -24.436966018529414,
+        "value_hex": "-0x1.86fdd01470c13p+4"
+      },
+      "lra": {
+        "status": "available",
+        "unit": "LU",
+        "value": 2.2178844714419732,
+        "value_hex": "0x1.1be3a36b93238p+1"
+      },
+      "momentary_max": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -27.452249698470812,
+        "value_hex": "-0x1.b73c6a2e08ed9p+4"
+      },
+      "short_term_max": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -27.455429439462318,
+        "value_hex": "-0x1.b749706142053p+4"
+      }
+    },
+    "per_channel_peaks": [{
+        "channel": 1,
+        "role": "L",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -24.436966018529414,
+          "value_hex": "-0x1.86fdd01470c13p+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -24.436960579922943,
+          "value_hex": "-0x1.86fdca6086905p+4"
+        },
+        "sample_peak_frame": "693",
+        "true_peak_eighth_frame": "1053727"
+      },{
+        "channel": 2,
+        "role": "R",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -30.457548674531797,
+          "value_hex": "-0x1.e7521e8f17135p+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -29.396838308145661,
+          "value_hex": "-0x1.d65973203491cp+4"
+        },
+        "sample_peak_frame": "1386",
+        "true_peak_eighth_frame": "1411189"
+      }]
+  },
+  "current": {
+    "domain": "Current State",
+    "measurement_available": true,
+    "status": "valid_measured_snapshot",
+    "evaluation": {
+      "verdict": "PASS",
+      "message": "Passes selected programme loudness and true-peak rules.",
+      "identity": "ba1262303f75e4dbcd64e234b71f6043b5a752a34a35c83672c3eb77fc5b2834",
+      "profile_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+      "snapshot_identity": "30b629f7741297c257bf9a00126abf493245d9692e16b67a9278b3d2648f52ea",
+      "rules": [{
+          "id": "programme-loudness",
+          "verdict": "PASS",
+          "reason": "Within selected bounds.",
+          "provenance": "R128-2023 clauses h, i, k, l: -23 LUFS intended target; +/-0.2 LU QC allowance; whole-programme level gating.",
+          "units": "LUFS",
+          "measured": -23.000000000070862,
+          "lower": -23.199999999999999,
+          "upper": -22.800000000000001,
+          "delta": -7.0862427037354792e-11
+        },{
+          "id": "true-peak",
+          "verdict": "PASS",
+          "reason": "Within selected bounds.",
+          "provenance": "R128-2023 clause m: maximum -1 dBTP for linear audio.",
+          "units": "dBTP",
+          "measured": -19.980413214568213,
+          "lower": null,
+          "upper": -1,
+          "delta": -18.980413214568213
+        }]
+    },
+    "measurement_identity": "e514c19ada59aa105b72d6f8d0f6b989048b3218ba5b6f52a7a3216ddc8e791b",
+    "measured_content_sha256": "e65552a2194d217b2e1161d4cf86d27da7e502f57f3ee7f1dc424a3620315619",
+    "measurement_method": "bs1770-5-ebu2023-m7.1",
+    "build": "f36567f5f38a47daef49bc9543252b42b3403e3bdcc2fe986b755bee1576cce9",
+    "platform": "Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off",
+    "original_runtime": "",
+    "restored_from_session": false,
+    "frames": "176400",
+    "sample_rate": 44100,
+    "lra_stable": false,
+    "metrics": {
+      "integrated": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -23.000000000070862,
+        "value_hex": "-0x1.7000000004deap+4"
+      },
+      "true_peak": {
+        "status": "available",
+        "unit": "dBTP",
+        "value": -19.980413214568213,
+        "value_hex": "-0x1.3fafc5c4522ffp+4"
+      },
+      "sample_peak": {
+        "status": "available",
+        "unit": "dBFS",
+        "value": -19.980418515621878,
+        "value_hex": "-0x1.3fafcb534fd24p+4"
+      },
+      "lra": {
+        "status": "available",
+        "unit": "LU",
+        "value": 2.2178844707877055,
+        "value_hex": "0x1.1be3a36a2b738p+1"
+      },
+      "momentary_max": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -22.995702489156212,
+        "value_hex": "-0x1.6fee65bbb78c3p+4"
+      },
+      "short_term_max": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -22.998882229047666,
+        "value_hex": "-0x1.6ffb6beea50b8p+4"
+      }
+    },
+    "per_channel_peaks": [{
+        "channel": 1,
+        "role": "L",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -19.980418515621878,
+          "value_hex": "-0x1.3fafcb534fd24p+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -19.980413214568213,
+          "value_hex": "-0x1.3fafc5c4522ffp+4"
+        },
+        "sample_peak_frame": "693",
+        "true_peak_eighth_frame": "419495"
+      },{
+        "channel": 2,
+        "role": "R",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -26.001001640927882,
+          "value_hex": "-0x1.a0041a4bf071p+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -24.940290909374276,
+          "value_hex": "-0x1.8f0b6e7b07d16p+4"
+        },
+        "sample_peak_frame": "1386",
+        "true_peak_eighth_frame": "1411189"
+      }]
+  },
+  "artifact": {
+    "domain": "Exported artifact",
+    "measurement_available": true,
+    "status": "valid_measured_snapshot",
+    "evaluation": {
+      "verdict": "PASS",
+      "message": "Passes selected programme loudness and true-peak rules.",
+      "identity": "f469ad346ce44e10ba479dfc7a16b88f7f62bba93c26fc675b61ef0de33f63bc",
+      "profile_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+      "snapshot_identity": "e1c4cb7b1fcd63fb95b799d60c22022a1fd85a2104cc218bca229fe93cf3f502",
+      "rules": [{
+          "id": "programme-loudness",
+          "verdict": "PASS",
+          "reason": "Within selected bounds.",
+          "provenance": "R128-2023 clauses h, i, k, l: -23 LUFS intended target; +/-0.2 LU QC allowance; whole-programme level gating.",
+          "units": "LUFS",
+          "measured": -23.000000008722587,
+          "lower": -23.199999999999999,
+          "upper": -22.800000000000001,
+          "delta": -8.7225870970542019e-09
+        },{
+          "id": "true-peak",
+          "verdict": "PASS",
+          "reason": "Within selected bounds.",
+          "provenance": "R128-2023 clause m: maximum -1 dBTP for linear audio.",
+          "units": "dBTP",
+          "measured": -19.980406492853202,
+          "lower": null,
+          "upper": -1,
+          "delta": -18.980406492853202
+        }]
+    },
+    "measurement_identity": "79693a60ef388c5f78adcfad319c086cdd8fd9f9058dc91f19b6ada05e4f5f54",
+    "measured_content_sha256": "28c34ed792176f33469c26a065fa5664b68aa86c26fc7eb60840352d07cff7cb",
+    "measurement_method": "bs1770-5-ebu2023-m7.1",
+    "build": "f36567f5f38a47daef49bc9543252b42b3403e3bdcc2fe986b755bee1576cce9",
+    "platform": "Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off",
+    "original_runtime": "",
+    "restored_from_session": false,
+    "frames": "176400",
+    "sample_rate": 44100,
+    "lra_stable": false,
+    "metrics": {
+      "integrated": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -23.000000008722587,
+        "value_hex": "-0x1.7000000257696p+4"
+      },
+      "true_peak": {
+        "status": "available",
+        "unit": "dBTP",
+        "value": -19.980406492853202,
+        "value_hex": "-0x1.3fafbeb7f972fp+4"
+      },
+      "sample_peak": {
+        "status": "available",
+        "unit": "dBFS",
+        "value": -19.980408830248525,
+        "value_hex": "-0x1.3fafc12b6a085p+4"
+      },
+      "lra": {
+        "status": "available",
+        "unit": "LU",
+        "value": 2.2178844590295519,
+        "value_hex": "0x1.1be3a350eb568p+1"
+      },
+      "momentary_max": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -22.99570241941942,
+        "value_hex": "-0x1.6fee65a8ff459p+4"
+      },
+      "short_term_max": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -22.998882224776469,
+        "value_hex": "-0x1.6ffb6bed7f87dp+4"
+      }
+    },
+    "per_channel_peaks": [{
+        "channel": 1,
+        "role": "L",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -19.980408830248525,
+          "value_hex": "-0x1.3fafc12b6a085p+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -19.980406492853202,
+          "value_hex": "-0x1.3fafbeb7f972fp+4"
+        },
+        "sample_peak_frame": "77200",
+        "true_peak_eighth_frame": "367751"
+      },{
+        "channel": 2,
+        "role": "R",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -26.000977750405983,
+          "value_hex": "-0x1.a004013ee0471p+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -24.940304372378925,
+          "value_hex": "-0x1.8f0b7c98fa73ep+4"
+        },
+        "sample_peak_frame": "12474",
+        "true_peak_eighth_frame": "1411189"
+      }],
+    "sha256": "28c34ed792176f33469c26a065fa5664b68aa86c26fc7eb60840352d07cff7cb",
+    "basename": "programme.wav",
+    "container": "RIFF/WAVE",
+    "bits": 24,
+    "channel_mask": "3",
+    "file_bytes": "1058468",
+    "format_identity": "36f241ebea9b2e6c6ff5547807db3a72aeec0ea6344a4a26fa641965e59a4da5",
+    "quantizer": "pcm24-tpdf-splitmix64-counter-v1",
+    "dither_seed_hex": "36f241ebea9b2e6c",
+    "dither_applications": 1,
+    "dither_note": "TPDF applied once at final PCM24 quantization, outside Current State. Even zero-gain export is not a bit-identical copy.",
+    "verification_gain_db": 0,
+    "output_to_input_channels": [1,2]
+  },
+  "sections_annotations_only": [],
+  "reference_picture_context": {
+    "basename": "",
+    "sha256": "",
+    "offset_rational": "0/1",
+    "is_sync_evidence": false
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "qualification": "incomplete",
+  "last_log": "2026-10-25T23:01:34+01:00",
+  "next_observed_boot": "2026-10-26T10:18:07+01:00",
+  "final_long_report": false,
+  "final_publication_folder": false,
+  "observed_last_stage": "LONG verified elapsed_ms=1.68453e+06",
+  "interpretation": "No pass claimed; process termination cause not established. Host restarted before resumption. Original staging and logs preserved.",
+  "replacement": "Fresh candidate-03 long run"
+}

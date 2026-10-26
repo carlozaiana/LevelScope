@@ -1,0 +1,96 @@
+[
+  {
+    "name": "regressions",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/run_m8_qualification.py",
+      "--platform",
+      "sequoia",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/sequoia-candidate-03/regressions"
+    ],
+    "exit_code": 0,
+    "seconds": 437.368036833,
+    "log_sha256": "156f6ea7c6db76b38fce8bd84b29aff29e65bfbb2c003659a6b1cbcfd75882de"
+  },
+  {
+    "name": "programmes",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/bin/LevelScopeProgrammeTests",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/sequoia-candidate-03/programmes.json",
+      "--samples",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/sequoia-candidate-03/programme-samples",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/video-fixtures",
+      "--prores",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/m7-video-fixtures",
+      "--exchange-out",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/sequoia-candidate-03/programme-exchange",
+      "--m8-session",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/m9-fixtures/m8-sessions"
+    ],
+    "exit_code": 0,
+    "seconds": 117.71763045799997,
+    "log_sha256": "c4eac4331e7c7db68b0b50127fa65fe971d4e360bbab1f6130bde7ee847eef02"
+  },
+  {
+    "name": "programme-extended",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/bin/LevelScopeProgrammeTests",
+      "--only",
+      "--extended-oracle",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/sequoia-candidate-03/programme-extended.json"
+    ],
+    "exit_code": 0,
+    "seconds": 203.69140933300002,
+    "log_sha256": "b65ee9f1d4b365475b1f99042e94def746c2ede496bf2f44d4b10aa003e16fb8"
+  },
+  {
+    "name": "m9-runner",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/M9QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "seconds": 0.9536205409999639,
+    "log_sha256": "3f5378d8c9e4f13eb13eb808aa0e399aa9c0582fc7b2a34873cb5661f8eb08ba"
+  },
+  {
+    "name": "export",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/bin/LevelScopeExportTests",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/sequoia-candidate-03/export.json",
+      "--artifacts",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/sequoia-candidate-03/artifacts",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/video-fixtures",
+      "--prores",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/m7-video-fixtures"
+    ],
+    "exit_code": 0,
+    "seconds": 60.60748329199998,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "m10-runner",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "Tests/M10QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "seconds": 0.08997545900001569,
+    "log_sha256": "d03ce458f2a6cd2b4f27522f3aacad03ce1872c028853507c3ad02ca621bdcad"
+  }
+]

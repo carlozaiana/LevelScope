@@ -47,7 +47,7 @@ void StandaloneMainComponent::confirmDiscard(std::function<void()> action)
 }
 void StandaloneMainComponent::requestClose(std::function<void()> close)
 {
-    if(documentResult.valid()||session.persistenceLoading){documentNotice="Cancel or finish the session file operation before closing";refreshSessionControls();return;}
+    if(documentResult.valid()||session.persistenceLoading){documentNotice="Cancel or finish the active file/export operation before closing";refreshSessionControls();return;}
     audition.stop();audition.disconnect();
     confirmDiscard(close);
 }

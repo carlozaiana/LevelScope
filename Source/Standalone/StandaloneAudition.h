@@ -81,6 +81,7 @@ public:
     float preparationProgress() const { return preparationControl ? preparationControl->progress.load() * 2 : 0; }
     const juce::String& boundIdentity() const { return expectedIdentity; }
     const VerifiedSource* preparedCopy() const { return preparedSource.get(); }
+    std::shared_ptr<const VerifiedSource> sharedPreparedCopy() const { return preparedSource; }
     bool setCaptureObserver (ProcessedAudioObserver* sink) { if (active()) return false; capture = sink; return true; }
     bool setSnapshotStorage (SnapshotStorage storage) { if (active()) return false; snapshotStorage = std::move (storage); return true; }
     int64_t positionFrames() const;

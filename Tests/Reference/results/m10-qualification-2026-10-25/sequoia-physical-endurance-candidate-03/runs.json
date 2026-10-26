@@ -1,0 +1,47 @@
+[
+  {
+    "name": "prores-current-30min",
+    "argv": [
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification",
+      "--allow-audio",
+      "--muted",
+      "--device",
+      "Mac Studio Speakers",
+      "--audio",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/clock-sequoia-continuous-export/programme.wav",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/candidate-03/m9-fixtures/physical-video/proxy-1800.mov",
+      "--seconds",
+      "1800",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m10-qualification-2026-10-25/sequoia-physical-endurance-candidate-03/prores-current-30min.json",
+      "--audition-state",
+      "current",
+      "--processing-gain",
+      "-3.305074118944"
+    ],
+    "seconds": 1863.7530946250001,
+    "report_sha256": "e7dde6fd4b8a1c106f0dced16e22a31b1aa04333c6842c6995487a0a209f23d5",
+    "expected": {
+      "architecture": "arm64",
+      "device": "Mac Studio Speakers",
+      "sample_rate": 48000,
+      "audition_state": "Current State",
+      "processing_gain_db": -3.305074118944,
+      "measurement_build": "f36567f5f38a47daef49bc9543252b42b3403e3bdcc2fe986b755bee1576cce9",
+      "video_sha256": "a539099eeff5ae8b42ed42224a06dd239fbb0d3b66e69a6f9014ba83b6b5d269",
+      "audio_sha256": "f37eaab065b49b73bf907d303550a59a5de3135d07bd7cc2c20c60f1607dedde",
+      "requested_seconds": 1800
+    },
+    "fps": 25,
+    "policy": "m7-development-picture-skips-2026-10-25",
+    "accepted": true,
+    "failures": [],
+    "strict_harness_passed": true,
+    "strict_exit_code": 0,
+    "accepted_picture_skips": 0,
+    "maximum_paint_interval_ms": 33.663958,
+    "maximum_frame_pts_skew_seconds": 0.0,
+    "scope": "Internal audio-clock / UI selection; not optical sync or physical 7.1 listening"
+  }
+]

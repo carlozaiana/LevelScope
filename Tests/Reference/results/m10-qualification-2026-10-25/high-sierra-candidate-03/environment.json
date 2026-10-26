@@ -1,0 +1,11 @@
+{
+  "source_digest": "4ff89967e4927600d0b6defafabb28c372f4068870a0f1a9adb1ee84fe1781d8",
+  "identity_sha256": "0b0cd42a9f4ee917d6d62f25a903edd7ea354a7d1313d6dfa64341396453cbdd",
+  "build": "f36567f5f38a47daef49bc9543252b42b3403e3bdcc2fe986b755bee1576cce9",
+  "architecture": "x86_64",
+  "os": "10.13.6",
+  "os_build": "17G66",
+  "cpu": "Intel(R) Core(TM) i7-3770K CPU @ 3.50GHz",
+  "decoder_library_sha256": "f3097d29afc013525c8106a576a4828ede508ac36011fa51ed1c59d16e2eae6f",
+  "physical_devices_opened": false
+}

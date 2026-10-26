@@ -1,0 +1,8 @@
+{
+  "accepted": true,
+  "policy": "m7-development-picture-skips-2026-10-25",
+  "expected_cases": 4,
+  "completed_cases": 4,
+  "audio_configuration_unchanged": true,
+  "physical_multichannel_listening": "Not assessed; every route muted on two-output device"
+}

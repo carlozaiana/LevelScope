@@ -27,10 +27,10 @@ MeasuredProgramme measured()
     m.truePeak = { -1.0, measurement::Status::available };
     return m;
 }
-void rules()
+void rules(SnapshotDomain testedDomain=SnapshotDomain::source)
 {
     const auto p = ebuR128ProgrammeQc();
-    const auto base = measured();
+    auto base = measured();base.domain=testedDomain;
     const auto eval = [&] (MeasuredProgramme m) { return evaluateMeasuredProgramme (p, m); };
     expect (p.validationError().isEmpty(), "built-in profile valid");
     expect (p.limits.integratedLufs == -23 && p.limits.integratedToleranceLu == .2
@@ -81,9 +81,12 @@ void rules()
     m = base; m.domain = SnapshotDomain::predicted;
     expect (eval (m).verdict == Verdict::notEvaluated, "predictions cannot satisfy measured rules");
     m.domain = SnapshotDomain::renderedOutput;
-    expect (eval (m).verdict == Verdict::notEvaluated, "M2 cannot certify an encoded export");
+    expect (eval (m).verdict == Verdict::pass && eval (m).domain == SnapshotDomain::renderedOutput,
+            "M10 evaluates separately bound measured artifact rules without widening limits");
+    m.currentIdentityMatches = false;
+    expect (eval (m).verdict == Verdict::notEvaluated, "stale artifact cannot pass");
     m = base; m.domain = SnapshotDomain::currentState;
-    expect (eval (m).domain == SnapshotDomain::currentState && eval (m).identity != eval (base).identity, "domain is explicit and identity bound");
+    expect (eval (m).domain == SnapshotDomain::currentState && (base.domain==SnapshotDomain::currentState || eval (m).identity != eval (base).identity), "domain is explicit and identity bound");
     m = base; m.currentIdentityMatches = false;
     expect (eval (m).verdict == Verdict::notEvaluated, "stale snapshot cannot pass");
     m = base; m.snapshotIdentity.clear();
@@ -264,7 +267,7 @@ void lifecycle()
 int main (int argc, char** argv)
 {
     bool passed = false;
-    try { profiles(); rules(); lifecycle(); passed = true; }
+    try { profiles(); rules();rules(SnapshotDomain::renderedOutput); lifecycle(); passed = true; }
     catch (const std::exception& e) { std::cerr << "FAIL: " << e.what() << '\n'; }
     auto* report = new juce::DynamicObject();
     report->setProperty ("suite", "M2 measured compliance"); report->setProperty ("passed", passed);

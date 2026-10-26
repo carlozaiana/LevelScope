@@ -1,0 +1,14 @@
+{
+  "purpose": "New binaries/source copied independently; unchanged pinned fixture directories referenced read-only to avoid redundant media copies on the qualification disk.",
+  "symlink_directories": [
+    "baseline",
+    "vectors",
+    "video-fixtures",
+    "ui-fixtures",
+    "m7-fixtures",
+    "m7-ui-fixtures",
+    "m7-video-fixtures",
+    "m9-fixtures"
+  ],
+  "preserved_candidate02_identity_sha256": "225fa11cd0274d1114c9f66dcc62e8bb8e189db77639f931f8b7559722b3d038"
+}

@@ -1,0 +1,61 @@
+{
+  "status": "passed",
+  "source_digest": "4ff89967e4927600d0b6defafabb28c372f4068870a0f1a9adb1ee84fe1781d8",
+  "build": "f36567f5f38a47daef49bc9543252b42b3403e3bdcc2fe986b755bee1576cce9",
+  "app_sha256": "92c013999bdecaf904af0888ce68dd59bcd1b3004934b9ddb36ce1a1bf511e15",
+  "tested_app_path": "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone",
+  "device_opened": false,
+  "observations": [
+    {
+      "check": "no-source measurement-only report",
+      "passed": true,
+      "observed": "Empty session, render disabled. Saved no-source-report with explicit MEASUREMENT-ONLY, NO EXPORTED AUDIO notice; device closed/routes muted."
+    },
+    {
+      "check": "older-build session cache rejection and remeasurement",
+      "passed": true,
+      "observed": "Candidate-02 session settings, confirmed roles and applicability retained; both caches rejected explicitly. Fresh Source/Current 0 dB measurements complete at approximately -23 LUFS/-20.027600 dBTP; duration 192000 frames at 48 kHz."
+    },
+    {
+      "check": "format mapping dither preview",
+      "passed": true,
+      "observed": "RIFF/WAVE PCM24, 48000 Hz,192000 frames,1152068 bytes. Explicit L<-Channel1,R<-Channel2; dither once and zero-gain not bit-identical wording."
+    },
+    {
+      "check": "profile applicability live evaluation regression",
+      "passed": true,
+      "observed": "Measured artifact PASS; unchecked applicability gave NOT EVALUATED and disabled Publish with no stale PASS; rechecked returned PASS without rerender. Same hash."
+    },
+    {
+      "check": "monitor separation",
+      "passed": true,
+      "observed": "-30 to -15 dB monitor preserved measurements, artifact hash and approval; device closed/routes muted."
+    },
+    {
+      "check": "explicit publication",
+      "passed": true,
+      "observed": "Final destination confirmed absent before Publish; explicit Publish produced complete verified-ui-export. Artifact f53368854f7a4042a41a670962c1846d5e0badc55c3cec4e6788633d6d95a307. Independent libsndfile1.2.2 decoded384000 codes exactly and verified reports/manifest."
+    },
+    {
+      "check": "stale and failing Current measurement-only report",
+      "passed": true,
+      "observed": "-10 dB gain invalidated Current; remeasurement showed actual FAIL at -33 LUFS; gain retained. Render/Publish disabled, measurement-only report succeeded with no artifact/hash/verdict. Manifest and report labels validated."
+    },
+    {
+      "check": "progress cancellation and active-close guard",
+      "passed": true,
+      "observed": "30m10s reimported PCM Source/Current measured at zero gain. Render displayed6%, then98%; Close kept app open with cancel/finish warning. Cancel showed job cancelled, no audio published, retained both measurements/gain/position0/stopped/closed/muted. Filesystem confirmed destination and owned staging absent."
+    },
+    {
+      "check": "existing destination rejection",
+      "passed": true,
+      "observed": "Native chooser accepted collision-test filename; application explicitly requested a new name and refused overwrite. Sentinel exact bytes unchanged."
+    }
+  ],
+  "tested_binary_matches_frozen_candidate": true,
+  "physical_audio_used": false,
+  "report_visual_review": {
+    "evidence": "User confirmed readable verified-export and no-source HTML in candidate-02; Source/Standalone/StandaloneReport.cpp is byte-identical in candidate-03. Candidate-03 JSON/HTML/manifest independently validated on both Macs.",
+    "scope": "Static HTML readability, not a browser execution/decoder qualification claim"
+  }
+}

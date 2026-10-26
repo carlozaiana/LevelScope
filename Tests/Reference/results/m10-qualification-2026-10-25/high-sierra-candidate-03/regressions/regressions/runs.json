@@ -1,0 +1,353 @@
+[
+  {
+    "name": "multichannel",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/bin/LevelScopeMultichannelTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/high-sierra-candidate-03/regressions/regressions/multichannel.json",
+      "--samples",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/high-sierra-candidate-03/regressions/regressions/m7-samples"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 182.955623724,
+    "log_sha256": "4984a7f6a6974b01f0b11cbd3ae4091e80549c987695b33df032bb63ad0836c1"
+  },
+  {
+    "name": "multichannel-video",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/bin/LevelScopeMultichannelTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/high-sierra-candidate-03/regressions/regressions/multichannel-video.json",
+      "--video",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-02/video-fixtures/two-streams-audio.mov",
+      "--video",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-02/video-fixtures/vfr-exact.mov",
+      "--video",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-02/m7-video-fixtures/proxy-with-tone.mov",
+      "--video",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-02/m7-video-fixtures/lt-with-tone.mov",
+      "--video",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-02/m7-video-fixtures/422-with-tone.mov"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 11.008344082999997,
+    "log_sha256": "ca59ea03cf20f088487a3f1b7a90f2a8b86bcb7baf51f0f71898b96832d4f639"
+  },
+  {
+    "name": "audition",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/bin/LevelScopeAuditionTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/high-sierra-candidate-03/regressions/regressions/audition.json",
+      "--samples",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/high-sierra-candidate-03/regressions/regressions/samples"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 65.25293031500001,
+    "log_sha256": "6e5f1fe5813ebf6acd2d19d5d4c32031259852ac6a194e8f33cba69070ef3c99"
+  },
+  {
+    "name": "audition-long",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/bin/LevelScopeAuditionTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/high-sierra-candidate-03/regressions/regressions/audition-long.json",
+      "--long-source",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-02/ui-fixtures/diagnostic-three-hour.wav"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 94.12197129600003,
+    "log_sha256": "a174984ace04cb201d59aecb565b5bfd4ef94b7c65525d9626e0c708a2fac113"
+  },
+  {
+    "name": "sections",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/bin/LevelScopeSectionsTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/high-sierra-candidate-03/regressions/regressions/sections.json"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 6.9865474690000156,
+    "log_sha256": "ea3431c7f7a2166da4b65711268db8b1f432ae162e08c6ba1f03c1a746d3f0fe"
+  },
+  {
+    "name": "diagnostics",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/bin/LevelScopeDiagnosticsTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/high-sierra-candidate-03/regressions/regressions/diagnostics.json"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 4.3273194369999715,
+    "log_sha256": "1fcc0038f5c6830c1ef6a5b4d9036e912fda8e59639d1fd1eaa58cc64b88232d"
+  },
+  {
+    "name": "proposal",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/bin/LevelScopeProposalTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/high-sierra-candidate-03/regressions/regressions/proposal.json"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 17.431818634999956,
+    "log_sha256": "d2297d0dbe58d37196eda1d4c7762c78c7185ec2eb18c77cf4307e7e32ba1531"
+  },
+  {
+    "name": "compliance",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/bin/LevelScopeComplianceTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/high-sierra-candidate-03/regressions/regressions/compliance.json"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.6804929959999981,
+    "log_sha256": "387e97462de36fb405471706290ea69618f1678a02bd985cf1139744b5649cc1"
+  },
+  {
+    "name": "measurement",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/bin/LevelScopeMeasurementTests"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 29.95387025599996,
+    "log_sha256": "693ec25505d8a388521025eedf57085a86503c9ccda9586e86f6f315285c4e6c"
+  },
+  {
+    "name": "scaffold",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/bin/LevelScopeScaffoldTests"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.17154969800003528,
+    "log_sha256": "6bb87a5bfaf3556d33e1c6901fb0e97689e9f1b327adff9d26bc5955929d44d6"
+  },
+  {
+    "name": "video",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/bin/LevelScopeVideoTests",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-02/video-fixtures/cfr-exact.mov",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-02/video-fixtures/vfr-exact.mov",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-02/video-fixtures/two-streams-audio.mov",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-02/video-fixtures/timecode.mov",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-02/video-fixtures/cfr-exact.mp4",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-02/video-fixtures/cfr-exact.m4v",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-02/video-fixtures/half-hour.mov"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 15.579658092999978,
+    "log_sha256": "dbca510cc7abcdeec10de3b42c2a293820a36024f7d24541cc81686bf64d824c"
+  },
+  {
+    "name": "runner",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "Tests/EbuReferenceRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.3806079649999674,
+    "log_sha256": "698d16d7b93c4bd9707d3cfacda6fb1e0fea99ed0cda6e69bedc42772940540a"
+  },
+  {
+    "name": "m3-runner",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "Tests/M3QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.23027845600000774,
+    "log_sha256": "2b8a5c7e7bfdde85bf100dde94d4f0d07df6f886aca0c69849d08d8bb7a0973a"
+  },
+  {
+    "name": "m4-runner",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "Tests/M4QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.17038526300001422,
+    "log_sha256": "5b8a3ccb28c32f172271a641e8142fdb66c37cd396f681ca016266abfdb51bb3"
+  },
+  {
+    "name": "m5-runner",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "Tests/M5QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.22485812500002567,
+    "log_sha256": "c7aef28573dd346b7ba685f3d2ec544dbfb85fedfbed9fab0c778d251f7118ec"
+  },
+  {
+    "name": "m6-runner",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "Tests/M6QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.1661412699999687,
+    "log_sha256": "d094b1bd2c8318c96097f80c50da282add5b2972970a77046de8db6c8935f6ca"
+  },
+  {
+    "name": "itu",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "Tests/run_reference_measurements.py",
+      "--binary",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/bin/LevelScopeMeasurementTests",
+      "--vectors",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-02/vectors/itu",
+      "--report",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/high-sierra-candidate-03/regressions/regressions/itu.json",
+      "--compare",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-02/baseline/itu.json",
+      "--arch",
+      "x86_64"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 43.802642271000025,
+    "log_sha256": "9571a299c82a4aa12593daf8b7ed82d5c1eb5874cfefdd6f4a5a56e0c6f1d16e"
+  },
+  {
+    "name": "ebu",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "Tests/run_ebu_measurements.py",
+      "--binary",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/bin/LevelScopeMeasurementTests",
+      "--vectors",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-02/vectors/ebu",
+      "--report",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/high-sierra-candidate-03/regressions/regressions/ebu.json",
+      "--compare",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-02/baseline/ebu.json",
+      "--arch",
+      "x86_64"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 21.584286010000028,
+    "log_sha256": "18e65c40d2edcd18e30155f9ca4f7a49b0e066f90ea10aa588ab78922e03d313"
+  },
+  {
+    "name": "m7-runner",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "Tests/M7QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.6370617790000779,
+    "log_sha256": "6445c5d29c244ea3a47dbd4980262c8e754b9fe2f3cdf07018f9f0346796aa1e"
+  },
+  {
+    "name": "m7-video-acceptance",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "Tests/M7VideoAcceptanceTests.py"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.22396775400000024,
+    "log_sha256": "a6c2032ee0568007e84d552ef4a4234e1c70b85ec04db93105872cadce999114"
+  },
+  {
+    "name": "paint-trace-buffer",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/bin/LevelScopeVideoPaintTraceTests"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.009951783000019532,
+    "log_sha256": "5cb0b2155aebf13f2bb2c61a50df896b4f7b1e9f0ee40a5dc09e4cf59ee9389a"
+  },
+  {
+    "name": "paint-runner",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "Tests/VideoPaint/RunnerTests.py"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.1702740939999785,
+    "log_sha256": "a0c655005a6913b22729ce324e24c2ecee4c438dd13b2e88b93dc396a2ba1851"
+  },
+  {
+    "name": "paint-offline-export",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/LevelScope Video Paint Diagnostic.app/Contents/MacOS/LevelScope Video Paint Diagnostic",
+      "--diagnostic-offline-check",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/high-sierra-candidate-03/regressions/regressions/offline-trace.json"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.06831174800004192,
+    "log_sha256": "82c5e6779fa32f0127117537817f3c24ba17d846fdb874afcca3f442f721d06a"
+  },
+  {
+    "name": "paint-exclusive-output",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/candidate-03/LevelScope Video Paint Diagnostic.app/Contents/MacOS/LevelScope Video Paint Diagnostic",
+      "--diagnostic-offline-check",
+      "/Users/fuzz/LevelScope-M10-qualification-2026-10-25/high-sierra-candidate-03/regressions/regressions/offline-trace.json"
+    ],
+    "exit_code": 1,
+    "expected_exit": 1,
+    "seconds": 0.06900372400002652,
+    "log_sha256": "20fbfa6060a0055e23732676cb4be9837b3ec72d56259ae90db520fe9562a210"
+  }
+]

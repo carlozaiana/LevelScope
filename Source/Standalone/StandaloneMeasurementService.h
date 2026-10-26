@@ -15,6 +15,9 @@ public:
     // Test/verification primitive. Encodes to an owned temporary PCM24 WAV, reopens
     // it, and measures those bytes. Does not publish an output or enable export.
     ServiceResult<AnalysisSnapshot> verifyTemporaryRender (const ServiceContext&, JobControl&);
+    // Encoded artifact has its own media/layout/hash context and zero gain. It is
+    // read in owned export staging; no second full-length copy is manufactured.
+    ServiceResult<AnalysisSnapshot> verifyEncodedArtifact (const ServiceContext&, JobControl&);
 private:
     ProcessedAudioObserver* observer;
 };

@@ -78,7 +78,7 @@ proposal::Evaluation evaluateSnapshot (const AnalysisSnapshot* analysis, const S
 juce::String evaluationText (const proposal::Evaluation& e)
 {
     juce::String text;
-    text << (e.domain == proposal::SnapshotDomain::source ? "Source" : "Current State")
+    text << (e.domain == proposal::SnapshotDomain::source ? "Source" : e.domain == proposal::SnapshotDomain::renderedOutput ? "Exported artifact" : "Current State")
          << " evaluation: " << proposal::verdictName (e.verdict) << "\n" << e.message << "\n";
     for (const auto& rule : e.rules)
     {
@@ -92,7 +92,9 @@ juce::String evaluationText (const proposal::Evaluation& e)
         text << "\n" << rule.reason << "\n";
     }
     text << "LRA is informative when the profile has no LRA rule. Verdict uses full precision.\n"
-         << "No complete delivery, metadata or future encoded-export verification.\n";
+         << (e.domain == proposal::SnapshotDomain::renderedOutput
+             ? "These measured PCM bytes only; no complete delivery, metadata or future encoded-media verification.\n"
+             : "No complete delivery, metadata or future encoded-export verification.\n");
     return text;
 }
 }

@@ -1,0 +1,11 @@
+{
+  "candidate": "candidate-02",
+  "qualification": "Not qualified: stale duplicate UI verdict after profile/applicability edit",
+  "preserved": true,
+  "fix": "StandaloneExportUI: render completion notice no longer stores an evaluation; exportDetails derives current artifact evaluation from current profile/applicability.",
+  "scope": "Presentation only; processing, measurement, encoder, export gates, report schema and quantizer unchanged.",
+  "core_sequoia": "passed",
+  "core_high_sierra": "in progress",
+  "long_platforms": "in progress; retain accurate original tested binary/build provenance",
+  "new_candidate": "candidate-03, not yet frozen"
+}

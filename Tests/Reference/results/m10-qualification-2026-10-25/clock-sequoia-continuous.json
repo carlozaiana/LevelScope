@@ -1,0 +1,51 @@
+{
+  "suite": "M10 verified PCM export and reporting",
+  "passed": true,
+  "message": "",
+  "build": "3e24a19f92e3b54738be169bc222c0a433414cca577687c42a648453e305d6ce",
+  "checks": [{
+      "name": "create owned fixture directory",
+      "passed": true
+    },{
+      "name": "fresh evidence artifact directory",
+      "passed": true
+    },{
+      "name": "stereo qualification clock files inspected",
+      "passed": true
+    },{
+      "name": "known generator alignment explicitly confirmed",
+      "passed": true
+    },{
+      "name": "stereo export clock session",
+      "passed": true
+    },{
+      "name": "begin test measurement",
+      "passed": true
+    },{
+      "name": "test source/current measured",
+      "passed": true
+    },{
+      "name": "accept exact measured test state",
+      "passed": true
+    },{
+      "name": "begin test measurement",
+      "passed": true
+    },{
+      "name": "test source/current measured",
+      "passed": true
+    },{
+      "name": "accept exact measured test state",
+      "passed": true
+    },{
+      "name": "clock PCM rendered and independently remeasured",
+      "passed": true
+    },{
+      "name": "clock actual PCM passes and is published for reimported video tests",
+      "passed": true
+    }],
+  "cases": [],
+  "long_export": null,
+  "video_cases": 0,
+  "physical_devices_opened": false,
+  "architecture": "arm64"
+}
