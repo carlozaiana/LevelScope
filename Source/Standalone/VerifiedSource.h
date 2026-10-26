@@ -31,6 +31,7 @@ private:
     juce::File ownedFile;
     MediaInfo media;
     std::vector<std::shared_ptr<const VerifiedSource>> members;
+    std::optional<ProgrammeComposition> composition;
     friend ServiceResult<std::shared_ptr<const VerifiedSource>> prepareVerifiedSource (const ServiceContext&, JobControl&, const SnapshotStorage&);
 };
 using VerifiedSourceResult = ServiceResult<std::shared_ptr<const VerifiedSource>>;

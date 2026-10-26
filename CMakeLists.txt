@@ -207,6 +207,7 @@ add_library(LevelScopeStandaloneSupport STATIC
     Source/Standalone/StandaloneExport.cpp
     Source/Standalone/StandaloneReport.cpp
     Source/Standalone/ProgrammeSource.cpp
+    Source/Standalone/ProgrammeComposition.cpp
     Source/Standalone/SessionDocument.cpp
     Source/Standalone/VerifiedSource.cpp
     Source/Core/Proposal/SectionAnalysis.cpp
@@ -265,6 +266,7 @@ target_link_libraries(LevelScopeStandalone PRIVATE LevelScopeDiagnosticsUI)
 target_sources(LevelScopeStandalone
     PRIVATE
         Source/Standalone/StandaloneProgrammeImport.cpp
+        Source/Standalone/StandaloneCompositionImport.cpp
         Source/Standalone/StandaloneExportUI.cpp
         Source/Standalone/StandaloneSessionUI.cpp
         Source/Standalone/StandaloneApp.cpp
@@ -464,4 +466,16 @@ if (LEVELSCOPE_BUILD_EXPORT_TESTS)
     target_link_libraries(LevelScopeExportTests PRIVATE LevelScopeStandaloneSupport juce::juce_gui_basics)
     add_test(NAME verified-pcm-export COMMAND LevelScopeExportTests)
     set_tests_properties(verified-pcm-export PROPERTIES TIMEOUT 600)
+endif()
+
+option(LEVELSCOPE_BUILD_COMPOSITION_TESTS "Build explicit M11 composition checks" OFF)
+if(LEVELSCOPE_BUILD_COMPOSITION_TESTS)
+    juce_add_console_app(LevelScopeCompositionTests PRODUCT_NAME "LevelScope Composition Tests")
+    target_sources(LevelScopeCompositionTests PRIVATE Tests/CompositionTests.cpp)
+    if (APPLE)
+        target_sources(LevelScopeCompositionTests PRIVATE Tests/VideoReaderAudit_mac.mm)
+    endif()
+    target_compile_definitions(LevelScopeCompositionTests PRIVATE JUCE_MODAL_LOOPS_PERMITTED=1)
+    target_link_libraries(LevelScopeCompositionTests PRIVATE LevelScopeStandaloneSupport juce::juce_gui_basics)
+    # The qualification runner supplies fresh evidence paths and an explicit phase.
 endif()

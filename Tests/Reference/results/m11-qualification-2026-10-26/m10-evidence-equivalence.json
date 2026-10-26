@@ -1,0 +1,297 @@
+{
+  "m11_source_digest": "669b350652dbc3fb09d0ff724758208fec21bba40e0f6bc0188b89e6404c2c61",
+  "m10_commit": "fcd4c15fe78d6352f5e96faabf3eb52f942235e1",
+  "m10_candidate": "candidate-03",
+  "m10_source_digest": "4ff89967e4927600d0b6defafabb28c372f4068870a0f1a9adb1ee84fe1781d8",
+  "m10_app_sha256": "92c013999bdecaf904af0888ce68dd59bcd1b3004934b9ddb36ce1a1bf511e15",
+  "unchanged_files": [
+    {
+      "path": "Source/Core/BS1770KWeighting.h",
+      "sha256": "e5a4a405fd71b631549ce29ce26b1b6833ea6d1b5c06cb75391a37ff79203ee7",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/LevelScopeHistoryModel.cpp",
+      "sha256": "0495ed804982830ed8e3abac200dfbab0489ca9100d32a3bbb44ab46d9098f40",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/LevelScopeHistoryModel.h",
+      "sha256": "bd3abd986086ad890065bcb064a45aad5f0fc58f7a092a61ff609284dff2e4aa",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Measurement/GatePopulation.h",
+      "sha256": "56c32bea23a332f811433c0977d07de9b3401b12cf8629d92aa78ceb58060c3e",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Measurement/OfflineMeasurement.cpp",
+      "sha256": "a72cbe46461c8d7589eebb644ba28f0ece0f0e7b8f0565ae1a3858125e584cf7",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Measurement/OfflineMeasurement.h",
+      "sha256": "296958549aef56a4717deaace9cba7a6e2d85a7bb34c99906c321b21f75d7020",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Processing/DSP/BS1770MomentaryLufsDetector.h",
+      "sha256": "ce3244119e6ac8d36c48d9b69c9b7421c2c81dcc73e47bd135178b498910da6f",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Processing/DSP/BroadbandDownwardCompressor.cpp",
+      "sha256": "47a1580c9c73e21bf2d50ac8d5d96b6da73ee764795614259c3a1343255f993b",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Processing/DSP/BroadbandDownwardCompressor.h",
+      "sha256": "d490dd72b88e4f2549f64af4727e34461e523614b4c8025eeb86646f55617a63",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Processing/DSP/BroadbandUpwardCompressor.cpp",
+      "sha256": "ba73d0c937472fcbb7674ab616c4097814295d6cf79e05aab31cdcaf354b13c6",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Processing/DSP/BroadbandUpwardCompressor.h",
+      "sha256": "5601110d1e3ad20a9e04fdf1741d2aa2a638173866dbfbd726f05ae1f8de5483",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Processing/DSP/LookaheadLimiter.cpp",
+      "sha256": "360ccd04a44cf83d52a17c99f893ab661f2fd560c8f4c4a4bc2e609368cb319c",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Processing/DSP/LookaheadLimiter.h",
+      "sha256": "cfa3a5a44c5f6858aca11179f26c96adb1c066cfb7ae7aa714b4d079a6f17c66",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Processing/DSP/SpectralUpwardCompressor.cpp",
+      "sha256": "506a9aabf4fd22c022372c49306da6b40034399a9bcf7056a23a79ed3330a0cf",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Processing/DSP/SpectralUpwardCompressor.h",
+      "sha256": "a6488b85cfabc66c3a073aaaf7a6c356372fbc91b258943579b3045c78f65db7",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Processing/DSP/UpwardGainLaw.h",
+      "sha256": "c76ee1dc5f36b7e59e8c82fedc3858dc70edfd3444009803002681bf11f19881",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Processing/IAudioModule.h",
+      "sha256": "5696083035028c8ccc8da4aed8ed28f3fd89a057f7064f4bb75069b00d338dc6",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Processing/Modules/LevelerModule.cpp",
+      "sha256": "9a989ab0581a0136f8a6302e0bab2986afeaa1a136139428d43d332bd071cd15",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Processing/Modules/LevelerModule.h",
+      "sha256": "e671df99d228ed7843c8a4021ba37de831981db0bc43ff0647a51e5e610970ba",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Processing/Modules/LevelerParamIDs.h",
+      "sha256": "bb71fc7c804b0fb94d69ecd2f98f3166747bac1862817d01c091694b155c7be8",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Processing/Modules/MultiThresholdDynamicsModule.cpp",
+      "sha256": "0cdc402e5d7b60e8e05a11aa76cfed8aa4dc6a4b33efe97e8ad755aad7ebc973",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Processing/Modules/MultiThresholdDynamicsModule.h",
+      "sha256": "8be81698b0afb5292a612b3769a2d5a1f51754bcd1e25ce2e0bbccc0492e4ac3",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Processing/Modules/MultiThresholdDynamicsParamGroups.h",
+      "sha256": "bdfaef5a125e238e35e08970fdb94a72cc017877e6b7871bc38af78509771e46",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Processing/Modules/MultiThresholdDynamicsParamIDs.h",
+      "sha256": "64b614f2c6f6173a1370551964f5a349f93305ff03cdb831042ce6e208efe18e",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Processing/ProcessContext.h",
+      "sha256": "654df1fccda8187b888922091430e4db5d48ad0eb2636b201f86ba8ffa34f330",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Processing/ProcessorCore.h",
+      "sha256": "64b32626c0e4a757d866682eba25effb82c4f4daa6464d47418348e60b79b53e",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Proposal/AnalysisEngine.cpp",
+      "sha256": "af70b743ad8c3e06f26de85ea3d211e4e5d4b60cd638ce56ef232fbe06f9b567",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Proposal/AnalysisEngine.h",
+      "sha256": "45a2ecd7beecd4f68083af48a16c2ce4d874af181df6cd7c7231c4efb60fd0da",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Proposal/AttributionEngine.cpp",
+      "sha256": "26601d948cef90b8bda0fc62f1e55e5bd69c4dc81a383efa50208f2751c741ea",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Proposal/AttributionEngine.h",
+      "sha256": "3c4d0d012775ca95860b25e18c8c9853da10bfddaa6aac3fd4e32947bb7406c1",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Proposal/Methods/RuleBasedMethod.cpp",
+      "sha256": "ce26548bf9465cf62044e5ee2806ac841bf6337092b46e2165a9588e928566ce",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Proposal/Methods/RuleBasedMethod.h",
+      "sha256": "a9f71cdae373b03d13c708ae7b18685e5d762b3a5d6086634f004f1fdba7a119",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Proposal/Model/ProgramAnalysis.h",
+      "sha256": "10f5a0d7249b83224734e2a4a4912b337ebb44a1dd04f584b95807bf60092cb3",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Proposal/Model/ProgrammeSections.h",
+      "sha256": "669a20458d03abae81e52a733415e01d6a06d0491a1f27548a0db0f1b3158038",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Proposal/Model/TargetProfile.cpp",
+      "sha256": "578736b0daa64d7d654506a3d81a4715b093f5ea8c15610f2b5a930ee566fcda",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Proposal/Model/TargetProfile.h",
+      "sha256": "54b2637bc231647e7ededa584b894a83976f0f05777d46d2330cd97ddc82ab67",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Proposal/SectionAnalysis.cpp",
+      "sha256": "f202b0570c077d2a49c566ad6d620a8b6b4423514e6b3011ddb7f71055139ac3",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Proposal/SectionAnalysis.h",
+      "sha256": "e2cceff43728ffce4463eedcbfed688d100224c1322988db6f0393f79cbc292a",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Proposal/VerificationEngine.cpp",
+      "sha256": "bb1849e84b7affe84e84241951ffbf8dc923d086c115f2b04a2427f413c30fb4",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/Proposal/VerificationEngine.h",
+      "sha256": "9c5b58d9f49959db68c71cfc295236a2078d5bfde4013577329cbd156bd3bd9e",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/PublicAPI.h",
+      "sha256": "df5681f91e2ab5ffbeef132521bd674914840bbc05c5f62a4f73993e0749071a",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/RunningLoudnessStats.cpp",
+      "sha256": "bc7c98bc72b3c818f254545127b0f6b72dbfcae964e78d4b8abb89d846b45c98",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Core/RunningLoudnessStats.h",
+      "sha256": "9027ba4b57b7382b5f29fa4faa70996394e5f295123b7f8cb681d9064e36bb02",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Standalone/Pcm24Wave.cpp",
+      "sha256": "77b74156bf37a14acfa475ef81df18b76656dc7620f8819a608d56d5d6d6e5a3",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Standalone/Pcm24Wave.h",
+      "sha256": "f901ea0dbf429b14c31faa33c3bd92c4754858a608555110d1fab67dcddd7e1f",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Standalone/StandaloneAudition.cpp",
+      "sha256": "d49f7714275f2549ce0a8320bb98d250da429f74c619f5e10ef1ff4a9cbe2d62",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Standalone/StandaloneAudition.h",
+      "sha256": "c145aa1342731fb766e8b1a4e6f651d833f7ab0aba662de7892b27af7e27b36e",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Standalone/StandaloneAuditionRequest.h",
+      "sha256": "3344c81e283c93896d53047d56b27954e6da8333ca0f7b1e4c2c16cc4ade9d51",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Standalone/StandaloneTargetProfiles.h",
+      "sha256": "78148721bd755ba34084f679e68f2da4a7f9b120b4872161095db64d887471fe",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Standalone/StandaloneVideo.cpp",
+      "sha256": "7b5aee564de7dba96e9557f784a8d03dce60ca8022b4736a0a84eb7097e458cb",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Standalone/StandaloneVideo.h",
+      "sha256": "97279ff2b6d8fb20fc8d3f230eea44949df8dc9666590aef03efbe01b7721e34",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Standalone/StandaloneVideoPanel.cpp",
+      "sha256": "19a84acf7e0531ba18b7e011e158c707fbb2014f3ade4e9f961cd806de987dfa",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Standalone/StandaloneVideoPanel.h",
+      "sha256": "01c1c47107d9c76a190167687d2df548d58c6cf487369db0fa5da2d7c8b5b74f",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Standalone/StandaloneVideo_mac.mm",
+      "sha256": "004e02878e75fcf3ff8e48de3a5f83a6d200f1a3e60117bb3b32f212df754e53",
+      "unchanged_from_m10": true
+    },
+    {
+      "path": "Source/Standalone/VideoTiming.h",
+      "sha256": "69dc05d1f03a0d17d5b83ce317829135c1cd28305e5dd769327b830b7c6eb7bb",
+      "unchanged_from_m10": true
+    }
+  ],
+  "reuse_scope": [
+    "Historical broad codec/colour coverage",
+    "Historical physical-device endurance and presentation-clock behavior",
+    "Measurement algorithm, profile and PCM24/RF64 specification qualification"
+  ],
+  "fresh_caller_coverage": [
+    "Composition sum and all-channel captures",
+    "Pinned EBU/ITU vectors",
+    "Focused profile/proposal/diagnostics/sections/audition/session/export regressions",
+    "Native H264 CFR/VFR and ProRes selection with composed Source/Current and injected audio clock",
+    "One real three-hour composition and independently decoded RF64 per Mac"
+  ],
+  "limitations": "Byte equivalence supports scoped reuse; it does not make M10 physical runs M11 observations. No M11 physical device opened. Full physical multichannel listening remains separate."
+}

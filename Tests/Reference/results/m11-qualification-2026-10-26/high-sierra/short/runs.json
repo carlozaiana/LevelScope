@@ -1,0 +1,321 @@
+[
+  {
+    "name": "m11-core",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/bin/LevelScopeCompositionTests",
+      "--root",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02-results/high-sierra/short/core-files",
+      "--output",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02-results/high-sierra/short/core.json",
+      "--samples",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02-results/high-sierra/short/samples"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 290.485353216,
+    "log_sha256": "63f45c875dd0759a44281a0c44df4ba1db39e2cfb28131f6b9fbcb287268be86"
+  },
+  {
+    "name": "m11-video",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/bin/LevelScopeCompositionTests",
+      "--phase",
+      "video",
+      "--root",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02-results/high-sierra/short/video-files",
+      "--output",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02-results/high-sierra/short/video.json",
+      "--video",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/video-fixtures",
+      "--prores",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/m7-video-fixtures"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 18.01028495600002,
+    "log_sha256": "43274398f03197ed331826ad30eebf06fdaa314e574bc4d07a2d552ccb4e992b"
+  },
+  {
+    "name": "measurement",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/bin/LevelScopeMeasurementTests"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 30.281559345999995,
+    "log_sha256": "693ec25505d8a388521025eedf57085a86503c9ccda9586e86f6f315285c4e6c"
+  },
+  {
+    "name": "scaffold",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/bin/LevelScopeScaffoldTests"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 0.17334691199999952,
+    "log_sha256": "f44e28ded3d28dbda4c0bd3a5acbb1727ff5ffebd19c2a7d7db1eac84a98a646"
+  },
+  {
+    "name": "compliance",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/bin/LevelScopeComplianceTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02-results/high-sierra/short/compliance.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 0.7363040239999918,
+    "log_sha256": "387e97462de36fb405471706290ea69618f1678a02bd985cf1139744b5649cc1"
+  },
+  {
+    "name": "proposals",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/bin/LevelScopeProposalTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02-results/high-sierra/short/proposals.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 17.561722401999987,
+    "log_sha256": "d2297d0dbe58d37196eda1d4c7762c78c7185ec2eb18c77cf4307e7e32ba1531"
+  },
+  {
+    "name": "diagnostics",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/bin/LevelScopeDiagnosticsTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02-results/high-sierra/short/diagnostics.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 4.475487648000012,
+    "log_sha256": "1fcc0038f5c6830c1ef6a5b4d9036e912fda8e59639d1fd1eaa58cc64b88232d"
+  },
+  {
+    "name": "sections",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/bin/LevelScopeSectionsTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02-results/high-sierra/short/sections.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 6.83803254999998,
+    "log_sha256": "ea3431c7f7a2166da4b65711268db8b1f432ae162e08c6ba1f03c1a746d3f0fe"
+  },
+  {
+    "name": "audition",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/bin/LevelScopeAuditionTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02-results/high-sierra/short/audition.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 65.39410877699999,
+    "log_sha256": "b1ab9cc0022d1ab8f3c0ccff2dd6754d616eb3249a2bf0c224f212986f953b7e"
+  },
+  {
+    "name": "multichannel",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/bin/LevelScopeMultichannelTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02-results/high-sierra/short/multichannel.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 175.51921141499997,
+    "log_sha256": "7230bf3634018275b561007e1c9ff2bc8549d57d39e8d97acd11f367e0429e5e"
+  },
+  {
+    "name": "sessions",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/bin/LevelScopeSessionTests",
+      "--output",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02-results/high-sierra/short/sessions.json",
+      "--short"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 15.158400529999994,
+    "log_sha256": "b5a381b8f33c5e60ff9b7446d0840a0428f8328ef506adfdc67614fd1ee12131"
+  },
+  {
+    "name": "programmes",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/bin/LevelScopeProgrammeTests",
+      "--output",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02-results/high-sierra/short/programmes.json",
+      "--m8-session",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/m9-fixtures/m8-sessions"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 38.59715260400003,
+    "log_sha256": "beafda9bd98ec00a33fdf566162dbd7e50c44ccf9bc6bba1398dcb11fb349c3f"
+  },
+  {
+    "name": "export",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/bin/LevelScopeExportTests",
+      "--output",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02-results/high-sierra/short/export.json",
+      "--artifacts",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02-results/high-sierra/short/export-artifacts"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 93.17855182899996,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "video-timing",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/bin/LevelScopeVideoTests"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 0.28538790599998265,
+    "log_sha256": "dea3f854057fa0706f9ed7a9068864ba8ce01b6885182f2fccc4392795a65bb7"
+  },
+  {
+    "name": "ebu",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/Tests/run_ebu_measurements.py",
+      "--binary",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/bin/LevelScopeMeasurementTests",
+      "--vectors",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/vectors/ebu",
+      "--report",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02-results/high-sierra/short/ebu.json",
+      "--compare",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/baseline/ebu.json",
+      "--arch",
+      "x86_64"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 21.35643400899994,
+    "log_sha256": "18e65c40d2edcd18e30155f9ca4f7a49b0e066f90ea10aa588ab78922e03d313"
+  },
+  {
+    "name": "itu",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/Tests/run_reference_measurements.py",
+      "--binary",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/bin/LevelScopeMeasurementTests",
+      "--vectors",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/vectors/itu",
+      "--report",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02-results/high-sierra/short/itu.json",
+      "--compare",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/baseline/itu.json",
+      "--arch",
+      "x86_64"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 43.516979539999966,
+    "log_sha256": "9571a299c82a4aa12593daf8b7ed82d5c1eb5874cfefdd6f4a5a56e0c6f1d16e"
+  },
+  {
+    "name": "ebu-runner",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/Tests/EbuReferenceRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 0.29157340200004,
+    "log_sha256": "698d16d7b93c4bd9707d3cfacda6fb1e0fea99ed0cda6e69bedc42772940540a"
+  },
+  {
+    "name": "m11-runner",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/Tests/M11QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 0.18768580300002213,
+    "log_sha256": "e73c3805f810fdcf3d0167ced7085c48306c9482a952ffb710551d230cdb3e51"
+  },
+  {
+    "name": "legacy-rejection",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/legacy/M10ProgrammeTests",
+      "--only",
+      "--prepare-session",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02-results/high-sierra/short/core-files/48000-0-files/composition.levelscope",
+      "--destination",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02-results/high-sierra/short/must-not-exist.levelscope",
+      "--output",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02-results/high-sierra/short/legacy-rejection.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 1,
+    "expected_exit_code": 1,
+    "seconds": 0.03869244800000615,
+    "log_sha256": "179989c498efc8d842ecd45f3d477b5d25e90604ff28cfe4ea667021cefa247c"
+  },
+  {
+    "name": "independent-pcm",
+    "exit_code": 0,
+    "seconds": 314.68174176,
+    "evidence_sha256": "2a915a1d8b2b89b565d5fe6400036696c77ac718df0f5652ac04b5ac60a77246"
+  }
+]

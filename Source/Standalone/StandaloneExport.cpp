@@ -54,8 +54,7 @@ void space (const juce::File& parent, uint64_t payload, const pcm24::Hooks& hook
 std::vector<std::pair<juce::File, juce::String>> originals (const Request& r)
 {
     std::vector<std::pair<juce::File, juce::String>> out;
-    if (r.current.assembly) for (const auto& m : r.current.assembly->members) out.emplace_back (m.file, m.media.sha256);
-    else if (r.current.media.sha256.isNotEmpty()) out.emplace_back (r.current.sourceFile, r.current.media.sha256);
+    if (r.current.media.sha256.isNotEmpty())for (const auto& m : r.current.sourceMembers()) out.emplace_back (m.file, m.media.sha256);
     return out;
 }
 Request checkedReportMedia(const Request& request,JobControl& control)
@@ -160,10 +159,8 @@ Request capture (const StandaloneSessionModel& s)
     r.applicability = s.programmeApplicability; r.documentId = s.documentId; r.programmeId = s.programmeId;
     r.documentRevision = s.documentRevision; r.unsaved = s.documentDirty(); r.sessionFile = s.documentFile;
     if(s.sourceContentInvalid)r.mediaIssue="Programme media is unresolved or invalidated; recorded hashes are historical identities.";
-    else if(r.current.assembly)
-    {for(const auto& m:r.current.assembly->members)if(!m.media.matchesFileStamp(m.file))r.mediaIssue="A programme member is missing or changed; reverify and remeasure.";}
-    else if(r.current.media.sha256.isNotEmpty()&&!r.current.media.matchesFileStamp(r.current.sourceFile))
-        r.mediaIssue="Source file is missing or changed; reverify and remeasure.";
+    else if(r.current.media.sha256.isNotEmpty()&&!r.current.sourceFilesMatch())
+        r.mediaIssue="A programme member is missing, changed or duplicated; reverify and remeasure.";
     r.sections = s.sectionDocument.map(); r.video = s.referenceVideo; return r;
 }
 juce::String specification (const Request& r, Specification& s)
@@ -294,7 +291,7 @@ ServiceResult<std::shared_ptr<Candidate>> render (const Request& r, const juce::
         writer.finish(control); pcm24::checkpoint(hooks,"verify",control);
         JobControl validationControl;validationControl.parent=&control;validationControl.parentProgress=&control.progress;validationControl.progressBase=.55f;validationControl.progressScale=.1f;
         const auto validation=validateMedia(c->file(),validationControl); demand(validation.succeeded(),validation.error,validation.message);
-        ServiceContext artifact=r.current;artifact.assembly.reset();artifact.sourceFile=c->file();artifact.media=validation.media;
+        ServiceContext artifact=r.current;artifact.assembly.reset();artifact.composition.reset();artifact.sourceFile=c->file();artifact.media=validation.media;
         artifact.fileLayout=spec.layout;artifact.processing={};artifact.range={0,spec.format.frames};
         JobControl measurementControl;measurementControl.parent=&control;measurementControl.parentProgress=&control.progress;measurementControl.progressBase=.65f;measurementControl.progressScale=.35f;
         auto measured=OfflineAnalysisService().verifyEncodedArtifact(artifact,measurementControl);

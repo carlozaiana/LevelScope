@@ -1,0 +1,27 @@
+[
+  {
+    "name": "m11-long",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02/bin/LevelScopeCompositionTests",
+      "--phase",
+      "long",
+      "--root",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02-results/high-sierra/long/long-files",
+      "--output",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02-results/high-sierra/long/long.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 6338.627003315,
+    "log_sha256": "fa7ddec2e3bcab082afc551dde7d8c076172f8b231a6216dd63fb1dc1bdaf161"
+  },
+  {
+    "name": "independent-rf64",
+    "exit_code": 0,
+    "seconds": 30.68298674699963,
+    "evidence_sha256": "2d34a4894eeb6620641615191eb2987e03f8e9c8e1e0b4b9e1a5be6c41554b0f"
+  }
+]

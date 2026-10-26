@@ -142,6 +142,20 @@ Video implementation follows M1 and precedes polished UI. Test fractional rates,
 drop-frame minute/ten-minute boundaries, signed offsets, overflow, seek generations,
 VFR and known sync points before claiming frame accuracy.
 
+## M11 composition input boundary
+
+M11 implementation boundary (26 October 2026; candidate-02 qualified): an
+explicitly confirmed two-component programme may supply this worker through the
+same verified-source interface. Each member retains its own content identity.
+`aligned-two-component-sum-v1` performs fixed M&E/dialogue float64 addition with a
+float32 rounding boundary; the existing all-channel static gain follows the sum.
+No dither, monitor gain, video audio or analysis-only reference enters this input.
+Source means the original confirmed composition and Current means its explicit
+versioned processing plan. Whole-programme metrics and all-channel peaks retain
+their existing semantics. See [43](43_M11QualificationAndHandover.md) for completed
+qualification, published checkpoint identity and future component/whole-programme processing boundaries; this
+addition does not retroactively extend earlier measured checkpoint evidence.
+
 ## Primary references
 
 - https://www.itu.int/rec/R-REC-BS.1770-5-202311-I/en

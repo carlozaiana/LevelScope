@@ -1,6 +1,7 @@
 #pragma once
 #include "SessionDocument.h"
 #include "StandaloneProgrammeImport.h"
+#include "StandaloneCompositionImport.h"
 #include "StandaloneExport.h"
 
 #include <memory>
@@ -94,6 +95,10 @@ private:
     std::unique_ptr<juce::DocumentWindow> programmeWindow;
     juce::TextButton chooseProgrammeButton { "Import channel files..." };
     void chooseProgramme();
+    std::unique_ptr<CompositionImportPanel> compositionPanel;
+    std::unique_ptr<juce::DocumentWindow> compositionWindow;
+    juce::TextButton chooseCompositionButton { "Compose M&E + dialogue..." };
+    void chooseComposition();
     juce::TextButton chooseSourceButton { "Choose Source File..." };
     juce::TextButton clearSourceButton { "Clear Source" };
     juce::TextButton measureSourceButton { "Measure Source" };

@@ -88,7 +88,7 @@ void roundtrip(const juce::File& root,int channels,int rate)
     d.source.file.setLastModificationTime(originalTime);
     auto bad=root.getChildFile("invalid-core.levelscope");
     std::vector<std::function<void(juce::var&)>> invalid {
-        [](auto& v){v.getDynamicObject()->setProperty("schema",3);},
+        [](auto& v){v.getDynamicObject()->setProperty("schema",sf::schemaVersion+1);},
         [](auto& v){v.getDynamicObject()->setProperty("documentId",juce::String::repeatedString("z",32));},
         [](auto& v){v["programme"]["channels"][1].getDynamicObject()->setProperty("fileChannel",0);},
         [](auto& v){v["programme"]["layout"]["roles"].getArray()->set(1,1);},
@@ -199,9 +199,9 @@ void exchangeIn(const juce::File& directory)
 }
 int main(int argc,char** argv)
 {
-    juce::ScopedJuceInitialiser_GUI init;juce::String output,exchangeWrite,exchangeRead,longFile;for(int n=1;n+1<argc;++n){auto arg=juce::String(argv[n]);if(arg=="--output")output=argv[++n];else if(arg=="--exchange-out")exchangeWrite=argv[++n];else if(arg=="--exchange-in")exchangeRead=argv[++n];else if(arg=="--long-media")longFile=argv[++n];}
+    juce::ScopedJuceInitialiser_GUI init;bool shortOnly=false;juce::String output,exchangeWrite,exchangeRead,longFile;for(int n=1;n<argc;++n){auto arg=juce::String(argv[n]);if(arg=="--short"){shortOnly=true;continue;}if(n+1>=argc)return 2;if(arg=="--output")output=argv[++n];else if(arg=="--exchange-out")exchangeWrite=argv[++n];else if(arg=="--exchange-in")exchangeRead=argv[++n];else if(arg=="--long-media")longFile=argv[++n];}
     auto root=(output.isNotEmpty()?juce::File(output).getParentDirectory():juce::File::getCurrentWorkingDirectory()).getChildFile("levelscope-m8-"+juce::Uuid().toString());root.createDirectory();bool passed=false;juce::String failure;
-    try{for(int channels:{2,6,8})roundtrip(root,channels,48000);for(int rate:{44100,96000,192000})roundtrip(root,2,rate);longSnapshot(root);unavailableMetrics(root);if(longFile.isNotEmpty())longMedia(juce::File(longFile),root);if(exchangeWrite.isNotEmpty()){exchangeOut(juce::File(exchangeWrite));if(longFile.isNotEmpty())expect(root.getChildFile("long-media.levelscope").copyFileTo(juce::File(exchangeWrite).getChildFile("long-media.levelscope")),"UI long opening/cancellation fixture");}if(exchangeRead.isNotEmpty())exchangeIn(juce::File(exchangeRead));passed=true;}catch(const std::exception& e){failure=e.what();std::cerr<<failure<<'\n';}
+    try{for(int channels:{2,6,8})roundtrip(root,channels,48000);for(int rate:{44100,96000,192000})roundtrip(root,2,rate);if(!shortOnly)longSnapshot(root);unavailableMetrics(root);if(longFile.isNotEmpty())longMedia(juce::File(longFile),root);if(exchangeWrite.isNotEmpty()){exchangeOut(juce::File(exchangeWrite));if(longFile.isNotEmpty())expect(root.getChildFile("long-media.levelscope").copyFileTo(juce::File(exchangeWrite).getChildFile("long-media.levelscope")),"UI long opening/cancellation fixture");}if(exchangeRead.isNotEmpty())exchangeIn(juce::File(exchangeRead));passed=true;}catch(const std::exception& e){failure=e.what();std::cerr<<failure<<'\n';}
     auto v=juce::var(new juce::DynamicObject());auto* o=v.getDynamicObject();o->setProperty("suite","M8 sessions");o->setProperty("passed",passed);o->setProperty("checks",checks);o->setProperty("failure",failure);o->setProperty("performance",performance);o->setProperty("long_media",mediaPerformance);o->setProperty("build",LEVELSCOPE_MEASUREMENT_BUILD);o->setProperty("os",juce::SystemStats::getOperatingSystemName());
 #if defined(__arm64__)
     o->setProperty("architecture","arm64");

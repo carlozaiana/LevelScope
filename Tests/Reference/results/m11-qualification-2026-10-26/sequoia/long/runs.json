@@ -1,0 +1,27 @@
+[
+  {
+    "name": "m11-long",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-02/bin/LevelScopeCompositionTests",
+      "--phase",
+      "long",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-02-results/sequoia/long/long-files",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-02-results/sequoia/long/long.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 3392.290669625,
+    "log_sha256": "4d6b7d854d27af258ae44954dcee188c7835174d083ec24b29bf015f22970592"
+  },
+  {
+    "name": "independent-rf64",
+    "exit_code": 0,
+    "seconds": 5.011240082999848,
+    "evidence_sha256": "b7b2e1a96c622efc9d05a0f5a4733029929c978b7bd3f701a34eb9b5693eba4b"
+  }
+]

@@ -31,6 +31,17 @@ Standards priority: EBU R128 and ATSC A/85.
   An all-or-nothing verified group and bounded worker reader feed measurement and
   audition. Session schema 2 supports grouped recovery and explicit per-file relink;
   existing interleaved stereo/5.1/7.1 behavior remains covered by regressions.
+- [M10 verified PCM export/reporting](40_M10QualificationAndHandover.md) is qualified
+  and published. Current State and the finalized reopened PCM24 artifact must both
+  pass the selected rules before explicit local publication. Final quantization
+  applies deterministic TPDF once; measurement-only reports remain separate.
+- [M11 aligned M&E/dialogue composition](43_M11QualificationAndHandover.md) candidate-02
+  is qualified on actual Sequoia/High Sierra, published as
+  `m11-aligned-stem-composition-2026-10-26` and integrated into main. Original component
+  identities and exact mappings feed one shared summing path before global trim;
+  schema 3 retains older-session migration. Future component DSP, whole-programme
+  processing plans and non-audible analysis references have distinct identity
+  boundaries. Unity component gain is only the M11 scope boundary.
 
 ## Medium-term direction
 - Approved M7 implementation extends the standalone measurement/Current path to
@@ -44,10 +55,12 @@ Standards priority: EBU R128 and ATSC A/85.
   [The qualification record](32_M7QualificationAndHandover.md) distinguishes offline,
   injected routing, video/UI and separately pending full physical 7.1 listening.
 - Defer 7.1.4/immersive expansion and prioritize the practical stereo/5.1 workflow:
-  qualified M8 session saving/reopening and M9 separate-file import, then a
-  bounded proposal for verified PCM export and artifact-bound reports. Stem
-  composition and dialogue-assisted analysis follow as separate proposals;
-  channel assembly does not implement either one.
+  qualified M8 sessions, M9 channel assembly and M10 verified PCM export/reporting.
+  M11 adds explicit confirmed composition. Later whole-programme processing and
+  dialogue levelling relative to M&E need bounded proposals, explicit application
+  and verification of both the intended improvement and the complete programme.
+  Analysis-only references must remain non-audible; channel assembly, stem
+  composition and dialogue-assisted analysis are separate capabilities.
 - Standalone app with analyze/propose/apply/export workflow
 - Intelligent logic/policy engine for minimal-intervention target matching
 - Later: stem workflow + marker-track/scene-aware processing

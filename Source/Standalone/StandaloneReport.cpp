@@ -48,11 +48,12 @@ juce::var snapshot(const AnalysisSnapshot* a,const ServiceContext& expected,Meas
     auto o=object();const auto input=measuredProgrammeForSnapshot(a,expected,domain,applicability);
     const bool valid=a&&input.currentIdentityMatches&&mediaIssue.isEmpty();
     set(o,"domain",domain==MeasurementDomain::source?"Source":domain==MeasurementDomain::currentState?"Current State":"Exported artifact");
+    if(expected.composition)set(o,"input_description",domain==MeasurementDomain::source?"Original confirmed composed programme":"Composed programme with explicit Current processing plan");
     set(o,"measurement_available",valid);
     set(o,"status",valid?"valid_measured_snapshot":a?"stale_or_incompatible":"unavailable");
     set(o,"evaluation",evaluation(evaluateSnapshot(valid?a:nullptr,expected,domain,profile,applicability)));
     if(!valid){set(o,"reason",mediaIssue.isNotEmpty()?mediaIssue:a?"Snapshot does not match the exact current input/processing context":"No valid measurement for this state");return o;}
-    set(o,"measurement_identity",a->identity);set(o,"measured_content_sha256",a->measuredContentHash);
+    set(o,"measurement_identity",a->identity);set(o,(expected.composition||expected.assembly)?"measured_programme_definition_digest":"measured_content_sha256",a->measuredContentHash);
     set(o,"measurement_method",a->measurementVersion);set(o,"build",a->context.buildVersion);
     set(o,"platform",a->context.platformAndFloatingPointMode);set(o,"original_runtime",a->originSessionId);
     set(o,"restored_from_session",a->restoredFromSession);set(o,"frames",juce::String(a->detail.frames));
@@ -97,13 +98,13 @@ void jsonValue(std::ostringstream& out,const juce::var& v,int depth)
 juce::var report(const Request& r,const Candidate* c,bool publishing)
 {
     if(c&&!c->matchesAudio(r))throw std::runtime_error("Artifact report does not match captured audio/runtime");
-    auto o=object();set(o,"schema","levelscope-measurement-report-v1");
+    auto o=object();set(o,"schema","levelscope-measurement-report-v2");
     set(o,"kind",c?"verified-artifact-measurement":"measurement-only-no-exported-audio");
     set(o,"publication",publishing?"published-verified-pcm":c?"NOT EXPORTED - verified staging artifact":"NO EXPORTED AUDIO");
     set(o,"scope","Selected whole-programme loudness and true-peak rules only. No complete broadcaster delivery, BWF/BW64, metadata, synchronization or future encoded-media certification.");
     set(o,"document_id",r.documentId);set(o,"programme_id",r.programmeId);set(o,"document_revision",juce::String(r.documentRevision));
     set(o,"session_unsaved",r.unsaved);set(o,"session_basename",r.sessionFile.getFileName());set(o,"runtime_id",r.current.sessionId);
-    set(o,"app","LevelScope Standalone M10");set(o,"build",r.current.buildVersion);set(o,"platform",r.current.platformAndFloatingPointMode);
+    set(o,"app","LevelScope Standalone M11");set(o,"build",r.current.buildVersion);set(o,"platform",r.current.platformAndFloatingPointMode);
     set(o,"cpu",juce::SystemStats::getCpuModel());set(o,"processing_version",r.current.processing.engineVersion);
     set(o,"processing_gain_db",r.current.processing.staticGainDb);set(o,"processing_gain_hex",exact(r.current.processing.staticGainDb));
     set(o,"programme_frames",juce::String(r.current.media.frames));set(o,"sample_rate",r.current.media.sampleRate);
@@ -115,7 +116,27 @@ juce::var report(const Request& r,const Candidate* c,bool publishing)
     set(profile,"applicability_scope","Pre-produced whole-programme linear-audio QC only; excludes live, deliberate lower targets, short-form and distribution-specific requirements.");
     set(profile,"meter_tolerance_documentary_only",p.meterToleranceNote);set(o,"profile",profile);
     juce::Array<juce::var> members;
-    if(r.current.assembly)
+    if(r.current.composition)
+    {
+        const auto& recipe=*r.current.composition;
+        auto composition=object();set(composition,"schema",ProgrammeComposition::schemaVersion);set(composition,"engine",ProgrammeComposition::engineVersion);
+        set(composition,"definition_digest",recipe.definitionIdentity());set(composition,"confirmation",recipe.confirmation);
+        set(composition,"confirmation_meaning","Complementary, correctly balanced stems intended to be combined; exact sample-zero alignment confirmed.");
+        set(composition,"preset",static_cast<int>(recipe.preset));juce::Array<juce::var> components;
+        for(const auto* c:{&recipe.me,&recipe.dialogue})
+        {
+            auto component=object();set(component,"id",c->id);set(component,"purpose",c->purpose);set(component,"language",c->language);set(component,"version_label",c->versionLabel);
+            set(component,"audio_identity",c->audioIdentity());set(component,"component_gain_db",0);set(component,"sample_zero_offset_frames","0");
+            juce::Array<juce::var> files,roles,mapping;
+            for(const auto& m:c->files())
+            {auto f=object();set(f,"slot",c->id+"/"+m.id);set(f,"basename",m.file.getFileName());set(f,"sha256",m.media.sha256);files.add(f);members.add(f);}
+            for(int n=0;n<c->layout.count;++n)roles.add(juce::AudioChannelSet::getAbbreviatedChannelTypeName(c->layout.roles[n]));
+            for(auto n:recipe.map(c==&recipe.dialogue))mapping.add(n<0?juce::var():juce::var(n+1));
+            set(component,"files",files);set(component,"ordered_input_roles",roles);set(component,"output_to_input_channels",mapping);components.add(component);
+        }
+        set(composition,"components",components);set(o,"composition",composition);
+    }
+    else if(r.current.assembly)
     {
         for(const auto& m:r.current.assembly->members)
         {auto row=object();set(row,"basename",m.file.getFileName());set(row,"sha256",m.media.sha256);set(row,"role",juce::AudioChannelSet::getAbbreviatedChannelTypeName(m.role));
@@ -155,6 +176,7 @@ juce::String reportHtml(const juce::var& model)
     html+=artifact?"VERIFIED ARTIFACT MEASUREMENT":"MEASUREMENT-ONLY - NO EXPORTED AUDIO";
     html+="</h1><p>"+escaped(model["publication"].toString())+"</p><p>"+escaped(model["scope"].toString())+"</p>";
     html+="<p>Programme: "+escaped(model["programme_id"].toString())+" | Processing gain: "+escaped(model["processing_gain_db"].toString())+" dB | "+(static_cast<bool>(model["session_unsaved"])?"Unsaved captured session revision":"Saved session revision")+"</p>";
+    if(model.hasProperty("composition"))html+="<p><strong>Source: original confirmed M&amp;E + dialogue composition.</strong> Unity component gains; Current State applies the recorded global trim. Component purpose, language/version, mapping and individual file hashes are recorded below. This is not dialogue analysis or verification of creative balance.</p>";
     html+="<table><tr><th>Measured state</th><th>Status / selected rules</th><th>Integrated LUFS</th><th>True peak dBTP</th><th>LRA LU</th></tr>";
     for(const auto& key:artifact?juce::StringArray{"source","current","artifact"}:juce::StringArray{"source","current"})
     {

@@ -1,0 +1,13 @@
+{
+  "architecture": "arm64",
+  "os": "15.7.9",
+  "os_build": "24G830",
+  "cpu": "Apple M1 Max",
+  "source_digest": "669b350652dbc3fb09d0ff724758208fec21bba40e0f6bc0188b89e6404c2c61",
+  "measurement_build": "70dc29e6fabde64b0be2a0f12790528de7e088956d5817f82b6888611c723d98",
+  "identity_sha256": "d9198c3ea9cb98a51f25f1850c4210e8351e0be52a508ba5e39e0b926e9686d6",
+  "decoder_library_sha256": "e9fd4d76bc457dcfb956617e8d467df85087ce069747fccd78e1e702d8629c14",
+  "python": "3.9.6 (default, Apr 30 2025, 02:07:17) \n[Clang 17.0.0 (clang-1700.0.13.5)]",
+  "physical_devices_opened": false,
+  "artifact_integrity_passed": true
+}

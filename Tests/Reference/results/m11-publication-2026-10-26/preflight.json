@@ -1,0 +1,202 @@
+{
+  "checked_utc": "2026-10-26T17:48:58.367358+00:00",
+  "tag": "m11-aligned-stem-composition-2026-10-26",
+  "candidate": "candidate-02",
+  "base_commit": "fcd4c15fe78d6352f5e96faabf3eb52f942235e1",
+  "source_digest": "669b350652dbc3fb09d0ff724758208fec21bba40e0f6bc0188b89e6404c2c61",
+  "measurement_build": "70dc29e6fabde64b0be2a0f12790528de7e088956d5817f82b6888611c723d98",
+  "app_sha256": "deb189e943529dd3e9e9d63a93e1d1cd2003f36752f7ab43f1e099d6c204eae5",
+  "identity_sha256": "d9198c3ea9cb98a51f25f1850c4210e8351e0be52a508ba5e39e0b926e9686d6",
+  "acceptance_receipt_sha256": "933b9756ee09944ee8221bbc05a553152b33934cc995c14a5f782cd034de7e6f",
+  "evidence_manifest_sha256": "75446c97004d378fdb4d4cb009d9eeb9aba735fe346e590987e490220cbf2832",
+  "integrity": [
+    {
+      "scope": "current implementation",
+      "files_checked": 222,
+      "passed": true
+    },
+    {
+      "scope": "frozen package",
+      "files_checked": 370,
+      "passed": true
+    },
+    {
+      "scope": "qualification evidence",
+      "files_checked": 146,
+      "passed": true
+    }
+  ],
+  "m10_unchanged_dependencies": 55,
+  "original_tags": [
+    {
+      "ref": "refs/tags/high-sierra-pre-scaffold-2026-10-15",
+      "object": "b3c6e845482dbe8a0ec9778d5a9ad7953e614609",
+      "commit": "556d387ad772dc5e604ead95f1525f60e66fd5f9"
+    },
+    {
+      "ref": "refs/tags/m10-verified-pcm-export-2026-10-26",
+      "object": "3bbd1476cbc4e200f9d8f2776f53e06c4bf57180",
+      "commit": "fcd4c15fe78d6352f5e96faabf3eb52f942235e1"
+    },
+    {
+      "ref": "refs/tags/m2-measured-compliance-2026-10-18",
+      "object": "673e382feeaa7e29e6e6abedbd56677aa2163ef3",
+      "commit": "01a34833ec06a0d237e098faadb23b398581e8f9"
+    },
+    {
+      "ref": "refs/tags/m3-global-trim-2026-10-18",
+      "object": "4063ca0e73c5b24dfa079eb894f85e398e9fee50",
+      "commit": "62ab420cb15b3ce5e1c821c963a749a9a56ae4a7"
+    },
+    {
+      "ref": "refs/tags/m4-measured-diagnostics-2026-10-18",
+      "object": "cc64c771a70ccf95e779a7fe7260749a4530c285",
+      "commit": "9a22749901d9f6d4b9c194c9c22c0a231f2494f6"
+    },
+    {
+      "ref": "refs/tags/m5-programme-sections-2026-10-20",
+      "object": "e36b4308374256ad36eff6c01d4d92325a06d3b0",
+      "commit": "ae88e187d288c53dbca1287e8341b74b9b5b2619"
+    },
+    {
+      "ref": "refs/tags/m6-verified-current-state-audition-2026-10-24",
+      "object": "7f54eb1098471dc55bd75484f873a9f90e68ac05",
+      "commit": "b57a1ed23cbe7d74afe98ed16ec8fd615db9d171"
+    },
+    {
+      "ref": "refs/tags/m7-pcm-7.1-2026-10-25",
+      "object": "04d0c836fcbc3a7af72638a7514faacd32ae48a9",
+      "commit": "cfbf3f981dece326d2363b911e5914ea61f1796c"
+    },
+    {
+      "ref": "refs/tags/m8-reproducible-sessions-2026-10-25",
+      "object": "93908205c41de16c10b187bc00fcc1621e328c66",
+      "commit": "8e984889c5e73670f370c6c568c8ea1d7902a35c"
+    },
+    {
+      "ref": "refs/tags/m9-separate-file-stereo-5.1-2026-10-25",
+      "object": "0cb0e4bea6fd9d11cc4207e9b863d5fca2b70bff",
+      "commit": "75843dcd017ec7990be2200454a10fc38beb44c4"
+    },
+    {
+      "ref": "refs/tags/measurement-milestone-2026-10-17",
+      "object": "76affb667b6dab066cb36b2a2c741525b9b6eeac",
+      "commit": "b29bc7c183743f35c6271d2d7ec8fb5ba1464591"
+    },
+    {
+      "ref": "refs/tags/standalone-scaffold-2026-10-15",
+      "object": "4c8bc35b788969e1f6e97dcdc57a601b01fff7cd",
+      "commit": "f192a8553e139d390056c9755f25eeb123bbc5e6"
+    },
+    {
+      "ref": "refs/tags/video-checkpoint-2026-10-17",
+      "object": "06f57524bedca1912c0d5c454f13561cec9ce5b4",
+      "commit": "700b9e77e439a8ca9bb7583adf826fac01dbe924"
+    },
+    {
+      "ref": "refs/tags/video-prores-checkpoint-2026-10-21",
+      "object": "d62c1159eeb2ffbb8b7ffc7c31014b842642d195",
+      "commit": "dcc34aabba6b5b3ca4805e2965d21ffebf2e4d0a"
+    }
+  ],
+  "remote_before": {
+    "tags": [
+      {
+        "ref": "refs/tags/high-sierra-pre-scaffold-2026-10-15",
+        "object": "b3c6e845482dbe8a0ec9778d5a9ad7953e614609",
+        "type": "tag"
+      },
+      {
+        "ref": "refs/tags/m10-verified-pcm-export-2026-10-26",
+        "object": "3bbd1476cbc4e200f9d8f2776f53e06c4bf57180",
+        "type": "tag"
+      },
+      {
+        "ref": "refs/tags/m2-measured-compliance-2026-10-18",
+        "object": "673e382feeaa7e29e6e6abedbd56677aa2163ef3",
+        "type": "tag"
+      },
+      {
+        "ref": "refs/tags/m3-global-trim-2026-10-18",
+        "object": "4063ca0e73c5b24dfa079eb894f85e398e9fee50",
+        "type": "tag"
+      },
+      {
+        "ref": "refs/tags/m4-measured-diagnostics-2026-10-18",
+        "object": "cc64c771a70ccf95e779a7fe7260749a4530c285",
+        "type": "tag"
+      },
+      {
+        "ref": "refs/tags/m5-programme-sections-2026-10-20",
+        "object": "e36b4308374256ad36eff6c01d4d92325a06d3b0",
+        "type": "tag"
+      },
+      {
+        "ref": "refs/tags/m6-verified-current-state-audition-2026-10-24",
+        "object": "7f54eb1098471dc55bd75484f873a9f90e68ac05",
+        "type": "tag"
+      },
+      {
+        "ref": "refs/tags/m7-pcm-7.1-2026-10-25",
+        "object": "04d0c836fcbc3a7af72638a7514faacd32ae48a9",
+        "type": "tag"
+      },
+      {
+        "ref": "refs/tags/m8-reproducible-sessions-2026-10-25",
+        "object": "93908205c41de16c10b187bc00fcc1621e328c66",
+        "type": "tag"
+      },
+      {
+        "ref": "refs/tags/m9-separate-file-stereo-5.1-2026-10-25",
+        "object": "0cb0e4bea6fd9d11cc4207e9b863d5fca2b70bff",
+        "type": "tag"
+      },
+      {
+        "ref": "refs/tags/measurement-milestone-2026-10-17",
+        "object": "76affb667b6dab066cb36b2a2c741525b9b6eeac",
+        "type": "tag"
+      },
+      {
+        "ref": "refs/tags/standalone-scaffold-2026-10-15",
+        "object": "4c8bc35b788969e1f6e97dcdc57a601b01fff7cd",
+        "type": "tag"
+      },
+      {
+        "ref": "refs/tags/video-checkpoint-2026-10-17",
+        "object": "06f57524bedca1912c0d5c454f13561cec9ce5b4",
+        "type": "tag"
+      },
+      {
+        "ref": "refs/tags/video-prores-checkpoint-2026-10-21",
+        "object": "d62c1159eeb2ffbb8b7ffc7c31014b842642d195",
+        "type": "tag"
+      }
+    ],
+    "branches": [
+      {
+        "ref": "refs/heads/main",
+        "object": "fcd4c15fe78d6352f5e96faabf3eb52f942235e1"
+      },
+      {
+        "ref": "refs/heads/codex/logic-module",
+        "object": "fcd4c15fe78d6352f5e96faabf3eb52f942235e1"
+      }
+    ]
+  },
+  "worktrees_before": "worktree /Users/fuzz/Developer/LevelScope\nHEAD fcd4c15fe78d6352f5e96faabf3eb52f942235e1\nbranch refs/heads/codex/logic-module\n\nworktree /Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation\nHEAD 5e07bbd29930db34236d6dfcede7fea14983f90a\nbranch refs/heads/codex/video-implementation",
+  "video_status_before": "?? .DS_Store\n?? Source/.DS_Store\n?? Source/Core/.DS_Store\n?? Source/Core/Processing/.DS_Store\n?? Tests/.DS_Store\n?? Tests/Video/.DS_Store\n?? Tests/Video/results/.DS_Store\n",
+  "unrelated_finder_metadata_sha256": {
+    ".DS_Store": "405677d78d0793a2a5596160ddc7e5b870092802a9d2f941c2c2a3fb73ffd9ae",
+    "Source/.DS_Store": "491170b5810f85cf5fe34a41e214885a4a2baee46c43c290bb3652f521b9b503",
+    "Source/Core/.DS_Store": "05aa686cd8a9e54b65388fc4dce1ea2c91ab5cd5fd1af8bfe6ad73055d06100d",
+    "Source/Core/Processing/.DS_Store": "ad1a60ff6db582810365ba9056c69006adb8046e1f5689330c1f4a8a0d19ac69",
+    "Tests/.DS_Store": "2580b31ef5dd6bff31896da264d93fba08ede30643057595f12d74bda7ebb324",
+    "Tests/Ebu_Loudness_Testset_V05/.DS_Store": "70717f88feaf78b87253ac39ee19f416a741dd2085d60afa946ae119f17cee4b",
+    "Tests/Reference/.DS_Store": "0779c884fa6bee8c6ebb09bcb3d1b7d51786ec9688788d1dc4225e90aa5725fb",
+    "Docs/.DS_Store": "ff642a3e8b407e9740f78574084ac43450daf3aa67170b2d728669b3a1d4fb9b"
+  },
+  "integration": "Fast-forward from unchanged M10 base; no implementation changes required",
+  "qualification_receipts_preserved": true,
+  "new_device_tests_required_for_publication": false,
+  "checkpoint_commit": "Resolve annotated tag to commit; final full identity recorded in tag annotation to avoid self-reference"
+}

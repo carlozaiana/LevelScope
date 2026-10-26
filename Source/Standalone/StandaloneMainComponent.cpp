@@ -12,6 +12,14 @@ public:
     void closeButtonPressed() override {panel.cancel();}
 private:ProgrammeImportPanel& panel;
 };
+class CompositionWindow final : public juce::DocumentWindow
+{
+public:
+    explicit CompositionWindow(CompositionImportPanel& p):DocumentWindow("Compose M&E + dialogue",juce::Colour(0xff181b20),closeButton),panel(p)
+    {setUsingNativeTitleBar(true);setContentNonOwned(&p,true);centreWithSize(p.getWidth(),p.getHeight());setVisible(true);}
+    void closeButtonPressed() override{panel.cancel();}
+private:CompositionImportPanel& panel;
+};
 class DiagnosticsWindow final : public juce::DocumentWindow
 {
 public:
@@ -144,6 +152,7 @@ StandaloneMainComponent::~StandaloneMainComponent()
     if (exportWriteResult.valid()) exportWriteResult.wait();
     exportCandidate.reset();
     programmeWindow.reset(); programmePanel.reset();
+    compositionWindow.reset(); compositionPanel.reset();
     videoWindow.reset();
     diagnosticsWindow.reset(); diagnosticsPanel.reset();
     sectionsWindow.reset(); sectionsPanel.reset();
@@ -351,6 +360,7 @@ void StandaloneMainComponent::configureSourceControls()
 {
     chooseProgrammeButton.onClick = [this] { chooseProgramme(); };
     addAndMakeVisible(chooseProgrammeButton);
+    chooseCompositionButton.onClick=[this]{chooseComposition();};addAndMakeVisible(chooseCompositionButton);
     chooseSourceButton.onClick = [this] { chooseSourceFile(); };
     clearSourceButton.onClick = [this] { clearSourceFile(); };
 
@@ -468,6 +478,7 @@ void StandaloneMainComponent::refreshFromSession()
 
     clearSourceButton.setEnabled (!session.persistenceLoading && (session.sourceDocument.hasSource || session.job.isActive()));
     chooseProgrammeButton.setEnabled(canReplaceSession());
+    chooseCompositionButton.setEnabled(canReplaceSession());
     chooseSourceButton.setEnabled (! session.job.isActive() && !session.persistenceLoading);
     targetProfileBox.setEnabled (! session.job.isActive() && !session.persistenceLoading);
     cancelJobButton.setEnabled (session.job.state == JobState::running);
@@ -520,6 +531,39 @@ void StandaloneMainComponent::chooseProgramme()
     });
 }
 
+void StandaloneMainComponent::chooseComposition()
+{
+    if(!canReplaceSession())return;
+    confirmDiscard([this]
+    {
+        if(!canReplaceSession())return;
+        audition.stop();audition.disconnect();session.persistenceLoading=true;
+        juce::Component::SafePointer<StandaloneMainComponent> safe(this);
+        compositionPanel=std::make_unique<CompositionImportPanel>(session.sourceDocument.composition,[safe](std::optional<ProgrammeComposition> recipe)
+        {
+            juce::MessageManager::callAsync([safe,recipe=std::move(recipe)]
+            {
+                if(!safe)return;safe->compositionWindow.reset();safe->compositionPanel.reset();safe->session.persistenceLoading=false;
+                if(recipe)
+                {
+                    const auto before=safe->session.revision;
+                    if(safe->session.setValidatedComposition(*recipe))
+                    {
+                        safe->audioPanel.sourceChanged();
+                        safe->documentNotice=before==safe->session.revision
+                            ?"Composition labels or locations updated; valid measurements retained; device closed, routes muted"
+                            :"Confirmed composition committed; device closed, routes muted, fresh measurements required";
+                    }
+                    else safe->documentNotice="Composition changed before adoption; previous session retained";
+                }
+                else safe->documentNotice="Composition cancelled; previous session retained stopped";
+                safe->refreshFromSession();
+            });
+        });
+        compositionWindow=std::make_unique<CompositionWindow>(*compositionPanel);refreshFromSession();
+    });
+}
+
 juce::String StandaloneMainComponent::getSourceFileWildcard()
 {
     return "*.wav;*.wave;*.aif;*.aiff;*.flac";
@@ -541,9 +585,9 @@ juce::String StandaloneMainComponent::buildSourceStateText() const
 {
     juce::String text;
 
-    text << "SOURCE\n\n";
+    text << (session.sourceDocument.composition?"SOURCE - ORIGINAL CONFIRMED COMPOSITION\n\n":"SOURCE\n\n");
     text << evaluationText (session.evaluation (MeasurementDomain::source)) << "\n";
-    text << "File: " << session.sourceDocument.displayName << "\n";
+    text << "Programme: " << session.sourceDocument.displayName << "\n";
     text << "Import status: " << session.sourceDocument.importStatus << "\n";
     text << "Measurement status: " << session.source.statusText << "\n\n";
 
@@ -558,7 +602,13 @@ juce::String StandaloneMainComponent::buildSourceStateText() const
         if(session.sourceDocument.assembly)
             for(const auto& member:session.sourceDocument.assembly->members)
                 text << juce::AudioChannelSet::getAbbreviatedChannelTypeName(member.role) << ": " << member.file.getFileName() << "\n";
-        text << "SHA-256: " << media.sha256 << "\n";
+        if(session.sourceDocument.composition)
+            for(const auto* component:{&session.sourceDocument.composition->me,&session.sourceDocument.composition->dialogue})
+            {
+                text << component->purpose << " | " << component->language << " | " << component->versionLabel << " | unity gain\n";
+                for(const auto& member:component->files())text << "  " << member.file.getFullPathName() << "\n";
+            }
+        text << ((session.sourceDocument.composition||session.sourceDocument.assembly)?"Programme definition digest: ":"SHA-256: ") << media.sha256 << "\n";
         text << "Channel roles: " << (session.sourceDocument.layout.confirmed ? "confirmed" : "confirmation required") << "\n\n";
     }
     else
@@ -602,7 +652,7 @@ juce::String StandaloneMainComponent::buildCurrentStateText() const
 {
     juce::String text;
 
-    text << "CURRENT STATE\n\n";
+    text << (session.sourceDocument.composition?"CURRENT STATE - COMPOSED PROGRAMME PLUS GLOBAL TRIM\n\n":"CURRENT STATE\n\n");
     text << evaluationText (session.evaluation (MeasurementDomain::currentState)) << "\n";
     text << "Initialized: " << (session.currentStateDocument.isInitialized ? "yes" : "no") << "\n";
     text << "Status: " << session.currentStateDocument.statusText << "\n";
@@ -630,10 +680,12 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
             text << "Validated source import.\n\n";
             text << "Implemented now:\n";
             text << "- Choose an audio source file.\n";
+            text << "- Assemble aligned mono channel files, or explicitly compose complementary M&E and dialogue.\n";
             text << "- Decode the entire file on a cancellable worker; record format, rate, frames, channels and SHA-256.\n";
             text << "- Confirm speaker roles separately from file order and physical outputs.\n";
             text << "- Clear the selected source.\n";
-            text << "- Successful replacement clears Current State; failure/cancellation keeps the previous source.\n\n";
+            text << "- New source import clears Current State. Editing existing composition audio retains its gain but invalidates measurements.\n";
+            text << "- Failure/cancellation keeps the previous session stopped.\n\n";
             text << "Accepted picker patterns:\n";
             text << getSourceFileWildcard() << "\n\n";
 
@@ -664,7 +716,7 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
             text << "Supported: mono, stereo, 5.0/5.1 and explicit BS.2051 System I 7.1 at 44.1/48/96/192 kHz.\n";
             text << "7.1 requires distinct side/rear roles and confirmation; monitor muting never excludes a channel from measurement.\n";
             text << "LFE is excluded from loudness and included in peak measurement.\n";
-            text << "Measure Source reads a verified copy of the full original file.\n\n";
+            text << "Measure Source reads the full original programme from verified member copies.\n\n";
             text << measurementsText (session.source);
 
             break;
@@ -674,7 +726,7 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
             text << session.trimNotice << "\n\n";
             text << evaluationText (session.evaluation (MeasurementDomain::currentState)) << "\n";
             text << "Initialize Current State, adjust static gain, then re-measure.\n\n";
-            text << "Static gain applies to every file channel, including LFE.\n";
+            text << "Static gain applies to every programme channel, including LFE, after any composition.\n";
             text << "Editing gain invalidates the previous Current State measurement.\n";
             text << "Audition Source or the explicitly applied Current State; monitor gain is separate.\n\n";
             text << measurementsText (session.currentState);
@@ -744,6 +796,8 @@ void StandaloneMainComponent::resized()
     chooseSourceButton.setBounds (sourceActionRow.removeFromLeft (190));
     sourceActionRow.removeFromLeft (8);
     chooseProgrammeButton.setBounds(sourceActionRow.removeFromLeft(190));
+    sourceActionRow.removeFromLeft(8);
+    chooseCompositionButton.setBounds(sourceActionRow.removeFromLeft(210));
     sourceActionRow.removeFromLeft(8);
     clearSourceButton.setBounds (sourceActionRow.removeFromLeft (120));
     sourceActionRow.removeFromLeft (8);

@@ -1,0 +1,10 @@
+LONG generate_verify_ms elapsed_s=247.616
+LONG source_measure_ms elapsed_s=1848.86
+LONG current_measure_ms elapsed_s=3453.99
+LONG save_ms elapsed_s=3456.18
+LONG parse_ms elapsed_s=3457.22
+LONG reopen_verify_ms elapsed_s=3645.08
+LONG prepare_seek_capture_ms elapsed_s=4075
+LONG render_verify_ms elapsed_s=6020.56
+LONG publish_ms elapsed_s=6338.43
+1103 assertions; PASS

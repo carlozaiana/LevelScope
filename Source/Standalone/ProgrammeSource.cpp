@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <locale>
 #include <set>
+#include <cmath>
 
 namespace levelscope::standalone
 {
@@ -159,9 +160,43 @@ bool ProgrammeReader::read (float* const* output, int channels, juce::int64 star
 {
     if (channels != static_cast<int>(numChannels) || start < 0 || count < 0 || start > lengthInSamples
         || count > lengthInSamples - start) return false;
+    if (meReader)
+    {
+        // Worker-only, bounded scratch; partitioning cannot change sum precision.
+        for(int offset=0;offset<count;)
+        {
+            const int n=std::min(4096,count-offset);
+            if(!meReader->read(meBuffer.getArrayOfWritePointers(),meBuffer.getNumChannels(),start+offset,n)
+                ||!dialogueReader->read(dialogueBuffer.getArrayOfWritePointers(),dialogueBuffer.getNumChannels(),start+offset,n))return false;
+            for(int c=0;c<channels;++c)for(int i=0;i<n;++i)
+            {
+                const float a=meBuffer.getSample(meMapping[static_cast<size_t>(c)],i);
+                const int d=dialogueMapping[static_cast<size_t>(c)];
+                const float b=d<0?0.0f:dialogueBuffer.getSample(d,i);
+                const float x=d<0?a:static_cast<float>(static_cast<double>(a)+static_cast<double>(b));
+                if(!std::isfinite(a)||!std::isfinite(b)||!std::isfinite(x))return false;
+                output[c][offset+i]=x;
+            }
+            offset+=n;
+        }
+        return true;
+    }
     if (readers.size() == 1) return readers.front()->read(output, channels, start, count);
     for (int channel = 0; channel < channels; ++channel)
         if (!readers[static_cast<size_t>(channel)]->read(output + channel, 1, start, count)) return false;
     return true;
+}
+std::unique_ptr<ProgrammeReader> ProgrammeReader::compose (std::unique_ptr<ProgrammeReader> me,
+    std::unique_ptr<ProgrammeReader> dialogue,const std::vector<int>& meMap,const std::vector<int>& dialogueMap)
+{
+    if(!me||!dialogue||me->sampleRate!=dialogue->sampleRate||me->lengthInSamples!=dialogue->lengthInSamples
+        ||meMap.empty()||meMap.size()>maxChannels||meMap.size()!=dialogueMap.size())return {};
+    for(size_t c=0;c<meMap.size();++c)
+        if(meMap[c]<0||meMap[c]>=static_cast<int>(me->numChannels)||dialogueMap[c]<-1||dialogueMap[c]>=static_cast<int>(dialogue->numChannels))return {};
+    auto r=std::make_unique<ProgrammeReader>();r->sampleRate=me->sampleRate;r->lengthInSamples=me->lengthInSamples;
+    r->numChannels=static_cast<unsigned>(meMap.size());r->hasFlac=me->hasFlac||dialogue->hasFlac;
+    r->meMapping=meMap;r->dialogueMapping=dialogueMap;
+    r->meBuffer.setSize(static_cast<int>(me->numChannels),4096);r->dialogueBuffer.setSize(static_cast<int>(dialogue->numChannels),4096);
+    r->meReader=std::move(me);r->dialogueReader=std::move(dialogue);return r;
 }
 }

@@ -1,0 +1,145 @@
+{
+  "candidate": "candidate-02",
+  "qualified": true,
+  "ready_for_checkpoint_review": true,
+  "source_digest": "669b350652dbc3fb09d0ff724758208fec21bba40e0f6bc0188b89e6404c2c61",
+  "base_commit": "fcd4c15fe78d6352f5e96faabf3eb52f942235e1",
+  "measurement_build": "70dc29e6fabde64b0be2a0f12790528de7e088956d5817f82b6888611c723d98",
+  "app_sha256": "deb189e943529dd3e9e9d63a93e1d1cd2003f36752f7ab43f1e099d6c204eae5",
+  "identity_sha256": "d9198c3ea9cb98a51f25f1850c4210e8351e0be52a508ba5e39e0b926e9686d6",
+  "platforms": {
+    "sequoia": {
+      "phases": {
+        "short": {
+          "summary_sha256": "1aff6c228f4c92e57bb7b2736aecc41ce418be4e63f38469e4099a35442d4e43",
+          "runs_sha256": "a20bc84ccacb6257c1b8e88c039c549e5ef08b08cf49d3b8475700d7f47cc285"
+        },
+        "long": {
+          "summary_sha256": "371ab33c59db25feb6c64ea6c361cee9168cf44af3354989ee7cb5d48d61e462",
+          "runs_sha256": "3df7d85444ea41c8d58e9612899349c0f01a6cd329da05657ca8f24e99629a2f"
+        },
+        "exchange": {
+          "summary_sha256": "d83f59175421ca81e719735c559aa540c44a7c507c994c83087e303656675a04",
+          "runs_sha256": "548d8fefb1abc484b292c2f5ab0d1296d6f2ef93ef9b0dd3d18477cf41dcf984"
+        }
+      },
+      "environment": {
+        "architecture": "arm64",
+        "os": "15.7.9",
+        "os_build": "24G830",
+        "cpu": "Apple M1 Max",
+        "source_digest": "669b350652dbc3fb09d0ff724758208fec21bba40e0f6bc0188b89e6404c2c61",
+        "measurement_build": "70dc29e6fabde64b0be2a0f12790528de7e088956d5817f82b6888611c723d98",
+        "identity_sha256": "d9198c3ea9cb98a51f25f1850c4210e8351e0be52a508ba5e39e0b926e9686d6",
+        "decoder_library_sha256": "e9fd4d76bc457dcfb956617e8d467df85087ce069747fccd78e1e702d8629c14",
+        "python": "3.9.6 (default, Apr 30 2025, 02:07:17) \n[Clang 17.0.0 (clang-1700.0.13.5)]",
+        "physical_devices_opened": false,
+        "artifact_integrity_passed": true
+      },
+      "ui_sha256": "1fca81334a9f29e4abef7737acd7512baf12d24a4d40a536c417c25f113fa84a",
+      "long_workflow": {
+        "frames": "518400000",
+        "sample_rate": 48000,
+        "channels": 6,
+        "components": 2,
+        "annotations": 1000,
+        "capture_cases": 6,
+        "stages_ms": {
+          "generate_verify_ms": 110461.9833750017,
+          "source_measure_ms": 832928.1051666662,
+          "current_measure_ms": 838496.1658333316,
+          "save_ms": 91.214958332479,
+          "parse_ms": 450.9940000027418,
+          "reopen_verify_ms": 108194.0000416674,
+          "prepare_seek_capture_ms": 211562.0260000005,
+          "render_verify_ms": 1061791.680875,
+          "publish_ms": 209501.6077916659
+        },
+        "total_ms": 3392121.764000002,
+        "cancel_ms": 22.38391666859388,
+        "ui_p95_ms": 12.5709166675806,
+        "ui_callbacks": 278330,
+        "rss_growth_bytes": 133693440,
+        "disk_growth_bytes": 47377219584,
+        "session_bytes": 10444186,
+        "report_bytes": 385600,
+        "artifact_bytes": 9331200104,
+        "artifact_sha256": "cdc392649f4e7e7b0cd68e99998eea71ae8d402abefcbc1ea311a0a205b4d812",
+        "composition_identity": "dafb0f62c6b4de33baea1802bec2b720b381441b145db1b518be8ef6b4ef25e0"
+      },
+      "independent_rf64_sha256": "b7b2e1a96c622efc9d05a0f5a4733029929c978b7bd3f701a34eb9b5693eba4b"
+    },
+    "high-sierra": {
+      "phases": {
+        "short": {
+          "summary_sha256": "1aff6c228f4c92e57bb7b2736aecc41ce418be4e63f38469e4099a35442d4e43",
+          "runs_sha256": "1eec1f2d2f95749eb7939c2c967631d2e8eae3b5b09b1f3c16c9ef1f0601adeb"
+        },
+        "long": {
+          "summary_sha256": "371ab33c59db25feb6c64ea6c361cee9168cf44af3354989ee7cb5d48d61e462",
+          "runs_sha256": "fac7a82165ad07764f4dac4559a15a37ada0ef627ad52dcfb502fceeb21aabb1"
+        },
+        "exchange": {
+          "summary_sha256": "d83f59175421ca81e719735c559aa540c44a7c507c994c83087e303656675a04",
+          "runs_sha256": "0341254a9522efbd744605fe38d0483e970f28a37dbeb709bf0e6253306f2a6d"
+        }
+      },
+      "environment": {
+        "architecture": "x86_64",
+        "os": "10.13.6",
+        "os_build": "17G66",
+        "cpu": "Intel(R) Core(TM) i7-3770K CPU @ 3.50GHz",
+        "source_digest": "669b350652dbc3fb09d0ff724758208fec21bba40e0f6bc0188b89e6404c2c61",
+        "measurement_build": "70dc29e6fabde64b0be2a0f12790528de7e088956d5817f82b6888611c723d98",
+        "identity_sha256": "d9198c3ea9cb98a51f25f1850c4210e8351e0be52a508ba5e39e0b926e9686d6",
+        "decoder_library_sha256": "f3097d29afc013525c8106a576a4828ede508ac36011fa51ed1c59d16e2eae6f",
+        "python": "3.8.10 (v3.8.10:3d8993a744, May  3 2021, 08:55:58) \n[Clang 6.0 (clang-600.0.57)]",
+        "physical_devices_opened": false,
+        "artifact_integrity_passed": true
+      },
+      "ui_sha256": "f30b77d0b20803c8347c238f2577b405241d54f9945916db1528199958468456",
+      "long_workflow": {
+        "frames": "518400000",
+        "sample_rate": 48000,
+        "channels": 6,
+        "components": 2,
+        "annotations": 1000,
+        "capture_cases": 6,
+        "stages_ms": {
+          "generate_verify_ms": 247615.671870999,
+          "source_measure_ms": 1601243.994454999,
+          "current_measure_ms": 1605125.653551999,
+          "save_ms": 233.9070170000196,
+          "parse_ms": 1037.240199998021,
+          "reopen_verify_ms": 187859.5063800029,
+          "prepare_seek_capture_ms": 398074.060738001,
+          "render_verify_ms": 1945023.268157002,
+          "publish_ms": 317870.6514170021
+        },
+        "total_ms": 6338470.014332999,
+        "cancel_ms": 80.0788330025971,
+        "ui_p95_ms": 12.25135599821806,
+        "ui_callbacks": 607433,
+        "rss_growth_bytes": 97644544,
+        "disk_growth_bytes": 46721753088,
+        "session_bytes": 10443758,
+        "report_bytes": 385672,
+        "artifact_bytes": 9331200104,
+        "artifact_sha256": "cdc392649f4e7e7b0cd68e99998eea71ae8d402abefcbc1ea311a0a205b4d812",
+        "composition_identity": "dafb0f62c6b4de33baea1802bec2b720b381441b145db1b518be8ef6b4ef25e0"
+      },
+      "independent_rf64_sha256": "2d34a4894eeb6620641615191eb2987e03f8e9c8e1e0b4b9e1a5be6c41554b0f"
+    }
+  },
+  "complete_comparison_sha256": "506dd80428df27fa0e3b4c6bf01ca1bc318001132be6ee7521b1a2766fccac1a",
+  "evidence_policy": "Explicit M11 impact plan, ProjectIndex 42; scoped M10 reuse recorded separately",
+  "required_checks_outstanding": [],
+  "physical_devices_opened": false,
+  "physical_multichannel_listening": "Separately pending; not part of approved offline/injected M11 scope",
+  "accepted_limitations": [
+    "Occasional picture skips; no acceptance of audio interruption, drift or sustained freezes",
+    "Unity component gains and sample-zero alignment only; no dialogue analysis or component DSP"
+  ],
+  "checkpoint_published": false,
+  "main_merged": false
+}

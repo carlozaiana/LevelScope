@@ -2,6 +2,7 @@
 
 #include "StandaloneMedia.h"
 #include "ProgrammeSource.h"
+#include "ProgrammeComposition.h"
 #include "StandaloneTargetProfiles.h"
 #include "Core/Measurement/OfflineMeasurement.h"
 #include <optional>
@@ -29,6 +30,7 @@ struct ServiceContext
     juce::File sourceFile;
     MediaInfo media;
     std::optional<ProgrammeAssembly> assembly;
+    std::optional<ProgrammeComposition> composition; // immutable original Source recipe
     ChannelLayout fileLayout;
     FrameRange range;
     ProcessingPlan processing;
@@ -36,9 +38,24 @@ struct ServiceContext
     juce::String profileVersion, buildVersion, platformAndFloatingPointMode;
 
     bool isFullProgram() const { return range.begin == 0 && range.end == media.frames; }
-    bool sourceFilesMatch() const { return assembly ? assembly->matchesFileStamps() : media.matchesFileStamp(sourceFile); }
+    bool sourceFilesMatch() const { return composition ? composition->matchesFileStamps() : assembly ? assembly->matchesFileStamps() : media.matchesFileStamp(sourceFile); }
+    std::vector<ProgrammeMember> sourceMembers() const
+    {
+        if(composition)return composition->files();
+        if(assembly)return assembly->members;
+        return {{"audio",sourceFile,media,fileLayout.roles[0],0}};
+    }
     bool isValid() const
     {
+        if(composition)
+        {
+            if(assembly||composition->validate().isNotEmpty())return false;
+            const auto m=composition->summary();const auto roles=composition->layout();
+            if(media.sha256!=m.sha256||media.channels!=m.channels||media.bytes!=m.bytes||media.frames!=m.frames
+                ||media.sampleRate!=m.sampleRate||media.bitsPerSample!=m.bitsPerSample||media.format!=m.format
+                ||fileLayout.count!=roles.count)return false;
+            for(int i=0;i<roles.count;++i)if(fileLayout.roles[i]!=roles.roles[i])return false;
+        }
         if (assembly)
         {
             if (assembly->validate().isNotEmpty()) return false;

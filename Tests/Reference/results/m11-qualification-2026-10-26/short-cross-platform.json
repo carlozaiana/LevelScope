@@ -1,0 +1,371 @@
+{
+  "passed": true,
+  "qualification_complete": false,
+  "source_digest": "669b350652dbc3fb09d0ff724758208fec21bba40e0f6bc0188b89e6404c2c61",
+  "maximum_float32_ulp": 0,
+  "maximum_metric_difference": 0.0,
+  "cases": [
+    {
+      "case": "0.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "1.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "2.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "3.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "4.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "5.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "6.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "7.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "8.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "9.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "10.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "11.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "12.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "13.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "14.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "15.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "16.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "17.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "18.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "19.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "20.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "21.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "22.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "23.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "24.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "25.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "26.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "27.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "28.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "29.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "30.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "31.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "32.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "33.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "34.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "35.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "36.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "37.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "38.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "39.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "40.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "41.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "42.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "43.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "44.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "45.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "46.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "47.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "48.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "49.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "50.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "51.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "52.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "53.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "54.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "55.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "56.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "57.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "58.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "59.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "60.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "61.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "62.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "63.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "64.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "65.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "66.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "67.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "68.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "69.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "70.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    },
+    {
+      "case": "71.f32",
+      "maximum_ulp": 0,
+      "maximum_metric_difference": 0.0
+    }
+  ],
+  "physical_multichannel_listening": "separately pending",
+  "allowances": "Cross-platform comparison only; no extra profile acceptance allowance"
+}

@@ -1,0 +1,23 @@
+[
+  {
+    "name": "m11-exchange",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-02/bin/LevelScopeCompositionTests",
+      "--phase",
+      "exchange",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-02-results/sequoia/exchange/exchange-files",
+      "--exchange",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/exchange-from-high-sierra",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-02-results/sequoia/exchange/exchange.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 3.3414274579999996,
+    "log_sha256": "787443d4fbc7eeb11ca70f6a5e55a202e3f35dbca4fa1d04b39c06af6f92d089"
+  }
+]

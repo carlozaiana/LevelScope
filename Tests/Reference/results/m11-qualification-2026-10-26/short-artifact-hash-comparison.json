@@ -1,0 +1,150 @@
+{
+  "passed": true,
+  "scope": "Additional comparison of already-generated short artifacts; not a new media render",
+  "cases": [
+    {
+      "case": "192000-0-files",
+      "sequoia_sha256": "dcadff3b6c3eb533d68ddfa33fc44baf827d97325e5c0e5cd2a7f5d6f10e6900",
+      "high_sierra_sha256": "dcadff3b6c3eb533d68ddfa33fc44baf827d97325e5c0e5cd2a7f5d6f10e6900",
+      "identical": true
+    },
+    {
+      "case": "192000-1-files",
+      "sequoia_sha256": "e439c0668b83bfb009b04e9e1f836cea6f5681af4c42e129dd54f61c32b7f0fa",
+      "high_sierra_sha256": "e439c0668b83bfb009b04e9e1f836cea6f5681af4c42e129dd54f61c32b7f0fa",
+      "identical": true
+    },
+    {
+      "case": "192000-2-files",
+      "sequoia_sha256": "633df7203980a41194a78085bea450f2168a1899f44c74ca6fa709b3ffd33955",
+      "high_sierra_sha256": "633df7203980a41194a78085bea450f2168a1899f44c74ca6fa709b3ffd33955",
+      "identical": true
+    },
+    {
+      "case": "44100-0-files",
+      "sequoia_sha256": "f47606538469c2918aa51af67b86a8d868d1e519420384c2b807da6cf73cc075",
+      "high_sierra_sha256": "f47606538469c2918aa51af67b86a8d868d1e519420384c2b807da6cf73cc075",
+      "identical": true
+    },
+    {
+      "case": "44100-1-files",
+      "sequoia_sha256": "7593ec1e801084693d8296536faafb40e4563d868bff196d65d54d5604bf0111",
+      "high_sierra_sha256": "7593ec1e801084693d8296536faafb40e4563d868bff196d65d54d5604bf0111",
+      "identical": true
+    },
+    {
+      "case": "44100-2-files",
+      "sequoia_sha256": "d6d8900ef17c8c1f42f0aaaab60ffb85e89bed82a1ba1cb1e01c4a9288cfbc87",
+      "high_sierra_sha256": "d6d8900ef17c8c1f42f0aaaab60ffb85e89bed82a1ba1cb1e01c4a9288cfbc87",
+      "identical": true
+    },
+    {
+      "case": "48000-0-files",
+      "sequoia_sha256": "e6f8347ae032bd0d62ae7d414609d0c74a1b9c483c45f8e3e30c20ebc5c91f7f",
+      "high_sierra_sha256": "e6f8347ae032bd0d62ae7d414609d0c74a1b9c483c45f8e3e30c20ebc5c91f7f",
+      "identical": true
+    },
+    {
+      "case": "48000-1-files",
+      "sequoia_sha256": "61ad2c31d0ff73ea20d31565962b0bd52c2ff270bade2044184361c4ee180784",
+      "high_sierra_sha256": "61ad2c31d0ff73ea20d31565962b0bd52c2ff270bade2044184361c4ee180784",
+      "identical": true
+    },
+    {
+      "case": "48000-2-files",
+      "sequoia_sha256": "147e8a387476a56bf8c822cb27ee45cae3f6b5fdc56ff30f7b9d6cb6ac622f2f",
+      "high_sierra_sha256": "147e8a387476a56bf8c822cb27ee45cae3f6b5fdc56ff30f7b9d6cb6ac622f2f",
+      "identical": true
+    },
+    {
+      "case": "96000-0-files",
+      "sequoia_sha256": "a5b030f94f37f45f944042d32875662f14059ef1b7520136fe8b2187d29f364b",
+      "high_sierra_sha256": "a5b030f94f37f45f944042d32875662f14059ef1b7520136fe8b2187d29f364b",
+      "identical": true
+    },
+    {
+      "case": "96000-1-files",
+      "sequoia_sha256": "89568aa904c2de4f49c616b4a6dcc49d1756a489b442ea754d4f07450640a061",
+      "high_sierra_sha256": "89568aa904c2de4f49c616b4a6dcc49d1756a489b442ea754d4f07450640a061",
+      "identical": true
+    },
+    {
+      "case": "96000-2-files",
+      "sequoia_sha256": "ce2c384d92f50b0ed191b504b8d02fb9fc67fca02baa5547dfea4f8ca7e2aab3",
+      "high_sierra_sha256": "ce2c384d92f50b0ed191b504b8d02fb9fc67fca02baa5547dfea4f8ca7e2aab3",
+      "identical": true
+    },
+    {
+      "case": "192000-0-groups",
+      "sequoia_sha256": "99c177748b5806aebe9ebbe8d796e69b1497ead9d8e691ce6053be766d291486",
+      "high_sierra_sha256": "99c177748b5806aebe9ebbe8d796e69b1497ead9d8e691ce6053be766d291486",
+      "identical": true
+    },
+    {
+      "case": "192000-1-groups",
+      "sequoia_sha256": "5783819dac95943ca7b5e931f281932ddb8cc12b728cdf2aa1e3d9af7a754ce4",
+      "high_sierra_sha256": "5783819dac95943ca7b5e931f281932ddb8cc12b728cdf2aa1e3d9af7a754ce4",
+      "identical": true
+    },
+    {
+      "case": "192000-2-groups",
+      "sequoia_sha256": "de6c12e9e0dbc3f29cd3ea039c3097ee73571b4f0d8099c261a6346378079cfa",
+      "high_sierra_sha256": "de6c12e9e0dbc3f29cd3ea039c3097ee73571b4f0d8099c261a6346378079cfa",
+      "identical": true
+    },
+    {
+      "case": "44100-0-groups",
+      "sequoia_sha256": "104e026bca645286a5b41a911e962c5c13462c72d3033512b1780f0bc5c43944",
+      "high_sierra_sha256": "104e026bca645286a5b41a911e962c5c13462c72d3033512b1780f0bc5c43944",
+      "identical": true
+    },
+    {
+      "case": "44100-1-groups",
+      "sequoia_sha256": "8c996d6246e5064d0ede78e70177f03f38aed02904598f628f94bfca7d35c5cd",
+      "high_sierra_sha256": "8c996d6246e5064d0ede78e70177f03f38aed02904598f628f94bfca7d35c5cd",
+      "identical": true
+    },
+    {
+      "case": "44100-2-groups",
+      "sequoia_sha256": "202df35deb03681901672bd6be596e4ba946b0ee24d067ac72549c81732fc679",
+      "high_sierra_sha256": "202df35deb03681901672bd6be596e4ba946b0ee24d067ac72549c81732fc679",
+      "identical": true
+    },
+    {
+      "case": "48000-0-groups",
+      "sequoia_sha256": "e98253e9cf7446c582ca6d86e0ea1b5fc1c92b8ab27ab76cb5e1d8e107cf8805",
+      "high_sierra_sha256": "e98253e9cf7446c582ca6d86e0ea1b5fc1c92b8ab27ab76cb5e1d8e107cf8805",
+      "identical": true
+    },
+    {
+      "case": "48000-1-groups",
+      "sequoia_sha256": "d07082dc7a94b92c8adfb77739e66bf028ff5dec7242dc1b26bb591bf5bc4102",
+      "high_sierra_sha256": "d07082dc7a94b92c8adfb77739e66bf028ff5dec7242dc1b26bb591bf5bc4102",
+      "identical": true
+    },
+    {
+      "case": "48000-2-groups",
+      "sequoia_sha256": "1a145b91337ac9695246f98742f7025f942c8f5de848276f35b537f5b7a17f9a",
+      "high_sierra_sha256": "1a145b91337ac9695246f98742f7025f942c8f5de848276f35b537f5b7a17f9a",
+      "identical": true
+    },
+    {
+      "case": "96000-0-groups",
+      "sequoia_sha256": "268747051ed931a698db81ff05c067a7166ffc5bb01bd7724b1bf2870a2ead2c",
+      "high_sierra_sha256": "268747051ed931a698db81ff05c067a7166ffc5bb01bd7724b1bf2870a2ead2c",
+      "identical": true
+    },
+    {
+      "case": "96000-1-groups",
+      "sequoia_sha256": "e9bd651fce2b424766e72fd20e08d493df8210bf3280f6a800c7b9941f835b53",
+      "high_sierra_sha256": "e9bd651fce2b424766e72fd20e08d493df8210bf3280f6a800c7b9941f835b53",
+      "identical": true
+    },
+    {
+      "case": "96000-2-groups",
+      "sequoia_sha256": "632f4c4ae2ebef1364e31d06ee83037ce0912e831576d2735dc787ab0887585e",
+      "high_sierra_sha256": "632f4c4ae2ebef1364e31d06ee83037ce0912e831576d2735dc787ab0887585e",
+      "identical": true
+    }
+  ]
+}

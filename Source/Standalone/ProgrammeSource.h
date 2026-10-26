@@ -40,11 +40,13 @@ bool samePhysicalFile (const juce::File&, const juce::File&);
 std::vector<ChannelRole> assemblyRoles (int channels);
 
 // Worker-only adapter. All reads stay inside the declared programme; a failed
-// member read fails the entire block. No silence replacement or channel summing.
+// member read fails the entire block. Only compose() permits the explicit M11 sum.
 class ProgrammeReader
 {
 public:
     static std::unique_ptr<ProgrammeReader> open (const std::vector<juce::File>&, const MediaInfo&);
+    static std::unique_ptr<ProgrammeReader> compose (std::unique_ptr<ProgrammeReader> me,
+        std::unique_ptr<ProgrammeReader> dialogue, const std::vector<int>& meMap, const std::vector<int>& dialogueMap);
     bool read (float* const*, int channels, juce::int64 start, int count);
     double sampleRate = 0;
     juce::int64 lengthInSamples = 0;
@@ -52,5 +54,8 @@ public:
     bool hasFlac = false;
 private:
     std::vector<std::unique_ptr<juce::AudioFormatReader>> readers;
+    std::unique_ptr<ProgrammeReader> meReader, dialogueReader;
+    std::vector<int> meMapping, dialogueMapping;
+    juce::AudioBuffer<float> meBuffer, dialogueBuffer;
 };
 }

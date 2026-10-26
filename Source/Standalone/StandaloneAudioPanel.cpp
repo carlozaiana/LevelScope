@@ -158,7 +158,7 @@ void StandaloneAudioPanel::sourceChanged()
 void StandaloneAudioPanel::synchronize()
 {
     const bool previouslyInvalid = session.sourceContentInvalid;
-    if (session.sourceDocument.assembly && !session.sourceContentInvalid && !session.persistenceLoading
+    if ((session.sourceDocument.assembly || session.sourceDocument.composition) && !session.sourceContentInvalid && !session.persistenceLoading
         && !session.sourceDocument.matchesFileStamps())
         session.measurementUnsuccessful(session.auditionDomain, ErrorCode::sourceChanged);
     if (audio.failureCode() == ErrorCode::sourceChanged && ! session.sourceContentInvalid)
@@ -187,7 +187,7 @@ void StandaloneAudioPanel::refresh()
     juce::String measurementStatus = measured ? "Measurements current" : summary.hasMeasurement
         ? "UNVERIFIED: measurements stale" : current && session.currentStateNeedsRemeasurement()
         ? "UNVERIFIED: measurements unavailable; remeasure Current State" : "UNVERIFIED: measurements unavailable";
-    auditionLabel.setText ((current ? "Current State" : "Source") + juce::String (" | Processing ")
+    auditionLabel.setText ((current ? "Current State" : "Source") + juce::String (session.sourceDocument.composition ? " | composed programme | Processing " : " | Processing ")
         + juce::String (request.context.processing.staticGainDb, 12) + " dB | " + measurementStatus
         + "\n" + (requestError.isNotEmpty() ? requestError : "Playback does not measure or establish compliance."), juce::dontSendNotification);
     gain.setEnabled (true); // Listening volume remains live, even after an overload fault.
@@ -211,7 +211,7 @@ void StandaloneAudioPanel::refresh()
         channelLabels[channel].setVisible (visible);
         roleBoxes[channel].setVisible (visible);
         outputBoxes[channel].setVisible (visible);
-        roleBoxes[channel].setEnabled (editable && !source.assembly);
+        roleBoxes[channel].setEnabled (editable && !source.assembly && !source.composition);
         channelLabels[channel].setText(source.channelName(channel),juce::dontSendNotification);
         channelLabels[channel].setTooltip(source.channelName(channel));
         roleBoxes[channel].setEditableText (source.layout.count == 8);
@@ -268,7 +268,7 @@ void StandaloneAudioPanel::resized()
     for (int channel = 0; channel < maxChannels; ++channel)
     {
         auto bounds = juce::Rectangle<int> (0, channel * 28, rows.getWidth(), 28).reduced (2);
-        channelLabels[channel].setBounds (bounds.removeFromLeft (session.sourceDocument.assembly ? 240 : 80));
+        channelLabels[channel].setBounds (bounds.removeFromLeft ((session.sourceDocument.assembly || session.sourceDocument.composition) ? 240 : 80));
         roleBoxes[channel].setBounds (bounds.removeFromLeft (210).reduced (2, 0));
         outputBoxes[channel].setBounds (bounds.reduced (2, 0));
     }

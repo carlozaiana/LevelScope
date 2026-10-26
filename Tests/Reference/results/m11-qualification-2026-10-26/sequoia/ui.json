@@ -1,0 +1,65 @@
+{
+  "passed": true,
+  "source_digest": "669b350652dbc3fb09d0ff724758208fec21bba40e0f6bc0188b89e6404c2c61",
+  "architecture": "arm64",
+  "device_closed": true,
+  "routes_muted": true,
+  "cases": [
+    {
+      "id": "three-presets",
+      "passed": true,
+      "evidence": "Created stereo composition interactively. Reopened final-candidate mono-to-Centre and grouped 5.1+5.1 sessions; inspected each named mapping and persisted confirmation. Group editor visually displayed all twelve filenames with L/R/C/LFE/Ls/Rs roles."
+    },
+    {
+      "id": "confirmation-gate",
+      "passed": true,
+      "evidence": "Commit unavailable with no files and with verified files until explicit complementary/balanced/sample-zero confirmation. Changing mapping cleared confirmation and rejected incompatible roles. Replacing M&E with changed bytes but identical rate/count/roles cleared confirmation. Explicit reconfirmation/commit removed the old pass and proposal, reset applicability and showed Current NOT EVALUATED/UNVERIFIED while preserving exact 19.079015077778 dB gain."
+    },
+    {
+      "id": "component-roles-and-files",
+      "passed": true,
+      "evidence": "Stereo Left/Right, mono dialogue Centre only, grouped 5.1 roles including LFE inspected. Channel labels and component member filenames visible; unity component gain explicit."
+    },
+    {
+      "id": "source-current-m3",
+      "passed": true,
+      "evidence": "Measured stereo Source and Current at zero; initial Current loudness failed. Draft left gain unchanged; Apply set 19.079015077778 dB and showed UNVERIFIED. Actual remeasurement passed. Draft again displayed NO CHANGE and retained measurements. Label edits retained measured pass."
+    },
+    {
+      "id": "diagnostics-sections",
+      "passed": true,
+      "evidence": "Source/Current diagnostic selector, 1.5 s inspection and zoom worked on 4 s composition. Split annotation at frame 96000; UI said audio/measurements/verdicts/proposals unchanged and retained unavailable short-section metrics."
+    },
+    {
+      "id": "session-reopen-relink",
+      "passed": true,
+      "evidence": "Saved and reopened stereo with exact gain and compatible caches, stopped/device-closed/muted. Relocated only disposable dialogue.wav; unresolved reopen retained settings and disabled measure/audition/export. Wrong member-slot relink was rejected. Identical dialogue relink restored caches without reconfirmation; new locator saved."
+    },
+    {
+      "id": "cancel-invalid-preserves-session",
+      "passed": true,
+      "evidence": "Changed stereo editor to incompatible 5.1 presets; confirmation cleared and commit disabled. Cancel retained original stereo, exact gain and passing Current."
+    },
+    {
+      "id": "verified-export-report",
+      "passed": true,
+      "evidence": "Render/reopen/measurement displayed actual artifact pass before Publish. Destination did not exist before explicit Publish. Published local test bundle independently decoded with libsndfile; PCM codes, artifact/report/HTML/manifest hashes agreed; composition provenance present."
+    },
+    {
+      "id": "device-closed-muted",
+      "passed": true,
+      "evidence": "No physical device selected or opened. Every route muted throughout. Grouped Current prepared verified copies while stopped; Source selection and exact 3/2 seek preserved measured identity. Play remained unavailable without a device."
+    },
+    {
+      "id": "older-session-save-as",
+      "passed": true,
+      "evidence": "Opened copied M8 session, saw explicit M11-reader migration warning and incompatible cache notices. Save offered Save As/Upgrade original/Cancel. Save As created M11 copy; original M8 bytes SHA-256 unchanged."
+    },
+    {
+      "id": "stopped-only-edits",
+      "passed": true,
+      "evidence": "All interactive Source/Current changes, composition and gain edits occurred stopped. Verified-source preparation opened no device; Play was unavailable without an output. Source/Current selection and rational seek retained measurement identity. Active playback edit rejection is separately exercised by the frozen injected audition/composition tests."
+    }
+  ],
+  "notes": "Observed silent native UI on frozen candidate-02. Device never opened; final unsaved test edit discarded, test app closed. Active-play edit rejection is automated injected evidence, not a physical-play UI claim."
+}

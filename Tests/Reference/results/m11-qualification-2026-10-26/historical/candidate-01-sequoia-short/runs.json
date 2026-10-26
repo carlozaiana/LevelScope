@@ -1,0 +1,321 @@
+[
+  {
+    "name": "m11-core",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/bin/LevelScopeCompositionTests",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/sequoia/short/core-files",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/sequoia/short/core.json",
+      "--samples",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/sequoia/short/samples"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 159.657209208,
+    "log_sha256": "63f45c875dd0759a44281a0c44df4ba1db39e2cfb28131f6b9fbcb287268be86"
+  },
+  {
+    "name": "m11-video",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/bin/LevelScopeCompositionTests",
+      "--phase",
+      "video",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/sequoia/short/video-files",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/sequoia/short/video.json",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/video-fixtures",
+      "--prores",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/m7-video-fixtures"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 9.491019416,
+    "log_sha256": "43274398f03197ed331826ad30eebf06fdaa314e574bc4d07a2d552ccb4e992b"
+  },
+  {
+    "name": "measurement",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/bin/LevelScopeMeasurementTests"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 13.282458999999989,
+    "log_sha256": "693ec25505d8a388521025eedf57085a86503c9ccda9586e86f6f315285c4e6c"
+  },
+  {
+    "name": "scaffold",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/bin/LevelScopeScaffoldTests"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 0.5609652500000095,
+    "log_sha256": "a4ef83ee217a412273da4466ec1ab8b4402d26e4a2c7974c9f0b654f48af3621"
+  },
+  {
+    "name": "compliance",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/bin/LevelScopeComplianceTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/sequoia/short/compliance.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 0.7328265420000264,
+    "log_sha256": "387e97462de36fb405471706290ea69618f1678a02bd985cf1139744b5649cc1"
+  },
+  {
+    "name": "proposals",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/bin/LevelScopeProposalTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/sequoia/short/proposals.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 8.684072833000016,
+    "log_sha256": "d2297d0dbe58d37196eda1d4c7762c78c7185ec2eb18c77cf4307e7e32ba1531"
+  },
+  {
+    "name": "diagnostics",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/bin/LevelScopeDiagnosticsTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/sequoia/short/diagnostics.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 2.180288791999999,
+    "log_sha256": "1fcc0038f5c6830c1ef6a5b4d9036e912fda8e59639d1fd1eaa58cc64b88232d"
+  },
+  {
+    "name": "sections",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/bin/LevelScopeSectionsTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/sequoia/short/sections.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 3.273046749999992,
+    "log_sha256": "ea3431c7f7a2166da4b65711268db8b1f432ae162e08c6ba1f03c1a746d3f0fe"
+  },
+  {
+    "name": "audition",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/bin/LevelScopeAuditionTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/sequoia/short/audition.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 32.33965966600002,
+    "log_sha256": "b1ab9cc0022d1ab8f3c0ccff2dd6754d616eb3249a2bf0c224f212986f953b7e"
+  },
+  {
+    "name": "multichannel",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/bin/LevelScopeMultichannelTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/sequoia/short/multichannel.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 70.945982375,
+    "log_sha256": "7230bf3634018275b561007e1c9ff2bc8549d57d39e8d97acd11f367e0429e5e"
+  },
+  {
+    "name": "sessions",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/bin/LevelScopeSessionTests",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/sequoia/short/sessions.json",
+      "--short"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 6.062583542000027,
+    "log_sha256": "e7966382071aebfaec51a5ef751ba9e235568d14ce49cf03298c0259a198daea"
+  },
+  {
+    "name": "programmes",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/bin/LevelScopeProgrammeTests",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/sequoia/short/programmes.json",
+      "--m8-session",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/m9-fixtures/m8-sessions"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 103.56412524999996,
+    "log_sha256": "beafda9bd98ec00a33fdf566162dbd7e50c44ccf9bc6bba1398dcb11fb349c3f"
+  },
+  {
+    "name": "export",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/bin/LevelScopeExportTests",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/sequoia/short/export.json",
+      "--artifacts",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/sequoia/short/export-artifacts"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 45.82430179200003,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "video-timing",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/bin/LevelScopeVideoTests"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 0.6237016659999881,
+    "log_sha256": "dea3f854057fa0706f9ed7a9068864ba8ce01b6885182f2fccc4392795a65bb7"
+  },
+  {
+    "name": "ebu",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/Tests/run_ebu_measurements.py",
+      "--binary",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/bin/LevelScopeMeasurementTests",
+      "--vectors",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/vectors/ebu",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/sequoia/short/ebu.json",
+      "--compare",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/baseline/ebu.json",
+      "--arch",
+      "arm64"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 10.596644459000004,
+    "log_sha256": "18e65c40d2edcd18e30155f9ca4f7a49b0e066f90ea10aa588ab78922e03d313"
+  },
+  {
+    "name": "itu",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/Tests/run_reference_measurements.py",
+      "--binary",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/bin/LevelScopeMeasurementTests",
+      "--vectors",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/vectors/itu",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/sequoia/short/itu.json",
+      "--compare",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/baseline/itu.json",
+      "--arch",
+      "arm64"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 23.642009083000005,
+    "log_sha256": "9571a299c82a4aa12593daf8b7ed82d5c1eb5874cfefdd6f4a5a56e0c6f1d16e"
+  },
+  {
+    "name": "ebu-runner",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/Tests/EbuReferenceRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 0.07813604200003965,
+    "log_sha256": "698d16d7b93c4bd9707d3cfacda6fb1e0fea99ed0cda6e69bedc42772940540a"
+  },
+  {
+    "name": "m11-runner",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/Tests/M11QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 0.07822937499997806,
+    "log_sha256": "feabb4add9e2ca3374e538560634d1ec97dc4f4ce89aab12f3d726e36ea9b2f6"
+  },
+  {
+    "name": "legacy-rejection",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-01/legacy/M10ProgrammeTests",
+      "--only",
+      "--prepare-session",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/sequoia/short/core-files/48000-0-files/composition.levelscope",
+      "--destination",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/sequoia/short/must-not-exist.levelscope",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/sequoia/short/legacy-rejection.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 1,
+    "expected_exit_code": 1,
+    "seconds": 0.4536741249999636,
+    "log_sha256": "179989c498efc8d842ecd45f3d477b5d25e90604ff28cfe4ea667021cefa247c"
+  },
+  {
+    "name": "independent-pcm",
+    "exit_code": 0,
+    "seconds": 103.1496765,
+    "evidence_sha256": "734e2513b5617695d53d53208465a326aed9a72056b997619fec99c29df27a74"
+  }
+]

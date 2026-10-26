@@ -1,0 +1,11 @@
+{
+  "candidate": "candidate-02",
+  "qualified": true,
+  "ready_for_checkpoint_review": true,
+  "source_digest": "669b350652dbc3fb09d0ff724758208fec21bba40e0f6bc0188b89e6404c2c61",
+  "outstanding_required_checks": [],
+  "published": false,
+  "merged_to_main": false,
+  "physical_multichannel_listening": "separately pending",
+  "acceptance": "acceptance-candidate-02.json"
+}

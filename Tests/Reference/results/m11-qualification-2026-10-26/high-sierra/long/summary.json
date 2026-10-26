@@ -1,0 +1,12 @@
+{
+  "automated_passed": true,
+  "phase": "long",
+  "error": "",
+  "source_digest": "669b350652dbc3fb09d0ff724758208fec21bba40e0f6bc0188b89e6404c2c61",
+  "qualification_complete": false,
+  "required_runs": [
+    "independent-rf64",
+    "m11-long"
+  ],
+  "remaining": "Both actual platforms, short/long/exchange, cross-platform comparison and explicit UI receipts are required"
+}

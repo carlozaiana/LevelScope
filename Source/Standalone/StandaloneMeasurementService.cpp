@@ -52,7 +52,7 @@ AnalysisSnapshot measure (const ServiceContext& context, MeasurementDomain domai
     result.measurementVersion = measurement::version;
     result.identity = OfflineAnalysisService::identityFor (context, domain, hash);
     result.detail = engine.finish();
-    if (context.assembly && !context.sourceFilesMatch())
+    if ((context.assembly || context.composition) && !context.sourceFilesMatch())
         throw Failure { ErrorCode::sourceChanged, "A programme member changed during measurement; result discarded" };
     checkCancel (control);
     result.measured = { result.detail.integrated.value, result.detail.lra.value,
@@ -112,6 +112,7 @@ juce::String OfflineAnalysisService::validateRequest (const ServiceContext& c, M
 juce::String OfflineAnalysisService::identityFor (const ServiceContext& c, MeasurementDomain domain, const juce::String& hash)
 {
     std::ostringstream key; key.imbue (std::locale::classic());
+    if(c.composition)key << ProgrammeComposition::engineVersion << '\n' << c.composition->definitionIdentity() << '\n';
     if (c.assembly) key << "mono-channel-assembly-v2\n" << c.assembly->definitionIdentity() << '\n';
     key << measurement::version << '\n' << layoutMappingVersion << '\n'
         << (isSystemI (c.fileLayout) ? systemICapability : "m1-layouts-v1") << '\n'
@@ -215,7 +216,7 @@ ServiceResult<AnalysisSnapshot> OfflineAnalysisService::verifyEncodedArtifact (c
     return run ([&]
     {
         const auto error = validateRequest (context, MeasurementDomain::renderedOutput);
-        if (error.isNotEmpty() || context.assembly || context.processing.staticGainDb != 0)
+        if (error.isNotEmpty() || context.assembly || context.composition || context.processing.staticGainDb != 0)
             throw Failure { ErrorCode::invalidRequest, "Artifact measurement requires its own supported PCM context and zero additional gain. " + error };
         pcm24::Format format; juce::String formatError;
         if (!pcm24::inspect (context.sourceFile, format, formatError, control))

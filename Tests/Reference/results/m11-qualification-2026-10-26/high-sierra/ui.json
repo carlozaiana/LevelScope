@@ -1,0 +1,65 @@
+{
+  "passed": true,
+  "source_digest": "669b350652dbc3fb09d0ff724758208fec21bba40e0f6bc0188b89e6404c2c61",
+  "architecture": "x86_64",
+  "device_closed": true,
+  "routes_muted": true,
+  "cases": [
+    {
+      "id": "three-presets",
+      "passed": true,
+      "evidence": "Created stereo composition interactively. Reopened final-candidate mono-to-Centre and grouped 5.1+5.1 sessions; inspected each named mapping and persisted confirmation. Group editor visually displayed all twelve filenames with L/R/C/LFE/Ls/Rs roles."
+    },
+    {
+      "id": "confirmation-gate",
+      "passed": true,
+      "evidence": "Commit unavailable with no files and with verified files until explicit complementary/balanced/sample-zero confirmation. Changing mapping cleared confirmation and rejected incompatible roles. Replacing M&E with changed bytes but identical rate/count/roles cleared confirmation. Explicit reconfirmation/commit removed the old pass and proposal, reset applicability and showed Current NOT EVALUATED/UNVERIFIED while preserving exact 19.079015077778 dB gain."
+    },
+    {
+      "id": "component-roles-and-files",
+      "passed": true,
+      "evidence": "Stereo Left/Right, mono dialogue Centre only, grouped 5.1 roles including LFE inspected. Channel labels and component member filenames visible; unity component gain explicit."
+    },
+    {
+      "id": "source-current-m3",
+      "passed": true,
+      "evidence": "Measured stereo Source and Current at zero; initial Current loudness failed. Draft left gain unchanged; Apply set 19.079015077778 dB and showed UNVERIFIED. Actual remeasurement passed. Draft again displayed NO CHANGE and retained measurements. Label edits retained measured pass."
+    },
+    {
+      "id": "diagnostics-sections",
+      "passed": true,
+      "evidence": "Source/Current diagnostic selector, 1.5 s inspection and zoom worked on 4 s composition. Split annotation at frame 96000; UI said audio/measurements/verdicts/proposals unchanged and retained unavailable short-section metrics."
+    },
+    {
+      "id": "session-reopen-relink",
+      "passed": true,
+      "evidence": "Saved and reopened stereo with exact gain and compatible caches, stopped/device-closed/muted. Relocated only disposable dialogue.wav; unresolved reopen retained settings and disabled measure/audition/export. Relinking the identical dialogue file restored caches without remeasurement or renewed confirmation. New locator saved and Current measured PASS inspected."
+    },
+    {
+      "id": "cancel-invalid-preserves-session",
+      "passed": true,
+      "evidence": "Changed stereo editor to incompatible 5.1 presets; confirmation cleared and commit disabled. Cancel retained original stereo, exact gain and passing Current."
+    },
+    {
+      "id": "verified-export-report",
+      "passed": true,
+      "evidence": "Render/reopen/measurement displayed actual artifact pass before Publish. Destination did not exist before explicit Publish. Published local test bundle independently decoded with libsndfile; PCM codes, artifact/report/HTML/manifest hashes agreed; composition provenance present."
+    },
+    {
+      "id": "device-closed-muted",
+      "passed": true,
+      "evidence": "No physical device selected or opened. Every route remained muted. Current preparation verified component copies while device-closed; exact 3/2 seek preserved measured identity. Play remained unavailable without a device."
+    },
+    {
+      "id": "older-session-save-as",
+      "passed": true,
+      "evidence": "Opened copied M8 session with intentionally unresolved old audio/video references; explicit M11-reader migration warning offered recovery of settings/sections. Save offered Save As/Upgrade original/Cancel. Save As wrote separate m8-original-M11.levelscope schema 3 with valid core checksum; original M8 SHA-256 remained 634c8fdf9aa28ab2e7c453a9271a2d720598bc91305886ecc9863517fa0d5bab."
+    },
+    {
+      "id": "stopped-only-edits",
+      "passed": true,
+      "evidence": "All interactive composition and processing changes occurred stopped. Current preparation opened no device; Play remained unavailable. Rational seek retained measurement identity. Active-play editing guards are covered separately by frozen injected tests; no physical-play UI claim."
+    }
+  ],
+  "notes": "Observed actual High Sierra native UI through Screen Sharing on frozen candidate-02. Shortcuts were unreliable, so native folder menus and mouse actions were used. Device never opened; final migrated test copy saved and candidate app closed. All evidence describes observed UI, with active-play guards attributed separately to injected tests."
+}

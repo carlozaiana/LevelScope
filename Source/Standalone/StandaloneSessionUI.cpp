@@ -54,18 +54,18 @@ void StandaloneMainComponent::requestClose(std::function<void()> close)
 void StandaloneMainComponent::beginSaveSession(bool saveAs,std::function<void()> continuation)
 {
     if(documentResult.valid()||session.persistenceLoading||audition.active()){documentNotice="Stop audition and finish the file operation before saving";return;}
-    if(session.openedSessionSchema==1&&!saveAs&&!migrationSaveApproved&&session.documentFile!=juce::File())
+    if(session.openedSessionSchema<sessionfile::schemaVersion&&!saveAs&&!migrationSaveApproved&&session.documentFile!=juce::File())
     {
         juce::Component::SafePointer<StandaloneMainComponent> safe(this);
         juce::AlertWindow::showAsync(juce::MessageBoxOptions().withIconType(juce::MessageBoxIconType::WarningIcon).withTitle("Session format upgrade")
-            .withMessage("Saving writes the M9 session format and requires an M9 reader. Choose Save As to retain your original M8-readable copy.")
+            .withMessage("Saving writes the M11 session format and requires an M11 reader. Choose Save As to retain your original older-readable copy.")
             .withButton("Save As").withButton("Upgrade original").withButton("Cancel"),[safe,continuation](int choice)
             {if(!safe)return;if(choice==1)safe->beginSaveSession(true,continuation);else if(choice==2){safe->migrationSaveApproved=true;safe->beginSaveSession(false,continuation);safe->migrationSaveApproved=false;}});
         return;
     }
     if(saveAs||session.documentFile==juce::File())
     {
-        sessionChooser=std::make_unique<juce::FileChooser>("Save LevelScope session",session.documentFile==juce::File()?juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile("Untitled.levelscope"):(session.openedSessionSchema==1?session.documentFile.getSiblingFile(session.documentFile.getFileNameWithoutExtension()+"-M9.levelscope"):session.documentFile),"*.levelscope");
+        sessionChooser=std::make_unique<juce::FileChooser>("Save LevelScope session",session.documentFile==juce::File()?juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile("Untitled.levelscope"):(session.openedSessionSchema<sessionfile::schemaVersion?session.documentFile.getSiblingFile(session.documentFile.getFileNameWithoutExtension()+"-M11.levelscope"):session.documentFile),"*.levelscope");
         juce::Component::SafePointer<StandaloneMainComponent> safe(this);
         sessionChooser->launchAsync(juce::FileBrowserComponent::saveMode|juce::FileBrowserComponent::canSelectFiles|juce::FileBrowserComponent::warnAboutOverwriting,[safe,continuation](const auto& picker)
         {
@@ -92,10 +92,10 @@ void StandaloneMainComponent::beginOpenSession(const juce::File& file)
 void StandaloneMainComponent::chooseRelink(bool video,juce::String slot)
 {
     if(!canReplaceSession())return;
-    if(!video&&session.sourceDocument.assembly&&slot.isEmpty())
+    if(!video&&(session.sourceDocument.assembly||session.sourceDocument.composition)&&slot.isEmpty())
     {
-        juce::PopupMenu menu;const auto members=session.sourceDocument.assembly->members;
-        for(size_t i=0;i<members.size();++i)menu.addItem(static_cast<int>(i)+1,juce::AudioChannelSet::getAbbreviatedChannelTypeName(members[i].role)+": "+members[i].file.getFileName());
+        juce::PopupMenu menu;const auto members=session.measurementContext(MeasurementDomain::source).sourceMembers();
+        for(size_t i=0;i<members.size();++i)menu.addItem(static_cast<int>(i)+1,members[i].id+": "+members[i].file.getFileName());
         juce::Component::SafePointer<StandaloneMainComponent> safe(this);
         menu.showMenuAsync(juce::PopupMenu::Options().withTargetComponent(&relinkAudioButton),[safe,members](int choice)
         {if(safe&&choice>0&&choice<=static_cast<int>(members.size()))safe->chooseRelink(false,members[static_cast<size_t>(choice-1)].id);});return;

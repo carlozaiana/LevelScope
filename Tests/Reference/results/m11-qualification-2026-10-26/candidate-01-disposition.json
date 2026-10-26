@@ -1,0 +1,13 @@
+{
+  "candidate": "candidate-01",
+  "source_digest": "4c13d106b45dfbc115a1954ff156184fadb5abc8d40b334f36390aef69cd6176",
+  "qualified": false,
+  "issue": "New composed audition label used an incorrectly encoded em dash; visible in native UI. Replace with ASCII separator.",
+  "scope": "Display-only edit in StandaloneAudioPanel.cpp. Numeric results retained as historical evidence; replacement candidate will run the explicit required inventory on both Macs.",
+  "frozen_package_preserved": true,
+  "short_sequoia_automated_passed": true,
+  "short_minutes": 9.920343527766667,
+  "composition_assertions": 4860,
+  "independent_exports": 24,
+  "complete_qualification": false
+}

@@ -42,15 +42,23 @@ VerifiedSource::~VerifiedSource() { if (ownedFile != juce::File()) { ownedFile.s
 std::vector<juce::File> VerifiedSource::files() const
 {
     if (members.empty()) return { ownedFile };
-    std::vector<juce::File> result; for (const auto& m : members) result.push_back(m->file()); return result;
+    std::vector<juce::File> result; for (const auto& m : members) {const auto f=m->files();result.insert(result.end(),f.begin(),f.end());} return result;
 }
-std::unique_ptr<ProgrammeReader> VerifiedSource::createReader() const { return ProgrammeReader::open(files(), media); }
+std::unique_ptr<ProgrammeReader> VerifiedSource::createReader() const
+{
+    if(composition)
+    {
+        if(members.size()!=2)return {};
+        return ProgrammeReader::compose(members[0]->createReader(),members[1]->createReader(),composition->map(false),composition->map(true));
+    }
+    return ProgrammeReader::open(files(), media);
+}
 bool VerifiedSource::matches (const MediaInfo& other) const
 {
     return media.sha256 == other.sha256 && media.bytes == other.bytes && media.frames == other.frames
         && media.channels == other.channels && media.sampleRate == other.sampleRate
         && media.bitsPerSample == other.bitsPerSample && media.format == other.format
-        && (members.empty() ? ownedFile.existsAsFile() : std::all_of(members.begin(), members.end(), [](const auto& m) { return m->file().existsAsFile(); }));
+        && (members.empty() ? ownedFile.existsAsFile() : std::all_of(members.begin(), members.end(), [](const auto& m) { return m->matches(m->media); }));
 }
 VerifiedSourceResult prepareVerifiedSource (const ServiceContext& context, JobControl& control, const SnapshotStorage& storage)
 {
@@ -64,6 +72,28 @@ VerifiedSourceResult prepareVerifiedSource (const ServiceContext& context, JobCo
         const auto free = storage.availableBytes ? storage.availableBytes (storage.directory) : storage.directory.getBytesFreeOnVolume();
         if (free >= 0 && (free < context.media.bytes || free - context.media.bytes < 65536))
             throw Failure { ErrorCode::insufficientDiskSpace, "Insufficient temporary disk space for a verified source copy" };
+        if(context.composition)
+        {
+            if(!context.isValid())throw Failure{ErrorCode::invalidRequest,"Exact confirmed composition required"};
+            if(!context.sourceFilesMatch())throw Failure{ErrorCode::sourceChanged,"A required composition member is missing, changed or duplicated"};
+            auto group=std::shared_ptr<VerifiedSource>(new VerifiedSource({},context.media));group->composition=context.composition;
+            juce::int64 completeBytes=0;
+            for(const auto* component:{&context.composition->me,&context.composition->dialogue})
+            {
+                ServiceContext part=context;part.composition.reset();part.sourceFile=component->file;part.media=component->media;
+                part.assembly=component->assembly;part.fileLayout=component->layout;part.range={0,part.media.frames};
+                JobControl child;child.parent=&control;child.parentProgress=&control.progress;
+                child.progressBase=0.5f*static_cast<float>(static_cast<double>(completeBytes)/context.media.bytes);
+                child.progressScale=static_cast<float>(static_cast<double>(component->media.bytes)/context.media.bytes);
+                auto copy=prepareVerifiedSource(part,child,storage);
+                if(!copy.value)throw Failure{copy.error,component->purpose+": "+copy.message};
+                group->members.push_back(*copy.value);completeBytes+=component->media.bytes;
+            }
+            checkCancel(control);
+            if(!context.sourceFilesMatch())throw Failure{ErrorCode::sourceChanged,"A composition member changed during preparation"};
+            control.setProgress(0.5f);
+            return {std::shared_ptr<const VerifiedSource>(std::move(group)),ErrorCode::none,"Both complete composition components verified"};
+        }
         if (context.assembly)
         {
             if (!context.isValid()) throw Failure { ErrorCode::invalidRequest, "Confirmed exact programme assembly required" };

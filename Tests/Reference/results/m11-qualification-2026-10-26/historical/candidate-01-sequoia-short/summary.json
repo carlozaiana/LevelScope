@@ -1,0 +1,30 @@
+{
+  "automated_passed": true,
+  "phase": "short",
+  "error": "",
+  "source_digest": "4c13d106b45dfbc115a1954ff156184fadb5abc8d40b334f36390aef69cd6176",
+  "qualification_complete": false,
+  "required_runs": [
+    "audition",
+    "compliance",
+    "diagnostics",
+    "ebu",
+    "ebu-runner",
+    "export",
+    "independent-pcm",
+    "itu",
+    "legacy-rejection",
+    "m11-core",
+    "m11-runner",
+    "m11-video",
+    "measurement",
+    "multichannel",
+    "programmes",
+    "proposals",
+    "scaffold",
+    "sections",
+    "sessions",
+    "video-timing"
+  ],
+  "remaining": "Both actual platforms, short/long/exchange, cross-platform comparison and explicit UI receipts are required"
+}
