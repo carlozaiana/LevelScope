@@ -50,6 +50,11 @@ Standards priority: EBU R128 and ATSC A/85.
   applied settings and measured results remain distinct; schema 4 and report v3
   preserve the exact plan. High Sierra and video qualification wait until after
   M13, before any request for main integration.
+- [M13 bounded section-trim proposal](47_M13BoundedSectionTrimProposals.md) awaits
+  approval. It proposes global-first planning, bounded local peak correction,
+  private candidate assessment, explicit Apply and measured Current verification.
+  No M13 implementation has started; combined High Sierra/video qualification is
+  required before requesting main integration.
 
 ## Medium-term direction
 - Approved M7 implementation extends the standalone measurement/Current path to

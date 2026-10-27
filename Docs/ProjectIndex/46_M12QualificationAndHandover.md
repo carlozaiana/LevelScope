@@ -9,6 +9,8 @@ Main remains the published M11 commit
 `cfb1033aa7fb65a2655db276bee696161196bdeb`. Candidate-03 is saved on
 `codex/logic-module` as annotated checkpoint
 [`m12-section-trim-sequoia-2026-10-27`](https://github.com/carlozaiana/LevelScope/tree/m12-section-trim-sequoia-2026-10-27).
+The checkpoint commit is `2fb0e3cfee22a527bacaa09c4ddace23129442fb`; direct GitHub
+verification confirmed all fifteen earlier tags unchanged and main still at M11.
 The [publication record](../../Tests/Reference/results/m12-publication-2026-10-27/README.md)
 binds the tested manifest and original binaries to that checkpoint. Main integration
 and M13 implementation remain unauthorized; the next step is an M13 proposal.
@@ -252,9 +254,9 @@ requires resolving the draft; Render and verify / Publish retain the M10 gates.
 
 ## Follow-up order
 
-Propose M13 separately after review: bounded automatic section-trim proposals,
-explicit Apply, complete-programme remeasurement and verification. No implementation
-is authorized here. Keep near-term mono section/export support visible. Use the
+[47 — M13 proposal](47_M13BoundedSectionTrimProposals.md) now proposes bounded
+automatic section-trim proposals, explicit Apply, complete-programme remeasurement
+and verification. It awaits approval; no M13 implementation is authorized here. Keep near-term mono section/export support visible. Use the
 existing manual editor first; marker import should precede bounded EDL import,
 with explicit programme timecode origin/frame rate, exact audio-frame mapping and
 preview/confirmation. Imported edits are proposed annotations, never automatic

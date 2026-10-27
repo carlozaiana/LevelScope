@@ -1,0 +1,299 @@
+# M13 proposal — bounded section-trim proposals and measured verification
+
+Status: **proposed for review; implementation has not started.** 27 October 2026.
+
+Start from M12 candidate-03, checkpoint
+[`m12-section-trim-sequoia-2026-10-27`](https://github.com/carlozaiana/LevelScope/tree/m12-section-trim-sequoia-2026-10-27),
+commit `2fb0e3cfee22a527bacaa09c4ddace23129442fb`, in the established
+`codex/logic-module` working copy. Main remains qualified M11
+`cfb1033aa7fb65a2655db276bee696161196bdeb`. Preserve all checkpoint tags and packages.
+The M12 checkpoint is **“Sequoia tested; High Sierra and video qualification pending.”**
+M13 approval would authorize development, not a main merge or checkpoint publication.
+
+Read with [ProposalEngineSpec_v2](../ProposalEngineSpec_v2.md),
+[M12 contract](44_M12SectionTrimProcessing.md), [M12 handover](46_M12QualificationAndHandover.md)
+and [measurement contract](14_OfflineMeasurementContract.md).
+
+## Recommended outcome
+
+Offer one explained, deterministic section-gain proposal when a measured programme
+cannot satisfy the selected loudness/true-peak rules with global trim alone.
+Privately measure the proposed complete programme before offering Apply. Applying
+it remains an explicit stopped-only operation; Current State then requires its own
+remeasurement. Generation, preview and private assessment never change audible audio.
+
+This first automatic method addresses **localized peak constraints**. It reduces
+the level of explicitly annotated passages and compensates with final global trim
+where feasible. It does not promise a solution, equalize scenes, infer dialogue,
+steer LRA, compress samples or substitute a limiter. The operator reviews the
+artistic balance change. M12 manual trims remain available when this bounded method
+cannot help. The specification's broader optimizer and dialogue targets remain future work.
+
+## Existing implementation and dependencies
+
+| Foundation | Reuse / required addition |
+| --- | --- |
+| M2 profile and measured evaluator | Keep the authoritative EBU definition/digest and applicability. Obtain all rule limits from it; no new LRA rule or compliance allowance. |
+| M3 `draftGlobalTrim` / `global-trim-m12.1` | Keep the global-first/no-change decision and fixed upstream section identity. A global-only solution remains the existing M3 workflow. |
+| M4/M5 analysis and manual sections | Reuse full-resolution window data, source-frame intervals and annotation editor. `SectionAnalysis` is descriptive: its energy shares are not causal predictions, and its peaks contain only programme maxima. |
+| M12 `SectionGainPlan` / shared `ProgrammeGainProcessor` | Reuse the exact 100 ms convention, float32 stage order, all-channel processing, audition/export path, sessions and measured verification. No new DSP stage or transport behavior. |
+| M11 verified programme inputs | Reuse original component identities and deterministic composition. Section changes follow the sum; they never change dialogue relative to M&E. |
+| New bounded proposal service | Add proposal-specific peak attribution, immutable candidate plans, private whole-programme assessment, explicit atomic Apply, cancellation and explanation UI. |
+
+No existing section statistic establishes the maximum peak of every section.
+M13 needs an optional, bounded per-section peak collector using the **same continuous
+true-peak interpolation and sample stream** as the qualified measurement engine.
+Do not restart a meter at each section or substitute sampled plot points. Keep
+this attribution separate from ordinary measured-result authority and do not
+alter numerical accumulation, filter history, gates or EOF drain behavior.
+If introducing the collector changes shared measurement code, the pinned EBU/ITU
+checks and numerical equivalence tests are required on both actual platforms.
+
+## Exact scope and proposed policy defaults
+
+- Whole-programme stereo and conventional 5.1, including LFE, at 44.1/48/96/192 kHz,
+  up to three hours. Support qualified interleaved files, mono-file assemblies and
+  all three M11 composition mappings. Preserve legacy mono/5.0/7.1 global-only behavior.
+- Use existing manually confirmed annotations. Do not create, move, merge or infer
+  section boundaries automatically. An annotation is not a semantic scene classification.
+- Require valid, current measured Source and Current State describing the exact same
+  programme content, ordered roles, range and alignment, with Current matching the
+  applied plan. Source need not pass. Confirm profile applicability.
+- Require unapplied manual drafts to be resolved explicitly first. If an applied
+  non-unity section plan exists, its annotation geometry must still match the
+  proposed geometry. Otherwise stop with an explanation; do not remap, reset or
+  overwrite manual gains. Cosmetic names stay outside audio identity.
+- A versioned fixed policy, initially `section-trim-proposal-v1`: additional local
+  attenuation only, **at most 3 dB per section**, **at most eight changed sections**,
+  and **at most 20% of programme duration affected**, counting the union of changed
+  sections and transition regions. Final plateau gains must also remain within
+  M12's -12 to +12 dB range. Existing global limits remain unchanged.
+- Include a visible **0.5 dB planning reserve** in requested local attenuation to
+  allow for the loudness lost when reducing a passage. This is a product heuristic,
+  not a standard tolerance, guaranteed headroom, or relaxed evaluation ceiling.
+  Both the reserve and the full proposed gains appear in the explanation.
+- One proposed section envelope per Generate action; no combinatorial search,
+  automatic retries or background pursuit of a passing result. At most **three
+  additional full-programme measurement/attribution passes**: attribution if needed, local-plan measurement,
+  then measurement of the complete plan with its proposed final global trim.
+  Reuse compatible attribution and skip an identical final pass. Explicit later
+  Current remeasurement and export verification are separate user actions.
+  Verified-copy preparation and content hashing are additional I/O, included in
+  disk/runtime budgets rather than hidden within the three measurement passes.
+
+These alteration budgets are deliberately conservative defaults for review, not
+EBU requirements. They limit the change **relative to measured Current State**;
+show existing, additional and resulting gains, and the cumulative applied envelope.
+They do not prove minimum perceptual alteration. No automatic upward section gain,
+per-section normalization to -23 LUFS, or new LRA target is introduced.
+
+## Deterministic decision sequence
+
+1. Validate snapshots, profile, applicability, required finite metrics, programme
+   identity and job/session freshness. Missing metrics, stale measurements,
+   unsupported inputs and predictions cannot enter the method as measured facts.
+   Unavailable LRA is not a blocker when the profile has no LRA rule.
+2. If Current already passes, return **NO CHANGE**: preserve all gains, revisions,
+   valid measurements and evaluations; start no new measurement/attribution job.
+3. Try M3 global trim with the existing section envelope fixed. If it offers a
+   global-only draft, return that outcome. Do not apply section changes merely to
+   move an acceptable result closer to exactly -23 LUFS. Enter the new path only
+   for an identified loudness/peak-headroom conflict, not arbitrary invalid input.
+4. Obtain a complete per-section/all-channel peak map for measured Current using
+   a private verified-source pass if none matches its exact identity and geometry.
+   Include LFE and muted channels. Record sample and true peaks, exact source
+   frame/eighth-frame coordinates, and explicit EOF filter-padding attribution.
+   Padding does not lengthen the displayed programme.
+5. At the profile's intended global correction, identify every section whose
+   mapped peak would exceed the strict profile ceiling. Attribute peaks within
+   transition neighborhoods and the interpolation support conservatively to both
+   affected sides. At an exact boundary use a documented deterministic rule;
+   leading/trailing interpolation padding belongs to the first/last interval.
+   Never hide a crossing peak by clipping its coordinate to a display axis.
+6. For each affected section request the peak deficit plus the explicit planning
+   reserve, capped at 3 dB; leave other section plateaus unchanged. Build the
+   complete M12 envelope, validate resulting transitions and all budgets. An
+   over-budget changed set is rejected, not silently truncated to eight sections
+   or remapped. Impossible very short transitions are rejected. A capped candidate
+   can still be assessed, but carries no predicted-pass claim.
+7. Measure that local envelope at the existing final global gain through the
+   qualified worker. From this **private measured candidate**, derive a final
+   global correction using the existing M3 numerical rules. If no feasible global
+   correction exists, finish with **NO SOLUTION FOUND WITHIN THIS POLICY**. This is
+   not proof that no other plan could work.
+8. Measure the final combined section/global candidate, including all transition
+   samples, gating and every channel. Strict M2 evaluation determines whether it
+   can be offered for Apply. A failed or unavailable assessment is shown as such;
+   never promote an estimate to a pass. Do not try a second section envelope.
+9. Present changed intervals, baseline/resulting gains, affected duration, method
+   and profile identities, why global trim was insufficient, candidate measurements
+   and limitations. Rank/explanation uses full-resolution data; plot reduction
+   cannot affect the decision. Equal inputs and policy give equal plans; stable
+   frame/role ordering resolves ties. Do not claim a general optimum.
+
+The peak map and reserve are planning aids. Exact whole-programme assessment is
+necessary because filtering, transitions, gate membership and the final global
+gain can change the result. Do not add measurement-engine test tolerances to rules.
+
+## Separate candidate, applied and measured state
+
+Use an immutable proposal request containing source/current snapshot identities,
+programme/member identities and alignment, ordered roles, range, base processing
+revision/digest, annotation geometry, profile digest/applicability, policy/method
+version, build/platform provenance and runtime session/job token.
+
+Private measurements live in a distinct **candidate-assessment domain**. They may
+say “Candidate passes selected programme loudness and true-peak rules”; they are
+neither Current State measurements nor verified exported audio. They cannot satisfy
+Current freshness or M10 publication gates and are not installed into session caches.
+Keep predictions explicitly labelled as predictions. Candidate cancellation, read
+failure or exhausted budgets leave the previous valid session and audio untouched.
+
+**Apply proposal** installs the proposed section envelope and final global gain
+atomically, once, while stopped and with all identities rechecked. It invalidates
+affected Current measurements/evaluations, other proposals and export approvals;
+Source stays unchanged. Current is immediately **UNVERIFIED**. Require a separate
+explicit **Re-measure Current State** through the qualified worker and M2 evaluation,
+even if the identical private candidate was measured successfully.
+
+If actual verification disagrees, show the actual values and verdict and stop.
+Cancellation/failure leaves the applied plan unverified; completed failure remains
+a measured failure. Retain applied settings; no rollback, retry or extra correction.
+An identical plan is a genuine no-op and preserves revisions/results.
+
+Source/member/role/processing changes reject dependent drafts and late jobs. An
+annotation geometry edit invalidates its proposal/attribution but not unchanged
+applied audio or measurements. Names may update display labels only. A compatible
+profile change reuses valid audio measurements but requires fresh policy evaluation
+and proposal binding. Monitor volume/routing and video attachment/offset preserve
+audio identity; their established playback restrictions still apply.
+
+Save/reopen persists the applied M12 plan and exact settings using schema 4; it
+does not make a transient proposal or private assessment authoritative. Reopened
+sessions stay stopped, device-closed and routes-muted. Follow M12's explicit
+Apply/Discard/Cancel handling for outstanding drafts. No proposal-history browser
+or general undo system is required. Existing reports describe actual Source,
+Current and exported audio; strict Current-plus-artifact publication gates and
+one final TPDF quantization remain unchanged.
+
+## Minimal UI
+
+Add Generate section proposal / Cancel, a concise interval-and-gain diff, separately
+labelled candidate measurements, and explicit Apply. Reuse the existing timeline
+for interval highlighting and draft/applied curves. Navigation never starts audio.
+Show why generation is unavailable or no bounded solution was found. A candidate
+that has not passed its private assessment cannot be applied via this automatic
+workflow; the independent manual M12 editor remains available.
+
+Do not redesign the application, add candidate audition, make device opening
+automatic, or implicitly generate a proposal when another job completes.
+
+## Acceptance tests
+
+| Area | Required evidence |
+| --- | --- |
+| Decision hierarchy | Already-pass preserves settings/revision/results with zero worker calls; feasible global-only case keeps every section unchanged; localized-peak fixture yields an explained successful section proposal; distributed peaks/budget exhaustion produce honest no-solution without mutation. |
+| Numeric policy | Full-precision profile comparisons and gains; exact/adjacent threshold values; reserve disclosed; 3 dB, eight-section, 20% and M12 range boundaries; no epsilon/rounded-display verdict changes; deterministic ties and repeated identical requests. |
+| Attribution | All-channel per-section sample/true peaks against an independent short-fixture oracle; multiple peaks, near-boundary peaks, shortened ramps, first/last-frame impulses, EOF drain, silence and non-finite rejection. Collector on/off must preserve every ordinary measurement result. |
+| Input coverage | Four rates × stereo/5.1 × interleaved/grouped/composed representations, all three composition mappings; LFE or a muted channel alone limits the plan. No channel removal or component rebalance. Unsupported layouts fail clearly. |
+| Identity | Mismatched Source/Current content, roles, alignment, range or plan rejected; stale map/profile/request/late completion rejected; rename and video/monitor-only edits preserve audio; annotation movement changes no applied samples. |
+| Manual baseline | Existing nonzero gains survive; geometry mismatch never resets them; no pending draft overwritten; budgets count complete intervals and ramp unions; applying section plus global is one transaction. |
+| Truth domains | Prediction/private-candidate pass cannot become Current/artifact pass; explicit Apply invalidates old Current truth; independent remeasurement succeeds or displays actual failure; cancel/fail retains applied settings unverified with no automatic action. |
+| Audio and lifecycle | Independent sample oracle, offline/pre-monitor/export parity including all channels and transitions; random seeks/block sizes, duration/frame position/EOF, overload recovery, interrupted jobs and owned-copy/write/disk failures. Device remains closed for injected tests. |
+| Sessions and export | Exact applied-plan round trip, schema 1–4 compatibility and cache recovery; coherent saving/late jobs; narrow report domains/hashes; final PCM24 single dither and actual-artifact gates, including a deliberate failing Current/artifact. |
+| UI | Generate/Cancel, explanation and candidate labels, draft/Apply/UNVERIFIED/actual result, no-change, no-solution, stale actions, save/discard, small-window reachability; no accidental playback or device opening. |
+
+Use known synthetic programmes with successful, infeasible and misleading proxy
+cases; include a deliberately injected disagreement between private assessment and
+post-Apply verification to prove it stops rather than silently correcting. Frozen
+fixtures must exercise the actual success path, not only graceful rejection.
+Cross-platform tests use the established measurement tolerances, separate from
+strict rule thresholds. Determinism means identical measured inputs/policy produce
+identical plans; near-threshold cross-platform verdict differences must be reported,
+never hidden by increasing the profile allowance.
+
+## Qualification sequence and resource limits
+
+Before implementation, record an explicit change-impact table covering shared
+callers, selected executable modes, reused identities and estimates. Short targeted
+development tests first; no recursive historical qualification runners. Build only
+named standalone/test targets with the established universal/10.13 dependencies.
+
+1. Stabilize M13 on Sequoia with audio-only automated and silent UI checks. Preserve
+   the M12 candidate and keep main at M11. No Golem or video loading/decoding/playback
+   during this development stage, per the existing deferral. Explain any concrete
+   timing/buffering/video change before requesting an earlier change to that plan.
+2. Freeze a new combined M12/M13 candidate, recording source and executable hashes.
+   Then complete actual Intel High Sierra runtime and cross-Mac session checks on
+   that same candidate, including all new manual and automatic section behavior.
+3. Run pinned EBU/ITU and affected M1–M12 checks on both Macs, with collector on/off
+   equivalence and focused legacy mono/5.0/7.1, group/composition and schema coverage.
+   Reuse historical evidence only with a documented dependency/behavior equivalence;
+   M11 results never qualify new M12/M13 behavior on High Sierra.
+4. One consolidated three-hour 48 kHz 5.1 composition workflow per Mac, with 1,000
+   annotations and localized peak constraints: attribution, bounded proposal,
+   explicit Apply/verification, seek/capture, diagnostics, sessions and real verified
+   RF64 export. Do not separately rerun equivalent older long workflows. Exercise
+   10,000-interval storage/boundary budgets in a short synthetic test.
+5. After the freeze, perform the deferred combined video checks on both actual Macs:
+   H.264 CFR and VFR, and ProRes exact- and fractional-rate fixtures, each in Source
+   and Current (**eight short cases per Mac**). Include a nonzero section envelope
+   plus global trim, positive/negative rational offsets, seeks across transitions,
+   pause/resume/restart and EOF. Use injected audio first; coordinate a representative
+   muted physical-device subset before opening devices. Preserve the audio clock
+   and embedded-video-audio exclusion. No automatic full codec/colour matrix or
+   30-minute endurance suite unless changed dependencies or a concrete failure
+   justify it. Record selected coverage and the original evidence reused.
+
+Planning estimate: short/reference checks 30–60 minutes per Mac, silent UI 20–40
+minutes, and short video checks 15–30 minutes, excluding builds/fixes/operator delays.
+M12's Sequoia consolidated workflow took 70 minutes; added exact candidate scans
+make the proposed long-workflow estimate **90–150 minutes on Sequoia, 120–210 minutes
+on High Sierra**, to be measured, not assumed. Proposed hard limits are **240 minutes
+on Sequoia and 300 minutes on High Sierra**, including the combined long workflow;
+missed limits remain qualification failures, not silently widened budgets.
+
+Keep the generation pass cap at three. Reuse one verified source preparation
+through the private passes; stream samples without retaining full-length renders.
+Require at least **65 GiB free working headroom per long run**, checking actual
+input/copy/export sizes before starting and avoiding duplicate original packages.
+Proposal/attribution/plan data <=16 MiB at 10,000 sections; additional working RSS
+<=256 MiB beyond existing measured-result storage; UI heartbeat p95 <=100 ms;
+cancellation acknowledgement <=1 second; save/parse <=5 seconds; session <=128 MiB;
+JSON+HTML report <=16 MiB. Track peak disk/RSS and owned cleanup on success/failure.
+
+Occasional picture skips remain accepted development limitations, with counts and
+timing retained. Audio interruptions, accumulating drift, sustained freezes,
+identity errors and memory/lifecycle failures remain blockers. Do not repeat a run
+merely to seek zero skips. Full physical multichannel listening remains separately
+pending; offline/automated qualification does not require eight outputs. Coordinate
+audible tests separately; preserve installations, plugins, Pro40 and system audio.
+
+The completion validator must explicitly require each selected test/receipt and
+candidate identity; missing required evidence cannot pass. Until actual High Sierra
+and selected video checks are complete, retain **“Sequoia tested; High Sierra and
+video qualification pending.”** Report combined readiness for review; do not merge
+main or publish a new checkpoint without subsequent authorization.
+
+## Exclusions and following order
+
+No dynamics/limiting, lower-tail or LRA steering, per-component gains/DSP, dialogue
+analysis, semantic segmentation, optimization search, section freezes, general
+policy editor, marker/EDL import, export-format expansion, 7.1.4/Atmos or VST3 parity.
+Mono section processing and mono verified export remain a near-term separate
+extension; their existing measurement/global-trim behavior must keep working.
+
+After the combined milestone, prioritize the mono extension and marker import,
+then bounded EDL import with explicit timecode/frame mapping and annotation preview.
+Broader whole-programme processing proposals precede component-relative dialogue
+processing. Keep original components accessible, Source the original composition,
+Current a versioned plan, and analysis-only references non-audible and independently
+invalidated. Future dialogue targets must define their method and verify both the
+intended improvement and the complete programme; none is inferred here.
+
+## Decisions requested for M13 approval
+
+Approve or revise: the localized-peak/downward-only scope; the 3 dB/eight-section/20%
+budgets and visible 0.5 dB planning reserve; one envelope with at most three private
+passes; and the combined two-platform/video qualification and resource limits above.
+These are proposed product defaults, not already implemented or qualified behavior.

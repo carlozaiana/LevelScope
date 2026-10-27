@@ -9,6 +9,13 @@ full runtime qualification, and does not authorize M13 implementation.
 
 Checkpoint:
 [`m12-section-trim-sequoia-2026-10-27`](https://github.com/carlozaiana/LevelScope/tree/m12-section-trim-sequoia-2026-10-27).
+Published checkpoint commit: `2fb0e3cfee22a527bacaa09c4ddace23129442fb`.
+Annotated tag object: `4afecf3455f15792403a843772ef9e495de58ae5`.
+[Direct remote verification](remote-verification.json) confirms the checkpoint, main
+at M11, and all fifteen previous tag objects and commit targets unchanged. A later
+documentation-only commit records publication and the M13 proposal; it does not
+change the checkpoint or frozen implementation.
+
 Its annotation records the exact commit, qualification status and artifact hashes.
 The stable tag avoids a self-referential commit hash inside its own files:
 
