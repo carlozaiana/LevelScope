@@ -185,6 +185,7 @@ juce::String specification (const Request& r, Specification& s)
     for (int n = 0; n < c.media.channels; ++n) s.layout.roles[n] = canonical.getTypeOfChannel (n);
     juce::String key = juce::String (pcm24::version) + ";" + c.media.sha256 + ";" + exact (c.processing.staticGainDb)
         + ";" + c.processing.engineVersion + ";" + juce::String (c.media.frames) + ";" + exact (c.media.sampleRate);
+    if(c.processing.sectionGains) key += ";" + c.processing.sectionGains->audioKey();
     for (int n = 0; n < c.fileLayout.count; ++n) key += ";" + juce::String (static_cast<int> (c.fileLayout.roles[n]));
     for (auto n : s.outputToInput) key += ";map=" + juce::String (n);
     s.identity = digest (key); s.seedHex = s.identity.substring (0,16); s.seed = static_cast<uint64_t> (s.seedHex.getHexValue64()); return {};
@@ -278,12 +279,12 @@ ServiceResult<std::shared_ptr<Candidate>> render (const Request& r, const juce::
         c->output=spec;c->runtimeId=r.current.sessionId;c->originAudioIdentity=audioIdentity(r);
         auto reader=(*prepared.value)->createReader(); demand(reader!=nullptr,ErrorCode::decodeFailed,"Cannot decode complete verified programme");
         pcm24::Writer writer(c->file(),spec.format,hooks,control);
-        juce::AudioBuffer<float> audio(r.current.media.channels,4096); StaticGainProcessor processing(r.current.processing.staticGainDb);
+        juce::AudioBuffer<float> audio(r.current.media.channels,4096); ProgrammeGainProcessor processing(r.current.processing);
         for(int64_t first=0;first<spec.format.frames;)
         {
             pcm24::checkpoint(hooks,"render-block",control); const int count=static_cast<int>(std::min<int64_t>(4096,spec.format.frames-first));
             demand(reader->read(audio.getArrayOfWritePointers(),audio.getNumChannels(),first,count),ErrorCode::decodeFailed,"Incomplete programme read; no silence substitution");
-            demand(processing.process(audio.getArrayOfWritePointers(),audio.getNumChannels(),count),ErrorCode::nonFiniteAudio,"Non-finite processed audio");
+            demand(processing.process(audio.getArrayOfWritePointers(),audio.getNumChannels(),count,first),ErrorCode::nonFiniteAudio,"Non-finite processed audio");
             if(observer)observer->observe(audio.getArrayOfReadPointers(),audio.getNumChannels(),count,first);
             writer.write(audio.getArrayOfReadPointers(),spec.outputToInput,count,spec.seed,control); first+=count;
             control.setProgress(.2f+.35f*static_cast<float>(double(first)/spec.format.frames));

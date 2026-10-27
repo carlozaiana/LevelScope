@@ -30,6 +30,11 @@ proposal::TrimRequest trimRequest (const AnalysisSnapshot* source, const Analysi
     r.sourceInputIdentity = inputIdentity (source); r.currentInputIdentity = inputIdentity (current);
     r.currentGainDb = expectedCurrent.processing.staticGainDb;
     r.processingVersion = expectedCurrent.processing.engineVersion;
+    if(expectedCurrent.processing.sectionGains)
+    {
+        const auto key=expectedCurrent.processing.sectionGains->audioKey().toStdString();
+        r.fixedUpstreamPlanIdentity=juce::SHA256(key.data(),key.size()).toHexString();
+    }
     return r;
 }
 }

@@ -39,6 +39,14 @@ void StandaloneMainComponent::refreshSessionControls()
 }
 void StandaloneMainComponent::confirmDiscard(std::function<void()> action)
 {
+    if(session.sectionTrimDraft)
+    {
+        juce::Component::SafePointer<StandaloneMainComponent> safe(this);
+        juce::AlertWindow::showAsync(juce::MessageBoxOptions().withIconType(juce::MessageBoxIconType::QuestionIcon)
+            .withTitle("Unapplied section gains").withMessage("This draft has not changed audio and is not saved. Discard it before continuing, or cancel and return to Apply.")
+            .withButton("Discard draft").withButton("Cancel"),[safe,action](int result){if(safe&&result==1){safe->session.discardSectionTrimDraft();safe->confirmDiscard(action);}});
+        return;
+    }
     if(!session.documentDirty()){action();return;}
     juce::Component::SafePointer<StandaloneMainComponent> safe(this);
     juce::AlertWindow::showAsync(juce::MessageBoxOptions().withIconType(juce::MessageBoxIconType::QuestionIcon)
@@ -54,18 +62,20 @@ void StandaloneMainComponent::requestClose(std::function<void()> close)
 void StandaloneMainComponent::beginSaveSession(bool saveAs,std::function<void()> continuation)
 {
     if(documentResult.valid()||session.persistenceLoading||audition.active()){documentNotice="Stop audition and finish the file operation before saving";return;}
+    if(session.sectionTrimDraft)
+    {documentNotice="Apply or discard the section-gain draft in Programme sections before saving. Draft edits are not saved as applied audio.";refreshSessionControls();return;}
     if(session.openedSessionSchema<sessionfile::schemaVersion&&!saveAs&&!migrationSaveApproved&&session.documentFile!=juce::File())
     {
         juce::Component::SafePointer<StandaloneMainComponent> safe(this);
         juce::AlertWindow::showAsync(juce::MessageBoxOptions().withIconType(juce::MessageBoxIconType::WarningIcon).withTitle("Session format upgrade")
-            .withMessage("Saving writes the M11 session format and requires an M11 reader. Choose Save As to retain your original older-readable copy.")
+            .withMessage("Saving writes the M12 session format and requires an M12 reader. Choose Save As to retain your original older-readable copy.")
             .withButton("Save As").withButton("Upgrade original").withButton("Cancel"),[safe,continuation](int choice)
             {if(!safe)return;if(choice==1)safe->beginSaveSession(true,continuation);else if(choice==2){safe->migrationSaveApproved=true;safe->beginSaveSession(false,continuation);safe->migrationSaveApproved=false;}});
         return;
     }
     if(saveAs||session.documentFile==juce::File())
     {
-        sessionChooser=std::make_unique<juce::FileChooser>("Save LevelScope session",session.documentFile==juce::File()?juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile("Untitled.levelscope"):(session.openedSessionSchema<sessionfile::schemaVersion?session.documentFile.getSiblingFile(session.documentFile.getFileNameWithoutExtension()+"-M11.levelscope"):session.documentFile),"*.levelscope");
+        sessionChooser=std::make_unique<juce::FileChooser>("Save LevelScope session",session.documentFile==juce::File()?juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile("Untitled.levelscope"):(session.openedSessionSchema<sessionfile::schemaVersion?session.documentFile.getSiblingFile(session.documentFile.getFileNameWithoutExtension()+"-M12.levelscope"):session.documentFile),"*.levelscope");
         juce::Component::SafePointer<StandaloneMainComponent> safe(this);
         sessionChooser->launchAsync(juce::FileBrowserComponent::saveMode|juce::FileBrowserComponent::canSelectFiles|juce::FileBrowserComponent::warnAboutOverwriting,[safe,continuation](const auto& picker)
         {

@@ -19,7 +19,7 @@ Standards priority: EBU R128 and ATSC A/85.
 - Preset/snapshot infrastructure and APVTS-based parameter system
 - Standalone scaffold: validated background media import, confirmed file-channel roles, explicit output mapping/device selection and original-source audition; cancellable jobs and future service interfaces. See [scaffold handover](13_StandaloneScaffoldHandover.md) for actual validation and limitations.
 - Qualified standalone M1 measurement, synchronized reference picture, M2 measured programme rules, [M3 global trim](22_M3GlobalTrimProposals.md), [M4 diagnostics](23_M4MeasuredDiagnostics.md), [M5 in-memory sections](24_M5ProgrammeSections.md) and [bounded SDR ProRes](27_ProResMainIntegration.md) are published on main.
-- [M6 verified Current State audition](28_M6VerifiedCurrentStateAudition.md) candidate 01 is qualified on actual Intel High Sierra and arm64 Sequoia, published as `m6-verified-current-state-audition-2026-10-24` and integrated into main. A shared static-gain sample operation serves offline measurement and the bounded playback worker. Source/Current selection, ordered roles, processing gain and routing are stopped-only; monitor volume remains live. Playback never establishes measurement or compliance. [The handover](30_M6QualificationAndHandover.md) records exact source/binary identity and completed evidence. Section processing, public export and VST3 parity remain deferred.
+- [M6 verified Current State audition](28_M6VerifiedCurrentStateAudition.md) candidate 01 is qualified on actual Intel High Sierra and arm64 Sequoia, published as `m6-verified-current-state-audition-2026-10-24` and integrated into main. A shared static-gain sample operation serves offline measurement and the bounded playback worker. Source/Current selection, ordered roles, processing gain and routing are stopped-only; monitor volume remains live. Playback never establishes measurement or compliance. [The handover](30_M6QualificationAndHandover.md) records exact source/binary identity and completed evidence. Section processing and public export were outside M6; VST3 parity remains deferred.
 - [M8 reproducible sessions](36_M8SessionsQualificationAndHandover.md) is qualified,
   published and integrated into main. Documents preserve settings, section
   annotations, media identities and rational video alignment; replaceable caches
@@ -42,6 +42,14 @@ Standards priority: EBU R128 and ATSC A/85.
   schema 3 retains older-session migration. Future component DSP, whole-programme
   processing plans and non-audible analysis references have distinct identity
   boundaries. Unity component gain is only the M11 scope boundary.
+- [M12 explicit section processing](46_M12QualificationAndHandover.md):
+  **Sequoia tested; High Sierra and video qualification pending.** Candidate-03 is
+  published as a development checkpoint on `codex/logic-module`; main remains
+  at qualified M11. Typed manual section gains follow composition and precede
+  global trim through the same measurement/audition/export processor. Drafts,
+  applied settings and measured results remain distinct; schema 4 and report v3
+  preserve the exact plan. High Sierra and video qualification wait until after
+  M13, before any request for main integration.
 
 ## Medium-term direction
 - Approved M7 implementation extends the standalone measurement/Current path to

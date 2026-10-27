@@ -1,0 +1,434 @@
+[
+  {
+    "name": "m12-core",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-01/bin/LevelScopeSectionProcessingTests",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-01-results/sequoia/short/core-files",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-01-results/sequoia/short/core.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 148.48775212500001,
+    "log_sha256": "cba40491548e232f58c12f4aa95bcbf24d8a1ea9d6fb3a35c892d45f51425be8",
+    "reused": true,
+    "reused_from": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02-results/sequoia/short",
+    "original_source_digest": "07cadcd4285aa8171290c994d26184e2bfa5c0443a9dd7e0aadd0ce8b2a576f5",
+    "original_identity_sha256": "adc50854ed27d8d4f6605dc683df8b7be92a2fcabe48aa1c5bb64d1d27bf4f59",
+    "reuse_reason": "Exact production source/build and executable SHA-256; identical actual Sequoia environment. Original results retained.",
+    "reuse_chain": [
+      {
+        "result_root": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02-results/sequoia/short",
+        "source_digest": "d09ef6c1165313fb46496f16d89a8bd2bd6b26c5497d5e5a63c6ea2e8370f04b",
+        "identity_sha256": "a8ccafac0a65af19a42506e930c8e0bafb884cf1fc65ca68d59121ddbffcc8b0"
+      }
+    ]
+  },
+  {
+    "name": "m11-safety",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-01/bin/LevelScopeCompositionTests",
+      "--phase",
+      "safety",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-01-results/sequoia/short/composition-safety",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-01-results/sequoia/short/composition-safety.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 8.341544416000005,
+    "log_sha256": "a127e84d08871b5a2085f90b359dc9c45b6077fcd70eabd760a213ac1557a886",
+    "reused": true,
+    "reused_from": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02-results/sequoia/short",
+    "original_source_digest": "07cadcd4285aa8171290c994d26184e2bfa5c0443a9dd7e0aadd0ce8b2a576f5",
+    "original_identity_sha256": "adc50854ed27d8d4f6605dc683df8b7be92a2fcabe48aa1c5bb64d1d27bf4f59",
+    "reuse_reason": "Exact production source/build and executable SHA-256; identical actual Sequoia environment. Original results retained.",
+    "reuse_chain": [
+      {
+        "result_root": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02-results/sequoia/short",
+        "source_digest": "d09ef6c1165313fb46496f16d89a8bd2bd6b26c5497d5e5a63c6ea2e8370f04b",
+        "identity_sha256": "a8ccafac0a65af19a42506e930c8e0bafb884cf1fc65ca68d59121ddbffcc8b0"
+      }
+    ]
+  },
+  {
+    "name": "measurement",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-01/bin/LevelScopeMeasurementTests"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 13.073569665999997,
+    "log_sha256": "693ec25505d8a388521025eedf57085a86503c9ccda9586e86f6f315285c4e6c",
+    "reused": true,
+    "reused_from": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02-results/sequoia/short",
+    "original_source_digest": "07cadcd4285aa8171290c994d26184e2bfa5c0443a9dd7e0aadd0ce8b2a576f5",
+    "original_identity_sha256": "adc50854ed27d8d4f6605dc683df8b7be92a2fcabe48aa1c5bb64d1d27bf4f59",
+    "reuse_reason": "Exact production source/build and executable SHA-256; identical actual Sequoia environment. Original results retained.",
+    "reuse_chain": [
+      {
+        "result_root": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02-results/sequoia/short",
+        "source_digest": "d09ef6c1165313fb46496f16d89a8bd2bd6b26c5497d5e5a63c6ea2e8370f04b",
+        "identity_sha256": "a8ccafac0a65af19a42506e930c8e0bafb884cf1fc65ca68d59121ddbffcc8b0"
+      }
+    ]
+  },
+  {
+    "name": "scaffold",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-01/bin/LevelScopeScaffoldTests"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 0.5093695829999945,
+    "log_sha256": "79c972489bdfa0d6402a9777301f77578b39a63f9552d31bf148544bef2b5f35",
+    "reused": true,
+    "reused_from": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02-results/sequoia/short",
+    "original_source_digest": "07cadcd4285aa8171290c994d26184e2bfa5c0443a9dd7e0aadd0ce8b2a576f5",
+    "original_identity_sha256": "adc50854ed27d8d4f6605dc683df8b7be92a2fcabe48aa1c5bb64d1d27bf4f59",
+    "reuse_reason": "Exact production source/build and executable SHA-256; identical actual Sequoia environment. Original results retained.",
+    "reuse_chain": [
+      {
+        "result_root": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02-results/sequoia/short",
+        "source_digest": "d09ef6c1165313fb46496f16d89a8bd2bd6b26c5497d5e5a63c6ea2e8370f04b",
+        "identity_sha256": "a8ccafac0a65af19a42506e930c8e0bafb884cf1fc65ca68d59121ddbffcc8b0"
+      }
+    ]
+  },
+  {
+    "name": "compliance",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-01/bin/LevelScopeComplianceTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-01-results/sequoia/short/compliance.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 0.7322398329999942,
+    "log_sha256": "387e97462de36fb405471706290ea69618f1678a02bd985cf1139744b5649cc1",
+    "reused": true,
+    "reused_from": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02-results/sequoia/short",
+    "original_source_digest": "07cadcd4285aa8171290c994d26184e2bfa5c0443a9dd7e0aadd0ce8b2a576f5",
+    "original_identity_sha256": "adc50854ed27d8d4f6605dc683df8b7be92a2fcabe48aa1c5bb64d1d27bf4f59",
+    "reuse_reason": "Exact production source/build and executable SHA-256; identical actual Sequoia environment. Original results retained.",
+    "reuse_chain": [
+      {
+        "result_root": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02-results/sequoia/short",
+        "source_digest": "d09ef6c1165313fb46496f16d89a8bd2bd6b26c5497d5e5a63c6ea2e8370f04b",
+        "identity_sha256": "a8ccafac0a65af19a42506e930c8e0bafb884cf1fc65ca68d59121ddbffcc8b0"
+      }
+    ]
+  },
+  {
+    "name": "proposals",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-01/bin/LevelScopeProposalTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-01-results/sequoia/short/proposals.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 8.604610750000006,
+    "log_sha256": "d2297d0dbe58d37196eda1d4c7762c78c7185ec2eb18c77cf4307e7e32ba1531",
+    "reused": true,
+    "reused_from": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02-results/sequoia/short",
+    "original_source_digest": "07cadcd4285aa8171290c994d26184e2bfa5c0443a9dd7e0aadd0ce8b2a576f5",
+    "original_identity_sha256": "adc50854ed27d8d4f6605dc683df8b7be92a2fcabe48aa1c5bb64d1d27bf4f59",
+    "reuse_reason": "Exact production source/build and executable SHA-256; identical actual Sequoia environment. Original results retained.",
+    "reuse_chain": [
+      {
+        "result_root": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02-results/sequoia/short",
+        "source_digest": "d09ef6c1165313fb46496f16d89a8bd2bd6b26c5497d5e5a63c6ea2e8370f04b",
+        "identity_sha256": "a8ccafac0a65af19a42506e930c8e0bafb884cf1fc65ca68d59121ddbffcc8b0"
+      }
+    ]
+  },
+  {
+    "name": "diagnostics",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-01/bin/LevelScopeDiagnosticsTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-01-results/sequoia/short/diagnostics.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 2.1923355829999878,
+    "log_sha256": "1fcc0038f5c6830c1ef6a5b4d9036e912fda8e59639d1fd1eaa58cc64b88232d",
+    "reused": true,
+    "reused_from": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02-results/sequoia/short",
+    "original_source_digest": "07cadcd4285aa8171290c994d26184e2bfa5c0443a9dd7e0aadd0ce8b2a576f5",
+    "original_identity_sha256": "adc50854ed27d8d4f6605dc683df8b7be92a2fcabe48aa1c5bb64d1d27bf4f59",
+    "reuse_reason": "Exact production source/build and executable SHA-256; identical actual Sequoia environment. Original results retained.",
+    "reuse_chain": [
+      {
+        "result_root": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02-results/sequoia/short",
+        "source_digest": "d09ef6c1165313fb46496f16d89a8bd2bd6b26c5497d5e5a63c6ea2e8370f04b",
+        "identity_sha256": "a8ccafac0a65af19a42506e930c8e0bafb884cf1fc65ca68d59121ddbffcc8b0"
+      }
+    ]
+  },
+  {
+    "name": "sections",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02/bin/LevelScopeSectionsTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02-results/sequoia/short/sections.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 3.5017874580000004,
+    "log_sha256": "bdaaadcb64af45d40330d99f9ae01ac7e60ec50b9aae61efae9c65916f1c303c",
+    "reused": true,
+    "reused_from": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02-results/sequoia/short",
+    "original_source_digest": "d09ef6c1165313fb46496f16d89a8bd2bd6b26c5497d5e5a63c6ea2e8370f04b",
+    "original_identity_sha256": "a8ccafac0a65af19a42506e930c8e0bafb884cf1fc65ca68d59121ddbffcc8b0",
+    "reuse_chain": [
+      {
+        "result_root": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02-results/sequoia/short",
+        "source_digest": "d09ef6c1165313fb46496f16d89a8bd2bd6b26c5497d5e5a63c6ea2e8370f04b",
+        "identity_sha256": "a8ccafac0a65af19a42506e930c8e0bafb884cf1fc65ca68d59121ddbffcc8b0"
+      }
+    ],
+    "reuse_reason": "Exact production source/build and executable SHA-256; identical actual Sequoia environment. Original results retained."
+  },
+  {
+    "name": "audition",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02/bin/LevelScopeAuditionTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02-results/sequoia/short/audition.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 33.68021875,
+    "log_sha256": "b1ab9cc0022d1ab8f3c0ccff2dd6754d616eb3249a2bf0c224f212986f953b7e",
+    "reused": true,
+    "reused_from": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02-results/sequoia/short",
+    "original_source_digest": "d09ef6c1165313fb46496f16d89a8bd2bd6b26c5497d5e5a63c6ea2e8370f04b",
+    "original_identity_sha256": "a8ccafac0a65af19a42506e930c8e0bafb884cf1fc65ca68d59121ddbffcc8b0",
+    "reuse_chain": [
+      {
+        "result_root": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02-results/sequoia/short",
+        "source_digest": "d09ef6c1165313fb46496f16d89a8bd2bd6b26c5497d5e5a63c6ea2e8370f04b",
+        "identity_sha256": "a8ccafac0a65af19a42506e930c8e0bafb884cf1fc65ca68d59121ddbffcc8b0"
+      }
+    ],
+    "reuse_reason": "Exact production source/build and executable SHA-256; identical actual Sequoia environment. Original results retained."
+  },
+  {
+    "name": "multichannel",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02/bin/LevelScopeMultichannelTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02-results/sequoia/short/multichannel.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 70.62450695800001,
+    "log_sha256": "7230bf3634018275b561007e1c9ff2bc8549d57d39e8d97acd11f367e0429e5e",
+    "reused": true,
+    "reused_from": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02-results/sequoia/short",
+    "original_source_digest": "d09ef6c1165313fb46496f16d89a8bd2bd6b26c5497d5e5a63c6ea2e8370f04b",
+    "original_identity_sha256": "a8ccafac0a65af19a42506e930c8e0bafb884cf1fc65ca68d59121ddbffcc8b0",
+    "reuse_chain": [
+      {
+        "result_root": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02-results/sequoia/short",
+        "source_digest": "d09ef6c1165313fb46496f16d89a8bd2bd6b26c5497d5e5a63c6ea2e8370f04b",
+        "identity_sha256": "a8ccafac0a65af19a42506e930c8e0bafb884cf1fc65ca68d59121ddbffcc8b0"
+      }
+    ],
+    "reuse_reason": "Exact production source/build and executable SHA-256; identical actual Sequoia environment. Original results retained."
+  },
+  {
+    "name": "sessions",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02/bin/LevelScopeSessionTests",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02-results/sequoia/short/sessions.json",
+      "--short"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 5.792415249999991,
+    "log_sha256": "cb508e5b35d7d39246d8799339c8b8b4c3c08a3f935565cfb0e7891e5e766044",
+    "reused": true,
+    "reused_from": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02-results/sequoia/short",
+    "original_source_digest": "d09ef6c1165313fb46496f16d89a8bd2bd6b26c5497d5e5a63c6ea2e8370f04b",
+    "original_identity_sha256": "a8ccafac0a65af19a42506e930c8e0bafb884cf1fc65ca68d59121ddbffcc8b0",
+    "reuse_chain": [
+      {
+        "result_root": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-02-results/sequoia/short",
+        "source_digest": "d09ef6c1165313fb46496f16d89a8bd2bd6b26c5497d5e5a63c6ea2e8370f04b",
+        "identity_sha256": "a8ccafac0a65af19a42506e930c8e0bafb884cf1fc65ca68d59121ddbffcc8b0"
+      }
+    ],
+    "reuse_reason": "Exact production source/build and executable SHA-256; identical actual Sequoia environment. Original results retained."
+  },
+  {
+    "name": "programmes",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03/bin/LevelScopeProgrammeTests",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/short/programmes.json",
+      "--m8-session",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03/audio-only-m8-sessions"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 99.397105667,
+    "log_sha256": "beafda9bd98ec00a33fdf566162dbd7e50c44ccf9bc6bba1398dcb11fb349c3f"
+  },
+  {
+    "name": "export",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03/bin/LevelScopeExportTests",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/short/export.json",
+      "--artifacts",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/short/export-artifacts"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 45.38425816700001,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "ebu",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03/Tests/run_ebu_measurements.py",
+      "--binary",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03/bin/LevelScopeMeasurementTests",
+      "--vectors",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-02/vectors/ebu",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/short/ebu.json",
+      "--compare",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-02/baseline/ebu.json",
+      "--arch",
+      "arm64"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 10.751563042000015,
+    "log_sha256": "18e65c40d2edcd18e30155f9ca4f7a49b0e066f90ea10aa588ab78922e03d313"
+  },
+  {
+    "name": "itu",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03/Tests/run_reference_measurements.py",
+      "--binary",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03/bin/LevelScopeMeasurementTests",
+      "--vectors",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-02/vectors/itu",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/short/itu.json",
+      "--compare",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-02/baseline/itu.json",
+      "--arch",
+      "arm64"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 22.599535000000003,
+    "log_sha256": "9571a299c82a4aa12593daf8b7ed82d5c1eb5874cfefdd6f4a5a56e0c6f1d16e"
+  },
+  {
+    "name": "ebu-runner",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03/Tests/EbuReferenceRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 0.04824275000001421,
+    "log_sha256": "f8f7b0ac7f2b53ac4e96000f166430c488f2c37e059ad5502b09d60f29d363b8"
+  },
+  {
+    "name": "m12-runner",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03/Tests/M12QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 0.08869487500001583,
+    "log_sha256": "c6b9b1f09add0403cc07e90bfdf272129b1ddfa2f8f7675ea8218862f2516371"
+  },
+  {
+    "name": "legacy-rejection",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03/legacy/M11ProgrammeTests",
+      "--only",
+      "--prepare-session",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/short/core-files/48000-2-0/section.levelscope",
+      "--destination",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/short/must-not-exist.levelscope",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/short/legacy-rejection.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 1,
+    "expected_exit_code": 1,
+    "seconds": 0.4885879590000002,
+    "log_sha256": "179989c498efc8d842ecd45f3d477b5d25e90604ff28cfe4ea667021cefa247c"
+  },
+  {
+    "name": "independent-pcm",
+    "exit_code": 0,
+    "seconds": 18.331286167000002,
+    "evidence_sha256": "cc2b2263cf152771306c59a76c08834635349972376f2ce5461a474a8d888d2d"
+  }
+]

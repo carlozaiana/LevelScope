@@ -132,7 +132,7 @@ run on candidate-01.
 The frozen identity and completed evidence are recorded below. The complete
 aggregate gate passed using both actual-platform records and all required phases.
 
-Qualified frozen candidate: **candidate-02**, unpublished and awaiting review.
+Qualified frozen candidate: **candidate-02**, published at the checkpoint identified above.
 
 - Source manifest: `669b350652dbc3fb09d0ff724758208fec21bba40e0f6bc0188b89e6404c2c61`.
 - Measurement build: `70dc29e6fabde64b0be2a0f12790528de7e088956d5817f82b6888611c723d98`.
@@ -250,7 +250,7 @@ or VST3 parity. Imported M&E/dialogue content and balance are user assertions,
 not automatically certified. Only selected whole-programme loudness/true-peak rules
 are evaluated. Existing M10 container/export/report limits continue to apply.
 
-Implementation and the approved qualification are complete; readiness is now
-submitted for user review. Do not publish a checkpoint or merge main before that
-subsequent authorization. Preserve tested packages, all existing tags,
+Implementation and the approved qualification are complete; the user subsequently
+authorized publication and main integration, completed as recorded above.
+Further implementation requires a new approved milestone. Preserve tested packages, all existing tags,
 installations, the video working copy and Golem's relocated ProRes evidence.

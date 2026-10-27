@@ -4,7 +4,7 @@
 namespace levelscope::standalone::sessionfile
 {
 inline constexpr uint64_t maximumBytes = 128 * 1024 * 1024;
-inline constexpr int schemaVersion = 3, programmeAssemblyVersion = 3;
+inline constexpr int schemaVersion = 4, programmeAssemblyVersion = 4;
 struct ProfileReference { juce::String id, version, digest; };
 // Value snapshot: each save owns one coherent revision; shared analyses are immutable.
 struct Document

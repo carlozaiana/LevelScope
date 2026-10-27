@@ -27,20 +27,20 @@ struct OwnedFile
 };
 
 AnalysisSnapshot measure (const ServiceContext& context, MeasurementDomain domain,
-                          std::unique_ptr<ProgrammeReader> reader, const juce::String& hash, double gainDb, JobControl& control, ProcessedAudioObserver* observer)
+                          std::unique_ptr<ProgrammeReader> reader, const juce::String& hash, bool applyProcessing, JobControl& control, ProcessedAudioObserver* observer)
 {
     if (!reader) throw Failure { ErrorCode::decodeFailed, "Cannot decode complete verified programme" };
     measurement::OfflineMeasurement engine (static_cast<int> (reader->sampleRate), OfflineAnalysisService::measurementRoles (context.fileLayout));
     constexpr int blockSize = 4096;
     juce::AudioBuffer<float> audio (context.media.channels, blockSize);
-    const StaticGainProcessor processing (gainDb);
+    const ProgrammeGainProcessor processing (applyProcessing ? context.processing : ProcessingPlan{});
     for (juce::int64 frame = 0; frame < reader->lengthInSamples;)
     {
         checkCancel (control);
         const int count = static_cast<int> (std::min<juce::int64> (blockSize, reader->lengthInSamples - frame));
         if (! reader->read (audio.getArrayOfWritePointers(), audio.getNumChannels(), frame, count))
             throw Failure { ErrorCode::decodeFailed, "Measurement decode failed" };
-        if (! processing.process (audio.getArrayOfWritePointers(), audio.getNumChannels(), count))
+        if (! processing.process (audio.getArrayOfWritePointers(), audio.getNumChannels(), count, frame))
             throw Failure { ErrorCode::nonFiniteAudio, "Non-finite processed audio" };
         if (observer) observer->observe (audio.getArrayOfReadPointers(), audio.getNumChannels(), count, frame);
         engine.push (audio.getArrayOfReadPointers(), count);
@@ -103,9 +103,9 @@ juce::String OfflineAnalysisService::validateRequest (const ServiceContext& c, M
         || c.media.sampleRate != std::floor (c.media.sampleRate)
         || ! measurement::OfflineMeasurement::supports (static_cast<int> (c.media.sampleRate), measurementRoles (c.fileLayout)))
         return "Measurement supports mono, stereo, 5.0/5.1 and explicit BS.2051 System I 7.1 at 44.1/48/96/192 kHz";
-    if (! StaticGainProcessor::supports (c.processing))
-        return "Unsupported processing plan; M1 accepts static gain from -60 to +24 dB";
-    if (domain == MeasurementDomain::source && c.processing.staticGainDb != 0)
+    const auto processingError=ProgrammeGainProcessor::validationError(c);
+    if(processingError.isNotEmpty()) return processingError;
+    if (domain == MeasurementDomain::source && (c.processing.staticGainDb != 0 || c.processing.sectionGains))
         return "Source measurement requires identity processing";
     return {};
 }
@@ -121,6 +121,7 @@ juce::String OfflineAnalysisService::identityFor (const ServiceContext& c, Measu
         << c.range.begin << ':' << c.range.end << '\n' << c.processing.schemaVersion << '\n'
         << c.processing.engineVersion << '\n' << c.processing.staticGainDb << '\n'
         << c.buildVersion << '\n' << c.platformAndFloatingPointMode << "\njuce-7.0.12-float32-decode\n";
+    if(c.processing.sectionGains) key << c.processing.sectionGains->audioKey() << '\n';
     for (int i = 0; i < c.fileLayout.count; ++i) key << static_cast<int> (c.fileLayout.roles[i]) << ',';
     const auto text = key.str();
     return juce::SHA256 (text.data(), text.size()).toHexString();
@@ -135,7 +136,7 @@ ServiceResult<AnalysisSnapshot> OfflineAnalysisService::analyze (const ServiceCo
         const auto prepared = prepareVerifiedSource (context, control);
         if (! prepared.value) throw Failure { prepared.error, prepared.message };
         const auto& source = *prepared.value;
-        return measure (context, domain, source->createReader(), context.media.sha256, context.processing.staticGainDb, control, observer);
+        return measure (context, domain, source->createReader(), context.media.sha256, true, control, observer);
     });
 }
 bool ExportApproval::matches (const ServiceContext& context, const RenderArtifact& artifact) const
@@ -180,14 +181,14 @@ ServiceResult<AnalysisSnapshot> OfflineAnalysisService::verifyTemporaryRender (c
         if (! writer) throw Failure { ErrorCode::unavailable, "Cannot create PCM24 encoder" };
         stream.release();
         juce::AudioBuffer<float> audio (context.media.channels, 4096);
-        const StaticGainProcessor processing (context.processing.staticGainDb);
+        const ProgrammeGainProcessor processing (context.processing);
         for (juce::int64 frame = 0; frame < reader->lengthInSamples;)
         {
             checkCancel (control);
             const int count = static_cast<int> (std::min<juce::int64> (4096, reader->lengthInSamples-frame));
             if (! reader->read (audio.getArrayOfWritePointers(), audio.getNumChannels(), frame, count))
                 throw Failure { ErrorCode::decodeFailed, "Render decode failed" };
-            if (! processing.process (audio.getArrayOfWritePointers(), audio.getNumChannels(), count))
+            if (! processing.process (audio.getArrayOfWritePointers(), audio.getNumChannels(), count, frame))
                 throw Failure { ErrorCode::nonFiniteAudio, "Non-finite processed audio" };
             for (int channel = 0; channel < audio.getNumChannels(); ++channel)
                 for (int i = 0; i < count; ++i)
@@ -208,7 +209,7 @@ ServiceResult<AnalysisSnapshot> OfflineAnalysisService::verifyTemporaryRender (c
             || validation.media.channels != context.media.channels || validation.media.sampleRate != context.media.sampleRate
             || validation.media.bitsPerSample != 24)
             throw Failure { ErrorCode::decodeFailed, "Rendered artifact validation failed" };
-        return measure (context, MeasurementDomain::renderedOutput, ProgrammeReader::open({output.file}, validation.media), validation.media.sha256, 0, control, observer);
+        return measure (context, MeasurementDomain::renderedOutput, ProgrammeReader::open({output.file}, validation.media), validation.media.sha256, false, control, observer);
     });
 }
 ServiceResult<AnalysisSnapshot> OfflineAnalysisService::verifyEncodedArtifact (const ServiceContext& context, JobControl& control)
@@ -216,7 +217,7 @@ ServiceResult<AnalysisSnapshot> OfflineAnalysisService::verifyEncodedArtifact (c
     return run ([&]
     {
         const auto error = validateRequest (context, MeasurementDomain::renderedOutput);
-        if (error.isNotEmpty() || context.assembly || context.composition || context.processing.staticGainDb != 0)
+        if (error.isNotEmpty() || context.assembly || context.composition || context.processing.staticGainDb != 0 || context.processing.sectionGains)
             throw Failure { ErrorCode::invalidRequest, "Artifact measurement requires its own supported PCM context and zero additional gain. " + error };
         pcm24::Format format; juce::String formatError;
         if (!pcm24::inspect (context.sourceFile, format, formatError, control))
@@ -227,7 +228,7 @@ ServiceResult<AnalysisSnapshot> OfflineAnalysisService::verifyEncodedArtifact (c
             || format.channels != context.media.channels)
             throw Failure { ErrorCode::sourceChanged, "Encoded artifact bytes or format changed" };
         auto result = measure (context, MeasurementDomain::renderedOutput,
-            ProgrammeReader::open ({context.sourceFile}, context.media), context.media.sha256, 0, control, observer);
+            ProgrammeReader::open ({context.sourceFile}, context.media), context.media.sha256, false, control, observer);
         if (pcm24::hashFile (context.sourceFile, control) != context.media.sha256)
             throw Failure { ErrorCode::sourceChanged, "Artifact changed during measurement" };
         return result;

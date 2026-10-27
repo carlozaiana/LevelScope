@@ -1,0 +1,8 @@
+{
+  "supplemental_oracle_passed": false,
+  "native_migration_passed": true,
+  "failure": "AssertionError: assembly; original media mtime ended 4123 ms, verified identical archived file reports 4000 ms.",
+  "cause": "Oracle incorrectly compared filesystem timestamp metadata after the earlier Tucan archive migration.",
+  "resolution": "Allow verified locator/mtime refresh; retain exact content identity, alignment confirmation, roles, settings and gain. Two corrected cases passed with the same frozen binary.",
+  "original_attempt_preserved": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/schema2-migration"
+}

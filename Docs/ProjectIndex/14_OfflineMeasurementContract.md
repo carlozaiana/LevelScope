@@ -156,6 +156,21 @@ their existing semantics. See [43](43_M11QualificationAndHandover.md) for comple
 qualification, published checkpoint identity and future component/whole-programme processing boundaries; this
 addition does not retroactively extend earlier measured checkpoint evidence.
 
+## M12 development extension — Sequoia tested; High Sierra and video qualification pending
+
+M12 adds `section-gain-v1` before the unchanged final global trim, after any
+confirmed composition. It uses absolute audio-source frames, full-precision
+all-channel gains including LFE, and a versioned centered 100 ms transition.
+Processing-stage float32 rounding is explicit; no dither enters measurement.
+Source remains the original programme. Current identity includes the exact applied
+plan; annotation-only edits do not change it. Whole-programme rules and measurement
+method remain unchanged. New section processing is limited to stereo/5.1.
+
+See [44](44_M12SectionTrimProcessing.md) for the approved numerical/identity contract
+and [46](46_M12QualificationAndHandover.md) for current evidence. This development
+extension is not covered by earlier M11 qualification. Actual High Sierra and all
+video runtime checks are deferred until after M13; main remains at qualified M11.
+
 ## Primary references
 
 - https://www.itu.int/rec/R-REC-BS.1770-5-202311-I/en

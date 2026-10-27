@@ -1,0 +1,52 @@
+{
+  "sequoia_phase_complete": true,
+  "qualification_complete": false,
+  "status": "Sequoia tested; High Sierra and video qualification pending",
+  "source_digest": "d6501c0d234ccf9c02b90527fc4af6c613dd4d538a71cc5520fb6b7b21085c1f",
+  "measurement_build": "185566e2c3ed9835d9878643618bd6789e785dee78fd670174f1ede4eb10f5fd",
+  "identity_sha256": "d0004ae7604b0c86158a623047c07b86a4bf8e0c85f9e462998289ae22621b6a",
+  "evidence_sha256": {
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/short/multichannel.json": "d561561613bf8440fedaec21c9eee098aed4f67ab8311e8ed777491284616f70",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/short/summary.json": "94ddc892a45f63e9cc808ac90421c81ad5ac16f8d6542b582c2892c0b4a35a61",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/short/export.json": "a14a726d72d90cfc8ee38c2f81a1994f8645cb258b94dac3b4c5385f6a4e7410",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/short/sessions.json": "f8e01d194b220e048a2f7489585ba458a90216fd51d7f67db8eaf90fb0028321",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/short/composition-safety.json": "767cc6736f293b8fa5b631bfe36a1d1dbaab080cefff7a3d447023af0b624ee2",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/short/ebu.json": "e105549d56910a8dcc48b35820bb534889d4b330a58fafcf27ae70c118525e44",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/short/diagnostics.json": "450b413882933643d4d33164eea8887f0adce0f5e8b570a13d47c0be2c02e8e5",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/short/proposals.json": "ec6797ff6310d0bd70871bd30f53b0101b70167e030f2a3b985854a077452dbc",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/short/audition.json": "92dfd97e0d84c32a646037fa3886525407c6725c40dbf4375806f215b1905685",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/short/core.json": "35e50c5fa314c6e0615c45132a0f30f8e17be9a1578960e730954289c84519a1",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/short/programmes.json": "3787a236fb8b2265aeb7939a674019196865c97a71728e26d7b6763d59ef50ac",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/short/sections.json": "ddd438a07d3c9c1bfbe66543ceda906aae84f0553fa66cba37f75f564d6b97ac",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/short/legacy-rejection.json": "c078dc7eb867115d53eb7166e064954f7db22c662b34407d4c50fd9f3ead7bce",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/short/itu.json": "97741dd6e19587de723cd59163e8fba5a803f5ef03046d2b8944f3133fe917dd",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/short/independent-pcm.json": "cc2b2263cf152771306c59a76c08834635349972376f2ce5461a474a8d888d2d",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/short/compliance.json": "77099088da7288530e478a7e4de638bf980cabf49a3692ec38661bbac588a4bf",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/short/environment.json": "bed7fa15a1c37714fb7f04abf4d8c527c38776becb07d986755ec32aeef8e088",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/short/runs.json": "2d38b431f05d66c2f4e801cfa1ab1adac2d37d57d1381eeb6954622349bb6a6e",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/long/independent-rf64.json": "8a3dac546c24988eecb3d8474c039150b6328735f58e82ee5c0caefd48379685",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/long/summary.json": "435c62c54c82fa2763c4fc3f7ba53169b3326c2c1634bf41fa7fa96770aaf227",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/long/long.json": "c9d5ed876c82a66f09a875c2da373ac43c52407c9567bc00f0fbe5ece7dbda5b",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/long/environment.json": "bed7fa15a1c37714fb7f04abf4d8c527c38776becb07d986755ec32aeef8e088",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/long/runs.json": "f8af4ac9ef9ef4b1c3df389dafd66f7fdd720e03e5e635f0286627d997aad547",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/ui-checklist.json": "4e64bc2f3b73747c9f6b9fcb1423494a5025f7559987087e7f77ef85c138dac7"
+  },
+  "deferred": [
+    "Actual Intel High Sierra runtime and cross-platform qualification after M13",
+    "All selected video loading, decoding and playback qualification after M13"
+  ],
+  "publication_authorized": false,
+  "main_integration_authorized": false,
+  "m13_implementation_authorized": false,
+  "supplemental_required_schema2_migration": {
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/schema2-migration-02/summary.json": "c5bc62c8cb82aa2136d2a31a8e1e3913b3db0710ba0003e33b594007e3e46495",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/schema2-migration-02/2.json": "70c848e15d3ffdda9ff638abf23ba6e0dc3ed53c5f9fb162ee3df7bb93285ad2",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/schema2-migration-02/2.log": "1b6df5a0afdf19c4160870a8357c159bfc841602806e01d3e0f11ff1e6b7a18a",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/schema2-migration-02/2.levelscope": "febecdc5a308b19d9b35fc4f9d3f3f5ece86de6420ad1187075a54fe05e3c2aa",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/schema2-migration-02/6.json": "a40bee0f0fe6bf40449c53c78684afaa876064c6a510849304640d076b18943d",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/schema2-migration-02/6.log": "b97df104aa970c364aeabd76cb7f9fda510716cd910c3fa42d8ef8f476f2ba9b",
+    "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/schema2-migration-02/6.levelscope": "aee40431dae730104811fda097af38e4a9a6153d97e715e6d81adf7650f82239"
+  },
+  "completion_script_sha256": "533fa890764eafb0498f954a58dd03db71f76e3b055405cb1976db596e815f48",
+  "no_required_sequoia_checks_outstanding": true
+}

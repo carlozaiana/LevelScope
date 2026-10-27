@@ -160,10 +160,13 @@ template<class C>void settle(C& c){auto start=now();do{c.poll();std::this_thread
 template<class T>T* control(juce::Component& parent,const juce::String& name){for(auto* c:parent.getChildren())if(auto* p=dynamic_cast<T*>(c))if(p->getName()==name)return p;return nullptr;}
 juce::TextButton* button(juce::Component& p,const juce::String& text){for(auto* c:p.getChildren())if(auto* b=dynamic_cast<juce::TextButton*>(c))if(b->getButtonText()==text)return b;return nullptr;}
 void nativePanel(StandaloneSessionModel& session){
-    StandaloneSectionsPanel p(session);p.setSize(1000,820);auto* split=button(p,"Split at frame");auto* move=button(p,"Move end");auto* merge=button(p,"Merge next");auto* rename=button(p,"Rename");auto* build=button(p,"Build sections");auto* cancel=button(p,"Cancel sections");
+    StandaloneSectionsPanel p(session);juce::Viewport viewport;viewport.setSize(1000,670);viewport.setViewedComponent(&p,false);p.setSize(1000,1000);auto* split=button(p,"Split at frame");auto* move=button(p,"Move end");auto* merge=button(p,"Merge next");auto* rename=button(p,"Rename");auto* build=button(p,"Build sections");auto* cancel=button(p,"Cancel sections");
     auto* frame=control<juce::TextEditor>(p,"Section boundary source frame");auto* name=control<juce::TextEditor>(p,"Section name");auto* summary=control<juce::TextEditor>(p,"Measured section summary");auto* list=control<juce::ListBox>(p,"Programme sections");auto* domain=control<juce::ComboBox>(p,"Section measured state");
     expect(split&&move&&merge&&rename&&build&&cancel&&frame&&name&&summary&&list&&domain,"native section controls are present");
-    for(auto* child:p.getChildren())expect(p.getLocalBounds().contains(child->getBounds())&&child->getHeight()>0,"all section controls fit the minimum High Sierra window size");
+    for(auto* child:p.getChildren())expect(p.getLocalBounds().contains(child->getBounds())&&child->getHeight()>0,"all section controls fit the scrollable M12 content");
+    viewport.setViewPosition(10000,10000);
+    expect(viewport.getViewArea().getBottom()==p.getHeight()&&viewport.getViewArea().getRight()==p.getWidth(),"minimum 1000x700 window can scroll to every bottom/right control; geometry test on the current OS only");
+    viewport.setViewPosition(0,0);
     auto wait=[&]{auto start=now();do{p.synchronize();std::this_thread::sleep_for(std::chrono::milliseconds(1));}while(cancel->isEnabled()&&now()-start<5000);expect(!cancel->isEnabled(),"native section worker settles");};wait();
     expect(summary->getText().contains("SOURCE")&&list->getListBoxModel()->getNumRows()==1,"native panel initializes whole programme measured Source");
     frame->setText("192000",false);split->onClick();wait();expect(list->getListBoxModel()->getNumRows()==2&&summary->getText().contains("[0, 192000) frames"),"native split updates exact frame interval");

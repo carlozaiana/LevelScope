@@ -1,0 +1,34 @@
+{
+  "checked_at": "2026-10-27T21:27:23.857691+01:00",
+  "main": "cfb1033aa7fb65a2655db276bee696161196bdeb",
+  "branch": "codex/logic-module",
+  "head": "cfb1033aa7fb65a2655db276bee696161196bdeb",
+  "working_source_matches_frozen_manifest": true,
+  "candidates": {
+    "candidate-01": {
+      "source_digest": "07cadcd4285aa8171290c994d26184e2bfa5c0443a9dd7e0aadd0ce8b2a576f5",
+      "identity_sha256": "adc50854ed27d8d4f6605dc683df8b7be92a2fcabe48aa1c5bb64d1d27bf4f59",
+      "all_frozen_artifacts_unchanged": true
+    },
+    "candidate-02": {
+      "source_digest": "d09ef6c1165313fb46496f16d89a8bd2bd6b26c5497d5e5a63c6ea2e8370f04b",
+      "identity_sha256": "a8ccafac0a65af19a42506e930c8e0bafb884cf1fc65ca68d59121ddbffcc8b0",
+      "all_frozen_artifacts_unchanged": true
+    },
+    "candidate-03": {
+      "source_digest": "d6501c0d234ccf9c02b90527fc4af6c613dd4d538a71cc5520fb6b7b21085c1f",
+      "identity_sha256": "d0004ae7604b0c86158a623047c07b86a4bf8e0c85f9e462998289ae22621b6a",
+      "all_frozen_artifacts_unchanged": true
+    }
+  },
+  "preexisting_tag_count": 15,
+  "preexisting_tag_objects_and_targets_unchanged": true,
+  "tag_inventory": "refs/tags/high-sierra-pre-scaffold-2026-10-15 b3c6e845482dbe8a0ec9778d5a9ad7953e614609 556d387ad772dc5e604ead95f1525f60e66fd5f9\nrefs/tags/m10-verified-pcm-export-2026-10-26 3bbd1476cbc4e200f9d8f2776f53e06c4bf57180 fcd4c15fe78d6352f5e96faabf3eb52f942235e1\nrefs/tags/m11-aligned-stem-composition-2026-10-26 2ddbd80e7ce0f5d42d72f8cc3d466925685f1fe0 cfb1033aa7fb65a2655db276bee696161196bdeb\nrefs/tags/m2-measured-compliance-2026-10-18 673e382feeaa7e29e6e6abedbd56677aa2163ef3 01a34833ec06a0d237e098faadb23b398581e8f9\nrefs/tags/m3-global-trim-2026-10-18 4063ca0e73c5b24dfa079eb894f85e398e9fee50 62ab420cb15b3ce5e1c821c963a749a9a56ae4a7\nrefs/tags/m4-measured-diagnostics-2026-10-18 cc64c771a70ccf95e779a7fe7260749a4530c285 9a22749901d9f6d4b9c194c9c22c0a231f2494f6\nrefs/tags/m5-programme-sections-2026-10-20 e36b4308374256ad36eff6c01d4d92325a06d3b0 ae88e187d288c53dbca1287e8341b74b9b5b2619\nrefs/tags/m6-verified-current-state-audition-2026-10-24 7f54eb1098471dc55bd75484f873a9f90e68ac05 b57a1ed23cbe7d74afe98ed16ec8fd615db9d171\nrefs/tags/m7-pcm-7.1-2026-10-25 04d0c836fcbc3a7af72638a7514faacd32ae48a9 cfbf3f981dece326d2363b911e5914ea61f1796c\nrefs/tags/m8-reproducible-sessions-2026-10-25 93908205c41de16c10b187bc00fcc1621e328c66 8e984889c5e73670f370c6c568c8ea1d7902a35c\nrefs/tags/m9-separate-file-stereo-5.1-2026-10-25 0cb0e4bea6fd9d11cc4207e9b863d5fca2b70bff 75843dcd017ec7990be2200454a10fc38beb44c4\nrefs/tags/measurement-milestone-2026-10-17 76affb667b6dab066cb36b2a2c741525b9b6eeac b29bc7c183743f35c6271d2d7ec8fb5ba1464591\nrefs/tags/standalone-scaffold-2026-10-15 4c8bc35b788969e1f6e97dcdc57a601b01fff7cd f192a8553e139d390056c9755f25eeb123bbc5e6\nrefs/tags/video-checkpoint-2026-10-17 06f57524bedca1912c0d5c454f13561cec9ce5b4 700b9e77e439a8ca9bb7583adf826fac01dbe924\nrefs/tags/video-prores-checkpoint-2026-10-21 d62c1159eeb2ffbb8b7ffc7c31014b842642d195 dcc34aabba6b5b3ca4805e2965d21ffebf2e4d0a\n",
+  "registered_worktrees_unchanged": true,
+  "worktree_inventory": "worktree /Users/fuzz/Developer/LevelScope\nHEAD cfb1033aa7fb65a2655db276bee696161196bdeb\nbranch refs/heads/codex/logic-module\n\nworktree /Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation\nHEAD 5e07bbd29930db34236d6dfcede7fea14983f90a\nbranch refs/heads/codex/video-implementation\n\n",
+  "m11_app_unchanged": true,
+  "m11_long_input_session_unchanged": true,
+  "no_commits_tags_pushes_or_main_integration": true,
+  "no_installed_app_plugin_or_system_audio_changes": true,
+  "no_golem_access_or_video_execution": true
+}

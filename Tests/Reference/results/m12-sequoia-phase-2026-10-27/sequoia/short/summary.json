@@ -1,0 +1,33 @@
+{
+  "sequoia_automated_passed": true,
+  "phase": "short",
+  "error": "",
+  "source_digest": "d6501c0d234ccf9c02b90527fc4af6c613dd4d538a71cc5520fb6b7b21085c1f",
+  "qualification_complete": false,
+  "required_runs": [
+    "audition",
+    "compliance",
+    "diagnostics",
+    "ebu",
+    "ebu-runner",
+    "export",
+    "independent-pcm",
+    "itu",
+    "legacy-rejection",
+    "m11-safety",
+    "m12-core",
+    "m12-runner",
+    "measurement",
+    "multichannel",
+    "programmes",
+    "proposals",
+    "scaffold",
+    "sections",
+    "sessions"
+  ],
+  "deferred": [
+    "Actual High Sierra after M13",
+    "All video loading/decoding/playback checks after M13"
+  ],
+  "remaining": "Required Sequoia short, long and silent UI receipts; no publication or M13 authorization"
+}

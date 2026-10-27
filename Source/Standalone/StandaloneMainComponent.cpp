@@ -50,12 +50,16 @@ public:
     explicit SectionsWindow (StandaloneSectionsPanel& p)
         : DocumentWindow ("LevelScope - Programme sections", juce::Colour (0xff151b24), DocumentWindow::allButtons), panel (p)
     {
-        setUsingNativeTitleBar (true); setResizable (true, false); setResizeLimits (1000, 820, 2400, 1800);
-        setContentNonOwned (&panel, true); centreWithSize (1080, 850); setVisible (true);
+        setUsingNativeTitleBar (true); setResizable (true, false); setResizeLimits (1000, 700, 2400, 1800);
+        viewport.setViewedComponent(&panel,false);setContentNonOwned (&viewport, false);
+        centreWithSize (1120, 900); setVisible (true);
     }
+    void resized() override
+    { DocumentWindow::resized();panel.setSize(juce::jmax(1000,viewport.getWidth()-16),1000); }
     void closeButtonPressed() override { panel.suspend(); setVisible (false); }
 private:
     StandaloneSectionsPanel& panel;
+    juce::Viewport viewport;
 };
 juce::String metricText (const measurement::Metric& metric, const juce::String& unit)
 {
@@ -115,6 +119,7 @@ StandaloneMainComponent::StandaloneMainComponent()
         diagnosticsPanel->onOpenSections = [this]
         {
             if (! sectionsPanel) sectionsPanel = std::make_unique<StandaloneSectionsPanel> (session);
+            sectionsPanel->onChanged=[this]{refreshFromSession();};
             if (! sectionsWindow) sectionsWindow = std::make_unique<SectionsWindow> (*sectionsPanel);
             sectionsPanel->resume(); sectionsWindow->setVisible (true); sectionsWindow->toFront (true);
         };
@@ -662,7 +667,8 @@ juce::String StandaloneMainComponent::buildCurrentStateText() const
 
     text << "Measurement status: " << session.currentState.statusText << "\n\n";
 
-    text << "Static gain (all channels): " << juce::String (session.currentStateDocument.staticGainDb, 12) << " dB\n\n";
+    if(session.currentStateDocument.sectionGains) text << "Applied section gains: " << juce::String(int(session.currentStateDocument.sectionGains->intervals.size())) << " intervals; inspect Programme sections. All channels including LFE.\n";
+    text << "Global trim (all channels): " << juce::String (session.currentStateDocument.staticGainDb, 12) << " dB\n\n";
     text << measurementsText (session.currentState);
 
     return text;

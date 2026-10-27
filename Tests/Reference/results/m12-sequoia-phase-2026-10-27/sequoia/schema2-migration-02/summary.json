@@ -1,0 +1,69 @@
+{
+  "passed": true,
+  "source_digest": "d6501c0d234ccf9c02b90527fc4af6c613dd4d538a71cc5520fb6b7b21085c1f",
+  "measurement_build": "185566e2c3ed9835d9878643618bd6789e785dee78fd670174f1ede4eb10f5fd",
+  "binary_sha256": "d1aeaa53a09de1e6cee687513e36b120e948650dc03adde2c6795a82f5839ede",
+  "cases": [
+    {
+      "channels": 2,
+      "passed": true,
+      "argv": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03/bin/LevelScopeProgrammeTests",
+        "--only",
+        "--prepare-session",
+        "/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/sequoia-supplement-candidate-04/exchange-out/2/programme.levelscope",
+        "--destination",
+        "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/schema2-migration-02/2.levelscope",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/schema2-migration-02/2.json"
+      ],
+      "originals_sha256": {
+        "/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/sequoia-supplement-candidate-04/exchange-out/2/programme.levelscope": "d41719943fde2d99f1420bddabeaa4b1f03aa60395749a62bc0ad397e4efcee2",
+        "/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/sequoia-supplement-candidate-04/exchange-out/2/mono-0.wav": "2bbc3ede4178499d5c6edb70b65ff45bbe7f6c2eb12312d231e21da659cc1882",
+        "/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/sequoia-supplement-candidate-04/exchange-out/2/mono-1.aiff": "3ae44207438823ea6b75c5fb5d14a4ee670719f7c9d860b0282355c7f9f49977"
+      },
+      "output_sha256": "febecdc5a308b19d9b35fc4f9d3f3f5ece86de6420ad1187075a54fe05e3c2aa",
+      "native_report_sha256": "70c848e15d3ffdda9ff638abf23ba6e0dc3ed53c5f9fb162ee3df7bb93285ad2",
+      "log_sha256": "1b6df5a0afdf19c4160870a8357c159bfc841602806e01d3e0f11ff1e6b7a18a",
+      "exact_settings_roles_alignment_and_gain_preserved": true,
+      "originals_unchanged": true,
+      "filesystem_metadata_policy": "Verified identical-content relinking may refresh locator and mtime; all audio identities, confirmation, settings and hashes must match."
+    },
+    {
+      "channels": 6,
+      "passed": true,
+      "argv": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03/bin/LevelScopeProgrammeTests",
+        "--only",
+        "--prepare-session",
+        "/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/sequoia-supplement-candidate-04/exchange-out/6/programme.levelscope",
+        "--destination",
+        "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/schema2-migration-02/6.levelscope",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/schema2-migration-02/6.json"
+      ],
+      "originals_sha256": {
+        "/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/sequoia-supplement-candidate-04/exchange-out/6/programme.levelscope": "c7418f44aea3ddc0e773fd84e6096abc66439613a8fb6fb7c4d0cdb283297e78",
+        "/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/sequoia-supplement-candidate-04/exchange-out/6/mono-0.wav": "2bbc3ede4178499d5c6edb70b65ff45bbe7f6c2eb12312d231e21da659cc1882",
+        "/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/sequoia-supplement-candidate-04/exchange-out/6/mono-1.aiff": "3ae44207438823ea6b75c5fb5d14a4ee670719f7c9d860b0282355c7f9f49977",
+        "/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/sequoia-supplement-candidate-04/exchange-out/6/mono-2.flac": "b2018e01951ba9c75e1b545ebe3cfaa060ada6d8d0b0c31a09a63cc06e5ff801",
+        "/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/sequoia-supplement-candidate-04/exchange-out/6/mono-3.wav": "731657bdade518942e64da6ae946ca75b4a6abade7f3b809107ae1147abdc707",
+        "/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/sequoia-supplement-candidate-04/exchange-out/6/mono-4.aiff": "687c75bf1766f0791330e3f337e43d3f191bfc5f28375713acbf4653e2ed5a99",
+        "/Users/fuzz/Developer/LevelScope/build/m9-qualification-2026-10-25/sequoia-supplement-candidate-04/exchange-out/6/mono-5.flac": "778568b952f5f05742838dddba0a071842931f3b26e3e9fb80b80e96121ebaaa"
+      },
+      "output_sha256": "aee40431dae730104811fda097af38e4a9a6153d97e715e6d81adf7650f82239",
+      "native_report_sha256": "a40bee0f0fe6bf40449c53c78684afaa876064c6a510849304640d076b18943d",
+      "log_sha256": "b97df104aa970c364aeabd76cb7f9fda510716cd910c3fa42d8ef8f476f2ba9b",
+      "exact_settings_roles_alignment_and_gain_preserved": true,
+      "originals_unchanged": true,
+      "filesystem_metadata_policy": "Verified identical-content relinking may refresh locator and mtime; all audio identities, confirmation, settings and hashes must match."
+    }
+  ],
+  "video_loaded": false,
+  "physical_devices_opened": false,
+  "scope": "Supplemental actual Sequoia schema-2 stereo/5.1 migration; same frozen candidate; no rebuild or long rerun"
+}

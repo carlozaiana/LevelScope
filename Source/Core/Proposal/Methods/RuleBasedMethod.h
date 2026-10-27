@@ -3,7 +3,7 @@
 
 namespace levelscope::proposal
 {
-inline constexpr const char* trimMethodVersion = "global-trim-m3.1";
+inline constexpr const char* trimMethodVersion = "global-trim-m12.1";
 enum class TrimStatus { unavailable, noChange, draft, noSolution };
 
 // Each snapshot is validated against its expected context by the adapter.
@@ -14,6 +14,7 @@ struct TrimRequest
     MeasuredProgramme source, current;
     juce::String sourceInputIdentity, currentInputIdentity;
     juce::String processingVersion = "static-gain-v1";
+    juce::String fixedUpstreamPlanIdentity; // validated section plan, held fixed
     double currentGainDb = 0;
 };
 struct TrimProposal

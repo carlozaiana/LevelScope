@@ -1,0 +1,13 @@
+{
+  "os": "15.7.9",
+  "os_build": "24G830",
+  "architecture": "arm64",
+  "cpu": "Apple M1 Max",
+  "source_digest": "d6501c0d234ccf9c02b90527fc4af6c613dd4d538a71cc5520fb6b7b21085c1f",
+  "measurement_build": "185566e2c3ed9835d9878643618bd6789e785dee78fd670174f1ede4eb10f5fd",
+  "identity_sha256": "d0004ae7604b0c86158a623047c07b86a4bf8e0c85f9e462998289ae22621b6a",
+  "decoder_sha256": "e9fd4d76bc457dcfb956617e8d467df85087ce069747fccd78e1e702d8629c14",
+  "physical_devices_opened": false,
+  "video_loaded": false,
+  "high_sierra_tested": false
+}

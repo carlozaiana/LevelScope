@@ -1,0 +1,339 @@
+{
+  "original_session_path": "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-02-results/sequoia/long/long-files/composition.levelscope",
+  "original_session_sha256": "140473833fa287f635febe1cda69605e67ce7bec66fe5c44487d67e0a12ebbca",
+  "original_m11_source_manifest": "669b350652dbc3fb09d0ff724758208fec21bba40e0f6bc0188b89e6404c2c61",
+  "original_m11_package_identity_sha256": "d9198c3ea9cb98a51f25f1850c4210e8351e0be52a508ba5e39e0b926e9686d6",
+  "unchanged_m11_app_sha256": "deb189e943529dd3e9e9d63a93e1d1cd2003f36752f7ab43f1e099d6c204eae5",
+  "core_programme": {
+    "schema": 3,
+    "id": "af158102f11641baafc349a4f4991582",
+    "mode": "composition",
+    "purpose": "programme_audio",
+    "alignment": "0/1",
+    "composition": {
+      "schema": 1,
+      "engine": "aligned-two-component-sum-v1",
+      "preset": 2,
+      "me": {
+        "id": "me",
+        "purpose": "music-effects",
+        "language": "",
+        "versionLabel": "",
+        "locator": "",
+        "media": {
+          "rate": "40e7700000000000",
+          "frames": "518400000",
+          "bytes": "9331200264",
+          "channels": 6,
+          "bits": 32,
+          "modified": "0",
+          "format": "Mono-file programme",
+          "sha256": "3928026e2304a05a3ea63013198764f7b0603751226b61f0e4259db66f590ae8",
+          "provenance": "Explicit channel assembly; sample zero in every member; metadata offsets not applied",
+          "restriction": ""
+        },
+        "layout": {
+          "count": 6,
+          "confirmed": true,
+          "manual": true,
+          "roles": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ]
+        },
+        "offset": "0",
+        "assembly": {
+          "schema": 2,
+          "confirmation": "3928026e2304a05a3ea63013198764f7b0603751226b61f0e4259db66f590ae8",
+          "members": [
+            {
+              "id": "channel-0",
+              "locator": "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-02-results/sequoia/long/long-files/me-0.wav",
+              "media": {
+                "rate": "40e7700000000000",
+                "frames": "518400000",
+                "bytes": "1555200044",
+                "channels": 1,
+                "bits": 24,
+                "modified": "1793028416788",
+                "format": "WAV file",
+                "sha256": "f886756446d2d5cb2d611cf147d3d954a53c8dc43cc220087855aa5b88520e08",
+                "provenance": "Legacy decoder role suggestions; confirm file-channel interpretation.",
+                "restriction": ""
+              },
+              "role": 1,
+              "offset": "0"
+            },
+            {
+              "id": "channel-1",
+              "locator": "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-02-results/sequoia/long/long-files/me-1.wav",
+              "media": {
+                "rate": "40e7700000000000",
+                "frames": "518400000",
+                "bytes": "1555200044",
+                "channels": 1,
+                "bits": 24,
+                "modified": "1793028425984",
+                "format": "WAV file",
+                "sha256": "06f8151fc4f66ec5908d3539be91ed6b0298092eb23b0caa6ee8bbc9ff0bd160",
+                "provenance": "Legacy decoder role suggestions; confirm file-channel interpretation.",
+                "restriction": ""
+              },
+              "role": 2,
+              "offset": "0"
+            },
+            {
+              "id": "channel-2",
+              "locator": "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-02-results/sequoia/long/long-files/me-2.wav",
+              "media": {
+                "rate": "40e7700000000000",
+                "frames": "518400000",
+                "bytes": "1555200044",
+                "channels": 1,
+                "bits": 24,
+                "modified": "1793028435223",
+                "format": "WAV file",
+                "sha256": "21ff4807d00377c1b97d06fccc501175477cc21a339f6b8d3fbfd9f26b844ada",
+                "provenance": "Legacy decoder role suggestions; confirm file-channel interpretation.",
+                "restriction": ""
+              },
+              "role": 3,
+              "offset": "0"
+            },
+            {
+              "id": "channel-3",
+              "locator": "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-02-results/sequoia/long/long-files/me-3.wav",
+              "media": {
+                "rate": "40e7700000000000",
+                "frames": "518400000",
+                "bytes": "1555200044",
+                "channels": 1,
+                "bits": 24,
+                "modified": "1793028444499",
+                "format": "WAV file",
+                "sha256": "585a68722828d27fd4c192bf9e73fc66e077907ce6fcf3b05d8993b4db4c7ad7",
+                "provenance": "Legacy decoder role suggestions; confirm file-channel interpretation.",
+                "restriction": ""
+              },
+              "role": 4,
+              "offset": "0"
+            },
+            {
+              "id": "channel-4",
+              "locator": "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-02-results/sequoia/long/long-files/me-4.wav",
+              "media": {
+                "rate": "40e7700000000000",
+                "frames": "518400000",
+                "bytes": "1555200044",
+                "channels": 1,
+                "bits": 24,
+                "modified": "1793028453741",
+                "format": "WAV file",
+                "sha256": "ca83c9a17ebc717f65b084e63d402dbc8b5780d4a93a571960af65b2b6565acb",
+                "provenance": "Legacy decoder role suggestions; confirm file-channel interpretation.",
+                "restriction": ""
+              },
+              "role": 5,
+              "offset": "0"
+            },
+            {
+              "id": "channel-5",
+              "locator": "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-02-results/sequoia/long/long-files/me-5.wav",
+              "media": {
+                "rate": "40e7700000000000",
+                "frames": "518400000",
+                "bytes": "1555200044",
+                "channels": 1,
+                "bits": 24,
+                "modified": "1793028462960",
+                "format": "WAV file",
+                "sha256": "1fd86510395dea89e808aa76c2c5f7313ff4a009c74582a5031c099d07ba32bc",
+                "provenance": "Legacy decoder role suggestions; confirm file-channel interpretation.",
+                "restriction": ""
+              },
+              "role": 6,
+              "offset": "0"
+            }
+          ]
+        }
+      },
+      "dialogue": {
+        "id": "dialogue",
+        "purpose": "dialogue",
+        "language": "",
+        "versionLabel": "",
+        "locator": "",
+        "media": {
+          "rate": "40e7700000000000",
+          "frames": "518400000",
+          "bytes": "9331200264",
+          "channels": 6,
+          "bits": 32,
+          "modified": "0",
+          "format": "Mono-file programme",
+          "sha256": "7022d183c228dcff303107f6810e6aa229bcb129c901b19920a2851ff66d8c0e",
+          "provenance": "Explicit channel assembly; sample zero in every member; metadata offsets not applied",
+          "restriction": ""
+        },
+        "layout": {
+          "count": 6,
+          "confirmed": true,
+          "manual": true,
+          "roles": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ]
+        },
+        "offset": "0",
+        "assembly": {
+          "schema": 2,
+          "confirmation": "7022d183c228dcff303107f6810e6aa229bcb129c901b19920a2851ff66d8c0e",
+          "members": [
+            {
+              "id": "channel-0",
+              "locator": "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-02-results/sequoia/long/long-files/dialogue-0.wav",
+              "media": {
+                "rate": "40e7700000000000",
+                "frames": "518400000",
+                "bytes": "1555200044",
+                "channels": 1,
+                "bits": 24,
+                "modified": "1793028472132",
+                "format": "WAV file",
+                "sha256": "32ea3e8dd10c65d3c87256fbed63792026ed882b85d70919540a8dceb124e65f",
+                "provenance": "Legacy decoder role suggestions; confirm file-channel interpretation.",
+                "restriction": ""
+              },
+              "role": 1,
+              "offset": "0"
+            },
+            {
+              "id": "channel-1",
+              "locator": "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-02-results/sequoia/long/long-files/dialogue-1.wav",
+              "media": {
+                "rate": "40e7700000000000",
+                "frames": "518400000",
+                "bytes": "1555200044",
+                "channels": 1,
+                "bits": 24,
+                "modified": "1793028481365",
+                "format": "WAV file",
+                "sha256": "5277999d8870342f840efa2572557fb45330768f37459333d82b3d52aa8509fc",
+                "provenance": "Legacy decoder role suggestions; confirm file-channel interpretation.",
+                "restriction": ""
+              },
+              "role": 2,
+              "offset": "0"
+            },
+            {
+              "id": "channel-2",
+              "locator": "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-02-results/sequoia/long/long-files/dialogue-2.wav",
+              "media": {
+                "rate": "40e7700000000000",
+                "frames": "518400000",
+                "bytes": "1555200044",
+                "channels": 1,
+                "bits": 24,
+                "modified": "1793028490573",
+                "format": "WAV file",
+                "sha256": "14d4a030d469e815f29dc986697c3bc46ab4778be2ef48970856fdc1bbeb9de9",
+                "provenance": "Legacy decoder role suggestions; confirm file-channel interpretation.",
+                "restriction": ""
+              },
+              "role": 3,
+              "offset": "0"
+            },
+            {
+              "id": "channel-3",
+              "locator": "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-02-results/sequoia/long/long-files/dialogue-3.wav",
+              "media": {
+                "rate": "40e7700000000000",
+                "frames": "518400000",
+                "bytes": "1555200044",
+                "channels": 1,
+                "bits": 24,
+                "modified": "1793028499754",
+                "format": "WAV file",
+                "sha256": "db67c4991bcdc5b806d70fac9ade5d14501ac35c7e3059d0cddba4d8b669ee8e",
+                "provenance": "Legacy decoder role suggestions; confirm file-channel interpretation.",
+                "restriction": ""
+              },
+              "role": 4,
+              "offset": "0"
+            },
+            {
+              "id": "channel-4",
+              "locator": "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-02-results/sequoia/long/long-files/dialogue-4.wav",
+              "media": {
+                "rate": "40e7700000000000",
+                "frames": "518400000",
+                "bytes": "1555200044",
+                "channels": 1,
+                "bits": 24,
+                "modified": "1793028508914",
+                "format": "WAV file",
+                "sha256": "7548b1b5355935dc701bef2ae26beb47be583d02d9f23e56d9f42c865115d1df",
+                "provenance": "Legacy decoder role suggestions; confirm file-channel interpretation.",
+                "restriction": ""
+              },
+              "role": 5,
+              "offset": "0"
+            },
+            {
+              "id": "channel-5",
+              "locator": "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-02-results/sequoia/long/long-files/dialogue-5.wav",
+              "media": {
+                "rate": "40e7700000000000",
+                "frames": "518400000",
+                "bytes": "1555200044",
+                "channels": 1,
+                "bits": 24,
+                "modified": "1793028518030",
+                "format": "WAV file",
+                "sha256": "579cd4d66d23e45f632dcce037d2848f847a49c6c3fdf0f612b0d463da91cefd",
+                "provenance": "Legacy decoder role suggestions; confirm file-channel interpretation.",
+                "restriction": ""
+              },
+              "role": 6,
+              "offset": "0"
+            }
+          ]
+        }
+      },
+      "confirmation": "dafb0f62c6b4de33baea1802bec2b720b381441b145db1b518be8ef6b4ef25e0"
+    },
+    "layout": {
+      "count": 6,
+      "confirmed": true,
+      "manual": true,
+      "roles": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    "rangeBegin": "0",
+    "rangeEnd": "518400000",
+    "files": [],
+    "channels": []
+  },
+  "original_video_descriptor": {
+    "locator": "",
+    "sha256": "",
+    "stream": 0,
+    "offset": "0/1"
+  },
+  "reuse": "Read-only fixture references only. M12 freshly verifies all members and measures/processes the three-hour programme. Original M11 results are not substituted.",
+  "recorded_at": "2026-10-27T20:08:59.005404+01:00"
+}

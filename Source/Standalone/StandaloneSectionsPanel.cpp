@@ -1,5 +1,7 @@
 #include "StandaloneSectionsPanel.h"
 #include <charconv>
+#include <sstream>
+#include <locale>
 
 namespace levelscope::standalone
 {
@@ -39,11 +41,32 @@ StandaloneSectionsPanel::StandaloneSectionsPanel (StandaloneSessionModel& s) : s
     mergeButton.onClick = [this] { performEdit (2); }; renameButton.onClick = [this] { performEdit (3); };
     rebuildButton.onClick = [this] { editNotice.clear(); diagnostics.retry(); sections.retry(); synchronize(); };
     cancelButton.onClick = [this] { editNotice.clear(); diagnostics.cancel(); sections.cancel(); synchronize(); };
+    gainEditor.setName("Section draft gain dB");gainEditor.setText("0",false);
+    gainEditor.setTooltip("Full precision gain for the selected annotation, -12 to +12 dB. Draft only until Apply.");
+    gainStatus.setName("Section draft and applied processing status");gainView.setName("Applied and draft section-gain curves");
+    draftGainButton.onClick=[this]{session.beginSectionTrimDraft();synchronize();refreshDetails();if(onChanged)onChanged();};
+    setGainButton.onClick=[this]
+    {
+        const auto* row=selectedSection();double db=0;std::istringstream in(gainEditor.getText().trim().toStdString());in.imbue(std::locale::classic());
+        if(!row || !(in>>db) || !(in>>std::ws).eof() || !std::isfinite(db) || db < -12 || db > 12)
+            session.sectionTrimNotice="Enter one finite gain from -12 to +12 dB; nothing applied.";
+        else
+        {
+            bool accepted=false;
+            if(session.sectionTrimDraft) for(size_t n=0;n<session.sectionTrimDraft->annotations.sections.size();++n)
+                if(session.sectionTrimDraft->annotations.sections[n].id==row->id) accepted=session.setSectionDraftGain(n,db);
+            if(!accepted) session.sectionTrimNotice="Draft is unavailable or stale. Discard and draft again; nothing applied.";
+        }
+        synchronize();
+    };
+    applyGainButton.onClick=[this]{session.applySectionTrimDraft();synchronize();if(onChanged)onChanged();};
+    discardGainButton.onClick=[this]{session.discardSectionTrimDraft();synchronize();if(onChanged)onChanged();};
+    for(auto* c:std::initializer_list<juce::Component*>{&draftGainButton,&setGainButton,&applyGainButton,&discardGainButton,&gainEditor,&gainStatus,&gainView})addAndMakeVisible(*c);
     timeline.onInspect = [this] (const juce::String& text) { inspection.setText (text, false); };
     for (auto* c : std::array<juce::Component*, 20> { &domainBox, &windowKind, &windowScope, &splitButton, &moveButton, &mergeButton, &renameButton,
          &rebuildButton, &cancelButton, &boundary, &name, &summary, &inspection, &boundaryLabel, &nameLabel, &status, &timeline, &sectionList, &windowList, nullptr })
         if (c) addAndMakeVisible (*c);
-    sectionList.setRowHeight (27); windowList.setRowHeight (25); setSize (1080, 850); startTimerHz (10);
+    sectionList.setRowHeight (27); windowList.setRowHeight (25); setSize (1120, 1000); startTimerHz (10);
 }
 StandaloneSectionsPanel::~StandaloneSectionsPanel() { stopTimer(); diagnostics.cancel(); sections.cancel(); }
 void StandaloneSectionsPanel::suspend() { suspended = true; diagnostics.cancel(); sections.cancel(); synchronize(); }
@@ -76,10 +99,21 @@ void StandaloneSectionsPanel::timerCallback()
     if (! suspended) sections.select (measured, document.map());
     sections.poll(); const auto next = sections.result(); const bool resultChanged = next != displayed; displayed = next;
     const auto newAnnotation = session.getSelectedTargetProfile().digest() + ";" + juce::String (static_cast<int> (session.programmeApplicability));
-    if (mapChanged || measuredChanged || resultChanged || newAnnotation != annotationKey) { annotationKey = newAnnotation; refreshDetails(); }
+    const auto newGainKey=session.currentStateDocument.sectionGains?session.currentStateDocument.sectionGains->audioKey():juce::String();
+    if (mapChanged || measuredChanged || resultChanged || newAnnotation != annotationKey || newGainKey!=appliedGainKey)
+    { annotationKey = newAnnotation; appliedGainKey=newGainKey; refreshDetails(); }
     const bool busy = diagnostics.busy() || sections.busy(); cancelButton.setEnabled (busy);
     rebuildButton.setEnabled (snapshot != nullptr && ! busy);
     status.setText (editNotice.isNotEmpty() ? editNotice : diagnostics.busy() ? diagnostics.status : sections.status, juce::dontSendNotification);
+    const bool editable=!session.audioEditsBlocked()&&!session.job.isActive();
+    draftGainButton.setEnabled(editable && !session.sectionTrimDraft && session.currentStateDocument.isInitialized);
+    setGainButton.setEnabled(editable && session.sectionDraftFresh());gainEditor.setEnabled(setGainButton.isEnabled());
+    applyGainButton.setEnabled(editable && session.sectionDraftFresh());discardGainButton.setEnabled(session.sectionTrimDraft.has_value());
+    auto gainText=session.sectionTrimNotice;
+    if(session.sectionTrimDraft&&!session.sectionDraftFresh())gainText="STALE DRAFT: discard/recreate after input, processing or annotation geometry changes. Applied audio retained.";
+    if(session.currentStateDocument.sectionGains && session.sectionGeometry(document.map())!=session.sectionGeometry(session.currentStateDocument.sectionGainAnnotations))
+        gainText+=" Applied intervals differ from current annotations; annotation edits do not move gain transitions.";
+    gainStatus.setText(gainText,juce::dontSendNotification);gainStatus.setTooltip(gainText);gainView.repaint();
 }
 const proposal::ProgrammeSection* StandaloneSectionsPanel::selectedSection() const
 { for (const auto& s : document.map().sections) if (s.id == selectedId) return &s; return nullptr; }
@@ -149,6 +183,22 @@ void StandaloneSectionsPanel::refreshDetails()
         text << annotateDiagnostics (*measured, session.getSelectedTargetProfile(), session.programmeApplicability).text << "\n";
     }
     text << "No section I/LRA or section compliance verdict. Crossing/padded windows are excluded from summaries and inspectable below. Section edits never seek, play or process audio.";
+    if(session.sectionTrimDraft && session.sectionDraftFresh())
+        for(size_t n=0;n<session.sectionTrimDraft->annotations.sections.size();++n)
+            if(session.sectionTrimDraft->annotations.sections[n].id==row->id)
+            {
+                std::ostringstream exact;exact.imbue(std::locale::classic());
+                exact<<std::setprecision(std::numeric_limits<double>::max_digits10)<<session.sectionTrimDraft->plan.intervals[n].db;
+                gainEditor.setText(exact.str(),false);
+            }
+    text << "\nApplied gains (independent of current annotations): ";
+    if(const auto& active=session.currentStateDocument.sectionGains)
+    {
+        for(const auto& i:active->intervals)if(i.begin<row->end&&i.end>row->begin)
+            text << "[" << juce::String(i.begin) << "," << juce::String(i.end) << ") " << juce::String(i.db,12) << " dB; ";
+    }
+    else text << "unity section gain; ";
+    text << "final global trim " << juce::String(session.currentStateDocument.staticGainDb,12) << " dB. Curves/settings are not measurements.";
     summary.setText (text, false);
 }
 int StandaloneSectionsPanel::getNumRows() { return static_cast<int> (document.map().sections.size()); }
@@ -192,10 +242,34 @@ void StandaloneSectionsPanel::resized()
     splitButton.setBounds (edit.removeFromLeft (120)); moveButton.setBounds (edit.removeFromLeft (100)); mergeButton.setBounds (edit.removeFromLeft (100));
     nameLabel.setBounds (edit.removeFromLeft (45)); renameButton.setBounds (edit.removeFromRight (90)); name.setBounds (edit);
     b.removeFromTop (6); sectionList.setBounds (b.removeFromTop (100)); b.removeFromTop (6);
+    auto gainRow=b.removeFromTop(28);draftGainButton.setBounds(gainRow.removeFromLeft(165));gainEditor.setBounds(gainRow.removeFromLeft(165));setGainButton.setBounds(gainRow.removeFromLeft(140));applyGainButton.setBounds(gainRow.removeFromLeft(165));discardGainButton.setBounds(gainRow.removeFromLeft(140));
+    gainStatus.setBounds(b.removeFromTop(40));gainView.setBounds(b.removeFromTop(90));b.removeFromTop(4);
     timeline.setBounds (b.removeFromTop (240)); b.removeFromTop (6);
     summary.setBounds (b.removeFromTop (std::max (160, b.getHeight() * 54 / 100))); b.removeFromTop (6);
     auto choose = b.removeFromTop (28); windowKind.setBounds (choose.removeFromLeft (240)); windowScope.setBounds (choose.removeFromLeft (200));
     inspection.setBounds (b.removeFromBottom (55)); b.removeFromBottom (4); windowList.setBounds (b);
 }
 void StandaloneSectionsPanel::paint (juce::Graphics& g) { g.fillAll (juce::Colour (0xff151b24)); }
+void StandaloneSectionsPanel::GainView::paint(juce::Graphics& g)
+{
+    g.fillAll(juce::Colour(0xff101820));g.setFont(12);g.setColour(juce::Colours::white);
+    g.drawText("Whole-programme audio-source time | applied: green | draft: orange | +/-12 dB | settings, not measured curves",5,0,getWidth()-10,18,juce::Justification::centredLeft);
+    const auto frames=session.sourceDocument.media.frames;if(frames<=0)return;
+    const float left=38,right=float(getWidth()-8),top=24,bottom=float(getHeight()-17);
+    auto x=[&](int64_t f){return left+float(double(f)/frames)*(right-left);};
+    auto y=[&](double db){return (top+bottom)*.5f-float(db/24)*(bottom-top);};
+    g.setColour(juce::Colours::grey);g.drawHorizontalLine(int(y(0)),left,right);
+    g.drawText("0 s",int(left),getHeight()-16,50,16,juce::Justification::left);
+    g.drawText(juce::String(double(frames)/session.sourceDocument.media.sampleRate,3)+" s",getWidth()-150,getHeight()-16,145,16,juce::Justification::right);
+    auto draw=[&](const processing::SectionGainPlan* plan,juce::Colour colour)
+    {
+        g.setColour(colour);if(!plan){g.drawLine(left,y(0),right,y(0),2);return;}
+        if(plan->validationError().isNotEmpty())return;const auto p=plan->canonical();juce::Path path;path.startNewSubPath(x(0),y(p.intervals.front().db));
+        for(size_t n=1;n<p.intervals.size();++n)
+        {const auto b=p.intervals[n].begin,r=p.radius(n);path.lineTo(x(b-r),y(p.intervals[n-1].db));path.lineTo(x(b+r-1),y(p.intervals[n].db));}
+        path.lineTo(x(frames),y(p.intervals.back().db));g.strokePath(path,juce::PathStrokeType(2));
+    };
+    draw(session.currentStateDocument.sectionGains?&*session.currentStateDocument.sectionGains:nullptr,juce::Colours::lightgreen);
+    if(session.sectionTrimDraft)draw(&session.sectionTrimDraft->plan,juce::Colours::orange);
+}
 }

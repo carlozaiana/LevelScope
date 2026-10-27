@@ -367,7 +367,7 @@ void StandaloneAudition::startDecoder (const AuditionRequest& request, const Out
                         throw std::runtime_error ("Verified source seek pre-roll failed");
                     prefix += count;
                 }
-            const StaticGainProcessor processing (request.context.processing.staticGainDb);
+            const ProgrammeGainProcessor processing (request.context.processing);
             juce::int64 position = begin;
             while (position < media.frames && ! cancel.load())
             {
@@ -377,7 +377,7 @@ void StandaloneAudition::startDecoder (const AuditionRequest& request, const Out
                 { workerFailure = ErrorCode::sourceChanged; throw std::runtime_error ("Source changed; import again"); }
                 if (! source->read (block.getArrayOfWritePointers(), media.channels, position, count))
                     throw std::runtime_error ("Verified source decode failed");
-                if (! processing.process (block.getArrayOfWritePointers(), media.channels, count))
+                if (! processing.process (block.getArrayOfWritePointers(), media.channels, count, position))
                     throw std::runtime_error ("Non-finite processed audition sample");
                 fifo.push (block.getArrayOfReadPointers(), count);
                 position += count;

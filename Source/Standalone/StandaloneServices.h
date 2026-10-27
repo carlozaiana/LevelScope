@@ -5,6 +5,7 @@
 #include "ProgrammeComposition.h"
 #include "StandaloneTargetProfiles.h"
 #include "Core/Measurement/OfflineMeasurement.h"
+#include "Core/Processing/SectionGainPlan.h"
 #include <optional>
 #include <vector>
 
@@ -21,6 +22,7 @@ struct ProcessingPlan
     double staticGainDb = 0.0; // M1 typed plan; all file channels, including LFE.
     // Versioned module IDs/order/parameters/automation/freezes; no plugin state blob.
     juce::String graphJson;
+    std::optional<processing::SectionGainPlan> sectionGains;
 };
 
 struct ServiceContext

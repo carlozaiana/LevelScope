@@ -1,0 +1,130 @@
+{
+  "time": "2026-10-27T23:37:03.384887+01:00",
+  "base_main": "cfb1033aa7fb65a2655db276bee696161196bdeb",
+  "branch": "codex/logic-module",
+  "scope": "Publish candidate-03 only to development branch and a new dated annotated tag. Keep main at M11. M13 proposal only.",
+  "qualification_status": "Sequoia tested; High Sierra and video qualification pending",
+  "full_qualification_complete": false,
+  "source_manifest": "d6501c0d234ccf9c02b90527fc4af6c613dd4d538a71cc5520fb6b7b21085c1f",
+  "measurement_build": "185566e2c3ed9835d9878643618bd6789e785dee78fd670174f1ede4eb10f5fd",
+  "candidate_identity_sha256": "d0004ae7604b0c86158a623047c07b86a4bf8e0c85f9e462998289ae22621b6a",
+  "app_sha256": "ab319348a5ca586fd9048581165f7fdefb0cb1bd7221d827c78fd3740ec2aec4",
+  "completion_sha256": "d4dcc3cfd6321d6f07ccd7967124bf0c98a7ba12309cbc4c988bdf8b37b4dfbb",
+  "evidence_manifest_sha256": "b706079ac2af2d4979397bb6bf8e0a3a3b4db15e80b06fdd39ef5334b73447d3",
+  "source_files_verified": 231,
+  "frozen_artifacts_verified": 266,
+  "evidence_files_verified": 116,
+  "tags": {
+    "refs/tags/high-sierra-pre-scaffold-2026-10-15": {
+      "object": "b3c6e845482dbe8a0ec9778d5a9ad7953e614609",
+      "commit": "556d387ad772dc5e604ead95f1525f60e66fd5f9"
+    },
+    "refs/tags/m10-verified-pcm-export-2026-10-26": {
+      "object": "3bbd1476cbc4e200f9d8f2776f53e06c4bf57180",
+      "commit": "fcd4c15fe78d6352f5e96faabf3eb52f942235e1"
+    },
+    "refs/tags/m11-aligned-stem-composition-2026-10-26": {
+      "object": "2ddbd80e7ce0f5d42d72f8cc3d466925685f1fe0",
+      "commit": "cfb1033aa7fb65a2655db276bee696161196bdeb"
+    },
+    "refs/tags/m2-measured-compliance-2026-10-18": {
+      "object": "673e382feeaa7e29e6e6abedbd56677aa2163ef3",
+      "commit": "01a34833ec06a0d237e098faadb23b398581e8f9"
+    },
+    "refs/tags/m3-global-trim-2026-10-18": {
+      "object": "4063ca0e73c5b24dfa079eb894f85e398e9fee50",
+      "commit": "62ab420cb15b3ce5e1c821c963a749a9a56ae4a7"
+    },
+    "refs/tags/m4-measured-diagnostics-2026-10-18": {
+      "object": "cc64c771a70ccf95e779a7fe7260749a4530c285",
+      "commit": "9a22749901d9f6d4b9c194c9c22c0a231f2494f6"
+    },
+    "refs/tags/m5-programme-sections-2026-10-20": {
+      "object": "e36b4308374256ad36eff6c01d4d92325a06d3b0",
+      "commit": "ae88e187d288c53dbca1287e8341b74b9b5b2619"
+    },
+    "refs/tags/m6-verified-current-state-audition-2026-10-24": {
+      "object": "7f54eb1098471dc55bd75484f873a9f90e68ac05",
+      "commit": "b57a1ed23cbe7d74afe98ed16ec8fd615db9d171"
+    },
+    "refs/tags/m7-pcm-7.1-2026-10-25": {
+      "object": "04d0c836fcbc3a7af72638a7514faacd32ae48a9",
+      "commit": "cfbf3f981dece326d2363b911e5914ea61f1796c"
+    },
+    "refs/tags/m8-reproducible-sessions-2026-10-25": {
+      "object": "93908205c41de16c10b187bc00fcc1621e328c66",
+      "commit": "8e984889c5e73670f370c6c568c8ea1d7902a35c"
+    },
+    "refs/tags/m9-separate-file-stereo-5.1-2026-10-25": {
+      "object": "0cb0e4bea6fd9d11cc4207e9b863d5fca2b70bff",
+      "commit": "75843dcd017ec7990be2200454a10fc38beb44c4"
+    },
+    "refs/tags/measurement-milestone-2026-10-17": {
+      "object": "76affb667b6dab066cb36b2a2c741525b9b6eeac",
+      "commit": "b29bc7c183743f35c6271d2d7ec8fb5ba1464591"
+    },
+    "refs/tags/standalone-scaffold-2026-10-15": {
+      "object": "4c8bc35b788969e1f6e97dcdc57a601b01fff7cd",
+      "commit": "f192a8553e139d390056c9755f25eeb123bbc5e6"
+    },
+    "refs/tags/video-checkpoint-2026-10-17": {
+      "object": "06f57524bedca1912c0d5c454f13561cec9ce5b4",
+      "commit": "700b9e77e439a8ca9bb7583adf826fac01dbe924"
+    },
+    "refs/tags/video-prores-checkpoint-2026-10-21": {
+      "object": "d62c1159eeb2ffbb8b7ffc7c31014b842642d195",
+      "commit": "dcc34aabba6b5b3ca4805e2965d21ffebf2e4d0a"
+    }
+  },
+  "remote_refs": {
+    "refs/heads/codex/logic-module": "cfb1033aa7fb65a2655db276bee696161196bdeb",
+    "refs/heads/codex/standalone-scaffold": "f192a8553e139d390056c9755f25eeb123bbc5e6",
+    "refs/heads/codex/video-implementation": "5e07bbd29930db34236d6dfcede7fea14983f90a",
+    "refs/heads/docs/compliance-harness": "8883928775dba56ac0bbd1dc1f6f3eef67b90d6f",
+    "refs/heads/main": "cfb1033aa7fb65a2655db276bee696161196bdeb",
+    "refs/tags/high-sierra-pre-scaffold-2026-10-15": "b3c6e845482dbe8a0ec9778d5a9ad7953e614609",
+    "refs/tags/high-sierra-pre-scaffold-2026-10-15^{}": "556d387ad772dc5e604ead95f1525f60e66fd5f9",
+    "refs/tags/m10-verified-pcm-export-2026-10-26": "3bbd1476cbc4e200f9d8f2776f53e06c4bf57180",
+    "refs/tags/m10-verified-pcm-export-2026-10-26^{}": "fcd4c15fe78d6352f5e96faabf3eb52f942235e1",
+    "refs/tags/m11-aligned-stem-composition-2026-10-26": "2ddbd80e7ce0f5d42d72f8cc3d466925685f1fe0",
+    "refs/tags/m11-aligned-stem-composition-2026-10-26^{}": "cfb1033aa7fb65a2655db276bee696161196bdeb",
+    "refs/tags/m2-measured-compliance-2026-10-18": "673e382feeaa7e29e6e6abedbd56677aa2163ef3",
+    "refs/tags/m2-measured-compliance-2026-10-18^{}": "01a34833ec06a0d237e098faadb23b398581e8f9",
+    "refs/tags/m3-global-trim-2026-10-18": "4063ca0e73c5b24dfa079eb894f85e398e9fee50",
+    "refs/tags/m3-global-trim-2026-10-18^{}": "62ab420cb15b3ce5e1c821c963a749a9a56ae4a7",
+    "refs/tags/m4-measured-diagnostics-2026-10-18": "cc64c771a70ccf95e779a7fe7260749a4530c285",
+    "refs/tags/m4-measured-diagnostics-2026-10-18^{}": "9a22749901d9f6d4b9c194c9c22c0a231f2494f6",
+    "refs/tags/m5-programme-sections-2026-10-20": "e36b4308374256ad36eff6c01d4d92325a06d3b0",
+    "refs/tags/m5-programme-sections-2026-10-20^{}": "ae88e187d288c53dbca1287e8341b74b9b5b2619",
+    "refs/tags/m6-verified-current-state-audition-2026-10-24": "7f54eb1098471dc55bd75484f873a9f90e68ac05",
+    "refs/tags/m6-verified-current-state-audition-2026-10-24^{}": "b57a1ed23cbe7d74afe98ed16ec8fd615db9d171",
+    "refs/tags/m7-pcm-7.1-2026-10-25": "04d0c836fcbc3a7af72638a7514faacd32ae48a9",
+    "refs/tags/m7-pcm-7.1-2026-10-25^{}": "cfbf3f981dece326d2363b911e5914ea61f1796c",
+    "refs/tags/m8-reproducible-sessions-2026-10-25": "93908205c41de16c10b187bc00fcc1621e328c66",
+    "refs/tags/m8-reproducible-sessions-2026-10-25^{}": "8e984889c5e73670f370c6c568c8ea1d7902a35c",
+    "refs/tags/m9-separate-file-stereo-5.1-2026-10-25": "0cb0e4bea6fd9d11cc4207e9b863d5fca2b70bff",
+    "refs/tags/m9-separate-file-stereo-5.1-2026-10-25^{}": "75843dcd017ec7990be2200454a10fc38beb44c4",
+    "refs/tags/measurement-milestone-2026-10-17": "76affb667b6dab066cb36b2a2c741525b9b6eeac",
+    "refs/tags/measurement-milestone-2026-10-17^{}": "b29bc7c183743f35c6271d2d7ec8fb5ba1464591",
+    "refs/tags/standalone-scaffold-2026-10-15": "4c8bc35b788969e1f6e97dcdc57a601b01fff7cd",
+    "refs/tags/standalone-scaffold-2026-10-15^{}": "f192a8553e139d390056c9755f25eeb123bbc5e6",
+    "refs/tags/video-checkpoint-2026-10-17": "06f57524bedca1912c0d5c454f13561cec9ce5b4",
+    "refs/tags/video-checkpoint-2026-10-17^{}": "700b9e77e439a8ca9bb7583adf826fac01dbe924",
+    "refs/tags/video-prores-checkpoint-2026-10-21": "d62c1159eeb2ffbb8b7ffc7c31014b842642d195",
+    "refs/tags/video-prores-checkpoint-2026-10-21^{}": "dcc34aabba6b5b3ca4805e2965d21ffebf2e4d0a"
+  },
+  "worktrees": "worktree /Users/fuzz/Developer/LevelScope\nHEAD cfb1033aa7fb65a2655db276bee696161196bdeb\nbranch refs/heads/codex/logic-module\n\nworktree /Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation\nHEAD 5e07bbd29930db34236d6dfcede7fea14983f90a\nbranch refs/heads/codex/video-implementation\n\n",
+  "unrelated_files_sha256": {
+    "Source/.DS_Store": "b5a3dbb10d1f70680db4aedad7c2b69090dd87fa6127598a06747aba81bc5b3e",
+    "Source/Core/.DS_Store": "a975a38bf2873d1fbb737e15b77a5e03a98d3a603f0f4a0d32ae8b9f7620d58a",
+    "Source/Core/Processing/.DS_Store": "ad1a60ff6db582810365ba9056c69006adb8046e1f5689330c1f4a8a0d19ac69",
+    "Tests/.DS_Store": "17a4a510e15b3e7278b0239f4fe6442fd9099d17920b2d5896142ae76c9d6ea1",
+    "Tests/Ebu_Loudness_Testset_V05/.DS_Store": "70717f88feaf78b87253ac39ee19f416a741dd2085d60afa946ae119f17cee4b",
+    "Tests/Reference/.DS_Store": "f9d3dcf480b25e096ceabf79cb5466b90b26663a3221145945b11b2f400155f7",
+    "Docs/.DS_Store": "41f804281f65d5f679f697ae57c7fc4b49936e908bf4ed128357ed2028ddd669",
+    ".DS_Store": "59c194b96134ec3bd38da88689eeb53e4e54f4e8f9d0b746dfe4f0024320e447"
+  },
+  "publication_authorized": true,
+  "main_integration_authorized": false,
+  "m13_implementation_authorized": false
+}

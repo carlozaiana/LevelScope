@@ -1,0 +1,72 @@
+{
+  "passed": true,
+  "evidence_kind": "Observed silent UI on frozen candidate-01; scripted filesystem/oracle verification",
+  "source_digest": "07cadcd4285aa8171290c994d26184e2bfa5c0443a9dd7e0aadd0ce8b2a576f5",
+  "app_sha256": "ab319348a5ca586fd9048581165f7fdefb0cb1bd7221d827c78fd3740ec2aec4",
+  "architecture": "arm64",
+  "device_closed": true,
+  "routes_muted": true,
+  "video_loaded": false,
+  "cases": [
+    {
+      "id": "manual-sections",
+      "passed": true,
+      "evidence": "Split 0..64000 at 32000, renamed first interval Review A, then moved its end to 33600 using the existing manual editor; no playback."
+    },
+    {
+      "id": "draft-applied-curves",
+      "passed": true,
+      "evidence": "Observed separate orange draft and green applied curves in audio-source time. 12.000001 dB rejected; 12 accepted in draft only. All controls reachable in scrolling content."
+    },
+    {
+      "id": "explicit-apply-unverified",
+      "passed": true,
+      "evidence": "Explicit Apply replaced old Current pass with UNVERIFIED / NOT EVALUATED and disabled measured proposal/render gates. No automatic measurement. Applied gain retained."
+    },
+    {
+      "id": "remeasure-actual",
+      "passed": true,
+      "evidence": "Explicit remeasurement after +12 dB section displayed actual FAIL: -18.582787 LUFS / -9.115451 dBTP. Separate predicted global trim was explicitly applied, then remeasured: actual PASS -23.000000 LUFS / -13.532664 dBTP. Final global gain bits 4032d4d1f554c116."
+    },
+    {
+      "id": "annotation-independence",
+      "passed": true,
+      "evidence": "Split, rename and move left previous Current pass and applied original geometry unchanged. Reopened saved Source cache SHA-256 identical to starting Source cache: 2be8d0fed0d03662c82c5fee6f476517e4486342d77994467bcc613c091a014e."
+    },
+    {
+      "id": "stale-draft",
+      "passed": true,
+      "evidence": "Changing boundary 32000 to 33600 marked draft STALE and disabled Apply/Set without changing applied audio. Explicit Discard recovered applied view; fresh draft began at zero for changed geometry."
+    },
+    {
+      "id": "already-pass-noop",
+      "passed": true,
+      "evidence": "After measured verification PASS, Draft global trim displayed NO CHANGE with no Apply action; gain, section plan and measured results retained."
+    },
+    {
+      "id": "session-roundtrip",
+      "passed": true,
+      "evidence": "Save As reviewed.levelscope; New cleared source safely; Open restored exact section plan [0,33600) +12 dB, [33600,192000) 0 dB, four independent annotations, global bits 4032d4d1f554c116 and valid measurements. Stopped/device closed/routes muted. Audio-only 3/2 seek did not invalidate measurements."
+    },
+    {
+      "id": "draft-save-discard",
+      "passed": true,
+      "evidence": "Save with pending draft rejected with explicit Apply/Discard explanation. New offered Discard draft/Cancel; Cancel preserved session. Draft changes did not replace prior measurements before Apply."
+    },
+    {
+      "id": "export-report",
+      "passed": true,
+      "evidence": "Explicit Render and verify completed actual artifact PASS. Destination did not exist before Publish. Explicit Publish created local export; independent libsndfile check verified all 384000 PCM24 codes against section/global/single-TPDF oracle and report/HTML/manifest hashes."
+    },
+    {
+      "id": "device-closed-muted",
+      "passed": true,
+      "evidence": "All UI work performed with device closed, routes muted, no selected output device, stopped transport. No physical device opened; no video loaded/decoded/played. Final state visibly device closed and muted."
+    }
+  ],
+  "files_sha256": {
+    "reviewed.levelscope": "3de12403820d76a43ed2d60a8f63bf22cc86dfb3db1e42a09f1c914f31ef0fb5",
+    "export-check.json": "7b01ff1c81bea08e0876cd344ab79985dfdb50c8bb09f75328ea17003257717d",
+    "input-provenance.json": "68e86ff5e32c2ec715d23eb65269c7b30577f39b3e2605900be51dc80ccacb14"
+  }
+}

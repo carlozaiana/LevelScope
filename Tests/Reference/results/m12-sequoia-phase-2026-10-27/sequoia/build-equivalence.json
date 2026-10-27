@@ -1,0 +1,34 @@
+{
+  "source_digest": "d6501c0d234ccf9c02b90527fc4af6c613dd4d538a71cc5520fb6b7b21085c1f",
+  "measurement_build": "185566e2c3ed9835d9878643618bd6789e785dee78fd670174f1ede4eb10f5fd",
+  "app_sha256": "ab319348a5ca586fd9048581165f7fdefb0cb1bd7221d827c78fd3740ec2aec4",
+  "architectures": "x86_64 arm64",
+  "intel_deployment_load_command": [
+    "      cmd LC_VERSION_MIN_MACOSX",
+    "  cmdsize 16",
+    "  version 10.13",
+    "      sdk 15.5",
+    "Load command 10",
+    "      cmd LC_SOURCE_VERSION",
+    "  cmdsize 16"
+  ],
+  "build_configuration": [
+    "CMAKE_BUILD_TYPE:STRING=Release",
+    "CMAKE_CXX_FLAGS:STRING=",
+    "CMAKE_CXX_FLAGS_RELEASE:STRING=-O3 -DNDEBUG",
+    "CMAKE_OSX_ARCHITECTURES:STRING=arm64;x86_64",
+    "CMAKE_OSX_DEPLOYMENT_TARGET:UNINITIALIZED=10.13",
+    "FETCHCONTENT_SOURCE_DIR_JUCE:PATH=/Users/fuzz/Developer/LevelScope/build/juce-7.0.12"
+  ],
+  "compiler": "Apple clang version 17.0.0 (clang-1700.0.13.5)\nTarget: arm64-apple-darwin24.6.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+  "actual_intel_high_sierra_executed": false,
+  "production_source_identical_to_candidate_01": true,
+  "changed_native_executables": [
+    "bin/LevelScopeSectionsTests"
+  ],
+  "main_commit": "cfb1033aa7fb65a2655db276bee696161196bdeb",
+  "status": "Build/equivalence evidence only; required Sequoia tests still in progress",
+  "all_native_executables_identical_to_candidate_02": true,
+  "original_tested_ui_source_digest": "07cadcd4285aa8171290c994d26184e2bfa5c0443a9dd7e0aadd0ce8b2a576f5",
+  "candidate_03_changes": "Qualification packaging and runner scripts only; no production or native executable change."
+}

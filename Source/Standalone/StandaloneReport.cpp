@@ -98,15 +98,26 @@ void jsonValue(std::ostringstream& out,const juce::var& v,int depth)
 juce::var report(const Request& r,const Candidate* c,bool publishing)
 {
     if(c&&!c->matchesAudio(r))throw std::runtime_error("Artifact report does not match captured audio/runtime");
-    auto o=object();set(o,"schema","levelscope-measurement-report-v2");
+    auto o=object();set(o,"schema","levelscope-measurement-report-v3");
     set(o,"kind",c?"verified-artifact-measurement":"measurement-only-no-exported-audio");
     set(o,"publication",publishing?"published-verified-pcm":c?"NOT EXPORTED - verified staging artifact":"NO EXPORTED AUDIO");
     set(o,"scope","Selected whole-programme loudness and true-peak rules only. No complete broadcaster delivery, BWF/BW64, metadata, synchronization or future encoded-media certification.");
     set(o,"document_id",r.documentId);set(o,"programme_id",r.programmeId);set(o,"document_revision",juce::String(r.documentRevision));
     set(o,"session_unsaved",r.unsaved);set(o,"session_basename",r.sessionFile.getFileName());set(o,"runtime_id",r.current.sessionId);
-    set(o,"app","LevelScope Standalone M11");set(o,"build",r.current.buildVersion);set(o,"platform",r.current.platformAndFloatingPointMode);
+    set(o,"app","LevelScope Standalone M12");set(o,"build",r.current.buildVersion);set(o,"platform",r.current.platformAndFloatingPointMode);
     set(o,"cpu",juce::SystemStats::getCpuModel());set(o,"processing_version",r.current.processing.engineVersion);
     set(o,"processing_gain_db",r.current.processing.staticGainDb);set(o,"processing_gain_hex",exact(r.current.processing.staticGainDb));
+    auto plan=object();set(plan,"engine",r.current.processing.engineVersion);set(plan,"global_gain_db",r.current.processing.staticGainDb);set(plan,"global_gain_hex",exact(r.current.processing.staticGainDb));
+    set(plan,"order","original programme/composition -> section gain -> static-gain-v1 -> monitor or final export quantization");
+    juce::Array<juce::var> gains,ramps;
+    if(r.current.processing.sectionGains)
+    {
+        const auto g=r.current.processing.sectionGains->canonical();set(plan,"input_identity",g.inputIdentity);set(plan,"audio_key",g.audioKey());
+        set(plan,"transition","section-gain-v1: centred 100 ms maximum, linear dB, shortened to half adjacent spans, half-open audio-frame intervals");
+        for(const auto& row:g.intervals){auto v=object();set(v,"begin_frame",juce::String(row.begin));set(v,"end_frame",juce::String(row.end));set(v,"gain_db",row.db);set(v,"gain_hex",exact(row.db));gains.add(v);}
+        for(size_t n=1;n<g.intervals.size();++n){auto v=object();const auto b=g.intervals[n].begin,rad=g.radius(n);set(v,"begin_frame",juce::String(b-rad));set(v,"end_frame",juce::String(b+rad));ramps.add(v);}
+    }
+    set(plan,"applied_intervals",gains);set(plan,"transitions",ramps);set(o,"current_processing_plan",plan);
     set(o,"programme_frames",juce::String(r.current.media.frames));set(o,"sample_rate",r.current.media.sampleRate);
     set(o,"duration_rational_seconds",juce::String(r.current.media.frames)+"/"+juce::String(r.current.media.sampleRate,0));
     set(o,"positions","Audio-source frames; true-peak positions in eighth-frames. Video offsets and measurement EOF drain do not extend programme duration.");
@@ -176,7 +187,7 @@ juce::String reportHtml(const juce::var& model)
     html+=artifact?"VERIFIED ARTIFACT MEASUREMENT":"MEASUREMENT-ONLY - NO EXPORTED AUDIO";
     html+="</h1><p>"+escaped(model["publication"].toString())+"</p><p>"+escaped(model["scope"].toString())+"</p>";
     html+="<p>Programme: "+escaped(model["programme_id"].toString())+" | Processing gain: "+escaped(model["processing_gain_db"].toString())+" dB | "+(static_cast<bool>(model["session_unsaved"])?"Unsaved captured session revision":"Saved session revision")+"</p>";
-    if(model.hasProperty("composition"))html+="<p><strong>Source: original confirmed M&amp;E + dialogue composition.</strong> Unity component gains; Current State applies the recorded global trim. Component purpose, language/version, mapping and individual file hashes are recorded below. This is not dialogue analysis or verification of creative balance.</p>";
+    if(model.hasProperty("composition"))html+="<p><strong>Source: original confirmed M&amp;E + dialogue composition.</strong> Unity component gains; Current State applies the recorded section and global processing plan. Component purpose, language/version, mapping and individual file hashes are recorded below. This is not dialogue analysis or verification of creative balance.</p>";
     html+="<table><tr><th>Measured state</th><th>Status / selected rules</th><th>Integrated LUFS</th><th>True peak dBTP</th><th>LRA LU</th></tr>";
     for(const auto& key:artifact?juce::StringArray{"source","current","artifact"}:juce::StringArray{"source","current"})
     {

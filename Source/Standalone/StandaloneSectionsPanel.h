@@ -15,6 +15,7 @@ public:
     void resume();
     void paint (juce::Graphics&) override;
     void resized() override;
+    std::function<void()> onChanged;
 private:
     StandaloneSessionModel& session;
     proposal::SectionDocument& document;
@@ -22,12 +23,22 @@ private:
     SectionsController sections;
     std::shared_ptr<const MeasuredDiagnostics> measured;
     std::shared_ptr<const proposal::SectionAnalysis> displayed;
-    juce::String mapKey, annotationKey, editNotice;
+    juce::String mapKey, annotationKey, editNotice, appliedGainKey;
     bool suspended = false, refreshing = false;
     uint64_t selectedId = 0;
     juce::ComboBox domainBox, windowKind, windowScope;
     juce::TextButton splitButton { "Split at frame" }, moveButton { "Move end" }, mergeButton { "Merge next" }, renameButton { "Rename" };
     juce::TextButton rebuildButton { "Build sections" }, cancelButton { "Cancel sections" };
+    juce::TextButton draftGainButton { "Draft section gains" }, setGainButton { "Set draft gain" },
+        applyGainButton { "Apply section trims" }, discardGainButton { "Discard draft" };
+    juce::TextEditor gainEditor;
+    juce::Label gainStatus;
+    struct GainView final : juce::Component
+    {
+        StandaloneSessionModel& session;
+        explicit GainView(StandaloneSessionModel& s):session(s){}
+        void paint(juce::Graphics&) override;
+    } gainView { session };
     juce::TextEditor boundary, name, summary, inspection;
     juce::Label boundaryLabel, nameLabel, status;
     MeasurementTimeline timeline;

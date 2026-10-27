@@ -1,0 +1,17 @@
+{
+  "status": "Sequoia tested; High Sierra and video qualification pending",
+  "candidate": "candidate-03",
+  "source_digest": "d6501c0d234ccf9c02b90527fc4af6c613dd4d538a71cc5520fb6b7b21085c1f",
+  "measurement_build": "185566e2c3ed9835d9878643618bd6789e785dee78fd670174f1ede4eb10f5fd",
+  "sequoia_phase_complete": true,
+  "qualification_complete": false,
+  "no_required_sequoia_checks_outstanding": true,
+  "main": "cfb1033aa7fb65a2655db276bee696161196bdeb",
+  "deferred": [
+    "Actual Intel High Sierra runtime and cross-platform qualification after M13",
+    "All selected video loading, decoding and playback qualification after M13"
+  ],
+  "publication_authorized": false,
+  "main_integration_authorized": false,
+  "m13_implementation_authorized": false
+}

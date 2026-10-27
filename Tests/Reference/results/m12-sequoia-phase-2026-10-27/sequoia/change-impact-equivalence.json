@@ -1,0 +1,92 @@
+{
+  "base_commit": "cfb1033aa7fb65a2655db276bee696161196bdeb",
+  "unchanged_files": [
+    {
+      "path": "Source/Core/Measurement/GatePopulation.h",
+      "sha256": "56c32bea23a332f811433c0977d07de9b3401b12cf8629d92aa78ceb58060c3e",
+      "unchanged_from_m11": true
+    },
+    {
+      "path": "Source/Core/Measurement/OfflineMeasurement.h",
+      "sha256": "296958549aef56a4717deaace9cba7a6e2d85a7bb34c99906c321b21f75d7020",
+      "unchanged_from_m11": true
+    },
+    {
+      "path": "Source/Core/Measurement/OfflineMeasurement.cpp",
+      "sha256": "a72cbe46461c8d7589eebb644ba28f0ece0f0e7b8f0565ae1a3858125e584cf7",
+      "unchanged_from_m11": true
+    },
+    {
+      "path": "Source/Standalone/Pcm24Wave.cpp",
+      "sha256": "77b74156bf37a14acfa475ef81df18b76656dc7620f8819a608d56d5d6d6e5a3",
+      "unchanged_from_m11": true
+    },
+    {
+      "path": "Source/Standalone/Pcm24Wave.h",
+      "sha256": "f901ea0dbf429b14c31faa33c3bd92c4754858a608555110d1fab67dcddd7e1f",
+      "unchanged_from_m11": true
+    },
+    {
+      "path": "Source/Standalone/StandaloneTargetProfiles.h",
+      "sha256": "78148721bd755ba34084f679e68f2da4a7f9b120b4872161095db64d887471fe",
+      "unchanged_from_m11": true
+    },
+    {
+      "path": "Source/Standalone/StandaloneMeasurementLayout.h",
+      "sha256": "d36871613a6d98cdd6455e883657fa1b8a2594d6ebbdcc6b36fd46b5e21defb8",
+      "unchanged_from_m11": true
+    },
+    {
+      "path": "Source/Core/Proposal/Model/TargetProfile.cpp",
+      "sha256": "578736b0daa64d7d654506a3d81a4715b093f5ea8c15610f2b5a930ee566fcda",
+      "unchanged_from_m11": true
+    },
+    {
+      "path": "Source/Core/Proposal/Model/TargetProfile.h",
+      "sha256": "54b2637bc231647e7ededa584b894a83976f0f05777d46d2330cd97ddc82ab67",
+      "unchanged_from_m11": true
+    },
+    {
+      "path": "Source/Standalone/VideoTiming.h",
+      "sha256": "69dc05d1f03a0d17d5b83ce317829135c1cd28305e5dd769327b830b7c6eb7bb",
+      "unchanged_from_m11": true
+    },
+    {
+      "path": "Source/Standalone/StandaloneVideoPanel.cpp",
+      "sha256": "19a84acf7e0531ba18b7e011e158c707fbb2014f3ade4e9f961cd806de987dfa",
+      "unchanged_from_m11": true
+    },
+    {
+      "path": "Source/Standalone/StandaloneVideo.h",
+      "sha256": "97279ff2b6d8fb20fc8d3f230eea44949df8dc9666590aef03efbe01b7721e34",
+      "unchanged_from_m11": true
+    },
+    {
+      "path": "Source/Standalone/StandaloneVideo_mac.mm",
+      "sha256": "004e02878e75fcf3ff8e48de3a5f83a6d200f1a3e60117bb3b32f212df754e53",
+      "unchanged_from_m11": true
+    },
+    {
+      "path": "Source/Standalone/StandaloneVideoPanel.h",
+      "sha256": "01c1c47107d9c76a190167687d2df548d58c6cf487369db0fa5da2d7c8b5b74f",
+      "unchanged_from_m11": true
+    },
+    {
+      "path": "Source/Standalone/StandaloneVideo.cpp",
+      "sha256": "7b5aee564de7dba96e9557f784a8d03dce60ca8022b4736a0a84eb7097e458cb",
+      "unchanged_from_m11": true
+    }
+  ],
+  "affected_dispatch": "Offline measurement, audition worker and export call ProgrammeGainProcessor using the existing absolute reader frame. No timing, buffering, callback or presentation-clock edits.",
+  "fresh_required": "M12 processing matrix and affected native regressions; pinned EBU/ITU; one three-hour workflow; independent quantization and silent UI.",
+  "reused_historical_evidence": "M11 baseline numerical tolerances, pinned vector bytes and immutable long fixture inputs only. Historical video/High Sierra results do not qualify M12.",
+  "deferred": "Every test loading/decoding/playing video and all actual High Sierra/Golem access until after M13.",
+  "selection_audit": {
+    "composition": "--phase safety only; native video requires --phase video",
+    "multichannel": "default audio-only tests; videoIsolation requires --video; no long-source mode",
+    "sessions": "--short; serialized rational offsets only; no video attachment",
+    "programmes": "default audio/group regressions plus explicitly derived audio-only M8 sessions; nativeReferences requires both --video and --prores",
+    "export": "default audio tests; exportVideo requires both --video and --prores",
+    "m12-long": "SectionProcessingTests --long-session only; input session must have no video; does not call historical longComposition runner"
+  }
+}

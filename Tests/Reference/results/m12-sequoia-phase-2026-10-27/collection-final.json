@@ -1,0 +1,100 @@
+{
+  "copied": [
+    {
+      "original": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/acceptance-candidate-03.json",
+      "collected": "acceptance-candidate-03.json",
+      "sha256": "6a10f0f201fc87c562f002389ca65772f8f3483614d4dd1fb5c9ccc54766788b"
+    },
+    {
+      "original": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/completion-candidate-03.json",
+      "collected": "completion-candidate-03.json",
+      "sha256": "d4dcc3cfd6321d6f07ccd7967124bf0c98a7ba12309cbc4c988bdf8b37b4dfbb"
+    },
+    {
+      "original": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/long/independent-rf64.json",
+      "collected": "sequoia/long/independent-rf64.json",
+      "sha256": "8a3dac546c24988eecb3d8474c039150b6328735f58e82ee5c0caefd48379685"
+    },
+    {
+      "original": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/long/summary.json",
+      "collected": "sequoia/long/summary.json",
+      "sha256": "435c62c54c82fa2763c4fc3f7ba53169b3326c2c1634bf41fa7fa96770aaf227"
+    },
+    {
+      "original": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/long/m12-long.log",
+      "collected": "sequoia/long/m12-long.log",
+      "sha256": "032e606c16f8975b2a05de27ae5f2bbd1b7115ae6c6accc514f3bc2f41bf6047"
+    },
+    {
+      "original": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/long/long.json",
+      "collected": "sequoia/long/long.json",
+      "sha256": "c9d5ed876c82a66f09a875c2da373ac43c52407c9567bc00f0fbe5ece7dbda5b"
+    },
+    {
+      "original": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/long/environment.json",
+      "collected": "sequoia/long/environment.json",
+      "sha256": "bed7fa15a1c37714fb7f04abf4d8c527c38776becb07d986755ec32aeef8e088"
+    },
+    {
+      "original": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/long/runs.json",
+      "collected": "sequoia/long/runs.json",
+      "sha256": "f8af4ac9ef9ef4b1c3df389dafd66f7fdd720e03e5e635f0286627d997aad547"
+    },
+    {
+      "original": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/long/long-files/export/report.json",
+      "collected": "sequoia/long/export/report.json",
+      "sha256": "7ccb4d3a9b4bb869b23961f253e830d5b7ca36e91557b70512839faf93392618"
+    },
+    {
+      "original": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/long/long-files/export/report.html",
+      "collected": "sequoia/long/export/report.html",
+      "sha256": "b5322dcbcc8b6eda29e4924e05901620b3be6be931d9dbb083baa49fab8e65ea"
+    },
+    {
+      "original": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/long/long-files/export/manifest.json",
+      "collected": "sequoia/long/export/manifest.json",
+      "sha256": "fd8dff48ed01a2e777d0d86888b8a14ce83edf42d5f3ff6790cc709c0760add8"
+    },
+    {
+      "original": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/schema2-migration-02/summary.json",
+      "collected": "sequoia/schema2-migration-02/summary.json",
+      "sha256": "c5bc62c8cb82aa2136d2a31a8e1e3913b3db0710ba0003e33b594007e3e46495"
+    },
+    {
+      "original": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/schema2-migration-02/6.log",
+      "collected": "sequoia/schema2-migration-02/6.log",
+      "sha256": "b97df104aa970c364aeabd76cb7f9fda510716cd910c3fa42d8ef8f476f2ba9b"
+    },
+    {
+      "original": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/schema2-migration-02/6.json",
+      "collected": "sequoia/schema2-migration-02/6.json",
+      "sha256": "a40bee0f0fe6bf40449c53c78684afaa876064c6a510849304640d076b18943d"
+    },
+    {
+      "original": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/schema2-migration-02/2.log",
+      "collected": "sequoia/schema2-migration-02/2.log",
+      "sha256": "1b6df5a0afdf19c4160870a8357c159bfc841602806e01d3e0f11ff1e6b7a18a"
+    },
+    {
+      "original": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/schema2-migration-02/2.json",
+      "collected": "sequoia/schema2-migration-02/2.json",
+      "sha256": "70c848e15d3ffdda9ff638abf23ba6e0dc3ed53c5f9fb162ee3df7bb93285ad2"
+    },
+    {
+      "original": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/schema2-migration/2.log",
+      "collected": "historical/schema2-migration-first-oracle/2.log",
+      "sha256": "1b6df5a0afdf19c4160870a8357c159bfc841602806e01d3e0f11ff1e6b7a18a"
+    },
+    {
+      "original": "/Users/fuzz/Developer/LevelScope/build/m12-qualification-2026-10-27/candidate-03-results/sequoia/schema2-migration/2.json",
+      "collected": "historical/schema2-migration-first-oracle/2.json",
+      "sha256": "70c848e15d3ffdda9ff638abf23ba6e0dc3ed53c5f9fb162ee3df7bb93285ad2"
+    }
+  ],
+  "exclusions": [
+    "Raw/generated media",
+    "Binaries/build products",
+    "Connection records/credentials",
+    "Finder metadata"
+  ]
+}

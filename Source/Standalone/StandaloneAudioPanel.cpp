@@ -188,7 +188,8 @@ void StandaloneAudioPanel::refresh()
         ? "UNVERIFIED: measurements stale" : current && session.currentStateNeedsRemeasurement()
         ? "UNVERIFIED: measurements unavailable; remeasure Current State" : "UNVERIFIED: measurements unavailable";
     auditionLabel.setText ((current ? "Current State" : "Source") + juce::String (session.sourceDocument.composition ? " | composed programme | Processing " : " | Processing ")
-        + juce::String (request.context.processing.staticGainDb, 12) + " dB | " + measurementStatus
+        + juce::String (request.context.processing.staticGainDb, 12) + " dB global"
+        + (request.context.processing.sectionGains ? " + applied section gains" : "") + " | " + measurementStatus
         + "\n" + (requestError.isNotEmpty() ? requestError : "Playback does not measure or establish compliance."), juce::dontSendNotification);
     gain.setEnabled (true); // Listening volume remains live, even after an overload fault.
     typeBox.setEnabled (editable);

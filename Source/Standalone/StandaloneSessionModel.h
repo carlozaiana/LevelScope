@@ -132,6 +132,15 @@ struct CurrentStateDocument
     bool needsRemeasurement = false;
     int revision = 0;
     double staticGainDb = 0.0;
+    std::optional<processing::SectionGainPlan> sectionGains;
+    proposal::SectionMap sectionGainAnnotations; // provenance, never audible identity
+
+    ProcessingPlan processingPlan() const
+    {
+        ProcessingPlan p; p.staticGainDb=staticGainDb; p.sectionGains=sectionGains;
+        if(sectionGains) { p.schemaVersion=2; p.engineVersion=processing::SectionGainPlan::version; }
+        return p;
+    }
 
     bool initializeFromSource (const SourceDocument& sourceDocument)
     {
@@ -147,7 +156,7 @@ struct CurrentStateDocument
         needsRemeasurement = true;
         ++revision;
 
-        staticGainDb = 0;
+        staticGainDb = 0; sectionGains.reset(); sectionGainAnnotations={};
         statusText = "Identity processing; ready to measure";
 
         return true;
@@ -161,7 +170,7 @@ struct CurrentStateDocument
         sourcePathSnapshot = juce::String();
         needsRemeasurement = false;
         revision = 0;
-        staticGainDb = 0;
+        staticGainDb = 0; sectionGains.reset(); sectionGainAnnotations={};
     }
 };
 
@@ -212,12 +221,97 @@ public:
     juce::String documentId = juce::Uuid().toString(), programmeId = juce::Uuid().toString();
     uint64_t documentRevision = 0, savedDocumentRevision = 0;
     juce::File documentFile;
-    int openedSessionSchema = 3;
+    int openedSessionSchema = 4;
     juce::String restoredProfileId, restoredProfileVersion, restoredProfileDigest;
     bool videoUnresolved = false;
     proposal::SectionDocument sectionDocument;
+    struct SectionTrimDraft
+    {
+        processing::SectionGainPlan plan;
+        proposal::SectionMap annotations;
+        juce::String geometry, runtime;
+        uint64_t audioRevision=0;
+    };
+    std::optional<SectionTrimDraft> sectionTrimDraft;
+    juce::String sectionTrimNotice="No section-gain draft. Applied processing is independent of annotations.";
+    static juce::String sectionGeometry(const proposal::SectionMap& map)
+    {
+        juce::String key=map.inputIdentity+":"+juce::String(map.sampleRate)+":"+juce::String(map.frames);
+        for(const auto& row:map.sections) key += ";"+juce::String(row.id)+":"+juce::String(row.begin)+":"+juce::String(row.end);
+        return key;
+    }
+    bool sectionDraftFresh() const
+    {
+        return sectionTrimDraft && sectionTrimDraft->runtime==sessionId && sectionTrimDraft->audioRevision==revision
+            && sectionTrimDraft->geometry==sectionGeometry(sectionDocument.map()) && !sourceContentInvalid
+            && sectionTrimDraft->plan.inputIdentity==sectionInputIdentity(measurementContext(MeasurementDomain::source));
+    }
+    bool beginSectionTrimDraft()
+    {
+        if(audioEditsBlocked() || job.isActive() || sectionTrimDraft || !currentStateDocument.isInitialized || sourceContentInvalid) return false;
+        synchronizeSections(); const auto& map=sectionDocument.map();
+        if(!map.valid()) return false;
+        auto c=measurementContext(MeasurementDomain::currentState);
+        // Validate the layout through the same adapter, using a non-unity probe.
+        processing::SectionGainPlan probe; probe.inputIdentity=map.inputIdentity; probe.sampleRate=map.sampleRate;
+        probe.frames=map.frames; probe.intervals={{0,map.frames,1}};
+        c.processing.sectionGains=probe;c.processing.schemaVersion=2;c.processing.engineVersion=processing::SectionGainPlan::version;
+        const auto error=ProgrammeGainProcessor::validationError(c);
+        if(error.isNotEmpty()){sectionTrimNotice=error;return false;}
+        SectionTrimDraft d;d.annotations=map;d.geometry=sectionGeometry(map);d.runtime=sessionId;d.audioRevision=revision;
+        d.plan=probe;d.plan.intervals.clear();
+        const auto& active=currentStateDocument.sectionGains;
+        const bool sameGeometry=active && sectionGeometry(currentStateDocument.sectionGainAnnotations)==d.geometry;
+        for(const auto& row:map.sections)
+        {
+            double gain=0;
+            if(sameGeometry) for(const auto& applied:active->intervals)
+                if(applied.begin<=row.begin && applied.end>=row.end) {gain=applied.db;break;}
+            d.plan.intervals.push_back({row.begin,row.end,gain});
+        }
+        sectionTrimDraft=std::move(d);
+        sectionTrimNotice=sameGeometry?"DRAFT copied from applied gains; no audio change.":"DRAFT initialized to 0 dB on current annotations; no audio change.";
+        return true;
+    }
+    bool setSectionDraftGain(size_t row,double db)
+    {
+        if(audioEditsBlocked() || job.isActive() || !sectionDraftFresh() || row>=sectionTrimDraft->plan.intervals.size()
+            || !std::isfinite(db) || db < -12 || db > 12) return false;
+        sectionTrimDraft->plan.intervals[row].db=db;
+        sectionTrimNotice="DRAFT only: Apply explicitly while stopped, then re-measure Current State.";return true;
+    }
+    void discardSectionTrimDraft()
+    {sectionTrimDraft.reset();sectionTrimNotice="Draft discarded. Applied processing and measurements unchanged.";}
+    bool applySectionTrimDraft()
+    {
+        if(audioEditsBlocked() || job.isActive() || !sectionDraftFresh())
+        {sectionTrimNotice="Cannot apply: stop playback, finish jobs and discard/recreate any stale draft.";return false;}
+        const auto error=sectionTrimDraft->plan.validationError();
+        if(error.isNotEmpty()){sectionTrimNotice=error;return false;}
+        auto next=sectionTrimDraft->plan.canonical();
+        auto c=measurementContext(MeasurementDomain::currentState);
+        c.processing.sectionGains=next.isUnity()?std::nullopt:std::optional<processing::SectionGainPlan>(next);
+        c.processing.schemaVersion=next.isUnity()?1:2;c.processing.engineVersion=next.isUnity()?"static-gain-v1":processing::SectionGainPlan::version;
+        const auto requestError=OfflineAnalysisService::validateRequest(c,MeasurementDomain::currentState);
+        if(requestError.isNotEmpty()){sectionTrimNotice=requestError;return false;}
+        const auto oldKey=currentStateDocument.sectionGains?currentStateDocument.sectionGains->audioKey():juce::String();
+        const auto newKey=next.isUnity()?juce::String():next.audioKey();
+        if(oldKey==newKey)
+        {sectionTrimDraft.reset();sectionTrimNotice="NO CHANGE: applied samples, revision and valid measurements retained.";return true;}
+        currentStateDocument.sectionGains=c.processing.sectionGains;
+        currentStateDocument.sectionGainAnnotations=next.isUnity()?proposal::SectionMap{}:sectionTrimDraft->annotations;
+        sectionTrimDraft.reset();invalidateCurrentProcessing();
+        sectionTrimNotice="APPLIED; Current State UNVERIFIED. Re-measure explicitly; no automatic correction or rollback.";return true;
+    }
+    void invalidateCurrentProcessing()
+    {
+        discardTrim();++revision;++currentStateDocument.revision;documentChanged();unresolvedCurrentCache.reset();
+        currentStateDocument.needsRemeasurement=true;
+        currentStateDocument.statusText="UNVERIFIED: processing changed; re-measure Current State";
+        currentState=MeasurementSummary();currentState.statusText="UNVERIFIED: audio changed; previous measurement discarded";
+    }
     void documentChanged() { ++documentRevision; }
-    bool documentDirty() const { return documentRevision != savedDocumentRevision; }
+    bool documentDirty() const { return sectionTrimDraft.has_value() || documentRevision != savedDocumentRevision; }
     void synchronizeSections()
     {
         const auto c = measurementContext (MeasurementDomain::source);
@@ -307,7 +401,7 @@ public:
         c.sourceFile = sourceDocument.file; c.media = sourceDocument.media; c.assembly = sourceDocument.assembly;
         c.composition = sourceDocument.composition;
         c.fileLayout = sourceDocument.layout; c.range = { 0, c.media.frames };
-        c.processing.staticGainDb = domain == MeasurementDomain::source ? 0 : currentStateDocument.staticGainDb;
+        c.processing = domain == MeasurementDomain::source ? ProcessingPlan{} : currentStateDocument.processingPlan();
         c.profile = getSelectedTargetProfile();
         c.profileVersion = c.profile.definitionVersion;
 #ifdef LEVELSCOPE_MEASUREMENT_BUILD
@@ -330,14 +424,8 @@ public:
         if (! currentStateDocument.isInitialized || ! std::isfinite (gain) || gain < -60 || gain > 24) return false;
         if (gain == currentStateDocument.staticGainDb) return true;
         if (audioEditsBlocked()) return false;
-        discardTrim();
-        ++revision; ++currentStateDocument.revision; documentChanged();
-        unresolvedCurrentCache.reset();
         currentStateDocument.staticGainDb = gain;
-        currentStateDocument.needsRemeasurement = true;
-        currentStateDocument.statusText = "UNVERIFIED: gain changed; re-measure Current State";
-        currentState = MeasurementSummary();
-        currentState.statusText = "UNVERIFIED: audio changed; previous measurement discarded";
+        invalidateCurrentProcessing();
         return true;
     }
 

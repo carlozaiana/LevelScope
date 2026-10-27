@@ -16,7 +16,7 @@ TrimProposal draftGlobalTrim (const TrimRequest& r)
     const auto current = evaluateMeasuredProgramme (r.profile, r.current);
     std::ostringstream binding; binding.imbue (std::locale::classic()); binding << std::hexfloat;
     for (const auto& s : { juce::String (trimMethodVersion), source.identity, current.identity,
-                           r.sourceInputIdentity, r.currentInputIdentity, r.processingVersion })
+                           r.sourceInputIdentity, r.currentInputIdentity, r.processingVersion, r.fixedUpstreamPlanIdentity })
     { const auto bytes = s.toStdString(); binding << bytes.size() << ':' << bytes << ';'; }
     binding << r.currentGainDb;
     const auto bytes = binding.str(); p.identity = juce::SHA256 (bytes.data(), bytes.size()).toHexString();
@@ -29,9 +29,11 @@ TrimProposal draftGlobalTrim (const TrimRequest& r)
     { p.explanation = "Valid measured Source and Current State, required metrics and confirmed profile applicability are required."; return p; }
     if (r.sourceInputIdentity.isEmpty() || r.sourceInputIdentity != r.currentInputIdentity)
     { p.explanation = "Source and Current State must describe identical content, channel interpretation and programme range."; return p; }
-    if (r.processingVersion != "static-gain-v1" || ! std::isfinite (r.currentGainDb)
+    const bool supportedPlan=(r.processingVersion=="static-gain-v1" && r.fixedUpstreamPlanIdentity.isEmpty())
+        || (r.processingVersion=="section-gain-v1" && r.fixedUpstreamPlanIdentity.isNotEmpty());
+    if (!supportedPlan || ! std::isfinite (r.currentGainDb)
         || r.currentGainDb < -60 || r.currentGainDb > 24 || r.profile.limits.hasMaxLoudnessRange)
-    { p.explanation = "M3 supports static gain from -60 to +24 dB and programme loudness/true-peak rules only."; return p; }
+    { p.explanation = "Global trim requires a supported measured plan, fixed upstream section gains and programme loudness/true-peak rules only."; return p; }
 
     const double i = *r.current.integrated.value, tp = *r.current.truePeak.value;
     if (current.verdict == Verdict::pass)
