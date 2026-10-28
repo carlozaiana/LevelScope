@@ -43,7 +43,9 @@ proposal::MeasuredProgramme measuredProgrammeForSnapshot (const AnalysisSnapshot
     proposal::MeasuredProgramme input;
     input.domain = domain == MeasurementDomain::source ? proposal::SnapshotDomain::source
                  : domain == MeasurementDomain::currentState ? proposal::SnapshotDomain::currentState
-                                                           : proposal::SnapshotDomain::renderedOutput;
+                 : domain == MeasurementDomain::renderedOutput ? proposal::SnapshotDomain::renderedOutput
+                 : domain == MeasurementDomain::privateCandidate ? proposal::SnapshotDomain::privateCandidate
+                                                               : proposal::SnapshotDomain::predicted;
     input.applicability = applicability;
     if (analysis)
     {
@@ -78,7 +80,8 @@ proposal::Evaluation evaluateSnapshot (const AnalysisSnapshot* analysis, const S
 juce::String evaluationText (const proposal::Evaluation& e)
 {
     juce::String text;
-    text << (e.domain == proposal::SnapshotDomain::source ? "Source" : e.domain == proposal::SnapshotDomain::renderedOutput ? "Exported artifact" : "Current State")
+    text << (e.domain == proposal::SnapshotDomain::source ? "Source" : e.domain == proposal::SnapshotDomain::renderedOutput ? "Exported artifact"
+        : e.domain == proposal::SnapshotDomain::privateCandidate ? "Private candidate (not Current State)" : "Current State")
          << " evaluation: " << proposal::verdictName (e.verdict) << "\n" << e.message << "\n";
     for (const auto& rule : e.rules)
     {

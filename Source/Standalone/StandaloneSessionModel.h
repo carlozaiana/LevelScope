@@ -11,6 +11,7 @@
 #include "StandaloneVideo.h"
 #include "StandaloneCompliance.h"
 #include "StandaloneProposal.h"
+#include "StandaloneSectionProposal.h"
 #include "StandaloneAuditionRequest.h"
 #include "StandaloneSections.h"
 #include <functional>
@@ -248,7 +249,7 @@ public:
     }
     bool beginSectionTrimDraft()
     {
-        if(audioEditsBlocked() || job.isActive() || sectionTrimDraft || !currentStateDocument.isInitialized || sourceContentInvalid) return false;
+        if(audioEditsBlocked() || job.isActive() || sectionTrimDraft || sectionProposal || !currentStateDocument.isInitialized || sourceContentInvalid) return false;
         synchronizeSections(); const auto& map=sectionDocument.map();
         if(!map.valid()) return false;
         auto c=measurementContext(MeasurementDomain::currentState);
@@ -311,7 +312,7 @@ public:
         currentState=MeasurementSummary();currentState.statusText="UNVERIFIED: audio changed; previous measurement discarded";
     }
     void documentChanged() { ++documentRevision; }
-    bool documentDirty() const { return sectionTrimDraft.has_value() || documentRevision != savedDocumentRevision; }
+    bool documentDirty() const { return sectionTrimDraft.has_value() || hasActionableSectionProposal() || documentRevision != savedDocumentRevision; }
     void synchronizeSections()
     {
         const auto c = measurementContext (MeasurementDomain::source);
@@ -326,6 +327,71 @@ public:
     bool sourceContentInvalid = false;
     std::optional<proposal::TrimProposal> trimDraft;
     juce::String trimNotice = "No proposal drafted.";
+
+    std::shared_ptr<const SectionProposalResult> sectionProposal;
+    std::shared_ptr<const proposal::SectionPeakMap> sectionAttribution;
+    juce::String sectionProposalNotice="No section-led proposal. Generate from measured Current State.";
+    SectionProposalRequest sectionProposalRequest() const
+    {
+        SectionProposalRequest r;
+        r.sourceContext=measurementContext(MeasurementDomain::source);
+        r.currentContext=measurementContext(MeasurementDomain::currentState);
+        if(source.hasMeasurement&&!sourceContentInvalid)r.source=source.analysis;
+        if(currentState.hasMeasurement&&!sourceContentInvalid&&!currentStateNeedsRemeasurement())r.current=currentState.analysis;
+        r.applicability=programmeApplicability;r.annotations=sectionDocument.map();
+        r.appliedAnnotations=currentStateDocument.sectionGainAnnotations;
+        r.pendingManualDraft=sectionTrimDraft.has_value();r.attribution=sectionAttribution;return r;
+    }
+    bool acceptSectionProposal(std::shared_ptr<const SectionProposalResult> result)
+    {
+        if(job.isActive()||!result||result->identity()!=sectionProposalRequest().binding())return false;
+        sectionProposal=std::move(result);sectionProposalNotice=sectionProposal->text();
+        if(sectionProposal->peaks())sectionAttribution=sectionProposal->peaks();
+        return true;
+    }
+    juce::String sectionProposalDisplayText() const
+    {
+        if(sectionProposal&&sectionProposal->identity()!=sectionProposalRequest().binding())
+            return "STALE PROPOSAL: inputs/annotation geometry changed. Cannot Apply; generate again.\n"+sectionProposalNotice;
+        return sectionProposalNotice;
+    }
+    bool canApplySectionProposal() const
+    {
+        return !audioEditsBlocked()&&!job.isActive()&&!sectionTrimDraft&&sectionProposal
+            &&(sectionProposal->status()==SectionProposalStatus::ready||sectionProposal->status()==SectionProposalStatus::globalOnly)
+            &&sectionProposal->identity()==sectionProposalRequest().binding()&&sourceDocument.matchesFileStamps();
+    }
+    bool hasActionableSectionProposal() const
+    {return sectionProposal&&(sectionProposal->status()==SectionProposalStatus::ready||sectionProposal->status()==SectionProposalStatus::globalOnly);}
+    void discardSectionProposal()
+    {sectionProposal.reset();sectionProposalNotice="Proposal discarded. Applied settings and measurements preserved.";}
+    bool applySectionProposal()
+    {
+        if(audioEditsBlocked()||job.isActive()||!sectionProposal)return false;
+        if(sectionProposal->identity()!=sectionProposalRequest().binding())
+        {discardSectionProposal();sectionProposalNotice="Stale proposal rejected. Generate again from current inputs.";return false;}
+        if(sectionProposal->status()==SectionProposalStatus::noChange)return true;
+        if(!canApplySectionProposal())return false;
+        const auto accepted=sectionProposal;
+        if(accepted->status()==SectionProposalStatus::globalOnly)
+        {
+            if(!acceptTrimProposal(accepted->global())||!applyTrim())return false;
+        }
+        else
+        {
+            auto c=measurementContext(MeasurementDomain::privateCandidate);c.processing=accepted->plan();
+            if(OfflineAnalysisService::validateRequest(c,MeasurementDomain::privateCandidate).isNotEmpty()
+                ||evaluateSnapshot(accepted->assessment().get(),c,MeasurementDomain::privateCandidate,
+                    getSelectedTargetProfile(),programmeApplicability).verdict!=proposal::Verdict::pass)return false;
+            currentStateDocument.sectionGains=c.processing.sectionGains;
+            currentStateDocument.sectionGainAnnotations=sectionDocument.map();
+            currentStateDocument.staticGainDb=c.processing.staticGainDb;
+            invalidateCurrentProcessing();
+        }
+        sectionProposalNotice="APPLIED explicitly. Current State UNVERIFIED; independently re-measure. Applied gains retained on cancellation/failure; no retry or rollback.\n"+accepted->text();
+        job.message="Proposal applied explicitly. Current State UNVERIFIED; re-measure independently.";
+        return true;
+    }
 
     proposal::TrimRequest currentTrimRequest() const
     {
@@ -366,6 +432,8 @@ public:
 
     void discardTrim()
     {
+        sectionProposal.reset();
+        sectionProposalNotice="No current section proposal. Generate from valid measured Current State.";
         trimDraft.reset();
         trimNotice = "No current proposal. Draft again from valid measured Current State.";
     }
@@ -431,7 +499,7 @@ public:
 
     bool acceptMeasurement (AnalysisSnapshot result)
     {
-        if (result.domain == MeasurementDomain::renderedOutput || ! sourceDocument.hasSource
+        if ((result.domain != MeasurementDomain::source && result.domain != MeasurementDomain::currentState) || ! sourceDocument.hasSource
             || result.context.sessionId != sessionId || result.context.ticket.sessionRevision != revision
             || result.context.ticket.id != job.ticket.id || job.state != JobState::succeeded
             || (result.domain == MeasurementDomain::currentState && ! currentStateDocument.isInitialized)) return false;

@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "phase": "video",
+  "platform": "high-sierra",
+  "error": "",
+  "source_digest": "50eba19a2d66096607ec878c8eaa05e610580c7f5e8854d7b375d846a89c5f27",
+  "required_runs": [
+    "m13-video",
+    "video-timing"
+  ],
+  "report_hashes": {
+    "environment.json": "abed96e106b022e45dae8b9952e1b83e204aeeab318ec9ba7d78ff4761a7d91c",
+    "m13-video.json": "7e8ba5f56df2e4c5b8c2fee6b4f5a845ce3063cef7b7afc1e04d59e457a9ee60",
+    "runs.json": "3b69ef155c396a4adacc1b3a5a24d7b1be4f99080378f4097d6da6c65d9b9523"
+  },
+  "qualification_complete": false
+}

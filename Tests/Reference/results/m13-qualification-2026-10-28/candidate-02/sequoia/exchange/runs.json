@@ -1,0 +1,21 @@
+[
+  {
+    "name": "m13-exchange",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-02/bin/LevelScopeSectionProposalTests",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-02-results/sequoia/exchange/exchange-files",
+      "--exchange",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-02-results/foreign-high-sierra",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-02-results/sequoia/exchange/m13-exchange.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 8.202061333000001,
+    "log_sha256": "6b9a90d5ad3b863bd969e7a0a70ecd66b9fb7cea9c4cf79ab43f90dcd183b5a2"
+  }
+]

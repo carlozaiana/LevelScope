@@ -1,0 +1,332 @@
+[
+  {
+    "name": "m13-core",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/bin/LevelScopeSectionProposalTests",
+      "--root",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02-results/high-sierra/short/m13-files",
+      "--output",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02-results/high-sierra/short/m13-core.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 772.6205142700001,
+    "log_sha256": "46dc8f9ae92398e33b83c589974abe5e71ba116e3cbba13b24fed3b19e834dca"
+  },
+  {
+    "name": "m12-core",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/bin/LevelScopeSectionProcessingTests",
+      "--root",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02-results/high-sierra/short/m12-files",
+      "--output",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02-results/high-sierra/short/m12-core.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 211.29664153700003,
+    "log_sha256": "cba40491548e232f58c12f4aa95bcbf24d8a1ea9d6fb3a35c892d45f51425be8"
+  },
+  {
+    "name": "m11-safety",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/bin/LevelScopeCompositionTests",
+      "--phase",
+      "safety",
+      "--root",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02-results/high-sierra/short/m11-safety-files",
+      "--output",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02-results/high-sierra/short/m11-safety.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 16.66720636399998,
+    "log_sha256": "a127e84d08871b5a2085f90b359dc9c45b6077fcd70eabd760a213ac1557a886"
+  },
+  {
+    "name": "measurement",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/bin/LevelScopeMeasurementTests"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 29.391695615999993,
+    "log_sha256": "693ec25505d8a388521025eedf57085a86503c9ccda9586e86f6f315285c4e6c"
+  },
+  {
+    "name": "scaffold",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/bin/LevelScopeScaffoldTests"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 0.19115378500009683,
+    "log_sha256": "f44e28ded3d28dbda4c0bd3a5acbb1727ff5ffebd19c2a7d7db1eac84a98a646"
+  },
+  {
+    "name": "compliance",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/bin/LevelScopeComplianceTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02-results/high-sierra/short/compliance.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 0.6926979689999371,
+    "log_sha256": "387e97462de36fb405471706290ea69618f1678a02bd985cf1139744b5649cc1"
+  },
+  {
+    "name": "proposals",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/bin/LevelScopeProposalTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02-results/high-sierra/short/proposals.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 17.629911923999998,
+    "log_sha256": "d2297d0dbe58d37196eda1d4c7762c78c7185ec2eb18c77cf4307e7e32ba1531"
+  },
+  {
+    "name": "diagnostics",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/bin/LevelScopeDiagnosticsTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02-results/high-sierra/short/diagnostics.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 4.255144726000026,
+    "log_sha256": "1fcc0038f5c6830c1ef6a5b4d9036e912fda8e59639d1fd1eaa58cc64b88232d"
+  },
+  {
+    "name": "sections",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/bin/LevelScopeSectionsTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02-results/high-sierra/short/sections.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 6.801387350000141,
+    "log_sha256": "bdaaadcb64af45d40330d99f9ae01ac7e60ec50b9aae61efae9c65916f1c303c"
+  },
+  {
+    "name": "audition",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/bin/LevelScopeAuditionTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02-results/high-sierra/short/audition.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 68.619271368,
+    "log_sha256": "b1ab9cc0022d1ab8f3c0ccff2dd6754d616eb3249a2bf0c224f212986f953b7e"
+  },
+  {
+    "name": "multichannel",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/bin/LevelScopeMultichannelTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02-results/high-sierra/short/multichannel.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 177.8495471220001,
+    "log_sha256": "7230bf3634018275b561007e1c9ff2bc8549d57d39e8d97acd11f367e0429e5e"
+  },
+  {
+    "name": "sessions",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/bin/LevelScopeSessionTests",
+      "--output",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02-results/high-sierra/short/sessions.json",
+      "--short"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 19.344827802999816,
+    "log_sha256": "6c0b50138a9d40a0b79c18759f0d24755469679b08a4edf8feada0b36bd313dd"
+  },
+  {
+    "name": "programmes",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/bin/LevelScopeProgrammeTests",
+      "--output",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02-results/high-sierra/short/programmes.json",
+      "--m8-session",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/audio-only-m8-sessions"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 37.56922203399995,
+    "log_sha256": "beafda9bd98ec00a33fdf566162dbd7e50c44ccf9bc6bba1398dcb11fb349c3f"
+  },
+  {
+    "name": "export",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/bin/LevelScopeExportTests",
+      "--output",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02-results/high-sierra/short/export.json",
+      "--artifacts",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02-results/high-sierra/short/export-artifacts"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 133.09646298100006,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "ebu",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/Tests/run_ebu_measurements.py",
+      "--binary",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/bin/LevelScopeMeasurementTests",
+      "--vectors",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/vectors/ebu",
+      "--report",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02-results/high-sierra/short/ebu.json",
+      "--compare",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/baseline/ebu.json",
+      "--arch",
+      "x86_64"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 23.249103799000068,
+    "log_sha256": "18e65c40d2edcd18e30155f9ca4f7a49b0e066f90ea10aa588ab78922e03d313"
+  },
+  {
+    "name": "itu",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/Tests/run_reference_measurements.py",
+      "--binary",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/bin/LevelScopeMeasurementTests",
+      "--vectors",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/vectors/itu",
+      "--report",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02-results/high-sierra/short/itu.json",
+      "--compare",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/baseline/itu.json",
+      "--arch",
+      "x86_64"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 46.69066725099992,
+    "log_sha256": "9571a299c82a4aa12593daf8b7ed82d5c1eb5874cfefdd6f4a5a56e0c6f1d16e"
+  },
+  {
+    "name": "ebu-runner",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/Tests/EbuReferenceRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 0.2415874379998968,
+    "log_sha256": "698d16d7b93c4bd9707d3cfacda6fb1e0fea99ed0cda6e69bedc42772940540a"
+  },
+  {
+    "name": "m13-runner",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/Tests/M13QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 0.23136637199991128,
+    "log_sha256": "31fee74ca91764ff428912a09870cbe01b998b86899b47ff32b2bbbf7fdc0d92"
+  },
+  {
+    "name": "m7-video-policy",
+    "argv": [
+      "/usr/local/bin/python3",
+      "-B",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/Tests/M7VideoAcceptanceTests.py"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 0.23411032500007423,
+    "log_sha256": "b9e4e8bbeda64e99edd0bec05769968089194d8298443bfb09efd27e51cd5ea1"
+  },
+  {
+    "name": "legacy-rejection",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/legacy/M11ProgrammeTests",
+      "--only",
+      "--prepare-session",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02-results/high-sierra/short/m13-files/48000-2-0/applied.levelscope",
+      "--destination",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02-results/high-sierra/short/must-not-exist.levelscope",
+      "--output",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02-results/high-sierra/short/legacy-rejection.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 1,
+    "expected_exit_code": 1,
+    "seconds": 0.07251354100003482,
+    "log_sha256": "179989c498efc8d842ecd45f3d477b5d25e90604ff28cfe4ea667021cefa247c"
+  },
+  {
+    "name": "independent-pcm",
+    "exit_code": 0,
+    "seconds": 195.280308203,
+    "evidence_sha256": "8bb7a7b7d5fadcd2e682c51d378977bdfcffac3868ae09f5df8da57ea8832adb"
+  }
+]

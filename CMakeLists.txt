@@ -216,6 +216,9 @@ add_library(LevelScopeStandaloneSupport STATIC
     Source/Core/Proposal/AttributionEngine.cpp
     Source/Standalone/StandaloneDiagnostics.cpp
     Source/Core/Proposal/Methods/RuleBasedMethod.cpp
+    Source/Core/Proposal/SectionPeakMap.cpp
+    Source/Core/Proposal/Methods/SectionTrimMethod.cpp
+    Source/Standalone/StandaloneSectionProposal.cpp
     Source/Standalone/StandaloneProposal.cpp
     Source/Core/Proposal/Model/TargetProfile.cpp
     Source/Core/Proposal/VerificationEngine.cpp
@@ -488,5 +491,19 @@ if(LEVELSCOPE_BUILD_SECTION_PROCESSING_TESTS)
     target_link_libraries(LevelScopeSectionProcessingTests PRIVATE LevelScopeDiagnosticsUI juce::juce_gui_basics)
     if(NOT MSVC)
         target_compile_options(LevelScopeSectionProcessingTests PRIVATE -fno-fast-math -ffp-contract=off)
+    endif()
+endif()
+
+option(LEVELSCOPE_BUILD_SECTION_PROPOSAL_TESTS "Build bounded M13 proposal checks" OFF)
+if(LEVELSCOPE_BUILD_SECTION_PROPOSAL_TESTS)
+    juce_add_console_app(LevelScopeSectionProposalTests PRODUCT_NAME "LevelScope Section Proposal Tests")
+    target_sources(LevelScopeSectionProposalTests PRIVATE Tests/SectionProposalTests.cpp)
+    if(APPLE)
+        target_sources(LevelScopeSectionProposalTests PRIVATE Tests/VideoReaderAudit_mac.mm)
+    endif()
+    target_compile_definitions(LevelScopeSectionProposalTests PRIVATE JUCE_MODAL_LOOPS_PERMITTED=1)
+    target_link_libraries(LevelScopeSectionProposalTests PRIVATE LevelScopeDiagnosticsUI juce::juce_gui_basics)
+    if(NOT MSVC)
+        target_compile_options(LevelScopeSectionProposalTests PRIVATE -fno-fast-math -ffp-contract=off)
     endif()
 endif()

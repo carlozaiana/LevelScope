@@ -77,7 +77,7 @@ struct MeasuredMetrics
     // Missing metrics (including silence/short-file cases) must stay missing.
     std::optional<double> integratedLufs, loudnessRangeLu, truePeakDbtp, samplePeakDbfs;
 };
-enum class MeasurementDomain { source, currentState, renderedOutput };
+enum class MeasurementDomain { source, currentState, renderedOutput, privateCandidate };
 struct AnalysisSnapshot
 {
     ServiceContext context;

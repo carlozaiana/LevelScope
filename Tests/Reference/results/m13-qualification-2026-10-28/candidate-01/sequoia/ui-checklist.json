@@ -1,0 +1,102 @@
+{
+  "source_digest": "2398d0106975e57f8d1f7484b4141ff5becb418649cc65b5f42e8d981c6f6a30",
+  "app_sha256": "6f843857838c64accc92536f6ccba2c9b0f36113dacca56dc2beef55c96233c5",
+  "architecture": "arm64",
+  "os": "15.7.9",
+  "passed": true,
+  "device_closed": true,
+  "routes_muted": true,
+  "cases": [
+    {
+      "id": "ready-private",
+      "passed": true,
+      "evidence": "Frozen app opened short/m13-files/48000-2-0/baseline.levelscope. Generate left global gain 0 and Current FAIL (-24.427229 LUFS, -1.938200 dBTP); private candidate separately labelled not Current State, PASS after 3/3 passes, proposed global 1.474076909608 dB, private TP -1.453152 dBTP."
+    },
+    {
+      "id": "explicit-apply-unverified",
+      "passed": true,
+      "evidence": "Clicked Apply proposal. Gain became 1.474076909608 dB; job line and Current notice both explicitly said applied/UNVERIFIED and required independent remeasurement. No previous Current PASS displayed."
+    },
+    {
+      "id": "independent-verify",
+      "passed": true,
+      "evidence": "Clicked Re-measure Current State. Actual Current evaluation PASS, -23.000000 LUFS / -1.453152 dBTP; actual measurement authoritative, gain retained, no automatic correction."
+    },
+    {
+      "id": "generate-noop",
+      "passed": true,
+      "evidence": "Generate on passing Current returned NO CHANGE, preserving gain and measured pass. Save As reviewed.levelscope succeeded without transient-draft discard; Generate again left saved/unchanged state and controls unchanged."
+    },
+    {
+      "id": "global-first",
+      "passed": true,
+      "evidence": "Reduced only global gain to 0.9740769096075006 dB, remeasured Current FAIL (-23.500000 LUFS/-1.953152 dBTP), then Generate section-led offered an explicitly labelled global-only prediction, 0/3 private passes and no private measurement. Existing local envelope retained."
+    },
+    {
+      "id": "m12-stale-draft",
+      "passed": true,
+      "evidence": "Drafted first section gain -0.123456789012345; split its annotation at frame 12000. UI showed STALE DRAFT with Apply/Set disabled. Explicit Discard retained applied processing."
+    },
+    {
+      "id": "m12-annotation-independence",
+      "passed": true,
+      "evidence": "After annotation split and stale-draft discard, main UI still showed Current PASS (-23.000000/-1.453152) and unchanged global 1.474076909608. Applied transition locations were expressly independent of changed annotations."
+    },
+    {
+      "id": "save-discard-reopen",
+      "passed": true,
+      "evidence": "Save with an actionable global-only proposal was refused with explicit discard notice. Discard then Save succeeded. Reopened reviewed.levelscope stopped/device-closed/routes-muted, restored gain 0.974076909608 and measured Source; no proposal restored. Current failure is checked separately in subsequent UI observations."
+    },
+    {
+      "id": "stale-rejection",
+      "passed": true,
+      "evidence": "With a current global-only proposal visible, changing processing gain to 0.975 immediately removed Apply and Generate authority and marked Current NOT EVALUATED. Remeasure then generated a fresh global-only draft; explicit Apply left UNVERIFIED and independent remeasurement passed. Reopened earlier 0.974076909608 state preserved its actual failing measurement and no saved proposal."
+    },
+    {
+      "id": "m12-manual-draft-apply",
+      "passed": true,
+      "evidence": "Entered first annotation -0.123456789012345 dB as an orange draft; explicit Apply reported UNVERIFIED and independent remeasurement displayed actual TP failure -0.464123 dBTP. Applied gain retained; no rollback."
+    },
+    {
+      "id": "m12-full-precision-entry",
+      "passed": true,
+      "evidence": "Saved core stores first interval [0,12000) gain hex bfbf9add3746f62e, exactly IEEE754 double -0.123456789012345, distinct from display rounding; manual-applied-core.json records original file hash."
+    },
+    {
+      "id": "m12-session-cache-recovery",
+      "passed": true,
+      "evidence": "Opened owned session copy with one flipped Current cache byte. Clear checksum-discard notice; exact gain/settings and valid Source retained; Current NOT EVALUATED, stopped/device closed/routes muted."
+    },
+    {
+      "id": "proposal-curve-highlight",
+      "passed": true,
+      "evidence": "Frozen proposal displayed cyan proposed envelope separately from green applied unity. Selecting Section 11 highlighted [240000,264000) / [5.0,5.5) seconds and showed proposed -0.989028699839 dB, 0.5 dB reserve and zero uncovered deficit. No audio/measurement changes until explicit Apply."
+    },
+    {
+      "id": "report-export",
+      "passed": true,
+      "evidence": "Measured failing manual Current displayed TP FAIL and disabled Render/Publish. After M13 Apply plus independent Current PASS, Render finalized and reopened PCM, showed separate artifact PASS and left final destination absent. Explicit Publish created programme.wav plus JSON/HTML/manifest; all three manifest hashes independently verified. Source remained failing; section/global plan and actual artifact separately recorded."
+    },
+    {
+      "id": "cancel-preserves",
+      "passed": true,
+      "evidence": "On owned 200-second stereo fixture, Generate showed active progress at 2%; clicking Cancel yielded Job cancelled; result discarded. Applied gain stayed 0 and actual Current FAIL values -24.427323 LUFS/-1.938200 dBTP stayed valid. No Apply became available; device remained closed."
+    },
+    {
+      "id": "policy-failure",
+      "passed": true,
+      "evidence": "200-second whole-programme annotation returned No solution within this policy: local envelope/transition support affects 100%, above 20%. One section/9600000 frames, exact reserve/correction disclosed; Apply disabled, no audio changes."
+    },
+    {
+      "id": "stopped-device-closed",
+      "passed": true,
+      "evidence": "Every silent UI check used no selected physical device, Device closed, Source selection, all Left/Right routes Muted and monitor -30 dB. At final policy failure these states remain visible; no Play/Open action occurred."
+    }
+  ],
+  "notes": [
+    "Qualification in progress; frozen app started empty, device closed, monitor -30 dB; no physical device selected.",
+    "Attempted UI cancellation on the 10-second fixture completed before the Cancel click; not counted as a cancellation pass. A longer disposable UI fixture will exercise the control.",
+    "Running app path verified by ps: candidate-01/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone, PID 12774."
+  ],
+  "completed_utc": "2026-10-28T15:40:00Z"
+}

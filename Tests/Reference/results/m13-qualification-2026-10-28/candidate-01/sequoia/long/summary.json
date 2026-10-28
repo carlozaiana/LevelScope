@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "phase": "long",
+  "platform": "sequoia",
+  "error": "",
+  "source_digest": "2398d0106975e57f8d1f7484b4141ff5becb418649cc65b5f42e8d981c6f6a30",
+  "required_runs": [
+    "independent-rf64",
+    "m13-long"
+  ],
+  "report_hashes": {
+    "independent-rf64.json": "b97a2a11b3681574e96d7944f4f8754ce7a4b50fd816b53a9c22f048f8929eb3",
+    "m13-long.json": "c5472ddc2ddabb98f7d5bc6b6b473d15180c7745de5534cbb36c1bab2cc204a2",
+    "environment.json": "08e03e006a37eeaf12a5dfc3618170f1d77d8cf0ae174a7181a3d33e7c0fb810",
+    "runs.json": "09dd9a54dee83f3584f541409aaf021b18b0f8418da0987d4d4860b68fc6e78a"
+  },
+  "qualification_complete": false
+}

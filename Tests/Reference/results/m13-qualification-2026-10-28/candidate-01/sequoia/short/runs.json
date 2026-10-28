@@ -1,0 +1,332 @@
+[
+  {
+    "name": "m13-core",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/bin/LevelScopeSectionProposalTests",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/short/m13-files",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/short/m13-core.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 388.600808917,
+    "log_sha256": "bd8d208ee28374de08442c8a5d81638250e6a8ff85018f41f162d326b52a319e"
+  },
+  {
+    "name": "m12-core",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/bin/LevelScopeSectionProcessingTests",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/short/m12-files",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/short/m12-core.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 141.624227625,
+    "log_sha256": "cba40491548e232f58c12f4aa95bcbf24d8a1ea9d6fb3a35c892d45f51425be8"
+  },
+  {
+    "name": "m11-safety",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/bin/LevelScopeCompositionTests",
+      "--phase",
+      "safety",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/short/m11-safety-files",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/short/m11-safety.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 8.820912792000058,
+    "log_sha256": "a127e84d08871b5a2085f90b359dc9c45b6077fcd70eabd760a213ac1557a886"
+  },
+  {
+    "name": "measurement",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/bin/LevelScopeMeasurementTests"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 13.728468125000063,
+    "log_sha256": "693ec25505d8a388521025eedf57085a86503c9ccda9586e86f6f315285c4e6c"
+  },
+  {
+    "name": "scaffold",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/bin/LevelScopeScaffoldTests"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 0.5005528750000394,
+    "log_sha256": "79c972489bdfa0d6402a9777301f77578b39a63f9552d31bf148544bef2b5f35"
+  },
+  {
+    "name": "compliance",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/bin/LevelScopeComplianceTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/short/compliance.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 0.7593544999999722,
+    "log_sha256": "387e97462de36fb405471706290ea69618f1678a02bd985cf1139744b5649cc1"
+  },
+  {
+    "name": "proposals",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/bin/LevelScopeProposalTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/short/proposals.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 10.379320374999907,
+    "log_sha256": "d2297d0dbe58d37196eda1d4c7762c78c7185ec2eb18c77cf4307e7e32ba1531"
+  },
+  {
+    "name": "diagnostics",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/bin/LevelScopeDiagnosticsTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/short/diagnostics.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 2.2006117500000073,
+    "log_sha256": "1fcc0038f5c6830c1ef6a5b4d9036e912fda8e59639d1fd1eaa58cc64b88232d"
+  },
+  {
+    "name": "sections",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/bin/LevelScopeSectionsTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/short/sections.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 3.4224247920000153,
+    "log_sha256": "bdaaadcb64af45d40330d99f9ae01ac7e60ec50b9aae61efae9c65916f1c303c"
+  },
+  {
+    "name": "audition",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/bin/LevelScopeAuditionTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/short/audition.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 31.06668820899995,
+    "log_sha256": "b1ab9cc0022d1ab8f3c0ccff2dd6754d616eb3249a2bf0c224f212986f953b7e"
+  },
+  {
+    "name": "multichannel",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/bin/LevelScopeMultichannelTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/short/multichannel.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 71.12770654200006,
+    "log_sha256": "7230bf3634018275b561007e1c9ff2bc8549d57d39e8d97acd11f367e0429e5e"
+  },
+  {
+    "name": "sessions",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/bin/LevelScopeSessionTests",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/short/sessions.json",
+      "--short"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 6.0183816669999715,
+    "log_sha256": "98684f4a42e6621d2a4374727c4fee7d3adc78cae4aa033fc90cd243784f47cd"
+  },
+  {
+    "name": "programmes",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/bin/LevelScopeProgrammeTests",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/short/programmes.json",
+      "--m8-session",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/audio-only-m8-sessions"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 103.04684399999996,
+    "log_sha256": "beafda9bd98ec00a33fdf566162dbd7e50c44ccf9bc6bba1398dcb11fb349c3f"
+  },
+  {
+    "name": "export",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/bin/LevelScopeExportTests",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/short/export.json",
+      "--artifacts",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/short/export-artifacts"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 46.333724832999906,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "ebu",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/Tests/run_ebu_measurements.py",
+      "--binary",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/bin/LevelScopeMeasurementTests",
+      "--vectors",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/vectors/ebu",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/short/ebu.json",
+      "--compare",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/baseline/ebu.json",
+      "--arch",
+      "arm64"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 10.718896875000041,
+    "log_sha256": "18e65c40d2edcd18e30155f9ca4f7a49b0e066f90ea10aa588ab78922e03d313"
+  },
+  {
+    "name": "itu",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/Tests/run_reference_measurements.py",
+      "--binary",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/bin/LevelScopeMeasurementTests",
+      "--vectors",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/vectors/itu",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/short/itu.json",
+      "--compare",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/baseline/itu.json",
+      "--arch",
+      "arm64"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 23.13763870899993,
+    "log_sha256": "9571a299c82a4aa12593daf8b7ed82d5c1eb5874cfefdd6f4a5a56e0c6f1d16e"
+  },
+  {
+    "name": "ebu-runner",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/Tests/EbuReferenceRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 0.07440741699997488,
+    "log_sha256": "f8f7b0ac7f2b53ac4e96000f166430c488f2c37e059ad5502b09d60f29d363b8"
+  },
+  {
+    "name": "m13-runner",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/Tests/M13QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 0.12174654100010684,
+    "log_sha256": "74c03fc16fde9a2dfeff03db0ec8f472a5a8dfed04e9e982a912b4b7f64faee3"
+  },
+  {
+    "name": "m7-video-policy",
+    "argv": [
+      "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+      "-B",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/Tests/M7VideoAcceptanceTests.py"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 0.12692587499998353,
+    "log_sha256": "e6b0816a4f65782b559ab0314abfb5a3aeac46bbcdb35d138daff401fd927d29"
+  },
+  {
+    "name": "legacy-rejection",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/legacy/M11ProgrammeTests",
+      "--only",
+      "--prepare-session",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/short/m13-files/48000-2-0/applied.levelscope",
+      "--destination",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/short/must-not-exist.levelscope",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/short/legacy-rejection.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 1,
+    "expected_exit_code": 1,
+    "seconds": 0.6079519159999336,
+    "log_sha256": "179989c498efc8d842ecd45f3d477b5d25e90604ff28cfe4ea667021cefa247c"
+  },
+  {
+    "name": "independent-pcm",
+    "exit_code": 0,
+    "seconds": 62.16992345799997,
+    "evidence_sha256": "b0663b88f28682f8db3c052a0f2453d3dac6d438e42236df0ea0b10ea2e45d11"
+  }
+]

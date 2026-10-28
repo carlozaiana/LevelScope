@@ -1,0 +1,120 @@
+{
+  "passed": true,
+  "recorded_utc": "2026-10-28T20:12:40.708717+00:00",
+  "source_digest": "50eba19a2d66096607ec878c8eaa05e610580c7f5e8854d7b375d846a89c5f27",
+  "measurement_build": "5fd55bb1a81c80b4b556715936b6873bccae29a5d04c00b0890a9b43296a20d2",
+  "source_files_verified": 250,
+  "candidate_artifacts_verified": 473,
+  "candidate_identity_sha256": "266783d8faaabde9fbb166901d1eba8f1c0ff75c4f51a2258a9502817feed839",
+  "app_sha256": "6f843857838c64accc92536f6ccba2c9b0f36113dacca56dc2beef55c96233c5",
+  "evidence_files_verified": 171,
+  "qualification_gate_revalidated": true,
+  "qualification_receipt_sha256": "a314467d7e12bccf5dc1c5b136d711967739e9517ecfd8e393d82a7a1555f4fe",
+  "original_candidate_and_receipts_unchanged": true,
+  "rebuild_performed": false,
+  "authorization": "User authorized M13 candidate-02 commits, dated annotated checkpoint tag, merge of combined M12/M13 into main, and pushes on 28 October 2026.",
+  "tag": "m13-bounded-section-proposals-2026-10-28",
+  "base_logic_commit": "0fc4c5a7f2364f57760228f5c5ecf2f6e0714197",
+  "remote_main_before": "cfb1033aa7fb65a2655db276bee696161196bdeb",
+  "remote_logic_before": "0fc4c5a7f2364f57760228f5c5ecf2f6e0714197",
+  "original_tags": {
+    "high-sierra-pre-scaffold-2026-10-15": {
+      "tag_object": "b3c6e845482dbe8a0ec9778d5a9ad7953e614609",
+      "commit": "556d387ad772dc5e604ead95f1525f60e66fd5f9"
+    },
+    "m10-verified-pcm-export-2026-10-26": {
+      "tag_object": "3bbd1476cbc4e200f9d8f2776f53e06c4bf57180",
+      "commit": "fcd4c15fe78d6352f5e96faabf3eb52f942235e1"
+    },
+    "m11-aligned-stem-composition-2026-10-26": {
+      "tag_object": "2ddbd80e7ce0f5d42d72f8cc3d466925685f1fe0",
+      "commit": "cfb1033aa7fb65a2655db276bee696161196bdeb"
+    },
+    "m12-section-trim-sequoia-2026-10-27": {
+      "tag_object": "4afecf3455f15792403a843772ef9e495de58ae5",
+      "commit": "2fb0e3cfee22a527bacaa09c4ddace23129442fb"
+    },
+    "m2-measured-compliance-2026-10-18": {
+      "tag_object": "673e382feeaa7e29e6e6abedbd56677aa2163ef3",
+      "commit": "01a34833ec06a0d237e098faadb23b398581e8f9"
+    },
+    "m3-global-trim-2026-10-18": {
+      "tag_object": "4063ca0e73c5b24dfa079eb894f85e398e9fee50",
+      "commit": "62ab420cb15b3ce5e1c821c963a749a9a56ae4a7"
+    },
+    "m4-measured-diagnostics-2026-10-18": {
+      "tag_object": "cc64c771a70ccf95e779a7fe7260749a4530c285",
+      "commit": "9a22749901d9f6d4b9c194c9c22c0a231f2494f6"
+    },
+    "m5-programme-sections-2026-10-20": {
+      "tag_object": "e36b4308374256ad36eff6c01d4d92325a06d3b0",
+      "commit": "ae88e187d288c53dbca1287e8341b74b9b5b2619"
+    },
+    "m6-verified-current-state-audition-2026-10-24": {
+      "tag_object": "7f54eb1098471dc55bd75484f873a9f90e68ac05",
+      "commit": "b57a1ed23cbe7d74afe98ed16ec8fd615db9d171"
+    },
+    "m7-pcm-7.1-2026-10-25": {
+      "tag_object": "04d0c836fcbc3a7af72638a7514faacd32ae48a9",
+      "commit": "cfbf3f981dece326d2363b911e5914ea61f1796c"
+    },
+    "m8-reproducible-sessions-2026-10-25": {
+      "tag_object": "93908205c41de16c10b187bc00fcc1621e328c66",
+      "commit": "8e984889c5e73670f370c6c568c8ea1d7902a35c"
+    },
+    "m9-separate-file-stereo-5.1-2026-10-25": {
+      "tag_object": "0cb0e4bea6fd9d11cc4207e9b863d5fca2b70bff",
+      "commit": "75843dcd017ec7990be2200454a10fc38beb44c4"
+    },
+    "measurement-milestone-2026-10-17": {
+      "tag_object": "76affb667b6dab066cb36b2a2c741525b9b6eeac",
+      "commit": "b29bc7c183743f35c6271d2d7ec8fb5ba1464591"
+    },
+    "standalone-scaffold-2026-10-15": {
+      "tag_object": "4c8bc35b788969e1f6e97dcdc57a601b01fff7cd",
+      "commit": "f192a8553e139d390056c9755f25eeb123bbc5e6"
+    },
+    "video-checkpoint-2026-10-17": {
+      "tag_object": "06f57524bedca1912c0d5c454f13561cec9ce5b4",
+      "commit": "700b9e77e439a8ca9bb7583adf826fac01dbe924"
+    },
+    "video-prores-checkpoint-2026-10-21": {
+      "tag_object": "d62c1159eeb2ffbb8b7ffc7c31014b842642d195",
+      "commit": "dcc34aabba6b5b3ca4805e2965d21ffebf2e4d0a"
+    }
+  },
+  "worktrees_before": "worktree /Users/fuzz/Developer/LevelScope\nHEAD 0fc4c5a7f2364f57760228f5c5ecf2f6e0714197\nbranch refs/heads/codex/logic-module\n\nworktree /Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation\nHEAD 5e07bbd29930db34236d6dfcede7fea14983f90a\nbranch refs/heads/codex/video-implementation\n\n",
+  "unrelated_files": {
+    ".DS_Store": {
+      "bytes": 8196,
+      "sha256": "27d5a6dea75520cbc218792d2f07942dee08ef3f9bd4dfe62ea26a49b2c612f8"
+    },
+    "Docs/.DS_Store": {
+      "bytes": 6148,
+      "sha256": "3db772b1c0a3d5a255485d82fca4c9adafe9300dcf72c4c9fce9213bb28a2e6a"
+    },
+    "Source/.DS_Store": {
+      "bytes": 6148,
+      "sha256": "b5a3dbb10d1f70680db4aedad7c2b69090dd87fa6127598a06747aba81bc5b3e"
+    },
+    "Source/Core/.DS_Store": {
+      "bytes": 6148,
+      "sha256": "a975a38bf2873d1fbb737e15b77a5e03a98d3a603f0f4a0d32ae8b9f7620d58a"
+    },
+    "Source/Core/Processing/.DS_Store": {
+      "bytes": 6148,
+      "sha256": "ad1a60ff6db582810365ba9056c69006adb8046e1f5689330c1f4a8a0d19ac69"
+    },
+    "Tests/.DS_Store": {
+      "bytes": 10244,
+      "sha256": "17a4a510e15b3e7278b0239f4fe6442fd9099d17920b2d5896142ae76c9d6ea1"
+    },
+    "Tests/Reference/.DS_Store": {
+      "bytes": 6148,
+      "sha256": "f9d3dcf480b25e096ceabf79cb5466b90b26663a3221145945b11b2f400155f7"
+    }
+  },
+  "integration": "Fast-forward; no implementation changes",
+  "main_ancestor_of_logic": true,
+  "qualification_evidence_manifest_sha256": "4b61b86c6ad53cea151bf2cf52512f977bca4224bdff6904e3025b19a96d1128"
+}

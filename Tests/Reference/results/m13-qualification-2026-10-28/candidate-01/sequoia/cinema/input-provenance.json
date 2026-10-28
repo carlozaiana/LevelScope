@@ -1,0 +1,37 @@
+{
+  "original": "/Volumes/Tucan/GuerraDiCesare/LGdC_Masters/LGdC__51_Master_V2.wav",
+  "original_sha256": "1fb7f93a33d600bf0a62d63e642e5703f03aec8e6920f8a6e510cf65f61fdeaf",
+  "original_bytes": 4934466898,
+  "original_mtime_ns": 1714640535000000000,
+  "output": "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/cinema-input/cinema-pcm24-payload-identical.wav",
+  "output_sha256": "2b00ba5ae88ef06b5d949adf7745144abf8b38d4cb97f78e8abe94d5916b9af6",
+  "payload_sha256": "1a4860f5a3b8d59bcc7401e5f16d57686674475658b36a90f2f6baca4c19300e",
+  "payload_verified_identical": true,
+  "source_payload_offset": 16384,
+  "source_payload_bytes": 4857753600,
+  "original_ds64": [
+    4857769988,
+    4857753600,
+    0,
+    0
+  ],
+  "trailing_nonpayload_bytes": 76696914,
+  "channels": [
+    "L",
+    "R",
+    "C",
+    "LFE",
+    "Ls",
+    "Rs"
+  ],
+  "sample_rate": 48000,
+  "bits": 24,
+  "frames": 269875200,
+  "range": [
+    0,
+    269875200
+  ],
+  "transformation": "Canonical qualified RF64 header around identical PCM payload; no resampling, gain, decode/reencode, dither or original modification.",
+  "limitation": "Original extended ds64/container metadata is outside the product-qualified subset. This test-only rewrap does not expand importer support.",
+  "external_reference": "User-reported Nuendo statistics, 28 October 2026; exact version/settings/range/content equivalence unconfirmed. Historical Cubase 10 screenshot remains supplementary."
+}

@@ -1,0 +1,381 @@
+{
+  "session_sha256": "33c054b48c3dc9ac1c61df167316c57829806b8cc790475471ec7fc2621029ec",
+  "core": {
+    "schema": 4,
+    "documentId": "6b1243afc21445c7bc18a94374dfb2fc",
+    "revision": "17",
+    "programme": {
+      "schema": 4,
+      "id": "c7fe1f41dc744380b5dfb7962746563c",
+      "mode": "interleaved",
+      "purpose": "programme_audio",
+      "alignment": "0/1",
+      "layout": {
+        "count": 2,
+        "confirmed": true,
+        "manual": false,
+        "roles": [
+          1,
+          2
+        ]
+      },
+      "rangeBegin": "0",
+      "rangeEnd": "480000",
+      "files": [
+        {
+          "id": "audio-1",
+          "locator": "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02-results/high-sierra/short/m13-files/48000-2-0/programme.wav",
+          "media": {
+            "rate": "40e7700000000000",
+            "frames": "480000",
+            "bytes": "3840044",
+            "channels": 2,
+            "bits": 32,
+            "modified": "1793204116000",
+            "format": "WAV file",
+            "sha256": "a6c1bd71547e02f672c4851727955688b9a6cc28a2eae6f1f7e6de1ddedbd242",
+            "provenance": "Legacy decoder role suggestions; confirm file-channel interpretation.",
+            "restriction": ""
+          }
+        }
+      ],
+      "channels": [
+        {
+          "fileId": "audio-1",
+          "fileChannel": 0,
+          "role": 1
+        },
+        {
+          "fileId": "audio-1",
+          "fileChannel": 1,
+          "role": 2
+        }
+      ]
+    },
+    "current": {
+      "gain": "3ff795d1c4abd56a",
+      "planSchema": 2,
+      "engine": "section-gain-v1",
+      "sectionGains": {
+        "schema": 1,
+        "rate": 48000,
+        "frames": "480000",
+        "input": "77b7c49d2f9ea3deee06621559b25c6fc8c7eabd88834f715c000cc4a308586f",
+        "intervals": [
+          [
+            "0",
+            "12000",
+            "bfbf9add3746f62e"
+          ],
+          [
+            "12000",
+            "480000",
+            "0000000000000000"
+          ]
+        ]
+      },
+      "initialized": true,
+      "annotationProvenance": {
+        "schema": 1,
+        "input": "77b7c49d2f9ea3deee06621559b25c6fc8c7eabd88834f715c000cc4a308586f",
+        "rate": 48000,
+        "frames": "480000",
+        "revision": "20",
+        "nextId": "22",
+        "rows": [
+          [
+            "1",
+            "0",
+            "12000",
+            "Whole programme"
+          ],
+          [
+            "21",
+            "12000",
+            "24000",
+            "Section 21"
+          ],
+          [
+            "2",
+            "24000",
+            "48000",
+            "Section 2"
+          ],
+          [
+            "3",
+            "48000",
+            "72000",
+            "Section 3"
+          ],
+          [
+            "4",
+            "72000",
+            "96000",
+            "Section 4"
+          ],
+          [
+            "5",
+            "96000",
+            "120000",
+            "Section 5"
+          ],
+          [
+            "6",
+            "120000",
+            "144000",
+            "Section 6"
+          ],
+          [
+            "7",
+            "144000",
+            "168000",
+            "Section 7"
+          ],
+          [
+            "8",
+            "168000",
+            "192000",
+            "Section 8"
+          ],
+          [
+            "9",
+            "192000",
+            "216000",
+            "Section 9"
+          ],
+          [
+            "10",
+            "216000",
+            "240000",
+            "Section 10"
+          ],
+          [
+            "11",
+            "240000",
+            "264000",
+            "Section 11"
+          ],
+          [
+            "12",
+            "264000",
+            "288000",
+            "Section 12"
+          ],
+          [
+            "13",
+            "288000",
+            "312000",
+            "Section 13"
+          ],
+          [
+            "14",
+            "312000",
+            "336000",
+            "Section 14"
+          ],
+          [
+            "15",
+            "336000",
+            "360000",
+            "Section 15"
+          ],
+          [
+            "16",
+            "360000",
+            "384000",
+            "Section 16"
+          ],
+          [
+            "17",
+            "384000",
+            "408000",
+            "Section 17"
+          ],
+          [
+            "18",
+            "408000",
+            "432000",
+            "Section 18"
+          ],
+          [
+            "19",
+            "432000",
+            "456000",
+            "Section 19"
+          ],
+          [
+            "20",
+            "456000",
+            "480000",
+            "Section 20"
+          ]
+        ]
+      },
+      "componentPlans": [],
+      "wholeProgrammeGraph": ""
+    },
+    "profile": {
+      "id": "ebu-r128-2023-programme-linear-qc",
+      "version": "1.0.0",
+      "digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+      "applicability": 1
+    },
+    "sections": {
+      "schema": 1,
+      "input": "77b7c49d2f9ea3deee06621559b25c6fc8c7eabd88834f715c000cc4a308586f",
+      "rate": 48000,
+      "frames": "480000",
+      "revision": "20",
+      "nextId": "22",
+      "rows": [
+        [
+          "1",
+          "0",
+          "12000",
+          "Whole programme"
+        ],
+        [
+          "21",
+          "12000",
+          "24000",
+          "Section 21"
+        ],
+        [
+          "2",
+          "24000",
+          "48000",
+          "Section 2"
+        ],
+        [
+          "3",
+          "48000",
+          "72000",
+          "Section 3"
+        ],
+        [
+          "4",
+          "72000",
+          "96000",
+          "Section 4"
+        ],
+        [
+          "5",
+          "96000",
+          "120000",
+          "Section 5"
+        ],
+        [
+          "6",
+          "120000",
+          "144000",
+          "Section 6"
+        ],
+        [
+          "7",
+          "144000",
+          "168000",
+          "Section 7"
+        ],
+        [
+          "8",
+          "168000",
+          "192000",
+          "Section 8"
+        ],
+        [
+          "9",
+          "192000",
+          "216000",
+          "Section 9"
+        ],
+        [
+          "10",
+          "216000",
+          "240000",
+          "Section 10"
+        ],
+        [
+          "11",
+          "240000",
+          "264000",
+          "Section 11"
+        ],
+        [
+          "12",
+          "264000",
+          "288000",
+          "Section 12"
+        ],
+        [
+          "13",
+          "288000",
+          "312000",
+          "Section 13"
+        ],
+        [
+          "14",
+          "312000",
+          "336000",
+          "Section 14"
+        ],
+        [
+          "15",
+          "336000",
+          "360000",
+          "Section 15"
+        ],
+        [
+          "16",
+          "360000",
+          "384000",
+          "Section 16"
+        ],
+        [
+          "17",
+          "384000",
+          "408000",
+          "Section 17"
+        ],
+        [
+          "18",
+          "408000",
+          "432000",
+          "Section 18"
+        ],
+        [
+          "19",
+          "432000",
+          "456000",
+          "Section 19"
+        ],
+        [
+          "20",
+          "456000",
+          "480000",
+          "Section 20"
+        ]
+      ]
+    },
+    "audition": 0,
+    "video": {
+      "locator": "",
+      "sha256": "",
+      "stream": 0,
+      "offset": "0/1"
+    },
+    "caches": [
+      {
+        "domain": 0,
+        "offset": "0",
+        "size": "5496",
+        "sha256": "b0b5eec356ca652622050545cacc6f64247e38822eb90c38634127f8a6a1aa60"
+      },
+      {
+        "domain": 1,
+        "offset": "5496",
+        "size": "5710",
+        "sha256": "feec33e1bb71b17de07ff82b6d0d7dcc2e0688f8e7552e962dbb870c6db0b4c0"
+      }
+    ]
+  }
+}

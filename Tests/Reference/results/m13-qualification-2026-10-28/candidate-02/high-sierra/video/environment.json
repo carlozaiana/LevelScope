@@ -1,0 +1,12 @@
+{
+  "os": "10.13.6",
+  "os_build": "17G66",
+  "architecture": "x86_64",
+  "cpu": "Intel(R) Core(TM) i7-3770K CPU @ 3.50GHz",
+  "source_digest": "50eba19a2d66096607ec878c8eaa05e610580c7f5e8854d7b375d846a89c5f27",
+  "measurement_build": "5fd55bb1a81c80b4b556715936b6873bccae29a5d04c00b0890a9b43296a20d2",
+  "identity_sha256": "266783d8faaabde9fbb166901d1eba8f1c0ff75c4f51a2258a9502817feed839",
+  "decoder_sha256": "f3097d29afc013525c8106a576a4828ede508ac36011fa51ed1c59d16e2eae6f",
+  "physical_devices_opened": false,
+  "video_loaded": true
+}

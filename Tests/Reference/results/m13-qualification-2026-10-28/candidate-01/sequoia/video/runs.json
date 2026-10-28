@@ -1,0 +1,36 @@
+[
+  {
+    "name": "m13-video",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/bin/LevelScopeSectionProposalTests",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/video/video-files",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/video-fixtures",
+      "--session",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/short/m13-files/48000-2-3/applied.levelscope",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/video/m13-video.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 21.217410375,
+    "log_sha256": "c5c8d6396c0c3a4c87f0df56bf78154a1247a33b47547c32ad5b9b315d7129af"
+  },
+  {
+    "name": "video-timing",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/bin/LevelScopeVideoTests"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 0.8655974999999998,
+    "log_sha256": "dea3f854057fa0706f9ed7a9068864ba8ce01b6885182f2fccc4392795a65bb7"
+  }
+]

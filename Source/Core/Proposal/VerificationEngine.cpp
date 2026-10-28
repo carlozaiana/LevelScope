@@ -35,8 +35,8 @@ Evaluation evaluateMeasuredProgramme (const TargetProfile& profile, const Measur
     out.message = profile.validationError();
     if (out.message.isNotEmpty()) return out;
     if (input.domain != SnapshotDomain::source && input.domain != SnapshotDomain::currentState
-        && input.domain != SnapshotDomain::renderedOutput)
-    { out.message = "Only measured Source, Current State or verified artifact snapshots are supported."; return out; }
+        && input.domain != SnapshotDomain::renderedOutput && input.domain != SnapshotDomain::privateCandidate)
+    { out.message = "Only explicitly identified measured snapshots are supported; predictions are not measurements."; return out; }
     if (! input.currentIdentityMatches || input.snapshotIdentity.isEmpty())
     { out.message = "No valid current measured snapshot; measure this state first."; return out; }
     if (input.measurementVersion != measurement::version)

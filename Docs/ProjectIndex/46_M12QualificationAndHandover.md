@@ -1,19 +1,32 @@
 # M12 section processing — implementation and Sequoia-phase handover
 
+M13 qualification update, 28 October 2026: bounded candidate-02 is implemented
+and qualified on actual Sequoia/High Sierra; [ProjectIndex 47](47_M13BoundedSectionTrimProposals.md) is authoritative for this scope. The broader
+no-change rule covers all applicable explicitly selected, method-defined objectives;
+M13 still evaluates only supported programme rules. The intended cinema comparison
+is user-reported Nuendo statistics supplied 28 October, while the historical screenshot
+is Cubase 10 supplementary evidence. No exact Nuendo version is claimed. The user authorized checkpoint publication
+and combined M12/M13 main integration on 28 October. The preserved M12 qualification
+status remains unchanged; [49](49_M13QualificationAndHandover.md) records the completed combined
+M12/M13 qualification. The [published M13 checkpoint](https://github.com/carlozaiana/LevelScope/tree/m13-bounded-section-proposals-2026-10-28)
+identifies the combined main revision at publication.
+
 Status: **“Sequoia tested; High Sierra and video qualification pending.”**
 The approved Sequoia phase is complete on candidate-03, 27 October 2026.
 This is not full two-platform/video qualification. The user subsequently authorized
 publication of this development checkpoint, with main held at M11.
 
-Main remains the published M11 commit
+At the M12-only publication, main remained the published M11 commit
 `cfb1033aa7fb65a2655db276bee696161196bdeb`. Candidate-03 is saved on
 `codex/logic-module` as annotated checkpoint
 [`m12-section-trim-sequoia-2026-10-27`](https://github.com/carlozaiana/LevelScope/tree/m12-section-trim-sequoia-2026-10-27).
 The checkpoint commit is `2fb0e3cfee22a527bacaa09c4ddace23129442fb`; direct GitHub
 verification confirmed all fifteen earlier tags unchanged and main still at M11.
 The [publication record](../../Tests/Reference/results/m12-publication-2026-10-27/README.md)
-binds the tested manifest and original binaries to that checkpoint. Main integration
-and M13 implementation remain unauthorized; the next step is an M13 proposal.
+binds the tested manifest and original binaries to that checkpoint. At that
+publication, main integration and M13 implementation were not authorized. M13 was
+subsequently approved on 28 October; its separate candidate/evidence record is
+[49](49_M13QualificationAndHandover.md). The user subsequently approved combined M12/M13 publication and main integration on 28 October; see the M13 publication record.
 
 Approved contract: [44](44_M12SectionTrimProcessing.md). The pre-implementation
 change-impact and resource plan is [45](45_M12ImpactQualificationPlan.md).
@@ -254,11 +267,24 @@ requires resolving the draft; Render and verify / Publish retain the M10 gates.
 
 ## Follow-up order
 
-[47 — M13 proposal](47_M13BoundedSectionTrimProposals.md) now proposes bounded
-automatic section-trim proposals, explicit Apply, complete-programme remeasurement
-and verification. It awaits approval; no M13 implementation is authorized here. Keep near-term mono section/export support visible. Use the
-existing manual editor first; marker import should precede bounded EDL import,
-with explicit programme timecode origin/frame rate, exact audio-frame mapping and
-preview/confirmation. Imported edits are proposed annotations, never automatic
-processing. Dynamics, component DSP, dialogue-assisted analysis, 7.1.4/Atmos and
-VST3 parity remain separate proposals.
+Design revision, subsequently approved for implementation on 28 October 2026:
+[47 — M13 proposal](47_M13BoundedSectionTrimProposals.md)
+is the first bounded **section-led** selection method. The revised
+[shared specification](../ProposalEngineSpec_v2.md) separates dynamics-led,
+section-led and mixed strategies from their algorithms and processing preferences.
+M13 still uses no limiter/dynamics and retains its conservative defaults; the
+0.5 dB reserve is included inside the 3 dB cap, with partial reserve disclosed.
+The bounded cinema evaluation and current M13 qualification status are recorded in
+[49](49_M13QualificationAndHandover.md). No preserved M12 evidence or tested package
+has changed; combined M13 results retain their own candidate identity.
+
+After combined M12/M13 qualification, separately propose mono section/export support
+and basic optional marker import; qualify standalone limiter, downward and upward
+processing in small steps; then dynamics-led proposals, enhanced section-led
+proposals and the mixed strategy. Keep future milestone numbers open. Marker/EDL
+import uses explicit time origin/rate, exact audio frames and preview/confirmation;
+imports are annotations, not gain changes, and useful proposals need no marker track.
+Component-relative dialogue/M&E processing and validated intelligibility objectives
+follow later. 7.1.4/Atmos and VST3 parity remain deferred. Main stays at M11 until
+combined actual High Sierra/selected video qualification and subsequent integration
+approval; the published M12 checkpoint and all historical records remain preserved.

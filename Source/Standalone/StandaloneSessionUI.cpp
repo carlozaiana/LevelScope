@@ -39,6 +39,14 @@ void StandaloneMainComponent::refreshSessionControls()
 }
 void StandaloneMainComponent::confirmDiscard(std::function<void()> action)
 {
+    if(session.hasActionableSectionProposal())
+    {
+        juce::Component::SafePointer<StandaloneMainComponent> safe(this);
+        juce::AlertWindow::showAsync(juce::MessageBoxOptions().withIconType(juce::MessageBoxIconType::QuestionIcon)
+            .withTitle("Transient proposal").withMessage("Private candidate assessments are not saved as Current measurements. Discard this proposal before continuing?")
+            .withButton("Discard proposal").withButton("Cancel"),[safe,action](int result){if(safe&&result==1){safe->session.discardSectionProposal();safe->confirmDiscard(action);}});
+        return;
+    }
     if(session.sectionTrimDraft)
     {
         juce::Component::SafePointer<StandaloneMainComponent> safe(this);
@@ -62,6 +70,8 @@ void StandaloneMainComponent::requestClose(std::function<void()> close)
 void StandaloneMainComponent::beginSaveSession(bool saveAs,std::function<void()> continuation)
 {
     if(documentResult.valid()||session.persistenceLoading||audition.active()){documentNotice="Stop audition and finish the file operation before saving";return;}
+    if(session.hasActionableSectionProposal())
+    {documentNotice="Discard the transient section-led proposal before saving. Applied settings remain saved normally.";refreshSessionControls();return;}
     if(session.sectionTrimDraft)
     {documentNotice="Apply or discard the section-gain draft in Programme sections before saving. Draft edits are not saved as applied audio.";refreshSessionControls();return;}
     if(session.openedSessionSchema<sessionfile::schemaVersion&&!saveAs&&!migrationSaveApproved&&session.documentFile!=juce::File())

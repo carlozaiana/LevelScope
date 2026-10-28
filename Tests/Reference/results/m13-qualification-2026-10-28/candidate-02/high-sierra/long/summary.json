@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "phase": "long",
+  "platform": "high-sierra",
+  "error": "",
+  "source_digest": "50eba19a2d66096607ec878c8eaa05e610580c7f5e8854d7b375d846a89c5f27",
+  "required_runs": [
+    "independent-rf64",
+    "m13-long"
+  ],
+  "report_hashes": {
+    "environment.json": "7c5ad4b9cbfbbf69b6acc685d252c79c7a5d13b5cbf71c437387a39828a7b7ee",
+    "independent-rf64.json": "d8a8e239aa5db2c5f8c6b4e43fa45cb8f8bbd448eee641942f0bbab347e0d5ff",
+    "m13-long.json": "42e09d7a9d5ae7dc944bc562d7e87c76aa82cb365c2ae9f374c382a1e4091647",
+    "runs.json": "57f1b3ef4aafa75b9813f918f9380d55867f90534549fa559a0602816fbb423c"
+  },
+  "qualification_complete": false
+}

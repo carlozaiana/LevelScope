@@ -1,0 +1,9 @@
+{
+  "accepted": true,
+  "source_digest": "50eba19a2d66096607ec878c8eaa05e610580c7f5e8854d7b375d846a89c5f27",
+  "policy": "m7-development-picture-skips-2026-10-25",
+  "expected_cases": 4,
+  "completed_cases": 4,
+  "audio_configuration_unchanged": true,
+  "physical_multichannel_listening": "Not assessed; every route muted on two-output device"
+}

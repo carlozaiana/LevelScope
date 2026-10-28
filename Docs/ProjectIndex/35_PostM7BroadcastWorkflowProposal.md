@@ -1,5 +1,23 @@
 # After M7 — practical stereo/5.1 workflow
 
+M13 qualification update, 28 October 2026: bounded candidate-02 is implemented
+and qualified on actual Sequoia/High Sierra; [ProjectIndex 47](47_M13BoundedSectionTrimProposals.md) is authoritative for this scope. The broader
+no-change rule covers all applicable explicitly selected, method-defined objectives;
+M13 still evaluates only supported programme rules. The intended cinema comparison
+is user-reported Nuendo statistics supplied 28 October, while the historical screenshot
+is Cubase 10 supplementary evidence. No exact Nuendo version is claimed. The user authorized checkpoint publication
+and combined M12/M13 main integration on 28 October. The preserved M12 qualification
+status remains unchanged; [49](49_M13QualificationAndHandover.md) records the completed combined
+M12/M13 qualification. The [published M13 checkpoint](https://github.com/carlozaiana/LevelScope/tree/m13-bounded-section-proposals-2026-10-28)
+identifies the combined main revision at publication.
+
+Historical M8 contract and post-M7 sequence below are retained. As of 28 October
+2026, M8–M11 are published on main, M12 is a Sequoia-tested development checkpoint,
+and combined M13 candidate-02 is qualified and authorized for checkpoint publication/main integration. The current staged order and optional-marker,
+three-strategy design are in [47](47_M13BoundedSectionTrimProposals.md) and
+[the shared specification](../ProposalEngineSpec_v2.md#22-staged-development-roadmap).
+The bounded implementation follows the explicit impact plan in [48](48_M13ImpactQualificationPlan.md); broader strategies remain proposals.
+
 M8 approved 25 October 2026, including the session, replaceable-cache and coherent-save clarifications below. Implementation and qualification are authorized; publication remains a separate checkpoint action. The user deferred
 7.1.4 and further immersive expansion after M7. Preserve the extensible channel
 interfaces and qualified 7.1 behavior, but optimize subsequent work for practical

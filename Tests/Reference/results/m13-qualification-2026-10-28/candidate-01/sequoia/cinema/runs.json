@@ -1,0 +1,21 @@
+[
+  {
+    "name": "cinema",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/bin/LevelScopeSectionProposalTests",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/cinema/cinema-files",
+      "--cinema",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/cinema-input/cinema-pcm24-payload-identical.wav",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/cinema/cinema.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 1412.178399834,
+    "log_sha256": "70b043b392e5c2c0226a0af3d2081577e18918babc587e34419669d3a5e431f3"
+  }
+]

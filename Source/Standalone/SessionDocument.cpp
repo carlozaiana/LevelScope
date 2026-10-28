@@ -200,7 +200,7 @@ void validateCore (const Document& d)
                 [&](const auto& annotation){return annotation.end==interval.end;}),"Applied gain boundary is absent from its annotation provenance");
     }
     else require(d.current.sectionGainAnnotations.sections.empty(),"Provenance without applied section gains");
-    require(d.audition!=MeasurementDomain::renderedOutput,"Unsupported audition selection");
+    require(d.audition==MeasurementDomain::source||d.audition==MeasurementDomain::currentState,"Unsupported audition selection");
     if(!d.sections.sections.empty())require(d.sections.valid()&&d.sections.inputIdentity==sectionInputIdentity(context(d,MeasurementDomain::source)),"Sections do not describe this programme");
     require(d.profile.id.isNotEmpty()&&hashValid(d.profile.digest),"Invalid target reference");
     require(d.reference.file==juce::File()||hashValid(d.reference.sha256),"Reference video identity unavailable; wait for loading or clear the reference");
@@ -348,6 +348,7 @@ template<class F> Outcome run (F f)
 }
 Document capture (StandaloneSessionModel& s)
 {
+    if(s.hasActionableSectionProposal())throw std::runtime_error("Discard the transient proposal before saving; private candidate measurements are not saved as Current authority");
     if(s.sectionTrimDraft)throw std::runtime_error("Apply or discard the section-gain draft before saving; draft edits are not saved as applied audio");
     s.synchronizeSections();Document d;d.id=s.documentId;d.programmeId=s.programmeId;d.runtimeId=s.sessionId;d.revision=s.documentRevision;d.source=s.sourceDocument;d.current=s.currentStateDocument;d.applicability=s.programmeApplicability;d.sections=s.sectionDocument.map();d.reference=s.referenceVideo;d.audition=s.auditionDomain;
     const auto p=s.getSelectedTargetProfile();d.profile={p.id,p.definitionVersion,p.digest()};if(s.restoredProfileId.isNotEmpty())d.profile={s.restoredProfileId,s.restoredProfileVersion,s.restoredProfileDigest};

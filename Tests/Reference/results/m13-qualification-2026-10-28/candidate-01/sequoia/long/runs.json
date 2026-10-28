@@ -1,0 +1,27 @@
+[
+  {
+    "name": "m13-long",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/bin/LevelScopeSectionProposalTests",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/long/long-files",
+      "--long-session",
+      "/Users/fuzz/Developer/LevelScope/build/m11-qualification-2026-10-26/candidate-02-results/sequoia/long/long-files/composition.levelscope",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01-results/sequoia/long/m13-long.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 7022.238457791,
+    "log_sha256": "d317527300216b1116c48ba3999637ad1a8f32346fa85dcc9d6a7576ecb27e92"
+  },
+  {
+    "name": "independent-rf64",
+    "exit_code": 0,
+    "seconds": 15.935688665999805,
+    "evidence_sha256": "b97a2a11b3681574e96d7944f4f8754ce7a4b50fd816b53a9c22f048f8929eb3"
+  }
+]

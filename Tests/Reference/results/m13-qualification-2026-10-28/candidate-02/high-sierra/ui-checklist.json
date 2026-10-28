@@ -1,0 +1,101 @@
+{
+  "source_digest": "50eba19a2d66096607ec878c8eaa05e610580c7f5e8854d7b375d846a89c5f27",
+  "app_sha256": "6f843857838c64accc92536f6ccba2c9b0f36113dacca56dc2beef55c96233c5",
+  "architecture": "x86_64",
+  "os": "10.13.6",
+  "passed": true,
+  "device_closed": true,
+  "routes_muted": true,
+  "cases": [
+    {
+      "id": "ready-private",
+      "passed": true,
+      "evidence": "Actual High Sierra app opened owned reviewed.levelscope, Current gain0 FAIL I -24.427229/TP -1.938200 preserved. Generate produced separately labelled private candidate PASS I -23/TP -1.453152,3/3 passes, global1.474076909608; no processing applied."
+    },
+    {
+      "id": "proposal-curve-highlight",
+      "passed": true,
+      "evidence": "Programme sections shows cyan proposed envelope vs green applied unity. Section11 selected [240000,264000) [5,5.5)s highlights exact interval; proposed -0.989028699839, reserve0.5, uncovered0. Device closed."
+    },
+    {
+      "id": "explicit-apply-unverified",
+      "passed": true,
+      "evidence": "Explicit Apply changed global to1.474076909608, main job line and proposal both UNVERIFIED, independent remeasurement required; no automatic playback."
+    },
+    {
+      "id": "independent-verify",
+      "passed": true,
+      "evidence": "Explicit independent Current measurement PASS I -23.000000/TP -1.453152. Gain retained."
+    },
+    {
+      "id": "generate-noop",
+      "passed": true,
+      "evidence": "Generate on passing Current displayed NO CHANGE, zero correction,0/3 passes and no private candidate. Save succeeded; repeat Generate left saved/unchanged."
+    },
+    {
+      "id": "m12-stale-draft",
+      "passed": true,
+      "evidence": "Entered -0.123456789012345 first-section draft, split annotation at12000. UI STALE DRAFT, Set/Apply disabled, Discard retains applied audio."
+    },
+    {
+      "id": "m12-annotation-independence",
+      "passed": true,
+      "evidence": "After split/discard, applied original intervals retained and actual Current PASS -23/-1.453152 unchanged."
+    },
+    {
+      "id": "global-first",
+      "passed": true,
+      "evidence": "Current -23.500000 LUFS/-1.953152 dBTP at global0.9740769096075006 offered global-only prediction to1.474076930309, zero private passes and local plan retained."
+    },
+    {
+      "id": "save-discard-reopen",
+      "passed": true,
+      "evidence": "Save actionable global-only proposal refused with discard message. Discard/Save/reopen restored full gain, actual Current FAIL and no proposal; stopped/device-closed/muted."
+    },
+    {
+      "id": "stale-rejection",
+      "passed": true,
+      "evidence": "Generate global-only then processing gain0.975 removed proposal Apply/Generate authority and Current became NOT EVALUATED."
+    },
+    {
+      "id": "m12-manual-draft-apply",
+      "passed": true,
+      "evidence": "New geometry manual draft first interval -0.123456789012345, explicit Apply UNVERIFIED. Independent measurement actual FAIL I -22.954565/TP -0.464123; gain retained, no rollback; Render/Publish disabled."
+    },
+    {
+      "id": "m12-full-precision-entry",
+      "passed": true,
+      "evidence": "Saved manual-applied-core.json stores [0,12000) gain bfbf9add3746f62e, exact IEEE double -0.123456789012345, global3ff795d1c4abd56a."
+    },
+    {
+      "id": "m12-session-cache-recovery",
+      "passed": true,
+      "evidence": "One byte of Current cache flipped in owned damaged-current.levelscope. Open warns cache checksum mismatch/discard/remeasure; exact settings and valid Source retained, Current NOT EVALUATED, stopped/closed/muted."
+    },
+    {
+      "id": "report-export",
+      "passed": true,
+      "evidence": "Failing manual Current disabled Render/Publish. Restored baseline, explicit M13 Apply+independent Current PASS enabled Render. Reopened PCM artifact PASS I -23/TP -1.453153, clearly NOT PUBLISHED, final folder absent. Explicit Publish created verified-ui-export; all PCM/JSON/HTML manifest hashes verified. SourceFAIL/CurrentPASS/artifactPASS separately recorded."
+    },
+    {
+      "id": "cancel-preserves",
+      "passed": true,
+      "evidence": "200-second owned stereo source. Generate visibly active1%; Cancel yielded Job cancelled/result discarded, gain0 and actual Current FAIL I -24.427323/TP -1.938200 retained, no Apply."
+    },
+    {
+      "id": "policy-failure",
+      "passed": true,
+      "evidence": "Uncancelled assessment of same whole-programme annotation rejected100%local support over20%;1section/9600000frames, reserve0.5 and uncovered0 disclosed, no Apply/audio change."
+    },
+    {
+      "id": "stopped-device-closed",
+      "passed": true,
+      "evidence": "All17 silent UI cases kept Device closed, no device selection, allLeft/Right routesMuted,Sourceaudition,monitor-30. NoPlay/Open action. App stayed stopped."
+    }
+  ],
+  "completed_utc": "2026-10-28T16:57:45.302340+00:00",
+  "notes": [
+    "Actual High Sierra candidate-02 app path/PID830 verified by SSH; all GUI interactions observed through Screen Sharing.",
+    "Remote image updates lagged input; results verified after updates. No app/code change required."
+  ]
+}

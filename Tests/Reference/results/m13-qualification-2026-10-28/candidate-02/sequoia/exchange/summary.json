@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "phase": "exchange",
+  "platform": "sequoia",
+  "error": "",
+  "source_digest": "50eba19a2d66096607ec878c8eaa05e610580c7f5e8854d7b375d846a89c5f27",
+  "required_runs": [
+    "m13-exchange"
+  ],
+  "report_hashes": {
+    "m13-exchange.json": "40b27349c661596089454d10b3b00d254033ae3fc18b9bacb77412e1cb623299",
+    "environment.json": "847554e873c543f4c3605acbf0747e2919656855aed89b6b24f81a685a111afc",
+    "runs.json": "dd53700329898c50829441174876a0725141212f01b78b2ec273992fa532ef2a"
+  },
+  "qualification_complete": false
+}

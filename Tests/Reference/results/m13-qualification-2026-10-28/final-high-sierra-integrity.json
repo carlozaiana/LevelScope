@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "recorded_utc": "2026-10-28T19:50:19.338563+00:00",
+  "source_digest": "50eba19a2d66096607ec878c8eaa05e610580c7f5e8854d7b375d846a89c5f27",
+  "both_frozen_packages_verified": true,
+  "tool_only_equivalence_verified": true,
+  "app_sha256": "6f843857838c64accc92536f6ccba2c9b0f36113dacca56dc2beef55c96233c5",
+  "verification": "Actual High Sierra execution of candidate-02 m13_evidence_identity.identities after the completed long workflow; all frozen artifact hashes checked"
+}

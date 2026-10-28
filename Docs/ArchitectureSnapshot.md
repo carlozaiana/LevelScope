@@ -1,5 +1,16 @@
 # LevelScope — Architecture Snapshot (Frozen Contracts + Implemented State)
 
+M13 qualification update, 28 October 2026: bounded candidate-02 is implemented
+and qualified on actual Sequoia/High Sierra; [ProjectIndex 47](ProjectIndex/47_M13BoundedSectionTrimProposals.md) is authoritative for this scope. The broader
+no-change rule covers all applicable explicitly selected, method-defined objectives;
+M13 still evaluates only supported programme rules. The intended cinema comparison
+is user-reported Nuendo statistics supplied 28 October, while the historical screenshot
+is Cubase 10 supplementary evidence. No exact Nuendo version is claimed. The user authorized checkpoint publication
+and combined M12/M13 main integration on 28 October. The preserved M12 qualification
+status remains unchanged; [49](ProjectIndex/49_M13QualificationAndHandover.md) records the completed combined
+M12/M13 qualification. The [published M13 checkpoint](https://github.com/carlozaiana/LevelScope/tree/m13-bounded-section-proposals-2026-10-28)
+identifies the combined main revision at publication.
+
 **Repo/plugin name (current):** LevelScope  
 **Intended suite/product name (later):** LevelFlow  
 **Vendor (later):** Studio Paradiso  
@@ -9,7 +20,41 @@ This document is a **contract** for parallel development chats.
 Anything marked **Implemented** must be preserved.  
 Anything marked **Planned** must not be assumed to exist until integrated.
 
-Last updated: **2026-10-25**
+Last updated: **2026-10-28** (qualified combined M12/M13 checkpoint publication).
+
+**Current baseline:** main receives the qualified combined M12/M13 checkpoint
+[`m13-bounded-section-proposals-2026-10-28`](https://github.com/carlozaiana/LevelScope/tree/m13-bounded-section-proposals-2026-10-28).
+Its peeled commit is the main revision at publication; M11
+`cfb1033aa7fb65a2655db276bee696161196bdeb` is preserved in its ancestry. M9 mono-channel assembly, M10 verified
+PCM export/reporting and M11 explicit aligned composition are qualified/published;
+see [38](ProjectIndex/38_M9QualificationAndHandover.md),
+[40](ProjectIndex/40_M10QualificationAndHandover.md) and
+[43](ProjectIndex/43_M11QualificationAndHandover.md).
+M12 candidate-03 is published only on the logic development branch as
+**“Sequoia tested; High Sierra and video qualification pending.”**
+[46](ProjectIndex/46_M12QualificationAndHandover.md) records its frozen identity.
+[47](ProjectIndex/47_M13BoundedSectionTrimProposals.md) is approved for bounded
+implementation and qualification under [48](ProjectIndex/48_M13ImpactQualificationPlan.md).
+The bounded implementation is frozen as candidate-02; [49](ProjectIndex/49_M13QualificationAndHandover.md)
+records completed actual-platform qualification and exact identity. Preserve all earlier packages/tags; the tested implementation is unchanged by the fast-forward.
+
+**Proposal direction:** dynamics-led, section-led and mixed processing strategies
+share one profile/measurement/analysis/processing/identity/verification/export
+foundation. Strategy selects permitted interventions; algorithms choose settings;
+versioned preferences constrain alteration separately from delivery rules. Existing
+DSP code still needs standalone qualification before supporting compliance claims.
+M13 is a bounded section-led subset without limiter/dynamics. Marker tracks are
+optional. Private measured candidates never replace measured Current or artifact
+verification; explicit Apply and independent Current remeasurement remain required.
+
+The development branch implements an optional continuous peak observer, bounded
+all-channel section attribution and the pure `section-trim-proposal-v1` planner.
+One verified input copy feeds at most three private passes using unchanged M12
+section/global processing. Private candidate identity is separate from Current and
+export authority. Atomic stopped-only Apply marks Current UNVERIFIED; an already
+passing outcome changes no audio revision, measurement or settings. Proposed cyan,
+applied green and manual-draft orange timeline curves remain distinct. The user approved publication/integration on 28 October; the checkpoint binds
+this exact qualified source to the original tested binaries without a rebuild.
 
 **M7 qualified and published, 25 October 2026:**
 annotated checkpoint [`m7-pcm-7.1-2026-10-25`](https://github.com/carlozaiana/LevelScope/tree/m7-pcm-7.1-2026-10-25)
@@ -34,8 +79,9 @@ is reused only through the documented implementation-equivalence review.
 M8 session persistence candidate-01 is qualified on actual arm64 Sequoia and Intel
 High Sierra, published as `m8-reproducible-sessions-2026-10-25` and fast-forwarded
 into main with the tested implementation unchanged. See [36](ProjectIndex/36_M8SessionsQualificationAndHandover.md).
-The next roadmap order is separate-file stereo/5.1 assembly, then verified PCM
-export/artifact QC and reports, followed by bounded stem/dialogue-analysis work.
+That historical roadmap delivered M9 assembly, M10 export and M11 composition.
+The current staged proposal/DSP direction is in ProjectIndex 47 and specification
+section 22; component-relative dialogue processing remains later work.
 
 **Standalone continuation, 18 October 2026:** qualified M1 offline measurement,
 M2 versioned programme-rule evaluation and M3 deterministic global trim with
@@ -65,13 +111,15 @@ regressions, official suites and silent three-hour inspection. See
 and binary identities. The annotated checkpoint `m5-programme-sections-2026-10-20`
 is saved on the logic branch and fast-forwarded into main without changing the
 tested implementation. Sections are annotations independent of audio processing. M8 adds their session
-persistence; section processing remains deferred. M6 already provides qualified
+persistence; M12 adds manual section processing on the development branch. Its
+preserved checkpoint is Sequoia-only; the combined M13 candidate has now passed
+actual High Sierra and selected video checks. M6 already provides qualified
 global-trim Current State audition.
 
 The qualified measurement contract remains in
 [14_OfflineMeasurementContract.md](ProjectIndex/14_OfflineMeasurementContract.md).
-Public render/export, dynamics integration, scenes/freezes and embedded soundtrack
-remain deferred. M6 audition and M8 persistence are qualified and published with
+M10 provides bounded verified PCM export. Standalone dynamics/limiter qualification,
+protection controls and embedded soundtrack remain deferred. M6 audition and M8 persistence are qualified and published with
 their separate candidate/evidence identities. VST3 measurement
 parity is a separate milestone; its parameters, state and DSP remain unchanged.
 
@@ -96,10 +144,12 @@ parity is a separate milestone; its parameters, state and DSP remain unchanged.
 
 **Planned / next milestones:**
 - IN snapshot vs OUT live analysis tracks (separate histories/curves, separate visibility)
-- Offline render/analysis hooks for standalone determinism
+- Further processing algorithms using the existing qualified standalone offline measurement/export path
 - Policy/proposal engine hooks
   * Detailed proposal-engine design lives in `Docs/ProposalEngineSpec_v2.md`.
-  * Direction: standalone-first, deterministic first-pass proposal, shared measurement/analysis/verification truth model, separate proposal methods for listening comparison, freeze-aware re-measurement and recalculation.
+  * Direction: three processing strategies (dynamics-led, section-led, mixed), separate selection algorithms and versioned preferences on one truth/processing foundation. All preserve already-pass and consider global-only first; later intervention preferences are strategy-specific.
+  * Comparisons are explicit, resource-bounded and use the same measured baseline. “Combined-analysis” replaces ambiguous “hybrid” terminology; it is not the mixed strategy.
+  * Follow M13 with separately reviewed mono/marker work, standalone limiter/downward/upward qualification, dynamics-led proposals, enhanced section-led proposals, then mixed. Configurable preferences, neighbour adjustment and protection remain future work outside the implemented bounded M13 subset.
 - Additional modules as needed (OutputTrim later, etc.)
 
 Hard rule: Core must be usable by plugin + future standalone + headless tests.
@@ -501,5 +551,5 @@ Leveler v1 reuses existing shared routing policy params:
 ### Chat C: Logic/Policy Proposal Engine
 - Presets/specs + proposal outputs (static params + automation curves)
 - Operates on analysis snapshots (IN and/or OUT)
-- Deterministic standalone/offline behavior
+- Deterministic standalone/offline behavior; selected strategy only by default, shared analysis reuse and separate candidate/Current/artifact truth.
   * Detailed design reference: `Docs/ProposalEngineSpec_v2.md`

@@ -70,7 +70,8 @@ private:
     std::future<MediaValidationResult> importResult;
     std::future<ServiceResult<AnalysisSnapshot>> analysisResult;
     std::future<proposal::TrimProposal> proposalResult;
-    JobTicket proposalTicket;
+    JobTicket proposalTicket, sectionProposalTicket;
+    std::future<SectionProposalOutcome> sectionProposalResult;
     MeasurementDomain analysisDomain = MeasurementDomain::source;
     JobTicket analysisTicket;
     JobTicket importTicket;
@@ -107,6 +108,7 @@ private:
     juce::TextButton clearCurrentStateButton { "Clear Current State" };
     juce::TextButton remeasureCurrentStateButton { "Re-measure Current State" };
     juce::Slider currentGain;
+    juce::TextButton sectionProposalButton { "Generate section-led" }, applySectionProposalButton { "Apply proposal" }, discardSectionProposalButton { "Discard proposal" };
     juce::TextButton draftTrimButton { "Draft global trim" };
     juce::TextButton applyTrimButton { "Apply trim" };
     juce::TextButton discardTrimButton { "Discard draft" };
@@ -150,6 +152,7 @@ private:
     void beginImport (const juce::File&);
     void beginMeasurement (MeasurementDomain);
     void beginTrimProposal();
+    void beginSectionProposal();
     void timerCallback() override;
 
     void setPage (WorkflowPage page);

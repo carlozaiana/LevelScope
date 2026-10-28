@@ -1,0 +1,39 @@
+M13 LONG source_measure_ms elapsed_s=1000.45
+M13 LONG baseline_current_measure_ms elapsed_s=2004.47
+M13 LONG private_proposal_ms elapsed_s=4423.8
+Section-led / section-trim-proposal-v1
+Baseline binding: 2e8325fe1058fde7385e25946d396ef6dd1d8cd042547d147ac4d1ac25cbdfc1
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 523200 frames; global trim acts on the whole programme.
+Section 501 [259200000, 259718400) source frames; channel 4; TP 3.521825181 dBTP at 2073984000/8 frames
+Gain 0.000000000000 -> -3.000000000000 dB; requested reduction 3.169528003095, applied 3.000000000000; reserve achieved 0.330471996905/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 523200 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 3.000000000000 dB; largest transition slope: 30.006251302355 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain -1.850127969214 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -21.147702822 LUFS / 3.521825181 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.328302 dBTP | max -1.000000 | delta -0.328302
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+M13 LONG independent_current_verification_ms elapsed_s=5412.7
+M13 LONG diagnostics_ms elapsed_s=5412.86
+M13 LONG save_ms elapsed_s=5412.96
+M13 LONG parse_ms elapsed_s=5413.43
+M13 LONG reopen_verify_ms elapsed_s=5523.9
+M13 LONG prepare_capture_ms elapsed_s=5758.73
+M13 LONG render_verify_ms elapsed_s=6808.55
+M13 LONG publish_ms elapsed_s=7022.04
+M13 PASS 1078 checks

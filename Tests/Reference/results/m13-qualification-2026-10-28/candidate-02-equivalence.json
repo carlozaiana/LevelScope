@@ -1,0 +1,13 @@
+{
+  "previous_source_digest": "2398d0106975e57f8d1f7484b4141ff5becb418649cc65b5f42e8d981c6f6a30",
+  "current_source_digest": "50eba19a2d66096607ec878c8eaa05e610580c7f5e8854d7b375d846a89c5f27",
+  "changed_tool_sources": [
+    "Tests/M13QualificationRunnerTests.py",
+    "Tests/compare_m13_reports.py",
+    "Tests/complete_m13_qualification.py",
+    "Tests/m13_evidence_identity.py",
+    "Tests/run_m13_muted_video.py"
+  ],
+  "production_and_test_binaries_unchanged": true,
+  "reason": "Qualification-tool repair only. Original phase receipts remain unchanged; corrected runner is tested freshly."
+}

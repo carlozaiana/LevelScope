@@ -27,10 +27,11 @@ struct OwnedFile
 };
 
 AnalysisSnapshot measure (const ServiceContext& context, MeasurementDomain domain,
-                          std::unique_ptr<ProgrammeReader> reader, const juce::String& hash, bool applyProcessing, JobControl& control, ProcessedAudioObserver* observer)
+                          std::unique_ptr<ProgrammeReader> reader, const juce::String& hash, bool applyProcessing, JobControl& control, ProcessedAudioObserver* observer,
+                          measurement::PeakObserver* peaks = nullptr)
 {
     if (!reader) throw Failure { ErrorCode::decodeFailed, "Cannot decode complete verified programme" };
-    measurement::OfflineMeasurement engine (static_cast<int> (reader->sampleRate), OfflineAnalysisService::measurementRoles (context.fileLayout));
+    measurement::OfflineMeasurement engine (static_cast<int> (reader->sampleRate), OfflineAnalysisService::measurementRoles (context.fileLayout), peaks);
     constexpr int blockSize = 4096;
     juce::AudioBuffer<float> audio (context.media.channels, blockSize);
     const ProgrammeGainProcessor processing (applyProcessing ? context.processing : ProcessingPlan{});
@@ -45,7 +46,7 @@ AnalysisSnapshot measure (const ServiceContext& context, MeasurementDomain domai
         if (observer) observer->observe (audio.getArrayOfReadPointers(), audio.getNumChannels(), count, frame);
         engine.push (audio.getArrayOfReadPointers(), count);
         frame += count;
-        control.progress.store (0.5f + 0.49f * static_cast<float> (static_cast<double> (frame) / reader->lengthInSamples));
+        control.setProgress (0.5f + 0.49f * static_cast<float> (static_cast<double> (frame) / reader->lengthInSamples));
     }
     AnalysisSnapshot result;
     result.context = context; result.domain = domain; result.measuredContentHash = hash;
@@ -57,7 +58,7 @@ AnalysisSnapshot measure (const ServiceContext& context, MeasurementDomain domai
     checkCancel (control);
     result.measured = { result.detail.integrated.value, result.detail.lra.value,
                         result.detail.truePeak.value, result.detail.samplePeak.value };
-    control.progress.store (1);
+    control.setProgress (1);
     return result;
 }
 template <typename Fn> ServiceResult<AnalysisSnapshot> run (Fn&& function)
@@ -97,6 +98,9 @@ std::vector<measurement::Role> OfflineAnalysisService::measurementRoles (const C
 }
 juce::String OfflineAnalysisService::validateRequest (const ServiceContext& c, MeasurementDomain domain)
 {
+    if(domain!=MeasurementDomain::source && domain!=MeasurementDomain::currentState
+        && domain!=MeasurementDomain::renderedOutput && domain!=MeasurementDomain::privateCandidate)
+        return "Unknown measurement domain";
     if (! c.isValid() || ! c.isFullProgram() || c.sessionId.isEmpty()) return "Full program, session identity and confirmed roles required";
     if (c.media.measurementRestriction.isNotEmpty()) return c.media.measurementRestriction;
     if (! std::isfinite (c.media.sampleRate) || c.media.sampleRate < 1 || c.media.sampleRate > 192000
@@ -131,12 +135,24 @@ ServiceResult<AnalysisSnapshot> OfflineAnalysisService::analyze (const ServiceCo
     return run ([&]
     {
         const auto error = validateRequest (context, domain);
-        if (error.isNotEmpty() || domain == MeasurementDomain::renderedOutput)
-            throw Failure { ErrorCode::invalidRequest, error.isNotEmpty() ? error : "Rendered output must be measured through artifact verification" };
+        if (error.isNotEmpty() || (domain != MeasurementDomain::source && domain != MeasurementDomain::currentState))
+            throw Failure { ErrorCode::invalidRequest, error.isNotEmpty() ? error : "Use the separate private-candidate or artifact-verification boundary" };
         const auto prepared = prepareVerifiedSource (context, control);
         if (! prepared.value) throw Failure { prepared.error, prepared.message };
         const auto& source = *prepared.value;
         return measure (context, domain, source->createReader(), context.media.sha256, true, control, observer);
+    });
+}
+ServiceResult<AnalysisSnapshot> OfflineAnalysisService::analyzeCandidate(const ServiceContext& context,
+    const VerifiedSource& source, JobControl& control, measurement::PeakObserver* peaks)
+{
+    return run([&]
+    {
+        const auto error=validateRequest(context,MeasurementDomain::privateCandidate);
+        if(error.isNotEmpty()||!source.matches(context.media)||!context.sourceFilesMatch())
+            throw Failure{ErrorCode::invalidRequest,error.isNotEmpty()?error:"Private candidate source identity changed"};
+        checkCancel(control);
+        return measure(context,MeasurementDomain::privateCandidate,source.createReader(),context.media.sha256,true,control,observer,peaks);
     });
 }
 bool ExportApproval::matches (const ServiceContext& context, const RenderArtifact& artifact) const

@@ -58,15 +58,24 @@ public:
             throw std::runtime_error("Diagnostic requires muted routes, <=100 seconds and a new --trace file");
 #endif
         JobControl job;
+        std::optional<ProcessingPlan> savedProcessing;
+        const bool sessionProcessing=args.contains("--session-processing");
+        if(sessionProcessing&&(argument("--programme").isEmpty()||argument("--audition-state")!="current"||argument("--processing-gain").isNotEmpty()))
+            throw std::runtime_error("Saved processing requires --programme and current audition without a gain override");
         if (argument("--programme").isNotEmpty())
         {
             if (argument("--audio").isNotEmpty()) throw std::runtime_error("Choose either --audio or --programme");
             auto loaded=sessionfile::read(juce::File(argument("--programme")),job);
             if(!loaded.document)throw std::runtime_error(loaded.message.toStdString());
             auto verified=sessionfile::verify(*loaded.document,job);
-            if(!verified.document||!verified.document->audioResolved||!verified.document->source.assembly)
-                throw std::runtime_error("A complete confirmed M9 programme is required");
-            request=verified.prepared->model.auditionRequest();request.domain=MeasurementDomain::source;request.context.processing.staticGainDb=0;
+            if(!verified.document||!verified.document->audioResolved||!verified.prepared)
+                throw std::runtime_error("A complete confirmed programme is required");
+            if(sessionProcessing)
+            {
+                if(!verified.prepared->model.currentStateDocument.isInitialized)throw std::runtime_error("Saved Current State required");
+                savedProcessing=verified.prepared->model.currentStateDocument.processingPlan();
+            }
+            request=verified.prepared->model.auditionRequest();request.domain=MeasurementDomain::source;request.context.processing=ProcessingPlan{};
             media=request.context.media;layout=request.context.fileLayout;
         }
         else {
@@ -91,10 +100,13 @@ public:
         {
             request.domain = MeasurementDomain::currentState; request.currentInitialized = true;
             request.context.ticket.sessionRevision = 1;
+            if(savedProcessing)request.context.processing=*savedProcessing;
+            else {
             const auto gainText = argument ("--processing-gain");
             if (gainText.isEmpty()) throw std::runtime_error ("Current qualification requires explicit --processing-gain");
             size_t used = 0; request.context.processing.staticGainDb = std::stod (gainText.toStdString(), &used);
             if (used != gainText.toStdString().size()) throw std::runtime_error ("Invalid processing gain");
+            }
         }
         else if (argument ("--processing-gain").isNotEmpty()) throw std::runtime_error ("Source has identity gain only");
         const auto requestError = request.validationError();
@@ -299,6 +311,7 @@ private:
         set ("sample_rate", media.sampleRate); set ("device", deviceName); set ("audio_sha256", media.sha256);
         set ("audition_state", request.domain == MeasurementDomain::source ? "Source" : "Current State");
         set ("processing_gain_db", request.context.processing.staticGainDb);
+        set ("section_plan_key", request.context.processing.sectionGains?request.context.processing.sectionGains->audioKey():juce::String());
         set ("audition_identity", request.identity());
         set ("measurement_build", LEVELSCOPE_MEASUREMENT_BUILD);
         set ("measurement_status", "UNVERIFIED; timing qualification does not measure compliance");
@@ -325,7 +338,8 @@ private:
         set ("embedded_audio_policy", "Excluded by video-only backend; independent nonzero-sink audit is a separate test");
         set ("all_routes_muted", muted);
         set ("selected_audio_channels", media.channels);
-        set ("programme_assembly", request.context.assembly ? "mono-channel-assembly-v2" : "interleaved");
+        set ("programme_assembly", request.context.composition ? "aligned-two-component-sum-v1" : request.context.assembly ? "mono-channel-assembly-v2" : "interleaved");
+        if(request.context.composition)set("composition_identity",request.context.composition->definitionIdentity());
         if(request.context.assembly)set("alignment_confirmation",request.context.assembly->alignmentConfirmation);
         set ("measurement_build", LEVELSCOPE_MEASUREMENT_BUILD);
         set ("layout_capability", isSystemI (layout) ? systemICapability : request.context.assembly ? "mono-channel-assembly-v2" : "stereo");

@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "recorded_utc": "2026-10-28T19:45:53.055512+00:00",
+  "source_digest": "50eba19a2d66096607ec878c8eaa05e610580c7f5e8854d7b375d846a89c5f27",
+  "source_files_verified": 250,
+  "both_frozen_packages_verified": true,
+  "tool_only_equivalence_verified": true,
+  "all_existing_tag_objects_and_targets_unchanged": true,
+  "tag_count": 16,
+  "branches_and_worktree_heads_unchanged": true,
+  "main": "cfb1033aa7fb65a2655db276bee696161196bdeb",
+  "head": "0fc4c5a7f2364f57760228f5c5ecf2f6e0714197",
+  "publication_performed": false
+}

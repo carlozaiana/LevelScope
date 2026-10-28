@@ -4,6 +4,7 @@
 namespace levelscope::standalone
 {
 struct ProcessedAudioObserver;
+class VerifiedSource;
 class OfflineAnalysisService final : public AnalysisService
 {
 public:
@@ -18,6 +19,10 @@ public:
     // Encoded artifact has its own media/layout/hash context and zero gain. It is
     // read in owned export staging; no second full-length copy is manufactured.
     ServiceResult<AnalysisSnapshot> verifyEncodedArtifact (const ServiceContext&, JobControl&);
+    // Private assessment only, reusing one verified original across bounded passes.
+    // Result domain cannot satisfy Current freshness or artifact approval.
+    ServiceResult<AnalysisSnapshot> analyzeCandidate(const ServiceContext&, const VerifiedSource&,
+        JobControl&, measurement::PeakObserver* = nullptr);
 private:
     ProcessedAudioObserver* observer;
 };

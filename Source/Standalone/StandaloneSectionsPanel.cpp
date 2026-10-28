@@ -100,13 +100,14 @@ void StandaloneSectionsPanel::timerCallback()
     sections.poll(); const auto next = sections.result(); const bool resultChanged = next != displayed; displayed = next;
     const auto newAnnotation = session.getSelectedTargetProfile().digest() + ";" + juce::String (static_cast<int> (session.programmeApplicability));
     const auto newGainKey=session.currentStateDocument.sectionGains?session.currentStateDocument.sectionGains->audioKey():juce::String();
-    if (mapChanged || measuredChanged || resultChanged || newAnnotation != annotationKey || newGainKey!=appliedGainKey)
-    { annotationKey = newAnnotation; appliedGainKey=newGainKey; refreshDetails(); }
+    const auto newProposalKey=session.sectionProposal?session.sectionProposal->identity():juce::String();
+    if (mapChanged || measuredChanged || resultChanged || newAnnotation != annotationKey || newGainKey!=appliedGainKey || newProposalKey!=proposalViewKey)
+    { annotationKey = newAnnotation; appliedGainKey=newGainKey; proposalViewKey=newProposalKey; refreshDetails(); }
     const bool busy = diagnostics.busy() || sections.busy(); cancelButton.setEnabled (busy);
     rebuildButton.setEnabled (snapshot != nullptr && ! busy);
     status.setText (editNotice.isNotEmpty() ? editNotice : diagnostics.busy() ? diagnostics.status : sections.status, juce::dontSendNotification);
     const bool editable=!session.audioEditsBlocked()&&!session.job.isActive();
-    draftGainButton.setEnabled(editable && !session.sectionTrimDraft && session.currentStateDocument.isInitialized);
+    draftGainButton.setEnabled(editable && !session.sectionTrimDraft && !session.sectionProposal && session.currentStateDocument.isInitialized);
     setGainButton.setEnabled(editable && session.sectionDraftFresh());gainEditor.setEnabled(setGainButton.isEnabled());
     applyGainButton.setEnabled(editable && session.sectionDraftFresh());discardGainButton.setEnabled(session.sectionTrimDraft.has_value());
     auto gainText=session.sectionTrimNotice;
@@ -147,8 +148,8 @@ void StandaloneSectionsPanel::performEdit (int operation)
     const bool ok = operation == 0 ? document.split (row->id, frame, error) : operation == 1 ? document.moveEnd (row->id, frame, error)
         : operation == 2 ? document.mergeNext (row->id, error) : document.rename (row->id, name.getText(), error);
     if (ok && previousRevision != document.map().revision) session.documentChanged();
-    editNotice = ok ? "Section edit accepted. Audio, measurements, verdicts and proposals unchanged." : error;
-    synchronize();
+    editNotice = ok ? "Section edit accepted. Audio and measurements unchanged; section-led proposals require matching geometry." : error;
+    synchronize();if(onChanged)onChanged();
 }
 void StandaloneSectionsPanel::refreshDetails()
 {
@@ -199,6 +200,15 @@ void StandaloneSectionsPanel::refreshDetails()
     }
     else text << "unity section gain; ";
     text << "final global trim " << juce::String(session.currentStateDocument.staticGainDb,12) << " dB. Curves/settings are not measurements.";
+    if(session.sectionProposal&&session.sectionProposal->status()==SectionProposalStatus::ready)
+    {
+        const bool fresh=session.sectionGeometry(document.map())==session.sectionProposal->peaks()->geometry;
+        text << "\n" << (fresh?"PROPOSED settings only (not applied): ":"STALE PROPOSAL geometry; cannot Apply: ");
+        for(const auto& correction:session.sectionProposal->selection().corrections)if(correction.id==row->id)
+            text << juce::String(correction.originalDb,12) << " -> " << juce::String(correction.resultingDb,12)
+                 << " dB; additional reduction " << juce::String(correction.reductionDb,12)
+                 << "; reserve " << juce::String(correction.reserveDb,12) << "; uncovered deficit " << juce::String(correction.uncoveredDb,12) << " dB.";
+    }
     summary.setText (text, false);
 }
 int StandaloneSectionsPanel::getNumRows() { return static_cast<int> (document.map().sections.size()); }
@@ -253,7 +263,7 @@ void StandaloneSectionsPanel::paint (juce::Graphics& g) { g.fillAll (juce::Colou
 void StandaloneSectionsPanel::GainView::paint(juce::Graphics& g)
 {
     g.fillAll(juce::Colour(0xff101820));g.setFont(12);g.setColour(juce::Colours::white);
-    g.drawText("Whole-programme audio-source time | applied: green | draft: orange | +/-12 dB | settings, not measured curves",5,0,getWidth()-10,18,juce::Justification::centredLeft);
+    g.drawText("Whole-programme audio-source time | applied: green | manual draft: orange | proposal: cyan | +/-12 dB | settings, not measured curves",5,0,getWidth()-10,18,juce::Justification::centredLeft);
     const auto frames=session.sourceDocument.media.frames;if(frames<=0)return;
     const float left=38,right=float(getWidth()-8),top=24,bottom=float(getHeight()-17);
     auto x=[&](int64_t f){return left+float(double(f)/frames)*(right-left);};
@@ -271,5 +281,8 @@ void StandaloneSectionsPanel::GainView::paint(juce::Graphics& g)
     };
     draw(session.currentStateDocument.sectionGains?&*session.currentStateDocument.sectionGains:nullptr,juce::Colours::lightgreen);
     if(session.sectionTrimDraft)draw(&session.sectionTrimDraft->plan,juce::Colours::orange);
+    if(session.sectionProposal&&session.sectionProposal->status()==SectionProposalStatus::ready
+        &&session.sectionGeometry(session.sectionDocument.map())==session.sectionProposal->peaks()->geometry)
+        draw(&*session.sectionProposal->plan().sectionGains,juce::Colours::cyan);
 }
 }

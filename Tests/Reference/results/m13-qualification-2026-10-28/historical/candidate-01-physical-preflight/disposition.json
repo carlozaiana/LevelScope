@@ -1,0 +1,6 @@
+{
+  "passed": false,
+  "physical_devices_opened": false,
+  "reason": "Qualification runner incorrectly expected a single-file content-hash field for a composition report.",
+  "fix": "Candidate-02 test tooling reads the measured programme-definition digest and validates it against the composition definition. Product and C++ binaries unchanged."
+}

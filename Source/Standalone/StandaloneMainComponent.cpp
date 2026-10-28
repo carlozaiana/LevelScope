@@ -165,6 +165,7 @@ StandaloneMainComponent::~StandaloneMainComponent()
     if (importResult.valid()) importResult.wait();
     if (analysisResult.valid()) analysisResult.wait();
     if (proposalResult.valid()) proposalResult.wait();
+    if (sectionProposalResult.valid()) sectionProposalResult.wait();
     audition.disconnect();
 }
 
@@ -198,6 +199,17 @@ void StandaloneMainComponent::timerCallback()
     audition.poll (videoPanel.prerollReady());
     audioPanel.refresh();
     if (audition.getState() != audioStateBeforePoll) refreshFromSession();
+    if(sectionProposalResult.valid()&&sectionProposalResult.wait_for(std::chrono::seconds(0))==std::future_status::ready)
+    {
+        const auto result=sectionProposalResult.get();
+        if(session.job.finish(sectionProposalTicket,session.revision,result.error,result.message))
+        {
+            if(!result.value||!session.acceptSectionProposal(*result.value))
+            {session.job.state=JobState::failed;session.job.message="Proposal inputs changed; private candidate discarded";}
+        }
+        else session.sectionProposalNotice=result.message;
+        importControl.reset();refreshFromSession();
+    }
     if (proposalResult.valid() && proposalResult.wait_for (std::chrono::seconds (0)) == std::future_status::ready)
     {
         const auto result = proposalResult.get();
@@ -292,6 +304,25 @@ void StandaloneMainComponent::beginTrimProposal()
         catch (...) { return proposal::TrimProposal(); }
     });
     session.selectedPage = WorkflowPage::currentState;
+    refreshFromSession();
+}
+void StandaloneMainComponent::beginSectionProposal()
+{
+    if(session.persistenceLoading||session.audioEditsBlocked()||session.job.isActive())return;
+    session.synchronizeSections();const auto request=session.sectionProposalRequest();
+    const auto first=proposal::draftGlobalTrim(request.scalar());
+    session.discardSectionProposal();session.selectedPage=WorkflowPage::currentState;
+    // No attribution, copy or measurement for existing global-only/no-change outcomes.
+    if(first.status!=proposal::TrimStatus::noSolution)
+    {
+        JobControl control;const auto result=generateSectionProposal(request,control);
+        if(result.value)session.acceptSectionProposal(*result.value);else session.sectionProposalNotice=result.message;
+        refreshFromSession();return;
+    }
+    if(!session.job.begin(JobStage::proposal,session.revision))return;
+    sectionProposalTicket=session.job.ticket;session.job.message="Assessing one section envelope; Current State unchanged";
+    importControl=std::make_shared<JobControl>();
+    sectionProposalResult=std::async(std::launch::async,[request,control=importControl]{return generateSectionProposal(request,*control);});
     refreshFromSession();
 }
 // [END LS-STANDALONE-IMPORT-LIFECYCLE]
@@ -394,6 +425,10 @@ void StandaloneMainComponent::configureCurrentStateControls()
     addAndMakeVisible (initializeCurrentStateButton);
     addAndMakeVisible (clearCurrentStateButton);
     addAndMakeVisible (remeasureCurrentStateButton);
+    sectionProposalButton.onClick=[this]{beginSectionProposal();};
+    applySectionProposalButton.onClick=[this]{session.applySectionProposal();refreshFromSession();};
+    discardSectionProposalButton.onClick=[this]{session.discardSectionProposal();refreshFromSession();};
+    for(auto* button:{&sectionProposalButton,&applySectionProposalButton,&discardSectionProposalButton})addAndMakeVisible(*button);
     draftTrimButton.onClick = [this] { beginTrimProposal(); };
     applyTrimButton.onClick = [this] { session.applyTrim(); refreshFromSession(); };
     discardTrimButton.onClick = [this] { session.discardTrim(); refreshFromSession(); };
@@ -498,6 +533,9 @@ void StandaloneMainComponent::refreshFromSession()
     currentGain.setValue (session.currentStateDocument.staticGainDb, juce::dontSendNotification);
     draftTrimButton.setEnabled (!session.persistenceLoading && session.getWorkflowReadiness().canDraftProposal());
     applyTrimButton.setEnabled (session.canApplyTrim());
+    sectionProposalButton.setEnabled(!session.persistenceLoading&&!session.audioEditsBlocked()&&!session.job.isActive()&&session.currentState.hasMeasurement);
+    applySectionProposalButton.setEnabled(session.canApplySectionProposal());
+    discardSectionProposalButton.setEnabled(bool(session.sectionProposal)&&!session.job.isActive());
     discardTrimButton.setEnabled (!session.persistenceLoading && ! session.job.isActive() && session.trimDraft.has_value());
 
     sourceStateBox.setText (buildSourceStateText(), false);
@@ -729,7 +767,7 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
         }
 
         case WorkflowPage::currentState:
-            text << session.trimNotice << "\n\n";
+            text << session.trimNotice << "\n\n" << session.sectionProposalDisplayText() << "\n\n";
             text << evaluationText (session.evaluation (MeasurementDomain::currentState)) << "\n";
             text << "Initialize Current State, adjust static gain, then re-measure.\n\n";
             text << "Static gain applies to every programme channel, including LFE, after any composition.\n";
@@ -827,6 +865,9 @@ void StandaloneMainComponent::resized()
     applyTrimButton.setBounds (proposalRow.removeFromLeft (120));
     proposalRow.removeFromLeft (8);
     discardTrimButton.setBounds (proposalRow.removeFromLeft (140));
+    proposalRow.removeFromLeft(8);sectionProposalButton.setBounds(proposalRow.removeFromLeft(190));
+    proposalRow.removeFromLeft(8);applySectionProposalButton.setBounds(proposalRow.removeFromLeft(150));
+    proposalRow.removeFromLeft(8);discardSectionProposalButton.setBounds(proposalRow.removeFromLeft(160));
     bounds.removeFromTop (8);
 
     auto exportRow = bounds.removeFromTop (30);

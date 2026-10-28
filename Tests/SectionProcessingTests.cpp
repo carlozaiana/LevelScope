@@ -279,7 +279,7 @@ int main(int argc,char** argv)
         passed=true;
     }
     catch(const std::exception& e){failure=e.what();std::cerr<<failure<<'\n';}
-    auto v=juce::var(new juce::DynamicObject());auto* r=v.getDynamicObject();r->setProperty("suite","M12 section processing");r->setProperty("passed",passed);r->setProperty("failure",failure);r->setProperty("checks",checks);r->setProperty("cases",cases);r->setProperty("build",LEVELSCOPE_MEASUREMENT_BUILD);r->setProperty("physical_devices_opened",false);r->setProperty("video_loaded",false);r->setProperty("phase",longSession.isNotEmpty()?"sequoia-long":smoke?"development-smoke":"sequoia-audio");r->setProperty("long_workflow",longEvidence);
+    auto v=juce::var(new juce::DynamicObject());auto* r=v.getDynamicObject();r->setProperty("suite","M12 section processing");r->setProperty("passed",passed);r->setProperty("failure",failure);r->setProperty("checks",checks);r->setProperty("cases",cases);r->setProperty("build",LEVELSCOPE_MEASUREMENT_BUILD);r->setProperty("physical_devices_opened",false);r->setProperty("video_loaded",false);r->setProperty("phase",longSession.isNotEmpty()?"long":smoke?"development-smoke":"audio");r->setProperty("long_workflow",longEvidence);
 #if defined(__arm64__) || defined(__aarch64__)
     r->setProperty("architecture","arm64");
 #else

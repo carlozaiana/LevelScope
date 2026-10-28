@@ -1,0 +1,40 @@
+{
+  "qualified": true,
+  "source_digest": "50eba19a2d66096607ec878c8eaa05e610580c7f5e8854d7b375d846a89c5f27",
+  "measurement_build": "5fd55bb1a81c80b4b556715936b6873bccae29a5d04c00b0890a9b43296a20d2",
+  "identity_sha256": "266783d8faaabde9fbb166901d1eba8f1c0ff75c4f51a2258a9502817feed839",
+  "evidence": {
+    "sequoia/short": "2b89cdd285401610260897240df352259f6562437cf8f93e8b91da8012b98c89",
+    "sequoia/long": "6fa49a55c01a4dfb998d0c27dc3be30d6733b4ef50e2452b2905d7f1b3d5ac90",
+    "sequoia/video": "3639716a1a80aa552bec2aba00b282187cd8c0022b45abc0c005907b5ebf27b8",
+    "sequoia/exchange": "b5d7f9fe3c15bd39b4894027a71430037071824f90c35f2f0371a82466b5c040",
+    "sequoia/ui": "a1774095c3b6a3cd699df4d8494d867793b4aeaf75ef4006699a83964bd269fc",
+    "sequoia/physical-video": "4153d777a69e4b85f51c32e619927e009be99a83f4da08d18d4b50fde3bad3a8",
+    "sequoia/tool-repair": "cf92486892021edab6f7b1545905d478ddbe07ffcea7b5aef3681f033bdb0f07",
+    "high-sierra/short": "d7b5427d010d65066dee0a7f398e99ffc44215f4547ac694e8303de7122f21a7",
+    "high-sierra/long": "58fa09f9605605d396fcfe67fae00c230288ce860edef1400a15f56e282198f6",
+    "high-sierra/video": "44b8ae4816bee7105a109858bf4f793bdb40e482b9221654e4a5a0bb1f8cdc9b",
+    "high-sierra/exchange": "ada430fe8e33661149239ca6d0f9325223513f94dfa276d847496268f94935db",
+    "high-sierra/ui": "3a5721b17ef4ee227a76a3fe96a74ad24949f87922c30aa15037b914a8c91198",
+    "high-sierra/physical-video": "4153d777a69e4b85f51c32e619927e009be99a83f4da08d18d4b50fde3bad3a8",
+    "high-sierra/tool-repair": "f92d41bd4a44b5af7cc231ebe776208ff9679184b62ebbb421a6e186f1c3dc7e"
+  },
+  "tool_only_equivalence": {
+    "previous_source_digest": "2398d0106975e57f8d1f7484b4141ff5becb418649cc65b5f42e8d981c6f6a30",
+    "current_source_digest": "50eba19a2d66096607ec878c8eaa05e610580c7f5e8854d7b375d846a89c5f27",
+    "changed_tool_sources": [
+      "Tests/M13QualificationRunnerTests.py",
+      "Tests/compare_m13_reports.py",
+      "Tests/complete_m13_qualification.py",
+      "Tests/m13_evidence_identity.py",
+      "Tests/run_m13_muted_video.py"
+    ],
+    "production_and_test_binaries_unchanged": true,
+    "reason": "Qualification-tool repair only. Original phase receipts remain unchanged; corrected runner is tested freshly."
+  },
+  "publication_authorized": false,
+  "main_integration_authorized": false,
+  "main_remains": "cfb1033aa7fb65a2655db276bee696161196bdeb",
+  "physical_full_71_listening": "Separately pending; outside M13",
+  "picture_skips": "Accepted development limitation under retained audio/drift/lifecycle conditions"
+}

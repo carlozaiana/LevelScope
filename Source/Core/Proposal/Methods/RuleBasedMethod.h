@@ -27,5 +27,7 @@ struct TrimProposal
 
 // Scalar planning only. No audio, session mutation, measured verdict or retry.
 TrimProposal draftGlobalTrim (const TrimRequest&);
+// Candidate-domain numerical planning only; never a Current State Apply authority.
+TrimProposal draftGlobalTrimForCandidate (const TrimRequest&);
 juce::String trimProposalText (const TrimProposal&);
 }

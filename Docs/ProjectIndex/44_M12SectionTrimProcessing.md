@@ -1,9 +1,17 @@
 # M12 proposal — explicit section-trim processing and measured verification
 
+Publication update, 28 October 2026: combined candidate-02 completed actual-platform
+qualification and the user subsequently authorized commits, an annotated tag and
+main integration. The [M13 checkpoint](https://github.com/carlozaiana/LevelScope/tree/m13-bounded-section-proposals-2026-10-28) records the accepted source.
+The original development-phase restrictions below are retained as historical
+plan/authorization boundaries; the later approval permits this publication.
+
 Status: **approved for implementation**, 27 October 2026.
 
 M12 approved Sequoia phase completed on candidate-03, 27 October 2026; see
-[46](46_M12QualificationAndHandover.md). Full qualification remains deferred.
+[46](46_M12QualificationAndHandover.md). That checkpoint retains its historical
+Sequoia-only status. The combined M13 candidate subsequently completed actual
+High Sierra and selected deferred video qualification; see [49](49_M13QualificationAndHandover.md).
 Required development-checkpoint label:
 **“Sequoia tested; High Sierra and video qualification pending.”**
 
@@ -24,8 +32,10 @@ Make the next intervention after global trim available through the complete
 measured workflow: **user-selected section gains, explicit Apply, whole-programme
 remeasurement, verified audition and verified PCM export**.
 
-The proposal specification places section/scene trims after global trim and before
-dynamic processing. M5 supplies exact programme sections and descriptive analysis;
+M12 established section trims after global-only planning. The 28 October design
+revision now makes subsequent preferences strategy-specific: M13 is the first
+bounded section-led method, alongside future dynamics-led and mixed strategies.
+This clarification does not change M12's tested contract. M5 supplies exact programme sections and descriptive analysis;
 M3 supplies a measured global-trim proposal; M6/M8/M10 supply audition, sessions and
 export. At the M11 baseline, code executes only `static-gain-v1`, and M5 summaries are
 not independent section loudness/peak measurements or a causal edit simulator.

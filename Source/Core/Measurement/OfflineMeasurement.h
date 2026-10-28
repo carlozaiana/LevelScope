@@ -37,12 +37,21 @@ struct Result
     std::vector<int64_t> samplePeakFrames, truePeakEighthFrames;
 };
 
+// Optional worker-only observation of the existing continuous peak calculation.
+// Observers cannot change samples, filter history, gates or ordinary results.
+struct PeakObserver
+{
+    virtual ~PeakObserver() = default;
+    virtual void sample (size_t channel, double magnitude, int64_t frame) = 0;
+    virtual void truePeak (size_t channel, double magnitude, int64_t eighthFrame, bool padding) = 0;
+};
+
 // Invalid configuration/samples throw std::invalid_argument; accumulation overflow
 // throws std::overflow_error. finish() is idempotent; push after finish is invalid.
 class OfflineMeasurement
 {
 public:
-    OfflineMeasurement (int sampleRate, const std::vector<Role>& fileRoles);
+    OfflineMeasurement (int sampleRate, const std::vector<Role>& fileRoles, PeakObserver* = nullptr);
     void push (const float* const* channels, int count);
     const Result& finish();
     static bool supports (int sampleRate, const std::vector<Role>& roles);
@@ -70,5 +79,6 @@ private:
     int mLength, sLength, step;
     double mSum = 0, sSum = 0, mMaximum = 0, sMaximum = 0;
     bool finished = false;
+    PeakObserver* peakObserver = nullptr;
 };
 }

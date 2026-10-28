@@ -5,9 +5,9 @@
 
 namespace levelscope::proposal
 {
-inline constexpr const char* evaluationVersion = "measured-programme-rules-m10.1";
+inline constexpr const char* evaluationVersion = "measured-programme-rules-m13.1";
 enum class Verdict { notEvaluated, pass, fail, indeterminate };
-enum class SnapshotDomain { source, currentState, predicted, renderedOutput };
+enum class SnapshotDomain { source, currentState, predicted, renderedOutput, privateCandidate };
 struct MeasuredProgramme
 {
     SnapshotDomain domain = SnapshotDomain::predicted; // Fail closed.

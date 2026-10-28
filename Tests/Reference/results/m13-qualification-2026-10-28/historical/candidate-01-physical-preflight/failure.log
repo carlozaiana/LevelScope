@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/Tests/run_m13_muted_video.py", line 58, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+  File "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-01/Tests/run_m13_muted_video.py", line 33, in main
+    plan=model['current_processing_plan'];gain=plan['global_gain_db'];audio_identity=model['source']['measured_content_sha256'];key=plan['audio_key']
+KeyError: 'measured_content_sha256'

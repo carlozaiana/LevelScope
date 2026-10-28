@@ -1,0 +1,27 @@
+[
+  {
+    "name": "m13-long",
+    "argv": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/bin/LevelScopeSectionProposalTests",
+      "--root",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02-results/high-sierra/long/long-files",
+      "--long-session",
+      "/Users/fuzz/LevelScope-M11-qualification-2026-10-26/candidate-02-results/high-sierra/long/long-files/composition.levelscope",
+      "--output",
+      "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02-results/high-sierra/long/m13-long.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 12096.823477349,
+    "log_sha256": "95e6a894b0a560058084b7b7090e4f0f3c82af175a370a8fe61adb00dd92c346"
+  },
+  {
+    "name": "independent-rf64",
+    "exit_code": 0,
+    "seconds": 30.734809858000517,
+    "evidence_sha256": "d8a8e239aa5db2c5f8c6b4e43fa45cb8f8bbd448eee641942f0bbab347e0d5ff"
+  }
+]

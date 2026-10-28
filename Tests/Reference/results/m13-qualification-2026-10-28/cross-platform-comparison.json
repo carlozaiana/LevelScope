@@ -1,0 +1,264 @@
+{
+  "passed": true,
+  "source_digest": "50eba19a2d66096607ec878c8eaa05e610580c7f5e8854d7b375d846a89c5f27",
+  "measurement_build": "5fd55bb1a81c80b4b556715936b6873bccae29a5d04c00b0890a9b43296a20d2",
+  "cases": [
+    {
+      "rate": 44100,
+      "channels": 2,
+      "mode": 0,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 44100,
+      "channels": 2,
+      "mode": 1,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 44100,
+      "channels": 2,
+      "mode": 2,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 44100,
+      "channels": 2,
+      "mode": 3,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 44100,
+      "channels": 6,
+      "mode": 0,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 44100,
+      "channels": 6,
+      "mode": 1,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 44100,
+      "channels": 6,
+      "mode": 2,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 44100,
+      "channels": 6,
+      "mode": 3,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 44100,
+      "channels": 6,
+      "mode": 4,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 44100,
+      "channels": 6,
+      "mode": 5,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 48000,
+      "channels": 2,
+      "mode": 0,
+      "maximum_ulp": 0
+    },
+    {
+      "rate": 48000,
+      "channels": 2,
+      "mode": 1,
+      "maximum_ulp": 0
+    },
+    {
+      "rate": 48000,
+      "channels": 2,
+      "mode": 2,
+      "maximum_ulp": 0
+    },
+    {
+      "rate": 48000,
+      "channels": 2,
+      "mode": 3,
+      "maximum_ulp": 0
+    },
+    {
+      "rate": 48000,
+      "channels": 6,
+      "mode": 0,
+      "maximum_ulp": 0
+    },
+    {
+      "rate": 48000,
+      "channels": 6,
+      "mode": 1,
+      "maximum_ulp": 0
+    },
+    {
+      "rate": 48000,
+      "channels": 6,
+      "mode": 2,
+      "maximum_ulp": 0
+    },
+    {
+      "rate": 48000,
+      "channels": 6,
+      "mode": 3,
+      "maximum_ulp": 0
+    },
+    {
+      "rate": 48000,
+      "channels": 6,
+      "mode": 4,
+      "maximum_ulp": 0
+    },
+    {
+      "rate": 48000,
+      "channels": 6,
+      "mode": 5,
+      "maximum_ulp": 0
+    },
+    {
+      "rate": 96000,
+      "channels": 2,
+      "mode": 0,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 96000,
+      "channels": 2,
+      "mode": 1,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 96000,
+      "channels": 2,
+      "mode": 2,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 96000,
+      "channels": 2,
+      "mode": 3,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 96000,
+      "channels": 6,
+      "mode": 0,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 96000,
+      "channels": 6,
+      "mode": 1,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 96000,
+      "channels": 6,
+      "mode": 2,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 96000,
+      "channels": 6,
+      "mode": 3,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 96000,
+      "channels": 6,
+      "mode": 4,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 96000,
+      "channels": 6,
+      "mode": 5,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 192000,
+      "channels": 2,
+      "mode": 0,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 192000,
+      "channels": 2,
+      "mode": 1,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 192000,
+      "channels": 2,
+      "mode": 2,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 192000,
+      "channels": 2,
+      "mode": 3,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 192000,
+      "channels": 6,
+      "mode": 0,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 192000,
+      "channels": 6,
+      "mode": 1,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 192000,
+      "channels": 6,
+      "mode": 2,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 192000,
+      "channels": 6,
+      "mode": 3,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 192000,
+      "channels": 6,
+      "mode": 4,
+      "maximum_ulp": null
+    },
+    {
+      "rate": 192000,
+      "channels": 6,
+      "mode": 5,
+      "maximum_ulp": null
+    }
+  ],
+  "maximum_float32_ulp": 0,
+  "maximum_metric_difference": 3.552713678800501e-15,
+  "allowances": "Cross-platform comparison only: I/M/S/TP/SP and gain .01; LRA .1; processed float32 <=1 ULP. No additional profile allowance.",
+  "physical_multichannel_listening": "Separately pending",
+  "tool_only_equivalence": {
+    "previous_source_digest": "2398d0106975e57f8d1f7484b4141ff5becb418649cc65b5f42e8d981c6f6a30",
+    "current_source_digest": "50eba19a2d66096607ec878c8eaa05e610580c7f5e8854d7b375d846a89c5f27",
+    "changed_tool_sources": [
+      "Tests/M13QualificationRunnerTests.py",
+      "Tests/compare_m13_reports.py",
+      "Tests/complete_m13_qualification.py",
+      "Tests/m13_evidence_identity.py",
+      "Tests/run_m13_muted_video.py"
+    ],
+    "production_and_test_binaries_unchanged": true,
+    "reason": "Qualification-tool repair only. Original phase receipts remain unchanged; corrected runner is tested freshly."
+  }
+}

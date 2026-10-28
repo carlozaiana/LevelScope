@@ -1,0 +1,1081 @@
+Section-led / section-trim-proposal-v1
+Baseline binding: f64ef394b0a6ac824765a9e1dbe2e79a75423a53913449490ff277e0af8780eb
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 26460 frames; global trim acts on the whole programme.
+Section 11 [220500, 242550) source frames; channel 1; TP -1.938200131 dBTP at 1852200/8 frames
+Gain 0.000000000000 -> -0.985549849954 dB; requested reduction 0.985549849954, applied 0.985549849954; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 26460 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 0.985549849954 dB; largest transition slope: 9.857733813329 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.470504754303 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.423749981 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta 0.000000
+Within selected bounds.
+true-peak: PASS | -1.453245 dBTP | max -1.000000 | delta -0.453245
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: d48edc63662ba5d601ed1192c20a8c11ae49c3a90364852519965314975f28e9
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 26460 frames; global trim acts on the whole programme.
+Section 11 [220500, 242550) source frames; channel 1; TP -1.938200131 dBTP at 1852200/8 frames
+Gain 0.000000000000 -> -0.985549849954 dB; requested reduction 0.985549849954, applied 0.985549849954; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 26460 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 0.985549849954 dB; largest transition slope: 9.857733813329 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.470504754303 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.423749981 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta 0.000000
+Within selected bounds.
+true-peak: PASS | -1.453245 dBTP | max -1.000000 | delta -0.453245
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: 479bcd0b367c421226004b9ebe6401aed45e58e5d56a6cf9653d3786ade36ae5
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 26460 frames; global trim acts on the whole programme.
+Section 11 [220500, 242550) source frames; channel 1; TP -1.938200131 dBTP at 1852200/8 frames
+Gain 0.000000000000 -> -0.985549849954 dB; requested reduction 0.985549849954, applied 0.985549849954; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 26460 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 0.985549849954 dB; largest transition slope: 9.857733813329 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.470504754303 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.423749981 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta 0.000000
+Within selected bounds.
+true-peak: PASS | -1.453245 dBTP | max -1.000000 | delta -0.453245
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: a9b244756aa9cdd99d2c46b19abc332769737f056c006caf80496a715150440a
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 26460 frames; global trim acts on the whole programme.
+Section 11 [220500, 242550) source frames; channel 1; TP -1.938200131 dBTP at 1852200/8 frames
+Gain 0.000000000000 -> -0.985549849954 dB; requested reduction 0.985549849954, applied 0.985549849954; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 26460 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 0.985549849954 dB; largest transition slope: 9.857733813329 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.470504754303 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.423749981 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta 0.000000
+Within selected bounds.
+true-peak: PASS | -1.453245 dBTP | max -1.000000 | delta -0.453245
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: bf7c6929b5aafc06e0e221eea88203fa51dd6edd2b163610f88e4546c122dd6c
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 26460 frames; global trim acts on the whole programme.
+Section 11 [220500, 242550) source frames; channel 4; TP -1.938200131 dBTP at 1852200/8 frames
+Gain 0.000000000000 -> -1.283579346212 dB; requested reduction 1.283579346212, applied 1.283579346212; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 26460 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.283579346212 dB; largest transition slope: 12.838704733031 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.780014052813 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.721779477 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta 0.000000
+Within selected bounds.
+true-peak: PASS | -1.441766 dBTP | max -1.000000 | delta -0.441766
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: 1145a4cc9333fd09ad92838844f7eaeaf4aa47eca3717f053965fc0b27708240
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 26460 frames; global trim acts on the whole programme.
+Section 11 [220500, 242550) source frames; channel 4; TP -1.938200131 dBTP at 1852200/8 frames
+Gain 0.000000000000 -> -1.283579346212 dB; requested reduction 1.283579346212, applied 1.283579346212; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 26460 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.283579346212 dB; largest transition slope: 12.838704733031 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.780014052813 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.721779477 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta 0.000000
+Within selected bounds.
+true-peak: PASS | -1.441766 dBTP | max -1.000000 | delta -0.441766
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: 0b9da033feb340f336ca160d0d26208cc09dcea3ea36ec3300ad36e8f8de9ed1
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 26460 frames; global trim acts on the whole programme.
+Section 11 [220500, 242550) source frames; channel 4; TP -1.938200131 dBTP at 1852200/8 frames
+Gain 0.000000000000 -> -1.283579346212 dB; requested reduction 1.283579346212, applied 1.283579346212; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 26460 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.283579346212 dB; largest transition slope: 12.838704733031 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.780014052813 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.721779477 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta 0.000000
+Within selected bounds.
+true-peak: PASS | -1.441766 dBTP | max -1.000000 | delta -0.441766
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: 41f5c2cbf2ad7fc78c05e4cff5c26afae0fff5a3284d916cf5df6f89c1b3088d
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 26460 frames; global trim acts on the whole programme.
+Section 11 [220500, 242550) source frames; channel 4; TP -1.938200131 dBTP at 1852200/8 frames
+Gain 0.000000000000 -> -1.283579346212 dB; requested reduction 1.283579346212, applied 1.283579346212; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 26460 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.283579346212 dB; largest transition slope: 12.838704733031 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.780014052813 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.721779477 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta 0.000000
+Within selected bounds.
+true-peak: PASS | -1.441766 dBTP | max -1.000000 | delta -0.441766
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: 0e7ac1e2dadf3af8e8b07a2dc35b50e910b8a0ed956f53473a3c7d6c4b4b3aea
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 26460 frames; global trim acts on the whole programme.
+Section 11 [220500, 242550) source frames; channel 4; TP -1.938200131 dBTP at 1852200/8 frames
+Gain 0.000000000000 -> -1.283579346212 dB; requested reduction 1.283579346212, applied 1.283579346212; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 26460 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.283579346212 dB; largest transition slope: 12.838704733031 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.780014052813 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.721779477 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta 0.000000
+Within selected bounds.
+true-peak: PASS | -1.441766 dBTP | max -1.000000 | delta -0.441766
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: 912c9ed61bdd93045c9644b96ebe7d208c34e1cdcdd43296e5b12713f1d59e90
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 26460 frames; global trim acts on the whole programme.
+Section 11 [220500, 242550) source frames; channel 4; TP -1.938200131 dBTP at 1852200/8 frames
+Gain 0.000000000000 -> -1.283579346212 dB; requested reduction 1.283579346212, applied 1.283579346212; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 26460 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.283579346212 dB; largest transition slope: 12.838704733031 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.780014052813 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.721779477 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta 0.000000
+Within selected bounds.
+true-peak: PASS | -1.441766 dBTP | max -1.000000 | delta -0.441766
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: ec796a65368d98976ae0dd76a3d38f75e9ea403cde5754f8d5f03b21c0b87e4e
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 28800 frames; global trim acts on the whole programme.
+Section 11 [240000, 264000) source frames; channel 1; TP -1.938200131 dBTP at 2016000/8 frames
+Gain 0.000000000000 -> -0.989028699839 dB; requested reduction 0.989028699839, applied 0.989028699839; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 28800 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 0.989028699839 dB; largest transition slope: 9.892347904203 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.474076909608 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.427228831 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.453152 dBTP | max -1.000000 | delta -0.453152
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: c5c2123da801b656bfd215f7c38f17eb77645d6f3faf5ab403e567d4a5acd18d
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 28800 frames; global trim acts on the whole programme.
+Section 11 [240000, 264000) source frames; channel 1; TP -1.938200131 dBTP at 2016000/8 frames
+Gain 0.000000000000 -> -0.989028699839 dB; requested reduction 0.989028699839, applied 0.989028699839; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 28800 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 0.989028699839 dB; largest transition slope: 9.892347904203 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.474076909608 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.427228831 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.453152 dBTP | max -1.000000 | delta -0.453152
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: 5642dd9f945a6a057d1fc7237d22b3d45f853df213989a8c1df2048b6a58252c
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 28800 frames; global trim acts on the whole programme.
+Section 11 [240000, 264000) source frames; channel 1; TP -1.938200131 dBTP at 2016000/8 frames
+Gain 0.000000000000 -> -0.989028699839 dB; requested reduction 0.989028699839, applied 0.989028699839; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 28800 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 0.989028699839 dB; largest transition slope: 9.892347904203 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.474076909608 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.427228831 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.453152 dBTP | max -1.000000 | delta -0.453152
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: 9e2d12124e7dec6d4c7a7195c58286f03396142a06870b9e6405a79ed54bae25
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 28800 frames; global trim acts on the whole programme.
+Section 11 [240000, 264000) source frames; channel 1; TP -1.938200131 dBTP at 2016000/8 frames
+Gain 0.000000000000 -> -0.989028699839 dB; requested reduction 0.989028699839, applied 0.989028699839; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 28800 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 0.989028699839 dB; largest transition slope: 9.892347904203 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.474076909608 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.427228831 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.453152 dBTP | max -1.000000 | delta -0.453152
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: 80c4ae9352e87a3b34425d3b8b58725e4c0d2eb58214e233136ad004cc76fc56
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 28800 frames; global trim acts on the whole programme.
+Section 11 [240000, 264000) source frames; channel 4; TP -1.938200131 dBTP at 2016000/8 frames
+Gain 0.000000000000 -> -1.286782372113 dB; requested reduction 1.286782372113, applied 1.286782372113; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 28800 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.286782372113 dB; largest transition slope: 12.870505076352 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.783344207180 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.724982503 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.441639 dBTP | max -1.000000 | delta -0.441639
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: 281ff91e39c7a13cd6e9696fba12f953e5a51cb8fe1c9294004ff906e71cd020
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 28800 frames; global trim acts on the whole programme.
+Section 11 [240000, 264000) source frames; channel 4; TP -1.938200131 dBTP at 2016000/8 frames
+Gain 0.000000000000 -> -1.286782372113 dB; requested reduction 1.286782372113, applied 1.286782372113; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 28800 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.286782372113 dB; largest transition slope: 12.870505076352 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.783344207180 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.724982503 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.441639 dBTP | max -1.000000 | delta -0.441639
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: 64ad196af15c18e875ea175f046bf61c1ce14569b69a4aadcfa42b18793c2759
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 28800 frames; global trim acts on the whole programme.
+Section 11 [240000, 264000) source frames; channel 4; TP -1.938200131 dBTP at 2016000/8 frames
+Gain 0.000000000000 -> -1.286782372113 dB; requested reduction 1.286782372113, applied 1.286782372113; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 28800 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.286782372113 dB; largest transition slope: 12.870505076352 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.783344207180 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.724982503 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.441639 dBTP | max -1.000000 | delta -0.441639
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: b24aaf83e006e6686e57285005d31a820e76b900b56d9fb55a41ba4406d22cc1
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 28800 frames; global trim acts on the whole programme.
+Section 11 [240000, 264000) source frames; channel 4; TP -1.938200131 dBTP at 2016000/8 frames
+Gain 0.000000000000 -> -1.286782372113 dB; requested reduction 1.286782372113, applied 1.286782372113; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 28800 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.286782372113 dB; largest transition slope: 12.870505076352 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.783344207180 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.724982503 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.441639 dBTP | max -1.000000 | delta -0.441639
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: cbb3c0e9636f676ce068fcfc648d4edddd33d982d9c4d0f502fdfe2ab47a519b
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 28800 frames; global trim acts on the whole programme.
+Section 11 [240000, 264000) source frames; channel 4; TP -1.938200131 dBTP at 2016000/8 frames
+Gain 0.000000000000 -> -1.286782372113 dB; requested reduction 1.286782372113, applied 1.286782372113; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 28800 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.286782372113 dB; largest transition slope: 12.870505076352 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.783344207180 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.724982503 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.441639 dBTP | max -1.000000 | delta -0.441639
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: a4879bd83058806d7518eacbf83887b2209cbf6b047fd18b231cbb18f24539b3
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 28800 frames; global trim acts on the whole programme.
+Section 11 [240000, 264000) source frames; channel 4; TP -1.938200131 dBTP at 2016000/8 frames
+Gain 0.000000000000 -> -1.291885028298 dB; requested reduction 1.291885028298, applied 1.291885028298; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 57600 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.291885028298 dB; largest transition slope: 12.921542270954 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.788718522637 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.730085159 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta 0.000000
+Within selected bounds.
+true-peak: PASS | -1.441367 dBTP | max -1.000000 | delta -0.441367
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: 66c342773728f6e5d90ef50017955e74d957bfe8d37711eae37a425d55bdf0ea
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 57600 frames; global trim acts on the whole programme.
+Section 11 [480000, 528000) source frames; channel 1; TP -1.938200131 dBTP at 4032000/8 frames
+Gain 0.000000000000 -> -1.007885061308 dB; requested reduction 1.007885061308, applied 1.007885061308; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 57600 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.007885061308 dB; largest transition slope: 10.079900602726 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.493408082009 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.446085192 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.452678 dBTP | max -1.000000 | delta -0.452678
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: f16d1747ca500693570ad31cfd6fa0f286bf56551adf9d111ccfbe75d29071ea
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 57600 frames; global trim acts on the whole programme.
+Section 11 [480000, 528000) source frames; channel 1; TP -1.938200131 dBTP at 4032000/8 frames
+Gain 0.000000000000 -> -1.007885061308 dB; requested reduction 1.007885061308, applied 1.007885061308; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 57600 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.007885061308 dB; largest transition slope: 10.079900602726 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.493408082009 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.446085192 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.452678 dBTP | max -1.000000 | delta -0.452678
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: 58a1dd9d0d6effbc2c3e4f01e7d048d41dd836a1c61fd5d996b61b9681c1fb32
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 57600 frames; global trim acts on the whole programme.
+Section 11 [480000, 528000) source frames; channel 1; TP -1.938200131 dBTP at 4032000/8 frames
+Gain 0.000000000000 -> -1.007885061308 dB; requested reduction 1.007885061308, applied 1.007885061308; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 57600 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.007885061308 dB; largest transition slope: 10.079900602726 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.493408082009 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.446085192 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.452678 dBTP | max -1.000000 | delta -0.452678
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: 13d60c7a09f8282e16c1aaf09cb2ef5062a249b7684010a8e5df19a928aff4da
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 57600 frames; global trim acts on the whole programme.
+Section 11 [480000, 528000) source frames; channel 1; TP -1.938200131 dBTP at 4032000/8 frames
+Gain 0.000000000000 -> -1.007885061308 dB; requested reduction 1.007885061308, applied 1.007885061308; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 57600 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.007885061308 dB; largest transition slope: 10.079900602726 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.493408082009 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.446085192 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.452678 dBTP | max -1.000000 | delta -0.452678
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: 2919ed689e75a65718f8594c627c0ce3d9a9149989f18aba0617432cb2740335
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 57600 frames; global trim acts on the whole programme.
+Section 11 [480000, 528000) source frames; channel 4; TP -1.938200131 dBTP at 4032000/8 frames
+Gain 0.000000000000 -> -1.303556912918 dB; requested reduction 1.303556912918, applied 1.303556912918; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 57600 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.303556912918 dB; largest transition slope: 13.036927142427 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.800783195793 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.741757044 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.440974 dBTP | max -1.000000 | delta -0.440974
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: 6b2d9f4d31674dd2b26b563644df4b19085e3c6d702ba387f9c3303d07e87be0
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 57600 frames; global trim acts on the whole programme.
+Section 11 [480000, 528000) source frames; channel 4; TP -1.938200131 dBTP at 4032000/8 frames
+Gain 0.000000000000 -> -1.303556912918 dB; requested reduction 1.303556912918, applied 1.303556912918; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 57600 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.303556912918 dB; largest transition slope: 13.036927142427 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.800783195793 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.741757044 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.440974 dBTP | max -1.000000 | delta -0.440974
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: b1bc063e8f109165c5fc8eec34bd4fa1b86451e88c3129b6b74d2098dbbdacd1
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 57600 frames; global trim acts on the whole programme.
+Section 11 [480000, 528000) source frames; channel 4; TP -1.938200131 dBTP at 4032000/8 frames
+Gain 0.000000000000 -> -1.303556912918 dB; requested reduction 1.303556912918, applied 1.303556912918; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 57600 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.303556912918 dB; largest transition slope: 13.036927142427 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.800783195793 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.741757044 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.440974 dBTP | max -1.000000 | delta -0.440974
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: c81af190cc8910dfe72b21cad3c6cda169e8f891621f903841e93c5b168232e3
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 57600 frames; global trim acts on the whole programme.
+Section 11 [480000, 528000) source frames; channel 4; TP -1.938200131 dBTP at 4032000/8 frames
+Gain 0.000000000000 -> -1.303556912918 dB; requested reduction 1.303556912918, applied 1.303556912918; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 57600 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.303556912918 dB; largest transition slope: 13.036927142427 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.800783195793 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.741757044 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.440974 dBTP | max -1.000000 | delta -0.440974
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: 6d072e41624540a399d1dc7ea2a2c0b2757574ab01a4a45945e225888eb939d5
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 57600 frames; global trim acts on the whole programme.
+Section 11 [480000, 528000) source frames; channel 4; TP -1.938200131 dBTP at 4032000/8 frames
+Gain 0.000000000000 -> -1.303556912918 dB; requested reduction 1.303556912918, applied 1.303556912918; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 57600 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.303556912918 dB; largest transition slope: 13.036927142427 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.800783195793 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.741757044 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.440974 dBTP | max -1.000000 | delta -0.440974
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: d97ed6eeb108afb0fd1a7de21274f528fe721b16c704a0a71d0943065dbc3f9f
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 57600 frames; global trim acts on the whole programme.
+Section 11 [480000, 528000) source frames; channel 4; TP -1.938200131 dBTP at 4032000/8 frames
+Gain 0.000000000000 -> -1.303556912918 dB; requested reduction 1.303556912918, applied 1.303556912918; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 57600 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.303556912918 dB; largest transition slope: 13.036927142427 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.800783195793 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.741757044 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.440974 dBTP | max -1.000000 | delta -0.440974
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: e39b64cdd625b56587bd6a578e3b999c0d99816ecc58d3a1892c8d0107cfe6ff
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 115200 frames; global trim acts on the whole programme.
+Section 11 [960000, 1056000) source frames; channel 1; TP -1.938200131 dBTP at 8064000/8 frames
+Gain 0.000000000000 -> -1.018250615282 dB; requested reduction 1.018250615282, applied 1.018250615282; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 115200 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.018250615282 dB; largest transition slope: 10.183036519303 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.504038959567 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.456450746 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta 0.000000
+Within selected bounds.
+true-peak: PASS | -1.452411 dBTP | max -1.000000 | delta -0.452411
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: 0eec071067a1868ac60ca4e3393c1d444e60859ab6d3bc2c16209582a33afe77
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 115200 frames; global trim acts on the whole programme.
+Section 11 [960000, 1056000) source frames; channel 1; TP -1.938200131 dBTP at 8064000/8 frames
+Gain 0.000000000000 -> -1.018250615282 dB; requested reduction 1.018250615282, applied 1.018250615282; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 115200 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.018250615282 dB; largest transition slope: 10.183036519303 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.504038959567 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.456450746 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta 0.000000
+Within selected bounds.
+true-peak: PASS | -1.452411 dBTP | max -1.000000 | delta -0.452411
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: f0d02f12f9d600b76134a436e7b7b60862e3247b43bfd580f1852a78839bd585
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 115200 frames; global trim acts on the whole programme.
+Section 11 [960000, 1056000) source frames; channel 1; TP -1.938200131 dBTP at 8064000/8 frames
+Gain 0.000000000000 -> -1.018250615282 dB; requested reduction 1.018250615282, applied 1.018250615282; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 115200 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.018250615282 dB; largest transition slope: 10.183036519303 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.504038959567 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.456450746 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta 0.000000
+Within selected bounds.
+true-peak: PASS | -1.452411 dBTP | max -1.000000 | delta -0.452411
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: 78175e0b1b2359113a6364708106c291dea6d9114206dde372baab2b924e3911
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 115200 frames; global trim acts on the whole programme.
+Section 11 [960000, 1056000) source frames; channel 1; TP -1.938200131 dBTP at 8064000/8 frames
+Gain 0.000000000000 -> -1.018250615282 dB; requested reduction 1.018250615282, applied 1.018250615282; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 115200 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.018250615282 dB; largest transition slope: 10.183036519303 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.504038959567 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.456450746 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta 0.000000
+Within selected bounds.
+true-peak: PASS | -1.452411 dBTP | max -1.000000 | delta -0.452411
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: b63c851aef6baafe80ed0dfbb892f0fb4930e8865a35563ee9eec258fcd02fbc
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 115200 frames; global trim acts on the whole programme.
+Section 11 [960000, 1056000) source frames; channel 4; TP -1.938200131 dBTP at 8064000/8 frames
+Gain 0.000000000000 -> -1.313129113385 dB; requested reduction 1.313129113385, applied 1.313129113385; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 115200 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.313129113385 dB; largest transition slope: 13.131975090890 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.810733537415 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.751329244 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.440596 dBTP | max -1.000000 | delta -0.440596
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: 33eb9f12e9f123bcb30b80debc7036c6bba9a5d2e70d1a6f785b02d26f0885da
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 115200 frames; global trim acts on the whole programme.
+Section 11 [960000, 1056000) source frames; channel 4; TP -1.938200131 dBTP at 8064000/8 frames
+Gain 0.000000000000 -> -1.313129113385 dB; requested reduction 1.313129113385, applied 1.313129113385; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 115200 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.313129113385 dB; largest transition slope: 13.131975090890 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.810733537415 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.751329244 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.440596 dBTP | max -1.000000 | delta -0.440596
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: 3773d9bd84c7cd655cb0bbcd44107448db7aa4b8b3c2d2a39f2e2a2e27482cea
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 115200 frames; global trim acts on the whole programme.
+Section 11 [960000, 1056000) source frames; channel 4; TP -1.938200131 dBTP at 8064000/8 frames
+Gain 0.000000000000 -> -1.313129113385 dB; requested reduction 1.313129113385, applied 1.313129113385; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 115200 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.313129113385 dB; largest transition slope: 13.131975090890 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.810733537415 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.751329244 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.440596 dBTP | max -1.000000 | delta -0.440596
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: 5fa8074e359224e62be093c4f812b8656daff1562d0d477679176e5d3141e622
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 115200 frames; global trim acts on the whole programme.
+Section 11 [960000, 1056000) source frames; channel 4; TP -1.938200131 dBTP at 8064000/8 frames
+Gain 0.000000000000 -> -1.313129113385 dB; requested reduction 1.313129113385, applied 1.313129113385; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 115200 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.313129113385 dB; largest transition slope: 13.131975090890 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.810733537415 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.751329244 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.440596 dBTP | max -1.000000 | delta -0.440596
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: f2d1bb0cdd808b3b824c6161f71e08fc625b74d242a07635cfaecbe1e33ab7f5
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 115200 frames; global trim acts on the whole programme.
+Section 11 [960000, 1056000) source frames; channel 4; TP -1.938200131 dBTP at 8064000/8 frames
+Gain 0.000000000000 -> -1.313129113385 dB; requested reduction 1.313129113385, applied 1.313129113385; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 115200 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.313129113385 dB; largest transition slope: 13.131975090890 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.810733537415 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.751329244 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.440596 dBTP | max -1.000000 | delta -0.440596
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Section-led / section-trim-proposal-v1
+Baseline binding: ff063f522e932a6696a1e7f9fb485fb0b1f19cac3162f98dcc564206bc174b1a
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 115200 frames; global trim acts on the whole programme.
+Section 11 [960000, 1056000) source frames; channel 4; TP -1.938200131 dBTP at 8064000/8 frames
+Gain 0.000000000000 -> -1.313129113385 dB; requested reduction 1.313129113385, applied 1.313129113385; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 115200 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.313129113385 dB; largest transition slope: 13.131975090890 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.810733537415 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.751329244 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.440596 dBTP | max -1.000000 | delta -0.440596
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+M13 PASS 3671 checks

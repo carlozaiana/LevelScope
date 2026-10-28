@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "phase": "exchange",
+  "platform": "high-sierra",
+  "error": "",
+  "source_digest": "50eba19a2d66096607ec878c8eaa05e610580c7f5e8854d7b375d846a89c5f27",
+  "required_runs": [
+    "m13-exchange"
+  ],
+  "report_hashes": {
+    "environment.json": "7c5ad4b9cbfbbf69b6acc685d252c79c7a5d13b5cbf71c437387a39828a7b7ee",
+    "m13-exchange.json": "acdc539599b354a4dcfc26a13590c6934b296ba17ae6db9e1b131a9bb7beaec2",
+    "runs.json": "81e2cd24c6ca8f8730ca5b7b43548571dca71bfd7dc15d1a5b32a66700986c19"
+  },
+  "qualification_complete": false
+}

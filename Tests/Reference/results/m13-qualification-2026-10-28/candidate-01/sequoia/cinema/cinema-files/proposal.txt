@@ -1,0 +1,16 @@
+Section-led / section-trim-proposal-v1
+Baseline binding: 07df659b66f2c7f19ef98b7eb3c1faca02a5683edc4897d6fe68618d7b3ce842
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+No solution within this policy: local envelope/transition support affects 100.000000%, above 20%. Global trim extent is separate.
+Changed sections: 1 (not peak-event counts); local support 269875200 frames; global trim acts on the whole programme.
+Section 1 [0, 269875200) source frames; channel 1; TP -0.826620972 dBTP at 822161867/8 frames
+Gain 0.000000000000 -> -3.000000000000 dB; requested reduction 3.652133407380, applied 3.000000000000; reserve achieved 0.000000000000/0.5 dB; uncovered deficit 0.152133407380 dB.
+Cumulative non-unity local envelope support: 269875200 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 0.000000000000 dB; largest transition slope: 0.000000000000 dB/s (descriptive, not additional acceptance rules).
+
+Private full-programme passes: 1 / 3.
+Baseline measured I / TP: -25.978754380 LUFS / -0.826620972 dBTP.
+No private candidate measurement was performed.

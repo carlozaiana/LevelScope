@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "phase": "video",
+  "platform": "sequoia",
+  "error": "",
+  "source_digest": "2398d0106975e57f8d1f7484b4141ff5becb418649cc65b5f42e8d981c6f6a30",
+  "required_runs": [
+    "m13-video",
+    "video-timing"
+  ],
+  "report_hashes": {
+    "m13-video.json": "4f90dcde4f038975d2be4a72736ca54e59f76f7e05592aa9b5fa800ed73e557c",
+    "environment.json": "596d0f8e74bdf90bffabc448e6542a74237af4f6ad2bbdc0f2081dc080150601",
+    "runs.json": "723b24a78a9fb5692d80608dfe2f7b600c58e5c955a1f63175df730cbe50706e"
+  },
+  "qualification_complete": false
+}

@@ -9,7 +9,9 @@
 
 namespace levelscope::proposal
 {
-TrimProposal draftGlobalTrim (const TrimRequest& r)
+namespace
+{
+TrimProposal draftGlobalTrimImpl (const TrimRequest& r, bool privateCandidate)
 {
     TrimProposal p; p.originalGainDb = r.currentGainDb;
     const auto source = evaluateMeasuredProgramme (r.profile, r.source);
@@ -22,7 +24,8 @@ TrimProposal draftGlobalTrim (const TrimRequest& r)
     const auto bytes = binding.str(); p.identity = juce::SHA256 (bytes.data(), bytes.size()).toHexString();
     const auto finiteMetric = [] (const measurement::Metric& m)
     { return m.status == measurement::Status::available && m.value && std::isfinite (*m.value); };
-    if (r.source.domain != SnapshotDomain::source || r.current.domain != SnapshotDomain::currentState
+    if (r.source.domain != SnapshotDomain::source
+        || r.current.domain != (privateCandidate ? SnapshotDomain::privateCandidate : SnapshotDomain::currentState)
         || source.verdict == Verdict::notEvaluated || current.verdict == Verdict::notEvaluated
         || ! finiteMetric (r.source.integrated) || ! finiteMetric (r.source.truePeak)
         || ! finiteMetric (r.current.integrated) || ! finiteMetric (r.current.truePeak))
@@ -75,6 +78,9 @@ TrimProposal draftGlobalTrim (const TrimRequest& r)
     p.explanation = "No representable trim candidate satisfies the scalar bounds. No plan applied.";
     return p;
 }
+}
+TrimProposal draftGlobalTrim(const TrimRequest& r) { return draftGlobalTrimImpl(r,false); }
+TrimProposal draftGlobalTrimForCandidate(const TrimRequest& r) { return draftGlobalTrimImpl(r,true); }
 
 juce::String trimProposalText (const TrimProposal& p)
 {

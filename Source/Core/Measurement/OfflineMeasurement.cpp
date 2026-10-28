@@ -44,8 +44,8 @@ bool OfflineMeasurement::supports (int rate, const std::vector<Role>& roles)
         || sorted == std::vector<Role> { Role::left, Role::right, Role::centre, Role::surroundLeft, Role::surroundRight, Role::lfe, Role::rearLeft, Role::rearRight };
 }
 
-OfflineMeasurement::OfflineMeasurement (int rate, const std::vector<Role>& roles)
-    : mLength (0), sLength (0), step (0)
+OfflineMeasurement::OfflineMeasurement (int rate, const std::vector<Role>& roles, PeakObserver* observer)
+    : mLength (0), sLength (0), step (0), peakObserver (observer)
 {
     if (! supports (rate, roles)) throw std::invalid_argument ("Unqualified measurement sample rate or layout");
     mLength = rate * 4 / 10; sLength = rate * 3; step = rate / 10;
@@ -97,6 +97,11 @@ void OfflineMeasurement::addPeak (size_t index, double sample, int64_t frame, bo
 {
     auto& c = channels[index];
     const double magnitude = std::abs (sample);
+    if (peakObserver)
+    {
+        if (!drain) peakObserver->sample(index, magnitude, frame);
+        peakObserver->truePeak(index, magnitude, frame * 8, drain);
+    }
     if (! drain && magnitude > result.channelSamplePeaks[index])
     {
         result.channelSamplePeaks[index] = magnitude;
@@ -113,6 +118,7 @@ void OfflineMeasurement::addPeak (size_t index, double sample, int64_t frame, bo
     {
         double interpolated = 0;
         for (int tap = 0; tap < 64; ++tap) interpolated += c.history[c.position + tap] * interpolation[phase][tap];
+        if (peakObserver) peakObserver->truePeak(index, std::abs(interpolated), (frame - 31) * 8 - phase, drain);
         if (std::abs (interpolated) > result.channelTruePeaks[index])
         {
             result.channelTruePeaks[index] = std::abs (interpolated);

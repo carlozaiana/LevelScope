@@ -23,7 +23,7 @@ private:
     SectionsController sections;
     std::shared_ptr<const MeasuredDiagnostics> measured;
     std::shared_ptr<const proposal::SectionAnalysis> displayed;
-    juce::String mapKey, annotationKey, editNotice, appliedGainKey;
+    juce::String mapKey, annotationKey, editNotice, appliedGainKey, proposalViewKey;
     bool suspended = false, refreshing = false;
     uint64_t selectedId = 0;
     juce::ComboBox domainBox, windowKind, windowScope;

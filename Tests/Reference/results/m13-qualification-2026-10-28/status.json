@@ -1,0 +1,46 @@
+{
+  "status": "Qualified combined M12/M13 candidate-02; ready for publication/integration review",
+  "source_digest": "50eba19a2d66096607ec878c8eaa05e610580c7f5e8854d7b375d846a89c5f27",
+  "running": [],
+  "pending": [],
+  "main": "cfb1033aa7fb65a2655db276bee696161196bdeb",
+  "publication_authorized": false,
+  "recorded_utc": "2026-10-28T19:51:43.703972+00:00",
+  "candidate": "candidate-02",
+  "reused_from_candidate_01": [
+    "Sequoia short: 22 required checks",
+    "Sequoia silent UI: 17 cases",
+    "Sequoia injected video: 80 receipts plus timing regressions",
+    "Sequoia single cinema evaluation: honest whole-programme policy failure; no Apply or playback",
+    "Sequoia consolidated three-hour workflow and independent RF64 checks: PASS"
+  ],
+  "fresh_completed": [
+    "Both qualification-tool regression sets: 9 passed each",
+    "Both coordinated physical video sets: 4 passed each, 0 skips, configuration unchanged",
+    "High Sierra short/reference set: 22 required checks",
+    "High Sierra silent UI: 17 cases",
+    "High Sierra injected video: 80 receipts plus timing regressions",
+    "Both actual-platform foreign-session exchanges: 6 passed each",
+    "High Sierra consolidated three-hour workflow and independent RF64 checks: PASS"
+  ],
+  "qualified": true,
+  "completed": [
+    "Both actual-platform short/reference sets",
+    "Both 17-case silent UI sets",
+    "Both injected and coordinated muted video sets",
+    "Both six-case foreign session exchanges",
+    "One bounded Sequoia cinema evaluation",
+    "Sequoia consolidated long workflow: 1,078 assertions and independent RF64 oracle/hash verification",
+    "High Sierra consolidated long workflow: 1,078 assertions and independent RF64 checks",
+    "Cross-platform comparison: 40 cases, 0 float32 ULP, max metric difference 3.552713678800501e-15",
+    "Final required-evidence completion gate: PASS"
+  ],
+  "main_integration_authorized": false,
+  "limitations": [
+    "One fixed bounded algorithm and manual sections; no limiter/dynamics",
+    "Cinema mix: honest policy-limited failure; no Apply/export/playback",
+    "Occasional picture skips remain accepted under retained audio/drift/lifecycle conditions",
+    "Full physical 7.1 listening separately pending outside M13",
+    "Inherited report application caption says M12; exact build field identifies M13"
+  ]
+}

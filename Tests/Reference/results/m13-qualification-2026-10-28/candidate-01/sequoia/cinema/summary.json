@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "phase": "cinema",
+  "platform": "sequoia",
+  "error": "",
+  "source_digest": "2398d0106975e57f8d1f7484b4141ff5becb418649cc65b5f42e8d981c6f6a30",
+  "required_runs": [
+    "cinema"
+  ],
+  "report_hashes": {
+    "environment.json": "08e03e006a37eeaf12a5dfc3618170f1d77d8cf0ae174a7181a3d33e7c0fb810",
+    "runs.json": "d7f6bb0e6f243c030f4f6744a7433015c27ad6119cd38e05aed4cf25252f7d01",
+    "cinema.json": "06a3525ef463e14db0c3836e6fd72e853e6a3d3f5af2f323f7222bb40c69eb91"
+  },
+  "qualification_complete": false
+}

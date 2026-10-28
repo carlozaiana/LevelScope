@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "exit_code": 0,
+  "source_digest": "50eba19a2d66096607ec878c8eaa05e610580c7f5e8854d7b375d846a89c5f27",
+  "architecture": "arm64",
+  "os": "15.7.9",
+  "runner_tests_sha256": "ce672577b55c0c01f11f9ebdd8adeac7b63b300a5aba620e9fd383fe83d34a95",
+  "log_sha256": "603db52fd0016ca5cdcf83b2588160ae92bde08c66ba4c61dfc8a2a74cdb95c9",
+  "cases": 9
+}
