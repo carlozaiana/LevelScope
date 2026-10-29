@@ -1,0 +1,194 @@
+{
+  "status": "Sequoia tested; High Sierra, video and three-hour checks pending.",
+  "publication_authorized": true,
+  "source_digest": "38676a45d47ddba6eb54f7ab299f52f622f6be26554256781b8960749c609564",
+  "manifest_files_verified": 262,
+  "artifacts_verified": 275,
+  "measurement_build": "8a7a2866d48f7ba6d4db1c7f532eaffbfce03fa78fbca02211d3f6b9fb79ef47",
+  "app_sha256": "2fc20d4cb9f1db21bc875ba2df9b9ebbeb048976093771affca13c7e25e7dd3c",
+  "candidate_identity_sha256": "628cd75b3f7691f05771c1374c0236d3c6e71a0546c5bfdad0911b177330c136",
+  "qualification_evidence_manifest_sha256": "1faafcaa43df931f5ba3b7105f537cac217f4fa39bbb9176db095a067df811be",
+  "preserved_prior_packages": {
+    "build/m14-qualification-2026-10-29/candidate-02": {
+      "source_digest": "9dd22a598281e83431039f210202a8a24fe49517294cc6bb8d83032c4975e013",
+      "artifacts_verified": 473
+    },
+    "build/m15-qualification-2026-10-29/candidate-01": {
+      "source_digest": "f140731dde637c51d92426d0c353f73bc5a45c4619b870da3dbf063b4c902278",
+      "artifacts_verified": 273
+    },
+    "build/m15-qualification-2026-10-29/candidate-02": {
+      "source_digest": "8d0f5c7a50d43317fff19874cf9895a363e96fd25dd518d2ff419986903b9acf",
+      "artifacts_verified": 273
+    },
+    "build/m15-qualification-2026-10-29/candidate-03": {
+      "source_digest": "21e393b5f513dbf51aa5da4359583f6879f880c2e151e5bddee68a58a0a51a0d",
+      "artifacts_verified": 274
+    },
+    "build/m15-qualification-2026-10-29/candidate-04": {
+      "source_digest": "0cfd128c38e78b74d890eccb6bc78ad52ae3527fda970ec06d9eab4d8e7f7462",
+      "artifacts_verified": 274
+    }
+  },
+  "original_exports": {
+    "6NuendoMarkers.csv": "24941511d781d103f801a348b022001f3eda2b33887d694b37a87393f1b835b7",
+    "TimeOffsetMarkers.csv": "f4709037d4cbe30436be995b4fa3cf5cd9ce1795575ee97594fca60216e09cfd",
+    "TUTTI_UCCIDONO_V2.txt": "10aecddf80f7dcb668315f68cfd4782a10fe0b218a3c2d487529267fbc60dc25"
+  },
+  "main_preserved": "a9be070ab9eb5cb4f591ff9d991d8999c3a016d0",
+  "logic_before": "be4bf23c8bb9f661ae1ede30f3b6e79a067aea37",
+  "tag_planned": "m15-marker-import-sequoia-2026-10-29",
+  "prior_tags": [
+    {
+      "ref": "refs/tags/high-sierra-pre-scaffold-2026-10-15",
+      "object": "b3c6e845482dbe8a0ec9778d5a9ad7953e614609",
+      "commit": "556d387ad772dc5e604ead95f1525f60e66fd5f9"
+    },
+    {
+      "ref": "refs/tags/m10-verified-pcm-export-2026-10-26",
+      "object": "3bbd1476cbc4e200f9d8f2776f53e06c4bf57180",
+      "commit": "fcd4c15fe78d6352f5e96faabf3eb52f942235e1"
+    },
+    {
+      "ref": "refs/tags/m11-aligned-stem-composition-2026-10-26",
+      "object": "2ddbd80e7ce0f5d42d72f8cc3d466925685f1fe0",
+      "commit": "cfb1033aa7fb65a2655db276bee696161196bdeb"
+    },
+    {
+      "ref": "refs/tags/m12-section-trim-sequoia-2026-10-27",
+      "object": "4afecf3455f15792403a843772ef9e495de58ae5",
+      "commit": "2fb0e3cfee22a527bacaa09c4ddace23129442fb"
+    },
+    {
+      "ref": "refs/tags/m13-bounded-section-proposals-2026-10-28",
+      "object": "bbcf9d7baca12decb7bbd6f835f4e52b8c0a8bb2",
+      "commit": "a9be070ab9eb5cb4f591ff9d991d8999c3a016d0"
+    },
+    {
+      "ref": "refs/tags/m14-mono-rf64-sequoia-2026-10-29",
+      "object": "8523392cd96b76513f10c8441d236c8f16a9e5a1",
+      "commit": "3d98284c2c0b7de92cfee70cb0007d43d1f04d1f"
+    },
+    {
+      "ref": "refs/tags/m2-measured-compliance-2026-10-18",
+      "object": "673e382feeaa7e29e6e6abedbd56677aa2163ef3",
+      "commit": "01a34833ec06a0d237e098faadb23b398581e8f9"
+    },
+    {
+      "ref": "refs/tags/m3-global-trim-2026-10-18",
+      "object": "4063ca0e73c5b24dfa079eb894f85e398e9fee50",
+      "commit": "62ab420cb15b3ce5e1c821c963a749a9a56ae4a7"
+    },
+    {
+      "ref": "refs/tags/m4-measured-diagnostics-2026-10-18",
+      "object": "cc64c771a70ccf95e779a7fe7260749a4530c285",
+      "commit": "9a22749901d9f6d4b9c194c9c22c0a231f2494f6"
+    },
+    {
+      "ref": "refs/tags/m5-programme-sections-2026-10-20",
+      "object": "e36b4308374256ad36eff6c01d4d92325a06d3b0",
+      "commit": "ae88e187d288c53dbca1287e8341b74b9b5b2619"
+    },
+    {
+      "ref": "refs/tags/m6-verified-current-state-audition-2026-10-24",
+      "object": "7f54eb1098471dc55bd75484f873a9f90e68ac05",
+      "commit": "b57a1ed23cbe7d74afe98ed16ec8fd615db9d171"
+    },
+    {
+      "ref": "refs/tags/m7-pcm-7.1-2026-10-25",
+      "object": "04d0c836fcbc3a7af72638a7514faacd32ae48a9",
+      "commit": "cfbf3f981dece326d2363b911e5914ea61f1796c"
+    },
+    {
+      "ref": "refs/tags/m8-reproducible-sessions-2026-10-25",
+      "object": "93908205c41de16c10b187bc00fcc1621e328c66",
+      "commit": "8e984889c5e73670f370c6c568c8ea1d7902a35c"
+    },
+    {
+      "ref": "refs/tags/m9-separate-file-stereo-5.1-2026-10-25",
+      "object": "0cb0e4bea6fd9d11cc4207e9b863d5fca2b70bff",
+      "commit": "75843dcd017ec7990be2200454a10fc38beb44c4"
+    },
+    {
+      "ref": "refs/tags/measurement-milestone-2026-10-17",
+      "object": "76affb667b6dab066cb36b2a2c741525b9b6eeac",
+      "commit": "b29bc7c183743f35c6271d2d7ec8fb5ba1464591"
+    },
+    {
+      "ref": "refs/tags/standalone-scaffold-2026-10-15",
+      "object": "4c8bc35b788969e1f6e97dcdc57a601b01fff7cd",
+      "commit": "f192a8553e139d390056c9755f25eeb123bbc5e6"
+    },
+    {
+      "ref": "refs/tags/video-checkpoint-2026-10-17",
+      "object": "06f57524bedca1912c0d5c454f13561cec9ce5b4",
+      "commit": "700b9e77e439a8ca9bb7583adf826fac01dbe924"
+    },
+    {
+      "ref": "refs/tags/video-prores-checkpoint-2026-10-21",
+      "object": "d62c1159eeb2ffbb8b7ffc7c31014b842642d195",
+      "commit": "dcc34aabba6b5b3ca4805e2965d21ffebf2e4d0a"
+    }
+  ],
+  "remote_refs_before": {
+    "HEAD": "a9be070ab9eb5cb4f591ff9d991d8999c3a016d0",
+    "refs/heads/codex/logic-module": "be4bf23c8bb9f661ae1ede30f3b6e79a067aea37",
+    "refs/heads/codex/standalone-scaffold": "f192a8553e139d390056c9755f25eeb123bbc5e6",
+    "refs/heads/codex/video-implementation": "5e07bbd29930db34236d6dfcede7fea14983f90a",
+    "refs/heads/docs/compliance-harness": "8883928775dba56ac0bbd1dc1f6f3eef67b90d6f",
+    "refs/heads/main": "a9be070ab9eb5cb4f591ff9d991d8999c3a016d0",
+    "refs/pull/1/head": "499db1030f1fd4b953d924b9c3a76e9f0338a2a0",
+    "refs/pull/10/head": "800bd9cba4b114e7ffc48afcaa35f74e31ce3041",
+    "refs/pull/11/head": "3718c926c9cd7213ae44b2e07240e62f4b408654",
+    "refs/pull/12/head": "95487dc241d1da66855ed4878f884acd9aa79371",
+    "refs/pull/13/head": "89b39c7a9dcce6ea27deae77db924fdf2784927a",
+    "refs/pull/14/head": "0e8822d75201bf8afdbab35097a10884a5eeb912",
+    "refs/pull/2/head": "6cd589d5c842427f28a2d62922f47b2b5b0facf7",
+    "refs/pull/3/head": "600ff85b174a191e8dc4ca2c30e2e43f52e3ef73",
+    "refs/pull/4/head": "ed293e8a5df85d2cbe159bab0e7a57f56f76a099",
+    "refs/pull/5/head": "639b17d23200c3a8c1adabb5ec1b59c0cab2cd7b",
+    "refs/pull/6/head": "17957b273d539bd872c70f030d02fd5128279b1a",
+    "refs/pull/7/head": "2fb5b507e5ad7f1f36f8a8b3545bbeafc0e7f1b2",
+    "refs/pull/8/head": "74e15ac1c762e883ef2130a8ee13998a0a2a7bd9",
+    "refs/pull/9/head": "b821d58928739bcc268d0d9941b731013438aa1c",
+    "refs/tags/high-sierra-pre-scaffold-2026-10-15": "b3c6e845482dbe8a0ec9778d5a9ad7953e614609",
+    "refs/tags/high-sierra-pre-scaffold-2026-10-15^{}": "556d387ad772dc5e604ead95f1525f60e66fd5f9",
+    "refs/tags/m10-verified-pcm-export-2026-10-26": "3bbd1476cbc4e200f9d8f2776f53e06c4bf57180",
+    "refs/tags/m10-verified-pcm-export-2026-10-26^{}": "fcd4c15fe78d6352f5e96faabf3eb52f942235e1",
+    "refs/tags/m11-aligned-stem-composition-2026-10-26": "2ddbd80e7ce0f5d42d72f8cc3d466925685f1fe0",
+    "refs/tags/m11-aligned-stem-composition-2026-10-26^{}": "cfb1033aa7fb65a2655db276bee696161196bdeb",
+    "refs/tags/m12-section-trim-sequoia-2026-10-27": "4afecf3455f15792403a843772ef9e495de58ae5",
+    "refs/tags/m12-section-trim-sequoia-2026-10-27^{}": "2fb0e3cfee22a527bacaa09c4ddace23129442fb",
+    "refs/tags/m13-bounded-section-proposals-2026-10-28": "bbcf9d7baca12decb7bbd6f835f4e52b8c0a8bb2",
+    "refs/tags/m13-bounded-section-proposals-2026-10-28^{}": "a9be070ab9eb5cb4f591ff9d991d8999c3a016d0",
+    "refs/tags/m14-mono-rf64-sequoia-2026-10-29": "8523392cd96b76513f10c8441d236c8f16a9e5a1",
+    "refs/tags/m14-mono-rf64-sequoia-2026-10-29^{}": "3d98284c2c0b7de92cfee70cb0007d43d1f04d1f",
+    "refs/tags/m2-measured-compliance-2026-10-18": "673e382feeaa7e29e6e6abedbd56677aa2163ef3",
+    "refs/tags/m2-measured-compliance-2026-10-18^{}": "01a34833ec06a0d237e098faadb23b398581e8f9",
+    "refs/tags/m3-global-trim-2026-10-18": "4063ca0e73c5b24dfa079eb894f85e398e9fee50",
+    "refs/tags/m3-global-trim-2026-10-18^{}": "62ab420cb15b3ce5e1c821c963a749a9a56ae4a7",
+    "refs/tags/m4-measured-diagnostics-2026-10-18": "cc64c771a70ccf95e779a7fe7260749a4530c285",
+    "refs/tags/m4-measured-diagnostics-2026-10-18^{}": "9a22749901d9f6d4b9c194c9c22c0a231f2494f6",
+    "refs/tags/m5-programme-sections-2026-10-20": "e36b4308374256ad36eff6c01d4d92325a06d3b0",
+    "refs/tags/m5-programme-sections-2026-10-20^{}": "ae88e187d288c53dbca1287e8341b74b9b5b2619",
+    "refs/tags/m6-verified-current-state-audition-2026-10-24": "7f54eb1098471dc55bd75484f873a9f90e68ac05",
+    "refs/tags/m6-verified-current-state-audition-2026-10-24^{}": "b57a1ed23cbe7d74afe98ed16ec8fd615db9d171",
+    "refs/tags/m7-pcm-7.1-2026-10-25": "04d0c836fcbc3a7af72638a7514faacd32ae48a9",
+    "refs/tags/m7-pcm-7.1-2026-10-25^{}": "cfbf3f981dece326d2363b911e5914ea61f1796c",
+    "refs/tags/m8-reproducible-sessions-2026-10-25": "93908205c41de16c10b187bc00fcc1621e328c66",
+    "refs/tags/m8-reproducible-sessions-2026-10-25^{}": "8e984889c5e73670f370c6c568c8ea1d7902a35c",
+    "refs/tags/m9-separate-file-stereo-5.1-2026-10-25": "0cb0e4bea6fd9d11cc4207e9b863d5fca2b70bff",
+    "refs/tags/m9-separate-file-stereo-5.1-2026-10-25^{}": "75843dcd017ec7990be2200454a10fc38beb44c4",
+    "refs/tags/measurement-milestone-2026-10-17": "76affb667b6dab066cb36b2a2c741525b9b6eeac",
+    "refs/tags/measurement-milestone-2026-10-17^{}": "b29bc7c183743f35c6271d2d7ec8fb5ba1464591",
+    "refs/tags/standalone-scaffold-2026-10-15": "4c8bc35b788969e1f6e97dcdc57a601b01fff7cd",
+    "refs/tags/standalone-scaffold-2026-10-15^{}": "f192a8553e139d390056c9755f25eeb123bbc5e6",
+    "refs/tags/video-checkpoint-2026-10-17": "06f57524bedca1912c0d5c454f13561cec9ce5b4",
+    "refs/tags/video-checkpoint-2026-10-17^{}": "700b9e77e439a8ca9bb7583adf826fac01dbe924",
+    "refs/tags/video-prores-checkpoint-2026-10-21": "d62c1159eeb2ffbb8b7ffc7c31014b842642d195",
+    "refs/tags/video-prores-checkpoint-2026-10-21^{}": "dcc34aabba6b5b3ca4805e2965d21ffebf2e4d0a"
+  },
+  "rebuild_required": false,
+  "qualification_rerun_required": false,
+  "reason": "All tested source, binaries, evidence and original export identities match; publication is Git/documentation only."
+}

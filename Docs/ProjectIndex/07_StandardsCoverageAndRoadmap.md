@@ -57,19 +57,25 @@ from passing the selected programme loudness/true-peak rules.
 
 1. [M14: complete mono section processing and verified export](50_M14MonoProcessingAndVerifiedExport.md),
    including the existing bounded M13 method and bounded direct RF64 import; approved
-   for Sequoia development on 29 October. High Sierra, video and full-duration
+   and published as candidate-02 on the logic branch on 29 October. High Sierra, video and full-duration
    mono/RF64 qualification are deferred to the combined M14-M18 window, no later
    than M19; future milestone implementation still requires separate approval.
-   Basic optional marker import is the next separately reviewed workflow improvement;
-   bounded EDL import follows later without becoming a proposal prerequisite.
-2. Qualify standalone limiter, downward and upward processing in small stages.
-3. Dynamics-led proposals, then enhanced section-led proposals, then mixed strategy.
-4. Later component-relative dialogue/M&E processing and validated dialogue/intelligibility
-   objectives. Keep analysis-only references independently identified and non-audible.
+2. [M15 marker import and source-time mapping](53_M15MarkerImportAndSourceTimeMapping.md):
+   approved Nuendo CSV and dedicated Pro Tools Session Info as Text point-marker
+   readers, explicit mapping, preview and annotation-only confirmation.
+3. Separately propose a bounded preference review and configurable controls. Review
+   count/duration/gain/neighbour/transition/resource budgets together, including
+   marker-density sensitivity. Preserve the existing policy version until an approved,
+   versioned replacement is qualified. M15 changes no limits.
+4. Standalone true-peak limiter qualification.
+5. Basic measured-audio region suggestions, reviewed before adoption and protecting
+   confirmed boundaries, before enhanced section-led strategy. No narrative-scene
+   claims. Dynamics-led proposals remain usable without markers. Further downward/
+   upward DSP, mixed strategies, EDL import and component/dialogue work need separate
+   proposals and approval.
 
 Generate only the selected strategy; explicit comparisons reuse compatible analysis
-and share a frozen measured baseline with bounded resources. No milestone numbering
-beyond approved M14 is committed. Combined M12/M13 actual High Sierra and selected
+and share a frozen measured baseline with bounded resources. M15 alone is approved; no later implementation is authorized. Combined M12/M13 actual High Sierra and selected
 video qualification and publication are complete. M14 uses Sequoia stabilization and a universal cross-build; actual High Sierra
 runtime qualification follows in the explicitly deferred combined window. Accepted occasional
 picture skips retain all existing audio/drift/lifecycle gates.

@@ -4,7 +4,7 @@
 namespace levelscope::standalone::sessionfile
 {
 inline constexpr uint64_t maximumBytes = 128 * 1024 * 1024;
-inline constexpr int schemaVersion = 4, programmeAssemblyVersion = 4;
+inline constexpr int schemaVersion = 5, programmeAssemblyVersion = 5;
 struct ProfileReference { juce::String id, version, digest; };
 // Value snapshot: each save owns one coherent revision; shared analyses are immutable.
 struct Document
@@ -17,6 +17,7 @@ struct Document
     ProfileReference profile;
     proposal::Applicability applicability = proposal::Applicability::unconfirmed;
     proposal::SectionMap sections;
+    std::optional<proposal::markers::Receipt> markerImport;
     video::Reference reference;
     MeasurementDomain audition = MeasurementDomain::source;
     std::shared_ptr<const AnalysisSnapshot> sourceCache, currentCache;
@@ -46,6 +47,7 @@ struct FileHooks
     std::function<void(const juce::File&)> beforeCreate;
 };
 Document capture (StandaloneSessionModel&);
+bool coreFits (const Document&, juce::String&); // bounded preflight, no file/media I/O
 Outcome save (const Document&, const juce::File&, JobControl&, const FileHooks& = {});
 Outcome read (const juce::File&, JobControl&); // core and independent caches; no media I/O
 Outcome verify (Document, JobControl&);       // per-file verification, no devices

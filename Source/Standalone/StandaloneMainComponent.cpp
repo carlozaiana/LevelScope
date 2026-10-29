@@ -120,6 +120,7 @@ StandaloneMainComponent::StandaloneMainComponent()
         {
             if (! sectionsPanel) sectionsPanel = std::make_unique<StandaloneSectionsPanel> (session);
             sectionsPanel->onChanged=[this]{refreshFromSession();};
+            sectionsPanel->canImportMarkers=[this]{return canReplaceSession();};
             if (! sectionsWindow) sectionsWindow = std::make_unique<SectionsWindow> (*sectionsPanel);
             sectionsPanel->resume(); sectionsWindow->setVisible (true); sectionsWindow->toFront (true);
         };

@@ -1,0 +1,76 @@
+{
+  "daw": "Nuendo",
+  "version": "15.0.30",
+  "version_provenance": "user reported",
+  "original_path": "/Users/fuzz/N15/6NuendoMarkers.csv",
+  "sha256": "24941511d781d103f801a348b022001f3eda2b33887d694b37a87393f1b835b7",
+  "bytes": 305,
+  "encoding": "UTF-8 with BOM",
+  "delimiter": "comma",
+  "headers": [
+    "Track name",
+    "Timecode In",
+    "Timecode Out",
+    "Description",
+    "Length",
+    "Comment",
+    "Character",
+    "Dialogue"
+  ],
+  "position_column": 2,
+  "name_column": 4,
+  "point_rows": 6,
+  "marker_units": "25 fps NDF Timecode In; rate confirmed by user",
+  "visible_positions_confirmation": {
+    "first": "00:00:23:05",
+    "second": "00:00:29:04",
+    "provenance": "user reported 2026-10-29"
+  },
+  "export_settings_confirmation": "User confirms default CSV settings, UTF-8 and comma",
+  "physical_audio_or_video_executed": false,
+  "synthetic_selected_mapping_test": {
+    "rate_numerator": 25,
+    "rate_denominator": 1,
+    "origin": "00:00:00:00",
+    "audio_sample_rate": 48000,
+    "expected_frames": [
+      1209600,
+      1495680,
+      1633920,
+      1660800,
+      28823040,
+      30205440
+    ],
+    "status": "Historical raw-label zero-origin test only; not DAW programme-alignment evidence"
+  },
+  "project_start_user_reported": "-1 23:59:58",
+  "programme_start_user_reported": "00:00:00:000",
+  "investigation": {
+    "hypothesis": "Export positions are relative to project start rather than displayed programme timecode",
+    "explicit_export_coordinate_origin": "00:00:02:00",
+    "offset_frames_at_25fps": 50,
+    "status": "Programme-zero mapping confirmed by a second actual export; vendor-general convention and exact Time Offset control value not established. No automatic correction.",
+    "expected_48k_frames": [
+      1113600,
+      1399680,
+      1537920,
+      1564800,
+      28727040,
+      30109440
+    ],
+    "last_four_positions": "Mapped using the confirmed origin; original six rows byte-for-byte unchanged in the anchor export."
+  },
+  "anchor_export": {
+    "path": "/Users/fuzz/N15/TimeOffsetMarkers.csv",
+    "repository_fixture": "Tests/Markers/nuendo-15.0.30-programme-zero.csv",
+    "sha256": "f4709037d4cbe30436be995b4fa3cf5cd9ce1795575ee97594fca60216e09cfd",
+    "bytes": 368,
+    "user_visible_position": "00:00:00:00",
+    "exported_position": "00:00:02:00",
+    "name": "AudioVideoStart at 00:00:00",
+    "same_project_settings": "user confirmed",
+    "six_original_rows": "unchanged",
+    "status": "Confirms export-coordinate programme origin 00:00:02:00 at 25 fps"
+  },
+  "additional_formats": "User chose finish M15 CSV/Pro Tools; other formats pending usefulness review"
+}

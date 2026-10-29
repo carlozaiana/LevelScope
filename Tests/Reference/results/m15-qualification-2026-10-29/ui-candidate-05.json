@@ -1,0 +1,36 @@
+{
+  "candidate": "candidate-05",
+  "source_digest": "38676a45d47ddba6eb54f7ab299f52f622f6be26554256781b8960749c609564",
+  "measurement_build": "8a7a2866d48f7ba6d4db1c7f532eaffbfce03fa78fbca02211d3f6b9fb79ef47",
+  "app_sha256": "2fc20d4cb9f1db21bc875ba2df9b9ebbeb048976093771affca13c7e25e7dd3c",
+  "passed": true,
+  "method": "Native CUA accessibility and visual inspection on actual Sequoia; independent saved-core inspection",
+  "media": "Disposable 900-second 48 kHz mono silent PCM16 coordinate fixture; no measurement or playback; not the user mix",
+  "mapping_scope": "Explicit zero-origin export coordinates only; user programme alignment still pending",
+  "checks": [
+    "Full original file selected through native picker",
+    "Pro Tools format and Audio sample frames explicitly selected; rate 24/1 and origin 0",
+    "Preview shows 45 input rows and 46 sections; first sample reference 587888; row 6347 retained",
+    "Non-drop timecode LOCATION preview shows first sample 586000 and second 1610000",
+    "Complete changes/disclosures shows unused TIME REFERENCE/UNITS, subframe precision warning and excluded session text",
+    "Cancel clears preview and preserves annotations",
+    "Sample-reference re-preview followed by explicit atomic annotation replacement",
+    "Section editor first boundary 587888 and provenance matches annotations",
+    "Save As followed by New and Open: stopped, device closed, routes muted, Source UNVERIFIED/no inferred measurement or compliance",
+    "Saved core retains all 45 rows, exact source hash and sample-coordinate options"
+  ],
+  "session_sha256": "abff3501d0716f50c81f87714635c1f39d5853a36a9c537534784e213f0554ab",
+  "session_bytes": 13836,
+  "saved_core_schema": 5,
+  "original_marker_file_sha256": "10aecddf80f7dcb668315f68cfd4782a10fe0b218a3c2d487529267fbc60dc25",
+  "physical_device_opened": false,
+  "video_loaded": false,
+  "reused_ui": {
+    "records": [
+      "ui-candidate-02-partial.json",
+      "ui-candidate-03-file-reader-supplement.json",
+      "ui-candidate-04.json"
+    ],
+    "reason": "Only Pro Tools reader and its field-policy label changed from candidate-04; affected actual-reader/UI checked fresh. Nuendo/paste, commit/invalidation, session/report implementations identical; all eight automated commands fresh on candidate-05."
+  }
+}

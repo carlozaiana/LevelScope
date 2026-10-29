@@ -1,0 +1,52 @@
+SAMPLE RATE:	48000.000000
+BIT DEPTH:	24-bit
+SESSION START TIMECODE:	00:00:00:00
+TIMECODE FORMAT:	24 Frame
+
+M A R K E R S  L I S T I N G
+#   	LOCATION     	TIME REFERENCE    	UNITS    	NAME                             	COMMENTS
+49  	00:00:12:05  	587888            	Samples  	Start Audio                      	
+2   	00:00:33:13  	1610400           	Samples  	START                            	
+3   	00:01:11:12  	3432560           	Samples  	NERO                             	
+4   	00:01:13:20  	3544000           	Samples  	CAR                              	
+5   	00:01:38:00  	4704912           	Samples  	PIAZZA NOTTE                     	
+6   	00:01:57:20  	5656912           	Samples  	CASA PIANEROTTOLO                	
+24  	00:02:09:05  	6203840           	Samples  	Location 24                      	
+7   	00:02:24:07  	6926912           	Samples  	INT CASA                         	
+8   	00:02:57:11  	8518000           	Samples  	PANORAMICA CHIESA                	
+9   	00:03:03:19  	8822000           	Samples  	INT CASA                         	
+87  	00:03:16:15  	9439590           	Samples  	frana 1                          	
+10  	00:03:23:23  	9790000           	Samples  	EST PORTA CLOSE UP               	
+11  	00:03:29:19  	10070000          	Samples  	INT CASA PP TAVOLO               	
+13  	00:04:31:06  	13020000          	Samples  	EST PIAZZETTA                    	
+15  	00:06:23:04  	18392000          	Samples  	INT CASA CAMINO                  	
+27  	00:08:18:23  	23951856          	Samples  	Location 27                      	
+28  	00:08:23:05  	24155856          	Samples  	Location 28                      	
+29  	00:08:25:01  	24242528          	Samples  	Location 29                      	
+16  	00:08:29:03  	24438000          	Samples  	EST CASA PORTA                   	
+26  	00:08:41:02  	25012912          	Samples  	vicolo                           	
+17  	00:09:15:09  	26658000          	Samples  	INT FIENILE                      	
+14  	00:09:59:08  	28769904          	Samples  	Location 14                      	
+30  	00:10:09:19  	29271152          	Samples  	BODY IMPACT                      	
+31  	00:10:11:08  	29345152          	Samples  	SPINTA                           	
+32  	00:10:12:17  	29411152          	Samples  	PUNCH                            	
+33  	00:10:13:08  	29441152          	Samples  	BODY FALL                        	
+34  	00:10:15:12  	29544304          	Samples  	BODY IMPACT                      	
+35  	00:10:18:11  	29687152          	Samples  	BODY FALL                        	
+36  	00:10:23:09  	29923152          	Samples  	GRAB                             	
+37  	00:10:26:05  	30059984          	Samples  	PUNCH                            	
+38  	00:10:26:21  	30091152          	Samples  	BODY FALL                        	
+18  	00:10:27:02  	30100000          	Samples  	NERO                             	
+19  	00:10:29:21  	30234000          	Samples  	EST PANORAMICA CHIESA GIORNO     	
+20  	00:10:34:06  	30444000          	Samples  	INT FIENILE                      	
+25  	00:10:37:23  	30622912          	Samples  	Location 25                      	
+39  	00:10:53:23  	31391856          	Samples  	Location 39                      	
+40  	00:10:55:03  	31446128          	Samples  	PORTONE                          	
+21  	00:10:58:01  	31586000          	Samples  	EST GIORNO PIAZZETTA             	
+22  	00:11:20:14  	32668000          	Samples  	INT CHIESA                       	
+57  	00:12:34:05  	36202752          	Samples  	Location 57                      	
+23  	00:12:53:12  	37128304          	Samples  	EST CHIESA                       	
+85  	00:13:26:19  	38727792          	Samples  	corre                            	
+86  	00:13:29:08  	38849792          	Samples  	Location 86                      	
+12  	00:13:48:03  	39750000          	Samples  	Location 12                      	
+1   	00:14:21:07  	41343984          	Samples  	END                              	

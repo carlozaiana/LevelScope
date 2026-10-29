@@ -1,0 +1,7 @@
+SESSION NAME:	Synthetic reader test
+TIME FORMAT:	Not evidence of LOCATION units
+
+M A R K E R S
+#	LOCATION	TIME REFERENCE	UNITS	NAME	COMMENTS
+1	01:00:01:00	Absolute	Timecode	Opening	Not imported
+2	01:00:02:12	Absolute	Timecode	Next	Not imported

@@ -629,16 +629,23 @@ for mono and bounded direct RF64 input with Sequoia-first reduced qualification.
    shared channel path, existing fixed M13 method and format gates without bundling
    new automatic methods. Preserve explicit single-channel role identity and
    qualify PCM24 odd-byte padding as well as the bounded mono RF64 subset.
-3. **Basic optional marker import.** Explicit time origin/rate and exact frame mapping,
-   preview/confirmation and provenance; annotations only. Bounded EDL import follows
+3. **M15 approved: optional point-marker import.** [ProjectIndex 53](ProjectIndex/53_M15MarkerImportAndSourceTimeMapping.md)
+   defines explicit time origin/rate, exact mapping with disclosed sample quantization,
+   preview/confirmation and provenance; Nuendo CSV and a dedicated Pro Tools
+   Session Info as Text reader, annotations only. Real DAW interoperability needs
+   actual versioned exports, not only synthetic fixtures. Bounded EDL import follows
    as a separate proposal and is not a dependency for useful proposal generation.
-4. **Standalone DSP qualification, in separate small steps:** first final true-peak
+4. **First review proposal preferences:** count/duration/additional and cumulative
+   gain/neighbour/transition/resource budgets and marker-density sensitivity together.
+   Preserve the fixed policy until a separately approved versioned replacement is tested.
+   Then **standalone DSP qualification, in separate small steps:** first final true-peak
    limiter, then downward processing, then upward processing, each with exact shared
    offline/audition/export behavior, identity/activity, state/seek/timing/resource
    evidence on both Macs and listening review. Existing plugin code alone is insufficient.
 5. **Dynamics-led proposals.** Qualified processors and bounded versioned activity
    preferences; useful without markers/sections. Explicit method selection/review.
-6. **Enhanced section-led proposals.** Qualified optional final limiter, configurable
+6. **Basic measured-audio region suggestions first:** editable, reviewed, no narrative
+   scene claim; preserve confirmed/protected boundaries. Then **enhanced section-led proposals.** Qualified optional final limiter, configurable
    section/transition/neighbour preferences, provenance/protection and later audio-
    derived regions as individually approved increments; no forced scene equalization.
 7. **Mixed strategy.** Justified interaction of qualified section and dynamics stages,
@@ -733,3 +740,15 @@ execution and new three-hour mono/RF64 qualification until approximately five
 post-M13 milestones, no later than six, using one frozen combined candidate and
 an impact-selected manifest. This does not authorize future milestones. Main
 stays at qualified M13 until combined qualification and separate integration approval.
+
+M15 review request, 29 October 2026: proposal-policy limits are to be revisited later,
+not changed by marker import. Retain main at qualified M13 and the agreed actual
+High Sierra/video/three-hour deferrals through the combined M14–M18 window, no later
+than M19. The seven-section cinema test identified four changed sections and a
+89.529560% affected envelope; the 20% duration budget blocked that attempt. This is
+local test evidence, not authorization to alter limits or expand M15 processing.
+
+M15 approval, 29 October 2026: explicit Nuendo and Pro Tools point-marker routes;
+annotation-only import and schema-5 provenance. Preference controls, standalone
+true-peak limiter and basic region suggestions are ordered future proposals, not
+M15 implementation scope. See ProjectIndex 53–54.

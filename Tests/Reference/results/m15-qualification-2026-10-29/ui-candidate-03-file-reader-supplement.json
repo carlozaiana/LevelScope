@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-29",
+  "candidate": "candidate-02 (app byte-identical to candidate-03)",
+  "source_digest": "8d0f5c7a50d43317fff19874cf9895a363e96fd25dd518d2ff419986903b9acf",
+  "standalone_sha256": "59c6ad3696a6206926e329b07415b0ad5ec6c8c12fb021c34428a40715a8a1ad",
+  "user_assistance": "Selected Non-drop HH:MM:SS:FF. Later menu selection succeeded through click, arrow keys and Return.",
+  "passed": [
+    "Nuendo synthetic CSV file chooser/read with explicit position/name/type columns and 01:00:00:00 origin at 25fps",
+    "Marker at 01:00:01:00 -> frame 48000, named Opening; 01:00:02:12 ->119040, quoted comma-containing name retained",
+    "All three preview views reviewed, full [0,48000),[48000,119040),[119040,144000) map and complete replacement diff visible",
+    "Confirm changes annotations only; applied gain and measurements remain current",
+    "Dedicated Pro Tools reader rejects selected CSV lacking MARKERS section",
+    "Pro Tools synthetic tabular fixture exposes marker-only import and unused TIME REFERENCE/UNITS/COMMENTS; only marker-name difference shown",
+    "Format/rate/pasted-position changes clear prior preview and require Preview again",
+    "30000/1001 NDF preview displays frame 1601 with 3/5 sample earlier, 3203 with 1/5 earlier, and 96096 exact",
+    "Cancel discards fractional preview, preserving previously confirmed annotations",
+    "Save As retains baseline file; saved core differs only in revision/sections/markerImport; measurement-cache payload unchanged"
+  ],
+  "not_claimed": [
+    "Actual Pro Tools DAW/version interoperability (no real export yet)",
+    "Physical audio or video playback",
+    "Actual High Sierra"
+  ],
+  "finding": "Pasted-mode UI left previous selected filename visible; display-only fix pending new candidate. Actual receipt correctly identifies pasted input.",
+  "saved_session_sha256": "eb3f669a995ad4474ec4b9b422c9e5569a2bf2f8ee34107c6603397bf2b38d3c",
+  "physical_device_opened": false,
+  "video_loaded": false,
+  "cache_payload_identical": true
+}

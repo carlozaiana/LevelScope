@@ -2,6 +2,7 @@
 #include "StandaloneSections.h"
 #include "StandaloneSessionModel.h"
 #include "MeasurementTimeline.h"
+#include "StandaloneMarkerImportPanel.h"
 
 namespace levelscope::standalone
 {
@@ -16,6 +17,7 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
     std::function<void()> onChanged;
+    std::function<bool()> canImportMarkers;
 private:
     StandaloneSessionModel& session;
     proposal::SectionDocument& document;
@@ -31,6 +33,8 @@ private:
     juce::TextButton rebuildButton { "Build sections" }, cancelButton { "Cancel sections" };
     juce::TextButton draftGainButton { "Draft section gains" }, setGainButton { "Set draft gain" },
         applyGainButton { "Apply section trims" }, discardGainButton { "Discard draft" };
+    juce::TextButton importMarkers { "Import markers..." }, pasteMarkers { "Paste positions..." };
+    std::unique_ptr<MarkerImportWindow> markerWindow;
     juce::TextEditor gainEditor;
     juce::Label gainStatus;
     struct GainView final : juce::Component

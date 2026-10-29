@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-29",
+  "candidate": "candidate-02",
+  "source_digest": "8d0f5c7a50d43317fff19874cf9895a363e96fd25dd518d2ff419986903b9acf",
+  "executable_sha256": "59c6ad3696a6206926e329b07415b0ad5ec6c8c12fb021c34428a40715a8a1ad",
+  "observed_via": "Native accessibility and screenshot inspection; saved-document comparison",
+  "programme": "Disposable 3-second stereo fixture, non-unity applied section gains and global trim",
+  "passed": [
+    "Open saved session stopped/device-closed/routes-muted with current measurements",
+    "Preview three pasted 25 fps points without applying",
+    "Original row detail: 12 -> frame 23040, seconds 12/25, zero quantization",
+    "Cancel clears preview and preserves annotations/audio",
+    "Out-of-duration point 100 at 25 fps rejects before quantization",
+    "Explicit confirm replaces annotations only",
+    "Existing section-gain draft marked STALE; Apply unavailable; applied audio retained",
+    "Save blocked until stale draft explicitly discarded",
+    "Save As preserves baseline and saves new annotations/provenance",
+    "Reopen retains exact processing gain and current measurements, stopped/device-closed/muted",
+    "Independent saved-core comparison changes only revision/sections/markerImport; cache payload byte-identical"
+  ],
+  "pending": [
+    "Popup selector interaction for format, units, rate and complete map/diff views",
+    "File-reader UI path for actual Nuendo and Pro Tools examples",
+    "Controlled Nuendo programme-zero anchor and actual Pro Tools interoperability"
+  ],
+  "ui_complete": false,
+  "physical_device_opened": false,
+  "video_loaded": false,
+  "baseline_session_sha256": "671adc6c3bc83bdb84cf8213442d98a494c50b083973d6ef40f4a2fe8f6d5270",
+  "saved_session_sha256": "8fe1f7134314f74f0469d66dcd7358ead5ca925fc34e00258bca10c43d9ed6f5",
+  "saved_core_changed_keys": [
+    "revision",
+    "sections",
+    "markerImport"
+  ],
+  "measurement_cache_payload_identical": true
+}

@@ -1,0 +1,42 @@
+{
+  "source_digest": "38676a45d47ddba6eb54f7ab299f52f622f6be26554256781b8960749c609564",
+  "measurement_build": "8a7a2866d48f7ba6d4db1c7f532eaffbfce03fa78fbca02211d3f6b9fb79ef47",
+  "executables": {
+    "bin/LevelScopeSectionProposalTests": {
+      "architectures": "x86_64 arm64",
+      "intel_minimum": "10.13",
+      "sha256": "72a651fcc57c031473cfbccec274f1a46559fb6cdf84431d5880118f0e1cb946"
+    },
+    "bin/LevelScopeSectionProcessingTests": {
+      "architectures": "x86_64 arm64",
+      "intel_minimum": "10.13",
+      "sha256": "c3f73ea37c86a2a22c73f87fe5cea1c0e2c8ab9b0b7acc3dd0f6d5031383a006"
+    },
+    "bin/LevelScopeMarkerTests": {
+      "architectures": "x86_64 arm64",
+      "intel_minimum": "10.13",
+      "sha256": "0cff02df1cb08ab6d7cb24ae0fe195fe1beea4e3143975120469232547f7b9e1"
+    },
+    "bin/LevelScopeExportTests": {
+      "architectures": "x86_64 arm64",
+      "intel_minimum": "10.13",
+      "sha256": "5f91586d3e71545028ee97b4751d61af9d7e9848e24275677877c916fbc4e548"
+    },
+    "bin/LevelScopeSectionsTests": {
+      "architectures": "x86_64 arm64",
+      "intel_minimum": "10.13",
+      "sha256": "9459c723ccfb9abcdd445a447a481e9439c46f35ac1e55379088d206b6bd9819"
+    },
+    "bin/LevelScopeSessionTests": {
+      "architectures": "x86_64 arm64",
+      "intel_minimum": "10.13",
+      "sha256": "0e64f2251d4ee2cd12ff98390050d4138a64a3317c754c311d117c6b5f298d49"
+    },
+    "LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone": {
+      "architectures": "x86_64 arm64",
+      "intel_minimum": "10.13",
+      "sha256": "2fc20d4cb9f1db21bc875ba2df9b9ebbeb048976093771affca13c7e25e7dd3c"
+    }
+  },
+  "actual_high_sierra_execution": false
+}

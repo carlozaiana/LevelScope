@@ -1,0 +1,62 @@
+{
+  "original_path": "/Users/fuzz/N15/TUTTI_UCCIDONO_V2.txt",
+  "original_sha256": "10aecddf80f7dcb668315f68cfd4782a10fe0b218a3c2d487529267fbc60dc25",
+  "original_bytes": 672421,
+  "original_lines": 6391,
+  "version": "10.3.10",
+  "version_source": "user reported",
+  "export_choices": "User reports most other information included; exact checkbox inventory not supplied",
+  "encoding": "UTF-8 without BOM",
+  "marker_count": 45,
+  "header_values": {
+    "sample_rate": "48000.000000",
+    "bit_depth": "24-bit",
+    "session_start_timecode": "00:00:00:00",
+    "timecode_format": "24 Frame"
+  },
+  "fixture": "Tests/Markers/pro-tools-10.3.10-markers.txt",
+  "fixture_sha256": "f9f5bf49f5ddda6707e9031b587d78a383797fb84eb2af5b64b29c2ba8aaa460",
+  "fixture_extraction": "Verbatim original lines 2\u20135, one LF separator, lines 6345\u20136391",
+  "selected_sample_fields": "TIME REFERENCE + UNITS Samples; exactly matching sample-rate header required",
+  "selected_other_units_field": "LOCATION; explicit unit and exact rate required",
+  "first_two_location_labels": [
+    "00:00:12:05",
+    "00:00:33:13"
+  ],
+  "first_two_samples": [
+    587888,
+    1610400
+  ],
+  "first_two_timecode_24fps_samples": [
+    586000,
+    1610000
+  ],
+  "programme_origin_confirmation": "User confirmed on 29 October 2026: project and audio begin at 00:00:00:00; trailer begins there. Start Audio is an internal marker, not programme zero.",
+  "visible_daw_positions_confirmation": "User confirmed 24 fps and first two markers at 00:00:12:05 Start Audio and 00:00:33:13 START.",
+  "current_candidate_tests": {
+    "candidate": "candidate-05",
+    "source_digest": "38676a45d47ddba6eb54f7ab299f52f622f6be26554256781b8960749c609564",
+    "full_original_and_fixture_passed": true,
+    "short_marker_checks": 535,
+    "required_groups": 10,
+    "silent_ui_passed": true
+  },
+  "original_modified": false,
+  "full_project_listing_in_repository": false,
+  "verified_mapping": {
+    "rate_numerator": 24,
+    "rate_denominator": 1,
+    "audio_sample_origin": 0,
+    "timecode_origin": "00:00:00:00",
+    "first_two_sample_references": [
+      587888,
+      1610400
+    ],
+    "first_two_display_timecode_sample_positions": [
+      586000,
+      1610000
+    ],
+    "scope": "Supplied Pro Tools 10.3.10 export setup only; exact sample references retain finer precision than displayed TC."
+  },
+  "tested_export_setup_passed": true
+}

@@ -14,6 +14,7 @@
 #include "StandaloneSectionProposal.h"
 #include "StandaloneAuditionRequest.h"
 #include "StandaloneSections.h"
+#include "Core/Proposal/MarkerImport.h"
 #include <functional>
 
 namespace levelscope::standalone
@@ -222,10 +223,11 @@ public:
     juce::String documentId = juce::Uuid().toString(), programmeId = juce::Uuid().toString();
     uint64_t documentRevision = 0, savedDocumentRevision = 0;
     juce::File documentFile;
-    int openedSessionSchema = 4;
+    int openedSessionSchema = 5;
     juce::String restoredProfileId, restoredProfileVersion, restoredProfileDigest;
     bool videoUnresolved = false;
     proposal::SectionDocument sectionDocument;
+    std::optional<proposal::markers::Receipt> markerImport;
     struct SectionTrimDraft
     {
         processing::SectionGainPlan plan;
@@ -316,7 +318,7 @@ public:
     void synchronizeSections()
     {
         const auto c = measurementContext (MeasurementDomain::source);
-        sectionDocument.bind (sectionInputIdentity (c), static_cast<int> (c.media.sampleRate), c.media.frames);
+        if(sectionDocument.bind (sectionInputIdentity (c), static_cast<int> (c.media.sampleRate), c.media.frames)) markerImport.reset();
     }
     void newDocument()
     {
@@ -582,7 +584,7 @@ public:
         if(keepCurrent){currentStateDocument.initializeFromSource(sourceDocument);currentStateDocument.staticGainDb=retainedGain;}
         source.statusText="Original confirmed composition; measurement not run";
         currentState.statusText=keepCurrent?"UNVERIFIED: composition changed; applied global gain retained":"Waiting for Current State initialization";
-        sectionDocument=proposal::SectionDocument();
+        sectionDocument=proposal::SectionDocument();markerImport.reset();
         return true;
     }
 

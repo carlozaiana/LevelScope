@@ -1,0 +1,27 @@
+{
+  "milestone": "M15",
+  "candidate": "candidate-05",
+  "source_digest": "38676a45d47ddba6eb54f7ab299f52f622f6be26554256781b8960749c609564",
+  "measurement_build": "8a7a2866d48f7ba6d4db1c7f532eaffbfce03fa78fbca02211d3f6b9fb79ef47",
+  "actual_sequoia_short_automated_passed": true,
+  "bounded_silent_ui_passed": true,
+  "nuendo_15_0_30_tested_export_setup_passed": true,
+  "pro_tools_10_3_10_actual_file_parser_passed": true,
+  "actual_pro_tools_programme_mapping": "Confirmed: 24 fps; project/audio/trailer start at zero; first two visible markers match export. Start Audio does not define programme origin.",
+  "sequoia_phase_complete": true,
+  "ready_for_checkpoint_publication": true,
+  "main": "a9be070ab9eb5cb4f591ff9d991d8999c3a016d0",
+  "logic_base": "be4bf23c8bb9f661ae1ede30f3b6e79a067aea37",
+  "deferred": [
+    "Actual High Sierra",
+    "Cross-Mac exchange",
+    "All video execution",
+    "Three-hour qualification; combined window after M18, no later than M19"
+  ],
+  "checkpoint_published": false,
+  "physical_device_opened": false,
+  "installations_changed": false,
+  "pro_tools_10_3_10_tested_export_setup_passed": true,
+  "checkpoint_readiness_scope": "Sequoia-tested development checkpoint only; High Sierra, video and three-hour qualification pending. Publication requires subsequent review/approval; no main integration.",
+  "full_cross_platform_qualification_complete": false
+}

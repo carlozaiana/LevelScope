@@ -143,8 +143,8 @@ void matrixCase(const juce::File& root,int rate,int channels,int mode,bool thoro
         oracleFile->flush();expect(oracleFile->getStatus().wasOk(),"independent input oracle finalized");oracleFile.reset();
         expect((*artifact.value)->analysis().context.processing.sectionGains==std::nullopt&&(*artifact.value)->analysis().context.processing.staticGainDb==0,"finalized artifact measured without section gain or second global gain");
         expect(ex::publish(**artifact.value,request,root.getChildFile("export"),ex::approvalIdentity(**artifact.value,request),control).value.has_value(),"strict Current and actual artifact gates permit explicit local publication");
-        auto document=sf::capture(s);const auto file=root.getChildFile("section.levelscope");expect(sf::save(document,file,control).succeeded(),"schema4 exact applied plan save");auto read=sf::read(file,control);
-        expect(read.document&&read.document->loadedSchema==4&&read.document->current.sectionGains->audioKey()==planKey,"schema4 full-precision plan round trip");
+        auto document=sf::capture(s);const auto file=root.getChildFile("section.levelscope");expect(sf::save(document,file,control).succeeded(),"current schema exact applied plan save");auto read=sf::read(file,control);
+        expect(read.document&&read.document->loadedSchema==sf::schemaVersion&&read.document->current.sectionGains->audioKey()==planKey,"current schema full-precision plan round trip");
         auto verified=sf::verify(*read.document,control);StandaloneSessionModel reopened;juce::String message;
         expect(verified.prepared&&sf::adopt(*verified.document,*verified.prepared,reopened,message)&&reopened.currentState.hasMeasurement&&reopened.source.hasMeasurement,"reopen restores valid caches after per-member verification");
         expect(reopened.sessionId!=s.sessionId&&reopened.sourceDocument.routing.fileToDevice[0]==-1,"reopen new runtime with all routes muted");

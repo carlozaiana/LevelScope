@@ -62,6 +62,9 @@ StandaloneSectionsPanel::StandaloneSectionsPanel (StandaloneSessionModel& s) : s
     applyGainButton.onClick=[this]{session.applySectionTrimDraft();synchronize();if(onChanged)onChanged();};
     discardGainButton.onClick=[this]{session.discardSectionTrimDraft();synchronize();if(onChanged)onChanged();};
     for(auto* c:std::initializer_list<juce::Component*>{&draftGainButton,&setGainButton,&applyGainButton,&discardGainButton,&gainEditor,&gainStatus,&gainView})addAndMakeVisible(*c);
+    importMarkers.onClick=[this]{markerWindow=std::make_unique<MarkerImportWindow>(session,false,canImportMarkers,[this]{synchronize();if(onChanged)onChanged();});};
+    pasteMarkers.onClick=[this]{markerWindow=std::make_unique<MarkerImportWindow>(session,true,canImportMarkers,[this]{synchronize();if(onChanged)onChanged();});};
+    addAndMakeVisible(importMarkers);addAndMakeVisible(pasteMarkers);
     timeline.onInspect = [this] (const juce::String& text) { inspection.setText (text, false); };
     for (auto* c : std::array<juce::Component*, 20> { &domainBox, &windowKind, &windowScope, &splitButton, &moveButton, &mergeButton, &renameButton,
          &rebuildButton, &cancelButton, &boundary, &name, &summary, &inspection, &boundaryLabel, &nameLabel, &status, &timeline, &sectionList, &windowList, nullptr })
@@ -76,7 +79,7 @@ void StandaloneSectionsPanel::timerCallback()
     const auto context = session.measurementContext (MeasurementDomain::source);
     const auto input = session.sourceContentInvalid ? juce::String() : sectionInputIdentity (context);
     if (! session.sourceContentInvalid && document.bind (input, input.isNotEmpty() ? static_cast<int> (context.media.sampleRate) : 0, input.isNotEmpty() ? context.media.frames : 0))
-    { selectedId = 0; editNotice.clear(); }
+    { selectedId = 0; editNotice.clear(); session.markerImport.reset(); }
     const auto key = document.map().valid() ? document.map().digest() : juce::String();
     const bool mapChanged = key != mapKey;
     if (mapChanged)
@@ -107,6 +110,7 @@ void StandaloneSectionsPanel::timerCallback()
     rebuildButton.setEnabled (snapshot != nullptr && ! busy);
     status.setText (editNotice.isNotEmpty() ? editNotice : diagnostics.busy() ? diagnostics.status : sections.status, juce::dontSendNotification);
     const bool editable=!session.audioEditsBlocked()&&!session.job.isActive();
+    importMarkers.setEnabled(editable&&document.map().valid()&&(!canImportMarkers||canImportMarkers()));pasteMarkers.setEnabled(importMarkers.isEnabled());
     draftGainButton.setEnabled(editable && !session.sectionTrimDraft && !session.sectionProposal && session.currentStateDocument.isInitialized);
     setGainButton.setEnabled(editable && session.sectionDraftFresh());gainEditor.setEnabled(setGainButton.isEnabled());
     applyGainButton.setEnabled(editable && session.sectionDraftFresh());discardGainButton.setEnabled(session.sectionTrimDraft.has_value());
@@ -114,6 +118,7 @@ void StandaloneSectionsPanel::timerCallback()
     if(session.sectionTrimDraft&&!session.sectionDraftFresh())gainText="STALE DRAFT: discard/recreate after input, processing or annotation geometry changes. Applied audio retained.";
     if(session.currentStateDocument.sectionGains && session.sectionGeometry(document.map())!=session.sectionGeometry(session.currentStateDocument.sectionGainAnnotations))
         gainText+=" Applied intervals differ from current annotations; annotation edits do not move gain transitions.";
+    if(session.markerImport&&document.map().valid())gainText+=session.markerImport->imported.digest()==document.map().digest()?" Marker import provenance matches annotations.":" Annotations differ from retained marker-import provenance.";
     gainStatus.setText(gainText,juce::dontSendNotification);gainStatus.setTooltip(gainText);gainView.repaint();
 }
 const proposal::ProgrammeSection* StandaloneSectionsPanel::selectedSection() const
@@ -246,7 +251,7 @@ void StandaloneSectionsPanel::Windows::selectedRowsChanged (int row)
 void StandaloneSectionsPanel::resized()
 {
     auto b = getLocalBounds().reduced (12); auto top = b.removeFromTop (28);
-    domainBox.setBounds (top.removeFromLeft (225)); rebuildButton.setBounds (top.removeFromLeft (145)); cancelButton.setBounds (top.removeFromLeft (145));
+    domainBox.setBounds (top.removeFromLeft (225)); rebuildButton.setBounds (top.removeFromLeft (145)); cancelButton.setBounds (top.removeFromLeft (145)); importMarkers.setBounds(top.removeFromLeft(160));pasteMarkers.setBounds(top.removeFromLeft(160));
     status.setBounds (b.removeFromTop (27)); auto edit = b.removeFromTop (28);
     boundaryLabel.setBounds (edit.removeFromLeft (105)); boundary.setBounds (edit.removeFromLeft (140));
     splitButton.setBounds (edit.removeFromLeft (120)); moveButton.setBounds (edit.removeFromLeft (100)); mergeButton.setBounds (edit.removeFromLeft (100));

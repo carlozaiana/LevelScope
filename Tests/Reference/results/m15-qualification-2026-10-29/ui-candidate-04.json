@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-29",
+  "candidate": "candidate-04",
+  "source_digest": "0cfd128c38e78b74d890eccb6bc78ad52ae3527fda970ec06d9eab4d8e7f7462",
+  "standalone_sha256": "37e83225a3555fc9d484e1bf0cf2f7e62e24d57a6c04d19a2d1f1a32a9fb0fad",
+  "fresh_passed": [
+    "Same-build saved session opened stopped/device-closed/routes-muted, Current measurements current",
+    "Selected actual Nuendo marker file displays its basename in CSV mode",
+    "Switch to Pasted positions hides the previous filename; corrected display inspected visually and in accessibility tree",
+    "Explicit 25fps paste preview and confirmation preserves Current gain and measurement status",
+    "Unsaved-close warning cancelled safely",
+    "Save As to a separate file; core changes only revision/sections/markerImport, cache payload identical, provenance basename Pasted positions",
+    "Reopen saved file with same gain and current measurements, stopped/device-closed/routes-muted"
+  ],
+  "reused_from": [
+    "ui-candidate-02-partial.json",
+    "ui-candidate-03-file-reader-supplement.json"
+  ],
+  "reuse_reason": "Only one visibility line changed since candidate-03; existing format, mapping, three preview views, errors, stale-draft, cancellation and file-reader UI behavior unchanged. Full automated short selection rerun on candidate-04.",
+  "bounded_silent_ui_passed": true,
+  "actual_pro_tools_interoperability": "Pending real user export/version/settings; synthetic UI/parser checks do not qualify a DAW version",
+  "physical_device_opened": false,
+  "video_loaded": false,
+  "saved_session_sha256": "be69c33dc8665c219cf249ed9b2641ecb3470d312d65b97161c10a6041e2ab0b",
+  "baseline_session_sha256": "c74d14a24d4004b57eb3c68fddeaf1e28c2a3d0f8fce7d18a6ba78f5f604e702",
+  "changed_core_keys": [
+    "revision",
+    "sections",
+    "markerImport"
+  ],
+  "cache_payload_identical": true
+}

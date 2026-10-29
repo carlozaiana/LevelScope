@@ -16,6 +16,7 @@ struct Request
     bool unsaved = true;
     juce::File sessionFile;
     proposal::SectionMap sections;
+    std::optional<proposal::markers::Receipt> markerImport;
     video::Reference video;
 };
 Request capture (const StandaloneSessionModel&);

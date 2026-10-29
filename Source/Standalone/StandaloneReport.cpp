@@ -171,9 +171,11 @@ juce::var report(const Request& r,const Candidate* c,bool publishing)
         set(artifact,"verification_gain_db",0);juce::Array<juce::var> map;for(auto n:c->spec().outputToInput)map.add(n+1);set(artifact,"output_to_input_channels",map);set(o,"artifact",artifact);
     }
     juce::Array<juce::var> sections;
-    if(r.sections.sections.size()>1000)throw std::runtime_error("Too many report annotations");
+    if(r.sections.sections.size()>10000)throw std::runtime_error("Too many report annotations");
     for(const auto& s:r.sections.sections){auto row=object();set(row,"id",juce::String(s.id));set(row,"name",s.name);set(row,"begin_frame",juce::String(s.begin));set(row,"end_frame",juce::String(s.end));sections.add(row);}
-    set(o,"sections_annotations_only",sections);auto video=object();set(video,"basename",r.video.file.getFileName());set(video,"sha256",r.video.sha256);
+    set(o,"sections_annotations_only",sections);
+    set(o,"marker_import_provenance",r.markerImport?proposal::markers::encode(*r.markerImport):juce::var());
+    set(o,"annotations_match_last_import",r.markerImport&&r.sections.valid()&&r.markerImport->imported.digest()==r.sections.digest());auto video=object();set(video,"basename",r.video.file.getFileName());set(video,"sha256",r.video.sha256);
     set(video,"offset_rational",juce::String(r.video.startOnAudio.text()));set(video,"is_sync_evidence",false);set(o,"reference_picture_context",video);
     return o;
 }

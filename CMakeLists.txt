@@ -210,6 +210,8 @@ add_library(LevelScopeStandaloneSupport STATIC
     Source/Standalone/ProgrammeComposition.cpp
     Source/Standalone/SessionDocument.cpp
     Source/Standalone/VerifiedSource.cpp
+    Source/Core/Proposal/MarkerImport.cpp
+    Source/Standalone/StandaloneMarkerImport.cpp
     Source/Core/Proposal/SectionAnalysis.cpp
     Source/Standalone/StandaloneSections.cpp
     Source/Core/Proposal/AnalysisEngine.cpp
@@ -253,6 +255,7 @@ target_link_libraries(LevelScopeStandaloneSupport PUBLIC
     LevelScopeMeasurementCore juce::juce_audio_formats juce::juce_audio_devices juce::juce_cryptography juce::juce_graphics)
 
 add_library(LevelScopeDiagnosticsUI STATIC
+    Source/Standalone/StandaloneMarkerImportPanel.cpp
     Source/Standalone/StandaloneSectionsPanel.cpp
     Source/Standalone/MeasurementTimeline.cpp
     Source/Standalone/StandaloneDiagnosticsPanel.cpp)
@@ -517,4 +520,12 @@ if(LEVELSCOPE_BUILD_MONO_TESTS)
     if(NOT MSVC)
         target_compile_options(LevelScopeMonoTests PRIVATE -fno-fast-math -ffp-contract=off)
     endif()
+endif()
+
+option(LEVELSCOPE_BUILD_MARKER_TESTS "Build M15 audio-only marker/session checks" OFF)
+if(LEVELSCOPE_BUILD_MARKER_TESTS)
+    juce_add_console_app(LevelScopeMarkerTests PRODUCT_NAME "LevelScope Marker Tests")
+    target_sources(LevelScopeMarkerTests PRIVATE Tests/MarkerTests.cpp)
+    target_compile_definitions(LevelScopeMarkerTests PRIVATE JUCE_MODAL_LOOPS_PERMITTED=1)
+    target_link_libraries(LevelScopeMarkerTests PRIVATE LevelScopeDiagnosticsUI juce::juce_gui_basics)
 endif()

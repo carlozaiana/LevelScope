@@ -1,0 +1,162 @@
+{
+  "short_automated_passed": true,
+  "failure": "",
+  "source_digest": "38676a45d47ddba6eb54f7ab299f52f622f6be26554256781b8960749c609564",
+  "measurement_build": "8a7a2866d48f7ba6d4db1c7f532eaffbfce03fa78fbca02211d3f6b9fb79ef47",
+  "runtime_os": "ProductName:\t\tmacOS\nProductVersion:\t\t15.7.9\nBuildVersion:\t\t24G830",
+  "cpu": "Apple M1 Max",
+  "architecture": "arm64",
+  "seconds": 94.27973608299999,
+  "commands": [
+    {
+      "name": "markers",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/Developer/LevelScope/build/m15-qualification-2026-10-29/candidate-05/bin/LevelScopeMarkerTests",
+        "/Users/fuzz/Developer/LevelScope/build/m15-qualification-2026-10-29/sequoia-candidate-05/marker-files",
+        "/Users/fuzz/Developer/LevelScope/build/m15-qualification-2026-10-29/candidate-05/source/Tests/Markers/nuendo-15.0.30-points.csv",
+        "/Users/fuzz/N15/TUTTI_UCCIDONO_V2.txt"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "seconds": 9.026491167000001,
+      "passed": true,
+      "build": "8a7a2866d48f7ba6d4db1c7f532eaffbfce03fa78fbca02211d3f6b9fb79ef47",
+      "reason": "",
+      "report_sha256": "08452c78b81f312d1657ecaf58ebd3910a481ebd659de9166531dfa73ea85ba6"
+    },
+    {
+      "name": "sessions-short",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/Developer/LevelScope/build/m15-qualification-2026-10-29/candidate-05/bin/LevelScopeSessionTests",
+        "--short",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m15-qualification-2026-10-29/sequoia-candidate-05/sessions.json"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "seconds": 5.981912458,
+      "passed": true,
+      "build": "8a7a2866d48f7ba6d4db1c7f532eaffbfce03fa78fbca02211d3f6b9fb79ef47",
+      "reason": "",
+      "report_sha256": "712bef3ee2566c0abfd4b1f45681c116c8c06ff42190d117347f9f32da8692af"
+    },
+    {
+      "name": "sections",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/Developer/LevelScope/build/m15-qualification-2026-10-29/candidate-05/bin/LevelScopeSectionsTests",
+        "--report",
+        "/Users/fuzz/Developer/LevelScope/build/m15-qualification-2026-10-29/sequoia-candidate-05/sections.json"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "seconds": 3.3048425829999992,
+      "passed": true,
+      "build": "8a7a2866d48f7ba6d4db1c7f532eaffbfce03fa78fbca02211d3f6b9fb79ef47",
+      "reason": "",
+      "report_sha256": "b6f0349a7a700038852e5471a452ab74e9b8967dae3b10ab3eaaf7fa55609525"
+    },
+    {
+      "name": "m12-smoke",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/Developer/LevelScope/build/m15-qualification-2026-10-29/candidate-05/bin/LevelScopeSectionProcessingTests",
+        "--smoke",
+        "--root",
+        "/Users/fuzz/Developer/LevelScope/build/m15-qualification-2026-10-29/sequoia-candidate-05/m12-files",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m15-qualification-2026-10-29/sequoia-candidate-05/m12.json"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "seconds": 7.920836833000003,
+      "passed": true,
+      "build": "8a7a2866d48f7ba6d4db1c7f532eaffbfce03fa78fbca02211d3f6b9fb79ef47",
+      "reason": "",
+      "report_sha256": "09471150dc20d1e0c9ff5d15d6e20aa8885519ba30dd9fe3d43852df10058676"
+    },
+    {
+      "name": "m13-smoke",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/Developer/LevelScope/build/m15-qualification-2026-10-29/candidate-05/bin/LevelScopeSectionProposalTests",
+        "--smoke",
+        "--root",
+        "/Users/fuzz/Developer/LevelScope/build/m15-qualification-2026-10-29/sequoia-candidate-05/m13-files",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m15-qualification-2026-10-29/sequoia-candidate-05/m13.json"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "seconds": 22.226093959,
+      "passed": true,
+      "build": "8a7a2866d48f7ba6d4db1c7f532eaffbfce03fa78fbca02211d3f6b9fb79ef47",
+      "reason": "",
+      "report_sha256": "6355987be3f32a78f4b22dcbd2ed4a1e00de8c317adfa596ea128571a29d3b10"
+    },
+    {
+      "name": "export-short",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/Developer/LevelScope/build/m15-qualification-2026-10-29/candidate-05/bin/LevelScopeExportTests",
+        "--artifacts",
+        "/Users/fuzz/Developer/LevelScope/build/m15-qualification-2026-10-29/sequoia-candidate-05/export-files",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m15-qualification-2026-10-29/sequoia-candidate-05/export.json"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "seconds": 45.318591583,
+      "passed": true,
+      "build": "8a7a2866d48f7ba6d4db1c7f532eaffbfce03fa78fbca02211d3f6b9fb79ef47",
+      "reason": "",
+      "report_sha256": "c9cbf239c57b1367a409ddc253423a9329563ec4b825b5f5bb18a0d9dedff454"
+    },
+    {
+      "name": "m14-reader-rejects-schema5",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/Developer/LevelScope/build/m15-qualification-2026-10-29/candidate-05/legacy/M14ProgrammeTests",
+        "--only",
+        "--m8-session",
+        "/Users/fuzz/Developer/LevelScope/build/m15-qualification-2026-10-29/sequoia-candidate-05/marker-files/transaction-2/markers.levelscope",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m15-qualification-2026-10-29/sequoia-candidate-05/legacy-rejection.json"
+      ],
+      "exit_code": 1,
+      "expected_exit": 1,
+      "seconds": 0.4119536670000059,
+      "passed": false,
+      "build": "4002f49d4d8eb3cffcf825f1624d8a00d6f48557f0755e711683cff6627f68da",
+      "reason": "M8 core migration remains interleaved: Session integer outside supported range",
+      "report_sha256": "41c32585c652c80e44a7010051a702c26f8792b8b01543078a3b1f144c014c9d"
+    },
+    {
+      "name": "runner-self-tests",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/fuzz/Developer/LevelScope/build/m15-qualification-2026-10-29/candidate-05/Tests/M15QualificationRunnerTests.py"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "seconds": 0.06466658300000461
+    }
+  ],
+  "real_daw_interoperability": "Nuendo 15.0.30 actual CSV and programme-zero origin tested at user-confirmed 25 fps; exact settings in fixture record. Pro Tools 10.3.10 actual table tested with explicit 24 fps LOCATION and matching-rate sample references; programme-origin confirmation recorded separately",
+  "silent_UI": "separate required receipt",
+  "high_sierra": "deferred after M18, no later than M19",
+  "video": "deferred; no loading/decoding/playback",
+  "three_hour": "deferred; synthetic section-population/index tests are not full-duration audio",
+  "physical_devices_opened": false,
+  "qualification_complete": false
+}

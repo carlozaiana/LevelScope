@@ -161,7 +161,10 @@ Request capture (const StandaloneSessionModel& s)
     if(s.sourceContentInvalid)r.mediaIssue="Programme media is unresolved or invalidated; recorded hashes are historical identities.";
     else if(r.current.media.sha256.isNotEmpty()&&!r.current.sourceFilesMatch())
         r.mediaIssue="A programme member is missing, changed or duplicated; reverify and remeasure.";
-    r.sections = s.sectionDocument.map(); r.video = s.referenceVideo; return r;
+    const auto input = sectionInputIdentity(r.source);
+    if(s.sectionDocument.map().valid() && s.sectionDocument.map().inputIdentity == input)
+    { r.sections = s.sectionDocument.map(); if(s.markerImport && s.markerImport->imported.inputIdentity == input) r.markerImport = s.markerImport; }
+    r.video = s.referenceVideo; return r;
 }
 juce::String specification (const Request& r, Specification& s)
 {
@@ -206,6 +209,7 @@ juce::String requestIdentity (const Request& r)
         + ";" + juce::String (r.documentRevision) + ";" + juce::String (r.current.ticket.sessionRevision)
         + ";" + r.current.profile.digest() + ";" + juce::String (static_cast<int> (r.applicability))
         + ";" + (r.sections.valid() ? r.sections.digest() : juce::String("no-bound-sections"))
+        + ";" + (r.markerImport ? r.markerImport->identity() : juce::String())
         + ";" + r.video.sha256 + ";" + juce::String(r.video.startOnAudio.text()));
 }
 juce::String readiness (const Request& r)

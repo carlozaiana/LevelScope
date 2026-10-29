@@ -1,0 +1,10 @@
+{
+  "base_candidate_source_digest": "21e393b5f513dbf51aa5da4359583f6879f880c2e151e5bddee68a58a0a51a0d",
+  "changed_files": [
+    "Source/Standalone/StandaloneMarkerImportPanel.cpp"
+  ],
+  "change": "Hide the previous marker filename when Pasted positions is selected; no parser, mapping, transaction, measurement, processing, transport or export change.",
+  "fresh_checks": "Rebuild the same seven explicit universal targets; run the full eight-command short M15 manifest on new candidate; verify pasted-mode label and a new UI confirmation/save/reopen.",
+  "reused_UI": "Candidate-02/03 file/paste/mapping/diff/cancel/stale/session checks, except the corrected label, retain original identities. Only the visibility line changed.",
+  "deferred": "Actual High Sierra, all video execution and three-hour audio remain deferred; Pro Tools real export still pending."
+}
