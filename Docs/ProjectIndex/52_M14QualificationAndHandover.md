@@ -1,9 +1,14 @@
 # M14 implementation and qualification handover
 
 Status, 29 October 2026: **Sequoia tested; High Sierra, video and three-hour checks pending.**
-Candidate-02 is accepted for publication on `codex/logic-module` as the annotated
+Candidate-02 is published on `codex/logic-module` as the annotated
 development checkpoint [m14-mono-rf64-sequoia-2026-10-29](https://github.com/carlozaiana/LevelScope/tree/m14-mono-rf64-sequoia-2026-10-29). No main integration is authorized. Main remains qualified M13
 `a9be070ab9eb5cb4f591ff9d991d8999c3a016d0`.
+
+Checkpoint commit: `3d98284c2c0b7de92cfee70cb0007d43d1f04d1f`. Annotated tag object:
+`8523392cd96b76513f10c8441d236c8f16a9e5a1`. GitHub verification confirms main
+and all 17 prior annotated tag objects/targets are unchanged. A subsequent
+documentation-only receipt does not alter the tagged implementation.
 
 Contract: [50](50_M14MonoProcessingAndVerifiedExport.md). Pre-implementation
 impact selection: [51](51_M14ImpactQualificationPlan.md).

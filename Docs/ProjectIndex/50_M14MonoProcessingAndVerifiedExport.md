@@ -1,6 +1,6 @@
 # M14 proposal — complete mono processing and verified PCM export
 
-Status, 29 October 2026: **Sequoia tested; High Sierra, video and three-hour checks pending.** Candidate-02 is accepted for development-checkpoint publication on `codex/logic-module`; main remains M13. See [52](52_M14QualificationAndHandover.md) for the publication record.
+Status, 29 October 2026: **Sequoia tested; High Sierra, video and three-hour checks pending.** Candidate-02 is published as a development checkpoint on `codex/logic-module`; main remains M13. See [52](52_M14QualificationAndHandover.md) for the publication record.
 
 The user-approved revision below supersedes the original two-platform/three-hour
 M14 proposal. Main stays at qualified M13. See [51](51_M14ImpactQualificationPlan.md)

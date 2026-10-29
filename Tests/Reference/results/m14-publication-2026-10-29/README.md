@@ -5,7 +5,8 @@
 The user approved publication of candidate-02 on `codex/logic-module`, with main
 held at qualified M13 `a9be070ab9eb5cb4f591ff9d991d8999c3a016d0`.
 The annotated checkpoint is [`m14-mono-rf64-sequoia-2026-10-29`](https://github.com/carlozaiana/LevelScope/tree/m14-mono-rf64-sequoia-2026-10-29).
-Its target commit records the exact implementation in candidate-02 source manifest
+Its target commit is `3d98284c2c0b7de92cfee70cb0007d43d1f04d1f`. Annotated tag object:
+`8523392cd96b76513f10c8441d236c8f16a9e5a1`. It records the exact implementation in candidate-02 source manifest
 `9dd22a598281e83431039f210202a8a24fe49517294cc6bb8d83032c4975e013`.
 Publication adds documentation/evidence; it does not change the tested implementation.
 
@@ -31,3 +32,9 @@ for unchanged implementation publication. No raw media, binaries, credentials,
 connection details or unrelated Finder metadata are included. Main, prior tags,
 frozen packages, installations, the separate video worktree and audio settings
 must remain unchanged. Stop after publication; no next milestone is started.
+
+Publication succeeded and was verified directly through GitHub API refs/tag data
+and `git ls-remote`. All 17 prior annotated tag objects and targets, main and other
+remote branches were unchanged. [Remote verification](remote-verification.json)
+records the exact checkpoint, tag and main identities. A following documentation-only
+commit records this receipt without moving the checkpoint tag or changing implementation.
