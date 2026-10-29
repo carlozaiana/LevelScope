@@ -752,3 +752,14 @@ M15 approval, 29 October 2026: explicit Nuendo and Pro Tools point-marker routes
 annotation-only import and schema-5 provenance. Preference controls, standalone
 true-peak limiter and basic region suggestions are ordered future proposals, not
 M15 implementation scope. See ProjectIndex 53–54.
+
+
+M16 proposal, 29 October 2026: [ProjectIndex 56](ProjectIndex/56_M16ProposalPreferencesAndLimits.md)
+proposes a bounded configurable policy with separate additional/cumulative local
+attenuation, reserve and count/duration limits. New v2 accounting uses connected
+changed processing support rather than raw annotation count; legacy v1 semantics
+remain explicit. This is not coordinated neighbouring adjustment or a new strategy.
+The document specifies defaults/ranges, identity/session/report boundaries and
+impact-selected Sequoia acceptance; it awaits implementation approval. Main stays
+at M13, with actual High Sierra/video/three-hour checks deferred after M18, no later
+than M19. The published M15 checkpoint and original evidence remain unchanged.

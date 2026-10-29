@@ -1,12 +1,14 @@
 # M15 qualification and handover
 
 Status, 29 October 2026: **Sequoia tested; High Sierra, video and three-hour checks pending.**
-Candidate-05 publication on `codex/logic-module` is now authorized. The exact
+Candidate-05 is published on `codex/logic-module`. The exact
 checkpoint and remote verification are recorded in the [publication receipt](../../Tests/Reference/results/m15-publication-2026-10-29/README.md); main stays at M13.
 Nuendo 15.0.30’s actual six-point CSV and 25 fps are confirmed; a second actual export
 confirms its two-second origin. The user also confirmed Pro Tools 10.3.10 at 24 fps,
 project/audio/trailer start at zero, and the first two visible marker positions. Both
-actual export setups are verified within the bounded reader scope. No M15 checkpoint has been published. Main remains qualified M13
+actual export setups are verified within the bounded reader scope.
+Published checkpoint: [`m15-marker-import-sequoia-2026-10-29`](https://github.com/carlozaiana/LevelScope/tree/m15-marker-import-sequoia-2026-10-29),
+commit `1b56804ecfb469aef3276b2d4ac96039ce3e4cc1`. Main remains qualified M13
 `a9be070ab9eb5cb4f591ff9d991d8999c3a016d0`.
 
 ## Implementation
@@ -61,7 +63,8 @@ transport, timing, video, session or report implementation changed in this follo
 - Universal executable SHA-256: `2fc20d4cb9f1db21bc875ba2df9b9ebbeb048976093771affca13c7e25e7dd3c`.
 - Preserved app: `build/m15-qualification-2026-10-29/candidate-05/LevelScope Standalone.app`.
 - Base commit remains `be4bf23c8bb9f661ae1ede30f3b6e79a067aea37`; it is not the
-  uncommitted M15 implementation. No checkpoint has been published.
+  frozen M15 implementation. Checkpoint `1b56804ecfb469aef3276b2d4ac96039ce3e4cc1` now records
+  all 262 manifest paths exactly; no rebuild or qualification rerun was needed.
 
 All eight explicitly selected short commands ran fresh and passed in **94.28 s**
 on actual arm64 Sequoia 15.7.9 (24G830), Apple M1 Max. Marker tests passed **535
@@ -109,10 +112,10 @@ rebuild or repeat test is necessary. The reference-sample fields retain subframe
 precision that is absent from the displayed LOCATION labels. No general Pro Tools
 version/export-dialect or universal Nuendo-offset claim is made.
 
-The approved **Sequoia phase is complete**. The candidate is ready for review before
-a **Sequoia-tested development checkpoint**, with actual High Sierra, cross-Mac
-exchange, all video execution and three-hour qualification explicitly pending.
-Publication and main integration have not been authorized by this readiness result.
+The approved **Sequoia phase is complete**. The user subsequently authorized and
+published this **Sequoia-tested development checkpoint**, with actual High Sierra,
+cross-Mac exchange, all video execution and three-hour qualification explicitly
+pending. Main integration remains outside that authorization.
 Main remains fully qualified M13. The frozen identity’s pending-at-freeze status is
 preserved; current acceptance is in `status.json` and this handover, not a rewritten
 package. All prior checkpoints and tested packages remain unchanged.
@@ -209,8 +212,9 @@ with a SHA-256 evidence manifest; media, binaries and session files remain local
 The runner rejects missing/duplicated/failed checks and mismatched build identities.
 [Current status](../../Tests/Reference/results/m15-qualification-2026-10-29/status.json)
 records the completed Sequoia phase after the actual Pro Tools programme mapping
-was independently confirmed; deferred qualification remains pending. No M15 checkpoint or main merge
-has been performed. All 18 prior tag objects/targets, the frozen M14 package and
+was independently confirmed; deferred qualification remains pending. That original
+readiness receipt is deliberately unchanged; the separate publication receipt records
+the subsequent checkpoint. No main merge has been performed. All 18 prior tag objects/targets, the frozen M14 package and
 M15 packages, original Nuendo files and video branch remain unchanged.
 
 Reused measurement/reference, input/RF64, processing and timing evidence originates
@@ -281,5 +285,20 @@ required records; an automated-runner pass never sets complete qualification tru
   accumulating drift, sustained freezes and identity/lifecycle failures remain
   blockers when deferred tests run. Physical full-7.1 listening remains separate.
 
-Stop for review before checkpoint publication, main integration or a new milestone.
+M15 checkpoint publication is complete. Stop for review of the separate M16 proposal;
+no M16 implementation or main integration is authorized.
 Preserve all tags/packages/installations, unrelated work and the video working copy.
+
+## Publication and next review
+
+The checkpoint status remains **“Sequoia tested; High Sierra, video and three-hour
+checks pending.”** The original candidate-05 app, package identity and qualification
+receipts are unchanged. The new commit ties the manifest to Git; the tested binary
+still contains its original measurement/build identity rather than a substituted
+post-publication build. All 18 prior tag objects/targets and qualified M13 main were
+verified directly on GitHub after push.
+
+[M16 — bounded proposal preferences and configurable limits](56_M16ProposalPreferencesAndLimits.md)
+is a proposal only. It covers configurable magnitude/count/duration/reserve limits,
+canonical processing-region accounting and reproducible policy identity. No new
+processing strategy, neighbour optimizer, segmentation or dynamics is implemented.

@@ -85,3 +85,14 @@ Detailed requirements, provenance and evidence remain in
 [the M2 profile contract](21_M2MeasuredCompliance.md),
 [the M10 export handover](40_M10QualificationAndHandover.md) and
 [the compliance matrix](../ComplianceMatrix.md). No tests are run by this design update.
+
+
+### M16 review boundary (29 October 2026)
+
+M15 candidate-05 is published as a Sequoia-tested development checkpoint. The next
+[proposal](56_M16ProposalPreferencesAndLimits.md) reviews configurable proposal
+preferences and marker-density accounting, independently of delivery profiles.
+No M16 implementation is approved yet. Coordinated neighbours, segmentation and
+limiter/compressor or new strategies remain separate. Main stays at qualified M13;
+combined actual High Sierra/video/three-hour qualification remains planned after
+M18 and no later than M19.

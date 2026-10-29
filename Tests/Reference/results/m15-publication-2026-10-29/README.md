@@ -3,10 +3,12 @@
 **Sequoia tested; High Sierra, video and three-hour checks pending.**
 
 The user authorized publication on `codex/logic-module`, with main held at M13
-`a9be070ab9eb5cb4f591ff9d991d8999c3a016d0`. The planned annotated checkpoint is
+`a9be070ab9eb5cb4f591ff9d991d8999c3a016d0`. The published annotated checkpoint is
 [`m15-marker-import-sequoia-2026-10-29`](https://github.com/carlozaiana/LevelScope/tree/m15-marker-import-sequoia-2026-10-29).
-A following documentation-only receipt records the actual commit, tag object and
-remote verification, without rewriting this checkpoint or its tested package.
+Checkpoint commit: `1b56804ecfb469aef3276b2d4ac96039ce3e4cc1`.
+Annotated tag object: `e2c9fee7c5c8ac228a3487d2b7d8b9df45b92472`.
+This following documentation-only receipt records publication without rewriting
+the checkpoint or its tested package.
 
 Candidate-05 source manifest:
 `38676a45d47ddba6eb54f7ab299f52f622f6be26554256781b8960749c609564`.
@@ -20,8 +22,8 @@ Original tested app:
 [Preflight](preflight.json) verifies every manifest file, frozen artifact, original
 export, preserved earlier package, and all 18 prior tag objects/targets against
 GitHub. The manifest identifies the tested source; its M14 base commit is not the
-M15 implementation commit. The new checkpoint will bind that exact manifest to
-Git. No binary is rebuilt, substituted or installed. No qualification is rerun.
+M15 implementation commit. The checkpoint binds that exact manifest to Git; all 262 paths were independently
+verified with `git show <checkpoint>:<path>` after committing. No binary is rebuilt, substituted or installed. No qualification is rerun.
 
 [Original qualification receipts](../m15-qualification-2026-10-29/status.json)
 retain their original pre-publication identities/status, including pending-at-freeze
@@ -35,3 +37,17 @@ receipts are committed. No full original Pro Tools project listing, media, binar
 credential, connection detail or Finder metadata is included. Main, all existing
 tags, frozen packages, installations, the separate video worktree and system audio
 remain untouched. M16 is a separate proposal awaiting implementation approval.
+
+Publication succeeded through an atomic push of only the development branch and
+new tag. [Remote verification](remote-checkpoint-verification.json) confirms the
+remote branch, tag object/peeled target, unchanged main and all 18 prior annotated
+tag objects/targets. Other remote branches were unchanged. GitHub’s commit API
+also returned the same checkpoint SHA and canonical commit URL. Original CRLF
+qualification receipts and padded DAW fixture fields were preserved byte for byte;
+whitespace checks did not normalize evidence.
+
+A subsequent documentation-only commit carries this receipt and the M16 proposal.
+Its source still matches the checkpoint manifest exactly; the checkpoint tag
+continues to identify the original implementation commit. Final branch/ref checks
+are retained locally in `build/m15-publication-2026-10-29/final-verification.json`
+and summarized in the publication response. No main merge was requested or made.

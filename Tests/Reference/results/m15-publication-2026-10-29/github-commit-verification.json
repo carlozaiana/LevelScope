@@ -1,0 +1,7 @@
+{
+  "sha": "1b56804ecfb469aef3276b2d4ac96039ce3e4cc1",
+  "url": "https://github.com/carlozaiana/LevelScope/commit/1b56804ecfb469aef3276b2d4ac96039ce3e4cc1",
+  "title": "Checkpoint M15 candidate-05 marker import: Sequoia tested\n\nPreserve frozen source manifest 38676a45d47ddba6eb54f7ab299f52f622f6be26554256781b8960749c609564 and original qualification receipts. High Sierra, video and three-hour checks pending. Main remains qualified M13.",
+  "provider": "GitHub connector fetch_commit",
+  "verified": true
+}
