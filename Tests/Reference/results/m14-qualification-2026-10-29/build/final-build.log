@@ -1,0 +1,11 @@
+[  5%] Built target LevelScopeMeasurementCore
+[ 63%] Built target LevelScopeStandaloneSupport
+[ 84%] Built target LevelScopeDiagnosticsUI
+[ 84%] Building CXX object CMakeFiles/LevelScopeMonoTests.dir/Tests/MonoTests.cpp.o
+[ 84%] Linking CXX executable LevelScopeMonoTests_artefacts/Release/LevelScopeMonoTests
+[100%] Built target LevelScopeMonoTests
+[  3%] Built target LevelScopeMeasurementCore
+[ 22%] Built target LevelScopeCore
+[ 62%] Built target LevelScopeStandaloneSupport
+[ 77%] Built target LevelScopeDiagnosticsUI
+[100%] Built target LevelScopeStandalone

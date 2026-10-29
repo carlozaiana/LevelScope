@@ -74,18 +74,21 @@ void StandaloneMainComponent::beginSaveSession(bool saveAs,std::function<void()>
     {documentNotice="Discard the transient section-led proposal before saving. Applied settings remain saved normally.";refreshSessionControls();return;}
     if(session.sectionTrimDraft)
     {documentNotice="Apply or discard the section-gain draft in Programme sections before saving. Draft edits are not saved as applied audio.";refreshSessionControls();return;}
-    if(session.openedSessionSchema<sessionfile::schemaVersion&&!saveAs&&!migrationSaveApproved&&session.documentFile!=juce::File())
+    const bool monoSections=session.sourceDocument.media.channels==1 && session.currentStateDocument.sectionGains.has_value();
+    if(!migrationSaveApproved && (monoSections || (session.openedSessionSchema<sessionfile::schemaVersion
+        && !saveAs && session.documentFile!=juce::File())))
     {
         juce::Component::SafePointer<StandaloneMainComponent> safe(this);
         juce::AlertWindow::showAsync(juce::MessageBoxOptions().withIconType(juce::MessageBoxIconType::WarningIcon).withTitle("Session format upgrade")
-            .withMessage("Saving writes the M12 session format and requires an M12 reader. Choose Save As to retain your original older-readable copy.")
-            .withButton("Save As").withButton("Upgrade original").withButton("Cancel"),[safe,continuation](int choice)
-            {if(!safe)return;if(choice==1)safe->beginSaveSession(true,continuation);else if(choice==2){safe->migrationSaveApproved=true;safe->beginSaveSession(false,continuation);safe->migrationSaveApproved=false;}});
+            .withMessage(monoSections ? "This mono section-processing plan requires an M14-capable reader. Earlier readers reject it. Choose Save As to retain your original file; no audio processing is removed."
+                : "Saving writes the M12 session format and requires an M12 reader. Choose Save As to retain your original older-readable copy.")
+            .withButton("Save As").withButton("Save").withButton("Cancel"),[safe,continuation](int choice)
+            {if(!safe || (choice!=1 && choice!=2))return;safe->migrationSaveApproved=true;safe->beginSaveSession(choice==1,continuation);safe->migrationSaveApproved=false;});
         return;
     }
     if(saveAs||session.documentFile==juce::File())
     {
-        sessionChooser=std::make_unique<juce::FileChooser>("Save LevelScope session",session.documentFile==juce::File()?juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile("Untitled.levelscope"):(session.openedSessionSchema<sessionfile::schemaVersion?session.documentFile.getSiblingFile(session.documentFile.getFileNameWithoutExtension()+"-M12.levelscope"):session.documentFile),"*.levelscope");
+        sessionChooser=std::make_unique<juce::FileChooser>(monoSections?"Save session (requires M14 mono processing)":"Save LevelScope session",session.documentFile==juce::File()?juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile("Untitled.levelscope"):((monoSections || session.openedSessionSchema<sessionfile::schemaVersion)?session.documentFile.getSiblingFile(session.documentFile.getFileNameWithoutExtension()+(monoSections?"-M14.levelscope":"-M12.levelscope")):session.documentFile),"*.levelscope");
         juce::Component::SafePointer<StandaloneMainComponent> safe(this);
         sessionChooser->launchAsync(juce::FileBrowserComponent::saveMode|juce::FileBrowserComponent::canSelectFiles|juce::FileBrowserComponent::warnAboutOverwriting,[safe,continuation](const auto& picker)
         {

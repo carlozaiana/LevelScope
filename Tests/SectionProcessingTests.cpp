@@ -172,7 +172,8 @@ void modelCases(const juce::File& root)
     {
         auto request=fixture(root.getChildFile("legacy-"+juce::String(channels)+".wav"),48000,channels,48000);
         StandaloneSessionModel old;expect(old.setValidatedSource(request.context.sourceFile,request.context.media),"legacy source import");old.sourceDocument.layout=request.context.fileLayout;expect(old.initializeCurrentStateFromSource(),"legacy Current initialized");
-        expect(!old.beginSectionTrimDraft(),"mono/5.0/7.1 section processing explicitly unavailable");
+        expect(old.beginSectionTrimDraft()==(channels==1),"mono section processing available; 5.0/7.1 remain unavailable");
+        old.sectionTrimDraft.reset();
         expect(OfflineAnalysisService::validateRequest(old.measurementContext(MeasurementDomain::currentState),MeasurementDomain::currentState).isEmpty(),"legacy mono/5.0/7.1 static gain remains supported");
     }
 }

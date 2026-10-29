@@ -1,0 +1,23 @@
+[
+  {
+    "name": "m14-cinema",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m14-qualification-2026-10-29/candidate-01/bin/LevelScopeMonoTests",
+      "--cinema",
+      "/Volumes/Tucan/GuerraDiCesare/LGdC_Masters/LGdC__51_Master_V2.wav",
+      "--copy",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/cinema-input/cinema-pcm24-payload-identical.wav",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m14-qualification-2026-10-29/sequoia-candidate-01/cinema/cinema-files",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m14-qualification-2026-10-29/sequoia-candidate-01/cinema/m14-cinema.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 92.93207575000001,
+    "log_sha256": "229aa03cb722a9f68c6dbb4f2d7bf727dcaabe0d045bf4086cc4b78d5d8eedb7"
+  }
+]

@@ -169,20 +169,24 @@ juce::String specification (const Request& r, Specification& s)
     auto error = OfflineAnalysisService::validateRequest (c, MeasurementDomain::currentState);
     if (error.isNotEmpty()) return error;
     if(c.media.bytes<=0)return "Verified source byte count required";
-    if (!pcm24::describe (static_cast<int> (c.media.sampleRate), c.media.channels, c.media.frames, s.format, error)) return error;
     const auto mapped = OfflineAnalysisService::measurementRoles (c.fileLayout);
     using R = measurement::Role;
-    const std::vector<R> roles = c.media.channels == 2 ? std::vector<R> {R::left, R::right}
+    const bool mono=c.media.channels==1 && mapped.size()==1
+        && (mapped[0]==R::left || mapped[0]==R::right || mapped[0]==R::centre);
+    if(c.media.channels==1 && !mono) return "Mono export requires confirmed Left, Right or Centre";
+    const uint32_t mask=mono ? (mapped[0]==R::left?1u:mapped[0]==R::right?2u:4u) : 0;
+    if (!pcm24::describe (static_cast<int> (c.media.sampleRate), c.media.channels, c.media.frames, s.format, error,mask)) return error;
+    const std::vector<R> roles = mono ? mapped : c.media.channels == 2 ? std::vector<R> {R::left, R::right}
         : std::vector<R> {R::left, R::right, R::centre, R::lfe, R::surroundLeft, R::surroundRight};
     for (auto role : roles)
     {
         const auto it = std::find (mapped.begin(), mapped.end(), role);
-        if (it == mapped.end() || std::count (mapped.begin(), mapped.end(), role) != 1) return "Export requires explicit stereo or conventional 5.1 roles";
+        if (it == mapped.end() || std::count (mapped.begin(), mapped.end(), role) != 1) return "Export requires explicit mono, stereo or conventional 5.1 roles";
         s.outputToInput.push_back (static_cast<int> (std::distance (mapped.begin(), it)));
     }
     s.layout.count = c.media.channels; s.layout.confirmed = true;
     const auto canonical = c.media.channels == 2 ? juce::AudioChannelSet::stereo() : juce::AudioChannelSet::create5point1();
-    for (int n = 0; n < c.media.channels; ++n) s.layout.roles[n] = canonical.getTypeOfChannel (n);
+    for (int n = 0; n < c.media.channels; ++n) s.layout.roles[n] = mono ? c.fileLayout.roles[0] : canonical.getTypeOfChannel (n);
     juce::String key = juce::String (pcm24::version) + ";" + c.media.sha256 + ";" + exact (c.processing.staticGainDb)
         + ";" + c.processing.engineVersion + ";" + juce::String (c.media.frames) + ";" + exact (c.media.sampleRate);
     if(c.processing.sectionGains) key += ";" + c.processing.sectionGains->audioKey();

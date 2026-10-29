@@ -40,8 +40,10 @@ def inspect(path):
             f.seek(pos + n + (n & 1))
         assert data and fmt
         tag, channels, rate, byte_rate, align, bits, cb, valid, mask = fmt
-        assert tag == 0xfffe and channels in (2, 6) and bits == valid == 24 and cb == 22
-        assert mask == (3 if channels == 2 else 63) and align == channels * 3 and byte_rate == rate * align
+        assert tag == 0xfffe and channels in (1, 2, 6) and bits == valid == 24 and cb == 22
+        assert (mask in (1,2,4) if channels == 1 else mask == (3 if channels == 2 else 63))
+        assert align == channels * 3 and byte_rate == rate * align
+        assert size == data[0] + data[1] + (data[1] & 1)
         assert data[1] % align == 0
         frames = data[1] // align
         assert not ds or ds[2] == frames

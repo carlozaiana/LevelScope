@@ -1,0 +1,70 @@
+{
+  "passed": true,
+  "source_digest": "d584a7a1b95a33b7f9befe75129d59fa7ccea04ec1f4b5624498616af4edacf9",
+  "architecture": "arm64",
+  "device_closed": true,
+  "routes_muted": true,
+  "video_loaded": false,
+  "physical_devices_opened": false,
+  "app_sha256": "188446f5752d91e40e90066d2b25133eaaa07b421ed0018da15a1be2fb60777c",
+  "date": "2026-10-29",
+  "method": "Observed native Sequoia UI through CUA; no manual operator step required",
+  "cases": [
+    {
+      "id": "mono-import-roles",
+      "passed": true,
+      "evidence": "Imported short mono.wav; Channel 1 Centre shown, Confirm roles required, one Muted route. No duplication or device opening."
+    },
+    {
+      "id": "source-measure-profile",
+      "passed": true,
+      "evidence": "Opened same-build baseline with EBU R128-2023 and applicability confirmation; Measure Source completed: I -24.937937, TP -1.938200; selected programme rules FAIL. Source diagnostics show 10.000021 seconds and unstable short-programme LRA."
+    },
+    {
+      "id": "manual-draft-apply",
+      "passed": true,
+      "evidence": "Programme sections: draft first 24000-frame annotation at -1.234567890123 dB; draft explicitly stated no audio change. Apply made Current NOT EVALUATED, no valid current measured snapshot."
+    },
+    {
+      "id": "independent-current",
+      "passed": true,
+      "evidence": "Independent Current remeasurement after manual Apply showed actual FAIL, I -24.977116 and TP -1.938200; applied gain retained and no automatic correction."
+    },
+    {
+      "id": "proposal-apply-verify",
+      "passed": true,
+      "evidence": "Generate section-led assessed privately without applying. Explicit Apply produced global 2.046962327226 dB and UNVERIFIED. Independent remeasurement showed PASS, I -23.000000 and TP -1.430153, narrowly worded selected-rule result."
+    },
+    {
+      "id": "already-pass",
+      "passed": true,
+      "evidence": "Generate section-led on passing Current immediately showed NO CHANGE; gain and measurements retained, Apply unavailable; discard retained settings/evaluation."
+    },
+    {
+      "id": "session-reader-warning-reopen",
+      "passed": true,
+      "evidence": "Save As displayed M14-capable-reader warning and Save As/Save/Cancel choices. Saved ui/reviewed-mono.levelscope, preserving baseline. Reopened saved/unchanged with exact gain, valid caches, one Centre channel, stopped/device-closed/routes-muted."
+    },
+    {
+      "id": "export-report",
+      "passed": true,
+      "evidence": "Render and verify displayed one C <- Channel 1 mapping, PCM24 48000 Hz, 480001 frames, 1440072 bytes, one TPDF stage and artifact PASS. Destination absent before Publish; explicit Publish created verified-mono-export. JSON/HTML/manifest and decoder hashes checked separately."
+    },
+    {
+      "id": "rf64-compatible-input",
+      "passed": true,
+      "evidence": "Imported 6-101-1.wav through normal picker; six correct roles and all three compatibility notices: zero-filled extended ds64, derived frame count, trailing metadata/outer size discrepancy."
+    },
+    {
+      "id": "invalid-input-preserves",
+      "passed": true,
+      "evidence": "Then imported invalid-count.wav; displayed RF64 sample count mismatch while retaining valid six-channel source, confirmed roles and all muted routes."
+    },
+    {
+      "id": "stopped-muted-device-closed",
+      "passed": true,
+      "evidence": "No scan/open/play or video action used. Device closed and routes muted throughout. Closed candidate after discarding only unsaved synthetic RF64 changes; app no longer running."
+    }
+  ],
+  "later_operator_reopen": "User later reopened candidate-01 and selected EBU R128; executable path verified. Native UI showed empty session, stopped, device closed, routes muted. No evidence or saved session changed."
+}

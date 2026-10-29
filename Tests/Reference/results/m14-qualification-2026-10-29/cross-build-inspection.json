@@ -1,0 +1,106 @@
+{
+  "passed": true,
+  "source_digest": "9dd22a598281e83431039f210202a8a24fe49517294cc6bb8d83032c4975e013",
+  "measurement_build": "4002f49d4d8eb3cffcf825f1624d8a00d6f48557f0755e711683cff6627f68da",
+  "configuration": [
+    "CMAKE_BUILD_TYPE:STRING=Release",
+    "CMAKE_CXX_FLAGS:STRING=",
+    "CMAKE_CXX_FLAGS_RELEASE:STRING=-O3 -DNDEBUG",
+    "CMAKE_OSX_ARCHITECTURES:STRING=arm64;x86_64",
+    "CMAKE_OSX_DEPLOYMENT_TARGET:UNINITIALIZED=10.13",
+    "FETCHCONTENT_SOURCE_DIR_JUCE:PATH=/Users/fuzz/Developer/LevelScope/build/juce-7.0.12"
+  ],
+  "compiler": "Apple clang version 17.0.0 (clang-1700.0.13.5)\nTarget: arm64-apple-darwin24.6.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+  "juce": "4f43011b96eb0636104cb3e433894cda98243626",
+  "binaries": {
+    "bin/LevelScopeAuditionTests": {
+      "sha256": "3d6a004566bfa7a80d1710523beac2f0ea4a06ebbf994b9b3f5ef29eaac35fbe",
+      "architectures": "x86_64 arm64",
+      "intel_minimum_os": "10.13"
+    },
+    "bin/LevelScopeComplianceTests": {
+      "sha256": "aedac408be49456194163d46a9dfabcfd68a001c8b4c0c731f06385d2a756796",
+      "architectures": "x86_64 arm64",
+      "intel_minimum_os": "10.13"
+    },
+    "bin/LevelScopeCompositionTests": {
+      "sha256": "b14d678f5f1a76b9f3acb73f7ea3d360c436b652f3891f64c282ab0366ff0a86",
+      "architectures": "x86_64 arm64",
+      "intel_minimum_os": "10.13"
+    },
+    "bin/LevelScopeDiagnosticsTests": {
+      "sha256": "9b3bf70ac8362e558d31b8e98ff32c78a41d90669a8948b92b5f16dce8d58f79",
+      "architectures": "x86_64 arm64",
+      "intel_minimum_os": "10.13"
+    },
+    "bin/LevelScopeExportTests": {
+      "sha256": "adb8b33cf30d28aadacf60dc1728033d69c6c2d4f0386768c546eb723163e062",
+      "architectures": "x86_64 arm64",
+      "intel_minimum_os": "10.13"
+    },
+    "bin/LevelScopeMeasurementTests": {
+      "sha256": "8297235814ac0215cb6fdd0eeb75deb6be20761a95dc5ffe1305b5f3b98c65c3",
+      "architectures": "x86_64 arm64",
+      "intel_minimum_os": "10.13"
+    },
+    "bin/LevelScopeMonoTests": {
+      "sha256": "666a1e159b203b6b38c4586f689ed793f0e2ca8b412565318a071d50d2eadc78",
+      "architectures": "x86_64 arm64",
+      "intel_minimum_os": "10.13"
+    },
+    "bin/LevelScopeMultichannelTests": {
+      "sha256": "1f5257cee37791432a0bfbce27204614f92198a1194a8f0e13ebebbe58b2f1a0",
+      "architectures": "x86_64 arm64",
+      "intel_minimum_os": "10.13"
+    },
+    "bin/LevelScopeProgrammeTests": {
+      "sha256": "eb87d19a0b1eadf9a5622f80ff16584a0a63c490b8d5d6e566051b64da4f0634",
+      "architectures": "x86_64 arm64",
+      "intel_minimum_os": "10.13"
+    },
+    "bin/LevelScopeProposalTests": {
+      "sha256": "6e1361bf989e8951419bdc22b958d1de990366f8899e86e74bdd99f9fed321d4",
+      "architectures": "x86_64 arm64",
+      "intel_minimum_os": "10.13"
+    },
+    "bin/LevelScopeScaffoldTests": {
+      "sha256": "deb9e4a7fa3b35f049d1b1d8ee1f07d60c004267f57f9fe2cff6e67705b85283",
+      "architectures": "x86_64 arm64",
+      "intel_minimum_os": "10.13"
+    },
+    "bin/LevelScopeSectionProcessingTests": {
+      "sha256": "046a38f86add7cfe9b83c027011eab5210c3ac047699f265af38bb42a12ef8ab",
+      "architectures": "x86_64 arm64",
+      "intel_minimum_os": "10.13"
+    },
+    "bin/LevelScopeSectionProposalTests": {
+      "sha256": "baddaef19bd767a90749fe1e24968246d6dc6a21d974442d5cd7ac89bf9123c8",
+      "architectures": "x86_64 arm64",
+      "intel_minimum_os": "10.13"
+    },
+    "bin/LevelScopeSectionsTests": {
+      "sha256": "55aad30b394699f3105e44cb87d702da9aff0c709afb7eb87d16f3cc506abe1d",
+      "architectures": "x86_64 arm64",
+      "intel_minimum_os": "10.13"
+    },
+    "bin/LevelScopeSessionTests": {
+      "sha256": "8f2cb657db7113c0f92dbbc1296e22c21736233a641530a97b9a793f6e8a708d",
+      "architectures": "x86_64 arm64",
+      "intel_minimum_os": "10.13"
+    },
+    "LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone": {
+      "sha256": "188446f5752d91e40e90066d2b25133eaaa07b421ed0018da15a1be2fb60777c",
+      "architectures": "x86_64 arm64",
+      "intel_minimum_os": "10.13"
+    }
+  },
+  "physical_devices_opened": false,
+  "video_executed": false,
+  "intel_runtime_qualified": false,
+  "targets": "Standalone and 15 explicitly named test targets; no default-all/plugin/install target",
+  "logs": {
+    "configure-mono.log": "063309b02ccc56da648e4c4c147d0e78980f17cfa17d7da05be170004641205e",
+    "regression-build.log": "35ac835094fb3dd626f2d8f8d004648ec0a1d6371950e8f0e1d17fcb9f135a68",
+    "final-build.log": "f6507ec4865da124c97ade6f83c5b263a8598c0f5bf879409b447217b6bfb27c"
+  }
+}

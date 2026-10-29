@@ -1,0 +1,36 @@
+{
+  "sequoia_phase_complete": true,
+  "qualified": false,
+  "status": "Sequoia tested; High Sierra, video and full-duration mono/RF64 qualification pending",
+  "source_digest": "9dd22a598281e83431039f210202a8a24fe49517294cc6bb8d83032c4975e013",
+  "measurement_build": "4002f49d4d8eb3cffcf825f1624d8a00d6f48557f0755e711683cff6627f68da",
+  "identity_sha256": "c8b0184b700be7ada4963b0b80bcfca1e577936855291e1280e5f6aa0ccc913d",
+  "evidence": {
+    "short": "f0756ed09c6e1f79c96f8181838496b5169ed3f0c3c350f655d4a7fa8706c6e0",
+    "long": "8657628d7846e1245a576d999ff6a44e3a169634f49d2dfb33d7c93facbb2c2d",
+    "cinema": "ae1cea9d4775e516e727e2d902a92fc7b78621bdbb1d1521fd1a2955ce33a6b0",
+    "legacy": "eecab3c96eca3d2ca14454f4d95ecf058d22bba1dc1e282e3070e07bae6fe2ad",
+    "ui": "df4bb1b0c1a5d24d4f8ee578fdbbf6d0a5c3631e3f0b0f06077ccac56f678f2b"
+  },
+  "reused_from_source": "d584a7a1b95a33b7f9befe75129d59fa7ccea04ec1f4b5624498616af4edacf9",
+  "tool_only_differences": [
+    "Tests/M14QualificationRunnerTests.py",
+    "Tests/complete_m14_qualification.py",
+    "Tests/run_m14_qualification.py"
+  ],
+  "production_and_test_binaries_identical": true,
+  "deferred": [
+    "actual-high-sierra-runtime-ui",
+    "cross-mac-exchange",
+    "video-execution",
+    "three-hour-mono-rf64-end-to-end"
+  ],
+  "combined_window": "After M18; no later than M19; later milestones require separate approval",
+  "main_remains": "a9be070ab9eb5cb4f591ff9d991d8999c3a016d0",
+  "publication_authorized": false,
+  "main_integration_authorized": false,
+  "review_candidate": "candidate-02",
+  "original_tested_binary_package": "candidate-01",
+  "no_required_sequoia_gaps": true,
+  "existing_tags_unchanged": true
+}

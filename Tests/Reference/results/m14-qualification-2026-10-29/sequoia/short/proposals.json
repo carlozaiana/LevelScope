@@ -1,0 +1,1286 @@
+{
+  "suite": "M3 global trim",
+  "passed": true,
+  "checks": [
+    {
+      "name": "increase reaches intended target",
+      "passed": true
+    },
+    {
+      "name": "scalar predictions explicitly distinct",
+      "passed": true
+    },
+    {
+      "name": "deterministic repeated plan",
+      "passed": true
+    },
+    {
+      "name": "draft has no measured-pass wording",
+      "passed": true
+    },
+    {
+      "name": "attenuation solves both selected rules",
+      "passed": true
+    },
+    {
+      "name": "delta is added once to measured Current State gain",
+      "passed": true
+    },
+    {
+      "name": "headroom constrained point inside QC allowance",
+      "passed": true
+    },
+    {
+      "name": "infeasible intersection gives no applicable plan",
+      "passed": true
+    },
+    {
+      "name": "total upper gain bound",
+      "passed": true
+    },
+    {
+      "name": "total lower gain bound",
+      "passed": true
+    },
+    {
+      "name": "already passing retains existing gain without renormalizing",
+      "passed": true
+    },
+    {
+      "name": "already passing retains existing gain without renormalizing",
+      "passed": true
+    },
+    {
+      "name": "already passing retains existing gain without renormalizing",
+      "passed": true
+    },
+    {
+      "name": "one ULP inside loudness allowance is no-op",
+      "passed": true
+    },
+    {
+      "name": "one ULP outside loudness allowance requires proposal",
+      "passed": true
+    },
+    {
+      "name": "one ULP inside loudness allowance is no-op",
+      "passed": true
+    },
+    {
+      "name": "one ULP outside loudness allowance requires proposal",
+      "passed": true
+    },
+    {
+      "name": "one ULP below TP ceiling no-op",
+      "passed": true
+    },
+    {
+      "name": "one ULP above TP ceiling requires strict correction",
+      "passed": true
+    },
+    {
+      "name": "meter tolerance is not extra peak headroom",
+      "passed": true
+    },
+    {
+      "name": "gain retains full precision",
+      "passed": true
+    },
+    {
+      "name": "target is read from versioned profile",
+      "passed": true
+    },
+    {
+      "name": "unavailable informative LRA never blocks",
+      "passed": true
+    },
+    {
+      "name": "LRA steering profiles unsupported explicitly",
+      "passed": true
+    },
+    {
+      "name": "invalid missing stale unsupported or mismatched inputs rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid missing stale unsupported or mismatched inputs rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid missing stale unsupported or mismatched inputs rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid missing stale unsupported or mismatched inputs rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid missing stale unsupported or mismatched inputs rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid missing stale unsupported or mismatched inputs rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid missing stale unsupported or mismatched inputs rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid missing stale unsupported or mismatched inputs rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid missing stale unsupported or mismatched inputs rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid missing stale unsupported or mismatched inputs rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid missing stale unsupported or mismatched inputs rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid missing stale unsupported or mismatched inputs rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid missing stale unsupported or mismatched inputs rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid missing stale unsupported or mismatched inputs rejected",
+      "passed": true
+    },
+    {
+      "name": "non-finite metric cannot draft",
+      "passed": true
+    },
+    {
+      "name": "non-finite metric cannot draft",
+      "passed": true
+    },
+    {
+      "name": "non-finite metric cannot draft",
+      "passed": true
+    },
+    {
+      "name": "non-finite metric cannot draft",
+      "passed": true
+    },
+    {
+      "name": "non-finite metric cannot draft",
+      "passed": true
+    },
+    {
+      "name": "non-finite metric cannot draft",
+      "passed": true
+    },
+    {
+      "name": "non-finite metric cannot draft",
+      "passed": true
+    },
+    {
+      "name": "non-finite metric cannot draft",
+      "passed": true
+    },
+    {
+      "name": "non-finite metric cannot draft",
+      "passed": true
+    },
+    {
+      "name": "non-finite metric cannot draft",
+      "passed": true
+    },
+    {
+      "name": "non-finite metric cannot draft",
+      "passed": true
+    },
+    {
+      "name": "non-finite metric cannot draft",
+      "passed": true
+    },
+    {
+      "name": "profile version binds draft identity",
+      "passed": true
+    },
+    {
+      "name": "exact measured snapshot binds draft identity",
+      "passed": true
+    },
+    {
+      "name": "fixture stream created",
+      "passed": true
+    },
+    {
+      "name": "fixture writer created",
+      "passed": true
+    },
+    {
+      "name": "fixture written",
+      "passed": true
+    },
+    {
+      "name": "source imported",
+      "passed": true
+    },
+    {
+      "name": "roles confirmed",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "unmeasured Current State cannot draft",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "measured matching inputs can draft despite failing rules",
+      "passed": true
+    },
+    {
+      "name": "fresh draft accepted",
+      "passed": true
+    },
+    {
+      "name": "apply enabled for current draft",
+      "passed": true
+    },
+    {
+      "name": "draft never mutates gain measurement or audio revision",
+      "passed": true
+    },
+    {
+      "name": "video offset routing monitor preserve draft and audio identity",
+      "passed": true
+    },
+    {
+      "name": "discard preserves measured audio",
+      "passed": true
+    },
+    {
+      "name": "fresh draft accepted",
+      "passed": true
+    },
+    {
+      "name": "explicit apply uses full-precision bound plan",
+      "passed": true
+    },
+    {
+      "name": "apply clears previous verdict and marks unverified",
+      "passed": true
+    },
+    {
+      "name": "apply preserves Source truth",
+      "passed": true
+    },
+    {
+      "name": "double apply rejected without compounding",
+      "passed": true
+    },
+    {
+      "name": "prediction cannot draft again or enable export",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "actual processed measurement passes M2",
+      "passed": true
+    },
+    {
+      "name": "fresh draft accepted",
+      "passed": true
+    },
+    {
+      "name": "already passes gives no applicable audio change",
+      "passed": true
+    },
+    {
+      "name": "no-op preserves gain snapshot evaluation revisions and measurement count",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "fresh draft accepted",
+      "passed": true
+    },
+    {
+      "name": "profile change invalidates draft but reuses measurements",
+      "passed": true
+    },
+    {
+      "name": "fresh draft accepted",
+      "passed": true
+    },
+    {
+      "name": "applicability change rejects stale draft",
+      "passed": true
+    },
+    {
+      "name": "fresh draft accepted",
+      "passed": true
+    },
+    {
+      "name": "manual processing edit rejects stale draft",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "fresh draft accepted",
+      "passed": true
+    },
+    {
+      "name": "role edit rejects draft",
+      "passed": true
+    },
+    {
+      "name": "source imported",
+      "passed": true
+    },
+    {
+      "name": "roles confirmed",
+      "passed": true
+    },
+    {
+      "name": "source replacement rejects draft",
+      "passed": true
+    },
+    {
+      "name": "source clear rejects draft",
+      "passed": true
+    },
+    {
+      "name": "fixture stream created",
+      "passed": true
+    },
+    {
+      "name": "fixture writer created",
+      "passed": true
+    },
+    {
+      "name": "fixture written",
+      "passed": true
+    },
+    {
+      "name": "source imported",
+      "passed": true
+    },
+    {
+      "name": "roles confirmed",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "unit fixture snapshots individually valid against own expected context",
+      "passed": true
+    },
+    {
+      "name": "individually valid but mismatched input pair rejected",
+      "passed": true
+    },
+    {
+      "name": "unit fixture snapshots individually valid against own expected context",
+      "passed": true
+    },
+    {
+      "name": "individually valid but mismatched input pair rejected",
+      "passed": true
+    },
+    {
+      "name": "unit fixture snapshots individually valid against own expected context",
+      "passed": true
+    },
+    {
+      "name": "individually valid but mismatched input pair rejected",
+      "passed": true
+    },
+    {
+      "name": "unit fixture snapshots individually valid against own expected context",
+      "passed": true
+    },
+    {
+      "name": "individually valid but mismatched input pair rejected",
+      "passed": true
+    },
+    {
+      "name": "Current State must match current processing plan",
+      "passed": true
+    },
+    {
+      "name": "non-static graph or freeze rejected",
+      "passed": true
+    },
+    {
+      "name": "fixture stream created",
+      "passed": true
+    },
+    {
+      "name": "fixture writer created",
+      "passed": true
+    },
+    {
+      "name": "fixture written",
+      "passed": true
+    },
+    {
+      "name": "source imported",
+      "passed": true
+    },
+    {
+      "name": "roles confirmed",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "fresh draft accepted",
+      "passed": true
+    },
+    {
+      "name": "gain applied before unsuccessful verification",
+      "passed": true
+    },
+    {
+      "name": "verification job begins",
+      "passed": true
+    },
+    {
+      "name": "actual worker cancellation or failure returned",
+      "passed": true
+    },
+    {
+      "name": "unsuccessful verification rejected",
+      "passed": true
+    },
+    {
+      "name": "unsuccessful verification retains gain and no previous pass",
+      "passed": true
+    },
+    {
+      "name": "no automatic retry correction or rollback",
+      "passed": true
+    },
+    {
+      "name": "fixture stream created",
+      "passed": true
+    },
+    {
+      "name": "fixture writer created",
+      "passed": true
+    },
+    {
+      "name": "fixture written",
+      "passed": true
+    },
+    {
+      "name": "source imported",
+      "passed": true
+    },
+    {
+      "name": "roles confirmed",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "fresh draft accepted",
+      "passed": true
+    },
+    {
+      "name": "gain applied before unsuccessful verification",
+      "passed": true
+    },
+    {
+      "name": "verification job begins",
+      "passed": true
+    },
+    {
+      "name": "actual worker cancellation or failure returned",
+      "passed": true
+    },
+    {
+      "name": "unsuccessful verification rejected",
+      "passed": true
+    },
+    {
+      "name": "unsuccessful verification retains gain and no previous pass",
+      "passed": true
+    },
+    {
+      "name": "no automatic retry correction or rollback",
+      "passed": true
+    },
+    {
+      "name": "fixture stream created",
+      "passed": true
+    },
+    {
+      "name": "fixture writer created",
+      "passed": true
+    },
+    {
+      "name": "fixture written",
+      "passed": true
+    },
+    {
+      "name": "source imported",
+      "passed": true
+    },
+    {
+      "name": "roles confirmed",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "fresh draft accepted",
+      "passed": true
+    },
+    {
+      "name": "gain applied before unsuccessful verification",
+      "passed": true
+    },
+    {
+      "name": "verification job begins",
+      "passed": true
+    },
+    {
+      "name": "actual worker cancellation or failure returned",
+      "passed": true
+    },
+    {
+      "name": "unsuccessful verification rejected",
+      "passed": true
+    },
+    {
+      "name": "unsuccessful verification retains gain and no previous pass",
+      "passed": true
+    },
+    {
+      "name": "no automatic retry correction or rollback",
+      "passed": true
+    },
+    {
+      "name": "fixture stream created",
+      "passed": true
+    },
+    {
+      "name": "fixture writer created",
+      "passed": true
+    },
+    {
+      "name": "fixture written",
+      "passed": true
+    },
+    {
+      "name": "source imported",
+      "passed": true
+    },
+    {
+      "name": "roles confirmed",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "fresh draft accepted",
+      "passed": true
+    },
+    {
+      "name": "gate fixture scalar prediction inside allowance",
+      "passed": true
+    },
+    {
+      "name": "gate fixture explicitly applied",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "actual gate-changing measurement overrides prediction with failure",
+      "passed": true
+    },
+    {
+      "name": "completed measured failure retains gain and stops without retry",
+      "passed": true
+    },
+    {
+      "name": "fixture stream created",
+      "passed": true
+    },
+    {
+      "name": "fixture writer created",
+      "passed": true
+    },
+    {
+      "name": "fixture written",
+      "passed": true
+    },
+    {
+      "name": "multirate source imports",
+      "passed": true
+    },
+    {
+      "name": "mono stereo or 5.1 roles confirmed",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "fresh draft accepted",
+      "passed": true
+    },
+    {
+      "name": "multirate trim applies",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "multirate measured result passes",
+      "passed": true
+    },
+    {
+      "name": "gain reaches every file channel including LFE",
+      "passed": true
+    },
+    {
+      "name": "fixture stream created",
+      "passed": true
+    },
+    {
+      "name": "fixture writer created",
+      "passed": true
+    },
+    {
+      "name": "fixture written",
+      "passed": true
+    },
+    {
+      "name": "multirate source imports",
+      "passed": true
+    },
+    {
+      "name": "mono stereo or 5.1 roles confirmed",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "fresh draft accepted",
+      "passed": true
+    },
+    {
+      "name": "multirate trim applies",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "multirate measured result passes",
+      "passed": true
+    },
+    {
+      "name": "gain reaches every file channel including LFE",
+      "passed": true
+    },
+    {
+      "name": "gain reaches every file channel including LFE",
+      "passed": true
+    },
+    {
+      "name": "gain reaches every file channel including LFE",
+      "passed": true
+    },
+    {
+      "name": "gain reaches every file channel including LFE",
+      "passed": true
+    },
+    {
+      "name": "gain reaches every file channel including LFE",
+      "passed": true
+    },
+    {
+      "name": "gain reaches every file channel including LFE",
+      "passed": true
+    },
+    {
+      "name": "fixture stream created",
+      "passed": true
+    },
+    {
+      "name": "fixture writer created",
+      "passed": true
+    },
+    {
+      "name": "fixture written",
+      "passed": true
+    },
+    {
+      "name": "multirate source imports",
+      "passed": true
+    },
+    {
+      "name": "mono stereo or 5.1 roles confirmed",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "fresh draft accepted",
+      "passed": true
+    },
+    {
+      "name": "multirate trim applies",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "multirate measured result passes",
+      "passed": true
+    },
+    {
+      "name": "gain reaches every file channel including LFE",
+      "passed": true
+    },
+    {
+      "name": "gain reaches every file channel including LFE",
+      "passed": true
+    },
+    {
+      "name": "fixture stream created",
+      "passed": true
+    },
+    {
+      "name": "fixture writer created",
+      "passed": true
+    },
+    {
+      "name": "fixture written",
+      "passed": true
+    },
+    {
+      "name": "multirate source imports",
+      "passed": true
+    },
+    {
+      "name": "mono stereo or 5.1 roles confirmed",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "fresh draft accepted",
+      "passed": true
+    },
+    {
+      "name": "multirate trim applies",
+      "passed": true
+    },
+    {
+      "name": "measurement begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker returns actual measurement",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "multirate measured result passes",
+      "passed": true
+    },
+    {
+      "name": "gain reaches every file channel including LFE",
+      "passed": true
+    },
+    {
+      "name": "gain reaches every file channel including LFE",
+      "passed": true
+    }
+  ],
+  "method": "global-trim-m12.1",
+  "profile_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+  "scalar_outcomes": [
+    {
+      "identity": "20996cd08224ab36a7d1562ec2599de3b01bb38b56ccd91b60bdccf9563e78f5",
+      "status": 2,
+      "total_gain": 3.0,
+      "delta": 3.0,
+      "predicted_I": -23.0,
+      "predicted_TP": -2.0
+    },
+    {
+      "identity": "3de098916dc58ddd2537fdbf71c14e0c83c0d0d4ac21c9105f05e84716722c28",
+      "status": 2,
+      "total_gain": -3.0,
+      "delta": -3.0,
+      "predicted_I": -23.0,
+      "predicted_TP": -2.0
+    },
+    {
+      "identity": "6b93d525742912a817e7543acccb80c6faf637f18c224278d06834c472cd1a39",
+      "status": 2,
+      "total_gain": 0.0,
+      "delta": 6.0,
+      "predicted_I": -23.0,
+      "predicted_TP": -2.0
+    },
+    {
+      "identity": "f69d01cd4b495709b5f5eee69ba7091fa080c4f3da77766454269a29d95f9e51",
+      "status": 2,
+      "total_gain": 2.9,
+      "delta": 2.9,
+      "predicted_I": -23.1,
+      "predicted_TP": -1.0
+    },
+    {
+      "identity": "116c1f0f09d98ad6afcfaad69032fa3dfb641e7a1366da767c2459fe4892b68c",
+      "status": 3,
+      "total_gain": null,
+      "delta": null,
+      "predicted_I": null,
+      "predicted_TP": null
+    },
+    {
+      "identity": "09868dd049ee0bae0f06e8bda9a92b8a2552c9ad444fee683d89d40069f97773",
+      "status": 1,
+      "total_gain": -6.125,
+      "delta": 0.0,
+      "predicted_I": null,
+      "predicted_TP": null
+    },
+    {
+      "identity": "c19a9bb08483fbbfa1253396980423d92557dc1d7ee065ff29fc99873543f82a",
+      "status": 1,
+      "total_gain": 2.125,
+      "delta": 0.0,
+      "predicted_I": null,
+      "predicted_TP": null
+    },
+    {
+      "identity": "94a8792394e62cccac6c85a55d7cd9a305148b111b41954d67a02916403abb84",
+      "status": 2,
+      "total_gain": 2.999999999999999,
+      "delta": 3.123456788999999,
+      "predicted_I": -23.0,
+      "predicted_TP": -6.876543211000001
+    }
+  ],
+  "build": "4002f49d4d8eb3cffcf825f1624d8a00d6f48557f0755e711683cff6627f68da",
+  "engine": "bs1770-5-ebu2023-m7.1",
+  "os": "Mac OSX 15.7.9",
+  "architecture": "arm64"
+}

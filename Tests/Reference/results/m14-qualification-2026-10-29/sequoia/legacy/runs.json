@@ -1,0 +1,38 @@
+[
+  {
+    "name": "legacy-baseline",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m14-qualification-2026-10-29/candidate-02/legacy/M13ProgrammeTests",
+      "--only",
+      "--m8-session",
+      "/Users/fuzz/Developer/LevelScope/build/m14-qualification-2026-10-29/sequoia-candidate-01/short/mono-files/48000-3/baseline.levelscope",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m14-qualification-2026-10-29/sequoia-candidate-01/legacy/legacy-baseline.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 1,
+    "expected_exit_code": 1,
+    "seconds": 0.585607,
+    "log_sha256": "503cfc9bb208b3b21c02f0420456a0a545d03eecbdfd0fdaef0004d868aa12b7"
+  },
+  {
+    "name": "legacy-rejection",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m14-qualification-2026-10-29/candidate-02/legacy/M13ProgrammeTests",
+      "--only",
+      "--m8-session",
+      "/Users/fuzz/Developer/LevelScope/build/m14-qualification-2026-10-29/sequoia-candidate-01/short/mono-files/48000-3/applied.levelscope",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m14-qualification-2026-10-29/sequoia-candidate-01/legacy/legacy-rejection.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 1,
+    "expected_exit_code": 1,
+    "seconds": 0.019833749999999872,
+    "log_sha256": "7bff2431f283977349d79005f36a20aaf05911ae1d776b8d0fcaf2e0ddf8622b"
+  }
+]

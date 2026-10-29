@@ -1,0 +1,24 @@
+{
+  "tested_source": "d584a7a1b95a33b7f9befe75129d59fa7ccea04ec1f4b5624498616af4edacf9",
+  "review_candidate_source": "9dd22a598281e83431039f210202a8a24fe49517294cc6bb8d83032c4975e013",
+  "measurement_build": "4002f49d4d8eb3cffcf825f1624d8a00d6f48557f0755e711683cff6627f68da",
+  "tool_only_changes": [
+    "Tests/M14QualificationRunnerTests.py",
+    "Tests/complete_m14_qualification.py",
+    "Tests/run_m14_qualification.py"
+  ],
+  "production_and_cpp_tests_unchanged": true,
+  "all_app_test_legacy_binaries_identical": true,
+  "reused_phases": [
+    "short except inconclusive legacy assertion",
+    "cinema",
+    "long",
+    "ui"
+  ],
+  "fresh_phases": [
+    "explicit legacy parser error and readable baseline",
+    "qualification gate tests"
+  ],
+  "original_legacy_run": "inconclusive: grouped helper asserted assembly; not rejection evidence",
+  "new_legacy_evidence": "Sequoia legacy phase checks exact parser messages from preserved M13 reader"
+}

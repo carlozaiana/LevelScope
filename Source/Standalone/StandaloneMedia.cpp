@@ -243,6 +243,18 @@ MediaValidationResult validateMedia (const juce::File& file, JobControl& control
     media.bytes = file.getSize();
     media.modified = file.getLastModificationTime();
 
+    std::optional<pcm24::Format> rf64Input;
+    juce::String rf64Notice;
+    {
+        juce::FileInputStream header(file);char magic[4]{};header.read(magic,4);
+        if(std::memcmp(magic,"RF64",4)==0)
+        {
+            pcm24::Format format;juce::String error;
+            if(!pcm24::inspectRf64Input(file,format,error,control,rf64Notice))
+                return fail(control.isCancelled()?ErrorCode::cancelled:ErrorCode::invalidMetadata,"RF64: "+error);
+            rf64Input=format;
+        }
+    }
     juce::AudioFormatManager formats;
     registerSourceFormats (formats);
     // Stream overload probes contents, not the filename extension.
@@ -265,24 +277,9 @@ MediaValidationResult validateMedia (const juce::File& file, JobControl& control
     if (media.bitsPerSample < 1 || media.bitsPerSample > 32)
         return fail (ErrorCode::unsupportedMedia, "Unsupported source bit depth");
 
-    // M10 qualifies a deliberately narrow RF64 PCM24 stereo/conventional-5.1
-    // subset. Independently check 64-bit bounds before trusting decoder length.
-    {
-        juce::FileInputStream header (file); char magic[4] {};
-        header.read (magic, 4);
-        if (std::memcmp (magic, "RF64", 4) == 0)
-        {
-            if ((media.channels == 2 || media.channels == 6) && media.bitsPerSample == 24)
-            {
-                pcm24::Format format; juce::String error;
-                if (!pcm24::inspect (file, format, error, control))
-                    return fail (control.isCancelled() ? ErrorCode::cancelled : ErrorCode::invalidMetadata, "RF64: " + error);
-                if (format.frames != media.frames || format.rate != media.sampleRate || format.channels != media.channels)
-                    return fail (ErrorCode::invalidMetadata, "RF64 decoder/header disagreement");
-            }
-            else media.measurementRestriction = "RF64 qualification is limited to PCM24 stereo/conventional 5.1 at the existing rates, up to three hours.";
-        }
-    }
+    if(rf64Input && (rf64Input->frames!=media.frames || rf64Input->rate!=media.sampleRate
+        || rf64Input->channels!=media.channels || media.bitsPerSample!=24))
+        return fail(ErrorCode::invalidMetadata,"RF64 decoder/header disagreement");
 
     juce::String flacChecksum;
     if (media.format.containsIgnoreCase ("flac"))
@@ -309,6 +306,7 @@ MediaValidationResult validateMedia (const juce::File& file, JobControl& control
     for (int channel = 0; channel < juce::jmin (layout.size(), media.channels); ++channel)
         media.suggestedLayout.roles[channel] = layout.getTypeOfChannel (channel);
     media.layoutProvenance = "Legacy decoder role suggestions; confirm file-channel interpretation.";
+    if(rf64Input)media.layoutProvenance+=" "+rf64Notice;
     if (media.channels == 8)
     {
         const auto error = interpretEightChannels (file, media, control);

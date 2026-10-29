@@ -56,9 +56,12 @@ public:
             if(role==juce::AudioChannelSet::rightSurroundSide) role=juce::AudioChannelSet::rightSurround;
             roles.addChannel(role);
         }
-        if(!c.fileLayout.confirmed || !c.fileLayout.isValid() || (c.fileLayout.count!=2 && c.fileLayout.count!=6)
-            || (roles!=juce::AudioChannelSet::stereo() && roles!=juce::AudioChannelSet::create5point1()))
-            return "M12 section processing supports confirmed stereo and conventional 5.1 only";
+        const bool mono=c.fileLayout.count==1 && (c.fileLayout.roles[0]==juce::AudioChannelSet::left
+            || c.fileLayout.roles[0]==juce::AudioChannelSet::right || c.fileLayout.roles[0]==juce::AudioChannelSet::centre);
+        if(!c.fileLayout.confirmed || !c.fileLayout.isValid() || (!mono
+            && ((c.fileLayout.count!=2 && c.fileLayout.count!=6)
+                || (roles!=juce::AudioChannelSet::stereo() && roles!=juce::AudioChannelSet::create5point1()))))
+            return "Section processing supports confirmed mono (Left/Right/Centre), stereo and conventional 5.1 only";
         if(plan.inputIdentity!=sectionInputIdentity(c) || plan.frames!=c.media.frames || plan.sampleRate!=c.media.sampleRate)
             return "Section plan does not describe this exact programme input";
         if(plan.isUnity()) return "Unity section plans must use the legacy static-gain identity";

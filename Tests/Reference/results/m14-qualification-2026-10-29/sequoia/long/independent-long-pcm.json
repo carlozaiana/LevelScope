@@ -1,0 +1,25 @@
+{
+  "passed": true,
+  "decoder": "libsndfile-1.2.2",
+  "library_sha256": "e9fd4d76bc457dcfb956617e8d467df85087ce069747fccd78e1e702d8629c14",
+  "artifact_sha256": "94070c5af19fd502f417dcb9bb7bd69dcda07df8a03f87d1ff4c1c5ff79be240",
+  "format": {
+    "container": "RIFF",
+    "channels": 1,
+    "rate": 192000,
+    "frames": 1036800000,
+    "offset": 68,
+    "bytes": 3110400000,
+    "mask": 4
+  },
+  "frames_decoded": 16384,
+  "codes_exact": 16384,
+  "long_known_source_oracle": false,
+  "report_manifest_html_agree": true,
+  "section_global_single_dither_oracle": true,
+  "codes_checked": 60480,
+  "long": true,
+  "coverage": "bounded long locations and complete hash",
+  "three_hour_qualified": false,
+  "rf64_end_to_end_qualified": false
+}

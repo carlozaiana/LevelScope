@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "phase": "legacy",
+  "platform": "sequoia",
+  "error": "",
+  "source_digest": "9dd22a598281e83431039f210202a8a24fe49517294cc6bb8d83032c4975e013",
+  "required_runs": [
+    "legacy-baseline",
+    "legacy-rejection"
+  ],
+  "report_hashes": {
+    "legacy-baseline.json": "d53a558b3d4eda8e423d14e80bf1b5e7b2855c7c14d97907df8d29f84e89763a",
+    "legacy-rejection.json": "d75e20700839d4e39a00da2620ad817611ba067f7db19f90b86484eec5fd58ea",
+    "environment.json": "c030b61be132a9989bef120916795a9eadd3aa01ae86a64b804dc4d6b253c351",
+    "runs.json": "0dd2abf55156ec9053a6118ff1ff2751ea33f5a61f28ef2a3cca920b96547456"
+  },
+  "qualification_complete": false,
+  "deferred": [
+    "actual-high-sierra-runtime-ui",
+    "cross-mac-exchange",
+    "video-execution",
+    "three-hour-mono-rf64-end-to-end"
+  ]
+}

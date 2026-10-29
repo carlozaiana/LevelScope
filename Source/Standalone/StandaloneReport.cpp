@@ -104,7 +104,7 @@ juce::var report(const Request& r,const Candidate* c,bool publishing)
     set(o,"scope","Selected whole-programme loudness and true-peak rules only. No complete broadcaster delivery, BWF/BW64, metadata, synchronization or future encoded-media certification.");
     set(o,"document_id",r.documentId);set(o,"programme_id",r.programmeId);set(o,"document_revision",juce::String(r.documentRevision));
     set(o,"session_unsaved",r.unsaved);set(o,"session_basename",r.sessionFile.getFileName());set(o,"runtime_id",r.current.sessionId);
-    set(o,"app","LevelScope Standalone M12");set(o,"build",r.current.buildVersion);set(o,"platform",r.current.platformAndFloatingPointMode);
+    set(o,"app","LevelScope Standalone");set(o,"build",r.current.buildVersion);set(o,"platform",r.current.platformAndFloatingPointMode);
     set(o,"cpu",juce::SystemStats::getCpuModel());set(o,"processing_version",r.current.processing.engineVersion);
     set(o,"processing_gain_db",r.current.processing.staticGainDb);set(o,"processing_gain_hex",exact(r.current.processing.staticGainDb));
     auto plan=object();set(plan,"engine",r.current.processing.engineVersion);set(plan,"global_gain_db",r.current.processing.staticGainDb);set(plan,"global_gain_hex",exact(r.current.processing.staticGainDb));

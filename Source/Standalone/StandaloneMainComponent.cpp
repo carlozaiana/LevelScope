@@ -642,6 +642,7 @@ juce::String StandaloneMainComponent::buildSourceStateText() const
         const auto& media = session.sourceDocument.media;
         text << media.format << " | " << media.sampleRate << " Hz | " << media.channels << " ch | " << media.bitsPerSample << " bit\n";
         text << media.frames << " frames | " << juce::String (media.durationSeconds(), 3) << " seconds\n";
+        if(media.layoutProvenance.contains("RF64 input:"))text << media.layoutProvenance << "\n";
         if(session.sourceDocument.assembly)
             for(const auto& member:session.sourceDocument.assembly->members)
                 text << juce::AudioChannelSet::getAbbreviatedChannelTypeName(member.role) << ": " << member.file.getFileName() << "\n";

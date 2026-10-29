@@ -1,0 +1,26 @@
+[
+  {
+    "name": "m14-long",
+    "argv": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m14-qualification-2026-10-29/candidate-01/bin/LevelScopeMonoTests",
+      "--long",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m14-qualification-2026-10-29/sequoia-candidate-01/long/long-files",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m14-qualification-2026-10-29/sequoia-candidate-01/long/m14-long.json"
+    ],
+    "exit_code": 0,
+    "actual_exit_code": 0,
+    "expected_exit_code": 0,
+    "seconds": 2109.446346625,
+    "log_sha256": "ad1071b8570da0c4e3e434cc3d1c5614c52b094867dbe893d056d31760950555"
+  },
+  {
+    "name": "independent-long-pcm",
+    "exit_code": 0,
+    "seconds": 1.773831292000068,
+    "evidence_sha256": "881cb701bd36c3dfc25cc87828a9930102d14cddf5a2014181e7001047855cbe"
+  }
+]

@@ -16,9 +16,12 @@ struct Format
     bool rf64 = false;
 };
 // Checked sizes include the entire RIFF header, not just its data chunk.
-bool describe (int rate, int channels, int64_t frames, Format&, juce::String& error);
+bool describe (int rate, int channels, int64_t frames, Format&, juce::String& error, uint32_t mask = 0);
 std::vector<uint8_t> header (const Format&);
 bool inspect (const juce::File&, Format&, juce::String& error, JobControl&);
+// Bounded PCM24 RF64 input compatibility. Never use this in export verification.
+// Notices describe tolerated input metadata; no source bytes are repaired/written.
+bool inspectRf64Input (const juce::File&, Format&, juce::String& error, JobControl&, juce::String& notice);
 uint64_t mix (uint64_t) noexcept;
 double dither (uint64_t seed, uint64_t frame, int channel) noexcept;
 bool quantize (float sample, double noiseInLsb, int32_t& code) noexcept;

@@ -1,0 +1,40 @@
+M14 LONG generate_import_ms elapsed_s=18.9408
+M14 LONG source_measure_ms elapsed_s=324.849
+M14 LONG baseline_current_measure_ms elapsed_s=611.757
+M14 LONG proposal_ms elapsed_s=1381.61
+Section-led / section-trim-proposal-v1
+Baseline binding: 0098c87e3bc7f87765e33f6aa8eccea57a5759b5b878a0e3a765b5349075ed28
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+Changed sections: 1 (not peak-event counts); local support 1056000 frames; global trim acts on the whole programme.
+Section 501 [518400000, 519436800) source frames; channel 1; TP -1.938200778 dBTP at 4148736000/8 frames
+Gain 0.000000000000 -> -1.530639848079 dB; requested reduction 1.530639848079, applied 1.530639848079; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 1056000 source frames (includes pre-existing manual processing).
+Largest neighbouring plateau difference: 1.530639848079 dB; largest transition slope: 15.307195730567 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.970132810509 dB affects the entire programme.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.968840626 LUFS / -1.938200778 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.498708 dBTP | max -1.000000 | delta -0.498708
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+M14 LONG independent_current_ms elapsed_s=1673.76
+M14 LONG diagnostics_ms elapsed_s=1673.84
+M14 LONG save_ms elapsed_s=1673.89
+M14 LONG parse_ms elapsed_s=1674.13
+M14 LONG reopen_ms elapsed_s=1692.63
+M14 LONG audition_capture_ms elapsed_s=1728.47
+M14 LONG render_verify_ms elapsed_s=2047.19
+M14 LONG publish_ms elapsed_s=2109.36
+M14 PASS 1065 checks

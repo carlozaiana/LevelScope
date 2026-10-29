@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "phase": "cinema",
+  "platform": "sequoia",
+  "error": "",
+  "source_digest": "d584a7a1b95a33b7f9befe75129d59fa7ccea04ec1f4b5624498616af4edacf9",
+  "required_runs": [
+    "m14-cinema"
+  ],
+  "report_hashes": {
+    "m14-cinema.json": "947a0582ed77fd6bb3e6e3c323ff84540dc6e07b3220ce251ac44b9b3ba83789",
+    "environment.json": "b071364008eb62b0dc95ce262094fa95b03b1e6eb72dd18167be8f1536f52ad0",
+    "runs.json": "0bb6faeeae97a4e16ca3ee03d28925c33542e0e672a185976cbd75863453282f"
+  },
+  "qualification_complete": false,
+  "deferred": [
+    "actual-high-sierra-runtime-ui",
+    "cross-mac-exchange",
+    "video-execution",
+    "three-hour-mono-rf64-end-to-end"
+  ]
+}

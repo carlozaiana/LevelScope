@@ -15,6 +15,7 @@ This folder is the persistent orientation layer for future development chats. Re
 
 ## Task-based quick start
 
+- **M14 candidate-02 development checkpoint — Sequoia tested; High Sierra, video and three-hour checks pending:** [checkpoint](https://github.com/carlozaiana/LevelScope/tree/m14-mono-rf64-sequoia-2026-10-29); [50 — complete mono processing and verified PCM export](50_M14MonoProcessingAndVerifiedExport.md) — existing manual/bounded section workflow extended to mono, explicit role-preserving PCM24 output, odd-byte padding, sessions and impact-selected Sequoia qualification. Bounded direct cinema-layout RF64 import is included; High Sierra/video/three-hour qualification deferred. [51 — impact plan](51_M14ImpactQualificationPlan.md); [52 — handover/status](52_M14QualificationAndHandover.md).
 - **M7 channel-based PCM 7.1 / qualified, published and integrated into main:** [checkpoint](https://github.com/carlozaiana/LevelScope/tree/m7-pcm-7.1-2026-10-25); [proposal](31_M7ChannelBasedPcm71Proposal.md); [qualification record](32_M7QualificationAndHandover.md); [completion decision](34_M7CompletionAcceptance.md)
 - **Optional video paint diagnostics / integrated investigation tooling:** [diagnostic integration handover](../VideoPaintDiagnosticMainIntegration-2026-10-24.md); [historical M7 video handover](33_M7VideoPaintTimingHandover.md)
 - **M6 verified Current State audition / qualified, published and integrated into main:** [28_M6VerifiedCurrentStateAudition.md](28_M6VerifiedCurrentStateAudition.md)

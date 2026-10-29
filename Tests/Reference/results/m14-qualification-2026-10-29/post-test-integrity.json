@@ -1,0 +1,12 @@
+{
+  "source_manifest_matches": true,
+  "candidate_source": "9dd22a598281e83431039f210202a8a24fe49517294cc6bb8d83032c4975e013",
+  "main_unchanged": "a9be070ab9eb5cb4f591ff9d991d8999c3a016d0",
+  "tag_objects_and_targets_unchanged": true,
+  "tag_count": 17,
+  "worktree_heads_unchanged": true,
+  "full_candidate_integrity_checked_by": "sequoia-phase-complete.json",
+  "unrelated_finder_metadata_preserved": true,
+  "committed": false,
+  "pushed": false
+}

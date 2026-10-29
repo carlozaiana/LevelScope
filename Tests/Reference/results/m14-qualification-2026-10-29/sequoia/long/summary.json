@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "phase": "long",
+  "platform": "sequoia",
+  "error": "",
+  "source_digest": "d584a7a1b95a33b7f9befe75129d59fa7ccea04ec1f4b5624498616af4edacf9",
+  "required_runs": [
+    "independent-long-pcm",
+    "m14-long"
+  ],
+  "report_hashes": {
+    "independent-long-pcm.json": "881cb701bd36c3dfc25cc87828a9930102d14cddf5a2014181e7001047855cbe",
+    "environment.json": "b071364008eb62b0dc95ce262094fa95b03b1e6eb72dd18167be8f1536f52ad0",
+    "runs.json": "f754825906fdcfe571f9a587dc9077aa15b03b1e2dd8594cbca6210b6e375204",
+    "m14-long.json": "73d9101b045cdd08b3f2e5d69c06631a096b681b3bedbf5d51e1c8b533e62607"
+  },
+  "qualification_complete": false,
+  "deferred": [
+    "actual-high-sierra-runtime-ui",
+    "cross-mac-exchange",
+    "video-execution",
+    "three-hour-mono-rf64-end-to-end"
+  ]
+}

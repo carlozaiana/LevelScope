@@ -55,19 +55,24 @@ from passing the selected programme loudness/true-peak rules.
 
 ## Dependency order after the bounded M13 method
 
-1. Mono section processing/export and optional basic marker import, each separately
-   reviewed; bounded EDL import follows later without becoming a proposal prerequisite.
+1. [M14: complete mono section processing and verified export](50_M14MonoProcessingAndVerifiedExport.md),
+   including the existing bounded M13 method and bounded direct RF64 import; approved
+   for Sequoia development on 29 October. High Sierra, video and full-duration
+   mono/RF64 qualification are deferred to the combined M14-M18 window, no later
+   than M19; future milestone implementation still requires separate approval.
+   Basic optional marker import is the next separately reviewed workflow improvement;
+   bounded EDL import follows later without becoming a proposal prerequisite.
 2. Qualify standalone limiter, downward and upward processing in small stages.
 3. Dynamics-led proposals, then enhanced section-led proposals, then mixed strategy.
 4. Later component-relative dialogue/M&E processing and validated dialogue/intelligibility
    objectives. Keep analysis-only references independently identified and non-audible.
 
 Generate only the selected strategy; explicit comparisons reuse compatible analysis
-and share a frozen measured baseline with bounded resources. No detailed future
-milestone numbering is committed. M13 development remains Sequoia-first, followed
-by combined M12/M13 actual High Sierra and selected deferred video qualification.
-Accepted occasional picture skips retain all existing audio/drift/lifecycle gates.
-Both combined qualification and the subsequent publication/integration approval are complete.
+and share a frozen measured baseline with bounded resources. No milestone numbering
+beyond approved M14 is committed. Combined M12/M13 actual High Sierra and selected
+video qualification and publication are complete. M14 uses Sequoia stabilization and a universal cross-build; actual High Sierra
+runtime qualification follows in the explicitly deferred combined window. Accepted occasional
+picture skips retain all existing audio/drift/lifecycle gates.
 
 Detailed requirements, provenance and evidence remain in
 [the measurement contract](14_OfflineMeasurementContract.md),

@@ -32,7 +32,7 @@ def decode_spans(frames):
     starts=sorted({0,min(123456789,frames-4096),frames//2,frames-4096})
     return [(first,min(4096,frames-first)) for first in starts]
 
-def verify_bundle(folder, library, long_fixture=False):
+def verify_bundle(folder, library, long_fixture=False, full_decode=False):
     lib=C.CDLL(str(library));lib.sf_version_string.restype=C.c_char_p
     lib.sf_open.argtypes=[C.c_char_p,C.c_int,C.POINTER(Info)];lib.sf_open.restype=C.c_void_p
     lib.sf_readf_int.argtypes=[C.c_void_p,C.POINTER(C.c_int),C.c_int64];lib.sf_readf_int.restype=C.c_int64
@@ -53,7 +53,7 @@ def verify_bundle(folder, library, long_fixture=False):
     try:
         assert (info.frames,info.channels,info.samplerate)==(parsed['frames'],parsed['channels'],parsed['rate'])
         assert info.format&0xffff==3 # SF_FORMAT_PCM_24
-        spans=decode_spans(info.frames)
+        spans=[(0,info.frames)] if full_decode else decode_spans(info.frames)
         with path.open('rb') as f:
             for first,count in spans:
                 assert lib.sf_seek(handle,first,0)==first

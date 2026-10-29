@@ -618,14 +618,17 @@ Retain synthetic success cases and eventual coordinated listening review.
 
 ## 22. Staged development roadmap
 
-Keep future stages small and separately reviewable; assign no detailed milestone
-numbers beyond the existing M13 proposal:
+Keep future stages small and separately reviewable. M13 is qualified and published;
+[ProjectIndex 50](ProjectIndex/50_M14MonoProcessingAndVerifiedExport.md) records M14 approval
+for mono and bounded direct RF64 input with Sequoia-first reduced qualification. Assign no later milestone numbers:
 
 1. **M13: first bounded section-led algorithm.** Existing manual sections, fixed
    conservative preferences, no limiter/dynamics; private candidate measurement,
    explicit Apply and independent Current verification.
-2. **Mono section processing and verified export.** Extend/qualify the shared channel
-   path and format gates without bundling new automatic methods.
+2. **M14: mono section processing and verified export.** Extend/qualify the
+   shared channel path, existing fixed M13 method and format gates without bundling
+   new automatic methods. Preserve explicit single-channel role identity and
+   qualify PCM24 odd-byte padding as well as the bounded mono RF64 subset.
 3. **Basic optional marker import.** Explicit time origin/rate and exact frame mapping,
    preview/confirmation and provenance; annotations only. Bounded EDL import follows
    as a separate proposal and is not a dependency for useful proposal generation.
@@ -650,13 +653,14 @@ explicit bounded request. Automatic region generation, broad optimization, gener
 freeze UI and ML remain separate future proposals. Further immersive expansion and
 VST3 parity stay deferred.
 
-The agreed M13 sequence is unchanged: Sequoia audio development first, freeze the
-combined M12/M13 candidate, then actual Intel High Sierra and selected deferred video
-checks. Reuse evidence only with justified compatibility, never as new-feature runtime
+The agreed M13 sequence completed Sequoia stabilization, combined M12/M13 actual
+Intel High Sierra and selected video qualification, then authorized publication and
+main integration at `a9be070ab9eb5cb4f591ff9d991d8999c3a016d0`. For approved M14,
+reuse evidence only with justified compatibility, never as new-feature runtime
 qualification. Accepted occasional picture skips retain recorded counts/timing;
 audio interruptions, accumulating drift, sustained freezes and identity/lifecycle
-failures remain blockers. Main stays at M11 until combined qualification and
-subsequent explicit integration approval. The approved impact plan selects the work.
+failures remain blockers. Main remains at the qualified M13 checkpoint during
+subsequent development until separately authorized integration.
 
 ---
 
@@ -723,3 +727,9 @@ qualified standalone dynamics/limiting and comparisons are staged future work.
 Bounded M13 implementation is now approved; broader strategies/controls remain
 future work. Readiness review is complete and checkpoint publication/integration
 was subsequently authorized; no broader strategy implementation is included.
+
+M14 qualification cadence (29 October approval): defer actual High Sierra, video
+execution and new three-hour mono/RF64 qualification until approximately five
+post-M13 milestones, no later than six, using one frozen combined candidate and
+an impact-selected manifest. This does not authorize future milestones. Main
+stays at qualified M13 until combined qualification and separate integration approval.
