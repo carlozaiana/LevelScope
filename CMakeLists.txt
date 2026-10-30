@@ -255,6 +255,7 @@ target_link_libraries(LevelScopeStandaloneSupport PUBLIC
     LevelScopeMeasurementCore juce::juce_audio_formats juce::juce_audio_devices juce::juce_cryptography juce::juce_graphics)
 
 add_library(LevelScopeDiagnosticsUI STATIC
+    Source/Standalone/StandaloneProposalPreferences.cpp
     Source/Standalone/StandaloneMarkerImportPanel.cpp
     Source/Standalone/StandaloneSectionsPanel.cpp
     Source/Standalone/MeasurementTimeline.cpp

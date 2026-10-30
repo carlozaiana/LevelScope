@@ -16,41 +16,54 @@ double originalReductionTarget(double original,double reduction)
 }
 }
 
-int64_t changedEnvelopeExtent(const processing::SectionGainPlan& before,
+std::vector<std::pair<int64_t,int64_t>> changedEnvelopeSupport(const processing::SectionGainPlan& before,
                              const processing::SectionGainPlan& after)
 {
     if(before.validationError().isNotEmpty()||after.validationError().isNotEmpty()
-        ||before.inputIdentity!=after.inputIdentity||before.frames!=after.frames||before.sampleRate!=after.sampleRate
-        ||before.intervals.size()!=after.intervals.size())throw std::invalid_argument("Envelope extent requires matching valid geometry");
-    std::vector<std::pair<int64_t,int64_t>> changed,extent;
-    for(size_t n=0;n<before.intervals.size();++n)
+        ||before.inputIdentity!=after.inputIdentity||before.frames!=after.frames||before.sampleRate!=after.sampleRate)
+        throw std::invalid_argument("Envelope support requires matching valid programme");
+    const auto a=before.canonical(),b=after.canonical();
+    if(a.audioKey()==b.audioKey())return {};
+    // Partition into canonical plateau/ramp segments. Different ramp definitions
+    // count their complete support, including equal endpoints: a conservative,
+    // versioned support measure, not a count of numerically unequal samples.
+    struct Piece {int64_t begin,end,rampBegin=0,rampEnd=0;double left=0,right=0;};
+    const auto pieces=[](const processing::SectionGainPlan& p)
     {
-        const auto& a=before.intervals[n];const auto& b=after.intervals[n];
-        if(a.begin!=b.begin||a.end!=b.end)throw std::invalid_argument("Envelope extent geometry changed");
-        if(a.db!=b.db)changed.emplace_back(a.begin,a.end);
-    }
-    extent=changed;
-    for(const auto* source:{&before,&after})
-    {
-        const auto p=source->canonical();
+        std::vector<Piece> v;int64_t begin=0;
         for(size_t n=1;n<p.intervals.size();++n)
         {
-            const auto radius=p.radius(n),begin=p.intervals[n].begin-radius,end=p.intervals[n].begin+radius;
-            if(std::any_of(changed.begin(),changed.end(),[&](auto span){return span.first<end&&span.second>begin;}))
-                extent.emplace_back(begin,end);
+            const auto radius=p.radius(n),start=p.intervals[n].begin-radius,end=p.intervals[n].begin+radius;
+            if(begin<start)v.push_back({begin,start,0,0,p.intervals[n-1].db,p.intervals[n-1].db});
+            v.push_back({start,end,start,end,p.intervals[n-1].db,p.intervals[n].db});begin=end;
         }
+        if(begin<p.frames)v.push_back({begin,p.frames,0,0,p.intervals.back().db,p.intervals.back().db});
+        return v;
+    };
+    const auto x=pieces(a),y=pieces(b);size_t i=0,j=0;int64_t begin=0;
+    std::vector<std::pair<int64_t,int64_t>> spans;
+    while(i<x.size()&&j<y.size())
+    {
+        const auto& u=x[i];const auto& v=y[j];const auto end=std::min(u.end,v.end);
+        const bool equal=u.rampBegin==v.rampBegin&&u.rampEnd==v.rampEnd&&u.left==v.left&&u.right==v.right;
+        if(!equal)
+        {
+            if(!spans.empty()&&spans.back().second==begin)spans.back().second=end;
+            else spans.emplace_back(begin,end);
+        }
+        begin=end;if(end==u.end)++i;if(end==v.end)++j;
     }
-    // Count complete transition support conservatively, including ramp endpoints.
-    std::sort(extent.begin(),extent.end());int64_t total=0,begin=0,end=0;
-    for(auto span:extent)
-        if(span.first>end){total+=end-begin;begin=span.first;end=span.second;}
-        else end=std::max(end,span.second);
-    return total+end-begin;
+    return spans;
+}
+int64_t changedEnvelopeExtent(const processing::SectionGainPlan& before,const processing::SectionGainPlan& after)
+{
+    int64_t total=0;for(auto span:changedEnvelopeSupport(before,after))total+=span.second-span.first;return total;
 }
 SectionTrimSeed selectSectionTrims(const TrimRequest& request,const SectionMap& map,
-    const std::optional<processing::SectionGainPlan>& existing,const SectionPeakMap& peaks)
+    const std::optional<processing::SectionGainPlan>& existing,const SectionPeakMap& peaks,const ProposalPolicy& policy)
 {
-    SectionTrimSeed out;
+    SectionTrimSeed out;out.policy=policy;
+    if(policy.validationError().isNotEmpty()){out.reason=policy.validationError();return out;}
     const auto global=draftGlobalTrim(request);
     if(global.status!=TrimStatus::noSolution)
     {out.reason="Local processing is unavailable: preserve no-change/global-only decisions or resolve invalid measurements first.";return out;}
@@ -73,13 +86,18 @@ SectionTrimSeed selectSectionTrims(const TrimRequest& request,const SectionMap& 
         const auto& row=map.sections[n];double original=0;
         if(existing)
         {
-            const auto it=std::find_if(existing->intervals.begin(),existing->intervals.end(),[&](const auto& i){return i.begin<=row.begin&&i.end>=row.end;});
-            if(it==existing->intervals.end()){out.reason="Annotation geometry cannot inherit the applied envelope. No manual gains remapped.";return out;}
+            const auto it=std::lower_bound(existing->intervals.begin(),existing->intervals.end(),row.end,[](const auto& i,int64_t end){return i.end<end;});
+            if(it==existing->intervals.end()||it->begin>row.begin){out.reason="Annotation geometry cannot inherit the applied envelope. No manual gains remapped.";return out;}
             original=it->db;
         }
         out.plan.intervals.push_back({row.begin,row.end,original});
     }
     const auto before=out.plan;
+    const double additional=policy.additionalTenths/10.,cumulative=policy.cumulativeTenths/10.,reserve=policy.reserveTenths/10.;
+    for(const auto& row:before.intervals)if(row.db < -cumulative)
+    {out.reason="Local proposal unavailable: existing manual envelope exceeds selected cumulative attenuation. Settings unchanged; choose compatible limits or explicitly change/reverify processing.";return out;}
+    if(additional==0||policy.durationThousandths==0)
+    {out.reason="Local changes disabled by the selected additional attenuation or duration preference.";return out;}
     for(size_t n=0;n<map.sections.size();++n)
     {
         const auto& observed=peaks.sections[n];
@@ -101,41 +119,49 @@ SectionTrimSeed selectSectionTrims(const TrimRequest& request,const SectionMap& 
         SectionCorrection correction;correction.id=section.id;correction.begin=row.begin;correction.end=row.end;
         correction.channel=int(ch);correction.peakEighthFrame=peak.eighthFrame;correction.padding=peak.padding;
         correction.originalDb=row.db;correction.peakDbtp=db;correction.deficitDb=deficit;
-        correction.requestedDb=deficit+.5;correction.reductionDb=std::min(3.,correction.requestedDb);
-        correction.reserveDb=std::min(.5,std::max(0.,correction.reductionDb-deficit));
+        correction.requestedDb=deficit+reserve;correction.reductionDb=std::min({additional,std::max(0.,row.db+cumulative),correction.requestedDb});
+        correction.reserveDb=std::min(reserve,std::max(0.,correction.reductionDb-deficit));
         correction.uncoveredDb=std::max(0.,deficit-correction.reductionDb);
-        row.db=originalReductionTarget(row.db,correction.reductionDb);
+        row.db=std::max(-cumulative,originalReductionTarget(row.db,correction.reductionDb));
         correction.reductionDb=correction.originalDb-row.db;
-        correction.reserveDb=std::min(.5,std::max(0.,correction.reductionDb-deficit));
+        correction.reserveDb=std::min(reserve,std::max(0.,correction.reductionDb-deficit));
         correction.uncoveredDb=std::max(0.,deficit-correction.reductionDb);
         correction.resultingDb=row.db;out.corrections.push_back(correction);
     }
     if(out.corrections.empty()) {out.reason="No local peak-constrained section identified; no section envelope proposed.";return out;}
     const auto error=out.plan.validationError();
     if(error.isNotEmpty()){out.reason="No solution within this policy: "+error+". Existing manual settings preserved.";return out;}
-    if(out.corrections.size()>8)
-    {out.reason="No solution within this policy: "+juce::String(out.corrections.size())+" changed sections exceeds eight. No set truncated.";return out;}
-    out.affectedFrames=changedEnvelopeExtent(before,out.plan);
-    if(out.affectedFrames*5>map.frames)
-    {out.reason="No solution within this policy: local envelope/transition support affects "+juce::String(100.*double(out.affectedFrames)/double(map.frames),6)+"%, above 20%. Global trim extent is separate.";return out;}
+    const auto support=changedEnvelopeSupport(before,out.plan);out.processingRegions=support.size();out.affectedFrames=0;
+    for(auto span:support)out.affectedFrames+=span.second-span.first;
+    if(out.affectedFrames==0){out.reason="No changed local envelope is available within these gain limits. Uncovered deficits are shown; no private candidate requested.";return out;}
+    juce::String limiting;
+    if(policy.regionLimit&&out.processingRegions>size_t(*policy.regionLimit))
+        limiting << juce::String(out.processingRegions) << " changed processing regions exceeds " << *policy.regionLimit << ". ";
+    // Three-hour/192 kHz frame capacity makes both products safe in int64.
+    if(out.affectedFrames*1000>map.frames*policy.durationThousandths)
+        limiting << "Local envelope/transition support affects " << juce::String(100.*double(out.affectedFrames)/double(map.frames),6)
+            << "%, above " << juce::String(policy.durationThousandths/10.,1) << "%. ";
+    if(limiting.isNotEmpty())
+    {out.reason="No solution within these preferences: "+limiting+"Complete set retained; no subset selected. These are preservation preferences, not delivery rules. Global trim extent is separate.";return out;}
     out.available=true;out.reason="One bounded envelope selected; exact private whole-programme assessment is still required.";return out;
 }
 juce::String sectionSeedText(const SectionTrimSeed& s)
 {
-    juce::String text=s.reason+"\n";
-    text << "Changed sections: " << juce::String(s.corrections.size()) << " (not peak-event counts); local support "
-         << (s.affectedFrames<0?juce::String("not assessed after the earlier rejection"):juce::String(s.affectedFrames)+" frames")
-         << "; global trim acts on the whole programme.\n";
-    size_t displayed=0;
+    juce::MemoryOutputStream text; text << s.reason << "\n" << s.policy.text();
+    text << "Changed annotation rows: " << juce::String(std::count_if(s.corrections.begin(),s.corrections.end(),[](const auto& row){return row.originalDb!=row.resultingDb;})) << "; inspected correction rows: " << juce::String(s.corrections.size()) << "; connected processing regions: " << juce::String(s.processingRegions) << "; local support "
+         << (s.affectedFrames<0?juce::String("not assessed after the earlier rejection"):juce::String(s.affectedFrames)+" frames");
+    if(s.affectedFrames>=0&&s.plan.sampleRate>0&&s.plan.frames>0)
+        text << " / " << juce::String(double(s.affectedFrames)/s.plan.sampleRate,6) << " seconds / "
+             << juce::String(100.*double(s.affectedFrames)/double(s.plan.frames),6) << "% of programme";
+    text << "; global trim acts on the whole programme.\n";
     for(const auto& row:s.corrections)
     {
-        if(displayed++==32){text << "Further row details omitted from this bounded text view; all " << juce::String(s.corrections.size()) << " corrections remain in full-resolution data. The complete set was rejected, not truncated into a plan.\n";break;}
         text << "Section " << juce::String(row.id) << " [" << row.begin << ", " << row.end << ") source frames; channel "
              << row.channel+1 << "; TP " << juce::String(row.peakDbtp,9) << " dBTP at " << row.peakEighthFrame << "/8 frames"
              << (row.padding?" (filter padding attribution)":"") << "\n"
              << "Gain " << juce::String(row.originalDb,12) << " -> " << juce::String(row.resultingDb,12)
-             << " dB; requested reduction " << juce::String(row.requestedDb,12) << ", applied " << juce::String(row.reductionDb,12)
-             << "; reserve achieved " << juce::String(row.reserveDb,12) << "/0.5 dB; uncovered deficit " << juce::String(row.uncoveredDb,12) << " dB.\n";
+             << " dB; requested reduction " << juce::String(row.requestedDb,12) << ", planned " << juce::String(row.reductionDb,12)
+             << "; reserve achieved " << juce::String(row.reserveDb,12) << "/" << juce::String(s.policy.reserveTenths/10.,1) << " dB; uncovered deficit " << juce::String(row.uncoveredDb,12) << " dB.\n";
     }
     if(s.plan.validationError().isEmpty())
     {
@@ -143,6 +169,11 @@ juce::String sectionSeedText(const SectionTrimSeed& s)
         text << "Cumulative non-unity local envelope support: " << changedEnvelopeExtent(unity,s.plan)
              << " source frames (includes pre-existing manual processing).\n";
         const auto p=s.plan.canonical();
+        double largestReduction=0,cumulativeAttenuation=0;
+        for(const auto& row:s.corrections)largestReduction=std::max(largestReduction,row.reductionDb);
+        for(const auto& row:p.intervals)cumulativeAttenuation=std::max(cumulativeAttenuation,-row.db);
+        text << "Maximum additional local reduction: " << juce::String(largestReduction,12) << " dB; maximum resulting cumulative local attenuation: " << juce::String(cumulativeAttenuation,12) << " dB.\n";
+        text << "Canonical plateaus: " << juce::String(p.intervals.size()) << "; transitions: " << juce::String(p.intervals.size()-1) << "\n";
         double maximumStep=0,maximumSlew=0;
         for(size_t n=1;n<p.intervals.size();++n)
         {
@@ -154,6 +185,6 @@ juce::String sectionSeedText(const SectionTrimSeed& s)
              << " dB; largest transition slope: " << juce::String(maximumSlew,12)
              << " dB/s (descriptive, not additional acceptance rules).\n";
     }
-    return text;
+    return text.toUTF8();
 }
 }

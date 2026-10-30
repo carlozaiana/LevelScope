@@ -100,3 +100,14 @@ transport guards or the audition ring. M1 added this path without changing the
 plugin callback. M6 shares snapshot/gain primitives with audition; measurement
 windowing and finalization remain offline.
 See [14_OfflineMeasurementContract.md](14_OfflineMeasurementContract.md).
+
+## M16 proposal preferences remain outside sample processing
+
+The standalone signal remains confirmed programme/component sum → applied canonical
+section envelope → global trim → measurement or pre-monitor audition/export path.
+M16 selects and describes a candidate using versioned proposal preferences; the
+preferences themselves never enter the sample pipeline or measured-audio identity.
+Policy edits preserve audio, while pending proposal/report approvals become stale.
+Sessions distinguish active policy, historical application policy and exact applied
+audio. Independent measured verification and one final export dither remain unchanged.
+See ProjectIndex 59 for phase status; no new video/High Sierra qualification is claimed.

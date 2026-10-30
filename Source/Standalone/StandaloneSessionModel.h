@@ -223,11 +223,25 @@ public:
     juce::String documentId = juce::Uuid().toString(), programmeId = juce::Uuid().toString();
     uint64_t documentRevision = 0, savedDocumentRevision = 0;
     juce::File documentFile;
-    int openedSessionSchema = 5;
+    int openedSessionSchema = 6;
     juce::String restoredProfileId, restoredProfileVersion, restoredProfileDigest;
     bool videoUnresolved = false;
     proposal::SectionDocument sectionDocument;
     std::optional<proposal::markers::Receipt> markerImport;
+    proposal::ProposalPolicy proposalPolicy;
+    std::optional<proposal::ProposalPolicy> lastAppliedProposalPolicy;
+    juce::String lastAppliedProposalBinding; // provenance only, never audio/measurement authority
+    juce::String lastAppliedProposalText; // transient full explanation; reports also retain exact applied envelope
+    bool setProposalPolicy(const proposal::ProposalPolicy& value,juce::String& error)
+    {
+        if(audioEditsBlocked()||job.isActive()||persistenceLoading){error="Stop and finish the current job before changing preferences";return false;}
+        error=value.validationError();if(error.isNotEmpty())return false;
+        if(value.digest()==proposalPolicy.digest())return true;
+        proposalPolicy=value;documentChanged();
+        trimDraft.reset();trimNotice="Preferences changed; generate a fresh proposal. Valid measurements preserved.";
+        // Retain an old result for inspection, but its bound digest makes Apply stale.
+        return true;
+    }
     struct SectionTrimDraft
     {
         processing::SectionGainPlan plan;
@@ -335,7 +349,7 @@ public:
     juce::String sectionProposalNotice="No section-led proposal. Generate from measured Current State.";
     SectionProposalRequest sectionProposalRequest() const
     {
-        SectionProposalRequest r;
+        SectionProposalRequest r;r.policy=proposalPolicy;
         r.sourceContext=measurementContext(MeasurementDomain::source);
         r.currentContext=measurementContext(MeasurementDomain::currentState);
         if(source.hasMeasurement&&!sourceContentInvalid)r.source=source.analysis;
@@ -354,7 +368,7 @@ public:
     juce::String sectionProposalDisplayText() const
     {
         if(sectionProposal&&sectionProposal->identity()!=sectionProposalRequest().binding())
-            return "STALE PROPOSAL: inputs/annotation geometry changed. Cannot Apply; generate again.\n"+sectionProposalNotice;
+            return "STALE PROPOSAL: inputs/preferences/annotation geometry changed. Cannot Apply; generate again.\n"+sectionProposalNotice;
         return sectionProposalNotice;
     }
     bool canApplySectionProposal() const
@@ -364,7 +378,7 @@ public:
             &&sectionProposal->identity()==sectionProposalRequest().binding()&&sourceDocument.matchesFileStamps();
     }
     bool hasActionableSectionProposal() const
-    {return sectionProposal&&(sectionProposal->status()==SectionProposalStatus::ready||sectionProposal->status()==SectionProposalStatus::globalOnly);}
+    {return sectionProposal&&sectionProposal->identity()==sectionProposalRequest().binding()&&(sectionProposal->status()==SectionProposalStatus::ready||sectionProposal->status()==SectionProposalStatus::globalOnly);}
     void discardSectionProposal()
     {sectionProposal.reset();sectionProposalNotice="Proposal discarded. Applied settings and measurements preserved.";}
     bool applySectionProposal()
@@ -390,6 +404,7 @@ public:
             currentStateDocument.staticGainDb=c.processing.staticGainDb;
             invalidateCurrentProcessing();
         }
+        lastAppliedProposalPolicy=proposalPolicy;lastAppliedProposalBinding=accepted->identity();lastAppliedProposalText=accepted->text();
         sectionProposalNotice="APPLIED explicitly. Current State UNVERIFIED; independently re-measure. Applied gains retained on cancellation/failure; no retry or rollback.\n"+accepted->text();
         job.message="Proposal applied explicitly. Current State UNVERIFIED; re-measure independently.";
         return true;
@@ -397,10 +412,11 @@ public:
 
     proposal::TrimRequest currentTrimRequest() const
     {
-        return trimRequest (source.hasMeasurement && ! sourceContentInvalid ? source.analysis.get() : nullptr,
+        auto request=trimRequest (source.hasMeasurement && ! sourceContentInvalid ? source.analysis.get() : nullptr,
                             currentState.hasMeasurement && ! currentStateNeedsRemeasurement() ? currentState.analysis.get() : nullptr,
                             measurementContext (MeasurementDomain::source), measurementContext (MeasurementDomain::currentState),
                             getSelectedTargetProfile(), programmeApplicability);
+        request.preferenceIdentity=proposalPolicy.digest();request.preferencesAvailable=proposalPolicy.validationError().isEmpty();return request;
     }
 
     bool acceptTrimProposal (const proposal::TrimProposal& result)
@@ -534,11 +550,14 @@ public:
         return true;
     }
 
+    void clearProposalApplicationProvenance()
+    {lastAppliedProposalPolicy.reset();lastAppliedProposalBinding.clear();lastAppliedProposalText.clear();}
+
     bool setValidatedSource (const juce::File& file, const MediaInfo& media)
     {
         if (audioEditsBlocked() || ! media.matchesFileStamp (file)) return false;
         ++revision; documentChanged(); programmeId = juce::Uuid().toString();
-        discardTrim(); sourceContentInvalid = false; unresolvedSourceCache.reset(); unresolvedCurrentCache.reset();
+        discardTrim(); clearProposalApplicationProvenance(); sourceContentInvalid = false; unresolvedSourceCache.reset(); unresolvedCurrentCache.reset();
         sourceDocument.setValidatedFile (file, media);
 
         source = MeasurementSummary();
@@ -558,7 +577,7 @@ public:
     {
         if (audioEditsBlocked() || group.validate().isNotEmpty() || !group.matchesFileStamps()) return false;
         ++revision; documentChanged(); programmeId = juce::Uuid().toString();
-        discardTrim(); sourceContentInvalid = false; unresolvedSourceCache.reset(); unresolvedCurrentCache.reset(); sourceDocument.setValidatedProgramme(group);
+        discardTrim(); clearProposalApplicationProvenance(); sourceContentInvalid = false; unresolvedSourceCache.reset(); unresolvedCurrentCache.reset(); sourceDocument.setValidatedProgramme(group);
         source = MeasurementSummary(); currentState = MeasurementSummary(); currentStateDocument.clear();
         programmeApplicability = proposal::Applicability::unconfirmed;
         source.statusText = "Complete aligned programme; measurement not run";
@@ -578,7 +597,7 @@ public:
         const bool keepCurrent=editing&&currentStateDocument.isInitialized;
         const double retainedGain=currentStateDocument.staticGainDb;
         ++revision;documentChanged();if(!editing)programmeId=juce::Uuid().toString();
-        discardTrim();sourceContentInvalid=false;unresolvedSourceCache.reset();unresolvedCurrentCache.reset();
+        discardTrim();clearProposalApplicationProvenance();sourceContentInvalid=false;unresolvedSourceCache.reset();unresolvedCurrentCache.reset();
         sourceDocument.setValidatedComposition(recipe);source=MeasurementSummary();currentState=MeasurementSummary();
         currentStateDocument.clear();programmeApplicability=proposal::Applicability::unconfirmed;
         if(keepCurrent){currentStateDocument.initializeFromSource(sourceDocument);currentStateDocument.staticGainDb=retainedGain;}
@@ -592,7 +611,7 @@ public:
     {
         if (audioEditsBlocked()) return;
         ++revision; documentChanged(); programmeId = juce::Uuid().toString();
-        discardTrim(); sourceContentInvalid = false; unresolvedSourceCache.reset(); unresolvedCurrentCache.reset();
+        discardTrim(); clearProposalApplicationProvenance(); sourceContentInvalid = false; unresolvedSourceCache.reset(); unresolvedCurrentCache.reset();
         sourceDocument.clear();
         currentStateDocument.clear();
         programmeApplicability = proposal::Applicability::unconfirmed;

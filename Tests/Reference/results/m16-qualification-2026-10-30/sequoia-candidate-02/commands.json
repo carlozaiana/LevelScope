@@ -1,0 +1,191 @@
+[
+  {
+    "name": "preferences",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/candidate-02/bin/LevelScopeSectionProposalTests",
+      "--preferences",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/sequoia-candidate-02/preferences-files",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/sequoia-candidate-02/preferences.json"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 9.041701125,
+    "passed": true,
+    "build": "4232c04d89758b3726d5da1b93a4786ca1a1e76075ddbe5427c90718b423d323",
+    "reason": "",
+    "report_sha256": "67222aeee10968d616a487909565b27130d71b06fae892b6e2a0b5bcd2fdbad6",
+    "groups": [
+      "policy-validation",
+      "support-and-gain-limits",
+      "capacity-and-complete-inspection",
+      "ui-controls-and-responsiveness",
+      "identity-session-report",
+      "large-measured-proposal",
+      "mono-policy-path"
+    ]
+  },
+  {
+    "name": "global-proposals",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/candidate-02/bin/LevelScopeProposalTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/sequoia-candidate-02/global-proposals.json"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 9.280296084,
+    "passed": true,
+    "build": "4232c04d89758b3726d5da1b93a4786ca1a1e76075ddbe5427c90718b423d323",
+    "reason": "",
+    "report_sha256": "d0e35311450305d384e022d2c116208fabaa50e23e293ae53c634570a5629016"
+  },
+  {
+    "name": "sessions-short",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/candidate-02/bin/LevelScopeSessionTests",
+      "--short",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/sequoia-candidate-02/sessions.json"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 5.8347485,
+    "passed": true,
+    "build": "4232c04d89758b3726d5da1b93a4786ca1a1e76075ddbe5427c90718b423d323",
+    "reason": "",
+    "report_sha256": "64875a5d77cf579100b72c085deb0c29c280182fe67a0eca52f0b03c0f2329b7"
+  },
+  {
+    "name": "sections",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/candidate-02/bin/LevelScopeSectionsTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/sequoia-candidate-02/sections.json"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 3.182025124999999,
+    "passed": true,
+    "build": "4232c04d89758b3726d5da1b93a4786ca1a1e76075ddbe5427c90718b423d323",
+    "reason": "",
+    "report_sha256": "8fa96145a8acf482b8f6f3631402436c78000f57578ff1234b9e42563470d5aa"
+  },
+  {
+    "name": "m12-smoke",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/candidate-02/bin/LevelScopeSectionProcessingTests",
+      "--smoke",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/sequoia-candidate-02/m12-files",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/sequoia-candidate-02/m12.json"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 7.498273000000001,
+    "passed": true,
+    "build": "4232c04d89758b3726d5da1b93a4786ca1a1e76075ddbe5427c90718b423d323",
+    "reason": "",
+    "report_sha256": "5db0f03fe2c7b3a650ae5a8dffdabd51e20b1eaae042525c5b209765434c1db3"
+  },
+  {
+    "name": "m13-smoke",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/candidate-02/bin/LevelScopeSectionProposalTests",
+      "--smoke",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/sequoia-candidate-02/m13-files",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/sequoia-candidate-02/m13.json"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 21.953372416,
+    "passed": true,
+    "build": "4232c04d89758b3726d5da1b93a4786ca1a1e76075ddbe5427c90718b423d323",
+    "reason": "",
+    "report_sha256": "3095aeab2f67ae6d90a6942eb652a0575b2095265be30dc6a53cf003ab8dbe2d"
+  },
+  {
+    "name": "markers",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/candidate-02/bin/LevelScopeMarkerTests",
+      "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/sequoia-candidate-02/marker-files",
+      "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/candidate-02/source/Tests/Markers/nuendo-15.0.30-points.csv"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 8.094045417000004,
+    "passed": true,
+    "build": "4232c04d89758b3726d5da1b93a4786ca1a1e76075ddbe5427c90718b423d323",
+    "reason": "",
+    "report_sha256": "05cdfe774313fa0dfa0154ddcc35d8100b6168b50166f30c69df6bf0cb58e647"
+  },
+  {
+    "name": "export-short",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/candidate-02/bin/LevelScopeExportTests",
+      "--artifacts",
+      "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/sequoia-candidate-02/export-files",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/sequoia-candidate-02/export.json"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 41.61356779200001,
+    "passed": true,
+    "build": "4232c04d89758b3726d5da1b93a4786ca1a1e76075ddbe5427c90718b423d323",
+    "reason": "",
+    "report_sha256": "fb4f8ee18e73440e85b82000858acc42c7126d106b472f93cf7389839abe4604"
+  },
+  {
+    "name": "m15-reader-rejects-schema6",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/candidate-02/legacy/M15SectionProposalTests",
+      "--exchange",
+      "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/sequoia-candidate-02/m13-files",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/sequoia-candidate-02/legacy-read-files",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/sequoia-candidate-02/legacy-rejection.json"
+    ],
+    "exit_code": 1,
+    "expected_exit": 1,
+    "seconds": 0.41520595799998716,
+    "passed": false,
+    "build": "8a7a2866d48f7ba6d4db1c7f532eaffbfce03fa78fbca02211d3f6b9fb79ef47",
+    "reason": "foreign session has exact applied plan and provenance",
+    "report_sha256": "3ac02e88b300f4e553dd287021ad824ddadfd8b5bc99889076e26727d7619c24"
+  },
+  {
+    "name": "runner-self-tests",
+    "command": [
+      "python3",
+      "-B",
+      "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/candidate-02/Tests/M16QualificationRunnerTests.py"
+    ],
+    "exit_code": 0,
+    "expected_exit": 0,
+    "seconds": 0.04412829200001056
+  }
+]

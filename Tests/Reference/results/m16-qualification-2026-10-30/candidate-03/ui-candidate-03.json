@@ -1,0 +1,58 @@
+{
+  "date": "2026-10-30",
+  "method": "Native CUA accessibility and screenshot observation; no physical device opened, no video loaded.",
+  "actually_executed_app": "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/candidate-03/LevelScope Standalone.app",
+  "app_sha256": "8ee1b747685a8840284dbe6992b95c1076a76fc90cfe510ac043b63c61df2286",
+  "fresh_candidate03_checks": true,
+  "session": "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/sequoia-candidate-03/preferences-files/large-measured-proposal/large-proposal-input.levelscope",
+  "checks": [
+    {
+      "name": "Safe reopen",
+      "passed": true,
+      "observed": "EBU R128 profile/applicability restored; Source measurements current; Current gain0dB; stopped, device closed, both routes muted."
+    },
+    {
+      "name": "Large proposal generation",
+      "passed": true,
+      "observed": "READY FOR EXPLICIT APPLY; 134 corrections / 1 connected region / 66720 of480000frames; displayed1.390000seconds and13.900000%; 3 private passes. No processing applied. Irrelevant no-global-draft notice is absent after completion."
+    },
+    {
+      "name": "Complete paginated inspection",
+      "passed": true,
+      "observed": "Navigated pages1\u20134; final Section134 and complete final private measured PASS visible by scrolling. Current explicitly unchanged/unverified after future Apply; narrow selected-rule wording."
+    },
+    {
+      "name": "Draft cancellation",
+      "passed": true,
+      "observed": "Entered100% then Cancel edits; active20% unchanged."
+    },
+    {
+      "name": "Invalid reserve",
+      "passed": true,
+      "observed": "Additional0.2dB / reserve0.5dB rejected with explicit error; no clamp or audio change."
+    },
+    {
+      "name": "Explicit count above64",
+      "passed": true,
+      "observed": "Confirmed65regions and100.0%; active digest91393bac03c8d8c16031433a31402305d1c67f5609a47b6ebdce30e9875626e4."
+    },
+    {
+      "name": "Stale rejection and preserved measurement",
+      "passed": true,
+      "observed": "STALE PROPOSAL visible; Apply unavailable; Source measurements current and failing original IL still shown; Current gain0dB. Native automated identity test separately verifies both snapshot pointers/evaluations unchanged."
+    },
+    {
+      "name": "SaveAs and reopen",
+      "passed": true,
+      "observed": "ui-candidate-03-preferences.levelscope saved, New session then reopened.65/100.0/3.0/12.0/0.5exact; no transient proposal restored; measurements current, deviceclosed/routesmuted. Save response completed in0.464s including UI overhead; reopen response0.578s for1000annotations, not maximum-session benchmark."
+    },
+    {
+      "name": "Explicit defaults",
+      "passed": true,
+      "observed": "Draft defaults then Use restores unrestrictedcount/20%/3dB/12dB/0.5dB, digest9020f36cdf7584536fc2708e4f57196cbf3ca8ef1d72e954ae8ad2e88bb48e27. Audio unchanged."
+    }
+  ],
+  "physical_devices_opened": false,
+  "video_loaded": false,
+  "passed": true
+}

@@ -1,0 +1,127 @@
+{
+  "previous_candidates": [
+    {
+      "path": "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-02",
+      "source": "50eba19a2d66096607ec878c8eaa05e610580c7f5e8854d7b375d846a89c5f27",
+      "identity_sha256": "266783d8faaabde9fbb166901d1eba8f1c0ff75c4f51a2258a9502817feed839",
+      "artifacts_verified": 473
+    },
+    {
+      "path": "/Users/fuzz/Developer/LevelScope/build/m14-qualification-2026-10-29/candidate-02",
+      "source": "9dd22a598281e83431039f210202a8a24fe49517294cc6bb8d83032c4975e013",
+      "identity_sha256": "c8b0184b700be7ada4963b0b80bcfca1e577936855291e1280e5f6aa0ccc913d",
+      "artifacts_verified": 473
+    },
+    {
+      "path": "/Users/fuzz/Developer/LevelScope/build/m15-qualification-2026-10-29/candidate-05",
+      "source": "38676a45d47ddba6eb54f7ab299f52f622f6be26554256781b8960749c609564",
+      "identity_sha256": "628cd75b3f7691f05771c1374c0236d3c6e71a0546c5bfdad0911b177330c136",
+      "artifacts_verified": 275
+    }
+  ],
+  "unchanged_dependency_hashes": {
+    "Source/Core/Measurement/GatePopulation.h": "56c32bea23a332f811433c0977d07de9b3401b12cf8629d92aa78ceb58060c3e",
+    "Source/Core/Measurement/OfflineMeasurement.cpp": "b4e6ab4b0ae0cd89e41370ff8ee66de9eb9780f181fc853c3ad3294345d29dc4",
+    "Source/Core/Measurement/OfflineMeasurement.h": "cd85ad1244b6710cead67de383a46c17541b3b32b41a5218c8f623cbbb90b850",
+    "Source/Core/Processing/DSP/BS1770MomentaryLufsDetector.h": "ce3244119e6ac8d36c48d9b69c9b7421c2c81dcc73e47bd135178b498910da6f",
+    "Source/Core/Processing/DSP/BroadbandDownwardCompressor.cpp": "47a1580c9c73e21bf2d50ac8d5d96b6da73ee764795614259c3a1343255f993b",
+    "Source/Core/Processing/DSP/BroadbandDownwardCompressor.h": "d490dd72b88e4f2549f64af4727e34461e523614b4c8025eeb86646f55617a63",
+    "Source/Core/Processing/DSP/BroadbandUpwardCompressor.cpp": "ba73d0c937472fcbb7674ab616c4097814295d6cf79e05aab31cdcaf354b13c6",
+    "Source/Core/Processing/DSP/BroadbandUpwardCompressor.h": "5601110d1e3ad20a9e04fdf1741d2aa2a638173866dbfbd726f05ae1f8de5483",
+    "Source/Core/Processing/DSP/LookaheadLimiter.cpp": "360ccd04a44cf83d52a17c99f893ab661f2fd560c8f4c4a4bc2e609368cb319c",
+    "Source/Core/Processing/DSP/LookaheadLimiter.h": "cfa3a5a44c5f6858aca11179f26c96adb1c066cfb7ae7aa714b4d079a6f17c66",
+    "Source/Core/Processing/DSP/SpectralUpwardCompressor.cpp": "506a9aabf4fd22c022372c49306da6b40034399a9bcf7056a23a79ed3330a0cf",
+    "Source/Core/Processing/DSP/SpectralUpwardCompressor.h": "a6488b85cfabc66c3a073aaaf7a6c356372fbc91b258943579b3045c78f65db7",
+    "Source/Core/Processing/DSP/UpwardGainLaw.h": "c76ee1dc5f36b7e59e8c82fedc3858dc70edfd3444009803002681bf11f19881",
+    "Source/Core/Processing/IAudioModule.h": "5696083035028c8ccc8da4aed8ed28f3fd89a057f7064f4bb75069b00d338dc6",
+    "Source/Core/Processing/Modules/LevelerModule.cpp": "9a989ab0581a0136f8a6302e0bab2986afeaa1a136139428d43d332bd071cd15",
+    "Source/Core/Processing/Modules/LevelerModule.h": "e671df99d228ed7843c8a4021ba37de831981db0bc43ff0647a51e5e610970ba",
+    "Source/Core/Processing/Modules/LevelerParamIDs.h": "bb71fc7c804b0fb94d69ecd2f98f3166747bac1862817d01c091694b155c7be8",
+    "Source/Core/Processing/Modules/MultiThresholdDynamicsModule.cpp": "0cdc402e5d7b60e8e05a11aa76cfed8aa4dc6a4b33efe97e8ad755aad7ebc973",
+    "Source/Core/Processing/Modules/MultiThresholdDynamicsModule.h": "8be81698b0afb5292a612b3769a2d5a1f51754bcd1e25ce2e0bbccc0492e4ac3",
+    "Source/Core/Processing/Modules/MultiThresholdDynamicsParamGroups.h": "bdfaef5a125e238e35e08970fdb94a72cc017877e6b7871bc38af78509771e46",
+    "Source/Core/Processing/Modules/MultiThresholdDynamicsParamIDs.h": "64b614f2c6f6173a1370551964f5a349f93305ff03cdb831042ce6e208efe18e",
+    "Source/Core/Processing/ProcessContext.h": "654df1fccda8187b888922091430e4db5d48ad0eb2636b201f86ba8ffa34f330",
+    "Source/Core/Processing/ProcessorCore.h": "64b32626c0e4a757d866682eba25effb82c4f4daa6464d47418348e60b79b53e",
+    "Source/Core/Processing/SectionGainPlan.h": "62919a2c9d7aa6036985f812c3ae481f923a3c40d0760177a4bfd8efe6704122",
+    "Source/Core/Proposal/Model/TargetProfile.cpp": "578736b0daa64d7d654506a3d81a4715b093f5ea8c15610f2b5a930ee566fcda",
+    "Source/Core/Proposal/Model/TargetProfile.h": "54b2637bc231647e7ededa584b894a83976f0f05777d46d2330cd97ddc82ab67",
+    "Source/Core/Proposal/VerificationEngine.cpp": "551afae2db0b9916150715d46bdf770f67dc67ea94d6cdbc42885c5a67bf46d0",
+    "Source/Core/Proposal/VerificationEngine.h": "3df93cfbf36a433d5ec340878b46a405d3ecc6e8a9d6fadce806270e007a547b",
+    "Source/Standalone/AudioPresentationClock.h": "d5f2ea390f8a9ec8f5c68472452d8ec865bf38252da5b78ede884defd017dc79",
+    "Source/Standalone/MeasurementTimeline.cpp": "2bea768c4c6dcbca1ada70a61a75c439d5cbc1a8057a624194fca55bfaacb4e7",
+    "Source/Standalone/MeasurementTimeline.h": "4b2422bc970e6ee554329236d0515994f6f10bb4ec4c6ca671ce25f0ba559878",
+    "Source/Standalone/Pcm24Wave.cpp": "b6e7924177527cbb1369cec7975fe633e73da9b16f8c45ea83dc3a6378e48cb7",
+    "Source/Standalone/Pcm24Wave.h": "9889ad239a027621436e792a99e0e3437aa4241887d7a11232ced15e2f6f2174",
+    "Source/Standalone/ProgrammeComposition.cpp": "0657a0e260a96bb0cf6b9b9fc2184ce17f6ea3f8d0562e0ce6bf1f0dfde4ed24",
+    "Source/Standalone/ProgrammeComposition.h": "afe41fe98ab6d2840d7bcb582da64cc7e542c57470751b2a2a63706b9b2cee52",
+    "Source/Standalone/ProgrammeSource.cpp": "1941b2b525ba3aaabb652d0df537f6acb1420bcda334824e08b01fe1329e4f2c",
+    "Source/Standalone/ProgrammeSource.h": "e1b1835cb084f9195b4c032bf2dba77969b84e2ef56c0989d5a24d7551ee1f99",
+    "Source/Standalone/StandaloneAudition.cpp": "ab1ca96ad322f44acdcd06ca28f813ffdc32fe17517d2e9191b6e0a4b032d310",
+    "Source/Standalone/StandaloneAudition.h": "c145aa1342731fb766e8b1a4e6f651d833f7ab0aba662de7892b27af7e27b36e",
+    "Source/Standalone/StandaloneAuditionRequest.h": "3344c81e283c93896d53047d56b27954e6da8333ca0f7b1e4c2c16cc4ade9d51",
+    "Source/Standalone/StandaloneMeasurementLayout.h": "d36871613a6d98cdd6455e883657fa1b8a2594d6ebbdcc6b36fd46b5e21defb8",
+    "Source/Standalone/StandaloneMeasurementService.cpp": "9036b60500e74eb3a7d53e342c1ba0951ccd62db9d534b42014ec5c1b77cc5be",
+    "Source/Standalone/StandaloneMeasurementService.h": "551c6d8f01ea0d86452719715a4f2b445ab184f9e6c934397dca23cf4e98abbb",
+    "Source/Standalone/StandaloneMedia.cpp": "9e848f5e459568c88853079f03bbebf4a638bb66357c1edacd4a6e670cb48bdf",
+    "Source/Standalone/StandaloneMedia.h": "b8c68cc8af3c078344121b5705d1771a5f1765819c85478b6148c5c36853ef5d",
+    "Source/Standalone/StandaloneVideo.cpp": "7b5aee564de7dba96e9557f784a8d03dce60ca8022b4736a0a84eb7097e458cb",
+    "Source/Standalone/StandaloneVideo.h": "97279ff2b6d8fb20fc8d3f230eea44949df8dc9666590aef03efbe01b7721e34",
+    "Source/Standalone/StandaloneVideoPanel.cpp": "19a84acf7e0531ba18b7e011e158c707fbb2014f3ade4e9f961cd806de987dfa",
+    "Source/Standalone/StandaloneVideoPanel.h": "01c1c47107d9c76a190167687d2df548d58c6cf487369db0fa5da2d7c8b5b74f",
+    "Source/Standalone/StandaloneVideo_mac.mm": "004e02878e75fcf3ff8e48de3a5f83a6d200f1a3e60117bb3b32f212df754e53",
+    "Source/Standalone/VideoTiming.h": "69dc05d1f03a0d17d5b83ce317829135c1cd28305e5dd769327b830b7c6eb7bb"
+  },
+  "changed_production": [
+    "Source/Core/Proposal/Methods/RuleBasedMethod.cpp",
+    "Source/Core/Proposal/Methods/RuleBasedMethod.h",
+    "Source/Core/Proposal/Methods/SectionTrimMethod.cpp",
+    "Source/Core/Proposal/Methods/SectionTrimMethod.h",
+    "Source/Core/Proposal/Model/ProposalPolicy.h",
+    "Source/Standalone/SessionDocument.cpp",
+    "Source/Standalone/SessionDocument.h",
+    "Source/Standalone/StandaloneExport.cpp",
+    "Source/Standalone/StandaloneExport.h",
+    "Source/Standalone/StandaloneMainComponent.cpp",
+    "Source/Standalone/StandaloneMainComponent.h",
+    "Source/Standalone/StandaloneProposalPreferences.cpp",
+    "Source/Standalone/StandaloneProposalPreferences.h",
+    "Source/Standalone/StandaloneReport.cpp",
+    "Source/Standalone/StandaloneSectionProposal.cpp",
+    "Source/Standalone/StandaloneSectionProposal.h",
+    "Source/Standalone/StandaloneSessionModel.h",
+    "Source/Standalone/StandaloneSessionUI.cpp"
+  ],
+  "cmake_change": "Only adds StandaloneProposalPreferences.cpp to existing DiagnosticsUI; compiler flags, deployment target, dependencies and audio/video linkage unchanged.",
+  "compiler_and_dependencies": "Apple clang / JUCE 7.0.12 revision recorded in candidate identity, same established universal Release configuration.",
+  "reused_evidence": [
+    {
+      "source_manifest": "50eba19a2d66096607ec878c8eaa05e610580c7f5e8854d7b375d846a89c5f27",
+      "report": "Docs/ProjectIndex/49_M13QualificationAndHandover.md",
+      "scope": "Historical pinned EBU/ITU and timing/video lower-level baseline. Not M16 runtime or new-feature qualification."
+    },
+    {
+      "source_manifest": "9dd22a598281e83431039f210202a8a24fe49517294cc6bb8d83032c4975e013",
+      "report": "Docs/ProjectIndex/52_M14QualificationAndHandover.md",
+      "scope": "Unchanged mono/RF64 arithmetic/decoder and prior bounded cinema / sustained 90-minute workflow; original binary-equivalent candidate-01 provenance retained."
+    },
+    {
+      "source_manifest": "38676a45d47ddba6eb54f7ab299f52f622f6be26554256781b8960749c609564",
+      "report": "Docs/ProjectIndex/55_M15QualificationAndHandover.md",
+      "scope": "Actual Nuendo/Pro Tools export setup provenance and unchanged mapping; focused marker/session checks freshly rerun."
+    }
+  ],
+  "fresh_shared_callers": [
+    "preferences",
+    "global-proposals",
+    "sessions-short",
+    "sections",
+    "m12-smoke",
+    "m13-smoke",
+    "markers",
+    "export-short",
+    "m15-reader-rejects-schema6",
+    "runner-self-tests"
+  ],
+  "deferred": "Actual High Sierra, cross-Mac, video and three-hour testing after M18, no later than M19. No earlier-triggering arithmetic/clock/buffering/dependency change found."
+}

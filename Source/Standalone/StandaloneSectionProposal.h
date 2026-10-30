@@ -8,6 +8,7 @@ namespace levelscope::standalone
 struct SectionProposalRequest
 {
     ServiceContext sourceContext, currentContext;
+    proposal::ProposalPolicy policy;
     std::shared_ptr<const AnalysisSnapshot> source, current;
     proposal::Applicability applicability=proposal::Applicability::unconfirmed;
     proposal::SectionMap annotations, appliedAnnotations;

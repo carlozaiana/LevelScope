@@ -61,6 +61,13 @@ private:
     StandaloneSectionsPanel& panel;
     juce::Viewport viewport;
 };
+class ProposalWindow final : public juce::DocumentWindow
+{
+public:
+    ProposalWindow(const juce::String& title,juce::Component* content):DocumentWindow(title,juce::Colour(0xff20242b),allButtons)
+    {setUsingNativeTitleBar(true);setResizable(true,false);setResizeLimits(800,570,1600,1200);setContentOwned(content,true);centreWithSize(content->getWidth(),content->getHeight());setVisible(true);}
+    void closeButtonPressed()override{setVisible(false);}
+};
 juce::String metricText (const measurement::Metric& metric, const juce::String& unit)
 {
     if (metric.value) return juce::String (*metric.value, 1) + " " + unit;
@@ -426,6 +433,9 @@ void StandaloneMainComponent::configureCurrentStateControls()
     addAndMakeVisible (initializeCurrentStateButton);
     addAndMakeVisible (clearCurrentStateButton);
     addAndMakeVisible (remeasureCurrentStateButton);
+    preferencesButton.onClick=[this]{preferencesWindow=std::make_unique<ProposalWindow>("Proposal limits - preferences, not delivery rules",new ProposalPreferencesPanel(session,[this]{refreshFromSession();}));};
+    inspectProposalButton.onClick=[this]{proposalInspectionWindow=std::make_unique<ProposalWindow>("Complete proposal inspection - snapshot",new ProposalInspectionPanel(session.sectionProposalDisplayText()));};
+    addAndMakeVisible(preferencesButton);addAndMakeVisible(inspectProposalButton);
     sectionProposalButton.onClick=[this]{beginSectionProposal();};
     applySectionProposalButton.onClick=[this]{session.applySectionProposal();refreshFromSession();};
     discardSectionProposalButton.onClick=[this]{session.discardSectionProposal();refreshFromSession();};
@@ -534,6 +544,8 @@ void StandaloneMainComponent::refreshFromSession()
     currentGain.setValue (session.currentStateDocument.staticGainDb, juce::dontSendNotification);
     draftTrimButton.setEnabled (!session.persistenceLoading && session.getWorkflowReadiness().canDraftProposal());
     applyTrimButton.setEnabled (session.canApplyTrim());
+    preferencesButton.setEnabled(!session.persistenceLoading&&!session.audioEditsBlocked()&&!session.job.isActive());
+    inspectProposalButton.setEnabled(true);
     sectionProposalButton.setEnabled(!session.persistenceLoading&&!session.audioEditsBlocked()&&!session.job.isActive()&&session.currentState.hasMeasurement);
     applySectionProposalButton.setEnabled(session.canApplySectionProposal());
     discardSectionProposalButton.setEnabled(bool(session.sectionProposal)&&!session.job.isActive());
@@ -769,7 +781,8 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
         }
 
         case WorkflowPage::currentState:
-            text << session.trimNotice << "\n\n" << session.sectionProposalDisplayText() << "\n\n";
+            if(!session.sectionProposal)text << "Global-trim draft: " << session.trimNotice << "\n\n";
+            text << session.proposalPolicy.text() << "\n" << session.sectionProposalDisplayText().substring(0,1800) << "\nOpen Inspect complete proposal for all rows and final outcome; this is a summary only.\n" << "\n\n";
             text << evaluationText (session.evaluation (MeasurementDomain::currentState)) << "\n";
             text << "Initialize Current State, adjust static gain, then re-measure.\n\n";
             text << "Static gain applies to every programme channel, including LFE, after any composition.\n";
@@ -861,6 +874,7 @@ void StandaloneMainComponent::resized()
     currentGain.setBounds (currentStateActionRow);
 
     bounds.removeFromTop (8);
+    auto preferencesRow=bounds.removeFromTop(30);preferencesButton.setBounds(preferencesRow.removeFromLeft(210));inspectProposalButton.setBounds(preferencesRow.removeFromLeft(260));bounds.removeFromTop(8);
     auto proposalRow = bounds.removeFromTop (30);
     draftTrimButton.setBounds (proposalRow.removeFromLeft (180));
     proposalRow.removeFromLeft (8);

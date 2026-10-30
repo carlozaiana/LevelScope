@@ -18,12 +18,13 @@ TrimProposal draftGlobalTrimImpl (const TrimRequest& r, bool privateCandidate)
     const auto current = evaluateMeasuredProgramme (r.profile, r.current);
     std::ostringstream binding; binding.imbue (std::locale::classic()); binding << std::hexfloat;
     for (const auto& s : { juce::String (trimMethodVersion), source.identity, current.identity,
-                           r.sourceInputIdentity, r.currentInputIdentity, r.processingVersion, r.fixedUpstreamPlanIdentity })
+                           r.sourceInputIdentity, r.currentInputIdentity, r.processingVersion, r.fixedUpstreamPlanIdentity, r.preferenceIdentity })
     { const auto bytes = s.toStdString(); binding << bytes.size() << ':' << bytes << ';'; }
     binding << r.currentGainDb;
     const auto bytes = binding.str(); p.identity = juce::SHA256 (bytes.data(), bytes.size()).toHexString();
     const auto finiteMetric = [] (const measurement::Metric& m)
     { return m.status == measurement::Status::available && m.value && std::isfinite (*m.value); };
+    if(!r.preferencesAvailable){p.explanation="Proposal preferences unavailable; explicitly select valid limits.";return p;}
     if (r.source.domain != SnapshotDomain::source
         || r.current.domain != (privateCandidate ? SnapshotDomain::privateCandidate : SnapshotDomain::currentState)
         || source.verdict == Verdict::notEvaluated || current.verdict == Verdict::notEvaluated

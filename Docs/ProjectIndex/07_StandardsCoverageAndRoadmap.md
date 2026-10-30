@@ -63,19 +63,12 @@ from passing the selected programme loudness/true-peak rules.
 2. [M15 marker import and source-time mapping](53_M15MarkerImportAndSourceTimeMapping.md):
    approved Nuendo CSV and dedicated Pro Tools Session Info as Text point-marker
    readers, explicit mapping, preview and annotation-only confirmation.
-3. Separately propose a bounded preference review and configurable controls. Review
-   count/duration/gain/neighbour/transition/resource budgets together, including
-   marker-density sensitivity. Preserve the existing policy version until an approved,
-   versioned replacement is qualified. M15 changes no limits.
-4. Standalone true-peak limiter qualification.
-5. Basic measured-audio region suggestions, reviewed before adoption and protecting
-   confirmed boundaries, before enhanced section-led strategy. No narrative-scene
-   claims. Dynamics-led proposals remain usable without markers. Further downward/
-   upward DSP, mixed strategies, EDL import and component/dialogue work need separate
-   proposals and approval.
+3. M16 configurable preferences and density-aware processing support, approved 30 October; see ProjectIndex 56–57. No coordinated neighbour adjustment.
+4. Inline explicit LRA requirements/named presets, then early interactive timeline/progressive analysis; see ProjectIndex 58 for bounded proposal candidates and qualification cadence.
+5. Editable region suggestions and selective LRA-directed correction, with preservation/transition controls; separately qualified selective raising and true-peak limiting. Limiting is supporting work, not a complete compressor prerequisite. No narrative-scene claims. Dynamics-led/mixed and component/dialogue work remain separate approvals.
 
 Generate only the selected strategy; explicit comparisons reuse compatible analysis
-and share a frozen measured baseline with bounded resources. M15 alone is approved; no later implementation is authorized. Combined M12/M13 actual High Sierra and selected
+and share a frozen measured baseline with bounded resources. M16 is approved; subsequent roadmap items require separate approval. Combined M12/M13 actual High Sierra and selected
 video qualification and publication are complete. M14 uses Sequoia stabilization and a universal cross-build; actual High Sierra
 runtime qualification follows in the explicitly deferred combined window. Accepted occasional
 picture skips retain all existing audio/drift/lifecycle gates.
@@ -92,7 +85,14 @@ Detailed requirements, provenance and evidence remain in
 M15 candidate-05 is published as a Sequoia-tested development checkpoint. The next
 [proposal](56_M16ProposalPreferencesAndLimits.md) reviews configurable proposal
 preferences and marker-density accounting, independently of delivery profiles.
-No M16 implementation is approved yet. Coordinated neighbours, segmentation and
+M16 implementation was approved with revisions on 30 October; see the superseding section below. Coordinated neighbours, segmentation and
 limiter/compressor or new strategies remain separate. Main stays at qualified M13;
 combined actual High Sierra/video/three-hour qualification remains planned after
 M18 and no later than M19.
+
+
+## M16 approval and revised product priorities — 30 October 2026
+
+The M16 approval supersedes earlier proposed defaults and legacy-mode plans: no region-count restriction by default, optional explicit count within 10,000-interval processing capacity, connected processing support accounting, automatic pre-M16 adoption, and complete scrollable/reportable change inspection. Duration 20% is an adjustable preservation preference, not an EBU rule or cinema expectation. Additional/cumulative attenuation and reserve remain distinct. Delivery-profile rules are unchanged.
+
+Selective LRA correction is a central objective. See ProjectIndex 58 for inline job LRA requirements/named presets, early timeline interaction and progressive automatic analysis, then editable region suggestions and selective LRA proposals. Defined extra objectives must all be satisfied before “already compliant”; plain EBU has no LRA ceiling. Preserve dialogue/ambience/contrast, distinguish diagnostic tails from causal claims, and define locking settings versus preserving audible results before freeze controls. These are separately reviewed milestones, not M16 implementation scope. Combined qualification remains after M18, no later than M19; main stays qualified M13.

@@ -164,6 +164,9 @@ Request capture (const StandaloneSessionModel& s)
     const auto input = sectionInputIdentity(r.source);
     if(s.sectionDocument.map().valid() && s.sectionDocument.map().inputIdentity == input)
     { r.sections = s.sectionDocument.map(); if(s.markerImport && s.markerImport->imported.inputIdentity == input) r.markerImport = s.markerImport; }
+    r.proposalPolicy=s.proposalPolicy;r.lastAppliedProposalPolicy=s.lastAppliedProposalPolicy;r.lastAppliedProposalBinding=s.lastAppliedProposalBinding;
+    r.proposalInspection=s.sectionProposal?s.sectionProposalDisplayText():juce::String("No transient proposal. Applied settings and measured outcomes are reported separately.");
+    r.lastAppliedProposalInspection=s.sectionProposal?juce::String("Active proposal shown in full; historical applied policy/binding and exact current envelope reported separately."):s.lastAppliedProposalText;
     r.video = s.referenceVideo; return r;
 }
 juce::String specification (const Request& r, Specification& s)
@@ -210,6 +213,8 @@ juce::String requestIdentity (const Request& r)
         + ";" + r.current.profile.digest() + ";" + juce::String (static_cast<int> (r.applicability))
         + ";" + (r.sections.valid() ? r.sections.digest() : juce::String("no-bound-sections"))
         + ";" + (r.markerImport ? r.markerImport->identity() : juce::String())
+        + ";" + r.proposalPolicy.digest() + ";" + r.lastAppliedProposalBinding
+        + ";" + r.proposalInspection + ";" + r.lastAppliedProposalInspection
         + ";" + r.video.sha256 + ";" + juce::String(r.video.startOnAudio.text()));
 }
 juce::String readiness (const Request& r)

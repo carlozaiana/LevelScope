@@ -14,7 +14,15 @@ void set(juce::var& o,const char* key,const juce::var& v) { o.getDynamicObject()
 juce::String exact(double value)
 {std::ostringstream out;out.imbue(std::locale::classic());out<<std::hexfloat<<value;return out.str();}
 juce::String escaped(const juce::String& s)
-{return s.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;").replace("\"","&quot;").replace("'","&#39;");}
+{
+    // Single pass: repeated String::replace copies the full multi-megabyte
+    // proposal report once per quote/angle bracket and is quadratic.
+    const auto input=s.toStdString();std::string output;output.reserve(input.size());
+    for(char c:input)switch(c)
+    {case '&':output+="&amp;";break;case '<':output+="&lt;";break;case '>':output+="&gt;";break;
+     case '\"':output+="&quot;";break;case '\'':output+="&#39;";break;default:output+=c;break;}
+    return juce::String::fromUTF8(output.data(),int(output.size()));
+}
 const char* status(measurement::Status s)
 {
     switch(s){case measurement::Status::available:return "available";case measurement::Status::silence:return "silence";
@@ -98,7 +106,7 @@ void jsonValue(std::ostringstream& out,const juce::var& v,int depth)
 juce::var report(const Request& r,const Candidate* c,bool publishing)
 {
     if(c&&!c->matchesAudio(r))throw std::runtime_error("Artifact report does not match captured audio/runtime");
-    auto o=object();set(o,"schema","levelscope-measurement-report-v3");
+    auto o=object();set(o,"schema","levelscope-measurement-report-v4");
     set(o,"kind",c?"verified-artifact-measurement":"measurement-only-no-exported-audio");
     set(o,"publication",publishing?"published-verified-pcm":c?"NOT EXPORTED - verified staging artifact":"NO EXPORTED AUDIO");
     set(o,"scope","Selected whole-programme loudness and true-peak rules only. No complete broadcaster delivery, BWF/BW64, metadata, synchronization or future encoded-media certification.");
@@ -174,6 +182,12 @@ juce::var report(const Request& r,const Candidate* c,bool publishing)
     if(r.sections.sections.size()>10000)throw std::runtime_error("Too many report annotations");
     for(const auto& s:r.sections.sections){auto row=object();set(row,"id",juce::String(s.id));set(row,"name",s.name);set(row,"begin_frame",juce::String(s.begin));set(row,"end_frame",juce::String(s.end));sections.add(row);}
     set(o,"sections_annotations_only",sections);
+    set(o,"proposal_preferences",r.proposalPolicy.encode());set(o,"proposal_preferences_digest",r.proposalPolicy.digest());
+    set(o,"proposal_inspection_not_current_measurement",r.proposalInspection);
+    set(o,"last_applied_proposal_policy_historical",r.lastAppliedProposalPolicy?r.lastAppliedProposalPolicy->encode():juce::var());
+    set(o,"last_applied_proposal_binding_historical",r.lastAppliedProposalBinding);
+    set(o,"last_applied_proposal_inspection_transient",r.lastAppliedProposalInspection);
+    set(o,"proposal_provenance_scope","Preferences are preservation choices, not delivery rules. Last applied policy is historical and may differ from current processing/preferences. Full transient proposal inspection is reportable before closing; sessions retain policy/binding and the exact applied envelope, not private assessment authority.");
     set(o,"marker_import_provenance",r.markerImport?proposal::markers::encode(*r.markerImport):juce::var());
     set(o,"annotations_match_last_import",r.markerImport&&r.sections.valid()&&r.markerImport->imported.digest()==r.sections.digest());auto video=object();set(video,"basename",r.video.file.getFileName());set(video,"sha256",r.video.sha256);
     set(video,"offset_rational",juce::String(r.video.startOnAudio.text()));set(video,"is_sync_evidence",false);set(o,"reference_picture_context",video);

@@ -72,7 +72,7 @@ void policyCases()
     r=scalar(-24,1.2);peaks=peakMap(m,1.2);s=proposal::selectSectionTrims(r,m,{},peaks);
     expect(s.available&&s.corrections[0].reductionDb==3&&s.corrections[0].reserveDb==0&&std::abs(s.corrections[0].uncoveredDb-.2)<1e-12,"uncovered deficit disclosed without widening ceiling");
     peaks=peakMap(m,1.2,8);expect(proposal::selectSectionTrims(r,m,{},peaks).available,"eight changed sections accepted within extent budget");
-    peaks=peakMap(m,1.2,9);s=proposal::selectSectionTrims(r,m,{},peaks);expect(!s.available&&s.corrections.size()==9,"ninth section rejects full set without truncation");
+    peaks=peakMap(m,1.2,9);s=proposal::selectSectionTrims(r,m,{},peaks);expect(s.available&&s.corrections.size()==9,"ninth annotation accepted with unrestricted region count");
     auto edge=mapFor(48000,10005,2);edge.sections[0].end=1334;edge.sections[1].begin=1334;
     expect(proposal::selectSectionTrims(r,edge,{},peakMap(edge,1.2)).available,"exact twenty percent including transition support accepted");
     --edge.frames;--edge.sections.back().end;
@@ -88,12 +88,12 @@ void policyCases()
     auto after=before;after.intervals[0].db=-1;
     expect(proposal::changedEnvelopeExtent(before,after)==1500,"transition support counted in local extent at EOF-side plateau");
     auto manual=s.plan;manual.inputIdentity=m.inputIdentity;manual.frames=m.frames;manual.sampleRate=m.sampleRate;manual.intervals={{0,m.frames,-11}};
-    expect(!proposal::selectSectionTrims(r,m,manual,peakMap(m,1.2)).available,"existing manual cumulative minus twelve dB bound protected");
+    expect(proposal::selectSectionTrims(r,m,manual,peakMap(m,1.2)).plan.intervals.front().db>=-12,"cumulative ceiling limits additional reduction");
     peaks=peakMap(m,1.2);peaks.geometry+="stale";expect(!proposal::selectSectionTrims(r,m,{},peaks).available,"stale peak geometry rejected");
     peaks=peakMap(m,1.2);peaks.sections[0].truePeak[0].magnitude=std::numeric_limits<double>::quiet_NaN();expect(!proposal::selectSectionTrims(r,m,{},peaks).available,"nonfinite attribution rejected");
     auto many=mapFor(48000,480000,10000);auto manyPeaks=peakMap(many,1.2,10000);auto manySeed=proposal::selectSectionTrims(r,many,{},manyPeaks);
     const auto manyText=proposal::sectionSeedText(manySeed);
-    expect(!manySeed.available&&manySeed.corrections.size()==10000&&manyText.contains("complete set was rejected"),"large over-budget failure retains full data and bounds explanation text without truncating a plan");
+    expect(!manySeed.available&&manySeed.corrections.size()==10000&&manyText.contains("Section 10000"),"large over-budget failure retains full data and retains complete explanation without truncating a plan");
     expect(manyPeaks.storageBytes()+manySeed.corrections.capacity()*sizeof(proposal::SectionCorrection)
         +manySeed.plan.intervals.capacity()*sizeof(processing::GainInterval)+manyText.getNumBytesAsUTF8()<16*1024*1024,"combined retained attribution proposal and explanation under sixteen MiB at ten thousand sections");
     r=scalar(-23,-1);expect(proposal::draftGlobalTrim(r).status==proposal::TrimStatus::noChange,"exact passing thresholds no change");
@@ -246,7 +246,7 @@ void workflow(const juce::File& root,int rate,int channels,int mode)
         auto rejected=generateSectionProposal(unavailable,missing);expect(rejected.value&&(*rejected.value)->status()==SectionProposalStatus::unavailable&&(*rejected.value)->passes()==0,"missing required metric rejects generation before measurement");
         auto whole=request;whole.annotations=mapFor(rate,rate*10,1);whole.annotations.inputIdentity=request.annotations.inputIdentity;
         JobControl extentControl;auto extent=generateSectionProposal(whole,extentControl);
-        expect(extent.value&&(*extent.value)->status()==SectionProposalStatus::noSolution&&(*extent.value)->passes()==1&&(*extent.value)->text().contains("above 20%"),"whole-programme local attenuation rejected honestly after attribution without candidate pass claim");
+        expect(extent.value&&(*extent.value)->status()==SectionProposalStatus::noSolution&&(*extent.value)->passes()==1&&(*extent.value)->selection().affectedFrames==whole.annotations.frames&&(*extent.value)->text().contains("above 20.0%"),"whole-programme local attenuation rejected honestly after attribution without candidate pass claim");
         auto manual=request;manual.pendingManualDraft=true;JobControl manualControl;auto blocked=generateSectionProposal(manual,manualControl);
         expect(blocked.value&&(*blocked.value)->status()==SectionProposalStatus::unavailable&&(*blocked.value)->passes()==0,"pending manual draft is not overwritten");
         JobControl active;auto activeJob=std::async(std::launch::async,[&]{return generateSectionProposal(request,active);});
@@ -337,18 +337,19 @@ void assessmentBranches(const juce::File& root)
         &&(*result.value)->plan().staticGainDb==gain,"already-acceptable exact local candidate skips identical final measurement without centering gain");
 }
 }
+#include "ProposalPreferencesTests.h"
 // Resource helpers only; no historical runner invoked.
 #include "SectionProposalLongTests.h"
 #include "SectionProposalCinemaTests.h"
 #include "SectionProposalIntegrationTests.h"
 int main(int argc,char** argv)
 {
-    juce::ScopedJuceInitialiser_GUI gui;juce::String rootPath,output,longSession,cinema,videoDirectory,sessionPath,exchange;bool passed=false,smoke=false;juce::String failure;
-    for(int n=1;n<argc;++n){juce::String arg(argv[n]);if(arg=="--smoke")smoke=true;else if(arg=="--root"&&n+1<argc)rootPath=argv[++n];else if(arg=="--video"&&n+1<argc)videoDirectory=argv[++n];else if(arg=="--session"&&n+1<argc)sessionPath=argv[++n];else if(arg=="--exchange"&&n+1<argc)exchange=argv[++n];else if(arg=="--cinema"&&n+1<argc)cinema=argv[++n];else if(arg=="--long-session"&&n+1<argc)longSession=argv[++n];else if(arg=="--output"&&n+1<argc)output=argv[++n];else return 2;}
+    juce::ScopedJuceInitialiser_GUI gui;juce::String rootPath,output,longSession,cinema,videoDirectory,sessionPath,exchange;bool passed=false,smoke=false,preferences=false,preferencesLarge=false;juce::String failure;
+    for(int n=1;n<argc;++n){juce::String arg(argv[n]);if(arg=="--preferences-large")preferencesLarge=true;else if(arg=="--preferences")preferences=true;else if(arg=="--smoke")smoke=true;else if(arg=="--root"&&n+1<argc)rootPath=argv[++n];else if(arg=="--video"&&n+1<argc)videoDirectory=argv[++n];else if(arg=="--session"&&n+1<argc)sessionPath=argv[++n];else if(arg=="--exchange"&&n+1<argc)exchange=argv[++n];else if(arg=="--cinema"&&n+1<argc)cinema=argv[++n];else if(arg=="--long-session"&&n+1<argc)longSession=argv[++n];else if(arg=="--output"&&n+1<argc)output=argv[++n];else return 2;}
     try
     {
         const juce::File root(rootPath);expect(rootPath.isNotEmpty()&&!root.exists()&&root.createDirectory().wasOk(),"fresh M13 fixture root required");
-        if(videoDirectory.isNotEmpty())proposalVideo(juce::File(sessionPath),juce::File(videoDirectory));else if(exchange.isNotEmpty())proposalExchange(juce::File(exchange));else if(cinema.isNotEmpty())cinemaEvaluation(root,juce::File(cinema));else if(longSession.isNotEmpty())longSectionProposal(root,juce::File(longSession));else {
+        if(preferencesLarge)m16LargeMeasuredProposal(root);else if(preferences)m16Preferences(root);else if(videoDirectory.isNotEmpty())proposalVideo(juce::File(sessionPath),juce::File(videoDirectory));else if(exchange.isNotEmpty())proposalExchange(juce::File(exchange));else if(cinema.isNotEmpty())cinemaEvaluation(root,juce::File(cinema));else if(longSession.isNotEmpty())longSectionProposal(root,juce::File(longSession));else {
         policyCases();collectorCases();assessmentBranches(root.getChildFile("assessment-branches"));
         for(int rate:{44100,48000,96000,192000})for(int channels:{2,6})for(int mode=0;mode<(channels==2?4:6);++mode)
         {
@@ -359,7 +360,7 @@ int main(int argc,char** argv)
         passed=true;
     }
     catch(const std::exception& e){failure=e.what();std::cerr<<failure<<'\n';}
-    auto v=juce::var(new juce::DynamicObject());auto* r=v.getDynamicObject();r->setProperty("suite","M13 section-led proposals");r->setProperty("passed",passed);r->setProperty("failure",failure);
+    auto v=juce::var(new juce::DynamicObject());auto* r=v.getDynamicObject();r->setProperty("suite",preferences?"M16 proposal preferences":"M13 section-led proposals");r->setProperty("policy_groups",juce::var(policyGroups));r->setProperty("policy_resources",policyResources);r->setProperty("passed",passed);r->setProperty("failure",failure);
     r->setProperty("checks",checks);r->setProperty("cases",cases);r->setProperty("phase",videoDirectory.isNotEmpty()?"video":exchange.isNotEmpty()?"exchange":cinema.isNotEmpty()?"cinema":longSession.isNotEmpty()?"long":smoke?"development-smoke":"audio");r->setProperty("build",LEVELSCOPE_MEASUREMENT_BUILD);r->setProperty("os",juce::SystemStats::getOperatingSystemName());r->setProperty("long_workflow",longEvidence);r->setProperty("physical_devices_opened",false);r->setProperty("video_loaded",videoDirectory.isNotEmpty());r->setProperty("video_cases",videoEvidence);r->setProperty("exchange_cases",exchangeEvidence);
 #if defined(__arm64__) || defined(__aarch64__)
     r->setProperty("architecture","arm64");

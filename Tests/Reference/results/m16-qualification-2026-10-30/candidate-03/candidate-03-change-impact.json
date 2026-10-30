@@ -1,0 +1,16 @@
+{
+  "from_candidate": "candidate-03",
+  "to_candidate": "candidate-03",
+  "from_source": "6e7465e85ffac1394680f9ede6fff598edad04926e8f88bfcfe736ba917a30c1",
+  "to_source": "3ac2e19d8dd976a8fdc41490245ad9961af91e4bfe1a1d5afdc1ad5c03897f38",
+  "changed_source": [
+    "Source/Core/Proposal/Methods/SectionTrimMethod.cpp",
+    "Source/Standalone/StandaloneMainComponent.cpp",
+    "Tests/M16QualificationRunnerTests.py",
+    "Tests/ProposalPreferencesTests.h",
+    "Tests/run_m16_qualification.py"
+  ],
+  "production_change": "Display only: affected frames/seconds/percentage in accepted summaries; remove irrelevant empty global-draft notice when section proposal exists. No selection/sample arithmetic change.",
+  "test_change": "Assert duration display; strengthen old-reader proof with exact expected build/failure and valid schema6 input checksum.",
+  "qualification": "Full explicit short manifest rerun on candidate-03; silent UI repeated on candidate-03."
+}

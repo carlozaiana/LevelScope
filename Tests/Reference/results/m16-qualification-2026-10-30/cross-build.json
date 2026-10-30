@@ -1,0 +1,90 @@
+{
+  "actual_runtime": "ProductName:\t\tmacOS\nProductVersion:\t\t15.7.9\nBuildVersion:\t\t24G830",
+  "cpu": "Apple M1 Max",
+  "executed_architecture": "arm64",
+  "compiler": "Apple clang version 17.0.0 (clang-1700.0.13.5)\nTarget: arm64-apple-darwin24.6.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+  "build_configuration": [
+    "CMAKE_BUILD_TYPE:STRING=Release",
+    "CMAKE_CXX_FLAGS:STRING=",
+    "CMAKE_CXX_FLAGS_RELEASE:STRING=-O3 -DNDEBUG",
+    "CMAKE_OSX_ARCHITECTURES:STRING=arm64;x86_64",
+    "CMAKE_OSX_DEPLOYMENT_TARGET:UNINITIALIZED=10.13",
+    "FETCHCONTENT_SOURCE_DIR_JUCE:PATH=/Users/fuzz/Developer/LevelScope/build/juce-7.0.12"
+  ],
+  "binaries": [
+    {
+      "file": "LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone",
+      "sha256": "318d51ef9db96a2707f7881c450cde113eb6392d480cbd73f152420ace6bab58",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum_macos": "10.13"
+    },
+    {
+      "file": "bin/LevelScopeExportTests",
+      "sha256": "d248d1cac283f7debf1c4179c6d649583a0472b17c76e62a05cde4600b0c8540",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum_macos": "10.13"
+    },
+    {
+      "file": "bin/LevelScopeMarkerTests",
+      "sha256": "d89f9997f41752a45ba709a1558431ec43868ef4b162a791aa4da7696633d9a3",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum_macos": "10.13"
+    },
+    {
+      "file": "bin/LevelScopeProposalTests",
+      "sha256": "eb57bda0e54d6ee6798f9241db1934754d650a8622770411265ff98959ae4e0d",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum_macos": "10.13"
+    },
+    {
+      "file": "bin/LevelScopeSectionProcessingTests",
+      "sha256": "c2488091df03be58f82dfa2884aeed553a587f341cf06949f4ff7a2a246ab2ff",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum_macos": "10.13"
+    },
+    {
+      "file": "bin/LevelScopeSectionProposalTests",
+      "sha256": "ee46bb9629d30b13ddc74737f4eb59806b132710f6c10d789be990a2e93bc31f",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum_macos": "10.13"
+    },
+    {
+      "file": "bin/LevelScopeSectionsTests",
+      "sha256": "354c390a83228b698d051c6f68536908512ef90891401926b7ede00be3bad6e1",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum_macos": "10.13"
+    },
+    {
+      "file": "bin/LevelScopeSessionTests",
+      "sha256": "10389a67db49608dfcb40b1a02f1571f6c6c31abca0593a46e97089c4985ad96",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum_macos": "10.13"
+    }
+  ],
+  "actual_intel_high_sierra_executed": false,
+  "plugins_built_or_installed": false
+}

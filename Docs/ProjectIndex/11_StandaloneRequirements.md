@@ -139,3 +139,9 @@ Artifacts to emit:
 - TODO: Final per-profile lock/default/free parameter tables.
 - TODO: Profile override policy (what is locked vs editable per profile).
 - TODO: Scope of reanalysis primitives (full-file only vs segment-level).
+
+## M16 approval and revised product priorities — 30 October 2026
+
+The M16 approval supersedes earlier proposed defaults and legacy-mode plans: no region-count restriction by default, optional explicit count within 10,000-interval processing capacity, connected processing support accounting, automatic pre-M16 adoption, and complete scrollable/reportable change inspection. Duration 20% is an adjustable preservation preference, not an EBU rule or cinema expectation. Additional/cumulative attenuation and reserve remain distinct. Delivery-profile rules are unchanged.
+
+Selective LRA correction is a central objective. See ProjectIndex 58 for inline job LRA requirements/named presets, early timeline interaction and progressive automatic analysis, then editable region suggestions and selective LRA proposals. Defined extra objectives must all be satisfied before “already compliant”; plain EBU has no LRA ceiling. Preserve dialogue/ambience/contrast, distinguish diagnostic tails from causal claims, and define locking settings versus preserving audible results before freeze controls. These are separately reviewed milestones, not M16 implementation scope. Combined qualification remains after M18, no later than M19; main stays qualified M13.

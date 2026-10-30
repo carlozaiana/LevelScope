@@ -1,6 +1,6 @@
 # M16 proposal — bounded proposal preferences and configurable limits
 
-29 October 2026. **Proposed for review; implementation is not approved or started.**
+30 October 2026. **Approved revisions implemented in candidate-03. Sequoia tested; High Sierra, video and three-hour checks pending.** See [59](59_M16QualificationAndHandover.md) for exact identity/evidence; checkpoint publication authorized30October2026; main integration remains deferred.
 
 Start from published M15 candidate-05, commit
 `1b56804ecfb469aef3276b2d4ac96039ce3e4cc1`, annotated tag
@@ -45,7 +45,7 @@ cinema file. All supported controls are hard proposal constraints.
 
 | Control | Proposed default | Supported range / representation | Reason |
 | --- | --- | --- | --- |
-| Maximum changed processing regions | 8 | Integer 1–64 | Eight preserves the existing nominal review budget; 64 bounds human review. Region accounting below removes annotation-row inflation. |
+| Maximum changed processing regions | No region-count restriction | Optional explicit integer 1–10,000, within structural processing capacity | Count is a preservation preference, not an engineering budget. No ceiling of 64 and no truncation to fit a limit. |
 | Maximum newly affected local-envelope duration | 20% | 0–100%, 0.1 percentage-point steps; exact integer thousandths of programme length | Keep the existing default. Wider values explicitly allow broader local processing, with preview of seconds/percentage. Zero disables changing the local envelope. |
 | Maximum additional local attenuation per proposal | 3 dB | 0–6 dB, 0.1 dB steps | Preserve the current default; allow a bounded reviewable extension, still limited by the cumulative and processing bounds. Zero disables local attenuation. |
 | Maximum resulting cumulative local attenuation | 12 dB | 0–12 dB, 0.1 dB steps | The existing M12 lower plateau bound is −12 dB. Making that ceiling explicit preserves current reach; users may choose a stricter value, e.g. 3 dB. It is not a recommended amount to apply. |
@@ -57,7 +57,7 @@ strings or round evaluated audio to the controls' step size. Existing gains rema
 full precision. Reject non-finite/out-of-range values and incompatible settings;
 do not silently clamp a saved policy. A zero additional cap requires reserve zero
 (or the user explicitly chooses both); show the conflict without modifying settings.
-No unbounded or hidden “off” value for count/cumulative limits. Duration 100% is an
+An explicit optional count limit is distinct from the always-enforced 10,000-interval structural capacity. Cumulative gain remains bounded. Duration 100% is an
 explicit whole-programme local allowance, not bypass of any other gate.
 
 Keep non-configurable: target profile and its exact rules; local upward proposal
@@ -103,7 +103,7 @@ planning deficit must remain visible even if the exact result differs.
 
 ## Marker density and changed audio
 
-Current M13 code counts `corrections.size()`: changed annotation rows. It also
+Frozen M13 code counts `corrections.size()`: changed annotation rows. It also
 unions changed interval/transition support for the 20% check. M16 should version a
 new accounting policy, **not silently reinterpret the old eight-section rule**.
 
@@ -117,8 +117,7 @@ as required by the versioned sample-coordinate convention. Clip to [0, programme
 frames); never extend programme duration for filter padding. The duration gate is
 the union of that support, not a sum of row lengths or a percentage of marker count.
 
-An implementation may refine the conservative support calculation, but its definition
-must be fixed and independently tested before freezing the candidate. Identical
+The implementation partitions both canonical envelopes into plateaus/ramps, merges their event coordinates, and counts spans with different plateau values or ramp definitions, including complete ramp endpoints. Touching spans join. This conservative versioned support may include an equal ramp endpoint; it is not a sample-by-sample count of unequal floating-point values. Independently sampled tests must show that every unequal processing sample is covered. Identical
 canonical envelopes must have zero change. An arbitrary rename, ID change or redundant
 equal-gain split must not increase measured support or region count when the actual
 before/after processing is identical. Two separated modified spans remain two regions;
@@ -178,11 +177,7 @@ identity. The result retains the policy snapshot that actually generated it.
 - Editing remains explicit and stopped/no active proposal or file transaction for
   the first UI. Show draft versus active policy; Cancel preserves the old policy.
   Nothing regenerates, applies, measures or starts playback automatically.
-- New sessions use configurable policy v2 with the defaults above. Older sessions
-  (schemas 1–5) reconstruct immutable legacy fixed policy v1, including raw changed-
-  section counting. Display “Legacy fixed policy.” Explicit **Use configurable
-  limits** previews the v2 semantics/defaults before adoption. Retain a bounded v1
-  compatibility path and regression evidence; do not silently rewrite old decisions.
+- New sessions and pre-M16 sessions (schemas 1–5) use configurable policy v2 defaults automatically. Preserve media, annotations and exact applied processing; discard transient old proposals. No legacy executable method or adoption prompt. Historical packages/evidence retain old decisions. Opening never rewrites the original file.
 - Propose session schema 6 for the policy record. Old formats open without rewriting;
   Save As preserves an M15-readable original. Saving v2 requires an M16 reader.
   Unknown/invalid mandatory policy fields block proposal generation, without trusting
@@ -219,11 +214,11 @@ all listed evidence. Do not recursively launch historical milestone runners.
    No undocumented epsilon; display rounding never changes a gate or verdict.
 3. **Extent and density:** independently computed sample-support oracle for short
    envelopes at 44.1/48/96/192 kHz; transitions/short sections/EOF; union with no double
-   counting; exact duration boundary; separate versus touching regions; count 8/9 and
-   configurable min/max. Equal canonical processing with renamed/reordered metadata
+   counting; exact duration boundary; separate versus touching regions; counts above 64, disabled/restricted count and
+   structural min/max. Equal canonical processing with renamed/reordered metadata
    or redundant splits has equal support/count; truly different gains/transitions may
    differ and are explained. Inspect 10,000-row inputs without per-sample three-hour scans.
-4. **Method behavior:** legacy v1 reproduces existing fixed decisions; v2 default and
+4. **Method behavior:** pre-M16 migration adopts new defaults; v2 default and
    explicit alternate policies use the same global-first/one-envelope sequence;
    already-pass preserves gain/revisions/measurements and requests no new pass.
    No truncated subset chosen merely to fit count/time budgets. Cinema-equivalent
@@ -241,7 +236,7 @@ all listed evidence. Do not recursively launch historical milestone runners.
    unknown policy recovery, coherent saves/late jobs; report provenance and strict
    artifact gates, single dither stage and unchanged rendered-audio reuse. Preserve
    M15 exact marker mapping and annotation-only invalidation. No playback device.
-7. **Silent UI:** draft/edit/confirm/cancel/reset, legacy-to-v2 adoption, disabled Apply
+7. **Silent UI:** draft/edit/confirm/cancel/reset, automatic pre-M16 migration, disabled Apply
    on stale proposal, requested/achieved limits and failure explanations, saved policy
    and reopening stopped/device-closed/routes-muted. Proposal-limit edits do not show
    a new compliance verdict or automatically regenerate audio.
@@ -284,21 +279,8 @@ Keep occasional picture skips accepted when deferred tests run, recording counts
 audio interruptions, accumulating drift, sustained freezes and identity/lifecycle
 failures remain blockers. Full physical 7.1 listening remains separately pending.
 
-## Exclusions and decisions for review
+## Complete inspection and exclusions
 
-No coordinated neighbouring adjustment, new transition rules, automatic segmentation,
-marker/EDL adapter expansion, limiter/compressor integration, dynamics/mixed/alternative
-proposal strategies, optimization search, LRA/dialogue objectives, component DSP,
-stem/Atmos/7.1.4 expansion, new export formats or VST3 parity. No processing is
-implemented by this document. Neighbour difference/slew stays descriptive only.
+Every correction remains available in the bounded scrollable proposal view and JSON/HTML reporting, including accepted proposals with more than 32 or 64 rows. A shortened summary is never labelled a rejected proposal. The 10,000-interval structural bound, 16 MiB retained-state budget and report budgets remain independent safeguards. No silent subset selection.
 
-The substantive proposed decisions are: (1) replace the v2 count gate with connected
-changed-processing regions while retaining raw-row disclosure and legacy v1 behavior;
-(2) expose cumulative attenuation with default 12 dB to match the existing hard local
-range, rather than implying the additional 3 dB is cumulative; (3) permit explicit
-ranges up to 64 regions, 100% duration and 6 dB additional reduction, while retaining
-one candidate and measured gates. Approval may choose stricter supported ranges or
-a lower new-session cumulative default without changing delivery requirements.
-
-Stop for implementation approval. M15 publication does not authorize M16 code,
-qualification execution, a new checkpoint, or integration into main.
+No coordinated neighbouring adjustment, new transition rules, automatic segmentation, new strategies, limiter/compressor integration, new marker formats/EDL, component DSP or intelligibility analysis inside M16. See the separately staged UI/product priorities in ProjectIndex 58. High Sierra/Golem, video and three-hour tests remain deferred after M18, no later than M19. Main stays at M13. Stop for review before publication or integration.

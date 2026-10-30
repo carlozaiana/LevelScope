@@ -16,6 +16,9 @@ struct Request
     bool unsaved = true;
     juce::File sessionFile;
     proposal::SectionMap sections;
+    proposal::ProposalPolicy proposalPolicy;
+    std::optional<proposal::ProposalPolicy> lastAppliedProposalPolicy;
+    juce::String lastAppliedProposalBinding,proposalInspection,lastAppliedProposalInspection;
     std::optional<proposal::markers::Receipt> markerImport;
     video::Reference video;
 };

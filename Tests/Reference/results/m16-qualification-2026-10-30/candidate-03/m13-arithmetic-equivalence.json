@@ -1,0 +1,31 @@
+{
+  "original_m13_source": "50eba19a2d66096607ec878c8eaa05e610580c7f5e8854d7b375d846a89c5f27",
+  "m16_source": "3ac2e19d8dd976a8fdc41490245ad9961af91e4bfe1a1d5afdc1ad5c03897f38",
+  "unchanged_files": {
+    "Source/Core/Measurement/GatePopulation.h": "56c32bea23a332f811433c0977d07de9b3401b12cf8629d92aa78ceb58060c3e",
+    "Source/Core/Measurement/OfflineMeasurement.cpp": "b4e6ab4b0ae0cd89e41370ff8ee66de9eb9780f181fc853c3ad3294345d29dc4",
+    "Source/Core/Measurement/OfflineMeasurement.h": "cd85ad1244b6710cead67de383a46c17541b3b32b41a5218c8f623cbbb90b850",
+    "Source/Core/Processing/DSP/BS1770MomentaryLufsDetector.h": "ce3244119e6ac8d36c48d9b69c9b7421c2c81dcc73e47bd135178b498910da6f",
+    "Source/Core/Processing/DSP/BroadbandDownwardCompressor.cpp": "47a1580c9c73e21bf2d50ac8d5d96b6da73ee764795614259c3a1343255f993b",
+    "Source/Core/Processing/DSP/BroadbandDownwardCompressor.h": "d490dd72b88e4f2549f64af4727e34461e523614b4c8025eeb86646f55617a63",
+    "Source/Core/Processing/DSP/BroadbandUpwardCompressor.cpp": "ba73d0c937472fcbb7674ab616c4097814295d6cf79e05aab31cdcaf354b13c6",
+    "Source/Core/Processing/DSP/BroadbandUpwardCompressor.h": "5601110d1e3ad20a9e04fdf1741d2aa2a638173866dbfbd726f05ae1f8de5483",
+    "Source/Core/Processing/DSP/LookaheadLimiter.cpp": "360ccd04a44cf83d52a17c99f893ab661f2fd560c8f4c4a4bc2e609368cb319c",
+    "Source/Core/Processing/DSP/LookaheadLimiter.h": "cfa3a5a44c5f6858aca11179f26c96adb1c066cfb7ae7aa714b4d079a6f17c66",
+    "Source/Core/Processing/DSP/SpectralUpwardCompressor.cpp": "506a9aabf4fd22c022372c49306da6b40034399a9bcf7056a23a79ed3330a0cf",
+    "Source/Core/Processing/DSP/SpectralUpwardCompressor.h": "a6488b85cfabc66c3a073aaaf7a6c356372fbc91b258943579b3045c78f65db7",
+    "Source/Core/Processing/DSP/UpwardGainLaw.h": "c76ee1dc5f36b7e59e8c82fedc3858dc70edfd3444009803002681bf11f19881",
+    "Source/Core/Processing/IAudioModule.h": "5696083035028c8ccc8da4aed8ed28f3fd89a057f7064f4bb75069b00d338dc6",
+    "Source/Core/Processing/Modules/LevelerModule.cpp": "9a989ab0581a0136f8a6302e0bab2986afeaa1a136139428d43d332bd071cd15",
+    "Source/Core/Processing/Modules/LevelerModule.h": "e671df99d228ed7843c8a4021ba37de831981db0bc43ff0647a51e5e610970ba",
+    "Source/Core/Processing/Modules/LevelerParamIDs.h": "bb71fc7c804b0fb94d69ecd2f98f3166747bac1862817d01c091694b155c7be8",
+    "Source/Core/Processing/Modules/MultiThresholdDynamicsModule.cpp": "0cdc402e5d7b60e8e05a11aa76cfed8aa4dc6a4b33efe97e8ad755aad7ebc973",
+    "Source/Core/Processing/Modules/MultiThresholdDynamicsModule.h": "8be81698b0afb5292a612b3769a2d5a1f51754bcd1e25ce2e0bbccc0492e4ac3",
+    "Source/Core/Processing/Modules/MultiThresholdDynamicsParamGroups.h": "bdfaef5a125e238e35e08970fdb94a72cc017877e6b7871bc38af78509771e46",
+    "Source/Core/Processing/Modules/MultiThresholdDynamicsParamIDs.h": "64b614f2c6f6173a1370551964f5a349f93305ff03cdb831042ce6e208efe18e",
+    "Source/Core/Processing/ProcessContext.h": "654df1fccda8187b888922091430e4db5d48ad0eb2636b201f86ba8ffa34f330",
+    "Source/Core/Processing/ProcessorCore.h": "64b32626c0e4a757d866682eba25effb82c4f4daa6464d47418348e60b79b53e",
+    "Source/Core/Processing/SectionGainPlan.h": "62919a2c9d7aa6036985f812c3ae481f923a3c40d0760177a4bfd8efe6704122"
+  },
+  "scope": "Arithmetic equivalence only. Does not qualify new M16 features on High Sierra or video."
+}

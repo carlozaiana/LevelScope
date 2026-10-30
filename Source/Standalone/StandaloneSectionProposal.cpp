@@ -6,13 +6,13 @@
 namespace levelscope::standalone
 {
 proposal::TrimRequest SectionProposalRequest::scalar() const
-{ return trimRequest(source.get(),current.get(),sourceContext,currentContext,currentContext.profile,applicability); }
+{ auto r=trimRequest(source.get(),current.get(),sourceContext,currentContext,currentContext.profile,applicability);r.preferenceIdentity=policy.digest();r.preferencesAvailable=policy.validationError().isEmpty();return r; }
 juce::String SectionProposalRequest::binding() const
 {
     const auto s=proposal::draftGlobalTrim(scalar()).identity+";"+proposal::sectionTrimMethodVersion
         +";"+proposal::sectionGeometryKey(annotations)+";"+proposal::sectionGeometryKey(appliedAnnotations)
         +";"+currentContext.sessionId+";"+juce::String(currentContext.ticket.sessionRevision)
-        +";"+juce::String(int(pendingManualDraft));
+        +";"+juce::String(int(pendingManualDraft))+";"+policy.digest();
     return juce::SHA256(s.toRawUTF8(),s.getNumBytesAsUTF8()).toHexString();
 }
 SectionProposalOutcome generateSectionProposal(const SectionProposalRequest& r,JobControl& control,const SnapshotStorage& storage)
@@ -22,9 +22,13 @@ SectionProposalOutcome generateSectionProposal(const SectionProposalRequest& r,J
     const auto complete=[&]() -> SectionProposalOutcome
     {
         if(control.isCancelled())return {{},ErrorCode::cancelled,"Proposal cancelled; applied settings and measurements preserved."};
-        out->explanation="Section-led / "+juce::String(proposal::sectionTrimMethodVersion)+"\nBaseline binding: "+out->bound
+        const char* outcome=out->state==SectionProposalStatus::ready?"READY FOR EXPLICIT APPLY - exact private candidate passes selected rules; Current unchanged":
+            out->state==SectionProposalStatus::noChange?"NO CHANGE - measured Current already passes":
+            out->state==SectionProposalStatus::globalOnly?"GLOBAL-ONLY DRAFT - prediction, explicit Apply and remeasurement required":
+            out->state==SectionProposalStatus::noSolution?"NO SOLUTION FOUND WITHIN THESE PREFERENCES":"UNAVAILABLE";
+        out->explanation=juce::String(outcome)+"\nSection-led / "+juce::String(proposal::sectionTrimMethodVersion)+"\nBaseline binding: "+out->bound
             +"\nProfile: "+r.currentContext.profile.id+" / "+r.currentContext.profile.definitionVersion+" / "+r.currentContext.profile.digest()
-            +"\n"+out->explanation+"\nPrivate full-programme passes: "+juce::String(out->passCount)+" / 3.\n";
+            +"\n"+r.policy.text()+"\n"+out->explanation+"\nPrivate full-programme passes: "+juce::String(out->passCount)+" / 3.\n";
         if(r.current) out->explanation+="Baseline measured I / TP: "+(r.current->measured.integratedLufs?juce::String(*r.current->measured.integratedLufs,9):juce::String("unavailable"))
             +" LUFS / "+(r.current->measured.truePeakDbtp?juce::String(*r.current->measured.truePeakDbtp,9):juce::String("unavailable"))+" dBTP.\n";
         if(out->candidate)out->explanation+=evaluationText(evaluateSnapshot(out->candidate.get(),out->candidate->context,
@@ -34,6 +38,7 @@ SectionProposalOutcome generateSectionProposal(const SectionProposalRequest& r,J
     };
     try
     {
+        if(r.policy.validationError().isNotEmpty()){out->explanation=r.policy.validationError();return complete();}
         const auto scalar=r.scalar();out->scalarResult=proposal::draftGlobalTrim(scalar);
         out->explanation=proposal::trimProposalText(out->scalarResult);
         if(control.isCancelled())return complete();
@@ -84,7 +89,7 @@ SectionProposalOutcome generateSectionProposal(const SectionProposalRequest& r,J
                 return {{},ErrorCode::staleRevision,"Private baseline disagrees with measured Current. Remeasure; no proposal offered."};
             out->attribution=collector.finish();
         }
-        out->seed=proposal::selectSectionTrims(scalar,map,r.currentContext.processing.sectionGains,*out->attribution);
+        out->seed=proposal::selectSectionTrims(scalar,map,r.currentContext.processing.sectionGains,*out->attribution,r.policy);
         out->state=SectionProposalStatus::noSolution;out->explanation+=proposal::sectionSeedText(out->seed);
         if(!out->seed.available)return complete();
         context.processing.sectionGains=out->seed.plan.canonical();context.processing.schemaVersion=2;
@@ -111,6 +116,9 @@ SectionProposalOutcome generateSectionProposal(const SectionProposalRequest& r,J
         out->state=SectionProposalStatus::ready;out->proposed=context.processing;
         out->explanation+="READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.\n"
             "After Apply Current is UNVERIFIED until independent remeasurement. Global gain "+juce::String(context.processing.staticGainDb,12)+" dB affects the entire programme.\n";
+        double minimumLocal=0,maximumLocal=0;
+        if(context.processing.sectionGains){minimumLocal=12;maximumLocal=-12;for(const auto& row:context.processing.sectionGains->intervals){minimumLocal=std::min(minimumLocal,row.db);maximumLocal=std::max(maximumLocal,row.db);}}
+        out->explanation+="Proposed local gain range "+juce::String(minimumLocal,12)+" to "+juce::String(maximumLocal,12)+" dB; combined local-plus-global range "+juce::String(minimumLocal+context.processing.staticGainDb,12)+" to "+juce::String(maximumLocal+context.processing.staticGainDb,12)+" dB. Local attenuation preferences do not cap whole-chain attenuation.\n";
         return complete();
     }
     catch(const std::exception& e){return {{},ErrorCode::invalidRequest,"Proposal failed safely: "+juce::String(e.what())};}

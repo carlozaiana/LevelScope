@@ -3,6 +3,7 @@
 #include "StandaloneProgrammeImport.h"
 #include "StandaloneCompositionImport.h"
 #include "StandaloneExport.h"
+#include "StandaloneProposalPreferences.h"
 
 #include <memory>
 #include <future>
@@ -109,6 +110,8 @@ private:
     juce::TextButton remeasureCurrentStateButton { "Re-measure Current State" };
     juce::Slider currentGain;
     juce::TextButton sectionProposalButton { "Generate section-led" }, applySectionProposalButton { "Apply proposal" }, discardSectionProposalButton { "Discard proposal" };
+    std::unique_ptr<juce::DocumentWindow> preferencesWindow,proposalInspectionWindow;
+    juce::TextButton preferencesButton { "Proposal limits..." },inspectProposalButton { "Inspect complete proposal..." };
     juce::TextButton draftTrimButton { "Draft global trim" };
     juce::TextButton applyTrimButton { "Apply trim" };
     juce::TextButton discardTrimButton { "Discard draft" };

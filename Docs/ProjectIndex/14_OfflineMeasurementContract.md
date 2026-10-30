@@ -156,7 +156,7 @@ their existing semantics. See [43](43_M11QualificationAndHandover.md) for comple
 qualification, published checkpoint identity and future component/whole-programme processing boundaries; this
 addition does not retroactively extend earlier measured checkpoint evidence.
 
-## M12 development extension — Sequoia tested; High Sierra and video qualification pending
+## M12 development extension — historical phase status
 
 M12 adds `section-gain-v1` before the unchanged final global trim, after any
 confirmed composition. It uses absolute audio-source frames, full-precision
@@ -168,8 +168,21 @@ method remain unchanged. New section processing is limited to stereo/5.1.
 
 See [44](44_M12SectionTrimProcessing.md) for the approved numerical/identity contract
 and [46](46_M12QualificationAndHandover.md) for current evidence. This development
-extension is not covered by earlier M11 qualification. Actual High Sierra and all
-video runtime checks are deferred until after M13; main remains at qualified M11.
+extension is not covered by earlier M11 qualification. That original deferral was completed by qualified M13 (document 49). Main now remains at M13; M14 subsequently adds mono section processing/export under its separate Sequoia phase (document 52).
+
+## M16 proposal metadata and unchanged measured authority
+
+M16 policy preferences are session metadata, separate from profiles and processing.
+Changing them invalidates pending global/section proposals and report approvals,
+while preserving unchanged-audio measurements, evaluations, audition identity and
+rendered artifact samples. The exact policy digest joins proposal request/baseline
+identity; only explicit stopped-only Apply changes Current audio. Private candidate
+measurements remain distinct from independent Current remeasurement and finalized
+export verification. Defaults and engineering limits are not delivery allowances.
+Session schema 6 automatically adopts current defaults for pre-M16 documents without
+remapping applied gains or rewriting originals. See documents 56–59 for implementation,
+evidence and pending High Sierra/video/three-hour combined qualification after M18,
+no later than M19. Main remains qualified M13 until later integration approval.
 
 ## Primary references
 

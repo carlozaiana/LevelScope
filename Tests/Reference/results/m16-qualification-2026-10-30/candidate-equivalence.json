@@ -1,0 +1,11 @@
+{
+  "from_candidate": "candidate-01",
+  "to_candidate": "candidate-02",
+  "from_source": "39f4a1a9b410895bfcea0b259afce63b822af33f59b76a49fcf4466fa36cd9ef",
+  "to_source": "6e7465e85ffac1394680f9ede6fff598edad04926e8f88bfcfe736ba917a30c1",
+  "changed_source": [
+    "Tests/SectionProposalTests.cpp"
+  ],
+  "production_and_app_byte_identical": true,
+  "reason": "Regression assertion updated from above 20% to above 20.0%, adding exact whole-programme affected-frame assertion; no implementation change. Full explicit automated selection rerun on candidate-02. Candidate-01 UI evidence applies to identical app."
+}

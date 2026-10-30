@@ -1,0 +1,40 @@
+{
+  "checked_at": "2026-10-30T12:36:15.387838+00:00",
+  "head": "63eafac9acc210d762dfd5e3dcc70defbe5bbdf3",
+  "main": "a9be070ab9eb5cb4f591ff9d991d8999c3a016d0",
+  "tag_count": 19,
+  "tag_objects_and_targets": "refs/tags/high-sierra-pre-scaffold-2026-10-15 b3c6e845482dbe8a0ec9778d5a9ad7953e614609 556d387ad772dc5e604ead95f1525f60e66fd5f9\nrefs/tags/m10-verified-pcm-export-2026-10-26 3bbd1476cbc4e200f9d8f2776f53e06c4bf57180 fcd4c15fe78d6352f5e96faabf3eb52f942235e1\nrefs/tags/m11-aligned-stem-composition-2026-10-26 2ddbd80e7ce0f5d42d72f8cc3d466925685f1fe0 cfb1033aa7fb65a2655db276bee696161196bdeb\nrefs/tags/m12-section-trim-sequoia-2026-10-27 4afecf3455f15792403a843772ef9e495de58ae5 2fb0e3cfee22a527bacaa09c4ddace23129442fb\nrefs/tags/m13-bounded-section-proposals-2026-10-28 bbcf9d7baca12decb7bbd6f835f4e52b8c0a8bb2 a9be070ab9eb5cb4f591ff9d991d8999c3a016d0\nrefs/tags/m14-mono-rf64-sequoia-2026-10-29 8523392cd96b76513f10c8441d236c8f16a9e5a1 3d98284c2c0b7de92cfee70cb0007d43d1f04d1f\nrefs/tags/m15-marker-import-sequoia-2026-10-29 e2c9fee7c5c8ac228a3487d2b7d8b9df45b92472 1b56804ecfb469aef3276b2d4ac96039ce3e4cc1\nrefs/tags/m2-measured-compliance-2026-10-18 673e382feeaa7e29e6e6abedbd56677aa2163ef3 01a34833ec06a0d237e098faadb23b398581e8f9\nrefs/tags/m3-global-trim-2026-10-18 4063ca0e73c5b24dfa079eb894f85e398e9fee50 62ab420cb15b3ce5e1c821c963a749a9a56ae4a7\nrefs/tags/m4-measured-diagnostics-2026-10-18 cc64c771a70ccf95e779a7fe7260749a4530c285 9a22749901d9f6d4b9c194c9c22c0a231f2494f6\nrefs/tags/m5-programme-sections-2026-10-20 e36b4308374256ad36eff6c01d4d92325a06d3b0 ae88e187d288c53dbca1287e8341b74b9b5b2619\nrefs/tags/m6-verified-current-state-audition-2026-10-24 7f54eb1098471dc55bd75484f873a9f90e68ac05 b57a1ed23cbe7d74afe98ed16ec8fd615db9d171\nrefs/tags/m7-pcm-7.1-2026-10-25 04d0c836fcbc3a7af72638a7514faacd32ae48a9 cfbf3f981dece326d2363b911e5914ea61f1796c\nrefs/tags/m8-reproducible-sessions-2026-10-25 93908205c41de16c10b187bc00fcc1621e328c66 8e984889c5e73670f370c6c568c8ea1d7902a35c\nrefs/tags/m9-separate-file-stereo-5.1-2026-10-25 0cb0e4bea6fd9d11cc4207e9b863d5fca2b70bff 75843dcd017ec7990be2200454a10fc38beb44c4\nrefs/tags/measurement-milestone-2026-10-17 76affb667b6dab066cb36b2a2c741525b9b6eeac b29bc7c183743f35c6271d2d7ec8fb5ba1464591\nrefs/tags/standalone-scaffold-2026-10-15 4c8bc35b788969e1f6e97dcdc57a601b01fff7cd f192a8553e139d390056c9755f25eeb123bbc5e6\nrefs/tags/video-checkpoint-2026-10-17 06f57524bedca1912c0d5c454f13561cec9ce5b4 700b9e77e439a8ca9bb7583adf826fac01dbe924\nrefs/tags/video-prores-checkpoint-2026-10-21 d62c1159eeb2ffbb8b7ffc7c31014b842642d195 dcc34aabba6b5b3ca4805e2965d21ffebf2e4d0a\n",
+  "worktrees": "worktree /Users/fuzz/Developer/LevelScope\nHEAD 63eafac9acc210d762dfd5e3dcc70defbe5bbdf3\nbranch refs/heads/codex/logic-module\n\nworktree /Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation\nHEAD 5e07bbd29930db34236d6dfcede7fea14983f90a\nbranch refs/heads/codex/video-implementation\n\n",
+  "all_preexisting_tags_unchanged": true,
+  "prior_frozen_artifacts_verified": [
+    {
+      "path": "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-02",
+      "source": "50eba19a2d66096607ec878c8eaa05e610580c7f5e8854d7b375d846a89c5f27",
+      "identity_sha256": "266783d8faaabde9fbb166901d1eba8f1c0ff75c4f51a2258a9502817feed839",
+      "artifacts_verified": 473
+    },
+    {
+      "path": "/Users/fuzz/Developer/LevelScope/build/m14-qualification-2026-10-29/candidate-02",
+      "source": "9dd22a598281e83431039f210202a8a24fe49517294cc6bb8d83032c4975e013",
+      "identity_sha256": "c8b0184b700be7ada4963b0b80bcfca1e577936855291e1280e5f6aa0ccc913d",
+      "artifacts_verified": 473
+    },
+    {
+      "path": "/Users/fuzz/Developer/LevelScope/build/m15-qualification-2026-10-29/candidate-05",
+      "source": "38676a45d47ddba6eb54f7ab299f52f622f6be26554256781b8960749c609564",
+      "identity_sha256": "628cd75b3f7691f05771c1374c0236d3c6e71a0546c5bfdad0911b177330c136",
+      "artifacts_verified": 275
+    }
+  ],
+  "preexisting_unrelated_files_preserved": [
+    "?? .DS_Store",
+    "?? Docs/.DS_Store",
+    "?? Source/.DS_Store",
+    "?? Source/Core/.DS_Store",
+    "?? Source/Core/Processing/.DS_Store",
+    "?? Tests/.DS_Store",
+    "?? Tests/Reference/.DS_Store"
+  ],
+  "network_publication_performed": false,
+  "main_integration_performed": false
+}

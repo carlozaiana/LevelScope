@@ -1,0 +1,23 @@
+{
+  "complete_text_seconds": 0.02286191666591912,
+  "selection_seconds": 0.04317033333331347,
+  "selection_peak_rss_delta": 9404416.0,
+  "inspection_peak_rss_delta": 57409536.0,
+  "retained_plan_attribution_text_bytes": 8575063.0,
+  "large_report_seconds": 0.04747379166726023,
+  "ten_thousand_selection_seconds": 0.04317033333331347,
+  "peak_rss_delta_bytes": 57409536.0,
+  "retained_bytes": 8575063.0,
+  "report_pair_bytes": 5645849.0,
+  "inspection_heartbeat_p95_ms": 48.65125000011176,
+  "inspection_heartbeat_max_ms": 91.49358333274722,
+  "cancel_seconds": 0.0007086249999701977,
+  "large_candidate_changed_rows": 134,
+  "large_candidate_regions": 1,
+  "large_candidate_affected_frames": "66720",
+  "test_files_bytes": 213572513,
+  "silent_ui_session_bytes": 56644,
+  "silent_ui_session_sha256": "f5858ed65390d4c4d50cfa0a289c3de84967db570fac47a4d21f709cbd52e0c9",
+  "maximum_cache_session_not_rebenchmarked": true,
+  "scope": "Short synthetic audio and10000-interval structural stress. Synthetic10800-second diagnostic coordinates are not a three-hour audio workflow."
+}

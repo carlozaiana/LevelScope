@@ -757,9 +757,15 @@ M15 implementation scope. See ProjectIndex 53–54.
 M16 proposal, 29 October 2026: [ProjectIndex 56](ProjectIndex/56_M16ProposalPreferencesAndLimits.md)
 proposes a bounded configurable policy with separate additional/cumulative local
 attenuation, reserve and count/duration limits. New v2 accounting uses connected
-changed processing support rather than raw annotation count; legacy v1 semantics
-remain explicit. This is not coordinated neighbouring adjustment or a new strategy.
+changed processing support rather than raw annotation count; the 30 October approval removes the proposed legacy executable mode. This is not coordinated neighbouring adjustment or a new strategy.
 The document specifies defaults/ranges, identity/session/report boundaries and
-impact-selected Sequoia acceptance; it awaits implementation approval. Main stays
+impact-selected Sequoia acceptance; implementation is approved with the revisions below. Main stays
 at M13, with actual High Sierra/video/three-hour checks deferred after M18, no later
 than M19. The published M15 checkpoint and original evidence remain unchanged.
+
+
+## M16 approval and revised product priorities — 30 October 2026
+
+The M16 approval supersedes earlier proposed defaults and legacy-mode plans: no region-count restriction by default, optional explicit count within 10,000-interval processing capacity, connected processing support accounting, automatic pre-M16 adoption, and complete scrollable/reportable change inspection. Duration 20% is an adjustable preservation preference, not an EBU rule or cinema expectation. Additional/cumulative attenuation and reserve remain distinct. Delivery-profile rules are unchanged.
+
+Selective LRA correction is a central objective. See ProjectIndex 58 for inline job LRA requirements/named presets, early timeline interaction and progressive automatic analysis, then editable region suggestions and selective LRA proposals. Defined extra objectives must all be satisfied before “already compliant”; plain EBU has no LRA ceiling. Preserve dialogue/ambience/contrast, distinguish diagnostic tails from causal claims, and define locking settings versus preserving audible results before freeze controls. These are separately reviewed milestones, not M16 implementation scope. Combined qualification remains after M18, no later than M19; main stays qualified M13.

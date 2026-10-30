@@ -1,0 +1,305 @@
+READY FOR EXPLICIT APPLY - exact private candidate passes selected rules; Current unchanged
+Section-led / section-trim-proposal-v2
+Baseline binding: 34123b730fbfa75528a67225c003bbb561f0b934a7e0932029849b84bd7c0586
+Profile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66
+section-preferences-v2 / connected-envelope-support-v2
+Policy digest: 9020f36cdf7584536fc2708e4f57196cbf3ca8ef1d72e954ae8ad2e88bb48e27
+No region-count restriction; affected duration 20.0% (preservation preference, not broadcast rule).
+Additional attenuation 3.0 dB; cumulative local attenuation 12.0 dB; requested reserve 0.5 dB inside both caps.
+
+Global-trim proposal: NO PREDICTED SOLUTION
+No predicted trim-only solution: loudness allowance, true-peak headroom and supported total gain do not intersect. No plan applied.
+Source audition remains original audio.
+One bounded envelope selected; exact private whole-programme assessment is still required.
+section-preferences-v2 / connected-envelope-support-v2
+Policy digest: 9020f36cdf7584536fc2708e4f57196cbf3ca8ef1d72e954ae8ad2e88bb48e27
+No region-count restriction; affected duration 20.0% (preservation preference, not broadcast rule).
+Additional attenuation 3.0 dB; cumulative local attenuation 12.0 dB; requested reserve 0.5 dB inside both caps.
+Changed annotation rows: 134; inspected correction rows: 134; connected processing regions: 1; local support 66720 frames; global trim acts on the whole programme.
+Section 1 [0, 480) source frames; channel 1; TP -1.938200131 dBTP at 1920/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 2 [480, 960) source frames; channel 1; TP -1.938200131 dBTP at 1920/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 3 [960, 1440) source frames; channel 1; TP -1.938200131 dBTP at 1920/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 4 [1440, 1920) source frames; channel 1; TP -1.938200131 dBTP at 1920/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 5 [1920, 2400) source frames; channel 1; TP -1.938200131 dBTP at 1920/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 6 [2400, 2880) source frames; channel 1; TP -1.938200131 dBTP at 1920/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 7 [2880, 3360) source frames; channel 1; TP -1.938200131 dBTP at 9600/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 8 [3360, 3840) source frames; channel 1; TP -1.938200131 dBTP at 9600/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 9 [3840, 4320) source frames; channel 1; TP -1.938200131 dBTP at 17280/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 10 [4320, 4800) source frames; channel 1; TP -1.938200131 dBTP at 17280/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 11 [4800, 5280) source frames; channel 1; TP -1.938200131 dBTP at 24960/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 12 [5280, 5760) source frames; channel 1; TP -1.938200131 dBTP at 24960/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 13 [5760, 6240) source frames; channel 1; TP -1.938200131 dBTP at 32640/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 14 [6240, 6720) source frames; channel 1; TP -1.938200131 dBTP at 32640/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 15 [6720, 7200) source frames; channel 1; TP -1.938200131 dBTP at 40320/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 16 [7200, 7680) source frames; channel 1; TP -1.938200131 dBTP at 40320/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 17 [7680, 8160) source frames; channel 1; TP -1.938200131 dBTP at 48000/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 18 [8160, 8640) source frames; channel 1; TP -1.938200131 dBTP at 48000/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 19 [8640, 9120) source frames; channel 1; TP -1.938200131 dBTP at 55680/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 20 [9120, 9600) source frames; channel 1; TP -1.938200131 dBTP at 55680/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 21 [9600, 10080) source frames; channel 1; TP -1.938200131 dBTP at 63360/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 22 [10080, 10560) source frames; channel 1; TP -1.938200131 dBTP at 63360/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 23 [10560, 11040) source frames; channel 1; TP -1.938200131 dBTP at 71040/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 24 [11040, 11520) source frames; channel 1; TP -1.938200131 dBTP at 71040/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 25 [11520, 12000) source frames; channel 1; TP -1.938200131 dBTP at 78720/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 26 [12000, 12480) source frames; channel 1; TP -1.938200131 dBTP at 78720/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 27 [12480, 12960) source frames; channel 1; TP -1.938200131 dBTP at 86400/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 28 [12960, 13440) source frames; channel 1; TP -1.938200131 dBTP at 86400/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 29 [13440, 13920) source frames; channel 1; TP -1.938200131 dBTP at 94080/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 30 [13920, 14400) source frames; channel 1; TP -1.938200131 dBTP at 94080/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 31 [14400, 14880) source frames; channel 1; TP -1.938200131 dBTP at 101760/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 32 [14880, 15360) source frames; channel 1; TP -1.938200131 dBTP at 101760/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 33 [15360, 15840) source frames; channel 1; TP -1.938200131 dBTP at 109440/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 34 [15840, 16320) source frames; channel 1; TP -1.938200131 dBTP at 109440/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 35 [16320, 16800) source frames; channel 1; TP -1.938200131 dBTP at 117120/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 36 [16800, 17280) source frames; channel 1; TP -1.938200131 dBTP at 117120/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 37 [17280, 17760) source frames; channel 1; TP -1.938200131 dBTP at 124800/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 38 [17760, 18240) source frames; channel 1; TP -1.938200131 dBTP at 124800/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 39 [18240, 18720) source frames; channel 1; TP -1.938200131 dBTP at 132480/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 40 [18720, 19200) source frames; channel 1; TP -1.938200131 dBTP at 132480/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 41 [19200, 19680) source frames; channel 1; TP -1.938200131 dBTP at 140160/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 42 [19680, 20160) source frames; channel 1; TP -1.938200131 dBTP at 140160/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 43 [20160, 20640) source frames; channel 1; TP -1.938200131 dBTP at 147840/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 44 [20640, 21120) source frames; channel 1; TP -1.938200131 dBTP at 147840/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 45 [21120, 21600) source frames; channel 1; TP -1.938200131 dBTP at 155520/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 46 [21600, 22080) source frames; channel 1; TP -1.938200131 dBTP at 155520/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 47 [22080, 22560) source frames; channel 1; TP -1.938200131 dBTP at 163200/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 48 [22560, 23040) source frames; channel 1; TP -1.938200131 dBTP at 163200/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 49 [23040, 23520) source frames; channel 1; TP -1.938200131 dBTP at 170880/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 50 [23520, 24000) source frames; channel 1; TP -1.938200131 dBTP at 170880/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 51 [24000, 24480) source frames; channel 1; TP -1.938200131 dBTP at 178560/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 52 [24480, 24960) source frames; channel 1; TP -1.938200131 dBTP at 178560/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 53 [24960, 25440) source frames; channel 1; TP -1.938200131 dBTP at 186240/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 54 [25440, 25920) source frames; channel 1; TP -1.938200131 dBTP at 186240/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 55 [25920, 26400) source frames; channel 1; TP -1.938200131 dBTP at 193920/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 56 [26400, 26880) source frames; channel 1; TP -1.938200131 dBTP at 193920/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 57 [26880, 27360) source frames; channel 1; TP -1.938200131 dBTP at 201600/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 58 [27360, 27840) source frames; channel 1; TP -1.938200131 dBTP at 201600/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 59 [27840, 28320) source frames; channel 1; TP -1.938200131 dBTP at 209280/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 60 [28320, 28800) source frames; channel 1; TP -1.938200131 dBTP at 209280/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 61 [28800, 29280) source frames; channel 1; TP -1.938200131 dBTP at 216960/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 62 [29280, 29760) source frames; channel 1; TP -1.938200131 dBTP at 216960/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 63 [29760, 30240) source frames; channel 1; TP -1.938200131 dBTP at 224640/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 64 [30240, 30720) source frames; channel 1; TP -1.938200131 dBTP at 224640/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 65 [30720, 31200) source frames; channel 1; TP -1.938200131 dBTP at 232320/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 66 [31200, 31680) source frames; channel 1; TP -1.938200131 dBTP at 232320/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 67 [31680, 32160) source frames; channel 1; TP -1.938200131 dBTP at 240000/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 68 [32160, 32640) source frames; channel 1; TP -1.938200131 dBTP at 240000/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 69 [32640, 33120) source frames; channel 1; TP -1.938200131 dBTP at 247680/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 70 [33120, 33600) source frames; channel 1; TP -1.938200131 dBTP at 247680/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 71 [33600, 34080) source frames; channel 1; TP -1.938200131 dBTP at 255360/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 72 [34080, 34560) source frames; channel 1; TP -1.938200131 dBTP at 255360/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 73 [34560, 35040) source frames; channel 1; TP -1.938200131 dBTP at 263040/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 74 [35040, 35520) source frames; channel 1; TP -1.938200131 dBTP at 263040/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 75 [35520, 36000) source frames; channel 1; TP -1.938200131 dBTP at 270720/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 76 [36000, 36480) source frames; channel 1; TP -1.938200131 dBTP at 270720/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 77 [36480, 36960) source frames; channel 1; TP -1.938200131 dBTP at 278400/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 78 [36960, 37440) source frames; channel 1; TP -1.938200131 dBTP at 278400/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 79 [37440, 37920) source frames; channel 1; TP -1.938200131 dBTP at 286080/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 80 [37920, 38400) source frames; channel 1; TP -1.938200131 dBTP at 286080/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 81 [38400, 38880) source frames; channel 1; TP -1.938200131 dBTP at 293760/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 82 [38880, 39360) source frames; channel 1; TP -1.938200131 dBTP at 293760/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 83 [39360, 39840) source frames; channel 1; TP -1.938200131 dBTP at 301440/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 84 [39840, 40320) source frames; channel 1; TP -1.938200131 dBTP at 301440/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 85 [40320, 40800) source frames; channel 1; TP -1.938200131 dBTP at 309120/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 86 [40800, 41280) source frames; channel 1; TP -1.938200131 dBTP at 309120/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 87 [41280, 41760) source frames; channel 1; TP -1.938200131 dBTP at 316800/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 88 [41760, 42240) source frames; channel 1; TP -1.938200131 dBTP at 316800/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 89 [42240, 42720) source frames; channel 1; TP -1.938200131 dBTP at 324480/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 90 [42720, 43200) source frames; channel 1; TP -1.938200131 dBTP at 324480/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 91 [43200, 43680) source frames; channel 1; TP -1.938200131 dBTP at 332160/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 92 [43680, 44160) source frames; channel 1; TP -1.938200131 dBTP at 332160/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 93 [44160, 44640) source frames; channel 1; TP -1.938200131 dBTP at 339840/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 94 [44640, 45120) source frames; channel 1; TP -1.938200131 dBTP at 339840/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 95 [45120, 45600) source frames; channel 1; TP -1.938200131 dBTP at 347520/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 96 [45600, 46080) source frames; channel 1; TP -1.938200131 dBTP at 347520/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 97 [46080, 46560) source frames; channel 1; TP -1.938200131 dBTP at 355200/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 98 [46560, 47040) source frames; channel 1; TP -1.938200131 dBTP at 355200/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 99 [47040, 47520) source frames; channel 1; TP -1.938200131 dBTP at 362880/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 100 [47520, 48000) source frames; channel 1; TP -1.938200131 dBTP at 362880/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 101 [48000, 48480) source frames; channel 1; TP -1.938200131 dBTP at 370560/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 102 [48480, 48960) source frames; channel 1; TP -1.938200131 dBTP at 370560/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 103 [48960, 49440) source frames; channel 1; TP -1.938200131 dBTP at 378240/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 104 [49440, 49920) source frames; channel 1; TP -1.938200131 dBTP at 378240/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 105 [49920, 50400) source frames; channel 1; TP -1.938200131 dBTP at 385920/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 106 [50400, 50880) source frames; channel 1; TP -1.938200131 dBTP at 385920/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 107 [50880, 51360) source frames; channel 1; TP -1.938200131 dBTP at 393600/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 108 [51360, 51840) source frames; channel 1; TP -1.938200131 dBTP at 393600/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 109 [51840, 52320) source frames; channel 1; TP -1.938200131 dBTP at 401280/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 110 [52320, 52800) source frames; channel 1; TP -1.938200131 dBTP at 401280/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 111 [52800, 53280) source frames; channel 1; TP -1.938200131 dBTP at 408960/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 112 [53280, 53760) source frames; channel 1; TP -1.938200131 dBTP at 408960/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 113 [53760, 54240) source frames; channel 1; TP -1.938200131 dBTP at 416640/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 114 [54240, 54720) source frames; channel 1; TP -1.938200131 dBTP at 416640/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 115 [54720, 55200) source frames; channel 1; TP -1.938200131 dBTP at 424320/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 116 [55200, 55680) source frames; channel 1; TP -1.938200131 dBTP at 424320/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 117 [55680, 56160) source frames; channel 1; TP -1.938200131 dBTP at 432000/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 118 [56160, 56640) source frames; channel 1; TP -1.938200131 dBTP at 432000/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 119 [56640, 57120) source frames; channel 1; TP -1.938200131 dBTP at 439680/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 120 [57120, 57600) source frames; channel 1; TP -1.938200131 dBTP at 439680/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 121 [57600, 58080) source frames; channel 1; TP -1.938200131 dBTP at 447360/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 122 [58080, 58560) source frames; channel 1; TP -1.938200131 dBTP at 447360/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 123 [58560, 59040) source frames; channel 1; TP -1.938200131 dBTP at 455040/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 124 [59040, 59520) source frames; channel 1; TP -1.938200131 dBTP at 455040/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 125 [59520, 60000) source frames; channel 1; TP -1.938200131 dBTP at 462720/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 126 [60000, 60480) source frames; channel 1; TP -1.938200131 dBTP at 462720/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 127 [60480, 60960) source frames; channel 1; TP -1.938200131 dBTP at 470400/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 128 [60960, 61440) source frames; channel 1; TP -1.938200131 dBTP at 470400/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 129 [61440, 61920) source frames; channel 1; TP -1.938200131 dBTP at 478080/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 130 [61920, 62400) source frames; channel 1; TP -1.938200131 dBTP at 478080/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 131 [62400, 62880) source frames; channel 1; TP -1.938200131 dBTP at 485760/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 132 [62880, 63360) source frames; channel 1; TP -1.938200131 dBTP at 485760/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 133 [63360, 63840) source frames; channel 1; TP -1.938200131 dBTP at 493440/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Section 134 [63840, 64320) source frames; channel 1; TP -1.938200131 dBTP at 493440/8 frames
+Gain 0.000000000000 -> -0.800628549994 dB; requested reduction 0.800628549994, planned 0.800628549994; reserve achieved 0.500000000000/0.5 dB; uncovered deficit 0.000000000000 dB.
+Cumulative non-unity local envelope support: 66720 source frames (includes pre-existing manual processing).
+Maximum additional local reduction: 0.800628549994 dB; maximum resulting cumulative local attenuation: 0.800628549994 dB.
+Canonical plateaus: 2; transitions: 1
+Largest neighbouring plateau difference: 0.800628549994 dB; largest transition slope: 8.007953823655 dB/s (descriptive, not additional acceptance rules).
+Private local-plan global calculation: Global trim toward the profile's intended loudness target. Prediction only: absolute-gate membership and sample rounding can change the measured outcome. Apply explicitly, then re-measure; no automatic correction.
+READY FOR EXPLICIT APPLY: private exact candidate passes selected programme rules. Current State remains unchanged.
+After Apply Current is UNVERIFIED until independent remeasurement. Global gain 1.357973074369 dB affects the entire programme.
+Proposed local gain range -0.800628549994 to 0.000000000000 dB; combined local-plus-global range 0.557344524375 to 1.357973074369 dB. Local attenuation preferences do not cap whole-chain attenuation.
+
+Private full-programme passes: 3 / 3.
+Baseline measured I / TP: -24.238828681 LUFS / -1.938200131 dBTP.
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness and true-peak rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -1.380856 dBTP | max -1.000000 | delta -0.380856
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.

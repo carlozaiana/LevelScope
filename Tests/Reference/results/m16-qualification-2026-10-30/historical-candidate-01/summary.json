@@ -1,0 +1,139 @@
+{
+  "short_automated_passed": false,
+  "failure": "Required command failed: m13-smoke",
+  "source_digest": "39f4a1a9b410895bfcea0b259afce63b822af33f59b76a49fcf4466fa36cd9ef",
+  "measurement_build": "4232c04d89758b3726d5da1b93a4786ca1a1e76075ddbe5427c90718b423d323",
+  "os": "ProductName:\t\tmacOS\nProductVersion:\t\t15.7.9\nBuildVersion:\t\t24G830",
+  "cpu": "Apple M1 Max",
+  "architecture": "arm64",
+  "seconds": 46.476337834,
+  "commands": [
+    {
+      "name": "preferences",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/candidate-01/bin/LevelScopeSectionProposalTests",
+        "--preferences",
+        "--root",
+        "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/sequoia-candidate-01/preferences-files",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/sequoia-candidate-01/preferences.json"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "seconds": 8.909864624999999,
+      "passed": true,
+      "build": "4232c04d89758b3726d5da1b93a4786ca1a1e76075ddbe5427c90718b423d323",
+      "reason": "",
+      "report_sha256": "91d5f6f1fc2affcbd752a31400ef4d1176aee4442d5e8395a8b7800e39546c9c",
+      "groups": [
+        "policy-validation",
+        "support-and-gain-limits",
+        "capacity-and-complete-inspection",
+        "ui-controls-and-responsiveness",
+        "identity-session-report",
+        "large-measured-proposal",
+        "mono-policy-path"
+      ]
+    },
+    {
+      "name": "global-proposals",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/candidate-01/bin/LevelScopeProposalTests",
+        "--report",
+        "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/sequoia-candidate-01/global-proposals.json"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "seconds": 9.474813875,
+      "passed": true,
+      "build": "4232c04d89758b3726d5da1b93a4786ca1a1e76075ddbe5427c90718b423d323",
+      "reason": "",
+      "report_sha256": "d0e35311450305d384e022d2c116208fabaa50e23e293ae53c634570a5629016"
+    },
+    {
+      "name": "sessions-short",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/candidate-01/bin/LevelScopeSessionTests",
+        "--short",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/sequoia-candidate-01/sessions.json"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "seconds": 5.857790208000001,
+      "passed": true,
+      "build": "4232c04d89758b3726d5da1b93a4786ca1a1e76075ddbe5427c90718b423d323",
+      "reason": "",
+      "report_sha256": "64875a5d77cf579100b72c085deb0c29c280182fe67a0eca52f0b03c0f2329b7"
+    },
+    {
+      "name": "sections",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/candidate-01/bin/LevelScopeSectionsTests",
+        "--report",
+        "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/sequoia-candidate-01/sections.json"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "seconds": 3.2680728340000016,
+      "passed": true,
+      "build": "4232c04d89758b3726d5da1b93a4786ca1a1e76075ddbe5427c90718b423d323",
+      "reason": "",
+      "report_sha256": "dffa03cab648cdd16f855351ba1eae7e96a86feae6dd479c3e3953a99639e836"
+    },
+    {
+      "name": "m12-smoke",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/candidate-01/bin/LevelScopeSectionProcessingTests",
+        "--smoke",
+        "--root",
+        "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/sequoia-candidate-01/m12-files",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/sequoia-candidate-01/m12.json"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "seconds": 7.677195125000001,
+      "passed": true,
+      "build": "4232c04d89758b3726d5da1b93a4786ca1a1e76075ddbe5427c90718b423d323",
+      "reason": "",
+      "report_sha256": "5db0f03fe2c7b3a650ae5a8dffdabd51e20b1eaae042525c5b209765434c1db3"
+    },
+    {
+      "name": "m13-smoke",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/candidate-01/bin/LevelScopeSectionProposalTests",
+        "--smoke",
+        "--root",
+        "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/sequoia-candidate-01/m13-files",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m16-qualification-2026-10-30/sequoia-candidate-01/m13.json"
+      ],
+      "exit_code": 1,
+      "expected_exit": 0,
+      "seconds": 11.271743750000006,
+      "passed": false,
+      "build": "4232c04d89758b3726d5da1b93a4786ca1a1e76075ddbe5427c90718b423d323",
+      "reason": "whole-programme local attenuation rejected honestly after attribution without candidate pass claim",
+      "report_sha256": "9f46b960394528a501376f9d13922fa5e3e695137688fc5a40beefb34e779b63"
+    }
+  ],
+  "silent_UI": "separate required candidate receipt",
+  "physical_devices_opened": false,
+  "video_loaded": false,
+  "high_sierra": "deferred after M18, no later than M19",
+  "three_hour": "deferred; short structural test is not full-duration audio",
+  "qualification_complete": false
+}
