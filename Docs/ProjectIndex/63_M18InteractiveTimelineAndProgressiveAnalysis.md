@@ -1,11 +1,16 @@
 # M18 proposal — interactive audio timeline and progressive analysis
 
 30 October 2026. **Proposed for review; implementation is not authorized.**
+The dedicated UI/Timeline handover in [64](64_M18UITimelineHandover.md) records
+ownership, the separate M17-based checkout, plugin reuse assessment and the user
+clarification that a stopped time-ruler click explicitly seeks. Preparing that
+handover authorizes documentation only.
 Continue from published M17 candidate-04, checkpoint
 [`e422f85ccbf7ae11876e6a31be2409937cb8381c`](https://github.com/carlozaiana/LevelScope/commit/e422f85ccbf7ae11876e6a31be2409937cb8381c),
 tag [`m17-job-lra-presets-sequoia-2026-10-30`](https://github.com/carlozaiana/LevelScope/tree/m17-job-lra-presets-sequoia-2026-10-30).
-The publication/proposal follow-up changes documentation only. Work remains in the
-established `codex/logic-module` copy. Main remains qualified M13
+The publication/proposal follow-up changes documentation only. The logic checkout
+remains on `codex/logic-module`; future M18 implementation belongs to the dedicated
+UI/Timeline chat and proposed `codex/ui-timeline-m18` worktree described in [64](64_M18UITimelineHandover.md). Main remains qualified M13
 `a9be070ab9eb5cb4f591ff9d991d8999c3a016d0` until combined qualification and subsequent
 integration approval. Preserve all checkpoint tags, packages and the video worktree.
 
@@ -24,9 +29,12 @@ Deliver one reusable audio timeline with:
   the same audio-source axis. Display the inspected domain separately from the
   auditioned domain; inspecting Current must not switch playback implicitly.
 - Horizontal zoom, pan/scroll, fit programme/selection, exact numerical inspection
-  and explicit **Seek to cursor**. Clicking a plot selects/inspects; it does not seek,
-  play or open a device. First-version timeline seeking is stopped-only and uses
-  the existing seek service. Existing transport capabilities remain available.
+  and explicit **Seek to cursor**. **Clicking the time ruler while stopped explicitly
+  positions the playhead through the existing seek service.** Clicking measurement
+  lanes selects/inspects without seeking, playing, changing processing or opening a
+  device. While playing, ruler seek is disabled; it must not stop/restart playback
+  implicitly. The playhead observes the authoritative audio presentation position.
+  Existing transport capabilities remain available.
 - An applied section-envelope lane plus a visually distinct draft overlay. Selecting
   a section exposes its existing numeric gain control and full-precision stored
   value. Use M12's existing draft/Apply/discard operations and unchanged 100 ms
@@ -183,8 +191,10 @@ historical and escaped, and cannot authorize publication.
 4. **Navigation:** frame-zero/end, fractional-time floor convention, long coordinates,
    exact window selection, no phantom edge markers, EOF padding and viewport clipping.
    Explicit seeks through the existing service preserve audio-only continuity, duration,
-   stop/restart/EOF and pre-monitor sample parity. Mere clicks/zoom/selection do nothing
-   to transport, measurements, proposal validity or processing.
+   stop/restart/EOF and pre-monitor sample parity. Distinguish the explicit stopped
+   ruler click (one seek) from lane clicks/zoom/selection (no seek). Test ruler clicks
+   during playback and jobs, exact first/last frames, and device-closed seeking.
+   No navigation changes measurements, proposal validity or processing.
 5. **Editing/requirements:** annotation edits preserve audio; draft/apply/discard use
    existing M12 semantics; no-op preserves revisions; Apply makes Current UNVERIFIED.
    Cancellation leaves the applied gain in place; completed failing measurement shows

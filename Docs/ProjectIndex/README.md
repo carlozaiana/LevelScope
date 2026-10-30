@@ -15,6 +15,8 @@ This folder is the persistent orientation layer for future development chats. Re
 
 ## Task-based quick start
 
+- **M18 dedicated UI/Timeline handover — documentation only:** [64 — ownership, exact M17-based setup, plugin reuse assessment, interaction/contracts and build/test handover](64_M18UITimelineHandover.md). Recommended future copy `/Users/fuzz/Developer/LevelScope-worktrees/UITimeline`, branch `codex/ui-timeline-m18`; not created here. UI chat owns M18 after approval; logic chat retains later LRA proposal work. Stopped ruler clicks explicitly seek; lane clicks inspect only.
+
 - **M18 proposed — awaiting approval, no implementation:** [63 — interactive audio timeline and progressive analysis](63_M18InteractiveTimelineAndProgressiveAnalysis.md). Reuse existing processing; waveform/M/S previews, exact navigation, section-gain drafts and restored historical proposal explanations. Combined actual High Sierra/video/three-hour qualification planned after M18, no later than M19.
 
 - **M17 candidate-04 published development checkpoint — Sequoia tested; High Sierra, video and three-hour checks pending:** [62 — qualification and handover](62_M17QualificationAndHandover.md). Optional explicit job LRA ceiling, independent named presets, reused measured evaluation and strict all-selected-rule export gates. [60 — approved scope](60_M17JobLraRequirementsAndPresets.md); [61 — impact plan](61_M17ImpactQualificationPlan.md). [Checkpoint](https://github.com/carlozaiana/LevelScope/tree/m17-job-lra-presets-sequoia-2026-10-30), commit `e422f85ccbf7ae11876e6a31be2409937cb8381c`; [publication receipt](../../Tests/Reference/results/m17-publication-2026-10-30/README.md). Main stays M13. Combined qualification follows M18, no later than M19.

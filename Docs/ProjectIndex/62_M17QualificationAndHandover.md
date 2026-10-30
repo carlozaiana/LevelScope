@@ -254,3 +254,10 @@ M18 is now [proposed for review](63_M18InteractiveTimelineAndProgressiveAnalysis
 a bounded interactive audio timeline, progressive waveform/M/S previews and historical
 applied explanations. No M18 implementation has started. Its publication follow-up
 is documentation-only; main and the tested M17 source remain unchanged.
+
+M18 ownership is handed to a dedicated UI/Timeline chat in
+[64 — complete handover](64_M18UITimelineHandover.md). This documentation-only
+transfer does not authorize implementation, create a worktree, change the tested
+M17 candidate, lift qualification deferrals or move main. The logic-module chat
+stops overlapping implementation and retains later LRA proposal work and review
+of shared measurement/processing/session contracts.

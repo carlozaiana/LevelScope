@@ -1,5 +1,18 @@
 # Development workflow and video checkpoint locations
 
+## M18 UI/Timeline handover — 30 October 2026
+
+[64 — dedicated UI/Timeline handover](64_M18UITimelineHandover.md) proposes a new
+registered worktree at `/Users/fuzz/Developer/LevelScope-worktrees/UITimeline`, branch
+`codex/ui-timeline-m18`, starting at M17 `e422f85ccbf7ae11876e6a31be2409937cb8381c`
+plus documentation-only follow-ups. It has not been created. This handover authorizes
+documentation, not implementation. The UI chat will own M18 after approval; the logic
+chat retains subsequent LRA proposal work and shared-contract review, without parallel
+overlapping implementation. Main remains qualified M13
+`a9be070ab9eb5cb4f591ff9d991d8999c3a016d0` until combined qualification and later approval.
+Preserve both existing working copies, every checkpoint and package. Older continuation
+sections below retain their historical dates/status and do not supersede this handover.
+
 ## Diagnostic integration continuation — 24 October 2026
 
 [The diagnostic integration handover](../VideoPaintDiagnosticMainIntegration-2026-10-24.md)
