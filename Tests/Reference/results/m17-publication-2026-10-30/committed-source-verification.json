@@ -1,0 +1,10 @@
+{
+  "checkpoint_commit": "e422f85ccbf7ae11876e6a31be2409937cb8381c",
+  "candidate": "candidate-04",
+  "source_manifest_sha256": "853a5711c162fbbbfa9daff2dbc1acee3fee18ee94445e2ac0ae3407efdeb904",
+  "measurement_build": "5d1c4dc69d6df19c0fcf3dd39b53cffdd34495d23b52bed716657cb6e2c507b8",
+  "source_files_verified": 277,
+  "all_match": true,
+  "rebuild_performed": false,
+  "main_preserved": "a9be070ab9eb5cb4f591ff9d991d8999c3a016d0"
+}

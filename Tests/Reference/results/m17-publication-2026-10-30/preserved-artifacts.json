@@ -1,0 +1,9 @@
+{
+  "candidate": "candidate-04",
+  "artifacts_verified": 293,
+  "candidate_identity_sha256": "6bf766c4c90e046f4538b015509e94b7c2bf239993070ebaf04854d48c45a1b2",
+  "evidence_index_sha256": "96fa04147ce2d44a34daf6c75f7fca19ac0a97b2872e0b8c4fb104f21f20f673",
+  "evidence_receipts_verified": 128,
+  "all_unchanged": true,
+  "rebuilt": false
+}

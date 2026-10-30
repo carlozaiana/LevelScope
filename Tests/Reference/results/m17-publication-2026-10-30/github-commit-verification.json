@@ -1,0 +1,9 @@
+{
+  "sha": "e422f85ccbf7ae11876e6a31be2409937cb8381c",
+  "url": "https://github.com/carlozaiana/LevelScope/commit/e422f85ccbf7ae11876e6a31be2409937cb8381c",
+  "title": "Implement M17 job LRA requirements and portable presets\n\nPublish candidate-04 with unchanged frozen source and artifacts.\nSequoia tested; High Sierra, video and three-hour checks pending.\n\nSource manifest: 853a5711c162fbbbfa9daff2dbc1acee3fee18ee94445e2ac0ae3407efdeb904\nMeasurement/build: 5d1c4dc69d6df19c0fcf3dd39b53cffdd34495d23b52bed716657cb6e2c507b8\nUniversal app SHA-256: b84db4eff7945d5e264aa7f67bab7be153aede1758b6d5818e6d2cbbab680126\n\nTwelve selected automated commands pass; native UI and universal/Intel\n10.13 cross-build evidence are recorded separately with explicit reuse.\nMain remains qualified M13. Combined qualification follows M18, no later\nthan M19; no main integration or M18 implementation is included.",
+  "message": "Implement M17 job LRA requirements and portable presets\n\nPublish candidate-04 with unchanged frozen source and artifacts.\nSequoia tested; High Sierra, video and three-hour checks pending.\n\nSource manifest: 853a5711c162fbbbfa9daff2dbc1acee3fee18ee94445e2ac0ae3407efdeb904\nMeasurement/build: 5d1c4dc69d6df19c0fcf3dd39b53cffdd34495d23b52bed716657cb6e2c507b8\nUniversal app SHA-256: b84db4eff7945d5e264aa7f67bab7be153aede1758b6d5818e6d2cbbab680126\n\nTwelve selected automated commands pass; native UI and universal/Intel\n10.13 cross-build evidence are recorded separately with explicit reuse.\nMain remains qualified M13. Combined qualification follows M18, no later\nthan M19; no main integration or M18 implementation is included.",
+  "verified_by": "GitHub fetch_commit connector",
+  "fetched_at": "2026-10-30",
+  "is_error": false
+}

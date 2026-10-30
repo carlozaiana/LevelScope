@@ -2,10 +2,12 @@
 
 30 October 2026. **Candidate-04: Sequoia tested; High Sierra, video and three-hour
 checks pending.** The approved Sequoia phase is complete, with no outstanding
-required check in that phase. **Development-checkpoint publication is authorized;
-main integration is not authorized.** The checkpoint tag is
-`m17-job-lra-presets-sequoia-2026-10-30`; the subsequent publication receipt records
-its exact commit and remote verification. Main remains qualified M13
+required check in that phase. **Published development checkpoint:**
+[`m17-job-lra-presets-sequoia-2026-10-30`](https://github.com/carlozaiana/LevelScope/tree/m17-job-lra-presets-sequoia-2026-10-30),
+commit `e422f85ccbf7ae11876e6a31be2409937cb8381c`.
+[Publication receipt](../../Tests/Reference/results/m17-publication-2026-10-30/README.md)
+records remote verification, preserved packages and all 20 prior tags. Main integration
+is not authorized. Main remains qualified M13
 `a9be070ab9eb5cb4f591ff9d991d8999c3a016d0`; work remains in the established
 `codex/logic-module` working copy. Read the approved scope in [60](60_M17JobLraRequirementsAndPresets.md)
 and the pre-implementation impact plan in [61](61_M17ImpactQualificationPlan.md).
@@ -77,7 +79,9 @@ Measurement-only reports never invent an exported artifact hash or verdict.
   `73a7b25e71f87299fa2d93c1b1106c118c55beec`. **Neither identifies the M17
   implementation.** The frozen manifest is its exact tested source authority.
   Publication binds those same bytes to the new annotated checkpoint without a
-  rebuild; the later publication receipt supplies the commit/tag mapping.
+  rebuild: checkpoint `e422f85ccbf7ae11876e6a31be2409937cb8381c`, annotated tag
+  object `d243e4a68503bf719fc01ab2eefb2156d982ab20`. The publication receipt
+  verifies all 277 committed manifest files and 293 frozen artifacts.
   Documentation/qualification receipts are outside the source digest and finalized
   after freezing. Original package identities retain their historical freeze-time fields.
 - Actual execution: arm64 Apple M1 Max, Sequoia **15.7.9 / 24G830**. Release
@@ -245,3 +249,8 @@ measurements or old verdicts as current verification. This is documented prepara
 only; M17 does not implement complete explanation persistence. Existing saved applied
 policy/binding and exact processing remain; save a report to retain full transient
 inspection until that later milestone is implemented.
+
+M18 is now [proposed for review](63_M18InteractiveTimelineAndProgressiveAnalysis.md):
+a bounded interactive audio timeline, progressive waveform/M/S previews and historical
+applied explanations. No M18 implementation has started. Its publication follow-up
+is documentation-only; main and the tested M17 source remain unchanged.

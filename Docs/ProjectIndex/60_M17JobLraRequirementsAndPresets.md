@@ -1,6 +1,6 @@
 # M17 proposal — explicit job LRA requirements and reusable presets
 
-30 October 2026. **Approved for implementation and impact-selected Sequoia qualification, 30 October 2026.** Publication and main integration require later review. Candidate-04 completes the approved Sequoia phase; [62 — qualification/handover](62_M17QualificationAndHandover.md) records exact identity, results and pending combined qualification.
+30 October 2026. **Approved for implementation and impact-selected Sequoia qualification, 30 October 2026.** Candidate-04 is now published as a development checkpoint; main integration remains subject to combined qualification and later approval. Candidate-04 completes the approved Sequoia phase; [62 — qualification/handover](62_M17QualificationAndHandover.md) records exact identity, results and pending combined qualification.
 
 Continue from published M16 candidate-03, commit
 `73a7b25e71f87299fa2d93c1b1106c118c55beec`, annotated tag
