@@ -1,0 +1,8 @@
+{
+  "checkpoint_commit": "73a7b25e71f87299fa2d93c1b1106c118c55beec",
+  "source_manifest": "3ac2e19d8dd976a8fdc41490245ad9961af91e4bfe1a1d5afdc1ad5c03897f38",
+  "all_manifest_files_match_commit": true,
+  "source_file_count": 269,
+  "main_unchanged": "a9be070ab9eb5cb4f591ff9d991d8999c3a016d0",
+  "note": "Original JUCE textual receipts retain their CRLF bytes and hashes; they are not reformatted for whitespace style."
+}

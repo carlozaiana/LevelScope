@@ -1,6 +1,6 @@
 # M16 proposal — bounded proposal preferences and configurable limits
 
-30 October 2026. **Approved revisions implemented in candidate-03. Sequoia tested; High Sierra, video and three-hour checks pending.** See [59](59_M16QualificationAndHandover.md) for exact identity/evidence; checkpoint publication authorized30October2026; main integration remains deferred.
+30 October 2026. **Approved revisions implemented in candidate-03. Sequoia tested; High Sierra, video and three-hour checks pending.** See [59](59_M16QualificationAndHandover.md) for exact identity/evidence; published as [`m16-proposal-preferences-sequoia-2026-10-30`](https://github.com/carlozaiana/LevelScope/tree/m16-proposal-preferences-sequoia-2026-10-30), commit `73a7b25e71f87299fa2d93c1b1106c118c55beec`; main integration remains deferred.
 
 Start from published M15 candidate-05, commit
 `1b56804ecfb469aef3276b2d4ac96039ce3e4cc1`, annotated tag

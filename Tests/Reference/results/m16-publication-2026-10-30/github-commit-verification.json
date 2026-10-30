@@ -1,0 +1,8 @@
+{
+  "verified_via": "GitHub connector fetch_commit",
+  "sha": "73a7b25e71f87299fa2d93c1b1106c118c55beec",
+  "url": "https://github.com/carlozaiana/LevelScope/commit/73a7b25e71f87299fa2d93c1b1106c118c55beec",
+  "title": "Implement M16 proposal preferences and complete inspection\n\nSequoia tested; High Sierra, video and three-hour checks pending.\n\nFreeze candidate-03 source manifest 3ac2e19d8dd976a8fdc41490245ad9961af91e4bfe1a1d5afdc1ad5c03897f38. Preserve the original tested universal package. Main remains qualified M13; combined qualification after M18, no later than M19.",
+  "created_at": "2026-10-30T14:21:43Z",
+  "repository_full_name": "carlozaiana/LevelScope"
+}
