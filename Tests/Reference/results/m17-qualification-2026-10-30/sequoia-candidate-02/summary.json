@@ -1,0 +1,296 @@
+{
+  "short_automated_passed": true,
+  "failure": "",
+  "source_digest": "607de169d5004d1b1f7309c97ec69de2fdb26d0c60bbee4db42c12ecb6fab87f",
+  "measurement_build": "0f4c2918fa471391fd2a168344d7909dde496cf64e6d127f22d49d9780f4ea37",
+  "os": "ProductName:\t\tmacOS\nProductVersion:\t\t15.7.9\nBuildVersion:\t\t24G830",
+  "cpu": "Apple M1 Max",
+  "architecture": "arm64",
+  "seconds_fresh": 50.278939291,
+  "commands": [
+    {
+      "name": "requirements",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/candidate-01/bin/LevelScopeJobRequirementsTests",
+        "--root",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/sequoia-candidate-01/requirements-files",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/sequoia-candidate-01/requirements.json"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "seconds": 33.9123475,
+      "passed": true,
+      "build": "0f4c2918fa471391fd2a168344d7909dde496cf64e6d127f22d49d9780f4ea37",
+      "reason": "",
+      "report_sha256": "1dfc03ce0b9e45e6fec5b0caff8d38066b39985c91d0c811a5f96176b62c8b99",
+      "groups": [
+        "definitions-presets-failures",
+        "measured-rule-boundaries",
+        "proposal-capability-noop",
+        "session-identity-reuse-migration",
+        "real-export-report-gates",
+        "inline-ui-resources",
+        "manual-processing-input-identity",
+        "actual-layout-duration-boundaries"
+      ],
+      "evidence_origin_candidate": "candidate-01",
+      "evidence_origin_source_digest": "4c7bebfacd75927ffeb085584993f6f7e357a2b22877858b27a2c7c1a4f2a43c",
+      "reuse_reason": "Only marker test assertion and marker test binary changed; application and this test executable are byte-identical."
+    },
+    {
+      "name": "measurement-service-short",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/candidate-01/bin/LevelScopeMeasurementTests",
+        "--report",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/sequoia-candidate-01/measurement-service.json"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "seconds": 13.923167291000006,
+      "passed": true,
+      "build": "0f4c2918fa471391fd2a168344d7909dde496cf64e6d127f22d49d9780f4ea37",
+      "reason": "",
+      "report_sha256": "ad56f341afbdfdc8022c798ffdf2ba0581ea2cd1edd406066a7afb415323b045",
+      "evidence_origin_candidate": "candidate-01",
+      "evidence_origin_source_digest": "4c7bebfacd75927ffeb085584993f6f7e357a2b22877858b27a2c7c1a4f2a43c",
+      "reuse_reason": "Only marker test assertion and marker test binary changed; application and this test executable are byte-identical."
+    },
+    {
+      "name": "compliance",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/candidate-01/bin/LevelScopeComplianceTests",
+        "--report",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/sequoia-candidate-01/compliance.json"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "seconds": 0.7285938340000016,
+      "passed": true,
+      "build": "0f4c2918fa471391fd2a168344d7909dde496cf64e6d127f22d49d9780f4ea37",
+      "reason": "",
+      "report_sha256": "a98298460077076c01976dc6767469b3c4246f10915dc3d8f76e1efc5aef8f59",
+      "evidence_origin_candidate": "candidate-01",
+      "evidence_origin_source_digest": "4c7bebfacd75927ffeb085584993f6f7e357a2b22877858b27a2c7c1a4f2a43c",
+      "reuse_reason": "Only marker test assertion and marker test binary changed; application and this test executable are byte-identical."
+    },
+    {
+      "name": "preferences",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/candidate-01/bin/LevelScopeSectionProposalTests",
+        "--preferences",
+        "--root",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/sequoia-candidate-01/preferences-files",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/sequoia-candidate-01/preferences.json"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "seconds": 8.841597167000003,
+      "passed": true,
+      "build": "0f4c2918fa471391fd2a168344d7909dde496cf64e6d127f22d49d9780f4ea37",
+      "reason": "",
+      "report_sha256": "593b28d4f92837dde8bbd3921a13bb7da1b67d77ed7f762db149b643e8f0da5c",
+      "groups": [
+        "policy-validation",
+        "support-and-gain-limits",
+        "capacity-and-complete-inspection",
+        "ui-controls-and-responsiveness",
+        "identity-session-report",
+        "large-measured-proposal",
+        "mono-policy-path"
+      ],
+      "evidence_origin_candidate": "candidate-01",
+      "evidence_origin_source_digest": "4c7bebfacd75927ffeb085584993f6f7e357a2b22877858b27a2c7c1a4f2a43c",
+      "reuse_reason": "Only marker test assertion and marker test binary changed; application and this test executable are byte-identical."
+    },
+    {
+      "name": "global-proposals",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/candidate-01/bin/LevelScopeProposalTests",
+        "--report",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/sequoia-candidate-01/global-proposals.json"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "seconds": 9.474363292,
+      "passed": true,
+      "build": "0f4c2918fa471391fd2a168344d7909dde496cf64e6d127f22d49d9780f4ea37",
+      "reason": "",
+      "report_sha256": "8d75d6c375fe1515202b9c735d09dd9d606590acd0273ba0919992ba89a7d61f",
+      "evidence_origin_candidate": "candidate-01",
+      "evidence_origin_source_digest": "4c7bebfacd75927ffeb085584993f6f7e357a2b22877858b27a2c7c1a4f2a43c",
+      "reuse_reason": "Only marker test assertion and marker test binary changed; application and this test executable are byte-identical."
+    },
+    {
+      "name": "sessions-short",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/candidate-01/bin/LevelScopeSessionTests",
+        "--short",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/sequoia-candidate-01/sessions.json"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "seconds": 5.919424040999999,
+      "passed": true,
+      "build": "0f4c2918fa471391fd2a168344d7909dde496cf64e6d127f22d49d9780f4ea37",
+      "reason": "",
+      "report_sha256": "bbb64db1bc47d85b3ad19b1bcc6529de22e6ad27af298cf51bf9230ec9b88529",
+      "evidence_origin_candidate": "candidate-01",
+      "evidence_origin_source_digest": "4c7bebfacd75927ffeb085584993f6f7e357a2b22877858b27a2c7c1a4f2a43c",
+      "reuse_reason": "Only marker test assertion and marker test binary changed; application and this test executable are byte-identical."
+    },
+    {
+      "name": "m12-smoke",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/candidate-01/bin/LevelScopeSectionProcessingTests",
+        "--smoke",
+        "--root",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/sequoia-candidate-01/m12-files",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/sequoia-candidate-01/m12.json"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "seconds": 7.436559209000009,
+      "passed": true,
+      "build": "0f4c2918fa471391fd2a168344d7909dde496cf64e6d127f22d49d9780f4ea37",
+      "reason": "",
+      "report_sha256": "eac1cb254cb548caed9fd0519f322742120a7d4ff4acca8bf5fd83c57dfa17e7",
+      "evidence_origin_candidate": "candidate-01",
+      "evidence_origin_source_digest": "4c7bebfacd75927ffeb085584993f6f7e357a2b22877858b27a2c7c1a4f2a43c",
+      "reuse_reason": "Only marker test assertion and marker test binary changed; application and this test executable are byte-identical."
+    },
+    {
+      "name": "m13-smoke",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/candidate-01/bin/LevelScopeSectionProposalTests",
+        "--smoke",
+        "--root",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/sequoia-candidate-01/m13-files",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/sequoia-candidate-01/m13.json"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "seconds": 22.725396290999996,
+      "passed": true,
+      "build": "0f4c2918fa471391fd2a168344d7909dde496cf64e6d127f22d49d9780f4ea37",
+      "reason": "",
+      "report_sha256": "e3e414c3777c8dfd388cab0c5f0a3ef6d584069357db2e4f6e79f06e56c50566",
+      "evidence_origin_candidate": "candidate-01",
+      "evidence_origin_source_digest": "4c7bebfacd75927ffeb085584993f6f7e357a2b22877858b27a2c7c1a4f2a43c",
+      "reuse_reason": "Only marker test assertion and marker test binary changed; application and this test executable are byte-identical."
+    },
+    {
+      "name": "markers",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/candidate-02/bin/LevelScopeMarkerTests",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/sequoia-candidate-02/marker-files",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/candidate-02/source/Tests/Markers/nuendo-15.0.30-points.csv"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "seconds": 8.296626875000001,
+      "evidence_origin_candidate": "candidate-02",
+      "passed": true,
+      "build": "0f4c2918fa471391fd2a168344d7909dde496cf64e6d127f22d49d9780f4ea37",
+      "reason": "",
+      "report_sha256": "e9085b3b2d6c1ab08c51247f93d4b3844a00226cdfcc55cfd727009186251799"
+    },
+    {
+      "name": "export-short",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/candidate-02/bin/LevelScopeExportTests",
+        "--artifacts",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/sequoia-candidate-02/export-files",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/sequoia-candidate-02/export.json"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "seconds": 41.52710825,
+      "evidence_origin_candidate": "candidate-02",
+      "passed": true,
+      "build": "0f4c2918fa471391fd2a168344d7909dde496cf64e6d127f22d49d9780f4ea37",
+      "reason": "",
+      "report_sha256": "079eaab15626390c8a20a98168b800281e10f686089f1cdbc46b496a6560056e"
+    },
+    {
+      "name": "m16-reader-rejects-schema7",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/candidate-02/legacy/M16SectionProposalTests",
+        "--exchange",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/sequoia-candidate-01/m13-files",
+        "--root",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/sequoia-candidate-02/legacy-read-files",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/sequoia-candidate-02/legacy-rejection.json"
+      ],
+      "exit_code": 1,
+      "expected_exit": 1,
+      "seconds": 0.39841087499999617,
+      "evidence_origin_candidate": "candidate-02",
+      "passed": false,
+      "build": "9b7d85d5463297b70e6edaabd5010ddabbd317ea63e2ae1eea7a8280da387bcf",
+      "reason": "foreign session has exact applied plan and provenance",
+      "report_sha256": "65b9ce09ab67dda8e0a891fcc66012af8b8d22bf492a2b5202d005ccc24b442b",
+      "legacy_input_schema": 7,
+      "legacy_input_sha256": "6418392f6836da322d7886bab23f818578f10efaf7577b17b9a81d82ea1bf09c"
+    },
+    {
+      "name": "runner-self-tests",
+      "command": [
+        "python3",
+        "-B",
+        "/Users/fuzz/Developer/LevelScope/build/m17-qualification-2026-10-30/candidate-02/Tests/M17QualificationRunnerTests.py"
+      ],
+      "exit_code": 0,
+      "expected_exit": 0,
+      "seconds": 0.05146270800000252,
+      "evidence_origin_candidate": "candidate-02"
+    }
+  ],
+  "equivalence": {
+    "source_difference": [
+      "Tests/MarkerTests.cpp"
+    ],
+    "artifact_difference": [
+      "bin/LevelScopeMarkerTests",
+      "source/Tests/MarkerTests.cpp"
+    ],
+    "original_source": "4c7bebfacd75927ffeb085584993f6f7e357a2b22877858b27a2c7c1a4f2a43c",
+    "accepted_source": "607de169d5004d1b1f7309c97ec69de2fdb26d0c60bbee4db42c12ecb6fab87f",
+    "original_summary_sha256": "a72dc5f2f306a48133363480d8656937ac69abf38e32fdb5f36cc0e022727934",
+    "reason": "Correct obsolete M16-reader marker test assertion to M17 reader. No production change; historical failed run retained."
+  },
+  "silent_UI": "separate required receipt",
+  "physical_devices_opened": false,
+  "video_loaded": false,
+  "high_sierra": "deferred after M18, no later than M19",
+  "three_hour": "deferred",
+  "qualification_complete": false
+}

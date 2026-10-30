@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-30T16:47:39.433009+00:00",
+  "candidate": "candidate-01",
+  "source_digest": "4c7bebfacd75927ffeb085584993f6f7e357a2b22877858b27a2c7c1a4f2a43c",
+  "measurement_build": "0f4c2918fa471391fd2a168344d7909dde496cf64e6d127f22d49d9780f4ea37",
+  "scope": "Native Sequoia exploratory/silent UI; superseded text-rendering defect requires final-candidate recheck",
+  "device_opened": false,
+  "video_loaded": false,
+  "observations": [
+    "Initial empty app: unchecked LRA, blank Unset field, no suggested ceiling, stopped/device closed/muted.",
+    "Opened copied 65-second stereo fixture with Source and Current measurements current, exact gain 6.366099153670 dB, named 100.0 LU requirement and user provenance.",
+    "Current PASS; Draft global trim reports NO CHANGE and exact retained gain, no new measurement required, Apply disabled.",
+    "Enabled blank field rejected, active state unchanged; warning rendered incorrectly because UTF-8 dash was implicitly decoded as narrow text. Fixed after candidate-02; this remains a historical UI defect, not a pass.",
+    "Explicit 0.0 LU accepted. Current immediately FAIL, old proposal invalidated, render disabled, measurements/gain retained.",
+    "Generate section-led then complete inspection: UNAVAILABLE; automatic correction unsupported yet, not a claim no solution exists; manual processing/independent remeasurement available; zero private passes.",
+    "100.0 LU restored without measuring, render enabled again. Saved native-named.levelscope-target; active session unchanged by save.",
+    "Invalid preset rejected with Invalid or duplicate requirements fields; exact active name, ceiling, gain and measurements retained.",
+    "Unset selected explicitly then named preset reloaded successfully. Cancelled Load reports active definition unchanged.",
+    "SaveAs native-reopen.levelscope completes saved/unchanged; original safe fixture not overwritten.",
+    "Invalid requirements session recovers original media/gain/current measurements but reports Job requirements unavailable and Current NOT EVALUATED. No silent fallback pass.",
+    "Damaged Current cache session keeps named 100.0 LU requirement/gain/Source measurement, discards bad cache with checksum warning and requires remeasurement.",
+    "Test app closed in stopped/device-closed/muted state."
+  ],
+  "final_phase_passed": false
+}

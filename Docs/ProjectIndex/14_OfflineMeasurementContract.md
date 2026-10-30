@@ -184,6 +184,26 @@ remapping applied gains or rewriting originals. See documents 56–59 for implem
 evidence and pending High Sierra/video/three-hour combined qualification after M18,
 no later than M19. Main remains qualified M13 until later integration approval.
 
+## M17 job requirements and reusable measured authority
+
+M17 adds an optional explicit whole-programme maximum LRA as a user-specified job
+requirement, separate from the unchanged authoritative EBU IL/TP definition. Unset
+is the default; explicit zero is a strict ceiling. Requirements changes preserve
+compatible unchanged-audio measurements and trigger reevaluation, while proposals
+and publication approvals bind the complete requirement definition. Source, Current
+and finalized output remain separate measured domains. Required unavailable or
+unstable LRA cannot pass; without a selected LRA rule it remains informative.
+
+All selected rules passing is a genuine no-op. Changing automatic proposals under
+an LRA requirement are unavailable in M17, without implying that no solution exists;
+manual processing and independent remeasurement remain supported. Both Current and
+the reopened artifact must pass the selected rules before export publication. No
+measurement arithmetic, PCM sample processing or test tolerance is changed. See
+[60](60_M17JobLraRequirementsAndPresets.md), [61](61_M17ImpactQualificationPlan.md)
+and [62](62_M17QualificationAndHandover.md). Session schema 7 embeds requirements;
+reports v5 distinguish base, job and combined identities. Main stays M13 and actual
+High Sierra, video and three-hour qualification stays pending after M18/no later M19.
+
 ## Primary references
 
 - https://www.itu.int/rec/R-REC-BS.1770-5-202311-I/en

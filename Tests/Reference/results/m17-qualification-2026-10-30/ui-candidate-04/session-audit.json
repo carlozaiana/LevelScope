@@ -1,0 +1,34 @@
+{
+  "passed": true,
+  "schema": 7,
+  "session_sha256": "b6ae426efdac02652973a0d094bf76b4982ea3f07e4488da35de83ee3025793f",
+  "session_bytes": 66814,
+  "core_checksum_valid": true,
+  "job_definition": {
+    "format": "levelscope-job-requirements",
+    "schema": 1,
+    "id": "f8678a25e1164801a5c9f6b73509bfbf",
+    "revision": 5,
+    "name": "Named delivery job",
+    "base_id": "ebu-r128-2023-programme-linear-qc",
+    "base_version": "1.0.0",
+    "base_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+    "method": "EBU Tech 3342-2023 whole-programme LRA",
+    "applicability": "pre-produced-whole-programme-linear-audio",
+    "provenance_kind": "user-specified-job-requirement",
+    "provenance": "User-specified test contract",
+    "maximum_lra_tenths": 1000,
+    "unavailable_reason": "",
+    "digest": "47e145658447f59b2675364fa9f9450fecacdc9eb4d858aac5ed5815de73d3a9"
+  },
+  "base_profile": {
+    "id": "ebu-r128-2023-programme-linear-qc",
+    "version": "1.0.0",
+    "digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+    "applicability": 1
+  },
+  "cache_records": 2,
+  "external_preset_missing_at_reopen": true,
+  "save_and_observe_ms": 528,
+  "reopen_and_observe_ms": 555
+}

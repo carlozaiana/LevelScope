@@ -15,7 +15,7 @@ This folder is the persistent orientation layer for future development chats. Re
 
 ## Task-based quick start
 
-- **M17 proposal only, awaiting approval:** [60 — explicit job LRA requirements and reusable presets](60_M17JobLraRequirementsAndPresets.md). Separate immutable base profile and job requirements, cached measured evaluation, named presets, session/report/export identity and an explicit automatic-proposal capability boundary. No implementation started.
+- **M17 candidate-04 — Sequoia tested; High Sierra, video and three-hour checks pending:** [62 — qualification and handover](62_M17QualificationAndHandover.md). Optional explicit job LRA ceiling, independent named presets, reused measured evaluation and strict all-selected-rule export gates. [60 — approved scope](60_M17JobLraRequirementsAndPresets.md); [61 — impact plan](61_M17ImpactQualificationPlan.md). Development-checkpoint publication authorized; main stays M13. Combined qualification follows M18, no later than M19.
 
 - **M16 candidate-03 published development checkpoint — Sequoia tested; High Sierra, video and three-hour checks pending:** [checkpoint](https://github.com/carlozaiana/LevelScope/tree/m16-proposal-preferences-sequoia-2026-10-30); [56 — bounded proposal preferences and configurable limits](56_M16ProposalPreferencesAndLimits.md). Explicit additional/cumulative gain, reserve, changed-region and duration budgets; density-aware accounting, policy identity and session/report provenance. [59 — exact candidate identity and handover](59_M16QualificationAndHandover.md). Main remains M13; High Sierra/video/three-hour qualification deferred.
 

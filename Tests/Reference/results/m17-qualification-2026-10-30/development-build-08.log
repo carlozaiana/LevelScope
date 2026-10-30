@@ -1,0 +1,86 @@
+[  0%] Built target LevelScopeMeasurementCore
+[ 58%] Built target LevelScopeStandaloneSupport
+[ 83%] Built target LevelScopeDiagnosticsUI
+[ 83%] Building CXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/Tests/JobRequirementsTests.cpp.o
+[ 87%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/build/juce-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 87%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/build/juce-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 91%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/build/juce-7.0.12/modules/juce_core/juce_core.mm.o
+[ 91%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/build/juce-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 91%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/build/juce-7.0.12/modules/juce_events/juce_events.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/build/juce-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/build/juce-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/build/juce-7.0.12/modules/juce_gui_basics/juce_gui_basics.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/build/juce-7.0.12/modules/juce_data_structures/juce_data_structures.mm.o
+[100%] Linking CXX executable LevelScopeJobRequirementsTests_artefacts/Release/LevelScopeJobRequirementsTests
+[100%] Built target LevelScopeJobRequirementsTests
+[  0%] Built target LevelScopeMeasurementCore
+[ 82%] Built target LevelScopeStandaloneSupport
+[ 82%] Building CXX object CMakeFiles/LevelScopeComplianceTests.dir/Tests/ComplianceTests.cpp.o
+[ 88%] Building OBJCXX object CMakeFiles/LevelScopeComplianceTests.dir/build/juce-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 88%] Building OBJCXX object CMakeFiles/LevelScopeComplianceTests.dir/build/juce-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 88%] Building OBJCXX object CMakeFiles/LevelScopeComplianceTests.dir/build/juce-7.0.12/modules/juce_core/juce_core.mm.o
+[ 94%] Building OBJCXX object CMakeFiles/LevelScopeComplianceTests.dir/build/juce-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 94%] Building OBJCXX object CMakeFiles/LevelScopeComplianceTests.dir/build/juce-7.0.12/modules/juce_events/juce_events.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeComplianceTests.dir/build/juce-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeComplianceTests.dir/build/juce-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[100%] Linking CXX executable LevelScopeComplianceTests_artefacts/Release/LevelScopeComplianceTests
+[100%] Built target LevelScopeComplianceTests
+[  0%] Built target LevelScopeMeasurementCore
+[ 77%] Built target LevelScopeStandaloneSupport
+[ 83%] Building CXX object CMakeFiles/LevelScopeMeasurementTests.dir/Tests/OfflineMeasurementTests.cpp.o
+[ 83%] Building OBJCXX object CMakeFiles/LevelScopeMeasurementTests.dir/build/juce-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 83%] Building OBJCXX object CMakeFiles/LevelScopeMeasurementTests.dir/build/juce-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 88%] Building OBJCXX object CMakeFiles/LevelScopeMeasurementTests.dir/build/juce-7.0.12/modules/juce_core/juce_core.mm.o
+[ 88%] Building OBJCXX object CMakeFiles/LevelScopeMeasurementTests.dir/build/juce-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 94%] Building OBJCXX object CMakeFiles/LevelScopeMeasurementTests.dir/build/juce-7.0.12/modules/juce_events/juce_events.mm.o
+[ 94%] Building OBJCXX object CMakeFiles/LevelScopeMeasurementTests.dir/build/juce-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[ 94%] Building OBJCXX object CMakeFiles/LevelScopeMeasurementTests.dir/build/juce-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[100%] Linking CXX executable LevelScopeMeasurementTests_artefacts/Release/LevelScopeMeasurementTests
+[100%] Built target LevelScopeMeasurementTests
+[  0%] Built target LevelScopeMeasurementCore
+[ 82%] Built target LevelScopeStandaloneSupport
+[ 82%] Building CXX object CMakeFiles/LevelScopeProposalTests.dir/Tests/ProposalTests.cpp.o
+[ 88%] Building OBJCXX object CMakeFiles/LevelScopeProposalTests.dir/build/juce-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 88%] Building OBJCXX object CMakeFiles/LevelScopeProposalTests.dir/build/juce-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 88%] Building OBJCXX object CMakeFiles/LevelScopeProposalTests.dir/build/juce-7.0.12/modules/juce_core/juce_core.mm.o
+[ 94%] Building OBJCXX object CMakeFiles/LevelScopeProposalTests.dir/build/juce-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 94%] Building OBJCXX object CMakeFiles/LevelScopeProposalTests.dir/build/juce-7.0.12/modules/juce_events/juce_events.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeProposalTests.dir/build/juce-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeProposalTests.dir/build/juce-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[100%] Linking CXX executable LevelScopeProposalTests_artefacts/Release/LevelScopeProposalTests
+[100%] Built target LevelScopeProposalTests
+[  0%] Built target LevelScopeMeasurementCore
+[ 58%] Built target LevelScopeStandaloneSupport
+[ 83%] Built target LevelScopeDiagnosticsUI
+[ 83%] Building CXX object CMakeFiles/LevelScopeSectionProposalTests.dir/Tests/SectionProposalTests.cpp.o
+[ 83%] Building OBJCXX object CMakeFiles/LevelScopeSectionProposalTests.dir/Tests/VideoReaderAudit_mac.mm.o
+[ 87%] Building OBJCXX object CMakeFiles/LevelScopeSectionProposalTests.dir/build/juce-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 87%] Building OBJCXX object CMakeFiles/LevelScopeSectionProposalTests.dir/build/juce-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 87%] Building OBJCXX object CMakeFiles/LevelScopeSectionProposalTests.dir/build/juce-7.0.12/modules/juce_core/juce_core.mm.o
+[ 91%] Building OBJCXX object CMakeFiles/LevelScopeSectionProposalTests.dir/build/juce-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 91%] Building OBJCXX object CMakeFiles/LevelScopeSectionProposalTests.dir/build/juce-7.0.12/modules/juce_events/juce_events.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeSectionProposalTests.dir/build/juce-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeSectionProposalTests.dir/build/juce-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeSectionProposalTests.dir/build/juce-7.0.12/modules/juce_gui_basics/juce_gui_basics.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeSectionProposalTests.dir/build/juce-7.0.12/modules/juce_data_structures/juce_data_structures.mm.o
+[100%] Linking CXX executable LevelScopeSectionProposalTests_artefacts/Release/LevelScopeSectionProposalTests
+[100%] Built target LevelScopeSectionProposalTests
+[  0%] Built target LevelScopeMeasurementCore
+[ 77%] Built target LevelScopeStandaloneSupport
+[100%] Built target LevelScopeSessionTests
+[  0%] Built target LevelScopeMeasurementCore
+[ 56%] Built target LevelScopeStandaloneSupport
+[ 80%] Built target LevelScopeDiagnosticsUI
+[100%] Built target LevelScopeSectionProcessingTests
+[  0%] Built target LevelScopeMeasurementCore
+[ 56%] Built target LevelScopeStandaloneSupport
+[ 80%] Built target LevelScopeDiagnosticsUI
+[100%] Built target LevelScopeMarkerTests
+[  0%] Built target LevelScopeMeasurementCore
+[ 73%] Built target LevelScopeStandaloneSupport
+[100%] Built target LevelScopeExportTests
+[  0%] Built target LevelScopeMeasurementCore
+[ 17%] Built target LevelScopeCore
+[ 58%] Built target LevelScopeStandaloneSupport
+[ 76%] Built target LevelScopeDiagnosticsUI
+[100%] Built target LevelScopeStandalone

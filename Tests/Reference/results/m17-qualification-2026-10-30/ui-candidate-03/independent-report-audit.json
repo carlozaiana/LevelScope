@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "candidate": "candidate-03",
+  "checks": [
+    "Failed Current has explicit zero ceiling, FAIL, and no artifact key/hash/verdict.",
+    "Actual artifact byte hash matches, Current/artifact both PASS all selected rules, base and job identities exact, verification gain zero and final dither once.",
+    "Both HTML reports expose selected job requirements and unavailable/unstable limits."
+  ],
+  "artifact_sha256": "88e91e3a3afae044fa087aed5c2d12b23e20ffa7adc738d4d63a823cabddd812"
+}

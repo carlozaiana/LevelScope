@@ -218,6 +218,8 @@ void serviceChecks()
     expect(!approval.matches(changed,artifact),"revision edit rejects approval");
     changed=certificateContext; changed.profileVersion="test-v2";
     expect(!approval.matches(changed,artifact),"profile edition rejects approval");
+    changed=certificateContext;changed.profile.jobRequirementsDigest="different-job-requirements";
+    expect(!approval.matches(changed,artifact),"job definition identity rejects legacy artifact approval");
     artifact.sha256="changed";
     expect(!approval.matches(certificateContext,artifact),"artifact edit rejects approval");
     expect(!service.analyze(context,MeasurementDomain::renderedOutput,control).value,"cannot relabel source as rendered output");
@@ -399,6 +401,15 @@ void measureReference (const juce::File& file, bool curves, int64_t checkpointFr
 }
 int main(int argc,char**argv)
 {
+    const bool reporting=argc==3&&std::string(argv[1])=="--report";
+    const auto report=[&](bool passed,const juce::String& failure)
+    {
+        if(!reporting)return;
+        auto result=juce::var(new juce::DynamicObject());auto* r=result.getDynamicObject();
+        r->setProperty("suite","Offline measurement and service identity checks");r->setProperty("passed",passed);r->setProperty("failure",failure);
+        r->setProperty("checks",checks);r->setProperty("build",LEVELSCOPE_MEASUREMENT_BUILD);r->setProperty("physical_devices_opened",false);r->setProperty("video_loaded",false);
+        if(!juce::File(argv[2]).replaceWithText(juce::JSON::toString(result,false)))throw std::runtime_error("Cannot write measurement test receipt");
+    };
     try
     {
         if (argc == 3 && std::string (argv[1]) == "--write-ui-fixtures")
@@ -423,8 +434,8 @@ int main(int argc,char**argv)
             }
             measureReference (juce::File (argv[2]), curves, checkpointFrames, roles); return 0;
         }
-        if (argc != 1) throw std::runtime_error ("Usage: --file path [--roles L,R,...] [--curves] [--checkpoint-frames N]");
-        numericChecks();serviceChecks();std::cout<<checks<<" measurement checks passed\n";return 0;
+        if (argc != 1 && !reporting) throw std::runtime_error ("Usage: --file path [--roles L,R,...] [--curves] [--checkpoint-frames N]");
+        numericChecks();serviceChecks();report(true,{});std::cout<<checks<<" measurement checks passed\n";return 0;
     }
-    catch(const std::exception& error){std::cerr<<"FAIL: "<<error.what()<<'\n';return 1;}
+    catch(const std::exception& error){report(false,error.what());std::cerr<<"FAIL: "<<error.what()<<'\n';return 1;}
 }

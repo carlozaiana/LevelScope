@@ -1,0 +1,71 @@
+{
+  "status": "Sequoia tested; High Sierra, video and three-hour checks pending.",
+  "sequoia_phase_passed": true,
+  "full_combined_qualification_complete": false,
+  "checkpoint_publication": "awaiting review; no commit/tag/push",
+  "source_digest": "853a5711c162fbbbfa9daff2dbc1acee3fee18ee94445e2ac0ae3407efdeb904",
+  "measurement_build": "5d1c4dc69d6df19c0fcf3dd39b53cffdd34495d23b52bed716657cb6e2c507b8",
+  "app_sha256": "b84db4eff7945d5e264aa7f67bab7be153aede1758b6d5818e6d2cbbab680126",
+  "base_head": "06f3f75bcf956787124079d24f8fbd60b46b2fa6",
+  "main": "a9be070ab9eb5cb4f591ff9d991d8999c3a016d0",
+  "fresh_short_commands": 12,
+  "fresh_short_seconds": 153.68708641700002,
+  "native_UI_passed": true,
+  "native_UI_reuse": {
+    "candidate-01": "Native invalid-requirements/cache recovery and preset cancellation; unaffected by final confirmation-text refresh changes. Original encoding defect retained as history, retested here.",
+    "candidate-03": "Manual processing/independent measurement, plain EBU proposal/apply, actual export requirement-change gates/reuse, report content/hash and native Safari visual review. Only JobRequirementsPanel confirmation/load feedback and its test changed subsequently; these backend paths are byte-identical source and all twelve short commands rerun on candidate-04."
+  },
+  "final_UI_fix_source_delta": [
+    "Source/Standalone/StandaloneJobRequirements.cpp",
+    "Tests/JobRequirementsTests.cpp"
+  ],
+  "resources": {
+    "short_session_reopen_ms": 118.9228333346546,
+    "session_bytes": 66814,
+    "cached_evaluation_p95_ms": 0.2654166668653488,
+    "inline_feedback_p95_ms": 0.02008333429694176,
+    "native_save_observe_ms": 528,
+    "native_reopen_observe_ms": 555,
+    "test_tree_allocated_bytes": 409378816,
+    "package_allocated_bytes": 177651712
+  },
+  "frozen_packages_verified": [
+    {
+      "candidate": "M16 candidate-03",
+      "artifacts_verified": 283,
+      "identity_sha256": "0c85ba78e061bd7a4365e5fed59703c3e21af877851adf653e4cccb1c31fba97"
+    },
+    {
+      "candidate": "M17 candidate-01",
+      "artifacts_verified": 293,
+      "identity_sha256": "2bba0e3ecf0e508fd43552c138278c825d45b6efd20bc558dc6a8f8dfb124dac"
+    },
+    {
+      "candidate": "M17 candidate-02",
+      "artifacts_verified": 293,
+      "identity_sha256": "d679183d515ed19187fedbda87512d7f40b9f40b1b28e27c040a39a10bb3eb6d"
+    },
+    {
+      "candidate": "M17 candidate-03",
+      "artifacts_verified": 293,
+      "identity_sha256": "cc8d2d106e2cc3bd13b2f60e41e2ced23c7bd30cde7f04597da5e21188431e57"
+    },
+    {
+      "candidate": "M17 candidate-04",
+      "artifacts_verified": 293,
+      "identity_sha256": "6bf766c4c90e046f4538b015509e94b7c2bf239993070ebaf04854d48c45a1b2"
+    }
+  ],
+  "current_source_matches_manifest": true,
+  "deferred": [
+    "actual High Sierra/Golem",
+    "cross-Mac exchange",
+    "video load/decode/playback",
+    "three-hour workflows"
+  ],
+  "combined_qualification": "after M18, no later than M19",
+  "physical_full_71_listening": "separately pending",
+  "physical_devices_opened": false,
+  "video_loaded": false,
+  "date": "2026-10-30T17:17:28.866375+00:00"
+}

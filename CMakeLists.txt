@@ -223,6 +223,7 @@ add_library(LevelScopeStandaloneSupport STATIC
     Source/Standalone/StandaloneSectionProposal.cpp
     Source/Standalone/StandaloneProposal.cpp
     Source/Core/Proposal/Model/TargetProfile.cpp
+    Source/Core/Proposal/Model/JobRequirements.cpp
     Source/Core/Proposal/VerificationEngine.cpp
     Source/Standalone/StandaloneCompliance.cpp
     Source/Standalone/StandaloneMedia.cpp
@@ -256,6 +257,7 @@ target_link_libraries(LevelScopeStandaloneSupport PUBLIC
 
 add_library(LevelScopeDiagnosticsUI STATIC
     Source/Standalone/StandaloneProposalPreferences.cpp
+    Source/Standalone/StandaloneJobRequirements.cpp
     Source/Standalone/StandaloneMarkerImportPanel.cpp
     Source/Standalone/StandaloneSectionsPanel.cpp
     Source/Standalone/MeasurementTimeline.cpp
@@ -529,4 +531,15 @@ if(LEVELSCOPE_BUILD_MARKER_TESTS)
     target_sources(LevelScopeMarkerTests PRIVATE Tests/MarkerTests.cpp)
     target_compile_definitions(LevelScopeMarkerTests PRIVATE JUCE_MODAL_LOOPS_PERMITTED=1)
     target_link_libraries(LevelScopeMarkerTests PRIVATE LevelScopeDiagnosticsUI juce::juce_gui_basics)
+endif()
+
+option(LEVELSCOPE_BUILD_JOB_REQUIREMENTS_TESTS "Build M17 job requirements/presets checks" OFF)
+if(LEVELSCOPE_BUILD_JOB_REQUIREMENTS_TESTS)
+    juce_add_console_app(LevelScopeJobRequirementsTests PRODUCT_NAME "LevelScope Job Requirements Tests")
+    target_sources(LevelScopeJobRequirementsTests PRIVATE Tests/JobRequirementsTests.cpp)
+    target_compile_definitions(LevelScopeJobRequirementsTests PRIVATE JUCE_MODAL_LOOPS_PERMITTED=1)
+    target_link_libraries(LevelScopeJobRequirementsTests PRIVATE LevelScopeDiagnosticsUI juce::juce_gui_basics)
+    if(NOT MSVC)
+        target_compile_options(LevelScopeJobRequirementsTests PRIVATE -fno-fast-math -ffp-contract=off)
+    endif()
 endif()

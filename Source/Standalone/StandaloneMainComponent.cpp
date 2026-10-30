@@ -377,6 +377,7 @@ void StandaloneMainComponent::configureTargetProfileBox()
     };
 
     addAndMakeVisible (targetProfileBox);
+    addAndMakeVisible(jobRequirementsPanel);
     applicabilityConfirmation.setTooltip ("Confirm programme context. Excludes live exceptions, deliberate lower targets, short-form supplements and distribution-specific requirements.");
     applicabilityConfirmation.onClick = [this]
     {
@@ -531,7 +532,8 @@ void StandaloneMainComponent::refreshFromSession()
     chooseProgrammeButton.setEnabled(canReplaceSession());
     chooseCompositionButton.setEnabled(canReplaceSession());
     chooseSourceButton.setEnabled (! session.job.isActive() && !session.persistenceLoading);
-    targetProfileBox.setEnabled (! session.job.isActive() && !session.persistenceLoading);
+    targetProfileBox.setEnabled (!session.audioEditsBlocked() && !session.job.isActive());
+    jobRequirementsPanel.refresh();
     cancelJobButton.setEnabled (session.job.state == JobState::running);
 
     initializeCurrentStateButton.setEnabled (! session.audioEditsBlocked() && ! session.job.isActive() && session.canInitializeCurrentStateFromSource());
@@ -687,7 +689,8 @@ juce::String StandaloneMainComponent::buildTargetStateText() const
     juce::String text;
 
     text << "TARGET\n\n";
-    text << "Profile: " << profile.displayName << "\n";
+    text << session.jobRequirements.text() << "\n";
+    text << "Base profile: " << profile.displayName << "\n";
     text << "Family: " << profile.familyName << "\n";
     text << "ID: " << profile.id << "\n\n";
 
@@ -833,6 +836,7 @@ void StandaloneMainComponent::resized()
     targetProfileBox.setBounds (targetRow.removeFromLeft (360));
     workflowStateLabel.setBounds (targetRow.reduced (16, 0));
     applicabilityConfirmation.setBounds (bounds.removeFromTop (28));
+    jobRequirementsPanel.setBounds(bounds.removeFromTop(88));
 
     bounds.removeFromTop (14);
 

@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-30T16:58:23.357625+00:00",
+  "candidate": "candidate-03",
+  "source_digest": "4a1bf88a2114e8dac7ca7f548b56f4d92e982a23ed14f5b7d48591a42beee72d",
+  "measurement_build": "bb4ac8837dd773a14cf040f7710f8bf50bed00224de139f049dc86e2f95afd13",
+  "physical_devices_opened": false,
+  "video_loaded": false,
+  "observations": [
+    "Initial default unset; enabled blank value rejected, corrected plain 0.0 to 100.0 warning readable.",
+    "Safe measured session opens stopped/device-closed/muted with full precision 6.366099153670 dB trim, Source/Current current and explicit named 100 LU requirement.",
+    "All selected rules pass: global proposal NO CHANGE, exact gain retained, Apply disabled, no new worker.",
+    "Changing requirement to explicit zero immediately fails Current, invalidates old proposal and disables render; measurements retained.",
+    "Complete inspection reports unsupported automatic correction, explicitly not no solution, manual processing/independent remeasurement remain, zero private passes.",
+    "Failing Current measurement-only report saved with no audio/artifact authority.",
+    "Manual stopped gain edit to zero marks Current NOT EVALUATED, then independent remeasurement produces actual IL failure at -29.366099154 LUFS. LRA ceiling 100 passes but automatic correction still unavailable.",
+    "Removing optional LRA re-enables plain-EBU draft, exact proposed trim 6.366099153670. Explicit Apply marks UNVERIFIED; independent remeasurement completes and enables measured export.",
+    "Reselecting 100 LU reuses measurement. Render/verify of actual 65-second stereo PCM completes artifact PASS.",
+    "Changing requirement to zero retains artifact but immediately shows FAIL and disables Publish. Restoring 100 reuses artifact and refreshes approval without rerender; explicit local test export succeeds.",
+    "Identical confirmation leaves obsolete Draft only notice: model remains a genuine no-op. Candidate-04 fixes panel refresh and adds regression. This is a historical UI defect, not relabelled as passed.",
+    "Closed test app; discarded only disposable unsaved edits; safe fixture originals remain unchanged."
+  ],
+  "historical_UI_defect": "Identical confirmation must clear obsolete draft notice; candidate-04 affected check required",
+  "final_phase_passed": false,
+  "report_files_sha256": {
+    "failed-job-report/report.json": "7a51ec80dd57a91a3db5f62a3817bc5ec2439925c3ac06efae86035cc65f4944",
+    "failed-job-report/manifest.json": "6252db76398f4c71e74692ec8b4bfcaf8740ddf66ef8da49f262dce16f4eb682",
+    "failed-job-report/report.html": "e4917ad999dd5f8ef5cf268b99d41b5bc2dd19951ba6e75eefcd2aac33159d0b",
+    "verified-job-export/report.json": "ba3a636a8ee8bd80000d1c982aa49053ff412093d2968c6534474614ef645926",
+    "verified-job-export/programme.wav": "88e91e3a3afae044fa087aed5c2d12b23e20ffa7adc738d4d63a823cabddd812",
+    "verified-job-export/manifest.json": "d608a2ce4dafd108f18ea792b6bc75a0bf552729b52eb990c9a90afc39ed584f",
+    "verified-job-export/report.html": "4804bbd78cd202c46d95ca0f1fd36aaca64f62e0945996726605ff24c4b8a255"
+  },
+  "browser_visual_review": {
+    "browser": "Safari, native UI; local self-contained files only",
+    "verified_export": "Readable job provenance/100 LU ceiling, Source FAIL / Current PASS / actual Export PASS separated; actual PCM hash and final-only dither note visible.",
+    "measurement_only": "Readable explicit zero ceiling and Source/Current FAIL; prominent NO EXPORTED AUDIO; no artifact row or hash.",
+    "report_tab_closed": true
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "local_tags_unchanged": true,
+  "remote_tags_unchanged": true,
+  "tag_count": 20,
+  "main": "a9be070ab9eb5cb4f591ff9d991d8999c3a016d0",
+  "logic_head": "06f3f75bcf956787124079d24f8fbd60b46b2fa6",
+  "registered_worktrees_unchanged": true,
+  "remote_main_unchanged": true,
+  "remote_logic_unchanged": true,
+  "publication_performed": false,
+  "note": "Read-only direct remote verification. No commits/tags/pushes, installations, devices or Golem access."
+}

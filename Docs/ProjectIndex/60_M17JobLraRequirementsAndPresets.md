@@ -1,6 +1,6 @@
 # M17 proposal — explicit job LRA requirements and reusable presets
 
-30 October 2026. **Proposal for review; implementation is not authorized.**
+30 October 2026. **Approved for implementation and impact-selected Sequoia qualification, 30 October 2026.** Publication and main integration require later review. Candidate-04 completes the approved Sequoia phase; [62 — qualification/handover](62_M17QualificationAndHandover.md) records exact identity, results and pending combined qualification.
 
 Continue from published M16 candidate-03, commit
 `73a7b25e71f87299fa2d93c1b1106c118c55beec`, annotated tag
@@ -28,11 +28,11 @@ processing and independent remeasurement; M13 proposal identity; M16 preferences
 complete inspection and stale-result handling. Read ProjectIndex 14, 21, 39, 47,
 56, 58 and 59 and ProposalEngineSpec_v2 before implementation.
 
-Current code has optional LRA evaluation in `TargetProfile`/`VerificationEngine`,
+At the published M16 baseline, optional LRA evaluation existed in `TargetProfile`/`VerificationEngine`,
 including unavailable and unstable handling. The authoritative EBU catalogue entry
-has no LRA ceiling. `RuleBasedMethod` explicitly rejects profiles containing an LRA
-rule before its no-change branch; `SectionTrimMethod` depends on that decision.
-Session schema 6 currently persists a catalogue profile reference. These shared
+has no LRA ceiling. The old `RuleBasedMethod` rejected profiles containing an LRA
+rule before its no-change branch; `SectionTrimMethod` depended on that decision.
+Session schema 6 persisted a catalogue profile reference. These shared
 callers require explicit integration; merely exposing an existing numeric field is
 insufficient. No new audio analysis or arithmetic is required by this proposal.
 
@@ -72,7 +72,7 @@ default unchecked, with **No LRA acceptance limit specified** displayed. Selecti
 it requires an explicit value; do not prefill a supposedly universal 7, 10 or 18 LU
 limit or silently infer one from genre, the cinema example or proposal preferences.
 
-Recommended input range for review: **0.0–100.0 LU in exact 0.1 LU steps**, stored
+Approved input range: **0.0–100.0 LU in exact 0.1 LU steps**, stored
 as integer tenths. This is an input/engineering bound, not a broadcast recommendation.
 Zero is a real strict ceiling, distinct from unset. Reject malformed, negative,
 non-finite, unsupported-precision or out-of-range values without clamping. The
@@ -139,9 +139,9 @@ the combined requirements identity, full-precision values, stability/unavailabil
 reasons, and the evaluated domain. Version the report extension. Escape all names
 and provenance; a preset is data, including in HTML.
 
-## Proposal boundary needing review
+## Approved automatic-proposal boundary
 
-**Recommended bounded M17 behavior:** first validate matching measured inputs and
+**Approved bounded M17 behavior:** first validate matching measured inputs and
 the applied plan, then return a genuine no-change result when **all selected rules**
 already pass. Preserve the exact gain/envelope, measurement/evaluation objects,
 audio revision and job count. Do not move a satisfactory result towards a preferred
@@ -242,7 +242,7 @@ separately. Accepted occasional picture skips do not excuse audio discontinuity,
 accumulating drift, sustained freezes or identity/lifecycle failures when video
 testing resumes. Full physical 7.1 listening remains independently pending.
 
-## Exclusions and approval decisions
+## Exclusions and completion boundary
 
 No LRA correction method, coordinated neighbour adjustment, automatic segmentation,
 selective raising, limiter/compressor, new dialogue metric, general target editor,
@@ -250,8 +250,14 @@ new codec/layout, VST3 parity or physical multichannel claim. Automatic analysis
 progressive displays and timeline editing remain the following separately bounded
 proposal; do not make them prerequisites for this requirements layer.
 
-Approval should explicitly cover the proposed unset default and 0.0–100.0 LU input
-range, portable named preset files/session snapshots, and the conservative automatic
-proposal boundary above. No implementation begins before that review. M17's Sequoia
-phase then stops for readiness review; neither checkpoint publication nor main
-integration is implied by this proposal.
+The user approved the unset default and 0.0–100.0 LU input range, portable named
+preset files/session snapshots, and the conservative automatic-proposal boundary.
+M17's Sequoia phase stops for readiness review before publication or merging.
+
+The upcoming timeline must eventually restore applied-proposal explanations along
+with exact processing: reasons, relevant baseline and requirement/policy provenance
+are historical information. Do not restore private candidate measurements or old
+verdicts as current verification. Mark explanations whose processing was subsequently
+edited. This is architectural preparation, not complete explanation persistence in
+M17. Keep the timeline/progressive-analysis slice bounded so it does not unnecessarily
+delay region suggestions and selective LRA correction. See the impact plan in 61.

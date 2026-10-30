@@ -38,7 +38,7 @@ juce::var metric(const measurement::Metric& m,const char* unit)
 juce::var evaluation(const proposal::Evaluation& e)
 {
     auto o=object();set(o,"verdict",proposal::verdictName(e.verdict));set(o,"message",e.message);
-    set(o,"identity",e.identity);set(o,"profile_digest",e.profileDigest);set(o,"snapshot_identity",e.snapshotIdentity);
+    set(o,"identity",e.identity);set(o,"profile_digest",e.profileDigest);set(o,"job_requirements_digest",e.jobRequirementsDigest);set(o,"evaluated_rules_digest",e.rulesDigest);set(o,"snapshot_identity",e.snapshotIdentity);
     juce::Array<juce::var> rules;
     for(const auto& r:e.rules)
     {
@@ -106,10 +106,10 @@ void jsonValue(std::ostringstream& out,const juce::var& v,int depth)
 juce::var report(const Request& r,const Candidate* c,bool publishing)
 {
     if(c&&!c->matchesAudio(r))throw std::runtime_error("Artifact report does not match captured audio/runtime");
-    auto o=object();set(o,"schema","levelscope-measurement-report-v4");
+    auto o=object();set(o,"schema","levelscope-measurement-report-v5");
     set(o,"kind",c?"verified-artifact-measurement":"measurement-only-no-exported-audio");
     set(o,"publication",publishing?"published-verified-pcm":c?"NOT EXPORTED - verified staging artifact":"NO EXPORTED AUDIO");
-    set(o,"scope","Selected whole-programme loudness and true-peak rules only. No complete broadcaster delivery, BWF/BW64, metadata, synchronization or future encoded-media certification.");
+    set(o,"scope","Selected whole-programme loudness, true-peak and any explicit job LRA requirement only. No complete broadcaster delivery, BWF/BW64, metadata, synchronization or future encoded-media certification.");
     set(o,"document_id",r.documentId);set(o,"programme_id",r.programmeId);set(o,"document_revision",juce::String(r.documentRevision));
     set(o,"session_unsaved",r.unsaved);set(o,"session_basename",r.sessionFile.getFileName());set(o,"runtime_id",r.current.sessionId);
     set(o,"app","LevelScope Standalone");set(o,"build",r.current.buildVersion);set(o,"platform",r.current.platformAndFloatingPointMode);
@@ -130,10 +130,10 @@ juce::var report(const Request& r,const Candidate* c,bool publishing)
     set(o,"duration_rational_seconds",juce::String(r.current.media.frames)+"/"+juce::String(r.current.media.sampleRate,0));
     set(o,"positions","Audio-source frames; true-peak positions in eighth-frames. Video offsets and measurement EOF drain do not extend programme duration.");
     auto profile=object();const auto& p=r.current.profile;
-    set(profile,"id",p.id);set(profile,"definition_version",p.definitionVersion);set(profile,"digest",p.digest());
+    set(profile,"id",p.id);set(profile,"definition_version",p.definitionVersion);set(profile,"digest",p.baseProfileDigest.isEmpty()?p.digest():p.baseProfileDigest);set(profile,"evaluated_requirements_digest",p.digest());
     set(profile,"edition",p.standardEdition);set(profile,"reference",p.referenceUrl);set(profile,"applicability",static_cast<int>(r.applicability));
     set(profile,"applicability_scope","Pre-produced whole-programme linear-audio QC only; excludes live, deliberate lower targets, short-form and distribution-specific requirements.");
-    set(profile,"meter_tolerance_documentary_only",p.meterToleranceNote);set(o,"profile",profile);
+    set(profile,"meter_tolerance_documentary_only",p.meterToleranceNote);set(o,"profile",profile);set(o,"job_requirements",r.jobRequirements.encode());set(o,"job_requirements_status",r.jobRequirements.text());
     juce::Array<juce::var> members;
     if(r.current.composition)
     {
@@ -204,6 +204,7 @@ juce::String reportHtml(const juce::var& model)
     html+="</h1><p>"+escaped(model["publication"].toString())+"</p><p>"+escaped(model["scope"].toString())+"</p>";
     html+="<p>Programme: "+escaped(model["programme_id"].toString())+" | Processing gain: "+escaped(model["processing_gain_db"].toString())+" dB | "+(static_cast<bool>(model["session_unsaved"])?"Unsaved captured session revision":"Saved session revision")+"</p>";
     if(model.hasProperty("composition"))html+="<p><strong>Source: original confirmed M&amp;E + dialogue composition.</strong> Unity component gains; Current State applies the recorded section and global processing plan. Component purpose, language/version, mapping and individual file hashes are recorded below. This is not dialogue analysis or verification of creative balance.</p>";
+    html+="<h2>Selected job requirements</h2><pre>"+escaped(model["job_requirements_status"].toString())+"</pre>";
     html+="<table><tr><th>Measured state</th><th>Status / selected rules</th><th>Integrated LUFS</th><th>True peak dBTP</th><th>LRA LU</th></tr>";
     for(const auto& key:artifact?juce::StringArray{"source","current","artifact"}:juce::StringArray{"source","current"})
     {
@@ -215,7 +216,7 @@ juce::String reportHtml(const juce::var& model)
         }
         html+="</tr>";
     }
-    html+="</table><p>Display rounding does not determine a verdict. LRA is informative, with short-programme stability recorded below.</p>";
+    html+="</table><p>Display rounding does not determine a verdict. LRA is informative unless an explicit job ceiling is selected; required unstable or unavailable LRA cannot pass. Stability and individual rule reasons are recorded below.</p>";
     if(artifact)html+="<p>Actual PCM SHA-256: <code>"+escaped(model["artifact"]["sha256"].toString())+"</code></p><p>"+escaped(model["artifact"]["dither_note"].toString())+"</p>";
     html+="<h2>Exact measurements, reasons and provenance</h2><pre>"+escaped(reportJson(model))+"</pre></body></html>";return html;
 }

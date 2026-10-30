@@ -1,0 +1,74 @@
+[  3%] Built target LevelScopeMeasurementCore
+[  3%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/Pcm24Wave.cpp.o
+[  3%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneReport.cpp.o
+[  7%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneExport.cpp.o
+[ 11%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/ProgrammeSource.cpp.o
+[ 11%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/ProgrammeComposition.cpp.o
+[ 11%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/SessionDocument.cpp.o
+[ 15%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/VerifiedSource.cpp.o
+[ 15%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/MarkerImport.cpp.o
+[ 19%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneMarkerImport.cpp.o
+[ 19%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/SectionAnalysis.cpp.o
+[ 19%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneSections.cpp.o
+[ 23%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/AnalysisEngine.cpp.o
+[ 23%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/AttributionEngine.cpp.o
+[ 26%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneDiagnostics.cpp.o
+[ 26%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/Methods/RuleBasedMethod.cpp.o
+[ 26%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/SectionPeakMap.cpp.o
+[ 30%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/Methods/SectionTrimMethod.cpp.o
+[ 30%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneSectionProposal.cpp.o
+[ 34%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneProposal.cpp.o
+[ 34%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/Model/TargetProfile.cpp.o
+[ 34%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/Model/JobRequirements.cpp.o
+[ 38%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/VerificationEngine.cpp.o
+[ 38%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneCompliance.cpp.o
+[ 42%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneMedia.cpp.o
+[ 42%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneAudition.cpp.o
+[ 42%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneMeasurementService.cpp.o
+[ 46%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneVideo.cpp.o
+[ 46%] Building OBJCXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneVideo_mac.mm.o
+[ 50%] Building OBJCXX object CMakeFiles/LevelScopeStandaloneSupport.dir/build/juce-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 50%] Building OBJCXX object CMakeFiles/LevelScopeStandaloneSupport.dir/build/juce-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 50%] Building OBJCXX object CMakeFiles/LevelScopeStandaloneSupport.dir/build/juce-7.0.12/modules/juce_core/juce_core.mm.o
+[ 53%] Building OBJCXX object CMakeFiles/LevelScopeStandaloneSupport.dir/build/juce-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 53%] Building OBJCXX object CMakeFiles/LevelScopeStandaloneSupport.dir/build/juce-7.0.12/modules/juce_events/juce_events.mm.o
+[ 57%] Building OBJCXX object CMakeFiles/LevelScopeStandaloneSupport.dir/build/juce-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[ 57%] Building OBJCXX object CMakeFiles/LevelScopeStandaloneSupport.dir/build/juce-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[ 57%] Linking CXX static library libLevelScopeStandaloneSupport.a
+[ 57%] Built target LevelScopeStandaloneSupport
+[ 57%] Building CXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Source/Standalone/StandaloneProposalPreferences.cpp.o
+[ 57%] Building CXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Source/Standalone/StandaloneMarkerImportPanel.cpp.o
+[ 61%] Building CXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Source/Standalone/StandaloneJobRequirements.cpp.o
+[ 65%] Building CXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Source/Standalone/StandaloneSectionsPanel.cpp.o
+[ 65%] Building CXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Source/Standalone/MeasurementTimeline.cpp.o
+[ 65%] Building CXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Source/Standalone/StandaloneDiagnosticsPanel.cpp.o
+[ 69%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/build/juce-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 69%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/build/juce-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 73%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/build/juce-7.0.12/modules/juce_core/juce_core.mm.o
+[ 73%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/build/juce-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 73%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/build/juce-7.0.12/modules/juce_events/juce_events.mm.o
+[ 76%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/build/juce-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[ 76%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/build/juce-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[ 80%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/build/juce-7.0.12/modules/juce_gui_basics/juce_gui_basics.mm.o
+[ 80%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/build/juce-7.0.12/modules/juce_data_structures/juce_data_structures.mm.o
+[ 80%] Linking CXX static library libLevelScopeDiagnosticsUI.a
+[ 80%] Built target LevelScopeDiagnosticsUI
+[ 80%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/build/juce-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 84%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/build/juce-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 84%] Building CXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/Tests/JobRequirementsTests.cpp.o
+[ 84%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/build/juce-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 88%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/build/juce-7.0.12/modules/juce_events/juce_events.mm.o
+[ 92%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/build/juce-7.0.12/modules/juce_core/juce_core.mm.o
+/Users/fuzz/Developer/LevelScope/Tests/JobRequirementsTests.cpp:36:96: error: no member named 'replaceFirstOccurrence' in 'juce::String'; did you mean 'replaceFirstOccurrenceOf'?
+   36 |     auto text=juce::JSON::toString(r.encode(),true);rejects([&]{JobRequirements::fromJson(text.replaceFirstOccurrence("{","{\"name\":\"duplicate\","));},"duplicate fields rejected");
+      |                                                                                                ^~~~~~~~~~~~~~~~~~~~~~
+      |                                                                                                replaceFirstOccurrenceOf
+/Users/fuzz/Developer/LevelScope/build/juce-7.0.12/modules/juce_core/text/juce_String.h:786:12: note: 'replaceFirstOccurrenceOf' declared here
+  786 |     String replaceFirstOccurrenceOf (StringRef stringToReplace,
+      |            ^
+1 error generated.
+make[3]: *** [CMakeFiles/LevelScopeJobRequirementsTests.dir/Tests/JobRequirementsTests.cpp.o] Error 1
+make[3]: *** Waiting for unfinished jobs....
+make[2]: *** [CMakeFiles/LevelScopeJobRequirementsTests.dir/all] Error 2
+make[1]: *** [CMakeFiles/LevelScopeJobRequirementsTests.dir/rule] Error 2
+make: *** [LevelScopeJobRequirementsTests] Error 2

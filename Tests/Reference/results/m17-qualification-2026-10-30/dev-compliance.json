@@ -1,0 +1,572 @@
+{
+  "suite": "M2 measured compliance",
+  "passed": false,
+  "checks": [
+    {
+      "name": "placeholder profile never passes",
+      "passed": true
+    },
+    {
+      "name": "placeholder profile never passes",
+      "passed": true
+    },
+    {
+      "name": "placeholder profile never passes",
+      "passed": true
+    },
+    {
+      "name": "definition version changes profile identity",
+      "passed": true
+    },
+    {
+      "name": "standard edition changes identity",
+      "passed": true
+    },
+    {
+      "name": "provenance changes identity",
+      "passed": true
+    },
+    {
+      "name": "limits change identity",
+      "passed": true
+    },
+    {
+      "name": "unsupported profile applicability refused",
+      "passed": true
+    },
+    {
+      "name": "invalid profile rejected before evaluation",
+      "passed": true
+    },
+    {
+      "name": "invalid profile rejected before evaluation",
+      "passed": true
+    },
+    {
+      "name": "invalid profile rejected before evaluation",
+      "passed": true
+    },
+    {
+      "name": "invalid profile rejected before evaluation",
+      "passed": true
+    },
+    {
+      "name": "invalid profile rejected before evaluation",
+      "passed": true
+    },
+    {
+      "name": "invalid profile rejected before evaluation",
+      "passed": true
+    },
+    {
+      "name": "invalid profile rejected before evaluation",
+      "passed": true
+    },
+    {
+      "name": "invalid profile rejected before evaluation",
+      "passed": true
+    },
+    {
+      "name": "invalid profile rejected before evaluation",
+      "passed": true
+    },
+    {
+      "name": "invalid profile rejected before evaluation",
+      "passed": true
+    },
+    {
+      "name": "invalid profile rejected before evaluation",
+      "passed": true
+    },
+    {
+      "name": "invalid profile rejected before evaluation",
+      "passed": true
+    },
+    {
+      "name": "built-in profile valid",
+      "passed": true
+    },
+    {
+      "name": "pinned R128 scalar rules",
+      "passed": true
+    },
+    {
+      "name": "documentary meter tolerance has explicit bandwidth",
+      "passed": true
+    },
+    {
+      "name": "missing informative LRA allows pass",
+      "passed": true
+    },
+    {
+      "name": "narrow success wording",
+      "passed": true
+    },
+    {
+      "name": "deterministic evaluation",
+      "passed": true
+    },
+    {
+      "name": "integrated exact boundary inclusive",
+      "passed": true
+    },
+    {
+      "name": "integrated one ULP inside",
+      "passed": true
+    },
+    {
+      "name": "integrated one ULP outside with no epsilon",
+      "passed": true
+    },
+    {
+      "name": "display-equivalent integrated values retain distinct verdicts",
+      "passed": true
+    },
+    {
+      "name": "integrated exact boundary inclusive",
+      "passed": true
+    },
+    {
+      "name": "integrated one ULP inside",
+      "passed": true
+    },
+    {
+      "name": "integrated one ULP outside with no epsilon",
+      "passed": true
+    },
+    {
+      "name": "display-equivalent integrated values retain distinct verdicts",
+      "passed": true
+    },
+    {
+      "name": "strict peak boundary including meter-tolerance trap",
+      "passed": true
+    },
+    {
+      "name": "strict peak boundary including meter-tolerance trap",
+      "passed": true
+    },
+    {
+      "name": "strict peak boundary including meter-tolerance trap",
+      "passed": true
+    },
+    {
+      "name": "strict peak boundary including meter-tolerance trap",
+      "passed": true
+    },
+    {
+      "name": "engine test tolerance cannot extend QC allowance",
+      "passed": true
+    },
+    {
+      "name": "non-finite required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "non-finite required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "non-finite required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "missing required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "missing required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "missing required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "inconsistent metric status cannot pass",
+      "passed": true
+    },
+    {
+      "name": "non-finite required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "non-finite required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "non-finite required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "missing required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "missing required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "missing required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "inconsistent metric status cannot pass",
+      "passed": true
+    },
+    {
+      "name": "known failure takes precedence without hiding indeterminate rule",
+      "passed": true
+    },
+    {
+      "name": "unused non-finite LRA is not a required rule",
+      "passed": true
+    },
+    {
+      "name": "predictions cannot satisfy measured rules",
+      "passed": true
+    },
+    {
+      "name": "M10 evaluates separately bound measured artifact rules without widening limits",
+      "passed": true
+    },
+    {
+      "name": "stale artifact cannot pass",
+      "passed": true
+    },
+    {
+      "name": "domain is explicit and identity bound",
+      "passed": true
+    },
+    {
+      "name": "stale snapshot cannot pass",
+      "passed": true
+    },
+    {
+      "name": "missing snapshot binding cannot pass",
+      "passed": true
+    },
+    {
+      "name": "unsupported measurement semantics refused",
+      "passed": true
+    },
+    {
+      "name": "unsupported or unconfirmed programme context refused",
+      "passed": true
+    },
+    {
+      "name": "unsupported or unconfirmed programme context refused",
+      "passed": true
+    },
+    {
+      "name": "unsupported or unconfirmed programme context refused",
+      "passed": true
+    },
+    {
+      "name": "unsupported or unconfirmed programme context refused",
+      "passed": true
+    },
+    {
+      "name": "unsupported or unconfirmed programme context refused",
+      "passed": true
+    },
+    {
+      "name": "snapshot change changes evaluation binding",
+      "passed": true
+    },
+    {
+      "name": "actual values participate in evaluation binding",
+      "passed": true
+    },
+    {
+      "name": "required optional LRA cannot be missing",
+      "passed": true
+    },
+    {
+      "name": "explicit LRA ceiling inclusive",
+      "passed": true
+    },
+    {
+      "name": "explicit LRA ceiling one ULP outside",
+      "passed": true
+    },
+    {
+      "name": "required unstable LRA refused",
+      "passed": true
+    },
+    {
+      "name": "built-in profile valid",
+      "passed": true
+    },
+    {
+      "name": "pinned R128 scalar rules",
+      "passed": true
+    },
+    {
+      "name": "documentary meter tolerance has explicit bandwidth",
+      "passed": true
+    },
+    {
+      "name": "missing informative LRA allows pass",
+      "passed": true
+    },
+    {
+      "name": "narrow success wording",
+      "passed": true
+    },
+    {
+      "name": "deterministic evaluation",
+      "passed": true
+    },
+    {
+      "name": "integrated exact boundary inclusive",
+      "passed": true
+    },
+    {
+      "name": "integrated one ULP inside",
+      "passed": true
+    },
+    {
+      "name": "integrated one ULP outside with no epsilon",
+      "passed": true
+    },
+    {
+      "name": "display-equivalent integrated values retain distinct verdicts",
+      "passed": true
+    },
+    {
+      "name": "integrated exact boundary inclusive",
+      "passed": true
+    },
+    {
+      "name": "integrated one ULP inside",
+      "passed": true
+    },
+    {
+      "name": "integrated one ULP outside with no epsilon",
+      "passed": true
+    },
+    {
+      "name": "display-equivalent integrated values retain distinct verdicts",
+      "passed": true
+    },
+    {
+      "name": "strict peak boundary including meter-tolerance trap",
+      "passed": true
+    },
+    {
+      "name": "strict peak boundary including meter-tolerance trap",
+      "passed": true
+    },
+    {
+      "name": "strict peak boundary including meter-tolerance trap",
+      "passed": true
+    },
+    {
+      "name": "strict peak boundary including meter-tolerance trap",
+      "passed": true
+    },
+    {
+      "name": "engine test tolerance cannot extend QC allowance",
+      "passed": true
+    },
+    {
+      "name": "non-finite required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "non-finite required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "non-finite required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "missing required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "missing required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "missing required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "inconsistent metric status cannot pass",
+      "passed": true
+    },
+    {
+      "name": "non-finite required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "non-finite required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "non-finite required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "missing required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "missing required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "missing required metric cannot pass",
+      "passed": true
+    },
+    {
+      "name": "inconsistent metric status cannot pass",
+      "passed": true
+    },
+    {
+      "name": "known failure takes precedence without hiding indeterminate rule",
+      "passed": true
+    },
+    {
+      "name": "unused non-finite LRA is not a required rule",
+      "passed": true
+    },
+    {
+      "name": "predictions cannot satisfy measured rules",
+      "passed": true
+    },
+    {
+      "name": "M10 evaluates separately bound measured artifact rules without widening limits",
+      "passed": true
+    },
+    {
+      "name": "stale artifact cannot pass",
+      "passed": true
+    },
+    {
+      "name": "domain is explicit and identity bound",
+      "passed": true
+    },
+    {
+      "name": "stale snapshot cannot pass",
+      "passed": true
+    },
+    {
+      "name": "missing snapshot binding cannot pass",
+      "passed": true
+    },
+    {
+      "name": "unsupported measurement semantics refused",
+      "passed": true
+    },
+    {
+      "name": "unsupported or unconfirmed programme context refused",
+      "passed": true
+    },
+    {
+      "name": "unsupported or unconfirmed programme context refused",
+      "passed": true
+    },
+    {
+      "name": "unsupported or unconfirmed programme context refused",
+      "passed": true
+    },
+    {
+      "name": "unsupported or unconfirmed programme context refused",
+      "passed": true
+    },
+    {
+      "name": "unsupported or unconfirmed programme context refused",
+      "passed": true
+    },
+    {
+      "name": "snapshot change changes evaluation binding",
+      "passed": true
+    },
+    {
+      "name": "actual values participate in evaluation binding",
+      "passed": true
+    },
+    {
+      "name": "required optional LRA cannot be missing",
+      "passed": true
+    },
+    {
+      "name": "explicit LRA ceiling inclusive",
+      "passed": true
+    },
+    {
+      "name": "explicit LRA ceiling one ULP outside",
+      "passed": true
+    },
+    {
+      "name": "required unstable LRA refused",
+      "passed": true
+    },
+    {
+      "name": "M2 temporary fixture created",
+      "passed": true
+    },
+    {
+      "name": "M2 PCM writer created",
+      "passed": true
+    },
+    {
+      "name": "M2 fixture encoded",
+      "passed": true
+    },
+    {
+      "name": "M2 source validates",
+      "passed": true
+    },
+    {
+      "name": "M2 source imports",
+      "passed": true
+    },
+    {
+      "name": "roles explicitly confirmed",
+      "passed": true
+    },
+    {
+      "name": "profile version populated in request",
+      "passed": true
+    },
+    {
+      "name": "measurement job begins",
+      "passed": true
+    },
+    {
+      "name": "actual snapshot measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement completes",
+      "passed": true
+    },
+    {
+      "name": "session accepts current worker result",
+      "passed": true
+    },
+    {
+      "name": "unconfirmed programme context cannot pass",
+      "passed": true
+    },
+    {
+      "name": "real Source measurements pass selected rules",
+      "passed": true
+    },
+    {
+      "name": "exact snapshot and profile bound",
+      "passed": false
+    }
+  ],
+  "profile_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+  "engine": "bs1770-5-ebu2023-m7.1",
+  "evaluator": "measured-programme-rules-m17.1",
+  "os": "Mac OSX 15.7.9",
+  "build": "551c4057ab41a6ea65ddd420893fa73aa519f7ffac73e89be8b8e5faaf39dcf3",
+  "architecture": "arm64"
+}

@@ -1,0 +1,26 @@
+{
+  "candidate": "candidate-04",
+  "source_digest": "853a5711c162fbbbfa9daff2dbc1acee3fee18ee94445e2ac0ae3407efdeb904",
+  "measurement_build": "5d1c4dc69d6df19c0fcf3dd39b53cffdd34495d23b52bed716657cb6e2c507b8",
+  "app_sha256": "b84db4eff7945d5e264aa7f67bab7be153aede1758b6d5818e6d2cbbab680126",
+  "date": "2026-10-30T17:16:51.498874+00:00",
+  "passed": true,
+  "physical_devices_opened": false,
+  "video_loaded": false,
+  "checks": [
+    "Default unset, blank enabled field rejected; plain 0.0 to 100.0 warning readable.",
+    "Safe session opens stopped/device-closed/muted with named 100.0 LU requirement, exact gain and valid measurements.",
+    "Edit draft 99.9 then back to active 100.0 and confirm: active status restored, document remains saved/unchanged. No audio revision or measurement requested.",
+    "Already-pass draft shows NO CHANGE, retains 6.366099153670 dB and measurements, no Apply and no new worker.",
+    "Native preset Save writes active definition; malformed Load reports error and leaves saved/unchanged session and measured state intact.",
+    "Loading identical saved preset after the error clears obsolete error to Active job ceiling while keeping the session saved/unchanged and no-op proposal current.",
+    "Explicit zero changes to UNSAVED, invalidates proposal and disables render; restoring 100 reevaluates without measurement.",
+    "SaveAs native-final.levelscope completes in 528 ms including UI observation. New returns to unset LRA.",
+    "External preset renamed only inside disposable folder. Reopen saved session in 555 ms including observation retains complete independent requirement, name/provenance, exact gain, Current PASS, Source measurement, stopped/device-closed/muted.",
+    "Test app closed with no outstanding job."
+  ],
+  "reused_UI_evidence": {
+    "candidate-01": "Native invalid-requirements/cache recovery and preset cancellation; unaffected by final confirmation-text refresh changes. Original encoding defect retained as history, retested here.",
+    "candidate-03": "Manual processing/independent measurement, plain EBU proposal/apply, actual export requirement-change gates/reuse, report content/hash and native Safari visual review. Only JobRequirementsPanel confirmation/load feedback and its test changed subsequently; these backend paths are byte-identical source and all twelve short commands rerun on candidate-04."
+  }
+}

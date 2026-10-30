@@ -773,3 +773,21 @@ Selective LRA correction is a central objective. See ProjectIndex 58 for inline 
 ## M17 proposal boundary — 30 October 2026
 
 [ProjectIndex 60](ProjectIndex/60_M17JobLraRequirementsAndPresets.md) proposes versioned job LRA requirements and reusable named presets, separate from M16 processing preferences and the immutable EBU profile. It requires all selected rules for no-change and measured export approval, with measurement reuse and explicit capability explanations. Its conservative boundary for changing automatic proposals under an added LRA rule is a decision for review, not an implemented strategy or a permanent architecture restriction. No M17 implementation is authorized.
+
+## M17 approval and historical explanation extension — 30 October 2026
+
+M17 requirements/presets and its conservative automatic-proposal boundary are now
+approved; ProjectIndex 60–61 govern implementation and Sequoia qualification.
+All selected objectives must pass for a genuine no-op. A selected LRA requirement
+otherwise makes changing automatic proposals unavailable during M17, even when
+LRA itself passes; this is a method-capability limitation, not proof of no solution.
+
+Future timeline/session work should restore the explanations behind applied proposals,
+including reasons, relevant baseline and requirement/policy/method provenance, bound
+to the exact historical processing plan. Do not reinstate private candidate analyses
+or previous verdicts as current verification. Show when the processing associated
+with an explanation has since been edited. M17 does not persist complete explanations.
+Keep the first timeline/progressive-analysis slice useful and bounded so that region
+suggestions and selective LRA correction are not delayed by unrelated UI ambitions.
+
+M17 implementation/Sequoia status: [ProjectIndex 62](ProjectIndex/62_M17QualificationAndHandover.md) records candidate-04, exact tested identity, all selected short checks and impact-selected native UI evidence. High Sierra/video/three-hour qualification remains pending after M18 and no later than M19; main stays M13. This does not authorize publication, integration or the timeline implementation.

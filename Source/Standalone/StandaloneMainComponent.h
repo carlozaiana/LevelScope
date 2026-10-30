@@ -4,6 +4,7 @@
 #include "StandaloneCompositionImport.h"
 #include "StandaloneExport.h"
 #include "StandaloneProposalPreferences.h"
+#include "StandaloneJobRequirements.h"
 
 #include <memory>
 #include <future>
@@ -85,6 +86,7 @@ private:
     juce::Label workflowStateLabel;
     juce::Label targetProfileLabel;
 
+    JobRequirementsPanel jobRequirementsPanel { session, [this] { refreshFromSession(); } };
     juce::ComboBox targetProfileBox;
     juce::ToggleButton applicabilityConfirmation { "Confirm pre-produced whole-programme linear-audio QC" };
 

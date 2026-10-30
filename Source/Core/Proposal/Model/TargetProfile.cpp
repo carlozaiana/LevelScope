@@ -9,6 +9,7 @@ namespace levelscope::proposal
 {
 juce::String TargetProfile::validationError() const
 {
+    if (jobRequirementsError.isNotEmpty()) return jobRequirementsError;
     if (! isSelectableForWorkflow || ! limits.valuesAreAuthoritative)
         return "No authoritative profile selected.";
     if (schemaVersion != 1 || id.isEmpty() || definitionVersion.isEmpty()
@@ -49,6 +50,8 @@ juce::String TargetProfile::digest() const
       << ';' << limits.hasTruePeakCeiling << ';' << limits.truePeakCeilingDbtp
       << ';' << limits.hasMaxLoudnessRange << ';' << limits.maxLoudnessRangeLu
       << ';' << truePeakMeterToleranceDb << ';' << truePeakMeterBandwidthHz;
+    if (jobRequirementsDigest.isNotEmpty() || jobRequirementsError.isNotEmpty())
+    { text(baseProfileDigest); text(jobRequirementsDigest); text(jobRequirementsError); }
     const auto bytes = s.str(); return juce::SHA256 (bytes.data(), bytes.size()).toHexString();
 }
 

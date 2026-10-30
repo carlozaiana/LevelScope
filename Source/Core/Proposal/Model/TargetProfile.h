@@ -38,6 +38,8 @@ struct TargetProfile
     double truePeakMeterToleranceDb = 0, truePeakMeterBandwidthHz = 0;
     juce::String meterToleranceNote;
 
+    // Evaluated view only; the immutable catalogue definition leaves these empty.
+    juce::String baseProfileDigest, jobRequirementsDigest, jobRequirementsError;
     juce::String validationError() const;
     juce::String digest() const;
 };

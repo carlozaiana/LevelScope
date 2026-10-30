@@ -15,6 +15,7 @@
 #include "StandaloneAuditionRequest.h"
 #include "StandaloneSections.h"
 #include "Core/Proposal/MarkerImport.h"
+#include "Core/Proposal/Model/JobRequirements.h"
 #include <functional>
 
 namespace levelscope::standalone
@@ -223,11 +224,21 @@ public:
     juce::String documentId = juce::Uuid().toString(), programmeId = juce::Uuid().toString();
     uint64_t documentRevision = 0, savedDocumentRevision = 0;
     juce::File documentFile;
-    int openedSessionSchema = 6;
+    int openedSessionSchema = 7;
     juce::String restoredProfileId, restoredProfileVersion, restoredProfileDigest;
     bool videoUnresolved = false;
     proposal::SectionDocument sectionDocument;
     std::optional<proposal::markers::Receipt> markerImport;
+    proposal::JobRequirements jobRequirements;
+    bool setJobRequirements(const proposal::JobRequirements& value,juce::String& error)
+    {
+        if(audioEditsBlocked()||job.isActive()){error="Stop and finish the current job before changing requirements";return false;}
+        error=value.validationError();if(error.isNotEmpty())return false;
+        if(value.digest()==jobRequirements.digest())return true;
+        jobRequirements=value;documentChanged();discardTrim();
+        trimNotice="Requirements changed; measurements preserved and reevaluated. Previous proposal/approval is stale.";
+        return true;
+    }
     proposal::ProposalPolicy proposalPolicy;
     std::optional<proposal::ProposalPolicy> lastAppliedProposalPolicy;
     juce::String lastAppliedProposalBinding; // provenance only, never audio/measurement authority
@@ -745,7 +756,7 @@ public:
 
     TargetProfile getSelectedTargetProfile() const
     {
-        return getTargetProfile (selectedTargetProfileIndex);
+        return jobRequirements.applyTo(getTargetProfile (selectedTargetProfileIndex));
     }
 
     bool hasTargetProfileFamilySelected() const

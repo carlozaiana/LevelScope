@@ -162,6 +162,7 @@ bool ExportApproval::matches (const ServiceContext& context, const RenderArtifac
     const auto& b = measured.context.profile.limits;
     return ! outputHash.isEmpty() && ! profileVersion.isEmpty()
         && context.profile.limits.valuesAreAuthoritative
+        && context.profile.digest() == measured.context.profile.digest()
         && a.hasIntegratedLoudnessTarget == b.hasIntegratedLoudnessTarget && a.integratedLufs == b.integratedLufs
         && a.integratedToleranceLu == b.integratedToleranceLu && a.hasMaxLoudnessRange == b.hasMaxLoudnessRange
         && a.maxLoudnessRangeLu == b.maxLoudnessRangeLu && a.hasTruePeakCeiling == b.hasTruePeakCeiling

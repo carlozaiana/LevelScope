@@ -1,0 +1,351 @@
+{
+  "schema": "levelscope-measurement-report-v5",
+  "kind": "measurement-only-no-exported-audio",
+  "publication": "NO EXPORTED AUDIO",
+  "scope": "Selected whole-programme loudness, true-peak and any explicit job LRA requirement only. No complete broadcaster delivery, BWF/BW64, metadata, synchronization or future encoded-media certification.",
+  "document_id": "fce49495531c49798ad0cc0c156cfab3",
+  "programme_id": "cbb0c3629227432d95f741317c3d3f79",
+  "document_revision": "11",
+  "session_unsaved": true,
+  "session_basename": "safe.levelscope",
+  "runtime_id": "3504240d674c412ab4e33657b9d550ac",
+  "app": "LevelScope Standalone",
+  "build": "bb4ac8837dd773a14cf040f7710f8bf50bed00224de139f049dc86e2f95afd13",
+  "platform": "Mac OSX 15.7.9;arm64;float32-samples;float64-analysis;no-fast-math;fp-contract-off",
+  "cpu": "Apple M1 Max",
+  "processing_version": "static-gain-v1",
+  "processing_gain_db": 6.3660991536700671,
+  "processing_gain_hex": "0x1.976e2b2506cc4p+2",
+  "current_processing_plan": {
+    "engine": "static-gain-v1",
+    "global_gain_db": 6.3660991536700671,
+    "global_gain_hex": "0x1.976e2b2506cc4p+2",
+    "order": "original programme/composition -> section gain -> static-gain-v1 -> monitor or final export quantization",
+    "applied_intervals": [],
+    "transitions": []
+  },
+  "programme_frames": "3120000",
+  "sample_rate": 48000,
+  "duration_rational_seconds": "3120000/48000",
+  "positions": "Audio-source frames; true-peak positions in eighth-frames. Video offsets and measurement EOF drain do not extend programme duration.",
+  "profile": {
+    "id": "ebu-r128-2023-programme-linear-qc",
+    "definition_version": "1.0.0",
+    "digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+    "evaluated_requirements_digest": "ba6a8ce1393e568881cd1ba47ca16203c969d19a0d18c69b9a30a2da1b76e77a",
+    "edition": "EBU R128-2023 (November 2023)",
+    "reference": "https://tech.ebu.ch/docs/r/r128.pdf",
+    "applicability": 1,
+    "applicability_scope": "Pre-produced whole-programme linear-audio QC only; excludes live, deliberate lower targets, short-form and distribution-specific requirements.",
+    "meter_tolerance_documentary_only": "Clause m separately permits +/-0.3 dB meter tolerance for signals band-limited to 20 kHz. Bandwidth is not certified here; this provision never relaxes the -1 dBTP evaluation ceiling."
+  },
+  "job_requirements": {
+    "format": "levelscope-job-requirements",
+    "schema": 1,
+    "id": "7f4e30943f574f5aaaef3137e1a627c1",
+    "revision": 4,
+    "name": "Named delivery job",
+    "base_id": "ebu-r128-2023-programme-linear-qc",
+    "base_version": "1.0.0",
+    "base_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+    "method": "EBU Tech 3342-2023 whole-programme LRA",
+    "applicability": "pre-produced-whole-programme-linear-audio",
+    "provenance_kind": "user-specified-job-requirement",
+    "provenance": "User-specified test contract",
+    "maximum_lra_tenths": 0,
+    "unavailable_reason": "",
+    "digest": "761198c164d445acc4b4ee06417c248d5f634f2ac48a9d5dc47d6f40b56f80bf"
+  },
+  "job_requirements_status": "Job: Named delivery job | revision 4\nUser-specified maximum LRA: 0.0 LU (inclusive).\nEBU Tech 3342-2023 whole-programme LRA; short-programme LRA under 60 seconds cannot satisfy a required ceiling.\nProvenance: User-specified test contract\nRequirements: 761198c164d445acc4b4ee06417c248d5f634f2ac48a9d5dc47d6f40b56f80bf\n",
+  "source_members": [{
+      "basename": "signal.wav",
+      "sha256": "7f05217480c1761be56990e34dfb3caf760710ee0c2c26b09c2ed5a6dc7e2916"
+    }],
+  "ordered_input_roles": ["L","R"],
+  "source": {
+    "domain": "Source",
+    "measurement_available": true,
+    "status": "valid_measured_snapshot",
+    "evaluation": {
+      "verdict": "FAIL",
+      "message": "Fails one or more selected measured rules.",
+      "identity": "96f0a340cd9ee7648fcd57480af2d69f2b3b636ed1db3b602f1228a8442214e9",
+      "profile_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+      "job_requirements_digest": "761198c164d445acc4b4ee06417c248d5f634f2ac48a9d5dc47d6f40b56f80bf",
+      "evaluated_rules_digest": "ba6a8ce1393e568881cd1ba47ca16203c969d19a0d18c69b9a30a2da1b76e77a",
+      "snapshot_identity": "fa68f0e7f8ab44c120fac54ed506c9bfe363b2a2ea5fe84d795d58155f123e56",
+      "rules": [{
+          "id": "programme-loudness",
+          "verdict": "FAIL",
+          "reason": "Outside selected bounds.",
+          "provenance": "R128-2023 clauses h, i, k, l: -23 LUFS intended target; +/-0.2 LU QC allowance; whole-programme level gating.",
+          "units": "LUFS",
+          "measured": -29.366099153670067,
+          "lower": -23.199999999999999,
+          "upper": -22.800000000000001,
+          "delta": -6.3660991536700671
+        },{
+          "id": "true-peak",
+          "verdict": "PASS",
+          "reason": "Within selected bounds.",
+          "provenance": "R128-2023 clause m: maximum -1 dBTP for linear audio.",
+          "units": "dBTP",
+          "measured": -26.935732534022474,
+          "lower": null,
+          "upper": -1,
+          "delta": -25.935732534022474
+        },{
+          "id": "loudness-range",
+          "verdict": "FAIL",
+          "reason": "Outside selected bounds.",
+          "provenance": "User-specified job requirement: Named delivery job; EBU Tech 3342-2023 whole-programme LRA; User-specified test contract. User provenance is not independently verified; not an EBU-mandated ceiling.",
+          "units": "LU",
+          "measured": 9.5424250599642555,
+          "lower": null,
+          "upper": 0,
+          "delta": 9.5424250599642555
+        }]
+    },
+    "measurement_identity": "bfa2b5fc45dc4d882b070666eb8481ac2cc1c5cb22ddaf69f0775e0567ba3e57",
+    "measured_content_sha256": "7f05217480c1761be56990e34dfb3caf760710ee0c2c26b09c2ed5a6dc7e2916",
+    "measurement_method": "bs1770-5-ebu2023-m7.1",
+    "build": "bb4ac8837dd773a14cf040f7710f8bf50bed00224de139f049dc86e2f95afd13",
+    "platform": "Mac OSX 15.7.9;arm64;float32-samples;float64-analysis;no-fast-math;fp-contract-off",
+    "original_runtime": "7f547982c3e743b7a8a6ed643577932d",
+    "restored_from_session": true,
+    "frames": "3120000",
+    "sample_rate": 48000,
+    "lra_stable": true,
+    "metrics": {
+      "integrated": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -29.366099153670067,
+        "value_hex": "-0x1.d5db8ac941b31p+4"
+      },
+      "true_peak": {
+        "status": "available",
+        "unit": "dBTP",
+        "value": -26.935732534022474,
+        "value_hex": "-0x1.aef8c2ad76e03p+4"
+      },
+      "sample_peak": {
+        "status": "available",
+        "unit": "dBFS",
+        "value": -26.93573499826585,
+        "value_hex": "-0x1.aef8c542f4642p+4"
+      },
+      "lra": {
+        "status": "available",
+        "unit": "LU",
+        "value": 9.5424250599642555,
+        "value_hex": "0x1.315b8bcca2796p+3"
+      },
+      "momentary_max": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -26.8115889284317,
+        "value_hex": "-0x1.acfc44ac168ebp+4"
+      },
+      "short_term_max": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -26.813335954925787,
+        "value_hex": "-0x1.ad036c8ff1133p+4"
+      }
+    },
+    "per_channel_peaks": [{
+        "channel": 1,
+        "role": "L",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -26.93573499826585,
+          "value_hex": "-0x1.aef8c542f4642p+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -26.935732534022474,
+          "value_hex": "-0x1.aef8c2ad76e03p+4"
+        },
+        "sample_peak_frame": "1562997",
+        "true_peak_eighth_frame": "12719663"
+      },{
+        "channel": 2,
+        "role": "R",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -26.93573499826585,
+          "value_hex": "-0x1.aef8c542f4642p+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -26.93573499826585,
+          "value_hex": "-0x1.aef8c542f4642p+4"
+        },
+        "sample_peak_frame": "1562000",
+        "true_peak_eighth_frame": "12496000"
+      }]
+  },
+  "current": {
+    "domain": "Current State",
+    "measurement_available": true,
+    "status": "valid_measured_snapshot",
+    "evaluation": {
+      "verdict": "FAIL",
+      "message": "Fails one or more selected measured rules.",
+      "identity": "69d25f90e323b67462792e41486e2a7ed5534ac00e7c19f353fdbaaff1059c26",
+      "profile_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+      "job_requirements_digest": "761198c164d445acc4b4ee06417c248d5f634f2ac48a9d5dc47d6f40b56f80bf",
+      "evaluated_rules_digest": "ba6a8ce1393e568881cd1ba47ca16203c969d19a0d18c69b9a30a2da1b76e77a",
+      "snapshot_identity": "66068ca64e83ea91de8005b0fa2f37513e9c6dafe965004f510db3ae975ade1b",
+      "rules": [{
+          "id": "programme-loudness",
+          "verdict": "PASS",
+          "reason": "Within selected bounds.",
+          "provenance": "R128-2023 clauses h, i, k, l: -23 LUFS intended target; +/-0.2 LU QC allowance; whole-programme level gating.",
+          "units": "LUFS",
+          "measured": -22.999999999381632,
+          "lower": -23.199999999999999,
+          "upper": -22.800000000000001,
+          "delta": 6.1836757936362119e-10
+        },{
+          "id": "true-peak",
+          "verdict": "PASS",
+          "reason": "Within selected bounds.",
+          "provenance": "R128-2023 clause m: maximum -1 dBTP for linear audio.",
+          "units": "dBTP",
+          "measured": -20.569633242238105,
+          "lower": null,
+          "upper": -1,
+          "delta": -19.569633242238105
+        },{
+          "id": "loudness-range",
+          "verdict": "FAIL",
+          "reason": "Outside selected bounds.",
+          "provenance": "User-specified job requirement: Named delivery job; EBU Tech 3342-2023 whole-programme LRA; User-specified test contract. User provenance is not independently verified; not an EBU-mandated ceiling.",
+          "units": "LU",
+          "measured": 9.5424250627548375,
+          "lower": null,
+          "upper": 0,
+          "delta": 9.5424250627548375
+        }]
+    },
+    "measurement_identity": "5808670d76a95b8fe4bd1573ffb40f2c5b36c5b18bfbe4bed44a4159cab3ec00",
+    "measured_content_sha256": "7f05217480c1761be56990e34dfb3caf760710ee0c2c26b09c2ed5a6dc7e2916",
+    "measurement_method": "bs1770-5-ebu2023-m7.1",
+    "build": "bb4ac8837dd773a14cf040f7710f8bf50bed00224de139f049dc86e2f95afd13",
+    "platform": "Mac OSX 15.7.9;arm64;float32-samples;float64-analysis;no-fast-math;fp-contract-off",
+    "original_runtime": "7f547982c3e743b7a8a6ed643577932d",
+    "restored_from_session": true,
+    "frames": "3120000",
+    "sample_rate": 48000,
+    "lra_stable": true,
+    "metrics": {
+      "integrated": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -22.999999999381632,
+        "value_hex": "-0x1.6fffffffd5819p+4"
+      },
+      "true_peak": {
+        "status": "available",
+        "unit": "dBTP",
+        "value": -20.569633242238105,
+        "value_hex": "-0x1.491d37bf2208ap+4"
+      },
+      "sample_peak": {
+        "status": "available",
+        "unit": "dBFS",
+        "value": -20.569635834344822,
+        "value_hex": "-0x1.491d3a76f2404p+4"
+      },
+      "lra": {
+        "status": "available",
+        "unit": "LU",
+        "value": 9.5424250627548375,
+        "value_hex": "0x1.315b8bce22024p+3"
+      },
+      "momentary_max": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -20.445489772906718,
+        "value_hex": "-0x1.4720b9e25563ap+4"
+      },
+      "short_term_max": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -20.447236800362603,
+        "value_hex": "-0x1.4727e1c672004p+4"
+      }
+    },
+    "per_channel_peaks": [{
+        "channel": 1,
+        "role": "L",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -20.569635834344822,
+          "value_hex": "-0x1.491d3a76f2404p+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -20.569633242238105,
+          "value_hex": "-0x1.491d37bf2208ap+4"
+        },
+        "sample_peak_frame": "1562997",
+        "true_peak_eighth_frame": "12719663"
+      },{
+        "channel": 2,
+        "role": "R",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -20.569635834344822,
+          "value_hex": "-0x1.491d3a76f2404p+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -20.569635834344822,
+          "value_hex": "-0x1.491d3a76f2404p+4"
+        },
+        "sample_peak_frame": "1562000",
+        "true_peak_eighth_frame": "12496000"
+      }]
+  },
+  "sections_annotations_only": [{
+      "id": "1",
+      "name": "Whole programme",
+      "begin_frame": "0",
+      "end_frame": "3120000"
+    }],
+  "proposal_preferences": {
+    "version": "section-preferences-v2",
+    "accounting": "connected-envelope-support-v2",
+    "region_limit": null,
+    "duration_thousandths": 200,
+    "additional_tenths_db": 30,
+    "cumulative_tenths_db": 120,
+    "reserve_tenths_db": 5,
+    "unavailable": ""
+  },
+  "proposal_preferences_digest": "9020f36cdf7584536fc2708e4f57196cbf3ca8ef1d72e954ae8ad2e88bb48e27",
+  "proposal_inspection_not_current_measurement": "UNAVAILABLE\nSection-led / section-trim-proposal-v2\nBaseline binding: a02e402edd47134d2cec31f5ea7d8364d5a7a7e00fae2f0b949e9f450eef27a0\nProfile: ebu-r128-2023-programme-linear-qc / 1.0.0 / ba6a8ce1393e568881cd1ba47ca16203c969d19a0d18c69b9a30a2da1b76e77a\nsection-preferences-v2 / connected-envelope-support-v2\nPolicy digest: 9020f36cdf7584536fc2708e4f57196cbf3ca8ef1d72e954ae8ad2e88bb48e27\nNo region-count restriction; affected duration 20.0% (preservation preference, not broadcast rule).\nAdditional attenuation 3.0 dB; cumulative local attenuation 12.0 dB; requested reserve 0.5 dB inside both caps.\n\nGlobal-trim proposal: UNAVAILABLE\nAutomatic correction for these requirements is not supported yet. This is a capability limit, not a claim that no solution exists. Manual processing and independent remeasurement remain available.\nFails one or more selected measured rules.\nSource audition remains original audio.\n\nPrivate full-programme passes: 0 / 3.\nBaseline measured I / TP: -22.999999999 LUFS / -20.569633242 dBTP.\nNo private candidate measurement was performed.\n",
+  "last_applied_proposal_policy_historical": null,
+  "last_applied_proposal_binding_historical": "",
+  "last_applied_proposal_inspection_transient": "Active proposal shown in full; historical applied policy/binding and exact current envelope reported separately.",
+  "proposal_provenance_scope": "Preferences are preservation choices, not delivery rules. Last applied policy is historical and may differ from current processing/preferences. Full transient proposal inspection is reportable before closing; sessions retain policy/binding and the exact applied envelope, not private assessment authority.",
+  "marker_import_provenance": null,
+  "annotations_match_last_import": false,
+  "reference_picture_context": {
+    "basename": "",
+    "sha256": "",
+    "offset_rational": "0/1",
+    "is_sync_evidence": false
+  }
+}

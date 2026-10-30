@@ -22,11 +22,12 @@ Evaluation evaluateMeasuredProgramme (const TargetProfile& profile, const Measur
 {
     Evaluation out;
     out.domain = input.domain; out.snapshotIdentity = input.snapshotIdentity;
-    out.profileDigest = profile.digest(); out.profileId = profile.id; out.profileVersion = profile.definitionVersion;
+    out.profileDigest = profile.baseProfileDigest.isEmpty() ? profile.digest() : profile.baseProfileDigest;
+    out.jobRequirementsDigest = profile.jobRequirementsDigest; out.rulesDigest = profile.digest(); out.profileId = profile.id; out.profileVersion = profile.definitionVersion;
     // Include actual evaluated values/status as well as the adapter's full snapshot
     // binding; two different measurements cannot share an evaluation identity.
     std::ostringstream s; s.imbue (std::locale::classic()); s << std::hexfloat;
-    s << evaluationVersion << ';' << out.profileDigest.toStdString() << ';' << input.snapshotIdentity.toStdString()
+    s << evaluationVersion << ';' << out.rulesDigest.toStdString() << ';' << input.snapshotIdentity.toStdString()
       << ';' << input.measurementVersion.toStdString() << ';' << static_cast<int> (input.domain)
       << ';' << static_cast<int> (input.applicability) << ';' << input.currentIdentityMatches << ';' << input.lraStable;
     for (const auto& m : { input.integrated, input.truePeak, input.lra })
@@ -50,10 +51,11 @@ Evaluation evaluateMeasuredProgramme (const TargetProfile& profile, const Measur
     {
         RuleEvaluation rule; rule.id = id; rule.units = units; rule.provenance = provenance;
         rule.lower = lower; rule.upper = upper;
-        if (! metric.value || ! std::isfinite (*metric.value) || metric.status != measurement::Status::available || ! stable)
+        if (! metric.value || ! std::isfinite (*metric.value) || metric.status != measurement::Status::available || ! stable || (juce::String(id)=="loudness-range" && metric.value && *metric.value<0))
         {
             rule.verdict = Verdict::indeterminate;
-            if (! stable) rule.reason = "Required LRA is unstable for a programme under 60 seconds.";
+            if (juce::String(id)=="loudness-range" && metric.value && *metric.value<0) rule.reason = "Required LRA is invalid (negative).";
+            else if (! stable) rule.reason = "Required LRA is unstable for a programme under 60 seconds.";
             else if (metric.value && ! std::isfinite (*metric.value)) rule.reason = "Required metric is non-finite.";
             else if (metric.status == measurement::Status::silence) rule.reason = "Digital silence; required metric unavailable.";
             else if (metric.status == measurement::Status::belowGate) rule.reason = "No eligible loudness blocks.";

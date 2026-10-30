@@ -1,0 +1,98 @@
+{
+  "source_digest": "4c7bebfacd75927ffeb085584993f6f7e357a2b22877858b27a2c7c1a4f2a43c",
+  "measurement_build": "0f4c2918fa471391fd2a168344d7909dde496cf64e6d127f22d49d9780f4ea37",
+  "binaries": [
+    {
+      "path": "bin/LevelScopeComplianceTests",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum_macos": "10.13",
+      "sha256": "d1c4bf229a122af499ea725858d30b40173f142bff81beaf5ad560e119a70c9d"
+    },
+    {
+      "path": "bin/LevelScopeExportTests",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum_macos": "10.13",
+      "sha256": "394a65523e085c7c1949cda473168c4b5c3d9b9e106cfa66285586d432feafd2"
+    },
+    {
+      "path": "bin/LevelScopeJobRequirementsTests",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum_macos": "10.13",
+      "sha256": "9e7609a7a9edbb5e7153112d7342cd1b5462168f0b6af22c34de695e5ef24403"
+    },
+    {
+      "path": "bin/LevelScopeMarkerTests",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum_macos": "10.13",
+      "sha256": "0a0a9ce15fedb06229e124d70dccb79649486b568a9588f49e7744f8d0623155"
+    },
+    {
+      "path": "bin/LevelScopeMeasurementTests",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum_macos": "10.13",
+      "sha256": "af6013374faaf607df8f6851c96af9c6cb71b843718e8aae085f365273e493ac"
+    },
+    {
+      "path": "bin/LevelScopeProposalTests",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum_macos": "10.13",
+      "sha256": "870a67d844d78c6cb11c7611a36849fc25f1e9d28eef9f9e7776c97333e17138"
+    },
+    {
+      "path": "bin/LevelScopeSectionProcessingTests",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum_macos": "10.13",
+      "sha256": "687d96c55f54cfe22747b5e13f0b0f603758e5c121a7e56479abb63aa641db4b"
+    },
+    {
+      "path": "bin/LevelScopeSectionProposalTests",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum_macos": "10.13",
+      "sha256": "26d937f83199dc54b838f0ddcf899917caf2209b00082b7e320c1ae9e78ada04"
+    },
+    {
+      "path": "bin/LevelScopeSessionTests",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum_macos": "10.13",
+      "sha256": "ae7ff75c2abcbf981a3cd3d358bf6d890068f2823e1d291f683259c7ea48cbe8"
+    },
+    {
+      "path": "LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum_macos": "10.13",
+      "sha256": "857095b8eb1326bcb177fd2ccde93a18d389020e330c4a0f482ffb52c50715fd"
+    }
+  ],
+  "actual_high_sierra_execution": false,
+  "note": "Universal compilation and Intel minimum-deployment inspection only; actual Sequoia OS/CPU are independently recorded by the executed qualification runner. High Sierra runtime remains deferred."
+}

@@ -1,0 +1,10 @@
+[  3%] Built target LevelScopeMeasurementCore
+[ 57%] Built target LevelScopeStandaloneSupport
+[ 80%] Built target LevelScopeDiagnosticsUI
+[ 84%] Building CXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/Tests/JobRequirementsTests.cpp.o
+[ 84%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/build/juce-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[ 84%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/build/juce-7.0.12/modules/juce_data_structures/juce_data_structures.mm.o
+[ 84%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/build/juce-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[ 88%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/build/juce-7.0.12/modules/juce_gui_basics/juce_gui_basics.mm.o
+[ 92%] Linking CXX executable LevelScopeJobRequirementsTests_artefacts/Release/LevelScopeJobRequirementsTests
+[100%] Built target LevelScopeJobRequirementsTests

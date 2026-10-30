@@ -1,0 +1,13 @@
+{
+  "source_difference": [
+    "Tests/MarkerTests.cpp"
+  ],
+  "artifact_difference": [
+    "bin/LevelScopeMarkerTests",
+    "source/Tests/MarkerTests.cpp"
+  ],
+  "original_source": "4c7bebfacd75927ffeb085584993f6f7e357a2b22877858b27a2c7c1a4f2a43c",
+  "accepted_source": "607de169d5004d1b1f7309c97ec69de2fdb26d0c60bbee4db42c12ecb6fab87f",
+  "original_summary_sha256": "a72dc5f2f306a48133363480d8656937ac69abf38e32fdb5f36cc0e022727934",
+  "reason": "Correct obsolete M16-reader marker test assertion to M17 reader. No production change; historical failed run retained."
+}

@@ -1,0 +1,58 @@
+{
+  "source_digest": "4a1bf88a2114e8dac7ca7f548b56f4d92e982a23ed14f5b7d48591a42beee72d",
+  "measurement_build": "bb4ac8837dd773a14cf040f7710f8bf50bed00224de139f049dc86e2f95afd13",
+  "binaries": {
+    "LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone": {
+      "sha256": "58eecac33c77cc8416100f88c3a931c32cc7570388b244cbc860c11c01ed14fe",
+      "architectures": "x86_64 arm64",
+      "intel_minimum": "10.13"
+    },
+    "bin/LevelScopeComplianceTests": {
+      "sha256": "00e272f1be3d55a57ee9d76d12423915bb69586aa930233e58268d4c18d26132",
+      "architectures": "x86_64 arm64",
+      "intel_minimum": "10.13"
+    },
+    "bin/LevelScopeExportTests": {
+      "sha256": "ad3548b89744564b066348a20fbfb80547ed9473e6b731113d593fd73202859f",
+      "architectures": "x86_64 arm64",
+      "intel_minimum": "10.13"
+    },
+    "bin/LevelScopeJobRequirementsTests": {
+      "sha256": "4aa4b80515a00d71cf50ce80bc6dfeccfe08ee2f0e626c918ba85796c1e8c17e",
+      "architectures": "x86_64 arm64",
+      "intel_minimum": "10.13"
+    },
+    "bin/LevelScopeMarkerTests": {
+      "sha256": "6d62a7b0fe0d9dc07ee7c833cc05878f6edd53fdfb9f05b58ebc51cad0b98516",
+      "architectures": "x86_64 arm64",
+      "intel_minimum": "10.13"
+    },
+    "bin/LevelScopeMeasurementTests": {
+      "sha256": "82f4ae149a5a170776e033ba01ea0e5858c61b353124fe80e275d84f31328237",
+      "architectures": "x86_64 arm64",
+      "intel_minimum": "10.13"
+    },
+    "bin/LevelScopeProposalTests": {
+      "sha256": "8354cae49d0c32e44b907b7a586f456caf0fe4d575eb27bc5580405c27d4ead3",
+      "architectures": "x86_64 arm64",
+      "intel_minimum": "10.13"
+    },
+    "bin/LevelScopeSectionProcessingTests": {
+      "sha256": "7d57a5151b040a44ff23091330a87fea01f778e0cca0c5f9b228cf52b6acbfca",
+      "architectures": "x86_64 arm64",
+      "intel_minimum": "10.13"
+    },
+    "bin/LevelScopeSectionProposalTests": {
+      "sha256": "43d5b0ed56f5c6b31d5c788c528391561c2a1e629d5d2881d1ed114e4b5a9b4a",
+      "architectures": "x86_64 arm64",
+      "intel_minimum": "10.13"
+    },
+    "bin/LevelScopeSessionTests": {
+      "sha256": "86210dfe0e5ce7f8104397258a69eb9f45ffb4dab06191295bfd4277ef00ecde",
+      "architectures": "x86_64 arm64",
+      "intel_minimum": "10.13"
+    }
+  },
+  "actual_high_sierra_execution": false,
+  "note": "Universal arm64/x86_64 Release and Intel 10.13 deployment only; no High Sierra runtime or video execution."
+}

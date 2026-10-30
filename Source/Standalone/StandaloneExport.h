@@ -16,6 +16,7 @@ struct Request
     bool unsaved = true;
     juce::File sessionFile;
     proposal::SectionMap sections;
+    proposal::JobRequirements jobRequirements;
     proposal::ProposalPolicy proposalPolicy;
     std::optional<proposal::ProposalPolicy> lastAppliedProposalPolicy;
     juce::String lastAppliedProposalBinding,proposalInspection,lastAppliedProposalInspection;
@@ -66,6 +67,7 @@ private:
                                              JobControl&, const pcm24::Hooks&);
 };
 proposal::Evaluation artifactEvaluation (const Candidate&, const Request&);
+bool rulesPermitPublication(const proposal::Evaluation& current,const proposal::Evaluation& artifact);
 juce::String approvalIdentity (const Candidate&, const Request&);
 // Both services are worker-only. The caller locks edits and checks runtime/job identity on adoption.
 ServiceResult<std::shared_ptr<Candidate>> render (const Request&, const juce::File& destinationParent,

@@ -36,7 +36,7 @@ TrimProposal draftGlobalTrimImpl (const TrimRequest& r, bool privateCandidate)
     const bool supportedPlan=(r.processingVersion=="static-gain-v1" && r.fixedUpstreamPlanIdentity.isEmpty())
         || (r.processingVersion=="section-gain-v1" && r.fixedUpstreamPlanIdentity.isNotEmpty());
     if (!supportedPlan || ! std::isfinite (r.currentGainDb)
-        || r.currentGainDb < -60 || r.currentGainDb > 24 || r.profile.limits.hasMaxLoudnessRange)
+        || r.currentGainDb < -60 || r.currentGainDb > 24)
     { p.explanation = "Global trim requires a supported measured plan, fixed upstream section gains and programme loudness/true-peak rules only."; return p; }
 
     const double i = *r.current.integrated.value, tp = *r.current.truePeak.value;
@@ -46,6 +46,8 @@ TrimProposal draftGlobalTrimImpl (const TrimRequest& r, bool privateCandidate)
         p.explanation = "Already passes selected measured rules. No change: retain gain, measurements and evaluation.";
         return p;
     }
+    if (r.profile.limits.hasMaxLoudnessRange)
+    { p.explanation = "Automatic correction for these requirements is not supported yet. This is a capability limit, not a claim that no solution exists. Manual processing and independent remeasurement remain available.\n" + current.message; return p; }
     const auto& l = r.profile.limits;
     const double desired = l.integratedLufs - i;
     const double lower = std::max (-60 - r.currentGainDb, l.integratedLufs - l.integratedToleranceLu - i);

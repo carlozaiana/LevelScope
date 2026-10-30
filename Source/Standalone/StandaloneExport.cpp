@@ -164,7 +164,7 @@ Request capture (const StandaloneSessionModel& s)
     const auto input = sectionInputIdentity(r.source);
     if(s.sectionDocument.map().valid() && s.sectionDocument.map().inputIdentity == input)
     { r.sections = s.sectionDocument.map(); if(s.markerImport && s.markerImport->imported.inputIdentity == input) r.markerImport = s.markerImport; }
-    r.proposalPolicy=s.proposalPolicy;r.lastAppliedProposalPolicy=s.lastAppliedProposalPolicy;r.lastAppliedProposalBinding=s.lastAppliedProposalBinding;
+    r.jobRequirements=s.jobRequirements;r.proposalPolicy=s.proposalPolicy;r.lastAppliedProposalPolicy=s.lastAppliedProposalPolicy;r.lastAppliedProposalBinding=s.lastAppliedProposalBinding;
     r.proposalInspection=s.sectionProposal?s.sectionProposalDisplayText():juce::String("No transient proposal. Applied settings and measured outcomes are reported separately.");
     r.lastAppliedProposalInspection=s.sectionProposal?juce::String("Active proposal shown in full; historical applied policy/binding and exact current envelope reported separately."):s.lastAppliedProposalText;
     r.video = s.referenceVideo; return r;
@@ -226,7 +226,7 @@ juce::String readiness (const Request& r)
         || pair.sourceInputIdentity.isEmpty() || pair.sourceInputIdentity != pair.currentInputIdentity)
         return "Valid matching Source/Current measurements are required; re-measure unavailable or stale results.";
     if (proposal::evaluateMeasuredProgramme (r.current.profile, pair.current).verdict != proposal::Verdict::pass)
-        return "Current State must pass the selected authoritative programme rules. Measurement-only reports remain available.";
+        return "Current State must pass all selected programme/job rules. Measurement-only reports remain available.";
     return {};
 }
 juce::String preview (const Request& r, bool includeReadiness)
@@ -252,9 +252,16 @@ proposal::Evaluation artifactEvaluation (const Candidate& c, const Request& r)
     auto measured=c.measuredInput();measured.applicability=r.applicability;
     return proposal::evaluateMeasuredProgramme(r.current.profile,measured);
 }
+bool rulesPermitPublication(const proposal::Evaluation& current,const proposal::Evaluation& artifact)
+{
+    return current.domain==proposal::SnapshotDomain::currentState&&artifact.domain==proposal::SnapshotDomain::renderedOutput
+        &&current.rulesDigest.isNotEmpty()&&current.rulesDigest==artifact.rulesDigest
+        &&current.profileDigest==artifact.profileDigest&&current.jobRequirementsDigest==artifact.jobRequirementsDigest
+        &&current.verdict==proposal::Verdict::pass&&artifact.verdict==proposal::Verdict::pass;
+}
 juce::String approvalIdentity (const Candidate& c, const Request& r)
 {
-    if (readiness(r).isNotEmpty() || artifactEvaluation(c,r).verdict != proposal::Verdict::pass) return {};
+    if (readiness(r).isNotEmpty() || !rulesPermitPublication(evaluateSnapshot(r.currentAnalysis.get(),r.current,MeasurementDomain::currentState,r.current.profile,r.applicability),artifactEvaluation(c,r))) return {};
     return digest(requestIdentity(r)+";"+c.hash()+";"+artifactEvaluation(c,r).identity+";"+c.spec().identity);
 }
 ServiceResult<std::shared_ptr<Candidate>> render (const Request& r, const juce::File& parent, JobControl& control,

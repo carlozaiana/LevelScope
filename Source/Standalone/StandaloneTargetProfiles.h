@@ -57,7 +57,7 @@ public:
     {
         juce::String text;
 
-        text << "Authoritative selected rules loaded: ";
+        text << "Authoritative base profile loaded: ";
         text << (profile.limits.valuesAreAuthoritative ? "yes" : "no");
         text << "\n";
 
@@ -90,7 +90,7 @@ public:
         text << "Edition: " << profile.standardEdition << "\n"
              << "Definition: " << profile.definitionVersion << "\n"
              << "Applicability: pre-produced whole-programme linear-audio QC only.\n"
-             << "LRA has no acceptance rule in the EBU programme QC profile.\n"
+             << "The base EBU profile has no LRA ceiling; an explicit job rule is separate.\n"
              << profile.meterToleranceNote << "\n\n"
              << "Profile note: " << profile.limits.validationNote;
 
