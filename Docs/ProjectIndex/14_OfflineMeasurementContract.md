@@ -213,3 +213,55 @@ High Sierra, video and three-hour qualification stays pending after M18/no later
 - https://www.atsc.org/wp-content/uploads/2026/07/A85-2026-07.pdf
 - https://tech.ebu.ch/publications/ebu_loudness_test_set
 - https://www.itu.int/oth/R1102000001/en
+
+## First-import Current measurement for M18 integration
+
+31 October 2026. A fresh interleaved, assembled or composed programme can use its
+first completed Source analysis for the untouched Current. The session arms this
+once at validated import. After confirmation and successful job completion,
+`StandaloneSessionModel::acceptMeasurement` checks the runtime ticket, programme
+content, ordered roles, whole range, method/build and complete window/peak coverage.
+The Current plan must also satisfy the Source identity-processing contract. The
+model then installs two immutable, domain-bound snapshots in one document update.
+Current carries the complete measured detail and its own evaluation against the
+active job requirements. The first import uses one offline analysis pass.
+
+For the UI/Timeline chat, deliver a worker completion through the existing acceptance
+path and refresh both domains. The call already initializes and measures eligible
+Current. An extra Initialize action would reset its measurement. The Current snapshot's
+`identicalSourceMeasurementIdentity` identifies the measured Source. The original
+runtime ID, job ID and revision identify that particular acquisition. This lets a
+timeline presenter bind the same completed PCM overview to the two distinct view
+identities when the Source job and coverage also match. M/S windows, gates, LRA
+populations and per-channel peaks are in each snapshot's `detail`. Partial preview
+batches have no adoption path. Keep the inspected and auditioned domains independent.
+
+Fresh-import eligibility is runtime-only. Cancellation, failure or a superseded job
+leaves the new Current pending. A successful retry for the same fresh input can
+complete it. A replacement import requires its own Source job. Clearing Current,
+applying an audio change or opening a saved session prevents later Source measurement
+from substituting for independent Current verification, even if the gain returns
+to zero. A verified cache that already contains the initial Current can reopen with
+its original provenance. The optional Current cache uses record version 5 for this
+association. Other measurement caches use their existing representation and the
+session core remains schema 7. Reports identify the Source acquisition for an initial
+Current. Rendered-output verification still measures the reopened PCM artifact.
+
+Cherry-pick the focused logic commit onto the registered `codex/ui-timeline-m18`
+branch. The first-import rule supersedes the earlier manual initialization step in
+ProjectIndex 63/64. The combined qualification plan covers actual High Sierra,
+cross-Mac exchange, reference video and the three-hour workflow after M18 and no
+later than M19. Main stays at qualified M13 pending that qualification and approval.
+
+Focused arm64 Sequoia 15.7.9 (24G830) results on 31 October 2026 were 1,071 short
+session checks, 185 measurement/service checks, 401 job-requirements checks and
+4,872 short export checks, all passing. The session suite exercises successful
+one-job adoption, late cancellation/replacement, incomplete coverage, role/range
+mismatch, gain edits and saved provenance. The requirements suite also exercises
+confirmed assemblies/compositions and renders an independently verified artifact
+from a passing initial Current. The universal standalone and four test executables
+carry x86_64 with a 10.13 minimum. The local machine-readable receipt is
+`build/m18-initial-current/results/logic-integration.json`. The measurement build ID
+is `13cd38e535ee405201e59faeac173d8080dd53acb0c577d297d7a217bf714a51`.
+Repeat the affected checks against the combined UI candidate and retain its own
+build and qualification identity.

@@ -11,6 +11,7 @@ public:
     explicit OfflineAnalysisService (ProcessedAudioObserver* sink = nullptr) : observer (sink) {}
     ServiceResult<AnalysisSnapshot> analyze (const ServiceContext&, MeasurementDomain, JobControl&) override;
     static juce::String validateRequest (const ServiceContext&, MeasurementDomain);
+    static bool hasCompleteCoverage (const AnalysisSnapshot&);
     static juce::String identityFor (const ServiceContext&, MeasurementDomain, const juce::String& measuredHash);
     static std::vector<measurement::Role> measurementRoles (const ChannelLayout&);
     // Test/verification primitive. Encodes to an owned temporary PCM24 WAV, reopens

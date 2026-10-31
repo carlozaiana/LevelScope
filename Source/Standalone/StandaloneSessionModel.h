@@ -333,6 +333,7 @@ public:
     }
     void invalidateCurrentProcessing()
     {
+        initialCurrentPending = false;
         discardTrim();++revision;++currentStateDocument.revision;documentChanged();unresolvedCurrentCache.reset();
         currentStateDocument.needsRemeasurement=true;
         currentStateDocument.statusText="UNVERIFIED: processing changed; re-measure Current State";
@@ -526,17 +527,51 @@ public:
         return true;
     }
 
+private:
+    // Only new imports arm this. SessionDocument installs a newly constructed model
+    // on reopen, so a missing or incompatible Current cache never arms it.
+    bool initialCurrentPending = false;
+
+    void adoptInitialCurrent (const AnalysisSnapshot& measuredSource)
+    {
+        if (audioEditsBlocked() || currentState.hasMeasurement) return;
+        auto context = measurementContext (MeasurementDomain::currentState);
+        // Validating the Current context as Source also requires a supported unity
+        // plan. Comparing identities in the same domain checks range, ordered roles,
+        // members, build and platform before giving Current its own domain identity.
+        if (!measurementMatchesContext (measuredSource, context, MeasurementDomain::source)) return;
+
+        auto initial = std::make_shared<AnalysisSnapshot> (measuredSource);
+        initial->domain = MeasurementDomain::currentState;
+        initial->context = std::move (context);
+        initial->identity = OfflineAnalysisService::identityFor (initial->context, initial->domain, initial->measuredContentHash);
+        initial->identicalSourceMeasurementIdentity = measuredSource.identity;
+        initial->originSessionId = measuredSource.context.sessionId;
+        initial->originJobId = measuredSource.context.ticket.id;
+        initial->originSessionRevision = measuredSource.context.ticket.sessionRevision;
+
+        if (!currentStateDocument.isInitialized && !currentStateDocument.initializeFromSource (sourceDocument)) return;
+        currentStateDocument.needsRemeasurement = false;
+        currentStateDocument.statusText = "Initial unity processing measured with Source";
+        currentState = source;
+        currentState.analysis = std::move (initial);
+        currentState.statusText = "Measured from identical Source";
+    }
+
+public:
     bool acceptMeasurement (AnalysisSnapshot result)
     {
         if ((result.domain != MeasurementDomain::source && result.domain != MeasurementDomain::currentState) || ! sourceDocument.hasSource
             || result.context.sessionId != sessionId || result.context.ticket.sessionRevision != revision
             || result.context.ticket.id != job.ticket.id || job.state != JobState::succeeded
+            || job.stage != JobStage::analysis || sourceContentInvalid || result.restoredFromSession
             || (result.domain == MeasurementDomain::currentState && ! currentStateDocument.isInitialized)) return false;
-        if ((sourceDocument.assembly || sourceDocument.composition) && !sourceDocument.matchesFileStamps())
+        if (!sourceDocument.matchesFileStamps())
         { measurementUnsuccessful(result.domain, ErrorCode::sourceChanged); return false; }
         const auto expected = measurementContext (result.domain);
-        if (result.measuredContentHash != sourceDocument.media.sha256
-            || result.identity != OfflineAnalysisService::identityFor (expected, result.domain, sourceDocument.media.sha256)) return false;
+        if (result.measurementVersion != measurement::version
+            || !measurementMatchesContext (result, expected, result.domain)
+            || !OfflineAnalysisService::hasCompleteCoverage (result)) return false;
         auto& summary = result.domain == MeasurementDomain::source ? source : currentState;
         summary.hasMeasurement = true;
         summary.integratedLufs = result.measured.integratedLufs;
@@ -549,6 +584,12 @@ public:
             currentStateDocument.statusText = "Measured current revision";
         }
         summary.analysis = std::make_shared<const AnalysisSnapshot> (std::move (result));
+        if (initialCurrentPending)
+        {
+            initialCurrentPending = false;
+            if (summary.analysis->domain == MeasurementDomain::source)
+                adoptInitialCurrent (*summary.analysis);
+        }
         documentChanged();
         discardTrim();
         if (summary.analysis->domain == MeasurementDomain::currentState)
@@ -570,6 +611,7 @@ public:
         ++revision; documentChanged(); programmeId = juce::Uuid().toString();
         discardTrim(); clearProposalApplicationProvenance(); sourceContentInvalid = false; unresolvedSourceCache.reset(); unresolvedCurrentCache.reset();
         sourceDocument.setValidatedFile (file, media);
+        initialCurrentPending = sourceDocument.hasSource;
 
         source = MeasurementSummary();
         currentState = MeasurementSummary();
@@ -579,7 +621,7 @@ public:
         if (sourceDocument.hasSource)
         {
             source.statusText = "Validated source; measurement not run";
-            currentState.statusText = "Waiting for Current State initialization";
+            currentState.statusText = "Awaiting first completed Source measurement";
         }
         return true;
     }
@@ -591,6 +633,8 @@ public:
         discardTrim(); clearProposalApplicationProvenance(); sourceContentInvalid = false; unresolvedSourceCache.reset(); unresolvedCurrentCache.reset(); sourceDocument.setValidatedProgramme(group);
         source = MeasurementSummary(); currentState = MeasurementSummary(); currentStateDocument.clear();
         programmeApplicability = proposal::Applicability::unconfirmed;
+        initialCurrentPending = true;
+        currentState.statusText = "Awaiting first completed Source measurement";
         source.statusText = "Complete aligned programme; measurement not run";
         return true;
     }
@@ -606,6 +650,7 @@ public:
             documentChanged();return true;
         }
         const bool keepCurrent=editing&&currentStateDocument.isInitialized;
+        initialCurrentPending = !editing;
         const double retainedGain=currentStateDocument.staticGainDb;
         ++revision;documentChanged();if(!editing)programmeId=juce::Uuid().toString();
         discardTrim();clearProposalApplicationProvenance();sourceContentInvalid=false;unresolvedSourceCache.reset();unresolvedCurrentCache.reset();
@@ -613,7 +658,8 @@ public:
         currentStateDocument.clear();programmeApplicability=proposal::Applicability::unconfirmed;
         if(keepCurrent){currentStateDocument.initializeFromSource(sourceDocument);currentStateDocument.staticGainDb=retainedGain;}
         source.statusText="Original confirmed composition; measurement not run";
-        currentState.statusText=keepCurrent?"UNVERIFIED: composition changed; applied global gain retained":"Waiting for Current State initialization";
+        currentState.statusText = keepCurrent ? "UNVERIFIED: composition changed; applied global gain retained"
+            : initialCurrentPending ? "Awaiting first completed Source measurement" : "Waiting for Current State initialization";
         sectionDocument=proposal::SectionDocument();markerImport.reset();
         return true;
     }
@@ -621,6 +667,7 @@ public:
     void clearSourceFile()
     {
         if (audioEditsBlocked()) return;
+        initialCurrentPending = false;
         ++revision; documentChanged(); programmeId = juce::Uuid().toString();
         discardTrim(); clearProposalApplicationProvenance(); sourceContentInvalid = false; unresolvedSourceCache.reset(); unresolvedCurrentCache.reset();
         sourceDocument.clear();
@@ -654,6 +701,7 @@ public:
     void clearCurrentState()
     {
         if (audioEditsBlocked()) return;
+        initialCurrentPending = false;
         unresolvedCurrentCache.reset();
         discardTrim();
         ++revision; documentChanged();

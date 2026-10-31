@@ -218,7 +218,10 @@ measurement::Metric metric (Reader& r)
 Bytes cacheBytes (const AnalysisSnapshot& a,JobControl& control)
 {
     Bytes b;const auto& c=a.context;auto v=gainPlanValue(c.processing);
-    put(v,"schema",4);put(v,"assembly",c.assembly?assemblyValue(*c.assembly):V());put(v,"composition",c.composition?compositionValue(*c.composition):V());put(v,"domain",static_cast<int>(a.domain));put(v,"media",mediaValue(c.media));put(v,"layout",layoutValue(c.fileLayout));put(v,"begin",signedValue(c.range.begin));put(v,"end",signedValue(c.range.end));
+    const bool fromSource = a.identicalSourceMeasurementIdentity.isNotEmpty();
+    put(v,"schema",fromSource ? 5 : 4);
+    if (fromSource) put(v,"identicalSourceMeasurementIdentity",a.identicalSourceMeasurementIdentity);
+    put(v,"assembly",c.assembly?assemblyValue(*c.assembly):V());put(v,"composition",c.composition?compositionValue(*c.composition):V());put(v,"domain",static_cast<int>(a.domain));put(v,"media",mediaValue(c.media));put(v,"layout",layoutValue(c.fileLayout));put(v,"begin",signedValue(c.range.begin));put(v,"end",signedValue(c.range.end));
     put(v,"gain",realValue(c.processing.staticGainDb));put(v,"planSchema",c.processing.schemaVersion);put(v,"engine",c.processing.engineVersion);put(v,"build",c.buildVersion);put(v,"platform",c.platformAndFloatingPointMode);put(v,"method",a.measurementVersion);put(v,"identity",a.identity);put(v,"content",a.measuredContentHash);
     put(v,"session",a.originSessionId.isEmpty()?c.sessionId:a.originSessionId);put(v,"job",unsignedValue(a.originSessionId.isEmpty()?c.ticket.id:a.originJobId));put(v,"revision",unsignedValue(a.originSessionId.isEmpty()?c.ticket.sessionRevision:a.originSessionRevision));
     text(b,juce::JSON::toString(v,true));const auto& d=a.detail;u64(b,d.sampleRate);u64(b,d.frames);
@@ -232,7 +235,7 @@ Bytes cacheBytes (const AnalysisSnapshot& a,JobControl& control)
 }
 std::shared_ptr<const AnalysisSnapshot> cache (const Bytes& b,MeasurementDomain domain,JobControl& control)
 {
-    Reader r{b,0,control};auto v=parse(r.t().toStdString());const int cacheSchema=number(get(v,"schema"),1,4);
+    Reader r{b,0,control};auto v=parse(r.t().toStdString());const int cacheSchema=number(get(v,"schema"),1,5);
     auto a=std::make_shared<AnalysisSnapshot>();a->domain=static_cast<MeasurementDomain>(number(get(v,"domain"),0,1));require(a->domain==domain,"Cache domain mismatch");auto& c=a->context;
     if(cacheSchema>=2&&!get(v,"assembly").isVoid())c.assembly=assembly(get(v,"assembly"));
     if(cacheSchema>=3&&!get(v,"composition").isVoid())c.composition=composition(get(v,"composition"));
@@ -252,6 +255,13 @@ std::shared_ptr<const AnalysisSnapshot> cache (const Bytes& b,MeasurementDomain 
     require(r.p==b.size()&&d.integratedIncluded<=d.momentary.size()&&d.lraIncluded<=d.lraWindows.size(),"Malformed measurement cache");
     a->measured={d.integrated.value,d.lra.value,d.truePeak.value,d.samplePeak.value};
     require(a->measurementVersion==measurement::version&&hashValid(a->identity)&&a->identity==OfflineAnalysisService::identityFor(c,domain,a->measuredContentHash),"Incompatible measurement identity");
+    if (cacheSchema == 5)
+    {
+        a->identicalSourceMeasurementIdentity = str(v,"identicalSourceMeasurementIdentity",64);
+        require(domain == MeasurementDomain::currentState && OfflineAnalysisService::validateRequest(c,MeasurementDomain::source).isEmpty()
+                && a->identicalSourceMeasurementIdentity == OfflineAnalysisService::identityFor(c,MeasurementDomain::source,a->measuredContentHash)
+                && OfflineAnalysisService::hasCompleteCoverage(*a), "Invalid initial Current measurement provenance");
+    }
     require(measuredProgrammeForSnapshot(a.get(),c,domain,proposal::Applicability::unconfirmed).currentIdentityMatches,"Invalid measured cache binding");return a;
 }
 V coreValue (const Document& d,const std::array<Bytes,2>& caches)

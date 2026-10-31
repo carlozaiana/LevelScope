@@ -100,7 +100,8 @@ stopped and no conflicting job is active. On session reopen, reuse compatible va
 measurements; start only when the required Source measurement is absent. Never invent
 roles, applicability or job requirements. Expose Cancel and explicit Analyze again;
 cancellation/failure suppresses automatic retries for that unchanged identity.
-Do not initialize or modify Current processing automatically. Applying a draft keeps
+The approved first-import exception initializes untouched Current from the complete
+identical Source measurement. See [the measurement contract](14_OfflineMeasurementContract.md#first-import-current-measurement-for-m18-integration). Applying a draft keeps
 Current UNVERIFIED until the existing independent Current measurement succeeds.
 
 Publish bounded incremental previews through immutable, generation-bound batches:

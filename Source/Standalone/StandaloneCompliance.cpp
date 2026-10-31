@@ -37,6 +37,23 @@ bool sameValue (std::optional<double> a, std::optional<double> b)
 }
 }
 
+bool measurementMatchesContext (const AnalysisSnapshot& a, const ServiceContext& expected, MeasurementDomain domain)
+{
+    return a.domain == domain && ! expected.sessionId.isEmpty()
+        && a.context.sessionId == expected.sessionId && a.context.isFullProgram()
+        && expected.isFullProgram() && a.detail.frames == expected.media.frames
+        && a.detail.sampleRate == expected.media.sampleRate
+        && OfflineAnalysisService::validateRequest (expected, domain).isEmpty()
+        && OfflineAnalysisService::validateRequest (a.context, domain).isEmpty()
+        && a.measuredContentHash == expected.media.sha256
+        && a.identity == OfflineAnalysisService::identityFor (a.context, domain, a.measuredContentHash)
+        && a.identity == OfflineAnalysisService::identityFor (expected, domain, expected.media.sha256)
+        && sameValue (a.measured.integratedLufs, a.detail.integrated.value)
+        && sameValue (a.measured.truePeakDbtp, a.detail.truePeak.value)
+        && sameValue (a.measured.loudnessRangeLu, a.detail.lra.value)
+        && sameValue (a.measured.samplePeakDbfs, a.detail.samplePeak.value);
+}
+
 proposal::MeasuredProgramme measuredProgrammeForSnapshot (const AnalysisSnapshot* analysis, const ServiceContext& expected,
                                                           MeasurementDomain domain, proposal::Applicability applicability)
 {
@@ -54,19 +71,7 @@ proposal::MeasuredProgramme measuredProgrammeForSnapshot (const AnalysisSnapshot
         input.measurementVersion = a.measurementVersion;
         input.integrated = a.detail.integrated; input.truePeak = a.detail.truePeak;
         input.lra = a.detail.lra; input.lraStable = a.detail.lraStable;
-        input.currentIdentityMatches = a.domain == domain && ! expected.sessionId.isEmpty()
-            && a.context.sessionId == expected.sessionId && a.context.isFullProgram()
-            && expected.isFullProgram() && a.detail.frames == expected.media.frames
-            && a.detail.sampleRate == expected.media.sampleRate
-            && OfflineAnalysisService::validateRequest (expected, domain).isEmpty()
-            && OfflineAnalysisService::validateRequest (a.context, domain).isEmpty()
-            && a.measuredContentHash == expected.media.sha256
-            && a.identity == OfflineAnalysisService::identityFor (a.context, domain, a.measuredContentHash)
-            && a.identity == OfflineAnalysisService::identityFor (expected, domain, expected.media.sha256)
-            && sameValue (a.measured.integratedLufs, a.detail.integrated.value)
-            && sameValue (a.measured.truePeakDbtp, a.detail.truePeak.value)
-            && sameValue (a.measured.loudnessRangeLu, a.detail.lra.value)
-            && sameValue (a.measured.samplePeakDbfs, a.detail.samplePeak.value);
+        input.currentIdentityMatches = measurementMatchesContext (a, expected, domain);
     }
     return input;
 }

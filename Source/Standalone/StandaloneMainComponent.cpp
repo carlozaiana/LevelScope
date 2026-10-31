@@ -83,6 +83,8 @@ juce::String measurementsText (const MeasurementSummary& summary)
     if (! summary.analysis) return "Integrated: --\nLRA: --\nTrue peak: --\n";
     const auto& r = summary.analysis->detail;
     juce::String text;
+    if (summary.analysis->identicalSourceMeasurementIdentity.isNotEmpty())
+        text << "Initial Current measurement reused from the identical Source at 0 dB.\n";
     if (summary.analysis->restoredFromSession) text << "Restored measurement; original provenance retained.\n";
     text << "Integrated: " << metricText (r.integrated, "LUFS") << "\n"
          << "LRA: " << metricText (r.lra, "LU") << (r.lra.value && ! r.lraStable ? " (under 60 s; unstable)" : "") << "\n"
@@ -787,7 +789,7 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
             if(!session.sectionProposal)text << "Global-trim draft: " << session.trimNotice << "\n\n";
             text << session.proposalPolicy.text() << "\n" << session.sectionProposalDisplayText().substring(0,1800) << "\nOpen Inspect complete proposal for all rows and final outcome; this is a summary only.\n" << "\n\n";
             text << evaluationText (session.evaluation (MeasurementDomain::currentState)) << "\n";
-            text << "Initialize Current State, adjust static gain, then re-measure.\n\n";
+            text << "The first Source measurement also measures the untouched Current State. After a gain change, re-measure Current State.\n\n";
             text << "Static gain applies to every programme channel, including LFE, after any composition.\n";
             text << "Editing gain invalidates the previous Current State measurement.\n";
             text << "Audition Source or the explicitly applied Current State; monitor gain is separate.\n\n";

@@ -37,6 +37,129 @@ juce::File fixture(const juce::File& folder,int channels,int rate,int frames=0,b
     for(int c=0;c<channels;++c)for(int i=0;i<b.getNumSamples();++i)b.setSample(c,i,silent?0.f:static_cast<float>(.04*std::sin(2*3.141592653589793*(351+c*100)*i/rate)));
     expect(writer->writeFromAudioSampleBuffer(b,0,b.getNumSamples()),"fixture samples");return f;
 }
+void initialCurrentFromSource(const juce::File& parent)
+{
+    const auto root = parent.getChildFile("initial-current");
+    expect(root.createDirectory().wasOk(), "create initial Current fixture directory");
+    constexpr auto source = MeasurementDomain::source;
+    constexpr auto current = MeasurementDomain::currentState;
+    const auto file = fixture(root, 2, 48000);
+    JobControl control;
+    const auto media = validateMedia(file, control);
+    StandaloneSessionModel session;
+    expect(media.succeeded() && session.setValidatedSource(file, media.media), "fresh import");
+    expect(session.confirmLayout(), "confirmed ordered stereo roles");
+    session.setSelectedTargetProfileIndex(1);
+    session.setProgrammeApplicability(proposal::Applicability::preProducedLinearProgramme);
+    proposal::JobRequirements requirements;
+    requirements.maximumLraTenths = 0;
+    juce::String error;
+    expect(session.setJobRequirements(requirements, error), error);
+
+    // Reopening a saved, unmeasured document must not acquire fresh-import eligibility.
+    auto pending = sf::verify(sf::capture(session), control);
+    StandaloneSessionModel reopened;
+    expect(pending.document && sf::install(*pending.document, reopened, error), error);
+    measure(reopened, source);
+    expect(!reopened.hasCurrentStateInitialized(), "reopened uninitialized Current remains untouched");
+
+    expect(session.job.begin(JobStage::analysis, session.revision), "one Source job starts");
+    auto context = session.measurementContext(source);
+    auto result = OfflineAnalysisService().analyze(context, source, control);
+    expect(result.value.has_value(), result.message);
+
+    // The worker has returned but the session has not yet accepted its completion.
+    auto cancelled = session;
+    cancelled.job.requestCancel();
+    expect(!cancelled.job.finish(context.ticket, cancelled.revision, result.error, result.message)
+           && !cancelled.acceptMeasurement(*result.value) && !cancelled.hasCurrentStateInitialized(),
+           "cancellation wins over late Source completion");
+    auto failed = session;
+    expect(!failed.job.finish(context.ticket, failed.revision, ErrorCode::decodeFailed, "read failed")
+           && !failed.acceptMeasurement(*result.value) && !failed.currentState.hasMeasurement,
+           "failed job leaves initial Current pending");
+    auto replaced = session;
+    const auto other = fixture(root, 1, 44100);
+    const auto otherMedia = validateMedia(other, control);
+    expect(otherMedia.succeeded() && replaced.setValidatedSource(other, otherMedia.media), "replace input before adoption");
+    expect(!replaced.job.finish(context.ticket, replaced.revision, result.error, result.message)
+           && !replaced.acceptMeasurement(*result.value) && !replaced.currentState.hasMeasurement,
+           "previous programme cannot populate replacement Current");
+    expect(replaced.confirmLayout(), "confirm replacement layout");
+    measure(replaced, source);
+    expect(replaced.currentState.analysis && replaced.currentState.analysis->measuredContentHash == otherMedia.media.sha256,
+           "replacement Current initialized only from its own successful Source job");
+
+    expect(session.job.finish(context.ticket, session.revision, result.error, result.message), "Source job finishes");
+    auto incomplete = *result.value;
+    incomplete.detail.shortTerm.pop_back();
+    expect(!session.acceptMeasurement(std::move(incomplete)) && !session.hasCurrentStateInitialized(),
+           "partial timeline cannot initialize Current");
+    auto wrong = *result.value;
+    std::swap(wrong.context.fileLayout.roles[0], wrong.context.fileLayout.roles[1]);
+    expect(!session.acceptMeasurement(std::move(wrong)), "swapped roles fail Source adoption");
+    wrong = *result.value;
+    --wrong.context.range.end;
+    expect(!session.acceptMeasurement(std::move(wrong)), "partial programme range rejected");
+
+    const auto revision = session.revision;
+    expect(session.acceptMeasurement(std::move(*result.value)), "adopt single finished measurement");
+    auto original = session.source.analysis;
+    auto initial = session.currentState.analysis;
+    expect(original && initial && session.hasCurrentStateInitialized() && !session.currentStateNeedsRemeasurement(),
+           "Source and initial Current are measured");
+    expect(initial->domain == current && initial->identity != original->identity
+           && measurementMatchesContext(*initial, session.measurementContext(current), current),
+           "Current has its own valid identity");
+    expect(initial->identicalSourceMeasurementIdentity == original->identity
+           && initial->originJobId == context.ticket.id && initial->originSessionId == session.sessionId
+           && session.job.ticket.id == context.ticket.id && session.revision == revision,
+           "one job, original Source provenance, no audio revision change");
+    const auto se = session.evaluation(source), ce = session.evaluation(current);
+    expect(ce.domain == proposal::SnapshotDomain::currentState && ce.verdict == se.verdict
+           && ce.rules.size() == 3 && ce.jobRequirementsDigest == requirements.digest()
+           && ce.snapshotIdentity != se.snapshotIdentity, "separate measured evaluations against active LRA requirements");
+
+    // The production snapshot digest covers every metric/status, window, gate,
+    // percentile and per-channel peak/location. Compare in a common domain.
+    auto payload = *initial;
+    payload.domain = source;
+    payload.identity = original->identity;
+    expect(measuredProgrammeForSnapshot(&payload, context, source, session.programmeApplicability).snapshotIdentity
+           == se.snapshotIdentity, "complete measurement payload matches the Source job");
+    const auto diagnostics = proposal::analyzeProgramme(initial->detail, ce.snapshotIdentity);
+    expect(diagnostics && !diagnostics->shortTerm.empty() && diagnostics->peaks.size() == 2,
+           "real diagnostics can consume the initial measured Current");
+
+    const auto path = root.getChildFile("initial.levelscope");
+    expect(sf::save(sf::capture(session), path, control).succeeded(), "save initial Current");
+    auto read = sf::read(path, control);
+    expect(read.document && read.document->currentCache, "initial Current cache decoded");
+    auto verified = sf::verify(*read.document, control);
+    expect(verified.document && sf::install(*verified.document, reopened, error), error);
+    auto restored = reopened.currentState.analysis;
+    expect(restored && restored->restoredFromSession && restored->identity == initial->identity
+           && restored->identicalSourceMeasurementIdentity == original->identity
+           && restored->originSessionId == session.sessionId && restored->originJobId == context.ticket.id,
+           "reopened cache retains original Source acquisition");
+    measure(reopened, source);
+    expect(reopened.currentState.analysis == restored, "new Source job preserves reopened Current");
+
+    expect(session.setCurrentGainDb(-3) && session.source.analysis == original
+           && session.currentStateNeedsRemeasurement() && !session.currentState.hasMeasurement,
+           "gain edit invalidates only Current");
+    measure(session, source);
+    expect(session.currentStateNeedsRemeasurement() && !session.currentState.analysis
+           && session.currentStateDocument.staticGainDb == -3, "Source cannot verify edited Current");
+    expect(session.setCurrentGainDb(0), "return gain to unity");
+    measure(session, source);
+    expect(!session.currentState.analysis, "returning to unity does not re-arm first import");
+    measure(session, current);
+    expect(session.currentState.analysis && !session.currentStateNeedsRemeasurement()
+           && session.currentState.analysis->identicalSourceMeasurementIdentity.isEmpty(),
+           "independent Current job restores measured status and its own provenance");
+}
+
 StandaloneSessionModel model(const juce::File& file,int channels)
 {
     StandaloneSessionModel s;JobControl c;auto m=validateMedia(file,c);expect(m.succeeded(),m.message);expect(s.setValidatedSource(file,m.media),"import source");
@@ -201,7 +324,7 @@ int main(int argc,char** argv)
 {
     juce::ScopedJuceInitialiser_GUI init;bool shortOnly=false;juce::String output,exchangeWrite,exchangeRead,longFile;for(int n=1;n<argc;++n){auto arg=juce::String(argv[n]);if(arg=="--short"){shortOnly=true;continue;}if(n+1>=argc)return 2;if(arg=="--output")output=argv[++n];else if(arg=="--exchange-out")exchangeWrite=argv[++n];else if(arg=="--exchange-in")exchangeRead=argv[++n];else if(arg=="--long-media")longFile=argv[++n];}
     auto root=(output.isNotEmpty()?juce::File(output).getParentDirectory():juce::File::getCurrentWorkingDirectory()).getChildFile("levelscope-m8-"+juce::Uuid().toString());root.createDirectory();bool passed=false;juce::String failure;
-    try{for(int channels:{2,6,8})roundtrip(root,channels,48000);for(int rate:{44100,96000,192000})roundtrip(root,2,rate);if(!shortOnly)longSnapshot(root);unavailableMetrics(root);if(longFile.isNotEmpty())longMedia(juce::File(longFile),root);if(exchangeWrite.isNotEmpty()){exchangeOut(juce::File(exchangeWrite));if(longFile.isNotEmpty())expect(root.getChildFile("long-media.levelscope").copyFileTo(juce::File(exchangeWrite).getChildFile("long-media.levelscope")),"UI long opening/cancellation fixture");}if(exchangeRead.isNotEmpty())exchangeIn(juce::File(exchangeRead));passed=true;}catch(const std::exception& e){failure=e.what();std::cerr<<failure<<'\n';}
+    try{initialCurrentFromSource(root);for(int channels:{2,6,8})roundtrip(root,channels,48000);for(int rate:{44100,96000,192000})roundtrip(root,2,rate);if(!shortOnly)longSnapshot(root);unavailableMetrics(root);if(longFile.isNotEmpty())longMedia(juce::File(longFile),root);if(exchangeWrite.isNotEmpty()){exchangeOut(juce::File(exchangeWrite));if(longFile.isNotEmpty())expect(root.getChildFile("long-media.levelscope").copyFileTo(juce::File(exchangeWrite).getChildFile("long-media.levelscope")),"UI long opening/cancellation fixture");}if(exchangeRead.isNotEmpty())exchangeIn(juce::File(exchangeRead));passed=true;}catch(const std::exception& e){failure=e.what();std::cerr<<failure<<'\n';}
     auto v=juce::var(new juce::DynamicObject());auto* o=v.getDynamicObject();o->setProperty("suite","M8 sessions");o->setProperty("passed",passed);o->setProperty("checks",checks);o->setProperty("failure",failure);o->setProperty("performance",performance);o->setProperty("long_media",mediaPerformance);o->setProperty("build",LEVELSCOPE_MEASUREMENT_BUILD);o->setProperty("os",juce::SystemStats::getOperatingSystemName());
 #if defined(__arm64__)
     o->setProperty("architecture","arm64");

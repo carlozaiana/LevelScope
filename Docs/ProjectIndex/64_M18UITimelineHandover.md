@@ -62,7 +62,7 @@ M18_UI_ROOT=/Users/fuzz/Developer/LevelScope-worktrees/UITimeline
 M18_TESTED_BASE=e422f85ccbf7ae11876e6a31be2409937cb8381c
 M18_PROPOSAL_DOCS=fc4e4b0d54456cb32ab68672ede0a772b663d749
 # Resolve the handover commit from this file's history, not a moving branch tip.
-M18_HANDOVER_DOCS=$(git -C "$M18_LOGIC_ROOT" log -1 --format=%H -- Docs/ProjectIndex/64_M18UITimelineHandover.md)
+M18_HANDOVER_DOCS=$(git -C "$M18_LOGIC_ROOT" log --diff-filter=A -1 --format=%H -- Docs/ProjectIndex/64_M18UITimelineHandover.md)
 
 git -C "$M18_LOGIC_ROOT" worktree list --porcelain
 git -C "$M18_LOGIC_ROOT" branch --list codex/ui-timeline-m18
@@ -217,8 +217,10 @@ no conflicting job runs. The current `beginMeasurement` explicitly stops auditio
 auto-scheduling must first check idle/stopped and never stop playback opportunistically.
 Reuse validated compatible cached measurements on reopening; a missing waveform offers
 Build waveform without remeasurement. Cancel/failure suppresses auto retry for that
-identity until explicit Analyze again or changed inputs. Do not initialize Current,
-change applicability, infer a requirement or open devices automatically.
+identity until explicit Analyze again or changed inputs. The 31 October logic integration
+initializes untouched Current on the first accepted, identical Source measurement.
+Refresh both domains after acceptance. Keep applicability, job requirements and device
+opening explicit. See [the first-import contract and UI integration notes](14_OfflineMeasurementContract.md#first-import-current-measurement-for-m18-integration).
 
 Use `SessionJob::finish` plus `acceptMeasurement` checks, not ticket ID alone. Runtime
 `sessionId` is new on each opening; document/programme IDs and saved revision are

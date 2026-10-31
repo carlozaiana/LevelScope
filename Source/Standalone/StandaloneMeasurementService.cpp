@@ -113,6 +113,24 @@ juce::String OfflineAnalysisService::validateRequest (const ServiceContext& c, M
         return "Source measurement requires identity processing";
     return {};
 }
+// Check the shape of a finished worker result in constant time at adoption.
+// Unavailable metrics on short/silent programmes are legitimate completed results.
+bool OfflineAnalysisService::hasCompleteCoverage (const AnalysisSnapshot& snapshot)
+{
+    const auto& d = snapshot.detail;
+    if (d.sampleRate < 10 || d.frames <= 0) return false;
+    const int64_t steps = d.frames / (d.sampleRate / 10);
+    const auto count = [steps] (int first, int drain = 0)
+    {
+        return static_cast<size_t> (std::max<int64_t> (0, steps + drain - first + 1));
+    };
+    const auto channels = static_cast<size_t> (snapshot.context.fileLayout.count);
+    return d.momentary.size() == count (4) && d.shortTerm.size() == count (30)
+        && d.lraWindows.size() == count (30, 15)
+        && d.channelSamplePeaks.size() == channels && d.channelTruePeaks.size() == channels
+        && d.samplePeakFrames.size() == channels && d.truePeakEighthFrames.size() == channels;
+}
+
 juce::String OfflineAnalysisService::identityFor (const ServiceContext& c, MeasurementDomain domain, const juce::String& hash)
 {
     std::ostringstream key; key.imbue (std::locale::classic());

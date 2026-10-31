@@ -158,6 +158,26 @@ void exportTests(const juce::File& root,StandaloneSessionModel& s)
     expect(report["schema"].toString()=="levelscope-measurement-report-v5"&&report["profile"]["digest"].toString()==r.baseDigest,"report versions addition while retaining base EBU digest");
     expect(html.contains("&lt;script&gt;")&&!html.contains("<script>not executed")&&html.contains("required unstable or unavailable LRA cannot pass"),"HTML escapes provenance and distinguishes required LRA");
     expect(bool(ex::publish(*candidate,fresh,root.getChildFile("accepted"),ex::approvalIdentity(*candidate,fresh),control).value),"explicit fresh approval publishes verified PCM/report");
+    // Re-import the passing fixture as a new programme, including the explicit LRA rule.
+    StandaloneSessionModel imported;
+    const auto pcm = root.getChildFile("accepted/programme.wav");
+    const auto media = validateMedia(pcm, control);
+    expect(media.succeeded() && imported.setValidatedSource(pcm, media.media) && imported.confirmLayout(),
+           "import passing programme with confirmed stereo roles");
+    imported.setSelectedTargetProfileIndex(1);
+    imported.setProgrammeApplicability(proposal::Applicability::preProducedLinearProgramme);
+    expect(imported.setJobRequirements(r, error), "select same requirements at import");
+    measuredComposition(imported, MeasurementDomain::source);
+    const auto exportRequest = ex::capture(imported);
+    expect(imported.evaluation(MeasurementDomain::currentState).verdict == Verdict::pass
+           && imported.currentState.analysis->identicalSourceMeasurementIdentity == imported.source.analysis->identity,
+           "one Source pass supplies measured passing Current");
+    auto final = ex::render(exportRequest, root, control);
+    expect(bool(final.value), "render using measured initial Current");
+    const auto& artifact = (*final.value)->analysis();
+    expect(artifact.domain == MeasurementDomain::renderedOutput && artifact.identicalSourceMeasurementIdentity.isEmpty()
+           && artifact.measuredContentHash == (*final.value)->hash() && artifact.identity != imported.currentState.analysis->identity,
+           "finalized PCM has a separately measured artifact identity");
     groups.addIfNotAlreadyThere("real-export-report-gates");
 }
 
@@ -184,10 +204,24 @@ void manualAndInputTests(const juce::File& root,StandaloneSessionModel& s)
     // Exercise programme assemblies/compositions with short existing sample paths;
     // stable LRA qualification uses the separate real 65-second fixtures.
     auto fixture=fixtureComposition(root.getChildFile("composed"),48000,CompositionPreset::surroundMonoCentre,true,48000);
-    auto composed=compositionModel(fixture.recipe);measuredComposition(composed,MeasurementDomain::source);measuredComposition(composed,MeasurementDomain::currentState);
-    expect(composed.setJobRequirements(r,error)&&composed.evaluation(MeasurementDomain::currentState).verdict!=Verdict::pass,"required unstable LRA on composed input cannot pass");
-    StandaloneSessionModel assembled;expect(assembled.setValidatedProgramme(*fixture.recipe.me.assembly)&&assembled.initializeCurrentStateFromSource(),"existing six-mono assembly remains available");assembled.setSelectedTargetProfileIndex(1);assembled.setProgrammeApplicability(proposal::Applicability::preProducedLinearProgramme);measuredComposition(assembled,MeasurementDomain::source);measuredComposition(assembled,MeasurementDomain::currentState);assembled.setJobRequirements(r,error);
-    expect(assembled.evaluation(MeasurementDomain::currentState).verdict!=Verdict::pass,"assembled-channel workflow evaluates selected LRA without changing programme assembly");
+    StandaloneSessionModel composed, assembled;
+    expect(composed.setValidatedComposition(fixture.recipe), "import confirmed composition");
+    expect(assembled.setValidatedProgramme(*fixture.recipe.me.assembly), "import confirmed six-mono assembly");
+    for (auto* initial : {&composed, &assembled})
+    {
+        initial->setSelectedTargetProfileIndex(1);
+        initial->setProgrammeApplicability(proposal::Applicability::preProducedLinearProgramme);
+        expect(initial->setJobRequirements(r,error), "select the job LRA requirement");
+        measuredComposition(*initial, MeasurementDomain::source);
+        expect(initial->currentState.analysis && initial->currentState.analysis->identicalSourceMeasurementIdentity
+               == initial->source.analysis->identity, "initial group/composition reuses complete measured Source");
+        auto initialReport = ex::report(ex::capture(*initial));
+        expect(initialReport["current"]["source_measurement_identity"].toString() == initial->source.analysis->identity
+               && !initialReport.hasProperty("artifact"), "measurement-only report identifies Source origin");
+        measuredComposition(*initial, MeasurementDomain::currentState);
+        expect(initial->evaluation(MeasurementDomain::currentState).verdict != Verdict::pass,
+               "independently measured short group/composition cannot pass required unstable LRA");
+    }
     groups.add("manual-processing-input-identity");
 }
 

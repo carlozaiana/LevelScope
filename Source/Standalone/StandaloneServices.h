@@ -90,6 +90,8 @@ struct AnalysisSnapshot
     juce::String originSessionId;
     uint64_t originJobId = 0, originSessionRevision = 0;
     bool restoredFromSession = false;
+    // Set only on the initial unity Current copied from an accepted Source job.
+    juce::String identicalSourceMeasurementIdentity;
     // Analysis engine may extend with curves, gates, attribution and scene data.
 };
 struct ProposalRequest

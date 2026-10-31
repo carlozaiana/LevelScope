@@ -64,6 +64,13 @@ juce::var snapshot(const AnalysisSnapshot* a,const ServiceContext& expected,Meas
     set(o,"measurement_identity",a->identity);set(o,(expected.composition||expected.assembly)?"measured_programme_definition_digest":"measured_content_sha256",a->measuredContentHash);
     set(o,"measurement_method",a->measurementVersion);set(o,"build",a->context.buildVersion);
     set(o,"platform",a->context.platformAndFloatingPointMode);set(o,"original_runtime",a->originSessionId);
+    if (a->identicalSourceMeasurementIdentity.isNotEmpty())
+    {
+        set(o,"measurement_origin","identical_source");
+        set(o,"source_measurement_identity",a->identicalSourceMeasurementIdentity);
+        set(o,"source_job_id",juce::String(a->originJobId));
+        set(o,"source_job_revision",juce::String(a->originSessionRevision));
+    }
     set(o,"restored_from_session",a->restoredFromSession);set(o,"frames",juce::String(a->detail.frames));
     set(o,"sample_rate",a->detail.sampleRate);set(o,"lra_stable",a->detail.lraStable);
     auto values=object();set(values,"integrated",metric(a->detail.integrated,"LUFS"));set(values,"true_peak",metric(a->detail.truePeak,"dBTP"));
