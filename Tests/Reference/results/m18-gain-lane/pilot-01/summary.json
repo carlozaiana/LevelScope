@@ -1,0 +1,25 @@
+{
+  "all_passed": false,
+  "pilot": true,
+  "measurement_build": "3ec35d020cea7bd89276c0079a5e06b5fbf5eaa5a0e9ec791a34462d726a53a2",
+  "records": [
+    {
+      "group": "timeline",
+      "passed": false,
+      "checks": 638,
+      "seconds": 47.266485416,
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeTimelineProgressTests_artefacts/Release/LevelScopeTimelineProgressTests",
+        "--root",
+        "/tmp/levelscope-m18-section-lane-1haec5j4/timeline",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/m18-gain-lane/pilot-01/timeline.json"
+      ],
+      "exit_code": 1
+    }
+  ],
+  "app_path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app",
+  "binaries": [],
+  "physical_device_opened": false,
+  "video_loaded": false
+}

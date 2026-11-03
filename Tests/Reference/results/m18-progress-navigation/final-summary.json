@@ -1,0 +1,96 @@
+{
+  "measurement_build": "aa06a460f743ba647f966f886be4cb76e9abbddb1588013f67eca522ee8c2cbe",
+  "app_path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app",
+  "all_passed": true,
+  "groups": [
+    {
+      "name": "timeline",
+      "passed": true,
+      "checks": 343,
+      "report": "candidate-01/timeline.json",
+      "sha256": "72836fff9c5f053ba37ba27b54b7eb759a09b8372dfe71766f6ddf9e901da379"
+    },
+    {
+      "name": "measurement",
+      "passed": true,
+      "checks": 185,
+      "report": "candidate-01/measurement.json",
+      "sha256": "7f69e023a2c0d3cb3c695ed04b5aad34dd790dc6c33b31f717ed05f0220e5fc3"
+    },
+    {
+      "name": "waveforms",
+      "passed": true,
+      "checks": 1305,
+      "report": "candidate-01/waveforms.json",
+      "sha256": "4cd1e9e29d9bb2c78d2574c3f69911572c93979ca52b22bb6426dc15bce4c1d1"
+    },
+    {
+      "name": "diagnostics",
+      "passed": true,
+      "checks": 370,
+      "report": "diagnostics-rerun/diagnostics.json",
+      "sha256": "81e8290cd48a66e330fb1378af429c92dd203aa33ab38f7154f751208eadeff0"
+    },
+    {
+      "name": "targets",
+      "passed": true,
+      "checks": 489,
+      "report": "candidate-01/targets.json",
+      "sha256": "7f0f267ea12f1a56a93550ace219ec60095492d4fbc705732fe77479049adffa"
+    },
+    {
+      "name": "pinned EBU M/S curve files",
+      "passed": true,
+      "files": 4,
+      "report": "candidate-01/reference-curves.json",
+      "sha256": "0e088a111285d5ba7ad99be5cdb7f8729c73c45670a73f4c38814322481f9254"
+    }
+  ],
+  "suite_checks": 2692,
+  "pinned_reference_files": 4,
+  "unchanged_production_sources": "candidate-01/source-manifest.json",
+  "baseline_test_inputs": "candidate-01/validation-manifest.json",
+  "changed_test_inputs": {
+    "Tests/DiagnosticsTests.cpp": "7ae05752cbcd5498335e879861c729cb3d90a1cda9cf3f748734bc16c85270d8"
+  },
+  "binaries": [
+    {
+      "path": "build/m18-dev-01/LevelScopeTimelineProgressTests_artefacts/Release/LevelScopeTimelineProgressTests",
+      "sha256": "073bc8fdf2fc286d5407545ca2a2ee9d72fd57e9ddb9254c871f583fa6cebbed",
+      "architectures": "x86_64 arm64",
+      "intel_minimum": "10.13"
+    },
+    {
+      "path": "build/m18-dev-01/LevelScopeMeasurementTests_artefacts/Release/LevelScopeMeasurementTests",
+      "sha256": "e5afafd81519dd5b8ce74683fe6d2a18241fa2cf7941de40902942e374f763fa",
+      "architectures": "x86_64 arm64",
+      "intel_minimum": "10.13"
+    },
+    {
+      "path": "build/m18-dev-01/LevelScopeDiagnosticsTests_artefacts/Release/LevelScopeDiagnosticsTests",
+      "sha256": "ed2a6f570fd43277880ad369887335eae72590783509a8b43ca52097e045cf86",
+      "architectures": "x86_64 arm64",
+      "intel_minimum": "10.13"
+    },
+    {
+      "path": "build/m18-dev-01/LevelScopeWaveformTests_artefacts/Release/LevelScopeWaveformTests",
+      "sha256": "d108b6b991d01c8a796cc9506ced758c6fb68fd1ed1b0bb7da5377832f3720f4",
+      "architectures": "x86_64 arm64",
+      "intel_minimum": "10.13"
+    },
+    {
+      "path": "build/m18-dev-01/LevelScopeJobRequirementsTests_artefacts/Release/LevelScopeJobRequirementsTests",
+      "sha256": "d5b321c4fea724434f2525cc6899e86b1e9264aeb72f6d5559735dc5835e451b",
+      "architectures": "x86_64 arm64",
+      "intel_minimum": "10.13"
+    },
+    {
+      "path": "build/m18-dev-01/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone",
+      "sha256": "c880f1f4d7cd3f9bc9768f48cdd1598eb1a687902000ff0de41df02108611b8b",
+      "architectures": "x86_64 arm64",
+      "intel_minimum": "10.13"
+    }
+  ],
+  "rerun": "Only the diagnostics test changed: restrict offscreen pixel comparison to the plot and add a visible selection control. The app, production sources, other test inputs and other binaries match candidate-01 byte for byte. Fresh diagnostics report replaces only the earlier diagnostic failure.",
+  "physical_devices_opened": false
+}

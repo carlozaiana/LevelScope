@@ -1,0 +1,27 @@
+{
+  "baseline_source_manifest": "Tests/Reference/results/m18-waveform-2026-10-31/candidate-02/source-manifest.json",
+  "changed_production_files": [
+    "Source/Core/Measurement/OfflineMeasurement.cpp",
+    "Source/Core/Measurement/OfflineMeasurement.h",
+    "Source/Core/Proposal/AnalysisEngine.cpp",
+    "Source/Core/Proposal/Model/ProgramAnalysis.h",
+    "Source/Standalone/MeasurementTimeline.cpp",
+    "Source/Standalone/MeasurementTimeline.h",
+    "Source/Standalone/StandaloneJobRequirements.cpp",
+    "Source/Standalone/StandaloneJobRequirements.h",
+    "Source/Standalone/StandaloneLoudnessPreview.cpp",
+    "Source/Standalone/StandaloneLoudnessPreview.h",
+    "Source/Standalone/StandaloneMainComponent.cpp",
+    "Source/Standalone/StandaloneMainComponent.h",
+    "Source/Standalone/StandaloneMeasurementService.cpp",
+    "Source/Standalone/StandaloneMeasurementService.h",
+    "Source/Standalone/TimelineLayout.h",
+    "Source/Standalone/TimelineTransport.h"
+  ],
+  "reused": {
+    "waveform core/storage": "Unchanged overview/allocator, existing extrema/positions/budget and sanitizer checks; waveform integration re-run with the M/S observer.",
+    "proposal/session/export": "Previously tested implementation unchanged. The shared engine receives optional window notifications during ordinary analysis only; no proposal/export worker gained preview authority.",
+    "transport and devices": "Existing audio/seek implementation unchanged. New guards, device-closed seek and injected playback/stop exercised at the timeline boundary."
+  },
+  "deferred": "Full native interaction, actual Intel High Sierra, cross-Mac, physical audio/video and combined full-duration/RSS workflow."
+}

@@ -1,0 +1,16 @@
+{
+  "exact_match": true,
+  "channels": [
+    2,
+    6
+  ],
+  "cases": [
+    "global",
+    "fresh",
+    "preference_blocked",
+    "measured_rejection",
+    "unsupported",
+    "reused",
+    "already_meets"
+  ]
+}

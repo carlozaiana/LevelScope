@@ -1,15 +1,21 @@
 #pragma once
 #include "StandaloneServices.h"
+#include "Core/Waveform/WaveformOverview.h"
 
 namespace levelscope::standalone
 {
 struct ProcessedAudioObserver;
 class VerifiedSource;
+class WaveformProgress;
+class LoudnessProgress;
 class OfflineAnalysisService final : public AnalysisService
 {
 public:
-    explicit OfflineAnalysisService (ProcessedAudioObserver* sink = nullptr) : observer (sink) {}
+    explicit OfflineAnalysisService (ProcessedAudioObserver* sink = nullptr, WaveformProgress* preview = nullptr, LoudnessProgress* loudness = nullptr)
+        : observer (sink), waveformProgress(preview), loudnessProgress(loudness) {}
     ServiceResult<AnalysisSnapshot> analyze (const ServiceContext&, MeasurementDomain, JobControl&) override;
+    // Replaceable runtime overview only. Does not measure or modify a valid snapshot.
+    ServiceResult<std::shared_ptr<const waveform::Overview>> buildWaveform(const ServiceContext&,MeasurementDomain,JobControl&);
     static juce::String validateRequest (const ServiceContext&, MeasurementDomain);
     static bool hasCompleteCoverage (const AnalysisSnapshot&);
     static juce::String identityFor (const ServiceContext&, MeasurementDomain, const juce::String& measuredHash);
@@ -26,5 +32,7 @@ public:
         JobControl&, measurement::PeakObserver* = nullptr);
 private:
     ProcessedAudioObserver* observer;
+    WaveformProgress* waveformProgress;
+    LoudnessProgress* loudnessProgress;
 };
 }

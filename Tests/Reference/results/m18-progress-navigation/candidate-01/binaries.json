@@ -1,0 +1,38 @@
+[
+  {
+    "path": "build/m18-dev-01/LevelScopeTimelineProgressTests_artefacts/Release/LevelScopeTimelineProgressTests",
+    "sha256": "073bc8fdf2fc286d5407545ca2a2ee9d72fd57e9ddb9254c871f583fa6cebbed",
+    "architectures": "x86_64 arm64",
+    "intel_minimum": "10.13"
+  },
+  {
+    "path": "build/m18-dev-01/LevelScopeMeasurementTests_artefacts/Release/LevelScopeMeasurementTests",
+    "sha256": "e5afafd81519dd5b8ce74683fe6d2a18241fa2cf7941de40902942e374f763fa",
+    "architectures": "x86_64 arm64",
+    "intel_minimum": "10.13"
+  },
+  {
+    "path": "build/m18-dev-01/LevelScopeDiagnosticsTests_artefacts/Release/LevelScopeDiagnosticsTests",
+    "sha256": "23e8da70d22fb8704a10d6bddd7c03511b13d778fb2a6d9739a367b34f674cd6",
+    "architectures": "x86_64 arm64",
+    "intel_minimum": "10.13"
+  },
+  {
+    "path": "build/m18-dev-01/LevelScopeWaveformTests_artefacts/Release/LevelScopeWaveformTests",
+    "sha256": "d108b6b991d01c8a796cc9506ced758c6fb68fd1ed1b0bb7da5377832f3720f4",
+    "architectures": "x86_64 arm64",
+    "intel_minimum": "10.13"
+  },
+  {
+    "path": "build/m18-dev-01/LevelScopeJobRequirementsTests_artefacts/Release/LevelScopeJobRequirementsTests",
+    "sha256": "d5b321c4fea724434f2525cc6899e86b1e9264aeb72f6d5559735dc5835e451b",
+    "architectures": "x86_64 arm64",
+    "intel_minimum": "10.13"
+  },
+  {
+    "path": "build/m18-dev-01/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone",
+    "sha256": "c880f1f4d7cd3f9bc9768f48cdd1598eb1a687902000ff0de41df02108611b8b",
+    "architectures": "x86_64 arm64",
+    "intel_minimum": "10.13"
+  }
+]

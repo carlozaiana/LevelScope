@@ -1,0 +1,810 @@
+{
+  "suite": "M17 job LRA requirements",
+  "passed": false,
+  "failure": "schema 8 decoded",
+  "checks": [
+    {
+      "name": "new M17 owned test root required",
+      "passed": true
+    },
+    {
+      "name": "immutable EBU digest and absent universal LRA ceiling",
+      "passed": true
+    },
+    {
+      "name": "default is genuinely unset",
+      "passed": true
+    },
+    {
+      "name": "exact named definition JSON round trip",
+      "passed": true
+    },
+    {
+      "name": "exact named definition JSON round trip",
+      "passed": true
+    },
+    {
+      "name": "exact named definition JSON round trip",
+      "passed": true
+    },
+    {
+      "name": "exact named definition JSON round trip",
+      "passed": true
+    },
+    {
+      "name": "exact named definition JSON round trip",
+      "passed": true
+    },
+    {
+      "name": "explicit legal tenths",
+      "passed": true
+    },
+    {
+      "name": "explicit legal tenths",
+      "passed": true
+    },
+    {
+      "name": "explicit legal tenths",
+      "passed": true
+    },
+    {
+      "name": "explicit legal tenths",
+      "passed": true
+    },
+    {
+      "name": "invalid value never rounds/clamps",
+      "passed": true
+    },
+    {
+      "name": "invalid value never rounds/clamps",
+      "passed": true
+    },
+    {
+      "name": "invalid value never rounds/clamps",
+      "passed": true
+    },
+    {
+      "name": "invalid value never rounds/clamps",
+      "passed": true
+    },
+    {
+      "name": "invalid value never rounds/clamps",
+      "passed": true
+    },
+    {
+      "name": "invalid value never rounds/clamps",
+      "passed": true
+    },
+    {
+      "name": "invalid value never rounds/clamps",
+      "passed": true
+    },
+    {
+      "name": "invalid value never rounds/clamps",
+      "passed": true
+    },
+    {
+      "name": "invalid value never rounds/clamps",
+      "passed": true
+    },
+    {
+      "name": "invalid value never rounds/clamps",
+      "passed": true
+    },
+    {
+      "name": "invalid value never rounds/clamps",
+      "passed": true
+    },
+    {
+      "name": "invalid requirement definition rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid serialized definition cannot acquire authority",
+      "passed": true
+    },
+    {
+      "name": "invalid requirement definition rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid serialized definition cannot acquire authority",
+      "passed": true
+    },
+    {
+      "name": "invalid requirement definition rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid serialized definition cannot acquire authority",
+      "passed": true
+    },
+    {
+      "name": "invalid requirement definition rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid serialized definition cannot acquire authority",
+      "passed": true
+    },
+    {
+      "name": "invalid requirement definition rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid serialized definition cannot acquire authority",
+      "passed": true
+    },
+    {
+      "name": "invalid requirement definition rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid serialized definition cannot acquire authority",
+      "passed": true
+    },
+    {
+      "name": "invalid requirement definition rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid serialized definition cannot acquire authority",
+      "passed": true
+    },
+    {
+      "name": "invalid requirement definition rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid serialized definition cannot acquire authority",
+      "passed": true
+    },
+    {
+      "name": "invalid requirement definition rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid serialized definition cannot acquire authority",
+      "passed": true
+    },
+    {
+      "name": "invalid requirement definition rejected",
+      "passed": true
+    },
+    {
+      "name": "invalid serialized definition cannot acquire authority",
+      "passed": true
+    },
+    {
+      "name": "integer units reject floating storage",
+      "passed": true
+    },
+    {
+      "name": "no external authority flag",
+      "passed": true
+    },
+    {
+      "name": "digest tampering rejected",
+      "passed": true
+    },
+    {
+      "name": "duplicate fields rejected",
+      "passed": true
+    },
+    {
+      "name": "trailing object rejected",
+      "passed": true
+    },
+    {
+      "name": "trailing non-JSON rejected",
+      "passed": true
+    },
+    {
+      "name": "deep untrusted JSON rejected before general parser",
+      "passed": true
+    },
+    {
+      "name": "oversized JSON rejected",
+      "passed": true
+    },
+    {
+      "name": "portable preset saved atomically",
+      "passed": true
+    },
+    {
+      "name": "write failure preserves previous preset",
+      "passed": true
+    },
+    {
+      "name": "write failure preserves previous preset",
+      "passed": true
+    },
+    {
+      "name": "write failure preserves previous preset",
+      "passed": true
+    },
+    {
+      "name": "portable preset reloaded independently",
+      "passed": true
+    },
+    {
+      "name": "owned partial preset files cleaned",
+      "passed": true
+    },
+    {
+      "name": "duplicate display names do not alias identity",
+      "passed": true
+    },
+    {
+      "name": "complete target round trip includes M/S",
+      "passed": true
+    },
+    {
+      "name": "named custom target never acquires standards authority",
+      "passed": true
+    },
+    {
+      "name": "all five measured boundaries inclusive",
+      "passed": true
+    },
+    {
+      "name": "M/S full precision violation changes identity and fails",
+      "passed": true
+    },
+    {
+      "name": "missing required M/S cannot pass",
+      "passed": true
+    },
+    {
+      "name": "M/S full precision violation changes identity and fails",
+      "passed": true
+    },
+    {
+      "name": "missing required M/S cannot pass",
+      "passed": true
+    },
+    {
+      "name": "all five measured boundaries inclusive",
+      "passed": true
+    },
+    {
+      "name": "M/S full precision violation changes identity and fails",
+      "passed": true
+    },
+    {
+      "name": "missing required M/S cannot pass",
+      "passed": true
+    },
+    {
+      "name": "M/S full precision violation changes identity and fails",
+      "passed": true
+    },
+    {
+      "name": "missing required M/S cannot pass",
+      "passed": true
+    },
+    {
+      "name": "all five measured boundaries inclusive",
+      "passed": true
+    },
+    {
+      "name": "M/S full precision violation changes identity and fails",
+      "passed": true
+    },
+    {
+      "name": "missing required M/S cannot pass",
+      "passed": true
+    },
+    {
+      "name": "M/S full precision violation changes identity and fails",
+      "passed": true
+    },
+    {
+      "name": "missing required M/S cannot pass",
+      "passed": true
+    },
+    {
+      "name": "rendered-file S failure blocks publication despite Current pass",
+      "passed": true
+    },
+    {
+      "name": "all No Limit fields persist explicitly",
+      "passed": true
+    },
+    {
+      "name": "all No Limit never produces empty-rule pass",
+      "passed": true
+    },
+    {
+      "name": "custom rule can be used without IL or peak target",
+      "passed": true
+    },
+    {
+      "name": "modern duplicate fields rejected",
+      "passed": true
+    },
+    {
+      "name": "signed target parser accepts exact tenths",
+      "passed": true
+    },
+    {
+      "name": "signed target parser accepts exact tenths",
+      "passed": true
+    },
+    {
+      "name": "signed target parser accepts exact tenths",
+      "passed": true
+    },
+    {
+      "name": "signed target parser accepts exact tenths",
+      "passed": true
+    },
+    {
+      "name": "signed target parser rejects invalid values",
+      "passed": true
+    },
+    {
+      "name": "signed target parser rejects invalid values",
+      "passed": true
+    },
+    {
+      "name": "signed target parser rejects invalid values",
+      "passed": true
+    },
+    {
+      "name": "signed target parser rejects invalid values",
+      "passed": true
+    },
+    {
+      "name": "signed target parser rejects invalid values",
+      "passed": true
+    },
+    {
+      "name": "signed target parser rejects invalid values",
+      "passed": true
+    },
+    {
+      "name": "signed target parser rejects invalid values",
+      "passed": true
+    },
+    {
+      "name": "full precision inclusive LRA ceiling at adjacent values",
+      "passed": true
+    },
+    {
+      "name": "display rounding cannot determine verdict",
+      "passed": true
+    },
+    {
+      "name": "full precision inclusive LRA ceiling at adjacent values",
+      "passed": true
+    },
+    {
+      "name": "display rounding cannot determine verdict",
+      "passed": true
+    },
+    {
+      "name": "full precision inclusive LRA ceiling at adjacent values",
+      "passed": true
+    },
+    {
+      "name": "display rounding cannot determine verdict",
+      "passed": true
+    },
+    {
+      "name": "negative/non-finite required LRA never passes",
+      "passed": true
+    },
+    {
+      "name": "negative/non-finite required LRA never passes",
+      "passed": true
+    },
+    {
+      "name": "negative/non-finite required LRA never passes",
+      "passed": true
+    },
+    {
+      "name": "negative/non-finite required LRA never passes",
+      "passed": true
+    },
+    {
+      "name": "unavailable statuses retain no-pass semantics",
+      "passed": true
+    },
+    {
+      "name": "unavailable statuses retain no-pass semantics",
+      "passed": true
+    },
+    {
+      "name": "unavailable statuses retain no-pass semantics",
+      "passed": true
+    },
+    {
+      "name": "missing required LRA cannot pass",
+      "passed": true
+    },
+    {
+      "name": "short-programme available LRA remains uninterpretable for rule",
+      "passed": true
+    },
+    {
+      "name": "unset LRA ignores optional unavailable/unstable metric",
+      "passed": true
+    },
+    {
+      "name": "stale measured input rejected",
+      "passed": true
+    },
+    {
+      "name": "full precision inclusive LRA ceiling at adjacent values",
+      "passed": true
+    },
+    {
+      "name": "display rounding cannot determine verdict",
+      "passed": true
+    },
+    {
+      "name": "full precision inclusive LRA ceiling at adjacent values",
+      "passed": true
+    },
+    {
+      "name": "display rounding cannot determine verdict",
+      "passed": true
+    },
+    {
+      "name": "full precision inclusive LRA ceiling at adjacent values",
+      "passed": true
+    },
+    {
+      "name": "display rounding cannot determine verdict",
+      "passed": true
+    },
+    {
+      "name": "negative/non-finite required LRA never passes",
+      "passed": true
+    },
+    {
+      "name": "negative/non-finite required LRA never passes",
+      "passed": true
+    },
+    {
+      "name": "negative/non-finite required LRA never passes",
+      "passed": true
+    },
+    {
+      "name": "negative/non-finite required LRA never passes",
+      "passed": true
+    },
+    {
+      "name": "unavailable statuses retain no-pass semantics",
+      "passed": true
+    },
+    {
+      "name": "unavailable statuses retain no-pass semantics",
+      "passed": true
+    },
+    {
+      "name": "unavailable statuses retain no-pass semantics",
+      "passed": true
+    },
+    {
+      "name": "missing required LRA cannot pass",
+      "passed": true
+    },
+    {
+      "name": "short-programme available LRA remains uninterpretable for rule",
+      "passed": true
+    },
+    {
+      "name": "unset LRA ignores optional unavailable/unstable metric",
+      "passed": true
+    },
+    {
+      "name": "stale measured input rejected",
+      "passed": true
+    },
+    {
+      "name": "full precision inclusive LRA ceiling at adjacent values",
+      "passed": true
+    },
+    {
+      "name": "display rounding cannot determine verdict",
+      "passed": true
+    },
+    {
+      "name": "full precision inclusive LRA ceiling at adjacent values",
+      "passed": true
+    },
+    {
+      "name": "display rounding cannot determine verdict",
+      "passed": true
+    },
+    {
+      "name": "full precision inclusive LRA ceiling at adjacent values",
+      "passed": true
+    },
+    {
+      "name": "display rounding cannot determine verdict",
+      "passed": true
+    },
+    {
+      "name": "negative/non-finite required LRA never passes",
+      "passed": true
+    },
+    {
+      "name": "negative/non-finite required LRA never passes",
+      "passed": true
+    },
+    {
+      "name": "negative/non-finite required LRA never passes",
+      "passed": true
+    },
+    {
+      "name": "negative/non-finite required LRA never passes",
+      "passed": true
+    },
+    {
+      "name": "unavailable statuses retain no-pass semantics",
+      "passed": true
+    },
+    {
+      "name": "unavailable statuses retain no-pass semantics",
+      "passed": true
+    },
+    {
+      "name": "unavailable statuses retain no-pass semantics",
+      "passed": true
+    },
+    {
+      "name": "missing required LRA cannot pass",
+      "passed": true
+    },
+    {
+      "name": "short-programme available LRA remains uninterpretable for rule",
+      "passed": true
+    },
+    {
+      "name": "unset LRA ignores optional unavailable/unstable metric",
+      "passed": true
+    },
+    {
+      "name": "stale measured input rejected",
+      "passed": true
+    },
+    {
+      "name": "full precision inclusive LRA ceiling at adjacent values",
+      "passed": true
+    },
+    {
+      "name": "display rounding cannot determine verdict",
+      "passed": true
+    },
+    {
+      "name": "full precision inclusive LRA ceiling at adjacent values",
+      "passed": true
+    },
+    {
+      "name": "display rounding cannot determine verdict",
+      "passed": true
+    },
+    {
+      "name": "full precision inclusive LRA ceiling at adjacent values",
+      "passed": true
+    },
+    {
+      "name": "display rounding cannot determine verdict",
+      "passed": true
+    },
+    {
+      "name": "negative/non-finite required LRA never passes",
+      "passed": true
+    },
+    {
+      "name": "negative/non-finite required LRA never passes",
+      "passed": true
+    },
+    {
+      "name": "negative/non-finite required LRA never passes",
+      "passed": true
+    },
+    {
+      "name": "negative/non-finite required LRA never passes",
+      "passed": true
+    },
+    {
+      "name": "unavailable statuses retain no-pass semantics",
+      "passed": true
+    },
+    {
+      "name": "unavailable statuses retain no-pass semantics",
+      "passed": true
+    },
+    {
+      "name": "unavailable statuses retain no-pass semantics",
+      "passed": true
+    },
+    {
+      "name": "missing required LRA cannot pass",
+      "passed": true
+    },
+    {
+      "name": "short-programme available LRA remains uninterpretable for rule",
+      "passed": true
+    },
+    {
+      "name": "unset LRA ignores optional unavailable/unstable metric",
+      "passed": true
+    },
+    {
+      "name": "stale measured input rejected",
+      "passed": true
+    },
+    {
+      "name": "prediction cannot satisfy selected rules",
+      "passed": true
+    },
+    {
+      "name": "zero is a strict available ceiling",
+      "passed": true
+    },
+    {
+      "name": "positive value immediately above zero fails",
+      "passed": true
+    },
+    {
+      "name": "artifact-only LRA boundary failure blocks production publication gate",
+      "passed": true
+    },
+    {
+      "name": "both domains pass the same requirements gate",
+      "passed": true
+    },
+    {
+      "name": "differing requirements identity cannot share export approval",
+      "passed": true
+    },
+    {
+      "name": "base and job identities are separately retained in combined evaluation",
+      "passed": true
+    },
+    {
+      "name": "all selected rules preserve exact existing gain",
+      "passed": true
+    },
+    {
+      "name": "unmet LRA or other rule has truthful capability limitation",
+      "passed": true
+    },
+    {
+      "name": "unmet LRA or other rule has truthful capability limitation",
+      "passed": true
+    },
+    {
+      "name": "unmet LRA or other rule has truthful capability limitation",
+      "passed": true
+    },
+    {
+      "name": "plain EBU automatic global correction preserved",
+      "passed": true
+    },
+    {
+      "name": "individually valid mismatched inputs rejected",
+      "passed": true
+    },
+    {
+      "name": "owned programme fixture folder",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "PCM fixture writer",
+      "passed": true
+    },
+    {
+      "name": "whole fixture written",
+      "passed": true
+    },
+    {
+      "name": "fixture content verified",
+      "passed": true
+    },
+    {
+      "name": "adopt source",
+      "passed": true
+    },
+    {
+      "name": "begin composition measurement",
+      "passed": true
+    },
+    {
+      "name": "composition measurement completes",
+      "passed": true
+    },
+    {
+      "name": "accept exact composition measurement",
+      "passed": true
+    },
+    {
+      "name": "initialize current",
+      "passed": true
+    },
+    {
+      "name": "explicit normalization gain",
+      "passed": true
+    },
+    {
+      "name": "begin composition measurement",
+      "passed": true
+    },
+    {
+      "name": "composition measurement completes",
+      "passed": true
+    },
+    {
+      "name": "accept exact composition measurement",
+      "passed": true
+    },
+    {
+      "name": "requirement edit preserves exact measurement and audio identities",
+      "passed": true
+    },
+    {
+      "name": "immediate full selected-rule reevaluation without worker",
+      "passed": true
+    },
+    {
+      "name": "identical requirement confirmation is no-op",
+      "passed": true
+    },
+    {
+      "name": "all selected rules section proposal no-op uses zero private passes",
+      "passed": true
+    },
+    {
+      "name": "select strict explicit requirement",
+      "passed": true
+    },
+    {
+      "name": "old completion rejected and strict rule fails without remeasurement",
+      "passed": true
+    },
+    {
+      "name": "LRA failure blocks audio export",
+      "passed": true
+    },
+    {
+      "name": "measurement-only report exposes actual failure without artifact",
+      "passed": true
+    },
+    {
+      "name": "selected unmet requirements generate no private correction passes",
+      "passed": true
+    },
+    {
+      "name": "schema 8 coherent session save",
+      "passed": true
+    },
+    {
+      "name": "changes after capture remain unsaved",
+      "passed": true
+    },
+    {
+      "name": "schema 8 decoded",
+      "passed": false
+    }
+  ],
+  "groups": [
+    "definitions-presets-failures",
+    "complete-targets-and-ms-gates",
+    "measured-rule-boundaries",
+    "proposal-capability-noop"
+  ],
+  "resources": {
+  },
+  "build": "a3abaff37d53f97331c4aef9774d149aa9f247cbae4d00648a37841a2113589c",
+  "video_loaded": false,
+  "physical_devices_opened": false
+}

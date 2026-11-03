@@ -166,7 +166,7 @@ Request capture (const StandaloneSessionModel& s)
     { r.sections = s.sectionDocument.map(); if(s.markerImport && s.markerImport->imported.inputIdentity == input) r.markerImport = s.markerImport; }
     r.jobRequirements=s.jobRequirements;r.proposalPolicy=s.proposalPolicy;r.lastAppliedProposalPolicy=s.lastAppliedProposalPolicy;r.lastAppliedProposalBinding=s.lastAppliedProposalBinding;
     r.proposalInspection=s.sectionProposal?s.sectionProposalDisplayText():juce::String("No transient proposal. Applied settings and measured outcomes are reported separately.");
-    r.lastAppliedProposalInspection=s.sectionProposal?juce::String("Active proposal shown in full; historical applied policy/binding and exact current envelope reported separately."):s.lastAppliedProposalText;
+    r.lastAppliedProposalInspection=s.sectionProposal?juce::String("Active proposal shown in full; historical applied policy/binding and exact current envelope reported separately."):(s.lastAppliedExplanation?s.appliedExplanationDisplayText():s.lastAppliedProposalText);
     r.video = s.referenceVideo; return r;
 }
 juce::String specification (const Request& r, Specification& s)

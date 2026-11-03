@@ -3,17 +3,26 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 namespace levelscope::standalone
 {
-// Bounded page view prevents 10,000-row proposal text from flooding a UI editor.
-class ProposalInspectionPanel final : public juce::Component
+class ProposalWindow final : public juce::DocumentWindow
 {
 public:
-    explicit ProposalInspectionPanel(juce::String);
+    ProposalWindow(const juce::String&, std::unique_ptr<juce::Component>, juce::Component* owner);
+    void present();
+    void closeButtonPressed() override { setVisible(false); }
+};
+// Bounded page view prevents 10,000-row proposal text from flooding a UI editor.
+class ProposalInspectionPanel final : public juce::Component, private juce::Timer
+{
+public:
+    explicit ProposalInspectionPanel(juce::String,std::function<juce::String()> status = {});
     void resized() override;
     int pageCount() const { return int(pages.size()); }
     juce::String allText() const;
     void nextPage();
 private:
     std::vector<juce::String> pages;int page=0;
+    std::function<juce::String()> statusText;juce::Label status;
+    void timerCallback() override;
     juce::TextEditor view;juce::Label location;
     juce::TextButton previous{"Previous page"},next{"Next page"};
     void refresh();
@@ -22,6 +31,7 @@ class ProposalPreferencesPanel final : public juce::Component
 {
 public:
     ProposalPreferencesPanel(StandaloneSessionModel&,std::function<void()>);
+    static void showWindow(std::unique_ptr<ProposalWindow>&, StandaloneSessionModel&, juce::Component* owner, std::function<void()>);
     void resized() override;
     static std::optional<int> exactUnits(juce::String,bool tenths);
 private:

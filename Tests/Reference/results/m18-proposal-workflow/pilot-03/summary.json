@@ -1,0 +1,27 @@
+{
+  "all_passed": true,
+  "pilot": true,
+  "measurement_build": "25dc6d12d4a5eaaf635a697877c7354a17a1ea60c068b5dbaed7c7ccb876c3a7",
+  "records": [
+    {
+      "group": "proposal-workflow",
+      "passed": true,
+      "checks": 292,
+      "seconds": 5.155420583,
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeSectionProposalTests_artefacts/Release/LevelScopeSectionProposalTests",
+        "--m18-workflow",
+        "--root",
+        "/tmp/levelscope-m18-proposals-1595fpkp/proposal-workflow",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/m18-proposal-workflow/pilot-03/proposal-workflow.json"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "app_path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app",
+  "binaries": [],
+  "fixtures": "/tmp/levelscope-m18-proposals-1595fpkp",
+  "physical_device_opened": false,
+  "video_loaded": false
+}

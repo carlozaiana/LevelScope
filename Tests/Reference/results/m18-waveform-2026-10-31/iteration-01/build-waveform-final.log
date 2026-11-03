@@ -1,0 +1,7 @@
+[  3%] Built target LevelScopeMeasurementCore
+[ 57%] Built target LevelScopeStandaloneSupport
+[ 82%] Built target LevelScopeDiagnosticsUI
+[ 85%] Building CXX object CMakeFiles/LevelScopeWaveformTests.dir/Tests/WaveformTests.cpp.o
+[ 89%] Linking CXX executable LevelScopeWaveformTests_artefacts/Release/LevelScopeWaveformTests
+[100%] Built target LevelScopeWaveformTests
+[100%] Built target LevelScopeWaveformCoreTests

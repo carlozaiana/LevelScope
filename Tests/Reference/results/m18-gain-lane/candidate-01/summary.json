@@ -1,0 +1,68 @@
+{
+  "all_passed": true,
+  "pilot": false,
+  "measurement_build": "42315ef049da2fc4465d5840652fac210f48b7bd70e4c5024ba21196e812a4f6",
+  "records": [
+    {
+      "group": "timeline",
+      "passed": true,
+      "checks": 715,
+      "seconds": 1.7443625409999999,
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeTimelineProgressTests_artefacts/Release/LevelScopeTimelineProgressTests",
+        "--root",
+        "/tmp/levelscope-m18-section-lane-e8km_jz_/timeline",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/m18-gain-lane/candidate-01/timeline.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "group": "section-processing",
+      "passed": true,
+      "checks": 334,
+      "seconds": 7.709733249999999,
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeSectionProcessingTests_artefacts/Release/LevelScopeSectionProcessingTests",
+        "--smoke",
+        "--root",
+        "/tmp/levelscope-m18-section-lane-e8km_jz_/section-processing",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/m18-gain-lane/candidate-01/section-processing.json"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "app_path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app",
+  "binaries": [
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone",
+      "sha256": "ef9fd32eaecfc16bff8603f58ca21b9d9750718564441d4f6eb4920fcc205c70",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeTimelineProgressTests_artefacts/Release/LevelScopeTimelineProgressTests",
+      "sha256": "e4fc1b4e7f861c5948277532398cfc1006dd6b81ef707b56d713dcdd551adc08",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeSectionProcessingTests_artefacts/Release/LevelScopeSectionProcessingTests",
+      "sha256": "c8b4e02270014f74f1246362cf2859f56e261dba27d2b1e96d17ce6cf1147d2f",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    }
+  ],
+  "physical_device_opened": false,
+  "video_loaded": false
+}

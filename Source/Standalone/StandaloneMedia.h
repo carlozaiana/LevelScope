@@ -18,6 +18,7 @@ struct MediaInfo
     juce::String measurementRestriction; // Broader Source audition may remain available.
     juce::StringPairArray tags;
     ChannelLayout suggestedLayout;
+    bool hasFileRoleLabels=false; // fresh import only; saved projects own their layout
 
     double durationSeconds() const { return sampleRate > 0 ? static_cast<double> (frames) / sampleRate : 0.0; }
     bool matchesFileStamp (const juce::File& file) const

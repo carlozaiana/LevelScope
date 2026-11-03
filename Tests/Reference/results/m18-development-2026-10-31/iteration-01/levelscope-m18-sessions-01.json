@@ -1,0 +1,12 @@
+{
+  "suite": "M8 sessions",
+  "passed": false,
+  "checks": 41,
+  "failure": "initial Current cache decoded",
+  "performance": {
+  },
+  "long_media": null,
+  "build": "a3abaff37d53f97331c4aef9774d149aa9f247cbae4d00648a37841a2113589c",
+  "os": "Mac OSX 15.7.9",
+  "architecture": "arm64"
+}

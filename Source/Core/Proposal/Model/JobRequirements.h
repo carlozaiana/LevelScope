@@ -16,6 +16,13 @@ struct JobRequirements
     juce::String method = "EBU Tech 3342-2023 whole-programme LRA";
     juce::String applicability = "pre-produced-whole-programme-linear-audio";
     std::optional<int> maximumLraTenths;
+    // Schema 2 stores the complete editable target, including explicit nulls.
+    // Schema 1 retains its original EBU + optional LRA definition and digest.
+    std::optional<int> integratedTenths = -230, truePeakTenths = -10;
+    int integratedToleranceTenths = 2;
+    std::optional<int> maximumMomentaryTenths, maximumShortTermTenths;
+    static JobRequirements editable(const TargetProfile&);
+    static std::optional<int> parseSignedTenths(const juce::String&);
     juce::String unavailableReason; // independently recoverable invalid session field
 
     juce::String validationError() const;

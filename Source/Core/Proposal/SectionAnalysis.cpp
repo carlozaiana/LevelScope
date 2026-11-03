@@ -63,6 +63,46 @@ bool SectionDocument::edit (uint64_t id, const std::function<void(SectionMap&, s
     }
     catch (const std::exception& e) { error = e.what(); return false; }
 }
+bool SectionDocument::defineInterval(int64_t begin, int64_t end, uint64_t& selectedId, juce::String& error)
+{
+    const auto found=std::find_if(value.sections.begin(),value.sections.end(),
+                                  [begin](const auto& row){return row.begin<=begin && begin<row.end;});
+    if(found==value.sections.end() || end<=begin || end>found->end)
+    {
+        error="Draw inside one existing section. Drag an existing boundary to move it.";
+        return false;
+    }
+    uint64_t id=found->id;
+    if(begin!=found->begin || end!=found->end)
+    {
+        const bool accepted=edit(id,[&](auto& map,size_t index)
+        {
+            const auto original=map.sections[index];
+            const auto makeRow=[&](int64_t a,int64_t b)
+            {
+                require(map.nextId<std::numeric_limits<uint64_t>::max(),"Section IDs exhausted");
+                auto next=map.nextId++;
+                return ProgrammeSection{next,a,b,"Section "+juce::String(next)};
+            };
+            auto chosen=makeRow(begin,end);
+            id=chosen.id;
+            std::vector<ProgrammeSection> parts;
+            if(begin>original.begin)parts.push_back({original.id,original.begin,begin,original.name});
+            parts.push_back(chosen);
+            if(end<original.end)
+            {
+                if(begin==original.begin)parts.push_back({original.id,end,original.end,original.name});
+                else parts.push_back(makeRow(end,original.end));
+            }
+            const auto at=map.sections.erase(map.sections.begin()+static_cast<ptrdiff_t>(index));
+            map.sections.insert(at,parts.begin(),parts.end());
+        },error);
+        if(!accepted)return false;
+    }
+    selectedId=id;
+    error.clear();
+    return true;
+}
 bool SectionDocument::split (uint64_t id, int64_t frame, juce::String& error)
 {
     return edit (id, [frame] (auto& map, size_t n)

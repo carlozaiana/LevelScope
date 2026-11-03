@@ -13,9 +13,13 @@ LocatedPeak maximum(LocatedPeak a, LocatedPeak b)
 }
 juce::String sectionGeometryKey(const SectionMap& map)
 {
-    juce::String key=map.inputIdentity+":"+juce::String(map.sampleRate)+":"+juce::String(map.frames);
-    for(const auto& row:map.sections) key += ";"+juce::String(row.id)+":"+juce::String(row.begin)+":"+juce::String(row.end);
-    return key;
+    // Append to a byte stream: repeated String concatenation rescans the growing
+    // UTF-8 key and becomes quadratic at the supported 10,000-section limit.
+    // Keep precisely the established identity bytes, including integer formatting.
+    juce::MemoryOutputStream key;
+    key << map.inputIdentity << ":" << juce::String(map.sampleRate) << ":" << juce::String(map.frames);
+    for(const auto& row:map.sections)key << ";" << juce::String(row.id) << ":" << juce::String(row.begin) << ":" << juce::String(row.end);
+    return key.toUTF8();
 }
 size_t SectionPeakMap::storageBytes() const
 {

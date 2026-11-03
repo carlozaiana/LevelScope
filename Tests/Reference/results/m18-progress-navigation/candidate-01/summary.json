@@ -1,0 +1,80 @@
+{
+  "measurement_build": "aa06a460f743ba647f966f886be4cb76e9abbddb1588013f67eca522ee8c2cbe",
+  "all_passed": false,
+  "runs": [
+    {
+      "name": "timeline",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeTimelineProgressTests_artefacts/Release/LevelScopeTimelineProgressTests",
+        "--root",
+        "/tmp/levelscope-m18-progress-navigation-candidate-01/timeline",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/m18-progress-navigation/candidate-01/timeline.json"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 3.25295625
+    },
+    {
+      "name": "measurement",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeMeasurementTests_artefacts/Release/LevelScopeMeasurementTests",
+        "--report",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/m18-progress-navigation/candidate-01/measurement.json"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 14.12135025
+    },
+    {
+      "name": "diagnostics",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeDiagnosticsTests_artefacts/Release/LevelScopeDiagnosticsTests",
+        "--report",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/m18-progress-navigation/candidate-01/diagnostics.json"
+      ],
+      "exit_code": 1,
+      "passed": false,
+      "seconds": 0.6750468749999996
+    },
+    {
+      "name": "waveforms",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeWaveformTests_artefacts/Release/LevelScopeWaveformTests",
+        "--root",
+        "/tmp/levelscope-m18-progress-navigation-candidate-01/waveforms",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/m18-progress-navigation/candidate-01/waveforms.json"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 32.828630459
+    },
+    {
+      "name": "targets",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeJobRequirementsTests_artefacts/Release/LevelScopeJobRequirementsTests",
+        "--root",
+        "/tmp/levelscope-m18-progress-navigation-candidate-01/targets",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/m18-progress-navigation/candidate-01/targets.json"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 48.370111125
+    },
+    {
+      "name": "pinned EBU M/S curves",
+      "passed": true,
+      "seconds": 1.366119458,
+      "files": [
+        "seq-3341-1-16bit.wav",
+        "seq-3341-12-24bit.wav",
+        "seq-3341-2-16bit.wav",
+        "seq-3341-9-24bit.wav"
+      ]
+    }
+  ],
+  "app_path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app",
+  "physical_devices_opened": false
+}

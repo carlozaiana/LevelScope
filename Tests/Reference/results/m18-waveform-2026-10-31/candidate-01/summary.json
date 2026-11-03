@@ -1,0 +1,89 @@
+{
+  "measurement_build": "f7c65fd8eb9e9c0c13af01db782124a131bb91b29dd9a3cede26e489bb57f538",
+  "all_passed": true,
+  "runs": [
+    {
+      "name": "core",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeWaveformCoreTests"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 3.149827209
+    },
+    {
+      "name": "waveforms",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeWaveformTests_artefacts/Release/LevelScopeWaveformTests",
+        "--root",
+        "/tmp/levelscope-m18-waveform-candidate-01/waveforms",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/m18-waveform-2026-10-31/candidate-01/waveforms.json"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 31.807434958
+    },
+    {
+      "name": "measurement",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeMeasurementTests_artefacts/Release/LevelScopeMeasurementTests",
+        "--report",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/m18-waveform-2026-10-31/candidate-01/measurement.json"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 14.883569541999996
+    },
+    {
+      "name": "diagnostics",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeDiagnosticsTests_artefacts/Release/LevelScopeDiagnosticsTests",
+        "--report",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/m18-waveform-2026-10-31/candidate-01/diagnostics.json"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 2.3577053749999948
+    },
+    {
+      "name": "sessions",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeSessionTests_artefacts/Release/LevelScopeSessionTests",
+        "--short",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/m18-waveform-2026-10-31/candidate-01/sessions.json"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 7.106031083000005
+    },
+    {
+      "name": "processing",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeSectionProcessingTests_artefacts/Release/LevelScopeSectionProcessingTests",
+        "--smoke",
+        "--root",
+        "/tmp/levelscope-m18-waveform-candidate-01/processing",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/m18-waveform-2026-10-31/candidate-01/processing.json"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 7.477263958999991
+    },
+    {
+      "name": "export",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeExportTests_artefacts/Release/LevelScopeExportTests",
+        "--artifacts",
+        "/tmp/levelscope-m18-waveform-candidate-01/export",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/m18-waveform-2026-10-31/candidate-01/export.json"
+      ],
+      "exit_code": 0,
+      "passed": true,
+      "seconds": 42.175464332999994
+    }
+  ]
+}

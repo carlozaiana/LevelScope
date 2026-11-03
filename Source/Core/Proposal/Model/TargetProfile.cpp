@@ -10,17 +10,17 @@ namespace levelscope::proposal
 juce::String TargetProfile::validationError() const
 {
     if (jobRequirementsError.isNotEmpty()) return jobRequirementsError;
-    if (! isSelectableForWorkflow || ! limits.valuesAreAuthoritative)
+    if (! isSelectableForWorkflow || (! limits.valuesAreAuthoritative && !userSpecified))
         return "No authoritative profile selected.";
     if (schemaVersion != 1 || id.isEmpty() || definitionVersion.isEmpty()
-        || standardEdition.isEmpty() || referenceUrl.isEmpty()
+        || standardEdition.isEmpty() || (!userSpecified && referenceUrl.isEmpty())
         || integratedProvenance.isEmpty() || truePeakProvenance.isEmpty())
         return "Invalid profile identity or rule provenance.";
     if (method != MeasurementMethod::bs1770FullProgramme
         || applicability != Applicability::preProducedLinearProgramme)
         return "Profile method or applicability is unsupported.";
     const auto& l = limits;
-    if (! l.hasIntegratedLoudnessTarget || ! l.hasTruePeakCeiling
+    if ((!userSpecified && (! l.hasIntegratedLoudnessTarget || ! l.hasTruePeakCeiling))
         || ! std::isfinite (l.integratedLufs) || ! std::isfinite (l.integratedToleranceLu)
         || l.integratedToleranceLu < 0
         || ! std::isfinite (l.integratedLufs - l.integratedToleranceLu)
@@ -28,6 +28,8 @@ juce::String TargetProfile::validationError() const
         || ! std::isfinite (l.truePeakCeilingDbtp)
         || ! std::isfinite (l.maxLoudnessRangeLu)
         || (l.hasMaxLoudnessRange && (l.maxLoudnessRangeLu < 0 || lraProvenance.isEmpty()))
+        || ! std::isfinite(l.maxMomentaryLufs) || ! std::isfinite(l.maxShortTermLufs)
+        || (l.hasMaxMomentary && momentaryProvenance.isEmpty()) || (l.hasMaxShortTerm && shortTermProvenance.isEmpty())
         || ! std::isfinite (truePeakMeterToleranceDb) || truePeakMeterToleranceDb < 0
         || ! std::isfinite (truePeakMeterBandwidthHz) || truePeakMeterBandwidthHz < 0
         || (truePeakMeterToleranceDb > 0 && (truePeakMeterBandwidthHz == 0 || meterToleranceNote.isEmpty())))
@@ -50,6 +52,9 @@ juce::String TargetProfile::digest() const
       << ';' << limits.hasTruePeakCeiling << ';' << limits.truePeakCeilingDbtp
       << ';' << limits.hasMaxLoudnessRange << ';' << limits.maxLoudnessRangeLu
       << ';' << truePeakMeterToleranceDb << ';' << truePeakMeterBandwidthHz;
+    if(userSpecified || limits.hasMaxMomentary || limits.hasMaxShortTerm)
+    {s << ";extended-target-v2;" << userSpecified << ';' << limits.hasMaxMomentary << ';' << limits.maxMomentaryLufs
+       << ';' << limits.hasMaxShortTerm << ';' << limits.maxShortTermLufs;text(momentaryProvenance);text(shortTermProvenance);}
     if (jobRequirementsDigest.isNotEmpty() || jobRequirementsError.isNotEmpty())
     { text(baseProfileDigest); text(jobRequirementsDigest); text(jobRequirementsError); }
     const auto bytes = s.str(); return juce::SHA256 (bytes.data(), bytes.size()).toHexString();

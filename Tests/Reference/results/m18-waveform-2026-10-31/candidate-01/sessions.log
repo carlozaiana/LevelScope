@@ -1,0 +1,12 @@
+{
+  "suite": "M8 sessions",
+  "passed": true,
+  "checks": 1071,
+  "failure": "",
+  "performance": {
+  },
+  "long_media": null,
+  "build": "f7c65fd8eb9e9c0c13af01db782124a131bb91b29dd9a3cede26e489bb57f538",
+  "os": "Mac OSX 15.7.9",
+  "architecture": "arm64"
+}

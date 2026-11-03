@@ -1,0 +1,511 @@
+{
+  "2": {
+    "operations": {
+      "import": {
+        "control_wall_ms": {
+          "median": 100.868833,
+          "min": 100.70025,
+          "max": 102.5155
+        },
+        "profile_wall_ms": {
+          "median": 100.920375,
+          "min": 100.642375,
+          "max": 101.829
+        },
+        "instrumented_delta_pct": 0.051098043337138854,
+        "stages_ms": {
+          "job": {
+            "payload_scan": 9.116541,
+            "validation_hash": 91.877375
+          }
+        },
+        "control_worker_core_equivalents": 0.9976042760569115
+      },
+      "source": {
+        "control_wall_ms": {
+          "median": 1396.993458,
+          "min": 1389.025375,
+          "max": 1398.358458
+        },
+        "profile_wall_ms": {
+          "median": 1396.318667,
+          "min": 1390.367875,
+          "max": 1405.320667
+        },
+        "instrumented_delta_pct": -0.048303089476597894,
+        "stages_ms": {
+          "job": {
+            "verification_total": 198.065667,
+            "copy_flush": 5.572209,
+            "first_hash": 91.45075,
+            "payload_scan": 9.213416,
+            "validation_hash": 91.8675,
+            "read_blocks": 9.020779999999997,
+            "processing": 2.721703999999999,
+            "waveform": 6.227657000000007,
+            "meter_push": 1178.0068,
+            "progress_publish": 0.04445800000000005,
+            "meter_finish": 1.04925
+          }
+        },
+        "control_worker_core_equivalents": 0.9966811168846577
+      },
+      "global": {
+        "control_wall_ms": {
+          "median": 1.7655,
+          "min": 1.752917,
+          "max": 1.817917
+        },
+        "profile_wall_ms": {
+          "median": 1.720625,
+          "min": 1.653291,
+          "max": 1.735834
+        },
+        "instrumented_delta_pct": -2.541772868875669,
+        "stages_ms": {},
+        "control_worker_core_equivalents": 1.00004565664989,
+        "passes": 0,
+        "with_preflight_accept_ms": {
+          "median": 2.771459,
+          "min": 2.7338750000000003,
+          "max": 2.8295
+        }
+      },
+      "fresh": {
+        "control_wall_ms": {
+          "median": 4061.828709,
+          "min": 4053.929625,
+          "max": 4094.621292
+        },
+        "profile_wall_ms": {
+          "median": 4094.921667,
+          "min": 4053.921416,
+          "max": 4111.336083
+        },
+        "instrumented_delta_pct": 0.8147305160031593,
+        "stages_ms": {
+          "job": {
+            "verification_total": 198.666917,
+            "copy_flush": 5.641041,
+            "first_hash": 91.988416,
+            "payload_scan": 9.033125,
+            "validation_hash": 91.48125
+          },
+          "attribution": {
+            "read_blocks": 9.11886499999999,
+            "processing": 2.686279999999995,
+            "waveform": 0.01812700000000004,
+            "meter_push": 1448.430228000002,
+            "progress_publish": 0.05184600000000003,
+            "meter_finish": 1.041167,
+            "pass_total": 1461.575834
+          },
+          "local": {
+            "read_blocks": 9.067920999999986,
+            "processing": 17.92425099999999,
+            "waveform": 0.01820600000000003,
+            "meter_push": 1180.671734,
+            "progress_publish": 0.03431300000000001,
+            "meter_finish": 1.026625,
+            "pass_total": 1209.093833
+          },
+          "combined": {
+            "read_blocks": 8.988043999999997,
+            "processing": 17.89416599999998,
+            "waveform": 0.01737000000000003,
+            "meter_push": 1178.353459,
+            "progress_publish": 0.03044700000000001,
+            "meter_finish": 1.036167,
+            "pass_total": 1206.677875
+          }
+        },
+        "control_worker_core_equivalents": 0.9977833361165501,
+        "passes": 3,
+        "with_preflight_accept_ms": {
+          "median": 4062.190585,
+          "min": 4054.2925420000006,
+          "max": 4094.9883349999996
+        }
+      },
+      "reused": {
+        "control_wall_ms": {
+          "median": 2603.317875,
+          "min": 2599.212708,
+          "max": 2627.996958
+        },
+        "profile_wall_ms": {
+          "median": 2609.163791,
+          "min": 2603.05125,
+          "max": 2630.810917
+        },
+        "instrumented_delta_pct": 0.22455636540350543,
+        "stages_ms": {
+          "job": {
+            "verification_total": 198.703291,
+            "copy_flush": 5.6705,
+            "first_hash": 91.781417,
+            "payload_scan": 9.091166,
+            "validation_hash": 91.660584
+          },
+          "local": {
+            "read_blocks": 8.738983999999997,
+            "processing": 17.90666099999999,
+            "waveform": 0.01739600000000004,
+            "meter_push": 1173.793726999999,
+            "progress_publish": 0.02771100000000003,
+            "meter_finish": 1.041166,
+            "pass_total": 1201.680333
+          },
+          "combined": {
+            "read_blocks": 8.919338999999992,
+            "processing": 17.80616600000001,
+            "waveform": 0.01760700000000003,
+            "meter_push": 1174.718530999999,
+            "progress_publish": 0.03388100000000005,
+            "meter_finish": 1.033083,
+            "pass_total": 1202.800208
+          }
+        },
+        "control_worker_core_equivalents": 0.9979491066723424,
+        "passes": 2,
+        "with_preflight_accept_ms": {
+          "median": 2605.0475420000002,
+          "min": 2600.939209,
+          "max": 2629.7807500000004
+        }
+      },
+      "current": {
+        "control_wall_ms": {
+          "median": 1416.41375,
+          "min": 1401.78325,
+          "max": 1432.524375
+        },
+        "profile_wall_ms": {
+          "median": 1413.373167,
+          "min": 1402.554292,
+          "max": 1416.533708
+        },
+        "instrumented_delta_pct": -0.21466771273577212,
+        "stages_ms": {
+          "job": {
+            "verification_total": 199.155667,
+            "copy_flush": 5.619583,
+            "first_hash": 92.403,
+            "payload_scan": 8.814083,
+            "validation_hash": 91.803167,
+            "read_blocks": 9.016916000000002,
+            "processing": 17.83997599999999,
+            "waveform": 6.196189999999998,
+            "meter_push": 1179.153330000001,
+            "progress_publish": 0.05348500000000003,
+            "meter_finish": 0.995792
+          }
+        },
+        "control_worker_core_equivalents": 0.9975750376611354
+      }
+    },
+    "ui": {
+      "heartbeat_count": 270,
+      "gap_p95_ms": 110.170708,
+      "max_gap_or_tail_ms": 110.792292,
+      "paint_p95_ms": 4.87375
+    },
+    "base_build": "8e566ab112b5632fb395c46b5a9d7e49dd7b685f97768d888f622fc644ec72ac",
+    "input_sha256": "171b4aa51900c9826416719af9950005ce1a445817e49aa215c14cc2cd332566",
+    "roles": "L,R",
+    "sample_stacks": {
+      "fresh": {
+        "worker_stacks": 1149,
+        "meter_push": 1056,
+        "add_peak": 1004,
+        "collector_true_peak": 78,
+        "sha_full_block": 45
+      },
+      "reused": {
+        "worker_stacks": 740,
+        "meter_push": 669,
+        "add_peak": 641,
+        "collector_true_peak": 0,
+        "sha_full_block": 50
+      },
+      "current": {
+        "worker_stacks": 397,
+        "meter_push": 329,
+        "add_peak": 317,
+        "collector_true_peak": 0,
+        "sha_full_block": 51
+      },
+      "source": {
+        "worker_stacks": 395,
+        "meter_push": 334,
+        "add_peak": 311,
+        "collector_true_peak": 0,
+        "sha_full_block": 49
+      },
+      "import": {
+        "worker_stacks": 28,
+        "meter_push": 0,
+        "add_peak": 0,
+        "collector_true_peak": 0,
+        "sha_full_block": 23
+      }
+    }
+  },
+  "6": {
+    "operations": {
+      "import": {
+        "control_wall_ms": {
+          "median": 304.073166,
+          "min": 302.778542,
+          "max": 306.135291
+        },
+        "profile_wall_ms": {
+          "median": 304.037958,
+          "min": 302.065875,
+          "max": 304.676292
+        },
+        "instrumented_delta_pct": -0.01157879219109148,
+        "stages_ms": {
+          "job": {
+            "payload_scan": 27.543834,
+            "validation_hash": 276.297
+          }
+        },
+        "control_worker_core_equivalents": 0.9979571824499633
+      },
+      "source": {
+        "control_wall_ms": {
+          "median": 4191.590875,
+          "min": 4157.656833,
+          "max": 4192.099959
+        },
+        "profile_wall_ms": {
+          "median": 4179.617292,
+          "min": 4154.624875,
+          "max": 4232.927209
+        },
+        "instrumented_delta_pct": -0.28565724463744946,
+        "stages_ms": {
+          "job": {
+            "verification_total": 595.005792,
+            "copy_flush": 14.8965,
+            "first_hash": 275.936541,
+            "payload_scan": 27.102,
+            "validation_hash": 275.532416,
+            "read_blocks": 23.75351000000002,
+            "processing": 9.387638999999986,
+            "waveform": 17.86657799999997,
+            "meter_push": 3528.993839,
+            "progress_publish": 0.1515709999999997,
+            "meter_finish": 2.03125
+          }
+        },
+        "control_worker_core_equivalents": 0.997645315276625
+      },
+      "global": {
+        "control_wall_ms": {
+          "median": 1.763041,
+          "min": 1.757375,
+          "max": 1.775083
+        },
+        "profile_wall_ms": {
+          "median": 1.749333,
+          "min": 1.737375,
+          "max": 1.798792
+        },
+        "instrumented_delta_pct": -0.7775202051455432,
+        "stages_ms": {},
+        "control_worker_core_equivalents": 1.0014937050999468,
+        "passes": 0,
+        "with_preflight_accept_ms": {
+          "median": 2.77375,
+          "min": 2.75725,
+          "max": 2.802041
+        }
+      },
+      "fresh": {
+        "control_wall_ms": {
+          "median": 12339.415667,
+          "min": 12311.99325,
+          "max": 12548.603709
+        },
+        "profile_wall_ms": {
+          "median": 12397.430375,
+          "min": 12256.998625,
+          "max": 12641.064667
+        },
+        "instrumented_delta_pct": 0.47015766034328443,
+        "stages_ms": {
+          "job": {
+            "verification_total": 597.294583,
+            "copy_flush": 14.51325,
+            "first_hash": 275.883209,
+            "payload_scan": 27.642041,
+            "validation_hash": 278.119125
+          },
+          "attribution": {
+            "read_blocks": 24.03528099999999,
+            "processing": 9.283314999999991,
+            "waveform": 0.02350300000000004,
+            "meter_push": 4565.271935999997,
+            "progress_publish": 0.1526349999999998,
+            "meter_finish": 1.957666,
+            "pass_total": 4601.128166
+          },
+          "local": {
+            "read_blocks": 23.82366199999998,
+            "processing": 24.7755,
+            "waveform": 0.01953000000000003,
+            "meter_push": 3529.932030000006,
+            "progress_publish": 0.12959,
+            "meter_finish": 2.0635,
+            "pass_total": 3581.132333
+          },
+          "combined": {
+            "read_blocks": 24.05439100000003,
+            "processing": 24.964793,
+            "waveform": 0.01967400000000004,
+            "meter_push": 3561.786869999997,
+            "progress_publish": 0.1437899999999999,
+            "meter_finish": 2.016,
+            "pass_total": 3613.593417
+          }
+        },
+        "control_worker_core_equivalents": 0.9977109396617915,
+        "passes": 3,
+        "with_preflight_accept_ms": {
+          "median": 12339.818792999999,
+          "min": 12312.403167,
+          "max": 12548.955333000002
+        }
+      },
+      "reused": {
+        "control_wall_ms": {
+          "median": 7797.001833,
+          "min": 7718.849542,
+          "max": 8031.222833
+        },
+        "profile_wall_ms": {
+          "median": 7797.306417,
+          "min": 7756.724375,
+          "max": 7889.692875
+        },
+        "instrumented_delta_pct": 0.003906424629929184,
+        "stages_ms": {
+          "job": {
+            "verification_total": 595.991292,
+            "copy_flush": 14.462,
+            "first_hash": 276.883625,
+            "payload_scan": 28.091375,
+            "validation_hash": 276.0675
+          },
+          "local": {
+            "read_blocks": 23.75964500000001,
+            "processing": 25.00747499999996,
+            "waveform": 0.02279900000000004,
+            "meter_push": 3527.110805000002,
+            "progress_publish": 0.1325479999999999,
+            "meter_finish": 2.036584,
+            "pass_total": 3578.428166
+          },
+          "combined": {
+            "read_blocks": 23.70850800000004,
+            "processing": 24.77358199999999,
+            "waveform": 0.01936400000000002,
+            "meter_push": 3541.167784999999,
+            "progress_publish": 0.1533279999999993,
+            "meter_finish": 1.950584,
+            "pass_total": 3592.407333
+          }
+        },
+        "control_worker_core_equivalents": 0.9976372423733496,
+        "passes": 2,
+        "with_preflight_accept_ms": {
+          "median": 7798.774374,
+          "min": 7720.661290999999,
+          "max": 8033.026833
+        }
+      },
+      "current": {
+        "control_wall_ms": {
+          "median": 4200.1445,
+          "min": 4169.055792,
+          "max": 4245.480834
+        },
+        "profile_wall_ms": {
+          "median": 4204.061959,
+          "min": 4191.666541,
+          "max": 4329.218208
+        },
+        "instrumented_delta_pct": 0.09326962441409403,
+        "stages_ms": {
+          "job": {
+            "verification_total": 594.401083,
+            "copy_flush": 14.828125,
+            "first_hash": 275.36725,
+            "payload_scan": 27.551167,
+            "validation_hash": 276.73625,
+            "read_blocks": 23.67287799999998,
+            "processing": 24.95463999999995,
+            "waveform": 18.03834299999998,
+            "meter_push": 3535.304503999998,
+            "progress_publish": 0.1591689999999995,
+            "meter_finish": 2.074542
+          }
+        },
+        "control_worker_core_equivalents": 0.997728054356225
+      }
+    },
+    "ui": {
+      "heartbeat_count": 824,
+      "gap_p95_ms": 109.580125,
+      "max_gap_or_tail_ms": 110.834833,
+      "paint_p95_ms": 8.171292
+    },
+    "base_build": "8e566ab112b5632fb395c46b5a9d7e49dd7b685f97768d888f622fc644ec72ac",
+    "input_sha256": "c2248717fe25628866c8b85e28a0fb7209f845a01a7b933e69955188867c59b9",
+    "roles": "L,R,C,Lfe,Ls,Rs",
+    "sample_stacks": {
+      "fresh": {
+        "worker_stacks": 3486,
+        "meter_push": 3268,
+        "add_peak": 3103,
+        "collector_true_peak": 260,
+        "sha_full_block": 151
+      },
+      "reused": {
+        "worker_stacks": 2256,
+        "meter_push": 2049,
+        "add_peak": 1944,
+        "collector_true_peak": 0,
+        "sha_full_block": 155
+      },
+      "source": {
+        "worker_stacks": 1220,
+        "meter_push": 1029,
+        "add_peak": 982,
+        "collector_true_peak": 0,
+        "sha_full_block": 147
+      },
+      "current": {
+        "worker_stacks": 1178,
+        "meter_push": 981,
+        "add_peak": 942,
+        "collector_true_peak": 0,
+        "sha_full_block": 151
+      },
+      "import": {
+        "worker_stacks": 86,
+        "meter_push": 0,
+        "add_peak": 0,
+        "collector_true_peak": 0,
+        "sha_full_block": 76
+      }
+    }
+  },
+  "binary_sha256": {
+    "control": "761321f3ffe0126207332e9853f669f16c9900e0b68fefa4504bfba54fa98e0b",
+    "profile": "5ac93feabc335dc2b3ee1b64865654ca35c13c2a6fa9aa1f669a9892743a711c",
+    "sample-control": "f341b0f1cc42be89f152383a571c56e686208c4792caa183c0d7f6b445c7801d"
+  }
+}

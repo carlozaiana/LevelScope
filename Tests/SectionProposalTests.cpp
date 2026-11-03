@@ -122,6 +122,11 @@ void collectorCases()
         for(int c=0;c<6;++c){audio.setSample(c,0,.5f);audio.setSample(c,frames/2,1.f);audio.setSample(c,frames-1,-1.f);}
         plain.push(audio.getArrayOfReadPointers(),frames);observed.push(audio.getArrayOfReadPointers(),frames);
         const auto a=plain.finish(),b=observed.finish();auto p=observer.collector.finish();
+        proposal::SectionPeakCollector channelCollector(m,6,"observed");
+        measurement::OfflineMeasurement bounded(rate,roles,&channelCollector,nullptr,measurement::PeakExecution::boundedChannels);
+        bounded.push(audio.getArrayOfReadPointers(),frames);
+        bounded.finish();
+        auto channelMap=channelCollector.finish();
         const auto sameWindows=[](const auto& x,const auto& y)
         {return x.size()==y.size()&&std::equal(x.begin(),x.end(),y.begin(),[](const auto& u,const auto& v){return u.endFrame==v.endFrame&&u.energy==v.energy;});};
         expect(a.momentaryMax.value==b.momentaryMax.value&&a.shortTermMax.value==b.shortTermMax.value&&a.integratedRelativeGate==b.integratedRelativeGate
@@ -146,8 +151,12 @@ void collectorCases()
             equal&=sample.magnitude==p->sections[n].sample[c].magnitude&&sample.eighthFrame==p->sections[n].sample[c].eighthFrame
                 &&peak.magnitude==p->sections[n].truePeak[c].magnitude&&peak.eighthFrame==p->sections[n].truePeak[c].eighthFrame
                 &&peak.padding==p->sections[n].truePeak[c].padding;
+            const auto& channelSample=channelMap->sections[n].sample[c];
+            const auto& channelPeak=channelMap->sections[n].truePeak[c];
+            equal &= sample.magnitude==channelSample.magnitude && sample.eighthFrame==channelSample.eighthFrame
+                  && peak.magnitude==channelPeak.magnitude && peak.eighthFrame==channelPeak.eighthFrame && peak.padding==channelPeak.padding;
         }
-        expect(equal,"all section/channel maxima match independent full-event oracle including boundaries and EOF drain");
+        expect(equal,"serial and bounded section/channel maxima match independent full-event oracle including boundaries and EOF drain");
     }
     const auto m=mapFor(48000,480000,10000);proposal::SectionPeakCollector collector(m,12,"large");
     collector.truePeak(11,2,-3,true);collector.truePeak(11,3,m.frames*8+1,true);
@@ -338,18 +347,19 @@ void assessmentBranches(const juce::File& root)
 }
 }
 #include "ProposalPreferencesTests.h"
+#include "M18ProposalWorkflowChecks.h"
 // Resource helpers only; no historical runner invoked.
 #include "SectionProposalLongTests.h"
 #include "SectionProposalCinemaTests.h"
 #include "SectionProposalIntegrationTests.h"
 int main(int argc,char** argv)
 {
-    juce::ScopedJuceInitialiser_GUI gui;juce::String rootPath,output,longSession,cinema,videoDirectory,sessionPath,exchange;bool passed=false,smoke=false,preferences=false,preferencesLarge=false;juce::String failure;
-    for(int n=1;n<argc;++n){juce::String arg(argv[n]);if(arg=="--preferences-large")preferencesLarge=true;else if(arg=="--preferences")preferences=true;else if(arg=="--smoke")smoke=true;else if(arg=="--root"&&n+1<argc)rootPath=argv[++n];else if(arg=="--video"&&n+1<argc)videoDirectory=argv[++n];else if(arg=="--session"&&n+1<argc)sessionPath=argv[++n];else if(arg=="--exchange"&&n+1<argc)exchange=argv[++n];else if(arg=="--cinema"&&n+1<argc)cinema=argv[++n];else if(arg=="--long-session"&&n+1<argc)longSession=argv[++n];else if(arg=="--output"&&n+1<argc)output=argv[++n];else return 2;}
+    juce::ScopedJuceInitialiser_GUI gui;juce::String rootPath,output,longSession,cinema,videoDirectory,sessionPath,exchange;bool passed=false,smoke=false,preferences=false,preferencesLarge=false,m18=false;juce::String failure;
+    for(int n=1;n<argc;++n){juce::String arg(argv[n]);if(arg=="--m18-workflow")m18=true;else if(arg=="--preferences-large")preferencesLarge=true;else if(arg=="--preferences")preferences=true;else if(arg=="--smoke")smoke=true;else if(arg=="--root"&&n+1<argc)rootPath=argv[++n];else if(arg=="--video"&&n+1<argc)videoDirectory=argv[++n];else if(arg=="--session"&&n+1<argc)sessionPath=argv[++n];else if(arg=="--exchange"&&n+1<argc)exchange=argv[++n];else if(arg=="--cinema"&&n+1<argc)cinema=argv[++n];else if(arg=="--long-session"&&n+1<argc)longSession=argv[++n];else if(arg=="--output"&&n+1<argc)output=argv[++n];else return 2;}
     try
     {
         const juce::File root(rootPath);expect(rootPath.isNotEmpty()&&!root.exists()&&root.createDirectory().wasOk(),"fresh M13 fixture root required");
-        if(preferencesLarge)m16LargeMeasuredProposal(root);else if(preferences)m16Preferences(root);else if(videoDirectory.isNotEmpty())proposalVideo(juce::File(sessionPath),juce::File(videoDirectory));else if(exchange.isNotEmpty())proposalExchange(juce::File(exchange));else if(cinema.isNotEmpty())cinemaEvaluation(root,juce::File(cinema));else if(longSession.isNotEmpty())longSectionProposal(root,juce::File(longSession));else {
+        if(m18)m18ProposalWorkflow(root);else if(preferencesLarge)m16LargeMeasuredProposal(root);else if(preferences)m16Preferences(root);else if(videoDirectory.isNotEmpty())proposalVideo(juce::File(sessionPath),juce::File(videoDirectory));else if(exchange.isNotEmpty())proposalExchange(juce::File(exchange));else if(cinema.isNotEmpty())cinemaEvaluation(root,juce::File(cinema));else if(longSession.isNotEmpty())longSectionProposal(root,juce::File(longSession));else {
         policyCases();collectorCases();assessmentBranches(root.getChildFile("assessment-branches"));
         for(int rate:{44100,48000,96000,192000})for(int channels:{2,6})for(int mode=0;mode<(channels==2?4:6);++mode)
         {

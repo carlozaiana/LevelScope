@@ -1,0 +1,9 @@
+{
+  "suite": "Offline measurement and service identity checks",
+  "passed": true,
+  "failure": "",
+  "checks": 185,
+  "build": "d6a5d2e5bcb87f26560dadbe17deb2fdd1fca7f00de08e533df2c8ee474fb80f",
+  "physical_devices_opened": false,
+  "video_loaded": false
+}

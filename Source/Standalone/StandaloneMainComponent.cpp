@@ -1,3 +1,4 @@
+#include "TimelineTransport.h"
 #include "StandaloneMainComponent.h"
 
 namespace levelscope::standalone
@@ -55,18 +56,11 @@ public:
         centreWithSize (1120, 900); setVisible (true);
     }
     void resized() override
-    { DocumentWindow::resized();panel.setSize(juce::jmax(1000,viewport.getWidth()-16),1000); }
+    { DocumentWindow::resized();panel.setSize(juce::jmax(1000,viewport.getWidth()-16),1120); }
     void closeButtonPressed() override { panel.suspend(); setVisible (false); }
 private:
     StandaloneSectionsPanel& panel;
     juce::Viewport viewport;
-};
-class ProposalWindow final : public juce::DocumentWindow
-{
-public:
-    ProposalWindow(const juce::String& title,juce::Component* content):DocumentWindow(title,juce::Colour(0xff20242b),allButtons)
-    {setUsingNativeTitleBar(true);setResizable(true,false);setResizeLimits(800,570,1600,1200);setContentOwned(content,true);centreWithSize(content->getWidth(),content->getHeight());setVisible(true);}
-    void closeButtonPressed()override{setVisible(false);}
 };
 juce::String metricText (const measurement::Metric& metric, const juce::String& unit)
 {
@@ -125,14 +119,7 @@ StandaloneMainComponent::StandaloneMainComponent()
     diagnosticsButton.onClick = [this]
     {
         if (! diagnosticsPanel) diagnosticsPanel = std::make_unique<StandaloneDiagnosticsPanel> (session);
-        diagnosticsPanel->onOpenSections = [this]
-        {
-            if (! sectionsPanel) sectionsPanel = std::make_unique<StandaloneSectionsPanel> (session);
-            sectionsPanel->onChanged=[this]{refreshFromSession();};
-            sectionsPanel->canImportMarkers=[this]{return canReplaceSession();};
-            if (! sectionsWindow) sectionsWindow = std::make_unique<SectionsWindow> (*sectionsPanel);
-            sectionsPanel->resume(); sectionsWindow->setVisible (true); sectionsWindow->toFront (true);
-        };
+        diagnosticsPanel->onOpenSections=[this]{showSections();};
         if (! diagnosticsWindow) diagnosticsWindow = std::make_unique<DiagnosticsWindow> (*diagnosticsPanel);
         diagnosticsPanel->resume(); diagnosticsWindow->setVisible (true); diagnosticsWindow->toFront (true);
     };
@@ -150,9 +137,10 @@ StandaloneMainComponent::StandaloneMainComponent()
         refreshFromSession();
     };
 
+    configureTimelineShell();
     refreshFromSession();
 
-    setSize (1200, 950);
+    setSize (1240, 1000);
     startTimerHz (10);
 }
 
@@ -168,12 +156,15 @@ StandaloneMainComponent::~StandaloneMainComponent()
     exportCandidate.reset();
     programmeWindow.reset(); programmePanel.reset();
     compositionWindow.reset(); compositionPanel.reset();
+    audioWindow.reset();
+    timelineDiagnostics.cancel();
     videoWindow.reset();
     diagnosticsWindow.reset(); diagnosticsPanel.reset();
     sectionsWindow.reset(); sectionsPanel.reset();
     if (importControl) importControl->cancel.store (true);
     if (importResult.valid()) importResult.wait();
     if (analysisResult.valid()) analysisResult.wait();
+    if (waveformResult.valid()) waveformResult.wait();
     if (proposalResult.valid()) proposalResult.wait();
     if (sectionProposalResult.valid()) sectionProposalResult.wait();
     audition.disconnect();
@@ -215,9 +206,9 @@ void StandaloneMainComponent::timerCallback()
         if(session.job.finish(sectionProposalTicket,session.revision,result.error,result.message))
         {
             if(!result.value||!session.acceptSectionProposal(*result.value))
-            {session.job.state=JobState::failed;session.job.message="Proposal inputs changed; private candidate discarded";}
+            {session.job.state=JobState::failed;session.job.error=ErrorCode::staleRevision;session.sectionProposalError=ErrorCode::staleRevision;session.sectionProposalNotice=session.job.message="Proposal inputs changed; private candidate discarded";}
         }
-        else session.sectionProposalNotice=result.message;
+        else {session.sectionProposalError=session.job.error;session.sectionProposalNotice=result.message;}
         importControl.reset();refreshFromSession();
     }
     if (proposalResult.valid() && proposalResult.wait_for (std::chrono::seconds (0)) == std::future_status::ready)
@@ -238,6 +229,7 @@ void StandaloneMainComponent::timerCallback()
     if (analysisResult.valid() && analysisResult.wait_for (std::chrono::seconds (0)) == std::future_status::ready)
     {
         auto result = analysisResult.get();
+        bool accepted=false;
         if (session.job.finish (analysisTicket, session.revision, result.error, result.message))
         {
             if (! result.value || ! session.acceptMeasurement (std::move (*result.value)))
@@ -247,10 +239,31 @@ void StandaloneMainComponent::timerCallback()
                 session.job.message = "Measurement identity no longer matches; result discarded";
                 session.measurementUnsuccessful (analysisDomain, ErrorCode::staleRevision);
             }
+            else accepted=true;
         }
         else session.measurementUnsuccessful (analysisDomain, session.job.error);
+        if(accepted && waveformCache.accept(analysisWaveformBinding,WaveformBinding::from(session.measurementContext(analysisDomain),analysisDomain)))
+        {
+            if(analysisDomain==MeasurementDomain::source && session.source.analysis && session.currentState.analysis)
+                waveformCache.shareInitialCurrent(*session.source.analysis,*session.currentState.analysis);
+        }
+        else waveformCache.reject(analysisWaveformBinding);
+        if(loudnessProgress){loudnessProgress->abandon();loudnessProgress.reset();}
         importControl.reset();
         refreshFromSession();
+    }
+    if(waveformResult.valid() && waveformResult.wait_for(std::chrono::seconds(0))==std::future_status::ready)
+    {
+        auto result=waveformResult.get();
+        const auto expected=WaveformBinding::from(session.measurementContext(waveformBinding.domain),waveformBinding.domain);
+        if(session.job.finish(waveformBinding.ticket,session.revision,result.error,result.message)
+            && result.value && waveformCache.accept(waveformBinding,expected))
+        {
+            if(waveformBinding.domain==MeasurementDomain::source && session.source.analysis && session.currentState.analysis)
+                waveformCache.shareInitialCurrent(*session.source.analysis,*session.currentState.analysis);
+        }
+        else waveformCache.reject(waveformBinding);
+        importControl.reset();refreshFromSession();
     }
     if (importResult.valid() && importResult.wait_for (std::chrono::seconds (0)) == std::future_status::ready)
     {
@@ -260,7 +273,8 @@ void StandaloneMainComponent::timerCallback()
             if (session.setValidatedSource (importingFile, result.media))
             {
                 session.selectedPage = WorkflowPage::analyze;
-                audioPanel.sourceChanged();
+                audioPanel.sourceChanged(true);
+                showAudioSetup();
             }
             else
             {
@@ -277,6 +291,8 @@ void StandaloneMainComponent::timerCallback()
         text << "  " << juce::String (juce::roundToInt (100 * importControl->progress.load())) << "%";
     jobLabel.setText (text, juce::dontSendNotification);
     refreshSessionControls();
+    refreshTimeline();
+    if(!audition.active() && automaticSource.eligible(session))beginMeasurement(MeasurementDomain::source);
 }
 
 void StandaloneMainComponent::beginMeasurement (MeasurementDomain domain)
@@ -285,6 +301,8 @@ void StandaloneMainComponent::beginMeasurement (MeasurementDomain domain)
     if (domain == MeasurementDomain::currentState && ! session.hasCurrentStateInitialized()) return;
     auto context = session.measurementContext (domain);
     if (OfflineAnalysisService::validateRequest (context, domain).isNotEmpty()) return;
+    if(domain==MeasurementDomain::source)
+        automaticSource.attemptedSource(session);
     audition.stop();
     if (! session.job.begin (JobStage::analysis, session.revision)) return;
     analysisTicket = session.job.ticket;
@@ -292,10 +310,29 @@ void StandaloneMainComponent::beginMeasurement (MeasurementDomain domain)
     context.ticket = analysisTicket;
     session.job.message = "Verifying source snapshot and measuring";
     importControl = std::make_shared<JobControl>();
-    analysisResult = std::async (std::launch::async, [context, domain, control = importControl]
+    timeline.setWaveform({},false,{});
+    analysisWaveformBinding=WaveformBinding::from(context,domain);
+    auto preview=waveformCache.begin(analysisWaveformBinding);
+    loudnessProgress=std::make_shared<LoudnessProgress>(analysisWaveformBinding);
+    analysisResult = std::async (std::launch::async, [context, domain, control = importControl,preview,loudness=loudnessProgress]
     {
-        return OfflineAnalysisService().analyze (context, domain, *control);
+        return OfflineAnalysisService(nullptr,preview.get(),loudness.get()).analyze (context, domain, *control);
     });
+    refreshFromSession();
+}
+
+void StandaloneMainComponent::beginWaveform()
+{
+    const auto domain=inspectDomain.getSelectedId()==2?MeasurementDomain::currentState:MeasurementDomain::source;
+    const auto& measured=domain==MeasurementDomain::source?session.source:session.currentState;
+    if(!measured.hasMeasurement || session.job.isActive() || session.audioEditsBlocked() || session.sourceContentInvalid)return;
+    auto context=session.measurementContext(domain);
+    if(OfflineAnalysisService::validateRequest(context,domain).isNotEmpty() || !session.job.begin(JobStage::waveform,session.revision))return;
+    context.ticket=session.job.ticket;waveformBinding=WaveformBinding::from(context,domain);
+    timeline.setWaveform({},false,{});auto preview=waveformCache.begin(waveformBinding);
+    importControl=std::make_shared<JobControl>();session.job.message="Verifying source and building waveform; measurements retained";
+    waveformResult=std::async(std::launch::async,[context,domain,preview,control=importControl]
+    {return OfflineAnalysisService(nullptr,preview.get()).buildWaveform(context,domain,*control);});
     refreshFromSession();
 }
 
@@ -326,7 +363,7 @@ void StandaloneMainComponent::beginSectionProposal()
     if(first.status!=proposal::TrimStatus::noSolution)
     {
         JobControl control;const auto result=generateSectionProposal(request,control);
-        if(result.value)session.acceptSectionProposal(*result.value);else session.sectionProposalNotice=result.message;
+        if(result.value)session.acceptSectionProposal(*result.value);else {session.sectionProposalError=result.error;session.sectionProposalNotice=result.message;}
         refreshFromSession();return;
     }
     if(!session.job.begin(JobStage::proposal,session.revision))return;
@@ -436,8 +473,8 @@ void StandaloneMainComponent::configureCurrentStateControls()
     addAndMakeVisible (initializeCurrentStateButton);
     addAndMakeVisible (clearCurrentStateButton);
     addAndMakeVisible (remeasureCurrentStateButton);
-    preferencesButton.onClick=[this]{preferencesWindow=std::make_unique<ProposalWindow>("Proposal limits - preferences, not delivery rules",new ProposalPreferencesPanel(session,[this]{refreshFromSession();}));};
-    inspectProposalButton.onClick=[this]{proposalInspectionWindow=std::make_unique<ProposalWindow>("Complete proposal inspection - snapshot",new ProposalInspectionPanel(session.sectionProposalDisplayText()));};
+    preferencesButton.onClick=[this]{ProposalPreferencesPanel::showWindow(preferencesWindow, session, this, [this]{refreshFromSession();});};
+    inspectProposalButton.onClick=[this]{reviewProposal(false);};
     addAndMakeVisible(preferencesButton);addAndMakeVisible(inspectProposalButton);
     sectionProposalButton.onClick=[this]{beginSectionProposal();};
     applySectionProposalButton.onClick=[this]{session.applySectionProposal();refreshFromSession();};
@@ -522,6 +559,7 @@ void StandaloneMainComponent::refreshFromSession()
 {
     refreshSessionControls();
     refreshExportControls();
+    proposalPanel.refresh(importControl?importControl->progress.load():-1);
     workflowStateLabel.setText ("Workflow page: " + getPageName (session.selectedPage)
                                     + "   |   Global-trim proposals",
                                 juce::dontSendNotification);
@@ -574,13 +612,21 @@ void StandaloneMainComponent::chooseProgramme()
         juce::Component::SafePointer<StandaloneMainComponent> safe(this);
         programmePanel=std::make_unique<ProgrammeImportPanel>([safe](std::optional<ProgrammeAssembly> group)
         {
-            juce::MessageManager::callAsync([safe,group=std::move(group)]
+            if(!safe || !safe->programmePanel)return;
+            const auto confirmedOrder=safe->programmePanel->confirmedFileOrder();
+            juce::MessageManager::callAsync([safe,group=std::move(group),confirmedOrder]
             {
                 if(!safe)return;
                 safe->programmeWindow.reset();safe->programmePanel.reset();safe->session.persistenceLoading=false;
                 if(group)
                 {
-                    if(safe->session.setValidatedProgramme(*group)) {safe->audioPanel.sourceChanged();safe->documentNotice="Aligned programme imported; all routes muted";}
+                    if(safe->session.setValidatedProgramme(*group))
+                    {
+                        safe->audioPanel.sourceChanged();
+                        const auto saved=RememberedChannelRoles().remember(confirmedOrder);
+                        safe->documentNotice=saved.wasOk()?"Aligned programme imported":saved.getErrorMessage();
+                        safe->beginMeasurement(MeasurementDomain::source);
+                    }
                     else safe->documentNotice="Programme changed before adoption; previous session retained";
                 }
                 else safe->documentNotice="Programme import cancelled; previous session retained";
@@ -820,105 +866,208 @@ void StandaloneMainComponent::paint (juce::Graphics& g)
     g.drawRoundedRectangle (getLocalBounds().toFloat().reduced (12.0f), 10.0f, 1.0f);
 }
 
+
+void StandaloneMainComponent::configureTimelineShell()
+{
+    audioPanel.onAnalyse=[this]
+    {
+        beginMeasurement(MeasurementDomain::source);
+        if(audioWindow && session.job.isActive())audioWindow->setVisible(false);
+    };
+    timeline.attachGainLane(gainLane);
+    timeline.bindSectionEditing(session,[this](uint64_t id)
+    {
+        refreshFromSession();
+        refreshTimeline();
+        for(const auto& row:session.sectionDocument.map().sections)
+            if(row.id==id){gainLane.selectFrame(row.begin,false);pageDetailBox.setText(gainLane.inspectionText(),false);break;}
+    });
+    timeline.onTogglePlayback=[this]{if(audition.active()){audition.stop();refreshTimeline();}else playTimeline();};
+    gainLane.onChanged=[this]{refreshFromSession();refreshTimeline();};
+    proposalPanel.onPropose=[this]{beginSectionProposal();refreshTimeline();};
+    proposalPanel.onReview=[this]{reviewProposal(false);};proposalPanel.onHistory=[this]{reviewProposal(true);};
+    proposalPanel.onPreferences=[this]{preferencesButton.onClick();};
+    proposalPanel.onChanged=[this]{refreshFromSession();refreshTimeline();};
+    for(auto* c:std::initializer_list<juce::Component*>{&titleLabel,&subtitleLabel,&workflowStateLabel,&targetProfileLabel,&targetProfileBox,
+        &newSessionButton,&openSessionButton,&saveAsSessionButton,&relinkAudioButton,&relinkVideoButton,&cancelSessionButton,
+        &importButton,&analyzeButton,&currentStateButton,&exportButton,&chooseSourceButton,&chooseProgrammeButton,&chooseCompositionButton,
+        &clearSourceButton,&initializeCurrentStateButton,&clearCurrentStateButton,&sourceStateBox,&targetStateBox,&currentStateBox,
+        &renderPcmButton,&publishPcmButton,&measurementReportButton,&artifactReportButton,&discardExportButton,&audioPanel,
+        &preferencesButton,&inspectProposalButton,&sectionProposalButton,&applySectionProposalButton,&discardSectionProposalButton,
+        &draftTrimButton,&applyTrimButton,&discardTrimButton})c->setVisible(false);
+    for(auto* c:std::initializer_list<juce::Component*>{&openMixButton,&toolsButton,&audioSetupButton,&timelinePlay,&timelineStop,&sectionsButton,
+        &inspectDomain,&auditionDomainBox,&positionLabel,&timeline,&comparisonDivider,&waveformDivider,&buildWaveformButton,&proposalPanel})addAndMakeVisible(c);
+    openMixButton.onClick=[this]{chooseMix();};toolsButton.onClick=[this]{showTools();};audioSetupButton.onClick=[this]{showAudioSetup();};
+    timelinePlay.onClick=[this]{playTimeline();};timelineStop.onClick=[this]{timeline.focusForTransport();audition.stop();refreshTimeline();};
+    inspectDomain.addItem("Inspect Original",1);inspectDomain.addItem("Inspect Current",2);inspectDomain.setSelectedId(1,juce::dontSendNotification);
+    inspectDomain.onChange=[this]{timeline.clearHighlight();refreshTimeline();pageDetailBox.setText(inspectDomain.getText()+": select a passage or inspect the entered time.",false);};
+    auditionDomainBox.addItem("Audition Original",1);auditionDomainBox.addItem("Audition Current",2);auditionDomainBox.setSelectedId(1,juce::dontSendNotification);
+    auditionDomainBox.onChange=[this]{session.selectAuditionDomain(auditionDomainBox.getSelectedId()==2?MeasurementDomain::currentState:MeasurementDomain::source);audioPanel.synchronize();refreshTimeline();};
+    addAndMakeVisible(jobRequirementsPanel.informationLine());
+    comparisonDivider.move=[this](int delta){timelineLayout.moveComparison(delta);resized();};
+    waveformDivider.move=[this](int delta){timelineLayout.moveTimeline(delta,timelineAvailableHeight,session.sourceDocument.layout.count,TimelineGainLane::height);resized();};
+    timeline.onRequestSeek=[this](int64_t frame,const juce::String& identity)
+    {const auto error=TimelineTransport::seek(frame,identity,session,audition);refreshTimeline();return error;};
+    sectionsButton.onClick=[this]{showSections();};
+    buildWaveformButton.onClick=[this]{beginWaveform();};
+    timeline.onInspect=[this](const juce::String& text){pageDetailBox.setText(text.startsWith("Current section gain settings")?text:inspectDomain.getText()+" | "+text,false);};
+    setWantsKeyboardFocus(true);
+}
+void StandaloneMainComponent::chooseMix()
+{
+    juce::PopupMenu menu;menu.addItem(1,"Interleaved",chooseSourceButton.isEnabled());menu.addItem(2,"Separate channel files",chooseProgrammeButton.isEnabled());
+    menu.addItem(3,"Compose M&E + dialogue",chooseCompositionButton.isEnabled());
+    menu.showMenuAsync(juce::PopupMenu::Options().withTargetComponent(&openMixButton),[safe=juce::Component::SafePointer<StandaloneMainComponent>(this)](int n)
+    {if(!safe)return;if(n==1)safe->chooseSourceFile();else if(n==2)safe->chooseProgramme();else if(n==3)safe->chooseComposition();});
+}
+void StandaloneMainComponent::showTools()
+{
+    std::vector<juce::TextButton*> actions={&newSessionButton,&openSessionButton,&saveAsSessionButton,&relinkAudioButton,&relinkVideoButton,&cancelSessionButton,
+        &clearSourceButton,&initializeCurrentStateButton,&clearCurrentStateButton,&preferencesButton,&inspectProposalButton,&sectionProposalButton,
+        &applySectionProposalButton,&discardSectionProposalButton,&renderPcmButton,&publishPcmButton,&measurementReportButton,&artifactReportButton,&discardExportButton};
+    juce::PopupMenu menu;int id=1;for(auto* button:actions)menu.addItem(id++,button->getButtonText(),button->isEnabled());
+    menu.addSeparator();menu.addItem(100,"Reset layout");
+    menu.showMenuAsync(juce::PopupMenu::Options().withTargetComponent(&toolsButton),[safe=juce::Component::SafePointer<StandaloneMainComponent>(this),actions](int n)
+    {if(!safe)return;if(n==100){safe->timelineLayout.reset();safe->resized();}else if(n>0&&n<=int(actions.size())&&actions[size_t(n-1)]->isEnabled())actions[size_t(n-1)]->onClick();});
+}
+void StandaloneMainComponent::showAudioSetup()
+{
+    if(!audioWindow)
+    {
+        audioWindow=std::make_unique<ReferenceWindow>(audioPanel);
+        audioWindow->setName("LevelScope - audio device and channel roles");
+    }
+    audioPanel.setVisible(true);audioWindow->setVisible(true);audioWindow->toFront(true);
+}
+void StandaloneMainComponent::reviewProposal(bool historical)
+{
+    if(historical?!session.lastAppliedExplanation:!session.sectionProposal)return;
+    const auto runtime=session.sessionId;const auto proposal=session.sectionProposal;const auto history=session.lastAppliedExplanation;
+    auto status=[safe=juce::Component::SafePointer<StandaloneMainComponent>(this),runtime,proposal,history,historical]() -> juce::String
+    {
+        if(!safe||safe->session.sessionId!=runtime)return "Historical inspection snapshot from a previous session opening. Cannot Apply.";
+        auto& s=safe->session;
+        if(historical)return s.lastAppliedExplanation==history?s.appliedExplanationStatus():"An older applied explanation snapshot. A newer proposal has been applied.";
+        if(s.sectionProposal!=proposal)return "Previous proposal snapshot — discarded, replaced or applied. Cannot Apply this snapshot.";
+        return s.sectionProposalStale()?"STALE proposal snapshot — inputs changed. Apply unavailable. Generate again.":
+            proposal->outcomeTitle()+". "+(s.canApplySectionProposal()?"Explicit Apply is in the main window.":"Apply unavailable. Current verification remains separate.");
+    };
+    proposalInspectionWindow=std::make_unique<ProposalWindow>(historical?"Last applied proposal explanation":"Review complete proposal",
+        std::make_unique<ProposalInspectionPanel>(historical?session.appliedExplanationDisplayText():session.sectionProposalDisplayText(),std::move(status)),this);
+    proposalInspectionWindow->present();
+}
+void StandaloneMainComponent::showSections()
+{
+    if(!sectionsPanel)
+    {
+        sectionsPanel=std::make_unique<StandaloneSectionsPanel>(session);
+        sectionsPanel->onChanged=[this]{refreshFromSession();refreshTimeline();};
+        sectionsPanel->canImportMarkers=[this]{return canReplaceSession();};
+        sectionsPanel->onPlay=[this]{playTimeline(&sectionsPanel->timelineView());};
+        sectionsPanel->onStop=[this]{audition.stop();refreshTimeline();};
+        auto& view=sectionsPanel->timelineView();
+        view.onRequestSeek=timeline.onRequestSeek;
+        view.onTogglePlayback=[this]{if(audition.active())sectionsPanel->onStop();else sectionsPanel->onPlay();};
+    }
+    if(!sectionsWindow)sectionsWindow=std::make_unique<SectionsWindow>(*sectionsPanel);
+    sectionsPanel->resume();
+    sectionsWindow->setVisible(true);
+    sectionsWindow->toFront(true);
+    refreshTimeline();
+}
+void StandaloneMainComponent::playTimeline(MeasurementTimeline* origin)
+{
+    if(session.job.isActive()||session.persistenceLoading)return;
+    (origin?*origin:timeline).focusForTransport();
+    if(!audition.connected()){showAudioSetup();return;}
+    audioPanel.synchronize();const auto error=audition.play(session.auditionRequest(),session.sourceDocument.routing);
+    if(error.isNotEmpty())jobLabel.setText(error,juce::dontSendNotification);refreshTimeline();
+}
+bool StandaloneMainComponent::keyPressed(const juce::KeyPress& key)
+{
+    auto* focused=juce::Component::getCurrentlyFocusedComponent();
+    for(auto* c=focused;c;c=c->getParentComponent())if(dynamic_cast<juce::TextEditor*>(c))return false;
+    if(juce::Component::getCurrentlyModalComponent()!=nullptr)return false;
+    if(key.getModifiers().isCommandDown())
+    {
+        if(key.getKeyCode()=='s'||key.getKeyCode()=='S'){beginSaveSession(false);return true;}
+        if(key.getKeyCode()=='o'||key.getKeyCode()=='O'){chooseMix();return true;}
+    }
+    return timeline.keyPressed(key);
+}
+void StandaloneMainComponent::refreshTimeline()
+{
+    const auto domain=inspectDomain.getSelectedId()==2?MeasurementDomain::currentState:MeasurementDomain::source;
+    const auto sourceBinding=WaveformBinding::from(session.measurementContext(MeasurementDomain::source),MeasurementDomain::source);
+    const auto currentBinding=WaveformBinding::from(session.measurementContext(MeasurementDomain::currentState),MeasurementDomain::currentState);
+    const bool valid=session.sourceDocument.hasSource && !session.sourceContentInvalid && session.sourceDocument.matchesFileStamps();
+    gainLane.synchronize(valid&&session.sourceDocument.layout.confirmed?sourceBinding.runtime+sourceBinding.identity:juce::String{});
+    timeline.setProgramme(valid?session.sourceDocument.media.frames:0,valid?int(session.sourceDocument.media.sampleRate):1,valid?sourceBinding.runtime+sourceBinding.identity:juce::String());
+    waveformCache.synchronize(sourceBinding,currentBinding,valid,session.hasCurrentStateInitialized());
+    const auto view=waveformCache.view(domain==MeasurementDomain::source?sourceBinding:currentBinding);
+    juce::StringArray channels;for(int c=0;c<session.sourceDocument.layout.count;++c)
+        channels.add(juce::AudioChannelSet::getAbbreviatedChannelTypeName(session.sourceDocument.layout.roles[size_t(c)]));
+    timeline.setWaveform(view.data,view.accepted,channels);
+    if(loudnessProgress&&(!valid||!session.job.isActive()||session.job.state==JobState::cancelling
+        || !loudnessProgress->binding.sameJob(analysisDomain==MeasurementDomain::source?sourceBinding:currentBinding)))
+    {loudnessProgress->abandon();loudnessProgress.reset();}
+    timeline.setPreview(loudnessProgress?loudnessProgress->view(domain==MeasurementDomain::source?sourceBinding:currentBinding):nullptr);
+    const auto& measured=domain==MeasurementDomain::source?session.source:session.currentState;
+    buildWaveformButton.setEnabled(valid && measured.hasMeasurement && !view.data && !session.job.isActive() && !session.audioEditsBlocked());
+    timelineDiagnostics.select(measured.analysis,session.measurementContext(domain),domain);timelineDiagnostics.poll();
+    const auto result=timelineDiagnostics.result();auto analysis=result?result->analysis:nullptr;
+    timeline.setAnalysis(analysis);
+    auditionDomainBox.setSelectedId(session.auditionDomain==MeasurementDomain::source?1:2,juce::dontSendNotification);
+    auditionDomainBox.setEnabled(!session.audioEditsBlocked()&&!session.job.isActive());
+    timelinePlay.setEnabled(!session.job.isActive()&&!session.persistenceLoading&&!audition.active()&&session.sourceDocument.hasSource);
+    timelineStop.setEnabled(audition.active());
+    jobRequirementsPanel.refreshAvailability();
+    proposalPanel.refresh(importControl?importControl->progress.load():-1);
+    auto seekReason=TimelineTransport::blockedReason(session,audition);
+    if(seekReason.isEmpty()&&audition.boundIdentity().isEmpty())seekReason="Waiting for the current audition binding.";
+    timeline.setTransport(audition.positionFrames(),seekReason.isEmpty(),seekReason,audition.boundIdentity());
+    timeline.refreshSectionEditing();
+    if(sectionsWindow && sectionsWindow->isVisible())
+    {
+        auto& editor=sectionsPanel->timelineView();
+        const auto& binding=sectionsPanel->inspectionDomain()==MeasurementDomain::source?sourceBinding:currentBinding;
+        const auto sectionWave=waveformCache.view(binding);
+        editor.setProgramme(valid?session.sourceDocument.media.frames:0,valid?int(session.sourceDocument.media.sampleRate):1,
+                            valid?sourceBinding.runtime+sourceBinding.identity:juce::String());
+        sectionsPanel->refreshMeasuredView();
+        editor.setWaveform(sectionWave.data,sectionWave.accepted,channels);
+        editor.setPreview(loudnessProgress?loudnessProgress->view(binding):nullptr);
+        editor.refreshSectionEditing();
+        editor.setTransport(audition.positionFrames(),seekReason.isEmpty(),seekReason,audition.boundIdentity());
+        sectionsPanel->setPlaybackState(timelinePlay.isEnabled(),timelineStop.isEnabled(),session.auditionDomain==MeasurementDomain::source?"Original":"Current");
+    }
+    positionLabel.setText(juce::String(audition.positionSeconds(),3)+" s  ·  "+(audition.connected()?"Device open":"Device closed"),juce::dontSendNotification);
+    positionLabel.setTooltip(audition.status());
+}
 void StandaloneMainComponent::resized()
 {
-    auto bounds = getLocalBounds().reduced (24);
-
-    auto sessionRow = bounds.removeFromTop(30);
-    for (auto* button : { &newSessionButton, &openSessionButton, &saveSessionButton, &saveAsSessionButton, &relinkAudioButton, &relinkVideoButton, &cancelSessionButton })
-        button->setBounds(sessionRow.removeFromLeft(button == &saveSessionButton ? 70 : 135).reduced(2));
-    sessionStatus.setBounds(bounds.removeFromTop(24));
-    titleLabel.setBounds (bounds.removeFromTop (40));
-    subtitleLabel.setBounds (bounds.removeFromTop (28));
-
-    bounds.removeFromTop (10);
-
-    auto targetRow = bounds.removeFromTop (32);
-    targetProfileLabel.setBounds (targetRow.removeFromLeft (120));
-    targetProfileBox.setBounds (targetRow.removeFromLeft (360));
-    workflowStateLabel.setBounds (targetRow.reduced (16, 0));
-    applicabilityConfirmation.setBounds (bounds.removeFromTop (28));
-    jobRequirementsPanel.setBounds(bounds.removeFromTop(88));
-
-    bounds.removeFromTop (14);
-
-    auto navRow = bounds.removeFromTop (34);
-    importButton.setBounds (navRow.removeFromLeft (120));
-    navRow.removeFromLeft (8);
-    analyzeButton.setBounds (navRow.removeFromLeft (120));
-    navRow.removeFromLeft (8);
-    currentStateButton.setBounds (navRow.removeFromLeft (140));
-    navRow.removeFromLeft (8);
-    exportButton.setBounds (navRow.removeFromLeft (120));
-    navRow.removeFromLeft (12);
-    videoButton.setBounds (navRow.removeFromLeft (180));
-    navRow.removeFromLeft (8);
-    diagnosticsButton.setBounds (navRow.removeFromLeft (190));
-
-    bounds.removeFromTop (10);
-
-    auto sourceActionRow = bounds.removeFromTop (34);
-    chooseSourceButton.setBounds (sourceActionRow.removeFromLeft (190));
-    sourceActionRow.removeFromLeft (8);
-    chooseProgrammeButton.setBounds(sourceActionRow.removeFromLeft(190));
-    sourceActionRow.removeFromLeft(8);
-    chooseCompositionButton.setBounds(sourceActionRow.removeFromLeft(210));
-    sourceActionRow.removeFromLeft(8);
-    clearSourceButton.setBounds (sourceActionRow.removeFromLeft (120));
-    sourceActionRow.removeFromLeft (8);
-    measureSourceButton.setBounds (sourceActionRow.removeFromLeft (240));
-
-    bounds.removeFromTop (8);
-
-    auto currentStateActionRow = bounds.removeFromTop (34);
-    initializeCurrentStateButton.setBounds (currentStateActionRow.removeFromLeft (230));
-    currentStateActionRow.removeFromLeft (8);
-    clearCurrentStateButton.setBounds (currentStateActionRow.removeFromLeft (150));
-    currentStateActionRow.removeFromLeft (8);
-    remeasureCurrentStateButton.setBounds (currentStateActionRow.removeFromLeft (300));
-    currentStateActionRow.removeFromLeft (8);
-    currentGain.setBounds (currentStateActionRow);
-
-    bounds.removeFromTop (8);
-    auto preferencesRow=bounds.removeFromTop(30);preferencesButton.setBounds(preferencesRow.removeFromLeft(210));inspectProposalButton.setBounds(preferencesRow.removeFromLeft(260));bounds.removeFromTop(8);
-    auto proposalRow = bounds.removeFromTop (30);
-    draftTrimButton.setBounds (proposalRow.removeFromLeft (180));
-    proposalRow.removeFromLeft (8);
-    applyTrimButton.setBounds (proposalRow.removeFromLeft (120));
-    proposalRow.removeFromLeft (8);
-    discardTrimButton.setBounds (proposalRow.removeFromLeft (140));
-    proposalRow.removeFromLeft(8);sectionProposalButton.setBounds(proposalRow.removeFromLeft(190));
-    proposalRow.removeFromLeft(8);applySectionProposalButton.setBounds(proposalRow.removeFromLeft(150));
-    proposalRow.removeFromLeft(8);discardSectionProposalButton.setBounds(proposalRow.removeFromLeft(160));
-    bounds.removeFromTop (8);
-
-    auto exportRow = bounds.removeFromTop (30);
-    for (auto* button : { &renderPcmButton, &publishPcmButton, &measurementReportButton, &artifactReportButton, &discardExportButton })
-        button->setBounds (exportRow.removeFromLeft (button == &measurementReportButton ? 215 : 185).reduced (2,0));
-    bounds.removeFromTop (8);
-
-    auto jobRow = bounds.removeFromTop (28);
-    cancelJobButton.setBounds (jobRow.removeFromRight (120));
-    jobLabel.setBounds (jobRow);
-    bounds.removeFromTop (8);
-    // Keep the audition controls and a usable channel viewport at smaller window
-    // heights. The workflow detail box also contains each state's full summary.
-    const int availableSummary = juce::jlimit (0, 180, bounds.getHeight() - 14 - 390);
-    auto summaryArea = bounds.removeFromTop (availableSummary >= 80 ? availableSummary : 0);
-    const auto gap = 12;
-    const auto columnWidth = (summaryArea.getWidth() - (2 * gap)) / 3;
-
-    sourceStateBox.setBounds (summaryArea.removeFromLeft (columnWidth));
-    summaryArea.removeFromLeft (gap);
-    targetStateBox.setBounds (summaryArea.removeFromLeft (columnWidth));
-    summaryArea.removeFromLeft (gap);
-    currentStateBox.setBounds (summaryArea);
-
-    bounds.removeFromTop (14);
-
-    pageDetailBox.setBounds (bounds.removeFromLeft (bounds.getWidth() * 38 / 100));
-    bounds.removeFromLeft (12);
-    audioPanel.setBounds (bounds);
+    auto bounds=getLocalBounds().reduced(16);
+    auto top=bounds.removeFromTop(32);
+    openMixButton.setBounds(top.removeFromLeft(125).reduced(2));videoButton.setBounds(top.removeFromLeft(155).reduced(2));
+    saveSessionButton.setBounds(top.removeFromLeft(115).reduced(2));toolsButton.setBounds(top.removeFromLeft(160).reduced(2));
+    audioSetupButton.setBounds(top.removeFromRight(150).reduced(2));sessionStatus.setBounds(top.reduced(5,0));bounds.removeFromTop(7);
+    jobRequirementsPanel.setBounds(bounds.removeFromTop(timelineLayout.comparison));comparisonDivider.setBounds(bounds.removeFromTop(TimelineLayout::dividerHeight));
+    jobRequirementsPanel.informationLine().setBounds(bounds.removeFromTop(TimelineLayout::informationHeight));
+    auto transport=bounds.removeFromTop(32);
+    inspectDomain.setBounds(transport.removeFromLeft(155).reduced(2));auditionDomainBox.setBounds(transport.removeFromLeft(165).reduced(2));
+    timelinePlay.setBounds(transport.removeFromLeft(65).reduced(2));timelineStop.setBounds(transport.removeFromLeft(65).reduced(2));
+    audioSetupButton.setTooltip("Configure the device, channel roles and routing. Device opening is explicit.");
+    sectionsButton.setBounds(transport.removeFromRight(160).reduced(2));diagnosticsButton.setBounds(transport.removeFromRight(190).reduced(2));positionLabel.setBounds(transport);
+    timelineAvailableHeight=bounds.getHeight();timelineLayout.moveTimeline(0,timelineAvailableHeight,session.sourceDocument.layout.count,TimelineGainLane::height);
+    auto bottom=bounds.removeFromBottom(timelineLayout.inspector);
+    waveformDivider.setBounds(bounds.removeFromBottom(TimelineLayout::dividerHeight));
+    proposalPanel.setBounds(bottom.removeFromTop(ProposalWorkflowPanel::height));
+    auto processing=bottom.removeFromTop(32);
+    measureSourceButton.setBounds(processing.removeFromLeft(150).reduced(2));remeasureCurrentStateButton.setBounds(processing.removeFromLeft(190).reduced(2));
+    currentGain.setBounds(processing.removeFromLeft(300).reduced(2));
+    auto applicability=bottom.removeFromTop(26);buildWaveformButton.setBounds(applicability.removeFromRight(150));applicabilityConfirmation.setBounds(applicability);
+    auto statusRow=bottom.removeFromBottom(25);cancelJobButton.setBounds(statusRow.removeFromRight(110));jobLabel.setBounds(statusRow);
+    pageDetailBox.setBounds(bottom.reduced(0,3));timeline.setBounds(bounds.reduced(0,4));
 }
 
 // [END LS-STANDALONE-WORKFLOW-SHELL]

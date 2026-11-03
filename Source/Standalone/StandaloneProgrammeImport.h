@@ -1,5 +1,5 @@
 #pragma once
-#include "ProgrammeSource.h"
+#include "RememberedChannelRoles.h"
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <future>
 
@@ -9,14 +9,20 @@ class ProgrammeImportPanel final : public juce::Component, private juce::Timer
 {
 public:
     using Completion=std::function<void(std::optional<ProgrammeAssembly>)>;
-    explicit ProgrammeImportPanel(Completion);
+    explicit ProgrammeImportPanel(Completion,juce::File roleDirectory={},bool analyse=true);
+    void inspectFiles(const juce::Array<juce::File>&);
+    ChannelLayout confirmedFileOrder() const;
     ~ProgrammeImportPanel() override;
     void resized() override;
     void cancel();
 private:
     Completion complete;
+    RememberedChannelRoles roleMemory;
+    bool editingOrder=false;
+    juce::Label suggestion;
+    juce::TextButton editOrder{"Edit order"};
     juce::ComboBox layout;
-    juce::TextButton choose{"Choose mono files..."}, accept{"Import complete programme"}, cancelButton{"Cancel"};
+    juce::TextButton choose{"Choose mono files..."}, accept{"Confirm roles and analyse"}, cancelButton{"Cancel"};
     juce::ToggleButton alignment{"I confirm these exact files form the same aligned mix; sample zero is shared."};
     juce::Label notice, explanation;
     std::array<juce::Label,6> labels;

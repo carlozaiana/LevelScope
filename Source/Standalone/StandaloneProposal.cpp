@@ -19,8 +19,10 @@ juce::String inputIdentity (const AnalysisSnapshot* a)
     for (int n = 0; n < c.fileLayout.count; ++n) s << ';' << static_cast<int> (c.fileLayout.roles[n]);
     const auto bytes = s.str(); return juce::SHA256 (bytes.data(), bytes.size()).toHexString();
 }
-}
-proposal::TrimRequest trimRequest (const AnalysisSnapshot* source, const AnalysisSnapshot* current,
+juce::String inputIdentity (const std::shared_ptr<const AnalysisSnapshot>& a) { return inputIdentity (a.get()); }
+
+template <typename SnapshotPtr>
+proposal::TrimRequest makeTrimRequest (const SnapshotPtr& source, const SnapshotPtr& current,
                                   const ServiceContext& expectedSource, const ServiceContext& expectedCurrent,
                                   const TargetProfile& profile, proposal::Applicability applicability)
 {
@@ -36,5 +38,20 @@ proposal::TrimRequest trimRequest (const AnalysisSnapshot* source, const Analysi
         r.fixedUpstreamPlanIdentity=juce::SHA256(key.data(),key.size()).toHexString();
     }
     return r;
+}
+}
+
+proposal::TrimRequest trimRequest (const AnalysisSnapshot* source, const AnalysisSnapshot* current,
+                                  const ServiceContext& expectedSource, const ServiceContext& expectedCurrent,
+                                  const TargetProfile& profile, proposal::Applicability applicability)
+{
+    return makeTrimRequest (source, current, expectedSource, expectedCurrent, profile, applicability);
+}
+
+proposal::TrimRequest trimRequest (const std::shared_ptr<const AnalysisSnapshot>& source, const std::shared_ptr<const AnalysisSnapshot>& current,
+                                  const ServiceContext& expectedSource, const ServiceContext& expectedCurrent,
+                                  const TargetProfile& profile, proposal::Applicability applicability)
+{
+    return makeTrimRequest (source, current, expectedSource, expectedCurrent, profile, applicability);
 }
 }

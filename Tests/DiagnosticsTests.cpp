@@ -139,8 +139,21 @@ void longProgramme(){
     {juce::Graphics g(without);timeline.paintEntireComponent(g,false);}
     timeline.highlight(0,60.*r.sampleRate,false);
     {juce::Graphics g(outside);timeline.paintEntireComponent(g,false);}
-    bool equalPixels=true;for(int y=0;y<300;++y)for(int x=0;x<1040;++x)equalPixels &= without.getPixelAt(x,y)==outside.getPixelAt(x,y);
-    expect(equalPixels,"offscreen half-open selection does not leave a fabricated viewport edge marker");
+    // A selection enables the toolbar's Fit selection action even if it is
+    // outside the viewport. The invariant here concerns the plotted pixels.
+    const auto graph=timeline.graphBounds();
+    auto samePlot=[&](const juce::Image& other)
+    {
+        for(int y=graph.getY();y<graph.getBottom();++y)for(int x=graph.getX();x<graph.getRight();++x)
+            if(without.getPixelAt(x,y)!=other.getPixelAt(x,y))return false;
+        return true;
+    };
+    expect(samePlot(outside),"offscreen half-open selection does not leave a fabricated viewport edge marker");
+    timeline.highlight(60.*r.sampleRate,90.*r.sampleRate,false);
+    juce::Image inside(juce::Image::ARGB,1040,300,true);
+    {juce::Graphics g(inside);timeline.paintEntireComponent(g,false);}
+    expect(!samePlot(inside),"visible intersecting selection changes the plotted pixels");
+    timeline.clearHighlight();
     proposal::ProgramAnalysis missing;missing.sampleRate=48000;missing.frames=48000*120;
     expect(diagnosticLraInterpretation(missing).contains("unavailable") && !diagnosticLraInterpretation(missing).contains("Under 60"),"long silence is unavailable without a false short-programme label");
     missing.frames=48000*2;expect(diagnosticLraInterpretation(missing).contains("Under 60") && diagnosticLraInterpretation(missing).contains("unavailable"),"short unavailable LRA keeps both distinct explanations");

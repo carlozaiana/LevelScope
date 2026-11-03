@@ -1,0 +1,50 @@
+[
+  {
+    "path": "build/m18-dev-01/LevelScopeWaveformCoreTests",
+    "sha256": "482878df6c9287a0f321d5d717c9cc391c905c2d013b1bcf7f3bf03a5a45f235",
+    "architectures": "x86_64 arm64",
+    "intel_minimum": "10.13"
+  },
+  {
+    "path": "build/m18-dev-01/LevelScopeWaveformTests_artefacts/Release/LevelScopeWaveformTests",
+    "sha256": "eb44e88fbd6ff6e91a321a2ee5988802805cb81777da3efe1791eea364bbdbdf",
+    "architectures": "x86_64 arm64",
+    "intel_minimum": "10.13"
+  },
+  {
+    "path": "build/m18-dev-01/LevelScopeMeasurementTests_artefacts/Release/LevelScopeMeasurementTests",
+    "sha256": "ee2e85f3af7658bc17f61321fe743e594fa008090699630e9dd11823fafa93e2",
+    "architectures": "x86_64 arm64",
+    "intel_minimum": "10.13"
+  },
+  {
+    "path": "build/m18-dev-01/LevelScopeDiagnosticsTests_artefacts/Release/LevelScopeDiagnosticsTests",
+    "sha256": "759730b9bce5a482f9728f791df40b63077ec63aca363b36015c12dad92a8200",
+    "architectures": "x86_64 arm64",
+    "intel_minimum": "10.13"
+  },
+  {
+    "path": "build/m18-dev-01/LevelScopeSessionTests_artefacts/Release/LevelScopeSessionTests",
+    "sha256": "bc02339e5c41ecc460db259916797fd253776568ddd582dfdf5a70efdcd5326e",
+    "architectures": "x86_64 arm64",
+    "intel_minimum": "10.13"
+  },
+  {
+    "path": "build/m18-dev-01/LevelScopeSectionProcessingTests_artefacts/Release/LevelScopeSectionProcessingTests",
+    "sha256": "bf67a54f5773d530d42f90b9fe47dab315848d4c91ea3d3589ae4bb2f4f0c254",
+    "architectures": "x86_64 arm64",
+    "intel_minimum": "10.13"
+  },
+  {
+    "path": "build/m18-dev-01/LevelScopeExportTests_artefacts/Release/LevelScopeExportTests",
+    "sha256": "8a4a404c5bbf38a6440024cf68a603b6debbd4a26191c95b255cbad5e78741d8",
+    "architectures": "x86_64 arm64",
+    "intel_minimum": "10.13"
+  },
+  {
+    "path": "build/m18-dev-01/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone",
+    "sha256": "21cac1b6d43e0cb618fa6ef77996bb9ee8c02d0d93648bcce91587525fd44358",
+    "architectures": "x86_64 arm64",
+    "intel_minimum": "10.13"
+  }
+]

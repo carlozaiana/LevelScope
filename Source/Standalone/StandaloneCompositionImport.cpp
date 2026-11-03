@@ -84,7 +84,7 @@ void CompositionImportPanel::pickGroup(int k)
             if(group){auto& p=safe->part(k);p.file=juce::File();p.assembly=*group;p.media=group->summary();p.layout=group->layout();safe->changed();}
             safe->refresh();
         });
-    });
+    },juce::File{},false);
     groupWindow=std::make_unique<GroupWindow>(*groupPanel);refresh();
 }
 void CompositionImportPanel::cancel()

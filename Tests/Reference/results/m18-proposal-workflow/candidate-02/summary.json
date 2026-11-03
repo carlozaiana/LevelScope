@@ -1,0 +1,112 @@
+{
+  "all_passed": false,
+  "pilot": false,
+  "measurement_build": "875fe8b80d1813513fc09c6ee0a4e5bd8e246bbd56d83128ac97a2b7794dbd8a",
+  "records": [
+    {
+      "group": "proposal-workflow",
+      "passed": true,
+      "checks": 363,
+      "seconds": 7.686759375,
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeSectionProposalTests_artefacts/Release/LevelScopeSectionProposalTests",
+        "--m18-workflow",
+        "--root",
+        "/tmp/levelscope-m18-proposals-hhea24vp/proposal-workflow",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/m18-proposal-workflow/candidate-02/proposal-workflow.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "group": "section-smoke",
+      "passed": true,
+      "checks": 366,
+      "seconds": 22.04567625,
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeSectionProposalTests_artefacts/Release/LevelScopeSectionProposalTests",
+        "--smoke",
+        "--root",
+        "/tmp/levelscope-m18-proposals-hhea24vp/section-smoke",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/m18-proposal-workflow/candidate-02/section-smoke.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "group": "preferences",
+      "passed": false,
+      "checks": 199,
+      "seconds": 7.292677000000001,
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeSectionProposalTests_artefacts/Release/LevelScopeSectionProposalTests",
+        "--preferences",
+        "--root",
+        "/tmp/levelscope-m18-proposals-hhea24vp/preferences",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/m18-proposal-workflow/candidate-02/preferences.json"
+      ],
+      "exit_code": 1
+    }
+  ],
+  "app_path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app",
+  "binaries": [
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone",
+      "sha256": "b425aec5642daf64a358f0b6397421848a1dd854e67c591fcafc025b7422588a",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeJobRequirementsTests_artefacts/Release/LevelScopeJobRequirementsTests",
+      "sha256": "a2c40cbbb8313c282d451d21e536d44c2453b8505c3f97be337969d6c95f2c26",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeProposalTests_artefacts/Release/LevelScopeProposalTests",
+      "sha256": "123f25f88b7123c3022ac8c2a1b0dafc4387465da4c4ee8f96d5d0e956b3dcf7",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeSectionProposalTests_artefacts/Release/LevelScopeSectionProposalTests",
+      "sha256": "c8f2a972685ab82f742c56cd5ec1aad87c7d8304d5d0dd35740f0f046d5f3618",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeSessionTests_artefacts/Release/LevelScopeSessionTests",
+      "sha256": "a0b64a552aba24b015cc0e9f96ef26ddcb77f862959fa7f01113fda2d4434276",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeTimelineProgressTests_artefacts/Release/LevelScopeTimelineProgressTests",
+      "sha256": "2c9e245811c5383035dfe38026274222d36f21e9bc1e64147834269ce31df167",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    }
+  ],
+  "fixtures": "/tmp/levelscope-m18-proposals-hhea24vp",
+  "physical_device_opened": false,
+  "video_loaded": false
+}

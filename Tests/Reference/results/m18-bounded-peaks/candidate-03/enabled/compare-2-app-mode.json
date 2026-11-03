@@ -1,0 +1,365 @@
+{
+  "operations": {
+    "import": {
+      "wall_ms": 101.237791,
+      "worker_cpu_ms": 101.029,
+      "process_cpu_ms": 101.805,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        101.8245
+      ],
+      "heartbeat_tail_ms": 3.456,
+      "timeline_paint_ms": [
+        3.423
+      ]
+    },
+    "source": {
+      "wall_ms": 854.7225,
+      "worker_cpu_ms": 832.731,
+      "process_cpu_ms": 1452.328,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        100.561292,
+        103.480375,
+        106.629833,
+        104.48375,
+        107.040875,
+        100.477209,
+        108.177541,
+        108.279709
+      ],
+      "heartbeat_tail_ms": 18.216333,
+      "timeline_paint_ms": [
+        2.460667,
+        2.789625,
+        2.306959,
+        3.444167,
+        3.330375,
+        4.622166,
+        4.380167,
+        5.6
+      ]
+    },
+    "global": {
+      "wall_ms": 1.721042,
+      "worker_cpu_ms": 1.723999999999997,
+      "process_cpu_ms": 1.733,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [],
+      "heartbeat_tail_ms": 1.737291,
+      "timeline_paint_ms": []
+    },
+    "fresh": {
+      "wall_ms": 2334.890375,
+      "worker_cpu_ms": 2275.929,
+      "process_cpu_ms": 4261.444,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        102.589375,
+        101.311125,
+        108.53425,
+        100.123583,
+        109.201583,
+        105.668959,
+        100.727375,
+        101.564958,
+        109.631167,
+        106.877916,
+        99.89458399999999,
+        102.047625,
+        104.845666,
+        100.402667,
+        109.344083,
+        100.210792,
+        107.154125,
+        105.367042,
+        105.018875,
+        106.925708,
+        100.678833,
+        101.817792
+      ],
+      "heartbeat_tail_ms": 52.537375,
+      "timeline_paint_ms": [
+        4.366208,
+        2.739416,
+        2.713166,
+        2.607542,
+        2.785667,
+        2.699375,
+        2.930625,
+        2.758583,
+        2.803791,
+        2.827792,
+        2.871291,
+        2.7315,
+        2.695542,
+        2.860792,
+        2.830875,
+        2.56575,
+        2.720625,
+        2.690333,
+        2.829375,
+        2.727042,
+        2.720334,
+        2.589125
+      ]
+    },
+    "preference_blocked": {
+      "wall_ms": 201.726875,
+      "worker_cpu_ms": 200.54,
+      "process_cpu_ms": 204.295,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        106.082041
+      ],
+      "heartbeat_tail_ms": 99.583625,
+      "timeline_paint_ms": [
+        2.533042
+      ]
+    },
+    "measured_rejection": {
+      "wall_ms": 865.036291,
+      "worker_cpu_ms": 843.669,
+      "process_cpu_ms": 1458.938,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        3.103042,
+        101.667167,
+        101.511041,
+        103.346917,
+        101.003,
+        101.206583,
+        102.762625,
+        100.688209,
+        107.690958
+      ],
+      "heartbeat_tail_ms": 46.233667,
+      "timeline_paint_ms": [
+        3.114542,
+        2.741375,
+        2.694917,
+        2.804083,
+        2.825167,
+        2.845875,
+        2.946375,
+        2.77325,
+        2.928458
+      ]
+    },
+    "unsupported": {
+      "wall_ms": 1.759875,
+      "worker_cpu_ms": 1.763999999999982,
+      "process_cpu_ms": 1.77,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [],
+      "heartbeat_tail_ms": 1.771958,
+      "timeline_paint_ms": []
+    },
+    "reused": {
+      "wall_ms": 1527.079291,
+      "worker_cpu_ms": 1486.396,
+      "process_cpu_ms": 2703.664,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        105.775833,
+        101.46725,
+        103.896208,
+        110.148292,
+        107.833042,
+        102.477333,
+        107.337375,
+        108.547583,
+        106.94125,
+        108.461459,
+        109.906333,
+        109.589167,
+        106.306708,
+        100.34575
+      ],
+      "heartbeat_tail_ms": 42.550167,
+      "timeline_paint_ms": [
+        2.817542,
+        2.7575,
+        2.66475,
+        2.840792,
+        2.793875,
+        2.684625,
+        2.651667,
+        2.94025,
+        2.775417,
+        2.793208,
+        2.925792,
+        2.770458,
+        2.560958,
+        2.574417
+      ]
+    },
+    "current": {
+      "wall_ms": 865.412583,
+      "worker_cpu_ms": 844.336,
+      "process_cpu_ms": 1459.081,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        88.964833,
+        100.070292,
+        100.514625,
+        99.467167,
+        103.742083,
+        101.671042,
+        101.087708,
+        107.7395
+      ],
+      "heartbeat_tail_ms": 67.8155,
+      "timeline_paint_ms": [
+        1.909917,
+        0.760667,
+        2.301583,
+        2.181958,
+        3.522125,
+        3.422333,
+        4.683125,
+        5.770875
+      ]
+    },
+    "already_meets": {
+      "wall_ms": 1.749125,
+      "worker_cpu_ms": 1.751000000000005,
+      "process_cpu_ms": 1.761,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [],
+      "heartbeat_tail_ms": 1.765,
+      "timeline_paint_ms": []
+    }
+  },
+  "identities": {
+    "source": "581d803448a3b562dca2751b5c8e817ff5cc5b5482d59690c40b247de9232441",
+    "global": "eef78bae2823c9aa7a92678956ab4775c39cdbfc0bf6a3d629c5a7941c366fc5",
+    "global_decision": "970c08d9fe31d1298a07bde0047775355050f9ff6e3acde471f5312d2ef70e1c",
+    "fresh": "5a42acf9961fb4ba5abcd243ec42c26eb0e6449fc2539ad220acbaf032fa943b",
+    "fresh_decision": "909ee5cddcc0b8f65f3c89b4e81a4df43d3cee637458b43e4d5135d8616f5609",
+    "fresh_section_peaks": "b58ecf779ba471746315128bd06d377cd8def09507b704fed597ff1866130f49",
+    "fresh_candidate": "5316eec9f38637998abda89ff9c5146ed28da3d144c3d5c9684f0a9d4c3cb82d",
+    "fresh_plan": "cb5ff556a9374e3e9da83b81230683683e0df46c2b14ea9d971943831244e6ba",
+    "preference_blocked": "f4ff12e534966573cee3dc33e499057bfc92ba273280f34527f4bd4b11686e91",
+    "preference_blocked_decision": "7622a6f142086aac525dcdb938b80283568a17ca413078965a898e9b28f9ed5a",
+    "preference_blocked_section_peaks": "b58ecf779ba471746315128bd06d377cd8def09507b704fed597ff1866130f49",
+    "measured_rejection": "a460e82303f0bf7c135422cec34b233980f6d93cd12e8768c22bacade8fda24a",
+    "measured_rejection_decision": "94bcbdc4a0c681a77f52c4ec8e72f110c15a246229fc94f82e352f7481a97c36",
+    "measured_rejection_section_peaks": "b58ecf779ba471746315128bd06d377cd8def09507b704fed597ff1866130f49",
+    "measured_rejection_candidate": "36f2c66e45150da5b37f3287b16949ce98adad5399cf4c61c64144ed62b3ba6b",
+    "measured_rejection_plan": "02e8e161047cdf69e8e640a7beb1a1ddc006430b68e884b36c5515aced4ff5e7",
+    "unsupported": "c4a4256b4bf00161288760898b052a5a7e314d770b74cc83b045c41bbabbc39a",
+    "unsupported_decision": "74b16e1d65441f06bb6ef758fc9b4accc330a927d0814a494c7e04c07e6de555",
+    "reused": "5a42acf9961fb4ba5abcd243ec42c26eb0e6449fc2539ad220acbaf032fa943b",
+    "reused_decision": "ed6aa8763953fe4a94af6e92fa76be3bd4397e94656ab230c6b0d952de709d6e",
+    "reused_section_peaks": "b58ecf779ba471746315128bd06d377cd8def09507b704fed597ff1866130f49",
+    "reused_candidate": "d5e3b9c944185e973599166448abee59577bd6aa5c963e6cc3c9ef73c796bfb0",
+    "reused_plan": "cb5ff556a9374e3e9da83b81230683683e0df46c2b14ea9d971943831244e6ba",
+    "current": "a16e42c14da10d77523117799f9dedc315ccac39c24488c3232ee7733f2f472f",
+    "already_meets": "01d609adaed763dc90a5dfaee2f390670182b998804cd0f19b3145cebcb3f19a",
+    "already_meets_decision": "e9effc5be9afbbf9a833ffe1fe7f42d3fcc939ebe43ba73521042fcf584f2917"
+  },
+  "outcomes": {
+    "global": {
+      "main_preflight_ms": 0.762667,
+      "main_accept_ms": 0.196542,
+      "passes": 0,
+      "outcome": "Ready to apply",
+      "changes": 0,
+      "status": 2,
+      "issue": 0,
+      "can_apply": true,
+      "target_il": -23.7,
+      "target_tp": -1.0
+    },
+    "fresh": {
+      "main_preflight_ms": 0.06925000000000001,
+      "main_accept_ms": 0.307,
+      "passes": 3,
+      "outcome": "Ready to apply",
+      "changes": 1,
+      "status": 4,
+      "issue": 0,
+      "can_apply": true,
+      "target_il": -23.0,
+      "target_tp": -1.0
+    },
+    "preference_blocked": {
+      "main_preflight_ms": 0.079958,
+      "main_accept_ms": 0.286209,
+      "passes": 0,
+      "outcome": "Blocked by proposal preferences",
+      "changes": 0,
+      "status": 3,
+      "issue": 3,
+      "can_apply": false,
+      "target_il": -23.0,
+      "target_tp": -1.0
+    },
+    "measured_rejection": {
+      "main_preflight_ms": 0.065958,
+      "main_accept_ms": 0.271,
+      "passes": 1,
+      "outcome": "Candidate rejected",
+      "changes": 1,
+      "status": 3,
+      "issue": 4,
+      "can_apply": false,
+      "target_il": -18.0,
+      "target_tp": -1.0
+    },
+    "unsupported": {
+      "main_preflight_ms": 1.452542,
+      "main_accept_ms": 0.216958,
+      "passes": 0,
+      "outcome": "Unsupported correction",
+      "changes": 0,
+      "status": 0,
+      "issue": 2,
+      "can_apply": false,
+      "target_il": -18.0,
+      "target_tp": -1.0
+    },
+    "reused": {
+      "main_preflight_ms": 0.067708,
+      "main_accept_ms": 0.291041,
+      "passes": 2,
+      "outcome": "Ready to apply",
+      "changes": 1,
+      "status": 4,
+      "issue": 0,
+      "can_apply": true,
+      "target_il": -23.0,
+      "target_tp": -1.0
+    },
+    "already_meets": {
+      "main_preflight_ms": 0.777709,
+      "main_accept_ms": 0.245792,
+      "passes": 0,
+      "outcome": "Already meets requirements",
+      "changes": 0,
+      "status": 1,
+      "issue": 0,
+      "can_apply": false,
+      "target_il": -23.0,
+      "target_tp": -1.0
+    }
+  },
+  "roles": "L,R",
+  "file_sha256": "171b4aa51900c9826416719af9950005ce1a445817e49aa215c14cc2cd332566",
+  "frames": 2880000,
+  "source_lufs": -24.43008132144102,
+  "current_lufs": -23.00000001747636,
+  "channels": 2,
+  "base_build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce"
+}

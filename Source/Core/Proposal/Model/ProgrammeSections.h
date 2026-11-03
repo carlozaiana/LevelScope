@@ -35,6 +35,7 @@ public:
         if (! map.valid() || map.inputIdentity != expectedInput) return false;
         value = map; return true;
     }
+    bool defineInterval(int64_t begin, int64_t end, uint64_t& selectedId, juce::String& error);
     bool split (uint64_t id, int64_t frame, juce::String& error);
     bool moveEnd (uint64_t id, int64_t frame, juce::String& error);
     bool mergeNext (uint64_t id, juce::String& error);

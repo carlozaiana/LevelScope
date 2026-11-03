@@ -1,14 +1,49 @@
 #include "OfflineMeasurement.h"
 #include "GatePopulation.h"
 #include <algorithm>
+#include <cfenv>
 #include <cmath>
+#include <exception>
 #include <stdexcept>
+#if defined(__APPLE__)
+#include <dispatch/dispatch.h>
+#include <thread>
+#endif
 
 namespace levelscope::measurement
 {
 namespace
 {
 constexpr double pi = 3.1415926535897932384626433832795;
+#if defined(__APPLE__)
+constexpr size_t maximumPeakLanes = 6;
+class WorkerFloatEnvironment
+{
+public:
+    explicit WorkerFloatEnvironment (const std::fenv_t& caller)
+    {
+        if (std::fegetenv (&previous) != 0 || std::fesetenv (&caller) != 0)
+            throw std::runtime_error ("Cannot set peak worker floating-point environment");
+    }
+    ~WorkerFloatEnvironment() { std::fesetenv (&previous); }
+private:
+    std::fenv_t previous;
+};
+#endif
+uint8_t laneCount (PeakExecution execution, size_t channels, const PeakObserver* observer)
+{
+#if defined(__APPLE__)
+    if (execution == PeakExecution::boundedChannels && (channels == 2 || channels == 6)
+        && (!observer || observer->acceptsConcurrentChannels()))
+    {
+        const auto cores = std::thread::hardware_concurrency();
+        return static_cast<uint8_t> (std::min ({ maximumPeakLanes, channels, size_t(cores > 1 ? cores - 1 : 1) }));
+    }
+#else
+    (void) execution; (void) channels; (void) observer;
+#endif
+    return 1;
+}
 Metric fromEnergy (double energy, bool enough)
 {
     if (! enough) return {};
@@ -44,8 +79,10 @@ bool OfflineMeasurement::supports (int rate, const std::vector<Role>& roles)
         || sorted == std::vector<Role> { Role::left, Role::right, Role::centre, Role::surroundLeft, Role::surroundRight, Role::lfe, Role::rearLeft, Role::rearRight };
 }
 
-OfflineMeasurement::OfflineMeasurement (int rate, const std::vector<Role>& roles, PeakObserver* observer)
-    : mLength (0), sLength (0), step (0), peakObserver (observer)
+OfflineMeasurement::OfflineMeasurement (int rate, const std::vector<Role>& roles, PeakObserver* observer, WindowObserver* windows,
+                                       PeakExecution execution)
+    : mLength (0), sLength (0), step (0), peakLanes (laneCount (execution, roles.size(), observer)),
+      peakObserver (observer), windowObserver(windows)
 {
     if (! supports (rate, roles)) throw std::invalid_argument ("Unqualified measurement sample rate or layout");
     mLength = rate * 4 / 10; sLength = rate * 3; step = rate / 10;
@@ -144,13 +181,63 @@ void OfflineMeasurement::addEnergy (double energy, bool drain)
     }
     if (clock % step == 0)
     {
-        if (! drain && clock >= mLength) result.momentary.push_back ({ clock, mEnergy });
+        if (! drain && clock >= mLength)
+        {
+            result.momentary.push_back ({ clock, mEnergy });
+            if(windowObserver)windowObserver->window(false,result.momentary.back());
+        }
         if (clock >= sLength)
         {
             result.lraWindows.push_back ({ clock, sEnergy });
-            if (! drain) result.shortTerm.push_back ({ clock, sEnergy });
+            if (! drain)
+            {
+                result.shortTerm.push_back ({ clock, sEnergy });
+                if(windowObserver)windowObserver->window(true,result.shortTerm.back());
+            }
         }
     }
+}
+
+bool OfflineMeasurement::pushChannelPeaks (const float* const* input, int count)
+{
+#if defined(__APPLE__)
+    struct Block
+    {
+        OfflineMeasurement& engine;
+        const float* const* input;
+        int count;
+        std::fenv_t environment;
+        std::array<std::exception_ptr, maximumPeakLanes> errors;
+    } block { *this, input, count, {}, {} };
+    if (std::fegetenv (&block.environment) != 0) return false;
+
+    // Synchronous: borrowed PCM and observer storage cannot outlive this push.
+    dispatch_apply_f (peakLanes, DISPATCH_APPLY_AUTO, &block, [] (void* context, size_t lane) noexcept
+    {
+        auto& b = *static_cast<Block*>(context);
+        auto& e = b.engine;
+        try
+        {
+            // System pool threads may previously have run with different FP
+            // controls. Use the calling job's environment for every peak.
+            WorkerFloatEnvironment fp (b.environment);
+            for (size_t ch = lane; ch < e.channels.size(); ch += e.peakLanes)
+                for (int n = 0; n < b.count; ++n)
+                {
+                    const double x = b.input[ch][n];
+                    if (!std::isfinite (x)) throw std::invalid_argument ("Non-finite audio");
+                    e.addPeak (ch, x, e.result.frames + n, false);
+                }
+        }
+        catch (...) { b.errors[lane] = std::current_exception(); }
+    });
+    for (const auto& error : block.errors)
+        if (error) std::rethrow_exception (error);
+    return true;
+#else
+    (void) input; (void) count;
+    return false;
+#endif
 }
 
 void OfflineMeasurement::push (const float* const* input, int count)
@@ -158,6 +245,7 @@ void OfflineMeasurement::push (const float* const* input, int count)
     if (finished || count < 0 || input == nullptr) throw std::invalid_argument ("Invalid measurement push");
     for (size_t c = 0; c < channels.size(); ++c)
         if (input[c] == nullptr) throw std::invalid_argument ("Null channel");
+    const bool parallel = peakLanes > 1 && count >= 256 && pushChannelPeaks (input, count);
     for (int frame = 0; frame < count; ++frame)
     {
         double energy = 0;
@@ -165,8 +253,11 @@ void OfflineMeasurement::push (const float* const* input, int count)
         {
             auto& c = channels[i];
             const double x = input[i][frame];
-            if (! std::isfinite (x)) throw std::invalid_argument ("Non-finite audio");
-            addPeak (i, x, result.frames, false);
+            if (!parallel)
+            {
+                if (!std::isfinite (x)) throw std::invalid_argument ("Non-finite audio");
+                addPeak (i, x, result.frames, false);
+            }
             const double y = c.highpass.process (c.shelf.process (x));
             energy += c.weight * y * y;
         }

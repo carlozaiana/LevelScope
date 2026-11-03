@@ -1,7 +1,30 @@
 #include "StandaloneProposalPreferences.h"
 namespace levelscope::standalone
 {
-ProposalInspectionPanel::ProposalInspectionPanel(juce::String text)
+ProposalWindow::ProposalWindow(const juce::String& title, std::unique_ptr<juce::Component> content, juce::Component* owner)
+    : DocumentWindow(title, juce::Colour(0xff20242b), allButtons)
+{
+    const auto size = content->getLocalBounds();
+    setUsingNativeTitleBar(true); setResizable(true,false); setResizeLimits(800,570,1600,1200);
+    setContentOwned(content.release(),true);
+    centreAroundComponent(owner,size.getWidth(),size.getHeight());
+}
+void ProposalWindow::present()
+{
+    setVisible(true); setMinimised(false); toFront(true);
+}
+void ProposalPreferencesPanel::showWindow(std::unique_ptr<ProposalWindow>& window, StandaloneSessionModel& s,
+                                          juce::Component* owner, std::function<void()> changed)
+{
+    auto* editor = window ? dynamic_cast<ProposalPreferencesPanel*>(window->getContentComponent()) : nullptr;
+    if (!editor || editor->runtime != s.sessionId || !(window->isVisible() || window->isMinimised()))
+        window = std::make_unique<ProposalWindow>("Proposal limits - preferences, not delivery rules",
+                    std::make_unique<ProposalPreferencesPanel>(s,std::move(changed)), owner);
+    // Raise after replacing the previous native window; its teardown can change
+    // macOS key-window ordering. Raising an open editor keeps its pending edits.
+    window->present();
+}
+ProposalInspectionPanel::ProposalInspectionPanel(juce::String text,std::function<juce::String()> statusCallback):statusText(std::move(statusCallback))
 {
     // At most 10,000 correction rows; reports enforce their separate 16 MiB bound.
     const auto bytes=text.toStdString();
@@ -17,6 +40,7 @@ ProposalInspectionPanel::ProposalInspectionPanel(juce::String text)
         pages.push_back(juce::String::fromUTF8(bytes.data()+begin,int(end-begin)));begin=end;
     }
     if(pages.empty())pages.push_back("No proposal available.");
+    addAndMakeVisible(status);status.setMinimumHorizontalScale(1.f);timerCallback();if(statusText)startTimerHz(2);
     view.setMultiLine(true);view.setReadOnly(true);view.setScrollbarsShown(true);view.setName("Complete proposal - paginated");
     for(auto* c:std::initializer_list<juce::Component*>{&view,&location,&previous,&next})addAndMakeVisible(c);
     previous.onClick=[this]{if(page>0)--page;refresh();};next.onClick=[this]{nextPage();};setSize(850,650);refresh();
@@ -25,8 +49,9 @@ juce::String ProposalInspectionPanel::allText()const {juce::String s;for(const a
 void ProposalInspectionPanel::nextPage(){if(page+1<int(pages.size()))++page;refresh();}
 void ProposalInspectionPanel::refresh()
 {view.setText(pages[size_t(page)],false);view.moveCaretToTop(false);location.setText("Complete inspection - page "+juce::String(page+1)+" / "+juce::String(pages.size())+". No corrections omitted.",juce::dontSendNotification);previous.setEnabled(page>0);next.setEnabled(page+1<int(pages.size()));}
+void ProposalInspectionPanel::timerCallback(){status.setText(statusText?statusText():"Complete inspection snapshot",juce::dontSendNotification);}
 void ProposalInspectionPanel::resized()
-{auto r=getLocalBounds().reduced(12);auto footer=r.removeFromBottom(32);previous.setBounds(footer.removeFromLeft(140));next.setBounds(footer.removeFromRight(140));location.setBounds(footer);view.setBounds(r.reduced(0,5));}
+{auto r=getLocalBounds().reduced(12);status.setBounds(r.removeFromTop(54));auto footer=r.removeFromBottom(32);previous.setBounds(footer.removeFromLeft(140));next.setBounds(footer.removeFromRight(140));location.setBounds(footer);view.setBounds(r.reduced(0,5));}
 std::optional<int> ProposalPreferencesPanel::exactUnits(juce::String text,bool tenths)
 {
     text=text.trim();if(text.isEmpty()||text.length()>8)return {};

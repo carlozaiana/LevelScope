@@ -3,6 +3,8 @@
 #include "StandaloneMeasurementLayout.h"
 #include "VerifiedSource.h"
 #include "Pcm24Wave.h"
+#include "StandaloneWaveform.h"
+#include "StandaloneLoudnessPreview.h"
 #include <juce_cryptography/juce_cryptography.h>
 #include <cmath>
 #include <iomanip>
@@ -28,13 +30,21 @@ struct OwnedFile
 
 AnalysisSnapshot measure (const ServiceContext& context, MeasurementDomain domain,
                           std::unique_ptr<ProgrammeReader> reader, const juce::String& hash, bool applyProcessing, JobControl& control, ProcessedAudioObserver* observer,
-                          measurement::PeakObserver* peaks = nullptr)
+                          measurement::PeakObserver* peaks = nullptr, WaveformProgress* preview = nullptr, LoudnessProgress* loudnessProgress = nullptr)
 {
     if (!reader) throw Failure { ErrorCode::decodeFailed, "Cannot decode complete verified programme" };
-    measurement::OfflineMeasurement engine (static_cast<int> (reader->sampleRate), OfflineAnalysisService::measurementRoles (context.fileLayout), peaks);
+    auto loudness=loudnessProgress?loudnessProgress->begin(reader->lengthInSamples,int(reader->sampleRate)):nullptr;
+#if LEVELSCOPE_ENABLE_BOUNDED_TRUE_PEAK && defined(__APPLE__) && defined(__aarch64__)
+    constexpr auto peakExecution = measurement::PeakExecution::boundedChannels;
+#else
+    constexpr auto peakExecution = measurement::PeakExecution::serial;
+#endif
+    measurement::OfflineMeasurement engine (static_cast<int> (reader->sampleRate), OfflineAnalysisService::measurementRoles (context.fileLayout),
+                                           peaks, loudness.get(), peakExecution);
     constexpr int blockSize = 4096;
     juce::AudioBuffer<float> audio (context.media.channels, blockSize);
     const ProgrammeGainProcessor processing (applyProcessing ? context.processing : ProcessingPlan{});
+    auto waveform=preview?preview->begin({reader->lengthInSamples,int(reader->sampleRate),context.media.channels}):nullptr;
     for (juce::int64 frame = 0; frame < reader->lengthInSamples;)
     {
         checkCancel (control);
@@ -44,8 +54,12 @@ AnalysisSnapshot measure (const ServiceContext& context, MeasurementDomain domai
         if (! processing.process (audio.getArrayOfWritePointers(), audio.getNumChannels(), count, frame))
             throw Failure { ErrorCode::nonFiniteAudio, "Non-finite processed audio" };
         if (observer) observer->observe (audio.getArrayOfReadPointers(), audio.getNumChannels(), count, frame);
+        if(waveform && preview->state()!=WaveformProgress::State::abandoned
+            && !waveform->append(audio.getArrayOfReadPointers(),audio.getNumChannels(),count,frame))
+        {preview->unavailable();waveform.reset();}
         engine.push (audio.getArrayOfReadPointers(), count);
         frame += count;
+        if(loudness)loudness->publish(frame);
         control.setProgress (0.5f + 0.49f * static_cast<float> (static_cast<double> (frame) / reader->lengthInSamples));
     }
     AnalysisSnapshot result;
@@ -58,6 +72,8 @@ AnalysisSnapshot measure (const ServiceContext& context, MeasurementDomain domai
     checkCancel (control);
     result.measured = { result.detail.integrated.value, result.detail.lra.value,
                         result.detail.truePeak.value, result.detail.samplePeak.value };
+    if(preview)preview->finish(waveform);
+    if(loudness)loudness->publish(reader->lengthInSamples,true);
     control.setProgress (1);
     return result;
 }
@@ -150,7 +166,7 @@ juce::String OfflineAnalysisService::identityFor (const ServiceContext& c, Measu
 }
 ServiceResult<AnalysisSnapshot> OfflineAnalysisService::analyze (const ServiceContext& context, MeasurementDomain domain, JobControl& control)
 {
-    return run ([&]
+    auto result=run ([&]
     {
         const auto error = validateRequest (context, domain);
         if (error.isNotEmpty() || (domain != MeasurementDomain::source && domain != MeasurementDomain::currentState))
@@ -158,8 +174,42 @@ ServiceResult<AnalysisSnapshot> OfflineAnalysisService::analyze (const ServiceCo
         const auto prepared = prepareVerifiedSource (context, control);
         if (! prepared.value) throw Failure { prepared.error, prepared.message };
         const auto& source = *prepared.value;
-        return measure (context, domain, source->createReader(), context.media.sha256, true, control, observer);
+        return measure (context, domain, source->createReader(), context.media.sha256, true, control, observer, nullptr, waveformProgress,loudnessProgress);
     });
+    if(!result.value && waveformProgress)waveformProgress->abandon();
+    if(!result.value && loudnessProgress)loudnessProgress->abandon();
+    return result;
+}
+ServiceResult<std::shared_ptr<const waveform::Overview>> OfflineAnalysisService::buildWaveform(
+    const ServiceContext& context,MeasurementDomain domain,JobControl& control)
+{
+    try
+    {
+        const auto error=validateRequest(context,domain);
+        if(error.isNotEmpty() || !waveformProgress || (domain!=MeasurementDomain::source && domain!=MeasurementDomain::currentState))
+            throw Failure{ErrorCode::invalidRequest,error.isNotEmpty()?error:"Waveform requires an explicit Source/Current preview sink"};
+        const auto prepared=prepareVerifiedSource(context,control);
+        if(!prepared.value)throw Failure{prepared.error,prepared.message};
+        auto reader=(*prepared.value)->createReader();
+        if(!reader)throw Failure{ErrorCode::decodeFailed,"Cannot read verified programme"};
+        auto data=waveformProgress->begin({reader->lengthInSamples,int(reader->sampleRate),context.media.channels});
+        if(!data)throw Failure{ErrorCode::unavailable,"Waveform memory unavailable; measured results preserved"};
+        juce::AudioBuffer<float> audio(context.media.channels,4096);const ProgrammeGainProcessor processing(context.processing);
+        for(int64_t frame=0;frame<reader->lengthInSamples;)
+        {
+            checkCancel(control);const int count=int(std::min<int64_t>(4096,reader->lengthInSamples-frame));
+            if(waveformProgress->state()==WaveformProgress::State::abandoned)throw Failure{ErrorCode::cancelled,"Waveform request superseded"};
+            if(!reader->read(audio.getArrayOfWritePointers(),audio.getNumChannels(),frame,count))throw Failure{ErrorCode::decodeFailed,"Waveform decode failed"};
+            if(!processing.process(audio.getArrayOfWritePointers(),audio.getNumChannels(),count,frame))throw Failure{ErrorCode::nonFiniteAudio,"Non-finite processed audio"};
+            if(!data->append(audio.getArrayOfReadPointers(),audio.getNumChannels(),count,frame))throw Failure{ErrorCode::invalidRequest,"Waveform coverage mismatch"};
+            frame+=count;control.setProgress(.5f+.49f*float(double(frame)/reader->lengthInSamples));
+        }
+        checkCancel(control);if(!context.sourceFilesMatch())throw Failure{ErrorCode::sourceChanged,"Programme changed; waveform discarded"};
+        waveformProgress->finish(data);if(!data->complete())throw Failure{ErrorCode::invalidRequest,"Incomplete waveform"};
+        control.setProgress(1);return {std::shared_ptr<const waveform::Overview>(std::move(data)),ErrorCode::none,"Waveform ready; existing measurements preserved"};
+    }
+    catch(const Failure& e){if(waveformProgress)waveformProgress->abandon();return {{},e.code,e.message};}
+    catch(const std::exception& e){if(waveformProgress)waveformProgress->abandon();return {{},ErrorCode::unavailable,e.what()};}
 }
 ServiceResult<AnalysisSnapshot> OfflineAnalysisService::analyzeCandidate(const ServiceContext& context,
     const VerifiedSource& source, JobControl& control, measurement::PeakObserver* peaks)

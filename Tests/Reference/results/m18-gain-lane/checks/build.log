@@ -1,0 +1,112 @@
+-- GLOB mismatch!
+The following files were added:
+  +/Users/fuzz/.codex/worktrees/a411/LevelScope/Source/Standalone/TimelineGainLane.cpp
+-- GLOB mismatch!
+The following files were added:
+  +/Users/fuzz/.codex/worktrees/a411/LevelScope/Source/Standalone/TimelineGainLane.h
+-- Configuring juceaide
+-- Building juceaide
+-- Exporting juceaide
+CMake Warning (policy) at /Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/extras/Build/CMake/JUCEUtils.cmake:695 (add_custom_command):
+  The following keywords are not supported when using
+  add_custom_command(TARGET): DEPENDS.
+
+  Policy CMP0175 is not set: add_custom_command() rejects invalid arguments.
+  Run "cmake --help-policy CMP0175" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+Call Stack (most recent call first):
+  /Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/extras/Build/CMake/JUCEUtils.cmake:1328 (_juce_configure_bundle)
+  /Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/extras/Build/CMake/JUCEUtils.cmake:1472 (_juce_link_plugin_wrapper)
+  /Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/extras/Build/CMake/JUCEUtils.cmake:2031 (_juce_configure_plugin_targets)
+  CMakeLists.txt:132 (juce_add_plugin)
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+CMake Warning (policy) at /Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/extras/Build/CMake/JUCEUtils.cmake:695 (add_custom_command):
+  The following keywords are not supported when using
+  add_custom_command(TARGET): DEPENDS.
+
+  Policy CMP0175 is not set: add_custom_command() rejects invalid arguments.
+  Run "cmake --help-policy CMP0175" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+Call Stack (most recent call first):
+  /Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/extras/Build/CMake/JUCEUtils.cmake:2022 (_juce_configure_bundle)
+  CMakeLists.txt:271 (juce_add_gui_app)
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Configuring done (0.9s)
+-- Generating done (0.1s)
+-- Build files have been written to: /Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01
+[  2%] Built target LevelScopeMeasurementCore
+[ 19%] Built target LevelScopeCore
+[ 19%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/Pcm24Wave.cpp.o
+[ 19%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneExport.cpp.o
+[ 22%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneReport.cpp.o
+[ 22%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/ProgrammeSource.cpp.o
+[ 22%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/ProgrammeComposition.cpp.o
+[ 25%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/SessionDocument.cpp.o
+[ 25%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/VerifiedSource.cpp.o
+[ 27%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/MarkerImport.cpp.o
+[ 27%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneMarkerImport.cpp.o
+[ 27%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/SectionAnalysis.cpp.o
+[ 30%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneSections.cpp.o
+[ 30%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/AnalysisEngine.cpp.o
+[ 33%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/AttributionEngine.cpp.o
+[ 33%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneDiagnostics.cpp.o
+[ 33%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/Methods/RuleBasedMethod.cpp.o
+[ 36%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/SectionPeakMap.cpp.o
+[ 36%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/Methods/SectionTrimMethod.cpp.o
+[ 36%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneSectionProposal.cpp.o
+[ 38%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneProposal.cpp.o
+[ 38%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/Model/TargetProfile.cpp.o
+[ 41%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/Model/JobRequirements.cpp.o
+[ 41%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/VerificationEngine.cpp.o
+[ 41%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneCompliance.cpp.o
+[ 44%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneMedia.cpp.o
+[ 44%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneAudition.cpp.o
+[ 44%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneMeasurementService.cpp.o
+[ 47%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneWaveform.cpp.o
+[ 47%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneLoudnessPreview.cpp.o
+[ 50%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Waveform/WaveformOverview.cpp.o
+[ 50%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneVideo.cpp.o
+[ 50%] Building OBJCXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneVideo_mac.mm.o
+[ 52%] Building OBJCXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 52%] Building OBJCXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 52%] Building OBJCXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o
+[ 55%] Building OBJCXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 55%] Building OBJCXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o
+[ 58%] Building OBJCXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[ 58%] Building OBJCXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[ 58%] Linking CXX static library libLevelScopeStandaloneSupport.a
+[ 58%] Built target LevelScopeStandaloneSupport
+[ 61%] Building CXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Source/Standalone/StandaloneProposalPreferences.cpp.o
+[ 61%] Building CXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Source/Standalone/StandaloneJobRequirements.cpp.o
+[ 61%] Building CXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Source/Standalone/StandaloneMarkerImportPanel.cpp.o
+[ 63%] Building CXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Source/Standalone/StandaloneSectionsPanel.cpp.o
+[ 63%] Building CXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Source/Standalone/MeasurementTimeline.cpp.o
+[ 66%] Building CXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Source/Standalone/TimelineGainLane.cpp.o
+[ 66%] Building CXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Source/Standalone/StandaloneDiagnosticsPanel.cpp.o
+[ 66%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+In file included from /Users/fuzz/.codex/worktrees/a411/LevelScope/Source/Standalone/TimelineGainLane.cpp:1:
+/Users/fuzz/.codex/worktrees/a411/LevelScope/Source/Standalone/TimelineGainLane.h:17:49: error: 'this' argument to member function 'getTooltip' has type 'const juce::Label', but function is not marked const
+   17 |     juce::String inspectionText() const {return detail.getTooltip();}
+      |                                                 ^~~~~~
+/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_gui_basics/mouse/juce_TooltipClient.h:80:12: note: 'getTooltip' declared here
+   80 |     String getTooltip() override                                    { return tooltipString; }
+      |            ^
+In file included from /Users/fuzz/.codex/worktrees/a411/LevelScope/Source/Standalone/MeasurementTimeline.cpp:2:
+/Users/fuzz/.codex/worktrees/a411/LevelScope/Source/Standalone/TimelineGainLane.h:17:49: error: 'this' argument to member function 'getTooltip' has type 'const juce::Label', but function is not marked const
+   17 |     juce::String inspectionText() const {return detail.getTooltip();}
+      |                                                 ^~~~~~
+/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_gui_basics/mouse/juce_TooltipClient.h:80:12: note: 'getTooltip' declared here
+   80 |     String getTooltip() override                                    { return tooltipString; }
+      |            ^
+1 error generated.
+make[3]: *** [CMakeFiles/LevelScopeDiagnosticsUI.dir/Source/Standalone/TimelineGainLane.cpp.o] Error 1
+make[3]: *** Waiting for unfinished jobs....
+1 error generated.
+make[3]: *** [CMakeFiles/LevelScopeDiagnosticsUI.dir/Source/Standalone/MeasurementTimeline.cpp.o] Error 1
+make[2]: *** [CMakeFiles/LevelScopeDiagnosticsUI.dir/all] Error 2
+make[1]: *** [CMakeFiles/LevelScopeStandalone.dir/rule] Error 2
+make: *** [LevelScopeStandalone] Error 2

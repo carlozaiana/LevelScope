@@ -16,7 +16,7 @@ public:
     {
         setUsingNativeTitleBar (true);
         setResizable (true, true);
-        setResizeLimits (1120, 800, 2400, 1600);
+        setResizeLimits (1120, 950, 2400, 1600);
         setContentOwned (new levelscope::standalone::StandaloneMainComponent(), true);
         centreWithSize (getWidth(), getHeight());
         setVisible (true);
@@ -51,7 +51,7 @@ public:
 
     void initialise (const juce::String&) override
     {
-        mainWindow = std::make_unique<StandaloneMainWindow> (getApplicationName());
+        mainWindow = std::make_unique<StandaloneMainWindow> ("LevelScope-Timeline");
     }
 
     void shutdown() override

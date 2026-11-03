@@ -1,0 +1,92 @@
+[
+  {
+    "target": "LevelScopeStandalone",
+    "path": "build/m18-dev-01/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone",
+    "sha256": "67f71732c14dc1bdcfc032d0fa260147a4732a062fe3e1456ab6edf3fbc2f27d",
+    "architectures": [
+      "x86_64",
+      "arm64"
+    ],
+    "intel_minimum": "10.13"
+  },
+  {
+    "target": "LevelScopeJobRequirementsTests",
+    "path": "build/m18-dev-01/LevelScopeJobRequirementsTests_artefacts/Release/LevelScopeJobRequirementsTests",
+    "sha256": "f0ada3e56682aa722644c6754189ae30aa2d697123ea84dd22e82c55d64b2afb",
+    "architectures": [
+      "x86_64",
+      "arm64"
+    ],
+    "intel_minimum": "10.13"
+  },
+  {
+    "target": "LevelScopeSessionTests",
+    "path": "build/m18-dev-01/LevelScopeSessionTests_artefacts/Release/LevelScopeSessionTests",
+    "sha256": "c4fbb4439804f1380c7b70873a53fd9cf7a36f03c330a955301636693a89dfce",
+    "architectures": [
+      "x86_64",
+      "arm64"
+    ],
+    "intel_minimum": "10.13"
+  },
+  {
+    "target": "LevelScopeMeasurementTests",
+    "path": "build/m18-dev-01/LevelScopeMeasurementTests_artefacts/Release/LevelScopeMeasurementTests",
+    "sha256": "c27d83f4be93da45d84de45bcaba0af68a5ad2eb42d3ebf0aa69e0b3ee45d1be",
+    "architectures": [
+      "x86_64",
+      "arm64"
+    ],
+    "intel_minimum": "10.13"
+  },
+  {
+    "target": "LevelScopeComplianceTests",
+    "path": "build/m18-dev-01/LevelScopeComplianceTests_artefacts/Release/LevelScopeComplianceTests",
+    "sha256": "0082e578ce8f2fbb5ee59f60d371b5bfac6f2973047406d2a2568c99176ee06e",
+    "architectures": [
+      "x86_64",
+      "arm64"
+    ],
+    "intel_minimum": "10.13"
+  },
+  {
+    "target": "LevelScopeProposalTests",
+    "path": "build/m18-dev-01/LevelScopeProposalTests_artefacts/Release/LevelScopeProposalTests",
+    "sha256": "51aaf0569417d5550a95e916158f3ee6a38a70f5c936729e54927d07f2fb6ecb",
+    "architectures": [
+      "x86_64",
+      "arm64"
+    ],
+    "intel_minimum": "10.13"
+  },
+  {
+    "target": "LevelScopeExportTests",
+    "path": "build/m18-dev-01/LevelScopeExportTests_artefacts/Release/LevelScopeExportTests",
+    "sha256": "68be7dd3b9333da72766419868d095a2d64ebe035d01dba1cfcc257fc2ae6eef",
+    "architectures": [
+      "x86_64",
+      "arm64"
+    ],
+    "intel_minimum": "10.13"
+  },
+  {
+    "target": "LevelScopeSectionProposalTests",
+    "path": "build/m18-dev-01/LevelScopeSectionProposalTests_artefacts/Release/LevelScopeSectionProposalTests",
+    "sha256": "53bbf6515f26b96ee569f02cb7bca76220a7b2763f521e854fcd54b8b5246fd2",
+    "architectures": [
+      "x86_64",
+      "arm64"
+    ],
+    "intel_minimum": "10.13"
+  },
+  {
+    "target": "LevelScopeDiagnosticsTests",
+    "path": "build/m18-dev-01/LevelScopeDiagnosticsTests_artefacts/Release/LevelScopeDiagnosticsTests",
+    "sha256": "20e0a0d2b52d23e03637a7742f80533144b65546ef1e18cfab75fba15471a5d9",
+    "architectures": [
+      "x86_64",
+      "arm64"
+    ],
+    "intel_minimum": "10.13"
+  }
+]

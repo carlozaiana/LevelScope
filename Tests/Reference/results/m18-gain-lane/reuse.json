@@ -1,0 +1,24 @@
+{
+  "baseline": "Tests/Reference/results/m18-progress-navigation/candidate-01/source-manifest.json",
+  "changed_sources": [
+    "Source/Standalone/MeasurementTimeline.cpp",
+    "Source/Standalone/MeasurementTimeline.h",
+    "Source/Standalone/StandaloneAudition.cpp",
+    "Source/Standalone/StandaloneMainComponent.cpp",
+    "Source/Standalone/StandaloneMainComponent.h",
+    "Source/Standalone/StandaloneSectionsPanel.cpp",
+    "Source/Standalone/StandaloneSectionsPanel.h",
+    "Source/Standalone/StandaloneSessionModel.h",
+    "Source/Standalone/TimelineGainLane.cpp",
+    "Source/Standalone/TimelineGainLane.h",
+    "Source/Standalone/TimelineGainOutline.h",
+    "Source/Standalone/TimelineLayout.h"
+  ],
+  "unchanged_paths_reused": [
+    "Measurement arithmetic and window publication, waveform budget/cache, proposal algorithms, audio seek/device engine (only preparation wording changed), export and session persistence."
+  ],
+  "fresh": [
+    "M18 timeline/progress plus main gain controls and real JUCE key dispatch with injected audio",
+    "M12 section-processing smoke (processing, transport, measurement parity)"
+  ]
+}

@@ -42,8 +42,20 @@ struct Result
 struct PeakObserver
 {
     virtual ~PeakObserver() = default;
+    // Opt in only if callbacks for different channels can run concurrently.
+    // Within a channel, every callback retains its original order.
+    virtual bool acceptsConcurrentChannels() const noexcept { return false; }
     virtual void sample (size_t channel, double magnitude, int64_t frame) = 0;
     virtual void truePeak (size_t channel, double magnitude, int64_t eighthFrame, bool padding) = 0;
+};
+enum class PeakExecution { serial, boundedChannels };
+
+// Observes the exact existing 100 ms samples of complete M/S windows. Worker-only,
+// non-mutating and noexcept; no EOF drain, gate estimates or programme verdicts.
+struct WindowObserver
+{
+    virtual ~WindowObserver() = default;
+    virtual void window(bool shortTerm, const Window&) noexcept = 0;
 };
 
 // Invalid configuration/samples throw std::invalid_argument; accumulation overflow
@@ -51,7 +63,8 @@ struct PeakObserver
 class OfflineMeasurement
 {
 public:
-    OfflineMeasurement (int sampleRate, const std::vector<Role>& fileRoles, PeakObserver* = nullptr);
+    OfflineMeasurement (int sampleRate, const std::vector<Role>& fileRoles, PeakObserver* = nullptr, WindowObserver* = nullptr,
+                        PeakExecution = PeakExecution::serial);
     void push (const float* const* channels, int count);
     const Result& finish();
     static bool supports (int sampleRate, const std::vector<Role>& roles);
@@ -71,6 +84,7 @@ private:
     };
     void addEnergy (double energy, bool drain);
     void addPeak (size_t channel, double sample, int64_t frame, bool drain);
+    bool pushChannelPeaks (const float* const* input, int count);
     Result result;
     std::vector<Channel> channels;
     std::array<std::array<double, 64>, 8> interpolation {};
@@ -79,6 +93,10 @@ private:
     int mLength, sLength, step;
     double mSum = 0, sSum = 0, mMaximum = 0, sMaximum = 0;
     bool finished = false;
+    // At most six. Keep this byte beside finished so the serial engine retains
+    // its original size and the offsets of its hot observer pointers.
+    uint8_t peakLanes = 1;
     PeakObserver* peakObserver = nullptr;
+    WindowObserver* windowObserver = nullptr;
 };
 }

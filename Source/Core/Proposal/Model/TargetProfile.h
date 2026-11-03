@@ -18,6 +18,8 @@ struct TargetProfileLimits
     double maxLoudnessRangeLu = 0;
     bool hasTruePeakCeiling = false;
     double truePeakCeilingDbtp = 0;
+    bool hasMaxMomentary = false, hasMaxShortTerm = false;
+    double maxMomentaryLufs = 0, maxShortTermLufs = 0;
     bool valuesAreAuthoritative = false;
     juce::String validationNote = "No authoritative profile loaded.";
 };
@@ -32,6 +34,8 @@ struct TargetProfile
     int schemaVersion = 1;
     juce::String definitionVersion, standardEdition, referenceUrl;
     juce::String integratedProvenance, truePeakProvenance, lraProvenance;
+    juce::String momentaryProvenance, shortTermProvenance;
+    bool userSpecified = false;
     MeasurementMethod method = MeasurementMethod::unsupported;
     Applicability applicability = Applicability::unconfirmed;
     // Documentary meter provision, NEVER added to an acceptance ceiling.

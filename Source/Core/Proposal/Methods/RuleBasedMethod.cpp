@@ -46,8 +46,18 @@ TrimProposal draftGlobalTrimImpl (const TrimRequest& r, bool privateCandidate)
         p.explanation = "Already passes selected measured rules. No change: retain gain, measurements and evaluation.";
         return p;
     }
-    if (r.profile.limits.hasMaxLoudnessRange)
-    { p.explanation = "Automatic correction for these requirements is not supported yet. This is a capability limit, not a claim that no solution exists. Manual processing and independent remeasurement remain available.\n" + current.message; return p; }
+    if (r.profile.limits.hasMaxLoudnessRange || r.profile.limits.hasMaxMomentary || r.profile.limits.hasMaxShortTerm
+        || !r.profile.limits.hasIntegratedLoudnessTarget || !r.profile.limits.hasTruePeakCeiling)
+    {
+        p.explanation = "Automatic correction is unsupported with the selected requirements: ";
+        juce::StringArray reasons;const auto& l=r.profile.limits;
+        if(l.hasMaxLoudnessRange)reasons.add("maximum LRA "+juce::String(l.maxLoudnessRangeLu,1)+" LU");
+        if(l.hasMaxMomentary)reasons.add("maximum momentary "+juce::String(l.maxMomentaryLufs,1)+" LUFS");
+        if(l.hasMaxShortTerm)reasons.add("maximum short-term "+juce::String(l.maxShortTermLufs,1)+" LUFS");
+        if(!l.hasIntegratedLoudnessTarget)reasons.add("IL target is No Limit");
+        if(!l.hasTruePeakCeiling)reasons.add("true-peak ceiling is No Limit");
+        p.explanation+=reasons.joinIntoString(", ")+". No candidate was measured. Manual processing and independent remeasurement remain available. Change requirements only if the delivery specification permits it.\nBaseline Current evaluation\n"+current.message;return p;
+    }
     const auto& l = r.profile.limits;
     const double desired = l.integratedLufs - i;
     const double lower = std::max (-60 - r.currentGainDb, l.integratedLufs - l.integratedToleranceLu - i);

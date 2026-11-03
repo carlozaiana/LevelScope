@@ -1,5 +1,6 @@
 #include "StandaloneCompliance.h"
 #include <juce_cryptography/juce_cryptography.h>
+#include <array>
 #include <iomanip>
 #include <locale>
 #include <sstream>
@@ -31,6 +32,25 @@ juce::String snapshotDigest (const AnalysisSnapshot& a)
     { s << ';' << frames->size(); for (auto v : *frames) s << ';' << v; }
     const auto bytes = s.str(); return juce::SHA256 (bytes.data(), bytes.size()).toHexString();
 }
+
+// Source and Current are repeatedly queried on the message thread, and may
+// contain many thousands of measured windows. Memoize their exact digest, not a
+// verdict or a freshness decision. Weak ownership cannot retain old windows or
+// accidentally match a new allocation at an expired snapshot's address.
+juce::String publishedDigest (const std::shared_ptr<const AnalysisSnapshot>& snapshot)
+{
+    struct Entry { std::weak_ptr<const AnalysisSnapshot> owner; juce::String digest; };
+    struct Recent { std::array<Entry, 2> entries; size_t next = 0; };
+    thread_local Recent recent; // Workers and the UI never wait for one another.
+    for (const auto& entry : recent.entries)
+        if (entry.owner.lock() == snapshot)
+            return entry.digest;
+
+    auto& entry = recent.entries[recent.next];
+    recent.next = (recent.next + 1) % recent.entries.size();
+    entry = { snapshot, snapshotDigest (*snapshot) };
+    return entry.digest;
+}
 bool sameValue (std::optional<double> a, std::optional<double> b)
 {
     return a.has_value() == b.has_value() && (! a || *a == *b);
@@ -54,8 +74,9 @@ bool measurementMatchesContext (const AnalysisSnapshot& a, const ServiceContext&
         && sameValue (a.measured.samplePeakDbfs, a.detail.samplePeak.value);
 }
 
-proposal::MeasuredProgramme measuredProgrammeForSnapshot (const AnalysisSnapshot* analysis, const ServiceContext& expected,
-                                                          MeasurementDomain domain, proposal::Applicability applicability)
+static proposal::MeasuredProgramme measuredProgramme (const AnalysisSnapshot* analysis, const juce::String& digest,
+                                                     const ServiceContext& expected, MeasurementDomain domain,
+                                                     proposal::Applicability applicability)
 {
     proposal::MeasuredProgramme input;
     input.domain = domain == MeasurementDomain::source ? proposal::SnapshotDomain::source
@@ -67,13 +88,27 @@ proposal::MeasuredProgramme measuredProgrammeForSnapshot (const AnalysisSnapshot
     if (analysis)
     {
         const auto& a = *analysis;
-        input.snapshotIdentity = snapshotDigest (a);
+        input.snapshotIdentity = digest;
         input.measurementVersion = a.measurementVersion;
         input.integrated = a.detail.integrated; input.truePeak = a.detail.truePeak;
+        input.momentaryMax=a.detail.momentaryMax;input.shortTermMax=a.detail.shortTermMax;
         input.lra = a.detail.lra; input.lraStable = a.detail.lraStable;
         input.currentIdentityMatches = measurementMatchesContext (a, expected, domain);
     }
     return input;
+}
+
+proposal::MeasuredProgramme measuredProgrammeForSnapshot (const AnalysisSnapshot* analysis, const ServiceContext& expected,
+                                                          MeasurementDomain domain, proposal::Applicability applicability)
+{
+    return measuredProgramme (analysis, analysis ? snapshotDigest (*analysis) : juce::String(), expected, domain, applicability);
+}
+
+proposal::MeasuredProgramme measuredProgrammeForSnapshot (const std::shared_ptr<const AnalysisSnapshot>& analysis,
+                                                          const ServiceContext& expected, MeasurementDomain domain,
+                                                          proposal::Applicability applicability)
+{
+    return measuredProgramme (analysis.get(), analysis ? publishedDigest (analysis) : juce::String(), expected, domain, applicability);
 }
 
 proposal::Evaluation evaluateSnapshot (const AnalysisSnapshot* analysis, const ServiceContext& expected,

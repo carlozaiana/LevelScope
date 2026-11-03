@@ -1,0 +1,67 @@
+{
+  "all_passed": true,
+  "pilot": false,
+  "measurement_build": "5811184d944d23b6b660dd6a4da55cfa24f81ffaa318414805d6c473fed92067",
+  "records": [
+    {
+      "group": "timeline",
+      "passed": true,
+      "checks": 889,
+      "seconds": 2.732087333,
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeTimelineProgressTests_artefacts/Release/LevelScopeTimelineProgressTests",
+        "--root",
+        "/tmp/levelscope-m18-section-import-71wg2i9p/timeline",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/m18-sections-roles/candidate-01/timeline.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "group": "target-presets",
+      "passed": true,
+      "checks": 489,
+      "seconds": 48.857193083,
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeJobRequirementsTests_artefacts/Release/LevelScopeJobRequirementsTests",
+        "--root",
+        "/tmp/levelscope-m18-section-import-71wg2i9p/target-presets",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/m18-sections-roles/candidate-01/target-presets.json"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "app_path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app",
+  "binaries": [
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone",
+      "sha256": "07b12298cfe779bb5f854f5e9c763586200a7973b481d7defb881d9e75bc84ea",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeTimelineProgressTests_artefacts/Release/LevelScopeTimelineProgressTests",
+      "sha256": "f298ed8a198d51974038d20f3ae6e8e75e695eee7d4376220acd90d64e83d0eb",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeJobRequirementsTests_artefacts/Release/LevelScopeJobRequirementsTests",
+      "sha256": "10471c4373875b0a68dcd085c0abc2e6014824feedc73dbdb6210809d3736773",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    }
+  ],
+  "physical_device_opened": false,
+  "video_loaded": false
+}

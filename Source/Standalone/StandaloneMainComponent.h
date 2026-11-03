@@ -5,6 +5,13 @@
 #include "StandaloneExport.h"
 #include "StandaloneProposalPreferences.h"
 #include "StandaloneJobRequirements.h"
+#include "MeasurementTimeline.h"
+#include "AutomaticSourceAnalysis.h"
+#include "StandaloneWaveform.h"
+#include "StandaloneLoudnessPreview.h"
+#include "TimelineLayout.h"
+#include "TimelineGainLane.h"
+#include "ProposalWorkflowPanel.h"
 
 #include <memory>
 #include <future>
@@ -30,11 +37,38 @@ public:
 
     void paint (juce::Graphics& g) override;
     void resized() override;
+    bool keyPressed(const juce::KeyPress&) override;
 
 private:
     StandaloneSessionModel session;
+    TimelineDivider comparisonDivider{"Comparison row height"},waveformDivider{"Waveform and inspector heights"};
+    TimelineLayout timelineLayout;
+    int timelineAvailableHeight=0;
+    std::shared_ptr<LoudnessProgress> loudnessProgress;
+    juce::TextButton openMixButton{"Open Mix..."},toolsButton{"Session / tools..."},audioSetupButton{"Audio setup..."},
+        timelinePlay{"Play"},timelineStop{"Stop"},sectionsButton{"Sections / gain..."};
+    juce::ComboBox inspectDomain, auditionDomainBox;
+    juce::Label positionLabel;
+    TimelineGainLane gainLane{session};
+    ProposalWorkflowPanel proposalPanel{session};
+    MeasurementTimeline timeline;
+    DiagnosticsController timelineDiagnostics;
+    WaveformCache waveformCache;
+    WaveformBinding analysisWaveformBinding,waveformBinding;
+    std::future<ServiceResult<std::shared_ptr<const waveform::Overview>>> waveformResult;
+    juce::TextButton buildWaveformButton{"Build waveform"};
+    void beginWaveform();
+    AutomaticSourceAnalysis automaticSource;
+    std::unique_ptr<juce::DocumentWindow> audioWindow;
+    void configureTimelineShell();
+    void showAudioSetup();
+    void chooseMix();
+    void showTools();
+    void refreshTimeline();
+    void playTimeline(MeasurementTimeline* origin=nullptr);
+    void showSections();
     juce::TextButton newSessionButton { "New session" }, openSessionButton { "Open session..." },
-        saveSessionButton { "Save" }, saveAsSessionButton { "Save as..." },
+        saveSessionButton { "Save session" }, saveAsSessionButton { "Save as..." },
         relinkAudioButton { "Relink audio..." }, relinkVideoButton { "Relink video..." }, cancelSessionButton { "Cancel file job" };
     juce::Label sessionStatus;
     std::unique_ptr<juce::FileChooser> sessionChooser;
@@ -112,7 +146,7 @@ private:
     juce::TextButton remeasureCurrentStateButton { "Re-measure Current State" };
     juce::Slider currentGain;
     juce::TextButton sectionProposalButton { "Generate section-led" }, applySectionProposalButton { "Apply proposal" }, discardSectionProposalButton { "Discard proposal" };
-    std::unique_ptr<juce::DocumentWindow> preferencesWindow,proposalInspectionWindow;
+    std::unique_ptr<ProposalWindow> preferencesWindow,proposalInspectionWindow;
     juce::TextButton preferencesButton { "Proposal limits..." },inspectProposalButton { "Inspect complete proposal..." };
     juce::TextButton draftTrimButton { "Draft global trim" };
     juce::TextButton applyTrimButton { "Apply trim" };
@@ -158,6 +192,7 @@ private:
     void beginMeasurement (MeasurementDomain);
     void beginTrimProposal();
     void beginSectionProposal();
+    void reviewProposal(bool historical);
     void timerCallback() override;
 
     void setPage (WorkflowPage page);

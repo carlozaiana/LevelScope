@@ -7,7 +7,7 @@
 namespace levelscope::standalone
 {
 // [BEGIN LS-STANDALONE-JOB-CONTRACT]
-enum class JobStage { ingest, analysis, proposal, render, report };
+enum class JobStage { ingest, analysis, proposal, render, report, waveform };
 enum class JobState { idle, running, cancelling, succeeded, cancelled, failed };
 enum class ErrorCode
 {

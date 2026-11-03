@@ -264,7 +264,7 @@ std::shared_ptr<const AnalysisSnapshot> cache (const Bytes& b,MeasurementDomain 
     }
     require(measuredProgrammeForSnapshot(a.get(),c,domain,proposal::Applicability::unconfirmed).currentIdentityMatches,"Invalid measured cache binding");return a;
 }
-V coreValue (const Document& d,const std::array<Bytes,2>& caches)
+V coreValue (const Document& d,const std::array<Bytes,2>& caches,const Bytes& explanation = {})
 {
     auto v=object();put(v,"schema",schemaVersion);put(v,"documentId",d.id);put(v,"revision",unsignedValue(d.revision));
     auto p=object();put(p,"schema",programmeAssemblyVersion);put(p,"id",d.programmeId);put(p,"mode",d.source.composition?"composition":d.source.assembly?"mono_files":"interleaved");put(p,"purpose","programme_audio");put(p,"alignment","0/1");
@@ -297,11 +297,12 @@ V coreValue (const Document& d,const std::array<Bytes,2>& caches)
     put(v,"proposalPolicy",d.proposalPolicy.encode());put(v,"lastAppliedProposalPolicy",d.lastAppliedProposalPolicy?d.lastAppliedProposalPolicy->encode():V());put(v,"lastAppliedProposalBinding",d.lastAppliedProposalBinding);
     put(v,"sections",sectionsValue(d.sections));put(v,"markerImport",d.markerImport?proposal::markers::encode(*d.markerImport):V());put(v,"audition",static_cast<int>(d.audition));
     auto video=object();put(video,"locator",d.reference.file.getFullPathName());put(video,"sha256",d.reference.sha256);put(video,"stream",d.reference.streamId);put(video,"offset",juce::String(d.reference.startOnAudio.text()));put(v,"video",video);
-    juce::Array<V> records;uint64_t offset=0;for(int n=0;n<2;++n){auto a=object();put(a,"domain",n);put(a,"offset",unsignedValue(offset));put(a,"size",unsignedValue(caches[n].size()));put(a,"sha256",digest(caches[n]));records.add(a);offset+=caches[n].size();}put(v,"caches",records);return v;
+    juce::Array<V> records;uint64_t offset=0;for(int n=0;n<2;++n){auto a=object();put(a,"domain",n);put(a,"offset",unsignedValue(offset));put(a,"size",unsignedValue(caches[n].size()));put(a,"sha256",digest(caches[n]));records.add(a);offset+=caches[n].size();}put(v,"caches",records);
+    auto history=object();put(history,"offset",unsignedValue(offset));put(history,"size",unsignedValue(explanation.size()));put(history,"sha256",digest(explanation));put(v,"appliedExplanation",history);return v;
 }
 Document core (const V& v)
 {
-    Document d;d.loadedSchema=number(get(v,"schema"),1,7);d.id=str(v,"documentId",36);d.revision=integer<uint64_t>(get(v,"revision"));auto p=get(v,"programme");require(number(get(p,"schema"),1,7)==d.loadedSchema,"Programme/core schema mismatch");d.programmeId=str(p,"id",36);
+    Document d;d.loadedSchema=number(get(v,"schema"),1,schemaVersion);d.id=str(v,"documentId",36);d.revision=integer<uint64_t>(get(v,"revision"));auto p=get(v,"programme");require(number(get(p,"schema"),1,programmeAssemblyVersion)==d.loadedSchema,"Programme/core schema mismatch");d.programmeId=str(p,"id",36);
     const auto mode=str(p,"mode");require((mode=="interleaved"||(mode=="mono_files"&&d.loadedSchema>=2)||(mode=="composition"&&d.loadedSchema>=3))&&str(p,"purpose")=="programme_audio"&&str(p,"alignment")=="0/1","Unsupported programme assembly");
     auto files=array(get(p,"files"),mode=="interleaved"?1:6);auto channels=array(get(p,"channels"),maxChannels);
     if(mode=="composition")
@@ -337,7 +338,7 @@ Document core (const V& v)
         require(integer<int64_t>(get(p,"rangeBegin"))==0&&integer<int64_t>(get(p,"rangeEnd"))==d.source.media.frames,"Only whole-programme sessions are supported");
     }
     else require(channels.isEmpty()&&mode=="interleaved","Channels reference a missing file record");
-    if(d.loadedSchema<6)d.notices.add("Older session migrated in memory to default proposal preferences; media, annotations and exact applied processing preserved. Saving writes schema 7 and requires an M17 reader; use Save As to retain the original older-readable copy. Old transient proposals are not restored.");
+    if(d.loadedSchema<6)d.notices.add("Older session migrated in memory to default proposal preferences; media, annotations and exact applied processing preserved. Saving writes schema 8 and requires an M18 reader; use Save As to retain the original older-readable copy. Old transient proposals are not restored.");
     else
     {
         d.proposalPolicy=proposal::ProposalPolicy::decode(v["proposalPolicy"]);
@@ -350,7 +351,7 @@ Document core (const V& v)
         try {d.jobRequirements=proposal::JobRequirements::decode(v["jobRequirements"]);}
         catch(const std::exception& e){d.jobRequirements=proposal::JobRequirements::unavailable(e.what());d.notices.add("Job requirements unavailable; core settings/media recovered. Explicit replacement required; no dependent approval is valid.");}
     }
-    else d.notices.add("No added LRA requirement in this older session. Saving writes schema 7 and requires an M17 reader; use Save As to retain the original.");
+    else d.notices.add("No added LRA requirement in this older session. Saving writes schema 8 and requires an M18 reader; use Save As to retain the original.");
     auto cur=get(v,"current");const auto plan=gainPlan(cur,d.loadedSchema>=4);d.current.isInitialized=boolean(get(cur,"initialized"));d.current.staticGainDb=plan.staticGainDb;d.current.sectionGains=plan.sectionGains;d.current.needsRemeasurement=d.current.isInitialized;
     if(d.loadedSchema>=4)d.current.sectionGainAnnotations=sections(get(cur,"annotationProvenance"));
     if(d.loadedSchema>=3)require(array(get(cur,"componentPlans"),0).isEmpty()&&str(cur,"wholeProgrammeGraph").isEmpty(),"Component DSP and arbitrary whole-programme graphs are not implemented in M12");
@@ -378,7 +379,7 @@ Document capture (StandaloneSessionModel& s)
 {
     if(s.hasActionableSectionProposal())throw std::runtime_error("Discard the transient proposal before saving; private candidate measurements are not saved as Current authority");
     if(s.sectionTrimDraft)throw std::runtime_error("Apply or discard the section-gain draft before saving; draft edits are not saved as applied audio");
-    s.synchronizeSections();Document d;d.id=s.documentId;d.programmeId=s.programmeId;d.runtimeId=s.sessionId;d.revision=s.documentRevision;d.source=s.sourceDocument;d.current=s.currentStateDocument;d.applicability=s.programmeApplicability;d.sections=s.sectionDocument.map();d.markerImport=s.markerImport;d.jobRequirements=s.jobRequirements;d.proposalPolicy=s.proposalPolicy;d.lastAppliedProposalPolicy=s.lastAppliedProposalPolicy;d.lastAppliedProposalBinding=s.lastAppliedProposalBinding;d.reference=s.referenceVideo;d.audition=s.auditionDomain;
+    s.synchronizeSections();Document d;d.id=s.documentId;d.programmeId=s.programmeId;d.runtimeId=s.sessionId;d.revision=s.documentRevision;d.source=s.sourceDocument;d.current=s.currentStateDocument;d.applicability=s.programmeApplicability;d.sections=s.sectionDocument.map();d.markerImport=s.markerImport;d.jobRequirements=s.jobRequirements;d.proposalPolicy=s.proposalPolicy;d.lastAppliedProposalPolicy=s.lastAppliedProposalPolicy;d.lastAppliedProposalBinding=s.lastAppliedProposalBinding;d.lastAppliedExplanation=s.lastAppliedExplanation;d.reference=s.referenceVideo;d.audition=s.auditionDomain;
     const auto p=s.getTargetProfile(s.selectedTargetProfileIndex);d.profile={p.id,p.definitionVersion,p.digest()};if(s.restoredProfileId.isNotEmpty())d.profile={s.restoredProfileId,s.restoredProfileVersion,s.restoredProfileDigest};
     for(auto domain:{MeasurementDomain::source,MeasurementDomain::currentState})
     {
@@ -403,15 +404,16 @@ Outcome save (const Document& d,const juce::File& file,JobControl& c,const FileH
     {
         check(c);validateCore(d);require(file.hasFileExtension("levelscope"),"Use a .levelscope session filename");require(!aliasesMedia(file,d),"A session cannot overwrite source audio or reference picture");
         std::array<Bytes,2> caches;if(d.sourceCache)caches[0]=cacheBytes(*d.sourceCache,c);c.setProgress(.2f);if(d.currentCache)caches[1]=cacheBytes(*d.currentCache,c);
-        auto json=juce::JSON::toString(coreValue(d,caches),true).toStdString();require(json.size()<=coreLimit,"Session core exceeds 4 MiB");
-        uint64_t size=80+json.size()+caches[0].size()+caches[1].size();require(size<=maximumBytes,"Session exceeds 128 MiB");
+        const auto history=d.lastAppliedExplanation?encodeAppliedExplanation(*d.lastAppliedExplanation):Bytes{};
+        auto json=juce::JSON::toString(coreValue(d,caches,history),true).toStdString();require(json.size()<=coreLimit,"Session core exceeds 4 MiB");
+        uint64_t size=80+json.size()+caches[0].size()+caches[1].size()+history.size();require(size<=maximumBytes,"Session exceeds 128 MiB");
         hook(h,"space");if(file.getParentDirectory().getBytesFreeOnVolume()<static_cast<int64_t>(size))throw Failure{ErrorCode::insufficientDiskSpace,"Insufficient disk space for session save"};
         auto temp=file.getSiblingFile("."+file.getFileName()+"."+juce::Uuid().toString()+".partial");
         struct Owned {juce::File file;int fd=-1;bool created=false;~Owned(){if(fd>=0)::close(fd);if(created)file.deleteFile();}} owned{temp};
         if(h.beforeCreate)h.beforeCreate(temp);
         hook(h,"create");owned.fd=::open(temp.getFullPathName().toRawUTF8(),O_WRONLY|O_CREAT|O_EXCL,0600);if(owned.fd<0)throw Failure{ErrorCode::writeFailed,"Cannot create session temporary file"};owned.created=true;
         uint64_t written=0;auto write=[&](const void* data,size_t n){auto* p=static_cast<const uint8_t*>(data);while(n){check(c);hook(h,"write");auto count=std::min<size_t>(n,65536);auto z=::write(owned.fd,p,count);if(z<0&&errno==EINTR)continue;if(z<=0)throw Failure{ErrorCode::writeFailed,"Session write failed; previous file retained"};p+=z;n-=static_cast<size_t>(z);written+=z;c.setProgress(.4f+.55f*static_cast<float>(double(written)/double(size)));}};
-        Bytes header{'L','S','S','E','S','S','0','1'};u64(header,json.size());auto hash=digest(json.data(),json.size()).toStdString();header.insert(header.end(),hash.begin(),hash.end());write(header.data(),header.size());write(json.data(),json.size());for(auto& b:caches)write(b.data(),b.size());
+        Bytes header{'L','S','S','E','S','S','0','1'};u64(header,json.size());auto hash=digest(json.data(),json.size()).toStdString();header.insert(header.end(),hash.begin(),hash.end());write(header.data(),header.size());write(json.data(),json.size());for(auto& b:caches)write(b.data(),b.size());write(history.data(),history.size());
         check(c);hook(h,"flush");if(::fsync(owned.fd)!=0)throw Failure{ErrorCode::writeFailed,"Session flush failed; previous file retained"};
         if(::close(owned.fd)!=0){owned.fd=-1;throw Failure{ErrorCode::writeFailed,"Session close failed; previous file retained"};}owned.fd=-1;
         check(c);hook(h,"replace");require(!aliasesMedia(file,d),"Destination now aliases source media");
@@ -443,6 +445,25 @@ Outcome read (const juce::File& file,JobControl& c)
             catch(const Failure& e){if(e.code==ErrorCode::cancelled)throw;d.notices.add((i==0?"Source":"Current State")+juce::String(" cache discarded: ")+e.message+". Remeasure.");}
             catch(const std::exception& e){d.notices.add("Cache discarded: "+juce::String(e.what())+". Remeasure.");}
         }
+        if(d.loadedSchema>=8&&v.hasProperty("appliedExplanation"))
+        {
+            check(c);try
+            {
+                const auto e=v["appliedExplanation"];const auto offset=integer<uint64_t>(get(e,"offset")),n=integer<uint64_t>(get(e,"size"));
+                if(n)
+                {
+                    require(n<=AppliedProposalExplanation::maximumBytes&&offset<=maximumBytes&&80+length+offset<=uint64_t(size)&&n<=uint64_t(size)-(80+length+offset),"Missing or oversized applied explanation");
+                    input.setPosition(int64_t(80+length+offset));Bytes bytes(size_t(n),0);require(input.read(bytes.data(),int(n))==int(n),"Truncated applied explanation");
+                    require(hashValid(str(e,"sha256",64))&&digest(bytes)==str(e,"sha256",64),"Applied explanation checksum mismatch");
+                    auto h=decodeAppliedExplanation(bytes,c);
+                    require(h->programmeId==d.programmeId&&h->inputIdentity==sectionInputIdentity(context(d,MeasurementDomain::source)),"Applied explanation belongs to different programme");
+                    d.lastAppliedExplanation=std::move(h);
+                }
+            }
+            catch(const Failure& e){if(e.code==ErrorCode::cancelled)throw;d.notices.add("Historical applied explanation discarded: "+e.message+". Valid session settings and independent measurements retained.");}
+            catch(const std::exception& e){check(c);d.notices.add("Historical applied explanation discarded: "+juce::String(e.what())+". Valid session settings and independent measurements retained.");}
+        }
+        if(!d.lastAppliedExplanation&&d.lastAppliedProposalBinding.isNotEmpty())d.notices.add("No complete saved explanation is available for the old applied proposal. No reasons were reconstructed.");
         c.setProgress(1);return{std::move(d),ErrorCode::none,"Session core read; media verification required"};
     });
 }
@@ -529,7 +550,7 @@ bool install (const Document& d,StandaloneSessionModel& s,juce::String& error)
         validateCore(d);require(!s.audioEditsBlocked()&&!s.job.isActive(),"Stop audition and finish/cancel the current job before opening a session");
         require(!d.source.hasSource || !d.audioResolved || d.source.matchesFileStamps(),"Source changed after verification; previous session retained");
         require(d.reference.file==juce::File() || !d.videoResolved || (d.reference.file.existsAsFile() && d.reference.file.getSize()==d.verifiedVideoBytes && d.reference.file.getLastModificationTime().toMilliseconds()==d.verifiedVideoModified),"Reference picture changed after verification; previous session retained");
-        StandaloneSessionModel next;next.openedSessionSchema=d.loadedSchema;next.documentId=d.id;next.programmeId=d.programmeId;next.documentRevision=next.savedDocumentRevision=d.revision;next.sourceDocument=d.source;next.sourceDocument.routing=OutputRouting();next.currentStateDocument=d.current;next.currentStateDocument.needsRemeasurement=d.current.isInitialized;next.programmeApplicability=d.applicability;next.auditionDomain=d.audition;next.markerImport=d.markerImport;next.jobRequirements=d.jobRequirements;next.proposalPolicy=d.proposalPolicy;next.lastAppliedProposalPolicy=d.lastAppliedProposalPolicy;next.lastAppliedProposalBinding=d.lastAppliedProposalBinding;next.referenceVideo=d.reference;next.videoUnresolved=!d.videoResolved;
+        StandaloneSessionModel next;next.openedSessionSchema=d.loadedSchema;next.documentId=d.id;next.programmeId=d.programmeId;next.documentRevision=next.savedDocumentRevision=d.revision;next.sourceDocument=d.source;next.sourceDocument.routing=OutputRouting();next.currentStateDocument=d.current;next.currentStateDocument.needsRemeasurement=d.current.isInitialized;next.programmeApplicability=d.applicability;next.auditionDomain=d.audition;next.markerImport=d.markerImport;next.jobRequirements=d.jobRequirements;next.proposalPolicy=d.proposalPolicy;next.lastAppliedProposalPolicy=d.lastAppliedProposalPolicy;next.lastAppliedProposalBinding=d.lastAppliedProposalBinding;next.lastAppliedExplanation=d.lastAppliedExplanation;next.referenceVideo=d.reference;next.videoUnresolved=!d.videoResolved;
         if(!d.audioResolved){next.unresolvedSourceCache=d.sourceCache;next.unresolvedCurrentCache=d.currentCache;}
         next.sourceContentInvalid=d.source.hasSource&&!d.audioResolved;next.sourceDocument.importStatus=next.sourceContentInvalid?"Unresolved programme; relink identical audio":"Restored source; saved channel interpretation retained";
         next.currentStateDocument.sourcePathSnapshot=d.source.file.getFullPathName();next.currentStateDocument.basedOnSourceName=d.source.displayName;

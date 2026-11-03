@@ -1,0 +1,24 @@
+{
+  "previous_measurement_build": "d2b478709ba907c2eede7d9d4b6360205e2fa4f84b1c4f3d71d3104b6ea68b4b",
+  "changed_production_files": [
+    "Source/Core/Waveform/WaveformOverview.cpp",
+    "Source/Core/Waveform/WaveformOverview.h",
+    "Source/Standalone/MeasurementTimeline.cpp",
+    "Source/Standalone/MeasurementTimeline.h",
+    "Source/Standalone/StandaloneJob.h",
+    "Source/Standalone/StandaloneMainComponent.cpp",
+    "Source/Standalone/StandaloneMainComponent.h",
+    "Source/Standalone/StandaloneMeasurementService.cpp",
+    "Source/Standalone/StandaloneMeasurementService.h",
+    "Source/Standalone/StandaloneWaveform.cpp",
+    "Source/Standalone/StandaloneWaveform.h"
+  ],
+  "unchanged_measurement_arithmetic": true,
+  "reused_first_slice_groups": [
+    "complete targets/presets",
+    "compliance",
+    "global proposals",
+    "section proposal smoke",
+    "proposal preferences"
+  ]
+}

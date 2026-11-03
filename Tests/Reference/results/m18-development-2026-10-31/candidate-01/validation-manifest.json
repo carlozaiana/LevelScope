@@ -1,0 +1,16 @@
+{
+  "base_commit": "cdac0c36b4259386417ecad507d107761eced864",
+  "measurement_build": "d2b478709ba907c2eede7d9d4b6360205e2fa4f84b1c4f3d71d3104b6ea68b4b",
+  "test_and_build_inputs": {
+    "CMakeLists.txt": "b199d7e8e0f2e99097f39d884ed36db258679f436d66a1d005800882861768ef",
+    "Tests/JobRequirementsTests.cpp": "c8833d18943746b99d0cc40824bc797b837ad978df5e2d69142b55b1edb09008",
+    "Tests/ProposalTests.cpp": "e8a5e217970b4f9eb014424b37b4f3e4d76f82cb6595c9d9312e7e7688a5ad6f",
+    "Tests/SessionTests.cpp": "5e0300b336ed8daa9f3ba91ec1be82be640c4f87b69bc7f463dcd785d720150b",
+    "Tests/OfflineMeasurementTests.cpp": "a6b0c6e2fa6876e046d37bdcbb11a74c657e0739115f093de16f470086002a75",
+    "Tests/ComplianceTests.cpp": "0f53c6130cf52685770bf651bd6828f69191f8c00d901874ad402cecfe3c6c5d",
+    "Tests/ExportTests.cpp": "58bb98128185c31c4cbe07c33eb61828040d0c45684db091af540bc4cddffa68",
+    "Tests/SectionProposalTests.cpp": "51d443d97860cdd0f168a157523e590eaf1cce22f4f96652e1efea0c3e47d360",
+    "Tests/DiagnosticsTests.cpp": "5ed2909eed4fa21dd7422cc9cb896ea7056383e0068c2f13a16b0c5096c27992"
+  },
+  "juce_commit": "4f43011b96eb0636104cb3e433894cda98243626"
+}

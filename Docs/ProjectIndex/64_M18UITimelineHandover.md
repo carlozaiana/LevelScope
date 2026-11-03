@@ -1,10 +1,115 @@
 # M18 dedicated UI/Timeline handover
 
-30 October 2026. **Documentation and handover only; M18 implementation has not been
-authorized or started.** No build, qualification, device opening or Golem access was
-performed for this handover. This document supplements [63 — M18 proposal](63_M18InteractiveTimelineAndProgressiveAnalysis.md)
-and incorporates the user's ruler-seek clarification. The new UI chat must obtain
-implementation approval; preparing or copying this handover is not that approval.
+**Current coordination summary — 3 November 2026**
+
+M18 implementation has reached the short end-to-end acceptance gate on the
+development M1 Max running Sequoia. The combined two-Mac qualification remains
+pending. This summary gives the current position. Dated sections below retain
+the earlier plans, build paths and per-slice evidence.
+
+The active worktree is `/Users/fuzz/.codex/worktrees/a411/LevelScope`, branch
+`codex/ui-timeline-m18`. HEAD is `cdac0c36b4259386417ecad507d107761eced864`, which
+integrates the logic module's tested automatic Current initialisation. The subsequent
+M18 implementation and evidence are working-tree changes. A combined frozen
+qualification package and published M18 checkpoint are still to be prepared.
+Main remains the qualified M13 commit `a9be070ab9eb5cb4f591ff9d991d8999c3a016d0`.
+
+Implemented behaviour includes:
+
+- The approved native timeline layout, prominent Original / Current / Target
+  values for IL, true peak, LRA, maximum momentary and maximum short-term loudness,
+  direct target editing, complete presets including No Limit, immediate Unsaved
+  preset naming, and resizable comparison, waveform and inspector areas.
+- Automatic initial Current readiness from the identical completed Source
+  measurement, with its origin inspectable. Applying later processing invalidates
+  Current until an independent remeasurement succeeds.
+- Progressive per-channel PCM waveform overviews from actual programme samples,
+  with Source and Current sharing a combined 128 MiB budget. Reduction retains
+  minima, maxima and their exact earliest sample positions. Deepest overview zoom
+  exposes the represented interval. Measured M/S curves retain their own data,
+  gates and coverage, with incomplete previews clearly identified. Build waveform
+  can restore a missing overview while retaining valid measurements.
+- Zoom, pan, Follow, an audio-timecode ruler above and seconds below, stopped ruler
+  seeking through the existing transport, and Space Play/Stop. Inspection and
+  audition remain independently selected. Main and Sections windows support
+  click-drag-release section creation, draggable boundaries and numerical gain
+  editing with explicit Apply and Discard.
+- Separate remembered explicitly confirmed stereo and 5.1 role orders. Imports
+  show suggestion provenance and label conflicts before Confirm roles and analyse.
+  Reliable file labels take precedence. Reopened projects retain their own roles,
+  physical output routing stays separate, and separate-file alignment confirmation
+  remains required.
+- Main-window Propose, Review, Apply and Discard, with disabled-action reasons,
+  progress and specific outcomes. The gain lane distinguishes applied gains,
+  manual drafts and automatic previews. Every proposed correction and its reason
+  remains inspectable. Stale and rejected candidates cannot be applied.
+- Complete last-applied global or section proposal explanations in schema-8
+  sessions, using an independent checksummed attachment capped at 8 MiB within
+  the existing 128 MiB session budget. Requirements, preferences, baseline,
+  processing, reasons and available candidate results survive reopening. Subsequent
+  edits identify historical association separately from Current verification.
+- Fixes for preset-dialog dismissal, stale Target control availability, Space
+  after Seek, Proposal limits window focus and repeated full measurement digests
+  on the UI timer.
+
+The existing proposal method still evaluates global gain first. The newly affected
+duration allowance applies to local envelope changes, including transitions.
+A section candidate uses desired global normalisation to identify local peak
+deficits, measures the local plan, recalculates global gain, then measures the
+combined candidate as required, with at most three private passes. Apply is explicit
+and independent Current remeasurement follows. Automatic changing corrections with
+selected LRA or M/S limits remain unsupported, although those limits are measured,
+evaluated and saved, and an already-passing state can return no change.
+
+The enabled Apple-silicon service now computes true peaks with bounded channel
+parallelism for stereo and 5.1, preserving serial arithmetic, peak positions,
+loudness order and proposal decisions. The Intel service retains serial execution.
+Exact core/section/proposal equivalence, adversarial rounding and exception checks,
+ThreadSanitizer and paired timing gates passed before enablement. The enabled build
+also passed 946 focused measurement and proposal checks. [Prototype evidence](../../Tests/Reference/results/m18-bounded-peaks/README.md)
+
+The latest acceptance used one 60-second stereo global-proposal job and one
+60-second 5.1 section-proposal job, each repeated three times through the actual
+native main component. Both passed fresh import, preview, roles, Original/Current
+audition, section editing, explicit Apply, independent remeasurement, save/reopen
+and verified PCM24 export. First partial waveform appeared at median 0.61 s / 1.23 s
+from import. Play reached the first non-zero injected-output sample in 0.30 s /
+0.71 s. The user selected injected output timing for this pass. Each stereo run
+passed 61 checks and each 5.1 run passed 77. Independent bundle hashes and selected
+PCM24 samples, including gain transitions, matched. [Acceptance evidence](../../Tests/Reference/results/m18-short-acceptance/README.md)
+
+Current development app is
+`/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-peak-dev/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app`.
+Its build identity is `93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce`.
+The universal app includes arm64 and x86_64, with Intel minimum macOS 10.13.
+[Executable hashes](../../Tests/Reference/results/m18-bounded-peaks/candidate-03/development-build.json)
+
+The next qualification block freezes the combined M14–M18 candidate, then runs
+actual Intel High Sierra, cross-Mac comparisons and session exchange, selected
+video regressions, and one consolidated three-hour mono/192 kHz workflow per Mac
+including RF64 beyond 4 GiB and resource checks. Plan 63 defines the exact selection,
+budgets and separately coordinated physical subset. The long tests have not started.
+Integration and publication follow successful qualification and explicit approval.
+
+Later work remains the visible-passage sample inspection reader, output selection
+and opt-in reconnection, explicitly selected 5.1-to-stereo monitoring, and further
+DSP/automation/meters. Faster initial waveform availability during import was
+identified as a possible follow-up. Logic owns future region/LRA proposal work,
+and the separate video worktree remains the video coordination point. Shared-file
+changes should be coordinated with this UI/Timeline worktree before qualification.
+
+Original handover 30 October 2026. **Implementation and the native layout approved
+31 October 2026; M18 work is in progress.** The original handover performed no
+build, qualification, device opening or Golem access. Current implementation
+status and fresh validation are recorded at the end of this document.
+This document supplements [63 — M18 plan](63_M18InteractiveTimelineAndProgressiveAnalysis.md).
+
+**31 October planning update.** The managed UI worktree is
+`/Users/fuzz/.codex/worktrees/a411/LevelScope` on `codex/ui-timeline-m18`.
+The setup recipe below records the original recommendation. The revised M18 plan
+specifies progressive waveform overviews, a later visible-passage sample reader,
+and first-import readiness after integration of the logic module's tested change.
+See [the revised interaction and implementation plan](63_M18InteractiveTimelineAndProgressiveAnalysis.md).
 
 ## Ownership, exact starting point and preservation
 
@@ -201,6 +306,10 @@ processed extrema by multiplying Source bins across a varying envelope. The exis
 `ProcessedAudioObserver::observe` is `noexcept` and also usable by real-time tests:
 use bounded worker-side publication, not allocations/UI callbacks in the audio callback.
 A new preview sink should have an explicit worker-only lifetime/error contract.
+Carry the frame of each minimum and maximum through every reduction. Label the
+finest bin's actual frame interval and duration. Source and Current share a combined
+128 MiB overview budget. The future sample reader uses the visible frame interval
+and the inspected domain's exact processing identity.
 
 M/S points use current window-end coordinates and 100 ms plot cadence; detailed windows
 retain half-open bounds. Sample-resolution maxima may lie between plotted windows.
@@ -217,10 +326,10 @@ no conflicting job runs. The current `beginMeasurement` explicitly stops auditio
 auto-scheduling must first check idle/stopped and never stop playback opportunistically.
 Reuse validated compatible cached measurements on reopening; a missing waveform offers
 Build waveform without remeasurement. Cancel/failure suppresses auto retry for that
-identity until explicit Analyze again or changed inputs. The 31 October logic integration
-initializes untouched Current on the first accepted, identical Source measurement.
-Refresh both domains after acceptance. Keep applicability, job requirements and device
-opening explicit. See [the first-import contract and UI integration notes](14_OfflineMeasurementContract.md#first-import-current-measurement-for-m18-integration).
+identity until explicit Analyze again or changed inputs. On an eligible first import,
+the integrated logic module initialises untouched, identical Current from the accepted
+final Source measurement. Display both ready states and measurement origin from the model. After an applied processing change, Current needs
+independent remeasurement. Applicability, requirements and device opening stay explicit.
 
 Use `SessionJob::finish` plus `acceptMeasurement` checks, not ticket ID alone. Runtime
 `sessionId` is new on each opening; document/programme IDs and saved revision are
@@ -310,7 +419,7 @@ Separate LRA distribution/tails / final IL-LRA-TP and narrow selected-rule verdi
   Missing cache/waveform/explanation does not fabricate data or discard valid settings.
 - No device opening during silent UI qualification. Coordinate later physical tests.
 
-## Build and test entry points — commands for later approved work, not run here
+## Build and test entry points — approved short implementation checks
 
 Use existing JUCE 7.0.12 at `/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12`,
 commit `4f43011b96eb0636104cb3e433894cda98243626`; do not modify it. Keep C++17, Release,
@@ -319,7 +428,7 @@ OS/dependency requirement is implied. CMake hashes all `Source` files into build
 so even UI/helper changes can invalidate conservative cache compatibility; do not falsify
 the build ID to reuse caches. Migrate recoverable settings and remeasure where required.
 
-After implementation approval, a fresh initial configuration can use:
+The approved configuration uses the managed worktree path; the original recipe was:
 
 ```sh
 M18_UI_ROOT=/Users/fuzz/Developer/LevelScope-worktrees/UITimeline
@@ -485,3 +594,390 @@ Suggested message to the new UI chat:
 > presentation/navigation code. Preserve main at M13, all checkpoints/packages and
 > the logic/video copies. Keep the Sequoia-first and combined post-M18 qualification
 > plan. The logic chat owns subsequent LRA proposal work and shared-contract review.
+
+## Approved native layout and initial implementation — 31 October 2026
+
+The user approved the layout and implementation. The tested logic change
+`9935ad725670958971c1aaed28d8e84f9b3d3e9a` is integrated as `cdac0c3`.
+The UI consumes `acceptMeasurement` and never reinitialises Current afterward.
+The approved waveform, 128 MiB combined budget and later visible-sample-read
+boundary above remain part of M18's implementation contract.
+
+The pinned comparison has Original, Current and Target rows and IL, maximum true
+peak, LRA, maximum momentary and maximum short-term columns. Target values are
+edited directly. Each optional value includes an explicit No Limit state. IL
+retains an explicit tolerance. Editing a named profile immediately displays
+Unsaved preset. Save as preset stores every field, including No Limit and M/S,
+and adds the saved definition to the profile chooser. There is no separate
+Requirements action and no LRA checkbox. User presets are user-specified
+constraints, never presented as an authoritative broadcaster definition merely
+because the user names one. A bounded vertical divider compresses comparison
+row spacing without changing fonts or hiding values.
+
+### First implementation slice and impact manifest
+
+Integrate the logic handover, implement complete target definitions and their
+measured rule/export guards, and replace the upper scaffold with the native
+comparison/editor and resizable layout. Wire automatic initial Source scheduling
+and measured M/S inspection using the existing services. Progressive PCM, the
+combined gain lane and persisted applied explanations follow as subsequent M18
+slices; this first slice is not M18 completion or qualification.
+
+Fresh commands use `build/m18-dev-01`, Release, universal arm64/x86_64, Intel
+10.13 and the existing JUCE 7.0.12 dependency. Build only named
+`LevelScopeStandalone`, `LevelScopeJobRequirementsTests`, `LevelScopeSessionTests`,
+`LevelScopeMeasurementTests`, `LevelScopeComplianceTests`, `LevelScopeProposalTests`,
+`LevelScopeExportTests` and `LevelScopeSectionProposalTests` targets. Execute the
+short argument forms documented above in a new owned M18 results directory.
+Target changes affect evaluation, proposals, session/preset serialization and
+export/report gates. Measurement arithmetic and device callbacks are unchanged
+in this slice. Reuse the logic handover's provenance evidence, and rerun its
+short integration checks on this build. No historical recursive runners, physical
+audio, video decode, full-duration workflow or main integration are included.
+Record fresh results and remaining M18 work here before handing back.
+
+### Current first-slice behavior and format notes
+
+- The native title bar reads LevelScope-Timeline. Open Mix offers the existing
+  interleaved, separate-channel and confirmed composition paths. Audio setup
+  remains a separate, explicit window. Space, Command-O and Command-S are wired
+  outside text entry/modal contexts.
+- Original and Current readiness are separate from rule verdicts. Complete
+  measurement and initial-Source origin are available in comparison tooltips.
+  The central surface currently displays the existing final measured M/S data.
+  Progressive PCM and the consolidated gain/inspector lanes are still outstanding.
+- All five Target fields are editable, including No Limit. IL includes its
+  tolerance. New presets use definition schema 2 with every optional field stored
+  explicitly. Legacy schema-1 EBU/LRA presets retain their original digest.
+  A preset changes measurements' evaluation, never the measured audio identity.
+- User constraints are labelled as user-specified. Maximum M/S use measured maxima
+  and full-precision inclusive bounds. Missing required data is indeterminate.
+  Zero selected constraints cannot produce a passing export approval. Changing
+  automatic proposals with M/S or LRA constraints, or without IL/TP constraints,
+  remain explicitly unsupported; all-selected-rules-pass is still a no-op.
+- Session/core and programme schemas now use version 8 so older readers reject
+  complete-target saves rather than silently losing new limits. Existing schemas
+  migrate in memory; explicit Save retains the newer-reader notice. The optional
+  historical explanation record is still to be added before M18 completion.
+- Saving a session commits valid pending Target text and refuses invalid fields.
+  The comparison divider varies spacing within 159–207 pixels, with fixed 16 px
+  values and a minimum usable field height.
+
+The first native launch was inspected with devices closed. Text encoding was
+corrected after that inspection. Automated native input did not reliably change
+JUCE controls through the computer-use tool, so interactive native verification
+is not claimed from those attempts. The component/model regression tests cover
+target edits, invalid input, no-op edits and compressed comparison geometry.
+
+### First-slice validation — 31 October 2026
+
+All nine selected short Sequoia/arm64 runs passed against the same measurement
+build `d2b478709ba907c2eede7d9d4b6360205e2fa4f84b1c4f3d71d3104b6ea68b4b`.
+
+| Group | Passed checks |
+| --- | ---: |
+| Measurement/services | 185 |
+| Measured compliance | 182 |
+| Global proposals | 303 |
+| Short export/report | 4,872 |
+| Section-proposal smoke | 366 |
+| Proposal preferences | 256 |
+| Complete targets/presets/UI components/scheduling | 489 |
+| Short sessions, including initial Current provenance | 1,071 |
+| Measured diagnostics | 369 |
+
+The standalone and eight test executables built universal arm64/x86_64. Binary
+inspection confirms Intel minimum macOS 10.13. Source and binary hashes, commands,
+reports and retained failed development attempts are under
+[`Tests/Reference/results/m18-development-2026-10-31`](../../Tests/Reference/results/m18-development-2026-10-31/README.md).
+No physical device, video playback or full-duration test was run. Native launch
+and layout inspection succeeded; interactive native UI qualification remains
+pending. High Sierra execution, cross-Mac exchange and combined long/video checks
+remain deferred as agreed. This is the first implementation slice, not completed
+M18 qualification. Main remains qualified M13.
+
+Next implementation work is the progressive per-channel PCM overview with exact
+extrema frames and the shared 128 MiB budget, preview lifecycle/cancellation,
+stopped ruler seeks and consolidated numeric gain/inspector lanes, followed by
+historical applied explanations and the remaining M18 acceptance checks. The later
+visible-passage sample reader remains out of M18 scope.
+
+### PCM waveform slice — implementation and impact manifest, 31 October 2026
+
+The next authorized slice adds actual-sample per-channel overview accumulation in
+`OfflineAnalysisService` after the shared applied gain processor, a runtime
+Source/Current cache, progressive publication and main timeline drawing/inspection.
+The overview starts at 64 frames/bin and coarsens adaptively. A single 128 MiB pool
+charges all live/retired worker and UI references: at most 60 MiB per pyramid plus
+an 8 MiB display/metadata reserve. Immutable completed prefixes publish at most
+five times/second, with immediate final publication. All pyramid/display merges
+preserve minimum/maximum values and their earliest exact sample positions.
+The inspector reports the represented half-open frame interval, duration and both
+positions; unread passages remain pending. No sample-level detail read is added.
+
+Source uses the verified confirmed programme. Current uses the shared actual
+processor, including transitions. Accepted initial unity Current shares Source's
+allocation only after verifying its measurement origin and audio identity.
+Runtime/job/revision/input/roles/processing changes reject stale publications.
+A cancellable Build waveform action replaces missing runtime data while preserving
+accepted measurement snapshots. No waveform data is serialized in this slice.
+M/S remain independently measured windows; no loudness or compliance is derived
+from PCM extrema. Core measurement arithmetic and shared audio processing are unchanged.
+
+Fresh required commands use `build/m18-dev-01`, Release universal arm64/x86_64,
+Intel minimum 10.13, existing JUCE 7.0.12. Configure with the existing options plus
+`-DLEVELSCOPE_BUILD_WAVEFORM_TESTS=ON -DLEVELSCOPE_BUILD_SECTION_PROCESSING_TESTS=ON`.
+Build only `LevelScopeStandalone`, `LevelScopeWaveformCoreTests`,
+`LevelScopeWaveformTests`, `LevelScopeMeasurementTests`, `LevelScopeDiagnosticsTests`,
+`LevelScopeSessionTests`, `LevelScopeSectionProcessingTests`, `LevelScopeExportTests`.
+Executables under `<Target>_artefacts/Release/<Target>` run as follows (the pure
+core executable is directly under the build directory):
+
+- WaveformCoreTests: no arguments; exhaustive PCM oracle, concurrency and pool bounds.
+- WaveformTests: `--root <new-owned-root> --output <waveforms.json>`; Source/Current
+  sample oracle, transitions, interleaved/assembly/composition, all four supported
+  rates, mono/stereo/5.0/5.1/System-I 7.1, exact observer on/off measurement parity,
+  cancellation/stale identity, allocation refusal, sharing, rebuild and UI inspection.
+- MeasurementTests: `--report <measurement.json>`.
+- DiagnosticsTests: `--report <diagnostics.json>`.
+- SessionTests: `--short --output <sessions.json>`.
+- SectionProcessingTests: `--smoke --root <new-owned-root> --output <processing.json>`.
+- ExportTests: `--artifacts <new-owned-root> --output <export.json>`.
+
+Reuse first-slice complete target/preset, compliance and proposal evidence because
+those implementations are unchanged by this slice. Reuse qualified reference
+measurement evidence because measurement arithmetic is unchanged; the fresh
+measurement run and exact on/off parity guard the new service observation boundary.
+Short automation budget 15–30 minutes plus build time. Preserve superseded evidence.
+No default/all/plugin builds, physical devices, video, actual High Sierra or
+three-hour end-to-end runs. This is development validation of the waveform slice,
+not completion or full qualification of M18.
+
+### Waveform slice completed and development-tested — 31 October 2026
+
+The progressive PCM overview slice is implemented. Source and Current use actual
+programme samples; Current includes the exact applied gain transitions. The initial
+identical Current shares Source's allocation after provenance checks. Both domains,
+obsolete worker references and display reserve remain within the combined 128 MiB
+budget. The main timeline shows per-channel coverage, keeps both extrema and their
+sample positions through reduction, and identifies the finest represented interval.
+A missing overview can be rebuilt without changing valid measured results. M/S still
+use their independently measured windows. The later visible-passage sample reader
+remains deferred.
+
+All seven required short development groups passed against build
+`d6a5d2e5bcb87f26560dadbe17deb2fdd1fca7f00de08e533df2c8ee474fb80f`: waveform core 240,560,
+waveform integration/UI 1,173, measurement 185, diagnostics 369, short sessions 1,071,
+section processing smoke 334 and export 4,872 checks. The pure waveform core also
+passed ThreadSanitizer and AddressSanitizer/UndefinedBehaviorSanitizer with no
+findings. Final short-fixture observation overhead was 0.36%; the largest
+sampled preparation + software paint was 4.479 ms. Every final release binary
+is universal, with Intel minimum 10.13. Source/test/binary hashes and commands are
+in [the waveform evidence](../../Tests/Reference/results/m18-waveform-2026-10-31/README.md).
+`candidate-02` is final; the passing earlier candidate is retained and superseded
+by a clarification that waveform rebuilding does not imply measurement invalidation.
+Component render captures were inspected; no native interactive qualification is
+claimed. No device, video, default/all/plugin target, main integration or other
+worktree was changed by this slice.
+
+Remaining M18 implementation includes progressive measured M/S publication,
+time-ruler/transport and gain-lane/inspector integration, further resizable zones
+and the bounded saved explanation history. Actual High Sierra, cross-Mac,
+physical/video and full-duration/RSS qualification remain in the agreed combined
+block after M18, no later than M19. This slice does not mark M18 complete.
+
+### Progressive M/S and navigation slice — authorized follow-up
+
+Scope: optional worker-only observation of the existing measured 400 ms M / 3 s S
+windows at the existing 100 ms cadence; bounded sealed-prefix publication with
+pending gate membership; final snapshot replacement and stale/cancel rejection.
+Add an audio-timecode ruler (HH:MM:SS.mmm, with no invented SMPTE frame rate), retain
+seconds below, pan/zoom/follow and a distinct stopped-only Seek action. Route seek
+through the existing audition service using the audition domain, independently of
+inspection. Reject ruler drags, playback/preparation/jobs/loading and stale requests.
+
+Fix stale Target availability after transport changes. Draft presence itself does
+not lock Target selection. Extend upper divider travel from 31 to 78 pixels at its
+default height, retaining 16-point metrics; keep its information line below the
+divider at a fixed height. Add a divider below the timeline scrollbar, giving the
+released height to the existing lower inspector rather than changing fonts.
+
+Focused validation selection: new LevelScopeTimelineProgressTests (exact observer
+on/off results/windows and cadence, silence/gaps/drain, publication/lifecycle,
+transport guards using injected devices, independent inspection, navigation and
+layout/Target availability); LevelScopeMeasurementTests; LevelScopeDiagnosticsTests;
+LevelScopeWaveformTests; LevelScopeJobRequirementsTests. Build only these named
+targets plus LevelScopeStandalone, universal with Intel minimum 10.13. Reuse prior
+unchanged export/session/proposal and waveform core/sanitizer evidence. Measurement
+arithmetic/order/drain are unchanged; the new observation boundary gets fresh exact
+on/off parity across supported rates/layouts and the existing numerical suite.
+No historical full runners, physical device or video runs, actual High Sierra or
+three-hour workflow. Those qualification deferrals remain as agreed. Record the
+exact development-app path and a short interaction checklist at completion.
+
+### Progressive loudness and navigation — development handover
+
+The standalone now overlays the actual 400 ms M and 3 s S measurement windows
+as analysis runs. Partial coverage, pending M gate membership and ungated S are
+identified in the plot and inspector. Cancellation clears the partial data.
+Final programme values, gate membership and identical-Source Current adoption
+still require an accepted measurement. Source and Current waveform storage
+remains subject to the existing combined 128 MiB budget.
+
+Development app: `/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app`.
+Use the [short manual checklist and rendered examples](../../Tests/Reference/results/m18-progress-navigation/README.md#manual-interaction-checklist)
+to try graph inspection, stopped ruler/numeric seek, zoom/fit/pan/follow and the
+two dividers. The Target controls now follow transport, loading and job state;
+neither discarding a draft nor toggling programme applicability is required to
+unlock them. At maximum compression the metrics keep their font size and the
+Target information line keeps its own height beneath the upper divider.
+
+[Final evidence](../../Tests/Reference/results/m18-progress-navigation/final-summary.json):
+2,692 focused checks and four pinned reference curve cases passed. The app and
+five test executables contain arm64/x86_64 and declare Intel minimum 10.13.
+The app was not qualified on actual High Sierra. The combined physical/video,
+cross-Mac and full-duration/RSS qualification remains deferred as agreed.
+Gain-lane/section inspection and saved applied explanations remain later M18
+work; the visible-passage sample reader belongs after M18.
+
+### Section gain lane and transport focus — impact selection
+
+Add a Current section-gain lane on the shared frame viewport and expose numerical
+staging, explicit Apply and Discard in the main timeline. Use existing M12
+validation, canonical plans, transition endpoints and invalidation. Selection is
+inspection only. Test lane alignment, boundary/EOF selection, exact values,
+stale/unsupported/active rejection, no-op, discard and independent remeasurement.
+Test the stopped-Seek → Space → Space path across child focus and retain normal
+text editing. Clarify playback preparation wording without changing verification,
+device, decoder or DSP behavior. Build the named standalone, timeline interaction
+tests and section-processing smoke target only. Reuse earlier measurement,
+waveform, session/export and proposal evidence for the unchanged paths. Actual
+High Sierra, cross-Mac, physical device/video and full-duration/RSS qualification
+remain deferred; saved proposal history remains separate M18 work.
+
+The gain/focus slice is implemented and passed **1,049 focused checks**: 715 for
+timeline/progress/gain/focus and 334 for the existing section-processing smoke
+suite. The main lane and Sections window share the same full-precision draft.
+Applied gain is solid, draft is dashed; click either the lane or its section
+navigation arrows to inspect without changing audition. Use Return or **Set
+draft**, then explicit **Apply gains** or **Discard gains**. A changing Apply
+marks Current unverified until remeasurement; a no-op and Discard preserve it.
+
+The dense 10,000-section fixture prepared and painted in 6.041 ms on the
+development Mac. The native JUCE focus regression executed both Space presses
+after Seek, including the Seek button becoming disabled during playback. The
+audio service continues to verify a new private playback copy; only its message
+changed. For app path, captures, commands, hashes and the manual checklist, see
+[the gain-lane evidence](../../Tests/Reference/results/m18-gain-lane/README.md).
+Development only: this does not mark M18 or the combined qualification complete.
+
+### Manual sections, preset dismissal and remembered roles
+
+M18 adds one-gesture waveform annotation and shared stopped ruler seeking and
+Play/Stop in the Sections window. Fresh stereo and 5.1 imports propose file
+roles from explicit labels, then remembered confirmed order, then a suggested
+layout for review. Both import paths require confirmation. A separate-file
+group also requires explicit alignment. Reopening restores the project's roles.
+Focused checks cover modal lifetime, section geometry, shared transport, role
+provenance, conflict, alternating formats and project reopening. Reuse M18's
+existing gain, measurement and audition evidence for the unchanged processing
+paths. The combined hardware, cross-Mac, High Sierra and full-duration checks
+stay scheduled after M18, no later than M19.
+
+Development build `5811184d944d23b6b660dd6a4da55cfa24f81ffaa318414805d6c473fed92067`
+passed 1,378 focused checks. These include both preset dialog exits, drawing
+and moving shared annotations, stale gesture rejection, Sections ruler seek
+and Play/Stop with injected audio, alternating stereo and 5.1, WAVE/FLAC/AIFF
+label precedence, separate-file alignment and a real saved-project reopen.
+The app and test binaries are universal with Intel minimum 10.13.
+[Development evidence and manual checks](../../Tests/Reference/results/m18-sections-roles/README.md).
+[Later playback roadmap](63_M18InteractiveTimelineAndProgressiveAnalysis.md#playback-roadmap-following-m18).
+
+### Main proposal workflow and saved explanation — impact selection
+
+Expose the existing global-first, section-led service through a main-window
+Propose / Review proposal / Apply proposal / Discard proposal panel. Keep the
+private assessment distinct from measured Current and require independent
+Re-measure Current State after changing Apply. Outcomes identify readiness,
+no-op, unsupported requirements, preference rejection, stale inputs, cancellation
+and failure. Rejected/stale selections remain labelled and inspectable. The gain
+lane shows applied, manual and automatic gains separately, including proposed
+global gain and exact local-plus-global inspection through transitions. Original
+proposal annotation intervals remain the review binding.
+
+Both changing automatic Apply paths capture the immutable baseline before
+invalidation. Session schema 8 gains an independent version-1, checksummed binary
+attachment for the last successfully applied explanation. It has an 8 MiB limit,
+inside the unchanged 128 MiB session budget; the 4 MiB core limit and independent
+measurement-cache recovery remain unchanged. The record holds exact before/after
+plans and identities, original annotations, structured corrections, full target
+and preference definitions/digests, baseline and available candidate scalar
+results/statuses/provenance, predictions and narrative. It contains no measured
+window population or verification authority. Legacy sessions gain no invented
+reasons. Bad history can be discarded independently with a notice. New changing
+Apply replaces the record, no-op/Discard preserve it, and source replacement
+clears it. Later edits identify historical processing/requirements/preferences
+separately from Current's actual verification state.
+
+Focused selection: new `--m18-workflow` checks in LevelScopeSectionProposalTests,
+its existing `--smoke` and `--preferences` modes, global proposal tests, session
+`--short`, timeline interaction tests and target requirement tests. These cover
+actual numerical proposal generation/application, explicit main-panel actions,
+automatic lane/rejected/stale views, 76.13% vs 20% diagnostic selection, 18 LU LRA
+capability rejection, no-op, global and section history, independent remeasurement,
+save/reopen, late-save edits, corrupt/missing/unrelated history and complete
+10,000-row access within the explanation budget. Build only the named standalone
+and selected test targets. Measurement/DSP arithmetic, device/routing, video,
+waveform storage and actual-artifact export gates are unchanged. The High Sierra,
+physical device/video, cross-Mac and full-duration/RSS qualification remains in
+the agreed combined block after M18, no later than M19.
+
+The new dense automatic-preview test identified quadratic geometry-key string
+construction during freshness checks. Use a linear stream for the identical
+established bytes and reuse that helper for manual geometry keys. A 10,000-row
+integer-format oracle guards identity compatibility; no revision, bound input,
+geometry or source-stamp check is removed from Apply.
+
+### Proposal workflow and historical explanation — development handover
+
+This slice is implemented. Final candidate 04 passed **3,737 focused checks**
+against build `875fe8b80d1813513fc09c6ee0a4e5bd8e246bbd56d83128ac97a2b7794dbd8a`. The development app remains
+`/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app`.
+The final app and five selected test binaries are universal with Intel minimum
+10.13. The dense automatic controls/lane test measured 14.042 ms p95;
+10,000 complete corrections and maximum UTF-8 names fit the 8 MiB historical
+attachment budget. Complete numerical/state, corruption recovery, save/reopen,
+no-op, stale and main-control checks are recorded with the commands/hashes in
+[the final evidence and manual checklist](../../Tests/Reference/results/m18-proposal-workflow/README.md).
+Native main-window and rendered component layout were inspected. This is focused
+development validation, not completion of M18 qualification. The High Sierra,
+physical/video, cross-Mac and full-duration/RSS deferrals remain unchanged.
+
+### Live proposal UI hang and limits window
+
+Sampling the unresponsive M18 app showed repeated full measurement digests on the
+UI timer. Proposal queries now reuse the digest of each immutable Source/Current
+snapshot without retaining the windows or caching an Apply decision. Raising
+Proposal limits now reuses its open editor and preserves unconfirmed values.
+The original app recovered on Discard. [Focused evidence](../../Tests/Reference/results/m18-proposal-refresh/README.md)
+records 1,136 passing checks, including live context/stale payload checks, large-window
+refresh (1.02 ms p95), and native window focus.
+The corrected development app is `/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-refresh-fix/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app`. Qualification deferrals stay unchanged.
+
+### Offline verification, measurement and Propose profiling
+
+On the development M1 Max, a 60-second stereo programme took 1.40 s to analyse and 4.06 s for a fresh three-pass section proposal. The matching 5.1 jobs took 4.19 s and 12.34 s. The meter took 84% of Source analysis in both layouts. The peak routine appeared in 79–81% of whole Source worker samples and 87–89% of fresh proposal worker samples. The recommended first experiment is a bounded per-channel true-peak prototype with exact serial-equivalence checks. A duplicate hash accounts for about 6.5% of Source analysis and 2.2% of fresh section Propose on these warm local PCM files. This profiling used diagnostic executables and synthetic files on the development Mac. [Stage timings, method and recommendation](../../Tests/Reference/results/m18-offline-profile/README.md)
+
+### Bounded per-channel true-peak development build
+
+The Apple-silicon standalone now uses a bounded per-channel true-peak path for stereo
+and 5.1. It preserves the serial filter arithmetic, frame/eighth-frame positions,
+observer semantics and ordered loudness reduction. The development Mac passed exact
+core, section-peak and proposal comparisons and matched stereo/5.1 timing gates
+before enablement. The compact lane count preserves the serial engine layout.
+The enabled app is `/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-peak-dev/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app`.
+[Timings, qualification boundaries and binary identity](../../Tests/Reference/results/m18-bounded-peaks/README.md).
+
+### Short end-to-end acceptance on the development Mac
+
+On 2 November 2026 the existing bounded-peak build passed one stereo global proposal and one 5.1 section proposal from fresh import through independent Current remeasurement, session reopen and verified PCM24 export. Each 60-second job ran three times. Median import-to-first-waveform was 0.61 s for stereo and 1.23 s for 5.1. Play-to-first-non-zero sample at the injected output was 0.30 s and 0.71 s respectively. The app restored the applied explanation and verified Current independently. Selected exported PCM samples, including the 5.1 gain transitions, matched the independent checker exactly. The combined two-Mac long, video and exchange qualification remains pending. [Short acceptance timings, workflows and evidence](../../Tests/Reference/results/m18-short-acceptance/README.md)

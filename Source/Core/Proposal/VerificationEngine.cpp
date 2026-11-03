@@ -30,7 +30,7 @@ Evaluation evaluateMeasuredProgramme (const TargetProfile& profile, const Measur
     s << evaluationVersion << ';' << out.rulesDigest.toStdString() << ';' << input.snapshotIdentity.toStdString()
       << ';' << input.measurementVersion.toStdString() << ';' << static_cast<int> (input.domain)
       << ';' << static_cast<int> (input.applicability) << ';' << input.currentIdentityMatches << ';' << input.lraStable;
-    for (const auto& m : { input.integrated, input.truePeak, input.lra })
+    for (const auto& m : { input.integrated, input.truePeak, input.lra, input.momentaryMax, input.shortTermMax })
     { s << ';' << static_cast<int> (m.status) << ';' << m.value.has_value(); if (m.value) s << ';' << *m.value; }
     const auto bytes = s.str(); out.identity = juce::SHA256 (bytes.data(), bytes.size()).toHexString();
     out.message = profile.validationError();
@@ -70,11 +70,14 @@ Evaluation evaluateMeasuredProgramme (const TargetProfile& profile, const Measur
         out.rules.push_back (std::move (rule));
     };
     const auto& l = profile.limits;
-    add ("programme-loudness", "LUFS", profile.integratedProvenance, input.integrated,
+    if(l.hasIntegratedLoudnessTarget) add ("programme-loudness", "LUFS", profile.integratedProvenance, input.integrated,
          l.integratedLufs - l.integratedToleranceLu, l.integratedLufs + l.integratedToleranceLu, l.integratedLufs, true);
-    add ("true-peak", "dBTP", profile.truePeakProvenance, input.truePeak, {}, l.truePeakCeilingDbtp, l.truePeakCeilingDbtp, true);
+    if(l.hasTruePeakCeiling) add ("true-peak", "dBTP", profile.truePeakProvenance, input.truePeak, {}, l.truePeakCeilingDbtp, l.truePeakCeilingDbtp, true);
     if (l.hasMaxLoudnessRange)
         add ("loudness-range", "LU", profile.lraProvenance, input.lra, {}, l.maxLoudnessRangeLu, l.maxLoudnessRangeLu, input.lraStable);
+    if(l.hasMaxMomentary) add("maximum-momentary", "LUFS", profile.momentaryProvenance, input.momentaryMax, {}, l.maxMomentaryLufs, l.maxMomentaryLufs, true);
+    if(l.hasMaxShortTerm) add("maximum-short-term", "LUFS", profile.shortTermProvenance, input.shortTermMax, {}, l.maxShortTermLufs, l.maxShortTermLufs, true);
+    if(out.rules.empty()){out.message="No target limits selected.";return out;}
     // A known violation is a fail even if another required metric is unavailable.
     // Otherwise any indeterminate rule prevents an aggregate pass.
     out.verdict = Verdict::pass;
@@ -82,8 +85,9 @@ Evaluation evaluateMeasuredProgramme (const TargetProfile& profile, const Measur
         if (rule.verdict == Verdict::fail) out.verdict = Verdict::fail;
         else if (rule.verdict != Verdict::pass && out.verdict != Verdict::fail) out.verdict = Verdict::indeterminate;
     out.message = out.verdict == Verdict::pass
-        ? (l.hasMaxLoudnessRange ? "Passes selected programme loudness, true-peak and LRA rules."
-                               : "Passes selected programme loudness and true-peak rules.")
+        ? (!profile.userSpecified && !l.hasMaxMomentary && !l.hasMaxShortTerm
+            ? (l.hasMaxLoudnessRange ? "Passes selected programme loudness, true-peak and LRA rules." : "Passes selected programme loudness and true-peak rules.")
+            : "Passes all selected measured rules.")
         : out.verdict == Verdict::fail ? "Fails one or more selected measured rules."
                                      : "Required measurements are unavailable; selected rules are indeterminate.";
     return out;

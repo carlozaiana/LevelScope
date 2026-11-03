@@ -120,7 +120,7 @@ TimelinePlot prepareTimeline (const ProgramAnalysis& a, double begin, double end
             ++plot.fullResolutionPoints;
             if (! it->lufs) continue;
             auto& b = bins[static_cast<size_t> (std::min (columns - 1, static_cast<int> ((it->end - plot.begin) * columns / (plot.end - plot.begin))))];
-            (ungated ? b.ungated : it->included ? b.included : b.excluded).add (*it->lufs);
+            (ungated ? b.ungated : it->included ? b.included : b.excluded).add (*it->lufs,it->end);
         }
     };
     fill (a.momentary, plot.momentary, false); fill (a.shortTerm, plot.shortTerm, true);

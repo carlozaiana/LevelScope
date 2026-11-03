@@ -160,8 +160,12 @@ void lifecycle()
 {
     Fixture f; StandaloneSessionModel s; import (s, f.file);
     measure (s, MeasurementDomain::source);
-    expect (! s.getWorkflowReadiness().canDraftProposal(), "unmeasured Current State cannot draft");
-    s.initializeCurrentStateFromSource(); measure (s, MeasurementDomain::currentState);
+    expect (s.getWorkflowReadiness().canDraftProposal() && s.currentState.analysis
+            && s.currentState.analysis->identicalSourceMeasurementIdentity == s.source.analysis->identity,
+            "first complete Source supplies measured identical Current for proposals");
+    s.initializeCurrentStateFromSource();
+    expect (! s.getWorkflowReadiness().canDraftProposal(), "explicitly reset unmeasured Current State cannot draft");
+    measure (s, MeasurementDomain::currentState);
     expect (s.getWorkflowReadiness().canDraftProposal(), "measured matching inputs can draft despite failing rules");
     const auto sourceIdentity = s.evaluation (MeasurementDomain::source).identity;
     const auto currentIdentity = s.evaluation (MeasurementDomain::currentState).identity;

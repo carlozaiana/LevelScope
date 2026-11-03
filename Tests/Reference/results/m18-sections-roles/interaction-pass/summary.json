@@ -1,0 +1,25 @@
+{
+  "all_passed": true,
+  "pilot": true,
+  "measurement_build": "e255815275c43086933c846b1c2b0e2cc5bca487df734d79273dcee9b5c380f5",
+  "records": [
+    {
+      "group": "timeline",
+      "passed": true,
+      "checks": 862,
+      "seconds": 2.87561825,
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeTimelineProgressTests_artefacts/Release/LevelScopeTimelineProgressTests",
+        "--root",
+        "/tmp/levelscope-m18-section-import-w7x76qi5/timeline",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/m18-sections-roles/interaction-pass/timeline.json"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "app_path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app",
+  "binaries": [],
+  "physical_device_opened": false,
+  "video_loaded": false
+}

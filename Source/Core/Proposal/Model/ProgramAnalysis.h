@@ -43,7 +43,16 @@ struct ValueExtent
 {
     size_t count = 0;
     double minimum = 0, maximum = 0;
-    void add (double v) { if (count++ == 0) minimum = maximum = v; else { minimum = std::min (minimum, v); maximum = std::max (maximum, v); } }
+    int64_t firstEnd=0,lastEnd=0;
+    double firstValue=0,lastValue=0;
+    void add (double v,int64_t endFrame)
+    {
+        if(count++==0){minimum=maximum=firstValue=v;firstEnd=endFrame;}
+        else {minimum=std::min(minimum,v);maximum=std::max(maximum,v);}
+        lastValue=v;lastEnd=endFrame;
+    }
+    bool follows(const ValueExtent& previous,int64_t step) const
+    {return count&&previous.count&&firstEnd-previous.lastEnd==step;}
 };
 struct PlotBucket
 {

@@ -1,0 +1,365 @@
+{
+  "operations": {
+    "import": {
+      "wall_ms": 101.280625,
+      "worker_cpu_ms": 101.152,
+      "process_cpu_ms": 103.107,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        100.084583
+      ],
+      "heartbeat_tail_ms": 3.624959,
+      "timeline_paint_ms": [
+        3.603959
+      ]
+    },
+    "source": {
+      "wall_ms": 856.174208,
+      "worker_cpu_ms": 835.417,
+      "process_cpu_ms": 1459.684,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        102.716,
+        100.902084,
+        99.415291,
+        101.218084,
+        100.63875,
+        100.39025,
+        100.546916,
+        103.75375
+      ],
+      "heartbeat_tail_ms": 47.370792,
+      "timeline_paint_ms": [
+        2.714209,
+        2.636041,
+        2.302875,
+        3.695458,
+        3.315208,
+        4.710291,
+        4.393625,
+        5.9205
+      ]
+    },
+    "global": {
+      "wall_ms": 1.72175,
+      "worker_cpu_ms": 1.725000000000001,
+      "process_cpu_ms": 1.735,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [],
+      "heartbeat_tail_ms": 1.734541,
+      "timeline_paint_ms": []
+    },
+    "fresh": {
+      "wall_ms": 2333.675459,
+      "worker_cpu_ms": 2279.99,
+      "process_cpu_ms": 4270.356,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        102.868792,
+        99.830292,
+        102.385708,
+        101.146542,
+        102.481291,
+        105.361125,
+        101.7635,
+        101.561375,
+        102.588125,
+        102.766167,
+        102.202,
+        100.2375,
+        100.154125,
+        101.221042,
+        103.196,
+        101.20325,
+        99.51879099999999,
+        100.544375,
+        104.946959,
+        102.211708,
+        102.834375,
+        102.468125
+      ],
+      "heartbeat_tail_ms": 94.331667,
+      "timeline_paint_ms": [
+        4.409667,
+        2.711375,
+        2.765792,
+        2.778041,
+        2.850542,
+        2.788459,
+        2.824959,
+        2.705667,
+        2.858917,
+        2.718333,
+        2.712833,
+        2.847292,
+        2.630875,
+        2.862583,
+        2.414916,
+        2.799125,
+        2.68275,
+        2.7095,
+        2.717916,
+        2.862417,
+        2.361417,
+        2.494042
+      ]
+    },
+    "preference_blocked": {
+      "wall_ms": 202.649709,
+      "worker_cpu_ms": 201.441,
+      "process_cpu_ms": 208.145,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        57.460833,
+        100.466
+      ],
+      "heartbeat_tail_ms": 48.914792,
+      "timeline_paint_ms": [
+        2.734084,
+        2.721584
+      ]
+    },
+    "measured_rejection": {
+      "wall_ms": 864.969291,
+      "worker_cpu_ms": 845.633,
+      "process_cpu_ms": 1460.45,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        52.9875,
+        103.986042,
+        104.652291,
+        105.555875,
+        102.484459,
+        104.144958,
+        104.493625,
+        101.482583
+      ],
+      "heartbeat_tail_ms": 88.351209,
+      "timeline_paint_ms": [
+        2.710667,
+        2.810416,
+        2.485792,
+        2.903584,
+        2.83675,
+        2.73525,
+        2.975833,
+        2.738834
+      ]
+    },
+    "unsupported": {
+      "wall_ms": 1.767375,
+      "worker_cpu_ms": 1.742999999999995,
+      "process_cpu_ms": 1.757,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [],
+      "heartbeat_tail_ms": 1.784041,
+      "timeline_paint_ms": []
+    },
+    "reused": {
+      "wall_ms": 1526.628584,
+      "worker_cpu_ms": 1491.081,
+      "process_cpu_ms": 2712.585,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        98.456875,
+        102.334542,
+        100.171208,
+        105.812584,
+        100.746583,
+        102.446375,
+        100.436583,
+        101.092625,
+        103.800792,
+        101.159417,
+        101.936791,
+        104.574625,
+        102.777459,
+        100.886625
+      ],
+      "heartbeat_tail_ms": 100.241333,
+      "timeline_paint_ms": [
+        2.694709,
+        2.695208,
+        2.886875,
+        2.739875,
+        2.706792,
+        2.831583,
+        2.745667,
+        2.615792,
+        2.698292,
+        2.72625,
+        2.991542,
+        2.623959,
+        3.056708,
+        2.87525
+      ]
+    },
+    "current": {
+      "wall_ms": 861.281208,
+      "worker_cpu_ms": 842.817,
+      "process_cpu_ms": 1460.992,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        99.069875,
+        100.712208,
+        100.44625,
+        101.891417,
+        104.279625,
+        104.496,
+        104.236625,
+        101.470708
+      ],
+      "heartbeat_tail_ms": 44.777875,
+      "timeline_paint_ms": [
+        1.947,
+        2.153,
+        2.257125,
+        3.471667,
+        3.43125,
+        4.569833,
+        4.379708,
+        5.85625
+      ]
+    },
+    "already_meets": {
+      "wall_ms": 1.806833,
+      "worker_cpu_ms": 1.811999999999983,
+      "process_cpu_ms": 1.822,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [],
+      "heartbeat_tail_ms": 1.821208,
+      "timeline_paint_ms": []
+    }
+  },
+  "identities": {
+    "source": "2fe8a45b582aac66b3bc9901d120de7974d4ead4077ff1092d83ad4e96223dee",
+    "global": "b0c15ae542f76ca34304c487b82c1a756d252db3dc8294133c8d564d704794b8",
+    "global_decision": "8e1b3adc15a736404a7e31738225d00e96a6b9c5f9b4a34921718cc8391e74a1",
+    "fresh": "0dc8424ac9cc15f41ba0943bc923ba1a47f35f436354449ba76d121af931ed0a",
+    "fresh_decision": "a5d35584332fce41dc6f83e6faa65082b7967bc5b23e09a8e0cf991a7453ed19",
+    "fresh_section_peaks": "b58ecf779ba471746315128bd06d377cd8def09507b704fed597ff1866130f49",
+    "fresh_candidate": "6e89393b489f76ea55fa1fb4eee96dccafbc38e9940f0c463d029ff81f73abc9",
+    "fresh_plan": "cb5ff556a9374e3e9da83b81230683683e0df46c2b14ea9d971943831244e6ba",
+    "preference_blocked": "847af5a2eaece995a95287b2fa4e58be1f090d6cf76ce7fdb282687060fb32e5",
+    "preference_blocked_decision": "dfbcf999126ea4a4722315928e7e4b96b8be4ae3ff775531090e2313b4884c4c",
+    "preference_blocked_section_peaks": "b58ecf779ba471746315128bd06d377cd8def09507b704fed597ff1866130f49",
+    "measured_rejection": "291fb4880bc561fd4047d8b3aaf570bd0e11b9d5e3ce0da345fad97d65ffe7dc",
+    "measured_rejection_decision": "197e4d40080977fa440bfdeca787049679651591ae968a91a276f786135da1be",
+    "measured_rejection_section_peaks": "b58ecf779ba471746315128bd06d377cd8def09507b704fed597ff1866130f49",
+    "measured_rejection_candidate": "f3bdc5874adee75034a4bb3907a2bb4b3dc9fe36827751a2dc5cdbe170cffdf8",
+    "measured_rejection_plan": "02e8e161047cdf69e8e640a7beb1a1ddc006430b68e884b36c5515aced4ff5e7",
+    "unsupported": "f19e0928faf740c584d3bce85bbf1f98ebeb407ef48f754c60a64210fc838f85",
+    "unsupported_decision": "f483b0ae329ceff3b040907d8102508cfd6e2b59e3c15fce9029ecc503d0432e",
+    "reused": "0dc8424ac9cc15f41ba0943bc923ba1a47f35f436354449ba76d121af931ed0a",
+    "reused_decision": "766bd926ed29d877051dfe28651e869027868d0003e977012c1c3f8b1c6264b9",
+    "reused_section_peaks": "b58ecf779ba471746315128bd06d377cd8def09507b704fed597ff1866130f49",
+    "reused_candidate": "0696da71c36231bc2ba2b90426717ac4e15019774489842482319a844480dba6",
+    "reused_plan": "cb5ff556a9374e3e9da83b81230683683e0df46c2b14ea9d971943831244e6ba",
+    "current": "189396dfadb0a14fc3b94f9fa68f71b1e74decc8c9d12952746ab56062a83516",
+    "already_meets": "7dc2a7f8359a4a05dc122138cdb8c7d3f911114ee01e9068c48adead688f1191",
+    "already_meets_decision": "e9c86deb1db0ee365178fc646ed907527eefa2a85a8c72018aabffde37bf9334"
+  },
+  "outcomes": {
+    "global": {
+      "main_preflight_ms": 0.766709,
+      "main_accept_ms": 0.199667,
+      "passes": 0,
+      "outcome": "Ready to apply",
+      "changes": 0,
+      "status": 2,
+      "issue": 0,
+      "can_apply": true,
+      "target_il": -23.7,
+      "target_tp": -1.0
+    },
+    "fresh": {
+      "main_preflight_ms": 0.067666,
+      "main_accept_ms": 0.289125,
+      "passes": 3,
+      "outcome": "Ready to apply",
+      "changes": 1,
+      "status": 4,
+      "issue": 0,
+      "can_apply": true,
+      "target_il": -23.0,
+      "target_tp": -1.0
+    },
+    "preference_blocked": {
+      "main_preflight_ms": 0.06758400000000001,
+      "main_accept_ms": 0.330958,
+      "passes": 0,
+      "outcome": "Blocked by proposal preferences",
+      "changes": 0,
+      "status": 3,
+      "issue": 3,
+      "can_apply": false,
+      "target_il": -23.0,
+      "target_tp": -1.0
+    },
+    "measured_rejection": {
+      "main_preflight_ms": 0.06979200000000001,
+      "main_accept_ms": 0.28125,
+      "passes": 1,
+      "outcome": "Candidate rejected",
+      "changes": 1,
+      "status": 3,
+      "issue": 4,
+      "can_apply": false,
+      "target_il": -18.0,
+      "target_tp": -1.0
+    },
+    "unsupported": {
+      "main_preflight_ms": 1.538959,
+      "main_accept_ms": 0.233375,
+      "passes": 0,
+      "outcome": "Unsupported correction",
+      "changes": 0,
+      "status": 0,
+      "issue": 2,
+      "can_apply": false,
+      "target_il": -18.0,
+      "target_tp": -1.0
+    },
+    "reused": {
+      "main_preflight_ms": 0.07133399999999999,
+      "main_accept_ms": 0.28825,
+      "passes": 2,
+      "outcome": "Ready to apply",
+      "changes": 1,
+      "status": 4,
+      "issue": 0,
+      "can_apply": true,
+      "target_il": -23.0,
+      "target_tp": -1.0
+    },
+    "already_meets": {
+      "main_preflight_ms": 0.780875,
+      "main_accept_ms": 0.246792,
+      "passes": 0,
+      "outcome": "Already meets requirements",
+      "changes": 0,
+      "status": 1,
+      "issue": 0,
+      "can_apply": false,
+      "target_il": -23.0,
+      "target_tp": -1.0
+    }
+  },
+  "roles": "L,R",
+  "file_sha256": "171b4aa51900c9826416719af9950005ce1a445817e49aa215c14cc2cd332566",
+  "frames": 2880000,
+  "source_lufs": -24.43008132144102,
+  "current_lufs": -23.00000001747636,
+  "channels": 2,
+  "base_build": "c47b52d320036a145982d2db53cdfea03bcce4834e7ffd0dffe3cd1fbdd973c9"
+}

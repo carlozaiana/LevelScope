@@ -1,5 +1,7 @@
 # Standards Coverage & Roadmap Matrix
 
+Later standalone playback work includes persistent device selection and opt-in reconnection, followed by explicitly selected stereo monitoring for 5.1 programmes. [Playback roadmap and proposed monitor matrix](63_M18InteractiveTimelineAndProgressiveAnalysis.md#playback-roadmap-following-m18)
+
 M13 qualification update, 28 October 2026: bounded candidate-02 is implemented
 and qualified on actual Sequoia/High Sierra; [ProjectIndex 47](47_M13BoundedSectionTrimProposals.md) is authoritative for this scope. The broader
 no-change rule covers all applicable explicitly selected, method-defined objectives;

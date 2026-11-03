@@ -3,6 +3,9 @@
 #include "Pcm24Wave.h"
 #include <juce_cryptography/juce_cryptography.h>
 #include <cmath>
+#if JUCE_MAC
+#include <AudioToolbox/AudioToolbox.h>
+#endif
 
 namespace levelscope::standalone
 {
@@ -71,6 +74,96 @@ juce::String flacChannelMask (const juce::File& file, JobControl& control, std::
         if (! input.setPosition (end)) return "Cannot skip FLAC metadata block";
     }
     return {};
+}
+
+ChannelLayout maskOrder(uint32_t mask,int count)
+{
+    ChannelLayout result;
+    result.count=count;
+    const auto roles=juce::AudioChannelSet::fromWaveChannelMask(int32_t(mask));
+    if((mask>>18)==0 && roles.size()==count)
+        for(int i=0;i<count;++i)result.roles[i]=roles.getTypeOfChannel(i);
+    return result;
+}
+#if JUCE_MAC
+// AIFF CHAN stores a Core Audio layout in big-endian byte order. Read only
+// an explicit chunk, never a layout inferred by a decoder from channel count.
+ChannelLayout aiffOrder(const juce::File& file,int count,JobControl& control)
+{
+    ChannelLayout order;
+    order.count=count;
+    juce::FileInputStream input(file);
+    input.setPosition(12);
+    while(!control.isCancelled() && input.getTotalLength()-input.getPosition()>=8)
+    {
+        char id[4]{};
+        if(input.read(id,4)!=4)break;
+        const auto size=uint32_t(input.readIntBigEndian());
+        const auto next=input.getPosition()+size+(size&1u);
+        if(next>input.getTotalLength())break;
+        if(std::memcmp(id,"CHAN",4)!=0){if(!input.setPosition(next))break;continue;}
+        if(size<12)break;
+        const auto tag=uint32_t(input.readIntBigEndian());
+        const auto bitmap=uint32_t(input.readIntBigEndian());
+        const auto n=uint32_t(input.readIntBigEndian());
+        if(tag==kAudioChannelLayoutTag_UseChannelBitmap)return maskOrder(bitmap,count);
+        std::array<uint32_t,maxChannels> labels{};
+        if(tag==kAudioChannelLayoutTag_UseChannelDescriptions)
+        {
+            if(n!=uint32_t(count) || size<12+20*n)break;
+            for(int i=0;i<count;++i){labels[i]=uint32_t(input.readIntBigEndian());input.setPosition(input.getPosition()+16);}
+        }
+        else
+        {
+            struct Buffer {AudioChannelLayout layout;AudioChannelDescription extra[maxChannels];} buffer{};
+            UInt32 bytes=sizeof(buffer);
+            if(AudioFormatGetProperty(kAudioFormatProperty_ChannelLayoutForTag,sizeof(tag),&tag,&bytes,&buffer)!=noErr
+                || buffer.layout.mNumberChannelDescriptions!=uint32_t(count))break;
+            const auto* descriptions=reinterpret_cast<const AudioChannelDescription*>(
+                reinterpret_cast<const char*>(&buffer)+offsetof(AudioChannelLayout,mChannelDescriptions));
+            for(int i=0;i<count;++i)labels[i]=descriptions[i].mChannelLabel;
+        }
+        for(int i=0;i<count;++i)
+            if(labels[i]>=1 && labels[i]<=18)order.roles[i]=static_cast<ChannelRole>(labels[i]);
+        break;
+    }
+    return order;
+}
+#endif
+void interpretRoleLabels(const juce::File& file,MediaInfo& media,JobControl& control)
+{
+    if(media.channels!=1 && media.channels!=2 && media.channels!=6)return;
+    ChannelLayout labelled;
+    juce::String provenance;
+    if(media.format.containsIgnoreCase("wav") && media.tags.containsKey("ChannelMask"))
+    {
+        labelled=maskOrder(uint32_t(media.tags["ChannelMask"].getLargeIntValue()),media.channels);
+        provenance="WAVE speaker mask";
+    }
+    else if(media.format.containsIgnoreCase("flac"))
+    {
+        std::optional<uint32_t> mask;
+        const auto error=flacChannelMask(file,control,mask);
+        if(error.isEmpty() && mask){labelled=maskOrder(*mask,media.channels);provenance="FLAC speaker mask";}
+        else if(error.isEmpty() && media.channels>1)
+        {
+            labelled=maskOrder(media.channels==2?3:0x3f,media.channels);
+            provenance="Native FLAC channel order";
+        }
+    }
+    #if JUCE_MAC
+    else if(media.format.containsIgnoreCase("aiff"))
+    {
+        labelled=aiffOrder(file,media.channels,control);
+        provenance="AIFF channel labels";
+    }
+    #endif
+    if(labelled.isValid())
+    {
+        media.hasFileRoleLabels=true;
+        media.suggestedLayout=labelled;
+        media.layoutProvenance=provenance;
+    }
 }
 
 juce::String interpretEightChannels (const juce::File& file, MediaInfo& media, JobControl& control)
@@ -306,6 +399,7 @@ MediaValidationResult validateMedia (const juce::File& file, JobControl& control
     for (int channel = 0; channel < juce::jmin (layout.size(), media.channels); ++channel)
         media.suggestedLayout.roles[channel] = layout.getTypeOfChannel (channel);
     media.layoutProvenance = "Legacy decoder role suggestions; confirm file-channel interpretation.";
+    interpretRoleLabels(file,media,control);
     if(rf64Input)media.layoutProvenance+=" "+rf64Notice;
     if (media.channels == 8)
     {

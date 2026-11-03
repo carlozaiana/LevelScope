@@ -1,0 +1,2 @@
+FAIL: offscreen half-open selection does not leave a fabricated viewport edge marker
+FAIL: 225 M4 checks; no audio device opened

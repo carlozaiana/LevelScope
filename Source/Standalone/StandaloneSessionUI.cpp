@@ -69,6 +69,7 @@ void StandaloneMainComponent::requestClose(std::function<void()> close)
 }
 void StandaloneMainComponent::beginSaveSession(bool saveAs,std::function<void()> continuation)
 {
+    if(!jobRequirementsPanel.commitFields()){documentNotice="Correct the Target fields before saving the session.";refreshSessionControls();return;}
     if(documentResult.valid()||session.persistenceLoading||audition.active()){documentNotice="Stop audition and finish the file operation before saving";return;}
     if(session.hasActionableSectionProposal())
     {documentNotice="Discard the transient section-led proposal before saving. Applied settings remain saved normally.";refreshSessionControls();return;}
@@ -80,15 +81,15 @@ void StandaloneMainComponent::beginSaveSession(bool saveAs,std::function<void()>
     {
         juce::Component::SafePointer<StandaloneMainComponent> safe(this);
         juce::AlertWindow::showAsync(juce::MessageBoxOptions().withIconType(juce::MessageBoxIconType::WarningIcon).withTitle("Session format upgrade")
-            .withMessage(monoSections ? "Saving writes schema 7 and requires an M17 reader, including proposal preferences, mono processing and marker provenance. Choose Save As to retain your original file; no audio processing is removed."
-                : "Saving writes schema 7 and requires an M17 reader. Choose Save As to retain your original older-readable copy.")
+            .withMessage(monoSections ? "Saving writes schema 8 and requires an M18 reader, including proposal preferences, mono processing and marker provenance. Choose Save As to retain your original file; no audio processing is removed."
+                : "Saving writes schema 8 and requires an M18 reader. Choose Save As to retain your original older-readable copy.")
             .withButton("Save As").withButton("Save").withButton("Cancel"),[safe,continuation](int choice)
             {if(!safe || (choice!=1 && choice!=2))return;safe->migrationSaveApproved=true;safe->beginSaveSession(choice==1,continuation);safe->migrationSaveApproved=false;});
         return;
     }
     if(saveAs||session.documentFile==juce::File())
     {
-        sessionChooser=std::make_unique<juce::FileChooser>(monoSections?"Save session (requires M17 reader)":"Save LevelScope session",session.documentFile==juce::File()?juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile("Untitled.levelscope"):((monoSections || session.openedSessionSchema<sessionfile::schemaVersion)?session.documentFile.getSiblingFile(session.documentFile.getFileNameWithoutExtension()+(monoSections?"-M17.levelscope":"-M17.levelscope")):session.documentFile),"*.levelscope");
+        sessionChooser=std::make_unique<juce::FileChooser>(monoSections?"Save session (requires M18 reader)":"Save LevelScope session",session.documentFile==juce::File()?juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile("Untitled.levelscope"):((monoSections || session.openedSessionSchema<sessionfile::schemaVersion)?session.documentFile.getSiblingFile(session.documentFile.getFileNameWithoutExtension()+(monoSections?"-M18.levelscope":"-M18.levelscope")):session.documentFile),"*.levelscope");
         juce::Component::SafePointer<StandaloneMainComponent> safe(this);
         sessionChooser->launchAsync(juce::FileBrowserComponent::saveMode|juce::FileBrowserComponent::canSelectFiles|juce::FileBrowserComponent::warnAboutOverwriting,[safe,continuation](const auto& picker)
         {

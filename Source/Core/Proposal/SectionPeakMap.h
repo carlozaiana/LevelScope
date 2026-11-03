@@ -32,6 +32,9 @@ class SectionPeakCollector final : public measurement::PeakObserver
 {
 public:
     SectionPeakCollector(const SectionMap&, int channels, const juce::String& snapshot);
+    // Cursors, maximum locations and buckets are preallocated and channel-owned.
+    // finish() reads them only after every block has joined.
+    bool acceptsConcurrentChannels() const noexcept override { return true; }
     void sample(size_t, double, int64_t) override;
     void truePeak(size_t, double, int64_t, bool) override;
     std::shared_ptr<const SectionPeakMap> finish();

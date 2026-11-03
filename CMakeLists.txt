@@ -221,6 +221,8 @@ add_library(LevelScopeStandaloneSupport STATIC
     Source/Core/Proposal/SectionPeakMap.cpp
     Source/Core/Proposal/Methods/SectionTrimMethod.cpp
     Source/Standalone/StandaloneSectionProposal.cpp
+    Source/Standalone/AppliedProposalExplanation.cpp
+    Source/Standalone/AppliedProposalSerialization.cpp
     Source/Standalone/StandaloneProposal.cpp
     Source/Core/Proposal/Model/TargetProfile.cpp
     Source/Core/Proposal/Model/JobRequirements.cpp
@@ -229,6 +231,10 @@ add_library(LevelScopeStandaloneSupport STATIC
     Source/Standalone/StandaloneMedia.cpp
     Source/Standalone/StandaloneAudition.cpp
     Source/Standalone/StandaloneMeasurementService.cpp
+    Source/Standalone/StandaloneWaveform.cpp
+    Source/Standalone/RememberedChannelRoles.cpp
+    Source/Standalone/StandaloneLoudnessPreview.cpp
+    Source/Core/Waveform/WaveformOverview.cpp
     Source/Standalone/StandaloneVideo.cpp
 )
 if (APPLE)
@@ -238,9 +244,12 @@ if (APPLE)
     target_link_libraries(LevelScopeStandaloneSupport PUBLIC "-framework AVFoundation" "-framework CoreMedia" "-framework CoreVideo")
 endif()
 target_include_directories(LevelScopeStandaloneSupport PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Source)
+option(LEVELSCOPE_ENABLE_BOUNDED_TRUE_PEAK "Use bounded per-channel peak measurement on Apple silicon" ON)
+target_compile_definitions(LevelScopeStandaloneSupport PRIVATE LEVELSCOPE_ENABLE_BOUNDED_TRUE_PEAK=$<BOOL:${LEVELSCOPE_ENABLE_BOUNDED_TRUE_PEAK}>)
 file(GLOB_RECURSE _measurement_identity_sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/Source/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Source/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/Source/*.mm")
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${_measurement_identity_sources})
 set(_measurement_identity_text "${CMAKE_CXX_COMPILER_ID};${CMAKE_CXX_COMPILER_VERSION};${CMAKE_BUILD_TYPE};${CMAKE_CXX_FLAGS};${CMAKE_CXX_FLAGS_RELEASE};no-fast-math;fp-contract-off")
+string(APPEND _measurement_identity_text ";bounded-peaks=${LEVELSCOPE_ENABLE_BOUNDED_TRUE_PEAK}")
 foreach(_measurement_source IN LISTS _measurement_identity_sources)
     file(SHA256 "${_measurement_source}" _measurement_source_hash)
     string(APPEND _measurement_identity_text "${_measurement_source_hash};")
@@ -261,6 +270,8 @@ add_library(LevelScopeDiagnosticsUI STATIC
     Source/Standalone/StandaloneMarkerImportPanel.cpp
     Source/Standalone/StandaloneSectionsPanel.cpp
     Source/Standalone/MeasurementTimeline.cpp
+    Source/Standalone/TimelineGainLane.cpp
+    Source/Standalone/ProposalWorkflowPanel.cpp
     Source/Standalone/StandaloneDiagnosticsPanel.cpp)
 target_link_libraries(LevelScopeDiagnosticsUI PUBLIC LevelScopeStandaloneSupport juce::juce_gui_basics)
 
@@ -350,6 +361,9 @@ endif()
 option(LEVELSCOPE_BUILD_MEASUREMENT_TESTS "Build hardware-independent offline measurement checks" OFF)
 if (LEVELSCOPE_BUILD_MEASUREMENT_TESTS)
     enable_testing()
+    add_executable(LevelScopePeakChannelParity Tests/PeakChannelParity.cpp)
+    target_link_libraries(LevelScopePeakChannelParity PRIVATE LevelScopeMeasurementCore)
+    add_test(NAME peak-channel-parity COMMAND LevelScopePeakChannelParity)
     juce_add_console_app(LevelScopeMeasurementTests PRODUCT_NAME "LevelScope Measurement Tests")
     target_sources(LevelScopeMeasurementTests PRIVATE Tests/OfflineMeasurementTests.cpp)
     target_link_libraries(LevelScopeMeasurementTests PRIVATE LevelScopeStandaloneSupport)
@@ -541,5 +555,33 @@ if(LEVELSCOPE_BUILD_JOB_REQUIREMENTS_TESTS)
     target_link_libraries(LevelScopeJobRequirementsTests PRIVATE LevelScopeDiagnosticsUI juce::juce_gui_basics)
     if(NOT MSVC)
         target_compile_options(LevelScopeJobRequirementsTests PRIVATE -fno-fast-math -ffp-contract=off)
+    endif()
+endif()
+
+option(LEVELSCOPE_BUILD_WAVEFORM_TESTS "Build M18 bounded PCM waveform checks" OFF)
+if(LEVELSCOPE_BUILD_WAVEFORM_TESTS)
+    find_package(Threads REQUIRED)
+    add_executable(LevelScopeWaveformCoreTests Tests/WaveformOverviewTests.cpp Source/Core/Waveform/WaveformOverview.cpp)
+    target_include_directories(LevelScopeWaveformCoreTests PRIVATE Source)
+    target_compile_features(LevelScopeWaveformCoreTests PRIVATE cxx_std_17)
+    target_link_libraries(LevelScopeWaveformCoreTests PRIVATE Threads::Threads)
+    juce_add_console_app(LevelScopeWaveformTests PRODUCT_NAME "LevelScope Waveform Tests")
+    target_sources(LevelScopeWaveformTests PRIVATE Tests/WaveformTests.cpp)
+    target_compile_definitions(LevelScopeWaveformTests PRIVATE JUCE_MODAL_LOOPS_PERMITTED=1)
+    target_link_libraries(LevelScopeWaveformTests PRIVATE LevelScopeDiagnosticsUI juce::juce_gui_basics)
+    if(NOT MSVC)
+        target_compile_options(LevelScopeWaveformCoreTests PRIVATE -fno-fast-math -ffp-contract=off)
+        target_compile_options(LevelScopeWaveformTests PRIVATE -fno-fast-math -ffp-contract=off)
+    endif()
+endif()
+
+option(LEVELSCOPE_BUILD_TIMELINE_PROGRESS_TESTS "Build M18 measured preview and timeline navigation checks" OFF)
+if(LEVELSCOPE_BUILD_TIMELINE_PROGRESS_TESTS)
+    juce_add_console_app(LevelScopeTimelineProgressTests PRODUCT_NAME "LevelScope Timeline Progress Tests")
+    target_sources(LevelScopeTimelineProgressTests PRIVATE Tests/TimelineProgressTests.cpp Source/Standalone/StandaloneAudioPanel.cpp Source/Standalone/StandaloneProgrammeImport.cpp)
+    target_compile_definitions(LevelScopeTimelineProgressTests PRIVATE JUCE_MODAL_LOOPS_PERMITTED=1)
+    target_link_libraries(LevelScopeTimelineProgressTests PRIVATE LevelScopeDiagnosticsUI juce::juce_gui_basics)
+    if(NOT MSVC)
+        target_compile_options(LevelScopeTimelineProgressTests PRIVATE -fno-fast-math -ffp-contract=off)
     endif()
 endif()

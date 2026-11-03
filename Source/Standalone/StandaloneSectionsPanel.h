@@ -14,6 +14,12 @@ public:
     void synchronize() { timerCallback(); }
     void suspend();
     void resume();
+    MeasurementTimeline& timelineView() {return timeline;}
+    void refreshMeasuredView() {timeline.setAnalysis(measured?measured->analysis:nullptr);}
+    MeasurementDomain inspectionDomain() const {return domainBox.getSelectedId()==2?MeasurementDomain::currentState:MeasurementDomain::source;}
+    void setPlaybackState(bool canPlay,bool canStop,const juce::String& domain);
+    bool keyPressed(const juce::KeyPress& key) override {return timeline.keyPressed(key);}
+    std::function<void()> onPlay,onStop;
     void paint (juce::Graphics&) override;
     void resized() override;
     std::function<void()> onChanged;
@@ -25,9 +31,11 @@ private:
     SectionsController sections;
     std::shared_ptr<const MeasuredDiagnostics> measured;
     std::shared_ptr<const proposal::SectionAnalysis> displayed;
-    juce::String mapKey, annotationKey, editNotice, appliedGainKey, proposalViewKey;
+    juce::String mapKey, annotationKey, editNotice, appliedGainKey, intentViewKey;
     bool suspended = false, refreshing = false;
     uint64_t selectedId = 0;
+    juce::TextButton play{"Play"},stop{"Stop"};
+    juce::Label auditionDomain;
     juce::ComboBox domainBox, windowKind, windowScope;
     juce::TextButton splitButton { "Split at frame" }, moveButton { "Move end" }, mergeButton { "Merge next" }, renameButton { "Rename" };
     juce::TextButton rebuildButton { "Build sections" }, cancelButton { "Cancel sections" };

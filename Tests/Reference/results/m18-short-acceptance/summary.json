@@ -1,0 +1,120 @@
+{
+  "build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce",
+  "standalone_sha256": "dc3134697c075415627b21fd9e8036f7af213eb8ee919d5839a5cf2698287c69",
+  "host": "Apple M1 Max / macOS 15.7.9 (24G830) / arm64",
+  "physical_output": false,
+  "layouts": {
+    "stereo": {
+      "seconds": {
+        "import_to_role_review_s": {
+          "median": 0.1882245,
+          "min": 0.187145417,
+          "max": 0.188622666
+        },
+        "import_to_first_waveform_s": {
+          "median": 0.607475417,
+          "min": 0.602763416,
+          "max": 0.611091167
+        },
+        "confirm_to_first_waveform_s": {
+          "median": 0.26077925,
+          "min": 0.260258833,
+          "max": 0.263457459
+        },
+        "import_to_16_signal_columns_s": {
+          "median": 0.810763834,
+          "min": 0.80588525,
+          "max": 0.811379417
+        },
+        "import_to_measurements_ready_s": {
+          "median": 1.435067917,
+          "min": 1.433424333,
+          "max": 1.437186792
+        },
+        "play_to_first_output_s": {
+          "median": 0.3036827503333334,
+          "min": 0.3025452923333334,
+          "max": 0.4055005003333333
+        },
+        "import_to_first_output_s": {
+          "median": 1.738755917333333,
+          "min": 1.735973583333333,
+          "max": 1.842691292333333
+        },
+        "proposal_s": {
+          "median": 0.01888375,
+          "min": 0.018802125,
+          "max": 0.019022083
+        },
+        "current_remeasurement_s": {
+          "median": 1.007114208,
+          "min": 1.002034041,
+          "max": 1.018398542
+        },
+        "render_and_measure_artifact_s": {
+          "median": 1.332617708,
+          "min": 1.328900708,
+          "max": 1.426593583
+        }
+      },
+      "native_checks_per_run": 61,
+      "exported_pcm_samples_independently_checked_per_run": 126
+    },
+    "surround": {
+      "seconds": {
+        "import_to_role_review_s": {
+          "median": 0.394005583,
+          "min": 0.390722625,
+          "max": 0.488213958
+        },
+        "import_to_first_waveform_s": {
+          "median": 1.234883042,
+          "min": 1.224990083,
+          "max": 1.318449541
+        },
+        "confirm_to_first_waveform_s": {
+          "median": 0.673324584,
+          "min": 0.6681705,
+          "max": 0.680540208
+        },
+        "import_to_16_signal_columns_s": {
+          "median": 1.438599792,
+          "min": 1.424409166,
+          "max": 1.521201833
+        },
+        "import_to_measurements_ready_s": {
+          "median": 2.168060125,
+          "min": 2.156019291,
+          "max": 2.262961125
+        },
+        "play_to_first_output_s": {
+          "median": 0.7084348753333334,
+          "min": 0.7077593333333334,
+          "max": 0.7914310413333333
+        },
+        "import_to_first_output_s": {
+          "median": 2.875825791333333,
+          "min": 2.864458666333333,
+          "max": 3.054399791333333
+        },
+        "proposal_s": {
+          "median": 4.003372708,
+          "min": 3.912693542,
+          "max": 4.357284708
+        },
+        "current_remeasurement_s": {
+          "median": 1.501155375,
+          "min": 1.499382917,
+          "max": 1.520948458
+        },
+        "render_and_measure_artifact_s": {
+          "median": 2.639491709,
+          "min": 2.557294334,
+          "max": 2.743817708
+        }
+      },
+      "native_checks_per_run": 77,
+      "exported_pcm_samples_independently_checked_per_run": 486
+    }
+  }
+}

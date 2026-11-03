@@ -1,0 +1,257 @@
+{
+  "operations": {
+    "import": {
+      "wall_ms": 100.839334,
+      "worker_cpu_ms": 100.706,
+      "process_cpu_ms": 104.622,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        94.469917
+      ],
+      "heartbeat_tail_ms": 9.773042,
+      "timeline_paint_ms": [
+        3.486125
+      ]
+    },
+    "source": {
+      "wall_ms": 850.070083,
+      "worker_cpu_ms": 829.907,
+      "process_cpu_ms": 1452.238,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        100.759583,
+        102.223875,
+        100.316,
+        99.814042,
+        102.041958,
+        100.1635,
+        100.924792,
+        100.815667
+      ],
+      "heartbeat_tail_ms": 45.626458,
+      "timeline_paint_ms": [
+        2.285917,
+        2.845709,
+        2.280959,
+        3.548083,
+        3.204292,
+        4.959542,
+        4.406042,
+        5.781791
+      ]
+    },
+    "global": {
+      "wall_ms": 1.653084,
+      "worker_cpu_ms": 1.656999999999996,
+      "process_cpu_ms": 1.667,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [],
+      "heartbeat_tail_ms": 1.670084,
+      "timeline_paint_ms": []
+    },
+    "fresh": {
+      "wall_ms": 2809.506333,
+      "worker_cpu_ms": 2762.333,
+      "process_cpu_ms": 5196.425,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        97.646,
+        101.25275,
+        99.445542,
+        103.100958,
+        102.738917,
+        100.559667,
+        100.645166,
+        100.868584,
+        104.689583,
+        100.219708,
+        100.430084,
+        100.604041,
+        101.791459,
+        103.3625,
+        102.200541,
+        104.19625,
+        100.260292,
+        104.85125,
+        99.475708,
+        102.216459,
+        99.79208300000001,
+        101.168958,
+        103.666334,
+        101.926125,
+        100.21675,
+        102.853291,
+        101.851834
+      ],
+      "heartbeat_tail_ms": 69.679666,
+      "timeline_paint_ms": [
+        4.32275,
+        2.73825,
+        2.81575,
+        2.757959,
+        2.738542,
+        2.785791,
+        2.658667,
+        2.793916,
+        2.90875,
+        2.800667,
+        2.5655,
+        2.773542,
+        2.777458,
+        2.58275,
+        2.990834,
+        2.809709,
+        2.79825,
+        2.744833,
+        2.756334,
+        2.774916,
+        2.796667,
+        2.687875,
+        2.7625,
+        2.945458,
+        2.916208,
+        2.8645,
+        2.776791
+      ]
+    },
+    "reused": {
+      "wall_ms": 1712.76325,
+      "worker_cpu_ms": 1672.686,
+      "process_cpu_ms": 3087.129,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        82.711209,
+        100.299333,
+        100.198333,
+        99.800792,
+        102.637417,
+        99.901208,
+        102.45325,
+        99.673042,
+        103.552708,
+        101.379958,
+        102.020834,
+        104.465333,
+        100.94075,
+        99.877917,
+        99.659083,
+        100.727417,
+        100.764958
+      ],
+      "heartbeat_tail_ms": 15.061375,
+      "timeline_paint_ms": [
+        2.700666,
+        2.7145,
+        2.803334,
+        2.825833,
+        2.822125,
+        2.878542,
+        2.729375,
+        2.726458,
+        2.782167,
+        2.508792,
+        2.8045,
+        2.78725,
+        2.758958,
+        2.785666,
+        2.810583,
+        2.797375,
+        2.544833
+      ]
+    },
+    "current": {
+      "wall_ms": 870.6794159999999,
+      "worker_cpu_ms": 849.0459999999999,
+      "process_cpu_ms": 1467.628,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        82.02904100000001,
+        101.136084,
+        99.803,
+        104.247333,
+        103.275833,
+        100.731167,
+        103.753583,
+        101.965125
+      ],
+      "heartbeat_tail_ms": 76.338792,
+      "timeline_paint_ms": [
+        2.115542,
+        0.799625,
+        2.376833,
+        2.13875,
+        3.561459,
+        3.25925,
+        4.654625,
+        4.4135
+      ]
+    }
+  },
+  "identities": {
+    "source": "861c50a3cfe4908f00d49d179f46873e2818e905c887e28d844500c8da78f014",
+    "global": "a96a4abe749fb58091564f134f5fb3eaaa4475461ea7e97267c964163942a6cd",
+    "global_decision": "7cefcafa2ef8adeb095f09612d796468121584941a8001f57a9fcf310108aaf9",
+    "fresh": "35bf35f9cf519f32e63ce1899a0b771e54a0308f701698e023404bd34f4c05ca",
+    "fresh_decision": "84aa52b8d0335cb48cc29c9f07d4abe7cacf870f22cd1a7bde218998d5d7b449",
+    "fresh_section_peaks": "b58ecf779ba471746315128bd06d377cd8def09507b704fed597ff1866130f49",
+    "fresh_candidate": "843d77a6e2f80b67c77fffa0c0295653ec16ad693d42f72bb49f5042bdbb729e",
+    "fresh_plan": "cb5ff556a9374e3e9da83b81230683683e0df46c2b14ea9d971943831244e6ba",
+    "reused": "35bf35f9cf519f32e63ce1899a0b771e54a0308f701698e023404bd34f4c05ca",
+    "reused_decision": "0ee8fcb035d1c0752789d03ccbdf02e0e5b11b77ef8cf14a628c68f74c1653a6",
+    "reused_section_peaks": "b58ecf779ba471746315128bd06d377cd8def09507b704fed597ff1866130f49",
+    "reused_candidate": "f4a39eb3f872a649ffd83b4e19800bea68c66879336c268b6cadc444f106be7f",
+    "reused_plan": "cb5ff556a9374e3e9da83b81230683683e0df46c2b14ea9d971943831244e6ba",
+    "current": "d23ef709de45c6edf9d674179431812547cf96b7d29e5cdd116b7ba60e6345c5"
+  },
+  "outcomes": {
+    "global": {
+      "main_preflight_ms": 0.76225,
+      "main_accept_ms": 0.202084,
+      "passes": 0,
+      "outcome": "Ready to apply",
+      "changes": 0,
+      "status": 2,
+      "issue": 0,
+      "can_apply": true,
+      "target_il": -23.7,
+      "target_tp": -1.0
+    },
+    "fresh": {
+      "main_preflight_ms": 0.066625,
+      "main_accept_ms": 0.298167,
+      "passes": 3,
+      "outcome": "Ready to apply",
+      "changes": 1,
+      "status": 4,
+      "issue": 0,
+      "can_apply": true,
+      "target_il": -23.0,
+      "target_tp": -1.0
+    },
+    "reused": {
+      "main_preflight_ms": 1.479208,
+      "main_accept_ms": 0.292792,
+      "passes": 2,
+      "outcome": "Ready to apply",
+      "changes": 1,
+      "status": 4,
+      "issue": 0,
+      "can_apply": true,
+      "target_il": -23.0,
+      "target_tp": -1.0
+    }
+  },
+  "roles": "L,R",
+  "file_sha256": "171b4aa51900c9826416719af9950005ce1a445817e49aa215c14cc2cd332566",
+  "frames": 2880000,
+  "source_lufs": -24.43008132144102,
+  "current_lufs": -23.00000001747636,
+  "channels": 2,
+  "base_build": "565e7114bc9b3ecc10f126de638fc968f97d13cca279da7285fd1636d5f1b9d1"
+}

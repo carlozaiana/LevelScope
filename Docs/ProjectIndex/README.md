@@ -69,3 +69,5 @@ This folder is the persistent orientation layer for future development chats. Re
 - [58 — LRA workflow and interactive timeline design](58_LraWorkflowAndInteractiveTimelineDesign.md)
 
 - [59 — M16 qualification and handover](59_M16QualificationAndHandover.md)
+
+- [M18 interactive timeline and later playback roadmap](63_M18InteractiveTimelineAndProgressiveAnalysis.md#playback-roadmap-following-m18)

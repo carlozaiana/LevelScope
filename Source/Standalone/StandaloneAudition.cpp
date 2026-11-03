@@ -288,7 +288,7 @@ juce::String StandaloneAudition::startPreparation (const AuditionRequest& reques
     preparation = std::async (std::launch::async, [request, storage = snapshotStorage, control = preparationControl]
     { return prepareVerifiedSource (request.context, *control, storage); });
     state = AuditionState::preparing;
-    message = "Preparing verified source copy (copy / hash / payload validation)";
+    message = "Verifying audio for playback...";
     return {};
 }
 

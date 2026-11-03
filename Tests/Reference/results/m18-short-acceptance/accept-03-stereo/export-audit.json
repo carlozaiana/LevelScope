@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "bundle_hashes_checked": [
+    "programme.wav",
+    "report.html",
+    "report.json"
+  ],
+  "frames_per_channel": 2880000,
+  "ordered_roles": [
+    "L",
+    "R"
+  ],
+  "pcm_positions_per_channel_checked": 63,
+  "exact_independent_pcm24_samples": 126,
+  "session_sha256": "2c3651090c2ad72938cf281e6f4f4468d1efc2fe9250b8561fb5fe0ae6b78018"
+}

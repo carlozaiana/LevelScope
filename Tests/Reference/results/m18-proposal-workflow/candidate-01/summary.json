@@ -1,0 +1,82 @@
+{
+  "all_passed": false,
+  "pilot": false,
+  "measurement_build": "c11bc83bd69e0948df5f499beeac07d1bc8505fd872809eb143e94954f3d01d2",
+  "records": [
+    {
+      "group": "proposal-workflow",
+      "passed": false,
+      "checks": 357,
+      "seconds": 11.206333791,
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeSectionProposalTests_artefacts/Release/LevelScopeSectionProposalTests",
+        "--m18-workflow",
+        "--root",
+        "/tmp/levelscope-m18-proposals-kzyuf1pc/proposal-workflow",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/m18-proposal-workflow/candidate-01/proposal-workflow.json"
+      ],
+      "exit_code": 1
+    }
+  ],
+  "app_path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app",
+  "binaries": [
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone",
+      "sha256": "825af7b56f0ad20f504f9193688cad30143e8749406be96df86918038f88de37",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeJobRequirementsTests_artefacts/Release/LevelScopeJobRequirementsTests",
+      "sha256": "3ba190a611e97c4d2f8087071592051237ab8e73b5d1af2333c65366dae7482b",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeProposalTests_artefacts/Release/LevelScopeProposalTests",
+      "sha256": "2211a3434a28b5f046126606a73844daaae95ec56df9490e3920bc73fef1b9ba",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeSectionProposalTests_artefacts/Release/LevelScopeSectionProposalTests",
+      "sha256": "e7b0a39297f658799c42bbe5e3e79f7974a351397853823756775d1c27b9835d",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeSessionTests_artefacts/Release/LevelScopeSessionTests",
+      "sha256": "a5ac2ba67ca3d2dcbc82ff556640b7f3d7ae670ca5b8ac857552893f7d048efd",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-dev-01/LevelScopeTimelineProgressTests_artefacts/Release/LevelScopeTimelineProgressTests",
+      "sha256": "45d1a655b5d46780ce611b3994f5e1ec7aa090c8b527318fb5fcc77b9b292e96",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    }
+  ],
+  "fixtures": "/tmp/levelscope-m18-proposals-kzyuf1pc",
+  "physical_device_opened": false,
+  "video_loaded": false
+}

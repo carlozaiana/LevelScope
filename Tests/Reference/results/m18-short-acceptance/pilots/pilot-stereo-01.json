@@ -1,0 +1,48 @@
+{
+  "import_to_role_review_s": 0.195084875,
+  "failure": "analysis starts and playback waits for the active job",
+  "passed": false,
+  "checks": [
+    {
+      "name": "main window has a live native peer",
+      "passed": true
+    },
+    {
+      "name": "EBU R128 programme context",
+      "passed": true
+    },
+    {
+      "name": "file picker opened with an active completion",
+      "passed": true
+    },
+    {
+      "name": "review precedes measurement",
+      "passed": true
+    },
+    {
+      "name": "one-click confirm and analyse action",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "injected output opened at programme rate",
+      "passed": true
+    },
+    {
+      "name": "explicit one-to-one monitoring route",
+      "passed": true
+    },
+    {
+      "name": "explicit one-to-one monitoring route",
+      "passed": true
+    },
+    {
+      "name": "analysis starts and playback waits for the active job",
+      "passed": false
+    }
+  ],
+  "measurement_build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce"
+}

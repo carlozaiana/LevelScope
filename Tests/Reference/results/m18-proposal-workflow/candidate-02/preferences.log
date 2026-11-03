@@ -1,0 +1,5 @@
+M16 capacity: seconds=0.00375908 selection RSS=8093696 inspection RSS=63733760 retained=8575063
+escaping probes=11111
+Large candidate: status=4 rows=134 passes=3
+large accepted outcome leads summary; complete rows and affected frames/seconds/percentage remain inspectable
+M13 FAIL 199 checks

@@ -1,0 +1,62 @@
+{
+  "scope": "M18 first implementation slice, short Sequoia checks only",
+  "groups": [
+    {
+      "group": "measurement",
+      "passed": true,
+      "checks": 185,
+      "build": "d2b478709ba907c2eede7d9d4b6360205e2fa4f84b1c4f3d71d3104b6ea68b4b"
+    },
+    {
+      "group": "compliance",
+      "passed": true,
+      "checks": 182,
+      "build": "d2b478709ba907c2eede7d9d4b6360205e2fa4f84b1c4f3d71d3104b6ea68b4b"
+    },
+    {
+      "group": "proposals",
+      "passed": true,
+      "checks": 303,
+      "build": "d2b478709ba907c2eede7d9d4b6360205e2fa4f84b1c4f3d71d3104b6ea68b4b"
+    },
+    {
+      "group": "export",
+      "passed": true,
+      "checks": 4872,
+      "build": "d2b478709ba907c2eede7d9d4b6360205e2fa4f84b1c4f3d71d3104b6ea68b4b"
+    },
+    {
+      "group": "section-proposals",
+      "passed": true,
+      "checks": 366,
+      "build": "d2b478709ba907c2eede7d9d4b6360205e2fa4f84b1c4f3d71d3104b6ea68b4b"
+    },
+    {
+      "group": "preferences",
+      "passed": true,
+      "checks": 256,
+      "build": "d2b478709ba907c2eede7d9d4b6360205e2fa4f84b1c4f3d71d3104b6ea68b4b"
+    },
+    {
+      "group": "targets",
+      "passed": true,
+      "checks": 489,
+      "build": "d2b478709ba907c2eede7d9d4b6360205e2fa4f84b1c4f3d71d3104b6ea68b4b"
+    },
+    {
+      "group": "sessions",
+      "passed": true,
+      "checks": 1071,
+      "build": "d2b478709ba907c2eede7d9d4b6360205e2fa4f84b1c4f3d71d3104b6ea68b4b"
+    },
+    {
+      "group": "diagnostics",
+      "passed": true,
+      "checks": 369,
+      "build": "d2b478709ba907c2eede7d9d4b6360205e2fa4f84b1c4f3d71d3104b6ea68b4b"
+    }
+  ],
+  "physical_devices_opened": false,
+  "high_sierra_execution": "pending",
+  "native_ui_interaction": "pending; window launch and layout inspected, automation did not reliably operate JUCE controls"
+}

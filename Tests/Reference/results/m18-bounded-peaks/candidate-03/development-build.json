@@ -1,0 +1,50 @@
+{
+  "build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce",
+  "app": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-peak-dev/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app",
+  "checks": {
+    "measurement": 185,
+    "section-smoke": 366,
+    "proposal-workflow": 395
+  },
+  "binaries": [
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-peak-dev/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone",
+      "sha256": "dc3134697c075415627b21fd9e8036f7af213eb8ee919d5839a5cf2698287c69",
+      "archs": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-peak-dev/LevelScopeSectionProposalTests_artefacts/Release/LevelScopeSectionProposalTests",
+      "sha256": "40958067b80abfa1aba48f81d795f6c812ba4ef280e26beaa874f9b08015cf7c",
+      "archs": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-peak-dev/LevelScopeMeasurementTests_artefacts/Release/LevelScopeMeasurementTests",
+      "sha256": "5e9c0bb5b5d1ccf75a4db85d235130176b62a696c5984f902d47c734a6927acf",
+      "archs": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-peak-dev/LevelScopePeakChannelParity",
+      "sha256": "58d2001cf320929bab085e6063328996de9311bdde8b29ced8f054faa7ab5580",
+      "archs": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    }
+  ],
+  "decisions_match": true,
+  "timing_gates_pass": true,
+  "enabled_service_matches_serial": true
+}

@@ -1,0 +1,37 @@
+{
+  "fresh": {
+    "worker_stacks": 1149,
+    "meter_push": 1056,
+    "add_peak": 1004,
+    "collector_true_peak": 78,
+    "sha_full_block": 45
+  },
+  "reused": {
+    "worker_stacks": 740,
+    "meter_push": 669,
+    "add_peak": 641,
+    "collector_true_peak": 0,
+    "sha_full_block": 50
+  },
+  "current": {
+    "worker_stacks": 397,
+    "meter_push": 329,
+    "add_peak": 317,
+    "collector_true_peak": 0,
+    "sha_full_block": 51
+  },
+  "source": {
+    "worker_stacks": 395,
+    "meter_push": 334,
+    "add_peak": 311,
+    "collector_true_peak": 0,
+    "sha_full_block": 49
+  },
+  "import": {
+    "worker_stacks": 28,
+    "meter_push": 0,
+    "add_peak": 0,
+    "collector_true_peak": 0,
+    "sha_full_block": 23
+  }
+}

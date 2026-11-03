@@ -1,6 +1,7 @@
 #pragma once
 
 #include "StandaloneAudition.h"
+#include "RememberedChannelRoles.h"
 #include "StandaloneSessionModel.h"
 #include <juce_gui_basics/juce_gui_basics.h>
 
@@ -10,15 +11,20 @@ namespace levelscope::standalone
 class StandaloneAudioPanel final : public juce::Component
 {
 public:
-    StandaloneAudioPanel (StandaloneSessionModel&, StandaloneAudition&, std::function<void()> changed);
+    StandaloneAudioPanel (StandaloneSessionModel&, StandaloneAudition&, std::function<void()> changed,juce::File roleDirectory={});
     void refresh();
-    void sourceChanged();
+    void sourceChanged(bool freshImport=false);
+    std::function<void()> onAnalyse;
     void synchronize();
     void resized() override;
 private:
     StandaloneSessionModel& session;
     StandaloneAudition& audio;
     std::function<void()> onChanged;
+    RememberedChannelRoles roleMemory;
+    bool reviewing=false,editingOrder=false;
+    juce::Label suggestionLabel;
+    juce::TextButton editOrder{"Edit order"};
     juce::ComboBox typeBox, deviceBox, domainBox, layoutPreset;
     juce::TextButton scanButton { "Scan devices" }, openButton { "Open device" }, closeButton { "Close device" };
     juce::TextButton prepareButton { "Prepare audition" };

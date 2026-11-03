@@ -18,6 +18,7 @@ struct SectionProposalRequest
     juce::String binding() const;
 };
 enum class SectionProposalStatus { unavailable, noChange, globalOnly, noSolution, ready };
+enum class SectionProposalIssue { none, inputs, unsupportedRequirements, preferences, candidateRejected };
 // Only the service constructs accepted results. Callers get immutable access and
 // must still compare the request binding before Apply. Never session-cache this.
 class SectionProposalResult
@@ -26,6 +27,13 @@ public:
     SectionProposalStatus status() const { return state; }
     const juce::String& identity() const { return bound; }
     const juce::String& text() const { return explanation; }
+    const juce::String& narrativeText() const { return narrative; }
+    const juce::String& outcomeTitle() const { return title; }
+    const juce::String& outcomeReason() const { return reason; }
+    SectionProposalIssue issue() const { return problem; }
+    const proposal::SectionMap& originalAnnotations() const { return annotations; }
+    std::optional<ProcessingPlan> previewPlan() const;
+    bool previewHasFinalGlobal() const { return state==SectionProposalStatus::ready||state==SectionProposalStatus::globalOnly||bool(candidate); }
     const ProcessingPlan& plan() const { return proposed; }
     const proposal::SectionTrimSeed& selection() const { return seed; }
     const proposal::TrimProposal& global() const { return scalarResult; }
@@ -35,7 +43,9 @@ public:
 private:
     SectionProposalResult()=default;
     SectionProposalStatus state=SectionProposalStatus::unavailable;
-    juce::String bound,explanation;
+    juce::String bound,explanation,narrative,title,reason;
+    SectionProposalIssue problem=SectionProposalIssue::inputs;
+    proposal::SectionMap annotations;
     ProcessingPlan proposed;
     proposal::SectionTrimSeed seed;
     proposal::TrimProposal scalarResult;

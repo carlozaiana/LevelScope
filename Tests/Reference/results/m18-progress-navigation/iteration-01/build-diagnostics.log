@@ -1,0 +1,6 @@
+[  3%] Built target LevelScopeMeasurementCore
+[ 61%] Built target LevelScopeStandaloneSupport
+[ 84%] Built target LevelScopeDiagnosticsUI
+[ 88%] Building CXX object CMakeFiles/LevelScopeDiagnosticsTests.dir/Tests/DiagnosticsTests.cpp.o
+[ 88%] Linking CXX executable LevelScopeDiagnosticsTests_artefacts/Release/LevelScopeDiagnosticsTests
+[100%] Built target LevelScopeDiagnosticsTests

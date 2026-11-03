@@ -95,9 +95,9 @@ SectionTrimSeed selectSectionTrims(const TrimRequest& request,const SectionMap& 
     const auto before=out.plan;
     const double additional=policy.additionalTenths/10.,cumulative=policy.cumulativeTenths/10.,reserve=policy.reserveTenths/10.;
     for(const auto& row:before.intervals)if(row.db < -cumulative)
-    {out.reason="Local proposal unavailable: existing manual envelope exceeds selected cumulative attenuation. Settings unchanged; choose compatible limits or explicitly change/reverify processing.";return out;}
+    {out.reason="Cumulative attenuation preference "+juce::String(cumulative,1)+" dB is below existing local attenuation "+juce::String(-row.db,9)+" dB. Choose compatible limits or explicitly change and reverify processing.";return out;}
     if(additional==0||policy.durationThousandths==0)
-    {out.reason="Local changes disabled by the selected additional attenuation or duration preference.";return out;}
+    {out.reason=additional==0?"Additional attenuation preference is 0.0 dB. Local changes are disabled.":"Newly affected duration preference is 0.0%. Local changes are disabled.";out.reason+=" Edit Proposal limits if appropriate, then Propose again.";return out;}
     for(size_t n=0;n<map.sections.size();++n)
     {
         const auto& observed=peaks.sections[n];

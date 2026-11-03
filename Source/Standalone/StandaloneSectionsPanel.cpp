@@ -65,6 +65,17 @@ StandaloneSectionsPanel::StandaloneSectionsPanel (StandaloneSessionModel& s) : s
     importMarkers.onClick=[this]{markerWindow=std::make_unique<MarkerImportWindow>(session,false,canImportMarkers,[this]{synchronize();if(onChanged)onChanged();});};
     pasteMarkers.onClick=[this]{markerWindow=std::make_unique<MarkerImportWindow>(session,true,canImportMarkers,[this]{synchronize();if(onChanged)onChanged();});};
     addAndMakeVisible(importMarkers);addAndMakeVisible(pasteMarkers);
+    timeline.bindSectionEditing(session,[this](uint64_t id)
+    {
+        selectedId=id;
+        synchronize();
+        if(onChanged)onChanged();
+    });
+    addAndMakeVisible(play);
+    addAndMakeVisible(stop);
+    addAndMakeVisible(auditionDomain);
+    play.onClick=[this]{timeline.focusForTransport();if(onPlay)onPlay();};
+    stop.onClick=[this]{timeline.focusForTransport();if(onStop)onStop();};
     timeline.onInspect = [this] (const juce::String& text) { inspection.setText (text, false); };
     for (auto* c : std::array<juce::Component*, 20> { &domainBox, &windowKind, &windowScope, &splitButton, &moveButton, &mergeButton, &renameButton,
          &rebuildButton, &cancelButton, &boundary, &name, &summary, &inspection, &boundaryLabel, &nameLabel, &status, &timeline, &sectionList, &windowList, nullptr })
@@ -103,9 +114,10 @@ void StandaloneSectionsPanel::timerCallback()
     sections.poll(); const auto next = sections.result(); const bool resultChanged = next != displayed; displayed = next;
     const auto newAnnotation = session.getSelectedTargetProfile().digest() + ";" + juce::String (static_cast<int> (session.programmeApplicability));
     const auto newGainKey=session.currentStateDocument.sectionGains?session.currentStateDocument.sectionGains->audioKey():juce::String();
-    const auto newProposalKey=session.sectionProposal?session.sectionProposal->identity():juce::String();
-    if (mapChanged || measuredChanged || resultChanged || newAnnotation != annotationKey || newGainKey!=appliedGainKey || newProposalKey!=proposalViewKey)
-    { annotationKey = newAnnotation; appliedGainKey=newGainKey; proposalViewKey=newProposalKey; refreshDetails(); }
+    auto intentKey=session.sectionProposal?session.sectionProposal->identity():juce::String();
+    if(session.sectionTrimDraft)intentKey+=";draft:"+juce::String(session.sectionTrimDraft->editSerial);
+    if (mapChanged || measuredChanged || resultChanged || newAnnotation != annotationKey || newGainKey!=appliedGainKey || intentKey!=intentViewKey)
+    { annotationKey = newAnnotation; appliedGainKey=newGainKey; intentViewKey=intentKey; refreshDetails(); }
     const bool busy = diagnostics.busy() || sections.busy(); cancelButton.setEnabled (busy);
     rebuildButton.setEnabled (snapshot != nullptr && ! busy);
     status.setText (editNotice.isNotEmpty() ? editNotice : diagnostics.busy() ? diagnostics.status : sections.status, juce::dontSendNotification);
@@ -189,6 +201,7 @@ void StandaloneSectionsPanel::refreshDetails()
         text << annotateDiagnostics (*measured, session.getSelectedTargetProfile(), session.programmeApplicability).text << "\n";
     }
     text << "No section I/LRA or section compliance verdict. Crossing/padded windows are excluded from summaries and inspectable below. Section edits never seek, play or process audio.";
+    gainEditor.setText({},false);
     if(session.sectionTrimDraft && session.sectionDraftFresh())
         for(size_t n=0;n<session.sectionTrimDraft->annotations.sections.size();++n)
             if(session.sectionTrimDraft->annotations.sections[n].id==row->id)
@@ -248,6 +261,11 @@ void StandaloneSectionsPanel::Windows::selectedRowsChanged (int row)
         panel.timeline.highlight (static_cast<double> (w->begin), static_cast<double> (w->end));
     }
 }
+void StandaloneSectionsPanel::setPlaybackState(bool canPlay,bool canStop,const juce::String& domain)
+{
+    play.setEnabled(canPlay);stop.setEnabled(canStop);
+    auditionDomain.setText("Audition "+domain,juce::dontSendNotification);
+}
 void StandaloneSectionsPanel::resized()
 {
     auto b = getLocalBounds().reduced (12); auto top = b.removeFromTop (28);
@@ -259,7 +277,10 @@ void StandaloneSectionsPanel::resized()
     b.removeFromTop (6); sectionList.setBounds (b.removeFromTop (100)); b.removeFromTop (6);
     auto gainRow=b.removeFromTop(28);draftGainButton.setBounds(gainRow.removeFromLeft(165));gainEditor.setBounds(gainRow.removeFromLeft(165));setGainButton.setBounds(gainRow.removeFromLeft(140));applyGainButton.setBounds(gainRow.removeFromLeft(165));discardGainButton.setBounds(gainRow.removeFromLeft(140));
     gainStatus.setBounds(b.removeFromTop(40));gainView.setBounds(b.removeFromTop(90));b.removeFromTop(4);
-    timeline.setBounds (b.removeFromTop (240)); b.removeFromTop (6);
+    auto transport=b.removeFromTop(28);
+    play.setBounds(transport.removeFromLeft(70));stop.setBounds(transport.removeFromLeft(70));
+    auditionDomain.setBounds(transport);
+    timeline.setBounds (b.removeFromTop (310)); b.removeFromTop (6);
     summary.setBounds (b.removeFromTop (std::max (160, b.getHeight() * 54 / 100))); b.removeFromTop (6);
     auto choose = b.removeFromTop (28); windowKind.setBounds (choose.removeFromLeft (240)); windowScope.setBounds (choose.removeFromLeft (200));
     inspection.setBounds (b.removeFromBottom (55)); b.removeFromBottom (4); windowList.setBounds (b);

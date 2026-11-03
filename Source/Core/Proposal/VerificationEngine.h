@@ -5,7 +5,7 @@
 
 namespace levelscope::proposal
 {
-inline constexpr const char* evaluationVersion = "measured-programme-rules-m17.1";
+inline constexpr const char* evaluationVersion = "measured-programme-rules-m18.1";
 enum class Verdict { notEvaluated, pass, fail, indeterminate };
 enum class SnapshotDomain { source, currentState, predicted, renderedOutput, privateCandidate };
 struct MeasuredProgramme
@@ -14,7 +14,7 @@ struct MeasuredProgramme
     juce::String snapshotIdentity, measurementVersion;
     Applicability applicability = Applicability::unconfirmed;
     bool currentIdentityMatches = false;
-    measurement::Metric integrated, truePeak, lra;
+    measurement::Metric integrated, truePeak, lra, momentaryMax, shortTermMax;
     bool lraStable = false;
 };
 struct RuleEvaluation

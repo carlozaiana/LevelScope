@@ -1,5 +1,7 @@
 #include "CompositionTestFixtures.h"
 #include "Standalone/StandaloneJobRequirements.h"
+#include "Standalone/AutomaticSourceAnalysis.h"
+#include "Standalone/StandaloneDiagnostics.h"
 #include <algorithm>
 #include <fstream>
 
@@ -26,7 +28,7 @@ void definitionTests(const juce::File& root)
     for(const auto* s:{"","-0","-1","NaN","inf","1e1",".5","1,0","10.01","100.1","1001"})expect(!JobRequirements::parseCeiling(s),"invalid value never rounds/clamps");
     for(int n=0;n<10;++n)
     {
-        auto bad=r;switch(n){case 0:bad.schema=2;break;case 1:bad.id="unknown";break;case 2:bad.baseId="invented";break;case 3:bad.baseDigest="bad";break;case 4:bad.method="dialogue-gated";break;case 5:bad.applicability="live";break;case 6:bad.maximumLraTenths=-1;break;case 7:bad.maximumLraTenths=1001;break;case 8:bad.name=juce::String::repeatedString("x",81);break;case 9:bad.provenance=juce::String::repeatedString("x",2049);break;}
+        auto bad=r;switch(n){case 0:bad.schema=99;break;case 1:bad.id="unknown";break;case 2:bad.baseId="invented";break;case 3:bad.baseDigest="bad";break;case 4:bad.method="dialogue-gated";break;case 5:bad.applicability="live";break;case 6:bad.maximumLraTenths=-1;break;case 7:bad.maximumLraTenths=1001;break;case 8:bad.name=juce::String::repeatedString("x",81);break;case 9:bad.provenance=juce::String::repeatedString("x",2049);break;}
         expect(bad.validationError().isNotEmpty(),"invalid requirement definition rejected");rejects([&]{JobRequirements::decode(bad.encode());},"invalid serialized definition cannot acquire authority");
     }
     r.name=juce::String::fromUTF8("Mix italiano — <script>alert(1)</script>");r.provenance="User supplied <delivery> & reference";
@@ -46,6 +48,41 @@ void definitionTests(const juce::File& root)
     expect(root.findChildFiles(juce::File::findFiles,false).size()==1,"owned partial preset files cleaned");
     auto duplicate=r;duplicate.id=juce::Uuid().toString();expect(duplicate.name==r.name&&duplicate.digest()!=r.digest(),"duplicate display names do not alias identity");
     groups.add("definitions-presets-failures");
+}
+void completeTargetsTests()
+{
+    auto r=JobRequirements::editable(proposal::ebuR128ProgrammeQc());r.name="Custom broadcaster example";
+    r.maximumLraTenths=100;r.maximumMomentaryTenths=-150;r.maximumShortTermTenths=-180;
+    auto decoded=JobRequirements::fromJson(juce::JSON::toString(r.encode()));
+    expect(decoded.digest()==r.digest()&&decoded.maximumMomentaryTenths==-150&&decoded.maximumShortTermTenths==-180,"complete target round trip includes M/S");
+    const auto p=r.applyTo(proposal::ebuR128ProgrammeQc());
+    expect(p.validationError().isEmpty()&&p.userSpecified&&!p.limits.valuesAreAuthoritative,"named custom target never acquires standards authority");
+    for(auto domain:{proposal::SnapshotDomain::source,proposal::SnapshotDomain::currentState,proposal::SnapshotDomain::renderedOutput})
+    {
+        auto m=input(domain);m.momentaryMax={-15,measurement::Status::available};m.shortTermMax={-18,measurement::Status::available};
+        const auto pass=proposal::evaluateMeasuredProgramme(p,m);expect(pass.verdict==Verdict::pass&&pass.rules.size()==5,"all five measured boundaries inclusive");
+        for(bool shortTerm:{false,true})
+        {
+            auto bad=m;auto& metric=shortTerm?bad.shortTermMax:bad.momentaryMax;
+            metric.value=std::nextafter(*metric.value,0.);const auto failed=proposal::evaluateMeasuredProgramme(p,bad);
+            expect(failed.verdict==Verdict::fail&&failed.identity!=pass.identity,"M/S full precision violation changes identity and fails");
+            metric.value.reset();expect(proposal::evaluateMeasuredProgramme(p,bad).verdict==Verdict::indeterminate,"missing required M/S cannot pass");
+        }
+    }
+    auto current=input();current.momentaryMax={-15,measurement::Status::available};current.shortTermMax={-18,measurement::Status::available};
+    auto artifact=current;artifact.domain=proposal::SnapshotDomain::renderedOutput;artifact.shortTermMax.value=-17;
+    expect(!ex::rulesPermitPublication(proposal::evaluateMeasuredProgramme(p,current),proposal::evaluateMeasuredProgramme(p,artifact)),"rendered-file S failure blocks publication despite Current pass");
+    r.integratedTenths.reset();r.truePeakTenths.reset();r.maximumLraTenths.reset();r.maximumMomentaryTenths.reset();r.maximumShortTermTenths.reset();
+    decoded=JobRequirements::fromJson(juce::JSON::toString(r.encode()));
+    expect(!decoded.integratedTenths&&!decoded.truePeakTenths&&!decoded.maximumLraTenths&&!decoded.maximumMomentaryTenths&&!decoded.maximumShortTermTenths,"all No Limit fields persist explicitly");
+    expect(proposal::evaluateMeasuredProgramme(r.applyTo(p),current).verdict==Verdict::notEvaluated,"all No Limit never produces empty-rule pass");
+    r.maximumMomentaryTenths=-150;expect(proposal::evaluateMeasuredProgramme(r.applyTo(p),current).rules.size()==1,"custom rule can be used without IL or peak target");
+    MeasuredDiagnostics diagnostics;diagnostics.analysis=std::make_shared<proposal::ProgramAnalysis>();diagnostics.measuredBinding=current;
+    expect(!annotateDiagnostics(diagnostics,r.applyTo(p),proposal::Applicability::preProducedLinearProgramme).ceiling,"No Limit peak does not invent diagnostic headroom");
+    auto text=juce::JSON::toString(r.encode());rejects([&]{JobRequirements::fromJson(text.replaceFirstOccurrenceOf("{","{\"name\":\"duplicate\","));},"modern duplicate fields rejected");
+    for(const auto* value:{"-23.0","+1.0","-100.0","24.0"})expect(bool(JobRequirements::parseSignedTenths(value)),"signed target parser accepts exact tenths");
+    for(const auto* value:{"NaN","-100.1","24.1","-23.01","1e1","","--1"})expect(!JobRequirements::parseSignedTenths(value),"signed target parser rejects invalid values");
+    groups.add("complete-targets-and-ms-gates");
 }
 void ruleTests()
 {
@@ -83,7 +120,7 @@ void proposalTests()
     auto p=proposal::draftGlobalTrim(r);expect(p.status==proposal::TrimStatus::noChange&&p.totalGainDb==r.currentGainDb&&p.deltaDb==0,"all selected rules preserve exact existing gain");
     for(int n=0;n<3;++n)
     {r.current=input();if(n==0)r.current.lra.value=11;else if(n==1)r.current.lraStable=false;else r.current.integrated.value=-24;
-        p=proposal::draftGlobalTrim(r);expect(p.status==proposal::TrimStatus::unavailable&&p.explanation.contains("not supported yet")&&p.explanation.contains("not a claim that no solution exists"),"unmet LRA or other rule has truthful capability limitation");}
+        p=proposal::draftGlobalTrim(r);expect(p.status==proposal::TrimStatus::unavailable&&p.explanation.contains("unsupported")&&p.explanation.contains("No candidate was measured"),"unmet LRA or other rule has truthful capability limitation");}
     job.maximumLraTenths.reset();r.profile=job.applyTo(proposal::ebuR128ProgrammeQc());r.current.truePeak.value=-5;
     expect(proposal::draftGlobalTrim(r).status==proposal::TrimStatus::draft,"plain EBU automatic global correction preserved");
     r.currentInputIdentity="different";expect(proposal::draftGlobalTrim(r).status==proposal::TrimStatus::unavailable,"individually valid mismatched inputs rejected");
@@ -122,10 +159,10 @@ void sessionTests(const juce::File& root,StandaloneSessionModel& s)
     auto report=ex::report(ex::capture(s));expect(!report.hasProperty("artifact")&&report["current"]["evaluation"]["verdict"].toString()=="FAIL","measurement-only report exposes actual failure without artifact");
     auto unsupported=generateSectionProposal(s.sectionProposalRequest(),control);expect(unsupported.value&&(*unsupported.value)->status()==SectionProposalStatus::unavailable&&(*unsupported.value)->passes()==0,"selected unmet requirements generate no private correction passes");
     r.maximumLraTenths=1000;++r.revision;s.setJobRequirements(r,error);
-    auto captured=sf::capture(s);const auto file=root.getChildFile("named.levelscope");expect(sf::save(captured,file,control).succeeded(),"schema 7 coherent session save");
+    auto captured=sf::capture(s);const auto file=root.getChildFile("named.levelscope");expect(sf::save(captured,file,control).succeeded(),"schema 8 coherent session save");
     r.name="Edits during save";++r.revision;s.setJobRequirements(r,error);sf::saved(s,captured,file);expect(s.documentRevision!=s.savedDocumentRevision,"changes after capture remain unsaved");
     const auto reopenStart=juce::Time::getMillisecondCounterHiRes();
-    auto read=sf::read(file,control);expect(read.document&&read.document->loadedSchema==7,"schema 7 decoded");auto verified=sf::verify(*read.document,control);StandaloneSessionModel reopened;
+    auto read=sf::read(file,control);expect(read.document&&read.document->loadedSchema==8,"schema 8 decoded");auto verified=sf::verify(*read.document,control);StandaloneSessionModel reopened;
     expect(verified.document&&sf::install(*verified.document,reopened,error),"verified named session reopen");
     expect(reopened.jobRequirements.digest()==captured.jobRequirements.digest()&&reopened.currentState.hasMeasurement&&reopened.evaluation(MeasurementDomain::currentState).verdict==Verdict::pass,"independent embedded definition and compatible caches reconstruct evaluation");
     const auto reopenMs=juce::Time::getMillisecondCounterHiRes()-reopenStart;expect(reopenMs<=5000,"short-session verify/reopen within five seconds");resources.getDynamicObject()->setProperty("short_session_reopen_ms",reopenMs);
@@ -134,6 +171,14 @@ void sessionTests(const juce::File& root,StandaloneSessionModel& s)
     auto recover=sf::read(broken,control);expect(recover.document&&recover.document->jobRequirements.validationError().isNotEmpty(),"damaged independent requirements recover core without fallback");
     auto resolved=sf::verify(*recover.document,control);StandaloneSessionModel partial;expect(resolved.document&&sf::install(*resolved.document,partial,error)&&partial.currentState.hasMeasurement,"invalid rule preserves valid settings/media/cache");
     expect(partial.evaluation(MeasurementDomain::currentState).verdict==Verdict::notEvaluated&&ex::readiness(ex::capture(partial)).isNotEmpty(),"recovered invalid requirement cannot pass or publish");
+    auto complete=JobRequirements::editable(proposal::ebuR128ProgrammeQc());complete.name="Stored complete target";
+    complete.maximumMomentaryTenths=-1;complete.maximumShortTermTenths=-2;complete.maximumLraTenths.reset();complete.truePeakTenths.reset();
+    expect(reopened.setJobRequirements(complete,error),"install complete custom target without remeasurement");reopened.setSelectedTargetProfileIndex(3);
+    const auto customFile=root.getChildFile("complete-target.levelscope");expect(sf::save(sf::capture(reopened),customFile,control).succeeded(),"save complete target session");
+    auto custom=sf::read(customFile,control);expect(custom.document&&custom.document->loadedSchema==8,"M18 session identifies its newer reader requirement");
+    auto customVerified=sf::verify(*custom.document,control);StandaloneSessionModel roundtrip;
+    expect(customVerified.document&&sf::install(*customVerified.document,roundtrip,error)&&roundtrip.jobRequirements.digest()==complete.digest(),"custom M/S and No Limit survive verified session reopen");
+    expect(roundtrip.currentState.analysis&&roundtrip.evaluation(MeasurementDomain::currentState).rules.size()==3,"reopened cached measurement reevaluates only selected IL/M/S");
     // Empty core has no unsupported newer processing; prove every old schema defaults unset.
     StandaloneSessionModel empty;auto emptyFile=root.getChildFile("empty.levelscope");expect(sf::save(sf::capture(empty),emptyFile,control).succeeded(),"empty migration fixture");
     for(int schema=1;schema<=6;++schema)
@@ -183,7 +228,7 @@ void exportTests(const juce::File& root,StandaloneSessionModel& s)
 
 void manualAndInputTests(const juce::File& root,StandaloneSessionModel& s)
 {
-    juce::String error;JobRequirements r;r.maximumLraTenths=1000;s.setJobRequirements(r,error);
+    juce::String error;JobRequirements r;r.maximumLraTenths=1000;s.setJobRequirements(r,error);s.setSelectedTargetProfileIndex(1);
     const auto source=s.source.analysis;const auto oldRevision=s.revision;
     expect(s.beginSectionTrimDraft()&&s.setSectionDraftGain(0,-1.123456789),"manual section draft remains available under an LRA requirement");
     expect(s.currentState.hasMeasurement&&s.revision==oldRevision,"unapplied manual draft leaves measured authority unchanged");
@@ -225,19 +270,40 @@ void manualAndInputTests(const juce::File& root,StandaloneSessionModel& s)
     groups.add("manual-processing-input-identity");
 }
 
+void automaticSchedulingTests(StandaloneSessionModel& s)
+{
+    AutomaticSourceAnalysis schedule;expect(!schedule.eligible(s),"valid cached Source is not remeasured automatically");
+    const auto measured=s.source;s.source={};expect(schedule.eligible(s),"confirmed source with missing measurement is eligible");
+    s.auditionBusy=[]{return true;};expect(!schedule.eligible(s),"automatic analysis never stops playback");s.auditionBusy={};
+    schedule.attemptedSource(s);expect(!schedule.eligible(s),"cancel or failure cannot cause automatic retry loop");
+    auto requirements=s.jobRequirements;requirements.name="New target name";++requirements.revision;juce::String error;
+    s.setJobRequirements(requirements,error);expect(!schedule.eligible(s),"target edits do not re-arm Source analysis");
+    const auto runtime=s.sessionId;s.sessionId=juce::Uuid().toString();expect(schedule.eligible(s),"new runtime may analyse its missing Source");
+    s.sessionId=runtime;s.source=measured;groups.add("automatic-source-scheduling");
+}
 void uiAndResources(StandaloneSessionModel& s)
 {
-    JobRequirementsPanel panel(s,[]{});panel.setSize(1100,88);panel.resized();
-    juce::TextEditor* ceiling=nullptr;juce::TextButton* use=nullptr;juce::ToggleButton* enabled=nullptr;
+    JobRequirementsPanel panel(s,[]{});panel.setSize(1100,190);panel.resized();
+    juce::TextEditor* ceiling=nullptr;juce::TextEditor* momentary=nullptr;juce::ComboBox* profiles=nullptr;
     for(auto* c:panel.getChildren())
-    {if(auto* f=dynamic_cast<juce::TextEditor*>(c);f&&f->getName().contains("Draft maximum"))ceiling=f;if(auto* b=dynamic_cast<juce::TextButton*>(c);b&&b->getButtonText()=="Use EBU requirements")use=b;if(auto* t=dynamic_cast<juce::ToggleButton*>(c))enabled=t;}
-    expect(ceiling&&use&&enabled,"inline controls expose named fields");enabled->setToggleState(true,juce::dontSendNotification);ceiling->setText("",false);auto before=s.jobRequirements.digest();use->onClick();expect(s.jobRequirements.digest()==before,"empty required ceiling cannot silently become zero");
-    ceiling->setText("0.0",false);use->onClick();expect(s.jobRequirements.maximumLraTenths==0,"explicit zero is retained");
+    {if(auto* f=dynamic_cast<juce::TextEditor*>(c)){if(f->getName().startsWith("LRA"))ceiling=f;if(f->getName().startsWith("Max M"))momentary=f;}
+     if(auto* combo=dynamic_cast<juce::ComboBox*>(c))profiles=combo;expect(dynamic_cast<juce::ToggleButton*>(c)==nullptr,"target editor has no requirement checkbox");}
+    expect(ceiling&&momentary&&profiles,"comparison exposes editable target fields and profile chooser");
+    ceiling->setText("",false);ceiling->onTextChange();auto before=s.jobRequirements.digest();
+    expect(!panel.commitFields()&&s.jobRequirements.digest()==before,"empty target cannot silently become zero or No Limit");
+    ceiling->setText("0.0",false);ceiling->onTextChange();expect(profiles->getText()=="Unsaved preset","editing immediately detaches profile label");
+    expect(panel.commitFields()&&s.jobRequirements.maximumLraTenths==0,"explicit zero retained");
     const auto confirmed=s.jobRequirements.digest();const auto revision=s.documentRevision;
-    ceiling->onTextChange();use->onClick();bool draftNotice=false;
-    for(auto* c:panel.getChildren())if(auto* label=dynamic_cast<juce::Label*>(c))draftNotice|=label->getText().startsWith("Draft only");
-    expect(!draftNotice&&s.jobRequirements.digest()==confirmed&&s.documentRevision==revision,"identical confirmation clears draft notice without editing active definition");
-    enabled->setToggleState(false,juce::dontSendNotification);use->onClick();expect(!s.jobRequirements.maximumLraTenths,"explicit unset restores ordinary automatic workflow");
+    ceiling->onTextChange();expect(panel.commitFields()&&s.jobRequirements.digest()==confirmed&&s.documentRevision==revision,"unchanged target edit is no-op");
+    ceiling->setText("No Limit",false);momentary->setText("-15.0",false);momentary->onTextChange();
+    expect(panel.commitFields()&&!s.jobRequirements.maximumLraTenths&&s.jobRequirements.maximumMomentaryTenths==-150,"No Limit and maximum momentary apply together");
+    momentary->setText("No Limit",false);momentary->onTextChange();expect(panel.commitFields(),"explicit No Limit restores ordinary automatic workflow");
+    for(int height:{159,190,207})
+    {
+        panel.setSize(1100,height);panel.resized();
+        for(auto* child:panel.getChildren())if(auto* field=dynamic_cast<juce::TextEditor*>(child))
+            expect(field->getHeight()>=22&&field->getFont().getHeight()==16.f&&panel.getLocalBounds().contains(field->getBounds()),"compressed rows retain visible fixed-size target text");
+    }
     std::vector<double> times;for(int n=0;n<200;++n){auto t=juce::Time::getMillisecondCounterHiRes();s.evaluation(MeasurementDomain::source);s.evaluation(MeasurementDomain::currentState);times.push_back(juce::Time::getMillisecondCounterHiRes()-t);}
     std::sort(times.begin(),times.end());expect(times[190]<=10,"cached reevaluation p95 within 10 ms");resources.getDynamicObject()->setProperty("cached_evaluation_p95_ms",times[190]);
     times.clear();for(int n=0;n<100;++n){auto t=juce::Time::getMillisecondCounterHiRes();panel.refresh();panel.resized();times.push_back(juce::Time::getMillisecondCounterHiRes()-t);}std::sort(times.begin(),times.end());expect(times[95]<=100,"inline feedback p95 within 100 ms");resources.getDynamicObject()->setProperty("inline_feedback_p95_ms",times[95]);
@@ -252,8 +318,8 @@ int main(int argc,char** argv)
     for(int n=1;n<argc;++n){juce::String arg(argv[n]);if(arg=="--root"&&n+1<argc)rootPath=argv[++n];else if(arg=="--output"&&n+1<argc)output=argv[++n];else return 2;}
     try
     {
-        const juce::File root(rootPath);expect(rootPath.isNotEmpty()&&!root.exists()&&root.createDirectory().wasOk(),"new M17 owned test root required");auto presets=root.getChildFile("presets");presets.createDirectory();definitionTests(presets);ruleTests();proposalTests();
-        auto stereo=model(root.getChildFile("stereo"),2,48000,65*48000);sessionTests(root.getChildFile("sessions"),stereo);exportTests(root.getChildFile("stereo-export"),stereo);uiAndResources(stereo);manualAndInputTests(root,stereo);
+        const juce::File root(rootPath);expect(rootPath.isNotEmpty()&&!root.exists()&&root.createDirectory().wasOk(),"new M17 owned test root required");auto presets=root.getChildFile("presets");presets.createDirectory();definitionTests(presets);completeTargetsTests();ruleTests();proposalTests();
+        auto stereo=model(root.getChildFile("stereo"),2,48000,65*48000);sessionTests(root.getChildFile("sessions"),stereo);exportTests(root.getChildFile("stereo-export"),stereo);uiAndResources(stereo);automaticSchedulingTests(stereo);manualAndInputTests(root,stereo);
         for(int channels:{1,6}){auto s=model(root.getChildFile("channels-"+juce::String(channels)),channels,48000,65*48000);exportTests(root.getChildFile("export-"+juce::String(channels)),s);}
         for(int offset:{-1,0,1}){auto s=model(root.getChildFile("duration-"+juce::String(offset)),1,44100,60*44100+offset);expect(s.currentState.analysis->detail.lraStable==(offset>=0),"actual under/exactly/above 60s stability boundary");}
         groups.add("actual-layout-duration-boundaries");passed=true;

@@ -10,7 +10,7 @@ DiagnosticAnnotations annotateDiagnostics (const MeasuredDiagnostics& d, const T
     DiagnosticAnnotations a;
     const auto key = d.analysis->identity + ";" + evaluation.identity;
     a.identity = juce::SHA256 (key.toRawUTF8(), key.getNumBytesAsUTF8()).toHexString();
-    if (evaluation.verdict != proposal::Verdict::notEvaluated)
+    if (evaluation.verdict != proposal::Verdict::notEvaluated && profile.limits.hasTruePeakCeiling)
     {
         a.ceiling = profile.limits.truePeakCeilingDbtp;
         a.text = "Selected profile: " + profile.displayName + " | TP ceiling " + juce::String (*a.ceiling, 6) + " dBTP. Headroom = ceiling - measured channel maximum.";
