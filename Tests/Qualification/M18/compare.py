@@ -43,7 +43,12 @@ def compare(left,right,include_long):
             for xp,yp in zip(x['per_channel_peaks'],y['per_channel_peaks']):
                 assert all(xp[k]==yp[k] for k in (('channel','role') if domain=='artifact' else ('channel','role','sample_peak_frame','true_peak_eighth_frame')))
                 maximum=max(maximum,metric_delta({k:xp[k] for k in ('sample_peak','true_peak')},{k:yp[k] for k in ('sample_peak','true_peak')}))
-        x,y=a['current_processing_plan'],b['current_processing_plan'];assert x['input_identity']==y['input_identity'] and x['transitions']==y['transitions']
+        x,y=a['current_processing_plan'],b['current_processing_plan']
+        assert x['engine']==y['engine'] and x['order']==y['order'] and x['transitions']==y['transitions']
+        if x['engine']=='section-gain-v1':assert x['input_identity']==y['input_identity']
+        else:
+            assert x['engine']=='static-gain-v1'
+            assert not x['applied_intervals'] and not y['applied_intervals'] and not x['transitions']
         assert len(x['applied_intervals'])==len(y['applied_intervals'])
         assert abs(float.fromhex(x['global_gain_hex'])-float.fromhex(y['global_gain_hex']))<=.01
         for xp,yp in zip(x['applied_intervals'],y['applied_intervals']):

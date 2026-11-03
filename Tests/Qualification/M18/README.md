@@ -154,3 +154,22 @@ four cases. Picture skips/deadlines require explicit review under the agreed M18
 allowance; audio underruns, incorrect timing bounds, blank pictures, failed
 attachment, invalid processing or memory failures remain failures. A review
 receipt supplements the raw results and never overwrites them.
+
+Candidate 04 passed all 28 fresh short/reference groups on both actual Macs.
+The first cross-Mac comparison stopped with `KeyError('input_identity')`: the
+checker assumed a section plan even for the intentional global-only stereo case.
+The corrected checker requires matching engine/order/transition geometry, checks
+input identity for section plans, and requires empty intervals/transitions for
+`static-gain-v1`. All metric, peak-position, gain and captured-sample tolerances
+are unchanged. Retain the failed receipt and record the corrected checker hash
+beside its result; no product code, executable, input or measured receipt changed.
+
+An audit of the Intel peak-policy timings found that the original probe's
+`bounded` variant enabled the build flag but still inherited the production
+arm64-only service selection. Its Intel results therefore tested serial service
+three times. The fresh direct core parity test did exercise Intel bounded workers,
+but the service/proposal comparison needs a corrected diagnostic overlay. The
+probe builder now removes only that architecture restriction in its private
+bounded service copy; app-mode and the production app retain Intel serial policy.
+Freeze the corrected probe hashes separately and repeat only the affected
+stereo/5.1 bounded service comparisons against the preserved serial/app receipts.

@@ -96,7 +96,15 @@ if args.compare_peaks:
     variants=[('app-mode',[])]
     for enable,name in enumerate(('serial','bounded')):
         src=out/(name+'-measurement.cpp')
-        src.write_text('#include "'+str(source/'StandaloneMeasurementService.cpp')+'"\n')
+        if enable:
+            # Diagnostic override only: exercise the bounded service on Intel
+            # too. The ordinary app variant keeps the production arm64 policy.
+            text=(source/'StandaloneMeasurementService.cpp').read_text()
+            policy='#if LEVELSCOPE_ENABLE_BOUNDED_TRUE_PEAK && defined(__APPLE__) && defined(__aarch64__)'
+            assert text.count(policy)==1
+            src.write_text(text.replace(policy,'#if LEVELSCOPE_ENABLE_BOUNDED_TRUE_PEAK && defined(__APPLE__)'))
+        else:
+            src.write_text('#include "'+str(source/'StandaloneMeasurementService.cpp')+'"\n')
         obj=compile_one(src,support,['-ULEVELSCOPE_ENABLE_BOUNDED_TRUE_PEAK',f'-DLEVELSCOPE_ENABLE_BOUNDED_TRUE_PEAK={enable}'])
         variants.append((name,[obj]))
 for name,objects in variants:
