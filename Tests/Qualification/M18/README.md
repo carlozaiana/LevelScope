@@ -99,3 +99,19 @@ has no normal application event loop around those calls. Production event-loop c
 is unchanged. The native check explicitly selects Current inspection so actual
 progressive PCM is painted during Current remeasurement. All failed pilot receipts
 remain in the owned qualification build directory.
+
+Candidate 01's first six short groups passed on both actual Macs. Its multichannel
+suite then failed at the same old helper which set `job.state` directly and never
+began an analysis job. The current session correctly rejects that missing ticket/
+stage. Only `Tests/MultichannelTests.cpp` changed to use the public begin/finish
+lifecycle. The corrected focused suite passed 43,202 checks. Candidate 02 retains
+the identical product source and app executable. Its runner may reuse only the
+first six self-contained passing receipts after verifying both candidate manifests,
+identical product-source inventories, report hashes and exact test executable hashes.
+All remaining groups execute in the new candidate's result tree. Failed candidate-01
+receipts remain untouched.
+
+The user separately approved four 10-second muted physical-output cases per Mac,
+using Mac Studio Speakers and Golem's Built-in Output at 48 kHz. No further
+permission is needed for that exact subset. System-default selections and Pro40
+remain unchanged.

@@ -210,9 +210,11 @@ void metadataAndLegacy(const juce::File& dir)
 
 void acceptMeasured (StandaloneSessionModel& session,MeasurementDomain domain)
 {
-    session.job.state=JobState::succeeded;
-    JobControl job;auto result=OfflineAnalysisService().analyze(session.measurementContext(domain),domain,job);
-    expect(result.value.has_value()&&session.acceptMeasurement(std::move(*result.value)),"device-closed worker result accepted by session");
+    expect(session.job.begin(JobStage::analysis,session.revision),"begin device-closed measurement job");
+    const auto context=session.measurementContext(domain);JobControl job;
+    auto result=OfflineAnalysisService().analyze(context,domain,job);
+    expect(result.value.has_value()&&session.job.finish(context.ticket,session.revision,result.error,result.message)
+        &&session.acceptMeasurement(std::move(*result.value)),"device-closed worker result accepted by session");
 }
 void mutedPeakWorkflow(const juce::File& dir)
 {

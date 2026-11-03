@@ -37,7 +37,7 @@ subprocess.run([str(Path('/usr/bin/python3')),str(dest/'source/Tests/Profiling/S
 subprocess.run([str(Path('/usr/bin/python3')),str(dest/'source/Tests/Profiling/OfflineStages/fixtures.py'),str(dest/'peak-fixtures')],check=True)
 flags=(compile/'CMakeFiles/LevelScopeStandalone.dir/flags.make').read_text();build=re.search(r'LEVELSCOPE_MEASUREMENT_BUILD=\\"([a-f0-9]{64})',flags)[1]
 artifacts={str(f.relative_to(dest)):sha(f) for f in sorted(dest.rglob('*')) if f.is_file()}
-identity=dict(schema=1,name='M18 combined qualification candidate 01',source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=repo,text=True).strip(),
+identity=dict(schema=1,name='M18 combined qualification '+dest.name,source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=repo,text=True).strip(),
               source_digest=source_digest,source_files_sha256=source_hashes,measurement_build=build,
               bounded_true_peak='ON; app service uses bounded stereo/5.1 on Apple silicon, serial on Intel',
               architectures=['arm64','x86_64'],intel_minimum='10.13',

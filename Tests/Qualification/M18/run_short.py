@@ -4,6 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 import platform
+import shutil
 import subprocess
 import sys
 import time
@@ -23,13 +24,35 @@ REQUIRED={'measurement','compliance','global-proposal','diagnostics','sections',
 def main():
     p=argparse.ArgumentParser();p.add_argument('candidate',type=Path);p.add_argument('output',type=Path)
     p.add_argument('--ebu',type=Path,required=True);p.add_argument('--itu',type=Path,required=True)
+    p.add_argument('--reuse',type=Path);p.add_argument('--previous-candidate',type=Path)
     a=p.parse_args();root=a.candidate.resolve();out=a.output.resolve();out.mkdir(parents=True,exist_ok=False)
     identity=json.loads((root/'identity.json').read_text());arch=platform.machine()
     assert arch in ('arm64','x86_64') and platform.system()=='Darwin'
     for path,digest in identity['artifacts_sha256'].items():assert sha(root/path)==digest,path
+    reused={};previous_identity=None
+    if a.reuse or a.previous_candidate:
+        assert a.reuse and a.previous_candidate,'Reuse needs its immutable originating candidate'
+        previous_root=a.previous_candidate.resolve();previous_identity=json.loads((previous_root/'identity.json').read_text())
+        previous= json.loads((a.reuse/'summary.json').read_text())
+        assert previous['identity_sha256']==sha(previous_root/'identity.json') and previous['architecture']==arch
+        assert previous_identity['measurement_build']==identity['measurement_build']
+        product=lambda manifest:{f:h for f,h in manifest['source_files_sha256'].items() if f.startswith('Source/') or f=='CMakeLists.txt'}
+        assert product(previous_identity)==product(identity),'Changed product source cannot use this reuse rule'
+        # These initial groups produce self-contained reports. Later groups retain
+        # fixtures for exchange/video and must execute in the new output tree.
+        allowed={'measurement','compliance','global-proposal','diagnostics','sections','audition'}
+        reused={r['name']:r for r in previous['commands'] if r['name'] in allowed and r.get('passed') is True and r['exit_code']==0}
     rows=[];start=time.monotonic();failure=''
     def run(name,command,report=None,text_pass=None):
         command=list(map(str,command));t=time.monotonic();print('START',name,flush=True)
+        if name in reused:
+            old=reused[name];old_binary=Path(old['command'][2]);new_binary=Path(command[2])
+            assert old_binary.name==new_binary.name and sha(old_binary)==sha(new_binary)==identity['artifacts_sha256']['bin/'+new_binary.name]
+            assert previous_identity['artifacts_sha256']['bin/'+old_binary.name]==sha(old_binary)
+            original=a.reuse/Path(report).relative_to(out);assert sha(original)==old['report_sha256']
+            shutil.copy2(original,report);shutil.copy2(a.reuse/(name+'.log'),out/(name+'.log'))
+            row=dict(old,reused_from=str(a.reuse.resolve()),origin_identity_sha256=sha(previous_root/'identity.json'),unchanged_executable_sha256=sha(new_binary))
+            rows.append(row);(out/'commands.json').write_text(json.dumps(rows,indent=2)+'\n');print('REUSED',name,flush=True);return
         with (out/(name+'.log')).open('w') as log:r=subprocess.run(command,stdout=log,stderr=subprocess.STDOUT)
         row=dict(name=name,command=command,exit_code=r.returncode,seconds=time.monotonic()-t)
         if report:
