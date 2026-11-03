@@ -1,0 +1,22 @@
+{
+  "format": "levelscope-job-requirements",
+  "schema": 2,
+  "id": "51e91a871a3a4fc5bb28bc136a3151ee",
+  "revision": 1,
+  "name": "Delivery A",
+  "base_id": "ebu-r128-2023-programme-linear-qc",
+  "base_version": "1.0.0",
+  "base_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+  "method": "EBU Tech 3342-2023 whole-programme LRA",
+  "applicability": "pre-produced-whole-programme-linear-audio",
+  "provenance_kind": "user-specified-job-requirement",
+  "provenance": "",
+  "maximum_lra_tenths": null,
+  "integrated_tenths": null,
+  "integrated_tolerance_tenths": 0,
+  "true_peak_tenths": null,
+  "maximum_momentary_tenths": null,
+  "maximum_short_term_tenths": null,
+  "unavailable_reason": "",
+  "digest": "b88820f3d8451e084a492beb362138d5e9627a8c1bbf45f8c9601650f4ce7124"
+}

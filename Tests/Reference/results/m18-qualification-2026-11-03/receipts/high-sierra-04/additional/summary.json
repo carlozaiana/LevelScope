@@ -1,0 +1,142 @@
+{
+  "passed": true,
+  "failure": "",
+  "architecture": "x86_64",
+  "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb",
+  "identity_sha256": "33bc7202fc2629797bbfd3223b3849145a88bebe5c22e9157a1636f53cd69e95",
+  "seconds": 843.798462591,
+  "commands": [
+    {
+      "name": "peaks-2-serial",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-04/bin/peaks/serial",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-04/peak-fixtures/programme-2.wav",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-04/additional/peaks-2-serial.json",
+        "--decisions"
+      ],
+      "exit_code": 0,
+      "seconds": 21.654412869,
+      "report_sha256": "69fb8aa4eff482edda7bdc7f6badc56b6cc651284e6513feb8db933d4c7d5d31"
+    },
+    {
+      "name": "peaks-2-bounded",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-04/bin/peaks/bounded",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-04/peak-fixtures/programme-2.wav",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-04/additional/peaks-2-bounded.json",
+        "--decisions"
+      ],
+      "exit_code": 0,
+      "seconds": 21.629728142999998,
+      "report_sha256": "733ac5f2c1e3c1935a4cfe55cceff24b5eb4a91bf962d83c55b37c9addbd24db"
+    },
+    {
+      "name": "peaks-2-app-mode",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-04/bin/peaks/app-mode",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-04/peak-fixtures/programme-2.wav",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-04/additional/peaks-2-app-mode.json",
+        "--decisions"
+      ],
+      "exit_code": 0,
+      "seconds": 21.65781066000001,
+      "report_sha256": "5c059605c6ae00c17a22e85782208a4d10a3701f4ad61de389acd3c9f5a3d920"
+    },
+    {
+      "name": "peaks-6-serial",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-04/bin/peaks/serial",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-04/peak-fixtures/programme-6.wav",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-04/additional/peaks-6-serial.json",
+        "--decisions"
+      ],
+      "exit_code": 0,
+      "seconds": 63.49046046000001,
+      "report_sha256": "9dcc47bdbb27a40fc5767777a3f68379cd921a90d34324ec109bc6b1fd704631"
+    },
+    {
+      "name": "peaks-6-bounded",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-04/bin/peaks/bounded",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-04/peak-fixtures/programme-6.wav",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-04/additional/peaks-6-bounded.json",
+        "--decisions"
+      ],
+      "exit_code": 0,
+      "seconds": 63.087387721,
+      "report_sha256": "7f247fbf1e57eebc33946f34dd8977961a6b38518bab098a29eb52b23854e1d4"
+    },
+    {
+      "name": "peaks-6-app-mode",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-04/bin/peaks/app-mode",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-04/peak-fixtures/programme-6.wav",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-04/additional/peaks-6-app-mode.json",
+        "--decisions"
+      ],
+      "exit_code": 0,
+      "seconds": 63.41794119599999,
+      "report_sha256": "aa7ea17e2e56c7bf58a5ccf0e5446af3906c1eca6fdb7353cfe947819f1f25be"
+    },
+    {
+      "name": "exchange-prepare",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-04/bin/session-exchange",
+        "prepare",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-04/short",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-04/additional/exchange-source"
+      ],
+      "exit_code": 0,
+      "seconds": 0.8485625160000154,
+      "report_sha256": "35c9e4c0d3d7dac12d72d0f6cdb496709e3c2160310c7d3609ba6b9e678dc99c"
+    },
+    {
+      "name": "video-matrix",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-04/bin/LevelScopeSectionProposalTests",
+        "--video",
+        "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/video-fixtures",
+        "--session",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-04/short/section-proposal-files/48000-6-0/applied.levelscope",
+        "--root",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-04/additional/video-matrix-files",
+        "--output",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-04/additional/video-matrix.json"
+      ],
+      "exit_code": 0,
+      "seconds": 43.21372952099995,
+      "report_sha256": "fcc2eb74a5b2b2e881d12d64eeefb0f7488f0a16813a687717c71f5767494d74"
+    },
+    {
+      "name": "video-native",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-04/bin/video-pressure",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-04/short/native-surround/job.levelscope",
+        "/Users/fuzz/LevelScope-M13-qualification-2026-10-28/candidate-02/video-fixtures",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-04/additional/video-native"
+      ],
+      "exit_code": 0,
+      "seconds": 544.779367599,
+      "report_sha256": "0c86b86e05552cee362c358a608cbb871014cf5294ed81c64ba2b4806c4fff43"
+    }
+  ],
+  "physical_devices_opened": false
+}

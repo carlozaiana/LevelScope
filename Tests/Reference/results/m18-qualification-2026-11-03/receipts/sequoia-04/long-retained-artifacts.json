@@ -1,0 +1,25 @@
+{
+  "artifacts": [
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/long/mono-duration-192k.wav",
+      "bytes": 6220800104,
+      "sha256": "fec6b61288c7f125eadf580f5107aa3f2527b8a5fe324686a1efa5519e0fcb27"
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/long/export/programme.wav",
+      "bytes": 6220800104,
+      "sha256": "055ae11446acfe0e9c405102f0a78f403d017075bb561c69435c27d908888449"
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/long/mono-duration.levelscope",
+      "bytes": 10725495,
+      "sha256": "22da0459a13f0718169d32461b97d417364f735fd756eb365153c317d967c087"
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/long/historical-unverified.levelscope",
+      "bytes": 5540586,
+      "sha256": "5739d44c7a427acb90e01c9726bd0d3de68e11c05573a3cf9e09b0be00e56f3b"
+    }
+  ],
+  "audio_hashes_from": "completed independent streaming audit; session hashes computed separately"
+}

@@ -1,0 +1,6 @@
+[  0%] Built target LevelScopeMeasurementCore
+[ 60%] Built target LevelScopeStandaloneSupport
+[ 85%] Built target LevelScopeDiagnosticsUI
+[ 85%] Building CXX object CMakeFiles/LevelScopeMarkerTests.dir/Tests/MarkerTests.cpp.o
+[ 90%] Linking CXX executable LevelScopeMarkerTests_artefacts/Release/LevelScopeMarkerTests
+[100%] Built target LevelScopeMarkerTests

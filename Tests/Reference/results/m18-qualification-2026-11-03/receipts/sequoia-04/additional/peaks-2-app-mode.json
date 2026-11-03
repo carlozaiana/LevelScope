@@ -1,0 +1,373 @@
+{
+  "operations": {
+    "import": {
+      "wall_ms": 101.7815,
+      "worker_cpu_ms": 101.636,
+      "process_cpu_ms": 102.321,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        101.833542
+      ],
+      "heartbeat_tail_ms": 3.6385,
+      "timeline_paint_ms": [
+        3.606208
+      ]
+    },
+    "source": {
+      "wall_ms": 856.5644579999999,
+      "worker_cpu_ms": 834.515,
+      "process_cpu_ms": 1457.892,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        101.762334,
+        102.401541,
+        100.155042,
+        100.503083,
+        101.2075,
+        99.895625,
+        100.627042,
+        101.723167
+      ],
+      "heartbeat_tail_ms": 52.788791,
+      "timeline_paint_ms": [
+        2.303458,
+        2.923209,
+        2.303875,
+        3.548542,
+        3.410292,
+        4.712042,
+        4.4655,
+        5.95325
+      ]
+    },
+    "global": {
+      "wall_ms": 1.696834,
+      "worker_cpu_ms": 1.697000000000003,
+      "process_cpu_ms": 1.704,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [],
+      "heartbeat_tail_ms": 1.709666,
+      "timeline_paint_ms": []
+    },
+    "fresh": {
+      "wall_ms": 2399.152375,
+      "worker_cpu_ms": 2341.783,
+      "process_cpu_ms": 4402.597,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        97.95725,
+        100.236708,
+        105.279417,
+        100.183083,
+        101.140375,
+        100.733,
+        100.582042,
+        102.3065,
+        101.952208,
+        101.722709,
+        105.546958,
+        101.094667,
+        102.499458,
+        100.352292,
+        101.275166,
+        101.546375,
+        100.837875,
+        101.576792,
+        101.989,
+        105.084833,
+        105.725875,
+        101.360959,
+        102.339708
+      ],
+      "heartbeat_tail_ms": 61.312625,
+      "timeline_paint_ms": [
+        4.385958,
+        2.694167,
+        2.877333,
+        2.505375,
+        2.791417,
+        2.770084,
+        2.810125,
+        2.588625,
+        2.863625,
+        2.408041,
+        2.893375,
+        3.077666,
+        2.894625,
+        2.814708,
+        2.804042,
+        2.800584,
+        2.781,
+        2.769625,
+        2.754458,
+        2.846209,
+        2.749167,
+        2.740291,
+        2.774208
+      ]
+    },
+    "preference_blocked": {
+      "wall_ms": 203.082,
+      "worker_cpu_ms": 201.88,
+      "process_cpu_ms": 208.731,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        61.397875,
+        104.204417
+      ],
+      "heartbeat_tail_ms": 41.0285,
+      "timeline_paint_ms": [
+        2.746458,
+        2.772416
+      ]
+    },
+    "measured_rejection": {
+      "wall_ms": 868.860916,
+      "worker_cpu_ms": 848.8430000000001,
+      "process_cpu_ms": 1464.113,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        61.099292,
+        101.874083,
+        102.246292,
+        101.316375,
+        100.900208,
+        102.641334,
+        104.735,
+        100.91525
+      ],
+      "heartbeat_tail_ms": 98.143458,
+      "timeline_paint_ms": [
+        2.735542,
+        2.574334,
+        2.82125,
+        2.797542,
+        2.749459,
+        2.641875,
+        3.092041,
+        2.397625
+      ]
+    },
+    "unsupported": {
+      "wall_ms": 1.673,
+      "worker_cpu_ms": 1.671000000000021,
+      "process_cpu_ms": 1.675,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [],
+      "heartbeat_tail_ms": 1.681542,
+      "timeline_paint_ms": []
+    },
+    "reused": {
+      "wall_ms": 1770.872083,
+      "worker_cpu_ms": 1749.961,
+      "process_cpu_ms": 2984.812,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        99.62204199999999,
+        101.028041,
+        103.13075,
+        101.811834,
+        104.296333,
+        101.588167,
+        99.95866599999999,
+        101.274459,
+        100.559708,
+        101.195958,
+        102.380209,
+        101.944708,
+        100.87625,
+        103.830375,
+        102.901458,
+        104.938375,
+        100.292709
+      ],
+      "heartbeat_tail_ms": 41.306041,
+      "timeline_paint_ms": [
+        2.88075,
+        2.750625,
+        2.701625,
+        2.728291,
+        2.774958,
+        2.879916,
+        2.689709,
+        2.870583,
+        2.888667,
+        2.870875,
+        2.730541,
+        2.639458,
+        2.780458,
+        2.685333,
+        2.740417,
+        2.709625,
+        2.900375
+      ]
+    },
+    "current": {
+      "wall_ms": 870.144708,
+      "worker_cpu_ms": 849.428,
+      "process_cpu_ms": 1466.881,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        65.34545799999999,
+        101.69575,
+        100.972834,
+        100.285375,
+        101.374375,
+        100.1485,
+        99.664708,
+        101.76025
+      ],
+      "heartbeat_tail_ms": 99.132375,
+      "timeline_paint_ms": [
+        1.932209,
+        0.78875,
+        2.399083,
+        2.306291,
+        3.603333,
+        3.256125,
+        4.874958,
+        4.500708
+      ]
+    },
+    "already_meets": {
+      "wall_ms": 1.860625,
+      "worker_cpu_ms": 1.864000000000033,
+      "process_cpu_ms": 1.873,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [],
+      "heartbeat_tail_ms": 1.871625,
+      "timeline_paint_ms": []
+    }
+  },
+  "identities": {
+    "source": "5f16ac43b7da1c38468ddcc711240af9f64201c26f03482ecd11e54ee3b48636",
+    "global": "14b07da751a1427a85291310596ac1c5bcb1a03ecca1c5081503f96340e2df77",
+    "global_decision": "90828488edfaa589a9f9e55000679786e67a2ca1be0895b1af18baa549bfb27f",
+    "fresh": "875b1ca1e5f9c0963565ff0049dc6b9117edc40155348950cf9d791fc991cd3f",
+    "fresh_decision": "a25ebcfd879420b146211180a5ce4c6656ad76526a648ad4710430c955c568af",
+    "fresh_section_peaks": "b58ecf779ba471746315128bd06d377cd8def09507b704fed597ff1866130f49",
+    "fresh_candidate": "fde727f783f0de5cf8713595c4a4cc4af0d0ffe638fc887d377deb3f108bdb8c",
+    "fresh_plan": "cb5ff556a9374e3e9da83b81230683683e0df46c2b14ea9d971943831244e6ba",
+    "preference_blocked": "4df980e118a004af962c94fda2d0a3ec36d4082ce684d4096c8e93a2201599f9",
+    "preference_blocked_decision": "0efaaa58f3c8546bcddd6c1214a9ff0878187353e42ff97a31d81f7181c29c61",
+    "preference_blocked_section_peaks": "b58ecf779ba471746315128bd06d377cd8def09507b704fed597ff1866130f49",
+    "measured_rejection": "b2ed84549192e0698ac41fad4c57fb44ebd3add1af46c7a099f89ff340a7dec5",
+    "measured_rejection_decision": "1c45e6d8a518b12bf4174460d40a0dd849a2bf90ca25c76916a21aa39884199b",
+    "measured_rejection_section_peaks": "b58ecf779ba471746315128bd06d377cd8def09507b704fed597ff1866130f49",
+    "measured_rejection_candidate": "912b87b533e6450480b5321928dafbf81a1abaf7f6826e7ccb7edd3701434f0e",
+    "measured_rejection_plan": "02e8e161047cdf69e8e640a7beb1a1ddc006430b68e884b36c5515aced4ff5e7",
+    "unsupported": "379cac10f74410f283de5abbdc0de1136b6ff6825c9900699de6c918c4a0fec0",
+    "unsupported_decision": "56daa84ccff17ee88c94463730b4d1fcfc0379b587a60789ca18a47af578e1f4",
+    "reused": "875b1ca1e5f9c0963565ff0049dc6b9117edc40155348950cf9d791fc991cd3f",
+    "reused_decision": "770e4842692c2a1bb6e36fe35772c8f7fac2dd8d9d5efd73e07fc71f3f5ab26a",
+    "reused_section_peaks": "b58ecf779ba471746315128bd06d377cd8def09507b704fed597ff1866130f49",
+    "reused_candidate": "4e899fbd13d3226bd7bb5afa5fb1e60c208fc729f5c08715dcf026a7428b9a3c",
+    "reused_plan": "cb5ff556a9374e3e9da83b81230683683e0df46c2b14ea9d971943831244e6ba",
+    "current": "adcead42257ff92067bf050394b2c0e4da426265ec903b5576e0ab872744af72",
+    "already_meets": "1d7bdc530a35b1247546d163a2d34aff90af7c203c85a967eff6b781e8431aa0",
+    "already_meets_decision": "d89a402b2acd22a72646ecc12fc694fa318d311fdf0fa7d20c22888e4ef1faef"
+  },
+  "outcomes": {
+    "global": {
+      "main_preflight_ms": 0.745875,
+      "main_accept_ms": 0.2005,
+      "passes": 0,
+      "outcome": "Ready to apply",
+      "changes": 0,
+      "status": 2,
+      "issue": 0,
+      "can_apply": true,
+      "target_il": -23.7,
+      "target_tp": -1.0
+    },
+    "fresh": {
+      "main_preflight_ms": 0.072958,
+      "main_accept_ms": 0.2925,
+      "passes": 3,
+      "outcome": "Ready to apply",
+      "changes": 1,
+      "status": 4,
+      "issue": 0,
+      "can_apply": true,
+      "target_il": -23.0,
+      "target_tp": -1.0
+    },
+    "preference_blocked": {
+      "main_preflight_ms": 0.07116699999999999,
+      "main_accept_ms": 0.285666,
+      "passes": 0,
+      "outcome": "Blocked by proposal preferences",
+      "changes": 0,
+      "status": 3,
+      "issue": 3,
+      "can_apply": false,
+      "target_il": -23.0,
+      "target_tp": -1.0
+    },
+    "measured_rejection": {
+      "main_preflight_ms": 0.06804200000000001,
+      "main_accept_ms": 0.272375,
+      "passes": 1,
+      "outcome": "Candidate rejected",
+      "changes": 1,
+      "status": 3,
+      "issue": 4,
+      "can_apply": false,
+      "target_il": -18.0,
+      "target_tp": -1.0
+    },
+    "unsupported": {
+      "main_preflight_ms": 1.54475,
+      "main_accept_ms": 0.211334,
+      "passes": 0,
+      "outcome": "Unsupported correction",
+      "changes": 0,
+      "status": 0,
+      "issue": 2,
+      "can_apply": false,
+      "target_il": -18.0,
+      "target_tp": -1.0
+    },
+    "reused": {
+      "main_preflight_ms": 0.06758400000000001,
+      "main_accept_ms": 0.287583,
+      "passes": 2,
+      "outcome": "Ready to apply",
+      "changes": 1,
+      "status": 4,
+      "issue": 0,
+      "can_apply": true,
+      "target_il": -23.0,
+      "target_tp": -1.0
+    },
+    "already_meets": {
+      "main_preflight_ms": 0.7803330000000001,
+      "main_accept_ms": 0.241584,
+      "passes": 0,
+      "outcome": "Already meets requirements",
+      "changes": 0,
+      "status": 1,
+      "issue": 0,
+      "can_apply": false,
+      "target_il": -23.0,
+      "target_tp": -1.0
+    }
+  },
+  "roles": "L,R",
+  "file_sha256": "171b4aa51900c9826416719af9950005ce1a445817e49aa215c14cc2cd332566",
+  "frames": 2880000,
+  "source_lufs": -24.43008132144102,
+  "current_lufs": -23.00000001747636,
+  "channels": 2,
+  "base_build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb"
+}

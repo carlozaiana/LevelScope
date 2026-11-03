@@ -1,0 +1,48 @@
+START measurement
+REUSED measurement
+START compliance
+REUSED compliance
+START global-proposal
+REUSED global-proposal
+START diagnostics
+REUSED diagnostics
+START sections
+REUSED sections
+START audition
+REUSED audition
+START multichannel
+PASS multichannel 70.84
+START sessions
+PASS sessions 4.91
+START session-playback
+PASS session-playback 3.25
+START export
+PASS export 24.7
+START section-processing
+PASS section-processing 6.36
+START section-proposal
+PASS section-proposal 11.63
+START preferences
+PASS preferences 6.88
+START proposal-workflow
+PASS proposal-workflow 5.21
+START mono
+PASS mono 9.34
+START requirements
+PASS requirements 28.59
+START waveform-service
+PASS waveform-service 25.12
+START timeline
+PASS timeline 2.42
+START markers
+{
+  "passed": false,
+  "failure": "Failed or missing result: markers",
+  "build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce",
+  "identity_sha256": "42235c6e971e18c9453542a9a2d4b758d5f20e77ede27a63d04a21f704852520",
+  "architecture": "arm64",
+  "os": "15.7.9",
+  "seconds": 205.396343292,
+  "physical_devices_opened": false,
+  "full_qualification_complete": false
+}

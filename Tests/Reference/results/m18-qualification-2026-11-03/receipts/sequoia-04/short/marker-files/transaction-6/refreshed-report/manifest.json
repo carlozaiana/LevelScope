@@ -1,0 +1,8 @@
+{
+  "schema": "levelscope-export-manifest-v1",
+  "kind": "artifact-report-no-exported-audio",
+  "files_sha256": {
+    "report.json": "04f6a33793e6f37786ca3a4ebd53eb860361213c3eec1f4d7b14c8019bb2e26c",
+    "report.html": "d0e84e7de95891a3a0979e34a2b502defd7d5fb912dd18a9c96704d7f50d947d"
+  }
+}

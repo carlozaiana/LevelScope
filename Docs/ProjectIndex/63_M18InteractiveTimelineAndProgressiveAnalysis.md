@@ -276,6 +276,16 @@ historical and escaped, and cannot authorize publication.
 
 ## Qualification sequence and budgets
 
+**Execution update — 3 November 2026.** The human-authorised combined selection
+passed on actual arm64 Sequoia and Intel High Sierra: fresh short/reference gates,
+bidirectional sessions, selected injected/native/muted-physical video, actual
+three-hour mono/192 kHz RF64 workflows, independent export samples beyond 4 GiB,
+complete plain/observed numerical comparisons and synthetic six/eight-channel
+display stress. [The frozen candidate and results](../../Tests/Reference/results/m18-qualification-2026-11-03/README.md)
+record the exact scope, resource measurements and test-only corrections. Main
+integration/publication remain subject to subsequent approval; the exclusions
+and conditional checks below still apply.
+
 Before implementation, record the final impact manifest: explicit required commands,
 shared callers, fresh/reused evidence and budget. Start with short targeted Sequoia
 audio tests. Build only the standalone and selected test targets, universal arm64/x86_64

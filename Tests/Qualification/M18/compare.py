@@ -32,6 +32,9 @@ def compare(left,right,include_long):
     if include_long:
         for p in roots:
             r=read(p/'long/result.json');audit=read(p/'long-audit.json');assert r['passed'] and audit['passed'] and audit['three_hour'] and audit['rf64'] and audit['samples_beyond_4_gib']>0
+            exact=read(p/'exact-long-source.json')
+            assert exact['passed'] and all(c['passed'] for c in exact['checks'])
+            assert exact['build']==summary[0]['build'] and exact['source_sha256']==audit['source_sha256']
         pairs.append(('three-hour-mono',[read(p/'long/export/report.json') for p in roots]))
     for name,reports in pairs:
         a,b=reports
@@ -62,7 +65,7 @@ def compare(left,right,include_long):
         for (x,),(y,) in zip(struct.iter_unpack('<f',data[0]),struct.iter_unpack('<f',data[1])):
             assert math.isfinite(x) and math.isfinite(y);distance=abs(bits(x)-bits(y));assert distance<=1;ulp=max(ulp,distance)
     return dict(passed=True,build=summary[0]['build'],identity_sha256=summary[0]['identity_sha256'],maximum_metric_difference=maximum,
-                maximum_capture_float32_ulp=ulp,cases=cases,three_hour_included=include_long,
+                maximum_capture_float32_ulp=ulp,cases=cases,three_hour_included=include_long,long_observer_exact_comparison_required=include_long,
                 allowances='Cross-Mac comparisons only: 0.01 LU/dB/gain, LRA 0.1 LU, processed float32 <=1 ULP; no additional compliance allowance')
 
 if __name__=='__main__':

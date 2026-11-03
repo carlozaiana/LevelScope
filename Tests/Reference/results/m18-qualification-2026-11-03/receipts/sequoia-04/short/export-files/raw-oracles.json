@@ -1,0 +1,433 @@
+[{
+    "file": "0-1.wav",
+    "capture": "0.f32",
+    "rate": 44100,
+    "channels": 2,
+    "frames": 1025,
+    "gain_db": 0,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [1,0]
+  },{
+    "file": "1-1.wav",
+    "capture": "1.f32",
+    "rate": 44100,
+    "channels": 2,
+    "frames": 1025,
+    "gain_db": 6.0205999132796242,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [1,0]
+  },{
+    "file": "2-1.wav",
+    "capture": "2.f32",
+    "rate": 44100,
+    "channels": 2,
+    "frames": 1025,
+    "gain_db": -6.0205999132796242,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [1,0]
+  },{
+    "file": "3-1.wav",
+    "capture": "3.f32",
+    "rate": 44100,
+    "channels": 2,
+    "frames": 1025,
+    "gain_db": -3.3050741189439998,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [1,0]
+  },{
+    "file": "4-1.wav",
+    "capture": "4.f32",
+    "rate": 44100,
+    "channels": 2,
+    "frames": 1025,
+    "gain_db": -60,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [1,0]
+  },{
+    "file": "5-1.wav",
+    "capture": "5.f32",
+    "rate": 44100,
+    "channels": 2,
+    "frames": 1025,
+    "gain_db": 24,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [1,0]
+  },{
+    "file": "6-1.wav",
+    "capture": "6.f32",
+    "rate": 48000,
+    "channels": 2,
+    "frames": 1025,
+    "gain_db": 0,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [1,0]
+  },{
+    "file": "7-1.wav",
+    "capture": "7.f32",
+    "rate": 48000,
+    "channels": 2,
+    "frames": 1025,
+    "gain_db": 6.0205999132796242,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [1,0]
+  },{
+    "file": "8-1.wav",
+    "capture": "8.f32",
+    "rate": 48000,
+    "channels": 2,
+    "frames": 1025,
+    "gain_db": -6.0205999132796242,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [1,0]
+  },{
+    "file": "9-1.wav",
+    "capture": "9.f32",
+    "rate": 48000,
+    "channels": 2,
+    "frames": 1025,
+    "gain_db": -3.3050741189439998,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [1,0]
+  },{
+    "file": "10-1.wav",
+    "capture": "10.f32",
+    "rate": 48000,
+    "channels": 2,
+    "frames": 1025,
+    "gain_db": -60,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [1,0]
+  },{
+    "file": "11-1.wav",
+    "capture": "11.f32",
+    "rate": 48000,
+    "channels": 2,
+    "frames": 1025,
+    "gain_db": 24,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [1,0]
+  },{
+    "file": "12-1.wav",
+    "capture": "12.f32",
+    "rate": 96000,
+    "channels": 2,
+    "frames": 1025,
+    "gain_db": 0,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [1,0]
+  },{
+    "file": "13-1.wav",
+    "capture": "13.f32",
+    "rate": 96000,
+    "channels": 2,
+    "frames": 1025,
+    "gain_db": 6.0205999132796242,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [1,0]
+  },{
+    "file": "14-1.wav",
+    "capture": "14.f32",
+    "rate": 96000,
+    "channels": 2,
+    "frames": 1025,
+    "gain_db": -6.0205999132796242,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [1,0]
+  },{
+    "file": "15-1.wav",
+    "capture": "15.f32",
+    "rate": 96000,
+    "channels": 2,
+    "frames": 1025,
+    "gain_db": -3.3050741189439998,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [1,0]
+  },{
+    "file": "16-1.wav",
+    "capture": "16.f32",
+    "rate": 96000,
+    "channels": 2,
+    "frames": 1025,
+    "gain_db": -60,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [1,0]
+  },{
+    "file": "17-1.wav",
+    "capture": "17.f32",
+    "rate": 96000,
+    "channels": 2,
+    "frames": 1025,
+    "gain_db": 24,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [1,0]
+  },{
+    "file": "18-1.wav",
+    "capture": "18.f32",
+    "rate": 192000,
+    "channels": 2,
+    "frames": 1025,
+    "gain_db": 0,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [1,0]
+  },{
+    "file": "19-1.wav",
+    "capture": "19.f32",
+    "rate": 192000,
+    "channels": 2,
+    "frames": 1025,
+    "gain_db": 6.0205999132796242,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [1,0]
+  },{
+    "file": "20-1.wav",
+    "capture": "20.f32",
+    "rate": 192000,
+    "channels": 2,
+    "frames": 1025,
+    "gain_db": -6.0205999132796242,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [1,0]
+  },{
+    "file": "21-1.wav",
+    "capture": "21.f32",
+    "rate": 192000,
+    "channels": 2,
+    "frames": 1025,
+    "gain_db": -3.3050741189439998,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [1,0]
+  },{
+    "file": "22-1.wav",
+    "capture": "22.f32",
+    "rate": 192000,
+    "channels": 2,
+    "frames": 1025,
+    "gain_db": -60,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [1,0]
+  },{
+    "file": "23-1.wav",
+    "capture": "23.f32",
+    "rate": 192000,
+    "channels": 2,
+    "frames": 1025,
+    "gain_db": 24,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [1,0]
+  },{
+    "file": "24-1.wav",
+    "capture": "24.f32",
+    "rate": 44100,
+    "channels": 6,
+    "frames": 1025,
+    "gain_db": 0,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [5,4,3,2,1,0]
+  },{
+    "file": "25-1.wav",
+    "capture": "25.f32",
+    "rate": 44100,
+    "channels": 6,
+    "frames": 1025,
+    "gain_db": 6.0205999132796242,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [5,4,3,2,1,0]
+  },{
+    "file": "26-1.wav",
+    "capture": "26.f32",
+    "rate": 44100,
+    "channels": 6,
+    "frames": 1025,
+    "gain_db": -6.0205999132796242,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [5,4,3,2,1,0]
+  },{
+    "file": "27-1.wav",
+    "capture": "27.f32",
+    "rate": 44100,
+    "channels": 6,
+    "frames": 1025,
+    "gain_db": -3.3050741189439998,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [5,4,3,2,1,0]
+  },{
+    "file": "28-1.wav",
+    "capture": "28.f32",
+    "rate": 44100,
+    "channels": 6,
+    "frames": 1025,
+    "gain_db": -60,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [5,4,3,2,1,0]
+  },{
+    "file": "29-1.wav",
+    "capture": "29.f32",
+    "rate": 44100,
+    "channels": 6,
+    "frames": 1025,
+    "gain_db": 24,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [5,4,3,2,1,0]
+  },{
+    "file": "30-1.wav",
+    "capture": "30.f32",
+    "rate": 48000,
+    "channels": 6,
+    "frames": 1025,
+    "gain_db": 0,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [5,4,3,2,1,0]
+  },{
+    "file": "31-1.wav",
+    "capture": "31.f32",
+    "rate": 48000,
+    "channels": 6,
+    "frames": 1025,
+    "gain_db": 6.0205999132796242,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [5,4,3,2,1,0]
+  },{
+    "file": "32-1.wav",
+    "capture": "32.f32",
+    "rate": 48000,
+    "channels": 6,
+    "frames": 1025,
+    "gain_db": -6.0205999132796242,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [5,4,3,2,1,0]
+  },{
+    "file": "33-1.wav",
+    "capture": "33.f32",
+    "rate": 48000,
+    "channels": 6,
+    "frames": 1025,
+    "gain_db": -3.3050741189439998,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [5,4,3,2,1,0]
+  },{
+    "file": "34-1.wav",
+    "capture": "34.f32",
+    "rate": 48000,
+    "channels": 6,
+    "frames": 1025,
+    "gain_db": -60,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [5,4,3,2,1,0]
+  },{
+    "file": "35-1.wav",
+    "capture": "35.f32",
+    "rate": 48000,
+    "channels": 6,
+    "frames": 1025,
+    "gain_db": 24,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [5,4,3,2,1,0]
+  },{
+    "file": "36-1.wav",
+    "capture": "36.f32",
+    "rate": 96000,
+    "channels": 6,
+    "frames": 1025,
+    "gain_db": 0,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [5,4,3,2,1,0]
+  },{
+    "file": "37-1.wav",
+    "capture": "37.f32",
+    "rate": 96000,
+    "channels": 6,
+    "frames": 1025,
+    "gain_db": 6.0205999132796242,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [5,4,3,2,1,0]
+  },{
+    "file": "38-1.wav",
+    "capture": "38.f32",
+    "rate": 96000,
+    "channels": 6,
+    "frames": 1025,
+    "gain_db": -6.0205999132796242,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [5,4,3,2,1,0]
+  },{
+    "file": "39-1.wav",
+    "capture": "39.f32",
+    "rate": 96000,
+    "channels": 6,
+    "frames": 1025,
+    "gain_db": -3.3050741189439998,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [5,4,3,2,1,0]
+  },{
+    "file": "40-1.wav",
+    "capture": "40.f32",
+    "rate": 96000,
+    "channels": 6,
+    "frames": 1025,
+    "gain_db": -60,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [5,4,3,2,1,0]
+  },{
+    "file": "41-1.wav",
+    "capture": "41.f32",
+    "rate": 96000,
+    "channels": 6,
+    "frames": 1025,
+    "gain_db": 24,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [5,4,3,2,1,0]
+  },{
+    "file": "42-1.wav",
+    "capture": "42.f32",
+    "rate": 192000,
+    "channels": 6,
+    "frames": 1025,
+    "gain_db": 0,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [5,4,3,2,1,0]
+  },{
+    "file": "43-1.wav",
+    "capture": "43.f32",
+    "rate": 192000,
+    "channels": 6,
+    "frames": 1025,
+    "gain_db": 6.0205999132796242,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [5,4,3,2,1,0]
+  },{
+    "file": "44-1.wav",
+    "capture": "44.f32",
+    "rate": 192000,
+    "channels": 6,
+    "frames": 1025,
+    "gain_db": -6.0205999132796242,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [5,4,3,2,1,0]
+  },{
+    "file": "45-1.wav",
+    "capture": "45.f32",
+    "rate": 192000,
+    "channels": 6,
+    "frames": 1025,
+    "gain_db": -3.3050741189439998,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [5,4,3,2,1,0]
+  },{
+    "file": "46-1.wav",
+    "capture": "46.f32",
+    "rate": 192000,
+    "channels": 6,
+    "frames": 1025,
+    "gain_db": -60,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [5,4,3,2,1,0]
+  },{
+    "file": "47-1.wav",
+    "capture": "47.f32",
+    "rate": 192000,
+    "channels": 6,
+    "frames": 1025,
+    "gain_db": 24,
+    "seed_hex": "1a2b3c4d5e6f7788",
+    "map": [5,4,3,2,1,0]
+  }]

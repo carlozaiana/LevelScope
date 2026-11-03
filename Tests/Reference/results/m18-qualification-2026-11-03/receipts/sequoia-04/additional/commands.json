@@ -1,0 +1,133 @@
+[
+  {
+    "name": "peaks-2-serial",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/peaks/serial",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/peak-fixtures/programme-2.wav",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/additional/peaks-2-serial.json",
+      "--decisions"
+    ],
+    "exit_code": 0,
+    "seconds": 11.943270209,
+    "report_sha256": "96b551a5b3e49ed331b1e69ad2f47ef33ec350c8874b37b241a9b9569e115528"
+  },
+  {
+    "name": "peaks-2-bounded",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/peaks/bounded",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/peak-fixtures/programme-2.wav",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/additional/peaks-2-bounded.json",
+      "--decisions"
+    ],
+    "exit_code": 0,
+    "seconds": 7.715028041,
+    "report_sha256": "116282515ab96e764287629a5460adc16201e7d9b3f07861b0cef305c8ee3240"
+  },
+  {
+    "name": "peaks-2-app-mode",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/peaks/app-mode",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/peak-fixtures/programme-2.wav",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/additional/peaks-2-app-mode.json",
+      "--decisions"
+    ],
+    "exit_code": 0,
+    "seconds": 7.599431791000001,
+    "report_sha256": "8e1449527fb4ea3cf2715fc427600c50334a8dc90fd325d3a308b2813e991a4d"
+  },
+  {
+    "name": "peaks-6-serial",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/peaks/serial",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/peak-fixtures/programme-6.wav",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/additional/peaks-6-serial.json",
+      "--decisions"
+    ],
+    "exit_code": 0,
+    "seconds": 33.909528041,
+    "report_sha256": "c21613758ab2527735843809bfdc0351a765f01de6ec20acb22c126b2762a4b0"
+  },
+  {
+    "name": "peaks-6-bounded",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/peaks/bounded",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/peak-fixtures/programme-6.wav",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/additional/peaks-6-bounded.json",
+      "--decisions"
+    ],
+    "exit_code": 0,
+    "seconds": 10.9789515,
+    "report_sha256": "73d6b6af7139add1c3933892b6f44a15de56aaf315f76df4c4720cde53912a5e"
+  },
+  {
+    "name": "peaks-6-app-mode",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/peaks/app-mode",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/peak-fixtures/programme-6.wav",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/additional/peaks-6-app-mode.json",
+      "--decisions"
+    ],
+    "exit_code": 0,
+    "seconds": 11.870058084000007,
+    "report_sha256": "35d0ab36a1c4930e402c2a25700410c1f80d2642919a7763188262e3f77911e4"
+  },
+  {
+    "name": "exchange-prepare",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/session-exchange",
+      "prepare",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/additional/exchange-source"
+    ],
+    "exit_code": 0,
+    "seconds": 1.040672083000004,
+    "report_sha256": "35c9e4c0d3d7dac12d72d0f6cdb496709e3c2160310c7d3609ba6b9e678dc99c"
+  },
+  {
+    "name": "video-matrix",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/LevelScopeSectionProposalTests",
+      "--video",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-02/video-fixtures",
+      "--session",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/section-proposal-files/48000-6-0/applied.levelscope",
+      "--root",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/additional/video-matrix-files",
+      "--output",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/additional/video-matrix.json"
+    ],
+    "exit_code": 0,
+    "seconds": 20.827974999999995,
+    "report_sha256": "86b9ef3188e8c9ab20b919eb2c4638f802edb6822fc755dac098eb506128a3b2"
+  },
+  {
+    "name": "video-native",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/video-pressure",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/native-surround/job.levelscope",
+      "/Users/fuzz/Developer/LevelScope/build/m13-qualification-2026-10-28/candidate-02/video-fixtures",
+      "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/additional/video-native"
+    ],
+    "exit_code": 0,
+    "seconds": 140.281797417,
+    "report_sha256": "48741758c32ed5d421f46768f6b9cfc8d5f06a9874b5e51fe05a38cf75dc097b"
+  }
+]

@@ -2,10 +2,11 @@
 
 **Current coordination summary — 3 November 2026**
 
-M18 implementation has reached the short end-to-end acceptance gate on the
-development M1 Max running Sequoia. The combined two-Mac qualification is now
-in progress, not complete. This summary gives the current position. Dated sections below retain
-the earlier plans, build paths and per-slice evidence.
+M18 implementation and the agreed combined M14–M18 qualification have passed on
+the development M1 Max running Sequoia and the actual Intel High Sierra Mac.
+The frozen candidate is ready for integration review; main integration and
+publication have not been performed. Dated sections below retain the earlier
+plans, build paths and per-slice evidence.
 
 The active worktree is `/Users/fuzz/.codex/worktrees/a411/LevelScope`, branch
 `codex/ui-timeline-m18`. The M18 implementation and development evidence are committed
@@ -13,18 +14,53 @@ as `4f02303a748b660c72471058111df8a1271758fc`, following
 `cdac0c36b4259386417ecad507d107761eced864`, which integrates the logic module's
 tested automatic Current initialisation. Frozen candidates and actual-platform
 short results are retained in `build/m18-qualification-2026-11-03`.
-High Sierra qualification exposed slow explanation paging; a smaller page size
-preserves the complete text and is being rebuilt as candidate 04 with fresh gates
-on both Macs. There is no qualified or published M18 checkpoint yet.
+High Sierra qualification exposed slow explanation paging; the complete text is
+now displayed in smaller pages (product fix `3665815`). Candidate 04 is frozen
+with measurement build `79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb`
+and identity SHA-256 `33bc7202fc2629797bbfd3223b3849145a88bebe5c22e9157a1636f53cd69e95`.
+All 28 fresh short/reference groups passed on both actual Macs: 399.64 seconds
+on arm64 Sequoia 15.7.9 and 1,075.65 seconds on Intel High Sierra 10.13.6.
+The complete cross-Mac checker, including the actual three-hour job, passed with
+exact Source/Current peak positions, section geometry and verdicts. Short captured
+float32 samples matched exactly; the largest metric difference was `3.55e-15`.
+Candidate 04 passed the selected combined qualification; no M18 checkpoint has
+been published yet.
 Main remains the qualified M13 commit `a9be070ab9eb5cb4f591ff9d991d8999c3a016d0`.
 
 The advisory chat has since delegated the human-authorised combined qualification
-to this UI/Timeline chat. The short driver pilots passed; long execution has not
-started. [The explicit qualification selection and driver notes](../../Tests/Qualification/M18/README.md)
+to this UI/Timeline chat. Both Macs passed the additional video checks, four muted
+physical cases each, native preset/file-panel review and eight receiving-platform
+session-exchange cases each. The corrected Intel diagnostic probe also passed
+exact serial/bounded service and proposal comparisons for stereo and 5.1; the
+production app remains serial on Intel. Sequoia's actual three-hour mono/192 kHz
+workflow passed in 68.68 minutes, including independent Current measurement,
+save/reopen, eight exact playback captures and verified RF64 export. Its independent
+audit matched 1,030 decoded samples, including 314 beyond 4 GiB. The supplemental
+synthetic six/eight-channel display-density check also passed. An additional plain
+Source pass on each Mac closed a gap in the long driver's identity-only observation
+comparison: all metrics, gates, peak positions and 323,954 measured windows matched
+exactly, adding 9.08 / 16.53 minutes without repeating either workflow. Golem's workflow passed in
+123.31 minutes, and its RF64 audit and synthetic display check also passed. Both
+Macs produced byte-identical full RF64 exports. All final comparison and integrity
+checks passed. The long workflows retained 100.70 MiB for both waveform domains
+combined; preparation/paint p95 was 1.40/6.91 ms and 3.84/25.69 ms respectively.
+[The combined qualification evidence](../../Tests/Reference/results/m18-qualification-2026-11-03/README.md)
+records measured timings and resource limits, including the long file's
+71.36 / 120.66-second first-preview delays during payload preparation.
+[The explicit qualification selection and driver notes](../../Tests/Qualification/M18/README.md)
 record the fresh groups, budgets and retained failures. The user has approved four
 10-second muted physical video cases per Mac, using Mac Studio Speakers and
 Golem's Built-in Output at 48 kHz. Pro40 and system-default selections remain
 untouched. Actual test receipts determine completion.
+
+Frozen candidate app:
+`/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/LevelScope Standalone.app`.
+Initial qualification-only checker/probe corrections were committed separately as
+`90b2ab27a81d8bf8d37391b448847ee765bf5c91`. Subsequent density and full-result parity
+supplements have separately recorded source/binary hashes; the frozen app is unchanged. Failed
+receipts and superseded packages remain preserved with explicit correction/reuse
+notes. Native review found a cosmetic dash-encoding defect in the historical
+explanation heading; all words and structured explanation data remain accessible.
 
 Implemented behaviour includes:
 
@@ -90,18 +126,18 @@ from import. Play reached the first non-zero injected-output sample in 0.30 s /
 passed 61 checks and each 5.1 run passed 77. Independent bundle hashes and selected
 PCM24 samples, including gain transitions, matched. [Acceptance evidence](../../Tests/Reference/results/m18-short-acceptance/README.md)
 
-Current development app is
+The pre-qualification development app was
 `/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-peak-dev/LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app`.
 Its build identity is `93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce`.
 The universal app includes arm64 and x86_64, with Intel minimum macOS 10.13.
 [Executable hashes](../../Tests/Reference/results/m18-bounded-peaks/candidate-03/development-build.json)
 
-The next qualification block freezes the combined M14–M18 candidate, then runs
-actual Intel High Sierra, cross-Mac comparisons and session exchange, selected
-video regressions, and one consolidated three-hour mono/192 kHz workflow per Mac
-including RF64 beyond 4 GiB and resource checks. Plan 63 defines the exact selection,
-budgets and separately coordinated physical subset. The long tests have not started.
-Integration and publication follow successful qualification and explicit approval.
+The combined M14–M18 qualification block is complete for the selection and budgets
+in Plan 63. The frozen candidate-04 app path above is the tested build. Full physical
+7.1 listening remains separate; full video codec/colour and 30-minute endurance
+remain conditional on relevant changes or concrete failures. No new full-duration
+multichannel PCM run is claimed. Integration and publication require subsequent
+explicit approval.
 
 Later work remains the visible-passage sample inspection reader, output selection
 and opt-in reconnection, explicitly selected 5.1-to-stereo monitoring, and further

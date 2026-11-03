@@ -1,0 +1,22 @@
+{
+  "candidate_identity_sha256": "33bc7202fc2629797bbfd3223b3849145a88bebe5c22e9157a1636f53cd69e95",
+  "method": "CUA native controls and actual macOS Open/Save panels; no physical output opened",
+  "passed_actions": [
+    "preset Cancel closes",
+    "direct M/S entry and Unsaved preset naming",
+    "preset Save closes and selects complete definition",
+    "existing presets unchanged; disposable preset archived",
+    "native Open panel selects owned 5.1 session",
+    "reopened Current independently Ready/PASS; device closed and routes muted",
+    "all three last-applied explanation pages accessible",
+    "Propose reports Already meets requirements with Apply unavailable",
+    "Proposal limits opens after Propose and Cancel edits restores active values",
+    "native Save As creates separate session without overwriting accepted fixture",
+    "quit after save"
+  ],
+  "not_claimed": [
+    "native hardware Seek-Space-Space; covered by driver-assisted injected transport tests",
+    "human aesthetic approval"
+  ],
+  "cosmetic_observation": "The historical explanation heading renders its dash incorrectly. All words, structured data and measurement distinctions remain readable; recorded for later text cleanup, not silently changed during this candidate."
+}

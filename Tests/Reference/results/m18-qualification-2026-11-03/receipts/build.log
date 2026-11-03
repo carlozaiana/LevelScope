@@ -1,0 +1,415 @@
+[  0%] Building CXX object CMakeFiles/LevelScopeMeasurementCore.dir/Source/Core/Measurement/OfflineMeasurement.cpp.o
+/Users/fuzz/.codex/worktrees/a411/LevelScope/Source/Core/Measurement/OfflineMeasurement.cpp:215:34: warning: type nullability specifier '_Nonnull' is a Clang extension [-Wnullability-extension]
+  215 |     dispatch_apply_f (peakLanes, DISPATCH_APPLY_AUTO, &block, [] (void* context, size_t lane) noexcept
+      |                                  ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/dispatch/queue.h:477:48: note: expanded from macro 'DISPATCH_APPLY_AUTO'
+  477 | #define DISPATCH_APPLY_AUTO ((dispatch_queue_t _Nonnull)0)
+      |                                                ^
+1 warning generated.
+/Users/fuzz/.codex/worktrees/a411/LevelScope/Source/Core/Measurement/OfflineMeasurement.cpp:215:34: warning: type nullability specifier '_Nonnull' is a Clang extension [-Wnullability-extension]
+  215 |     dispatch_apply_f (peakLanes, DISPATCH_APPLY_AUTO, &block, [] (void* context, size_t lane) noexcept
+      |                                  ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/dispatch/queue.h:477:48: note: expanded from macro 'DISPATCH_APPLY_AUTO'
+  477 | #define DISPATCH_APPLY_AUTO ((dispatch_queue_t _Nonnull)0)
+      |                                                ^
+1 warning generated.
+[  0%] Linking CXX static library libLevelScopeMeasurementCore.a
+[  0%] Built target LevelScopeMeasurementCore
+[  0%] Building CXX object CMakeFiles/LevelScopeCore.dir/Source/Core/RunningLoudnessStats.cpp.o
+[  3%] Building CXX object CMakeFiles/LevelScopeCore.dir/Source/Core/Processing/Modules/LevelerModule.cpp.o
+[  3%] Building CXX object CMakeFiles/LevelScopeCore.dir/Source/Core/LevelScopeHistoryModel.cpp.o
+[  3%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/Pcm24Wave.cpp.o
+[  3%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneExport.cpp.o
+[  3%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneReport.cpp.o
+[  7%] Building CXX object CMakeFiles/LevelScopeCore.dir/Source/Core/Processing/Modules/MultiThresholdDynamicsModule.cpp.o
+[ 11%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/ProgrammeSource.cpp.o
+[ 11%] Building CXX object CMakeFiles/LevelScopeCore.dir/Source/Core/Processing/DSP/SpectralUpwardCompressor.cpp.o
+[ 11%] Building CXX object CMakeFiles/LevelScopeCore.dir/Source/Core/Processing/DSP/BroadbandUpwardCompressor.cpp.o
+[ 15%] Building CXX object CMakeFiles/LevelScopeCore.dir/Source/Core/Processing/DSP/BroadbandDownwardCompressor.cpp.o
+[ 15%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/ProgrammeComposition.cpp.o
+[ 15%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/SessionDocument.cpp.o
+[ 15%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/VerifiedSource.cpp.o
+[ 15%] Building CXX object CMakeFiles/LevelScopeCore.dir/Source/Core/Processing/DSP/LookaheadLimiter.cpp.o
+[ 19%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/MarkerImport.cpp.o
+[ 19%] Building OBJCXX object CMakeFiles/LevelScopeCore.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o
+[ 19%] Building OBJCXX object CMakeFiles/LevelScopeCore.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 19%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneMarkerImport.cpp.o
+[ 19%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/SectionAnalysis.cpp.o
+[ 23%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneSections.cpp.o
+[ 23%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/AnalysisEngine.cpp.o
+[ 26%] Building OBJCXX object CMakeFiles/LevelScopeCore.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_data_structures/juce_data_structures.mm.o
+[ 26%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/AttributionEngine.cpp.o
+[ 26%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneDiagnostics.cpp.o
+[ 30%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/Methods/RuleBasedMethod.cpp.o
+[ 30%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/SectionPeakMap.cpp.o
+[ 30%] Building OBJCXX object CMakeFiles/LevelScopeCore.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o
+[ 30%] Building OBJCXX object CMakeFiles/LevelScopeCore.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_dsp/juce_dsp.mm.o
+[ 30%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/Methods/SectionTrimMethod.cpp.o
+[ 34%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneSectionProposal.cpp.o
+[ 38%] Building OBJCXX object CMakeFiles/LevelScopeCore.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 38%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/AppliedProposalExplanation.cpp.o
+[ 38%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/AppliedProposalSerialization.cpp.o
+[ 38%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneProposal.cpp.o
+[ 42%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/Model/TargetProfile.cpp.o
+[ 42%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/Model/JobRequirements.cpp.o
+[ 42%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/VerificationEngine.cpp.o
+[ 42%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneCompliance.cpp.o
+[ 46%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneMedia.cpp.o
+[ 46%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneAudition.cpp.o
+[ 46%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneMeasurementService.cpp.o
+[ 50%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneWaveform.cpp.o
+[ 50%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/RememberedChannelRoles.cpp.o
+[ 50%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneLoudnessPreview.cpp.o
+[ 50%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Waveform/WaveformOverview.cpp.o
+[ 53%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneVideo.cpp.o
+[ 53%] Building OBJCXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneVideo_mac.mm.o
+[ 53%] Building OBJCXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 53%] Linking CXX static library libLevelScopeCore.a
+[ 53%] Built target LevelScopeCore
+[ 57%] Building OBJCXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 57%] Building OBJCXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o
+[ 57%] Building OBJCXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 57%] Building OBJCXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o
+[ 61%] Building OBJCXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[ 61%] Building OBJCXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[ 61%] Linking CXX static library libLevelScopeStandaloneSupport.a
+[ 61%] Built target LevelScopeStandaloneSupport
+[ 61%] Building CXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Source/Standalone/StandaloneProposalPreferences.cpp.o
+[ 65%] Building CXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Source/Standalone/StandaloneJobRequirements.cpp.o
+[ 65%] Building CXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Source/Standalone/StandaloneMarkerImportPanel.cpp.o
+[ 65%] Building CXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Source/Standalone/StandaloneSectionsPanel.cpp.o
+[ 65%] Building CXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Source/Standalone/MeasurementTimeline.cpp.o
+[ 69%] Building CXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Source/Standalone/TimelineGainLane.cpp.o
+[ 69%] Building CXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Source/Standalone/ProposalWorkflowPanel.cpp.o
+[ 69%] Building CXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Source/Standalone/StandaloneDiagnosticsPanel.cpp.o
+[ 73%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 73%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 73%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o
+[ 73%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 76%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o
+[ 76%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[ 76%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[ 80%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_gui_basics/juce_gui_basics.mm.o
+[ 80%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsUI.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_data_structures/juce_data_structures.mm.o
+[ 80%] Linking CXX static library libLevelScopeDiagnosticsUI.a
+[ 80%] Built target LevelScopeDiagnosticsUI
+[ 80%] Generating LevelScopeStandalone_artefacts/JuceLibraryCode/LevelScopeStandalone/PkgInfo
+[ 80%] Building CXX object CMakeFiles/LevelScopeStandalone.dir/Source/Standalone/StandaloneExportUI.cpp.o
+[ 84%] Building CXX object CMakeFiles/LevelScopeStandalone.dir/Source/Standalone/StandaloneCompositionImport.cpp.o
+[ 84%] Building CXX object CMakeFiles/LevelScopeStandalone.dir/Source/Standalone/StandaloneSessionUI.cpp.o
+[ 84%] Building CXX object CMakeFiles/LevelScopeStandalone.dir/Source/Standalone/StandaloneProgrammeImport.cpp.o
+[ 84%] Building CXX object CMakeFiles/LevelScopeStandalone.dir/Source/Standalone/StandaloneApp.cpp.o
+[ 88%] Building CXX object CMakeFiles/LevelScopeStandalone.dir/Source/Standalone/StandaloneMainComponent.cpp.o
+[ 88%] Building CXX object CMakeFiles/LevelScopeStandalone.dir/Source/Standalone/StandaloneAudioPanel.cpp.o
+[ 88%] Building CXX object CMakeFiles/LevelScopeStandalone.dir/Source/Standalone/StandaloneVideoPanel.cpp.o
+[ 92%] Building OBJCXX object CMakeFiles/LevelScopeStandalone.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 92%] Building OBJCXX object CMakeFiles/LevelScopeStandalone.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 92%] Building OBJCXX object CMakeFiles/LevelScopeStandalone.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o
+[ 92%] Building OBJCXX object CMakeFiles/LevelScopeStandalone.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 96%] Building OBJCXX object CMakeFiles/LevelScopeStandalone.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o
+[ 96%] Building OBJCXX object CMakeFiles/LevelScopeStandalone.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[ 96%] Building OBJCXX object CMakeFiles/LevelScopeStandalone.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeStandalone.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_gui_basics/juce_gui_basics.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeStandalone.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_data_structures/juce_data_structures.mm.o
+In file included from /Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_gui_basics/juce_gui_basics.mm:26:
+In file included from /Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_gui_basics/juce_gui_basics.cpp:159:
+/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_gui_basics/native/juce_NSViewComponentPeer_mac.mm:1630:23: warning: variable 'target' set but not used [-Wunused-but-set-variable]
+ 1630 |             if (auto* target = findCurrentTextInputTarget())
+      |                       ^
+[100%] Building OBJCXX object CMakeFiles/LevelScopeStandalone.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_dsp/juce_dsp.mm.o
+Copying OS X content LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app/Contents/Resources/RecentFilesMenuTemplate.nib
+1 warning generated.
+In file included from /Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_gui_basics/juce_gui_basics.mm:26:
+In file included from /Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_gui_basics/juce_gui_basics.cpp:159:
+/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_gui_basics/native/juce_NSViewComponentPeer_mac.mm:1630:23: warning: variable 'target' set but not used [-Wunused-but-set-variable]
+ 1630 |             if (auto* target = findCurrentTextInputTarget())
+      |                       ^
+1 warning generated.
+[100%] Linking CXX executable "LevelScopeStandalone_artefacts/Release/LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone"
+[100%] Built target LevelScopeStandalone
+[  0%] Built target LevelScopeMeasurementCore
+[ 80%] Built target LevelScopeStandaloneSupport
+[ 86%] Building OBJCXX object CMakeFiles/LevelScopeMeasurementTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 86%] Building CXX object CMakeFiles/LevelScopeMeasurementTests.dir/Tests/OfflineMeasurementTests.cpp.o
+[ 86%] Building OBJCXX object CMakeFiles/LevelScopeMeasurementTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 86%] Building OBJCXX object CMakeFiles/LevelScopeMeasurementTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeMeasurementTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeMeasurementTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeMeasurementTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeMeasurementTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[100%] Linking CXX executable LevelScopeMeasurementTests_artefacts/Release/LevelScopeMeasurementTests
+[100%] Built target LevelScopeMeasurementTests
+[  0%] Built target LevelScopeMeasurementCore
+[ 80%] Built target LevelScopeStandaloneSupport
+[ 80%] Building OBJCXX object CMakeFiles/LevelScopeComplianceTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 80%] Building CXX object CMakeFiles/LevelScopeComplianceTests.dir/Tests/ComplianceTests.cpp.o
+[ 86%] Building OBJCXX object CMakeFiles/LevelScopeComplianceTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 86%] Building OBJCXX object CMakeFiles/LevelScopeComplianceTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o
+[ 86%] Building OBJCXX object CMakeFiles/LevelScopeComplianceTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeComplianceTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeComplianceTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeComplianceTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[100%] Linking CXX executable LevelScopeComplianceTests_artefacts/Release/LevelScopeComplianceTests
+[100%] Built target LevelScopeComplianceTests
+[  0%] Built target LevelScopeMeasurementCore
+[ 80%] Built target LevelScopeStandaloneSupport
+[ 80%] Building OBJCXX object CMakeFiles/LevelScopeProposalTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 80%] Building OBJCXX object CMakeFiles/LevelScopeProposalTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o
+[ 86%] Building OBJCXX object CMakeFiles/LevelScopeProposalTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 86%] Building CXX object CMakeFiles/LevelScopeProposalTests.dir/Tests/ProposalTests.cpp.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeProposalTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeProposalTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeProposalTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeProposalTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[100%] Linking CXX executable LevelScopeProposalTests_artefacts/Release/LevelScopeProposalTests
+[100%] Built target LevelScopeProposalTests
+[  0%] Built target LevelScopeMeasurementCore
+[ 60%] Built target LevelScopeStandaloneSupport
+[ 85%] Built target LevelScopeDiagnosticsUI
+[ 85%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 85%] Building CXX object CMakeFiles/LevelScopeDiagnosticsTests.dir/Tests/DiagnosticsTests.cpp.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_gui_basics/juce_gui_basics.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeDiagnosticsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_data_structures/juce_data_structures.mm.o
+[100%] Linking CXX executable LevelScopeDiagnosticsTests_artefacts/Release/LevelScopeDiagnosticsTests
+[100%] Built target LevelScopeDiagnosticsTests
+[  0%] Built target LevelScopeMeasurementCore
+[ 60%] Built target LevelScopeStandaloneSupport
+[ 85%] Built target LevelScopeDiagnosticsUI
+[ 85%] Building OBJCXX object CMakeFiles/LevelScopeSectionsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeSectionsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeSectionsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 90%] Building CXX object CMakeFiles/LevelScopeSectionsTests.dir/Tests/SectionsTests.cpp.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeSectionsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeSectionsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeSectionsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeSectionsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeSectionsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_gui_basics/juce_gui_basics.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeSectionsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_data_structures/juce_data_structures.mm.o
+[100%] Linking CXX executable LevelScopeSectionsTests_artefacts/Release/LevelScopeSectionsTests
+[100%] Built target LevelScopeSectionsTests
+[  0%] Built target LevelScopeMeasurementCore
+[ 80%] Built target LevelScopeStandaloneSupport
+[ 80%] Building CXX object CMakeFiles/LevelScopeAuditionTests.dir/Source/Standalone/StandaloneAudioPanel.cpp.o
+[ 80%] Building CXX object CMakeFiles/LevelScopeAuditionTests.dir/Tests/AuditionTests.cpp.o
+[ 80%] Building OBJCXX object CMakeFiles/LevelScopeAuditionTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 86%] Building OBJCXX object CMakeFiles/LevelScopeAuditionTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 86%] Building OBJCXX object CMakeFiles/LevelScopeAuditionTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o
+[ 86%] Building OBJCXX object CMakeFiles/LevelScopeAuditionTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeAuditionTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeAuditionTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeAuditionTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeAuditionTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_gui_basics/juce_gui_basics.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeAuditionTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_data_structures/juce_data_structures.mm.o
+[100%] Linking CXX executable LevelScopeAuditionTests_artefacts/Release/LevelScopeAuditionTests
+[100%] Built target LevelScopeAuditionTests
+[  0%] Built target LevelScopeMeasurementCore
+[ 57%] Built target LevelScopeStandaloneSupport
+[ 80%] Built target LevelScopeDiagnosticsUI
+[ 80%] Building CXX object CMakeFiles/LevelScopeMultichannelTests.dir/Tests/MultichannelTests.cpp.o
+[ 80%] Building OBJCXX object CMakeFiles/LevelScopeMultichannelTests.dir/Tests/VideoReaderAudit_mac.mm.o
+[ 85%] Building CXX object CMakeFiles/LevelScopeMultichannelTests.dir/Source/Standalone/StandaloneAudioPanel.cpp.o
+[ 85%] Building OBJCXX object CMakeFiles/LevelScopeMultichannelTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 85%] Building OBJCXX object CMakeFiles/LevelScopeMultichannelTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeMultichannelTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeMultichannelTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeMultichannelTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeMultichannelTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeMultichannelTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeMultichannelTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_gui_basics/juce_gui_basics.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeMultichannelTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_data_structures/juce_data_structures.mm.o
+[100%] Linking CXX executable LevelScopeMultichannelTests_artefacts/Release/LevelScopeMultichannelTests
+[100%] Built target LevelScopeMultichannelTests
+[  0%] Built target LevelScopeMeasurementCore
+[ 80%] Built target LevelScopeStandaloneSupport
+[ 86%] Building OBJCXX object CMakeFiles/LevelScopeSessionTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 86%] Building OBJCXX object CMakeFiles/LevelScopeSessionTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o
+[ 86%] Building OBJCXX object CMakeFiles/LevelScopeSessionTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 86%] Building CXX object CMakeFiles/LevelScopeSessionTests.dir/Tests/SessionTests.cpp.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeSessionTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeSessionTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeSessionTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeSessionTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[100%] Linking CXX executable LevelScopeSessionTests_artefacts/Release/LevelScopeSessionTests
+[100%] Built target LevelScopeSessionTests
+[  0%] Built target LevelScopeMeasurementCore
+[ 75%] Built target LevelScopeStandaloneSupport
+[ 87%] Building CXX object CMakeFiles/LevelScopeSessionPlaybackTests.dir/Tests/SessionPlaybackTests.cpp.o
+[ 87%] Building OBJCXX object CMakeFiles/LevelScopeSessionPlaybackTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 87%] Building CXX object CMakeFiles/LevelScopeSessionPlaybackTests.dir/Source/Standalone/StandaloneAudioPanel.cpp.o
+[ 87%] Building OBJCXX object CMakeFiles/LevelScopeSessionPlaybackTests.dir/Tests/VideoReaderAudit_mac.mm.o
+[ 87%] Building OBJCXX object CMakeFiles/LevelScopeSessionPlaybackTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 87%] Building OBJCXX object CMakeFiles/LevelScopeSessionPlaybackTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o
+[ 87%] Building OBJCXX object CMakeFiles/LevelScopeSessionPlaybackTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeSessionPlaybackTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeSessionPlaybackTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeSessionPlaybackTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeSessionPlaybackTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_gui_basics/juce_gui_basics.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeSessionPlaybackTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_data_structures/juce_data_structures.mm.o
+[100%] Linking CXX executable LevelScopeSessionPlaybackTests_artefacts/Release/LevelScopeSessionPlaybackTests
+[100%] Built target LevelScopeSessionPlaybackTests
+[  0%] Built target LevelScopeMeasurementCore
+[ 80%] Built target LevelScopeStandaloneSupport
+[ 80%] Building CXX object CMakeFiles/LevelScopeExportTests.dir/Tests/ExportTests.cpp.o
+[ 86%] Building OBJCXX object CMakeFiles/LevelScopeExportTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 86%] Building OBJCXX object CMakeFiles/LevelScopeExportTests.dir/Tests/VideoReaderAudit_mac.mm.o
+[ 86%] Building OBJCXX object CMakeFiles/LevelScopeExportTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 86%] Building OBJCXX object CMakeFiles/LevelScopeExportTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeExportTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeExportTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeExportTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeExportTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeExportTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_gui_basics/juce_gui_basics.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeExportTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_data_structures/juce_data_structures.mm.o
+[100%] Linking CXX executable LevelScopeExportTests_artefacts/Release/LevelScopeExportTests
+[100%] Built target LevelScopeExportTests
+[  0%] Built target LevelScopeMeasurementCore
+[ 60%] Built target LevelScopeStandaloneSupport
+[ 85%] Built target LevelScopeDiagnosticsUI
+[ 85%] Building CXX object CMakeFiles/LevelScopeSectionProcessingTests.dir/Tests/SectionProcessingTests.cpp.o
+[ 85%] Building OBJCXX object CMakeFiles/LevelScopeSectionProcessingTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o
+[ 85%] Building OBJCXX object CMakeFiles/LevelScopeSectionProcessingTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeSectionProcessingTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeSectionProcessingTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeSectionProcessingTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeSectionProcessingTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeSectionProcessingTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeSectionProcessingTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_gui_basics/juce_gui_basics.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeSectionProcessingTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_data_structures/juce_data_structures.mm.o
+[100%] Linking CXX executable LevelScopeSectionProcessingTests_artefacts/Release/LevelScopeSectionProcessingTests
+[100%] Built target LevelScopeSectionProcessingTests
+[  0%] Built target LevelScopeMeasurementCore
+[ 60%] Built target LevelScopeStandaloneSupport
+[ 85%] Built target LevelScopeDiagnosticsUI
+[ 85%] Building OBJCXX object CMakeFiles/LevelScopeSectionProposalTests.dir/Tests/VideoReaderAudit_mac.mm.o
+[ 85%] Building CXX object CMakeFiles/LevelScopeSectionProposalTests.dir/Tests/SectionProposalTests.cpp.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeSectionProposalTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeSectionProposalTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeSectionProposalTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeSectionProposalTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeSectionProposalTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeSectionProposalTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeSectionProposalTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeSectionProposalTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_gui_basics/juce_gui_basics.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeSectionProposalTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_data_structures/juce_data_structures.mm.o
+[100%] Linking CXX executable LevelScopeSectionProposalTests_artefacts/Release/LevelScopeSectionProposalTests
+[100%] Built target LevelScopeSectionProposalTests
+[  0%] Built target LevelScopeMeasurementCore
+[ 60%] Built target LevelScopeStandaloneSupport
+[ 85%] Built target LevelScopeDiagnosticsUI
+[ 85%] Building OBJCXX object CMakeFiles/LevelScopeMonoTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o
+[ 85%] Building OBJCXX object CMakeFiles/LevelScopeMonoTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeMonoTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 90%] Building CXX object CMakeFiles/LevelScopeMonoTests.dir/Tests/MonoTests.cpp.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeMonoTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeMonoTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeMonoTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeMonoTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeMonoTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_gui_basics/juce_gui_basics.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeMonoTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_data_structures/juce_data_structures.mm.o
+[100%] Linking CXX executable LevelScopeMonoTests_artefacts/Release/LevelScopeMonoTests
+[100%] Built target LevelScopeMonoTests
+[  0%] Built target LevelScopeMeasurementCore
+[ 60%] Built target LevelScopeStandaloneSupport
+[ 85%] Built target LevelScopeDiagnosticsUI
+[ 85%] Building OBJCXX object CMakeFiles/LevelScopeMarkerTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 85%] Building OBJCXX object CMakeFiles/LevelScopeMarkerTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 85%] Building CXX object CMakeFiles/LevelScopeMarkerTests.dir/Tests/MarkerTests.cpp.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeMarkerTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeMarkerTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeMarkerTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeMarkerTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeMarkerTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeMarkerTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_gui_basics/juce_gui_basics.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeMarkerTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_data_structures/juce_data_structures.mm.o
+[100%] Linking CXX executable LevelScopeMarkerTests_artefacts/Release/LevelScopeMarkerTests
+[100%] Built target LevelScopeMarkerTests
+[  0%] Built target LevelScopeMeasurementCore
+[ 57%] Built target LevelScopeStandaloneSupport
+[ 80%] Built target LevelScopeDiagnosticsUI
+[ 80%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 85%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 85%] Building CXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/Tests/JobRequirementsTests.cpp.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_gui_basics/juce_gui_basics.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeJobRequirementsTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_data_structures/juce_data_structures.mm.o
+[100%] Linking CXX executable LevelScopeJobRequirementsTests_artefacts/Release/LevelScopeJobRequirementsTests
+[100%] Built target LevelScopeJobRequirementsTests
+[  0%] Building CXX object CMakeFiles/LevelScopeWaveformCoreTests.dir/Source/Core/Waveform/WaveformOverview.cpp.o
+[100%] Building CXX object CMakeFiles/LevelScopeWaveformCoreTests.dir/Tests/WaveformOverviewTests.cpp.o
+[100%] Linking CXX executable LevelScopeWaveformCoreTests
+[100%] Built target LevelScopeWaveformCoreTests
+[  0%] Built target LevelScopeMeasurementCore
+[ 60%] Built target LevelScopeStandaloneSupport
+[ 85%] Built target LevelScopeDiagnosticsUI
+[ 85%] Building CXX object CMakeFiles/LevelScopeWaveformTests.dir/Tests/WaveformTests.cpp.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeWaveformTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeWaveformTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeWaveformTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeWaveformTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeWaveformTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeWaveformTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeWaveformTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeWaveformTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_gui_basics/juce_gui_basics.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeWaveformTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_data_structures/juce_data_structures.mm.o
+[100%] Linking CXX executable LevelScopeWaveformTests_artefacts/Release/LevelScopeWaveformTests
+[100%] Built target LevelScopeWaveformTests
+[  0%] Built target LevelScopeMeasurementCore
+[ 57%] Built target LevelScopeStandaloneSupport
+[ 80%] Built target LevelScopeDiagnosticsUI
+[ 80%] Building OBJCXX object CMakeFiles/LevelScopeTimelineProgressTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 80%] Building CXX object CMakeFiles/LevelScopeTimelineProgressTests.dir/Source/Standalone/StandaloneAudioPanel.cpp.o
+[ 85%] Building CXX object CMakeFiles/LevelScopeTimelineProgressTests.dir/Tests/TimelineProgressTests.cpp.o
+[ 85%] Building CXX object CMakeFiles/LevelScopeTimelineProgressTests.dir/Source/Standalone/StandaloneProgrammeImport.cpp.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeTimelineProgressTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeTimelineProgressTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeTimelineProgressTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeTimelineProgressTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeTimelineProgressTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeTimelineProgressTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeTimelineProgressTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_gui_basics/juce_gui_basics.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeTimelineProgressTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_data_structures/juce_data_structures.mm.o
+[100%] Linking CXX executable LevelScopeTimelineProgressTests_artefacts/Release/LevelScopeTimelineProgressTests
+[100%] Built target LevelScopeTimelineProgressTests
+Built target LevelScopeMeasurementCore
+Building CXX object CMakeFiles/LevelScopePeakChannelParity.dir/Tests/PeakChannelParity.cpp.o
+Linking CXX executable LevelScopePeakChannelParity
+Built target LevelScopePeakChannelParity
+[  0%] Built target LevelScopeMeasurementCore
+[ 80%] Built target LevelScopeStandaloneSupport
+[ 80%] Building OBJCXX object CMakeFiles/LevelScopeVideoTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 86%] Building CXX object CMakeFiles/LevelScopeVideoTests.dir/Tests/VideoTests.cpp.o
+[ 86%] Building OBJCXX object CMakeFiles/LevelScopeVideoTests.dir/Tests/VideoReaderAudit_mac.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeVideoTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeVideoTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeVideoTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeVideoTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeVideoTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeVideoTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[100%] Linking CXX executable LevelScopeVideoTests_artefacts/Release/LevelScopeVideoTests
+[100%] Built target LevelScopeVideoTests
+[  0%] Built target LevelScopeMeasurementCore
+[ 80%] Built target LevelScopeStandaloneSupport
+[ 80%] Generating LevelScopeVideoQualification_artefacts/JuceLibraryCode/LevelScopeVideoQualification/PkgInfo
+[ 80%] Building OBJCXX object CMakeFiles/LevelScopeVideoQualification.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 80%] Building OBJCXX object CMakeFiles/LevelScopeVideoQualification.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o
+[ 80%] Building OBJCXX object CMakeFiles/LevelScopeVideoQualification.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 86%] Building CXX object CMakeFiles/LevelScopeVideoQualification.dir/Tests/VideoPlaybackQualification.cpp.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeVideoQualification.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeVideoQualification.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o
+[ 93%] Building OBJCXX object CMakeFiles/LevelScopeVideoQualification.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeVideoQualification.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeVideoQualification.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_gui_basics/juce_gui_basics.mm.o
+[100%] Building OBJCXX object CMakeFiles/LevelScopeVideoQualification.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_data_structures/juce_data_structures.mm.o
+Copying OS X content LevelScopeVideoQualification_artefacts/Release/LevelScope Video Qualification.app/Contents/Resources/RecentFilesMenuTemplate.nib
+[100%] Linking CXX executable "LevelScopeVideoQualification_artefacts/Release/LevelScope Video Qualification.app/Contents/MacOS/LevelScope Video Qualification"
+[100%] Built target LevelScopeVideoQualification

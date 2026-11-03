@@ -1,0 +1,8926 @@
+{
+  "suite": "M8 restored audition and reference picture",
+  "passed": true,
+  "error": "",
+  "checks": [
+    {
+      "name": "create owned fixture directory",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "opening disables audition lifecycle controls",
+      "passed": true
+    },
+    {
+      "name": "queued opening action cannot open a device or start preparation/playback",
+      "passed": true
+    },
+    {
+      "name": "opening disables audition lifecycle controls",
+      "passed": true
+    },
+    {
+      "name": "queued opening action cannot open a device or start preparation/playback",
+      "passed": true
+    },
+    {
+      "name": "opening disables audition lifecycle controls",
+      "passed": true
+    },
+    {
+      "name": "queued opening action cannot open a device or start preparation/playback",
+      "passed": true
+    },
+    {
+      "name": "opening disables audition lifecycle controls",
+      "passed": true
+    },
+    {
+      "name": "queued opening action cannot open a device or start preparation/playback",
+      "passed": true
+    },
+    {
+      "name": "opening disables audition lifecycle controls",
+      "passed": true
+    },
+    {
+      "name": "queued opening action cannot open a device or start preparation/playback",
+      "passed": true
+    },
+    {
+      "name": "opening blocks processing changes",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected connection after load guard clears",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "session source",
+      "passed": true
+    },
+    {
+      "name": "session roles",
+      "passed": true
+    },
+    {
+      "name": "session current",
+      "passed": true
+    },
+    {
+      "name": "session playback begin measurement",
+      "passed": true
+    },
+    {
+      "name": "offline measurement succeeds",
+      "passed": true
+    },
+    {
+      "name": "measurement finish",
+      "passed": true
+    },
+    {
+      "name": "measurement accepted",
+      "passed": true
+    },
+    {
+      "name": "playback session saved",
+      "passed": true
+    },
+    {
+      "name": "playback session read",
+      "passed": true
+    },
+    {
+      "name": "playback session files verified",
+      "passed": true
+    },
+    {
+      "name": "playback session installed",
+      "passed": true
+    },
+    {
+      "name": "current cache valid after reopen",
+      "passed": true
+    },
+    {
+      "name": "reopen never opens a device",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected device only",
+      "passed": true
+    },
+    {
+      "name": "restored audition exact seek",
+      "passed": true
+    },
+    {
+      "name": "restored audition all channels muted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "complete captured playback reaches audio EOF",
+      "passed": true
+    },
+    {
+      "name": "all restored pre-monitor samples captured",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "restored processing bit-exact against qualified offline path",
+      "passed": true
+    },
+    {
+      "name": "injected lifecycle closed",
+      "passed": true
+    }
+  ],
+  "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb",
+  "os": "Mac OSX 15.7.9",
+  "physical_devices_opened": false,
+  "sample_cases": [
+    {
+      "rate": 44100,
+      "channels": 2,
+      "gain_db": 0.0,
+      "frames": 8192,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -24.23513936516039
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -24.43696601852941
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 44100,
+      "channels": 2,
+      "gain_db": -6.020599913279624,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -30.25573927844002
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -30.45756593180904
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 44100,
+      "channels": 2,
+      "gain_db": 6.020599913279624,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -18.21453945188077
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -18.41636610524979
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 44100,
+      "channels": 2,
+      "gain_db": 24.0,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -0.2351394269221711
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -0.4369658764324238
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 44100,
+      "channels": 6,
+      "gain_db": 0.0,
+      "frames": 8192,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -14.89304266794279
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -14.89454667656953
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 44100,
+      "channels": 6,
+      "gain_db": -6.020599913279624,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -20.91364258122241
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -20.91514658984915
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 44100,
+      "channels": 6,
+      "gain_db": 6.020599913279624,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -8.872442754663165
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -8.873946763289904
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 44100,
+      "channels": 6,
+      "gain_db": 24.0,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": 9.106957209564811
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": 9.105453047742639
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 44100,
+      "channels": 8,
+      "gain_db": 0.0,
+      "frames": 8192,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -11.5346478895561
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -12.39585247887068
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 44100,
+      "channels": 8,
+      "gain_db": -6.020599913279624,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -17.55524780283573
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -18.4164523921503
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 44100,
+      "channels": 8,
+      "gain_db": 6.020599913279624,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -5.51404797627648
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -6.375252565591057
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 44100,
+      "channels": 8,
+      "gain_db": 24.0,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": 12.46535201438414
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": 11.60414738519461
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 48000,
+      "channels": 2,
+      "gain_db": 0.0,
+      "frames": 8192,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -24.23513936516039
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -24.43696601852941
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 48000,
+      "channels": 2,
+      "gain_db": -6.020599913279624,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -30.25573927844002
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -30.45756593180904
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 48000,
+      "channels": 2,
+      "gain_db": 6.020599913279624,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -18.21453945188077
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -18.41636610524979
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 48000,
+      "channels": 2,
+      "gain_db": 24.0,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -0.2351394269221711
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -0.4369658764324238
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 48000,
+      "channels": 6,
+      "gain_db": 0.0,
+      "frames": 8192,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -14.89304266794279
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -14.89454667656953
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 48000,
+      "channels": 6,
+      "gain_db": -6.020599913279624,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -20.91364258122241
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -20.91514658984915
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 48000,
+      "channels": 6,
+      "gain_db": 6.020599913279624,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -8.872442754663165
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -8.873946763289904
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 48000,
+      "channels": 6,
+      "gain_db": 24.0,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": 9.106957209564811
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": 9.105453047742639
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 48000,
+      "channels": 8,
+      "gain_db": 0.0,
+      "frames": 8192,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -11.5346478895561
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -12.39585247887068
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 48000,
+      "channels": 8,
+      "gain_db": -6.020599913279624,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -17.55524780283573
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -18.4164523921503
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 48000,
+      "channels": 8,
+      "gain_db": 6.020599913279624,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -5.51404797627648
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -6.375252565591057
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 48000,
+      "channels": 8,
+      "gain_db": 24.0,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": 12.46535201438414
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": 11.60414738519461
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 96000,
+      "channels": 2,
+      "gain_db": 0.0,
+      "frames": 8192,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -24.23513936516039
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -24.43696601852941
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 96000,
+      "channels": 2,
+      "gain_db": -6.020599913279624,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -30.25573927844002
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -30.45756593180904
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 96000,
+      "channels": 2,
+      "gain_db": 6.020599913279624,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -18.21453945188077
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -18.41636610524979
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 96000,
+      "channels": 2,
+      "gain_db": 24.0,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -0.2351394269221711
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -0.4369658764324238
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 96000,
+      "channels": 6,
+      "gain_db": 0.0,
+      "frames": 8192,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -14.89304266794279
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -14.89454667656953
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 96000,
+      "channels": 6,
+      "gain_db": -6.020599913279624,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -20.91364258122241
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -20.91514658984915
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 96000,
+      "channels": 6,
+      "gain_db": 6.020599913279624,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -8.872442754663165
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -8.873946763289904
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 96000,
+      "channels": 6,
+      "gain_db": 24.0,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": 9.106957209564811
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": 9.105453047742639
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 96000,
+      "channels": 8,
+      "gain_db": 0.0,
+      "frames": 8192,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -11.5346478895561
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -12.39585247887068
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 96000,
+      "channels": 8,
+      "gain_db": -6.020599913279624,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -17.55524780283573
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -18.4164523921503
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 96000,
+      "channels": 8,
+      "gain_db": 6.020599913279624,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -5.51404797627648
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -6.375252565591057
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 96000,
+      "channels": 8,
+      "gain_db": 24.0,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": 12.46535201438414
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": 11.60414738519461
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 192000,
+      "channels": 2,
+      "gain_db": 0.0,
+      "frames": 8192,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -24.23513936516039
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -24.43696601852941
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 192000,
+      "channels": 2,
+      "gain_db": -6.020599913279624,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -30.25573927844002
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -30.45756593180904
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 192000,
+      "channels": 2,
+      "gain_db": 6.020599913279624,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -18.21453945188077
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -18.41636610524979
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 192000,
+      "channels": 2,
+      "gain_db": 24.0,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -0.2351394269221711
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -0.4369658764324238
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 192000,
+      "channels": 6,
+      "gain_db": 0.0,
+      "frames": 8192,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -14.89304266794279
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -14.89454667656953
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 192000,
+      "channels": 6,
+      "gain_db": -6.020599913279624,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -20.91364258122241
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -20.91514658984915
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 192000,
+      "channels": 6,
+      "gain_db": 6.020599913279624,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -8.872442754663165
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -8.873946763289904
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 192000,
+      "channels": 6,
+      "gain_db": 24.0,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": 9.106957209564811
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": 9.105453047742639
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 192000,
+      "channels": 8,
+      "gain_db": 0.0,
+      "frames": 8192,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -11.5346478895561
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -12.39585247887068
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 192000,
+      "channels": 8,
+      "gain_db": -6.020599913279624,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -17.55524780283573
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -18.4164523921503
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 192000,
+      "channels": 8,
+      "gain_db": 6.020599913279624,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -5.51404797627648
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -6.375252565591057
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    },
+    {
+      "rate": 192000,
+      "channels": 8,
+      "gain_db": 24.0,
+      "frames": 6958,
+      "kind": "M8 restored Current",
+      "metrics": {
+        "integrated": {
+          "status": 2,
+          "value": null
+        },
+        "lra": {
+          "status": 2,
+          "value": null
+        },
+        "true_peak": {
+          "status": 0,
+          "value": 12.46535201438414
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": 11.60414738519461
+        },
+        "momentary": {
+          "status": 2,
+          "value": null
+        },
+        "short_term": {
+          "status": 2,
+          "value": null
+        }
+      },
+      "lra_stable": false
+    }
+  ],
+  "reference_cases": 0,
+  "architecture": "arm64"
+}

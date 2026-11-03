@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "identity_sha256": "33bc7202fc2629797bbfd3223b3849145a88bebe5c22e9157a1636f53cd69e95",
+  "checked_artifacts": 395,
+  "app_sha256": "1b9b8db2aca5d17f7343912110d263f638216152f1bb806368220a4ac79709bf",
+  "supplemental_binary_sha256": {
+    "density-01": "243d23d3a7ab810635283a121ac39971a375d890fe4b397ce161515004cb255b",
+    "exact-long-source-01": "d7d8c42a973a05ff0b033800220d6a362f498e95756d97dbe60a04ecbc992d77"
+  },
+  "extra_files_not_in_manifest": [
+    "source/Tests/Profiling/ShortAcceptance/__pycache__/check_export.cpython-38.pyc",
+    "source/Tests/Qualification/M18/__pycache__/run_short.cpython-38.pyc"
+  ]
+}

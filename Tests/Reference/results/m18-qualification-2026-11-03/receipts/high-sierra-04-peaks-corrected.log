@@ -1,0 +1,72 @@
+START peaks-2-bounded-corrected
+PASS peaks-2-bounded-corrected 13.01
+START peaks-6-bounded-corrected
+PASS peaks-6-bounded-corrected 22.65
+{
+  "passed": true,
+  "failure": "",
+  "architecture": "x86_64",
+  "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb",
+  "identity_sha256": "33bc7202fc2629797bbfd3223b3849145a88bebe5c22e9157a1636f53cd69e95",
+  "corrected_probe_sha256": "baf8bf5692db1e3c33a2d543edc662627edb5fcc04ba6efbb75a5a1af1c61f82",
+  "checker_sha256": "0a61be2d6fa2991bd5ca03b04442f47c2d565d74a4ffdaf7138434ec4da51b19",
+  "cases": [
+    {
+      "channels": 2,
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/bounded-service-revision2",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-04/peak-fixtures/programme-2.wav",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-04/peaks-corrected/peaks-2-bounded-corrected.json",
+        "--decisions"
+      ],
+      "exit_code": 0,
+      "seconds": 13.007191593000002,
+      "exact_match": true,
+      "report_sha256": "2f7836756c44d555a121558bafae559c3b8d400ed235f3894e6bad88246fe37b",
+      "baseline_receipts": [
+        {
+          "mode": "serial",
+          "report_sha256": "69fb8aa4eff482edda7bdc7f6badc56b6cc651284e6513feb8db933d4c7d5d31",
+          "seconds": 21.654412869
+        },
+        {
+          "mode": "app-mode",
+          "report_sha256": "5c059605c6ae00c17a22e85782208a4d10a3701f4ad61de389acd3c9f5a3d920",
+          "seconds": 21.65781066000001
+        }
+      ]
+    },
+    {
+      "channels": 6,
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/bounded-service-revision2",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-04/peak-fixtures/programme-6.wav",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-04/peaks-corrected/peaks-6-bounded-corrected.json",
+        "--decisions"
+      ],
+      "exit_code": 0,
+      "seconds": 22.654274169999997,
+      "exact_match": true,
+      "report_sha256": "cb1a9c05f5e9f4d2c280f688a213d7a372a530d0b5b94cd4726a00d3b073c4b8",
+      "baseline_receipts": [
+        {
+          "mode": "serial",
+          "report_sha256": "9dcc47bdbb27a40fc5767777a3f68379cd921a90d34324ec109bc6b1fd704631",
+          "seconds": 63.49046046000001
+        },
+        {
+          "mode": "app-mode",
+          "report_sha256": "aa7ea17e2e56c7bf58a5ccf0e5446af3906c1eca6fdb7353cfe947819f1f25be",
+          "seconds": 63.41794119599999
+        }
+      ]
+    }
+  ],
+  "execution": "Private diagnostic forces bounded service on Intel; production app remains serial",
+  "supersedes": "Only the originally mislabeled Intel bounded-service receipts",
+  "physical_devices_opened": false
+}

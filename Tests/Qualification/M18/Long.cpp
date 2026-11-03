@@ -85,7 +85,9 @@ void qLong(const juce::File& root)
     struct Join{std::atomic<bool>& stop;std::thread& worker;~Join(){stop=true;worker.join();}}join{stop,sampler};
     QView view(qFrames);t=monoNow();auto plain=qMeasure(s,MeasurementDomain::source,view,false);const auto plainMs=monoNow()-t;stage("plain_source_ms",t);
     const auto plainPeak=peak.load();peak=monoRss();t=monoNow();auto observed=qMeasure(s,MeasurementDomain::source,view,true);const auto observedMs=monoNow()-t;stage("observed_source_ms",t);
-    expect(plain.identity==observed.identity&&plain.measuredContentHash==observed.measuredContentHash,"observed three-hour results exactly equal serial non-observed measurement");
+    // Input identity is not a numerical result digest. ExactLongSource.cpp performs
+    // the complete metric/window comparison against the saved observed cache.
+    expect(plain.identity==observed.identity&&plain.measuredContentHash==observed.measuredContentHash,"observed and plain three-hour input identities and content hashes match");
     expect(plain.detail.samplePeakFrames==observed.detail.samplePeakFrames&&plain.detail.truePeakEighthFrames==observed.detail.truePeakEighthFrames,"all exact long peak positions unchanged");
     expect(observedMs<=1.15*plainMs,"long observation overhead <=15 percent");
     const auto observedPeak=peak.load();expect(observedPeak<=plainPeak+256ULL*1024*1024,"incremental waveform peak RSS <=256 MiB above plain baseline");

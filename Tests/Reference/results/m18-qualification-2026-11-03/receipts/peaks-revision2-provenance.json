@@ -1,0 +1,61 @@
+{
+  "candidate_identity_sha256": "33bc7202fc2629797bbfd3223b3849145a88bebe5c22e9157a1636f53cd69e95",
+  "builder_sha256": "89b5a9dbd4ef1c4809da0b9a9c8234b9d6757697d5bc941e68c96947a553cb8a",
+  "variants": [
+    {
+      "mode": "serial",
+      "old_universal_sha256": "67f31905883a1c46c4d6c8e4f275442dfc09eae87ca6df5cc7c2ab26b7e473b3",
+      "corrected_universal_sha256": "67f31905883a1c46c4d6c8e4f275442dfc09eae87ca6df5cc7c2ab26b7e473b3",
+      "slices": {
+        "arm64": {
+          "old_sha256": "b6077020a986346162876a12a8e8e31e8b8a8bc327edfd868ad129f93578b3e9",
+          "corrected_sha256": "b6077020a986346162876a12a8e8e31e8b8a8bc327edfd868ad129f93578b3e9",
+          "identical": true
+        },
+        "x86_64": {
+          "old_sha256": "29bacb1f6f56921fe957cb173443a341da50f6dd5c2e42e1be27e229a4e0a75a",
+          "corrected_sha256": "29bacb1f6f56921fe957cb173443a341da50f6dd5c2e42e1be27e229a4e0a75a",
+          "identical": true
+        }
+      }
+    },
+    {
+      "mode": "bounded",
+      "old_universal_sha256": "8c7411f786d755a4788efc21d8acb75983551dcbea8ef9e6545b728b01227ba2",
+      "corrected_universal_sha256": "baf8bf5692db1e3c33a2d543edc662627edb5fcc04ba6efbb75a5a1af1c61f82",
+      "slices": {
+        "arm64": {
+          "old_sha256": "3d9f084995e721fe295544424d8bcb43bce41c18c55a6d7b9f3684c478c5bff8",
+          "corrected_sha256": "3d9f084995e721fe295544424d8bcb43bce41c18c55a6d7b9f3684c478c5bff8",
+          "identical": true
+        },
+        "x86_64": {
+          "old_sha256": "b5087f9cd0671bb6f4984b5f71d0635ba56f1d94e1e658d2d6057a11e6b94bcd",
+          "corrected_sha256": "d7c37eeee9adac8892f8c6c0fcf13435da84fe9419ea3814aa5ee9801f10c750",
+          "identical": false
+        }
+      }
+    },
+    {
+      "mode": "app-mode",
+      "old_universal_sha256": "499bb2047daf5a9cc1c35c4e682dbd2d0c4de54d4a6f7635a4bdd6478b67b564",
+      "corrected_universal_sha256": "499bb2047daf5a9cc1c35c4e682dbd2d0c4de54d4a6f7635a4bdd6478b67b564",
+      "slices": {
+        "arm64": {
+          "old_sha256": "8171aae1c6190d98c5e4571393f2c231e8f3f79d2107c1a60c32a8974ae37192",
+          "corrected_sha256": "8171aae1c6190d98c5e4571393f2c231e8f3f79d2107c1a60c32a8974ae37192",
+          "identical": true
+        },
+        "x86_64": {
+          "old_sha256": "65e08576244f8f085b518fbc4568a92c61806635008e78c5e07defb8680b63c6",
+          "corrected_sha256": "65e08576244f8f085b518fbc4568a92c61806635008e78c5e07defb8680b63c6",
+          "identical": true
+        }
+      }
+    }
+  ],
+  "product_sources_changed": false,
+  "checker_sha256": "0a61be2d6fa2991bd5ca03b04442f47c2d565d74a4ffdaf7138434ec4da51b19",
+  "harness_commit": "90b2ab27a81d8bf8d37391b448847ee765bf5c91",
+  "reuse_reason": "Serial and app-mode universal binaries are identical; bounded arm64 slice is identical. Only corrected Intel bounded stereo/5.1 cases need execution."
+}

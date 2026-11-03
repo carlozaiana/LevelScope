@@ -1,0 +1,691 @@
+{
+  "schema": "levelscope-measurement-report-v5",
+  "kind": "verified-artifact-measurement",
+  "publication": "published-verified-pcm",
+  "scope": "Selected whole-programme loudness, true-peak and any explicit job LRA requirement only. No complete broadcaster delivery, BWF/BW64, metadata, synchronization or future encoded-media certification.",
+  "document_id": "194d97aab47e47238789f74286a440ee",
+  "programme_id": "6d5e563d8d684ebf9ecd4d5d105ce259",
+  "document_revision": "9",
+  "session_unsaved": true,
+  "session_basename": "",
+  "runtime_id": "f474f568f5e844ecae7401a462f5fcd0",
+  "app": "LevelScope Standalone",
+  "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb",
+  "platform": "Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off",
+  "cpu": "Intel(R) Core(TM) i7-3770K CPU @ 3.50GHz",
+  "processing_version": "static-gain-v1",
+  "processing_gain_db": 1.1029703924244139,
+  "processing_gain_hex": "0x1.1a5c4483eb4dp+0",
+  "current_processing_plan": {
+    "engine": "static-gain-v1",
+    "global_gain_db": 1.1029703924244139,
+    "global_gain_hex": "0x1.1a5c4483eb4dp+0",
+    "order": "original programme/composition -> section gain -> static-gain-v1 -> monitor or final export quantization",
+    "applied_intervals": [],
+    "transitions": []
+  },
+  "programme_frames": "3120000",
+  "sample_rate": 48000,
+  "duration_rational_seconds": "3120000/48000",
+  "positions": "Audio-source frames; true-peak positions in eighth-frames. Video offsets and measurement EOF drain do not extend programme duration.",
+  "profile": {
+    "id": "ebu-r128-2023-programme-linear-qc",
+    "definition_version": "1.0.0",
+    "digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+    "evaluated_requirements_digest": "c9bbc60b6c52b6846c836179a66eb830c62e426ef97b59ccc1a586c92bcf088a",
+    "edition": "EBU R128-2023 (November 2023)",
+    "reference": "https://tech.ebu.ch/docs/r/r128.pdf",
+    "applicability": 1,
+    "applicability_scope": "Pre-produced whole-programme linear-audio QC only; excludes live, deliberate lower targets, short-form and distribution-specific requirements.",
+    "meter_tolerance_documentary_only": "Clause m separately permits +/-0.3 dB meter tolerance for signals band-limited to 20 kHz. Bandwidth is not certified here; this provision never relaxes the -1 dBTP evaluation ceiling."
+  },
+  "job_requirements": {
+    "format": "levelscope-job-requirements",
+    "schema": 1,
+    "id": "00000000000000000000000000000017",
+    "revision": 2,
+    "name": "Changed provenance",
+    "base_id": "ebu-r128-2023-programme-linear-qc",
+    "base_version": "1.0.0",
+    "base_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+    "method": "EBU Tech 3342-2023 whole-programme LRA",
+    "applicability": "pre-produced-whole-programme-linear-audio",
+    "provenance_kind": "user-specified-job-requirement",
+    "provenance": "",
+    "maximum_lra_tenths": 1000,
+    "unavailable_reason": "",
+    "digest": "fed878b04830a827cbb8c6062d27b8f392dbe45f29f99d120b123f07f976ef5c"
+  },
+  "job_requirements_status": "Job: Changed provenance | revision 2\nUser-specified maximum LRA: 100.0 LU (inclusive).\nEBU Tech 3342-2023 whole-programme LRA; short-programme LRA under 60 seconds cannot satisfy a required ceiling.\nProvenance: user-specified; no external document specified\nRequirements: fed878b04830a827cbb8c6062d27b8f392dbe45f29f99d120b123f07f976ef5c\n",
+  "source_members": [{
+      "basename": "signal.wav",
+      "sha256": "bd9060864c14664849959be18598fc420bf4529b9bd2b86ea0f26e619eaa1608"
+    }],
+  "ordered_input_roles": ["L","R","C","Lfe","Ls","Rs"],
+  "source": {
+    "domain": "Source",
+    "measurement_available": true,
+    "status": "valid_measured_snapshot",
+    "evaluation": {
+      "verdict": "FAIL",
+      "message": "Fails one or more selected measured rules.",
+      "identity": "572790bb34113852242401ed0b316953ba27f03185c7b3e95d8963caff3b4e0a",
+      "profile_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+      "job_requirements_digest": "fed878b04830a827cbb8c6062d27b8f392dbe45f29f99d120b123f07f976ef5c",
+      "evaluated_rules_digest": "c9bbc60b6c52b6846c836179a66eb830c62e426ef97b59ccc1a586c92bcf088a",
+      "snapshot_identity": "bbde7a1c9a8d52e2d6a8e168f36fd08b7392bc7bd2f5044858f72a3063d49912",
+      "rules": [{
+          "id": "programme-loudness",
+          "verdict": "FAIL",
+          "reason": "Outside selected bounds.",
+          "provenance": "R128-2023 clauses h, i, k, l: -23 LUFS intended target; +/-0.2 LU QC allowance; whole-programme level gating.",
+          "units": "LUFS",
+          "measured": -24.102970392424414,
+          "lower": -23.199999999999999,
+          "upper": -22.800000000000001,
+          "delta": -1.1029703924244139
+        },{
+          "id": "true-peak",
+          "verdict": "PASS",
+          "reason": "Within selected bounds.",
+          "provenance": "R128-2023 clause m: maximum -1 dBTP for linear audio.",
+          "units": "dBTP",
+          "measured": -26.929465890459483,
+          "lower": null,
+          "upper": -1,
+          "delta": -25.929465890459483
+        },{
+          "id": "loudness-range",
+          "verdict": "PASS",
+          "reason": "Within selected bounds.",
+          "provenance": "User-specified job requirement: Changed provenance; EBU Tech 3342-2023 whole-programme LRA; no external document specified. User provenance is not independently verified; not an EBU-mandated ceiling.",
+          "units": "LU",
+          "measured": 9.5424250980426493,
+          "lower": null,
+          "upper": 100,
+          "delta": -90.457574901957344
+        }]
+    },
+    "measurement_identity": "22e74ff7eda18eebcf2012434689f4331f8fb92ee6af9ac3ad6fbb5964a3351d",
+    "measured_content_sha256": "bd9060864c14664849959be18598fc420bf4529b9bd2b86ea0f26e619eaa1608",
+    "measurement_method": "bs1770-5-ebu2023-m7.1",
+    "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb",
+    "platform": "Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off",
+    "original_runtime": "",
+    "restored_from_session": false,
+    "frames": "3120000",
+    "sample_rate": 48000,
+    "lra_stable": true,
+    "metrics": {
+      "integrated": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -24.102970392424414,
+        "value_hex": "-0x1.81a5c4483eb4dp+4"
+      },
+      "true_peak": {
+        "status": "available",
+        "unit": "dBTP",
+        "value": -26.929465890459483,
+        "value_hex": "-0x1.aedf17a02456p+4"
+      },
+      "sample_peak": {
+        "status": "available",
+        "unit": "dBFS",
+        "value": -26.93573499826585,
+        "value_hex": "-0x1.aef8c542f4642p+4"
+      },
+      "lra": {
+        "status": "available",
+        "unit": "LU",
+        "value": 9.5424250980426493,
+        "value_hex": "0x1.315b8be113edcp+3"
+      },
+      "momentary_max": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -21.549266539292734,
+        "value_hex": "-0x1.58c9cbb5f0ca5p+4"
+      },
+      "short_term_max": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -21.550224147568187,
+        "value_hex": "-0x1.58cdb7d5f465cp+4"
+      }
+    },
+    "per_channel_peaks": [{
+        "channel": 1,
+        "role": "L",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -26.93573499826585,
+          "value_hex": "-0x1.aef8c542f4642p+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -26.935732534022474,
+          "value_hex": "-0x1.aef8c2ad76e03p+4"
+        },
+        "sample_peak_frame": "1562997",
+        "true_peak_eighth_frame": "12719663"
+      },{
+        "channel": 2,
+        "role": "R",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -26.93573499826585,
+          "value_hex": "-0x1.aef8c542f4642p+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -26.93573499826585,
+          "value_hex": "-0x1.aef8c542f4642p+4"
+        },
+        "sample_peak_frame": "1562000",
+        "true_peak_eighth_frame": "12496000"
+      },{
+        "channel": 3,
+        "role": "C",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -26.93573499826585,
+          "value_hex": "-0x1.aef8c542f4642p+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -26.934816286993893,
+          "value_hex": "-0x1.aef501ec4682cp+4"
+        },
+        "sample_peak_frame": "1560010",
+        "true_peak_eighth_frame": "24959921"
+      },{
+        "channel": 4,
+        "role": "Lfe",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -26.93573499826585,
+          "value_hex": "-0x1.aef8c542f4642p+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -26.929465890459483,
+          "value_hex": "-0x1.aedf17a02456p+4"
+        },
+        "sample_peak_frame": "1560360",
+        "true_peak_eighth_frame": "24959926"
+      },{
+        "channel": 5,
+        "role": "Ls",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -26.93573499826585,
+          "value_hex": "-0x1.aef8c542f4642p+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -26.935726412821911,
+          "value_hex": "-0x1.aef8bc42512d1p+4"
+        },
+        "sample_peak_frame": "1560591",
+        "true_peak_eighth_frame": "12579015"
+      },{
+        "channel": 6,
+        "role": "Rs",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -26.93573499826585,
+          "value_hex": "-0x1.aef8c542f4642p+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -26.932825568504505,
+          "value_hex": "-0x1.aeecda80d9976p+4"
+        },
+        "sample_peak_frame": "1562996",
+        "true_peak_eighth_frame": "24959937"
+      }]
+  },
+  "current": {
+    "domain": "Current State",
+    "measurement_available": true,
+    "status": "valid_measured_snapshot",
+    "evaluation": {
+      "verdict": "PASS",
+      "message": "Passes selected programme loudness, true-peak and LRA rules.",
+      "identity": "fc253df0773228c75703fa2df0ef0811090ed9a11f62929042fc059d929764d4",
+      "profile_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+      "job_requirements_digest": "fed878b04830a827cbb8c6062d27b8f392dbe45f29f99d120b123f07f976ef5c",
+      "evaluated_rules_digest": "c9bbc60b6c52b6846c836179a66eb830c62e426ef97b59ccc1a586c92bcf088a",
+      "snapshot_identity": "c01ba88b24ab97ea4d7568cd2cc965c8d7b6d978230b17d5e53c67c5a8ed7039",
+      "rules": [{
+          "id": "programme-loudness",
+          "verdict": "PASS",
+          "reason": "Within selected bounds.",
+          "provenance": "R128-2023 clauses h, i, k, l: -23 LUFS intended target; +/-0.2 LU QC allowance; whole-programme level gating.",
+          "units": "LUFS",
+          "measured": -23.000000001427502,
+          "lower": -23.199999999999999,
+          "upper": -22.800000000000001,
+          "delta": -1.4275016724241141e-09
+        },{
+          "id": "true-peak",
+          "verdict": "PASS",
+          "reason": "Within selected bounds.",
+          "provenance": "R128-2023 clause m: maximum -1 dBTP for linear audio.",
+          "units": "dBTP",
+          "measured": -25.826495824535488,
+          "lower": null,
+          "upper": -1,
+          "delta": -24.826495824535488
+        },{
+          "id": "loudness-range",
+          "verdict": "PASS",
+          "reason": "Within selected bounds.",
+          "provenance": "User-specified job requirement: Changed provenance; EBU Tech 3342-2023 whole-programme LRA; no external document specified. User provenance is not independently verified; not an EBU-mandated ceiling.",
+          "units": "LU",
+          "measured": 9.5424250956660188,
+          "lower": null,
+          "upper": 100,
+          "delta": -90.457574904333981
+        }]
+    },
+    "measurement_identity": "9e482c80816e2cf7fb361a50e51b6d8d20816cda17055687d785a21d4f2b3978",
+    "measured_content_sha256": "bd9060864c14664849959be18598fc420bf4529b9bd2b86ea0f26e619eaa1608",
+    "measurement_method": "bs1770-5-ebu2023-m7.1",
+    "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb",
+    "platform": "Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off",
+    "original_runtime": "",
+    "restored_from_session": false,
+    "frames": "3120000",
+    "sample_rate": 48000,
+    "lra_stable": true,
+    "metrics": {
+      "integrated": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -23.000000001427502,
+        "value_hex": "-0x1.700000006218ep+4"
+      },
+      "true_peak": {
+        "status": "available",
+        "unit": "dBTP",
+        "value": -25.826495824535488,
+        "value_hex": "-0x1.9d3953af8a915p+4"
+      },
+      "sample_peak": {
+        "status": "available",
+        "unit": "dBFS",
+        "value": -25.832764804183448,
+        "value_hex": "-0x1.9d53012ff3a4ep+4"
+      },
+      "lra": {
+        "status": "available",
+        "unit": "LU",
+        "value": 9.5424250956660188,
+        "value_hex": "0x1.315b8bdfcd498p+3"
+      },
+      "momentary_max": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -20.446296148252568,
+        "value_hex": "-0x1.4724076e11357p+4"
+      },
+      "short_term_max": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -20.447253756808781,
+        "value_hex": "-0x1.4727f38e281c1p+4"
+      }
+    },
+    "per_channel_peaks": [{
+        "channel": 1,
+        "role": "L",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -25.832764804183448,
+          "value_hex": "-0x1.9d53012ff3a4ep+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -25.832762389829703,
+          "value_hex": "-0x1.9d52fea7da84ap+4"
+        },
+        "sample_peak_frame": "1562997",
+        "true_peak_eighth_frame": "12719663"
+      },{
+        "channel": 2,
+        "role": "R",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -25.832764804183448,
+          "value_hex": "-0x1.9d53012ff3a4ep+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -25.832764804183448,
+          "value_hex": "-0x1.9d53012ff3a4ep+4"
+        },
+        "sample_peak_frame": "1562000",
+        "true_peak_eighth_frame": "12496000"
+      },{
+        "channel": 3,
+        "role": "C",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -25.832764804183448,
+          "value_hex": "-0x1.9d53012ff3a4ep+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -25.831846036920719,
+          "value_hex": "-0x1.9d4f3dca3e1b7p+4"
+        },
+        "sample_peak_frame": "1560010",
+        "true_peak_eighth_frame": "24959921"
+      },{
+        "channel": 4,
+        "role": "Lfe",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -25.832764804183448,
+          "value_hex": "-0x1.9d53012ff3a4ep+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -25.826495824535488,
+          "value_hex": "-0x1.9d3953af8a915p+4"
+        },
+        "sample_peak_frame": "1560360",
+        "true_peak_eighth_frame": "24959926"
+      },{
+        "channel": 5,
+        "role": "Ls",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -25.832764804183448,
+          "value_hex": "-0x1.9d53012ff3a4ep+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -25.832755854482294,
+          "value_hex": "-0x1.9d52f7cd88dd2p+4"
+        },
+        "sample_peak_frame": "1560591",
+        "true_peak_eighth_frame": "12579015"
+      },{
+        "channel": 6,
+        "role": "Rs",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -25.832764804183448,
+          "value_hex": "-0x1.9d53012ff3a4ep+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -25.829855240718569,
+          "value_hex": "-0x1.9d471649f4cebp+4"
+        },
+        "sample_peak_frame": "1562996",
+        "true_peak_eighth_frame": "24959937"
+      }]
+  },
+  "artifact": {
+    "domain": "Exported artifact",
+    "measurement_available": true,
+    "status": "valid_measured_snapshot",
+    "evaluation": {
+      "verdict": "PASS",
+      "message": "Passes selected programme loudness, true-peak and LRA rules.",
+      "identity": "6aeb179af9001141acc5ef13375832b2438a34441cf655e2cca72c3f6de19bc2",
+      "profile_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+      "job_requirements_digest": "fed878b04830a827cbb8c6062d27b8f392dbe45f29f99d120b123f07f976ef5c",
+      "evaluated_rules_digest": "c9bbc60b6c52b6846c836179a66eb830c62e426ef97b59ccc1a586c92bcf088a",
+      "snapshot_identity": "52bd4e3992d3821c9f0fe0d288393f05414968dae0ca8c36c395346ed2d29f2a",
+      "rules": [{
+          "id": "programme-loudness",
+          "verdict": "PASS",
+          "reason": "Within selected bounds.",
+          "provenance": "R128-2023 clauses h, i, k, l: -23 LUFS intended target; +/-0.2 LU QC allowance; whole-programme level gating.",
+          "units": "LUFS",
+          "measured": -23.000000005001407,
+          "lower": -23.199999999999999,
+          "upper": -22.800000000000001,
+          "delta": -5.00140728831866e-09
+        },{
+          "id": "true-peak",
+          "verdict": "PASS",
+          "reason": "Within selected bounds.",
+          "provenance": "R128-2023 clause m: maximum -1 dBTP for linear audio.",
+          "units": "dBTP",
+          "measured": -25.826520987122926,
+          "lower": null,
+          "upper": -1,
+          "delta": -24.826520987122926
+        },{
+          "id": "loudness-range",
+          "verdict": "PASS",
+          "reason": "Within selected bounds.",
+          "provenance": "User-specified job requirement: Changed provenance; EBU Tech 3342-2023 whole-programme LRA; no external document specified. User provenance is not independently verified; not an EBU-mandated ceiling.",
+          "units": "LU",
+          "measured": 9.5424251719492368,
+          "lower": null,
+          "upper": 100,
+          "delta": -90.457574828050767
+        }]
+    },
+    "measurement_identity": "89a72a5628ed364f11ce7ad457f2d7dffbad3363acfa812479995465aec617e7",
+    "measured_content_sha256": "b6d3058d34047eee6b91e24c974f6f7b5135c9f9d6c4ade361528b7bb0a718c3",
+    "measurement_method": "bs1770-5-ebu2023-m7.1",
+    "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb",
+    "platform": "Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off",
+    "original_runtime": "",
+    "restored_from_session": false,
+    "frames": "3120000",
+    "sample_rate": 48000,
+    "lra_stable": true,
+    "metrics": {
+      "integrated": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -23.000000005001407,
+        "value_hex": "-0x1.7000000157b1bp+4"
+      },
+      "true_peak": {
+        "status": "available",
+        "unit": "dBTP",
+        "value": -25.826520987122926,
+        "value_hex": "-0x1.9d396e121268ep+4"
+      },
+      "sample_peak": {
+        "status": "available",
+        "unit": "dBFS",
+        "value": -25.832754671315151,
+        "value_hex": "-0x1.9d52f68fee3cap+4"
+      },
+      "lra": {
+        "status": "available",
+        "unit": "LU",
+        "value": 9.5424251719492368,
+        "value_hex": "0x1.315b8c08c192ap+3"
+      },
+      "momentary_max": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -20.446296109838062,
+        "value_hex": "-0x1.47240763c1625p+4"
+      },
+      "short_term_max": {
+        "status": "available",
+        "unit": "LUFS",
+        "value": -20.447253747578998,
+        "value_hex": "-0x1.4727f38badd8p+4"
+      }
+    },
+    "per_channel_peaks": [{
+        "channel": 1,
+        "role": "L",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -25.832754671315151,
+          "value_hex": "-0x1.9d52f68fee3cap+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -25.832742952039474,
+          "value_hex": "-0x1.9d52ea460fbeap+4"
+        },
+        "sample_peak_frame": "1572000",
+        "true_peak_eighth_frame": "16379025"
+      },{
+        "channel": 2,
+        "role": "R",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -25.832754671315151,
+          "value_hex": "-0x1.9d52f68fee3cap+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -25.832743142418877,
+          "value_hex": "-0x1.9d52ea792a848p+4"
+        },
+        "sample_peak_frame": "1578000",
+        "true_peak_eighth_frame": "24840306"
+      },{
+        "channel": 3,
+        "role": "C",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -25.832754671315151,
+          "value_hex": "-0x1.9d52f68fee3cap+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -25.831857177933276,
+          "value_hex": "-0x1.9d4f4978e2a91p+4"
+        },
+        "sample_peak_frame": "1583990",
+        "true_peak_eighth_frame": "24959921"
+      },{
+        "channel": 4,
+        "role": "Lfe",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -25.832754671315151,
+          "value_hex": "-0x1.9d52f68fee3cap+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -25.826520987122926,
+          "value_hex": "-0x1.9d396e121268ep+4"
+        },
+        "sample_peak_frame": "1561320",
+        "true_peak_eighth_frame": "24959926"
+      },{
+        "channel": 5,
+        "role": "Ls",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -25.832754671315151,
+          "value_hex": "-0x1.9d52f68fee3cap+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -25.83272891321354,
+          "value_hex": "-0x1.9d52db8d8af8fp+4"
+        },
+        "sample_peak_frame": "1563606",
+        "true_peak_eighth_frame": "15388985"
+      },{
+        "channel": 6,
+        "role": "Rs",
+        "sample_peak": {
+          "status": "available",
+          "unit": "dBFS",
+          "value": -25.832754671315151,
+          "value_hex": "-0x1.9d52f68fee3cap+4"
+        },
+        "true_peak": {
+          "status": "available",
+          "unit": "dBTP",
+          "value": -25.829865050486692,
+          "value_hex": "-0x1.9d4720933ef09p+4"
+        },
+        "sample_peak_frame": "1562996",
+        "true_peak_eighth_frame": "24959937"
+      }],
+    "sha256": "b6d3058d34047eee6b91e24c974f6f7b5135c9f9d6c4ade361528b7bb0a718c3",
+    "basename": "programme.wav",
+    "container": "RIFF/WAVE",
+    "bits": 24,
+    "channel_mask": "3f",
+    "file_bytes": "56160068",
+    "format_identity": "b2bd197adee8aea306afd39ca403414ed5831798d7e8b2da33ae38532f2406fe",
+    "quantizer": "pcm24-tpdf-splitmix64-counter-v1",
+    "dither_seed_hex": "b2bd197adee8aea3",
+    "dither_applications": 1,
+    "dither_note": "TPDF applied once at final PCM24 quantization, outside Current State. Even zero-gain export is not a bit-identical copy.",
+    "verification_gain_db": 0,
+    "output_to_input_channels": [1,2,3,4,5,6]
+  },
+  "sections_annotations_only": [],
+  "proposal_preferences": {
+    "version": "section-preferences-v2",
+    "accounting": "connected-envelope-support-v2",
+    "region_limit": null,
+    "duration_thousandths": 200,
+    "additional_tenths_db": 30,
+    "cumulative_tenths_db": 120,
+    "reserve_tenths_db": 5,
+    "unavailable": ""
+  },
+  "proposal_preferences_digest": "9020f36cdf7584536fc2708e4f57196cbf3ca8ef1d72e954ae8ad2e88bb48e27",
+  "proposal_inspection_not_current_measurement": "No transient proposal. Applied settings and measured outcomes are reported separately.",
+  "last_applied_proposal_policy_historical": null,
+  "last_applied_proposal_binding_historical": "",
+  "last_applied_proposal_inspection_transient": "",
+  "proposal_provenance_scope": "Preferences are preservation choices, not delivery rules. Last applied policy is historical and may differ from current processing/preferences. Full transient proposal inspection is reportable before closing; sessions retain policy/binding and the exact applied envelope, not private assessment authority.",
+  "marker_import_provenance": null,
+  "annotations_match_last_import": false,
+  "reference_picture_context": {
+    "basename": "",
+    "sha256": "",
+    "offset_rational": "0/1",
+    "is_sync_evidence": false
+  }
+}

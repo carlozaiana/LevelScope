@@ -1,0 +1,459 @@
+{
+  "passed": true,
+  "failure": "",
+  "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb",
+  "identity_sha256": "33bc7202fc2629797bbfd3223b3849145a88bebe5c22e9157a1636f53cd69e95",
+  "architecture": "arm64",
+  "os": "15.7.9",
+  "seconds": 399.637399875,
+  "commands": [
+    {
+      "name": "measurement",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/LevelScopeMeasurementTests",
+        "--report",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/measurement.json"
+      ],
+      "exit_code": 0,
+      "seconds": 13.566164958,
+      "report_sha256": "3fe8a6bc6d36493aa799330830a52e0930a05c6bae2c6d3f4b9dbb64c8db985c",
+      "passed": true,
+      "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb"
+    },
+    {
+      "name": "compliance",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/LevelScopeComplianceTests",
+        "--report",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/compliance.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.6194129999999998,
+      "report_sha256": "3d3c3a0f8d907319b43a10d68cf1550a085be62f7b580903f4669ebd670f4331",
+      "passed": true,
+      "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb"
+    },
+    {
+      "name": "global-proposal",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/LevelScopeProposalTests",
+        "--report",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/global-proposal.json"
+      ],
+      "exit_code": 0,
+      "seconds": 5.463979874999998,
+      "report_sha256": "24bae1292dc0e3d1689ba4ae1d68ff56ca4674927874726c04936c4bfb9747d9",
+      "passed": true,
+      "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb"
+    },
+    {
+      "name": "diagnostics",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/LevelScopeDiagnosticsTests",
+        "--report",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/diagnostics.json"
+      ],
+      "exit_code": 0,
+      "seconds": 2.226564875000001,
+      "report_sha256": "3a1fc80b506d9590b5dcfd4e50d947ba50d0139e0d0ce99f57eb43f1490e37bc",
+      "passed": true,
+      "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb"
+    },
+    {
+      "name": "sections",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/LevelScopeSectionsTests",
+        "--report",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/sections.json"
+      ],
+      "exit_code": 0,
+      "seconds": 3.391736625,
+      "report_sha256": "0e1b9975d7874692ed15f659c7aec4a3446995636bf4e38cc2974d47b2a1a5d5",
+      "passed": true,
+      "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb"
+    },
+    {
+      "name": "audition",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/LevelScopeAuditionTests",
+        "--report",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/audition.json"
+      ],
+      "exit_code": 0,
+      "seconds": 31.981720000000003,
+      "report_sha256": "ef9231a026839943b2f230e7c8d68956bd1785af53adeac1c939134b62059cc9",
+      "passed": true,
+      "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb"
+    },
+    {
+      "name": "multichannel",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/LevelScopeMultichannelTests",
+        "--report",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/multichannel.json"
+      ],
+      "exit_code": 0,
+      "seconds": 71.996416917,
+      "report_sha256": "a5133cea6f02a7963a88058f358e6816b9afc6e8e9a89f886b6ddd4ca014415b",
+      "passed": true,
+      "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb"
+    },
+    {
+      "name": "sessions",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/LevelScopeSessionTests",
+        "--short",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/sessions.json"
+      ],
+      "exit_code": 0,
+      "seconds": 4.919845833000011,
+      "report_sha256": "57cd21d29a4c73c27edc75635048c0e2ec5fa673225582d9f2cf29a4e9debaab",
+      "passed": true,
+      "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb"
+    },
+    {
+      "name": "session-playback",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/LevelScopeSessionPlaybackTests",
+        "--report",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/session-playback.json"
+      ],
+      "exit_code": 0,
+      "seconds": 3.4369924160000096,
+      "report_sha256": "367b3f5dabbeb100f4605d6a8b5530a7f641bd8c8d5980bd5d2aaf9f202b1a82",
+      "passed": true,
+      "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb"
+    },
+    {
+      "name": "export",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/LevelScopeExportTests",
+        "--artifacts",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/export-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/export.json"
+      ],
+      "exit_code": 0,
+      "seconds": 25.001350083000005,
+      "report_sha256": "6475a086a5d8568997aa064ef2eecbaa0009538e16fad074b5fc58e29a3faa67",
+      "passed": true,
+      "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb"
+    },
+    {
+      "name": "section-processing",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/LevelScopeSectionProcessingTests",
+        "--smoke",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/section-processing-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/section-processing.json"
+      ],
+      "exit_code": 0,
+      "seconds": 7.182822167000012,
+      "report_sha256": "ccf112bdac556d567e8d129e6c0589e44e93c55e9e1a6c20347ce05c244ecd7d",
+      "passed": true,
+      "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb"
+    },
+    {
+      "name": "section-proposal",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/LevelScopeSectionProposalTests",
+        "--smoke",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/section-proposal-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/section-proposal.json"
+      ],
+      "exit_code": 0,
+      "seconds": 11.634831375000005,
+      "report_sha256": "0f2cf14d17643ac8031f17afb42e4aab88a2b118ff348c0628881a3b76c98486",
+      "passed": true,
+      "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb"
+    },
+    {
+      "name": "preferences",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/LevelScopeSectionProposalTests",
+        "--preferences",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/preferences-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/preferences.json"
+      ],
+      "exit_code": 0,
+      "seconds": 7.330843541999997,
+      "report_sha256": "f979027318c89a8a61fd03515824ead6c1ed47a13a3a37eb1581a7e210cff771",
+      "passed": true,
+      "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb"
+    },
+    {
+      "name": "proposal-workflow",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/LevelScopeSectionProposalTests",
+        "--m18-workflow",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/proposal-workflow-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/proposal-workflow.json"
+      ],
+      "exit_code": 0,
+      "seconds": 5.764635834000018,
+      "report_sha256": "ce71e3bbfe2ac441fd1e766f23b4c87e9075d5412c7a6dd57fab6f2d16c2e79b",
+      "passed": true,
+      "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb"
+    },
+    {
+      "name": "mono",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/LevelScopeMonoTests",
+        "--smoke",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/mono-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/mono.json"
+      ],
+      "exit_code": 0,
+      "seconds": 11.633575750000006,
+      "report_sha256": "1f6bf1fc6f3e845485f8cc2fdb2506a6c783733c3fc79b42375383d7bf560b17",
+      "passed": true,
+      "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb"
+    },
+    {
+      "name": "requirements",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/LevelScopeJobRequirementsTests",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/requirements-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/requirements.json"
+      ],
+      "exit_code": 0,
+      "seconds": 32.21097554099998,
+      "report_sha256": "57da134fd808d2b62f00eefe957d9aab07707bfa0459ff2bbbfe19b2150e5e4c",
+      "passed": true,
+      "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb"
+    },
+    {
+      "name": "waveform-service",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/LevelScopeWaveformTests",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/waveform-service-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/waveform-service.json"
+      ],
+      "exit_code": 0,
+      "seconds": 25.163432250000028,
+      "report_sha256": "3aacd828b30362119ae57fe25b3ba8b9a4f36f6c741dfb4b78027e3b36678841",
+      "passed": true,
+      "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb"
+    },
+    {
+      "name": "timeline",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/timeline-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/timeline.json"
+      ],
+      "exit_code": 0,
+      "seconds": 3.363674666999998,
+      "report_sha256": "076c9485a1d2f6eeb0c41f295974d0f92ba6f981ff47f8eb1e1fe94b0fa60d86",
+      "passed": true,
+      "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb"
+    },
+    {
+      "name": "markers",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/LevelScopeMarkerTests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/marker-files",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/source/Tests/Markers/nuendo-15.0.30-points.csv"
+      ],
+      "exit_code": 0,
+      "seconds": 9.818957000000012,
+      "report_sha256": "b41f3fe02fcdf54bfc739a8e2f2525848a8e78acdc453b5e986f61beecdb26a5",
+      "passed": true,
+      "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb"
+    },
+    {
+      "name": "waveform-core",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/LevelScopeWaveformCoreTests"
+      ],
+      "exit_code": 0,
+      "seconds": 1.123332792000042,
+      "passed": true
+    },
+    {
+      "name": "peak-parity",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/LevelScopePeakChannelParity"
+      ],
+      "exit_code": 0,
+      "seconds": 4.535129291999965,
+      "passed": true
+    },
+    {
+      "name": "video-core",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/LevelScopeVideoTests"
+      ],
+      "exit_code": 0,
+      "seconds": 0.7409283339999888,
+      "passed": true
+    },
+    {
+      "name": "ebu",
+      "command": [
+        "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/source/Tests/run_ebu_measurements.py",
+        "--binary",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/LevelScopeMeasurementTests",
+        "--vectors",
+        "/Users/fuzz/Developer/LevelScope/Tests/Ebu_Loudness_Testset_V05/ebu-loudness-test-setv05",
+        "--report",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/ebu.json",
+        "--arch",
+        "arm64",
+        "--workers",
+        "1"
+      ],
+      "exit_code": 0,
+      "seconds": 27.72944133300001,
+      "report_sha256": "6b4b91120bcfe198e86c52bf3970616d10115270ca925ba2101ab36dac67a023",
+      "passed": true,
+      "build": null
+    },
+    {
+      "name": "itu",
+      "command": [
+        "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/source/Tests/run_reference_measurements.py",
+        "--binary",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/LevelScopeMeasurementTests",
+        "--vectors",
+        "/Users/fuzz/Developer/LevelScope/build/measurement-reference/itu",
+        "--report",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/itu.json",
+        "--arch",
+        "arm64",
+        "--workers",
+        "1"
+      ],
+      "exit_code": 0,
+      "seconds": 67.65444866600001,
+      "report_sha256": "0d8ba852405ba68aa45eb3d64ff318da82a0d288cb87e0913bd897608b470b8b",
+      "passed": true,
+      "build": null
+    },
+    {
+      "name": "native-stereo",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/short-acceptance",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/fixtures/programme-2.wav",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/native-stereo",
+        "2"
+      ],
+      "exit_code": 0,
+      "seconds": 7.253735791999986,
+      "report_sha256": "fd9c7e0020d7bbfbd311a8e3e9e6ec2ad01204391c3e4cc9f5b47490be44e11e",
+      "passed": true,
+      "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb"
+    },
+    {
+      "name": "audit-stereo",
+      "command": [
+        "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/source/Tests/Profiling/ShortAcceptance/check_export.py",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/native-stereo",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/fixtures/programme-2.wav"
+      ],
+      "exit_code": 0,
+      "seconds": 0.053387708000002476,
+      "report_sha256": "883bd347c5b4b1c8bfc380ac92aedf37be5524ec8d3ce5251a2b8f6a5c3cb2f4",
+      "passed": true,
+      "build": null
+    },
+    {
+      "name": "native-surround",
+      "command": [
+        "/usr/bin/arch",
+        "-arm64",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/bin/short-acceptance",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/fixtures/programme-6.wav",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/native-surround",
+        "6"
+      ],
+      "exit_code": 0,
+      "seconds": 13.691241208999998,
+      "report_sha256": "d420c59b39cf104840550be105dd188c4ef48590a1dd38f66c9c42fc14c6f317",
+      "passed": true,
+      "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb"
+    },
+    {
+      "name": "audit-surround",
+      "command": [
+        "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/source/Tests/Profiling/ShortAcceptance/check_export.py",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/sequoia-04/short/native-surround",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-04/fixtures/programme-6.wav"
+      ],
+      "exit_code": 0,
+      "seconds": 0.09009895799999867,
+      "report_sha256": "85b4f22b2f2fc1accb5278402258550410ad5a3f3cd51ad7260194a6bfaef863",
+      "passed": true,
+      "build": null
+    }
+  ],
+  "physical_devices_opened": false,
+  "full_qualification_complete": false
+}

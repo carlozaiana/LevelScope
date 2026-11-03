@@ -1,0 +1,24 @@
+START measurement
+PASS measurement 13.59
+START compliance
+PASS compliance 0.63
+START global-proposal
+PASS global-proposal 5.48
+START diagnostics
+PASS diagnostics 2.21
+START sections
+PASS sections 3.33
+START audition
+PASS audition 31.83
+START multichannel
+{
+  "passed": false,
+  "failure": "Failed or missing result: multichannel",
+  "build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce",
+  "identity_sha256": "7ee176cb1936ca62e9c6dfffe752af540d093ebc79b5c8ce7a3d4c40afb60506",
+  "architecture": "arm64",
+  "os": "15.7.9",
+  "seconds": 84.351917375,
+  "physical_devices_opened": false,
+  "full_qualification_complete": false
+}

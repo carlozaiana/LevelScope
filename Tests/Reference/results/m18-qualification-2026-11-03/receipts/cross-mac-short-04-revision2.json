@@ -1,0 +1,23 @@
+{
+  "passed": true,
+  "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb",
+  "identity_sha256": "33bc7202fc2629797bbfd3223b3849145a88bebe5c22e9157a1636f53cd69e95",
+  "maximum_metric_difference": 3.552713678800501e-15,
+  "maximum_capture_float32_ulp": 0,
+  "cases": [
+    {
+      "name": "native-stereo",
+      "source_current_peak_positions_equal": true,
+      "verdicts_equal": true,
+      "section_geometry_equal": true
+    },
+    {
+      "name": "native-surround",
+      "source_current_peak_positions_equal": true,
+      "verdicts_equal": true,
+      "section_geometry_equal": true
+    }
+  ],
+  "three_hour_included": false,
+  "allowances": "Cross-Mac comparisons only: 0.01 LU/dB/gain, LRA 0.1 LU, processed float32 <=1 ULP; no additional compliance allowance"
+}

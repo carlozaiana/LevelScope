@@ -1,0 +1,48 @@
+In file included from /Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Qualification/M18/VideoPressure.cpp:2:
+In file included from /Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Qualification/M18/../../Profiling/ShortAcceptance/ShortAcceptance.cpp:3:
+/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/AuditionTestSupport.h:73:6: warning: unused function 'waitPreparation' [-Wunused-function]
+   73 | void waitPreparation (StandaloneAudition& a)
+      |      ^~~~~~~~~~~~~~~
+/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/AuditionTestSupport.h:79:6: warning: unused function 'awaitPlaying' [-Wunused-function]
+   79 | void awaitPlaying (StandaloneAudition& a, Device& d)
+      |      ^~~~~~~~~~~~
+/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/AuditionTestSupport.h:86:15: warning: unused function 'routes' [-Wunused-function]
+   86 | OutputRouting routes (int n) { OutputRouting r;for(int i=0;i<n;++i)r.fileToDevice[i]=maxChannels-1-i;return r; }
+      |               ^~~~~~
+/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/AuditionTestSupport.h:94:17: warning: unused function 'fixture' [-Wunused-function]
+   94 | AuditionRequest fixture (const juce::File& file, int rate, int channels, int frames, int signal=0, int bits=24)
+      |                 ^~~~~~~
+/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/AuditionTestSupport.h:113:6: warning: unused function 'drain' [-Wunused-function]
+  113 | void drain (StandaloneAudition& a, Device& d, int blockSize)
+      |      ^~~~~
+/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/AuditionTestSupport.h:121:6: warning: unused function 'identical' [-Wunused-function]
+  121 | bool identical (const Capture& a,const Capture& b)
+      |      ^~~~~~~~~
+/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/AuditionTestSupport.h:127:6: warning: unused function 'recordSamples' [-Wunused-function]
+  127 | void recordSamples(const Capture& capture,int rate,double gain,const juce::String& kind,const measurement::Result& metrics)
+      |      ^~~~~~~~~~~~~
+7 warnings generated.
+In file included from /Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Qualification/M18/VideoPressure.cpp:2:
+In file included from /Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Qualification/M18/../../Profiling/ShortAcceptance/ShortAcceptance.cpp:3:
+/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/AuditionTestSupport.h:73:6: warning: unused function 'waitPreparation' [-Wunused-function]
+   73 | void waitPreparation (StandaloneAudition& a)
+      |      ^~~~~~~~~~~~~~~
+/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/AuditionTestSupport.h:79:6: warning: unused function 'awaitPlaying' [-Wunused-function]
+   79 | void awaitPlaying (StandaloneAudition& a, Device& d)
+      |      ^~~~~~~~~~~~
+/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/AuditionTestSupport.h:86:15: warning: unused function 'routes' [-Wunused-function]
+   86 | OutputRouting routes (int n) { OutputRouting r;for(int i=0;i<n;++i)r.fileToDevice[i]=maxChannels-1-i;return r; }
+      |               ^~~~~~
+/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/AuditionTestSupport.h:94:17: warning: unused function 'fixture' [-Wunused-function]
+   94 | AuditionRequest fixture (const juce::File& file, int rate, int channels, int frames, int signal=0, int bits=24)
+      |                 ^~~~~~~
+/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/AuditionTestSupport.h:113:6: warning: unused function 'drain' [-Wunused-function]
+  113 | void drain (StandaloneAudition& a, Device& d, int blockSize)
+      |      ^~~~~
+/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/AuditionTestSupport.h:121:6: warning: unused function 'identical' [-Wunused-function]
+  121 | bool identical (const Capture& a,const Capture& b)
+      |      ^~~~~~~~~
+/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/AuditionTestSupport.h:127:6: warning: unused function 'recordSamples' [-Wunused-function]
+  127 | void recordSamples(const Capture& capture,int rate,double gain,const juce::String& kind,const measurement::Result& metrics)
+      |      ^~~~~~~~~~~~~
+7 warnings generated.

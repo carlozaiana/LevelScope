@@ -1,0 +1,4 @@
+M16 capacity: seconds=0.0114157 selection RSS=8081408 inspection RSS=63795200 retained=8575063
+escaping probes=11111
+10000 row paginated UI heartbeat p95 within100ms
+M13 FAIL 87 checks

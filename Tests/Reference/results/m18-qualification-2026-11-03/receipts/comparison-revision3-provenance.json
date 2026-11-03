@@ -1,0 +1,7 @@
+{
+  "candidate_identity_sha256": "33bc7202fc2629797bbfd3223b3849145a88bebe5c22e9157a1636f53cd69e95",
+  "checker_sha256": "0cd228d65fbdc4985b694a8be4831702be1783e851f9390c88b08b934ddc98f8",
+  "previous_provenance": "comparison-revision2-provenance.json",
+  "change": "For --long, require exact per-host full metric/window comparison receipts matching the completed audit source hash and frozen measurement build. All cross-Mac numeric tolerances unchanged.",
+  "result": "cross-mac-complete-04.json"
+}

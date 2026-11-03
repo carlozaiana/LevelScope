@@ -1,0 +1,17 @@
+{
+  "format": "levelscope-job-requirements",
+  "schema": 1,
+  "id": "00000000000000000000000000000017",
+  "revision": 1,
+  "name": "Mix italiano \u2014 <script>alert(1)</script>",
+  "base_id": "ebu-r128-2023-programme-linear-qc",
+  "base_version": "1.0.0",
+  "base_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+  "method": "EBU Tech 3342-2023 whole-programme LRA",
+  "applicability": "pre-produced-whole-programme-linear-audio",
+  "provenance_kind": "user-specified-job-requirement",
+  "provenance": "User supplied <delivery> & reference",
+  "maximum_lra_tenths": 1000,
+  "unavailable_reason": "",
+  "digest": "81195cf87a8bdff99f7bd92e955850ec1a59021144f99b4fe1699ce285c808aa"
+}

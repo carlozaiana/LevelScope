@@ -145,8 +145,8 @@ now written before their assertions so a failure retains the measured value.
 
 Candidate 04 requires fresh short/reference gates on both Macs because product
 source and the measurement-build identity changed. Candidates 01–03 and failed
-receipts remain preserved; candidate 03 was packaged but not executed. The long
-workflows have not yet started. Prior true-peak sanitizer/floating-environment
+receipts remain preserved; candidate 03 was packaged but not executed. At that freeze,
+the long workflows had not started. Prior true-peak sanitizer/floating-environment
 receipts remain complementary evidence for the unchanged peak implementation.
 
 The muted physical runner retains the legacy zero-skip verdict and continues all
@@ -173,3 +173,43 @@ probe builder now removes only that architecture restriction in its private
 bounded service copy; app-mode and the production app retain Intel serial policy.
 Freeze the corrected probe hashes separately and repeat only the affected
 stereo/5.1 bounded service comparisons against the preserved serial/app receipts.
+
+`Density.cpp` supplements the six-channel long diagnostics, twelve-channel
+allocation and short real multichannel checks with the exact planned six/eight-channel
+display combinations. It seeds three-hour-sized synthetic extrema at the finest
+overview bins in a diagnostic executable built with access control disabled, then
+uses the unchanged production hierarchy, reduction and timeline painting. Both
+Source and Current occupy the shared budget. An independent ordered-bin oracle
+checks both extrema and their earliest positions at 1, 1,200 and 4,096 display
+columns. Synthetic measured loudness data and alternating whole-programme/bounded
+viewports exercise preparation and paint p95. This is not a full-duration
+multichannel PCM claim. Run it after the heavy workflow on each host, and freeze
+its source/binary hashes separately; the candidate-04 application is unchanged.
+
+A final audit found that the frozen long driver's observation comparison checks
+input/build identity, content hash and peak positions, not every numerical result.
+The existing short waveform suite does compare all results exactly. The supplemental
+`ExactLongSource.cpp` reuses that full comparison oracle on each host: it verifies
+the saved observed Source cache from the completed long session, runs one plain
+Source measurement of the same owned three-hour file, and compares every metric
+value/status, gate, population, percentile, window energy/position and channel peak.
+This closes the long-specific evidence gap without repeating proposal, Current,
+audition or export. Run it sequentially with that host's other heavy work, record
+its extra time separately, and freeze the diagnostic source/binary hashes. The
+original long receipt remains unchanged and its limited comparison is identified.
+
+## Completed outcome
+
+Candidate 04 passed the agreed combined selection on both actual Macs. The single
+three-hour workflows took 68.68 / 123.31 minutes; the additional full numerical
+Source comparisons took 9.08 / 16.53 minutes. Independent audits matched 1,030
+selected export samples per host, including 314 beyond 4 GiB, and the complete
+RF64 files were byte-identical. Synthetic six/eight-channel display checks also
+passed on both hosts. The final checker requires the supplemental numerical
+receipts and passed without changing any comparison allowance.
+
+[The qualification receipt](../../Reference/results/m18-qualification-2026-11-03/README.md)
+contains the final timing/resource tables, frozen identity, raw receipt manifest,
+preserved failures, native-review scope, remaining exclusions and manual checklist.
+The frozen package's original `qualification_complete: false` field remains an
+immutable freeze-time record; the separate final receipt establishes completion.

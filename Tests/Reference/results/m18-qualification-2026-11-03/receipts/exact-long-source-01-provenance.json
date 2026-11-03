@@ -1,0 +1,11 @@
+{
+  "candidate_identity_sha256": "33bc7202fc2629797bbfd3223b3849145a88bebe5c22e9157a1636f53cd69e95",
+  "source_sha256": "acf51186faa2ef4fec4651d12b2fc51956943fb039c9d9c1db814ef1bad7cfe8",
+  "binary_sha256": "d7d8c42a973a05ff0b033800220d6a362f498e95756d97dbe60a04ecbc992d77",
+  "binary": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/drivers/exact-long-source-01",
+  "architectures": "x86_64 arm64",
+  "oracle_source_sha256": "3dac19746f6fa06e13f088289de6e277f5a1bd61b3359c36c11132df79eaf7b0",
+  "builder_sha256": "e8ab9fbd5e6b2f530e5c291ed70fef1cfc2d85a46184daa2e288792dba7f08ac",
+  "method": "One plain Source measurement compared with every result field in the verified observed Source cache from the completed three-hour session; no new proposal/export workflow",
+  "build_command": "python3 Tests/Qualification/M18/build_driver.py build/m18-qualification-2026-11-03/compile Tests/Qualification/M18/ExactLongSource.cpp build/m18-qualification-2026-11-03/drivers/exact-long-source-01 --target LevelScopeWaveformTests --replace WaveformTests.cpp.o"
+}

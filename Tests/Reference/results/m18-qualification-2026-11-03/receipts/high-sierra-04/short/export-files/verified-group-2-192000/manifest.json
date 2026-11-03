@@ -1,0 +1,9 @@
+{
+  "schema": "levelscope-export-manifest-v1",
+  "kind": "verified-pcm-export",
+  "files_sha256": {
+    "report.json": "cd0d8ee3979e8c29be6d5afa8e7a22ad322b1e9b107b99ac13c57cbc3447f938",
+    "report.html": "51ee6be320ba7ce0b0efade1afa5cb873000fb8ecc00d953ee6604b5d4fcadad",
+    "programme.wav": "b7029b84a27394e394a6e59dce18eb7f1e78a1aa20c8a9bd6f8a76a7fe7ea675"
+  }
+}

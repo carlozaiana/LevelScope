@@ -1,0 +1,7 @@
+{
+  "candidate_identity_sha256": "33bc7202fc2629797bbfd3223b3849145a88bebe5c22e9157a1636f53cd69e95",
+  "checker_sha256": "f0883ae527afb1a4aea377531412072029b2bfdeb61773ba866f9d6d3a81d1ef",
+  "previous_result": "cross-mac-short-04.json",
+  "corrected_result": "cross-mac-short-04-revision2.json",
+  "reason": "Handle global-only static-gain-v1 plans without section input_identity; numerical tolerances unchanged; same frozen app and measured receipts"
+}

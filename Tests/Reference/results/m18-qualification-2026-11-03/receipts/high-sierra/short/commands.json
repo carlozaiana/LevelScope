@@ -1,0 +1,107 @@
+[
+  {
+    "name": "measurement",
+    "command": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-01/bin/LevelScopeMeasurementTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra/short/measurement.json"
+    ],
+    "exit_code": 0,
+    "seconds": 29.675717895,
+    "report_sha256": "3197476262612b684cafe5408aab719800d5428923974eaec95754be5d8fed94",
+    "passed": true,
+    "build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce"
+  },
+  {
+    "name": "compliance",
+    "command": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-01/bin/LevelScopeComplianceTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra/short/compliance.json"
+    ],
+    "exit_code": 0,
+    "seconds": 0.668489387000001,
+    "report_sha256": "5808a4c0645ec9425eaad4352429c4543c2d0394f616daa197306ece407edfb1",
+    "passed": true,
+    "build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce"
+  },
+  {
+    "name": "global-proposal",
+    "command": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-01/bin/LevelScopeProposalTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra/short/global-proposal.json"
+    ],
+    "exit_code": 0,
+    "seconds": 17.277329398999996,
+    "report_sha256": "098c86b3f186d136ab341bb7d09a3b105da010a28f3b370fa77b4accd68a0df4",
+    "passed": true,
+    "build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce"
+  },
+  {
+    "name": "diagnostics",
+    "command": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-01/bin/LevelScopeDiagnosticsTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra/short/diagnostics.json"
+    ],
+    "exit_code": 0,
+    "seconds": 4.647987499999999,
+    "report_sha256": "843355fd27f4588b24c9ef96a88bb528340e8dae90c165062916c6b54210429a",
+    "passed": true,
+    "build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce"
+  },
+  {
+    "name": "sections",
+    "command": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-01/bin/LevelScopeSectionsTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra/short/sections.json"
+    ],
+    "exit_code": 0,
+    "seconds": 7.431924645999999,
+    "report_sha256": "84acd8f658b471df4fe82faac7f2dca6f6d584bf89cd7ae4688d1d440c50ab24",
+    "passed": true,
+    "build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce"
+  },
+  {
+    "name": "audition",
+    "command": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-01/bin/LevelScopeAuditionTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra/short/audition.json"
+    ],
+    "exit_code": 0,
+    "seconds": 67.40006354800002,
+    "report_sha256": "973693d3eb31ce9d9c8973e741a9a970ba5ef6c503e9728725b720cd5e6d3cb1",
+    "passed": true,
+    "build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce"
+  },
+  {
+    "name": "multichannel",
+    "command": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-01/bin/LevelScopeMultichannelTests",
+      "--report",
+      "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra/short/multichannel.json"
+    ],
+    "exit_code": 1,
+    "seconds": 53.746519759999984,
+    "report_sha256": "86f80118a68fee5208660a454c5634d50c7f5d9a52aa5c557c7665deb244e295",
+    "passed": false,
+    "build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce"
+  }
+]

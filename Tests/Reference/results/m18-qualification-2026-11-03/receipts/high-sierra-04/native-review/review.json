@@ -1,0 +1,24 @@
+{
+  "candidate_identity_sha256": "33bc7202fc2629797bbfd3223b3849145a88bebe5c22e9157a1636f53cd69e95",
+  "method": "CUA mouse/keyboard through live Screen Sharing on actual High Sierra; native macOS Open and Save panels",
+  "passed_actions": [
+    "preset Cancel closes",
+    "direct M/S target entry and Unsaved preset naming",
+    "preset Save closes and selects all values including No Limit",
+    "disposable preset archived; previous preset directory contents restored",
+    "native Open panel selects owned verified 5.1 session",
+    "Current Ready/PASS; device closed and routes muted after reopen",
+    "all three last-applied explanation pages accessible with baseline and measured candidate distinctions",
+    "Propose reports Already meets requirements with Apply unavailable",
+    "Proposal limits opens in front after Propose",
+    "21.0 percent draft visibly entered; Cancel restores 20.0 percent active preference",
+    "native Save As creates native-reviewed.levelscope; original accepted fixture hash unchanged",
+    "app closed after save"
+  ],
+  "physical_devices_opened_during_native_review": false,
+  "not_claimed": [
+    "hardware listening or native hardware Seek-Space-Space; injected transport checks cover key dispatch",
+    "human aesthetic approval"
+  ],
+  "cosmetic_observation": "Historical explanation heading renders its dash incorrectly; all words and structured explanation remain accessible."
+}

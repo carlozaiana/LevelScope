@@ -1,0 +1,238 @@
+{
+  "passed": false,
+  "failure": "Failed or missing result: preferences",
+  "build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce",
+  "identity_sha256": "42235c6e971e18c9453542a9a2d4b758d5f20e77ede27a63d04a21f704852520",
+  "architecture": "x86_64",
+  "os": "10.13.6",
+  "seconds": 372.5707027,
+  "commands": [
+    {
+      "name": "measurement",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-01/bin/LevelScopeMeasurementTests",
+        "--report",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra/short/measurement.json"
+      ],
+      "exit_code": 0,
+      "seconds": 29.675717895,
+      "report_sha256": "3197476262612b684cafe5408aab719800d5428923974eaec95754be5d8fed94",
+      "passed": true,
+      "build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce",
+      "reused_from": "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra/short",
+      "origin_identity_sha256": "7ee176cb1936ca62e9c6dfffe752af540d093ebc79b5c8ce7a3d4c40afb60506",
+      "unchanged_executable_sha256": "a095ff72150c857a73c4bf8ef2c57baf97849f7dcb4857b467a7f4390bac34e6"
+    },
+    {
+      "name": "compliance",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-01/bin/LevelScopeComplianceTests",
+        "--report",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra/short/compliance.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.668489387000001,
+      "report_sha256": "5808a4c0645ec9425eaad4352429c4543c2d0394f616daa197306ece407edfb1",
+      "passed": true,
+      "build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce",
+      "reused_from": "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra/short",
+      "origin_identity_sha256": "7ee176cb1936ca62e9c6dfffe752af540d093ebc79b5c8ce7a3d4c40afb60506",
+      "unchanged_executable_sha256": "200820675fbcace9d2321461b2490b0e5d210d618b540b22ba9ee2de120f333f"
+    },
+    {
+      "name": "global-proposal",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-01/bin/LevelScopeProposalTests",
+        "--report",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra/short/global-proposal.json"
+      ],
+      "exit_code": 0,
+      "seconds": 17.277329398999996,
+      "report_sha256": "098c86b3f186d136ab341bb7d09a3b105da010a28f3b370fa77b4accd68a0df4",
+      "passed": true,
+      "build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce",
+      "reused_from": "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra/short",
+      "origin_identity_sha256": "7ee176cb1936ca62e9c6dfffe752af540d093ebc79b5c8ce7a3d4c40afb60506",
+      "unchanged_executable_sha256": "c2d604f0b8193a75eb601a07e776953213c3e7858b129769a3d5b53fd2b32338"
+    },
+    {
+      "name": "diagnostics",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-01/bin/LevelScopeDiagnosticsTests",
+        "--report",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra/short/diagnostics.json"
+      ],
+      "exit_code": 0,
+      "seconds": 4.647987499999999,
+      "report_sha256": "843355fd27f4588b24c9ef96a88bb528340e8dae90c165062916c6b54210429a",
+      "passed": true,
+      "build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce",
+      "reused_from": "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra/short",
+      "origin_identity_sha256": "7ee176cb1936ca62e9c6dfffe752af540d093ebc79b5c8ce7a3d4c40afb60506",
+      "unchanged_executable_sha256": "a2886218d7c79ddea986d5ef5e6b3d8b6b8931317d589039238a2ff848f49601"
+    },
+    {
+      "name": "sections",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-01/bin/LevelScopeSectionsTests",
+        "--report",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra/short/sections.json"
+      ],
+      "exit_code": 0,
+      "seconds": 7.431924645999999,
+      "report_sha256": "84acd8f658b471df4fe82faac7f2dca6f6d584bf89cd7ae4688d1d440c50ab24",
+      "passed": true,
+      "build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce",
+      "reused_from": "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra/short",
+      "origin_identity_sha256": "7ee176cb1936ca62e9c6dfffe752af540d093ebc79b5c8ce7a3d4c40afb60506",
+      "unchanged_executable_sha256": "41a509213338c8b77d8581c9985264aa7f5f25822e04dd46d085063f9735507d"
+    },
+    {
+      "name": "audition",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-01/bin/LevelScopeAuditionTests",
+        "--report",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra/short/audition.json"
+      ],
+      "exit_code": 0,
+      "seconds": 67.40006354800002,
+      "report_sha256": "973693d3eb31ce9d9c8973e741a9a970ba5ef6c503e9728725b720cd5e6d3cb1",
+      "passed": true,
+      "build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce",
+      "reused_from": "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra/short",
+      "origin_identity_sha256": "7ee176cb1936ca62e9c6dfffe752af540d093ebc79b5c8ce7a3d4c40afb60506",
+      "unchanged_executable_sha256": "9438faa3a51231f454b257f1c7224f6e61a857ab1ce35b92dd2a71cb5f8d599a"
+    },
+    {
+      "name": "multichannel",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-02/bin/LevelScopeMultichannelTests",
+        "--report",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-02/short/multichannel.json"
+      ],
+      "exit_code": 0,
+      "seconds": 176.65374887299998,
+      "report_sha256": "0a8787236bc0965a99667e5445d49b5a982f275d02f21dfdb710987697856aa4",
+      "passed": true,
+      "build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce"
+    },
+    {
+      "name": "sessions",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-02/bin/LevelScopeSessionTests",
+        "--short",
+        "--output",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-02/short/sessions.json"
+      ],
+      "exit_code": 0,
+      "seconds": 16.67112975699999,
+      "report_sha256": "eddfeddfcc3b2677b44c713949246e6bae6c4e65f761f5c67a205779c728641d",
+      "passed": true,
+      "build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce"
+    },
+    {
+      "name": "session-playback",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-02/bin/LevelScopeSessionPlaybackTests",
+        "--report",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-02/short/session-playback.json"
+      ],
+      "exit_code": 0,
+      "seconds": 12.705508621000007,
+      "report_sha256": "6df43be7faa9bb24cdad271144f8e9996fbfcda13dbbc48fc343ca0e1d9c313f",
+      "passed": true,
+      "build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce"
+    },
+    {
+      "name": "export",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-02/bin/LevelScopeExportTests",
+        "--artifacts",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-02/short/export-files",
+        "--output",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-02/short/export.json"
+      ],
+      "exit_code": 0,
+      "seconds": 90.29974730800001,
+      "report_sha256": "f3e7e0dcc377fa8cda9c3ff1fcfb90157d6ef1904e650ad45098d8859188a673",
+      "passed": true,
+      "build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce"
+    },
+    {
+      "name": "section-processing",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-02/bin/LevelScopeSectionProcessingTests",
+        "--smoke",
+        "--root",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-02/short/section-processing-files",
+        "--output",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-02/short/section-processing.json"
+      ],
+      "exit_code": 0,
+      "seconds": 10.380086344000006,
+      "report_sha256": "b9c13b83aeaa79044f15a263a9c51d29e606dee0eb2efd71b842fcdeba25cac4",
+      "passed": true,
+      "build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce"
+    },
+    {
+      "name": "section-proposal",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-02/bin/LevelScopeSectionProposalTests",
+        "--smoke",
+        "--root",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-02/short/section-proposal-files",
+        "--output",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-02/short/section-proposal.json"
+      ],
+      "exit_code": 0,
+      "seconds": 47.92481942799998,
+      "report_sha256": "7ae93e653e0e4f6049b4efdc1165b939db379e7c548eb4918c34c70f6d1791a8",
+      "passed": true,
+      "build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce"
+    },
+    {
+      "name": "preferences",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/candidate-02/bin/LevelScopeSectionProposalTests",
+        "--preferences",
+        "--root",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-02/short/preferences-files",
+        "--output",
+        "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-02/short/preferences.json"
+      ],
+      "exit_code": 1,
+      "seconds": 16.773679750999975,
+      "report_sha256": "cac737cf73f91c780a5daab4c2bd43fc3d5972ceabc73ed2d4aef289c8cf3411",
+      "passed": false,
+      "build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce"
+    }
+  ],
+  "physical_devices_opened": false,
+  "full_qualification_complete": false
+}

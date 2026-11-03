@@ -1,0 +1,22 @@
+{
+  "format": "levelscope-job-requirements",
+  "schema": 2,
+  "id": "e67f368e068d4c368c97265624f61ea7",
+  "revision": 1,
+  "name": "M18 qualification 04 disposable",
+  "base_id": "ebu-r128-2023-programme-linear-qc",
+  "base_version": "1.0.0",
+  "base_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+  "method": "EBU Tech 3342-2023 whole-programme LRA",
+  "applicability": "pre-produced-whole-programme-linear-audio",
+  "provenance_kind": "user-specified-job-requirement",
+  "provenance": "",
+  "maximum_lra_tenths": null,
+  "integrated_tenths": null,
+  "integrated_tolerance_tenths": 0,
+  "true_peak_tenths": null,
+  "maximum_momentary_tenths": -150,
+  "maximum_short_term_tenths": -180,
+  "unavailable_reason": "",
+  "digest": "d7b378304c3b43515afe1e092a6d94f0343c37bf4b021a4d78082a3b13a5f9c8"
+}

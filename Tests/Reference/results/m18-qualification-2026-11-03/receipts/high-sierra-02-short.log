@@ -1,0 +1,36 @@
+START measurement
+REUSED measurement
+START compliance
+REUSED compliance
+START global-proposal
+REUSED global-proposal
+START diagnostics
+REUSED diagnostics
+START sections
+REUSED sections
+START audition
+REUSED audition
+START multichannel
+PASS multichannel 176.65
+START sessions
+PASS sessions 16.67
+START session-playback
+PASS session-playback 12.71
+START export
+PASS export 90.3
+START section-processing
+PASS section-processing 10.38
+START section-proposal
+PASS section-proposal 47.92
+START preferences
+{
+  "passed": false,
+  "failure": "Failed or missing result: preferences",
+  "build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce",
+  "identity_sha256": "42235c6e971e18c9453542a9a2d4b758d5f20e77ede27a63d04a21f704852520",
+  "architecture": "x86_64",
+  "os": "10.13.6",
+  "seconds": 372.5707027,
+  "physical_devices_opened": false,
+  "full_qualification_complete": false
+}

@@ -1,0 +1,1946 @@
+{
+  "receipts/build-04.log": {
+    "bytes": 50617,
+    "sha256": "6ff0fdcd1e1c89a6f423e13176200efad2c8922cfbd760733214684a27c158ae"
+  },
+  "receipts/build.log": {
+    "bytes": 52220,
+    "sha256": "28d2d80cf0d93129fd483f165d86e6b9926e626b34e56534ea5e3444ca435836"
+  },
+  "receipts/candidate-01/identity.json": {
+    "bytes": 86967,
+    "sha256": "7ee176cb1936ca62e9c6dfffe752af540d093ebc79b5c8ce7a3d4c40afb60506"
+  },
+  "receipts/candidate-01/identity.sha256": {
+    "bytes": 80,
+    "sha256": "88593436e43b8709854518baa9772586673d265f12b7914301589c371b8052ff"
+  },
+  "receipts/candidate-02/identity.json": {
+    "bytes": 86967,
+    "sha256": "42235c6e971e18c9453542a9a2d4b758d5f20e77ede27a63d04a21f704852520"
+  },
+  "receipts/candidate-02/identity.sha256": {
+    "bytes": 80,
+    "sha256": "5956211f768035388bb045534d1dc6a8639b35b2d6a11207878d12a31ff4518a"
+  },
+  "receipts/candidate-03/identity.json": {
+    "bytes": 86967,
+    "sha256": "b1f2b6d655bbd4490153b51372878d401598388a10d99b9312421b44828e007c"
+  },
+  "receipts/candidate-03/identity.sha256": {
+    "bytes": 80,
+    "sha256": "f5474a3d08792fe2adf0ee3d8703f8ce4cddcfc2f1c1a6a885ad36e1ce9f09ea"
+  },
+  "receipts/candidate-04/identity.json": {
+    "bytes": 87212,
+    "sha256": "33bc7202fc2629797bbfd3223b3849145a88bebe5c22e9157a1636f53cd69e95"
+  },
+  "receipts/candidate-04/identity.sha256": {
+    "bytes": 80,
+    "sha256": "aeab463c08da9d6e6cbd14bdb7bd960f1b5a2440e35abb876b16bd81d26656d5"
+  },
+  "receipts/comparison-revision2-provenance.json": {
+    "bytes": 454,
+    "sha256": "3418c3b5be45d5f40768f491783d927e21a2e507bbd1f520c90480c773115100"
+  },
+  "receipts/comparison-revision3-provenance.json": {
+    "bytes": 501,
+    "sha256": "3bd91c99c54301e89d545cf5d038e021adfd6f5f9497d22b098d9aec478b84be"
+  },
+  "receipts/cross-mac-complete-04.json": {
+    "bytes": 1006,
+    "sha256": "d8d2082c8fb71bc1a146e36aa1359a955ff8b447c42503a128acb449b8014060"
+  },
+  "receipts/cross-mac-short-04-revision2.json": {
+    "bytes": 792,
+    "sha256": "b034493b2e307e23b0ad1f73cada403ddbb147bbb3150d476462edfb4e6695e9"
+  },
+  "receipts/cross-mac-short-04.json": {
+    "bytes": 63,
+    "sha256": "183ded51562a974782cb2ac5aed87227d018327cbc5f2da072f091106c2a0279"
+  },
+  "receipts/density-01-provenance.json": {
+    "bytes": 1079,
+    "sha256": "f56e0721ba2cb65d2e1a3799e38f9b9e3ed600a5418aae638e54d0011058d490"
+  },
+  "receipts/density-build-01.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "receipts/drivers-04.log": {
+    "bytes": 8018,
+    "sha256": "fd2065abe4e163c4a35e032fc94133df267a6c463c006c537601cd73b168ba49"
+  },
+  "receipts/exact-long-source-01-provenance.json": {
+    "bytes": 1087,
+    "sha256": "574ad27bb9f0350aca7b39dab533ae9894db431cde1a8f9382c80fc9d4382efc"
+  },
+  "receipts/exact-long-source-build-01.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "receipts/exchange-build-02.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "receipts/exchange-build.log": {
+    "bytes": 6742,
+    "sha256": "5f3fa5c86abcded33d4eecf8c9084530cb44f9a8c63573dcc0b2e9036217fbe7"
+  },
+  "receipts/high-sierra/short/commands.json": {
+    "bytes": 3915,
+    "sha256": "b0c9eb715c294e9be2cdbdbb4ed70460762ae90993cabdaa83c33a4258cbcbc9"
+  },
+  "receipts/high-sierra/short/multichannel.json": {
+    "bytes": 3321061,
+    "sha256": "86f80118a68fee5208660a454c5634d50c7f5d9a52aa5c557c7665deb244e295"
+  },
+  "receipts/high-sierra/short/multichannel.log": {
+    "bytes": 93,
+    "sha256": "9542cc7451da7a75752e3340a43cebab4f47f1d5c0c7ae0b895e2b41bad61b6c"
+  },
+  "receipts/high-sierra/short/summary.json": {
+    "bytes": 4537,
+    "sha256": "00e883ae8b3b80fa03415b967540a740cd53388ef7a74abfc2a84adafe0b9f79"
+  },
+  "receipts/high-sierra-02/short/commands.json": {
+    "bytes": 9640,
+    "sha256": "50f6c6b24a7c92f5e1cdab2f6e5bfd86cf52de8cdbe887763cc9bb6fb0d78584"
+  },
+  "receipts/high-sierra-02/short/preferences.json": {
+    "bytes": 8012,
+    "sha256": "cac737cf73f91c780a5daab4c2bd43fc3d5972ceabc73ed2d4aef289c8cf3411"
+  },
+  "receipts/high-sierra-02/short/preferences.log": {
+    "bytes": 185,
+    "sha256": "9ce92ecb38e3f5ba8d3a7f564bff95a4c687bb6096410cda51c54c2874219020"
+  },
+  "receipts/high-sierra-02/short/summary.json": {
+    "bytes": 10500,
+    "sha256": "75233a3df920fac74b96fbe076e52b6fcf472dfd9f973cf2ffa3814f52c4cf8b"
+  },
+  "receipts/high-sierra-02-short.log": {
+    "bytes": 893,
+    "sha256": "1b4fa7656a2eade18493c8e150512cdaeb837304a7e98875972cd3df7694393a"
+  },
+  "receipts/high-sierra-04/additional/commands.json": {
+    "bytes": 5446,
+    "sha256": "cf1f5d4454772bc79332524f93e24a503b3b67f1cd67dab2bf086b98a8212acd"
+  },
+  "receipts/high-sierra-04/additional/exchange-prepare.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "receipts/high-sierra-04/additional/exchange-source/result.json": {
+    "bytes": 1449,
+    "sha256": "35c9e4c0d3d7dac12d72d0f6cdb496709e3c2160310c7d3609ba6b9e678dc99c"
+  },
+  "receipts/high-sierra-04/additional/peak-policy.json": {
+    "bytes": 129983,
+    "sha256": "65461694be490d028442a558c2c6e25b1e95fdd8122c018100067c44b1420ae9"
+  },
+  "receipts/high-sierra-04/additional/peaks-2-app-mode.json": {
+    "bytes": 15920,
+    "sha256": "5c059605c6ae00c17a22e85782208a4d10a3701f4ad61de389acd3c9f5a3d920"
+  },
+  "receipts/high-sierra-04/additional/peaks-2-app-mode.log": {
+    "bytes": 243,
+    "sha256": "8a2573a312178614f19158c47bb7609bab912aeecf9d83773f2a569472d5a3ef"
+  },
+  "receipts/high-sierra-04/additional/peaks-2-bounded.json": {
+    "bytes": 15908,
+    "sha256": "733ac5f2c1e3c1935a4cfe55cceff24b5eb4a91bf962d83c55b37c9addbd24db"
+  },
+  "receipts/high-sierra-04/additional/peaks-2-bounded.log": {
+    "bytes": 245,
+    "sha256": "4893f0af0b46c15ebdf14cf419578c1b49ee8775cd49eb30ab0a9e4fdd7e2c7b"
+  },
+  "receipts/high-sierra-04/additional/peaks-2-serial.json": {
+    "bytes": 15905,
+    "sha256": "69fb8aa4eff482edda7bdc7f6badc56b6cc651284e6513feb8db933d4c7d5d31"
+  },
+  "receipts/high-sierra-04/additional/peaks-2-serial.log": {
+    "bytes": 245,
+    "sha256": "eaf907d9775032900c6cec282304f52b239856a5555b5bcc7350d42fff66519f"
+  },
+  "receipts/high-sierra-04/additional/peaks-6-app-mode.json": {
+    "bytes": 32040,
+    "sha256": "aa7ea17e2e56c7bf58a5ccf0e5446af3906c1eca6fdb7353cfe947819f1f25be"
+  },
+  "receipts/high-sierra-04/additional/peaks-6-app-mode.log": {
+    "bytes": 245,
+    "sha256": "436146dadd8ee7b790734073e35409092a8966b9d4fcdc4a9ef3b822c2175f61"
+  },
+  "receipts/high-sierra-04/additional/peaks-6-bounded.json": {
+    "bytes": 31919,
+    "sha256": "7f247fbf1e57eebc33946f34dd8977961a6b38518bab098a29eb52b23854e1d4"
+  },
+  "receipts/high-sierra-04/additional/peaks-6-bounded.log": {
+    "bytes": 248,
+    "sha256": "ef015149945355e774641f9a6cfd49d2a3bf485731f4e4782e5c0cdf71b52250"
+  },
+  "receipts/high-sierra-04/additional/peaks-6-serial.json": {
+    "bytes": 32066,
+    "sha256": "9dcc47bdbb27a40fc5767777a3f68379cd921a90d34324ec109bc6b1fd704631"
+  },
+  "receipts/high-sierra-04/additional/peaks-6-serial.log": {
+    "bytes": 246,
+    "sha256": "18e1a75c0dd4a4ac0941d09edcdadfb909f4a72c13ef0be49931fd1e14122085"
+  },
+  "receipts/high-sierra-04/additional/summary.json": {
+    "bytes": 6023,
+    "sha256": "d4ecb3ccf05bf64d7f7d6ffef4f79f3b699b65eb4d02d967409a8a58eb2b41ac"
+  },
+  "receipts/high-sierra-04/additional/video-matrix.json": {
+    "bytes": 60478,
+    "sha256": "fcc2eb74a5b2b2e881d12d64eeefb0f7488f0a16813a687717c71f5767494d74"
+  },
+  "receipts/high-sierra-04/additional/video-matrix.log": {
+    "bytes": 20,
+    "sha256": "c5c8d6396c0c3a4c87f0df56bf78154a1247a33b47547c32ad5b9b315d7129af"
+  },
+  "receipts/high-sierra-04/additional/video-native/reference-after-video.png": {
+    "bytes": 74411,
+    "sha256": "7719a1da4e6ba522fdd6553a7bcbc87e9ae6a8afeb1646b4f79bce79f5b32953"
+  },
+  "receipts/high-sierra-04/additional/video-native/result.json": {
+    "bytes": 26234,
+    "sha256": "0c86b86e05552cee362c358a608cbb871014cf5294ed81c64ba2b4806c4fff43"
+  },
+  "receipts/high-sierra-04/additional/video-native/timeline-after-video.png": {
+    "bytes": 198840,
+    "sha256": "0a4dc8a530304824611bb03406efde7e57643aef3e73907c994eba67ad3afcf5"
+  },
+  "receipts/high-sierra-04/additional/video-native.log": {
+    "bytes": 411,
+    "sha256": "020052eece848e72bbb6f98024577d75749f413f67d0ef1a0352d8397fc4feaf"
+  },
+  "receipts/high-sierra-04/candidate-integrity.json": {
+    "bytes": 642,
+    "sha256": "9479e920d491cedc4b48c2f25f3ac2f8b01bf01a6c488a93743cb8037c3c78c5"
+  },
+  "receipts/high-sierra-04/density.json": {
+    "bytes": 20310,
+    "sha256": "6ec1d758f47cf629bbf25894610bd35bf5f0d9ae59d66474c04f141d59394619"
+  },
+  "receipts/high-sierra-04/exact-long-source.json": {
+    "bytes": 1654,
+    "sha256": "32dfba0d617546aad1f83783574c457bd69494eedd3cc338a30277b246fa7728"
+  },
+  "receipts/high-sierra-04/exchange-received/result.json": {
+    "bytes": 18143,
+    "sha256": "0fd1ed6d4f58031617596fd8c2abb680866379ba13b1d0d078ba5f9efe34f07a"
+  },
+  "receipts/high-sierra-04/long/export/manifest.json": {
+    "bytes": 368,
+    "sha256": "4d5f67add55b4061187ec94f180851f3dfa689137364ee44478df30cf7e2f077"
+  },
+  "receipts/high-sierra-04/long/export/report.json": {
+    "bytes": 346717,
+    "sha256": "7ab4140a489b72b41438e9f8009d96ff66d11d9df5d2495f8026e76705f690c3"
+  },
+  "receipts/high-sierra-04/long/result.json": {
+    "bytes": 8225,
+    "sha256": "92d78fffcbeaeceaee0950df4f473a72d99e5262f2093be7cf47d8b828690f39"
+  },
+  "receipts/high-sierra-04/long-audit.json": {
+    "bytes": 321,
+    "sha256": "e407ae26a61af4d7c8632263508e615e859d0f6ba2a803145a2f25f6c7ab650d"
+  },
+  "receipts/high-sierra-04/long-retained-artifacts.json": {
+    "bytes": 1069,
+    "sha256": "d4477f31678f54b45555c4ad261e4ce881617afc55f2116f009ee74f7e67e210"
+  },
+  "receipts/high-sierra-04/native-review/0bfd39f3840e413aba315a61c9f8aabd.levelscope-target": {
+    "bytes": 847,
+    "sha256": "596ecb5034c6f7aa8b280db0f8ce269523a1a64c6931891fbeaa333c6c621bf2"
+  },
+  "receipts/high-sierra-04/native-review/presets-before.json": {
+    "bytes": 3,
+    "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+  },
+  "receipts/high-sierra-04/native-review/review.json": {
+    "bytes": 1428,
+    "sha256": "6790785d5fe0e6c90e4b9b78e0978d1d9e7f8ab8bd59149502febea9c4a8023c"
+  },
+  "receipts/high-sierra-04/peaks-corrected/peaks-2-bounded-corrected.json": {
+    "bytes": 12573,
+    "sha256": "2f7836756c44d555a121558bafae559c3b8d400ed235f3894e6bad88246fe37b"
+  },
+  "receipts/high-sierra-04/peaks-corrected/peaks-2-bounded-corrected.log": {
+    "bytes": 245,
+    "sha256": "3694de7d955f9b42c0bbd147d1371b3d56edd55f3e73646a9ff123b7ae22f587"
+  },
+  "receipts/high-sierra-04/peaks-corrected/peaks-6-bounded-corrected.json": {
+    "bytes": 16306,
+    "sha256": "cb1a9c05f5e9f4d2c280f688a213d7a372a530d0b5b94cd4726a00d3b073c4b8"
+  },
+  "receipts/high-sierra-04/peaks-corrected/peaks-6-bounded-corrected.log": {
+    "bytes": 244,
+    "sha256": "db826df8d395c45a489399f1408e2de9b6ed8e3537dd00575f3853a3b0eb81ac"
+  },
+  "receipts/high-sierra-04/peaks-corrected/summary.json": {
+    "bytes": 2705,
+    "sha256": "b73006d7c2c0d5c6b3c034dd550301d60ba13f7d78d6b98fdd13bdbb2e3b4919"
+  },
+  "receipts/high-sierra-04/physical/commands.json": {
+    "bytes": 4051,
+    "sha256": "04e2b9e49ec63acb9c386a6bcefe96cbeebe36e1334450ea3b022112ea6be131"
+  },
+  "receipts/high-sierra-04/physical/h264-current.json": {
+    "bytes": 4705,
+    "sha256": "e2b8bd6f1a78e69358c0329632a7fa078d6b50470e16e82b872ef3842a16d24f"
+  },
+  "receipts/high-sierra-04/physical/h264-current.log": {
+    "bytes": 4704,
+    "sha256": "e4bb888ec1c62a92bc76decbf7a5eeeee9736b982602025a0725ff0096d3f3e0"
+  },
+  "receipts/high-sierra-04/physical/h264-source.json": {
+    "bytes": 4655,
+    "sha256": "d9b911e7af9b1950acb8a3eed588c3f598f14cfc05f8e71554ee04c74ea57f19"
+  },
+  "receipts/high-sierra-04/physical/h264-source.log": {
+    "bytes": 4654,
+    "sha256": "e6e46db93afbd8980a4b004a7d688718d47f4546e3a65404d8a13584b2b540a9"
+  },
+  "receipts/high-sierra-04/physical/prores-current.json": {
+    "bytes": 4734,
+    "sha256": "d489a01dfe09691ddd35578133a80ca0dd2e14858e0c60d67a147c625672a051"
+  },
+  "receipts/high-sierra-04/physical/prores-current.log": {
+    "bytes": 4733,
+    "sha256": "8795157f965ca84b92f76096394293189e4f3646cd02e266b0872c869fcf0ba9"
+  },
+  "receipts/high-sierra-04/physical/prores-source.json": {
+    "bytes": 4701,
+    "sha256": "a3b5996565202566cb7085c4830553aa910d356e6f07e5599724c0e14dbfb983"
+  },
+  "receipts/high-sierra-04/physical/prores-source.log": {
+    "bytes": 4700,
+    "sha256": "a77690df21a54dbfb40b3de582283d98defcc8e56d9dec0b42200e01a87ca965"
+  },
+  "receipts/high-sierra-04/physical/summary.json": {
+    "bytes": 4598,
+    "sha256": "7f4c4cb68bcbbaa1dd7db1ece8221f5c5a1467cce7799ce4e5ba66614a807a24"
+  },
+  "receipts/high-sierra-04/short/audit-stereo.log": {
+    "bytes": 362,
+    "sha256": "dcb19e0d0de3b16b17aa95842f7e09f37899a33d5008b116042585aef93e0836"
+  },
+  "receipts/high-sierra-04/short/audit-surround.log": {
+    "bytes": 402,
+    "sha256": "5adb85797f1becd248ea4bc1391abe2569db6b7786c524895469aa25d7300c93"
+  },
+  "receipts/high-sierra-04/short/audition.json": {
+    "bytes": 278107,
+    "sha256": "5026ac6391cbd6fb90dda89c6d3b912085dcf5f19f6ea8b889688ede184dd319"
+  },
+  "receipts/high-sierra-04/short/audition.log": {
+    "bytes": 31,
+    "sha256": "b1ab9cc0022d1ab8f3c0ccff2dd6754d616eb3249a2bf0c224f212986f953b7e"
+  },
+  "receipts/high-sierra-04/short/commands.json": {
+    "bytes": 16867,
+    "sha256": "c2b5de6081d7d851b3c366170af0a53fe65beae9d6c908c5c85910d47b9b923b"
+  },
+  "receipts/high-sierra-04/short/compliance.json": {
+    "bytes": 17828,
+    "sha256": "78e77202de99796a5ae4708494d98530cc6efb0fdb499d52837eba72253a0a03"
+  },
+  "receipts/high-sierra-04/short/compliance.log": {
+    "bytes": 44,
+    "sha256": "387e97462de36fb405471706290ea69618f1678a02bd985cf1139744b5649cc1"
+  },
+  "receipts/high-sierra-04/short/diagnostics.json": {
+    "bytes": 38617,
+    "sha256": "f98ef44036c8a9a82c33b70de92512ada12f641a8f869e98675978fa5ee3216b"
+  },
+  "receipts/high-sierra-04/short/diagnostics.log": {
+    "bytes": 44,
+    "sha256": "8207835fc1507cac1b00277a64938a9acc476b872ed9770b9cd41d75ddf63bc2"
+  },
+  "receipts/high-sierra-04/short/ebu.json": {
+    "bytes": 218114,
+    "sha256": "af8020bb99f2afd83b89fe6deb43bb5f9f48c5772792eda1660fbf377660c996"
+  },
+  "receipts/high-sierra-04/short/ebu.log": {
+    "bytes": 2480,
+    "sha256": "18e65c40d2edcd18e30155f9ca4f7a49b0e066f90ea10aa588ab78922e03d313"
+  },
+  "receipts/high-sierra-04/short/export-files/raw-oracles.json": {
+    "bytes": 9899,
+    "sha256": "78e5050e23cd827cbab75c9fbf748f2d11a972e1d90dc1a3a99ff7effe7f68f3"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-2-192000/manifest.json": {
+    "bytes": 368,
+    "sha256": "bab2c675af04a4c277ca3c66267d3fd47156b56b0b9fb2bd788af348948b81a1"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-2-192000/report.json": {
+    "bytes": 18098,
+    "sha256": "7ff74c3d57d6c259e96575b260b9439c9e3bda84fd89ccea3a69b3708c3284fe"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-2-44100/manifest.json": {
+    "bytes": 368,
+    "sha256": "5a8744fa920ced92511a8244141b7480e8475aa030eb4bcb6df2a8eb04c75a92"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-2-44100/report.json": {
+    "bytes": 18090,
+    "sha256": "9385e4f1e254c94c5a0e58548e0061edf1522d4f53ad962e5a601d6a7278c47b"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-2-48000/manifest.json": {
+    "bytes": 368,
+    "sha256": "86395b3c85fb80ebd2f643c699e565a96291e06dd42a265b87ef0014b94b0474"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-2-48000/report.json": {
+    "bytes": 18070,
+    "sha256": "867c6fe460620c33b64ad863b8a8abbd91df296832d3a9af729bc37c65bd6453"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-2-96000/manifest.json": {
+    "bytes": 368,
+    "sha256": "3ec27c780d988c625f39c3f8522b30a306549f67279a5d28f0abcfffdeaf8ad1"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-2-96000/report.json": {
+    "bytes": 18085,
+    "sha256": "4724f05ff98dfaaddf2a787d51f6e5f0021b22b82ab6bea944ad13735bc60035"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-6-192000/manifest.json": {
+    "bytes": 368,
+    "sha256": "222444dea766719944120909e5f8c6951c338bb22a2fc0e376fa474903887e63"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-6-192000/report.json": {
+    "bytes": 24074,
+    "sha256": "8f2f2c91b8bd8939a170c4f0c14903be4d4ed0a215decb9de5929d190530eb5d"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-6-44100/manifest.json": {
+    "bytes": 368,
+    "sha256": "7d0e1ffdbeb0bbb037cc4bb4104c93c40bb2f4e239bb06b96f8c186fc984da84"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-6-44100/report.json": {
+    "bytes": 24060,
+    "sha256": "26ea4023b75af3e8fc3f9d4df4aaf87ea819173235a689f80090c1a094f0dc89"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-6-48000/manifest.json": {
+    "bytes": 368,
+    "sha256": "f7b0672ee74c813d4f13fcec8793c4132689080b5419bcc2314153ee373c05f3"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-6-48000/report.json": {
+    "bytes": 24077,
+    "sha256": "88e348797c4c890b8addb909e6a12b432341673b466d502760ffaecee1b55d70"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-6-96000/manifest.json": {
+    "bytes": 368,
+    "sha256": "4408b8d42bed228c0987e44eabb126fc4960d1a2e47520caa5b5835e7c7d141f"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-6-96000/report.json": {
+    "bytes": 24068,
+    "sha256": "5324333870817f8f975fdaeaebf75ee0b15f41bfac8b1173c2dca4fa482c0ea2"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-group-2-192000/manifest.json": {
+    "bytes": 368,
+    "sha256": "a8a0c6c8abf8f72d785234022edb1ee9e1da2d675a39d5a5848857621160e66b"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-group-2-192000/report.json": {
+    "bytes": 18551,
+    "sha256": "cd0d8ee3979e8c29be6d5afa8e7a22ad322b1e9b107b99ac13c57cbc3447f938"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-group-2-44100/manifest.json": {
+    "bytes": 368,
+    "sha256": "998b9e59e9190d6e63689dadc3a76ec71c29dcf32695a9bc108dc37b34fb6ed3"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-group-2-44100/report.json": {
+    "bytes": 18546,
+    "sha256": "7dce8a9ca72ae7fd31a9b637cbdf753263e4f52723d55e47b0ab721beb702247"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-group-2-48000/manifest.json": {
+    "bytes": 368,
+    "sha256": "f61ff645e6c5e781661e391f1a07d943771ad4a80e10396f1600f91fc35105e0"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-group-2-48000/report.json": {
+    "bytes": 18527,
+    "sha256": "132f8c3b163c65af211b0d817a33c123468a27a5fbdc5418b9e2973a18963de9"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-group-2-96000/manifest.json": {
+    "bytes": 368,
+    "sha256": "9fa7ef9d63698241b93d2d68b16406ddc51853926c4d213167ca6d25dcbaec23"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-group-2-96000/report.json": {
+    "bytes": 18539,
+    "sha256": "080ac517f50f63c1c5cb088e985b48d297aec51b85323b4c973180a8fe5471e2"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-group-6-192000/manifest.json": {
+    "bytes": 368,
+    "sha256": "3936cfabb30aa661e6b194a5fa97f8c311149b767430113cd9930a4510637594"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-group-6-192000/report.json": {
+    "bytes": 25261,
+    "sha256": "35790b85cdb642512d501939ab85074ed3ace5e8c375371788b90ad4fe08bfa1"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-group-6-44100/manifest.json": {
+    "bytes": 368,
+    "sha256": "65c2827eb3b96d11160c7ff1a4661b1ad5f2de129ea40356511e095d3ebcb99e"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-group-6-44100/report.json": {
+    "bytes": 25241,
+    "sha256": "3435f059e61838a2319d676bfb6ecb27085610efb924e307aece27810d53c870"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-group-6-48000/manifest.json": {
+    "bytes": 368,
+    "sha256": "f6cd4fcc577f01a967540bada5211d2bfb64590e59955c4e11adcd2c677faf68"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-group-6-48000/report.json": {
+    "bytes": 25269,
+    "sha256": "e1036468e469f3c2cfa1f1fb269c0ee01cf5c2bbc86042141e48d6ebddf2b2d5"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-group-6-96000/manifest.json": {
+    "bytes": 368,
+    "sha256": "42874793881a6b23e24a1846f54b6c8b57e2b96837536ed6381d5500427ed85e"
+  },
+  "receipts/high-sierra-04/short/export-files/verified-group-6-96000/report.json": {
+    "bytes": 25253,
+    "sha256": "b2985c0f5e3854082bb46b5ee1a39b70f0d14a64ed5b36f3e0b631cec01007d0"
+  },
+  "receipts/high-sierra-04/short/export.json": {
+    "bytes": 443125,
+    "sha256": "f4e82f72ef451b0988ea5efd85c9e1f8dccf4b3015d5e7480e3ddfd415497125"
+  },
+  "receipts/high-sierra-04/short/export.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "receipts/high-sierra-04/short/global-proposal.json": {
+    "bytes": 28909,
+    "sha256": "552c8eda00bcc384ae2b0f95441846ba37fe5448e2bc91480b912951740efb1f"
+  },
+  "receipts/high-sierra-04/short/global-proposal.log": {
+    "bytes": 44,
+    "sha256": "d72eaf833b17df95a0768b786bdc86381c863b89245ac3d8f553d7deb7f69e1d"
+  },
+  "receipts/high-sierra-04/short/itu.json": {
+    "bytes": 28593,
+    "sha256": "7897c323d9055b3c524eceee4b7baf3e2d283259ee53f13f2c634ab577320a56"
+  },
+  "receipts/high-sierra-04/short/itu.log": {
+    "bytes": 2363,
+    "sha256": "9571a299c82a4aa12593daf8b7ed82d5c1eb5874cfefdd6f4a5a56e0c6f1d16e"
+  },
+  "receipts/high-sierra-04/short/marker-files/marker-tests.json": {
+    "bytes": 42748,
+    "sha256": "f000bae6895397f870eba886c939fd390f43d06bdc40e6cb2cf79a93332a4a91"
+  },
+  "receipts/high-sierra-04/short/marker-files/transaction-1/refreshed-report/manifest.json": {
+    "bytes": 293,
+    "sha256": "d0fb707ddc733db853ad3dc06bd2c4038ce928d4c8cc5f222ed5df6ec343dcaf"
+  },
+  "receipts/high-sierra-04/short/marker-files/transaction-1/refreshed-report/report.json": {
+    "bytes": 25039,
+    "sha256": "e2dc40eb4dd6958e8d2d0a01ebac49ba20c9ee21fd892a2dc30b3e99db9774af"
+  },
+  "receipts/high-sierra-04/short/marker-files/transaction-2/refreshed-report/manifest.json": {
+    "bytes": 293,
+    "sha256": "e5b69b6d567285eca0fb4bb4c03b4b5c593c105794f121540cd6b3e090ebe81c"
+  },
+  "receipts/high-sierra-04/short/marker-files/transaction-2/refreshed-report/report.json": {
+    "bytes": 26525,
+    "sha256": "b59de70c08f0721ae07dc09b13b240235c3f57a7294b2bdf0e71102e59a2cc5f"
+  },
+  "receipts/high-sierra-04/short/marker-files/transaction-6/refreshed-report/manifest.json": {
+    "bytes": 293,
+    "sha256": "81c61cc2626a83ee3c19cb56370ec1bc947497825489ca7fe495350fffa2808d"
+  },
+  "receipts/high-sierra-04/short/marker-files/transaction-6/refreshed-report/report.json": {
+    "bytes": 32512,
+    "sha256": "a7f56a2b2d549b1bb039c2bc81fbe006f6eea4285d639970802f88948d5fbcb3"
+  },
+  "receipts/high-sierra-04/short/markers.log": {
+    "bytes": 28,
+    "sha256": "4b7466d0db99e7147ecb0da9b49813d8997a4d2f26d3d441517cb6671375aa39"
+  },
+  "receipts/high-sierra-04/short/measurement.json": {
+    "bytes": 264,
+    "sha256": "3fe8a6bc6d36493aa799330830a52e0930a05c6bae2c6d3f4b9dbb64c8db985c"
+  },
+  "receipts/high-sierra-04/short/measurement.log": {
+    "bytes": 30,
+    "sha256": "bedae39b3467c346f9e98b10fd11a32621214bc843750e73cb93eb6c9015082c"
+  },
+  "receipts/high-sierra-04/short/mono-files/48000-3/export/manifest.json": {
+    "bytes": 368,
+    "sha256": "63d09fceab1cadf81d75e236b66643fd0c8dccf65bf204f42161648d8cab1709"
+  },
+  "receipts/high-sierra-04/short/mono-files/48000-3/export/report.json": {
+    "bytes": 29417,
+    "sha256": "96e898472a021ddb1356a10eb7eed08adc1ccbe7d28a65a9f98a12fe0d721ce6"
+  },
+  "receipts/high-sierra-04/short/mono-files/raw-pcm/raw-oracles.json": {
+    "bytes": 6228,
+    "sha256": "b74d5c1fef046ae9c75601d0907cfbde2803eb6a5da5bdd95a6b2a2fcb8528c6"
+  },
+  "receipts/high-sierra-04/short/mono.json": {
+    "bytes": 35134,
+    "sha256": "c7bf1dab61a2616b7b7079d6db4e1059ad59aa5d2c932b2da6d886a46611230b"
+  },
+  "receipts/high-sierra-04/short/mono.log": {
+    "bytes": 7137,
+    "sha256": "d8e9ff94cc793a0012543cc83db6d036f7e773d832a04baa78a2e44c4ca1c1a0"
+  },
+  "receipts/high-sierra-04/short/multichannel.json": {
+    "bytes": 3625797,
+    "sha256": "7a42a2e1886782c1737baba90d2dc7e5942ad0f35af8ab7d7a807d260d92d76f"
+  },
+  "receipts/high-sierra-04/short/multichannel.log": {
+    "bytes": 36,
+    "sha256": "868a8d79d4353a26f6eb71e95a0d2a6f0e51c7a45711e39da670d53b0bf7e1e5"
+  },
+  "receipts/high-sierra-04/short/native-stereo/export/manifest.json": {
+    "bytes": 368,
+    "sha256": "c46cc49ecf8876eca52f1a6e24a768e9c752b996c3801f891231cb0621bbab10"
+  },
+  "receipts/high-sierra-04/short/native-stereo/export/report.json": {
+    "bytes": 24904,
+    "sha256": "0b1609c397a306e630582141e583a87c8c2e89f39fba709ee63cb41c4e5b8670"
+  },
+  "receipts/high-sierra-04/short/native-stereo/first-waveform.png": {
+    "bytes": 66903,
+    "sha256": "a937012090bb9c0150a186c548999977066894af0c7cb677dc8616a176c3aad7"
+  },
+  "receipts/high-sierra-04/short/native-stereo/progressive-waveform.png": {
+    "bytes": 67903,
+    "sha256": "a67ffbbf6b62643c0162b8b1b4bd95d186d8e8319ede2091c415dbc38c489aed"
+  },
+  "receipts/high-sierra-04/short/native-stereo/proposal-ready.png": {
+    "bytes": 196727,
+    "sha256": "ef75e37440108ffa46058ef8f0e05b3c2d9e655090e9b0bc05fc84088c807c59"
+  },
+  "receipts/high-sierra-04/short/native-stereo/reopened-exported.png": {
+    "bytes": 187461,
+    "sha256": "13202b573edcb05f13820c563e7d40e06583e85b8dede0dc8369f489fbc43f77"
+  },
+  "receipts/high-sierra-04/short/native-stereo/result.json": {
+    "bytes": 7551,
+    "sha256": "65ea17e963d8ca8532833a7cc63a2441f655cae0188e127e3402cd9eacbb883d"
+  },
+  "receipts/high-sierra-04/short/native-stereo/role-preferences/stereo.json": {
+    "bytes": 15,
+    "sha256": "2061bf369f709500a69e38595c4e2d8977ab2e81121b33ebe22e9be02ecd0e2a"
+  },
+  "receipts/high-sierra-04/short/native-stereo.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "receipts/high-sierra-04/short/native-surround/export/manifest.json": {
+    "bytes": 368,
+    "sha256": "f2b83158061faa65ee7cb64a98dafd8248b780cef719409be8b3d9ed0bdff94c"
+  },
+  "receipts/high-sierra-04/short/native-surround/export/report.json": {
+    "bytes": 34495,
+    "sha256": "9e46596900470a0476e0cff709f33cc92421689522b4be9d79c1703ae1afb191"
+  },
+  "receipts/high-sierra-04/short/native-surround/first-waveform.png": {
+    "bytes": 70836,
+    "sha256": "0964a7777317aacd04df5c5c9ca6ab8354d8505aa08c464ed2ad404e1a857b4e"
+  },
+  "receipts/high-sierra-04/short/native-surround/progressive-waveform.png": {
+    "bytes": 71843,
+    "sha256": "8bca6623d933792ee1f19a980c0b208014a1fc24d93bfd67fcda668598c44557"
+  },
+  "receipts/high-sierra-04/short/native-surround/proposal-ready.png": {
+    "bytes": 203867,
+    "sha256": "9adde5d0db03bfd0fefe9320c1264e8d7008b8bfc1ad1518cd0830c16ab32a38"
+  },
+  "receipts/high-sierra-04/short/native-surround/reopened-exported.png": {
+    "bytes": 187465,
+    "sha256": "88fe2096bc9d0c0afd63fc741edcdd057e337bac69352f5e30d7f9d5f4d846c2"
+  },
+  "receipts/high-sierra-04/short/native-surround/result.json": {
+    "bytes": 9271,
+    "sha256": "48c5a1c1933398c9428460c3754656c937f4875faffa6a866692cf567e2d018d"
+  },
+  "receipts/high-sierra-04/short/native-surround/role-preferences/5.1.json": {
+    "bytes": 39,
+    "sha256": "542207443af6db745257a05056b67fbc9c00c39ae3a9887c01aa012b6ca3d775"
+  },
+  "receipts/high-sierra-04/short/native-surround.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "receipts/high-sierra-04/short/peak-parity.log": {
+    "bytes": 119,
+    "sha256": "96f20e1df501ca272da261feacea9cd745b5910823b91f6ee45fd59938a7006c"
+  },
+  "receipts/high-sierra-04/short/preferences-files/large-measured-proposal/large-proposal-report.json": {
+    "bytes": 176451,
+    "sha256": "6d5778317038e76c2048bfd6b4d40e204586370afde2761df286eb2e31e3413f"
+  },
+  "receipts/high-sierra-04/short/preferences-files/large-measured-proposal/large-proposal-result.txt": {
+    "bytes": 43604,
+    "sha256": "3ffe9c24d2b740b225f09df1a79e69fb70a07cb33f215ad7c5a50c6605907d23"
+  },
+  "receipts/high-sierra-04/short/preferences.json": {
+    "bytes": 20271,
+    "sha256": "3b47432e6a0048f74a2c4cc1cdaed64b21abe30a59f0747ed83e59f7a6ae86e1"
+  },
+  "receipts/high-sierra-04/short/preferences.log": {
+    "bytes": 181,
+    "sha256": "c8df7f4c53b44a1cf17c3cf2898b18a03ca9579529ec4a40520af69007cdbc33"
+  },
+  "receipts/high-sierra-04/short/proposal-workflow-files/duration-rejection.png": {
+    "bytes": 46788,
+    "sha256": "e773f9125560a42faa4b82f024dc328caca51174295b36cc6c4c73b9015a0f7b"
+  },
+  "receipts/high-sierra-04/short/proposal-workflow-files/measured-candidate-rejection.png": {
+    "bytes": 36834,
+    "sha256": "344a5fbd9d42cf352afe115b8a5e22a977594846d9c5844246de763a054100ff"
+  },
+  "receipts/high-sierra-04/short/proposal-workflow-files/proposed-gain-lane.png": {
+    "bytes": 59734,
+    "sha256": "6c93a0e81bbd8947a81de5583e997082b1dea86f609808a754ea903ba7c7dbcb"
+  },
+  "receipts/high-sierra-04/short/proposal-workflow-files/ready-proposal.png": {
+    "bytes": 22118,
+    "sha256": "57880f95121d237d922765ea381df3b89558f3a3ec1cb840b5fcb8829feffa2c"
+  },
+  "receipts/high-sierra-04/short/proposal-workflow-files/unsupported-lra.png": {
+    "bytes": 37131,
+    "sha256": "5bc5472e58dafa7886f5d0d27faca863760e80c3051283e71ec011acaf398051"
+  },
+  "receipts/high-sierra-04/short/proposal-workflow.json": {
+    "bytes": 31289,
+    "sha256": "d2d103891683e75f9e197f5f1df3111dc47bc1f81f83378cf86ffaebc979e902"
+  },
+  "receipts/high-sierra-04/short/proposal-workflow.log": {
+    "bytes": 601,
+    "sha256": "2b63eed64b32c343cf7b13299aaf67ff5dd4ff201c2b9672a4f08454d6b4631a"
+  },
+  "receipts/high-sierra-04/short/requirements-files/export-1/accepted/manifest.json": {
+    "bytes": 368,
+    "sha256": "d42c8ac9b992c250de333ba55a715cedb7cc3f28ec079fa5084a1a7a36d19ee4"
+  },
+  "receipts/high-sierra-04/short/requirements-files/export-1/accepted/report.json": {
+    "bytes": 18127,
+    "sha256": "bccada34a171a8d73bb40f3b0e1a96477f497d20ca6a9ae64201a5d1e080ab7f"
+  },
+  "receipts/high-sierra-04/short/requirements-files/export-6/accepted/manifest.json": {
+    "bytes": 368,
+    "sha256": "d0913895ef917efe0b7b34cdf2d65cecdb3448b0b769af96d7cb2b9656b18971"
+  },
+  "receipts/high-sierra-04/short/requirements-files/export-6/accepted/report.json": {
+    "bytes": 25667,
+    "sha256": "a1c89331abd0facf61a40422275e75c72a0f50a42cb94b6c548fa16d0968030a"
+  },
+  "receipts/high-sierra-04/short/requirements-files/presets/portable.levelscope-target": {
+    "bytes": 726,
+    "sha256": "b1e4fb04b6e9f8980ac33faf8c377a7a26eca2d9e090cf56595e813d29120e86"
+  },
+  "receipts/high-sierra-04/short/requirements-files/stereo-export/accepted/manifest.json": {
+    "bytes": 368,
+    "sha256": "1cfb8678e743768cced1ebe23118f24bddd7940156393ab1f38311eb785d5361"
+  },
+  "receipts/high-sierra-04/short/requirements-files/stereo-export/accepted/report.json": {
+    "bytes": 19762,
+    "sha256": "62f5c0478ba249327773528ea258de79eff2feb1a6618df16ebe63532b23946c"
+  },
+  "receipts/high-sierra-04/short/requirements.json": {
+    "bytes": 47724,
+    "sha256": "205935c8ab4110e18be467f605eb0716da2bd8784093c37018aa1052fc3c19a1"
+  },
+  "receipts/high-sierra-04/short/requirements.log": {
+    "bytes": 20,
+    "sha256": "ace417b69d1c477cd9bd552df3497264c2008bb32ed1c31ed35f747a1303ee09"
+  },
+  "receipts/high-sierra-04/short/section-processing-files/smoke/export/manifest.json": {
+    "bytes": 368,
+    "sha256": "8faedfa2324e218b98e2edcc52cd6f725a3cbfb58205a6bdbd027064696e0516"
+  },
+  "receipts/high-sierra-04/short/section-processing-files/smoke/export/report.json": {
+    "bytes": 35175,
+    "sha256": "bac6cfa7d175ce98125254f92c2a612a92123ff9b4b732c5b194951fa1e1d3f1"
+  },
+  "receipts/high-sierra-04/short/section-processing.json": {
+    "bytes": 20603,
+    "sha256": "9fe393058d8dcc6e1e378e91d548baec4cf3d5be2a97c8a999c68a00fb11c870"
+  },
+  "receipts/high-sierra-04/short/section-processing.log": {
+    "bytes": 20,
+    "sha256": "cc4b4b8c46c25a31b9a1048e3af3eea36c9c3240a092eb7412f1b5b45a4e5cec"
+  },
+  "receipts/high-sierra-04/short/section-proposal-files/48000-2-0/audition-capture.f32": {
+    "bytes": 98304,
+    "sha256": "80685b71581ce59fe45c0976420550e0422c0d5ca6ed75123a454af32c8d8b22"
+  },
+  "receipts/high-sierra-04/short/section-proposal-files/48000-2-0/export/manifest.json": {
+    "bytes": 368,
+    "sha256": "47d81d92abdddf0d7a7dfd6834980312a21357c6cc03e50848dfbeefad31b2da"
+  },
+  "receipts/high-sierra-04/short/section-proposal-files/48000-2-0/export/report.json": {
+    "bytes": 30909,
+    "sha256": "6e4385a022a7d9ab2599725c6299bba9ae70c99a990b2732456a92cccc25360a"
+  },
+  "receipts/high-sierra-04/short/section-proposal-files/48000-2-0/measurement-only.json": {
+    "bytes": 23097,
+    "sha256": "9631c9371cc32987f644aa0878ef0fac122c7c6741a58e91e5505f0e8ad3a200"
+  },
+  "receipts/high-sierra-04/short/section-proposal-files/48000-6-0/audition-capture.f32": {
+    "bytes": 294912,
+    "sha256": "d86fbadba6c2ec9a0bf382ed56bdaa7ac450a3584960e8385e70f8dff98d895e"
+  },
+  "receipts/high-sierra-04/short/section-proposal-files/48000-6-0/export/manifest.json": {
+    "bytes": 368,
+    "sha256": "236a4ed454794b51666f5059feba3366616399de00589ced011c7fde88df4d2d"
+  },
+  "receipts/high-sierra-04/short/section-proposal-files/48000-6-0/export/report.json": {
+    "bytes": 36839,
+    "sha256": "257e40d05aaf49fd434fc616e221eec95819f72a0b15f10b4e0461476dbfb9e0"
+  },
+  "receipts/high-sierra-04/short/section-proposal-files/48000-6-0/measurement-only.json": {
+    "bytes": 25795,
+    "sha256": "a8524e6dd20c38249601bf52b4d5e95918871af6f65bd7c2e556fc66f936b809"
+  },
+  "receipts/high-sierra-04/short/section-proposal.json": {
+    "bytes": 30079,
+    "sha256": "b5a709077b8e598414e8cc60d3bb5838e68c6b7136f54b70778ab9a1292bc586"
+  },
+  "receipts/high-sierra-04/short/section-proposal.log": {
+    "bytes": 14253,
+    "sha256": "7c1e0f8559c5eebc125b48614fddc02ff80fd8095bf638b460064176e5827ff9"
+  },
+  "receipts/high-sierra-04/short/sections.json": {
+    "bytes": 306106,
+    "sha256": "a217b7cbf88e9524a3c1f64dfb1db122ae487eae7a1ff480cb3aacfb94556c00"
+  },
+  "receipts/high-sierra-04/short/sections.log": {
+    "bytes": 45,
+    "sha256": "dbc804980e120a9185be1eb637e3629b03e47f5282f89d4fd350299b15ed8d25"
+  },
+  "receipts/high-sierra-04/short/session-playback.json": {
+    "bytes": 190033,
+    "sha256": "d653605055df89e357e3bf4a33500bf582385599131d0b38e93a18d78e4a3f2c"
+  },
+  "receipts/high-sierra-04/short/session-playback.log": {
+    "bytes": 31,
+    "sha256": "f89e4c67221224b185d9f9b1c2be1080059b2a4ca9a6ecadc1f34e683088e2f7"
+  },
+  "receipts/high-sierra-04/short/sessions.json": {
+    "bytes": 272,
+    "sha256": "a72b504c33d11793edb45c680a511876419e9bed8eefd03852013b750894b2e4"
+  },
+  "receipts/high-sierra-04/short/sessions.log": {
+    "bytes": 273,
+    "sha256": "fd6ae420b2f817fa2b025b3d116bd36106fc81a3bb03380b39093679a5ad65cb"
+  },
+  "receipts/high-sierra-04/short/summary.json": {
+    "bytes": 18138,
+    "sha256": "9af8097fe61a7efbb5477bc56d396dc28d27f20eaed88e560cdc8cb8fa568fe5"
+  },
+  "receipts/high-sierra-04/short/timeline-files/Target presets/51e91a871a3a4fc5bb28bc136a3151ee.levelscope-target": {
+    "bytes": 826,
+    "sha256": "ce5e8febdbd50bb9426065a80886d1492ba3fdc1970d6a973a14a1acad3ce02e"
+  },
+  "receipts/high-sierra-04/short/timeline-files/compact.png": {
+    "bytes": 24280,
+    "sha256": "49428457313e117f37446a7d4c82fb2ef7f835506d2a96448d2c5a36fad18c8d"
+  },
+  "receipts/high-sierra-04/short/timeline-files/drawn-section.png": {
+    "bytes": 59421,
+    "sha256": "148469a6ae48f44969cc6320740c3637cc064ed66a17566e267228c8cde794a6"
+  },
+  "receipts/high-sierra-04/short/timeline-files/gain-applied.png": {
+    "bytes": 83844,
+    "sha256": "aa116df1fdc9b121909a4426586ae241870485eba7fadf7585a8a8a7578953e9"
+  },
+  "receipts/high-sierra-04/short/timeline-files/gain-draft.png": {
+    "bytes": 84081,
+    "sha256": "e857565751a079f6b3ac732c7817f1d33b4bb3891a6b5a9dfb5cbbfe2720b856"
+  },
+  "receipts/high-sierra-04/short/timeline-files/gain-short-transition.png": {
+    "bytes": 80159,
+    "sha256": "1da4d79056235e717cdb63041941423e68c85d65520867c6466f45d579b409f1"
+  },
+  "receipts/high-sierra-04/short/timeline-files/navigation.png": {
+    "bytes": 59111,
+    "sha256": "8cbffef8f7162c30f2d91bd786ea559f837fc94984b139ecd452caec77298803"
+  },
+  "receipts/high-sierra-04/short/timeline-files/partial.png": {
+    "bytes": 58914,
+    "sha256": "65b50fa96f54da65b2ebd055dbef9817f3cf76d3a48efde2e0d2d099da3c3e59"
+  },
+  "receipts/high-sierra-04/short/timeline-files/role-conflict.png": {
+    "bytes": 60006,
+    "sha256": "530cc7785ff542ac33c81c10f17e728a257ea52627b435a9d51e2d988cc5ffe1"
+  },
+  "receipts/high-sierra-04/short/timeline-files/roles/5.1.json": {
+    "bytes": 39,
+    "sha256": "0a91224a3d83be00f554fbc0d52366d73ed0848970d93bbe902921317c754064"
+  },
+  "receipts/high-sierra-04/short/timeline-files/roles/stereo.json": {
+    "bytes": 15,
+    "sha256": "2061bf369f709500a69e38595c4e2d8977ab2e81121b33ebe22e9be02ecd0e2a"
+  },
+  "receipts/high-sierra-04/short/timeline-files/separate-role-review.png": {
+    "bytes": 47235,
+    "sha256": "f0493a0b520a3c93dac6830b33c3472d7902a58a98247fc34fb576dec7a53fc3"
+  },
+  "receipts/high-sierra-04/short/timeline.json": {
+    "bytes": 48864,
+    "sha256": "be4e7ec966e1efa35f0711aabe465ab056d3e0f8f2269ec5c4da57194224eb4b"
+  },
+  "receipts/high-sierra-04/short/timeline.log": {
+    "bytes": 40,
+    "sha256": "7d8bb1e997699cdcdbafa27842d8f2aac2c872e6362526a080c153b405b7289f"
+  },
+  "receipts/high-sierra-04/short/video-core.log": {
+    "bytes": 67,
+    "sha256": "dea3f854057fa0706f9ed7a9068864ba8ce01b6885182f2fccc4392795a65bb7"
+  },
+  "receipts/high-sierra-04/short/waveform-core.log": {
+    "bytes": 33,
+    "sha256": "817c7b44d431a16f3cb28b4e144c1a53be863e46594b53c8df61da5defa631a8"
+  },
+  "receipts/high-sierra-04/short/waveform-service-files/complete.png": {
+    "bytes": 86590,
+    "sha256": "b9fce5a561a601062adad36de509f92dd6e30cbc72345f055576094bda406707"
+  },
+  "receipts/high-sierra-04/short/waveform-service-files/partial.png": {
+    "bytes": 44230,
+    "sha256": "586ccd41b1acac529b28ffe8e392575dee9e14dd32fda9316199194311b48c70"
+  },
+  "receipts/high-sierra-04/short/waveform-service.json": {
+    "bytes": 113312,
+    "sha256": "624b29cc03e0a1aae5e0a768f3e8fd76ca60054568ba6312e974dbbd7cde30b8"
+  },
+  "receipts/high-sierra-04/short/waveform-service.log": {
+    "bytes": 30,
+    "sha256": "e8ad18863893d38438374ba61318a56367735f88f75b4bf7a66c674438b9a0bc"
+  },
+  "receipts/high-sierra-04-additional.log": {
+    "bytes": 729,
+    "sha256": "6add00fc31ee1d05716c6e16f35841d487c01a2110b8550e9d2fee891e5d1146"
+  },
+  "receipts/high-sierra-04-density.log": {
+    "bytes": 20311,
+    "sha256": "53fad69ef2b88b5b37a1bba7f44c42366b7dbbd4b1473ce233e1a0d8c2eea041"
+  },
+  "receipts/high-sierra-04-exact-long-source.log": {
+    "bytes": 1655,
+    "sha256": "11f2305ae3c5c72487294c9a20936e77ed6ce7a2fe847cb96bcb61a431665d56"
+  },
+  "receipts/high-sierra-04-exchange.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "receipts/high-sierra-04-long-audit.log": {
+    "bytes": 321,
+    "sha256": "e407ae26a61af4d7c8632263508e615e859d0f6ba2a803145a2f25f6c7ab650d"
+  },
+  "receipts/high-sierra-04-long.log": {
+    "bytes": 7750,
+    "sha256": "22196446bc3c910b1c20ce049ea7dca212e92b8c73f062b34fc3b28989ec5365"
+  },
+  "receipts/high-sierra-04-peaks-corrected.log": {
+    "bytes": 2843,
+    "sha256": "3c939ea5ca852f0c362712a3993feb6ae29122ab6a4baeb2b78b53edc4b7115b"
+  },
+  "receipts/high-sierra-04-physical.log": {
+    "bytes": 4598,
+    "sha256": "7f4c4cb68bcbbaa1dd7db1ece8221f5c5a1467cce7799ce4e5ba66614a807a24"
+  },
+  "receipts/high-sierra-04-short.log": {
+    "bytes": 1503,
+    "sha256": "f2f974d34159c8773910358f8d23cc8427bcd1a036420d7720bb61e0a8e36416"
+  },
+  "receipts/high-sierra-audio-after.plist": {
+    "bytes": 6724,
+    "sha256": "22f8416dcda4b11ff16041515eecfcb08be632cacdd585e7623a39660ea052a1"
+  },
+  "receipts/high-sierra-audio-before.plist": {
+    "bytes": 6724,
+    "sha256": "4c947ae8a2c3aee628bb5b2f82e792fba1ae25b7a4ee65ee9cdaa264dd5ed33e"
+  },
+  "receipts/high-sierra-short.log": {
+    "bytes": 650,
+    "sha256": "252bd312622f166e713ea2d3ee57c3b67d3678d93f2e9b8c1b943c627a84f0e5"
+  },
+  "receipts/long-build-02.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "receipts/long-build.log": {
+    "bytes": 4250,
+    "sha256": "baf93be8e42a87ac98c85dd88c7e077c5cd5140f79db6e98db44dd29c5f9785b"
+  },
+  "receipts/marker-rebuild.log": {
+    "bytes": 360,
+    "sha256": "cbf265c2b8ad48dbd78ac714888119496624d4db8059334215e7ff6120f56d1e"
+  },
+  "receipts/multichannel-rebuild.log": {
+    "bytes": 390,
+    "sha256": "7de5543e61fad66e48c4af2ba12e1b587df6b657d33999ac8715c20c99a5efa6"
+  },
+  "receipts/native-driver-build-03.log": {
+    "bytes": 3810,
+    "sha256": "09a91d3f89e651b2ec77484f1117298c98dafd46d914bd517d7070334c9e6ad6"
+  },
+  "receipts/native-driver-build.log": {
+    "bytes": 3810,
+    "sha256": "09a91d3f89e651b2ec77484f1117298c98dafd46d914bd517d7070334c9e6ad6"
+  },
+  "receipts/package-01.log": {
+    "bytes": 2422,
+    "sha256": "98950e59a2b35fb9b4f7b748e230357ae325ec99797bb32b66d24121c7280050"
+  },
+  "receipts/package-02.log": {
+    "bytes": 2422,
+    "sha256": "d04f85d5d4478b5a8899cfc286810ccf5f396f8e08e79a5f11bdd43706af0ccd"
+  },
+  "receipts/package-03.log": {
+    "bytes": 2422,
+    "sha256": "48ed533e05bb425c997cbe6fba61d0e486e215e2e84b3eab0372b017ae6d4f03"
+  },
+  "receipts/package-04.log": {
+    "bytes": 2422,
+    "sha256": "8748b6103c7d45cdebb3982df6ca0581fb33b595afeb25c154ce38b999d23b9c"
+  },
+  "receipts/peak-probe-build.log": {
+    "bytes": 126,
+    "sha256": "a8bb298afa9b5451432d2a380f21d3d5aff70186111a57c4aabf8540a60089cc"
+  },
+  "receipts/peaks-revision2-build.log": {
+    "bytes": 136,
+    "sha256": "0a8f16d64a8c9298ac76858a0ec959e02f03648af44c3b9c9e20b921a844cbd1"
+  },
+  "receipts/peaks-revision2-provenance.json": {
+    "bytes": 2856,
+    "sha256": "245b2a849d368c7c6b4efbed0020e014e1529b15998f464000dd22798014c957"
+  },
+  "receipts/pilot-exchange-01/result.json": {
+    "bytes": 293,
+    "sha256": "f13eb17d98f6558286aeffa9c307815a4ddfe8da6c7263d24eaa414d3d4b7a39"
+  },
+  "receipts/pilot-exchange-01.log": {
+    "bytes": 29,
+    "sha256": "7129db4462fcf08ebe31b06d13d50b582e4f90103757c8841e66a0b75fa361d5"
+  },
+  "receipts/pilot-exchange-02/result.json": {
+    "bytes": 1449,
+    "sha256": "51c33ac8c9ef1058632a65acb4a5145b6bbe8c8545f8da2fb2de90d7c130b409"
+  },
+  "receipts/pilot-exchange-02.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "receipts/pilot-long-01/export/manifest.json": {
+    "bytes": 368,
+    "sha256": "5b496aaa91533c751751755761468efd74613188f2c84489ad5feff272beb2ad"
+  },
+  "receipts/pilot-long-01/export/report.json": {
+    "bytes": 319972,
+    "sha256": "1efe7b970429f7fdcd709f4ac4c928c77b1715a85fc097b0d7a3c1fbba656517"
+  },
+  "receipts/pilot-long-01/result.json": {
+    "bytes": 8211,
+    "sha256": "033fcd763103346a0f6c614c92397f29d8eca14182205a628e872b0c6aaa98db"
+  },
+  "receipts/pilot-long-01-audit.json": {
+    "bytes": 319,
+    "sha256": "5b81753321f35488bf91c9d60988086aab896d7cd46e2054cf3d2af87e4c00ec"
+  },
+  "receipts/pilot-long-01.log": {
+    "bytes": 8291,
+    "sha256": "d5021c04254623fe70aa666e996211228da414dfd85d26c2d5cabf9aed14f350"
+  },
+  "receipts/pilot-markers-03.log": {
+    "bytes": 28,
+    "sha256": "4b7466d0db99e7147ecb0da9b49813d8997a4d2f26d3d441517cb6671375aa39"
+  },
+  "receipts/pilot-multichannel-02.json": {
+    "bytes": 3625797,
+    "sha256": "6cc4e36338c5e77548b561575684f8952cb4a455f7f0da6bb7ec8e888d81646f"
+  },
+  "receipts/pilot-multichannel-02.log": {
+    "bytes": 36,
+    "sha256": "868a8d79d4353a26f6eb71e95a0d2a6f0e51c7a45711e39da670d53b0bf7e1e5"
+  },
+  "receipts/pilot-video-01/result.json": {
+    "bytes": 23945,
+    "sha256": "d539c287bd93ac23f33ec1a1a02dba94a827c6df04c43f55164e34d7d7c08ff7"
+  },
+  "receipts/pilot-video-01.log": {
+    "bytes": 61,
+    "sha256": "b80adc6a8e789d1e98ded499ca7722508449a87d8ae7a200e3d0958d27b196c4"
+  },
+  "receipts/pilot-video-02/result.json": {
+    "bytes": 25973,
+    "sha256": "1e0de222ab5a405ae567ad61e31cc8afe0e757d4dd7dea2505ab51c0422985f4"
+  },
+  "receipts/pilot-video-02.log": {
+    "bytes": 418,
+    "sha256": "cd6146358d3094580aaf34426985f12efc5cd005debe714dabeb4279f331ecf0"
+  },
+  "receipts/preservation-check.json": {
+    "bytes": 3093,
+    "sha256": "91b984479d2e466b0cca9f286a93345efee6a4cfa670018bfcbbe1c055c84920"
+  },
+  "receipts/qualification-summary.json": {
+    "bytes": 9252,
+    "sha256": "a14127fe9a5dbcf04de7608964968cb312f569c053cb728407267e0f6e4310c2"
+  },
+  "receipts/sequoia/short/commands.json": {
+    "bytes": 4281,
+    "sha256": "74f3c95dd49a3f97304255e50b6841abe7dcc3bddf953ba92131e1eeb00ab005"
+  },
+  "receipts/sequoia/short/multichannel.json": {
+    "bytes": 3321060,
+    "sha256": "3fdb60bf852a2fcb8845f6722a3930891764a3a06591ba29821933aeb5aa51a5"
+  },
+  "receipts/sequoia/short/multichannel.log": {
+    "bytes": 93,
+    "sha256": "9542cc7451da7a75752e3340a43cebab4f47f1d5c0c7ae0b895e2b41bad61b6c"
+  },
+  "receipts/sequoia/short/summary.json": {
+    "bytes": 4901,
+    "sha256": "28d76b06a728e79b7b3ca054c81a2aeee9a72a47538a49ab697bb97cddce452b"
+  },
+  "receipts/sequoia-02/short/commands.json": {
+    "bytes": 15047,
+    "sha256": "a96a59471f90c6d6da8f756af1cd7f68c29c979b69f067d9b9ccdfc7130a1b21"
+  },
+  "receipts/sequoia-02/short/markers.log": {
+    "bytes": 78,
+    "sha256": "36d3cd5574f0210a1ed9baed7c3a7002e288bca9e293dca643a452799fc71731"
+  },
+  "receipts/sequoia-02/short/summary.json": {
+    "bytes": 16107,
+    "sha256": "a7ed71d1be9e89be66ed2a88d6a34d918d0d73c4519148703c5bc5993d660bfa"
+  },
+  "receipts/sequoia-02-short.log": {
+    "bytes": 1127,
+    "sha256": "6dd17bfc42705a06f9793ef4c608eb9c6e46fe18a4e8088f7c8320d69faae981"
+  },
+  "receipts/sequoia-04/additional/commands.json": {
+    "bytes": 6188,
+    "sha256": "9d7257b05297cc80875b2e64409d82b6295a4582d188da2fabbcaaaa62516ee4"
+  },
+  "receipts/sequoia-04/additional/exchange-prepare.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "receipts/sequoia-04/additional/exchange-source/result.json": {
+    "bytes": 1449,
+    "sha256": "35c9e4c0d3d7dac12d72d0f6cdb496709e3c2160310c7d3609ba6b9e678dc99c"
+  },
+  "receipts/sequoia-04/additional/peak-policy.json": {
+    "bytes": 54089,
+    "sha256": "1718769e285c454efcd1ee2a59c7f0e7030ca106ff22e8ca17f4022956b5fbc1"
+  },
+  "receipts/sequoia-04/additional/peaks-2-app-mode.json": {
+    "bytes": 10377,
+    "sha256": "8e1449527fb4ea3cf2715fc427600c50334a8dc90fd325d3a308b2813e991a4d"
+  },
+  "receipts/sequoia-04/additional/peaks-2-app-mode.log": {
+    "bytes": 241,
+    "sha256": "aa0b2659ad6197dba4e8310abac19e7bce676558b7e2442d2ecd342f419a767d"
+  },
+  "receipts/sequoia-04/additional/peaks-2-bounded.json": {
+    "bytes": 10449,
+    "sha256": "116282515ab96e764287629a5460adc16201e7d9b3f07861b0cef305c8ee3240"
+  },
+  "receipts/sequoia-04/additional/peaks-2-bounded.log": {
+    "bytes": 240,
+    "sha256": "a99deab55a26e8bdf7d25ada0849e6651329d92b8c2248ef3febe47d1b454e52"
+  },
+  "receipts/sequoia-04/additional/peaks-2-serial.json": {
+    "bytes": 11951,
+    "sha256": "96b551a5b3e49ed331b1e69ad2f47ef33ec350c8874b37b241a9b9569e115528"
+  },
+  "receipts/sequoia-04/additional/peaks-2-serial.log": {
+    "bytes": 242,
+    "sha256": "212b11a6d8c01d22a09ba400001662cc57105d26d31ebf143ca6f51bf680d43f"
+  },
+  "receipts/sequoia-04/additional/peaks-6-app-mode.json": {
+    "bytes": 12208,
+    "sha256": "35d0ab36a1c4930e402c2a25700410c1f80d2642919a7763188262e3f77911e4"
+  },
+  "receipts/sequoia-04/additional/peaks-6-app-mode.log": {
+    "bytes": 252,
+    "sha256": "583550baee90abb2853920f044528cc45a3d9b5c87c4be0b01e143cebf512404"
+  },
+  "receipts/sequoia-04/additional/peaks-6-bounded.json": {
+    "bytes": 11914,
+    "sha256": "73d6b6af7139add1c3933892b6f44a15de56aaf315f76df4c4720cde53912a5e"
+  },
+  "receipts/sequoia-04/additional/peaks-6-bounded.log": {
+    "bytes": 239,
+    "sha256": "32b64b0ec55458dda99c6e20a1530c8cb5c5ac5d9ead1c21009ac1f0b428ce38"
+  },
+  "receipts/sequoia-04/additional/peaks-6-serial.json": {
+    "bytes": 20715,
+    "sha256": "c21613758ab2527735843809bfdc0351a765f01de6ec20acb22c126b2762a4b0"
+  },
+  "receipts/sequoia-04/additional/peaks-6-serial.log": {
+    "bytes": 242,
+    "sha256": "3fc99cc161515a0248bd87dbd0da8fb26d3d63f7d4244b71feacf2868ee7eb4b"
+  },
+  "receipts/sequoia-04/additional/summary.json": {
+    "bytes": 6764,
+    "sha256": "1f07300eaccb83c2297a89a60ad7faf21e0b638d066350c91f9af1ae3bc8baf6"
+  },
+  "receipts/sequoia-04/additional/video-matrix.json": {
+    "bytes": 60412,
+    "sha256": "86b9ef3188e8c9ab20b919eb2c4638f802edb6822fc755dac098eb506128a3b2"
+  },
+  "receipts/sequoia-04/additional/video-matrix.log": {
+    "bytes": 20,
+    "sha256": "c5c8d6396c0c3a4c87f0df56bf78154a1247a33b47547c32ad5b9b315d7129af"
+  },
+  "receipts/sequoia-04/additional/video-native/reference-after-video.png": {
+    "bytes": 79869,
+    "sha256": "006cfa267bfb049e0099d4c060a7e0299292ad34ff44ec9ec08b756bd8d7895f"
+  },
+  "receipts/sequoia-04/additional/video-native/result.json": {
+    "bytes": 26207,
+    "sha256": "48741758c32ed5d421f46768f6b9cfc8d5f06a9874b5e51fe05a38cf75dc097b"
+  },
+  "receipts/sequoia-04/additional/video-native/timeline-after-video.png": {
+    "bytes": 205187,
+    "sha256": "5ac7afb3aa928653b2d21dbd512cefeb1998bfd3b79e946c2d3f6fdeb17bac8e"
+  },
+  "receipts/sequoia-04/additional/video-native.log": {
+    "bytes": 418,
+    "sha256": "b82d50b82dbe2b09292d218ef9daa8c5bda4467bcd2a9e70a830f74a7369a943"
+  },
+  "receipts/sequoia-04/candidate-integrity.json": {
+    "bytes": 259,
+    "sha256": "06ff69cdb9c5973d467d32e4e31222382ff77b728cefeeec2e1cdbe568b73a57"
+  },
+  "receipts/sequoia-04/density.json": {
+    "bytes": 20309,
+    "sha256": "ae36503335af4632f5f3d05003212b99e86093b9cc92f170ca83e3926bdc3e39"
+  },
+  "receipts/sequoia-04/exact-long-source.json": {
+    "bytes": 1654,
+    "sha256": "4753c868efb6e671d2b9a6153413fff15e881b31de8a9aacf9c2736213658257"
+  },
+  "receipts/sequoia-04/exchange-received/result.json": {
+    "bytes": 18143,
+    "sha256": "7f9ecc9ba954d9b834f932b18cfb257d74a7224e13160b58209f1b8647f1e03d"
+  },
+  "receipts/sequoia-04/long/export/manifest.json": {
+    "bytes": 368,
+    "sha256": "5ef85dfbbfb433639f518fcd7bab2b42d85bab31d9e4bdab22965bb64c343498"
+  },
+  "receipts/sequoia-04/long/export/report.json": {
+    "bytes": 346675,
+    "sha256": "f8215704dce7c7ed13a80d7aa45d63982e14ebe8710d11716ff60f2b056873d6"
+  },
+  "receipts/sequoia-04/long/result.json": {
+    "bytes": 8224,
+    "sha256": "4194c115115d2013df9aec83a2352449016e075327cf92ff53b6dd0ba96d5737"
+  },
+  "receipts/sequoia-04/long-audit.json": {
+    "bytes": 321,
+    "sha256": "e407ae26a61af4d7c8632263508e615e859d0f6ba2a803145a2f25f6c7ab650d"
+  },
+  "receipts/sequoia-04/long-retained-artifacts.json": {
+    "bytes": 1165,
+    "sha256": "08398959e3897dc7e92b4515af9fb1187b7456268a10d5cc94b0415b42c4e3e6"
+  },
+  "receipts/sequoia-04/native-review/e67f368e068d4c368c97265624f61ea7.levelscope-target": {
+    "bytes": 847,
+    "sha256": "f9e20bb40ca3336170b59cb9d87afaf8254a6c3b09f6e8612a1daa25f01951fd"
+  },
+  "receipts/sequoia-04/native-review/presets-before.json": {
+    "bytes": 343,
+    "sha256": "b1f163faa4fc847c43f9f99e20be2f56826cddca3015a08d48cbe8eeca0f0423"
+  },
+  "receipts/sequoia-04/native-review/review.json": {
+    "bytes": 1268,
+    "sha256": "a16d71af96d62d6a07381f6afc300d700d676ba831c1ce999e717c8c9d34d9a5"
+  },
+  "receipts/sequoia-04/physical/commands.json": {
+    "bytes": 4429,
+    "sha256": "648bcbaa062c15f0dbc9012253d8ffd203c374ac9c727077179450335a380df1"
+  },
+  "receipts/sequoia-04/physical/h264-current.json": {
+    "bytes": 4785,
+    "sha256": "f05c27fc4381ceb385de13fc70fc95f2256c4d142164d5391f255dd7c000bba6"
+  },
+  "receipts/sequoia-04/physical/h264-current.log": {
+    "bytes": 4784,
+    "sha256": "427b5de641a04995f27447641336a096a0039c219b427e9e44bd832a83323ad5"
+  },
+  "receipts/sequoia-04/physical/h264-source.json": {
+    "bytes": 4754,
+    "sha256": "61016ef1e4dc6b165e6c9965458e1b8425c43d3944c5b6e0d9ab026adfd3ac06"
+  },
+  "receipts/sequoia-04/physical/h264-source.log": {
+    "bytes": 4753,
+    "sha256": "4c8bf1f9393e7e9f618767e5089470bd7fc8d4c9316b666a2bb8cb79ec7169e4"
+  },
+  "receipts/sequoia-04/physical/prores-current.json": {
+    "bytes": 4797,
+    "sha256": "a2984bf19b71890f08778c2054ade9825c9e2576a2a103e7c1cda15dd2836fd9"
+  },
+  "receipts/sequoia-04/physical/prores-current.log": {
+    "bytes": 4796,
+    "sha256": "4b94e08cc42e057ff93be858d73923f7920de2bc17e3e1c6089e7b6aafb592f5"
+  },
+  "receipts/sequoia-04/physical/prores-source.json": {
+    "bytes": 4766,
+    "sha256": "f056d69dbeb1c8b779ac8bfea3fd94974968c236d08b66489b1382600878ffdc"
+  },
+  "receipts/sequoia-04/physical/prores-source.log": {
+    "bytes": 4765,
+    "sha256": "c026c506ca7376d864adce8dae3d6c1ebf4df4dcaf9aaaeb18d91cd1d1b6c8b2"
+  },
+  "receipts/sequoia-04/physical/summary.json": {
+    "bytes": 4980,
+    "sha256": "6e889e01f619f7fcd54a0bc831419283c195747907960910c368a4ccf5087467"
+  },
+  "receipts/sequoia-04/short/audit-stereo.log": {
+    "bytes": 362,
+    "sha256": "883bd347c5b4b1c8bfc380ac92aedf37be5524ec8d3ce5251a2b8f6a5c3cb2f4"
+  },
+  "receipts/sequoia-04/short/audit-surround.log": {
+    "bytes": 402,
+    "sha256": "85b4f22b2f2fc1accb5278402258550410ad5a3f3cd51ad7260194a6bfaef863"
+  },
+  "receipts/sequoia-04/short/audition.json": {
+    "bytes": 278106,
+    "sha256": "ef9231a026839943b2f230e7c8d68956bd1785af53adeac1c939134b62059cc9"
+  },
+  "receipts/sequoia-04/short/audition.log": {
+    "bytes": 31,
+    "sha256": "b1ab9cc0022d1ab8f3c0ccff2dd6754d616eb3249a2bf0c224f212986f953b7e"
+  },
+  "receipts/sequoia-04/short/commands.json": {
+    "bytes": 18789,
+    "sha256": "c0a4474d1153cd215b53a3ba9323523621836741def85618b8ef608bceaeeefb"
+  },
+  "receipts/sequoia-04/short/compliance.json": {
+    "bytes": 17826,
+    "sha256": "3d3c3a0f8d907319b43a10d68cf1550a085be62f7b580903f4669ebd670f4331"
+  },
+  "receipts/sequoia-04/short/compliance.log": {
+    "bytes": 44,
+    "sha256": "387e97462de36fb405471706290ea69618f1678a02bd985cf1139744b5649cc1"
+  },
+  "receipts/sequoia-04/short/diagnostics.json": {
+    "bytes": 38616,
+    "sha256": "3a1fc80b506d9590b5dcfd4e50d947ba50d0139e0d0ce99f57eb43f1490e37bc"
+  },
+  "receipts/sequoia-04/short/diagnostics.log": {
+    "bytes": 44,
+    "sha256": "8207835fc1507cac1b00277a64938a9acc476b872ed9770b9cd41d75ddf63bc2"
+  },
+  "receipts/sequoia-04/short/ebu.json": {
+    "bytes": 218038,
+    "sha256": "6b4b91120bcfe198e86c52bf3970616d10115270ca925ba2101ab36dac67a023"
+  },
+  "receipts/sequoia-04/short/ebu.log": {
+    "bytes": 2480,
+    "sha256": "18e65c40d2edcd18e30155f9ca4f7a49b0e066f90ea10aa588ab78922e03d313"
+  },
+  "receipts/sequoia-04/short/export-files/raw-oracles.json": {
+    "bytes": 9899,
+    "sha256": "78e5050e23cd827cbab75c9fbf748f2d11a972e1d90dc1a3a99ff7effe7f68f3"
+  },
+  "receipts/sequoia-04/short/export-files/verified-2-192000/manifest.json": {
+    "bytes": 368,
+    "sha256": "248d6bcf53b728c96b738c8365d954c30801144990f3730f2a0d8f680f192e66"
+  },
+  "receipts/sequoia-04/short/export-files/verified-2-192000/report.json": {
+    "bytes": 18062,
+    "sha256": "ef70475f91d457476d45676ab187bfb35bf5c62deb371a1aa8c43edef3194d37"
+  },
+  "receipts/sequoia-04/short/export-files/verified-2-44100/manifest.json": {
+    "bytes": 368,
+    "sha256": "439fa5b54b228d680bbd7c2fda461207acafbc2f505a70b1d5990d057d761aec"
+  },
+  "receipts/sequoia-04/short/export-files/verified-2-44100/report.json": {
+    "bytes": 18054,
+    "sha256": "8728bc924cd80048024e7af3fc6a722f2a4d0295e7c1f81d0c0f5ec0eebe40ed"
+  },
+  "receipts/sequoia-04/short/export-files/verified-2-48000/manifest.json": {
+    "bytes": 368,
+    "sha256": "88448a5224ee31c8998a4148c618adcd04c987c9d35eec157570a834712d6c3e"
+  },
+  "receipts/sequoia-04/short/export-files/verified-2-48000/report.json": {
+    "bytes": 18034,
+    "sha256": "173cb8185254168ee6760bb5f4d7cedead4045ab5f2e1e3480504d2e0a276360"
+  },
+  "receipts/sequoia-04/short/export-files/verified-2-96000/manifest.json": {
+    "bytes": 368,
+    "sha256": "6db9c5d6fdb408a0823d46e8ca50c1b1fc55b4e0f123487a1ab2f2bfaa03b7b7"
+  },
+  "receipts/sequoia-04/short/export-files/verified-2-96000/report.json": {
+    "bytes": 18049,
+    "sha256": "fada194f166cc956fc88fa9e11f344b4af2742fcc44d2e47d581a983cf248502"
+  },
+  "receipts/sequoia-04/short/export-files/verified-6-192000/manifest.json": {
+    "bytes": 368,
+    "sha256": "c06de161331516df36c18a16d26099b7e39918cd67cc3ddcf74e43f3667f577b"
+  },
+  "receipts/sequoia-04/short/export-files/verified-6-192000/report.json": {
+    "bytes": 24038,
+    "sha256": "7cac0551124cfdf34235a681b08837ca6a61d26eb17c3642daf0e17ac05f96b0"
+  },
+  "receipts/sequoia-04/short/export-files/verified-6-44100/manifest.json": {
+    "bytes": 368,
+    "sha256": "c6fd03c8528adaa5534aac759c5efdfa14a99a850dbe4adbf4f06416456b91d8"
+  },
+  "receipts/sequoia-04/short/export-files/verified-6-44100/report.json": {
+    "bytes": 24024,
+    "sha256": "fd48c1f8d18660fe0eebf409ade29eecf912b52bd5e9abc2fa36ea2ae2c02f16"
+  },
+  "receipts/sequoia-04/short/export-files/verified-6-48000/manifest.json": {
+    "bytes": 368,
+    "sha256": "22e347b73747ac6c001b0a2102cb5e21d3d686ad7af783168000fec9179a9eff"
+  },
+  "receipts/sequoia-04/short/export-files/verified-6-48000/report.json": {
+    "bytes": 24041,
+    "sha256": "f3cc21e4e61848a53a397388ea824278f37a8f815c4681d615e15f238a6701b6"
+  },
+  "receipts/sequoia-04/short/export-files/verified-6-96000/manifest.json": {
+    "bytes": 368,
+    "sha256": "bc076f41e272bb092f61ec97ddec98714564df72149609a91e7efe85652e0cb0"
+  },
+  "receipts/sequoia-04/short/export-files/verified-6-96000/report.json": {
+    "bytes": 24032,
+    "sha256": "d3dbc9099c0e16867de2d39b0f2398038dbc5eeacbc03d4162a5b49fdac44d41"
+  },
+  "receipts/sequoia-04/short/export-files/verified-group-2-192000/manifest.json": {
+    "bytes": 368,
+    "sha256": "9238ea05912fbf9d73dee2ce649128d0363132ad8361b5161ead63da96e4c0b3"
+  },
+  "receipts/sequoia-04/short/export-files/verified-group-2-192000/report.json": {
+    "bytes": 18515,
+    "sha256": "b3349ebdc7409e2f78685d56ecc25ab151c2dc9d33cc994c75ea743c19e4c13e"
+  },
+  "receipts/sequoia-04/short/export-files/verified-group-2-44100/manifest.json": {
+    "bytes": 368,
+    "sha256": "20da5ff44765546189ad1d1e2a4ed74aac4a85db78674914d8b9c3477c78b269"
+  },
+  "receipts/sequoia-04/short/export-files/verified-group-2-44100/report.json": {
+    "bytes": 18510,
+    "sha256": "1a91a73437341070c3717392df874e50dfa4bb5916c661bddf25b6016a181052"
+  },
+  "receipts/sequoia-04/short/export-files/verified-group-2-48000/manifest.json": {
+    "bytes": 368,
+    "sha256": "1d6a882143eb3807035be19a1ac9bec5e6b9ca7ce3b47ff5d243b86f77369ea8"
+  },
+  "receipts/sequoia-04/short/export-files/verified-group-2-48000/report.json": {
+    "bytes": 18491,
+    "sha256": "5a9ccaa25a3451aa052ceefd4dfe286fc988436d783d33bdeaf38250e534855e"
+  },
+  "receipts/sequoia-04/short/export-files/verified-group-2-96000/manifest.json": {
+    "bytes": 368,
+    "sha256": "32ab30d632be9c38c67df759565737c02f4583963198c5ef0507fb404d03556d"
+  },
+  "receipts/sequoia-04/short/export-files/verified-group-2-96000/report.json": {
+    "bytes": 18503,
+    "sha256": "dd4cf472ab52bc579c9c20ae61ffa954a8c8e255ef60ce7e0139be44177431c9"
+  },
+  "receipts/sequoia-04/short/export-files/verified-group-6-192000/manifest.json": {
+    "bytes": 368,
+    "sha256": "55479641d5a472f8fca45947009d95df54092e13843d4db9666535c178284700"
+  },
+  "receipts/sequoia-04/short/export-files/verified-group-6-192000/report.json": {
+    "bytes": 25225,
+    "sha256": "6ef7da4727d5899427fd705dce2ff5534c9dbde0ef078c3e3bc04529800d8503"
+  },
+  "receipts/sequoia-04/short/export-files/verified-group-6-44100/manifest.json": {
+    "bytes": 368,
+    "sha256": "87897455a59d40f0040f98c00887d4e029996f29dbdf4c2e75c4f7810aa2609e"
+  },
+  "receipts/sequoia-04/short/export-files/verified-group-6-44100/report.json": {
+    "bytes": 25205,
+    "sha256": "3816bd5a5b24551c3472a6c1e4fa552b498c1226aba72bb43eb5a287075c57e3"
+  },
+  "receipts/sequoia-04/short/export-files/verified-group-6-48000/manifest.json": {
+    "bytes": 368,
+    "sha256": "b5f25ef4cf8d7eba9c07b4ba301636939e57465f53b9a9d649334f6b2c4c030c"
+  },
+  "receipts/sequoia-04/short/export-files/verified-group-6-48000/report.json": {
+    "bytes": 25233,
+    "sha256": "d14073d4dafa216103f1941317bfe91bbc0a7a94d6aede1402bd97a8e087f4e3"
+  },
+  "receipts/sequoia-04/short/export-files/verified-group-6-96000/manifest.json": {
+    "bytes": 368,
+    "sha256": "0ba500ce530ba98fbbe5e7395ff4ebd75932acbf4478095c513cbd3ad19b5fb5"
+  },
+  "receipts/sequoia-04/short/export-files/verified-group-6-96000/report.json": {
+    "bytes": 25217,
+    "sha256": "82b725e4e44557df6ad7097d4f749715f0454faaf85c7cfeee5cbf4fe4015065"
+  },
+  "receipts/sequoia-04/short/export.json": {
+    "bytes": 443092,
+    "sha256": "6475a086a5d8568997aa064ef2eecbaa0009538e16fad074b5fc58e29a3faa67"
+  },
+  "receipts/sequoia-04/short/export.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "receipts/sequoia-04/short/global-proposal.json": {
+    "bytes": 28907,
+    "sha256": "24bae1292dc0e3d1689ba4ae1d68ff56ca4674927874726c04936c4bfb9747d9"
+  },
+  "receipts/sequoia-04/short/global-proposal.log": {
+    "bytes": 44,
+    "sha256": "d72eaf833b17df95a0768b786bdc86381c863b89245ac3d8f553d7deb7f69e1d"
+  },
+  "receipts/sequoia-04/short/itu.json": {
+    "bytes": 28550,
+    "sha256": "0d8ba852405ba68aa45eb3d64ff318da82a0d288cb87e0913bd897608b470b8b"
+  },
+  "receipts/sequoia-04/short/itu.log": {
+    "bytes": 2363,
+    "sha256": "9571a299c82a4aa12593daf8b7ed82d5c1eb5874cfefdd6f4a5a56e0c6f1d16e"
+  },
+  "receipts/sequoia-04/short/marker-files/marker-tests.json": {
+    "bytes": 42753,
+    "sha256": "b41f3fe02fcdf54bfc739a8e2f2525848a8e78acdc453b5e986f61beecdb26a5"
+  },
+  "receipts/sequoia-04/short/marker-files/transaction-1/refreshed-report/manifest.json": {
+    "bytes": 293,
+    "sha256": "a357594f2fab848e787e834902d5b20caeab418d90716ffafd2e83d26a87a971"
+  },
+  "receipts/sequoia-04/short/marker-files/transaction-1/refreshed-report/report.json": {
+    "bytes": 24999,
+    "sha256": "194af79ba1e9afa7bf4d58de35446b4bc6ff228652cbd3712e97db3e1a2d8813"
+  },
+  "receipts/sequoia-04/short/marker-files/transaction-2/refreshed-report/manifest.json": {
+    "bytes": 293,
+    "sha256": "5cbb3e95f2ffc92805988d0e1c96cb9a5e750a10b498f64df2529fe76b8f20c2"
+  },
+  "receipts/sequoia-04/short/marker-files/transaction-2/refreshed-report/report.json": {
+    "bytes": 26485,
+    "sha256": "39832e45e1e5c32398e146e01ced59da3c7913a8ca61bc852371ee35b1229c77"
+  },
+  "receipts/sequoia-04/short/marker-files/transaction-6/refreshed-report/manifest.json": {
+    "bytes": 293,
+    "sha256": "a7b5bfe073cd2f8caaad015b6afed562e6e62b33fe04c49d9453906c2c1edc2c"
+  },
+  "receipts/sequoia-04/short/marker-files/transaction-6/refreshed-report/report.json": {
+    "bytes": 32472,
+    "sha256": "04f6a33793e6f37786ca3a4ebd53eb860361213c3eec1f4d7b14c8019bb2e26c"
+  },
+  "receipts/sequoia-04/short/markers.log": {
+    "bytes": 28,
+    "sha256": "4b7466d0db99e7147ecb0da9b49813d8997a4d2f26d3d441517cb6671375aa39"
+  },
+  "receipts/sequoia-04/short/measurement.json": {
+    "bytes": 264,
+    "sha256": "3fe8a6bc6d36493aa799330830a52e0930a05c6bae2c6d3f4b9dbb64c8db985c"
+  },
+  "receipts/sequoia-04/short/measurement.log": {
+    "bytes": 30,
+    "sha256": "bedae39b3467c346f9e98b10fd11a32621214bc843750e73cb93eb6c9015082c"
+  },
+  "receipts/sequoia-04/short/mono-files/48000-3/export/manifest.json": {
+    "bytes": 368,
+    "sha256": "f06cf0a2780683a9b33b66eaa5e00ab05357807d09cda7bba1bf7cb321d93ff6"
+  },
+  "receipts/sequoia-04/short/mono-files/48000-3/export/report.json": {
+    "bytes": 29375,
+    "sha256": "c58564db6e7d982707fa736fb88618c4b0824bc846e8dc845c285d132e60adb4"
+  },
+  "receipts/sequoia-04/short/mono-files/raw-pcm/raw-oracles.json": {
+    "bytes": 6228,
+    "sha256": "b74d5c1fef046ae9c75601d0907cfbde2803eb6a5da5bdd95a6b2a2fcb8528c6"
+  },
+  "receipts/sequoia-04/short/mono.json": {
+    "bytes": 35133,
+    "sha256": "1f6bf1fc6f3e845485f8cc2fdb2506a6c783733c3fc79b42375383d7bf560b17"
+  },
+  "receipts/sequoia-04/short/mono.log": {
+    "bytes": 7131,
+    "sha256": "8f1b2403e36355dfc6019888f69dd6f08f40982f9cfcf4649f1acb728b659e5b"
+  },
+  "receipts/sequoia-04/short/multichannel.json": {
+    "bytes": 3625797,
+    "sha256": "a5133cea6f02a7963a88058f358e6816b9afc6e8e9a89f886b6ddd4ca014415b"
+  },
+  "receipts/sequoia-04/short/multichannel.log": {
+    "bytes": 36,
+    "sha256": "868a8d79d4353a26f6eb71e95a0d2a6f0e51c7a45711e39da670d53b0bf7e1e5"
+  },
+  "receipts/sequoia-04/short/native-stereo/export/manifest.json": {
+    "bytes": 368,
+    "sha256": "a79545d246ef4ffde907beb29dcdf20c26ff6140f6cd4ec0f14fd2caa4533f1d"
+  },
+  "receipts/sequoia-04/short/native-stereo/export/report.json": {
+    "bytes": 24864,
+    "sha256": "c0134667141bc8a0985f49768d6f24f8c1e22b10c14b73fd0828d1d4b6b2e45f"
+  },
+  "receipts/sequoia-04/short/native-stereo/first-waveform.png": {
+    "bytes": 69055,
+    "sha256": "a912cc432d0650d56b64ec4de5bb5f828253653cbe75fe5d35453458dbb2e227"
+  },
+  "receipts/sequoia-04/short/native-stereo/progressive-waveform.png": {
+    "bytes": 72002,
+    "sha256": "9167d360594a5082520df6374483d23c3e94afc0875a7c88ec4911eb0f7fe801"
+  },
+  "receipts/sequoia-04/short/native-stereo/proposal-ready.png": {
+    "bytes": 203982,
+    "sha256": "639f1edb34471d2da5e53d3a289e099a09b2291b7a6a5571d8f34eec7f5935e7"
+  },
+  "receipts/sequoia-04/short/native-stereo/reopened-exported.png": {
+    "bytes": 193537,
+    "sha256": "e2a81718c6d27fc0e4d2dd8d28cea78d8009b42b6fc1c3222e9d4fc55c5e8538"
+  },
+  "receipts/sequoia-04/short/native-stereo/result.json": {
+    "bytes": 7551,
+    "sha256": "fd9c7e0020d7bbfbd311a8e3e9e6ec2ad01204391c3e4cc9f5b47490be44e11e"
+  },
+  "receipts/sequoia-04/short/native-stereo/role-preferences/stereo.json": {
+    "bytes": 15,
+    "sha256": "2061bf369f709500a69e38595c4e2d8977ab2e81121b33ebe22e9be02ecd0e2a"
+  },
+  "receipts/sequoia-04/short/native-stereo.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "receipts/sequoia-04/short/native-surround/export/manifest.json": {
+    "bytes": 368,
+    "sha256": "b6432fa7688832fb2cfc8bef1132c37b52ae50ea6e321fbe7049e64fad46a1f2"
+  },
+  "receipts/sequoia-04/short/native-surround/export/report.json": {
+    "bytes": 34453,
+    "sha256": "19bdd806a9d0f2655975fce1219bf93c6fde3e5a259735e2e4fc6f91bd15ad4b"
+  },
+  "receipts/sequoia-04/short/native-surround/first-waveform.png": {
+    "bytes": 73150,
+    "sha256": "1de790928a8634d1c550574cf36f05a902996b2ecdbfaa8abf75f3cfd8f91ee2"
+  },
+  "receipts/sequoia-04/short/native-surround/progressive-waveform.png": {
+    "bytes": 76555,
+    "sha256": "b781a13e7fa577683b0efd1d8613c67e6d1747577b5aadf7678e9162b3f766d2"
+  },
+  "receipts/sequoia-04/short/native-surround/proposal-ready.png": {
+    "bytes": 210820,
+    "sha256": "5e3d1609085f5bf3f0f6023693fc55a853ad3eb71a9e4045ee42d63be4ea7da4"
+  },
+  "receipts/sequoia-04/short/native-surround/reopened-exported.png": {
+    "bytes": 193639,
+    "sha256": "45f15c1c118e7fd1aefa69b5531a1e5589892f9c324f16e921892b15240d7ad8"
+  },
+  "receipts/sequoia-04/short/native-surround/result.json": {
+    "bytes": 9260,
+    "sha256": "d420c59b39cf104840550be105dd188c4ef48590a1dd38f66c9c42fc14c6f317"
+  },
+  "receipts/sequoia-04/short/native-surround/role-preferences/5.1.json": {
+    "bytes": 39,
+    "sha256": "542207443af6db745257a05056b67fbc9c00c39ae3a9887c01aa012b6ca3d775"
+  },
+  "receipts/sequoia-04/short/native-surround.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "receipts/sequoia-04/short/peak-parity.log": {
+    "bytes": 119,
+    "sha256": "96f20e1df501ca272da261feacea9cd745b5910823b91f6ee45fd59938a7006c"
+  },
+  "receipts/sequoia-04/short/preferences-files/large-measured-proposal/large-proposal-report.json": {
+    "bytes": 176411,
+    "sha256": "a2a4facbdd384ba2254a7238d60bc89b1ccc9474a0f34d86d51772ba666b0e22"
+  },
+  "receipts/sequoia-04/short/preferences-files/large-measured-proposal/large-proposal-result.txt": {
+    "bytes": 43598,
+    "sha256": "9a79ef6f8277e2df3d0d290e9facef34c9de53c778d558fb8c64b151dbcef9c1"
+  },
+  "receipts/sequoia-04/short/preferences.json": {
+    "bytes": 20271,
+    "sha256": "f979027318c89a8a61fd03515824ead6c1ed47a13a3a37eb1581a7e210cff771"
+  },
+  "receipts/sequoia-04/short/preferences.log": {
+    "bytes": 182,
+    "sha256": "ce51c4069c15fe2c56381b3a49154bc2e0098396b4f6051fcfe190d57a4892d3"
+  },
+  "receipts/sequoia-04/short/proposal-workflow-files/duration-rejection.png": {
+    "bytes": 49428,
+    "sha256": "9e825002d89083c308875dcef7c580adbb15ff2649c64d8f17e8babf1f4dffcf"
+  },
+  "receipts/sequoia-04/short/proposal-workflow-files/measured-candidate-rejection.png": {
+    "bytes": 37725,
+    "sha256": "bfdd63d843d4c2f770cad9da6fb0300f24338c55aa30d05acb754a05636d65d4"
+  },
+  "receipts/sequoia-04/short/proposal-workflow-files/proposed-gain-lane.png": {
+    "bytes": 62798,
+    "sha256": "c3c8a7f32408e2f8db27f976f8abf01345184230666952cff1c712d07680361d"
+  },
+  "receipts/sequoia-04/short/proposal-workflow-files/ready-proposal.png": {
+    "bytes": 22886,
+    "sha256": "41ec7d69280dd9a76a4ec3131b0e490775e918589ca6b4a214102657cca5deb4"
+  },
+  "receipts/sequoia-04/short/proposal-workflow-files/unsupported-lra.png": {
+    "bytes": 38538,
+    "sha256": "db94e5d8ac35159440227ef19c812d16b3fb82ae8265aa08b8857c3f9aeb67e1"
+  },
+  "receipts/sequoia-04/short/proposal-workflow.json": {
+    "bytes": 31286,
+    "sha256": "ce71e3bbfe2ac441fd1e766f23b4c87e9075d5412c7a6dd57fab6f2d16c2e79b"
+  },
+  "receipts/sequoia-04/short/proposal-workflow.log": {
+    "bytes": 601,
+    "sha256": "8634ce4d1b6c9379260ab234fd24955419a37988c6e44188ac50614a330603e6"
+  },
+  "receipts/sequoia-04/short/requirements-files/export-1/accepted/manifest.json": {
+    "bytes": 368,
+    "sha256": "622341baf3d0fc3114c40ce4d61c6f530a92b5fdbc483b4d4bf3e05117d31c6f"
+  },
+  "receipts/sequoia-04/short/requirements-files/export-1/accepted/report.json": {
+    "bytes": 18091,
+    "sha256": "77e724aa8dd60290670ba8b898a4d1773b5c470dbb7c67b4d4538a0e043498f7"
+  },
+  "receipts/sequoia-04/short/requirements-files/export-6/accepted/manifest.json": {
+    "bytes": 368,
+    "sha256": "f167adac9f372372b06a6177b7ed92e1b767c987dbf04190cd4b60c4388da334"
+  },
+  "receipts/sequoia-04/short/requirements-files/export-6/accepted/report.json": {
+    "bytes": 25631,
+    "sha256": "161312fc7eece46cd09bbce3f8c2a823e2132301dc14fb1bf0474c7096adf275"
+  },
+  "receipts/sequoia-04/short/requirements-files/presets/portable.levelscope-target": {
+    "bytes": 726,
+    "sha256": "b1e4fb04b6e9f8980ac33faf8c377a7a26eca2d9e090cf56595e813d29120e86"
+  },
+  "receipts/sequoia-04/short/requirements-files/stereo-export/accepted/manifest.json": {
+    "bytes": 368,
+    "sha256": "eb3cb4d8667891c4221461fcaa005c5e8991e802a1a83c6e8b805662df1cdd9e"
+  },
+  "receipts/sequoia-04/short/requirements-files/stereo-export/accepted/report.json": {
+    "bytes": 19726,
+    "sha256": "da19bf967ccf3a6a496c2aeea7fd485625212b401c25bdb9f6b52022f6b32f1c"
+  },
+  "receipts/sequoia-04/short/requirements.json": {
+    "bytes": 47724,
+    "sha256": "57da134fd808d2b62f00eefe957d9aab07707bfa0459ff2bbbfe19b2150e5e4c"
+  },
+  "receipts/sequoia-04/short/requirements.log": {
+    "bytes": 20,
+    "sha256": "ace417b69d1c477cd9bd552df3497264c2008bb32ed1c31ed35f747a1303ee09"
+  },
+  "receipts/sequoia-04/short/section-processing-files/smoke/export/manifest.json": {
+    "bytes": 368,
+    "sha256": "91f0b71e43cebe4eeaace9c66a726ecdbda1a8e711631184c94d7280dea47162"
+  },
+  "receipts/sequoia-04/short/section-processing-files/smoke/export/report.json": {
+    "bytes": 35135,
+    "sha256": "d43f134f59a594fece81f978976edaf0984193ead93688e92abf19cddb0e7cef"
+  },
+  "receipts/sequoia-04/short/section-processing.json": {
+    "bytes": 20602,
+    "sha256": "ccf112bdac556d567e8d129e6c0589e44e93c55e9e1a6c20347ce05c244ecd7d"
+  },
+  "receipts/sequoia-04/short/section-processing.log": {
+    "bytes": 20,
+    "sha256": "cc4b4b8c46c25a31b9a1048e3af3eea36c9c3240a092eb7412f1b5b45a4e5cec"
+  },
+  "receipts/sequoia-04/short/section-proposal-files/48000-2-0/audition-capture.f32": {
+    "bytes": 98304,
+    "sha256": "80685b71581ce59fe45c0976420550e0422c0d5ca6ed75123a454af32c8d8b22"
+  },
+  "receipts/sequoia-04/short/section-proposal-files/48000-2-0/export/manifest.json": {
+    "bytes": 368,
+    "sha256": "e72c0531bcee9678ac9617649a782eb4311bb9849dbca23cf685cf94ac728c0a"
+  },
+  "receipts/sequoia-04/short/section-proposal-files/48000-2-0/export/report.json": {
+    "bytes": 30867,
+    "sha256": "096e0c74360588b70139eb3e102b4e7a656b278a80e7485c571cb27e9e6b30dd"
+  },
+  "receipts/sequoia-04/short/section-proposal-files/48000-2-0/measurement-only.json": {
+    "bytes": 23057,
+    "sha256": "7a7bb7f51976f622bf98c21fdb5d611e2cb5124f5289644ff52c4491c9bac864"
+  },
+  "receipts/sequoia-04/short/section-proposal-files/48000-6-0/audition-capture.f32": {
+    "bytes": 294912,
+    "sha256": "d86fbadba6c2ec9a0bf382ed56bdaa7ac450a3584960e8385e70f8dff98d895e"
+  },
+  "receipts/sequoia-04/short/section-proposal-files/48000-6-0/export/manifest.json": {
+    "bytes": 368,
+    "sha256": "47f9a2541439c1e02882dc665a64f5c0e59e866d430d194bc3e5afa0183b34ac"
+  },
+  "receipts/sequoia-04/short/section-proposal-files/48000-6-0/export/report.json": {
+    "bytes": 36802,
+    "sha256": "96dd6ac3e756327f9da1388e6c6dff1a015b8bcf6b5a626dff6bd8020dce65d7"
+  },
+  "receipts/sequoia-04/short/section-proposal-files/48000-6-0/measurement-only.json": {
+    "bytes": 25760,
+    "sha256": "02e2be6acdec86b90cdc975298f0a0a5a6b77e7974fc45d094d460de11c8575c"
+  },
+  "receipts/sequoia-04/short/section-proposal.json": {
+    "bytes": 30077,
+    "sha256": "0f2cf14d17643ac8031f17afb42e4aab88a2b118ff348c0628881a3b76c98486"
+  },
+  "receipts/sequoia-04/short/section-proposal.log": {
+    "bytes": 14241,
+    "sha256": "a8413f467d877a3dedf2308cc811ead0b7da3ef48f5183a89cdeb85b0cdb5aea"
+  },
+  "receipts/sequoia-04/short/sections.json": {
+    "bytes": 306105,
+    "sha256": "0e1b9975d7874692ed15f659c7aec4a3446995636bf4e38cc2974d47b2a1a5d5"
+  },
+  "receipts/sequoia-04/short/sections.log": {
+    "bytes": 45,
+    "sha256": "dbc804980e120a9185be1eb637e3629b03e47f5282f89d4fd350299b15ed8d25"
+  },
+  "receipts/sequoia-04/short/session-playback.json": {
+    "bytes": 190031,
+    "sha256": "367b3f5dabbeb100f4605d6a8b5530a7f641bd8c8d5980bd5d2aaf9f202b1a82"
+  },
+  "receipts/sequoia-04/short/session-playback.log": {
+    "bytes": 31,
+    "sha256": "f89e4c67221224b185d9f9b1c2be1080059b2a4ca9a6ecadc1f34e683088e2f7"
+  },
+  "receipts/sequoia-04/short/sessions.json": {
+    "bytes": 270,
+    "sha256": "57cd21d29a4c73c27edc75635048c0e2ec5fa673225582d9f2cf29a4e9debaab"
+  },
+  "receipts/sequoia-04/short/sessions.log": {
+    "bytes": 271,
+    "sha256": "6607c8e642b71130e6a9d2a9afee75ac98e88ea80a512fdc7f75ec6d007a3ced"
+  },
+  "receipts/sequoia-04/short/summary.json": {
+    "bytes": 20053,
+    "sha256": "4f6526e315c8751ff831a5ca98f26d6a88fe8fc662f57ab80b74792d70409983"
+  },
+  "receipts/sequoia-04/short/timeline-files/Target presets/a9eb1977fc6a46b2a7ab9db484067485.levelscope-target": {
+    "bytes": 826,
+    "sha256": "f8a3c5aad64df3799d005cba4edf705058f10c5c448625b83511db37cc600d83"
+  },
+  "receipts/sequoia-04/short/timeline-files/compact.png": {
+    "bytes": 24462,
+    "sha256": "139bc4c591a588d51ad42931cb34dee714f2a75db997e1df8db1c06ce698cfc5"
+  },
+  "receipts/sequoia-04/short/timeline-files/drawn-section.png": {
+    "bytes": 60426,
+    "sha256": "1d6eb3573b6413710c1a17660e111f466e351c67b7e8045672b2263486ed6f07"
+  },
+  "receipts/sequoia-04/short/timeline-files/gain-applied.png": {
+    "bytes": 85695,
+    "sha256": "0e96f45cbe38c1c002c36846c0efb1accf29a5993d7cbf5a5706ae77779cfb17"
+  },
+  "receipts/sequoia-04/short/timeline-files/gain-draft.png": {
+    "bytes": 86316,
+    "sha256": "9ca6f90f7abc96a167c3e4c426c49401186cde47549dd9b353ff9d6814a9d022"
+  },
+  "receipts/sequoia-04/short/timeline-files/gain-short-transition.png": {
+    "bytes": 82382,
+    "sha256": "9cded2e7f1de7cc4c4c599adc6699430a072fc3a45b553028696c0fd1034feac"
+  },
+  "receipts/sequoia-04/short/timeline-files/navigation.png": {
+    "bytes": 60702,
+    "sha256": "f197578429dc172bfd47a506576aebff21923a2493c0e451d19e9ab63eff7dc0"
+  },
+  "receipts/sequoia-04/short/timeline-files/partial.png": {
+    "bytes": 60237,
+    "sha256": "1b27f9123798244f5d94a3dc82752b514e35369ae34748e441f98bf0e59a2508"
+  },
+  "receipts/sequoia-04/short/timeline-files/role-conflict.png": {
+    "bytes": 60681,
+    "sha256": "8ad1f9627467105d06eb1c527737822576ca34a8f76177f0d1a05879f8094a49"
+  },
+  "receipts/sequoia-04/short/timeline-files/roles/5.1.json": {
+    "bytes": 39,
+    "sha256": "0a91224a3d83be00f554fbc0d52366d73ed0848970d93bbe902921317c754064"
+  },
+  "receipts/sequoia-04/short/timeline-files/roles/stereo.json": {
+    "bytes": 15,
+    "sha256": "2061bf369f709500a69e38595c4e2d8977ab2e81121b33ebe22e9be02ecd0e2a"
+  },
+  "receipts/sequoia-04/short/timeline-files/separate-role-review.png": {
+    "bytes": 46448,
+    "sha256": "4bff0d38c12b44e2ecd43f23108955e1c635dca4758ef08b87a90a76f5e43d6c"
+  },
+  "receipts/sequoia-04/short/timeline.json": {
+    "bytes": 48866,
+    "sha256": "076c9485a1d2f6eeb0c41f295974d0f92ba6f981ff47f8eb1e1fe94b0fa60d86"
+  },
+  "receipts/sequoia-04/short/timeline.log": {
+    "bytes": 40,
+    "sha256": "7d8bb1e997699cdcdbafa27842d8f2aac2c872e6362526a080c153b405b7289f"
+  },
+  "receipts/sequoia-04/short/video-core.log": {
+    "bytes": 67,
+    "sha256": "dea3f854057fa0706f9ed7a9068864ba8ce01b6885182f2fccc4392795a65bb7"
+  },
+  "receipts/sequoia-04/short/waveform-core.log": {
+    "bytes": 33,
+    "sha256": "817c7b44d431a16f3cb28b4e144c1a53be863e46594b53c8df61da5defa631a8"
+  },
+  "receipts/sequoia-04/short/waveform-service-files/complete.png": {
+    "bytes": 87348,
+    "sha256": "cd8c8df3f11ff21639298e249d557b48c79d792cd45469de92d6fb50057d11ca"
+  },
+  "receipts/sequoia-04/short/waveform-service-files/partial.png": {
+    "bytes": 45324,
+    "sha256": "bb88a6429046f1ff5caddee7837211e6b5d350d176ae636579cfb056402c99e6"
+  },
+  "receipts/sequoia-04/short/waveform-service.json": {
+    "bytes": 113311,
+    "sha256": "3aacd828b30362119ae57fe25b3ba8b9a4f36f6c741dfb4b78027e3b36678841"
+  },
+  "receipts/sequoia-04/short/waveform-service.log": {
+    "bytes": 30,
+    "sha256": "e8ad18863893d38438374ba61318a56367735f88f75b4bf7a66c674438b9a0bc"
+  },
+  "receipts/sequoia-04-additional.log": {
+    "bytes": 725,
+    "sha256": "54d7291f35e3f65c5931eb1764f8a80400efd7689c547ef7ce9281e7fe363b34"
+  },
+  "receipts/sequoia-04-density.log": {
+    "bytes": 20310,
+    "sha256": "9f8228ad3b06f7f2e90a9f93dbb4f56dc94255aaf2abbd0fec7eefd976f758d9"
+  },
+  "receipts/sequoia-04-exact-long-source.log": {
+    "bytes": 1655,
+    "sha256": "22acf763f84d5a2935779b5b1191e6c4be4755f5de5608c89cce791b44d56011"
+  },
+  "receipts/sequoia-04-exchange.log": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "receipts/sequoia-04-long-audit.log": {
+    "bytes": 321,
+    "sha256": "e407ae26a61af4d7c8632263508e615e859d0f6ba2a803145a2f25f6c7ab650d"
+  },
+  "receipts/sequoia-04-long.log": {
+    "bytes": 7742,
+    "sha256": "b84f99555441f7cf6f339cf6fd964702f2d10b006fc6341286f25aa0aeb377ee"
+  },
+  "receipts/sequoia-04-physical.log": {
+    "bytes": 4980,
+    "sha256": "6e889e01f619f7fcd54a0bc831419283c195747907960910c368a4ccf5087467"
+  },
+  "receipts/sequoia-04-short.log": {
+    "bytes": 1484,
+    "sha256": "2ae36157e5e4a0b188764f4a6e9050fefe2ed372a04f95aae9df6915d5660095"
+  },
+  "receipts/sequoia-audio-after.json": {
+    "bytes": 1483,
+    "sha256": "a132583a618a66e9fa2e01548bcf7bbcfb675df8347a4bfde95fab6f1b1d1c10"
+  },
+  "receipts/sequoia-audio-before.json": {
+    "bytes": 1483,
+    "sha256": "a132583a618a66e9fa2e01548bcf7bbcfb675df8347a4bfde95fab6f1b1d1c10"
+  },
+  "receipts/sequoia-short.log": {
+    "bytes": 648,
+    "sha256": "85c4a67b9ce14a334e79bf4f595828aa4c119831cad07b98357d4f9d1ad2b79b"
+  },
+  "receipts/video-pressure-build-02.log": {
+    "bytes": 4082,
+    "sha256": "cf6cbee02e70befa8dbb6f00125d54dbd64b77e249d879fd72853eac036bd2ab"
+  },
+  "receipts/video-pressure-build-03.log": {
+    "bytes": 4082,
+    "sha256": "cf6cbee02e70befa8dbb6f00125d54dbd64b77e249d879fd72853eac036bd2ab"
+  },
+  "receipts/video-pressure-build-04.log": {
+    "bytes": 4082,
+    "sha256": "cf6cbee02e70befa8dbb6f00125d54dbd64b77e249d879fd72853eac036bd2ab"
+  },
+  "receipts/video-pressure-build.log": {
+    "bytes": 4082,
+    "sha256": "cf6cbee02e70befa8dbb6f00125d54dbd64b77e249d879fd72853eac036bd2ab"
+  }
+}

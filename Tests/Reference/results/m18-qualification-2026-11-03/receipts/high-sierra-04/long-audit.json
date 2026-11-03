@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "frames": 2073600000,
+  "rf64": true,
+  "independent_samples": 1030,
+  "samples_beyond_4_gib": 314,
+  "source_sha256": "fec6b61288c7f125eadf580f5107aa3f2527b8a5fe324686a1efa5519e0fcb27",
+  "artifact_sha256": "055ae11446acfe0e9c405102f0a78f403d017075bb561c69435c27d908888449",
+  "three_hour": true
+}

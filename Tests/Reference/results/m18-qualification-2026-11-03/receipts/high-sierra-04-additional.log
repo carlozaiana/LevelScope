@@ -1,0 +1,27 @@
+START peaks-2-serial
+PASS peaks-2-serial 21.65
+START peaks-2-bounded
+PASS peaks-2-bounded 21.63
+START peaks-2-app-mode
+PASS peaks-2-app-mode 21.66
+START peaks-6-serial
+PASS peaks-6-serial 63.49
+START peaks-6-bounded
+PASS peaks-6-bounded 63.09
+START peaks-6-app-mode
+PASS peaks-6-app-mode 63.42
+START exchange-prepare
+PASS exchange-prepare 0.85
+START video-matrix
+PASS video-matrix 43.21
+START video-native
+PASS video-native 544.78
+{
+  "passed": true,
+  "failure": "",
+  "architecture": "x86_64",
+  "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb",
+  "identity_sha256": "33bc7202fc2629797bbfd3223b3849145a88bebe5c22e9157a1636f53cd69e95",
+  "seconds": 843.798462591,
+  "physical_devices_opened": false
+}

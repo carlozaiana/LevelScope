@@ -1,0 +1,67 @@
+START measurement
+PASS measurement 13.57
+START compliance
+PASS compliance 0.62
+START global-proposal
+PASS global-proposal 5.46
+START diagnostics
+PASS diagnostics 2.23
+START sections
+PASS sections 3.39
+START audition
+PASS audition 31.98
+START multichannel
+PASS multichannel 72.0
+START sessions
+PASS sessions 4.92
+START session-playback
+PASS session-playback 3.44
+START export
+PASS export 25.0
+START section-processing
+PASS section-processing 7.18
+START section-proposal
+PASS section-proposal 11.63
+START preferences
+PASS preferences 7.33
+START proposal-workflow
+PASS proposal-workflow 5.76
+START mono
+PASS mono 11.63
+START requirements
+PASS requirements 32.21
+START waveform-service
+PASS waveform-service 25.16
+START timeline
+PASS timeline 3.36
+START markers
+PASS markers 9.82
+START waveform-core
+PASS waveform-core 1.12
+START peak-parity
+PASS peak-parity 4.54
+START video-core
+PASS video-core 0.74
+START ebu
+PASS ebu 27.73
+START itu
+PASS itu 67.65
+START native-stereo
+PASS native-stereo 7.25
+START audit-stereo
+PASS audit-stereo 0.05
+START native-surround
+PASS native-surround 13.69
+START audit-surround
+PASS audit-surround 0.09
+{
+  "passed": true,
+  "failure": "",
+  "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb",
+  "identity_sha256": "33bc7202fc2629797bbfd3223b3849145a88bebe5c22e9157a1636f53cd69e95",
+  "architecture": "arm64",
+  "os": "15.7.9",
+  "seconds": 399.637399875,
+  "physical_devices_opened": false,
+  "full_qualification_complete": false
+}

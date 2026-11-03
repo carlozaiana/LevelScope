@@ -1,0 +1,11 @@
+{
+  "candidate_identity_sha256": "33bc7202fc2629797bbfd3223b3849145a88bebe5c22e9157a1636f53cd69e95",
+  "measurement_build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb",
+  "source_sha256": "8359dea0edc5d6f803f7e2c844c3956b53aaeeb8e1d516318911fe7c9aef9aa0",
+  "binary_sha256": "243d23d3a7ab810635283a121ac39971a375d890fe4b397ce161515004cb255b",
+  "binary": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/drivers/density-01",
+  "architectures": "x86_64 arm64",
+  "builder_sha256": "e8ab9fbd5e6b2f530e5c291ed70fef1cfc2d85a46184daa2e288792dba7f08ac",
+  "build_command": "python3 Tests/Qualification/M18/build_driver.py build/m18-qualification-2026-11-03/compile Tests/Qualification/M18/Density.cpp build/m18-qualification-2026-11-03/drivers/density-01 --target LevelScopeDiagnosticsTests --replace DiagnosticsTests.cpp.o --private",
+  "method": "Separate diagnostic executable; synthetic finest-bin seed using -fno-access-control; unchanged production overview reduction and timeline objects; no long multichannel PCM claim"
+}

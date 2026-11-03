@@ -1,0 +1,219 @@
+{
+  "passed": true,
+  "scope": "Selected combined M14-M18 qualification on actual arm64 Sequoia and x86_64 High Sierra, including authorised muted physical subset",
+  "candidate_identity_sha256": "33bc7202fc2629797bbfd3223b3849145a88bebe5c22e9157a1636f53cd69e95",
+  "measurement_build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb",
+  "product_commit": "3665815d73fbd93c0574cdfee8d7efdd805ab7b6",
+  "app_sha256": "1b9b8db2aca5d17f7343912110d263f638216152f1bb806368220a4ac79709bf",
+  "hosts": {
+    "sequoia-04": {
+      "architecture": "arm64",
+      "os": "15.7.9",
+      "short_groups": 28,
+      "short_seconds": 399.637399875,
+      "long_checks": 87,
+      "long_seconds": 4120.68756925,
+      "extra_exact_source_seconds": 545.0312683333344,
+      "extra_plain_measurement_seconds": 507.4278817083333,
+      "long_with_extra_seconds": 4665.718837583335,
+      "source_observation_ratio": 1.010867274795092,
+      "source_observation_extra_peak_rss_bytes": 89784320,
+      "waveform_retained_bytes": 105592848,
+      "timeline": {
+        "updates": "20305",
+        "partial_updates": "4411",
+        "first_waveform_ms": 71360.32624999993,
+        "prepare_p95_ms": 1.403541667386889,
+        "paint_p95_ms": 6.908833334222436,
+        "rendering": "actual timeline component offscreen at 5 Hz"
+      },
+      "long_stages_seconds": {
+        "generate_import_ms": 37.790625249999586,
+        "plain_source_ms": 504.3353167083338,
+        "observed_source_ms": 509.81606729166583,
+        "proposal_ms": 1696.3497107499988,
+        "independent_current_ms": 519.1172149166671,
+        "diagnostics_ms": 0.0212377500012517,
+        "save_ms": 0.1099205833338201,
+        "parse_ms": 0.4826437500007451,
+        "reopen_ms": 37.15546883333288,
+        "audition_capture_ms": 71.47757562500053,
+        "render_verify_ms": 642.3289285000004,
+        "publish_ms": 100.6058708333336
+      },
+      "ui_p95_ms": 15.02508333325386,
+      "cancel_ms": 10.49683333188295,
+      "session_bytes": 10725495,
+      "report_bytes": 872091,
+      "independent_export_samples": 1030,
+      "samples_beyond_4_gib": 314,
+      "source_sha256": "fec6b61288c7f125eadf580f5107aa3f2527b8a5fe324686a1efa5519e0fcb27",
+      "artifact_sha256": "055ae11446acfe0e9c405102f0a78f403d017075bb561c69435c27d908888449",
+      "exact_source_window_count": 323954,
+      "density": [
+        {
+          "channels": 6,
+          "frames": "2073600000",
+          "sample_rate": 192000,
+          "combined_overview_bytes": "81294528",
+          "finest_interval_frames": "16384",
+          "prepare_p95_ms": 1.738833332434297,
+          "paint_p95_ms": 24.28708333335817
+        },
+        {
+          "channels": 8,
+          "frames": "2073600000",
+          "sample_rate": 192000,
+          "combined_overview_bytes": "105595200",
+          "finest_interval_frames": "16384",
+          "prepare_p95_ms": 1.904416665434837,
+          "paint_p95_ms": 26.25762500055134
+        }
+      ],
+      "native_review_actions": [
+        "preset Cancel closes",
+        "direct M/S entry and Unsaved preset naming",
+        "preset Save closes and selects complete definition",
+        "existing presets unchanged; disposable preset archived",
+        "native Open panel selects owned 5.1 session",
+        "reopened Current independently Ready/PASS; device closed and routes muted",
+        "all three last-applied explanation pages accessible",
+        "Propose reports Already meets requirements with Apply unavailable",
+        "Proposal limits opens after Propose and Cancel edits restores active values",
+        "native Save As creates separate session without overwriting accepted fixture",
+        "quit after save"
+      ],
+      "physical_device": "Mac Studio Speakers",
+      "physical_muted_cases": 4,
+      "receiving_exchange_cases": 8
+    },
+    "high-sierra-04": {
+      "architecture": "x86_64",
+      "os": "10.13.6",
+      "short_groups": 28,
+      "short_seconds": 1075.6483839999999,
+      "long_checks": 87,
+      "long_seconds": 7398.310037818,
+      "extra_exact_source_seconds": 991.9621266960017,
+      "extra_plain_measurement_seconds": 931.882001699999,
+      "long_with_extra_seconds": 8390.272164514,
+      "source_observation_ratio": 0.9982603729025369,
+      "source_observation_extra_peak_rss_bytes": 69963776,
+      "waveform_retained_bytes": 105592848,
+      "timeline": {
+        "updates": "36287",
+        "partial_updates": "8273",
+        "first_waveform_ms": 120661.9785600007,
+        "prepare_p95_ms": 3.840437000617385,
+        "paint_p95_ms": 25.68752400018275,
+        "rendering": "actual timeline component offscreen at 5 Hz"
+      },
+      "long_stages_seconds": {
+        "generate_import_ms": 69.97776919299923,
+        "plain_source_ms": 950.3010620879996,
+        "observed_source_ms": 948.6478933410011,
+        "proposal_ms": 2943.8799906000013,
+        "independent_current_ms": 963.5367485410012,
+        "diagnostics_ms": 0.04491377799957991,
+        "save_ms": 0.2354897390007973,
+        "parse_ms": 1.0256386790014802,
+        "reopen_ms": 59.309433025000615,
+        "audition_capture_ms": 121.0538601309992,
+        "render_verify_ms": 1185.7942487239989,
+        "publish_ms": 152.3573587679993
+      },
+      "ui_p95_ms": 21.81977700069547,
+      "cancel_ms": 36.34812599979341,
+      "session_bytes": 10725481,
+      "report_bytes": 872175,
+      "independent_export_samples": 1030,
+      "samples_beyond_4_gib": 314,
+      "source_sha256": "fec6b61288c7f125eadf580f5107aa3f2527b8a5fe324686a1efa5519e0fcb27",
+      "artifact_sha256": "055ae11446acfe0e9c405102f0a78f403d017075bb561c69435c27d908888449",
+      "exact_source_window_count": 323954,
+      "density": [
+        {
+          "channels": 6,
+          "frames": "2073600000",
+          "sample_rate": 192000,
+          "combined_overview_bytes": "81294528",
+          "finest_interval_frames": "16384",
+          "prepare_p95_ms": 2.828643999993801,
+          "paint_p95_ms": 79.00189899839461
+        },
+        {
+          "channels": 8,
+          "frames": "2073600000",
+          "sample_rate": 192000,
+          "combined_overview_bytes": "105595200",
+          "finest_interval_frames": "16384",
+          "prepare_p95_ms": 3.030772998929024,
+          "paint_p95_ms": 88.80521699972451
+        }
+      ],
+      "native_review_actions": [
+        "preset Cancel closes",
+        "direct M/S target entry and Unsaved preset naming",
+        "preset Save closes and selects all values including No Limit",
+        "disposable preset archived; previous preset directory contents restored",
+        "native Open panel selects owned verified 5.1 session",
+        "Current Ready/PASS; device closed and routes muted after reopen",
+        "all three last-applied explanation pages accessible with baseline and measured candidate distinctions",
+        "Propose reports Already meets requirements with Apply unavailable",
+        "Proposal limits opens in front after Propose",
+        "21.0 percent draft visibly entered; Cancel restores 20.0 percent active preference",
+        "native Save As creates native-reviewed.levelscope; original accepted fixture hash unchanged",
+        "app closed after save"
+      ],
+      "physical_device": "Built-in Output",
+      "physical_muted_cases": 4,
+      "receiving_exchange_cases": 8
+    }
+  },
+  "cross_mac": {
+    "passed": true,
+    "build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb",
+    "identity_sha256": "33bc7202fc2629797bbfd3223b3849145a88bebe5c22e9157a1636f53cd69e95",
+    "maximum_metric_difference": 3.552713678800501e-15,
+    "maximum_capture_float32_ulp": 0,
+    "cases": [
+      {
+        "name": "native-stereo",
+        "source_current_peak_positions_equal": true,
+        "verdicts_equal": true,
+        "section_geometry_equal": true
+      },
+      {
+        "name": "native-surround",
+        "source_current_peak_positions_equal": true,
+        "verdicts_equal": true,
+        "section_geometry_equal": true
+      },
+      {
+        "name": "three-hour-mono",
+        "source_current_peak_positions_equal": true,
+        "verdicts_equal": true,
+        "section_geometry_equal": true
+      }
+    ],
+    "three_hour_included": true,
+    "long_observer_exact_comparison_required": true,
+    "allowances": "Cross-Mac comparisons only: 0.01 LU/dB/gain, LRA 0.1 LU, processed float32 <=1 ULP; no additional compliance allowance"
+  },
+  "main": "a9be070ab9eb5cb4f591ff9d991d8999c3a016d0",
+  "publication_performed": false,
+  "known_cosmetic_issue": "Historical explanation heading dash renders incorrectly; complete data and words remain accessible",
+  "remaining_qualification_scope": [
+    "Full physical 7.1 listening remains separate",
+    "Full video codec/colour matrix and 30-minute endurance remain conditional on relevant changes or concrete failures",
+    "No new full-duration multichannel PCM end-to-end claim"
+  ],
+  "later_product_work": [
+    "Visible-passage sample inspection",
+    "Output selection and opt-in device reconnection",
+    "Explicit 5.1-to-stereo monitoring",
+    "Further DSP, automation and metering",
+    "Automatic LRA/M/S-directed correction",
+    "Faster initial waveform availability during payload preparation"
+  ]
+}

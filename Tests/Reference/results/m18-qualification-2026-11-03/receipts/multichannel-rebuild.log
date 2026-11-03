@@ -1,0 +1,6 @@
+[  0%] Built target LevelScopeMeasurementCore
+[ 57%] Built target LevelScopeStandaloneSupport
+[ 80%] Built target LevelScopeDiagnosticsUI
+[ 80%] Building CXX object CMakeFiles/LevelScopeMultichannelTests.dir/Tests/MultichannelTests.cpp.o
+[ 85%] Linking CXX executable LevelScopeMultichannelTests_artefacts/Release/LevelScopeMultichannelTests
+[100%] Built target LevelScopeMultichannelTests

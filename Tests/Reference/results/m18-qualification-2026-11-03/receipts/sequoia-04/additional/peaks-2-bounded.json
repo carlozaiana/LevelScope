@@ -1,0 +1,377 @@
+{
+  "operations": {
+    "import": {
+      "wall_ms": 101.622917,
+      "worker_cpu_ms": 101.31,
+      "process_cpu_ms": 102.418,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        101.327
+      ],
+      "heartbeat_tail_ms": 3.500208,
+      "timeline_paint_ms": [
+        3.480958
+      ]
+    },
+    "source": {
+      "wall_ms": 1071.949541,
+      "worker_cpu_ms": 833.139,
+      "process_cpu_ms": 1685.987,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        101.286125,
+        102.840791,
+        100.194875,
+        104.242167,
+        103.827875,
+        100.587958,
+        104.465959,
+        100.18975,
+        101.272458,
+        101.674625
+      ],
+      "heartbeat_tail_ms": 52.489042,
+      "timeline_paint_ms": [
+        2.516791,
+        2.825834,
+        2.243792,
+        3.269708,
+        3.053333,
+        4.041125,
+        3.8595,
+        5.107333,
+        4.6055,
+        6.046083
+      ]
+    },
+    "global": {
+      "wall_ms": 1.714208,
+      "worker_cpu_ms": 1.719999999999999,
+      "process_cpu_ms": 1.731,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [],
+      "heartbeat_tail_ms": 1.73275,
+      "timeline_paint_ms": []
+    },
+    "fresh": {
+      "wall_ms": 2560.454833,
+      "worker_cpu_ms": 2285.777,
+      "process_cpu_ms": 4514.78,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        97.32466700000001,
+        100.532666,
+        101.112334,
+        100.378958,
+        101.172125,
+        100.373583,
+        101.054709,
+        100.783583,
+        102.621042,
+        100.596541,
+        102.42975,
+        100.333125,
+        99.52912499999999,
+        102.293459,
+        100.721708,
+        100.624417,
+        101.088875,
+        101.290541,
+        100.4975,
+        100.007084,
+        101.682583,
+        100.77275,
+        103.957458,
+        101.202792,
+        100.808833
+      ],
+      "heartbeat_tail_ms": 38.005,
+      "timeline_paint_ms": [
+        4.399708,
+        2.847375,
+        2.774583,
+        2.800875,
+        2.784333,
+        2.734084,
+        2.629541,
+        2.886917,
+        2.747833,
+        2.720959,
+        2.729542,
+        2.847417,
+        2.786125,
+        2.824666,
+        2.950375,
+        2.838375,
+        2.883666,
+        2.73825,
+        2.823917,
+        2.767333,
+        2.514958,
+        2.766833,
+        2.817709,
+        2.7355,
+        2.720917
+      ]
+    },
+    "preference_blocked": {
+      "wall_ms": 201.683541,
+      "worker_cpu_ms": 200.422,
+      "process_cpu_ms": 207.186,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        99.779084,
+        99.84762499999999
+      ],
+      "heartbeat_tail_ms": 3.854083,
+      "timeline_paint_ms": [
+        2.815625,
+        3.830708
+      ]
+    },
+    "measured_rejection": {
+      "wall_ms": 868.182125,
+      "worker_cpu_ms": 847.979,
+      "process_cpu_ms": 1465.175,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        99.08799999999999,
+        100.156708,
+        102.583667,
+        101.692,
+        101.798958,
+        101.603834,
+        100.838083,
+        100.962875
+      ],
+      "heartbeat_tail_ms": 59.930417,
+      "timeline_paint_ms": [
+        2.77425,
+        2.734667,
+        2.639583,
+        2.779958,
+        2.845459,
+        2.7745,
+        2.846708,
+        2.738083
+      ]
+    },
+    "unsupported": {
+      "wall_ms": 1.711167,
+      "worker_cpu_ms": 1.713999999999999,
+      "process_cpu_ms": 1.719,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [],
+      "heartbeat_tail_ms": 1.723125,
+      "timeline_paint_ms": []
+    },
+    "reused": {
+      "wall_ms": 1534.639,
+      "worker_cpu_ms": 1494.537,
+      "process_cpu_ms": 2725.607,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        99.764709,
+        101.721541,
+        103.096667,
+        100.191708,
+        101.398667,
+        102.070208,
+        101.222584,
+        103.603375,
+        102.653375,
+        100.736541,
+        103.877375,
+        101.76775,
+        101.415209,
+        100.357208,
+        101.970042
+      ],
+      "heartbeat_tail_ms": 9.974333,
+      "timeline_paint_ms": [
+        2.784041,
+        2.638709,
+        2.694958,
+        2.84525,
+        2.741833,
+        2.751584,
+        2.813208,
+        2.892958,
+        2.642458,
+        2.791125,
+        2.822959,
+        2.501417,
+        2.739958,
+        2.765667,
+        2.779583
+      ]
+    },
+    "current": {
+      "wall_ms": 868.887459,
+      "worker_cpu_ms": 849.847,
+      "process_cpu_ms": 1466.859,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        91.69791600000001,
+        101.02375,
+        103.305459,
+        100.684833,
+        99.84970800000001,
+        100.956084,
+        101.036958,
+        99.832875
+      ],
+      "heartbeat_tail_ms": 73.22470800000001,
+      "timeline_paint_ms": [
+        1.805334,
+        0.799459,
+        2.320458,
+        2.10275,
+        3.668875,
+        3.299125,
+        4.360458,
+        4.449292
+      ]
+    },
+    "already_meets": {
+      "wall_ms": 1.817042,
+      "worker_cpu_ms": 1.819999999999993,
+      "process_cpu_ms": 1.831,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [],
+      "heartbeat_tail_ms": 1.845042,
+      "timeline_paint_ms": []
+    }
+  },
+  "identities": {
+    "source": "5f16ac43b7da1c38468ddcc711240af9f64201c26f03482ecd11e54ee3b48636",
+    "global": "14b07da751a1427a85291310596ac1c5bcb1a03ecca1c5081503f96340e2df77",
+    "global_decision": "90828488edfaa589a9f9e55000679786e67a2ca1be0895b1af18baa549bfb27f",
+    "fresh": "875b1ca1e5f9c0963565ff0049dc6b9117edc40155348950cf9d791fc991cd3f",
+    "fresh_decision": "a25ebcfd879420b146211180a5ce4c6656ad76526a648ad4710430c955c568af",
+    "fresh_section_peaks": "b58ecf779ba471746315128bd06d377cd8def09507b704fed597ff1866130f49",
+    "fresh_candidate": "fde727f783f0de5cf8713595c4a4cc4af0d0ffe638fc887d377deb3f108bdb8c",
+    "fresh_plan": "cb5ff556a9374e3e9da83b81230683683e0df46c2b14ea9d971943831244e6ba",
+    "preference_blocked": "4df980e118a004af962c94fda2d0a3ec36d4082ce684d4096c8e93a2201599f9",
+    "preference_blocked_decision": "0efaaa58f3c8546bcddd6c1214a9ff0878187353e42ff97a31d81f7181c29c61",
+    "preference_blocked_section_peaks": "b58ecf779ba471746315128bd06d377cd8def09507b704fed597ff1866130f49",
+    "measured_rejection": "b2ed84549192e0698ac41fad4c57fb44ebd3add1af46c7a099f89ff340a7dec5",
+    "measured_rejection_decision": "1c45e6d8a518b12bf4174460d40a0dd849a2bf90ca25c76916a21aa39884199b",
+    "measured_rejection_section_peaks": "b58ecf779ba471746315128bd06d377cd8def09507b704fed597ff1866130f49",
+    "measured_rejection_candidate": "912b87b533e6450480b5321928dafbf81a1abaf7f6826e7ccb7edd3701434f0e",
+    "measured_rejection_plan": "02e8e161047cdf69e8e640a7beb1a1ddc006430b68e884b36c5515aced4ff5e7",
+    "unsupported": "379cac10f74410f283de5abbdc0de1136b6ff6825c9900699de6c918c4a0fec0",
+    "unsupported_decision": "56daa84ccff17ee88c94463730b4d1fcfc0379b587a60789ca18a47af578e1f4",
+    "reused": "875b1ca1e5f9c0963565ff0049dc6b9117edc40155348950cf9d791fc991cd3f",
+    "reused_decision": "770e4842692c2a1bb6e36fe35772c8f7fac2dd8d9d5efd73e07fc71f3f5ab26a",
+    "reused_section_peaks": "b58ecf779ba471746315128bd06d377cd8def09507b704fed597ff1866130f49",
+    "reused_candidate": "4e899fbd13d3226bd7bb5afa5fb1e60c208fc729f5c08715dcf026a7428b9a3c",
+    "reused_plan": "cb5ff556a9374e3e9da83b81230683683e0df46c2b14ea9d971943831244e6ba",
+    "current": "adcead42257ff92067bf050394b2c0e4da426265ec903b5576e0ab872744af72",
+    "already_meets": "1d7bdc530a35b1247546d163a2d34aff90af7c203c85a967eff6b781e8431aa0",
+    "already_meets_decision": "d89a402b2acd22a72646ecc12fc694fa318d311fdf0fa7d20c22888e4ef1faef"
+  },
+  "outcomes": {
+    "global": {
+      "main_preflight_ms": 0.787667,
+      "main_accept_ms": 0.194834,
+      "passes": 0,
+      "outcome": "Ready to apply",
+      "changes": 0,
+      "status": 2,
+      "issue": 0,
+      "can_apply": true,
+      "target_il": -23.7,
+      "target_tp": -1.0
+    },
+    "fresh": {
+      "main_preflight_ms": 0.081709,
+      "main_accept_ms": 0.351042,
+      "passes": 3,
+      "outcome": "Ready to apply",
+      "changes": 1,
+      "status": 4,
+      "issue": 0,
+      "can_apply": true,
+      "target_il": -23.0,
+      "target_tp": -1.0
+    },
+    "preference_blocked": {
+      "main_preflight_ms": 0.115667,
+      "main_accept_ms": 0.317667,
+      "passes": 0,
+      "outcome": "Blocked by proposal preferences",
+      "changes": 0,
+      "status": 3,
+      "issue": 3,
+      "can_apply": false,
+      "target_il": -23.0,
+      "target_tp": -1.0
+    },
+    "measured_rejection": {
+      "main_preflight_ms": 0.07141699999999999,
+      "main_accept_ms": 0.294708,
+      "passes": 1,
+      "outcome": "Candidate rejected",
+      "changes": 1,
+      "status": 3,
+      "issue": 4,
+      "can_apply": false,
+      "target_il": -18.0,
+      "target_tp": -1.0
+    },
+    "unsupported": {
+      "main_preflight_ms": 1.462791,
+      "main_accept_ms": 0.221791,
+      "passes": 0,
+      "outcome": "Unsupported correction",
+      "changes": 0,
+      "status": 0,
+      "issue": 2,
+      "can_apply": false,
+      "target_il": -18.0,
+      "target_tp": -1.0
+    },
+    "reused": {
+      "main_preflight_ms": 0.067,
+      "main_accept_ms": 0.285417,
+      "passes": 2,
+      "outcome": "Ready to apply",
+      "changes": 1,
+      "status": 4,
+      "issue": 0,
+      "can_apply": true,
+      "target_il": -23.0,
+      "target_tp": -1.0
+    },
+    "already_meets": {
+      "main_preflight_ms": 0.859625,
+      "main_accept_ms": 0.266292,
+      "passes": 0,
+      "outcome": "Already meets requirements",
+      "changes": 0,
+      "status": 1,
+      "issue": 0,
+      "can_apply": false,
+      "target_il": -23.0,
+      "target_tp": -1.0
+    }
+  },
+  "roles": "L,R",
+  "file_sha256": "171b4aa51900c9826416719af9950005ce1a445817e49aa215c14cc2cd332566",
+  "frames": 2880000,
+  "source_lufs": -24.43008132144102,
+  "current_lufs": -23.00000001747636,
+  "channels": 2,
+  "base_build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb"
+}

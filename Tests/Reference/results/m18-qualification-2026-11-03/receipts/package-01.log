@@ -1,0 +1,61 @@
+/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-01/fixtures/programme-2.wav 171b4aa51900c9826416719af9950005ce1a445817e49aa215c14cc2cd332566
+/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-01/fixtures/programme-6.wav c2248717fe25628866c8b85e28a0fb7209f845a01a7b933e69955188867c59b9
+/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-01/peak-fixtures/programme-2.wav 171b4aa51900c9826416719af9950005ce1a445817e49aa215c14cc2cd332566
+/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/candidate-01/peak-fixtures/programme-6.wav c2248717fe25628866c8b85e28a0fb7209f845a01a7b933e69955188867c59b9
+{
+  "schema": 1,
+  "name": "M18 combined qualification candidate 01",
+  "source_commit": "916e7760cc96b25fb2428d3f2d9b28074ca80097",
+  "source_digest": "87e04baa0ed2fc53c47b44ad5485d14e8c946d187dc11263d69cb5fb9fc6e70c",
+  "measurement_build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce",
+  "bounded_true_peak": "ON; app service uses bounded stereo/5.1 on Apple silicon, serial on Intel",
+  "architectures": [
+    "arm64",
+    "x86_64"
+  ],
+  "intel_minimum": "10.13",
+  "juce_commit": "4f43011b96eb0636104cb3e433894cda98243626",
+  "compiler": "Apple clang version 17.0.0 (clang-1700.0.13.5)\nTarget: arm64-apple-darwin24.6.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin\n",
+  "required_short_groups": [
+    "audit-stereo",
+    "audit-surround",
+    "audition",
+    "compliance",
+    "diagnostics",
+    "ebu",
+    "export",
+    "global-proposal",
+    "itu",
+    "markers",
+    "measurement",
+    "mono",
+    "multichannel",
+    "native-stereo",
+    "native-surround",
+    "peak-parity",
+    "preferences",
+    "proposal-workflow",
+    "requirements",
+    "section-processing",
+    "section-proposal",
+    "sections",
+    "session-playback",
+    "sessions",
+    "timeline",
+    "video-core",
+    "waveform-core",
+    "waveform-service"
+  ],
+  "required_other_groups": [
+    "peak-policy-exact",
+    "cross-mac-measurements",
+    "exchange-both-directions",
+    "video-native-pressure",
+    "video-injected-matrix",
+    "mono-three-hour-both-macs",
+    "rf64-independent-oracle",
+    "physical-muted-coordinated",
+    "manual-native-review"
+  ],
+  "qualification_complete": false
+}

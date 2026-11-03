@@ -1,0 +1,25 @@
+{
+  "artifacts": [
+    {
+      "path": "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-04/long/mono-duration-192k.wav",
+      "bytes": 6220800104,
+      "sha256": "fec6b61288c7f125eadf580f5107aa3f2527b8a5fe324686a1efa5519e0fcb27"
+    },
+    {
+      "path": "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-04/long/export/programme.wav",
+      "bytes": 6220800104,
+      "sha256": "055ae11446acfe0e9c405102f0a78f403d017075bb561c69435c27d908888449"
+    },
+    {
+      "path": "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-04/long/mono-duration.levelscope",
+      "bytes": 10725481,
+      "sha256": "9f2c65c635a7e1882d28bdc2faebdccc22c425f708f9fc1af826953264bab01b"
+    },
+    {
+      "path": "/Users/fuzz/LevelScope-M18-qualification-2026-11-03/high-sierra-04/long/historical-unverified.levelscope",
+      "bytes": 5540570,
+      "sha256": "c6317766f120828e8e807c72f0a455cf341c8a9c9fd5e12d7885c262364b896d"
+    }
+  ],
+  "audio_hashes_from": "completed independent streaming audit; session hashes computed separately"
+}

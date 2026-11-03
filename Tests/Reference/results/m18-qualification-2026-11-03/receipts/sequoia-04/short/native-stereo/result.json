@@ -1,0 +1,275 @@
+{
+  "import_to_role_review_s": 0.215847208,
+  "import_to_first_waveform_s": 0.638537875,
+  "confirm_to_first_waveform_s": 0.263326125,
+  "import_to_16_signal_columns_s": 0.840499375,
+  "import_to_measurements_ready_s": 1.466656541,
+  "input_sha256": "7beb283889ffaf293c593599c8b941754598c9bff6dc0503856eea2b91dac002",
+  "frames": 2880000,
+  "source_il_lufs": -24.43055749893653,
+  "source_true_peak_dbtp": -10.45757628619184,
+  "play_to_first_output_s": 0.3035789163333333,
+  "import_to_first_output_s": 1.770239416333333,
+  "first_nonzero_frame": 1,
+  "proposal_s": 0.019378959,
+  "proposal_outcome_text": "Ready to apply\nProposed global gain 1.430557499 dB. Predicted IL -23.000000 LUFS / TP -9.027019 dBTP. Global gain alone has a predicted solution. Apply explicitly, then Re-measure Current State.",
+  "proposal_passes": 0,
+  "proposal_outcome": "Ready to apply",
+  "proposed_global_db": 1.430557498936526,
+  "proposed_local_count": 0,
+  "current_remeasurement_s": 0.992899375,
+  "current_il_lufs": -22.99999995132556,
+  "current_true_peak_dbtp": -9.027018942912388,
+  "render_and_measure_artifact_s": 1.340522208,
+  "artifact_sha256": "857e52542c5098623c19c8325e9ffeb4c492e11b0fb15b6150c708292b72735f",
+  "artifact_il_lufs": -22.99999995313937,
+  "artifact_true_peak_dbtp": -9.027019674751104,
+  "passed": true,
+  "checks": [
+    {
+      "name": "main window has a live native peer",
+      "passed": true
+    },
+    {
+      "name": "file picker opened with an active completion",
+      "passed": true
+    },
+    {
+      "name": "review precedes measurement",
+      "passed": true
+    },
+    {
+      "name": "one-click confirm and analyse action",
+      "passed": true
+    },
+    {
+      "name": "EBU R128 programme context",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "injected output opened at programme rate",
+      "passed": true
+    },
+    {
+      "name": "explicit one-to-one monitoring route",
+      "passed": true
+    },
+    {
+      "name": "explicit one-to-one monitoring route",
+      "passed": true
+    },
+    {
+      "name": "analysis starts and playback waits for the active job",
+      "passed": true
+    },
+    {
+      "name": "painted preview is incomplete and has no Current verdict",
+      "passed": true
+    },
+    {
+      "name": "one accepted Source measurement populated untouched Current with exact origin",
+      "passed": true
+    },
+    {
+      "name": "full short fixture metadata",
+      "passed": true
+    },
+    {
+      "name": "first Play started transport preparation",
+      "passed": true
+    },
+    {
+      "name": "first non-zero post-monitor PCM occurs at programme frame one",
+      "passed": true
+    },
+    {
+      "name": "first audible frame present on each explicitly routed output",
+      "passed": true
+    },
+    {
+      "name": "first audible frame present on each explicitly routed output",
+      "passed": true
+    },
+    {
+      "name": "Space stops native timeline playback",
+      "passed": true
+    },
+    {
+      "name": "transport stopped and output disconnected",
+      "passed": true
+    },
+    {
+      "name": "write fresh UI capture",
+      "passed": true
+    },
+    {
+      "name": "write fresh UI capture",
+      "passed": true
+    },
+    {
+      "name": "inspect Current leaves audition on Original",
+      "passed": true
+    },
+    {
+      "name": "one waveform gesture creates a local section",
+      "passed": true
+    },
+    {
+      "name": "boundary adjusted in Sections without disturbing either measurement",
+      "passed": true
+    },
+    {
+      "name": "stopped ruler seek in Sections",
+      "passed": true
+    },
+    {
+      "name": "gain selection and zoom leave audition position unchanged",
+      "passed": true
+    },
+    {
+      "name": "numeric gain remains an unapplied draft",
+      "passed": true
+    },
+    {
+      "name": "Discard draft restores applied gains",
+      "passed": true
+    },
+    {
+      "name": "Propose offers an unapplied correction",
+      "passed": true
+    },
+    {
+      "name": "expected global or section-led outcome",
+      "passed": true
+    },
+    {
+      "name": "candidate evidence matches proposal method",
+      "passed": true
+    },
+    {
+      "name": "proposal exposes the complete preview plan",
+      "passed": true
+    },
+    {
+      "name": "complete proposal review opens from main window",
+      "passed": true
+    },
+    {
+      "name": "write fresh UI capture",
+      "passed": true
+    },
+    {
+      "name": "explicit Apply makes Current unverified and blocks rendering",
+      "passed": true
+    },
+    {
+      "name": "Apply installs exactly the reviewed global and local gains",
+      "passed": true
+    },
+    {
+      "name": "independently measured applied Current passes",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "injected output opened at programme rate",
+      "passed": true
+    },
+    {
+      "name": "explicit one-to-one monitoring route",
+      "passed": true
+    },
+    {
+      "name": "explicit one-to-one monitoring route",
+      "passed": true
+    },
+    {
+      "name": "stopped main timecode seek lands at the edited boundary",
+      "passed": true
+    },
+    {
+      "name": "attach a bounded pre-monitor capture",
+      "passed": true
+    },
+    {
+      "name": "Current audition delivered all selected frames",
+      "passed": true
+    },
+    {
+      "name": "read selected programme passage independently",
+      "passed": true
+    },
+    {
+      "name": "process the exact applied state for comparison",
+      "passed": true
+    },
+    {
+      "name": "Current audition matches the applied samples on the routed channel",
+      "passed": true
+    },
+    {
+      "name": "Current audition matches the applied samples on the routed channel",
+      "passed": true
+    },
+    {
+      "name": "audition leaves independent measurement intact",
+      "passed": true
+    },
+    {
+      "name": "file picker opened with an active completion",
+      "passed": true
+    },
+    {
+      "name": "session saved from main window",
+      "passed": true
+    },
+    {
+      "name": "file picker opened with an active completion",
+      "passed": true
+    },
+    {
+      "name": "reopened and revalidated independently measured Current",
+      "passed": true
+    },
+    {
+      "name": "reopened complete applied explanation, annotations and identical processing",
+      "passed": true
+    },
+    {
+      "name": "reopen restores project roles and leaves playback stopped and routes muted",
+      "passed": true
+    },
+    {
+      "name": "saved explanation inspectable after reopen",
+      "passed": true
+    },
+    {
+      "name": "file picker opened with an active completion",
+      "passed": true
+    },
+    {
+      "name": "independently measured artifact ready for explicit Publish",
+      "passed": true
+    },
+    {
+      "name": "encoded artifact independently passes",
+      "passed": true
+    },
+    {
+      "name": "published PCM24 audio and complete report bundle",
+      "passed": true
+    },
+    {
+      "name": "write fresh UI capture",
+      "passed": true
+    }
+  ],
+  "measurement_build": "79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb"
+}

@@ -1,0 +1,52 @@
+/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Qualification/M18/Exchange.cpp:5:118: error: binding reference of type 'StandaloneSessionModel' to value of type 'const StandaloneSessionModel' drops 'const' qualifier
+    5 | void saveExchange(const StandaloneSessionModel& s,const juce::File& file){JobControl job;expect(sf::save(sf::capture(s),file,job).succeeded(),"save exact exchange fixture");}
+      |                                                                                                                      ^
+/Users/fuzz/.codex/worktrees/a411/LevelScope/Source/Standalone/SessionDocument.h:54:42: note: passing argument to parameter here
+   54 | Document capture (StandaloneSessionModel&);
+      |                                          ^
+/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Qualification/M18/Exchange.cpp:13:70: error: no member named 'targetProfile' in 'levelscope::standalone::StandaloneSessionModel'
+   13 |         auto edited=s;auto req=proposal::JobRequirements::editable(s.targetProfile());
+      |                                                                    ~ ^
+/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Qualification/M18/Exchange.cpp:28:46: error: use of overloaded operator '!=' is ambiguous (with operand types 'const char *' and 'juce::String')
+   28 |         const bool previouslyVerified=variant!=juce::String("processing-unverified");
+      |                                       ~~~~~~~^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/text/juce_String.h:1460:29: note: candidate function
+ 1460 | JUCE_API bool JUCE_CALLTYPE operator!= (const String& string1, const String& string2) noexcept;
+      |                             ^
+/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/containers/juce_Variant.h:340:15: note: candidate function
+  340 | JUCE_API bool operator!= (const var&, const String&);
+      |               ^
+/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Qualification/M18/Exchange.cpp:42:19: error: use of overloaded operator '==' is ambiguous (with operand types 'const char *' and 'juce::String')
+   42 |         if(variant==juce::String("verified")){
+      |            ~~~~~~~^ ~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/text/juce_String.h:1447:29: note: candidate function
+ 1447 | JUCE_API bool JUCE_CALLTYPE operator== (const String& string1, const String& string2) noexcept;
+      |                             ^
+/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/containers/juce_Variant.h:339:15: note: candidate function
+  339 | JUCE_API bool operator== (const var&, const String&);
+      |               ^
+/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Qualification/M18/Exchange.cpp:45:25: error: use of overloaded operator '==' is ambiguous (with operand types 'const char *' and 'juce::String')
+   45 |         }else if(variant==juce::String("processing-unverified"))expect(s.appliedExplanationStatus().contains("processing edited"),"changed processing visibly historical");
+      |                  ~~~~~~~^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/text/juce_String.h:1447:29: note: candidate function
+ 1447 | JUCE_API bool JUCE_CALLTYPE operator== (const String& string1, const String& string2) noexcept;
+      |                             ^
+/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/containers/juce_Variant.h:339:15: note: candidate function
+  339 | JUCE_API bool operator== (const var&, const String&);
+      |               ^
+/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Qualification/M18/Exchange.cpp:49:97: error: use of overloaded operator '==' is ambiguous (with operand types 'const char *' and 'juce::String')
+   49 |         expect(reopened.prepared&&reopened.prepared->model.currentState.hasMeasurement==(variant==juce::String("verified")),"receiving-platform save/reopen preserves independent verification state");
+      |                                                                                          ~~~~~~~^ ~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/text/juce_String.h:1447:29: note: candidate function
+ 1447 | JUCE_API bool JUCE_CALLTYPE operator== (const String& string1, const String& string2) noexcept;
+      |                             ^
+/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/containers/juce_Variant.h:339:15: note: candidate function
+  339 | JUCE_API bool operator== (const var&, const String&);
+      |               ^
+6 errors generated.
+Traceback (most recent call last):
+  File "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Qualification/M18/build_driver.py", line 24, in <module>
+    subprocess.run(['/usr/bin/c++', *options, '-x', 'objective-c++',
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 528, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/usr/bin/c++', '-DJUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1', '-DJUCE_MODAL_LOOPS_PERMITTED=1', '-DJUCE_MODULE_AVAILABLE_juce_audio_basics=1', '-DJUCE_MODULE_AVAILABLE_juce_audio_devices=1', '-DJUCE_MODULE_AVAILABLE_juce_audio_formats=1', '-DJUCE_MODULE_AVAILABLE_juce_core=1', '-DJUCE_MODULE_AVAILABLE_juce_cryptography=1', '-DJUCE_MODULE_AVAILABLE_juce_data_structures=1', '-DJUCE_MODULE_AVAILABLE_juce_events=1', '-DJUCE_MODULE_AVAILABLE_juce_graphics=1', '-DJUCE_MODULE_AVAILABLE_juce_gui_basics=1', '-DJUCE_STANDALONE_APPLICATION=1', '-DJUCE_USE_CURL=0', '-DJUCE_WEB_BROWSER=0', '-DLEVELSCOPE_MEASUREMENT_BUILD="93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce"', '-DNDEBUG=1', '-D_NDEBUG=1', '-I/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/compile/LevelScopeSectionProposalTests_artefacts/JuceLibraryCode', '-I/Users/fuzz/.codex/worktrees/a411/LevelScope/Source', '-I/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules', '-O3', '-DNDEBUG', '-std=gnu++17', '-arch', 'arm64', '-arch', 'x86_64', '-mmacosx-version-min=10.13', '-fno-fast-math', '-ffp-contract=off', '-x', 'objective-c++', '-I/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests', '-I/Users/fuzz/.codex/worktrees/a411/LevelScope/Source', '-c', '/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Qualification/M18/Exchange.cpp', '-o', '/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-qualification-2026-11-03/drivers/session-exchange.o']' returned non-zero exit status 1.
