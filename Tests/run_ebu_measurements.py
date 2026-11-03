@@ -150,6 +150,7 @@ def main():
     parser.add_argument('--report', required=True, type=pathlib.Path)
     parser.add_argument('--compare', type=pathlib.Path)
     parser.add_argument('--arch', choices=['arm64', 'x86_64'])
+    parser.add_argument('--workers', type=int, choices=range(1, 4), default=3)
     args = parser.parse_args()
     manifest_path = pathlib.Path(__file__).parent / 'Reference/ebu-v05-manifest.json'
     manifest = json.loads(manifest_path.read_text())
@@ -169,7 +170,7 @@ def main():
     if archive.is_file() and not archive_verified:
         failures.append('Archive hash mismatch')
     binary_hash = sha256(args.binary)
-    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=args.workers) as pool:
         results = list(pool.map(lambda case: run_case(case, args.binary, args.vectors, args.arch), manifest['files']))
     for result in results:
         print(('PASS' if result['passed'] else 'FAIL'), result['file'], result.get('error', ''), flush=True)

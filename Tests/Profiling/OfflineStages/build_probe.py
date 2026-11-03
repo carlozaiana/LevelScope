@@ -10,6 +10,7 @@ here=Path(__file__).resolve().parent
 root=here.parents[2]
 p=argparse.ArgumentParser()
 p.add_argument('base',type=Path);p.add_argument('output',type=Path)
+p.add_argument('--universal',action='store_true',help='Retain both macOS architectures for actual-platform qualification')
 modes=p.add_mutually_exclusive_group()
 modes.add_argument('--sampling-only',action='store_true')
 modes.add_argument('--compare-peaks',action='store_true')
@@ -35,7 +36,7 @@ assert expected in (base/'CMakeFiles'/f'{support}.dir'/'flags.make').read_text()
 def compile_one(src, tgt, extra=()):
     flags=(base/'CMakeFiles'/f'{tgt}.dir'/'flags.make').read_text().splitlines()
     opts=[]
-    for key in ('CXX_DEFINES','CXX_INCLUDES','CXX_FLAGSarm64'):
+    for key in ('CXX_DEFINES','CXX_INCLUDES','CXX_FLAGS' if args.universal else 'CXX_FLAGSarm64'):
         opts+=shlex.split(next(line.split(' = ',1)[1] for line in flags if line.startswith(key+' = ')))
     obj=out/(src.stem+'.o')
     subprocess.run(['/usr/bin/c++',*opts,*extra,'-I'+str(here),'-I'+str(source),'-c',str(src),'-o',str(obj)],check=True)
@@ -86,7 +87,8 @@ if args.sampling_only:
 else:
     driver=compile_one(here/'Profile.cpp',target)
 link=shlex.split((base/'CMakeFiles'/f'{target}.dir'/'link.txt').read_text())
-i=link.index('x86_64');del link[i-1:i+1]
+if not args.universal:
+    i=link.index('x86_64');del link[i-1:i+1]
 variants=[('sample-control',[])] if args.sampling_only else [('profile',overlay),('control',[])]
 if args.compare_peaks:
     # Only the service's execution choice differs. Keep the same DSP, build

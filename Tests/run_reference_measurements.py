@@ -20,6 +20,7 @@ parser.add_argument('--vectors', required=True, type=pathlib.Path)
 parser.add_argument('--report', required=True, type=pathlib.Path)
 parser.add_argument('--compare', type=pathlib.Path)
 parser.add_argument('--arch', choices=['arm64', 'x86_64'], help='macOS: execute universal test binary in this architecture')
+parser.add_argument('--workers', type=int, choices=range(1, 4), default=3)
 args = parser.parse_args()
 manifest_path = pathlib.Path(__file__).parent / 'Reference/itu-bs2217-manifest.json'
 manifest = json.loads(manifest_path.read_text())
@@ -39,7 +40,7 @@ def check(case):
     return dict(file=case['file'], sha256=case['sha256'], expected=expected, measured=metrics, passed=passed)
 
 
-with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
+with concurrent.futures.ThreadPoolExecutor(max_workers=args.workers) as pool:
     results = list(pool.map(check, manifest['files']))
 for result in results:
     print(('PASS' if result['passed'] else 'FAIL'), result['file'], result['measured']['I'], flush=True)

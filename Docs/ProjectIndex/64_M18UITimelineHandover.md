@@ -8,11 +8,20 @@ pending. This summary gives the current position. Dated sections below retain
 the earlier plans, build paths and per-slice evidence.
 
 The active worktree is `/Users/fuzz/.codex/worktrees/a411/LevelScope`, branch
-`codex/ui-timeline-m18`. HEAD is `cdac0c36b4259386417ecad507d107761eced864`, which
-integrates the logic module's tested automatic Current initialisation. The subsequent
-M18 implementation and evidence are working-tree changes. A combined frozen
-qualification package and published M18 checkpoint are still to be prepared.
+`codex/ui-timeline-m18`. The M18 implementation and development evidence are committed
+as `4f02303a748b660c72471058111df8a1271758fc`, following
+`cdac0c36b4259386417ecad507d107761eced864`, which integrates the logic module's
+tested automatic Current initialisation. Preparation of the combined qualification
+package has begun in `build/m18-qualification-2026-11-03`; its separate universal
+build has completed. There is no completed frozen qualification package or published
+M18 checkpoint yet. This handover update is subsequent documentation.
 Main remains the qualified M13 commit `a9be070ab9eb5cb4f591ff9d991d8999c3a016d0`.
+
+The advisory chat has since delegated the human-authorised combined qualification
+to this UI/Timeline chat. The short driver pilots passed; long execution has not
+started. [The explicit qualification selection and driver notes](../../Tests/Qualification/M18/README.md)
+record the fresh groups, budgets, retained pilot failures and separate physical-device
+coordination requirement. Actual test receipts determine completion.
 
 Implemented behaviour includes:
 
