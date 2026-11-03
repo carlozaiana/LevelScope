@@ -129,8 +129,9 @@ void m16UiControls()
     heartbeat.startTimer(5);juce::MessageManager::getInstance()->runDispatchLoopUntil(40);
     ProposalInspectionPanel inspect(large);for(int n=0;n<inspect.pageCount();++n){inspect.nextPage();juce::MessageManager::getInstance()->runDispatchLoopUntil(5);}
     juce::MessageManager::getInstance()->runDispatchLoopUntil(100);heartbeat.stopTimer();auto samples=heartbeat.ticks;std::sort(samples.begin(),samples.end());
-    expect(!samples.empty()&&samples[size_t(.95*(samples.size()-1))]<=100,"10000 row paginated UI heartbeat p95 within100ms");
+    expect(!samples.empty(),"paginated UI heartbeat has samples");
     policyResources.getDynamicObject()->setProperty("inspection_heartbeat_p95_ms",samples[size_t(.95*(samples.size()-1))]);policyResources.getDynamicObject()->setProperty("inspection_heartbeat_max_ms",samples.back());
+    expect(samples[size_t(.95*(samples.size()-1))]<=100,"10000 row paginated UI heartbeat p95 within100ms");
     policyGroups.add("ui-controls-and-responsiveness");
 }
 void rewritePolicyCore(const juce::File& from,const juce::File& to,const std::function<void(juce::var&)>& edit)

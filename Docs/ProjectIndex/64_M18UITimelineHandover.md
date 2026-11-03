@@ -3,25 +3,28 @@
 **Current coordination summary — 3 November 2026**
 
 M18 implementation has reached the short end-to-end acceptance gate on the
-development M1 Max running Sequoia. The combined two-Mac qualification remains
-pending. This summary gives the current position. Dated sections below retain
+development M1 Max running Sequoia. The combined two-Mac qualification is now
+in progress, not complete. This summary gives the current position. Dated sections below retain
 the earlier plans, build paths and per-slice evidence.
 
 The active worktree is `/Users/fuzz/.codex/worktrees/a411/LevelScope`, branch
 `codex/ui-timeline-m18`. The M18 implementation and development evidence are committed
 as `4f02303a748b660c72471058111df8a1271758fc`, following
 `cdac0c36b4259386417ecad507d107761eced864`, which integrates the logic module's
-tested automatic Current initialisation. Preparation of the combined qualification
-package has begun in `build/m18-qualification-2026-11-03`; its separate universal
-build has completed. There is no completed frozen qualification package or published
-M18 checkpoint yet. This handover update is subsequent documentation.
+tested automatic Current initialisation. Frozen candidates and actual-platform
+short results are retained in `build/m18-qualification-2026-11-03`.
+High Sierra qualification exposed slow explanation paging; a smaller page size
+preserves the complete text and is being rebuilt as candidate 04 with fresh gates
+on both Macs. There is no qualified or published M18 checkpoint yet.
 Main remains the qualified M13 commit `a9be070ab9eb5cb4f591ff9d991d8999c3a016d0`.
 
 The advisory chat has since delegated the human-authorised combined qualification
 to this UI/Timeline chat. The short driver pilots passed; long execution has not
 started. [The explicit qualification selection and driver notes](../../Tests/Qualification/M18/README.md)
-record the fresh groups, budgets, retained pilot failures and separate physical-device
-coordination requirement. Actual test receipts determine completion.
+record the fresh groups, budgets and retained failures. The user has approved four
+10-second muted physical video cases per Mac, using Mac Studio Speakers and
+Golem's Built-in Output at 48 kHz. Pro40 and system-default selections remain
+untouched. Actual test receipts determine completion.
 
 Implemented behaviour includes:
 

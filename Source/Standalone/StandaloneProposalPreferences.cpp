@@ -30,7 +30,9 @@ ProposalInspectionPanel::ProposalInspectionPanel(juce::String text,std::function
     const auto bytes=text.toStdString();
     for(size_t begin=0;begin<bytes.size();)
     {
-        size_t end=std::min(begin+12000,bytes.size());
+        // Keep synchronous TextEditor layout within the 100 ms inspection
+        // heartbeat budget on Intel High Sierra. Every byte remains accessible.
+        size_t end=std::min(begin+4000,bytes.size());
         if(end<bytes.size())
         {
             const auto line=bytes.rfind('\n',end-1);

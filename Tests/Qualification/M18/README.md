@@ -7,7 +7,9 @@ run. Main, checkpoint tags, installations, original media and Pro40 remain uncha
 The product implementation is commit `4f02303a748b660c72471058111df8a1271758fc`,
 following the tested initial-Current integration `cdac0c3`. Additional files here
 are qualification drivers and orchestration, with their own frozen hashes. The
-measurement build remains `93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce`.
+measurement build through candidate 03 was `93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce`.
+The candidate-04 paging fix changes it to
+`79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb`.
 A local qualification commit and immutable candidate package are authorised.
 Neither qualification preparation nor a successful build means the tests passed.
 
@@ -129,3 +131,26 @@ The native short driver's worker-job wait is 120 seconds for Intel's bounded
 three-pass serial proposal. Visual/interaction waits remain 30 seconds and actual
 elapsed times are still recorded. This changes only the diagnostic timeout, not
 application behaviour or the qualification resource/response budgets.
+
+Candidate 02's High Sierra preferences suite exposed a genuine UI response
+failure. The synchronous JUCE text layout for 12,000-byte explanation pages
+exceeded the existing 100 ms p95 heartbeat budget. A three-trial probe on each
+actual Mac compared 12,000, 6,000 and 4,000-byte pages with the same complete
+10,000-row explanation. High Sierra's 12,000-byte heartbeat p95 was about 255 ms;
+6,000 bytes still exceeded 100 ms; 4,000 bytes gave 89.29–89.44 ms, with complete
+text in every trial. The production page limit is now 4,000 bytes. UTF-8 and
+line-boundary handling and access to the full explanation are preserved.
+`PaginationProbe.cpp` retains the diagnostic driver. Test resource metrics are
+now written before their assertions so a failure retains the measured value.
+
+Candidate 04 requires fresh short/reference gates on both Macs because product
+source and the measurement-build identity changed. Candidates 01–03 and failed
+receipts remain preserved; candidate 03 was packaged but not executed. The long
+workflows have not yet started. Prior true-peak sanitizer/floating-environment
+receipts remain complementary evidence for the unchanged peak implementation.
+
+The muted physical runner retains the legacy zero-skip verdict and continues all
+four cases. Picture skips/deadlines require explicit review under the agreed M18
+allowance; audio underruns, incorrect timing bounds, blank pictures, failed
+attachment, invalid processing or memory failures remain failures. A review
+receipt supplements the raw results and never overwrites them.

@@ -1,0 +1,3 @@
+{"trial": 1, "pages": 58, "complete": true, "page_p95_ms": 249.8767809998244, "page_max_ms": 250.5663959998637, "heartbeat_p95_ms": 254.5738739999942, "heartbeat_max_ms": 532.5725779999048}
+{"trial": 2, "pages": 58, "complete": true, "page_p95_ms": 249.8361099995673, "page_max_ms": 251.168727000244, "heartbeat_p95_ms": 254.5638160002418, "heartbeat_max_ms": 506.8643840001896}
+{"trial": 3, "pages": 58, "complete": true, "page_p95_ms": 249.3046509996057, "page_max_ms": 251.2459459993988, "heartbeat_p95_ms": 254.4202060000971, "heartbeat_max_ms": 507.5279850000516}

@@ -1,0 +1,18 @@
+{
+  "purpose": "Diagnostic comparison after actual High Sierra preferences gate failure; not full qualification",
+  "source_commit": "e7bcf1db17310911bfd5d2bae54a32251bb252c1",
+  "base_build": "93460e4031c2ec51765b4ad83dd7bc4e67551be1f94129b107ebbeea494a32ce",
+  "diagnostic_files_sha256": {
+    "probe-6000": "4e8b6b1843d537a3bdd8cda8eca91f5652d612ca10bf3bd4c90c53bb01701827",
+    "Probe.cpp": "5bf7c23cf5226617dd9e82528095d54d9274ad31609017e9d3ea9da9705c629a",
+    "preferences-6000.cpp": "1657832cf5786539b05d0fa9ab3c63ff99f710921d5ba107f0e1b7bb20d8fb00",
+    "probe-4000": "2a015b7cdac9483a72664a6c84feb8759724b5171476a9219a81a66c3d86800b",
+    "preferences-4000.cpp": "de9bdfc034b09924325d0075e0f23b99ad09efcaedacb8c4abe1e2287b5d70c0",
+    "Probe-6000.cpp": "8ee820c67dce3a973c8fa8482387eb39c962f451e43b32f761538e95d0fd4783",
+    "Probe-4000.cpp": "67396c1c82aa39fdf5149dd3b4a7e624f369b9540e29815372a6342e4cde80e2",
+    "probe-12000": "efc194641d94f4ade7dc28c7fa3446120ea9f4c54ed9a629b03ba64e9e16757d"
+  },
+  "replacement": "Only explanation page limit: 12000 versus 6000 versus 4000 bytes",
+  "trial_count_per_host_per_size": 3,
+  "production_change": "4000-byte limit; fresh candidate 04 required"
+}
