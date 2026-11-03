@@ -1,0 +1,38 @@
+M18 interactive timeline — combined M14–M18 qualified checkpoint, 3 November 2026
+
+Checkpoint commit: a9550d9d43ed70fde4c73f90e44081a706d30a67
+Tested product commit: 3665815d73fbd93c0574cdfee8d7efdd805ab7b6
+Frozen candidate: M18 candidate-04, universal arm64/x86_64, Intel minimum macOS 10.13
+Measurement build: 79ee7b68ded355f1baf36f839c978ad692b8649cb3fe669b9fc9988060737fdb
+Identity SHA-256: 33bc7202fc2629797bbfd3223b3849145a88bebe5c22e9157a1636f53cd69e95
+Original app SHA-256: 1b9b8db2aca5d17f7343912110d263f638216152f1bb806368220a4ac79709bf
+Qualification receipt-manifest SHA-256: ac86a1ff5251d067c1dc163c487bb37bc2849406bc07827aac16222105de6b23
+
+Agreed combined qualification passed on actual arm64 Sequoia 15.7.9 and x86_64
+High Sierra 10.13.6: 28 fresh short/reference groups per Mac, selected video and
+native review, four authorised muted physical cases per Mac, bidirectional session
+exchange, actual three-hour mono/192 kHz workflows and independent RF64 audits,
+full numerical observer comparisons and synthetic 5.1/7.1 display-density checks.
+The complete 6.22 GB exports are byte-identical across hosts. Source and Current
+waveform overviews retained 100.70 MiB combined, within the 128 MiB cap.
+
+Evidence: Tests/Reference/results/m18-qualification-2026-11-03/README.md
+Handover: Docs/ProjectIndex/64_M18UITimelineHandover.md
+Publication receipt follows separately without moving this checkpoint.
+Post-freeze changes are qualification tools, evidence and documentation; product
+source and CMake configuration are identical to the tested product commit.
+
+Follow-ups: first waveform for the three-hour mono/192 kHz input took 71.36 s on
+Sequoia and 120.66 s on High Sierra, including payload preparation. A historical
+explanation heading has a cosmetic dash-encoding issue; complete data is accessible.
+No frozen binary is changed or rebuilt for publication.
+
+Boundaries: full physical 7.1 listening remains separate; full codec/colour matrix
+and 30-minute video endurance remain conditional on relevant changes or concrete
+failures. No new full-duration multichannel PCM qualification is claimed. Detailed
+sample inspection, device reconnection, stereo monitor fold-down, further DSP,
+automation/meters and automatic LRA/M/S-directed correction remain later work.
+
+User-authorised GitHub publication and main fast-forward integrate the combined
+M14–M18 line. Preserve all 21 existing checkpoint tag objects and targets, previous
+packages, other working copies, user files and installed applications/plugins.

@@ -3,6 +3,27 @@
 Integration continuation, 17 October 2026. Historical M1 and video reports remain
 unchanged; this document records the additional gate and subsequent integration.
 
+## Combined M14–M18 continuation — 3 November 2026
+
+The user-authorised combined M14–M18 checkpoint is now qualified, published and
+integrated into main. Main was fast-forwarded from M13 to
+`a9550d9d43ed70fde4c73f90e44081a706d30a67`; the publication follow-up changes only
+documentation and receipt metadata. The fixed annotated tag is
+[`m18-interactive-timeline-2026-11-03`](https://github.com/carlozaiana/LevelScope/tree/m18-interactive-timeline-2026-11-03).
+All product source and build configuration match tested commit
+`3665815d73fbd93c0574cdfee8d7efdd805ab7b6`; the exact frozen candidate-04 app is
+retained. Fresh checks on actual Sequoia and High Sierra completed the agreed
+short/reference, session exchange, selected video/muted physical and three-hour
+qualification. No rebuild or repeated long test was needed for this unchanged
+integration. [Publication receipt](../../Tests/Reference/results/m18-publication-2026-11-03/README.md)
+and [current M18 handover](64_M18UITimelineHandover.md) record identities, complete
+evidence, follow-ups and the remaining scope.
+
+All 21 prior tag objects/targets and the logic/video working copies are unchanged.
+Future work should inspect and integrate the latest fetched main in its own
+working copy; this publication does not switch or reset those active checkouts.
+The earlier sections below retain their historical milestone-specific status.
+
 ## ProRes continuation — 21 October 2026
 
 Qualified M5 and bounded SDR ProRes are now included in the accepted main

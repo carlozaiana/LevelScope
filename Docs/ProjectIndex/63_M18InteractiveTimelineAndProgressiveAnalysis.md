@@ -282,8 +282,11 @@ bidirectional sessions, selected injected/native/muted-physical video, actual
 three-hour mono/192 kHz RF64 workflows, independent export samples beyond 4 GiB,
 complete plain/observed numerical comparisons and synthetic six/eight-channel
 display stress. [The frozen candidate and results](../../Tests/Reference/results/m18-qualification-2026-11-03/README.md)
-record the exact scope, resource measurements and test-only corrections. Main
-integration/publication remain subject to subsequent approval; the exclusions
+record the exact scope, resource measurements and test-only corrections. The user
+subsequently approved publication and main integration, now completed through
+[`m18-interactive-timeline-2026-11-03`](https://github.com/carlozaiana/LevelScope/tree/m18-interactive-timeline-2026-11-03).
+[The publication receipt](../../Tests/Reference/results/m18-publication-2026-11-03/README.md)
+records the unchanged tested product and preserved checkpoints. The exclusions
 and conditional checks below still apply.
 
 Before implementation, record the final impact manifest: explicit required commands,

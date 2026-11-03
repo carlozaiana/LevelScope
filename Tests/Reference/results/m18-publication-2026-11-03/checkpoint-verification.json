@@ -1,0 +1,221 @@
+{
+  "passed": true,
+  "date": "2026-11-03",
+  "stage": "checkpoint",
+  "main": "a9550d9d43ed70fde4c73f90e44081a706d30a67",
+  "development_branch": "a9550d9d43ed70fde4c73f90e44081a706d30a67",
+  "checkpoint": "a9550d9d43ed70fde4c73f90e44081a706d30a67",
+  "tested_product_commit": "3665815d73fbd93c0574cdfee8d7efdd805ab7b6",
+  "tag": "m18-interactive-timeline-2026-11-03",
+  "tag_object": "d147d88fc0173a70abaa624cef686c195685901a",
+  "source_tree": "462218e5d0ef64833993f4f2c08ab3da131a3834",
+  "cmake_blob": "36e019ab1885b09701c1eaddbc250cc1dbd32e93",
+  "product_source_and_configuration_match": true,
+  "original_tags_preserved": {
+    "refs/tags/high-sierra-pre-scaffold-2026-10-15": {
+      "object": "b3c6e845482dbe8a0ec9778d5a9ad7953e614609",
+      "target": "556d387ad772dc5e604ead95f1525f60e66fd5f9"
+    },
+    "refs/tags/m10-verified-pcm-export-2026-10-26": {
+      "object": "3bbd1476cbc4e200f9d8f2776f53e06c4bf57180",
+      "target": "fcd4c15fe78d6352f5e96faabf3eb52f942235e1"
+    },
+    "refs/tags/m11-aligned-stem-composition-2026-10-26": {
+      "object": "2ddbd80e7ce0f5d42d72f8cc3d466925685f1fe0",
+      "target": "cfb1033aa7fb65a2655db276bee696161196bdeb"
+    },
+    "refs/tags/m12-section-trim-sequoia-2026-10-27": {
+      "object": "4afecf3455f15792403a843772ef9e495de58ae5",
+      "target": "2fb0e3cfee22a527bacaa09c4ddace23129442fb"
+    },
+    "refs/tags/m13-bounded-section-proposals-2026-10-28": {
+      "object": "bbcf9d7baca12decb7bbd6f835f4e52b8c0a8bb2",
+      "target": "a9be070ab9eb5cb4f591ff9d991d8999c3a016d0"
+    },
+    "refs/tags/m14-mono-rf64-sequoia-2026-10-29": {
+      "object": "8523392cd96b76513f10c8441d236c8f16a9e5a1",
+      "target": "3d98284c2c0b7de92cfee70cb0007d43d1f04d1f"
+    },
+    "refs/tags/m15-marker-import-sequoia-2026-10-29": {
+      "object": "e2c9fee7c5c8ac228a3487d2b7d8b9df45b92472",
+      "target": "1b56804ecfb469aef3276b2d4ac96039ce3e4cc1"
+    },
+    "refs/tags/m16-proposal-preferences-sequoia-2026-10-30": {
+      "object": "3fb03c9d4ba0374f3b6be9e69b48639587e9bc82",
+      "target": "73a7b25e71f87299fa2d93c1b1106c118c55beec"
+    },
+    "refs/tags/m17-job-lra-presets-sequoia-2026-10-30": {
+      "object": "d243e4a68503bf719fc01ab2eefb2156d982ab20",
+      "target": "e422f85ccbf7ae11876e6a31be2409937cb8381c"
+    },
+    "refs/tags/m2-measured-compliance-2026-10-18": {
+      "object": "673e382feeaa7e29e6e6abedbd56677aa2163ef3",
+      "target": "01a34833ec06a0d237e098faadb23b398581e8f9"
+    },
+    "refs/tags/m3-global-trim-2026-10-18": {
+      "object": "4063ca0e73c5b24dfa079eb894f85e398e9fee50",
+      "target": "62ab420cb15b3ce5e1c821c963a749a9a56ae4a7"
+    },
+    "refs/tags/m4-measured-diagnostics-2026-10-18": {
+      "object": "cc64c771a70ccf95e779a7fe7260749a4530c285",
+      "target": "9a22749901d9f6d4b9c194c9c22c0a231f2494f6"
+    },
+    "refs/tags/m5-programme-sections-2026-10-20": {
+      "object": "e36b4308374256ad36eff6c01d4d92325a06d3b0",
+      "target": "ae88e187d288c53dbca1287e8341b74b9b5b2619"
+    },
+    "refs/tags/m6-verified-current-state-audition-2026-10-24": {
+      "object": "7f54eb1098471dc55bd75484f873a9f90e68ac05",
+      "target": "b57a1ed23cbe7d74afe98ed16ec8fd615db9d171"
+    },
+    "refs/tags/m7-pcm-7.1-2026-10-25": {
+      "object": "04d0c836fcbc3a7af72638a7514faacd32ae48a9",
+      "target": "cfbf3f981dece326d2363b911e5914ea61f1796c"
+    },
+    "refs/tags/m8-reproducible-sessions-2026-10-25": {
+      "object": "93908205c41de16c10b187bc00fcc1621e328c66",
+      "target": "8e984889c5e73670f370c6c568c8ea1d7902a35c"
+    },
+    "refs/tags/m9-separate-file-stereo-5.1-2026-10-25": {
+      "object": "0cb0e4bea6fd9d11cc4207e9b863d5fca2b70bff",
+      "target": "75843dcd017ec7990be2200454a10fc38beb44c4"
+    },
+    "refs/tags/measurement-milestone-2026-10-17": {
+      "object": "76affb667b6dab066cb36b2a2c741525b9b6eeac",
+      "target": "b29bc7c183743f35c6271d2d7ec8fb5ba1464591"
+    },
+    "refs/tags/standalone-scaffold-2026-10-15": {
+      "object": "4c8bc35b788969e1f6e97dcdc57a601b01fff7cd",
+      "target": "f192a8553e139d390056c9755f25eeb123bbc5e6"
+    },
+    "refs/tags/video-checkpoint-2026-10-17": {
+      "object": "06f57524bedca1912c0d5c454f13561cec9ce5b4",
+      "target": "700b9e77e439a8ca9bb7583adf826fac01dbe924"
+    },
+    "refs/tags/video-prores-checkpoint-2026-10-21": {
+      "object": "d62c1159eeb2ffbb8b7ffc7c31014b842642d195",
+      "target": "dcc34aabba6b5b3ca4805e2965d21ffebf2e4d0a"
+    }
+  },
+  "other_remote_heads_unchanged": true,
+  "other_worktrees": [
+    {
+      "path": "/Users/fuzz/Developer/LevelScope",
+      "head": "9935ad725670958971c1aaed28d8e84f9b3d3e9a",
+      "branch": "codex/logic-module",
+      "files_checked": 4374,
+      "files_index_status_unchanged": true
+    },
+    {
+      "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation",
+      "head": "5e07bbd29930db34236d6dfcede7fea14983f90a",
+      "branch": "codex/video-implementation",
+      "files_checked": 1839,
+      "files_index_status_unchanged": true
+    }
+  ],
+  "finder_metadata": [
+    {
+      "path": "/Users/fuzz/Developer/LevelScope/.DS_Store",
+      "sha256": "b3f5ca79d1f00c2f5eb9ddab132a6c470847820bd0f80245ead39cc74b8131bc",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/fuzz/Developer/LevelScope/Docs/.DS_Store",
+      "sha256": "393c8ffb3ac5980dd457b7fdabc6246406baa8f3ab2c527598fafa1e5a798395",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/fuzz/Developer/LevelScope/Source/.DS_Store",
+      "sha256": "599888b028184dfb353822af68d0c96feea824c99bb61419a6b9e72a06b041f0",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/fuzz/Developer/LevelScope/Source/Core/.DS_Store",
+      "sha256": "44d328d561b3406fe4b128385d71bcc947732be41a1bdc98247b40cffc549885",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/fuzz/Developer/LevelScope/Source/Core/Processing/.DS_Store",
+      "sha256": "ad1a60ff6db582810365ba9056c69006adb8046e1f5689330c1f4a8a0d19ac69",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/fuzz/Developer/LevelScope/Tests/.DS_Store",
+      "sha256": "0588b3e63e2beef2dd3e4dd82d11de28a0bf8c120102ec93b5e3356fa985e0bc",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/fuzz/Developer/LevelScope/Tests/Reference/.DS_Store",
+      "sha256": "6e42fdbfb2a507b33b05d868f06051ed561f59086ad8fdbecb905a3f668621ec",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/.DS_Store",
+      "sha256": "1e514267c2157633f1f4c8d341ed902e0cd2053c9849b36d621dffb051892665",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/Source/.DS_Store",
+      "sha256": "efa4edefaa2f08b77230b77d41c452027aff95edc7721fbc4e4aafd4664e2823",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/Source/Core/.DS_Store",
+      "sha256": "931d565c74b7dee079833c518ad36b9a185b567a2f8527753cbd9706603c58b0",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/.DS_Store",
+      "sha256": "b0337639d3b005d768c78009431b2206859fc919a57b1f1b8df2b87f8db8c09d",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/.DS_Store",
+      "sha256": "7fb0ee383f61af582fb3b34e3984c6c4e62abc1fc105615bffc6e31c82370855",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/.DS_Store",
+      "sha256": "f31aa8db47d0e8b97d723736da3175df13d1e8c3bbb7f7e1fa3a4790bf5cdcf0",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/Source/.DS_Store",
+      "sha256": "de55dd8c6b48276afb0b5b67475d8415c5a688dc9e7942e0d281b174828ec036",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/Source/Core/.DS_Store",
+      "sha256": "59c7ae7c01a93df4d0520f812d057729fdc7f4102a82c0a8a2ffa6cf24a99a99",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/Source/Core/Processing/.DS_Store",
+      "sha256": "59fecc4495769458121b76a56c8ed5cc510894b38d7c97f01444cd3623c055d8",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/Tests/.DS_Store",
+      "sha256": "ccfd0a588d0560be0a267546c6e5676d004371d9a2d679d820ea7b20e6f3e966",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/Tests/Video/.DS_Store",
+      "sha256": "688676d3a5072574ad5ed1f4ba64592077c71e12fdfde723b8f096c491625c1b",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation/Tests/Video/results/.DS_Store",
+      "sha256": "20d3743ace48bb7273f9ec82185f25cc1a181cc528f76af3b3232416b125f333",
+      "unchanged": true
+    }
+  ],
+  "candidate_identity_sha256": "33bc7202fc2629797bbfd3223b3849145a88bebe5c22e9157a1636f53cd69e95",
+  "candidate_artifacts_checked": 395,
+  "qualification_receipts_checked": 486,
+  "receipt_manifest_sha256": "ac86a1ff5251d067c1dc163c487bb37bc2849406bc07827aac16222105de6b23",
+  "large_media_and_packages_not_added": true,
+  "no_rebuild_or_runtime_requalification": true,
+  "merge_method": "fast-forward only, no force push"
+}

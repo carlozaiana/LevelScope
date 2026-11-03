@@ -4,9 +4,10 @@
 
 M18 implementation and the agreed combined M14–M18 qualification have passed on
 the development M1 Max running Sequoia and the actual Intel High Sierra Mac.
-The frozen candidate is ready for integration review; main integration and
-publication have not been performed. Dated sections below retain the earlier
-plans, build paths and per-slice evidence.
+The qualified checkpoint is published on GitHub and integrated into main by
+fast-forward. The user authorised publication after the advisory chat's evidence
+review. Dated sections below retain the earlier plans, build paths and per-slice
+evidence; this summary and the publication receipt give the current status.
 
 The active worktree is `/Users/fuzz/.codex/worktrees/a411/LevelScope`, branch
 `codex/ui-timeline-m18`. The M18 implementation and development evidence are committed
@@ -23,9 +24,16 @@ on arm64 Sequoia 15.7.9 and 1,075.65 seconds on Intel High Sierra 10.13.6.
 The complete cross-Mac checker, including the actual three-hour job, passed with
 exact Source/Current peak positions, section geometry and verdicts. Short captured
 float32 samples matched exactly; the largest metric difference was `3.55e-15`.
-Candidate 04 passed the selected combined qualification; no M18 checkpoint has
-been published yet.
-Main remains the qualified M13 commit `a9be070ab9eb5cb4f591ff9d991d8999c3a016d0`.
+Published annotated checkpoint:
+[`m18-interactive-timeline-2026-11-03`](https://github.com/carlozaiana/LevelScope/tree/m18-interactive-timeline-2026-11-03),
+commit `a9550d9d43ed70fde4c73f90e44081a706d30a67`, tag object
+`d147d88fc0173a70abaa624cef686c195685901a`. Main advanced from M13
+`a9be070ab9eb5cb4f591ff9d991d8999c3a016d0` to this combined M14–M18 checkpoint;
+the subsequent publication receipt changes documentation only. Product source
+and CMake configuration match tested commit
+`3665815d73fbd93c0574cdfee8d7efdd805ab7b6`. All 21 previous tag objects/targets,
+the logic/video checkouts, user files and original candidate remain preserved.
+[Publication and integration receipt](../../Tests/Reference/results/m18-publication-2026-11-03/README.md).
 
 The advisory chat has since delegated the human-authorised combined qualification
 to this UI/Timeline chat. Both Macs passed the additional video checks, four muted
@@ -136,8 +144,8 @@ The combined M14–M18 qualification block is complete for the selection and bud
 in Plan 63. The frozen candidate-04 app path above is the tested build. Full physical
 7.1 listening remains separate; full video codec/colour and 30-minute endurance
 remain conditional on relevant changes or concrete failures. No new full-duration
-multichannel PCM run is claimed. Integration and publication require subsequent
-explicit approval.
+multichannel PCM run is claimed. Integration and publication were subsequently
+approved and completed; no implementation change or rebuild was needed.
 
 Later work remains the visible-passage sample inspection reader, output selection
 and opt-in reconnection, explicitly selected 5.1-to-stereo monitoring, and further
