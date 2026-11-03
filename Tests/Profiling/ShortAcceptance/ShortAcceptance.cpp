@@ -22,12 +22,12 @@ void pump()
         [NSApp updateWindows];
     }
 }
-template<class Predicate> void until(const char* reason, Predicate done)
+template<class Predicate> void until(const char* reason, Predicate done, double timeoutSeconds=30)
 {
     const auto start = Clock::now();
     while (!done())
     {
-        if (since(start) > 30) throw std::runtime_error(reason);
+        if (since(start) > timeoutSeconds) throw std::runtime_error(reason);
         pump();
     }
 }
@@ -67,7 +67,9 @@ void picture(const juce::Image& image,const juce::File& file)
 void snapshot(Main& ui,const juce::File& file) {picture(ui.createComponentSnapshot(ui.getLocalBounds()),file);}
 void idle(Main& ui)
 {
-    until("workflow job timeout",[&]{return !ui.session.job.isActive() && !ui.session.persistenceLoading;});
+    // The Intel service is deliberately serial. Keep visual/interaction waits
+    // short, but allow a bounded three-pass proposal to finish on that host.
+    until("workflow job timeout",[&]{return !ui.session.job.isActive() && !ui.session.persistenceLoading;},120);
     if (ui.session.job.state==JobState::failed || ui.session.job.state==JobState::cancelled)
         throw std::runtime_error(ui.session.job.message.toStdString());
 }

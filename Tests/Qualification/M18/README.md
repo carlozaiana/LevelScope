@@ -115,3 +115,17 @@ The user separately approved four 10-second muted physical-output cases per Mac,
 using Mac Studio Speakers and Golem's Built-in Output at 48 kHz. No further
 permission is needed for that exact subset. System-default selections and Pro40
 remain unchanged.
+
+Candidate 02 passed all groups through timeline on Sequoia, then found a marker
+migration assertion still expecting the text “M17 reader”. The production warning
+correctly names schema 8/M18. The test now checks the current schema number, Save As
+and preservation of the original, and its focused rerun passed 487 checks in ten
+groups. Candidate 03 changes no product code. Reuse now covers any passing native
+executable group with unchanged executable bytes and a verified report, copying
+its retained fixture tree for later checks and recording the reuse chain. Changed
+executables run again. Reference scripts and plain-text groups run fresh.
+
+The native short driver's worker-job wait is 120 seconds for Intel's bounded
+three-pass serial proposal. Visual/interaction waits remain 30 seconds and actual
+elapsed times are still recorded. This changes only the diagnostic timeout, not
+application behaviour or the qualification resource/response budgets.

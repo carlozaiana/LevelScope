@@ -38,26 +38,37 @@ def main():
         assert previous_identity['measurement_build']==identity['measurement_build']
         product=lambda manifest:{f:h for f,h in manifest['source_files_sha256'].items() if f.startswith('Source/') or f=='CMakeLists.txt'}
         assert product(previous_identity)==product(identity),'Changed product source cannot use this reuse rule'
-        # These initial groups produce self-contained reports. Later groups retain
-        # fixtures for exchange/video and must execute in the new output tree.
-        allowed={'measurement','compliance','global-proposal','diagnostics','sections','audition'}
-        reused={r['name']:r for r in previous['commands'] if r['name'] in allowed and r.get('passed') is True and r['exit_code']==0}
+        # Reuse only native executable groups with independently hashed reports.
+        # Preserve their retained fixtures for subsequent exchange/video checks.
+        reused={r['name']:r for r in previous['commands'] if r['name'] in REQUIRED and r.get('passed') is True
+                and r['exit_code']==0 and r.get('report_sha256') and r['command'][0]=='/usr/bin/arch'}
     rows=[];start=time.monotonic();failure=''
     def run(name,command,report=None,text_pass=None):
         command=list(map(str,command));t=time.monotonic();print('START',name,flush=True)
         if name in reused:
             old=reused[name];old_binary=Path(old['command'][2]);new_binary=Path(command[2])
-            assert old_binary.name==new_binary.name and sha(old_binary)==sha(new_binary)==identity['artifacts_sha256']['bin/'+new_binary.name]
-            assert previous_identity['artifacts_sha256']['bin/'+old_binary.name]==sha(old_binary)
-            original=a.reuse/Path(report).relative_to(out);assert sha(original)==old['report_sha256']
-            shutil.copy2(original,report);shutil.copy2(a.reuse/(name+'.log'),out/(name+'.log'))
-            row=dict(old,reused_from=str(a.reuse.resolve()),origin_identity_sha256=sha(previous_root/'identity.json'),unchanged_executable_sha256=sha(new_binary))
-            rows.append(row);(out/'commands.json').write_text(json.dumps(rows,indent=2)+'\n');print('REUSED',name,flush=True);return
+            assert old_binary.name==new_binary.name
+            old_hash,new_hash=sha(old_binary),sha(new_binary)
+            assert old_hash==previous_identity['artifacts_sha256']['bin/'+old_binary.name]
+            assert new_hash==identity['artifacts_sha256']['bin/'+new_binary.name]
+            if old_hash==new_hash:
+                original=a.reuse/Path(report).relative_to(out);assert sha(original)==old['report_sha256']
+                retained=[]
+                for flag in ('--root','--artifacts','--samples'):
+                    if flag in command:retained.append(Path(command[command.index(flag)+1]))
+                if name.startswith('native-'):retained.append(out/name)
+                if name=='markers':retained.append(out/'marker-files')
+                for destination in retained:shutil.copytree(a.reuse/destination.relative_to(out),destination)
+                Path(report).parent.mkdir(parents=True,exist_ok=True);shutil.copy2(original,report)
+                shutil.copy2(a.reuse/(name+'.log'),out/(name+'.log'))
+                chain=old.get('reuse_chain',[])+[dict(directory=str(a.reuse.resolve()),identity_sha256=sha(previous_root/'identity.json'))]
+                row=dict(old,reused_from=str(a.reuse.resolve()),reuse_chain=chain,unchanged_executable_sha256=new_hash)
+                rows.append(row);(out/'commands.json').write_text(json.dumps(rows,indent=2)+'\n');print('REUSED',name,flush=True);return
         with (out/(name+'.log')).open('w') as log:r=subprocess.run(command,stdout=log,stderr=subprocess.STDOUT)
         row=dict(name=name,command=command,exit_code=r.returncode,seconds=time.monotonic()-t)
         if report:
             data=json.loads(Path(report).read_text())
-            row.update(report_sha256=sha(report),passed=data.get('passed'),build=data.get('build',data.get('measurement_build')))
+            row.update(report_sha256=sha(report),passed=data.get('passed'),build=data.get('build',data.get('measurement_build',data.get('source_build'))))
             # EBU has a documented official-check result rather than a top-level passed.
             if name=='ebu':row['passed']=data.get('passed',data.get('minimum_requirements_passed'))
             if name=='itu':row['passed']=data.get('passed',all(x['passed'] for x in data['results']))
