@@ -690,6 +690,15 @@ not published or merged into main. See the [two-slice review receipt](../UIDevic
 for exact builds, connection/session semantics, focused evidence, scope and manual checks.
 First-playback feedback and the other document-69 performance items remain separate.
 
+**Remembered monitoring, 5 November 2026:** the subsequent local UI slice at
+`96159ebd79f762bea147b41ad696fd80f449dfc9` remembers speaker-role routing per Mac,
+interface and stereo/5.1 layout, plus the last explicit user monitor level per interface.
+Matching output configuration and confirmed roles are required; deliberate mutes are
+retained. Connection intent and explicit Play remain separate. Its preserved build
+contains all three convenience slices and passed focused checks on Sequoia and actual
+High Sierra. See the [monitoring review receipt](../UIMonitoringMemory-2026-11-05.md).
+Publication and main integration remain for review.
+
 **Stereo monitoring of 5.1** is a later, explicitly selected listening mode
 for either Source or Current. Label the fold-down at the transport and device
 panel. Proposed monitor matrix before the common headroom trim is L and Ls

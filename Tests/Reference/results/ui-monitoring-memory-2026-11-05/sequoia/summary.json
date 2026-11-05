@@ -1,0 +1,57 @@
+{
+  "passed": true,
+  "os": "15.7.9",
+  "architecture": "arm64",
+  "candidate_identity_sha256": "2ac289757842cef6c97c6854aae3e447ed43b5dfb0f20f1f8aafffb67273b6fd",
+  "build": "4a44fc52dd01be5947cc5627041391dac42ac5e2ee76044c60dc2d8f0faa3b9a",
+  "source_commit": "96159ebd79f762bea147b41ad696fd80f449dfc9",
+  "physical_devices_opened": false,
+  "groups": [
+    {
+      "name": "devices",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-monitoring-memory-2026-11-05/candidate-01/bin/LevelScopeDeviceSettingsTests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-monitoring-memory-2026-11-05/sequoia/device-files"
+      ],
+      "returncode": 0,
+      "seconds": 0.718509916,
+      "passed": true,
+      "checks": 445
+    },
+    {
+      "name": "audition",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-monitoring-memory-2026-11-05/candidate-01/bin/LevelScopeAuditionTests",
+        "--report",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-monitoring-memory-2026-11-05/sequoia/audition.json"
+      ],
+      "returncode": 0,
+      "seconds": 31.178566874999998,
+      "passed": true,
+      "checks": 4059
+    },
+    {
+      "name": "preparation",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-monitoring-memory-2026-11-05/candidate-01/bin/LevelScopePreparationFeedbackTests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-monitoring-memory-2026-11-05/sequoia/preparation-files"
+      ],
+      "returncode": 0,
+      "seconds": 2.4632620420000038,
+      "passed": true,
+      "checks": 946
+    },
+    {
+      "name": "session-playback",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-monitoring-memory-2026-11-05/candidate-01/bin/LevelScopeSessionPlaybackTests",
+        "--report",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-monitoring-memory-2026-11-05/sequoia/session-playback.json"
+      ],
+      "returncode": 0,
+      "seconds": 3.156054832999999,
+      "passed": true,
+      "checks": 1820
+    }
+  ]
+}

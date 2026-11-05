@@ -1,0 +1,57 @@
+{
+  "passed": true,
+  "os": "10.13.6",
+  "architecture": "x86_64",
+  "candidate_identity_sha256": "2ac289757842cef6c97c6854aae3e447ed43b5dfb0f20f1f8aafffb67273b6fd",
+  "build": "4a44fc52dd01be5947cc5627041391dac42ac5e2ee76044c60dc2d8f0faa3b9a",
+  "source_commit": "96159ebd79f762bea147b41ad696fd80f449dfc9",
+  "physical_devices_opened": false,
+  "groups": [
+    {
+      "name": "devices",
+      "command": [
+        "/Users/fuzz/LevelScope-UI-monitoring-2026-11-05/candidate-01/bin/LevelScopeDeviceSettingsTests",
+        "/Users/fuzz/LevelScope-UI-monitoring-2026-11-05/high-sierra/device-files"
+      ],
+      "returncode": 0,
+      "seconds": 1.3313396309999999,
+      "passed": true,
+      "checks": 445
+    },
+    {
+      "name": "audition",
+      "command": [
+        "/Users/fuzz/LevelScope-UI-monitoring-2026-11-05/candidate-01/bin/LevelScopeAuditionTests",
+        "--report",
+        "/Users/fuzz/LevelScope-UI-monitoring-2026-11-05/high-sierra/audition.json"
+      ],
+      "returncode": 0,
+      "seconds": 62.625726742,
+      "passed": true,
+      "checks": 4059
+    },
+    {
+      "name": "preparation",
+      "command": [
+        "/Users/fuzz/LevelScope-UI-monitoring-2026-11-05/candidate-01/bin/LevelScopePreparationFeedbackTests",
+        "/Users/fuzz/LevelScope-UI-monitoring-2026-11-05/high-sierra/preparation-files"
+      ],
+      "returncode": 0,
+      "seconds": 5.418136704999995,
+      "passed": true,
+      "checks": 946
+    },
+    {
+      "name": "session-playback",
+      "command": [
+        "/Users/fuzz/LevelScope-UI-monitoring-2026-11-05/candidate-01/bin/LevelScopeSessionPlaybackTests",
+        "--report",
+        "/Users/fuzz/LevelScope-UI-monitoring-2026-11-05/high-sierra/session-playback.json"
+      ],
+      "returncode": 0,
+      "seconds": 11.449581710000004,
+      "passed": true,
+      "checks": 1820
+    }
+  ]
+}

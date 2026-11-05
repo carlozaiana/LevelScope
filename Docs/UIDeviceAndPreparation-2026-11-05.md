@@ -205,3 +205,9 @@ long-duration rerun was performed. Reuse unchanged qualification; retain the sep
 source-reuse, project-owned audio, early-waveform, first-playback and completion-pause
 work items, and the later stereo monitoring design. Proposal strategy/audio quality
 remains the other chat's design-only assignment.
+
+The subsequent user-authorised [monitoring-memory slice](UIMonitoringMemory-2026-11-05.md)
+adds per-Mac/interface speaker routing and user volume memory. Its combined three-slice
+candidate supersedes the initial always-muted/-30 dB reconnect behaviour when valid
+matching monitoring settings exist. The two original candidates and results above
+remain preserved records of their tested behaviour.
