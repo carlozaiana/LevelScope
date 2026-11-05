@@ -15,7 +15,7 @@ This folder is the persistent orientation layer for future development chats. Re
 
 ## Task-based quick start
 
-- **Intel stereo/5.1 true-peak continuation — qualified locally, publication/merge pending:** [65 — candidate identities, exact serial parity, actual High Sierra/Sequoia results and timings](65_IntelMulticoreTruePeakQualification.md). Branch `codex/intel-multicore-true-peak`; the ordinary Intel app now uses the existing bounded implementation. Main and M18 remain unchanged; the inherited native completion pause is documented explicitly.
+- **Intel stereo/5.1 true-peak continuation — published, main integration pending:** [65 — candidate identities, exact serial parity, actual High Sierra/Sequoia results and timings](65_IntelMulticoreTruePeakQualification.md), [checkpoint](https://github.com/carlozaiana/LevelScope/tree/intel-multicore-true-peak-2026-11-05), [publication receipt](../../Tests/Reference/results/intel-peaks-publication-2026-11-05/README.md). Branch `codex/intel-multicore-true-peak`; the ordinary Intel app now uses the existing bounded implementation. Main and M18 remain unchanged; the inherited native completion pause is accepted for this optimisation and tracked separately.
 
 - **Next logic milestone, proposal only:** [66 — M19 LRA passages and measured selective-gain candidates](66_M19LraPassagesAndMeasuredCandidates.md). Marker-independent descriptive regions, bounded candidate assessment and explicit Apply/independent verification. No implementation approval yet.
 

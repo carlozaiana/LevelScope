@@ -1,8 +1,8 @@
 # Intel multicore true-peak continuation
 
-5 November 2026. **Passed the focused two-platform qualification, with the
-inherited native completion pause documented below.** Publication and main
-integration remain for review. Branch `codex/intel-multicore-true-peak` in
+5 November 2026. **Published after review of the focused two-platform qualification,
+with the inherited native completion pause accepted as a development limitation.**
+Main integration remains for separate approval. Branch `codex/intel-multicore-true-peak` in
 `/Users/fuzz/Developer/LevelScope`, based on published main
 `51e47f300fcc38a386a5a92a7277029175cfab0c` and the M18 checkpoint
 `m18-interactive-timeline-2026-11-03`.
@@ -185,3 +185,20 @@ the independence of Current/artifact verification.
 
 [Next proposed logic milestone — LRA passages and measured candidates](66_M19LraPassagesAndMeasuredCandidates.md)
 remains a proposal only.
+
+## Publication and follow-up
+
+Published checkpoint [intel-multicore-true-peak-2026-11-05](https://github.com/carlozaiana/LevelScope/tree/intel-multicore-true-peak-2026-11-05)
+targets `c4eea6f1c4569ec4f31725694ddf34db8340f15e`. Its tested product remains
+`f6fe99716618e94a3a3f5f9c066b5961a06a6075`; the later commit adds only qualification
+support, evidence and documentation. The immutable candidate is unchanged.
+[Publication verification](../../Tests/Reference/results/intel-peaks-publication-2026-11-05/README.md)
+records the remote tag object/target, unchanged main and every earlier tag.
+
+The user accepted the inherited approximately 0.8-second native completion pause
+for this optimisation. Numerical and scheduling checks passed; the original
+absolute 200 ms native gate did not. Preserve that distinction. Track a separate
+performance follow-up to profile completion/acceptance/UI work, measure how it
+scales with programme length and full-resolution data, and bound message-thread
+work. Do not treat this checkpoint as a responsiveness fix or silently rewrite
+the original failed receipts. No further long suite was run for publication.
