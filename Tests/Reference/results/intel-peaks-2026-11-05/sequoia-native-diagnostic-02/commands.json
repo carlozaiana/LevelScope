@@ -1,0 +1,50 @@
+[
+  {
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/native-diagnostic-02/serial",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/fixtures/programme-2.wav",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/sequoia-native-diagnostic-02/2-serial"
+    ],
+    "exit_code": 0,
+    "binary_sha256": "96373eb4a3cc5cf57a8b9ca044f2c1d40320560459cb874f8f14f49b538095de",
+    "report_sha256": "f9cfdad5e2c0034f0e4f009d096aa76505b855c7cc7e74c3e81be2242919b583"
+  },
+  {
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/native-diagnostic-02/app-mode",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/fixtures/programme-2.wav",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/sequoia-native-diagnostic-02/2-app-mode"
+    ],
+    "exit_code": 0,
+    "binary_sha256": "07953df9a97f27da6e6ceb43542e5e7d2194e9fc37208889c6f73d0d84aa43f3",
+    "report_sha256": "afebf4ab3dfb063c3763a18e224d2f31f368da135a8c23703c16cdcea1459b27"
+  },
+  {
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/native-diagnostic-02/serial",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/fixtures/programme-6.wav",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/sequoia-native-diagnostic-02/6-serial"
+    ],
+    "exit_code": 0,
+    "binary_sha256": "96373eb4a3cc5cf57a8b9ca044f2c1d40320560459cb874f8f14f49b538095de",
+    "report_sha256": "ef17952f5506f652b2429e1404fa7ea1398adbab3df2db2f6b68aa00c7037a66"
+  },
+  {
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/native-diagnostic-02/app-mode",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/fixtures/programme-6.wav",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/sequoia-native-diagnostic-02/6-app-mode"
+    ],
+    "exit_code": 0,
+    "binary_sha256": "07953df9a97f27da6e6ceb43542e5e7d2194e9fc37208889c6f73d0d84aa43f3",
+    "report_sha256": "b9e79f1a6c1393b7bb24c20e232a49e38e7e35212f579b62b5fc586a72d2434f"
+  }
+]

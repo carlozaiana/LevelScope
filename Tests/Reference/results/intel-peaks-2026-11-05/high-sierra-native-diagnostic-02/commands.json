@@ -1,0 +1,50 @@
+[
+  {
+    "command": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/native-diagnostic-02/serial",
+      "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/candidate-01/fixtures/programme-2.wav",
+      "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/high-sierra-native-diagnostic-02/2-serial"
+    ],
+    "exit_code": 0,
+    "binary_sha256": "96373eb4a3cc5cf57a8b9ca044f2c1d40320560459cb874f8f14f49b538095de",
+    "report_sha256": "29b05ee178ff45caabf0b457cce26bacdbede814fe954c4de8391d5e35b7eff4"
+  },
+  {
+    "command": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/native-diagnostic-02/app-mode",
+      "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/candidate-01/fixtures/programme-2.wav",
+      "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/high-sierra-native-diagnostic-02/2-app-mode"
+    ],
+    "exit_code": 0,
+    "binary_sha256": "07953df9a97f27da6e6ceb43542e5e7d2194e9fc37208889c6f73d0d84aa43f3",
+    "report_sha256": "b67c2d9b37c1f9dbffe7145a10cd1dc197834604ca9a32dbabd8b0983e46baf1"
+  },
+  {
+    "command": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/native-diagnostic-02/serial",
+      "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/candidate-01/fixtures/programme-6.wav",
+      "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/high-sierra-native-diagnostic-02/6-serial"
+    ],
+    "exit_code": 0,
+    "binary_sha256": "96373eb4a3cc5cf57a8b9ca044f2c1d40320560459cb874f8f14f49b538095de",
+    "report_sha256": "ff6ffa6a9630d6c975b61c5b76ac29e1290a001b87f9d31fff2b2c870c512c70"
+  },
+  {
+    "command": [
+      "/usr/bin/arch",
+      "-x86_64",
+      "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/native-diagnostic-02/app-mode",
+      "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/candidate-01/fixtures/programme-6.wav",
+      "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/high-sierra-native-diagnostic-02/6-app-mode"
+    ],
+    "exit_code": 0,
+    "binary_sha256": "07953df9a97f27da6e6ceb43542e5e7d2194e9fc37208889c6f73d0d84aa43f3",
+    "report_sha256": "18429e5aa52f75c8ad22bee5cab03d8c7c03705db04d82128821084f1f7a95f3"
+  }
+]

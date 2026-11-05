@@ -1,0 +1,298 @@
+[
+  {
+    "name": "core-parity",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/bin/LevelScopePeakChannelParity"
+    ],
+    "exit_code": 0,
+    "seconds": 4.2883460840000005,
+    "passed": true
+  },
+  {
+    "name": "measurement",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/bin/LevelScopeMeasurementTests",
+      "--report",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/sequoia-01/measurement.json"
+    ],
+    "exit_code": 0,
+    "seconds": 13.530696375000002,
+    "report_sha256": "f9d49b4a20579d1990bf0a5398672b8d9cec8181f92bfc4072d2144da8491756",
+    "passed": true
+  },
+  {
+    "name": "section-smoke",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/bin/LevelScopeSectionProposalTests",
+      "--smoke",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/sequoia-01/section-files",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/sequoia-01/section-smoke.json"
+    ],
+    "exit_code": 0,
+    "seconds": 11.565668667,
+    "report_sha256": "86adf809e6fdc418c0cea2e1ab31c7c85906c72a622a6fabcdfc42e2b0a299db",
+    "passed": true
+  },
+  {
+    "name": "2-serial-0",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/bin/peaks/serial",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/fixtures/programme-2.wav",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/sequoia-01/2-serial-0.json",
+      "--decisions"
+    ],
+    "exit_code": 0,
+    "seconds": 11.752968290999998,
+    "report_sha256": "ca9764b24228fc175e2bd1cc1cc9c228703ac58dd8fb5e74f1e3514f0f85c1c9",
+    "passed": true
+  },
+  {
+    "name": "2-app-mode-0",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/bin/peaks/app-mode",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/fixtures/programme-2.wav",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/sequoia-01/2-app-mode-0.json",
+      "--decisions"
+    ],
+    "exit_code": 0,
+    "seconds": 7.54939375,
+    "report_sha256": "5723041bcbfc761e9ab4bc7c2fc8d9a0aae29560e03522a750e89acc9050f073",
+    "passed": true
+  },
+  {
+    "name": "2-app-mode-1",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/bin/peaks/app-mode",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/fixtures/programme-2.wav",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/sequoia-01/2-app-mode-1.json"
+    ],
+    "exit_code": 0,
+    "seconds": 6.096182083999999,
+    "report_sha256": "7d8f7f2aaad28cb9146021af7862d94f1d15ce5495a647510ac7e7e28150a3e8",
+    "passed": true
+  },
+  {
+    "name": "2-serial-1",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/bin/peaks/serial",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/fixtures/programme-2.wav",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/sequoia-01/2-serial-1.json"
+    ],
+    "exit_code": 0,
+    "seconds": 9.724503417000001,
+    "report_sha256": "cc053a38a864d017950c6a4a489d131c4d1439a719d405782fd66554e4db284b",
+    "passed": true
+  },
+  {
+    "name": "2-serial-2",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/bin/peaks/serial",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/fixtures/programme-2.wav",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/sequoia-01/2-serial-2.json"
+    ],
+    "exit_code": 0,
+    "seconds": 9.702936790999999,
+    "report_sha256": "cddadbfc3c6266403a4a8bc3137b15d980473b0d138306883185bd89e9d9ec58",
+    "passed": true
+  },
+  {
+    "name": "2-app-mode-2",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/bin/peaks/app-mode",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/fixtures/programme-2.wav",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/sequoia-01/2-app-mode-2.json"
+    ],
+    "exit_code": 0,
+    "seconds": 6.427088832999999,
+    "report_sha256": "2f45805e138da92ae607415ab62103929fe5d1ef20f01ac860922dcd84260ef9",
+    "passed": true
+  },
+  {
+    "name": "2-app-mode-3",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/bin/peaks/app-mode",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/fixtures/programme-2.wav",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/sequoia-01/2-app-mode-3.json"
+    ],
+    "exit_code": 0,
+    "seconds": 5.804846249999997,
+    "report_sha256": "f6b6d962c335254ef651a3f256461738b5d34311188b5dc3ca85dc382c7c47ac",
+    "passed": true
+  },
+  {
+    "name": "2-serial-3",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/bin/peaks/serial",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/fixtures/programme-2.wav",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/sequoia-01/2-serial-3.json"
+    ],
+    "exit_code": 0,
+    "seconds": 9.696159124999994,
+    "report_sha256": "952a6adbc965e66dd195f68178ad8405300cc7194d17110451a9920f73f16cd7",
+    "passed": true
+  },
+  {
+    "name": "native-2",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/bin/native",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/fixtures/programme-2.wav",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/sequoia-01/native-2"
+    ],
+    "exit_code": 0,
+    "seconds": 8.562308583000004,
+    "report_sha256": "1bd74c4ff9a1768f08ef1ce1a5c9f9d81219ae0d905d70c93282c5877b34b4b6",
+    "passed": true
+  },
+  {
+    "name": "6-serial-0",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/bin/peaks/serial",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/fixtures/programme-6.wav",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/sequoia-01/6-serial-0.json",
+      "--decisions"
+    ],
+    "exit_code": 0,
+    "seconds": 33.494417708,
+    "report_sha256": "af813a941b345f30f7a1cc1d70dfac187850ed219ef30b9063c58af44ef2cbb9",
+    "passed": true
+  },
+  {
+    "name": "6-app-mode-0",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/bin/peaks/app-mode",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/fixtures/programme-6.wav",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/sequoia-01/6-app-mode-0.json",
+      "--decisions"
+    ],
+    "exit_code": 0,
+    "seconds": 11.47215912499999,
+    "report_sha256": "8b414bb377b3ab8a70aebdfb424c413a36f7c53303894ac8839d941feef8977a",
+    "passed": true
+  },
+  {
+    "name": "6-app-mode-1",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/bin/peaks/app-mode",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/fixtures/programme-6.wav",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/sequoia-01/6-app-mode-1.json"
+    ],
+    "exit_code": 0,
+    "seconds": 9.58067862499999,
+    "report_sha256": "56774d667c6ccd8d3c4884b147e25b1367aa3da068545151d85476679204f01b",
+    "passed": true
+  },
+  {
+    "name": "6-serial-1",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/bin/peaks/serial",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/fixtures/programme-6.wav",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/sequoia-01/6-serial-1.json"
+    ],
+    "exit_code": 0,
+    "seconds": 29.419493375000002,
+    "report_sha256": "3507b3c98acabcf4d4830b71fd409377e4b8868bdaa8e1708b1b52a06dfa57d3",
+    "passed": true
+  },
+  {
+    "name": "6-serial-2",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/bin/peaks/serial",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/fixtures/programme-6.wav",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/sequoia-01/6-serial-2.json"
+    ],
+    "exit_code": 0,
+    "seconds": 28.69017145799998,
+    "report_sha256": "ce47156bb4a28e761bd35fb52798f47a9ea739e253615752a36993a1272db317",
+    "passed": true
+  },
+  {
+    "name": "6-app-mode-2",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/bin/peaks/app-mode",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/fixtures/programme-6.wav",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/sequoia-01/6-app-mode-2.json"
+    ],
+    "exit_code": 0,
+    "seconds": 9.028637750000001,
+    "report_sha256": "7675184c6da11ad6a90e4a88cc33ba389408ebf09252aa36b17c9ad8a293513f",
+    "passed": true
+  },
+  {
+    "name": "6-app-mode-3",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/bin/peaks/app-mode",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/fixtures/programme-6.wav",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/sequoia-01/6-app-mode-3.json"
+    ],
+    "exit_code": 0,
+    "seconds": 9.729873166000004,
+    "report_sha256": "0aad087b5af4341291917dc4f147514d395c6a2007125b8e547a83046551fb72",
+    "passed": true
+  },
+  {
+    "name": "6-serial-3",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/bin/peaks/serial",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/fixtures/programme-6.wav",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/sequoia-01/6-serial-3.json"
+    ],
+    "exit_code": 0,
+    "seconds": 28.969625707999995,
+    "report_sha256": "672dbcb1cd47afa662501109ea993f0553caad93f590374d3d4a862958ea62d7",
+    "passed": true
+  },
+  {
+    "name": "native-6",
+    "command": [
+      "/usr/bin/arch",
+      "-arm64",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/bin/native",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/candidate-01/fixtures/programme-6.wav",
+      "/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/sequoia-01/native-6"
+    ],
+    "exit_code": 1,
+    "seconds": 13.297897750000004
+  }
+]

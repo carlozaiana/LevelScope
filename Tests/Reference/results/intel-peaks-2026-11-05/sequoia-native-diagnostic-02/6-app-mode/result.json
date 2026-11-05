@@ -1,0 +1,311 @@
+{
+  "source_cancel_ms": 43.6395,
+  "source_seconds": 1.508739125,
+  "proposal_cancel_ms": 46.486708,
+  "section_propose_seconds": 3.920606083,
+  "current_cancel_ms": 113.157625,
+  "current_seconds": 1.456608167,
+  "channels": 6,
+  "input_sha256": "c2248717fe25628866c8b85e28a0fb7209f845a01a7b933e69955188867c59b9",
+  "heartbeat_scope": "Active native analysis/proposal jobs, including completion and cancellation; excludes picker/setup/screenshot work",
+  "heartbeat_p95_ms": 125.429542,
+  "heartbeat_max_ms": 228.614208,
+  "heartbeat_stages": [
+    {
+      "stage": "cancel-source",
+      "gaps_ms": [
+        59.293833,
+        101.47875,
+        101.561583,
+        99.37216699999999,
+        102.5645,
+        99.745459,
+        100.978125,
+        99.661917,
+        2.306625
+      ]
+    },
+    {
+      "stage": "source",
+      "gaps_ms": [
+        99.147959,
+        112.674833,
+        101.65925,
+        115.1575,
+        117.300166,
+        106.105417,
+        117.985667,
+        99.138875,
+        110.733708,
+        100.103,
+        100.764166,
+        99.349834,
+        228.614208
+      ]
+    },
+    {
+      "stage": "cancel-proposal",
+      "gaps_ms": [
+        116.299625,
+        100.790792,
+        107.335542,
+        99.17824999999999,
+        100.336792,
+        101.22675,
+        101.938167,
+        100.341541,
+        101.598083,
+        100.645917,
+        101.101375,
+        100.7215,
+        101.139417,
+        100.727875,
+        101.358291,
+        100.340042,
+        101.441083,
+        99.065292,
+        101.932083,
+        99.89,
+        100.443458,
+        99.817959,
+        135.982084,
+        0.06724999999999999
+      ]
+    },
+    {
+      "stage": "proposal",
+      "gaps_ms": [
+        130.918542,
+        125.429542,
+        74.99891699999999,
+        100.35725,
+        101.858167,
+        101.7795,
+        100.743084,
+        99.37191700000001,
+        101.66025,
+        100.688416,
+        99.96754200000001,
+        100.445125,
+        100.008875,
+        100.554,
+        100.325917,
+        100.278833,
+        100.502916,
+        99.441625,
+        100.939792,
+        101.247208,
+        100.350625,
+        99.72079100000001,
+        101.189167,
+        101.250583,
+        100.171083,
+        99.992958,
+        99.2025,
+        100.757333,
+        100.298875,
+        100.416166,
+        100.846875,
+        100.238208,
+        99.93275,
+        100.480041,
+        101.833667,
+        99.75583400000001,
+        100.450542,
+        100.8115,
+        71.384417
+      ]
+    },
+    {
+      "stage": "cancel-current",
+      "gaps_ms": [
+        46.981833,
+        120.472417,
+        99.277417,
+        81.49625,
+        101.593416,
+        100.529875,
+        100.400875,
+        140.636209
+      ]
+    },
+    {
+      "stage": "current",
+      "gaps_ms": [
+        119.979667,
+        101.785625,
+        100.290042,
+        101.190292,
+        100.371208,
+        100.367666,
+        99.885875,
+        100.906083,
+        101.083041,
+        100.750791,
+        100.27425,
+        101.880125,
+        99.714709,
+        128.12425
+      ]
+    }
+  ],
+  "absolute_heartbeat_budget_passed": false,
+  "passed": true,
+  "checks": [
+    {
+      "name": "live native main component",
+      "passed": true
+    },
+    {
+      "name": "file picker opened with an active completion",
+      "passed": true
+    },
+    {
+      "name": "cancelled native job has explicit cancelled state",
+      "passed": true
+    },
+    {
+      "name": "cancellation never opens a device or starts audition",
+      "passed": true
+    },
+    {
+      "name": "cancelled first Source leaves both domains pending",
+      "passed": true
+    },
+    {
+      "name": "one successful Source initializes matching Current",
+      "passed": true
+    },
+    {
+      "name": "completed progressive timeline accepted",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "cancelled native job has explicit cancelled state",
+      "passed": true
+    },
+    {
+      "name": "cancellation never opens a device or starts audition",
+      "passed": true
+    },
+    {
+      "name": "cancelled proposal changes no audio and cannot apply",
+      "passed": true
+    },
+    {
+      "name": "fresh section proposal completes all three private passes",
+      "passed": true
+    },
+    {
+      "name": "explicit Apply invalidates Current",
+      "passed": true
+    },
+    {
+      "name": "cancelled native job has explicit cancelled state",
+      "passed": true
+    },
+    {
+      "name": "cancellation never opens a device or starts audition",
+      "passed": true
+    },
+    {
+      "name": "cancelled verification leaves applied audio unverified with no rollback",
+      "passed": true
+    },
+    {
+      "name": "independent Current verification passes",
+      "passed": true
+    },
+    {
+      "name": "Source preserved and device closed throughout",
+      "passed": true
+    },
+    {
+      "name": "write fresh UI capture",
+      "passed": true
+    },
+    {
+      "name": "native message loop heartbeat observed",
+      "passed": true
+    }
+  ],
+  "build": "77b7a0fa28402b43580096fa7e828af8bd08e681ddca29d4d36fe1e0183b51f6",
+  "physical_devices_opened": false,
+  "video_loaded": false
+}

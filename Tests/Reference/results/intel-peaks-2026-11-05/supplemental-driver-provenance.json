@@ -1,0 +1,14 @@
+{
+  "app_unchanged": true,
+  "measurement_build": "77b7a0fa28402b43580096fa7e828af8bd08e681ddca29d4d36fe1e0183b51f6",
+  "sha256": {
+    "native-diagnostic-02/app-mode": "07953df9a97f27da6e6ceb43542e5e7d2194e9fc37208889c6f73d0d84aa43f3",
+    "native-diagnostic-02/serial": "96373eb4a3cc5cf57a8b9ca044f2c1d40320560459cb874f8f14f49b538095de",
+    "Tests/Qualification/IntelPeaks/package.py": "bc547bcae8cf6d3e7b5b6a8360224fe267c87183c736e93915571ee76daf32ee",
+    "Tests/Qualification/IntelPeaks/run.py": "3b7aa2e467f9bcf74987e628ba564ef564b1c954ef92d6168b7fe583de74a7f3",
+    "Tests/Qualification/IntelPeaks/review.py": "d9f43f3915f9dea526b10492511288820b76401be5505e86c99079e2c7392a14",
+    "Tests/Qualification/IntelPeaks/Native.cpp": "a3b517fccdc50df4262a93f5fd4c6ceddb0311e7dd00eb4d951f3f293eb45c15",
+    "Tests/Qualification/IntelPeaks/README.md": "6b5f2faa4872e25a056a8c573f0b3ac15e2a9241b285525c1ee7cfcfd5555d21",
+    "Tests/Qualification/IntelPeaks/build_native.py": "25af3595dea755e9739727c34861e8d6ae045a7ea984a0404eeef9e13dc9ee06"
+  }
+}

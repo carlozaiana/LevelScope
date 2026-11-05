@@ -1,0 +1,251 @@
+{
+  "operations": {
+    "import": {
+      "wall_ms": 100.582166,
+      "worker_cpu_ms": 100.362,
+      "process_cpu_ms": 104.367,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        96.76983300000001
+      ],
+      "heartbeat_tail_ms": 5.517375,
+      "timeline_paint_ms": [
+        3.437667
+      ]
+    },
+    "source": {
+      "wall_ms": 854.630583,
+      "worker_cpu_ms": 834.523,
+      "process_cpu_ms": 1457.44,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        101.322708,
+        99.88641699999999,
+        101.253208,
+        101.353667,
+        100.995833,
+        102.259625,
+        102.09125,
+        101.593333
+      ],
+      "heartbeat_tail_ms": 44.256625,
+      "timeline_paint_ms": [
+        2.44175,
+        2.748875,
+        2.172208,
+        3.673958,
+        3.312958,
+        4.697917,
+        4.529792,
+        5.802375
+      ]
+    },
+    "global": {
+      "wall_ms": 1.743792,
+      "worker_cpu_ms": 1.729999999999997,
+      "process_cpu_ms": 1.739,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [],
+      "heartbeat_tail_ms": 1.759208,
+      "timeline_paint_ms": []
+    },
+    "fresh": {
+      "wall_ms": 2641.262375,
+      "worker_cpu_ms": 2602.059,
+      "process_cpu_ms": 4672.624,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        100.260291,
+        100.390125,
+        100.408417,
+        100.979125,
+        102.797333,
+        100.484084,
+        100.589291,
+        101.257584,
+        103.822833,
+        100.981,
+        101.653542,
+        104.842291,
+        101.74925,
+        104.809125,
+        102.846875,
+        100.2855,
+        103.460709,
+        100.06475,
+        103.432041,
+        101.23025,
+        101.789584,
+        102.002416,
+        104.623709,
+        100.922666,
+        102.87875
+      ],
+      "heartbeat_tail_ms": 94.640209,
+      "timeline_paint_ms": [
+        4.396917,
+        2.607959,
+        2.761292,
+        2.894375,
+        2.7065,
+        2.680375,
+        2.784625,
+        2.697958,
+        2.868375,
+        2.9035,
+        2.735458,
+        3.065292,
+        2.829375,
+        2.7625,
+        2.769625,
+        2.806042,
+        2.921125,
+        2.814,
+        2.786709,
+        2.796,
+        2.8515,
+        2.6985,
+        2.839833,
+        2.823917,
+        2.912792
+      ]
+    },
+    "reused": {
+      "wall_ms": 1532.258375,
+      "worker_cpu_ms": 1494.333,
+      "process_cpu_ms": 2721.162,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        51.0915,
+        100.525541,
+        105.062667,
+        101.468917,
+        101.078583,
+        102.47825,
+        100.640125,
+        101.022042,
+        103.617166,
+        100.920167,
+        100.883625,
+        104.814917,
+        102.3885,
+        102.741833,
+        99.774417
+      ],
+      "heartbeat_tail_ms": 54.169875,
+      "timeline_paint_ms": [
+        2.781291,
+        2.662459,
+        2.787917,
+        2.818666,
+        2.56025,
+        2.856042,
+        2.726167,
+        2.779291,
+        2.590167,
+        2.803083,
+        2.785292,
+        2.646208,
+        2.756083,
+        2.663625,
+        2.750125
+      ]
+    },
+    "current": {
+      "wall_ms": 870.946792,
+      "worker_cpu_ms": 850.9540000000001,
+      "process_cpu_ms": 1473.034,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        43.513291,
+        100.086667,
+        100.289542,
+        99.417875,
+        103.180166,
+        99.701792,
+        101.545583,
+        101.325209,
+        102.2475
+      ],
+      "heartbeat_tail_ms": 22.674458,
+      "timeline_paint_ms": [
+        1.986084,
+        0.774208,
+        2.310583,
+        2.221458,
+        3.581375,
+        3.411167,
+        4.319917,
+        4.342125,
+        5.672541
+      ]
+    }
+  },
+  "identities": {
+    "source": "8d51fd29b501f298d2be5c11172afa8df99787a0957a59d285ccd38660d1bc54",
+    "global": "a65681d5627058a4d903af64b02272cb2d38b62ccced7dc782e571b378abef59",
+    "global_decision": "de6b9664c31ac7e350564358716853480532d5fffbf76d22d2563ae0995631d7",
+    "fresh": "d7853b75dec520635114b1f21eb30847ae4de8331e263f6ad6883fb0f4d11a12",
+    "fresh_decision": "3456c6cdd8f917309600f1505d40383341d24a4819da76e07ff81584ebbc7a38",
+    "fresh_section_peaks": "b58ecf779ba471746315128bd06d377cd8def09507b704fed597ff1866130f49",
+    "fresh_candidate": "ffb4dd48b4c22cf348b19003188bcd38407c87017280cd28c39e28b4a0e75710",
+    "fresh_plan": "cb5ff556a9374e3e9da83b81230683683e0df46c2b14ea9d971943831244e6ba",
+    "reused": "d7853b75dec520635114b1f21eb30847ae4de8331e263f6ad6883fb0f4d11a12",
+    "reused_decision": "c4e1b5ac2038a278c9dcaad0d94a5231f70bfbe7f2823fd623286061aaa8502c",
+    "reused_section_peaks": "b58ecf779ba471746315128bd06d377cd8def09507b704fed597ff1866130f49",
+    "reused_candidate": "f4286ef645e9e9192f9349defa8ab9c7b7737c73a58c4be6b98b0645a6c82a25",
+    "reused_plan": "cb5ff556a9374e3e9da83b81230683683e0df46c2b14ea9d971943831244e6ba",
+    "current": "b71148a31c9c21800d06e28b5eb9d519c03a39c697b508f18f4584889fcc0b1f"
+  },
+  "outcomes": {
+    "global": {
+      "main_preflight_ms": 0.764583,
+      "main_accept_ms": 0.200083,
+      "passes": 0,
+      "outcome": "Ready to apply",
+      "changes": 0,
+      "status": 2,
+      "issue": 0,
+      "can_apply": true,
+      "target_il": -23.7,
+      "target_tp": -1.0
+    },
+    "fresh": {
+      "main_preflight_ms": 0.067583,
+      "main_accept_ms": 0.3045,
+      "passes": 3,
+      "outcome": "Ready to apply",
+      "changes": 1,
+      "status": 4,
+      "issue": 0,
+      "can_apply": true,
+      "target_il": -23.0,
+      "target_tp": -1.0
+    },
+    "reused": {
+      "main_preflight_ms": 1.511208,
+      "main_accept_ms": 0.277209,
+      "passes": 2,
+      "outcome": "Ready to apply",
+      "changes": 1,
+      "status": 4,
+      "issue": 0,
+      "can_apply": true,
+      "target_il": -23.0,
+      "target_tp": -1.0
+    }
+  },
+  "roles": "L,R",
+  "file_sha256": "171b4aa51900c9826416719af9950005ce1a445817e49aa215c14cc2cd332566",
+  "frames": 2880000,
+  "source_lufs": -24.43008132144102,
+  "current_lufs": -23.00000001747636,
+  "channels": 2,
+  "base_build": "77b7a0fa28402b43580096fa7e828af8bd08e681ddca29d4d36fe1e0183b51f6"
+}

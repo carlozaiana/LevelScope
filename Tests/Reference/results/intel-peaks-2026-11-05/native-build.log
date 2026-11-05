@@ -1,0 +1,13 @@
+/Users/fuzz/Developer/LevelScope/Tests/Qualification/IntelPeaks/Native.cpp:50:26: error: no matching function for call to 'expect'
+   50 |     for(int n=1;n<20;++n)expect(s.sectionDocument.split(uint64_t(n),s.sourceDocument.media.frames*n/20,error),error);
+      |                          ^~~~~~
+/Users/fuzz/Developer/LevelScope/Tests/AuditionTestSupport.h:21:6: note: candidate function not viable: no known conversion from 'juce::String' to 'const char *' for 2nd argument
+   21 | void expect (bool ok, const char* name)
+      |      ^                ~~~~~~~~~~~~~~~~
+1 error generated.
+Traceback (most recent call last):
+  File "/Users/fuzz/Developer/LevelScope/Tests/Qualification/M18/build_driver.py", line 24, in <module>
+    subprocess.run(['/usr/bin/c++', *options, '-x', 'objective-c++',
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 528, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/usr/bin/c++', '-DJUCE_APPLICATION_NAME_STRING="LevelScope Standalone"', '-DJUCE_APPLICATION_VERSION_STRING="0.1.0"', '-DJUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1', '-DJUCE_MODULE_AVAILABLE_juce_audio_basics=1', '-DJUCE_MODULE_AVAILABLE_juce_audio_devices=1', '-DJUCE_MODULE_AVAILABLE_juce_audio_formats=1', '-DJUCE_MODULE_AVAILABLE_juce_core=1', '-DJUCE_MODULE_AVAILABLE_juce_cryptography=1', '-DJUCE_MODULE_AVAILABLE_juce_data_structures=1', '-DJUCE_MODULE_AVAILABLE_juce_dsp=1', '-DJUCE_MODULE_AVAILABLE_juce_events=1', '-DJUCE_MODULE_AVAILABLE_juce_graphics=1', '-DJUCE_MODULE_AVAILABLE_juce_gui_basics=1', '-DJUCE_REPORT_APP_USAGE=0', '-DJUCE_STANDALONE_APPLICATION=1', '-DJUCE_USE_CURL=0', '-DJUCE_WEB_BROWSER=0', '-DLEVELSCOPE_MEASUREMENT_BUILD="77b7a0fa28402b43580096fa7e828af8bd08e681ddca29d4d36fe1e0183b51f6"', '-DNDEBUG=1', '-D_NDEBUG=1', '-I/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/compile/LevelScopeStandalone_artefacts/JuceLibraryCode', '-I/Users/fuzz/Developer/LevelScope/Source', '-I/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules', '-O3', '-DNDEBUG', '-std=gnu++17', '-arch', 'arm64', '-arch', 'x86_64', '-mmacosx-version-min=10.13', '-Wall', '-Wextra', '-Wpedantic', '-x', 'objective-c++', '-fno-access-control', '-I/Users/fuzz/Developer/LevelScope/Tests', '-I/Users/fuzz/Developer/LevelScope/Source', '-c', '/Users/fuzz/Developer/LevelScope/Tests/Qualification/IntelPeaks/Native.cpp', '-o', '/Users/fuzz/Developer/LevelScope/build/intel-peaks-2026-11-05/drivers/native.o']' returned non-zero exit status 1.

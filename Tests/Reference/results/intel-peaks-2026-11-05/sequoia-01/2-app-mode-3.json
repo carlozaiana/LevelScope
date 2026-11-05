@@ -1,0 +1,245 @@
+{
+  "operations": {
+    "import": {
+      "wall_ms": 102.099958,
+      "worker_cpu_ms": 101.924,
+      "process_cpu_ms": 106.042,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        97.70816600000001
+      ],
+      "heartbeat_tail_ms": 9.886334,
+      "timeline_paint_ms": [
+        3.567167
+      ]
+    },
+    "source": {
+      "wall_ms": 853.54875,
+      "worker_cpu_ms": 833.787,
+      "process_cpu_ms": 1456.383,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        101.604083,
+        100.275292,
+        100.980708,
+        101.278334,
+        100.501,
+        101.961166,
+        100.411667,
+        100.007667
+      ],
+      "heartbeat_tail_ms": 51.876041,
+      "timeline_paint_ms": [
+        2.462125,
+        2.735667,
+        2.220542,
+        3.540208,
+        3.313291,
+        4.830125,
+        4.558167,
+        5.747833
+      ]
+    },
+    "global": {
+      "wall_ms": 1.733625,
+      "worker_cpu_ms": 1.734000000000002,
+      "process_cpu_ms": 1.745,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [],
+      "heartbeat_tail_ms": 1.746458,
+      "timeline_paint_ms": []
+    },
+    "fresh": {
+      "wall_ms": 2335.464833,
+      "worker_cpu_ms": 2280.4,
+      "process_cpu_ms": 4274.642,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        102.829292,
+        103.3745,
+        104.829583,
+        102.045667,
+        100.278083,
+        101.57275,
+        102.351,
+        100.129417,
+        102.386875,
+        100.121292,
+        100.6345,
+        100.349125,
+        105.79175,
+        99.6405,
+        102.110083,
+        102.171167,
+        100.898291,
+        102.215542,
+        99.32808300000001,
+        102.393959,
+        100.115666,
+        101.376917
+      ],
+      "heartbeat_tail_ms": 98.84133300000001,
+      "timeline_paint_ms": [
+        4.582792,
+        2.468917,
+        2.978209,
+        2.936,
+        2.883209,
+        2.769042,
+        2.926709,
+        2.762583,
+        2.8805,
+        2.773208,
+        2.805291,
+        3.063875,
+        2.810458,
+        2.819208,
+        2.890583,
+        3.03375,
+        2.8345,
+        2.828625,
+        2.739417,
+        2.864875,
+        2.801667,
+        2.855583
+      ]
+    },
+    "reused": {
+      "wall_ms": 1532.356,
+      "worker_cpu_ms": 1494.506,
+      "process_cpu_ms": 2721.828,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        54.249667,
+        104.968458,
+        104.842292,
+        101.585667,
+        104.73175,
+        100.446708,
+        105.047458,
+        100.162834,
+        100.296125,
+        101.272375,
+        102.806333,
+        103.470875,
+        104.432208,
+        104.639834,
+        100.828791
+      ],
+      "heartbeat_tail_ms": 43.040125,
+      "timeline_paint_ms": [
+        2.937125,
+        2.838542,
+        2.778042,
+        2.672458,
+        2.976333,
+        2.756958,
+        3.01225,
+        3.124625,
+        2.463291,
+        2.83325,
+        2.853917,
+        2.358375,
+        2.911334,
+        2.977583,
+        3.011959
+      ]
+    },
+    "current": {
+      "wall_ms": 869.291375,
+      "worker_cpu_ms": 850.0029999999999,
+      "process_cpu_ms": 1471.329,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        54.680167,
+        101.675291,
+        100.758667,
+        102.266458,
+        99.374084,
+        100.769333,
+        100.969125,
+        101.619917,
+        100.973541
+      ],
+      "heartbeat_tail_ms": 12.028625,
+      "timeline_paint_ms": [
+        1.863833,
+        0.776834,
+        2.232333,
+        2.282834,
+        3.36125,
+        3.31075,
+        4.752208,
+        4.039791,
+        5.809375
+      ]
+    }
+  },
+  "identities": {
+    "source": "8d51fd29b501f298d2be5c11172afa8df99787a0957a59d285ccd38660d1bc54",
+    "global": "a65681d5627058a4d903af64b02272cb2d38b62ccced7dc782e571b378abef59",
+    "global_decision": "de6b9664c31ac7e350564358716853480532d5fffbf76d22d2563ae0995631d7",
+    "fresh": "d7853b75dec520635114b1f21eb30847ae4de8331e263f6ad6883fb0f4d11a12",
+    "fresh_decision": "3456c6cdd8f917309600f1505d40383341d24a4819da76e07ff81584ebbc7a38",
+    "fresh_section_peaks": "b58ecf779ba471746315128bd06d377cd8def09507b704fed597ff1866130f49",
+    "fresh_candidate": "ffb4dd48b4c22cf348b19003188bcd38407c87017280cd28c39e28b4a0e75710",
+    "fresh_plan": "cb5ff556a9374e3e9da83b81230683683e0df46c2b14ea9d971943831244e6ba",
+    "reused": "d7853b75dec520635114b1f21eb30847ae4de8331e263f6ad6883fb0f4d11a12",
+    "reused_decision": "c4e1b5ac2038a278c9dcaad0d94a5231f70bfbe7f2823fd623286061aaa8502c",
+    "reused_section_peaks": "b58ecf779ba471746315128bd06d377cd8def09507b704fed597ff1866130f49",
+    "reused_candidate": "f4286ef645e9e9192f9349defa8ab9c7b7737c73a58c4be6b98b0645a6c82a25",
+    "reused_plan": "cb5ff556a9374e3e9da83b81230683683e0df46c2b14ea9d971943831244e6ba",
+    "current": "b71148a31c9c21800d06e28b5eb9d519c03a39c697b508f18f4584889fcc0b1f"
+  },
+  "outcomes": {
+    "global": {
+      "main_preflight_ms": 0.770833,
+      "main_accept_ms": 0.217708,
+      "passes": 0,
+      "outcome": "Ready to apply",
+      "changes": 0,
+      "status": 2,
+      "issue": 0,
+      "can_apply": true,
+      "target_il": -23.7,
+      "target_tp": -1.0
+    },
+    "fresh": {
+      "main_preflight_ms": 0.080625,
+      "main_accept_ms": 0.300458,
+      "passes": 3,
+      "outcome": "Ready to apply",
+      "changes": 1,
+      "status": 4,
+      "issue": 0,
+      "can_apply": true,
+      "target_il": -23.0,
+      "target_tp": -1.0
+    },
+    "reused": {
+      "main_preflight_ms": 1.488,
+      "main_accept_ms": 0.290584,
+      "passes": 2,
+      "outcome": "Ready to apply",
+      "changes": 1,
+      "status": 4,
+      "issue": 0,
+      "can_apply": true,
+      "target_il": -23.0,
+      "target_tp": -1.0
+    }
+  },
+  "roles": "L,R",
+  "file_sha256": "171b4aa51900c9826416719af9950005ce1a445817e49aa215c14cc2cd332566",
+  "frames": 2880000,
+  "source_lufs": -24.43008132144102,
+  "current_lufs": -23.00000001747636,
+  "channels": 2,
+  "base_build": "77b7a0fa28402b43580096fa7e828af8bd08e681ddca29d4d36fe1e0183b51f6"
+}

@@ -1,0 +1,176 @@
+{
+  "source_cancel_ms": 49.45766699999999,
+  "source_seconds": 1.545662584,
+  "proposal_cancel_ms": 103.820333,
+  "section_propose_seconds": 4.140682875,
+  "current_cancel_ms": 107.979959,
+  "current_seconds": 1.528515666,
+  "channels": 6,
+  "input_sha256": "c2248717fe25628866c8b85e28a0fb7209f845a01a7b933e69955188867c59b9",
+  "heartbeat_scope": "Active native analysis/proposal jobs, including completion and cancellation; excludes picker/setup/screenshot work",
+  "heartbeat_p95_ms": 103.120542,
+  "heartbeat_max_ms": 240.710334,
+  "failure": "native heartbeat within selected budget",
+  "passed": false,
+  "checks": [
+    {
+      "name": "live native main component",
+      "passed": true
+    },
+    {
+      "name": "file picker opened with an active completion",
+      "passed": true
+    },
+    {
+      "name": "cancelled native job has explicit cancelled state",
+      "passed": true
+    },
+    {
+      "name": "cancellation never opens a device or starts audition",
+      "passed": true
+    },
+    {
+      "name": "cancelled first Source leaves both domains pending",
+      "passed": true
+    },
+    {
+      "name": "one successful Source initializes matching Current",
+      "passed": true
+    },
+    {
+      "name": "completed progressive timeline accepted",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "cancelled native job has explicit cancelled state",
+      "passed": true
+    },
+    {
+      "name": "cancellation never opens a device or starts audition",
+      "passed": true
+    },
+    {
+      "name": "cancelled proposal changes no audio and cannot apply",
+      "passed": true
+    },
+    {
+      "name": "fresh section proposal completes all three private passes",
+      "passed": true
+    },
+    {
+      "name": "explicit Apply invalidates Current",
+      "passed": true
+    },
+    {
+      "name": "cancelled native job has explicit cancelled state",
+      "passed": true
+    },
+    {
+      "name": "cancellation never opens a device or starts audition",
+      "passed": true
+    },
+    {
+      "name": "cancelled verification leaves applied audio unverified with no rollback",
+      "passed": true
+    },
+    {
+      "name": "independent Current verification passes",
+      "passed": true
+    },
+    {
+      "name": "Source preserved and device closed throughout",
+      "passed": true
+    },
+    {
+      "name": "write fresh UI capture",
+      "passed": true
+    },
+    {
+      "name": "native message loop heartbeat observed",
+      "passed": true
+    },
+    {
+      "name": "native heartbeat within selected budget",
+      "passed": false
+    }
+  ],
+  "build": "77b7a0fa28402b43580096fa7e828af8bd08e681ddca29d4d36fe1e0183b51f6",
+  "physical_devices_opened": false,
+  "video_loaded": false
+}

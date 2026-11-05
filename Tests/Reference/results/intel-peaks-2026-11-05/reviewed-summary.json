@@ -1,0 +1,522 @@
+{
+  "passed": true,
+  "scope": "Reviewed focused Intel scheduling qualification; not publication",
+  "candidate": "candidate-01",
+  "source_commit": "f6fe99716618e94a3a3f5f9c066b5961a06a6075",
+  "source_manifest_sha256": "3733d4be90f08cb82291872057ededc4f3c794534492be05cdd85bc4a7f728fb",
+  "measurement_build": "77b7a0fa28402b43580096fa7e828af8bd08e681ddca29d4d36fe1e0183b51f6",
+  "app_sha256": "7833642804d2b4199a31411e91a02c7067f05fb6f42168072e574d19c67f59e0",
+  "platforms": {
+    "sequoia": {
+      "architecture": "arm64",
+      "os": "15.7.9",
+      "os_build": "24G830",
+      "cpu": "Apple M1 Max",
+      "comparisons": {
+        "2": {
+          "exact": true,
+          "operations": {
+            "source": {
+              "milliseconds": {
+                "serial": [
+                  1394.332708,
+                  1392.884792,
+                  1393.45575
+                ],
+                "app-mode": [
+                  854.630583,
+                  1071.817667,
+                  853.54875
+                ]
+              },
+              "median_ms": {
+                "serial": 1393.45575,
+                "app-mode": 854.630583
+              },
+              "speedup": 1.630477281901811
+            },
+            "fresh": {
+              "milliseconds": {
+                "serial": [
+                  4101.880334,
+                  4077.705458,
+                  4077.281541
+                ],
+                "app-mode": [
+                  2641.262375,
+                  2402.208,
+                  2335.464833
+                ]
+              },
+              "median_ms": {
+                "serial": 4077.705458,
+                "app-mode": 2402.208
+              },
+              "speedup": 1.697482257156749
+            },
+            "reused": {
+              "milliseconds": {
+                "serial": [
+                  2612.058417,
+                  2616.852291,
+                  2615.007583
+                ],
+                "app-mode": [
+                  1532.258375,
+                  1634.416292,
+                  1532.356
+                ]
+              },
+              "median_ms": {
+                "serial": 2615.007583,
+                "app-mode": 1532.356
+              },
+              "speedup": 1.7065274538031632
+            },
+            "current": {
+              "milliseconds": {
+                "serial": [
+                  1410.919084,
+                  1410.303541,
+                  1410.697
+                ],
+                "app-mode": [
+                  870.946792,
+                  1104.495542,
+                  869.291375
+                ]
+              },
+              "median_ms": {
+                "serial": 1410.697,
+                "app-mode": 870.946792
+              },
+              "speedup": 1.6197281084881703
+            }
+          },
+          "heartbeat": {
+            "serial": {
+              "p95_ms": 105.462208,
+              "maximum_ms": 105.853375
+            },
+            "app-mode": {
+              "p95_ms": 104.842292,
+              "maximum_ms": 105.79175
+            }
+          },
+          "source_process_cores": [
+            1.7053450098684335,
+            1.5737396871999871,
+            1.7062680954075558
+          ]
+        },
+        "6": {
+          "exact": true,
+          "operations": {
+            "source": {
+              "milliseconds": {
+                "serial": [
+                  4177.191667,
+                  4197.866125,
+                  4178.682583
+                ],
+                "app-mode": [
+                  1334.802583,
+                  1336.383084,
+                  1479.041958
+                ]
+              },
+              "median_ms": {
+                "serial": 4178.682583,
+                "app-mode": 1336.383084
+              },
+              "speedup": 3.126859830111408
+            },
+            "fresh": {
+              "milliseconds": {
+                "serial": [
+                  12393.234208,
+                  12111.490834,
+                  12337.0645
+                ],
+                "app-mode": [
+                  4395.039167,
+                  3804.34625,
+                  4412.993833
+                ]
+              },
+              "median_ms": {
+                "serial": 12337.0645,
+                "app-mode": 4395.039167
+              },
+              "speedup": 2.8070431300436236
+            },
+            "reused": {
+              "milliseconds": {
+                "serial": [
+                  8241.389459,
+                  7750.232083,
+                  7794.379042
+                ],
+                "app-mode": [
+                  2088.392584,
+                  2085.09475,
+                  2074.975333
+                ]
+              },
+              "median_ms": {
+                "serial": 7794.379042,
+                "app-mode": 2085.09475
+              },
+              "speedup": 3.7381414163552993
+            },
+            "current": {
+              "milliseconds": {
+                "serial": [
+                  4196.054417,
+                  4221.60475,
+                  4255.325542
+                ],
+                "app-mode": [
+                  1352.760833,
+                  1395.555792,
+                  1350.979875
+                ]
+              },
+              "median_ms": {
+                "serial": 4221.60475,
+                "app-mode": 1352.760833
+              },
+              "speedup": 3.120732539718645
+            }
+          },
+          "heartbeat": {
+            "serial": {
+              "p95_ms": 105.608375,
+              "maximum_ms": 105.959167
+            },
+            "app-mode": {
+              "p95_ms": 105.031875,
+              "maximum_ms": 105.598458
+            }
+          },
+          "source_process_cores": [
+            3.2199548118495063,
+            3.2160089808499848,
+            3.0089004412138523
+          ]
+        }
+      },
+      "native": {
+        "2": {
+          "serial": {
+            "source_cancel_ms": 72.476,
+            "proposal_cancel_ms": 25.391291,
+            "current_cancel_ms": 56.594584,
+            "heartbeat_p95_ms": 103.538458,
+            "heartbeat_max_ms": 236.794625
+          },
+          "app-mode": {
+            "source_cancel_ms": 20.911583,
+            "proposal_cancel_ms": 78.771125,
+            "current_cancel_ms": 114.822583,
+            "heartbeat_p95_ms": 109.568667,
+            "heartbeat_max_ms": 224.684958
+          }
+        },
+        "6": {
+          "serial": {
+            "source_cancel_ms": 38.02575,
+            "proposal_cancel_ms": 99.824333,
+            "current_cancel_ms": 121.813875,
+            "heartbeat_p95_ms": 102.468875,
+            "heartbeat_max_ms": 165.220458
+          },
+          "app-mode": {
+            "source_cancel_ms": 43.6395,
+            "proposal_cancel_ms": 46.486708,
+            "current_cancel_ms": 113.157625,
+            "heartbeat_p95_ms": 125.429542,
+            "heartbeat_max_ms": 228.614208
+          }
+        }
+      },
+      "original_runner_passed": false,
+      "original_failure": "AssertionError('native-6: nonzero exit')"
+    },
+    "high-sierra": {
+      "architecture": "x86_64",
+      "os": "10.13.6",
+      "os_build": "17G66",
+      "cpu": "Intel(R) Core(TM) i7-3770K CPU @ 3.50GHz",
+      "comparisons": {
+        "2": {
+          "exact": true,
+          "operations": {
+            "source": {
+              "milliseconds": {
+                "serial": [
+                  2622.571444,
+                  2607.998522,
+                  2609.272118
+                ],
+                "app-mode": [
+                  1554.880576,
+                  1554.024721,
+                  1577.653634
+                ]
+              },
+              "median_ms": {
+                "serial": 2609.272118,
+                "app-mode": 1554.880576
+              },
+              "speedup": 1.6781173797363071
+            },
+            "fresh": {
+              "milliseconds": {
+                "serial": [
+                  8113.113807,
+                  8073.66725,
+                  8112.089048
+                ],
+                "app-mode": [
+                  4694.98318,
+                  4668.132514,
+                  4716.326121
+                ]
+              },
+              "median_ms": {
+                "serial": 8112.089048,
+                "app-mode": 4694.98318
+              },
+              "speedup": 1.7278206836941212
+            },
+            "reused": {
+              "milliseconds": {
+                "serial": [
+                  4937.650719,
+                  4947.517093,
+                  4983.929997
+                ],
+                "app-mode": [
+                  2848.413745,
+                  2836.967181,
+                  2840.926005
+                ]
+              },
+              "median_ms": {
+                "serial": 4947.517093,
+                "app-mode": 2840.926005
+              },
+              "speedup": 1.7415156481697949
+            },
+            "current": {
+              "milliseconds": {
+                "serial": [
+                  2666.345121,
+                  2661.752819,
+                  2648.831931
+                ],
+                "app-mode": [
+                  1604.652711,
+                  1609.506732,
+                  1589.819157
+                ]
+              },
+              "median_ms": {
+                "serial": 2661.752819,
+                "app-mode": 1604.652711
+              },
+              "speedup": 1.6587718954721535
+            }
+          },
+          "heartbeat": {
+            "serial": {
+              "p95_ms": 110.014946,
+              "maximum_ms": 110.974738
+            },
+            "app-mode": {
+              "p95_ms": 109.277171,
+              "maximum_ms": 110.922232
+            }
+          },
+          "source_process_cores": [
+            1.7526349239055643,
+            1.7556129983855,
+            1.7334419552321079
+          ]
+        },
+        "6": {
+          "exact": true,
+          "operations": {
+            "source": {
+              "milliseconds": {
+                "serial": [
+                  7842.894314,
+                  7744.277846,
+                  7756.477858
+                ],
+                "app-mode": [
+                  2801.535344,
+                  2858.208547,
+                  2792.145272
+                ]
+              },
+              "median_ms": {
+                "serial": 7756.477858,
+                "app-mode": 2801.535344
+              },
+              "speedup": 2.7686525085653177
+            },
+            "fresh": {
+              "milliseconds": {
+                "serial": [
+                  23848.418619,
+                  23731.913523,
+                  23741.348259
+                ],
+                "app-mode": [
+                  7772.086618,
+                  7818.758991,
+                  8087.583439
+                ]
+              },
+              "median_ms": {
+                "serial": 23741.348259,
+                "app-mode": 7818.758991
+              },
+              "speedup": 3.036459914716407
+            },
+            "reused": {
+              "milliseconds": {
+                "serial": [
+                  14420.672436,
+                  14460.354926,
+                  14434.67302
+                ],
+                "app-mode": [
+                  4577.90822,
+                  4571.271517,
+                  4573.66696
+                ]
+              },
+              "median_ms": {
+                "serial": 14434.67302,
+                "app-mode": 4573.66696
+              },
+              "speedup": 3.1560393763344767
+            },
+            "current": {
+              "milliseconds": {
+                "serial": [
+                  7841.668723,
+                  7829.090763,
+                  7748.513307
+                ],
+                "app-mode": [
+                  2964.904201,
+                  2818.301326,
+                  2874.178472
+                ]
+              },
+              "median_ms": {
+                "serial": 7829.090763,
+                "app-mode": 2874.178472
+              },
+              "speedup": 2.7239403674024874
+            }
+          },
+          "heartbeat": {
+            "serial": {
+              "p95_ms": 110.238679,
+              "maximum_ms": 110.881308
+            },
+            "app-mode": {
+              "p95_ms": 109.448606,
+              "maximum_ms": 110.627244
+            }
+          },
+          "source_process_cores": [
+            3.3822925062479596,
+            3.315103444759239,
+            3.3986541084241977
+          ]
+        }
+      },
+      "native": {
+        "2": {
+          "serial": {
+            "source_cancel_ms": 42.123959,
+            "proposal_cancel_ms": 86.666331,
+            "current_cancel_ms": 327.902252,
+            "heartbeat_p95_ms": 106.397498,
+            "heartbeat_max_ms": 821.954861
+          },
+          "app-mode": {
+            "source_cancel_ms": 26.248914,
+            "proposal_cancel_ms": 148.547332,
+            "current_cancel_ms": 336.335325,
+            "heartbeat_p95_ms": 107.951983,
+            "heartbeat_max_ms": 840.133523
+          }
+        },
+        "6": {
+          "serial": {
+            "source_cancel_ms": 22.997629,
+            "proposal_cancel_ms": 185.883061,
+            "current_cancel_ms": 374.929725,
+            "heartbeat_p95_ms": 103.160466,
+            "heartbeat_max_ms": 827.078133
+          },
+          "app-mode": {
+            "source_cancel_ms": 16.538518,
+            "proposal_cancel_ms": 122.667989,
+            "current_cancel_ms": 396.65151,
+            "heartbeat_p95_ms": 106.644272,
+            "heartbeat_max_ms": 802.666003
+          }
+        }
+      },
+      "original_runner_passed": false,
+      "original_failure": "AssertionError('native-2: nonzero exit')"
+    }
+  },
+  "ordinary_app": {
+    "stereo": {
+      "sha256": "938b0bb223ea7ed6640c455cd5f85b822a880eb8bf56a97f7c8726119aff68c7",
+      "observed_thread_ids": [
+        "Thread_17282",
+        "Thread_17562",
+        "Thread_17563",
+        "Thread_17571",
+        "Thread_17579",
+        "Thread_17580",
+        "Thread_17593"
+      ],
+      "interpretation": "Distinct sampled threads across the run, not a simultaneous lane-count claim"
+    },
+    "surround": {
+      "sha256": "31541c87e654ee0dba0feaf0afeabb3a0b43be665d195f0c9c4c84e5610d841f",
+      "observed_thread_ids": [
+        "Thread_17768",
+        "Thread_17886",
+        "Thread_17887",
+        "Thread_17894",
+        "Thread_17898",
+        "Thread_17900",
+        "Thread_17901",
+        "Thread_17902",
+        "Thread_17903",
+        "Thread_17904"
+      ],
+      "interpretation": "Distinct sampled threads across the run, not a simultaneous lane-count claim"
+    }
+  },
+  "ui_review": "Original 200 ms absolute native gate failures retained. Matched serial controls show the inherited completion pause. Service heartbeat budget passes; native p95 increase <=30 ms, maximum increase <=one 100 ms timer period, maximum <1 s, cancellation <1 s.",
+  "limitations": [
+    "Approximately 0.8-second native completion pause on Golem also occurs serially.",
+    "Performance measurements use warm-cache 60-second 48 kHz stereo/5.1 fixtures; no long multichannel throughput claim.",
+    "No physical playback/video test in this scheduling-only selection."
+  ],
+  "physical_devices_opened": false,
+  "historical_failures_rewritten": false
+}

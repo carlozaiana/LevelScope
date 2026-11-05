@@ -1,0 +1,42 @@
+START core-parity
+PASS core-parity 4.29
+START measurement
+PASS measurement 13.53
+START section-smoke
+PASS section-smoke 11.57
+START 2-serial-0
+PASS 2-serial-0 11.75
+START 2-app-mode-0
+PASS 2-app-mode-0 7.55
+START 2-app-mode-1
+PASS 2-app-mode-1 6.1
+START 2-serial-1
+PASS 2-serial-1 9.72
+START 2-serial-2
+PASS 2-serial-2 9.7
+START 2-app-mode-2
+PASS 2-app-mode-2 6.43
+START 2-app-mode-3
+PASS 2-app-mode-3 5.8
+START 2-serial-3
+PASS 2-serial-3 9.7
+START native-2
+PASS native-2 8.56
+START 6-serial-0
+PASS 6-serial-0 33.49
+START 6-app-mode-0
+PASS 6-app-mode-0 11.47
+START 6-app-mode-1
+PASS 6-app-mode-1 9.58
+START 6-serial-1
+PASS 6-serial-1 29.42
+START 6-serial-2
+PASS 6-serial-2 28.69
+START 6-app-mode-2
+PASS 6-app-mode-2 9.03
+START 6-app-mode-3
+PASS 6-app-mode-3 9.73
+START 6-serial-3
+PASS 6-serial-3 28.97
+START native-6
+AssertionError('native-6: nonzero exit')

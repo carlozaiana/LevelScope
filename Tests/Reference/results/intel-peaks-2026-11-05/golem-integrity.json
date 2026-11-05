@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "mismatches": [],
+  "checked": 361,
+  "identity_sha256": "79741e1fdcd868dcefc5e0256128169276c24f312d57f57961d7188aad51eba7",
+  "app_sha256": "7833642804d2b4199a31411e91a02c7067f05fb6f42168072e574d19c67f59e0",
+  "os": "ProductName:\tMac OS X\nProductVersion:\t10.13.6\nBuildVersion:\t17G66\n",
+  "cpu": "Intel(R) Core(TM) i7-3770K CPU @ 3.50GHz"
+}

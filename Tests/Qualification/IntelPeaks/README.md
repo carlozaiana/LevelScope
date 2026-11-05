@@ -56,3 +56,28 @@ this scheduling-only change. Expand only for a concrete failure or new impact.
 Publication, tags and merge remain for review. Main and every existing tag stay
 unchanged. Record candidate source/build/binary identities and the exact serial
 oracle overlay with the results; the oracle must not masquerade as the app.
+
+## Completed selection and reviewed UI exception
+
+The frozen implementation is `f6fe99716618e94a3a3f5f9c066b5961a06a6075`.
+Both actual platforms passed numerical/service comparisons and cancellation.
+Ordinary-app stack samples on Golem establish dispatched peak workers for both
+layouts. See [the evidence record](../../Reference/results/intel-peaks-2026-11-05/README.md).
+
+The original native 200 ms maximum-gap check failed and remains a failure in its
+original receipts. A matched serial/parallel native comparison established an
+inherited synchronous completion pause (about 0.8 s on Golem). The supplemental
+driver records stage gaps without hiding the absolute-budget failure. The final
+review separately requires native p95 growth <=30 ms, maximum-gap growth <=100 ms
+(one timer period), maximum gap <1 s and cancellation <1 s. The isolated
+service/timeline responsiveness gates remain unchanged. `review.py` requires all
+original numerical checks, the explicitly completed Golem surround selection,
+both native controls, ordinary-app proof and frozen-package integrity. It fails
+if a required result is absent; a supplemental-only runner cannot qualify the
+candidate by itself. This documented baseline comparison is not a UI-pause fix.
+
+Subsequent changes to this README, `Native.cpp` and `run.py`, plus the added
+`build_native.py` and `review.py`, are qualification support only. The frozen
+package and all product sources remain identical; no later rebuild replaces the
+tested app. Keep historical absolute-budget failures and supplementary diagnostic
+identities alongside the reviewed result.

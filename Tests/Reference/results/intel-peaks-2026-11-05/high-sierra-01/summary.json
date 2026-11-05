@@ -1,0 +1,281 @@
+{
+  "passed": false,
+  "failure": "AssertionError('native-2: nonzero exit')",
+  "comparisons": {
+    "2": {
+      "exact": true,
+      "operations": {
+        "source": {
+          "milliseconds": {
+            "serial": [
+              2622.571444,
+              2607.998522,
+              2609.272118
+            ],
+            "app-mode": [
+              1554.880576,
+              1554.024721,
+              1577.653634
+            ]
+          },
+          "median_ms": {
+            "serial": 2609.272118,
+            "app-mode": 1554.880576
+          },
+          "speedup": 1.6781173797363071
+        },
+        "fresh": {
+          "milliseconds": {
+            "serial": [
+              8113.113807,
+              8073.66725,
+              8112.089048
+            ],
+            "app-mode": [
+              4694.98318,
+              4668.132514,
+              4716.326121
+            ]
+          },
+          "median_ms": {
+            "serial": 8112.089048,
+            "app-mode": 4694.98318
+          },
+          "speedup": 1.7278206836941212
+        },
+        "reused": {
+          "milliseconds": {
+            "serial": [
+              4937.650719,
+              4947.517093,
+              4983.929997
+            ],
+            "app-mode": [
+              2848.413745,
+              2836.967181,
+              2840.926005
+            ]
+          },
+          "median_ms": {
+            "serial": 4947.517093,
+            "app-mode": 2840.926005
+          },
+          "speedup": 1.7415156481697949
+        },
+        "current": {
+          "milliseconds": {
+            "serial": [
+              2666.345121,
+              2661.752819,
+              2648.831931
+            ],
+            "app-mode": [
+              1604.652711,
+              1609.506732,
+              1589.819157
+            ]
+          },
+          "median_ms": {
+            "serial": 2661.752819,
+            "app-mode": 1604.652711
+          },
+          "speedup": 1.6587718954721535
+        }
+      },
+      "heartbeat": {
+        "serial": {
+          "p95_ms": 110.014946,
+          "maximum_ms": 110.974738
+        },
+        "app-mode": {
+          "p95_ms": 109.277171,
+          "maximum_ms": 110.922232
+        }
+      },
+      "source_process_cores": [
+        1.7526349239055643,
+        1.7556129983855,
+        1.7334419552321079
+      ]
+    }
+  },
+  "architecture": "x86_64",
+  "os": "10.13.6",
+  "os_build": "17G66",
+  "cpu": "Intel(R) Core(TM) i7-3770K CPU @ 3.50GHz",
+  "measurement_build": "77b7a0fa28402b43580096fa7e828af8bd08e681ddca29d4d36fe1e0183b51f6",
+  "identity_sha256": "79741e1fdcd868dcefc5e0256128169276c24f312d57f57961d7188aad51eba7",
+  "commands": [
+    {
+      "name": "core-parity",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/candidate-01/bin/LevelScopePeakChannelParity"
+      ],
+      "exit_code": 0,
+      "seconds": 12.656251157,
+      "passed": true
+    },
+    {
+      "name": "measurement",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/candidate-01/bin/LevelScopeMeasurementTests",
+        "--report",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/high-sierra-01/measurement.json"
+      ],
+      "exit_code": 0,
+      "seconds": 29.274688413,
+      "report_sha256": "f9d49b4a20579d1990bf0a5398672b8d9cec8181f92bfc4072d2144da8491756",
+      "passed": true
+    },
+    {
+      "name": "section-smoke",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/candidate-01/bin/LevelScopeSectionProposalTests",
+        "--smoke",
+        "--root",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/high-sierra-01/section-files",
+        "--output",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/high-sierra-01/section-smoke.json"
+      ],
+      "exit_code": 0,
+      "seconds": 26.844103005,
+      "report_sha256": "959cda65dc217d15d4eba432ba7525af5bc0af82644435858810c94f29e78ce1",
+      "passed": true
+    },
+    {
+      "name": "2-serial-0",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/candidate-01/bin/peaks/serial",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/candidate-01/fixtures/programme-2.wav",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/high-sierra-01/2-serial-0.json",
+        "--decisions"
+      ],
+      "exit_code": 0,
+      "seconds": 21.70688569299999,
+      "report_sha256": "d176d621d655d3900cd9c6459b8955e8129a5b3cb075f71b78594bd84d5d7110",
+      "passed": true
+    },
+    {
+      "name": "2-app-mode-0",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/candidate-01/bin/peaks/app-mode",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/candidate-01/fixtures/programme-2.wav",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/high-sierra-01/2-app-mode-0.json",
+        "--decisions"
+      ],
+      "exit_code": 0,
+      "seconds": 12.980940316000002,
+      "report_sha256": "01940f0ec803a659f222f1b5b0e339ad9eb8640bf43dbd7741d4cc4c534e40b2",
+      "passed": true
+    },
+    {
+      "name": "2-app-mode-1",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/candidate-01/bin/peaks/app-mode",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/candidate-01/fixtures/programme-2.wav",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/high-sierra-01/2-app-mode-1.json"
+      ],
+      "exit_code": 0,
+      "seconds": 10.984716667,
+      "report_sha256": "ebd0955d4e56334f6e83e25564a45f836696c1d7a2fe3e4d841d00d1603f7293",
+      "passed": true
+    },
+    {
+      "name": "2-serial-1",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/candidate-01/bin/peaks/serial",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/candidate-01/fixtures/programme-2.wav",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/high-sierra-01/2-serial-1.json"
+      ],
+      "exit_code": 0,
+      "seconds": 18.631719935000007,
+      "report_sha256": "9f81ede4441f0d7c77c1021453201f8f0313e5df52e76a17d145b1c9efdd9f77",
+      "passed": true
+    },
+    {
+      "name": "2-serial-2",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/candidate-01/bin/peaks/serial",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/candidate-01/fixtures/programme-2.wav",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/high-sierra-01/2-serial-2.json"
+      ],
+      "exit_code": 0,
+      "seconds": 18.572297485000007,
+      "report_sha256": "83fe3da45e5f84bb07553b0cc8f6cd59a9b64c3ccc092cb39111cb2d2b1e5eeb",
+      "passed": true
+    },
+    {
+      "name": "2-app-mode-2",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/candidate-01/bin/peaks/app-mode",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/candidate-01/fixtures/programme-2.wav",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/high-sierra-01/2-app-mode-2.json"
+      ],
+      "exit_code": 0,
+      "seconds": 10.950314695000003,
+      "report_sha256": "9d55a7d40f1b2b9cc007ab9923a6d41f700dfadef6778ca5f370f6b59434726b",
+      "passed": true
+    },
+    {
+      "name": "2-app-mode-3",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/candidate-01/bin/peaks/app-mode",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/candidate-01/fixtures/programme-2.wav",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/high-sierra-01/2-app-mode-3.json"
+      ],
+      "exit_code": 0,
+      "seconds": 11.008564288000002,
+      "report_sha256": "c682431299353073516bf0bbf858cb77c870f18f0e4f02ac60c1a30936323ce1",
+      "passed": true
+    },
+    {
+      "name": "2-serial-3",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/candidate-01/bin/peaks/serial",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/candidate-01/fixtures/programme-2.wav",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/high-sierra-01/2-serial-3.json"
+      ],
+      "exit_code": 0,
+      "seconds": 18.631587299000017,
+      "report_sha256": "c6f53ca0c96ed190cbc1c06adb3616e26e5cf5beb828f81f6ce91c8dba0c42d8",
+      "passed": true
+    },
+    {
+      "name": "native-2",
+      "command": [
+        "/usr/bin/arch",
+        "-x86_64",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/candidate-01/bin/native",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/candidate-01/fixtures/programme-2.wav",
+        "/Users/fuzz/LevelScope-IntelPeaks-qualification-2026-11-05/high-sierra-01/native-2"
+      ],
+      "exit_code": 1,
+      "seconds": 17.5497503
+    }
+  ],
+  "physical_devices_opened": false,
+  "video_loaded": false,
+  "ordinary_app_stack_check": "Separate required receipt on Golem"
+}

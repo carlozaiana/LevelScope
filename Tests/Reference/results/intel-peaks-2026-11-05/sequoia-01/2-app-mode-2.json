@@ -1,0 +1,257 @@
+{
+  "operations": {
+    "import": {
+      "wall_ms": 101.08525,
+      "worker_cpu_ms": 100.923,
+      "process_cpu_ms": 104.212,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        98.43495900000001
+      ],
+      "heartbeat_tail_ms": 3.607458,
+      "timeline_paint_ms": [
+        3.588916
+      ]
+    },
+    "source": {
+      "wall_ms": 1071.817667,
+      "worker_cpu_ms": 834.898,
+      "process_cpu_ms": 1686.762,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        101.111417,
+        101.688625,
+        101.947708,
+        100.250792,
+        100.471625,
+        99.81204099999999,
+        102.039375,
+        101.3225,
+        101.012542,
+        100.950333
+      ],
+      "heartbeat_tail_ms": 64.774542,
+      "timeline_paint_ms": [
+        2.47125,
+        2.814458,
+        2.223792,
+        3.034125,
+        3.193958,
+        4.314375,
+        3.838209,
+        4.8925,
+        4.544,
+        5.851542
+      ]
+    },
+    "global": {
+      "wall_ms": 1.692709,
+      "worker_cpu_ms": 1.694999999999993,
+      "process_cpu_ms": 1.703,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [],
+      "heartbeat_tail_ms": 1.706708,
+      "timeline_paint_ms": []
+    },
+    "fresh": {
+      "wall_ms": 2402.208,
+      "worker_cpu_ms": 2345.877,
+      "process_cpu_ms": 4408.338,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        99.472083,
+        101.793959,
+        100.094583,
+        100.407458,
+        104.708125,
+        101.627459,
+        100.576416,
+        100.792334,
+        101.288416,
+        99.75108400000001,
+        100.729333,
+        99.485125,
+        100.468292,
+        100.05475,
+        100.161333,
+        100.088292,
+        101.91125,
+        100.712,
+        100.464083,
+        102.043,
+        100.075542,
+        101.202375,
+        101.415875
+      ],
+      "heartbeat_tail_ms": 88.697041,
+      "timeline_paint_ms": [
+        4.321709,
+        2.768458,
+        2.494625,
+        2.858417,
+        3.122584,
+        2.755541,
+        2.772875,
+        2.723166,
+        2.685792,
+        2.831708,
+        2.350417,
+        2.791417,
+        2.855541,
+        2.972541,
+        2.704083,
+        2.826083,
+        2.70625,
+        2.753875,
+        2.742208,
+        2.775708,
+        2.992916,
+        2.722458,
+        2.728791
+      ]
+    },
+    "reused": {
+      "wall_ms": 1634.416292,
+      "worker_cpu_ms": 1494.889,
+      "process_cpu_ms": 2832.109,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        91.060292,
+        99.74570799999999,
+        100.020125,
+        99.877375,
+        101.049167,
+        104.787542,
+        104.858125,
+        105.576375,
+        100.061166,
+        100.268334,
+        101.681791,
+        100.804042,
+        99.916167,
+        100.429791,
+        104.57725,
+        102.816417
+      ],
+      "heartbeat_tail_ms": 21.825417,
+      "timeline_paint_ms": [
+        2.668958,
+        2.684917,
+        2.756959,
+        2.676167,
+        2.747583,
+        2.813083,
+        2.739541,
+        2.828791,
+        2.774209,
+        2.807791,
+        2.729417,
+        2.810917,
+        2.765416,
+        2.655625,
+        2.820917,
+        2.967542
+      ]
+    },
+    "current": {
+      "wall_ms": 1104.495542,
+      "worker_cpu_ms": 1101.78,
+      "process_cpu_ms": 1729.212,
+      "timings_ms": {
+      },
+      "heartbeat_gaps_ms": [
+        75.978375,
+        101.965,
+        104.85275,
+        102.869375,
+        105.384334,
+        100.629916,
+        100.475625,
+        104.792959,
+        103.860625,
+        103.587958,
+        102.741875
+      ],
+      "heartbeat_tail_ms": 5.761417,
+      "timeline_paint_ms": [
+        1.923959,
+        0.709959,
+        2.24575,
+        2.358125,
+        3.198041,
+        3.012625,
+        3.738125,
+        3.851666,
+        4.933916,
+        5.577875,
+        5.7475
+      ]
+    }
+  },
+  "identities": {
+    "source": "8d51fd29b501f298d2be5c11172afa8df99787a0957a59d285ccd38660d1bc54",
+    "global": "a65681d5627058a4d903af64b02272cb2d38b62ccced7dc782e571b378abef59",
+    "global_decision": "de6b9664c31ac7e350564358716853480532d5fffbf76d22d2563ae0995631d7",
+    "fresh": "d7853b75dec520635114b1f21eb30847ae4de8331e263f6ad6883fb0f4d11a12",
+    "fresh_decision": "3456c6cdd8f917309600f1505d40383341d24a4819da76e07ff81584ebbc7a38",
+    "fresh_section_peaks": "b58ecf779ba471746315128bd06d377cd8def09507b704fed597ff1866130f49",
+    "fresh_candidate": "ffb4dd48b4c22cf348b19003188bcd38407c87017280cd28c39e28b4a0e75710",
+    "fresh_plan": "cb5ff556a9374e3e9da83b81230683683e0df46c2b14ea9d971943831244e6ba",
+    "reused": "d7853b75dec520635114b1f21eb30847ae4de8331e263f6ad6883fb0f4d11a12",
+    "reused_decision": "c4e1b5ac2038a278c9dcaad0d94a5231f70bfbe7f2823fd623286061aaa8502c",
+    "reused_section_peaks": "b58ecf779ba471746315128bd06d377cd8def09507b704fed597ff1866130f49",
+    "reused_candidate": "f4286ef645e9e9192f9349defa8ab9c7b7737c73a58c4be6b98b0645a6c82a25",
+    "reused_plan": "cb5ff556a9374e3e9da83b81230683683e0df46c2b14ea9d971943831244e6ba",
+    "current": "b71148a31c9c21800d06e28b5eb9d519c03a39c697b508f18f4584889fcc0b1f"
+  },
+  "outcomes": {
+    "global": {
+      "main_preflight_ms": 0.768625,
+      "main_accept_ms": 0.201541,
+      "passes": 0,
+      "outcome": "Ready to apply",
+      "changes": 0,
+      "status": 2,
+      "issue": 0,
+      "can_apply": true,
+      "target_il": -23.7,
+      "target_tp": -1.0
+    },
+    "fresh": {
+      "main_preflight_ms": 0.067042,
+      "main_accept_ms": 0.292042,
+      "passes": 3,
+      "outcome": "Ready to apply",
+      "changes": 1,
+      "status": 4,
+      "issue": 0,
+      "can_apply": true,
+      "target_il": -23.0,
+      "target_tp": -1.0
+    },
+    "reused": {
+      "main_preflight_ms": 1.496959,
+      "main_accept_ms": 0.312,
+      "passes": 2,
+      "outcome": "Ready to apply",
+      "changes": 1,
+      "status": 4,
+      "issue": 0,
+      "can_apply": true,
+      "target_il": -23.0,
+      "target_tp": -1.0
+    }
+  },
+  "roles": "L,R",
+  "file_sha256": "171b4aa51900c9826416719af9950005ce1a445817e49aa215c14cc2cd332566",
+  "frames": 2880000,
+  "source_lufs": -24.43008132144102,
+  "current_lufs": -23.00000001747636,
+  "channels": 2,
+  "base_build": "77b7a0fa28402b43580096fa7e828af8bd08e681ddca29d4d36fe1e0183b51f6"
+}

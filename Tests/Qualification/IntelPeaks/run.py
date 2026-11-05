@@ -30,6 +30,8 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument('candidate', type=Path)
     p.add_argument('output', type=Path)
+    p.add_argument('--channels', type=int, choices=(2, 6), nargs='+', default=[2, 6])
+    p.add_argument('--comparisons-only', action='store_true', help='Explicit supplemental selection; never a full qualification receipt')
     a = p.parse_args()
     root, out = a.candidate.resolve(), a.output.resolve()
     out.mkdir(parents=True, exist_ok=False)
@@ -67,11 +69,12 @@ def main():
             assert platform.mac_ver()[0] == '10.13.6', 'Intel must run on actual High Sierra'
         for path, digest in identity['artifacts_sha256'].items():
             assert sha(root / path) == digest, path
-        run('core-parity', [root / 'bin/LevelScopePeakChannelParity'], text_pass='PASS: all result bits')
-        run('measurement', [root / 'bin/LevelScopeMeasurementTests', '--report', out / 'measurement.json'], out / 'measurement.json')
-        run('section-smoke', [root / 'bin/LevelScopeSectionProposalTests', '--smoke', '--root', out / 'section-files',
-                              '--output', out / 'section-smoke.json'], out / 'section-smoke.json')
-        for channels in (2, 6):
+        if not a.comparisons_only:
+            run('core-parity', [root / 'bin/LevelScopePeakChannelParity'], text_pass='PASS: all result bits')
+            run('measurement', [root / 'bin/LevelScopeMeasurementTests', '--report', out / 'measurement.json'], out / 'measurement.json')
+            run('section-smoke', [root / 'bin/LevelScopeSectionProposalTests', '--smoke', '--root', out / 'section-files',
+                                  '--output', out / 'section-smoke.json'], out / 'section-smoke.json')
+        for channels in a.channels:
             fixture = root / 'fixtures' / ('programme-%d.wav' % channels)
             expected = None
             timing = {mode: [] for mode in ('serial', 'app-mode')}
@@ -115,12 +118,15 @@ def main():
             assert statistics.median(cores) > 1.15, 'no observed service concurrency'
             comparisons[str(channels)] = dict(exact=True, operations=operations, heartbeat=ui,
                                               source_process_cores=cores)
-            run('native-%d' % channels, [root / 'bin/native', fixture, out / ('native-%d' % channels)],
-                out / ('native-%d' % channels) / 'result.json')
-        assert len(rows) == 21 and all(r.get('passed') for r in rows), 'required selection incomplete'
+            if not a.comparisons_only:
+                run('native-%d' % channels, [root / 'bin/native', fixture, out / ('native-%d' % channels)],
+                    out / ('native-%d' % channels) / 'result.json')
+        required = 8 * len(a.channels) if a.comparisons_only else 3 + 9 * len(a.channels)
+        assert len(rows) == required and all(r.get('passed') for r in rows), 'required selection incomplete'
     except Exception as error:
         failure = repr(error)
     summary = dict(passed=not failure, failure=failure, comparisons=comparisons,
+                   selection='supplemental comparisons only' if a.comparisons_only else 'regression, comparisons and native',
                    architecture=arch, os=platform.mac_ver()[0],
                    os_build=subprocess.check_output(['sw_vers', '-buildVersion'], text=True).strip(),
                    cpu=subprocess.check_output(['sysctl', '-n', 'machdep.cpu.brand_string'], text=True).strip(),

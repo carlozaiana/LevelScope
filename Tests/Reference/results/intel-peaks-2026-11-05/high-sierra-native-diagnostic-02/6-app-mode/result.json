@@ -1,0 +1,417 @@
+{
+  "source_cancel_ms": 16.538518,
+  "source_seconds": 3.868392052,
+  "proposal_cancel_ms": 122.667989,
+  "section_propose_seconds": 7.954035116,
+  "current_cancel_ms": 396.65151,
+  "current_seconds": 3.413192738,
+  "channels": 6,
+  "input_sha256": "c2248717fe25628866c8b85e28a0fb7209f845a01a7b933e69955188867c59b9",
+  "heartbeat_scope": "Active native analysis/proposal jobs, including completion and cancellation; excludes picker/setup/screenshot work",
+  "heartbeat_p95_ms": 106.644272,
+  "heartbeat_max_ms": 802.666003,
+  "heartbeat_stages": [
+    {
+      "stage": "cancel-source",
+      "gaps_ms": [
+        279.978817,
+        99.35986800000001,
+        103.86303,
+        98.240983,
+        102.192912,
+        99.182992,
+        101.932079,
+        98.89081,
+        101.124447,
+        99.33897399999999,
+        102.129619,
+        99.246098,
+        104.18053,
+        101.033018,
+        13.567555
+      ]
+    },
+    {
+      "stage": "source",
+      "gaps_ms": [
+        100.359065,
+        101.133559,
+        100.621576,
+        101.917019,
+        101.182023,
+        102.548414,
+        101.94889,
+        99.33717,
+        103.671898,
+        99.37325,
+        100.83838,
+        104.305298,
+        96.245279,
+        106.997798,
+        100.417385,
+        100.925496,
+        99.189441,
+        101.743748,
+        103.707654,
+        99.628646,
+        100.216446,
+        107.003857,
+        100.641677,
+        106.790944,
+        100.010119,
+        106.644272,
+        100.932059,
+        116.429387,
+        99.99372600000001,
+        100.961043,
+        802.666003
+      ]
+    },
+    {
+      "stage": "cancel-proposal",
+      "gaps_ms": [
+        94.802328,
+        98.92867099999999,
+        103.832615,
+        98.889878,
+        102.546796,
+        100.610827,
+        102.145923,
+        99.84378700000001,
+        102.782867,
+        98.228908,
+        103.774839,
+        99.804377,
+        101.854488,
+        99.76637600000001,
+        102.044067,
+        98.170835,
+        101.587401,
+        99.94765200000001,
+        100.829582,
+        98.603155,
+        102.177831,
+        99.84606100000001,
+        103.155419,
+        98.829786,
+        104.47776,
+        98.89459100000001,
+        102.140058,
+        98.490916,
+        102.85733,
+        99.996471,
+        103.278514,
+        100.004092,
+        102.154516,
+        99.66637900000001,
+        101.804487,
+        99.946361,
+        101.966308,
+        97.86591999999999,
+        102.630754,
+        99.14406200000001,
+        103.46911,
+        100.010607,
+        149.046082,
+        35.699941
+      ]
+    },
+    {
+      "stage": "proposal",
+      "gaps_ms": [
+        100.496889,
+        99.933452,
+        99.71457100000001,
+        99.99820099999999,
+        100.174627,
+        99.970321,
+        101.27929,
+        100.593695,
+        101.787433,
+        100.618431,
+        99.794899,
+        100.518403,
+        100.555416,
+        100.848766,
+        103.241549,
+        102.627566,
+        101.007009,
+        103.481101,
+        100.807755,
+        102.380469,
+        100.791924,
+        99.755139,
+        100.735388,
+        101.134434,
+        100.523964,
+        100.259433,
+        102.517413,
+        101.17452,
+        100.039381,
+        100.09405,
+        100.693199,
+        99.691935,
+        101.069577,
+        102.017187,
+        101.715224,
+        100.813315,
+        101.103248,
+        99.798874,
+        99.848676,
+        100.136254,
+        99.72290599999999,
+        103.032129,
+        100.751025,
+        100.34276,
+        101.052061,
+        100.883276,
+        99.69081100000001,
+        100.301926,
+        100.443092,
+        99.90110800000001,
+        100.018155,
+        100.931232,
+        99.41946899999999,
+        100.397095,
+        99.56947600000001,
+        100.618237,
+        101.950801,
+        99.564691,
+        99.80245499999999,
+        102.407466,
+        101.381277,
+        100.202979,
+        100.810829,
+        99.05638399999999,
+        103.078546,
+        100.585538,
+        102.102678,
+        100.281846,
+        101.659789,
+        100.716174,
+        100.519548,
+        100.131952,
+        101.046498,
+        101.147591,
+        100.151774,
+        100.242054,
+        101.149689,
+        195.20752
+      ]
+    },
+    {
+      "stage": "cancel-current",
+      "gaps_ms": [
+        80.03845199999999,
+        100.538827,
+        103.0313,
+        99.71280899999999,
+        101.195791,
+        98.815938,
+        101.806566,
+        100.786667,
+        103.374704,
+        100.323586,
+        102.438997,
+        100.730543,
+        421.105315
+      ]
+    },
+    {
+      "stage": "current",
+      "gaps_ms": [
+        63.836142,
+        99.081445,
+        101.188219,
+        99.874653,
+        101.331709,
+        100.294365,
+        100.949671,
+        100.655729,
+        101.582162,
+        98.90798000000001,
+        101.649142,
+        99.20949399999999,
+        102.341385,
+        99.903357,
+        102.636979,
+        101.084005,
+        101.901296,
+        98.812884,
+        103.335981,
+        99.26600400000001,
+        103.386093,
+        99.93798600000001,
+        101.108288,
+        100.383985,
+        100.852692,
+        98.407884,
+        101.991331,
+        101.097634,
+        102.702676,
+        99.910107,
+        425.492249,
+        0.070774
+      ]
+    }
+  ],
+  "absolute_heartbeat_budget_passed": false,
+  "passed": true,
+  "checks": [
+    {
+      "name": "live native main component",
+      "passed": true
+    },
+    {
+      "name": "file picker opened with an active completion",
+      "passed": true
+    },
+    {
+      "name": "cancelled native job has explicit cancelled state",
+      "passed": true
+    },
+    {
+      "name": "cancellation never opens a device or starts audition",
+      "passed": true
+    },
+    {
+      "name": "cancelled first Source leaves both domains pending",
+      "passed": true
+    },
+    {
+      "name": "one successful Source initializes matching Current",
+      "passed": true
+    },
+    {
+      "name": "completed progressive timeline accepted",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "split explicit 3-second annotation",
+      "passed": true
+    },
+    {
+      "name": "cancelled native job has explicit cancelled state",
+      "passed": true
+    },
+    {
+      "name": "cancellation never opens a device or starts audition",
+      "passed": true
+    },
+    {
+      "name": "cancelled proposal changes no audio and cannot apply",
+      "passed": true
+    },
+    {
+      "name": "fresh section proposal completes all three private passes",
+      "passed": true
+    },
+    {
+      "name": "explicit Apply invalidates Current",
+      "passed": true
+    },
+    {
+      "name": "cancelled native job has explicit cancelled state",
+      "passed": true
+    },
+    {
+      "name": "cancellation never opens a device or starts audition",
+      "passed": true
+    },
+    {
+      "name": "cancelled verification leaves applied audio unverified with no rollback",
+      "passed": true
+    },
+    {
+      "name": "independent Current verification passes",
+      "passed": true
+    },
+    {
+      "name": "Source preserved and device closed throughout",
+      "passed": true
+    },
+    {
+      "name": "write fresh UI capture",
+      "passed": true
+    },
+    {
+      "name": "native message loop heartbeat observed",
+      "passed": true
+    }
+  ],
+  "build": "77b7a0fa28402b43580096fa7e828af8bd08e681ddca29d4d36fe1e0183b51f6",
+  "physical_devices_opened": false,
+  "video_loaded": false
+}

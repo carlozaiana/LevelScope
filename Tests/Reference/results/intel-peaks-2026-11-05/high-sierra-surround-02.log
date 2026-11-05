@@ -1,0 +1,17 @@
+START 6-serial-0
+PASS 6-serial-0 63.27
+START 6-app-mode-0
+PASS 6-app-mode-0 22.88
+START 6-app-mode-1
+PASS 6-app-mode-1 18.73
+START 6-serial-1
+PASS 6-serial-1 54.58
+START 6-serial-2
+PASS 6-serial-2 54.37
+START 6-app-mode-2
+PASS 6-app-mode-2 18.67
+START 6-app-mode-3
+PASS 6-app-mode-3 18.95
+START 6-serial-3
+PASS 6-serial-3 54.27
+PASS
