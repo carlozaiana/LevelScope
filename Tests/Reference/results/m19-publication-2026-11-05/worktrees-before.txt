@@ -1,0 +1,16 @@
+worktree /Users/fuzz/Developer/LevelScope
+HEAD b475134e9b7e8e2afe0f41ea3edca7c27a196aa6
+branch refs/heads/codex/m19-lra-passages
+
+worktree /Users/fuzz/.codex/worktrees/a411/LevelScope
+HEAD 51e47f300fcc38a386a5a92a7277029175cfab0c
+branch refs/heads/codex/ui-timeline-m18
+
+worktree /Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-publication-2026-11-03/integration
+HEAD 51e47f300fcc38a386a5a92a7277029175cfab0c
+branch refs/heads/main
+
+worktree /Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation
+HEAD 5e07bbd29930db34236d6dfcede7fea14983f90a
+branch refs/heads/codex/video-implementation
+

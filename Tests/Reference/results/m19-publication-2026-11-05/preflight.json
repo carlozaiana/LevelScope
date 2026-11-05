@@ -1,0 +1,73 @@
+{
+  "date": "2026-11-05",
+  "reviewed_head": "b475134e9b7e8e2afe0f41ea3edca7c27a196aa6",
+  "branch": "codex/m19-lra-passages",
+  "tag_planned": "m19-lra-passages-2026-11-05",
+  "remote_main": "51e47f300fcc38a386a5a92a7277029175cfab0c",
+  "main_is_ancestor": true,
+  "intel_checkpoint_is_ancestor": true,
+  "existing_tag_count": 23,
+  "existing_tags_match_remote": true,
+  "candidates": {
+    "candidate-01": {
+      "source_commit": "2da3ac4ccb03a75976403c03bbc3461d00639752",
+      "source_manifest_sha256": "4cfde8ef7436d066e3c7d0e070db9158778d7dceed20afdfefbd94b641523b2d",
+      "identity_sha256": "457e60e3daebd3b4c4a28829a6b8c3755c419fc4a82c12f519f1e92ea8d5d398",
+      "build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e",
+      "artifacts_verified": 377,
+      "source_files_verified": 358,
+      "app_executable_sha256": "d9429446212fc299ee0efeafe4992676d635b78acd2bc73e632000971d292901"
+    },
+    "candidate-02": {
+      "source_commit": "cf275afb133118dd2a06e7bca59f82f98898b3cd",
+      "source_manifest_sha256": "0cc78f242abc6b1b799c04c2154fa25fb58ca57be295af2e047866c7d0a431e7",
+      "identity_sha256": "9e4f99eb1fe404314e867ee772a309506f12f8fb6d80d5123583d711eceaafb8",
+      "build": "993f26a9295201a87fedea54a60bc8ca57877e93bb8bebc11729ab5bf5d2af1a",
+      "artifacts_verified": 380,
+      "source_files_verified": 361,
+      "app_executable_sha256": "4bab04604bce5e7137dfb103ef880dd127a6cb402844281473307775d1c42536"
+    }
+  },
+  "evidence_files_verified": 199,
+  "evidence_manifest_sha256": "2af6bbe6c31f8a439e625899cdf906723d51dff1614476f2d7ffa4fe5f665290",
+  "original_completion_sha256": "7a456c8b05055105d532117f1f8ce8116531459d3cf22729f15e2598f119aa0d",
+  "readiness_review_sha256": "7a456c8b05055105d532117f1f8ce8116531459d3cf22729f15e2598f119aa0d",
+  "worktrees": {
+    "logic": {
+      "root": "/Users/fuzz/Developer/LevelScope",
+      "head": "b475134e9b7e8e2afe0f41ea3edca7c27a196aa6",
+      "branch": "codex/m19-lra-passages",
+      "status": "?? .DS_Store\n?? Docs/.DS_Store\n?? Source/.DS_Store\n?? Source/Core/.DS_Store\n?? Source/Core/Processing/.DS_Store\n?? Tests/.DS_Store\n?? Tests/Profiling/.DS_Store\n?? Tests/Qualification/.DS_Store\n?? Tests/Reference/.DS_Store\n",
+      "index_sha256": "2e0ed3576f1b553eff1209c4715283ae25977d5971a092d318efda99cea51c40",
+      "files_in_inventory": 5780
+    },
+    "ui": {
+      "root": "/Users/fuzz/.codex/worktrees/a411/LevelScope",
+      "head": "51e47f300fcc38a386a5a92a7277029175cfab0c",
+      "branch": "codex/ui-timeline-m18",
+      "status": "?? .DS_Store\n?? Source/.DS_Store\n?? Source/Core/.DS_Store\n?? Tests/.DS_Store\n?? Tests/Reference/.DS_Store\n",
+      "index_sha256": "c5057b79c08c2a4e09b9997174c9def0f5f9dc3b40d43560182d97b65fee8783",
+      "files_in_inventory": 5401
+    },
+    "video": {
+      "root": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation",
+      "head": "5e07bbd29930db34236d6dfcede7fea14983f90a",
+      "branch": "codex/video-implementation",
+      "status": "?? .DS_Store\n?? Source/.DS_Store\n?? Source/Core/.DS_Store\n?? Source/Core/Processing/.DS_Store\n?? Tests/.DS_Store\n?? Tests/Video/.DS_Store\n?? Tests/Video/results/.DS_Store\n",
+      "index_sha256": "6fa328b48a5a81c8536376ec4933c92e3583c56829ca6d17e67903d929f2eaff",
+      "files_in_inventory": 1839
+    },
+    "integration": {
+      "root": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-publication-2026-11-03/integration",
+      "head": "51e47f300fcc38a386a5a92a7277029175cfab0c",
+      "branch": "main",
+      "status": "?? .DS_Store\n?? Tests/.DS_Store\n",
+      "index_sha256": "c5057b79c08c2a4e09b9997174c9def0f5f9dc3b40d43560182d97b65fee8783",
+      "files_in_inventory": 5398
+    }
+  },
+  "full_worktree_inventory_sha256": "3206f2496cb1d7c129406bb48a77d498ea4f7d6b4ea25db6c6c1c474438467d4",
+  "implementation_changes_required": false,
+  "rebuild_required": false,
+  "new_runtime_qualification_required": false
+}

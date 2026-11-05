@@ -1,9 +1,10 @@
 # Proposal Strategy and Audio Quality — post-M19 design handover
 
 5 November 2026. **Design and analysis only.** The user approved the development
-approach below and this documentation handover. No new DSP, strategy implementation,
-test run, publication, main merge or new chat creation is authorized by this task.
-The next chat's first deliverable is a bounded proposal for review.
+approach below and this documentation handover. M19 publication and main integration
+were subsequently authorized and are being prepared as `m19-lra-passages-2026-11-05`.
+That authorization does not extend to new DSP, strategy implementation or test work.
+The next design chat's first deliverable remains a bounded proposal for review.
 
 ## Starting point and ownership
 
@@ -22,8 +23,8 @@ modifying implementation owned by another chat.
 | M19 candidate-01 product | `2da3ac4ccb03a75976403c03bbc3461d00639752` — original numerical qualification |
 | M19 candidate-02 tested product | `cf275afb133118dd2a06e7bca59f82f98898b3cd` — corrected preview legend, same numerical implementation |
 | M19 qualification/review documentation | `33e2248cb119290aaa7f16e03bb31faffbbbd0f0` — final evidence, supplemental helpers, completed listening review; no later product change |
-| This handover | Documentation-only continuation of `33e2248…`; its commit is reported separately on delivery and must not replace the frozen product identity |
-| Publication boundary | No M19 checkpoint tag/push/main merge yet. All 23 existing checkpoint tag objects and targets preserved. Separate user authorization is required. |
+| Original design handover | `b475134e9b7e8e2afe0f41ea3edca7c27a196aa6` — documentation-only continuation, not a new tested binary |
+| Publication boundary | User authorized M19 publication and main integration after readiness review; preparation in progress. Preserve all 23 pre-existing checkpoint tag objects and targets. |
 
 Frozen candidate-02 source-manifest SHA-256:
 `0cc78f242abc6b1b799c04c2154fa25fb58ca57be295af2e047866c7d0a431e7`.
@@ -89,6 +90,26 @@ Numerical compliance and preservation of mix quality are separate assessments. R
 the user's mixing judgments as examples; convert them into measurable constraints only
 with an explicit definition and evidence. A scalar alteration score is neither artistic
 transparency nor intelligibility. Neither can be inferred from a narrowed histogram.
+
+**Analytical and predictive design is included in “evidence-led”.** Develop calculations
+for a proposed region change together with surrounding material, overlapping windows,
+transitions, existing processing and programme-wide gates, forecasting IL/LRA/true peak
+and other selected metrics. Model-based selection, bounded simulation/search and
+coordinated-neighbour methods are open design directions. This clarifies design scope;
+it does not expand M19's implemented attenuation-only method during publication.
+
+For every forecast, identify required data and identity, assumptions, units, stage and
+resource cost, and distinguish exact conditional results from approximations/bounds.
+Fixed-gain scaling can be exact in an ideal linear, fixed-population model; real gate
+changes and float-stage rounding still need assessment. Regional window shifts require
+overlap and boundary/filter context; whole-programme LRA needs the full population and
+recomputed gates/percentiles. Arbitrary DSP/time-varying true-peak forecasts need sample/
+interpolation/state context or a justified conservative bound. Calibrate predictions
+against measured examples and show errors/failure cases. See the explicit model/data
+table in [specification section 8.4](../ProposalEngineSpec_v2.md#analytical-and-predictive-design-is-evidence-led-design).
+Actual complete candidate assessment, independent Current verification and finalized-
+artifact verification remain acceptance authority. No model restores predictions as
+Current, relaxes profile rules or eliminates those verification steps.
 
 ## What M19 actually does
 
@@ -347,6 +368,9 @@ accumulating drift, sustained freezes and identity/lifecycle failures remain blo
 
 These are separate work items, not strategy prerequisites or new approval:
 
+- Remembered device selection, opening on explicit selection and optional reconnection
+  are separate planned device/UI work. Define the user's connection intent and lifecycle
+  before implementation; none of these behaviours changes in M19 publication.
 - Clearly show initial import/verified-source preparation and progressive analysis states,
   progress/cancellation and pending versus authoritative results.
 - Design session-wide reuse of a verified source across analysis, proposals, audition
@@ -389,6 +413,11 @@ routing, immersive expansion, VST3 parity and new dialogue objectives stay separ
 > assessment distinct. Logic owns implementation/qualification; UI owns controls and
 > activity/timeline displays; this chat owns evidence-led strategy rules/trade-offs
 > recorded in the shared proposal specification.
+> Evidence-led includes analytical/predictive models, surrounding/overlapping-window
+> and transition/gating calculations, bounded simulation/search and neighbour-aware
+> design. State assumptions, exact versus approximate/bounded predictions and required
+> data; calibrate against measured examples. Complete candidate, independent Current
+> and finalized-artifact measurements remain acceptance authority.
 >
 > Propose a bounded next design/implementation sequence with alternatives, evaluation
 > cases, activity information, success/failure criteria, costs and ownership. Compare

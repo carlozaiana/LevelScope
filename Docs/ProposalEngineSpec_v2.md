@@ -1,8 +1,8 @@
 # LevelScope — Proposal Engine Specification v2
 
 Current entry point — 5 November 2026: **M18 is published on main; M19 candidate-02
-is qualified within its approved impact-selected scope and awaits separate publication
-and main-integration approval.** Read [69 — Proposal Strategy and Audio Quality handover](ProjectIndex/69_ProposalStrategyAndAudioQualityHandover.md),
+is qualified within its approved impact-selected scope; publication and main integration
+are now authorized and being prepared.** Read [69 — Proposal Strategy and Audio Quality handover](ProjectIndex/69_ProposalStrategyAndAudioQualityHandover.md),
 [66 — exact M19 method](ProjectIndex/66_M19LraPassagesAndMeasuredCandidates.md), and
 [68 — qualification](ProjectIndex/68_M19QualificationAndHandover.md).
 Section 8.4 and the current part of section 22 record the approved development approach.
@@ -357,6 +357,35 @@ DSP is reusable implementation material; it is not standalone qualification. A n
 stateful/latent stage needs targeted offline/audition/export, reset/seek/EOF and timing
 validation. No such implementation or new qualification run is authorized here.
 
+#### Analytical and predictive design is evidence-led design
+
+“Evidence-led” includes analytically derived, model-based and predictive proposal
+design, not only trial-and-error listening or rules inferred from finished renders.
+The design chat may develop calculations for a region change together with surrounding
+material, overlapping measurement windows, transitions, existing processing and
+programme-wide gating, forecasting IL, LRA, true peak and other selected metrics.
+Predictive models, bounded simulation/search and coordinated-neighbour methods are
+open design directions, not additional implemented M19 strategies.
+
+Every prediction declares its assumptions, required data and identity, applicable
+formats/layouts, scope, units and cost. Distinguish exact results within a stated model,
+approximations, conservative bounds and unavailable predictions. For example:
+
+| Proposed model | Data and declared validity boundary |
+| --- | --- |
+| Constant-gain arithmetic | Exact scaling in an ideal linear model with fixed gate membership and no sample rounding/quantization; needs the gain/stage, metric populations and peak definition. Actual absolute-gate membership or floating-point stage changes can invalidate shortcut assumptions. |
+| Regional/window-energy forecast | Needs full-resolution window support and overlap, boundary/filter context, existing plan and the transition envelope. Shifting stored window LUFS by a plateau gain alone is generally an approximation when a window straddles gains or filter memory matters. |
+| Gated IL/LRA forecast | Needs the whole eligible population, unavailable/padded status, exact gates/percentiles and a justified post-change energy model; recompute population membership. Selected-region statistics alone cannot establish programme-wide metrics. |
+| True-peak forecast or bound | Needs ordered channels, sample/interpolation context, stage order and any state/latency. A prior maximum and local gain are insufficient for arbitrary time-varying/DSP changes; identify the interpolation assumptions or prove a conservative bound. |
+| Bounded simulation/search | Needs frozen programme/plan/requirements/policy identities, deterministic search/version, state/seek rules and explicit pass/time/memory/disk budgets. Sampling/proxy models are not complete-programme verification. |
+
+Calibrate models against measured success and failure examples, including gate changes,
+neighbour effects and boundary peaks; report prediction error and where the model fails.
+An exact conditional model is not automatically bit-exact execution of the qualified
+sample path. Only actual complete candidate assessment, independent Current measurement
+after Apply and finalized-artifact verification provide their respective acceptance
+authority. Predictions must never relax delivery rules or be restored as measured truth.
+
 The concrete handover, current methods/defaults, evidence and first design assignment
 are in [69](ProjectIndex/69_ProposalStrategyAndAudioQualityHandover.md). Independent
 preparation/progress/source-reuse work must not be hidden inside strategy design.
@@ -704,7 +733,8 @@ Later dynamics-led/mixed methods, protection, component-relative dialogue work,
 immersive expansion and VST3 parity require their own decisions. Numerical truth,
 explicit Apply and independent Current/artifact verification remain common.
 
-Track initial import/analysis preparation feedback, session-wide verified-source
+Track remembered device selection/open-on-selection/optional reconnection,
+initial import/analysis preparation feedback, session-wide verified-source
 reuse, optional project-owned audio and the inherited completion pause as independent
 performance/UI work. The user deferred a separate first-playback feedback task while
 shared-source reuse is planned; see [69](ProjectIndex/69_ProposalStrategyAndAudioQualityHandover.md).

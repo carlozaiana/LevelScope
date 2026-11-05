@@ -1,0 +1,331 @@
+{
+  "date": "2026-11-05",
+  "qualified": true,
+  "ready_for_checkpoint_review": true,
+  "publication_authorized": false,
+  "checks": [
+    {
+      "name": "candidate-01: every frozen artifact unchanged",
+      "passed": true
+    },
+    {
+      "name": "candidate-01: manifest digest",
+      "passed": true
+    },
+    {
+      "name": "candidate-02: every frozen artifact unchanged",
+      "passed": true
+    },
+    {
+      "name": "candidate-02: manifest digest",
+      "passed": true
+    },
+    {
+      "name": "Current checkout still matches every candidate-02 manifest file",
+      "passed": true
+    },
+    {
+      "name": "Reuse restricted to UI legend correction",
+      "passed": true
+    },
+    {
+      "name": "Actual High Sierra package integrity",
+      "passed": true
+    },
+    {
+      "name": "Identical local/Golem frozen identity candidate-01",
+      "passed": true
+    },
+    {
+      "name": "Identical local/Golem frozen identity candidate-02",
+      "passed": true
+    },
+    {
+      "name": "sequoia: actual platform",
+      "passed": true
+    },
+    {
+      "name": "sequoia: all eleven groups",
+      "passed": true
+    },
+    {
+      "name": "sequoia: passing core original receipt",
+      "passed": true
+    },
+    {
+      "name": "sequoia: passing stereo original receipt",
+      "passed": true
+    },
+    {
+      "name": "sequoia: passing surround original receipt",
+      "passed": true
+    },
+    {
+      "name": "sequoia: passing rates original receipt",
+      "passed": true
+    },
+    {
+      "name": "sequoia: passing failures original receipt",
+      "passed": true
+    },
+    {
+      "name": "sequoia: passing inputs original receipt",
+      "passed": true
+    },
+    {
+      "name": "sequoia: passing gating original receipt",
+      "passed": true
+    },
+    {
+      "name": "sequoia: passing real original receipt",
+      "passed": true
+    },
+    {
+      "name": "sequoia: passing measurement original receipt",
+      "passed": true
+    },
+    {
+      "name": "sequoia: passing section original receipt",
+      "passed": true
+    },
+    {
+      "name": "sequoia: passing requirements original receipt",
+      "passed": true
+    },
+    {
+      "name": "sequoia: fresh candidate-02 native UI, cancellation and measured workflow",
+      "passed": true
+    },
+    {
+      "name": "sequoia: supplemental 5.1 rate cells",
+      "passed": true
+    },
+    {
+      "name": "sequoia: bounded population resources",
+      "passed": true
+    },
+    {
+      "name": "high-sierra: actual platform",
+      "passed": true
+    },
+    {
+      "name": "high-sierra: all eleven groups",
+      "passed": true
+    },
+    {
+      "name": "high-sierra: passing core original receipt",
+      "passed": true
+    },
+    {
+      "name": "high-sierra: passing stereo original receipt",
+      "passed": true
+    },
+    {
+      "name": "high-sierra: passing surround original receipt",
+      "passed": true
+    },
+    {
+      "name": "high-sierra: passing rates original receipt",
+      "passed": true
+    },
+    {
+      "name": "high-sierra: passing failures original receipt",
+      "passed": true
+    },
+    {
+      "name": "high-sierra: passing inputs original receipt",
+      "passed": true
+    },
+    {
+      "name": "high-sierra: passing gating original receipt",
+      "passed": true
+    },
+    {
+      "name": "high-sierra: passing real original receipt",
+      "passed": true
+    },
+    {
+      "name": "high-sierra: passing measurement original receipt",
+      "passed": true
+    },
+    {
+      "name": "high-sierra: passing section original receipt",
+      "passed": true
+    },
+    {
+      "name": "high-sierra: passing requirements original receipt",
+      "passed": true
+    },
+    {
+      "name": "high-sierra: fresh candidate-02 native UI, cancellation and measured workflow",
+      "passed": true
+    },
+    {
+      "name": "high-sierra: supplemental 5.1 rate cells",
+      "passed": true
+    },
+    {
+      "name": "high-sierra: bounded population resources",
+      "passed": true
+    },
+    {
+      "name": "Original numerical/native cross-platform review complete",
+      "passed": true
+    },
+    {
+      "name": "Supplemental cross-platform exact agreement",
+      "passed": true
+    },
+    {
+      "name": "Same supplemental executable on both Macs",
+      "passed": true
+    },
+    {
+      "name": "Supplemental source/binary identity Tests/Qualification/M19/Listen.cpp",
+      "passed": true
+    },
+    {
+      "name": "Supplemental source/binary identity Tests/Qualification/M19/Resources.cpp",
+      "passed": true
+    },
+    {
+      "name": "Supplemental source/binary identity Tests/Qualification/M19/SurroundRates.cpp",
+      "passed": true
+    },
+    {
+      "name": "Supplemental source/binary identity Tests/Qualification/M19/ListenReference.cpp",
+      "passed": true
+    },
+    {
+      "name": "listening-stereo: approved sequence complete and device closed",
+      "passed": true
+    },
+    {
+      "name": "listening-stereo-repeat: approved sequence complete and device closed",
+      "passed": true
+    },
+    {
+      "name": "listening-cinema: approved sequence complete and device closed",
+      "passed": true
+    },
+    {
+      "name": "listening-cinema-reference-zero: approved sequence complete and device closed",
+      "passed": true
+    },
+    {
+      "name": "Explicit user acceptance of bounded supplied-file inspection",
+      "passed": true
+    },
+    {
+      "name": "Preserved local/remote tag object and target high-sierra-pre-scaffold-2026-10-15",
+      "passed": true
+    },
+    {
+      "name": "Preserved local/remote tag object and target intel-multicore-true-peak-2026-11-05",
+      "passed": true
+    },
+    {
+      "name": "Preserved local/remote tag object and target m10-verified-pcm-export-2026-10-26",
+      "passed": true
+    },
+    {
+      "name": "Preserved local/remote tag object and target m11-aligned-stem-composition-2026-10-26",
+      "passed": true
+    },
+    {
+      "name": "Preserved local/remote tag object and target m12-section-trim-sequoia-2026-10-27",
+      "passed": true
+    },
+    {
+      "name": "Preserved local/remote tag object and target m13-bounded-section-proposals-2026-10-28",
+      "passed": true
+    },
+    {
+      "name": "Preserved local/remote tag object and target m14-mono-rf64-sequoia-2026-10-29",
+      "passed": true
+    },
+    {
+      "name": "Preserved local/remote tag object and target m15-marker-import-sequoia-2026-10-29",
+      "passed": true
+    },
+    {
+      "name": "Preserved local/remote tag object and target m16-proposal-preferences-sequoia-2026-10-30",
+      "passed": true
+    },
+    {
+      "name": "Preserved local/remote tag object and target m17-job-lra-presets-sequoia-2026-10-30",
+      "passed": true
+    },
+    {
+      "name": "Preserved local/remote tag object and target m18-interactive-timeline-2026-11-03",
+      "passed": true
+    },
+    {
+      "name": "Preserved local/remote tag object and target m2-measured-compliance-2026-10-18",
+      "passed": true
+    },
+    {
+      "name": "Preserved local/remote tag object and target m3-global-trim-2026-10-18",
+      "passed": true
+    },
+    {
+      "name": "Preserved local/remote tag object and target m4-measured-diagnostics-2026-10-18",
+      "passed": true
+    },
+    {
+      "name": "Preserved local/remote tag object and target m5-programme-sections-2026-10-20",
+      "passed": true
+    },
+    {
+      "name": "Preserved local/remote tag object and target m6-verified-current-state-audition-2026-10-24",
+      "passed": true
+    },
+    {
+      "name": "Preserved local/remote tag object and target m7-pcm-7.1-2026-10-25",
+      "passed": true
+    },
+    {
+      "name": "Preserved local/remote tag object and target m8-reproducible-sessions-2026-10-25",
+      "passed": true
+    },
+    {
+      "name": "Preserved local/remote tag object and target m9-separate-file-stereo-5.1-2026-10-25",
+      "passed": true
+    },
+    {
+      "name": "Preserved local/remote tag object and target measurement-milestone-2026-10-17",
+      "passed": true
+    },
+    {
+      "name": "Preserved local/remote tag object and target standalone-scaffold-2026-10-15",
+      "passed": true
+    },
+    {
+      "name": "Preserved local/remote tag object and target video-checkpoint-2026-10-17",
+      "passed": true
+    },
+    {
+      "name": "Preserved local/remote tag object and target video-prores-checkpoint-2026-10-21",
+      "passed": true
+    },
+    {
+      "name": "Main unchanged at M18",
+      "passed": true
+    }
+  ],
+  "reviewer_sha256": "13280257734b018a199f58b4097ded763a6a72b0186e7c50480bdfb9102150e8",
+  "branch": "codex/m19-lra-passages",
+  "tested_source_commit": "cf275afb133118dd2a06e7bca59f82f98898b3cd",
+  "source_manifest_sha256": "0cc78f242abc6b1b799c04c2154fa25fb58ca57be295af2e047866c7d0a431e7",
+  "measurement_build": "993f26a9295201a87fedea54a60bc8ca57877e93bb8bebc11729ab5bf5d2af1a",
+  "main": "51e47f300fcc38a386a5a92a7277029175cfab0c",
+  "existing_tags_preserved": 23,
+  "scope": "Approved impact-selected stereo/5.1 M19; no new full-duration/video or physical multichannel routing qualification",
+  "listening": "Bounded coordinated playback plus user-reported supplied stereo/5.1 file inspection; earlier observations retained",
+  "limitations": [
+    "Cinema 15 LU attempt fails honestly and cannot Apply",
+    "At most three private full-programme passes; no arbitrary LRA attainment guarantee",
+    "Mono/7.1 new automatic LRA method outside scope",
+    "Full physical multichannel routing/listening remains separate"
+  ]
+}
