@@ -1,5 +1,26 @@
 # Selective LRA workflow and interactive timeline — design priorities
 
+**Current entry point, 5 November 2026:** M17 requirements/presets and M18's bounded
+timeline, progressive analysis and applied-history record are implemented, qualified
+and published in M18/main `51e47f300fcc38a386a5a92a7277029175cfab0c`.
+M19's marker-independent passage inspection and bounded measured selective-attenuation
+method are qualified and await publication/main approval; see [68](68_M19QualificationAndHandover.md).
+The old main-at-M13, unimplemented-M18 and combined-qualification-pending wording below
+is historical and superseded. General region editing, rolling LRA/cumulative IL,
+freezes, neighbour strategies and new DSP do not become implemented by that update.
+
+The approved next design approach develops each processing capability alongside its
+first useful proposal method, with explicit settings/activity, measured verification
+and listening evidence. Logic owns implementation/qualification; UI owns controls and
+displays; the new Strategy and Audio Quality chat owns evidence-led rules/trade-offs.
+Read [69 — its self-contained handover](69_ProposalStrategyAndAudioQualityHandover.md)
+and [the shared specification, section 8.4](../ProposalEngineSpec_v2.md#84-approved-capability-and-method-development-approach--5-november-2026).
+A limiter plus a first section-gain-and-limiter method is a candidate to compare
+against improved region/gain/transition/neighbour rules, not an approved next milestone.
+No new DSP, tests or implementation is authorized by this documentation task.
+
+## Historical direction and dependency proposal — 30 October 2026
+
 30 October 2026 user direction. Architectural preparation and roadmap, not authorization to implement these features in M16.
 
 Intended workflow: **Open mix and optional video → automatic analysis → select delivery requirements → Propose → inspect, audition and refine → export the verified result.** Selective LRA correction is a central product objective. Preserve dynamics-led, section-led and mixed strategies, but a complete upward/downward compressor is not a prerequisite for the section-led LRA/timeline path.

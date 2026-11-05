@@ -1,6 +1,14 @@
 # LevelScope — Proposal Engine Specification v2
 
-Status: Design clarified; bounded M13 candidate-02 implemented and qualified, 28 October 2026.
+Current entry point — 5 November 2026: **M18 is published on main; M19 candidate-02
+is qualified within its approved impact-selected scope and awaits separate publication
+and main-integration approval.** Read [69 — Proposal Strategy and Audio Quality handover](ProjectIndex/69_ProposalStrategyAndAudioQualityHandover.md),
+[66 — exact M19 method](ProjectIndex/66_M19LraPassagesAndMeasuredCandidates.md), and
+[68 — qualification](ProjectIndex/68_M19QualificationAndHandover.md).
+Section 8.4 and the current part of section 22 record the approved development approach.
+No next processor or implementation milestone is approved by this documentation update.
+
+Historical status, 28 October 2026: Design clarified; bounded M13 candidate-02 implemented and qualified.
 [ProjectIndex 49](ProjectIndex/49_M13QualificationAndHandover.md) records actual-platform
 evidence and limitations. The user subsequently authorized checkpoint publication and main integration.
 
@@ -15,6 +23,12 @@ fast-forwards main from preserved M11 `cfb1033aa7fb65a2655db276bee696161196bdeb`
 **“Sequoia tested; High Sierra and video qualification pending.”**
 [ProjectIndex 47](ProjectIndex/47_M13BoundedSectionTrimProposals.md) defines the first
 bounded section-led method; future capabilities below are not M13 scope.
+M13-specific defaults and dated M14–M17 status below remain historical. M16 replaced
+the fixed eight-section limit with configurable connected-region accounting and no
+count restriction by default; M17 added job requirements; M18 implemented the bounded
+timeline/history slice and completed combined qualification. Main is now M18 commit
+`51e47f300fcc38a386a5a92a7277029175cfab0c`, not M13. M19 supplies the separately versioned
+selective-LRA method; it does not implement every future capability in this specification.
 
 ---
 
@@ -40,14 +54,16 @@ being available never means it must be active. Apply and verification stay expli
 
 ## 2. Product philosophy and terminology
 
-Separate four independent concepts:
+Keep these responsibilities distinct:
 
 | Concept | Meaning |
 | --- | --- |
 | Delivery profile | Versioned measurement method, applicability and rules. Defines what a measured pass means. |
+| Exact processing tool | Qualified sample transformation with full settings, channel policy, state/latency and activity contract. Availability does not authorize its use. |
 | Processing strategy | Permitted interventions: dynamics-led, section-led or mixed. |
 | Selection algorithm / method | How settings are chosen within a strategy; multiple algorithms may later serve each strategy. |
 | Processing preferences / policy | Versioned preservation priorities, activity budgets and search/resource limits, independent of delivery rules. |
+| Measured/perceptual assessment | Actual candidate/Current/artifact measurements and separately identified listening judgments. Numerical compliance does not certify preservation of mix quality. |
 
 The older `HybridMethod` combined rule-based diagnosis, distribution analysis,
 proxy simulation and bounded refinement. That is **combined-analysis selection**,
@@ -291,6 +307,59 @@ disclose strategy-specific differences. Before a comparison, bound selected meth
 candidate count, measurement passes, time, memory and disk; cancellation removes
 owned temporaries and leaves Current intact. Do not fan out every strategy or hide
 unbounded retries. M13 implements no multi-strategy comparison or selection UI.
+
+---
+
+### 8.4 Approved capability-and-method development approach — 5 November 2026
+
+Develop a processing capability together with its first useful proposal method,
+through small successive slices. Do not wait for every DSP module before designing
+selection rules. Maintain this shared strategy design as the implementation evolves;
+retain section-led, dynamics-led and mixed as distinct choices with independently
+versioned selection algorithms. A stronger algorithm reuses qualified processors,
+measurement, application/history, UI and export contracts rather than forking them.
+
+For each proposed capability, first define a concrete mixing problem and successful
+and unsuccessful examples. Integrate and qualify the processor with sufficient
+manual/test control to establish its exact behaviour. Expose its full settings and
+actual processing activity. Implement one bounded selection method, measure its
+complete result and listen to representative material; use that evidence to improve
+the rules with explicit versioning and affected requalification. These are successive
+slices, not a prerequisite to build a general processing graph or all processors.
+
+Ownership:
+
+- **Logic Module:** processor/algorithm implementation, shared contracts and qualification.
+- **UI/Timeline:** reviewable controls, timeline/activity displays, states and explanations.
+- **Proposal Strategy and Audio Quality:** evidence-led rule design and trade-offs;
+  record decisions/examples here and hand a bounded specification to the implementation owners.
+
+Passing selected requirements and preserving mix quality are separate assessments.
+Turn the user's mixing judgments into documented examples and, only where justified,
+measurable constraints with defined scope, units and acceptance. Amount, duration,
+repetition, location and neighbouring effects can inform preferences; a scalar
+alteration score proves neither artistic transparency nor intelligibility. Keep hard
+delivery rules, hard user protections, soft preferences and resource budgets separate.
+
+Maintain a small varied evaluation collection: stereo and conventional 5.1; quiet
+ambience/dialogue, sustained loud passages and brief peaks; synthetic controls plus
+different real programmes. Retain the cinema example and other examples to check
+generalisation. Record content/role/range identity, selected requirements/policy,
+exact settings/activity, measured outcomes and listening context. Preserve original
+audio, excerpts and listening files outside Git. Do not optimize exclusively for the
+cinema file or relax a delivery requirement to manufacture success.
+
+A qualified true-peak limiter plus one section-gain-and-limiter method is a promising
+candidate for design review, not the automatically assigned next milestone. Compare
+its usefulness and cost against improved region selection, gain policies, transitions
+and coordinated neighbouring-region adjustment using M19 evidence. Existing plugin/Core
+DSP is reusable implementation material; it is not standalone qualification. A new
+stateful/latent stage needs targeted offline/audition/export, reset/seek/EOF and timing
+validation. No such implementation or new qualification run is authorized here.
+
+The concrete handover, current methods/defaults, evidence and first design assignment
+are in [69](ProjectIndex/69_ProposalStrategyAndAudioQualityHandover.md). Independent
+preparation/progress/source-reuse work must not be hidden inside strategy design.
 
 ---
 
@@ -618,6 +687,33 @@ Retain synthetic success cases and eventual coordinated listening review.
 
 ## 22. Staged development roadmap
 
+### Current sequence — 5 November 2026
+
+M14–M18 are included in qualified published M18/main. M19's bounded passage analysis
+and selective attenuation are implemented and qualified, with publication/integration
+pending separate approval. The former “after M18, no later than M19” combined runtime
+deferral has been discharged; it is not a current exemption for new processors.
+
+Next, the dedicated Strategy and Audio Quality chat reviews M19 evidence and proposes
+one bounded capability/method sequence under section 8.4. Review the alternatives
+(region/gain/transition/neighbour improvements versus qualified limiting and a first
+section-plus-limiter method), their failure examples, activity information, UI needs,
+costs and acceptance tests before assigning a milestone. Do not require all dynamics
+modules before useful rules, and do not authorize a limiter simply by naming it here.
+Later dynamics-led/mixed methods, protection, component-relative dialogue work,
+immersive expansion and VST3 parity require their own decisions. Numerical truth,
+explicit Apply and independent Current/artifact verification remain common.
+
+Track initial import/analysis preparation feedback, session-wide verified-source
+reuse, optional project-owned audio and the inherited completion pause as independent
+performance/UI work. The user deferred a separate first-playback feedback task while
+shared-source reuse is planned; see [69](ProjectIndex/69_ProposalStrategyAndAudioQualityHandover.md).
+
+### Historical sequence and qualification decisions, M13–M17
+
+The following retains the earlier staged proposal and main/deferral status for
+provenance. It does not override the current sequence or authorize future work.
+
 Keep future stages small and separately reviewable. M13 is qualified and published;
 [ProjectIndex 50](ProjectIndex/50_M14MonoProcessingAndVerifiedExport.md) records M14 approval
 for mono and bounded direct RF64 input with Sequoia-first reduced qualification. Assign no later milestone numbers:
@@ -725,7 +821,11 @@ while preserving one shared truth model.
 
 ---
 
-## 25. Design status
+## 25. Historical design status and dated approvals
+
+These entries preserve their original milestone context. Use the current entry
+point above and [69](ProjectIndex/69_ProposalStrategyAndAudioQualityHandover.md)
+for implemented scope, current main, qualification and the next design assignment.
 
 Three processing strategies share one authoritative foundation and may each host
 multiple selection algorithms. M13 remains a bounded section-led subset with the
