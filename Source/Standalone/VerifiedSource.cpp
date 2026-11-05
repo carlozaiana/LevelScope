@@ -29,6 +29,7 @@ public:
     {
         checkCancel (control);
         const auto got = stream.read (dst, n);
+        control.reportPhase(JobPhase::copyHash, double(stream.getPosition()) / std::max<juce::int64>(1, length));
         control.setProgress (0.15f + 0.15f * static_cast<float> (static_cast<double> (stream.getPosition()) / std::max<juce::int64> (1, length)));
         return got;
     }
@@ -124,6 +125,7 @@ VerifiedSourceResult prepareVerifiedSource (const ServiceContext& context, JobCo
             storage.directory.getChildFile ("levelscope-" + juce::Uuid().toString() + ".wav"), context.media));
         auto output = storage.createWriter ? storage.createWriter (owned->file()) : std::make_unique<FileWriter> (owned->file());
         if (! output) throw Failure { ErrorCode::writeFailed, "Cannot create private source copy" };
+        control.reportPhase(JobPhase::copy, 0);
         std::array<char, 65536> buffer;
         juce::int64 copied = 0;
         while (copied < context.media.bytes)
@@ -135,6 +137,7 @@ VerifiedSourceResult prepareVerifiedSource (const ServiceContext& context, JobCo
             if (! output->write (buffer.data(), static_cast<size_t> (wanted)))
                 throw Failure { ErrorCode::writeFailed, "Temporary source copy write failed; check available disk space" };
             copied += wanted;
+            control.reportPhase(JobPhase::copy, double(copied) / context.media.bytes);
             control.setProgress (0.15f * static_cast<float> (static_cast<double> (copied) / context.media.bytes));
         }
         if (! output->flush()) throw Failure { ErrorCode::writeFailed, "Temporary source copy flush failed" };
@@ -143,6 +146,7 @@ VerifiedSourceResult prepareVerifiedSource (const ServiceContext& context, JobCo
             throw Failure { ErrorCode::sourceChanged, "Source length changed during preparation" };
         auto hashStream = owned->file().createInputStream();
         if (! hashStream) throw Failure { ErrorCode::missingFile, "Cannot reopen private source copy" };
+        control.reportPhase(JobPhase::copyHash, 0);
         HashInput hashInput (*hashStream, control);
         const auto hash = juce::SHA256 (hashInput).toHexString();
         checkCancel (control);

@@ -48,7 +48,7 @@ void ProgrammeImportPanel::inspectFiles(const juce::Array<juce::File>& selection
     }
     std::vector<juce::File> files(selection.begin(),selection.end());
     group.reset();alignment.setToggleState(false,juce::dontSendNotification);
-    control=std::make_shared<JobControl>();
+    control=std::make_shared<JobControl>();control->feedback=std::make_shared<JobFeedback>();
     pending=std::async(std::launch::async,[files,c=control]
     {
         try{return inspectProgrammeFiles(files,*c);}
@@ -57,6 +57,7 @@ void ProgrammeImportPanel::inspectFiles(const juce::Array<juce::File>& selection
     refresh();
 }
 ProgrammeImportPanel::~ProgrammeImportPanel(){stopTimer();if(control)control->cancel.store(true);if(pending.valid())pending.wait();}
+std::shared_ptr<JobControl> ProgrammeImportPanel::preparationControl() const { return pending.valid() ? control : nullptr; }
 void ProgrammeImportPanel::cancel(){if(closing)return;closing=true;if(control)control->cancel.store(true);if(!pending.valid())complete({});else refresh();}
 void ProgrammeImportPanel::timerCallback()
 {

@@ -15,6 +15,7 @@ public:
     ~ProgrammeImportPanel() override;
     void resized() override;
     void cancel();
+    std::shared_ptr<JobControl> preparationControl() const;
 private:
     Completion complete;
     RememberedChannelRoles roleMemory;

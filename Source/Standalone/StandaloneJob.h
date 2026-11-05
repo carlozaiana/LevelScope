@@ -1,5 +1,7 @@
 #pragma once
 
+#include "JobFeedback.h"
+#include <memory>
 #include <atomic>
 #include <cstdint>
 #include <juce_core/juce_core.h>
@@ -19,6 +21,14 @@ enum class ErrorCode
 
 struct JobControl
 {
+    // Optional only for initial import/analysis UI. Worker-local children inherit
+    // the reporting boundary without changing existing numeric progress mapping.
+    std::shared_ptr<JobFeedback> feedback;
+    void reportPhase(JobPhase phase, double fraction = -1) const
+    {
+        if(feedback) feedback->publish(phase, fraction);
+        else if(parent) parent->reportPhase(phase, fraction);
+    }
     std::atomic<bool> cancel { false };
     std::atomic<float> progress { 0.0f };
     const std::atomic<bool>* parentCancel = nullptr; // worker-local child stage only

@@ -609,3 +609,22 @@ if(LEVELSCOPE_BUILD_DEVICE_SETTINGS_TESTS)
         target_compile_options(LevelScopeDeviceSettingsTests PRIVATE -fno-fast-math -ffp-contract=off)
     endif()
 endif()
+
+option(LEVELSCOPE_BUILD_PREPARATION_FEEDBACK_TESTS "Build focused initial-import/preparation feedback tests" OFF)
+if(LEVELSCOPE_BUILD_PREPARATION_FEEDBACK_TESTS)
+    juce_add_console_app(LevelScopePreparationFeedbackTests PRODUCT_NAME "LevelScope Preparation Feedback Tests")
+    target_sources(LevelScopePreparationFeedbackTests PRIVATE
+        Tests/PreparationFeedbackTests.cpp
+        Source/Standalone/StandaloneMainComponent.cpp
+        Source/Standalone/StandaloneSessionUI.cpp
+        Source/Standalone/StandaloneExportUI.cpp
+        Source/Standalone/StandaloneAudioPanel.cpp
+        Source/Standalone/StandaloneVideoPanel.cpp
+        Source/Standalone/StandaloneProgrammeImport.cpp
+        Source/Standalone/StandaloneCompositionImport.cpp)
+    target_compile_definitions(LevelScopePreparationFeedbackTests PRIVATE JUCE_MODAL_LOOPS_PERMITTED=1)
+    target_link_libraries(LevelScopePreparationFeedbackTests PRIVATE LevelScopeDiagnosticsUI juce::juce_gui_basics)
+    if(NOT MSVC)
+        target_compile_options(LevelScopePreparationFeedbackTests PRIVATE -fno-fast-math -ffp-contract=off)
+    endif()
+endif()

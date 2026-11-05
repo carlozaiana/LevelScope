@@ -67,7 +67,7 @@ void CompositionImportPanel::pickFile(int k)
     chooser->launchAsync(juce::FileBrowserComponent::openMode|juce::FileBrowserComponent::canSelectFiles,[safe,k](const auto& p)
     {
         if(!safe||p.getResult()==juce::File())return;
-        safe->pendingFile=p.getResult();safe->pendingComponent=k;safe->control=std::make_shared<JobControl>();
+        safe->pendingFile=p.getResult();safe->pendingComponent=k;safe->control=std::make_shared<JobControl>();safe->control->feedback=std::make_shared<JobFeedback>();
         safe->pending=std::async(std::launch::async,[file=safe->pendingFile,c=safe->control]{return validateMedia(file,*c);});safe->changed();safe->refresh();
     });
 }
@@ -87,6 +87,7 @@ void CompositionImportPanel::pickGroup(int k)
     },juce::File{},false);
     groupWindow=std::make_unique<GroupWindow>(*groupPanel);refresh();
 }
+std::shared_ptr<JobControl> CompositionImportPanel::preparationControl() const { return groupPanel ? groupPanel->preparationControl() : (pending.valid() ? control : nullptr); }
 void CompositionImportPanel::cancel()
 {closing=true;if(control)control->cancel.store(true);if(groupPanel){groupPanel->cancel();return;}if(!pending.valid())complete({});else refresh();}
 void CompositionImportPanel::timerCallback()

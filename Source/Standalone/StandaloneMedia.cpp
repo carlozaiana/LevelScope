@@ -257,6 +257,7 @@ public:
     {
         if (control.isCancelled()) return 0;
         const auto count = source.read (destination, bytes);
+        control.reportPhase(JobPhase::sourceHash, double(getPosition()) / juce::jmax<juce::int64>(1, getTotalLength()));
         control.setProgress (0.8f + 0.2f * static_cast<float> (
             static_cast<double> (getPosition()) / juce::jmax<juce::int64> (1, getTotalLength())));
         return count;
@@ -288,6 +289,7 @@ public:
             const auto count = juce::jmin (requested - copied, bufferSize - bufferOffset);
             std::memcpy (output + copied, packed.data() + bufferOffset, static_cast<size_t> (count));
             copied += count; bufferOffset += count; position += count;
+            control.reportPhase(JobPhase::checksum, double(position) / getTotalLength());
         }
         return copied;
     }
@@ -323,6 +325,7 @@ private:
 
 MediaValidationResult validateMedia (const juce::File& file, JobControl& control)
 {
+    control.reportPhase(JobPhase::metadata);
     MediaValidationResult result;
     auto fail = [&] (ErrorCode code, const juce::String& message)
     {
@@ -408,6 +411,7 @@ MediaValidationResult validateMedia (const juce::File& file, JobControl& control
     }
 
     constexpr int blockSize = 4096;
+    control.reportPhase(JobPhase::samples, 0);
     juce::AudioBuffer<float> block (media.channels, blockSize);
     for (juce::int64 position = 0; position < media.frames;)
     {
@@ -423,10 +427,12 @@ MediaValidationResult validateMedia (const juce::File& file, JobControl& control
                 if (! std::isfinite (block.getSample (channel, frame)))
                     return fail (ErrorCode::nonFiniteAudio, "Source contains non-finite audio samples");
         position += count;
+        control.reportPhase(JobPhase::samples, double(position) / media.frames);
         control.setProgress (0.8f * static_cast<float> (static_cast<double> (position) / media.frames));
     }
     if (flacChecksum.isNotEmpty())
     {
+        control.reportPhase(JobPhase::checksum, 0);
         DecodedPcmStream pcm (*reader, control);
         const auto actual = juce::MD5 (pcm).toHexString();
         if (control.isCancelled()) return fail (ErrorCode::cancelled, "Import cancelled");
@@ -435,6 +441,7 @@ MediaValidationResult validateMedia (const juce::File& file, JobControl& control
     }
     auto input = file.createInputStream();
     if (! input) return fail (ErrorCode::missingFile, "Cannot reopen source for content hashing");
+    control.reportPhase(JobPhase::sourceHash, 0);
     CancellableInput stream (*input, control);
     media.sha256 = juce::SHA256 (stream).toHexString();
     if (control.isCancelled()) return fail (ErrorCode::cancelled, "Import cancelled");

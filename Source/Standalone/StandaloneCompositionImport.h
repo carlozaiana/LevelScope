@@ -12,6 +12,7 @@ public:
     ~CompositionImportPanel() override;
     void resized() override;
     void cancel();
+    std::shared_ptr<JobControl> preparationControl() const;
 private:
     ProgrammeComposition recipe;
     Completion complete;

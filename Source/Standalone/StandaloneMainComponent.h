@@ -32,7 +32,7 @@ namespace levelscope::standalone
 class StandaloneMainComponent final : public juce::Component, private juce::Timer
 {
 public:
-    StandaloneMainComponent();
+    explicit StandaloneMainComponent(std::shared_ptr<OutputDeviceCatalog> = {}, OutputDeviceSettings = OutputDeviceSettings());
     ~StandaloneMainComponent() override;
     void requestClose (std::function<void()>);
 
@@ -41,6 +41,7 @@ public:
     bool keyPressed(const juce::KeyPress&) override;
 
 private:
+    friend struct PreparationFeedbackTestAccess;
     StandaloneSessionModel session;
     TimelineDivider comparisonDivider{"Comparison row height"},waveformDivider{"Waveform and inspector heights"};
     TimelineLayout timelineLayout;
@@ -97,7 +98,7 @@ private:
     bool canReplaceSession() const;
 
     StandaloneAudition audition;
-    StandaloneAudioPanel audioPanel { session, audition, [this] { refreshFromSession(); } };
+    StandaloneAudioPanel audioPanel;
     StandaloneVideoPanel videoPanel { session, audition };
     std::unique_ptr<juce::DocumentWindow> videoWindow;
     juce::TextButton videoButton { "Reference picture..." };
@@ -116,7 +117,10 @@ private:
     JobTicket analysisTicket;
     JobTicket importTicket;
     juce::File importingFile;
-    juce::Label jobLabel;
+    juce::Label jobLabel, jobDetail;
+    double jobFraction = -1;
+    juce::ProgressBar jobProgress { jobFraction };
+    void refreshJobFeedback();
     juce::TextButton cancelJobButton { "Cancel job" };
 
     juce::Label titleLabel;

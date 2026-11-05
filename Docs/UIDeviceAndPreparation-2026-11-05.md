@@ -114,3 +114,35 @@ If CoreAudio exposes ambiguous duplicate/suffixed names that cannot be joined sa
 to a unique device UID through JUCE's public interface, selection is refused with a
 request to give the devices unique names in Audio MIDI Setup and rescan. The app
 never guesses which same-named device to open.
+
+## Slice 2 implementation notes
+
+The fixed banner is directly below the main toolbar and above Original / Current /
+Target. It names source validation, Original or Current preparation/verification,
+measurement, and finalisation. Decoded sample checks, FLAC checksum, source identity,
+private-copy progress and private-copy identity checks publish their real per-pass
+coverage. Percentages are explicitly for the current file/pass (or programme during
+measurement), not an estimated percentage of all remaining work. Metadata checks and
+finalisation use an indeterminate indicator instead of a fabricated remaining time.
+File groups and composition imports expose their existing worker's feedback and
+cancellation to this same banner; their separate role/alignment confirmation remains.
+
+`JobFeedback` holds one coherent atomic stage/fraction snapshot. Worker-local children
+forward optional feedback to their parent, independently of the existing numeric job
+progress. Production retains no stage history or PCM. The banner polls on the existing
+UI timer; no feedback is sent to the audio callback. A test receiver observes/cancels
+at actual stage boundaries without time-sensitive sleeps or modifying the source.
+Feedback is enabled for import and analysis, not first-playback preparation.
+
+Cancel immediately shows that cancellation is pending, then the existing job ticket /
+revision checks discard late results. Preparation cancellation removes the owned copy;
+measurement cancellation retires incomplete waveform and loudness previews. The
+existing once-per-source automatic-analysis policy prevents a cancellation/retry loop.
+Manual Measure Source / Re-measure Current State remains explicit. Existing completed
+measurements retain their original authority while a repeat measurement is pending.
+
+The waveform budget, per-channel extrema/positions, measured loudness windows, gate
+classification and completion acceptance are unchanged. The source verification passes,
+measurement engine, proposal strategy, applied explanation, session format and export
+logic are unchanged. Normal build/cache identity checks still apply. The inherited
+completion pause remains visible as finalisation; it has not been fixed in this slice.

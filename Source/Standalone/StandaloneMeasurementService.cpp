@@ -32,6 +32,7 @@ AnalysisSnapshot measure (const ServiceContext& context, MeasurementDomain domai
                           std::unique_ptr<ProgrammeReader> reader, const juce::String& hash, bool applyProcessing, JobControl& control, ProcessedAudioObserver* observer,
                           measurement::PeakObserver* peaks = nullptr, WaveformProgress* preview = nullptr, LoudnessProgress* loudnessProgress = nullptr)
 {
+    control.reportPhase(JobPhase::measuring, 0);
     if (!reader) throw Failure { ErrorCode::decodeFailed, "Cannot decode complete verified programme" };
     auto loudness=loudnessProgress?loudnessProgress->begin(reader->lengthInSamples,int(reader->sampleRate)):nullptr;
 #if LEVELSCOPE_ENABLE_BOUNDED_TRUE_PEAK && defined(__APPLE__)
@@ -59,6 +60,7 @@ AnalysisSnapshot measure (const ServiceContext& context, MeasurementDomain domai
         {preview->unavailable();waveform.reset();}
         engine.push (audio.getArrayOfReadPointers(), count);
         frame += count;
+        control.reportPhase(JobPhase::measuring, double(frame) / reader->lengthInSamples);
         if(loudness)loudness->publish(frame);
         control.setProgress (0.5f + 0.49f * static_cast<float> (static_cast<double> (frame) / reader->lengthInSamples));
     }
@@ -66,6 +68,7 @@ AnalysisSnapshot measure (const ServiceContext& context, MeasurementDomain domai
     result.context = context; result.domain = domain; result.measuredContentHash = hash;
     result.measurementVersion = measurement::version;
     result.identity = OfflineAnalysisService::identityFor (context, domain, hash);
+    control.reportPhase(JobPhase::finalising);
     result.detail = engine.finish();
     if ((context.assembly || context.composition) && !context.sourceFilesMatch())
         throw Failure { ErrorCode::sourceChanged, "A programme member changed during measurement; result discarded" };

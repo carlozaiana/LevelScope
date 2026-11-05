@@ -94,7 +94,8 @@ juce::String measurementsText (const MeasurementSummary& summary)
 }
 // [BEGIN LS-STANDALONE-WORKFLOW-SHELL]
 
-StandaloneMainComponent::StandaloneMainComponent()
+StandaloneMainComponent::StandaloneMainComponent(std::shared_ptr<OutputDeviceCatalog> catalog, OutputDeviceSettings settings)
+    : audioPanel(session, audition, [this] { refreshFromSession(); }, {}, std::move(catalog), std::move(settings))
 {
     configureSessionControls();
     configureLabels();
@@ -129,11 +130,22 @@ StandaloneMainComponent::StandaloneMainComponent()
         videoWindow->setVisible (true); videoWindow->toFront (true);
     };
     addAndMakeVisible (jobLabel);
+    addAndMakeVisible (jobDetail);
+    addAndMakeVisible (jobProgress);
+    jobLabel.setComponentID("job-stage");jobDetail.setComponentID("job-detail");jobProgress.setComponentID("job-progress");
+    jobLabel.setFont(juce::Font(17.0f, juce::Font::bold));
+    jobProgress.setPercentageDisplay(false);
+    jobProgress.setColour(juce::ProgressBar::foregroundColourId, juce::Colour(0xff42b8c4));
     addAndMakeVisible (cancelJobButton);
     cancelJobButton.onClick = [this]
     {
-        session.job.requestCancel();
-        if (importControl) importControl->cancel.store (true);
+        if(programmePanel && programmePanel->preparationControl()) programmePanel->cancel();
+        else if(compositionPanel && compositionPanel->preparationControl()) compositionPanel->cancel();
+        else
+        {
+            session.job.requestCancel();
+            if (importControl) importControl->cancel.store (true);
+        }
         refreshFromSession();
     };
 
@@ -179,6 +191,7 @@ void StandaloneMainComponent::beginImport (const juce::File& file)
     importTicket = session.job.ticket;
     importingFile = file;
     importControl = std::make_shared<JobControl>();
+    importControl->feedback = std::make_shared<JobFeedback>();
     importResult = std::async (std::launch::async, [file, control = importControl]
     {
         try { return validateMedia (file, *control); }
@@ -286,10 +299,7 @@ void StandaloneMainComponent::timerCallback()
         importControl.reset();
         refreshFromSession();
     }
-    auto text = session.job.message;
-    if (session.job.isActive() && importControl)
-        text << "  " << juce::String (juce::roundToInt (100 * importControl->progress.load())) << "%";
-    jobLabel.setText (text, juce::dontSendNotification);
+    refreshJobFeedback();
     refreshSessionControls();
     refreshTimeline();
     if(!audition.active() && automaticSource.eligible(session))beginMeasurement(MeasurementDomain::source);
@@ -310,6 +320,7 @@ void StandaloneMainComponent::beginMeasurement (MeasurementDomain domain)
     context.ticket = analysisTicket;
     session.job.message = "Verifying source snapshot and measuring";
     importControl = std::make_shared<JobControl>();
+    importControl->feedback = std::make_shared<JobFeedback>();
     timeline.setWaveform({},false,{});
     analysisWaveformBinding=WaveformBinding::from(context,domain);
     auto preview=waveformCache.begin(analysisWaveformBinding);
@@ -574,7 +585,7 @@ void StandaloneMainComponent::refreshFromSession()
     chooseSourceButton.setEnabled (! session.job.isActive() && !session.persistenceLoading);
     targetProfileBox.setEnabled (!session.audioEditsBlocked() && !session.job.isActive());
     jobRequirementsPanel.refresh();
-    cancelJobButton.setEnabled (session.job.state == JobState::running);
+    refreshJobFeedback();
 
     initializeCurrentStateButton.setEnabled (! session.audioEditsBlocked() && ! session.job.isActive() && session.canInitializeCurrentStateFromSource());
     clearCurrentStateButton.setEnabled (! session.audioEditsBlocked() && ! session.job.isActive() && session.hasCurrentStateInitialized());
@@ -1054,6 +1065,34 @@ void StandaloneMainComponent::refreshTimeline()
     positionLabel.setText(juce::String(audition.positionSeconds(),3)+" s  ·  "+(audition.connected()?"Device open":"Device closed"),juce::dontSendNotification);
     positionLabel.setTooltip(audition.status());
 }
+void StandaloneMainComponent::refreshJobFeedback()
+{
+    auto control = session.job.isActive() ? importControl : nullptr;
+    bool nestedImport = false;
+    if(programmePanel && programmePanel->preparationControl()) { control = programmePanel->preparationControl(); nestedImport = true; }
+    else if(compositionPanel && compositionPanel->preparationControl()) { control = compositionPanel->preparationControl(); nestedImport = true; }
+    const bool cancelling = (control && control->isCancelled()) || (!nestedImport && session.job.state == JobState::cancelling);
+    const bool active = nestedImport || session.job.isActive();
+    const bool phased = control && control->feedback;
+    auto text = phased ? describeJobFeedback(control->feedback->snapshot(), !nestedImport && session.job.stage == JobStage::analysis,
+                                            analysisDomain == MeasurementDomain::currentState, cancelling)
+                       : JobFeedbackText {session.job.message, {}, active && control ? double(control->progress.load()) : -1};
+    if(!active && session.job.state == JobState::cancelled && (session.job.stage == JobStage::analysis || session.job.stage == JobStage::ingest))
+        text = {session.job.message, session.job.stage == JobStage::ingest ? "Previous source retained. Use Open Mix to retry import." : "No incomplete measurement accepted. Use Measure Source or Re-measure Current State when ready.", -1};
+    else if(!active && session.job.state == JobState::failed && (session.job.stage == JobStage::analysis || session.job.stage == JobStage::ingest))
+        text.detail = "No new completed measurement accepted. Review the reason above and retry when ready.";
+    else if(!active && (programmePanel || compositionPanel))
+        text = {"Import: review assignments and alignment", "Continue in the import window to confirm the programme, or cancel to keep the previous source.", -1};
+    else if(!active && session.sourceDocument.hasSource && !session.sourceDocument.layout.confirmed)
+        text = {"Source validated: confirm channel roles", "Open Audio setup to review the proposed channel order, then Confirm roles and analyse.", -1};
+    else if(!active && !session.sourceDocument.hasSource && session.job.state == JobState::idle)
+        text = {"Ready to import", "Open Mix to begin. Output connection is optional for offline analysis.", -1};
+    jobLabel.setText(text.title, juce::dontSendNotification);jobLabel.setTooltip(text.title);
+    jobDetail.setText(text.detail, juce::dontSendNotification);jobDetail.setTooltip(text.detail);
+    jobFraction = text.fraction;jobProgress.setVisible(active);
+    jobProgress.setTextToDisplay(jobFraction < 0 ? "Working..." : juce::String(juce::roundToInt(jobFraction * 100)) + (phased ? "% this pass" : "%"));
+    cancelJobButton.setEnabled(active && !cancelling);cancelJobButton.setButtonText(cancelling ? "Cancelling..." : "Cancel job");
+}
 void StandaloneMainComponent::resized()
 {
     auto bounds=getLocalBounds().reduced(16);
@@ -1061,6 +1100,10 @@ void StandaloneMainComponent::resized()
     openMixButton.setBounds(top.removeFromLeft(125).reduced(2));videoButton.setBounds(top.removeFromLeft(155).reduced(2));
     saveSessionButton.setBounds(top.removeFromLeft(115).reduced(2));toolsButton.setBounds(top.removeFromLeft(160).reduced(2));
     audioSetupButton.setBounds(top.removeFromRight(150).reduced(2));sessionStatus.setBounds(top.reduced(5,0));bounds.removeFromTop(7);
+    auto feedback = bounds.removeFromTop(56);
+    cancelJobButton.setBounds(feedback.removeFromRight(110).withSizeKeepingCentre(106,28));
+    auto progressArea = feedback.removeFromRight(165);jobProgress.setBounds(progressArea.reduced(8,18));
+    jobLabel.setBounds(feedback.removeFromTop(26));jobDetail.setBounds(feedback);
     jobRequirementsPanel.setBounds(bounds.removeFromTop(timelineLayout.comparison));comparisonDivider.setBounds(bounds.removeFromTop(TimelineLayout::dividerHeight));
     jobRequirementsPanel.informationLine().setBounds(bounds.removeFromTop(TimelineLayout::informationHeight));
     auto transport=bounds.removeFromTop(32);
@@ -1076,7 +1119,6 @@ void StandaloneMainComponent::resized()
     measureSourceButton.setBounds(processing.removeFromLeft(150).reduced(2));remeasureCurrentStateButton.setBounds(processing.removeFromLeft(190).reduced(2));
     currentGain.setBounds(processing.removeFromLeft(300).reduced(2));
     auto applicability=bottom.removeFromTop(26);buildWaveformButton.setBounds(applicability.removeFromRight(150));applicabilityConfirmation.setBounds(applicability);
-    auto statusRow=bottom.removeFromBottom(25);cancelJobButton.setBounds(statusRow.removeFromRight(110));jobLabel.setBounds(statusRow);
     pageDetailBox.setBounds(bottom.reduced(0,3));timeline.setBounds(bounds.reduced(0,4));
 }
 
