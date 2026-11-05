@@ -1,0 +1,50 @@
+{
+  "passed": true,
+  "os": "15.7.9",
+  "architecture": "arm64",
+  "candidate_identity_sha256": "680e68ff91c883f7659cf0dc743ba18be0d827e983cc2cad80bddfd95c3f36a7",
+  "build": "2c5187d1c6cd122903fc419347308421c54899a46a5e2175b8610012eb74e991",
+  "source_commit": "0a942b542a4c51824da19940f9500680e5a23c80",
+  "physical_devices_opened": false,
+  "groups": [
+    {
+      "name": "preparation",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-preparation-feedback-2026-11-05/candidate-01/bin/LevelScopePreparationFeedbackTests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-preparation-feedback-2026-11-05/sequoia/preparation-files"
+      ],
+      "returncode": 0,
+      "seconds": 2.61082725,
+      "passed": true,
+      "checks": 946
+    },
+    {
+      "name": "waveform",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-preparation-feedback-2026-11-05/candidate-01/bin/LevelScopeWaveformTests",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-preparation-feedback-2026-11-05/sequoia/waveform-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-preparation-feedback-2026-11-05/sequoia/waveform.json"
+      ],
+      "returncode": 0,
+      "seconds": 26.177050792000003,
+      "passed": true,
+      "checks": 1305
+    },
+    {
+      "name": "timeline",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-preparation-feedback-2026-11-05/candidate-01/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-preparation-feedback-2026-11-05/sequoia/timeline-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-preparation-feedback-2026-11-05/sequoia/timeline.json"
+      ],
+      "returncode": 0,
+      "seconds": 1.6787702919999994,
+      "passed": true,
+      "checks": 889
+    }
+  ]
+}

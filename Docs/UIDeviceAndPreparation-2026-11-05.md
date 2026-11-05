@@ -146,3 +146,62 @@ classification and completion acceptance are unchanged. The source verification 
 measurement engine, proposal strategy, applied explanation, session format and export
 logic are unchanged. Normal build/cache identity checks still apply. The inherited
 completion pause remains visible as finalisation; it has not been fixed in this slice.
+
+## Slice 2 review receipt
+
+Product/test commit: `0a942b542a4c51824da19940f9500680e5a23c80`.
+Measurement build: `2c5187d1c6cd122903fc419347308421c54899a46a5e2175b8610012eb74e991`.
+Preserved development app, including both slices:
+
+`/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-preparation-feedback-2026-11-05/candidate-01/LevelScope Standalone.app`
+
+Identical Golem candidate:
+`/Users/fuzz/LevelScope-UI-preparation-2026-11-05/candidate-01/LevelScope Standalone.app`.
+The source/artifact manifest and compiler configuration are beside each app. App and
+focused executables are universal arm64/x86_64, with Intel minimum macOS 10.13.
+
+| Focused group | Sequoia 15.7.9 arm64 | High Sierra 10.13.6 Intel |
+| --- | ---: | ---: |
+| Preparation feedback / cancellation / exact parity / main workflow | 946 passed | 946 passed |
+| Progressive waveform / measurement observer parity | 1,305 passed | 1,305 passed |
+| Timeline / progressive loudness / interaction | 889 passed | 889 passed |
+
+These are executed results from the frozen candidate on both actual operating
+systems. Preparation checks cancel inside copy, copy-hash, decoded validation,
+source-hash, FLAC checksum, measurement and finalisation. They verify owned-copy
+cleanup, untouched originals, no cancelled-result authority, no automatic retry loop,
+manual retry, stale completion rejection and initial Current's identical-Source origin.
+Stereo and 5.1 feedback-on/off comparisons exactly match all metrics and availability,
+per-channel sample/true peaks and positions, gates, percentiles, populations and every
+M/S/LRA window. The existing waveform suite also covers Current processing/transitions,
+assemblies/compositions, supported rates/channels, memory and display reduction.
+
+UI images verify the stage banner layout with staged progress; live worker preview
+coverage/authority is tested separately. Visual inspection on both Macs confirmed
+readable stage, per-pass percentage and cancellation. The finalisation indicator
+remains indeterminate. Candidate artifact hashes match before and after the runs.
+Evidence: `Tests/Reference/results/ui-preparation-feedback-2026-11-05/`.
+
+Manual checklist:
+
+1. Open Mix and choose an interleaved file or channel-file group. Watch the banner
+   immediately below the toolbar identify source validation and the current pass.
+   Channel roles and separate-file alignment still require their existing confirmation.
+2. Confirm roles and analyse. Watch preparation/copy/identity stages change to measurement.
+   Waveform and M/S curves appear progressively; Original and initial Current stay pending
+   until the accepted completed Source result exists. The banner identifies finalisation
+   separately from completion.
+3. On a sufficiently long file, Cancel during preparation. Confirm it visibly enters
+   Cancelling, returns without a completed measurement and does not restart itself.
+   Use Measure Source to retry; repeat cancellation during progressive measurement.
+4. Let a retry finish. Confirm both Original and untouched Current become ready and
+   Current retains its inspectable identical-Source measurement origin. Inspection and
+   timeline navigation do not start audition. Playback preparation feedback is unchanged.
+
+Review state: both slices are local on `codex/ui-device-preparation-m19`; neither is
+published or integrated into main. Prior M18/M19/Intel checkpoints and the original UI
+branch remain intact. No physical output opening/listening, new video qualification or
+long-duration rerun was performed. Reuse unchanged qualification; retain the separate
+source-reuse, project-owned audio, early-waveform, first-playback and completion-pause
+work items, and the later stereo monitoring design. Proposal strategy/audio quality
+remains the other chat's design-only assignment.
