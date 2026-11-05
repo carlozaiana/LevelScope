@@ -1,0 +1,27 @@
+M19 — LRA passages and measured selective-trim proposals — 2026-11-05
+
+Qualified checkpoint: a14c88e8a94412eb2e2536860aa7cbd79de0dd39
+Frozen candidate-02 product: cf275afb133118dd2a06e7bca59f82f98898b3cd
+Completed evidence: 33e2248cb119290aaa7f16e03bb31faffbbbd0f0
+Original design handover: b475134e9b7e8e2afe0f41ea3edca7c27a196aa6
+Source manifest SHA-256: 0cc78f242abc6b1b799c04c2154fa25fb58ca57be295af2e047866c7d0a431e7
+Measurement build: 993f26a9295201a87fedea54a60bc8ca57877e93bb8bebc11729ab5bf5d2af1a
+Universal app SHA-256: 4bab04604bce5e7137dfb103ef880dd127a6cb402844281473307775d1c42536
+Evidence manifest SHA-256: 2af6bbe6c31f8a439e625899cdf906723d51dff1614476f2d7ffa4fe5f665290
+Original completion receipt SHA-256: 7a456c8b05055105d532117f1f8ce8116531459d3cf22729f15e2598f119aa0d
+
+Actual arm64 Sequoia and Intel High Sierra qualification completed within the
+approved impact-selected scope. Candidate-01 numerical evidence is reused only
+under the recorded label-only candidate-02 equivalence; native candidate-02 UI
+and added 5.1 rate workflows were freshly tested. Exact cross-platform processing,
+independent Current verification, captured audition and finalized PCM24 checks pass.
+The user inspected all four stereo and 5.1 boundary files and reported them flawless.
+
+The cinema example honestly fails its selected 15 LU requirement; no Apply occurs.
+Full physical multichannel routing remains separate. Inherited completion-pause and
+occasional-picture-skip limitations remain; no new full-duration/video test is claimed.
+
+Includes Intel checkpoint c4eea6f1c4569ec4f31725694ddf34db8340f15e and preserved
+M18 main 51e47f300fcc38a386a5a92a7277029175cfab0c. All 23 earlier tag objects and
+targets are preserved. Both frozen packages and original evidence are unchanged.
+No rebuild: publication adds documentation and receipts, not product changes.

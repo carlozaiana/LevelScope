@@ -1,5 +1,59 @@
 # M19 checkpoint publication — 5 November 2026
 
+## Completed publication and integration
+
+Qualified M19 was published with explicit user authorization, and main fast-forwarded
+from M18. The earlier Intel optimisation is an ancestor and is now included in main.
+No product change, rebuild, repeated runtime qualification or device use was required.
+
+| Published identity | Value |
+| --- | --- |
+| Annotated tag | [`m19-lra-passages-2026-11-05`](https://github.com/carlozaiana/LevelScope/tree/m19-lra-passages-2026-11-05) |
+| Tag object | `38efad9937a3beecc05f2e2cfc73ddce758aed19` |
+| Checkpoint / initial integrated main | `a14c88e8a94412eb2e2536860aa7cbd79de0dd39` |
+| Development branch | `codex/m19-lra-passages` |
+| Tested candidate-02 product | `cf275afb133118dd2a06e7bca59f82f98898b3cd` |
+| Original qualification commit | `33e2248cb119290aaa7f16e03bb31faffbbbd0f0` |
+| Original reviewed design handover | `b475134e9b7e8e2afe0f41ea3edca7c27a196aa6` |
+| Final publication revision | The subsequent documentation-only commit containing this completed receipt, fast-forwarded on both main and the development branch; its exact hash is reported by Git history and the final direct-reference verification. The tag remains on the checkpoint above. |
+
+[Direct GitHub refs](remote-checkpoint.txt), [independent GitHub file read](github-checkpoint-file.json),
+[annotated tag text](tag-annotation.txt) and [preservation verification](checkpoint-verification.json)
+record the published checkpoint. All **23** pre-existing tag objects and peeled targets,
+and all unrelated remote branches, match the captured before state. The new annotated
+tag is the 24th. The isolated main checkout performed a normal fast-forward; no merge
+resolution, reset, forced update, branch deletion or worktree relocation occurred.
+
+Every one of the frozen candidate-02 manifest's **361 source files** matches the
+checkpoint's committed bytes. Its full Source/CMake tree matches tested commit
+`cf275af…`; later supplemental qualification helpers and documentation do not replace
+the tested executable. Candidate-01's **377** and candidate-02's **380** indexed frozen
+artifacts, their identity files, and all **199** indexed original evidence files verify
+unchanged. Original freeze-time `qualification_complete: false` and qualification-time
+`publication_authorized: false` fields retain their historical meaning; completed
+qualification and later user authorization are recorded separately.
+
+UI/video branch heads, indices, status and all inventoried non-Finder files remain
+unchanged. Untracked `.DS_Store` bytes changed in the logic, UI and integration folders
+during this operation; before/after hashes are recorded without assigning a cause.
+No publication command edits, commits, deletes or restores them. The video inventory
+is byte-identical. Frozen packages, original media, installations and audio settings
+were not modified. Golem was not accessed for publication.
+
+[The current handover and starter](../../../../Docs/ProjectIndex/69_ProposalStrategyAndAudioQualityHandover.md)
+now use the merged M19 baseline. The clarification about analytical/predictive rule
+design is documentation only; measured candidate, independent Current and finalized
+artifact remain authoritative. Device memory/reconnection, preparation feedback,
+verified-source reuse and project-owned audio remain separate work. The next Strategy
+and Audio Quality assignment starts with design and a bounded proposal, not implementation.
+
+The final receipt commit changes only documentation/publication evidence. Its exact
+main/branch identity and final remote verification are also retained locally in
+`build/m19-publication-2026-11-05/final-verification.json` and reported to the user.
+Embedding a commit's own hash in its own tree is not attempted.
+
+## Historical pre-publication preparation
+
 The user authorized publication of qualified candidate-02, its completed evidence
 and reviewed Strategy and Audio Quality handover, and main integration including
 the separately published Intel true-peak optimisation ancestor.

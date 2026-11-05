@@ -4,7 +4,10 @@
 timeline, progressive analysis and applied-history record are implemented, qualified
 and published in M18/main `51e47f300fcc38a386a5a92a7277029175cfab0c`.
 M19's marker-independent passage inspection and bounded measured selective-attenuation
-method are qualified and await publication/main approval; see [68](68_M19QualificationAndHandover.md).
+method are qualified, published and integrated into main as
+`m19-lra-passages-2026-11-05` / `a14c88e8a94412eb2e2536860aa7cbd79de0dd39`;
+see [68](68_M19QualificationAndHandover.md) and the subsequent documentation-only
+[publication receipt](../../Tests/Reference/results/m19-publication-2026-11-05/README.md).
 The old main-at-M13, unimplemented-M18 and combined-qualification-pending wording below
 is historical and superseded. General region editing, rolling LRA/cumulative IL,
 freezes, neighbour strategies and new DSP do not become implemented by that update.

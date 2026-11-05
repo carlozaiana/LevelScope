@@ -1,0 +1,107 @@
+{
+  "date": "2026-11-05",
+  "verified": true,
+  "checkpoint": "a14c88e8a94412eb2e2536860aa7cbd79de0dd39",
+  "tag": "m19-lra-passages-2026-11-05",
+  "tag_object": "38efad9937a3beecc05f2e2cfc73ddce758aed19",
+  "main": "a14c88e8a94412eb2e2536860aa7cbd79de0dd39",
+  "development_branch": "codex/m19-lra-passages",
+  "previous_main": "51e47f300fcc38a386a5a92a7277029175cfab0c",
+  "existing_tags_verified": 23,
+  "existing_tag_objects_and_targets_unchanged": true,
+  "other_remote_branches_unchanged": true,
+  "intel_checkpoint_included": true,
+  "product_source_matches_frozen_candidate_02": true,
+  "packages": {
+    "candidate-01": {
+      "identity_sha256": "457e60e3daebd3b4c4a28829a6b8c3755c419fc4a82c12f519f1e92ea8d5d398",
+      "source_commit": "2da3ac4ccb03a75976403c03bbc3461d00639752",
+      "source_manifest_sha256": "4cfde8ef7436d066e3c7d0e070db9158778d7dceed20afdfefbd94b641523b2d",
+      "artifact_count_verified": 377,
+      "source_file_count": 358,
+      "app_executable_sha256": "d9429446212fc299ee0efeafe4992676d635b78acd2bc73e632000971d292901"
+    },
+    "candidate-02": {
+      "identity_sha256": "9e4f99eb1fe404314e867ee772a309506f12f8fb6d80d5123583d711eceaafb8",
+      "source_commit": "cf275afb133118dd2a06e7bca59f82f98898b3cd",
+      "source_manifest_sha256": "0cc78f242abc6b1b799c04c2154fa25fb58ca57be295af2e047866c7d0a431e7",
+      "artifact_count_verified": 380,
+      "source_file_count": 361,
+      "app_executable_sha256": "4bab04604bce5e7137dfb103ef880dd127a6cb402844281473307775d1c42536"
+    }
+  },
+  "qualification_evidence_files_unchanged": 199,
+  "evidence_manifest_sha256": "2af6bbe6c31f8a439e625899cdf906723d51dff1614476f2d7ffa4fe5f665290",
+  "original_completion_sha256": "7a456c8b05055105d532117f1f8ce8116531459d3cf22729f15e2598f119aa0d",
+  "worktrees": {
+    "ui": {
+      "head": "51e47f300fcc38a386a5a92a7277029175cfab0c",
+      "branch": "codex/ui-timeline-m18",
+      "index_status_and_non_finder_files_unchanged": true,
+      "files_checked": 5401
+    },
+    "video": {
+      "head": "5e07bbd29930db34236d6dfcede7fea14983f90a",
+      "branch": "codex/video-implementation",
+      "index_status_and_non_finder_files_unchanged": true,
+      "files_checked": 1839
+    },
+    "logic": {
+      "finder_files_left_unmodified_by_publication_commands": true,
+      "finder_files_checked": 9
+    },
+    "integration": {
+      "finder_files_left_unmodified_by_publication_commands": true,
+      "finder_files_checked": 2
+    }
+  },
+  "ambient_finder_metadata_changes": [
+    {
+      "worktree": "ui",
+      "path": ".DS_Store",
+      "before": "ec53381fe30d097836326cd0ef38c80d62372c4f3624bfcb66f538646101b2d0",
+      "after": "132226a189552946fe6bcc74ddbeae9c69ae59a6b1a98ccd33f4ff3ac0335845"
+    },
+    {
+      "worktree": "logic",
+      "path": ".DS_Store",
+      "before": "05b9c6fd194713e0a85911f47a61cda7e06f8f37d1f2cda3606de9b3031e2220",
+      "after": "e321e151fd1f2de946146df7323b1342e54845cba46cf884d572f7064f600585"
+    },
+    {
+      "worktree": "logic",
+      "path": "Docs/.DS_Store",
+      "before": "a573dab88a939337847feeef6de9be2dba46279bebee59a66f4f986f48a41b1c",
+      "after": "4a57b93fadd960da0e90f5d22fb3d6d8667c1f1226add8316c3f6c560d624a75"
+    },
+    {
+      "worktree": "logic",
+      "path": "Tests/.DS_Store",
+      "before": "eb3c99ae1a8840b6fe41ceacf0e7bc6f1d6ce1d825f68f78a3139828471d381f",
+      "after": "57d2a2ca0c3e1c72771f9a63bbd4084d795be6488972229d693403b2878bfe01"
+    },
+    {
+      "worktree": "logic",
+      "path": "Tests/Reference/.DS_Store",
+      "before": "5cdacd18c8e87ea65fc1b422c7394566143b3597212c6049a734dca4500e4280",
+      "after": "e6c228ab8672b41239c9fda0939240f6a5fd3d9060ccb2094ba14dc6d92a8c58"
+    },
+    {
+      "worktree": "integration",
+      "path": ".DS_Store",
+      "before": "a6f0fda89b98134a01567180270ceac1f62a968317f5de474c834fff63d5cbd0",
+      "after": "120bbe90aacaaf76b992173381c4d4c75be2def7ffd05358db9e66e6a78cad40"
+    },
+    {
+      "worktree": "integration",
+      "path": "Tests/.DS_Store",
+      "before": "e368771bb96e4c3c23f6cb832d65b23e0beded45fdb6226161f45ef17572444a",
+      "after": "fc7203b8e5a4e470b98e683b8acf73370ef13e533f638e202879dfacb1400cd8"
+    }
+  ],
+  "finder_note": "Untracked Finder metadata changed during the operation; no publication command edits, commits, removes or restores these files. Changes are recorded without attributing their cause.",
+  "rebuilt": false,
+  "runtime_tests_repeated": false,
+  "devices_opened": false,
+  "remote_refs_sha256": "e93837cfc94a972a58c9555377f23aea6f768d211350c71408552ddd5eb0e39c"
+}

@@ -1,5 +1,15 @@
 # M19 — implementation and qualification handover
 
+**Publication update, 5 November 2026:** the user subsequently approved publication.
+Checkpoint [`m19-lra-passages-2026-11-05`](https://github.com/carlozaiana/LevelScope/tree/m19-lra-passages-2026-11-05)
+targets `a14c88e8a94412eb2e2536860aa7cbd79de0dd39` and is included in main, together
+with the Intel optimisation. The [documentation-only publication receipt](../../Tests/Reference/results/m19-publication-2026-11-05/README.md)
+records exact refs and preservation checks. The original qualification-time status
+and candidate identities below are retained as historical evidence, not current
+publication restrictions. No rebuild or product change occurred during publication.
+
+## Original qualification-time handover
+
 5 November 2026. **Candidate-02 meets the approved impact-selected M19 qualification
 scope on actual Sequoia and High Sierra; the coordinated boundary listening and
 user file-inspection review is complete. Ready for checkpoint review.** No M19 tag, push or main merge

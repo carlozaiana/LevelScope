@@ -1,30 +1,34 @@
 # Proposal Strategy and Audio Quality — post-M19 design handover
 
 5 November 2026. **Design and analysis only.** The user approved the development
-approach below and this documentation handover. M19 publication and main integration
-were subsequently authorized and are being prepared as `m19-lra-passages-2026-11-05`.
+approach below and this documentation handover. Qualified M19 is published and integrated
+into main as `m19-lra-passages-2026-11-05`, checkpoint
+`a14c88e8a94412eb2e2536860aa7cbd79de0dd39`.
 That authorization does not extend to new DSP, strategy implementation or test work.
 The next design chat's first deliverable remains a bounded proposal for review.
 
 ## Starting point and ownership
 
 Use the existing logic checkout `/Users/fuzz/Developer/LevelScope`, branch
-`codex/m19-lra-passages`, for reading these documents and implementation. Do not
-start from the older main and mistake missing M19 code for unfinished implementation.
+`codex/m19-lra-passages`, for reading these documents and implementation. Published
+main now includes M19 and the Intel optimisation. Use the M19 checkpoint as the
+product baseline and its subsequent documentation-only publication receipt for current
+handover text; neither publication revision is a replacement tested binary.
 No new checkout is necessary for this design assignment. Do not edit the separate
 UI or video worktrees. Coordinate shared specification edits rather than concurrently
 modifying implementation owned by another chat.
 
 | Identity | Exact revision/status |
 | --- | --- |
-| Qualified published main | `51e47f300fcc38a386a5a92a7277029175cfab0c` — M18, unchanged |
+| Published M19 checkpoint / main integration | `m19-lra-passages-2026-11-05`, target `a14c88e8a94412eb2e2536860aa7cbd79de0dd39`; subsequent documentation-only receipt on main records remote verification |
+| Previous main | `51e47f300fcc38a386a5a92a7277029175cfab0c` — M18, preserved ancestor |
 | M18 checkpoint | `m18-interactive-timeline-2026-11-03`, target `a9550d9d43ed70fde4c73f90e44081a706d30a67` |
 | Published Intel optimisation | `intel-multicore-true-peak-2026-11-05`, target `c4eea6f1c4569ec4f31725694ddf34db8340f15e`; receipt `09c8b8f6345c7c889f21f5399a38284ce1d353b2` |
 | M19 candidate-01 product | `2da3ac4ccb03a75976403c03bbc3461d00639752` — original numerical qualification |
 | M19 candidate-02 tested product | `cf275afb133118dd2a06e7bca59f82f98898b3cd` — corrected preview legend, same numerical implementation |
 | M19 qualification/review documentation | `33e2248cb119290aaa7f16e03bb31faffbbbd0f0` — final evidence, supplemental helpers, completed listening review; no later product change |
 | Original design handover | `b475134e9b7e8e2afe0f41ea3edca7c27a196aa6` — documentation-only continuation, not a new tested binary |
-| Publication boundary | User authorized M19 publication and main integration after readiness review; preparation in progress. Preserve all 23 pre-existing checkpoint tag objects and targets. |
+| Publication receipt | [Verified publication and preservation](../../Tests/Reference/results/m19-publication-2026-11-05/README.md); all 23 pre-existing tag objects and targets preserved. No next implementation is authorized. |
 
 Frozen candidate-02 source-manifest SHA-256:
 `0cc78f242abc6b1b799c04c2154fa25fb58ca57be295af2e047866c7d0a431e7`.
@@ -399,12 +403,14 @@ routing, immersive expansion, VST3 parity and new dialogue objectives stay separ
 
 > Please begin the dedicated **Proposal Strategy and Audio Quality** design chat.
 > Read `/Users/fuzz/Developer/LevelScope/Docs/ProjectIndex/69_ProposalStrategyAndAudioQualityHandover.md`
-> and its reading order. M19 candidate-02 is qualified within its approved scope:
+> and its reading order. Start from published M19 checkpoint
+> `m19-lra-passages-2026-11-05` / `a14c88e8a94412eb2e2536860aa7cbd79de0dd39`,
+> now included in main, with the subsequent documentation-only publication receipt.
+> M19 candidate-02 is qualified within its approved scope:
 > tested product `cf275afb133118dd2a06e7bca59f82f98898b3cd`, qualification/review commit
 > `33e2248cb119290aaa7f16e03bb31faffbbbd0f0`, branch `codex/m19-lra-passages`.
-> Use the subsequent documentation-only handover revision on that branch; do not
-> treat it as a new tested binary. Main remains M18 `51e47f300fcc38a386a5a92a7277029175cfab0c`;
-> publication/main integration of M19 remains a separate decision.
+> The publication and handover commits preserve that tested implementation and original
+> frozen app; they are not new tested binaries. The Intel optimisation is also in main.
 >
 > Review the actual M19 success, policy-limited cinema and gate-crossing results.
 > Develop each processing capability alongside its first useful proposal method in

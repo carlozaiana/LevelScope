@@ -1,8 +1,11 @@
 # LevelScope — Proposal Engine Specification v2
 
-Current entry point — 5 November 2026: **M18 is published on main; M19 candidate-02
-is qualified within its approved impact-selected scope; publication and main integration
-are now authorized and being prepared.** Read [69 — Proposal Strategy and Audio Quality handover](ProjectIndex/69_ProposalStrategyAndAudioQualityHandover.md),
+Current entry point — 5 November 2026: **M19 candidate-02 is qualified within its
+approved impact-selected scope, published and integrated into main**, including the
+Intel true-peak optimisation. Checkpoint `m19-lra-passages-2026-11-05` targets
+`a14c88e8a94412eb2e2536860aa7cbd79de0dd39`; the subsequent documentation-only
+[publication receipt](../Tests/Reference/results/m19-publication-2026-11-05/README.md)
+records verification. Read [69 — Proposal Strategy and Audio Quality handover](ProjectIndex/69_ProposalStrategyAndAudioQualityHandover.md),
 [66 — exact M19 method](ProjectIndex/66_M19LraPassagesAndMeasuredCandidates.md), and
 [68 — qualification](ProjectIndex/68_M19QualificationAndHandover.md).
 Section 8.4 and the current part of section 22 record the approved development approach.
@@ -26,8 +29,9 @@ bounded section-led method; future capabilities below are not M13 scope.
 M13-specific defaults and dated M14–M17 status below remain historical. M16 replaced
 the fixed eight-section limit with configurable connected-region accounting and no
 count restriction by default; M17 added job requirements; M18 implemented the bounded
-timeline/history slice and completed combined qualification. Main is now M18 commit
-`51e47f300fcc38a386a5a92a7277029175cfab0c`, not M13. M19 supplies the separately versioned
+timeline/history slice and completed combined qualification. Main includes the M19
+checkpoint above, preserving M18 `51e47f300fcc38a386a5a92a7277029175cfab0c` as an ancestor.
+M19 supplies the separately versioned
 selective-LRA method; it does not implement every future capability in this specification.
 
 ---
@@ -718,9 +722,8 @@ Retain synthetic success cases and eventual coordinated listening review.
 
 ### Current sequence — 5 November 2026
 
-M14–M18 are included in qualified published M18/main. M19's bounded passage analysis
-and selective attenuation are implemented and qualified, with publication/integration
-pending separate approval. The former “after M18, no later than M19” combined runtime
+M14–M18 and M19's bounded passage analysis/selective attenuation are implemented,
+qualified and included in published main. The former “after M18, no later than M19” combined runtime
 deferral has been discharged; it is not a current exemption for new processors.
 
 Next, the dedicated Strategy and Audio Quality chat reviews M19 evidence and proposes

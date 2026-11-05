@@ -1,0 +1,17 @@
+{
+  "date": "2026-11-05",
+  "request": {
+    "repository_full_name": "carlozaiana/LevelScope",
+    "path": "Tests/Reference/results/m19-publication-2026-11-05/preflight.json",
+    "ref": "m19-lra-passages-2026-11-05",
+    "start_line": 1,
+    "end_line": 16
+  },
+  "response": {
+    "content": "{\n  \"date\": \"2026-11-05\",\n  \"reviewed_head\": \"b475134e9b7e8e2afe0f41ea3edca7c27a196aa6\",\n  \"branch\": \"codex/m19-lra-passages\",\n  \"tag_planned\": \"m19-lra-passages-2026-11-05\",\n  \"remote_main\": \"51e47f300fcc38a386a5a92a7277029175cfab0c\",\n  \"main_is_ancestor\": true,\n  \"intel_checkpoint_is_ancestor\": true,\n  \"existing_tag_count\": 23,\n  \"existing_tags_match_remote\": true,\n  \"candidates\": {\n    \"candidate-01\": {\n      \"source_commit\": \"2da3ac4ccb03a75976403c03bbc3461d00639752\",\n      \"source_manifest_sha256\": \"4cfde8ef7436d066e3c7d0e070db9158778d7dceed20afdfefbd94b641523b2d\",\n      \"identity_sha256\": \"457e60e3daebd3b4c4a28829a6b8c3755c419fc4a82c12f519f1e92ea8d5d398\",\n      \"build\": \"0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e\",",
+    "encoding": "utf-8",
+    "sha": "e64ec973972280df0ac0bee8cf4daab4a05cef2d",
+    "display_url": "https://github.com/carlozaiana/LevelScope/blob/m19-lra-passages-2026-11-05/Tests/Reference/results/m19-publication-2026-11-05/preflight.json",
+    "display_title": "preflight.json"
+  }
+}

@@ -1,5 +1,25 @@
 # Development workflow and video checkpoint locations
 
+## Current registered workspaces — 5 November 2026
+
+Qualified M19 and the Intel true-peak optimisation are published and integrated into
+main at checkpoint `m19-lra-passages-2026-11-05` /
+`a14c88e8a94412eb2e2536860aa7cbd79de0dd39`, followed by the documentation-only
+[publication receipt](../../Tests/Reference/results/m19-publication-2026-11-05/README.md).
+Use [69 — current strategy handover](69_ProposalStrategyAndAudioQualityHandover.md)
+for the next design-only assignment. No new implementation is approved there.
+
+- Logic: `/Users/fuzz/Developer/LevelScope`, `codex/m19-lra-passages`.
+- UI: `/Users/fuzz/.codex/worktrees/a411/LevelScope`, `codex/ui-timeline-m18`.
+- Existing isolated main integration worktree:
+  `/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-publication-2026-11-03/integration`.
+- Video: `/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation`,
+  `codex/video-implementation`.
+
+These are existing registered worktrees, not instructions to create, move or replace
+them. UI/video working copies remain unchanged. Earlier dated setup/status sections
+below are historical; their proposed locations and main-at-M13 status are superseded.
+
 ## M18 UI/Timeline handover — 30 October 2026
 
 [64 — dedicated UI/Timeline handover](64_M18UITimelineHandover.md) proposes a new
