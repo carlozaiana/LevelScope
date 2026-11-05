@@ -34,7 +34,7 @@ AnalysisSnapshot measure (const ServiceContext& context, MeasurementDomain domai
 {
     if (!reader) throw Failure { ErrorCode::decodeFailed, "Cannot decode complete verified programme" };
     auto loudness=loudnessProgress?loudnessProgress->begin(reader->lengthInSamples,int(reader->sampleRate)):nullptr;
-#if LEVELSCOPE_ENABLE_BOUNDED_TRUE_PEAK && defined(__APPLE__) && defined(__aarch64__)
+#if LEVELSCOPE_ENABLE_BOUNDED_TRUE_PEAK && defined(__APPLE__)
     constexpr auto peakExecution = measurement::PeakExecution::boundedChannels;
 #else
     constexpr auto peakExecution = measurement::PeakExecution::serial;

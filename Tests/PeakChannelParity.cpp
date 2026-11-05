@@ -115,6 +115,9 @@ void pair(int rate, const std::vector<Role>& roles, int frames, bool silence,
         if(!allowConcurrent)
             check(left.sequence==right.sequence && std::none_of(right.offCaller.begin(),right.offCaller.end(),[](bool x){return x;}),
                   "legacy observer callback order and thread");
+        if(roles.size()!=2 && roles.size()!=6)
+            check(std::none_of(right.offCaller.begin(),right.offCaller.end(),[](bool x){return x;}),
+                  "mono and other layouts retain serial execution");
     }
 }
 void failures()
