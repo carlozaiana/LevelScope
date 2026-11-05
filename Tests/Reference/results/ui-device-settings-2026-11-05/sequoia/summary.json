@@ -1,0 +1,60 @@
+{
+  "passed": true,
+  "os": "15.7.9",
+  "architecture": "arm64",
+  "candidate_identity_sha256": "4b53d5d9c36052aaaf31e69ed53ca973257dcd2a103d91ae868cc97b225b0c13",
+  "build": "935fcf7c38de1ac1bc2240d07e7281d24c6f17f179c6e75c2b0a20615ee42dcc",
+  "source_commit": "55e5cd1603ed4b6366b244fed12895d48e90099b",
+  "physical_devices_opened": false,
+  "groups": [
+    {
+      "name": "devices",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-device-settings-2026-11-05/candidate-01/bin/LevelScopeDeviceSettingsTests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-device-settings-2026-11-05/sequoia-02/device-files"
+      ],
+      "returncode": 0,
+      "seconds": 0.935739292,
+      "passed": true,
+      "checks": 170
+    },
+    {
+      "name": "audition",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-device-settings-2026-11-05/candidate-01/bin/LevelScopeAuditionTests",
+        "--report",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-device-settings-2026-11-05/sequoia-02/audition.json"
+      ],
+      "returncode": 0,
+      "seconds": 28.344302041,
+      "passed": true,
+      "checks": 4059
+    },
+    {
+      "name": "timeline",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-device-settings-2026-11-05/candidate-01/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-device-settings-2026-11-05/sequoia-02/timeline-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-device-settings-2026-11-05/sequoia-02/timeline.json"
+      ],
+      "returncode": 0,
+      "seconds": 2.4063617499999985,
+      "passed": true,
+      "checks": 889
+    },
+    {
+      "name": "session-playback",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-device-settings-2026-11-05/candidate-01/bin/LevelScopeSessionPlaybackTests",
+        "--report",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-device-settings-2026-11-05/sequoia-02/session-playback.json"
+      ],
+      "returncode": 0,
+      "seconds": 3.5691821249999975,
+      "passed": true,
+      "checks": 1820
+    }
+  ]
+}

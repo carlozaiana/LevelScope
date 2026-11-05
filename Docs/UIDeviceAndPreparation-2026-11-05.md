@@ -59,3 +59,58 @@ remain separate. No new DSP, proposal method, measurement, history or export beh
 
 Each slice receives its own exact commit, preserved test build, focused results and
 manual checklist before publication review.
+
+## Slice 1 review receipt
+
+Product/test commit: `55e5cd1603ed4b6366b244fed12895d48e90099b`.
+Measurement build: `935fcf7c38de1ac1bc2240d07e7281d24c6f17f179c6e75c2b0a20615ee42dcc`.
+Preserved development app (do not rebuild over it):
+
+`/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-device-settings-2026-11-05/candidate-01/LevelScope Standalone.app`
+
+Identical Golem candidate:
+`/Users/fuzz/LevelScope-UI-device-2026-11-05/candidate-01/LevelScope Standalone.app`.
+Both packages contain the source snapshot, exact binary/source SHA-256 manifest,
+compiler configuration and universal test executables. Intel deployment minimum is
+10.13; the same frozen executables ran on actual 10.13.6, not only under Rosetta.
+
+| Focused group | Sequoia 15.7.9 arm64 | High Sierra 10.13.6 Intel |
+| --- | ---: | ---: |
+| Device persistence / reconnection / safety | 170 passed | 171 passed |
+| Injected audition | 4,059 passed | 4,059 passed |
+| Timeline / roles / interaction | 889 passed | 889 passed |
+| Session playback lifecycle / reopen | 1,820 passed | 1,820 passed |
+
+Device counts differ only because read-only native catalog enumeration has one
+check per visible output. All opens/playback in these suites use injected devices.
+No physical output was opened, no audible test performed, and no system default,
+Pro40, installation or driver changed. Hashes were checked before and after testing.
+The first sandboxed local audition attempt could not create its existing JUCE-owned
+temporary directory; that failed attempt is retained separately. The unchanged
+candidate passed with the required temporary-directory access. There was no product
+failure or fix between the two attempts.
+
+Evidence: `Tests/Reference/results/ui-device-settings-2026-11-05/`, including the
+candidate identity, both host summaries, full focused checks and rendered Audio setup.
+Unchanged M19/Intel measurement, proposal, history, export, long-duration and video
+qualification is reused; this receipt does not claim new physical routing coverage.
+
+Manual checklist (user-coordinated hardware use):
+
+1. Open Audio setup. Automatic reconnect starts off. Select an interface, import a
+   mix and confirm roles. Once validation supplies its rate, the selected output
+   connects, transport stays stopped, monitor is −30 dB and all routes are muted.
+2. Restart with the preference off: the last successful interface is selected but
+   disconnected. Connect explicitly. Enable the preference and restart/import:
+   compatible remembered output reconnects, still stopped and muted.
+3. Disconnect, then open another project or import another rate. Automatic connection
+   remains paused until restart; explicit Connect is available. With automatic
+   reconnect off, a changed incompatible rate disconnects and waits for Connect.
+4. With the remembered interface absent or an incompatible rate, inspect the reason;
+   confirm there is no substituted output and offline analysis remains available.
+   Reopen a saved project and verify its speaker roles are retained independently.
+
+If CoreAudio exposes ambiguous duplicate/suffixed names that cannot be joined safely
+to a unique device UID through JUCE's public interface, selection is refused with a
+request to give the devices unique names in Audio MIDI Setup and rescan. The app
+never guesses which same-named device to open.

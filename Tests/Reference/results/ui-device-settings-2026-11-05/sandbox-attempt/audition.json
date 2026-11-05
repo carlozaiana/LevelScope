@@ -1,0 +1,1 @@
+{"suite": "M6 verified audition", "passed": false, "checks": [{"name": "create owned fixture directory", "passed": false}], "sample_cases": [], "build": "935fcf7c38de1ac1bc2240d07e7281d24c6f17f179c6e75c2b0a20615ee42dcc", "long_programme": null, "architecture": "arm64"}

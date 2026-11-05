@@ -1,0 +1,60 @@
+{
+  "passed": true,
+  "os": "10.13.6",
+  "architecture": "x86_64",
+  "candidate_identity_sha256": "4b53d5d9c36052aaaf31e69ed53ca973257dcd2a103d91ae868cc97b225b0c13",
+  "build": "935fcf7c38de1ac1bc2240d07e7281d24c6f17f179c6e75c2b0a20615ee42dcc",
+  "source_commit": "55e5cd1603ed4b6366b244fed12895d48e90099b",
+  "physical_devices_opened": false,
+  "groups": [
+    {
+      "name": "devices",
+      "command": [
+        "/Users/fuzz/LevelScope-UI-device-2026-11-05/candidate-01/bin/LevelScopeDeviceSettingsTests",
+        "/Users/fuzz/LevelScope-UI-device-2026-11-05/high-sierra/device-files"
+      ],
+      "returncode": 0,
+      "seconds": 1.077190155,
+      "passed": true,
+      "checks": 171
+    },
+    {
+      "name": "audition",
+      "command": [
+        "/Users/fuzz/LevelScope-UI-device-2026-11-05/candidate-01/bin/LevelScopeAuditionTests",
+        "--report",
+        "/Users/fuzz/LevelScope-UI-device-2026-11-05/high-sierra/audition.json"
+      ],
+      "returncode": 0,
+      "seconds": 62.647258544,
+      "passed": true,
+      "checks": 4059
+    },
+    {
+      "name": "timeline",
+      "command": [
+        "/Users/fuzz/LevelScope-UI-device-2026-11-05/candidate-01/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/LevelScope-UI-device-2026-11-05/high-sierra/timeline-files",
+        "--output",
+        "/Users/fuzz/LevelScope-UI-device-2026-11-05/high-sierra/timeline.json"
+      ],
+      "returncode": 0,
+      "seconds": 2.1070169130000096,
+      "passed": true,
+      "checks": 889
+    },
+    {
+      "name": "session-playback",
+      "command": [
+        "/Users/fuzz/LevelScope-UI-device-2026-11-05/candidate-01/bin/LevelScopeSessionPlaybackTests",
+        "--report",
+        "/Users/fuzz/LevelScope-UI-device-2026-11-05/high-sierra/session-playback.json"
+      ],
+      "returncode": 0,
+      "seconds": 11.490777183000006,
+      "passed": true,
+      "checks": 1820
+    }
+  ]
+}

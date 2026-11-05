@@ -1,0 +1,34 @@
+{
+  "passed": false,
+  "os": "15.7.9",
+  "architecture": "arm64",
+  "candidate_identity_sha256": "4b53d5d9c36052aaaf31e69ed53ca973257dcd2a103d91ae868cc97b225b0c13",
+  "build": "935fcf7c38de1ac1bc2240d07e7281d24c6f17f179c6e75c2b0a20615ee42dcc",
+  "source_commit": "55e5cd1603ed4b6366b244fed12895d48e90099b",
+  "physical_devices_opened": false,
+  "groups": [
+    {
+      "name": "devices",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-device-settings-2026-11-05/candidate-01/bin/LevelScopeDeviceSettingsTests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-device-settings-2026-11-05/sequoia/device-files"
+      ],
+      "returncode": 0,
+      "seconds": 0.654970791,
+      "passed": true,
+      "checks": 167
+    },
+    {
+      "name": "audition",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-device-settings-2026-11-05/candidate-01/bin/LevelScopeAuditionTests",
+        "--report",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-device-settings-2026-11-05/sequoia/audition.json"
+      ],
+      "returncode": 1,
+      "seconds": 0.445610167,
+      "passed": false,
+      "checks": 1
+    }
+  ]
+}
