@@ -220,6 +220,8 @@ add_library(LevelScopeStandaloneSupport STATIC
     Source/Core/Proposal/Methods/RuleBasedMethod.cpp
     Source/Core/Proposal/SectionPeakMap.cpp
     Source/Core/Proposal/Methods/SectionTrimMethod.cpp
+    Source/Core/Proposal/LraPassages.cpp
+    Source/Standalone/StandaloneLraProposal.cpp
     Source/Standalone/StandaloneSectionProposal.cpp
     Source/Standalone/AppliedProposalExplanation.cpp
     Source/Standalone/AppliedProposalSerialization.cpp
@@ -272,6 +274,7 @@ add_library(LevelScopeDiagnosticsUI STATIC
     Source/Standalone/MeasurementTimeline.cpp
     Source/Standalone/TimelineGainLane.cpp
     Source/Standalone/ProposalWorkflowPanel.cpp
+    Source/Standalone/LraPassagesPanel.cpp
     Source/Standalone/StandaloneDiagnosticsPanel.cpp)
 target_link_libraries(LevelScopeDiagnosticsUI PUBLIC LevelScopeStandaloneSupport juce::juce_gui_basics)
 
@@ -548,6 +551,16 @@ if(LEVELSCOPE_BUILD_MARKER_TESTS)
 endif()
 
 option(LEVELSCOPE_BUILD_JOB_REQUIREMENTS_TESTS "Build M17 job requirements/presets checks" OFF)
+option(LEVELSCOPE_BUILD_LRA_PROPOSAL_TESTS "Build M19 bounded LRA proposal checks" OFF)
+if(LEVELSCOPE_BUILD_LRA_PROPOSAL_TESTS)
+    juce_add_console_app(LevelScopeLraProposalTests PRODUCT_NAME "LevelScope LRA Proposal Tests")
+    target_sources(LevelScopeLraProposalTests PRIVATE Tests/LraProposalTests.cpp)
+    target_compile_definitions(LevelScopeLraProposalTests PRIVATE JUCE_MODAL_LOOPS_PERMITTED=1)
+    if(NOT MSVC)
+        target_compile_options(LevelScopeLraProposalTests PRIVATE -fno-fast-math -ffp-contract=off)
+    endif()
+    target_link_libraries(LevelScopeLraProposalTests PRIVATE LevelScopeDiagnosticsUI juce::juce_gui_basics)
+endif()
 if(LEVELSCOPE_BUILD_JOB_REQUIREMENTS_TESTS)
     juce_add_console_app(LevelScopeJobRequirementsTests PRODUCT_NAME "LevelScope Job Requirements Tests")
     target_sources(LevelScopeJobRequirementsTests PRIVATE Tests/JobRequirementsTests.cpp)

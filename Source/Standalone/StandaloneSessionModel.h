@@ -446,6 +446,13 @@ public:
                     getSelectedTargetProfile(),programmeApplicability).verdict!=proposal::Verdict::pass)return false;
             currentStateDocument.sectionGains=c.processing.sectionGains;
             currentStateDocument.sectionGainAnnotations=sectionDocument.map();
+            if(accepted->methodVersion()==proposal::lraTrimMethodVersion&&c.processing.sectionGains)
+            {
+                // Processing geometry is independent of editorial annotations.
+                auto& provenance=currentStateDocument.sectionGainAnnotations;provenance.sections.clear();provenance.nextId=1;
+                for(const auto& row:c.processing.sectionGains->intervals)
+                    provenance.sections.push_back({provenance.nextId++,row.begin,row.end,"Applied LRA processing interval"});
+            }
             currentStateDocument.staticGainDb=c.processing.staticGainDb;
             invalidateCurrentProcessing();
         }

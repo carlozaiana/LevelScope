@@ -157,7 +157,7 @@ void sessionTests(const juce::File& root,StandaloneSessionModel& s)
     expect(s.evaluation(MeasurementDomain::currentState).verdict==Verdict::fail&&!s.acceptSectionProposal(*noChange.value),"old completion rejected and strict rule fails without remeasurement");
     expect(ex::readiness(ex::capture(s)).isNotEmpty(),"LRA failure blocks audio export");
     auto report=ex::report(ex::capture(s));expect(!report.hasProperty("artifact")&&report["current"]["evaluation"]["verdict"].toString()=="FAIL","measurement-only report exposes actual failure without artifact");
-    auto unsupported=generateSectionProposal(s.sectionProposalRequest(),control);expect(unsupported.value&&(*unsupported.value)->status()==SectionProposalStatus::unavailable&&(*unsupported.value)->passes()==0,"selected unmet requirements generate no private correction passes");
+    auto bounded=generateSectionProposal(s.sectionProposalRequest(),control);expect(bounded.value&&(*bounded.value)->status()==SectionProposalStatus::noSolution&&(*bounded.value)->passes()==0&&(*bounded.value)->text().contains("Policy:"),"M19 broad high population cannot bypass duration policy for strict zero LRA; no private pass");
     r.maximumLraTenths=1000;++r.revision;s.setJobRequirements(r,error);
     auto captured=sf::capture(s);const auto file=root.getChildFile("named.levelscope");expect(sf::save(captured,file,control).succeeded(),"schema 8 coherent session save");
     r.name="Edits during save";++r.revision;s.setJobRequirements(r,error);sf::saved(s,captured,file);expect(s.documentRevision!=s.savedDocumentRevision,"changes after capture remain unsaved");

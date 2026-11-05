@@ -12,6 +12,7 @@
 #include "TimelineLayout.h"
 #include "TimelineGainLane.h"
 #include "ProposalWorkflowPanel.h"
+#include "LraPassagesPanel.h"
 
 #include <memory>
 #include <future>
@@ -51,6 +52,9 @@ private:
     juce::Label positionLabel;
     TimelineGainLane gainLane{session};
     ProposalWorkflowPanel proposalPanel{session};
+    std::unique_ptr<ProposalWindow> lraPassagesWindow;
+    juce::TextButton lraPassagesButton{"LRA passages..."};
+    void showLraPassages(bool current=false);
     MeasurementTimeline timeline;
     DiagnosticsController timelineDiagnostics;
     WaveformCache waveformCache;

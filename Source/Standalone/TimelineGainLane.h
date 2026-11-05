@@ -34,6 +34,7 @@ private:
     std::optional<processing::SectionGainPlan> applied,draft;
     std::shared_ptr<const SectionProposalResult> automatic;
     std::optional<ProcessingPlan> proposed;
+    std::vector<proposal::ProgrammeSection> lraRows;
     bool automaticStale=false;
     const std::vector<proposal::ProgrammeSection>& rows() const;
     void adjacent(int direction);

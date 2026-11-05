@@ -36,7 +36,7 @@ AppliedProposalExplanation captureProposalExplanation(const SectionProposalReque
 {
     if(!r.source||!r.current)throw std::runtime_error("Measured Source and Current baseline required for an applied explanation");
     AppliedProposalExplanation h;h.programmeId=programmeId;h.inputIdentity=sectionInputIdentity(r.currentContext);
-    h.binding=result?result->identity():global.identity;h.method=result?proposal::sectionTrimMethodVersion:proposal::trimMethodVersion;
+    h.binding=result?result->identity():global.identity;h.method=result?result->methodVersion():proposal::trimMethodVersion;
     h.before=r.currentContext.processing;h.after=h.before;
     h.roles=r.currentContext.fileLayout;h.sampleRate=int(r.currentContext.media.sampleRate);h.frames=r.currentContext.media.frames;
     if(result&&result->status()==SectionProposalStatus::ready)h.after=result->plan();
@@ -74,7 +74,8 @@ juce::String AppliedProposalExplanation::text() const
         +proposalTargetText(target)
         +requirements.text()+"\n"+preferences.text()+"\n"
         +proposalMeasurementText(source,"Source baseline")+"\n"+proposalMeasurementText(baseline,"Current baseline before Apply")+"\n"
-        +proposal::trimProposalText(global)+"\nApplied global gain "+juce::String(after.staticGainDb,12)+" dB (before "+juce::String(before.staticGainDb,12)+" dB).\n";
+        +(method==proposal::lraTrimMethodVersion?juce::String("LRA method: complete local/global candidate assessments are recorded above; scalar estimates alone do not establish LRA acceptance."):proposal::trimProposalText(global))
+        +"\nApplied global gain "+juce::String(after.staticGainDb,12)+" dB (before "+juce::String(before.staticGainDb,12)+" dB).\n";
     t << "Programme " << sampleRate << " Hz / " << frames << " frames. Confirmed file order";
     for(int n=0;n<roles.count;++n)t << " " << n+1 << "=" << juce::AudioChannelSet::getAbbreviatedChannelTypeName(roles.roles[size_t(n)]);
     t << "\n";

@@ -2,6 +2,7 @@
 #include "StandaloneProposal.h"
 #include "VerifiedSource.h"
 #include "Core/Proposal/Methods/SectionTrimMethod.h"
+#include "Core/Proposal/LraPassages.h"
 
 namespace levelscope::standalone
 {
@@ -30,6 +31,8 @@ public:
     const juce::String& narrativeText() const { return narrative; }
     const juce::String& outcomeTitle() const { return title; }
     const juce::String& outcomeReason() const { return reason; }
+    const juce::String& methodVersion() const { return method; }
+    const std::optional<proposal::LraTrimSelection>& lraSelection() const { return lraSeed; }
     SectionProposalIssue issue() const { return problem; }
     const proposal::SectionMap& originalAnnotations() const { return annotations; }
     std::optional<ProcessingPlan> previewPlan() const;
@@ -44,6 +47,8 @@ private:
     SectionProposalResult()=default;
     SectionProposalStatus state=SectionProposalStatus::unavailable;
     juce::String bound,explanation,narrative,title,reason;
+    juce::String method=proposal::sectionTrimMethodVersion;
+    std::optional<proposal::LraTrimSelection> lraSeed;
     SectionProposalIssue problem=SectionProposalIssue::inputs;
     proposal::SectionMap annotations;
     ProcessingPlan proposed;
@@ -54,7 +59,10 @@ private:
     int passCount=0;
     friend ServiceResult<std::shared_ptr<const SectionProposalResult>> generateSectionProposal(
         const SectionProposalRequest&,JobControl&,const SnapshotStorage&);
+    friend ServiceResult<std::shared_ptr<const SectionProposalResult>> generateLraProposal(
+        const SectionProposalRequest&,JobControl&,const SnapshotStorage&);
 };
 using SectionProposalOutcome=ServiceResult<std::shared_ptr<const SectionProposalResult>>;
 SectionProposalOutcome generateSectionProposal(const SectionProposalRequest&,JobControl&,const SnapshotStorage& = {});
+SectionProposalOutcome generateLraProposal(const SectionProposalRequest&,JobControl&,const SnapshotStorage& = {});
 }

@@ -1,6 +1,10 @@
 # M19 proposal — LRA passages and measured selective-gain candidates
 
-5 November 2026. **Proposal for review only; implementation is not approved.**
+5 November 2026. **Approved for implementation and focused qualification.**
+The user approved the scope and the review clarifications via the standalone
+coordination chat. Work starts on `codex/m19-lra-passages` from the published Intel
+checkpoint plus publication receipt `09c8b8f6345c7c889f21f5399a38284ce1d353b2`.
+M19 publication and main integration remain for later review.
 Start after the qualified M18 implementation and review of the separate Intel
 true-peak continuation. The latter improves measurement throughput and introduces
 no LRA correction method. This document supersedes the old roadmap's pending-M18
@@ -203,12 +207,91 @@ three-hour decode. Estimate 1–2 hours of selected qualification per Mac and
 5 GiB scratch excluding installed tools and preserved fixtures. Measure actual
 times/memory and record any unsupported product-duration claim honestly.
 
-## Decisions for approval
+## Approved deterministic method contract
 
-Approve or revise the analysis-region grouping boundary, attenuation-only first
-method, reuse of current preference defaults and hard three-assessment budget.
-These choices favour a useful bounded workflow over a guarantee to meet every
-LRA target. Raising quiet passages, preservation/freeze semantics, coordinated
-neighbour changes, dialogue analysis, new dynamics strategies, persistence beyond
-the existing session/history model, immersive expansion and VST3 parity remain
-separate reviewed work.
+Version `lra-passages-v1` describes populations; `lra-selective-trim-v1` selects
+and assesses processing. Use validated full-resolution M1 LRA windows, never
+display bins. Stable sorting breaks equal loudness values by original window
+index. Window inclusion, P10/P95 and rounding remain the qualified definitions.
+
+The descriptive lower population includes gated windows at or below P10. The
+upper population uses strictly greater than P95 without a job LRA ceiling, or
+strictly greater than `P10 + selected LRA ceiling` with one. This latter level
+is a provisional search threshold, not a compliance formula. Group overlapping
+or touching three-second source-frame supports; clip displayed support at EOF
+and retain padding counts. For each region, sum its selected windows' positive
+LUFS excess above the threshold, in original time order. This score has units
+LU × windows, not an allocated amount of programme LRA or unique audio energy.
+Order by decreasing score, then decreasing window count, then increasing begin
+frame, then increasing end frame. Markers only supply optional names/context.
+
+For a high region, initial requested attenuation is its selected-window P95
+minus the search threshold, plus the active planning reserve. The reserve is
+planning-only headroom inside both gain caps; it is not an LRA allowance or a
+guarantee about the resulting TP. Clip reduction to the additional cap and the
+least cumulative headroom across the existing applied plateaus intersecting the
+region. Report requested/achieved reserve and uncovered overshoot separately.
+Use full precision and move a representable result inward when subtraction
+would exceed the exact additional cap.
+
+Visit ranked regions greedily. Tentatively add each complete region; retain it
+only if the actual canonical before/after envelope support meets count/duration
+preferences and the existing processing capacity. Do not shorten regions to fit
+a budget or change adjacent unselected regions. Partition the existing plateaus
+at selected region boundaries. Validate actual sample-position gain differences
+at all linear-ramp segment endpoints: no additional local boost and no excess
+additional/cumulative attenuation are allowed. If interacting existing ramps
+make that impossible, explain the method limitation and skip the region.
+This guard preserves the existing processing convention without claiming that
+an arbitrary new partition preserves every prior transition automatically.
+
+Assess the first selected envelope with the baseline global gain. If its measured
+LRA still exceeds the ceiling, one optional refinement may deepen only the same
+selected regions by that measured deficit, constrained by the original caps and
+support budget. A refinement is never assumed to improve LRA. Compare actually
+measured attempts lexicographically: an all-selected-rules pass first, then lower
+measured LRA excess, fewer other failing rules, smaller sum of their positive
+bound violations, smaller changed-envelope duration, smaller maximum additional
+attenuation, and finally the earlier assessment index. Missing required metrics
+cannot win or be applied. Retain the better measured attempt if refinement is
+worse; show both actual outcomes and explain the choice.
+
+Reserve one of the three full-programme assessments for the retained local plan
+plus explicit final global trim. Calculate a scalar trim nearest the IL target
+within IL/TP/M/S limits and -60 to +24 dB total global gain. Its estimates confer
+no authority. Global gain may be positive after local attenuation; the complete
+programme, including quiet passages, is then raised by that global amount.
+Selective quiet-passage boosts remain deferred. If the retained exact plan
+already passes every rule, preserve it; otherwise measure the exact combined
+plan before Apply can become available. No more than three assessments, no
+automatic expansion of regions, rollback, second strategy or relaxed preference.
+
+An unsuccessful outcome distinguishes **measured rule failure**, **policy
+restriction** (such as duration/count/gain caps), **method limitation** (such as
+attenuation-only geometry), and **search budget**. It means this attempt did not
+find an acceptable candidate under these conditions, not that no solution exists.
+Only the exact measured passing complete plan can be applied. Historical reasons
+and baseline/requirements/policy/method survive via M18 history; candidate snapshots
+never become reopened Current verification.
+
+## Coordinated follow-ups, outside M19
+
+Track completion-pause profiling and scaling separately from this algorithm.
+A later UI task should prominently expose initial import/source preparation and
+analysis progress. A separate first-playback progress change is deferred while
+session-wide reuse of one verified source copy is designed as coordinated
+performance work. M19 retains existing preparation, cleanup and integrity rules.
+
+Discuss an optional persistent “Copy audio into project” design before implementing
+it. Show an explicit disk estimate and free-space check: copying encoded PCM24 at
+48 kHz costs approximately 0.97 GiB/hour stereo or 2.90 GiB/hour 5.1, plus headers;
+three-hour 5.1 is about 8.69 GiB. A float32 decoded copy would instead require
+about 3.86 GiB/hour 5.1. Multiple members/components add their actual sizes.
+Reopening must validate content/assembly identity and cache compatibility; a
+project copy cannot be trusted merely because its filename or timestamp matches.
+Relinking, partial-copy cleanup, ownership and user-visible deletion need design.
+These are planning notes, not approval for bundling or changed preparation.
+
+Raising quiet passages, freeze/preservation semantics, coordinated neighbour
+strategies, dialogue analysis, new DSP, immersive expansion and VST3 parity remain
+separately reviewed work.

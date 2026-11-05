@@ -51,7 +51,7 @@ TimelineGainLane::TimelineGainLane(StandaloneSessionModel& s):session(s)
     next.onClick=[this]{adjacent(1);};
 }
 const std::vector<proposal::ProgrammeSection>& TimelineGainLane::rows() const
-{return automatic&&proposed?automatic->originalAnnotations().sections:session.sectionDocument.map().sections;}
+{return !lraRows.empty()?lraRows:automatic&&proposed?automatic->originalAnnotations().sections:session.sectionDocument.map().sections;}
 void TimelineGainLane::adjacent(int direction)
 {
     if(!bindingMatches()||!selected())return;
@@ -96,6 +96,9 @@ void TimelineGainLane::synchronize(const juce::String& key)
         ||hasDraft!=bool(d)||(d&&editSerial!=d->editSerial))
     {
         automatic=session.sectionProposal;automaticStale=stale;proposed=automatic?automatic->previewPlan():std::nullopt;
+        lraRows.clear();
+        if(automatic&&automatic->methodVersion()==proposal::lraTrimMethodVersion&&proposed&&proposed->sectionGains)
+        {uint64_t id=1;for(const auto& r:proposed->sectionGains->intervals)lraRows.push_back({id++,r.begin,r.end,"Proposed LRA processing interval"});}
         audioRevision=session.revision;mapRevision=map.revision;initialized=session.hasCurrentStateInitialized();
         usableMap=input.isNotEmpty()&&map.inputIdentity==input&&map.valid();
         hasDraft=bool(d);editSerial=d?d->editSerial:0;fresh=usableMap&&session.sectionDraftFresh();
@@ -124,6 +127,10 @@ void TimelineGainLane::showSelection()
         const double local=proposed->sectionGains?proposed->sectionGains->gainAt(cursor):0.;
         description+="   Proposed local "+exact(local)+" dB / global "+exact(proposed->staticGainDb)+" dB / combined "+exact(local+proposed->staticGainDb)+" dB";
         if(!automatic->previewHasFinalGlobal())description+=" (rejected local selection with baseline global gain; combined candidate not measured)";
+        if(automatic->lraSelection())for(const auto& c:automatic->lraSelection()->selected)if(c.passage.begin<=cursor&&cursor<c.passage.end)
+        {
+            description+="\nLRA region support ["+juce::String(c.passage.begin)+", "+juce::String(c.passage.end)+") frames; score "+exact(c.passage.score)+" LU*windows. Estimated requested/reduction "+exact(c.requested)+" / "+exact(c.reduction)+" dB; reserve "+exact(c.reserve)+", uncovered overshoot "+exact(c.uncovered)+". See Review for actual complete measured results.";break;
+        }
         description=automaticStale?"STALE preview. "+description:automatic->status()==SectionProposalStatus::noSolution?"REJECTED preview. "+description:description;
         for(const auto& c:automatic->selection().corrections)if(c.begin==section->begin&&c.id==section->id)
         {

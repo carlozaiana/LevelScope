@@ -10,7 +10,7 @@ proposal::TrimRequest SectionProposalRequest::scalar() const
 { auto r=trimRequest(source,current,sourceContext,currentContext,currentContext.profile,applicability);r.preferenceIdentity=policy.digest();r.preferencesAvailable=policy.validationError().isEmpty();return r; }
 juce::String SectionProposalRequest::binding() const
 {
-    const auto s=proposal::draftGlobalTrim(scalar()).identity+";"+proposal::sectionTrimMethodVersion
+    const auto s=proposal::draftGlobalTrim(scalar()).identity+";"+(currentContext.profile.limits.hasMaxLoudnessRange?proposal::lraTrimMethodVersion:proposal::sectionTrimMethodVersion)
         +";"+proposal::sectionGeometryKey(annotations)+";"+proposal::sectionGeometryKey(appliedAnnotations)
         +";"+currentContext.sessionId+";"+juce::String(currentContext.ticket.sessionRevision)
         +";"+juce::String(int(pendingManualDraft))+";"+policy.digest();
@@ -27,6 +27,7 @@ std::optional<ProcessingPlan> SectionProposalResult::previewPlan() const
 }
 SectionProposalOutcome generateSectionProposal(const SectionProposalRequest& r,JobControl& control,const SnapshotStorage& storage)
 {
+    if(r.currentContext.profile.limits.hasMaxLoudnessRange)return generateLraProposal(r,control,storage);
     auto out=std::shared_ptr<SectionProposalResult>(new SectionProposalResult);
     out->bound=r.binding();out->proposed=r.currentContext.processing;out->annotations=r.annotations;
     const auto complete=[&]() -> SectionProposalOutcome

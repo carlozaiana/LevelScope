@@ -38,7 +38,9 @@ void ProposalWorkflowPanel::refresh(float progress)
     {
         title=session.job.state==JobState::cancelling?"Cancelling proposal":"Proposing — Current remains unchanged";
         if(progress>=0)title+="  "+juce::String(juce::roundToInt(100*progress))+"%";
-        detail="Global gain is considered first. If it cannot meet IL and true peak together, one section envelope is assessed with up to three private passes. Cancel job keeps the applied settings.";
+        detail=session.getSelectedTargetProfile().limits.hasMaxLoudnessRange?
+            "Measured LRA passages guide bounded attenuation; at most three private assessments. Estimates are not measurements. Final global trim can be positive; Apply requires an exact complete candidate pass. Cancel keeps applied settings.":
+            "Global gain is considered first. If it cannot meet IL and true peak together, one section envelope is assessed with up to three private passes. Cancel job keeps the applied settings.";
     }
     else if(stale)
     {title="Stale inputs — Apply unavailable";detail="Requirements, preferences, annotations, measured inputs or source files changed. Review shows the previous candidate. Choose Propose to replace it, or Discard proposal.";}

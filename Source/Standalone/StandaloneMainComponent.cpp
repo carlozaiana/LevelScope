@@ -360,14 +360,14 @@ void StandaloneMainComponent::beginSectionProposal()
     const auto first=proposal::draftGlobalTrim(request.scalar());
     session.discardSectionProposal();session.selectedPage=WorkflowPage::currentState;
     // No attribution, copy or measurement for existing global-only/no-change outcomes.
-    if(first.status!=proposal::TrimStatus::noSolution)
+    if(first.status==proposal::TrimStatus::noChange||(!request.currentContext.profile.limits.hasMaxLoudnessRange&&first.status!=proposal::TrimStatus::noSolution))
     {
         JobControl control;const auto result=generateSectionProposal(request,control);
         if(result.value)session.acceptSectionProposal(*result.value);else {session.sectionProposalError=result.error;session.sectionProposalNotice=result.message;}
         refreshFromSession();return;
     }
     if(!session.job.begin(JobStage::proposal,session.revision))return;
-    sectionProposalTicket=session.job.ticket;session.job.message="Assessing one section envelope; Current State unchanged";
+    sectionProposalTicket=session.job.ticket;session.job.message=request.currentContext.profile.limits.hasMaxLoudnessRange?"Assessing bounded LRA candidates; Current unchanged":"Assessing one section envelope; Current State unchanged";
     importControl=std::make_shared<JobControl>();
     sectionProposalResult=std::async(std::launch::async,[request,control=importControl]{return generateSectionProposal(request,*control);});
     refreshFromSession();
@@ -476,7 +476,7 @@ void StandaloneMainComponent::configureCurrentStateControls()
     preferencesButton.onClick=[this]{ProposalPreferencesPanel::showWindow(preferencesWindow, session, this, [this]{refreshFromSession();});};
     inspectProposalButton.onClick=[this]{reviewProposal(false);};
     addAndMakeVisible(preferencesButton);addAndMakeVisible(inspectProposalButton);
-    sectionProposalButton.onClick=[this]{beginSectionProposal();};
+    sectionProposalButton.onClick=[this]{if(session.getSelectedTargetProfile().limits.hasMaxLoudnessRange)showLraPassages(true);else beginSectionProposal();};
     applySectionProposalButton.onClick=[this]{session.applySectionProposal();refreshFromSession();};
     discardSectionProposalButton.onClick=[this]{session.discardSectionProposal();refreshFromSession();};
     for(auto* button:{&sectionProposalButton,&applySectionProposalButton,&discardSectionProposalButton})addAndMakeVisible(*button);
@@ -884,7 +884,8 @@ void StandaloneMainComponent::configureTimelineShell()
     });
     timeline.onTogglePlayback=[this]{if(audition.active()){audition.stop();refreshTimeline();}else playTimeline();};
     gainLane.onChanged=[this]{refreshFromSession();refreshTimeline();};
-    proposalPanel.onPropose=[this]{beginSectionProposal();refreshTimeline();};
+    proposalPanel.onPropose=[this]{if(session.getSelectedTargetProfile().limits.hasMaxLoudnessRange)showLraPassages(true);else beginSectionProposal();refreshTimeline();};
+    lraPassagesButton.onClick=[this]{showLraPassages();};
     proposalPanel.onReview=[this]{reviewProposal(false);};proposalPanel.onHistory=[this]{reviewProposal(true);};
     proposalPanel.onPreferences=[this]{preferencesButton.onClick();};
     proposalPanel.onChanged=[this]{refreshFromSession();refreshTimeline();};
@@ -923,7 +924,7 @@ void StandaloneMainComponent::chooseMix()
 void StandaloneMainComponent::showTools()
 {
     std::vector<juce::TextButton*> actions={&newSessionButton,&openSessionButton,&saveAsSessionButton,&relinkAudioButton,&relinkVideoButton,&cancelSessionButton,
-        &clearSourceButton,&initializeCurrentStateButton,&clearCurrentStateButton,&preferencesButton,&inspectProposalButton,&sectionProposalButton,
+        &clearSourceButton,&initializeCurrentStateButton,&clearCurrentStateButton,&lraPassagesButton,&preferencesButton,&inspectProposalButton,&sectionProposalButton,
         &applySectionProposalButton,&discardSectionProposalButton,&renderPcmButton,&publishPcmButton,&measurementReportButton,&artifactReportButton,&discardExportButton};
     juce::PopupMenu menu;int id=1;for(auto* button:actions)menu.addItem(id++,button->getButtonText(),button->isEnabled());
     menu.addSeparator();menu.addItem(100,"Reset layout");
@@ -938,6 +939,15 @@ void StandaloneMainComponent::showAudioSetup()
         audioWindow->setName("LevelScope - audio device and channel roles");
     }
     audioPanel.setVisible(true);audioWindow->setVisible(true);audioWindow->toFront(true);
+}
+void StandaloneMainComponent::showLraPassages(bool current)
+{
+    auto panel=std::make_unique<LraPassagesPanel>(session,current||inspectDomain.getSelectedId()==2?MeasurementDomain::currentState:MeasurementDomain::source);
+    panel->onAssess=[this]{if(lraPassagesWindow)lraPassagesWindow->setVisible(false);beginSectionProposal();refreshTimeline();};
+    panel->onInspect=[this](MeasurementDomain d,int64_t begin,int64_t end)
+    {inspectDomain.setSelectedId(d==MeasurementDomain::source?1:2,juce::dontSendNotification);refreshTimeline();timeline.highlight(double(begin),double(end));};
+    lraPassagesWindow=std::make_unique<ProposalWindow>("LRA passages — inspection and candidate estimates",std::move(panel),this);
+    lraPassagesWindow->present();
 }
 void StandaloneMainComponent::reviewProposal(bool historical)
 {
