@@ -1,0 +1,6 @@
+[  2%] Built target LevelScopeMeasurementCore
+[ 60%] Built target LevelScopeStandaloneSupport
+[ 85%] Built target LevelScopeDiagnosticsUI
+[ 87%] Building CXX object CMakeFiles/LevelScopeLraProposalTests.dir/Tests/LraProposalTests.cpp.o
+[ 87%] Linking CXX executable LevelScopeLraProposalTests_artefacts/Release/LevelScopeLraProposalTests
+[100%] Built target LevelScopeLraProposalTests

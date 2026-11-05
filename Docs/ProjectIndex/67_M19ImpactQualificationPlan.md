@@ -101,3 +101,23 @@ outcomes and requirements exactly, and report actual numerical differences.
 These comparison tolerances never enter a profile verdict. Within each host,
 candidate versus independent Current and injected samples versus the independent
 processing oracle must agree exactly.
+
+Final coverage review adds `SurroundRates.cpp`, linked to candidate-02's frozen
+objects, for the three remaining 5.1 cells at 44.1/96/192 kHz. The original `rates`
+group explicitly exercised stereo at those rates, with 5.1 at 48 kHz separately.
+These additional short checks make the new method's supported-rate claim explicit
+for both layouts; they do not invoke historical runners, video or long media.
+The original eleven-group receipts and packages remain unchanged.
+
+## Completion review
+
+All selected checks completed on the two actual platforms, including the
+supplemental 5.1 rate cells. The user inspected the supplied stereo and six-channel
+boundary captures and reported them flawless after the coordinated Saffire runs.
+This closes bounded M19 listening review, without claiming full physical
+multichannel routing qualification. [68](68_M19QualificationAndHandover.md) records
+the fresh/reused identities, earlier observations, honest cinema failure and limits.
+`complete_review.py` reads the preserved evidence, validates package/source/tag
+identity and requires all selected results plus the explicit user observation.
+It neither reruns audio tests nor changes the original numerical-only receipts.
+Publication and main integration remain for a separate user decision.

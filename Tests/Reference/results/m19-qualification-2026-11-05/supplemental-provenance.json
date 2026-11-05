@@ -1,0 +1,42 @@
+{
+  "probes": [
+    {
+      "source": "Tests/Qualification/M19/Listen.cpp",
+      "source_sha256": "0822854919f075a74ab407a37bfb7269be6acb5b2d508ca58c6d5c67d3573e6f",
+      "executable": "build/m19-qualification-2026-11-05/supplemental/listen",
+      "executable_sha256": "895c4deff1f259a600539f12fbeeae1f07ef20d7add12abc31eab4ecf728f203",
+      "linked_product_candidate": "candidate-01",
+      "linked_measurement_build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e",
+      "product_source_commit": "2da3ac4ccb03a75976403c03bbc3461d00639752"
+    },
+    {
+      "source": "Tests/Qualification/M19/Resources.cpp",
+      "source_sha256": "e62ea3364fe935c4112233b03c2e600e8d03de04b8cf086496c31fd58fe18730",
+      "executable": "build/m19-qualification-2026-11-05/supplemental/resources",
+      "executable_sha256": "9560d331398ed1e73751160d0ab9ad02dd7828c5d4737132b09132736e8ecbef",
+      "linked_product_candidate": "candidate-01",
+      "linked_measurement_build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e",
+      "product_source_commit": "2da3ac4ccb03a75976403c03bbc3461d00639752"
+    },
+    {
+      "source": "Tests/Qualification/M19/SurroundRates.cpp",
+      "source_sha256": "8c78ca3dcfc690fb920f24e1c06dc52fdbb0ae7989f70ba5b2cba94ab9339331",
+      "executable": "build/m19-qualification-2026-11-05/supplemental/surround-rates",
+      "executable_sha256": "f8aea5d4c4c6054885a617353afd7ede4f1353ea8662b5bbeb0c1329dd7d5542",
+      "linked_product_candidate": "candidate-02",
+      "linked_measurement_build": "993f26a9295201a87fedea54a60bc8ca57877e93bb8bebc11729ab5bf5d2af1a",
+      "product_source_commit": "cf275afb133118dd2a06e7bca59f82f98898b3cd"
+    },
+    {
+      "source": "Tests/Qualification/M19/ListenReference.cpp",
+      "source_sha256": "b9d48f2f8a41b0e3435bde288e5c8443fab90a98c671d5e21910786b9562f21d",
+      "executable": "build/m19-qualification-2026-11-05/supplemental/listen-reference-zero",
+      "executable_sha256": "496e5e324b95c2f724942e4f5f991af83516dd89be73d862bd3a2bda7a01e5a2",
+      "linked_product_candidate": "candidate-02",
+      "linked_measurement_build": "993f26a9295201a87fedea54a60bc8ca57877e93bb8bebc11729ab5bf5d2af1a",
+      "product_source_commit": "cf275afb133118dd2a06e7bca59f82f98898b3cd"
+    }
+  ],
+  "product_packages_modified": false,
+  "listen_execution": "Stereo first/repeat and cinema first sequences completed at -5 dB; requested 99.4-second unchanged cinema reference and four clips completed at 0 dB. Exact EOF, zero underruns, device closed after each sequence. User then inspected all four stereo and corresponding 5.1 captures and reported them flawless. Earlier subjective observations remain recorded; this is bounded clip review, not full physical 5.1/7.1 routing qualification."
+}

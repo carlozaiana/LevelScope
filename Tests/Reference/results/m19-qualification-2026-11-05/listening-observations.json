@@ -1,0 +1,21 @@
+{
+  "stereo_first_observation": "Sound was clean. I heard a click somewhere, but maybe when the device closed.",
+  "stereo_repeat_observation": "The gain transitions were clearly audible and those transitions and the endings of the clips sounded in my opinion as I would expect them to sound with a clear sine wave. They do produce a kind of a click, but it is very subtle and not out of normal.",
+  "interpretation": "User judged the audible sine-wave transitions and subtle click-like effects normal for this signal. Do not describe them as inaudible or click-free. No claim of perceptual transparency for all material.",
+  "cinema": "User inspected all four stereo and 5.1 captures and reported them flawless. This completes the bounded M19 listening/inspection review. The earlier ambiguous quiet-half report and exact content investigation remain preserved.",
+  "device": "Saffire Pro 40 (Experimental) on Sequoia",
+  "rate_hz": 48000,
+  "outputs": "1/2",
+  "cinema_minus5_observation": "I did not hear any clicks, but still would like to repeat the test: First play the clip without any gain changes, then play the 4 test clips. And please raise the monitor volume to 0 dB, because there are some soft parts I want to hear better.",
+  "monitor_db_initial_sequences": -5,
+  "reference_repeat_monitor_db": 0,
+  "reference_repeat_receipt": "listening-cinema-reference-zero.json",
+  "cinema_zero_reference_repeat_observation": "No clicks. The first and second file either missed the second part (after 4 seconds), or it was too soft to hear. I was not sure where file 3 and 4 started, because of the missing end of file 2. Please check and then I will propose another specific run to judge.",
+  "content_investigation": "listening-cinema-content-inspection.json",
+  "final_user_inspection": {
+    "date": "2026-11-05",
+    "verbatim": "I checked all 4 stereo and 5.1 files and they are flawless.",
+    "scope": "User-reported inspection of the supplied four stereo Left/Right-only clips and corresponding four six-channel cinema captures. Inspection method/hardware not specified; not a new full physical multichannel routing qualification.",
+    "accepted_for_bounded_m19_boundary_review": true
+  }
+}

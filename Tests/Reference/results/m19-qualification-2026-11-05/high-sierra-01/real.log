@@ -1,0 +1,16 @@
+M19 PASS 49 checks
+       91.76 real       281.42 user         3.75 sys
+  41607168  maximum resident set size
+         0  average shared memory size
+         0  average unshared data size
+         0  average unshared stack size
+     10270  page reclaims
+         0  page faults
+         0  swaps
+         0  block input operations
+       105  block output operations
+         0  messages sent
+         0  messages received
+         0  signals received
+      1613  voluntary context switches
+    233511  involuntary context switches

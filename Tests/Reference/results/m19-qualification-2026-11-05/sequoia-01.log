@@ -1,0 +1,22 @@
+START core
+PASS core 0.527
+START stereo
+PASS stereo 10.763
+START surround
+PASS surround 16.949
+START rates
+PASS rates 72.22
+START failures
+PASS failures 18.081
+START inputs
+PASS inputs 43.797
+START gating
+PASS gating 41.411
+START real
+PASS real 46.204
+START measurement
+PASS measurement 13.69
+START section
+PASS section 11.601
+START requirements
+PASS requirements 28.884

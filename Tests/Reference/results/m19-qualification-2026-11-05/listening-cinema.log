@@ -1,0 +1,8 @@
+PLAY onset-baseline-LEFT-RIGHT-ONLY.wav | outputs 1/2 | monitor -5 dB
+STOP
+PLAY onset-candidate-LEFT-RIGHT-ONLY.wav | outputs 1/2 | monitor -5 dB
+STOP
+PLAY return-baseline-LEFT-RIGHT-ONLY.wav | outputs 1/2 | monitor -5 dB
+STOP
+PLAY return-candidate-LEFT-RIGHT-ONLY.wav | outputs 1/2 | monitor -5 dB
+STOP

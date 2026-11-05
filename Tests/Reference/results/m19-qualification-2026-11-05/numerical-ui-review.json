@@ -1,0 +1,339 @@
+{
+  "qualified": false,
+  "checks": [
+    {
+      "name": "Actual platform sequoia",
+      "passed": true
+    },
+    {
+      "name": "Every required direct group present: sequoia",
+      "passed": true
+    },
+    {
+      "name": "Required passed receipt sequoia/core",
+      "passed": true
+    },
+    {
+      "name": "Required passed receipt sequoia/stereo",
+      "passed": true
+    },
+    {
+      "name": "Required passed receipt sequoia/surround",
+      "passed": true
+    },
+    {
+      "name": "Required passed receipt sequoia/rates",
+      "passed": true
+    },
+    {
+      "name": "Required passed receipt sequoia/failures",
+      "passed": true
+    },
+    {
+      "name": "Required passed receipt sequoia/inputs",
+      "passed": true
+    },
+    {
+      "name": "Required passed receipt sequoia/gating",
+      "passed": true
+    },
+    {
+      "name": "Required passed receipt sequoia/real",
+      "passed": true
+    },
+    {
+      "name": "Required passed receipt sequoia/measurement",
+      "passed": true
+    },
+    {
+      "name": "Required passed receipt sequoia/section",
+      "passed": true
+    },
+    {
+      "name": "Required passed receipt sequoia/requirements",
+      "passed": true
+    },
+    {
+      "name": "Native silent UI sequoia",
+      "passed": true
+    },
+    {
+      "name": "Native responsiveness/cancellation sequoia",
+      "passed": true
+    },
+    {
+      "name": "Actual platform high-sierra",
+      "passed": true
+    },
+    {
+      "name": "Every required direct group present: high-sierra",
+      "passed": true
+    },
+    {
+      "name": "Required passed receipt high-sierra/core",
+      "passed": true
+    },
+    {
+      "name": "Required passed receipt high-sierra/stereo",
+      "passed": true
+    },
+    {
+      "name": "Required passed receipt high-sierra/surround",
+      "passed": true
+    },
+    {
+      "name": "Required passed receipt high-sierra/rates",
+      "passed": true
+    },
+    {
+      "name": "Required passed receipt high-sierra/failures",
+      "passed": true
+    },
+    {
+      "name": "Required passed receipt high-sierra/inputs",
+      "passed": true
+    },
+    {
+      "name": "Required passed receipt high-sierra/gating",
+      "passed": true
+    },
+    {
+      "name": "Required passed receipt high-sierra/real",
+      "passed": true
+    },
+    {
+      "name": "Required passed receipt high-sierra/measurement",
+      "passed": true
+    },
+    {
+      "name": "Required passed receipt high-sierra/section",
+      "passed": true
+    },
+    {
+      "name": "Required passed receipt high-sierra/requirements",
+      "passed": true
+    },
+    {
+      "name": "Native silent UI high-sierra",
+      "passed": true
+    },
+    {
+      "name": "Native responsiveness/cancellation high-sierra",
+      "passed": true
+    },
+    {
+      "name": "Matching workflow count stereo",
+      "passed": true
+    },
+    {
+      "name": "Same assessed decision/pass budget stereo0",
+      "passed": true
+    },
+    {
+      "name": "Cross-platform numerical bounds stereo0",
+      "passed": true
+    },
+    {
+      "name": "Matching workflow count surround",
+      "passed": true
+    },
+    {
+      "name": "Same assessed decision/pass budget surround0",
+      "passed": true
+    },
+    {
+      "name": "Cross-platform numerical bounds surround0",
+      "passed": true
+    },
+    {
+      "name": "Matching workflow count rates",
+      "passed": true
+    },
+    {
+      "name": "Same assessed decision/pass budget rates0",
+      "passed": true
+    },
+    {
+      "name": "Cross-platform numerical bounds rates0",
+      "passed": true
+    },
+    {
+      "name": "Same assessed decision/pass budget rates1",
+      "passed": true
+    },
+    {
+      "name": "Cross-platform numerical bounds rates1",
+      "passed": true
+    },
+    {
+      "name": "Same assessed decision/pass budget rates2",
+      "passed": true
+    },
+    {
+      "name": "Cross-platform numerical bounds rates2",
+      "passed": true
+    },
+    {
+      "name": "Session core checksum: build/m19-qualification-2026-11-05/sequoia-01/stereo/verified.levelscope",
+      "passed": true
+    },
+    {
+      "name": "Session core checksum: build/m19-qualification-2026-11-05/high-sierra-01/stereo/verified.levelscope",
+      "passed": true
+    },
+    {
+      "name": "Pinned equivalent generated audio stereo",
+      "passed": true
+    },
+    {
+      "name": "Same roles, requirements and policy stereo",
+      "passed": true
+    },
+    {
+      "name": "Exact selected envelope and global gain stereo",
+      "passed": true
+    },
+    {
+      "name": "Session core checksum: build/m19-qualification-2026-11-05/sequoia-01/surround/verified.levelscope",
+      "passed": true
+    },
+    {
+      "name": "Session core checksum: build/m19-qualification-2026-11-05/high-sierra-01/surround/verified.levelscope",
+      "passed": true
+    },
+    {
+      "name": "Pinned equivalent generated audio surround",
+      "passed": true
+    },
+    {
+      "name": "Same roles, requirements and policy surround",
+      "passed": true
+    },
+    {
+      "name": "Exact selected envelope and global gain surround",
+      "passed": true
+    },
+    {
+      "name": "Session core checksum: build/m19-qualification-2026-11-05/sequoia-01/rates/44100/verified.levelscope",
+      "passed": true
+    },
+    {
+      "name": "Session core checksum: build/m19-qualification-2026-11-05/high-sierra-01/rates/44100/verified.levelscope",
+      "passed": true
+    },
+    {
+      "name": "Pinned equivalent generated audio rates/44100",
+      "passed": true
+    },
+    {
+      "name": "Same roles, requirements and policy rates/44100",
+      "passed": true
+    },
+    {
+      "name": "Exact selected envelope and global gain rates/44100",
+      "passed": true
+    },
+    {
+      "name": "Session core checksum: build/m19-qualification-2026-11-05/sequoia-01/rates/96000/verified.levelscope",
+      "passed": true
+    },
+    {
+      "name": "Session core checksum: build/m19-qualification-2026-11-05/high-sierra-01/rates/96000/verified.levelscope",
+      "passed": true
+    },
+    {
+      "name": "Pinned equivalent generated audio rates/96000",
+      "passed": true
+    },
+    {
+      "name": "Same roles, requirements and policy rates/96000",
+      "passed": true
+    },
+    {
+      "name": "Exact selected envelope and global gain rates/96000",
+      "passed": true
+    },
+    {
+      "name": "Session core checksum: build/m19-qualification-2026-11-05/sequoia-01/rates/192000/verified.levelscope",
+      "passed": true
+    },
+    {
+      "name": "Session core checksum: build/m19-qualification-2026-11-05/high-sierra-01/rates/192000/verified.levelscope",
+      "passed": true
+    },
+    {
+      "name": "Pinned equivalent generated audio rates/192000",
+      "passed": true
+    },
+    {
+      "name": "Same roles, requirements and policy rates/192000",
+      "passed": true
+    },
+    {
+      "name": "Exact selected envelope and global gain rates/192000",
+      "passed": true
+    },
+    {
+      "name": "Same bounded cinema content/outcome/pass count",
+      "passed": true
+    },
+    {
+      "name": "Bounded cinema metric comparison",
+      "passed": true
+    }
+  ],
+  "cross_platform": [
+    {
+      "case": "stereo0",
+      "differences": {
+        "before_lra": 0.0,
+        "after_lra": 0.0,
+        "gain_db": 0.0
+      }
+    },
+    {
+      "case": "surround0",
+      "differences": {
+        "before_lra": 0.0,
+        "after_lra": 0.0,
+        "gain_db": 0.0
+      }
+    },
+    {
+      "case": "rates0",
+      "differences": {
+        "before_lra": 0.0,
+        "after_lra": 0.0,
+        "gain_db": 0.0
+      }
+    },
+    {
+      "case": "rates1",
+      "differences": {
+        "before_lra": 0.0,
+        "after_lra": 0.0,
+        "gain_db": 0.0
+      }
+    },
+    {
+      "case": "rates2",
+      "differences": {
+        "before_lra": 0.0,
+        "after_lra": 0.0,
+        "gain_db": 0.0
+      }
+    },
+    {
+      "case": "cinema excerpt",
+      "differences": {
+        "source_integrated_lufs": 0.0,
+        "source_lra_lu": 0.0,
+        "source_true_peak_dbtp": 0.0,
+        "p10": 0.0,
+        "p95": 0.0
+      }
+    }
+  ],
+  "numerical_and_native_complete": true,
+  "remaining": "Review frozen-package integrity, UI-only reuse proof, supplemental resources, and separately coordinated listening observations before qualification."
+}

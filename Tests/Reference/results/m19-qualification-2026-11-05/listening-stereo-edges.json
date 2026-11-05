@@ -1,0 +1,53 @@
+{
+  "observation": "Diagnostic clips cut an ongoing tone; nonzero EOF samples are a possible click source, distinct from the internal M19 gain transition. This is a hypothesis, not a determination of the reported click.",
+  "clips": [
+    {
+      "file": "onset-baseline.wav",
+      "first_samples": [
+        -0.028531789779663086,
+        -0.030529022216796875
+      ],
+      "last_samples": [
+        -0.05416536331176758,
+        -0.05795693397521973
+      ],
+      "edge_fade_applied": false
+    },
+    {
+      "file": "onset-candidate.wav",
+      "first_samples": [
+        -0.060522712767124176,
+        -0.06475931406021118
+      ],
+      "last_samples": [
+        -0.0953412875533104,
+        -0.1020151674747467
+      ],
+      "edge_fade_applied": false
+    },
+    {
+      "file": "return-baseline.wav",
+      "first_samples": [
+        0.05706334114074707,
+        0.06105780601501465
+      ],
+      "last_samples": [
+        0.0294954776763916,
+        0.03156018257141113
+      ],
+      "edge_fade_applied": false
+    },
+    {
+      "file": "return-candidate.wav",
+      "first_samples": [
+        0.10044228285551071,
+        0.10747329145669937
+      ],
+      "last_samples": [
+        0.06256692111492157,
+        0.06694665551185608
+      ],
+      "edge_fade_applied": false
+    }
+  ]
+}

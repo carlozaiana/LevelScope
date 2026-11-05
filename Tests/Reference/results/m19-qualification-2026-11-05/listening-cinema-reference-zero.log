@@ -1,0 +1,10 @@
+PLAY Unchanged continuous reference | monitor 0 dB | 99.4 s
+STOP
+PLAY onset-baseline | monitor 0 dB | 8 s
+STOP
+PLAY onset-candidate | monitor 0 dB | 8 s
+STOP
+PLAY return-baseline | monitor 0 dB | 8 s
+STOP
+PLAY return-candidate | monitor 0 dB | 8 s
+STOP

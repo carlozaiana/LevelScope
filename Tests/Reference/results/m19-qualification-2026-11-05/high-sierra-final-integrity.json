@@ -1,0 +1,23 @@
+{
+  "machine": "x86_64",
+  "os": "ProductName:\tMac OS X\nProductVersion:\t10.13.6\nBuildVersion:\t17G66\n",
+  "packages": [
+    {
+      "candidate": "candidate-01",
+      "identity_sha256": "457e60e3daebd3b4c4a28829a6b8c3755c419fc4a82c12f519f1e92ea8d5d398",
+      "artifacts_checked": 377,
+      "mismatches": [],
+      "passed": true
+    },
+    {
+      "candidate": "candidate-02",
+      "identity_sha256": "9e4f99eb1fe404314e867ee772a309506f12f8fb6d80d5123583d711eceaafb8",
+      "artifacts_checked": 380,
+      "mismatches": [],
+      "passed": true
+    }
+  ],
+  "supplemental_surround_rates_binary_sha256": "f8aea5d4c4c6054885a617353afd7ede4f1353ea8662b5bbeb0c1329dd7d5542",
+  "supplemental_surround_rates_report_sha256": "10260a15698f9f4dd835007c34b7d4d12d53c7c7d69f288120b2a95b6a9a7541",
+  "passed": true
+}

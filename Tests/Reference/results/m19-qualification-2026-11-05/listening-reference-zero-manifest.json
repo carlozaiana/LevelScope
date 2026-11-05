@@ -1,0 +1,44 @@
+{
+  "purpose": "User-requested diagnostic listening sequence; not a verified export",
+  "rate": 48000,
+  "monitor_db": 0,
+  "source_excerpt_sha256": "cfd57bea9a108db850b4e371de0f299f3396fbc1730e58e357380042a3064dd5",
+  "reference_begin_excerpt_frame": 8592000,
+  "reference_end_excerpt_frame": 13363200,
+  "reference_seconds": 99.4,
+  "reference_gain_db": 0,
+  "channels": "Original Left/Right only, no downmix",
+  "baseline_eight_second_captures_match_exactly": true,
+  "clips": [
+    {
+      "path": "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/listening-reference-zero/reference-unchanged-LEFT-RIGHT-ONLY.wav",
+      "sha256": "6954b761bd4383950498868f8a5c650fb7858d263907898f2117aa4898ec161a",
+      "frames": 4771200,
+      "label": "Unchanged continuous reference"
+    },
+    {
+      "path": "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/real/listening/onset-baseline-LEFT-RIGHT-ONLY.wav",
+      "sha256": "b5f203d64b4489eea6c8d9afb0ce43b33ca7b4bde7b677b9b9bdc4d761d98aaa",
+      "frames": 384000,
+      "label": "onset-baseline"
+    },
+    {
+      "path": "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/real/listening/onset-candidate-LEFT-RIGHT-ONLY.wav",
+      "sha256": "7cbd90535e21b8fddcf477ab714a0b5925ef051ba44416d6f0574acd81bd2e8c",
+      "frames": 384000,
+      "label": "onset-candidate"
+    },
+    {
+      "path": "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/real/listening/return-baseline-LEFT-RIGHT-ONLY.wav",
+      "sha256": "528efec9991fdd4bd0ab3687cfd1ba528e051f3ae738463f9733417cdae3d220",
+      "frames": 384000,
+      "label": "return-baseline"
+    },
+    {
+      "path": "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/real/listening/return-candidate-LEFT-RIGHT-ONLY.wav",
+      "sha256": "e43b7a7ae8e6a8862f5f20dddeddfa00e56f3201089249e177cff44e145432e9",
+      "frames": 384000,
+      "label": "return-candidate"
+    }
+  ]
+}

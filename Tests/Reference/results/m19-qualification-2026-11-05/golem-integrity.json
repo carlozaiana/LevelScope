@@ -1,0 +1,20 @@
+{
+  "platform": "actual High Sierra 10.13.6 x86_64",
+  "packages": [
+    {
+      "candidate": "candidate-01",
+      "source_commit": "2da3ac4ccb03a75976403c03bbc3461d00639752",
+      "artifacts_checked": 377,
+      "mismatches": [],
+      "passed": true
+    },
+    {
+      "candidate": "candidate-02",
+      "source_commit": "cf275afb133118dd2a06e7bca59f82f98898b3cd",
+      "artifacts_checked": 380,
+      "mismatches": [],
+      "passed": true
+    }
+  ],
+  "passed": true
+}

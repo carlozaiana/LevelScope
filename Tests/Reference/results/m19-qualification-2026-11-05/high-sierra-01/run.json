@@ -1,0 +1,255 @@
+{
+  "required": [
+    "core",
+    "stereo",
+    "surround",
+    "rates",
+    "failures",
+    "inputs",
+    "gating",
+    "real",
+    "measurement",
+    "section",
+    "requirements"
+  ],
+  "selected": [
+    "core",
+    "stereo",
+    "surround",
+    "rates",
+    "failures",
+    "inputs",
+    "gating",
+    "real",
+    "measurement",
+    "section",
+    "requirements"
+  ],
+  "machine": "x86_64",
+  "os": "ProductName:\tMac OS X\nProductVersion:\t10.13.6\nBuildVersion:\t17G66\n",
+  "cpu": "Intel(R) Core(TM) i7-3770K CPU @ 3.50GHz",
+  "cinema_sha256": "cfd57bea9a108db850b4e371de0f299f3396fbc1730e58e357380042a3064dd5",
+  "cases": [
+    {
+      "group": "core",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/candidate-01/bin/LevelScopeLraProposalTests",
+        "--root",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/core",
+        "--output",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/core.json",
+        "--group",
+        "core"
+      ],
+      "executable_sha256": "c7a27a3371a3c09782d043c15ed7ea0c7b5ab1b52bf750971d3220a4007a3872",
+      "exit_code": 0,
+      "seconds": 0.05291420300000005,
+      "peak_rss_bytes": 24211456,
+      "passed": true,
+      "build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e"
+    },
+    {
+      "group": "stereo",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/candidate-01/bin/LevelScopeLraProposalTests",
+        "--root",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/stereo",
+        "--output",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/stereo.json",
+        "--group",
+        "stereo"
+      ],
+      "executable_sha256": "c7a27a3371a3c09782d043c15ed7ea0c7b5ab1b52bf750971d3220a4007a3872",
+      "exit_code": 0,
+      "seconds": 19.392545832,
+      "peak_rss_bytes": 22056960,
+      "passed": true,
+      "build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e"
+    },
+    {
+      "group": "surround",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/candidate-01/bin/LevelScopeLraProposalTests",
+        "--root",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/surround",
+        "--output",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/surround.json",
+        "--group",
+        "surround"
+      ],
+      "executable_sha256": "c7a27a3371a3c09782d043c15ed7ea0c7b5ab1b52bf750971d3220a4007a3872",
+      "exit_code": 0,
+      "seconds": 34.033430781999996,
+      "peak_rss_bytes": 16969728,
+      "passed": true,
+      "build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e"
+    },
+    {
+      "group": "rates",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/candidate-01/bin/LevelScopeLraProposalTests",
+        "--root",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/rates",
+        "--output",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/rates.json",
+        "--group",
+        "rates"
+      ],
+      "executable_sha256": "c7a27a3371a3c09782d043c15ed7ea0c7b5ab1b52bf750971d3220a4007a3872",
+      "exit_code": 0,
+      "seconds": 128.17447839000002,
+      "peak_rss_bytes": 23789568,
+      "passed": true,
+      "build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e"
+    },
+    {
+      "group": "failures",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/candidate-01/bin/LevelScopeLraProposalTests",
+        "--root",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/failures",
+        "--output",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/failures.json",
+        "--group",
+        "failures"
+      ],
+      "executable_sha256": "c7a27a3371a3c09782d043c15ed7ea0c7b5ab1b52bf750971d3220a4007a3872",
+      "exit_code": 0,
+      "seconds": 32.772791420999994,
+      "peak_rss_bytes": 14999552,
+      "passed": true,
+      "build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e"
+    },
+    {
+      "group": "inputs",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/candidate-01/bin/LevelScopeLraProposalTests",
+        "--root",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/inputs",
+        "--output",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/inputs.json",
+        "--group",
+        "inputs"
+      ],
+      "executable_sha256": "c7a27a3371a3c09782d043c15ed7ea0c7b5ab1b52bf750971d3220a4007a3872",
+      "exit_code": 0,
+      "seconds": 84.25903781,
+      "peak_rss_bytes": 228573184,
+      "passed": true,
+      "build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e"
+    },
+    {
+      "group": "gating",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/candidate-01/bin/LevelScopeLraProposalTests",
+        "--root",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/gating",
+        "--output",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/gating.json",
+        "--group",
+        "gating"
+      ],
+      "executable_sha256": "c7a27a3371a3c09782d043c15ed7ea0c7b5ab1b52bf750971d3220a4007a3872",
+      "exit_code": 0,
+      "seconds": 73.93082182799998,
+      "peak_rss_bytes": 19390464,
+      "passed": true,
+      "build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e"
+    },
+    {
+      "group": "real",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/candidate-01/bin/LevelScopeLraProposalTests",
+        "--root",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/real",
+        "--output",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/real.json",
+        "--group",
+        "real",
+        "--input",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/media/cinema-27m-35m.wav"
+      ],
+      "executable_sha256": "c7a27a3371a3c09782d043c15ed7ea0c7b5ab1b52bf750971d3220a4007a3872",
+      "exit_code": 0,
+      "seconds": 91.76710193100001,
+      "peak_rss_bytes": 41607168,
+      "passed": true,
+      "build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e"
+    },
+    {
+      "group": "measurement",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/candidate-01/bin/LevelScopeMeasurementTests",
+        "--report",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/measurement.json"
+      ],
+      "executable_sha256": "bba0f3e57d3ecf1609b305efb6234742ed7606562b7c3f31aa5e00b16de5e68d",
+      "exit_code": 0,
+      "seconds": 29.251459710000006,
+      "peak_rss_bytes": 23355392,
+      "passed": true,
+      "build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e"
+    },
+    {
+      "group": "section",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/candidate-01/bin/LevelScopeSectionProposalTests",
+        "--root",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/section",
+        "--output",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/section.json",
+        "--smoke"
+      ],
+      "executable_sha256": "bbdaa35dd13f8cf3e701c1a88c383c162544751a61f40c27fd67b9ea3a034aeb",
+      "exit_code": 0,
+      "seconds": 26.865442564000034,
+      "peak_rss_bytes": 442339328,
+      "passed": true,
+      "build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e"
+    },
+    {
+      "group": "requirements",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/candidate-01/bin/LevelScopeJobRequirementsTests",
+        "--root",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/requirements",
+        "--output",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/requirements.json"
+      ],
+      "executable_sha256": "c7a64155cd2335df8460c270dc52955fdf6b3adebb68c71910c30fa2ea0e2510",
+      "exit_code": 0,
+      "seconds": 53.88302838300001,
+      "peak_rss_bytes": 21504000,
+      "passed": true,
+      "build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e"
+    }
+  ],
+  "physical_devices_opened": false,
+  "video_loaded": false,
+  "seconds": 575.0829674480001,
+  "selected_passed": true,
+  "required_automated_complete": true,
+  "qualified": false
+}

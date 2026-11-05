@@ -1,0 +1,15 @@
+{
+  "build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e",
+  "grouping_seconds": 0.0010515,
+  "planning_seconds": 0.614962541,
+  "resident_bytes": 25493504,
+  "selected_regions": 540,
+  "available_regions": 1080,
+  "affected_frames": 414710400,
+  "cancelled_cleanly": true,
+  "passed": true,
+  "budget_seconds": 2.0,
+  "full_duration_audio_decoded": false
+}
+        1.15 real         0.61 user         0.01 sys
+time: sysctl kern.clockrate: Operation not permitted

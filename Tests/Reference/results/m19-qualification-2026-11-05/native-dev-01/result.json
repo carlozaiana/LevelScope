@@ -1,0 +1,29 @@
+{
+  "failure": "requirements reuse valid measurement",
+  "passed": false,
+  "checks": [
+    {
+      "name": "live native M19 main component",
+      "passed": true
+    },
+    {
+      "name": "file picker opened with an active completion",
+      "passed": true
+    },
+    {
+      "name": "one-pass Source and untouched Current ready",
+      "passed": true
+    },
+    {
+      "name": "inline LRA target committed",
+      "passed": true
+    },
+    {
+      "name": "requirements reuse valid measurement",
+      "passed": false
+    }
+  ],
+  "build": "8354c701314d425dd0f7765611c877f62c6996f3ddf9c81f2f6d8fea4e5decad",
+  "physical_devices_opened": false,
+  "video_loaded": false
+}

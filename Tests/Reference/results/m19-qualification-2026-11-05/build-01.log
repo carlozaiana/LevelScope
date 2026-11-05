@@ -1,0 +1,73 @@
+[  0%] Building CXX object CMakeFiles/LevelScopeMeasurementCore.dir/Source/Core/Measurement/OfflineMeasurement.cpp.o
+/Users/fuzz/Developer/LevelScope/Source/Core/Measurement/OfflineMeasurement.cpp:215:34: warning: type nullability specifier '_Nonnull' is a Clang extension [-Wnullability-extension]
+  215 |     dispatch_apply_f (peakLanes, DISPATCH_APPLY_AUTO, &block, [] (void* context, size_t lane) noexcept
+      |                                  ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/dispatch/queue.h:477:48: note: expanded from macro 'DISPATCH_APPLY_AUTO'
+  477 | #define DISPATCH_APPLY_AUTO ((dispatch_queue_t _Nonnull)0)
+      |                                                ^
+1 warning generated.
+/Users/fuzz/Developer/LevelScope/Source/Core/Measurement/OfflineMeasurement.cpp:215:34: warning: type nullability specifier '_Nonnull' is a Clang extension [-Wnullability-extension]
+  215 |     dispatch_apply_f (peakLanes, DISPATCH_APPLY_AUTO, &block, [] (void* context, size_t lane) noexcept
+      |                                  ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/dispatch/queue.h:477:48: note: expanded from macro 'DISPATCH_APPLY_AUTO'
+  477 | #define DISPATCH_APPLY_AUTO ((dispatch_queue_t _Nonnull)0)
+      |                                                ^
+1 warning generated.
+[  1%] Linking CXX static library libLevelScopeMeasurementCore.a
+[  1%] Built target LevelScopeMeasurementCore
+[  3%] Building CXX object CMakeFiles/LevelScopeCore.dir/Source/Core/LevelScopeHistoryModel.cpp.o
+[  5%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/Pcm24Wave.cpp.o
+[  5%] Building CXX object CMakeFiles/LevelScopeCore.dir/Source/Core/Processing/Modules/LevelerModule.cpp.o
+[  5%] Building CXX object CMakeFiles/LevelScopeCore.dir/Source/Core/RunningLoudnessStats.cpp.o
+[  7%] Building CXX object CMakeFiles/LevelScopeCore.dir/Source/Core/Processing/DSP/SpectralUpwardCompressor.cpp.o
+[  7%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneReport.cpp.o
+[  7%] Building CXX object CMakeFiles/LevelScopeCore.dir/Source/Core/Processing/Modules/MultiThresholdDynamicsModule.cpp.o
+[  8%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneExport.cpp.o
+[  8%] Building CXX object CMakeFiles/LevelScopeCore.dir/Source/Core/Processing/DSP/BroadbandUpwardCompressor.cpp.o
+[ 10%] Building CXX object CMakeFiles/LevelScopeCore.dir/Source/Core/Processing/DSP/BroadbandDownwardCompressor.cpp.o
+[ 12%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/ProgrammeSource.cpp.o
+[ 12%] Building CXX object CMakeFiles/LevelScopeCore.dir/Source/Core/Processing/DSP/LookaheadLimiter.cpp.o
+[ 14%] Building OBJCXX object CMakeFiles/LevelScopeCore.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o
+[ 15%] Building OBJCXX object CMakeFiles/LevelScopeCore.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 15%] Building OBJCXX object CMakeFiles/LevelScopeCore.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_data_structures/juce_data_structures.mm.o
+[ 17%] Building OBJCXX object CMakeFiles/LevelScopeCore.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o
+[ 17%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/ProgrammeComposition.cpp.o
+[ 19%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/SessionDocument.cpp.o
+[ 21%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/VerifiedSource.cpp.o
+[ 21%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/MarkerImport.cpp.o
+[ 22%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneMarkerImport.cpp.o
+[ 22%] Building OBJCXX object CMakeFiles/LevelScopeCore.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_dsp/juce_dsp.mm.o
+[ 22%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/SectionAnalysis.cpp.o
+[ 24%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneSections.cpp.o
+[ 26%] Building OBJCXX object CMakeFiles/LevelScopeCore.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 26%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/AnalysisEngine.cpp.o
+[ 28%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/AttributionEngine.cpp.o
+[ 29%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneDiagnostics.cpp.o
+[ 29%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/Methods/RuleBasedMethod.cpp.o
+[ 31%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/SectionPeakMap.cpp.o
+[ 31%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/Methods/SectionTrimMethod.cpp.o
+[ 33%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/LraPassages.cpp.o
+[ 35%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneLraProposal.cpp.o
+[ 35%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/StandaloneSectionProposal.cpp.o
+/Users/fuzz/Developer/LevelScope/Source/Core/Proposal/LraPassages.cpp:77:12: error: no matching function for call to 'group'
+   77 |     r->low=group(*r->analysis,*r->analysis->p10,false,cancelled());
+      |            ^~~~~
+/Users/fuzz/Developer/LevelScope/Source/Core/Proposal/LraPassages.cpp:12:25: note: candidate function not viable: no known conversion from 'bool' to 'const std::function<bool ()>' for 4th argument
+   12 | std::vector<LraPassage> group(const ProgramAnalysis& a,double level,bool upper,const std::function<bool()>& cancelled)
+      |                         ^                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/fuzz/Developer/LevelScope/Source/Core/Proposal/LraPassages.cpp:78:13: error: no matching function for call to 'group'
+   78 |     r->high=group(*r->analysis,*r->upperLevel,true,cancelled());if(cancelled())return {};
+      |             ^~~~~
+/Users/fuzz/Developer/LevelScope/Source/Core/Proposal/LraPassages.cpp:12:25: note: candidate function not viable: no known conversion from 'bool' to 'const std::function<bool ()>' for 4th argument
+   12 | std::vector<LraPassage> group(const ProgramAnalysis& a,double level,bool upper,const std::function<bool()>& cancelled)
+      |                         ^                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[ 36%] Building CXX object CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Standalone/AppliedProposalExplanation.cpp.o
+2 errors generated.
+make[3]: *** [CMakeFiles/LevelScopeStandaloneSupport.dir/Source/Core/Proposal/LraPassages.cpp.o] Error 1
+make[3]: *** Waiting for unfinished jobs....
+make[2]: *** [CMakeFiles/LevelScopeStandaloneSupport.dir/all] Error 2
+make[2]: *** Waiting for unfinished jobs....
+[ 36%] Linking CXX static library libLevelScopeCore.a
+[ 36%] Built target LevelScopeCore
+make[1]: *** [CMakeFiles/LevelScopeStandalone.dir/rule] Error 2
+make: *** [LevelScopeStandalone] Error 2

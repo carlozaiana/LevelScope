@@ -1,0 +1,40 @@
+{
+  "passed": true,
+  "device": "Saffire Pro 40 (Experimental)",
+  "rate": 48000,
+  "monitor_db": -5,
+  "output_pair": "1/2",
+  "clips": [
+    {
+      "file": "onset-baseline.wav",
+      "sha256": "6043fdd195237d582526ab4f2fe3952edd613ff83b4c6a508b598a740b29e00b",
+      "frames": 384000,
+      "underruns": 0,
+      "partial_left_right_only": false
+    },
+    {
+      "file": "onset-candidate.wav",
+      "sha256": "cf883e913e70b900c94b6515f555be718fa17196a2edfb6a111cc7ec02d7e024",
+      "frames": 384000,
+      "underruns": 0,
+      "partial_left_right_only": false
+    },
+    {
+      "file": "return-baseline.wav",
+      "sha256": "f6aa51cfb2bfe6e400aad8eeb3a8d3bfe3ab189db8c82d3add61f73900503fef",
+      "frames": 384000,
+      "underruns": 0,
+      "partial_left_right_only": false
+    },
+    {
+      "file": "return-candidate.wav",
+      "sha256": "3df5edd1c51c252404b93d561dbe9a6ae6cd2225bf40a6427af3341d0ee92620",
+      "frames": 384000,
+      "underruns": 0,
+      "partial_left_right_only": false
+    }
+  ],
+  "device_closed": true,
+  "build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e",
+  "perceptual_result": "Awaiting user observation; transport success is not perceptual transparency"
+}

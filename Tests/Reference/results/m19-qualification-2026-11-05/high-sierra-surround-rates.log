@@ -1,0 +1,432 @@
+Measured LRA candidate ready
+Exact complete measured assessment 2 passes all selected requirements. Global gain 0.639582164203 dB. Apply explicitly while stopped, then independently remeasure Current. Private measurements do not verify Current or an exported file.
+Planning estimates only. Connected changed regions 1; actual envelope/transition support 348390 frames / 12.153846%; maximum additional reduction 1.620599893653 dB.
+Region [1283310, 1627290) source frames; score 44.257038985723 LU*windows; 49 windows; requested 1.620599893653 dB, reduction 1.620599893653, reserve 0.500000000000, uncovered overshoot 0.000000000000 dB.
+
+Assessment 1 exact plan 5c321eb1f0606d053d0cebacf21b925538bfacc562c971b51410f847d162110b; global 0.000000000000 dB.
+Actual complete private assessment (measured)
+IL LUFS = -23.639582164203
+True peak dBTP = -14.015752662115
+LRA LU = 4.290036046833
+Max M LUFS = -19.859747803741
+Max S LUFS = -19.861553735983
+Sample peak dBFS = -14.016374460391
+Private candidate (not Current State) evaluation: FAIL
+Fails one or more selected measured rules.
+programme-loudness: FAIL | -23.639582 LUFS | min -23.200000 | max -22.800000 | delta -0.639582
+Outside selected bounds.
+true-peak: PASS | -14.015753 dBTP | max -1.000000 | delta -13.015753
+Within selected bounds.
+loudness-range: PASS | 4.290036 LU | max 4.900000 | delta -0.609964
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Measurement 75851d70449f0d518a54d03c2bf975a58077dffabe7bcccb2bb853df3672f68c
+Method bs1770-5-ebu2023-m7.1 / build 993f26a9295201a87fedea54a60bc8ca57877e93bb8bebc11729ab5bf5d2af1a / Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off
+Origin session 2b885a59b5f945889d9ede65f70df287 / job 2 / revision 2
+Final global trim estimate 0.639582164203 dB. A positive value raises the complete programme after local attenuation; it is not a selective quiet-passage boost.
+
+Assessment 2 exact plan 1c5d28d63c4722c48bf95264231f7e22457a0ff228bd8dd62c21d3544a6c7d3c; global 0.639582164203 dB.
+Actual complete private assessment (measured)
+IL LUFS = -23.000000000107
+True peak dBTP = -13.376170241580
+LRA LU = 4.290036046598
+Max M LUFS = -19.220165638757
+Max S LUFS = -19.221971572073
+Sample peak dBFS = -13.376792399559
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness, true-peak and LRA rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -13.376170 dBTP | max -1.000000 | delta -12.376170
+Within selected bounds.
+loudness-range: PASS | 4.290036 LU | max 4.900000 | delta -0.609964
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Measurement c8ea43df2a4fc2387dedf8255be1214a33a629ffb69a3e59e7c1aa71be46301a
+Method bs1770-5-ebu2023-m7.1 / build 993f26a9295201a87fedea54a60bc8ca57877e93bb8bebc11729ab5bf5d2af1a / Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off
+Origin session 2b885a59b5f945889d9ede65f70df287 / job 2 / revision 2
+
+Retained selection estimates/provenance
+Planning estimates only. Connected changed regions 1; actual envelope/transition support 348390 frames / 12.153846%; maximum additional reduction 1.620599893653 dB.
+Region [1283310, 1627290) source frames; score 44.257038985723 LU*windows; 49 windows; requested 1.620599893653 dB, reduction 1.620599893653, reserve 0.500000000000, uncovered overshoot 0.000000000000 dB.
+
+Method lra-selective-trim-v1 / binding c35bbe18971860279ef0c3826b73c99e2b51beb1aed78afcb6a75eab5c9a8c03
+section-preferences-v2 / connected-envelope-support-v2
+Policy digest: 9020f36cdf7584536fc2708e4f57196cbf3ca8ef1d72e954ae8ad2e88bb48e27
+No region-count restriction; affected duration 20.0% (preservation preference, not broadcast rule).
+Additional attenuation 3.0 dB; cumulative local attenuation 12.0 dB; requested reserve 0.5 dB inside both caps.
+
+Target EBU R128-2023 programme QC / ebu-r128-2023-programme-linear-qc / 1.0.0 / c3378e26aaf41176bf20d094b3be5cc91956bbd77d6e5e594e322453396cb29a
+IL -23.000000000 LUFS +/- 0.200000000 LU / True peak -1.000000000 dBTP / LRA 4.900000000 LU / Max M No Limit / Max S No Limit
+Selected programme loudness and true-peak rules for pre-produced whole-programme linear-audio QC. Excludes live exceptions, deliberate lower targets, short-form supplements and distribution-specific requirements.
+EBU R128-2023 (November 2023) / https://tech.ebu.ch/docs/r/r128.pdf
+Requirement provenance
+IL R128-2023 clauses h, i, k, l: -23 LUFS intended target; +/-0.2 LU QC allowance; whole-programme level gating.
+True peak R128-2023 clause m: maximum -1 dBTP for linear audio.
+LRA User-specified job requirement: Programme job requirements; EBU Tech 3342-2023 whole-programme LRA; M19 synthetic test requirement, not a delivery recommendation. User provenance is not independently verified; not an EBU-mandated ceiling.
+Max M 
+Max S 
+Clause m separately permits +/-0.3 dB meter tolerance for signals band-limited to 20 kHz. Bandwidth is not certified here; this provision never relaxes the -1 dBTP evaluation ceiling.
+Source baseline (measured)
+IL LUFS = -23.195572459985
+True peak dBTP = -12.395152685837
+LRA LU = 5.910635939930
+Max M LUFS = -18.239147909306
+Max S LUFS = -18.240953842805
+Sample peak dBFS = -12.395774820622
+Source evaluation: FAIL
+Fails one or more selected measured rules.
+programme-loudness: PASS | -23.195572 LUFS | min -23.200000 | max -22.800000 | delta -0.195572
+Within selected bounds.
+true-peak: PASS | -12.395153 dBTP | max -1.000000 | delta -11.395153
+Within selected bounds.
+loudness-range: FAIL | 5.910636 LU | max 4.900000 | delta 1.010636
+Outside selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Measurement 372168b65925fc8bde55fd281fb1bd59ec8e05687175fcfaa5bf3976d56c5375
+Method bs1770-5-ebu2023-m7.1 / build 993f26a9295201a87fedea54a60bc8ca57877e93bb8bebc11729ab5bf5d2af1a / Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off
+Origin session 2b885a59b5f945889d9ede65f70df287 / job 1 / revision 1
+Current baseline (measured)
+IL LUFS = -23.195572459985
+True peak dBTP = -12.395152685837
+LRA LU = 5.910635939930
+Max M LUFS = -18.239147909306
+Max S LUFS = -18.240953842805
+Sample peak dBFS = -12.395774820622
+Current State evaluation: FAIL
+Fails one or more selected measured rules.
+programme-loudness: PASS | -23.195572 LUFS | min -23.200000 | max -22.800000 | delta -0.195572
+Within selected bounds.
+true-peak: PASS | -12.395153 dBTP | max -1.000000 | delta -11.395153
+Within selected bounds.
+loudness-range: FAIL | 5.910636 LU | max 4.900000 | delta 1.010636
+Outside selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Measurement 82422bf4b9901e6f035568bce179540c1161bf887de0969a58dc21011f5c07ef
+Method bs1770-5-ebu2023-m7.1 / build 993f26a9295201a87fedea54a60bc8ca57877e93bb8bebc11729ab5bf5d2af1a / Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off
+Origin session 2b885a59b5f945889d9ede65f70df287 / job 2 / revision 2
+
+Private full-programme assessments 2 / 3. Estimates never satisfy measured rules.
+Retained measured private attempt (measured)
+IL LUFS = -23.000000000107
+True peak dBTP = -13.376170241580
+LRA LU = 4.290036046598
+Max M LUFS = -19.220165638757
+Max S LUFS = -19.221971572073
+Sample peak dBFS = -13.376792399559
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness, true-peak and LRA rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -13.376170 dBTP | max -1.000000 | delta -12.376170
+Within selected bounds.
+loudness-range: PASS | 4.290036 LU | max 4.900000 | delta -0.609964
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Measurement c8ea43df2a4fc2387dedf8255be1214a33a629ffb69a3e59e7c1aa71be46301a
+Method bs1770-5-ebu2023-m7.1 / build 993f26a9295201a87fedea54a60bc8ca57877e93bb8bebc11729ab5bf5d2af1a / Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off
+Origin session 2b885a59b5f945889d9ede65f70df287 / job 2 / revision 2
+
+Measured LRA candidate ready
+Exact complete measured assessment 2 passes all selected requirements. Global gain 0.659667875619 dB. Apply explicitly while stopped, then independently remeasure Current. Private measurements do not verify Current or an exported file.
+Planning estimates only. Connected changed regions 1; actual envelope/transition support 758400 frames / 12.153846%; maximum additional reduction 1.620599898755 dB.
+Region [2793600, 3542400) source frames; score 44.257036377160 LU*windows; 49 windows; requested 1.620599898755 dB, reduction 1.620599898755, reserve 0.500000000000, uncovered overshoot 0.000000000000 dB.
+
+Assessment 1 exact plan 0e33b25d0ddafd975e701d51e52bca6327cf1c29240c64a1f52ac1b47b924268; global 0.000000000000 dB.
+Actual complete private assessment (measured)
+IL LUFS = -23.659667875619
+True peak dBTP = -14.016374460391
+LRA LU = 4.290022208920
+Max M LUFS = -19.879824345200
+Max S LUFS = -19.881639377557
+Sample peak dBFS = -14.016374460391
+Private candidate (not Current State) evaluation: FAIL
+Fails one or more selected measured rules.
+programme-loudness: FAIL | -23.659668 LUFS | min -23.200000 | max -22.800000 | delta -0.659668
+Outside selected bounds.
+true-peak: PASS | -14.016374 dBTP | max -1.000000 | delta -13.016374
+Within selected bounds.
+loudness-range: PASS | 4.290022 LU | max 4.900000 | delta -0.609978
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Measurement a49d241d63547e210e967644ff26753a65b97fe46b56ecd438f214b1ec16d838
+Method bs1770-5-ebu2023-m7.1 / build 993f26a9295201a87fedea54a60bc8ca57877e93bb8bebc11729ab5bf5d2af1a / Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off
+Origin session 46c9b93a18e943b696285fb229dc5ca5 / job 2 / revision 2
+Final global trim estimate 0.659667875619 dB. A positive value raises the complete programme after local attenuation; it is not a selective quiet-passage boost.
+
+Assessment 2 exact plan e16575622cdf77f64c5a55db33279aefa60a741c0ca09a3b9dad655dc60e906f; global 0.659667875619 dB.
+Actual complete private assessment (measured)
+IL LUFS = -23.000000000034
+True peak dBTP = -13.356706362036
+LRA LU = 4.290022209392
+Max M LUFS = -19.220156468639
+Max S LUFS = -19.221971501571
+Sample peak dBFS = -13.356706362036
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness, true-peak and LRA rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -13.356706 dBTP | max -1.000000 | delta -12.356706
+Within selected bounds.
+loudness-range: PASS | 4.290022 LU | max 4.900000 | delta -0.609978
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Measurement 19d4ac2670e62c0230d54654cffa5525ad5965b574899f047d1f07f13dacf556
+Method bs1770-5-ebu2023-m7.1 / build 993f26a9295201a87fedea54a60bc8ca57877e93bb8bebc11729ab5bf5d2af1a / Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off
+Origin session 46c9b93a18e943b696285fb229dc5ca5 / job 2 / revision 2
+
+Retained selection estimates/provenance
+Planning estimates only. Connected changed regions 1; actual envelope/transition support 758400 frames / 12.153846%; maximum additional reduction 1.620599898755 dB.
+Region [2793600, 3542400) source frames; score 44.257036377160 LU*windows; 49 windows; requested 1.620599898755 dB, reduction 1.620599898755, reserve 0.500000000000, uncovered overshoot 0.000000000000 dB.
+
+Method lra-selective-trim-v1 / binding e9f02b5f47ed886b99edaefc1c82aacb0c8270ec5b1eacb6264a15f44e018d33
+section-preferences-v2 / connected-envelope-support-v2
+Policy digest: 9020f36cdf7584536fc2708e4f57196cbf3ca8ef1d72e954ae8ad2e88bb48e27
+No region-count restriction; affected duration 20.0% (preservation preference, not broadcast rule).
+Additional attenuation 3.0 dB; cumulative local attenuation 12.0 dB; requested reserve 0.5 dB inside both caps.
+
+Target EBU R128-2023 programme QC / ebu-r128-2023-programme-linear-qc / 1.0.0 / c3378e26aaf41176bf20d094b3be5cc91956bbd77d6e5e594e322453396cb29a
+IL -23.000000000 LUFS +/- 0.200000000 LU / True peak -1.000000000 dBTP / LRA 4.900000000 LU / Max M No Limit / Max S No Limit
+Selected programme loudness and true-peak rules for pre-produced whole-programme linear-audio QC. Excludes live exceptions, deliberate lower targets, short-form supplements and distribution-specific requirements.
+EBU R128-2023 (November 2023) / https://tech.ebu.ch/docs/r/r128.pdf
+Requirement provenance
+IL R128-2023 clauses h, i, k, l: -23 LUFS intended target; +/-0.2 LU QC allowance; whole-programme level gating.
+True peak R128-2023 clause m: maximum -1 dBTP for linear audio.
+LRA User-specified job requirement: Programme job requirements; EBU Tech 3342-2023 whole-programme LRA; M19 synthetic test requirement, not a delivery recommendation. User provenance is not independently verified; not an EBU-mandated ceiling.
+Max M 
+Max S 
+Clause m separately permits +/-0.3 dB meter tolerance for signals band-limited to 20 kHz. Bandwidth is not certified here; this provision never relaxes the -1 dBTP evaluation ceiling.
+Source baseline (measured)
+IL LUFS = -23.215658164076
+True peak dBTP = -12.395774820622
+LRA LU = 5.910622107020
+Max M LUFS = -18.259224445980
+Max S LUFS = -18.261039479392
+Sample peak dBFS = -12.395774820622
+Source evaluation: FAIL
+Fails one or more selected measured rules.
+programme-loudness: FAIL | -23.215658 LUFS | min -23.200000 | max -22.800000 | delta -0.215658
+Outside selected bounds.
+true-peak: PASS | -12.395775 dBTP | max -1.000000 | delta -11.395775
+Within selected bounds.
+loudness-range: FAIL | 5.910622 LU | max 4.900000 | delta 1.010622
+Outside selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Measurement 6c1a748d0128385fea9a1e394301b7f0277c213c3070176a6cad19d89f45ef0e
+Method bs1770-5-ebu2023-m7.1 / build 993f26a9295201a87fedea54a60bc8ca57877e93bb8bebc11729ab5bf5d2af1a / Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off
+Origin session 46c9b93a18e943b696285fb229dc5ca5 / job 1 / revision 1
+Current baseline (measured)
+IL LUFS = -23.215658164076
+True peak dBTP = -12.395774820622
+LRA LU = 5.910622107020
+Max M LUFS = -18.259224445980
+Max S LUFS = -18.261039479392
+Sample peak dBFS = -12.395774820622
+Current State evaluation: FAIL
+Fails one or more selected measured rules.
+programme-loudness: FAIL | -23.215658 LUFS | min -23.200000 | max -22.800000 | delta -0.215658
+Outside selected bounds.
+true-peak: PASS | -12.395775 dBTP | max -1.000000 | delta -11.395775
+Within selected bounds.
+loudness-range: FAIL | 5.910622 LU | max 4.900000 | delta 1.010622
+Outside selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Measurement 95aefabeeea757c676ec0a82b3c88f132d796cb14f2a7c76aed89202871cfd2a
+Method bs1770-5-ebu2023-m7.1 / build 993f26a9295201a87fedea54a60bc8ca57877e93bb8bebc11729ab5bf5d2af1a / Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off
+Origin session 46c9b93a18e943b696285fb229dc5ca5 / job 2 / revision 2
+
+Private full-programme assessments 2 / 3. Estimates never satisfy measured rules.
+Retained measured private attempt (measured)
+IL LUFS = -23.000000000034
+True peak dBTP = -13.356706362036
+LRA LU = 4.290022209392
+Max M LUFS = -19.220156468639
+Max S LUFS = -19.221971501571
+Sample peak dBFS = -13.356706362036
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness, true-peak and LRA rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta -0.000000
+Within selected bounds.
+true-peak: PASS | -13.356706 dBTP | max -1.000000 | delta -12.356706
+Within selected bounds.
+loudness-range: PASS | 4.290022 LU | max 4.900000 | delta -0.609978
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Measurement 19d4ac2670e62c0230d54654cffa5525ad5965b574899f047d1f07f13dacf556
+Method bs1770-5-ebu2023-m7.1 / build 993f26a9295201a87fedea54a60bc8ca57877e93bb8bebc11729ab5bf5d2af1a / Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off
+Origin session 46c9b93a18e943b696285fb229dc5ca5 / job 2 / revision 2
+
+Measured LRA candidate ready
+Exact complete measured assessment 2 passes all selected requirements. Global gain 0.669415445974 dB. Apply explicitly while stopped, then independently remeasure Current. Private measurements do not verify Current or an exported file.
+Planning estimates only. Connected changed regions 1; actual envelope/transition support 1516800 frames / 12.153846%; maximum additional reduction 1.620599912990 dB.
+Region [5587200, 7084800) source frames; score 44.257036917622 LU*windows; 49 windows; requested 1.620599912990 dB, reduction 1.620599912990, reserve 0.500000000000, uncovered overshoot 0.000000000000 dB.
+
+Assessment 1 exact plan 2a71b6e503f9d23ad21e8b4db780b29820a5f581a4bff5f01a0375b0bb6f8f2d; global 0.000000000000 dB.
+Actual complete private assessment (measured)
+IL LUFS = -23.669415445974
+True peak dBTP = -14.016372511677
+LRA LU = 4.290016372791
+Max M LUFS = -19.889572514267
+Max S LUFS = -19.891386917065
+Sample peak dBFS = -14.016374460391
+Private candidate (not Current State) evaluation: FAIL
+Fails one or more selected measured rules.
+programme-loudness: FAIL | -23.669415 LUFS | min -23.200000 | max -22.800000 | delta -0.669415
+Outside selected bounds.
+true-peak: PASS | -14.016373 dBTP | max -1.000000 | delta -13.016373
+Within selected bounds.
+loudness-range: PASS | 4.290016 LU | max 4.900000 | delta -0.609984
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Measurement 56d75c60bb0679ae68d832183f0cceb0b9b4aa97f55a8aa235d29361ee3cc302
+Method bs1770-5-ebu2023-m7.1 / build 993f26a9295201a87fedea54a60bc8ca57877e93bb8bebc11729ab5bf5d2af1a / Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off
+Origin session cd1c56006bff42be9bf35554fe3df4a0 / job 2 / revision 2
+Final global trim estimate 0.669415445974 dB. A positive value raises the complete programme after local attenuation; it is not a selective quiet-passage boost.
+
+Assessment 2 exact plan 7818dd53448ad7fa0973534b771d3356bbae59a4cabbc857502ee3d21acfd797; global 0.669415445974 dB.
+Actual complete private assessment (measured)
+IL LUFS = -22.999999999735
+True peak dBTP = -13.346957025161
+LRA LU = 4.290016372730
+Max M LUFS = -19.220157067905
+Max S LUFS = -19.221971470897
+Sample peak dBFS = -13.346958717205
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness, true-peak and LRA rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta 0.000000
+Within selected bounds.
+true-peak: PASS | -13.346957 dBTP | max -1.000000 | delta -12.346957
+Within selected bounds.
+loudness-range: PASS | 4.290016 LU | max 4.900000 | delta -0.609984
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Measurement 328c79ef22954da9b2a653ae3a2cf302526fb172a431bca1b2c841d914f741be
+Method bs1770-5-ebu2023-m7.1 / build 993f26a9295201a87fedea54a60bc8ca57877e93bb8bebc11729ab5bf5d2af1a / Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off
+Origin session cd1c56006bff42be9bf35554fe3df4a0 / job 2 / revision 2
+
+Retained selection estimates/provenance
+Planning estimates only. Connected changed regions 1; actual envelope/transition support 1516800 frames / 12.153846%; maximum additional reduction 1.620599912990 dB.
+Region [5587200, 7084800) source frames; score 44.257036917622 LU*windows; 49 windows; requested 1.620599912990 dB, reduction 1.620599912990, reserve 0.500000000000, uncovered overshoot 0.000000000000 dB.
+
+Method lra-selective-trim-v1 / binding b9a47fda4092bfdff1bbfa92771a66ee67122d1bcbd3c6697c582317f6c9ad91
+section-preferences-v2 / connected-envelope-support-v2
+Policy digest: 9020f36cdf7584536fc2708e4f57196cbf3ca8ef1d72e954ae8ad2e88bb48e27
+No region-count restriction; affected duration 20.0% (preservation preference, not broadcast rule).
+Additional attenuation 3.0 dB; cumulative local attenuation 12.0 dB; requested reserve 0.5 dB inside both caps.
+
+Target EBU R128-2023 programme QC / ebu-r128-2023-programme-linear-qc / 1.0.0 / c3378e26aaf41176bf20d094b3be5cc91956bbd77d6e5e594e322453396cb29a
+IL -23.000000000 LUFS +/- 0.200000000 LU / True peak -1.000000000 dBTP / LRA 4.900000000 LU / Max M No Limit / Max S No Limit
+Selected programme loudness and true-peak rules for pre-produced whole-programme linear-audio QC. Excludes live exceptions, deliberate lower targets, short-form supplements and distribution-specific requirements.
+EBU R128-2023 (November 2023) / https://tech.ebu.ch/docs/r/r128.pdf
+Requirement provenance
+IL R128-2023 clauses h, i, k, l: -23 LUFS intended target; +/-0.2 LU QC allowance; whole-programme level gating.
+True peak R128-2023 clause m: maximum -1 dBTP for linear audio.
+LRA User-specified job requirement: Programme job requirements; EBU Tech 3342-2023 whole-programme LRA; M19 synthetic test requirement, not a delivery recommendation. User provenance is not independently verified; not an EBU-mandated ceiling.
+Max M 
+Max S 
+Clause m separately permits +/-0.3 dB meter tolerance for signals band-limited to 20 kHz. Bandwidth is not certified here; this provision never relaxes the -1 dBTP evaluation ceiling.
+Source baseline (measured)
+IL LUFS = -23.225405724766
+True peak dBTP = -12.395772382213
+LRA LU = 5.910616285419
+Max M LUFS = -18.268972601622
+Max S LUFS = -18.270787004388
+Sample peak dBFS = -12.395774820622
+Source evaluation: FAIL
+Fails one or more selected measured rules.
+programme-loudness: FAIL | -23.225406 LUFS | min -23.200000 | max -22.800000 | delta -0.225406
+Outside selected bounds.
+true-peak: PASS | -12.395772 dBTP | max -1.000000 | delta -11.395772
+Within selected bounds.
+loudness-range: FAIL | 5.910616 LU | max 4.900000 | delta 1.010616
+Outside selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Measurement de16845e047382edb6682e1e4140366d90887dc5b80f4e625e5f7b8dc1215851
+Method bs1770-5-ebu2023-m7.1 / build 993f26a9295201a87fedea54a60bc8ca57877e93bb8bebc11729ab5bf5d2af1a / Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off
+Origin session cd1c56006bff42be9bf35554fe3df4a0 / job 1 / revision 1
+Current baseline (measured)
+IL LUFS = -23.225405724766
+True peak dBTP = -12.395772382213
+LRA LU = 5.910616285419
+Max M LUFS = -18.268972601622
+Max S LUFS = -18.270787004388
+Sample peak dBFS = -12.395774820622
+Current State evaluation: FAIL
+Fails one or more selected measured rules.
+programme-loudness: FAIL | -23.225406 LUFS | min -23.200000 | max -22.800000 | delta -0.225406
+Outside selected bounds.
+true-peak: PASS | -12.395772 dBTP | max -1.000000 | delta -11.395772
+Within selected bounds.
+loudness-range: FAIL | 5.910616 LU | max 4.900000 | delta 1.010616
+Outside selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Measurement fe34259863b26dfe5f02e9b5e15f20b6604eb793df6359b0eaa75824f7986ef6
+Method bs1770-5-ebu2023-m7.1 / build 993f26a9295201a87fedea54a60bc8ca57877e93bb8bebc11729ab5bf5d2af1a / Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off
+Origin session cd1c56006bff42be9bf35554fe3df4a0 / job 2 / revision 2
+
+Private full-programme assessments 2 / 3. Estimates never satisfy measured rules.
+Retained measured private attempt (measured)
+IL LUFS = -22.999999999735
+True peak dBTP = -13.346957025161
+LRA LU = 4.290016372730
+Max M LUFS = -19.220157067905
+Max S LUFS = -19.221971470897
+Sample peak dBFS = -13.346958717205
+Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness, true-peak and LRA rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta 0.000000
+Within selected bounds.
+true-peak: PASS | -13.346957 dBTP | max -1.000000 | delta -12.346957
+Within selected bounds.
+loudness-range: PASS | 4.290016 LU | max 4.900000 | delta -0.609984
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Measurement 328c79ef22954da9b2a653ae3a2cf302526fb172a431bca1b2c841d914f741be
+Method bs1770-5-ebu2023-m7.1 / build 993f26a9295201a87fedea54a60bc8ca57877e93bb8bebc11729ab5bf5d2af1a / Mac OSX 10.13.6;x86_64;float32-samples;float64-analysis;no-fast-math;fp-contract-off
+Origin session cd1c56006bff42be9bf35554fe3df4a0 / job 2 / revision 2
+
+      233.93 real       676.91 user         8.08 sys
+  24473600  maximum resident set size
+         0  average shared memory size
+         0  average unshared data size
+         0  average unshared stack size
+      5637  page reclaims
+       568  page faults
+         0  swaps
+         0  block input operations
+       154  block output operations
+         0  messages sent
+         0  messages received
+         0  signals received
+      3725  voluntary context switches
+    552295  involuntary context switches

@@ -1,0 +1,951 @@
+{
+  "passages_p95_ms": 85.01174999999999,
+  "passages_max_ms": 85.01174999999999,
+  "cancel_ms": 43.736208,
+  "channels": 2,
+  "input_sha256": "7cd69948c9a6caeae2b2d32228e33732e4b0477fab486f238a0a5f420702cf5c",
+  "private_passes": 2,
+  "target_lra": 4.9,
+  "passed": true,
+  "checks": [
+    {
+      "name": "live native M19 main component",
+      "passed": true
+    },
+    {
+      "name": "file picker opened with an active completion",
+      "passed": true
+    },
+    {
+      "name": "one-pass Source and untouched Current ready",
+      "passed": true
+    },
+    {
+      "name": "inline LRA target committed",
+      "passed": true
+    },
+    {
+      "name": "requirements reuse valid measurement",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "Propose opens explicit Current estimates before any measurement pass",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "estimate view does not launch private assessment or mutate audio",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "write fresh UI capture",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage selection highlights exact interval without seeking or audio mutation",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "Source view descriptive; Current correction requires Current inspection",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "viewing quiet/high Source populations preserves closed stopped audio",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "native passage view heartbeat observed",
+      "passed": true
+    },
+    {
+      "name": "passage inspection p95 under 100 ms on 20 ms timer",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "cancelled assessment leaves valid original Current and no Apply authority",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "passage window exists",
+      "passed": true
+    },
+    {
+      "name": "actual LRA passage panel",
+      "passed": true
+    },
+    {
+      "name": "native measured candidate enables explicit Apply",
+      "passed": true
+    },
+    {
+      "name": "marker-free candidate has navigable processing-region preview",
+      "passed": true
+    },
+    {
+      "name": "complete measured rationale is accessible",
+      "passed": true
+    },
+    {
+      "name": "explicit native Apply preserves historical rationale and marks Current unverified",
+      "passed": true
+    },
+    {
+      "name": "independent native Current remeasurement verifies exact candidate",
+      "passed": true
+    },
+    {
+      "name": "historical explanation remains accessible after measurement",
+      "passed": true
+    },
+    {
+      "name": "write fresh UI capture",
+      "passed": true
+    },
+    {
+      "name": "original Source, whole-programme annotation and closed device preserved throughout",
+      "passed": true
+    }
+  ],
+  "build": "8354c701314d425dd0f7765611c877f62c6996f3ddf9c81f2f6d8fea4e5decad",
+  "physical_devices_opened": false,
+  "video_loaded": false
+}

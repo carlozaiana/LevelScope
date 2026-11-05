@@ -1,0 +1,26 @@
+{
+  "candidate": "candidate-02",
+  "source_commit": "cf275afb133118dd2a06e7bca59f82f98898b3cd",
+  "numerical_and_native_ui_passed": true,
+  "resources_passed": true,
+  "packages_intact": true,
+  "qualified": true,
+  "ready_for_publication": true,
+  "pending": [],
+  "physical_devices_opened": true,
+  "video_loaded": false,
+  "main_unchanged": "51e47f300fcc38a386a5a92a7277029175cfab0c",
+  "existing_tags_preserved": 23,
+  "physical_device_status": "All approved stereo/cinema sequences complete; latest reference/four clips at 0 dB, 48 kHz, outputs 1/2, exact EOF and zero underruns. Saffire device closed.",
+  "supplemental_surround_rates_passed": true,
+  "ready_for_checkpoint_review": true,
+  "publication_authorized": false,
+  "bounded_listening_review_complete": true,
+  "completion_review": "completion-review.json",
+  "limitations": [
+    "Cinema 15 LU attempt fails honestly and cannot Apply",
+    "At most three private full-programme passes; no arbitrary LRA attainment guarantee",
+    "Mono/7.1 new automatic LRA method outside scope",
+    "Full physical multichannel routing/listening remains separate"
+  ]
+}

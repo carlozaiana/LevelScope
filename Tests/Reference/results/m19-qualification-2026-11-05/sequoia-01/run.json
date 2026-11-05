@@ -1,0 +1,255 @@
+{
+  "required": [
+    "core",
+    "stereo",
+    "surround",
+    "rates",
+    "failures",
+    "inputs",
+    "gating",
+    "real",
+    "measurement",
+    "section",
+    "requirements"
+  ],
+  "selected": [
+    "core",
+    "stereo",
+    "surround",
+    "rates",
+    "failures",
+    "inputs",
+    "gating",
+    "real",
+    "measurement",
+    "section",
+    "requirements"
+  ],
+  "machine": "arm64",
+  "os": "ProductName:\t\tmacOS\nProductVersion:\t\t15.7.9\nBuildVersion:\t\t24G830\n",
+  "cpu": "Apple M1 Max",
+  "cinema_sha256": "cfd57bea9a108db850b4e371de0f299f3396fbc1730e58e357380042a3064dd5",
+  "cases": [
+    {
+      "group": "core",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/candidate-01/bin/LevelScopeLraProposalTests",
+        "--root",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/core",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/core.json",
+        "--group",
+        "core"
+      ],
+      "executable_sha256": "c7a27a3371a3c09782d043c15ed7ea0c7b5ab1b52bf750971d3220a4007a3872",
+      "exit_code": 0,
+      "seconds": 0.526618416,
+      "peak_rss_bytes": 23035904,
+      "passed": true,
+      "build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e"
+    },
+    {
+      "group": "stereo",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/candidate-01/bin/LevelScopeLraProposalTests",
+        "--root",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/stereo",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/stereo.json",
+        "--group",
+        "stereo"
+      ],
+      "executable_sha256": "c7a27a3371a3c09782d043c15ed7ea0c7b5ab1b52bf750971d3220a4007a3872",
+      "exit_code": 0,
+      "seconds": 10.763167458,
+      "peak_rss_bytes": 36405248,
+      "passed": true,
+      "build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e"
+    },
+    {
+      "group": "surround",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/candidate-01/bin/LevelScopeLraProposalTests",
+        "--root",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/surround",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/surround.json",
+        "--group",
+        "surround"
+      ],
+      "executable_sha256": "c7a27a3371a3c09782d043c15ed7ea0c7b5ab1b52bf750971d3220a4007a3872",
+      "exit_code": 0,
+      "seconds": 16.949400083,
+      "peak_rss_bytes": 24100864,
+      "passed": true,
+      "build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e"
+    },
+    {
+      "group": "rates",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/candidate-01/bin/LevelScopeLraProposalTests",
+        "--root",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/rates",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/rates.json",
+        "--group",
+        "rates"
+      ],
+      "executable_sha256": "c7a27a3371a3c09782d043c15ed7ea0c7b5ab1b52bf750971d3220a4007a3872",
+      "exit_code": 0,
+      "seconds": 72.21981845799999,
+      "peak_rss_bytes": 49725440,
+      "passed": true,
+      "build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e"
+    },
+    {
+      "group": "failures",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/candidate-01/bin/LevelScopeLraProposalTests",
+        "--root",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/failures",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/failures.json",
+        "--group",
+        "failures"
+      ],
+      "executable_sha256": "c7a27a3371a3c09782d043c15ed7ea0c7b5ab1b52bf750971d3220a4007a3872",
+      "exit_code": 0,
+      "seconds": 18.080608667000007,
+      "peak_rss_bytes": 19742720,
+      "passed": true,
+      "build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e"
+    },
+    {
+      "group": "inputs",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/candidate-01/bin/LevelScopeLraProposalTests",
+        "--root",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/inputs",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/inputs.json",
+        "--group",
+        "inputs"
+      ],
+      "executable_sha256": "c7a27a3371a3c09782d043c15ed7ea0c7b5ab1b52bf750971d3220a4007a3872",
+      "exit_code": 0,
+      "seconds": 43.797063957999995,
+      "peak_rss_bytes": 240189440,
+      "passed": true,
+      "build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e"
+    },
+    {
+      "group": "gating",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/candidate-01/bin/LevelScopeLraProposalTests",
+        "--root",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/gating",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/gating.json",
+        "--group",
+        "gating"
+      ],
+      "executable_sha256": "c7a27a3371a3c09782d043c15ed7ea0c7b5ab1b52bf750971d3220a4007a3872",
+      "exit_code": 0,
+      "seconds": 41.41118754199999,
+      "peak_rss_bytes": 23396352,
+      "passed": true,
+      "build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e"
+    },
+    {
+      "group": "real",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/candidate-01/bin/LevelScopeLraProposalTests",
+        "--root",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/real",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/real.json",
+        "--group",
+        "real",
+        "--input",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/media/cinema-27m-35m.wav"
+      ],
+      "executable_sha256": "c7a27a3371a3c09782d043c15ed7ea0c7b5ab1b52bf750971d3220a4007a3872",
+      "exit_code": 0,
+      "seconds": 46.20363262500001,
+      "peak_rss_bytes": 58916864,
+      "passed": true,
+      "build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e"
+    },
+    {
+      "group": "measurement",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/candidate-01/bin/LevelScopeMeasurementTests",
+        "--report",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/measurement.json"
+      ],
+      "executable_sha256": "bba0f3e57d3ecf1609b305efb6234742ed7606562b7c3f31aa5e00b16de5e68d",
+      "exit_code": 0,
+      "seconds": 13.690465458000006,
+      "peak_rss_bytes": 48300032,
+      "passed": true,
+      "build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e"
+    },
+    {
+      "group": "section",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/candidate-01/bin/LevelScopeSectionProposalTests",
+        "--root",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/section",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/section.json",
+        "--smoke"
+      ],
+      "executable_sha256": "bbdaa35dd13f8cf3e701c1a88c383c162544751a61f40c27fd67b9ea3a034aeb",
+      "exit_code": 0,
+      "seconds": 11.601184833000048,
+      "peak_rss_bytes": 524779520,
+      "passed": true,
+      "build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e"
+    },
+    {
+      "group": "requirements",
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/candidate-01/bin/LevelScopeJobRequirementsTests",
+        "--root",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/requirements",
+        "--output",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/requirements.json"
+      ],
+      "executable_sha256": "c7a64155cd2335df8460c270dc52955fdf6b3adebb68c71910c30fa2ea0e2510",
+      "exit_code": 0,
+      "seconds": 28.884490416999995,
+      "peak_rss_bytes": 33292288,
+      "passed": true,
+      "build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e"
+    }
+  ],
+  "physical_devices_opened": false,
+  "video_loaded": false,
+  "seconds": 304.259764334,
+  "selected_passed": true,
+  "required_automated_complete": true,
+  "qualified": false
+}

@@ -1,0 +1,26 @@
+{
+  "original_path": "/Volumes/Tucan/GuerraDiCesare/LGdC_Masters/LGdC__51_Master_V2.wav",
+  "original_sha256": "1fb7f93a33d600bf0a62d63e642e5703f03aec8e6920f8a6e510cf65f61fdeaf",
+  "original_size": 4934466898,
+  "original_mtime_ns": 1714640535000000000,
+  "sample_rate": 48000,
+  "channels": [
+    "L",
+    "R",
+    "C",
+    "LFE",
+    "Ls",
+    "Rs"
+  ],
+  "bits": 24,
+  "begin_source_frame": 77760000,
+  "end_source_frame": 100800000,
+  "seconds": 480,
+  "excerpt_sha256": "cfd57bea9a108db850b4e371de0f299f3396fbc1730e58e357380042a3064dd5",
+  "pcm_payload_sha256": "0cb1b755af94e9eaca370941fdf3caa7f71c6b8844698b9c5ded256a4b4b6cd5",
+  "payload_byte_identical": true,
+  "dither": false,
+  "resampling": false,
+  "selection": "27:00\u201335:00 audio-source time, encompassing the prior 28:15\u201331:31 marker cluster; measured quiet/loud supports will be recorded from this excerpt.",
+  "interpretation": "Bounded excerpt, not full-film measurement or Nuendo comparison."
+}

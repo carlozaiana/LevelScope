@@ -1,0 +1,1450 @@
+[
+  {
+    "host": "sequoia",
+    "case": "stereo",
+    "session_sha256": "a3095052f12a5c821fce32771f51aaadede3755d1ed8d9a7a876096e42d02cb5",
+    "core_sha256": "3d2b268ca2031a7448b5619582031365b1d1bb5f72b808ee34088b79d811e3db",
+    "programme": {
+      "schema": 8,
+      "id": "02e087db9a0b45e7bb7a5dabc3b598e4",
+      "mode": "interleaved",
+      "purpose": "programme_audio",
+      "alignment": "0/1",
+      "layout": {
+        "count": 2,
+        "confirmed": true,
+        "manual": false,
+        "roles": [
+          1,
+          2
+        ]
+      },
+      "rangeBegin": "0",
+      "rangeEnd": "3120000",
+      "files": [
+        {
+          "id": "audio-1",
+          "locator": "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/stereo/programme.wav",
+          "media": {
+            "rate": "40e7700000000000",
+            "frames": "3120000",
+            "bytes": "18720104",
+            "channels": 2,
+            "bits": 24,
+            "modified": "1793881453055",
+            "format": "WAV file",
+            "sha256": "7cd69948c9a6caeae2b2d32228e33732e4b0477fab486f238a0a5f420702cf5c",
+            "provenance": "Legacy decoder role suggestions; confirm file-channel interpretation.",
+            "restriction": ""
+          }
+        }
+      ],
+      "channels": [
+        {
+          "fileId": "audio-1",
+          "fileChannel": 0,
+          "role": 1
+        },
+        {
+          "fileId": "audio-1",
+          "fileChannel": 1,
+          "role": 2
+        }
+      ]
+    },
+    "current": {
+      "gain": "401a208cd95d5aac",
+      "planSchema": 2,
+      "engine": "section-gain-v1",
+      "sectionGains": {
+        "schema": 1,
+        "rate": 48000,
+        "frames": "3120000",
+        "input": "fcd11a393f59a890f199ad6c94a1acf5d8f34416f6b9426880cd27d4c3853b26",
+        "intervals": [
+          [
+            "0",
+            "1396800",
+            "0000000000000000"
+          ],
+          [
+            "1396800",
+            "1771200",
+            "bff9edfa2a59d4e0"
+          ],
+          [
+            "1771200",
+            "3120000",
+            "0000000000000000"
+          ]
+        ]
+      },
+      "initialized": true,
+      "annotationProvenance": {
+        "schema": 1,
+        "input": "fcd11a393f59a890f199ad6c94a1acf5d8f34416f6b9426880cd27d4c3853b26",
+        "rate": 48000,
+        "frames": "3120000",
+        "revision": "0",
+        "nextId": "4",
+        "rows": [
+          [
+            "1",
+            "0",
+            "1396800",
+            "Applied LRA processing interval"
+          ],
+          [
+            "2",
+            "1396800",
+            "1771200",
+            "Applied LRA processing interval"
+          ],
+          [
+            "3",
+            "1771200",
+            "3120000",
+            "Applied LRA processing interval"
+          ]
+        ]
+      },
+      "componentPlans": [],
+      "wholeProgrammeGraph": ""
+    },
+    "jobRequirements": {
+      "format": "levelscope-job-requirements",
+      "schema": 1,
+      "id": "00000000000000000000000000000017",
+      "revision": 1,
+      "name": "Programme job requirements",
+      "base_id": "ebu-r128-2023-programme-linear-qc",
+      "base_version": "1.0.0",
+      "base_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+      "method": "EBU Tech 3342-2023 whole-programme LRA",
+      "applicability": "pre-produced-whole-programme-linear-audio",
+      "provenance_kind": "user-specified-job-requirement",
+      "provenance": "M19 synthetic test requirement, not a delivery recommendation",
+      "maximum_lra_tenths": 49,
+      "unavailable_reason": "",
+      "digest": "f4eca3efc67903aaa76a2ccda6671e65f0fab9fc911993cda84b6ae27915451d"
+    },
+    "proposalPolicy": {
+      "version": "section-preferences-v2",
+      "accounting": "connected-envelope-support-v2",
+      "region_limit": null,
+      "duration_thousandths": 200,
+      "additional_tenths_db": 30,
+      "cumulative_tenths_db": 120,
+      "reserve_tenths_db": 5,
+      "unavailable": ""
+    }
+  },
+  {
+    "host": "sequoia",
+    "case": "surround",
+    "session_sha256": "9fe8703440764ea268dcb85e64dd4166632d302a6136cf8bd9aaf29b6e6d54f0",
+    "core_sha256": "b2cc6213f3a208c96a16a1585b7479d32fa91e9ff2b4a9050029ef00fd30edb0",
+    "programme": {
+      "schema": 8,
+      "id": "2b745c900e724fb98bd52353c7f69ce7",
+      "mode": "interleaved",
+      "purpose": "programme_audio",
+      "alignment": "0/1",
+      "layout": {
+        "count": 6,
+        "confirmed": true,
+        "manual": false,
+        "roles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "rangeBegin": "0",
+      "rangeEnd": "3120000",
+      "files": [
+        {
+          "id": "audio-1",
+          "locator": "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/surround/programme.wav",
+          "media": {
+            "rate": "40e7700000000000",
+            "frames": "3120000",
+            "bytes": "56160104",
+            "channels": 6,
+            "bits": 24,
+            "modified": "1793881463922",
+            "format": "WAV file",
+            "sha256": "56c72e77ea2cfeb2828b339b10c5c4558c3c8cd945219601d23dbe0025cc29d4",
+            "provenance": "WAVE speaker mask",
+            "restriction": ""
+          }
+        }
+      ],
+      "channels": [
+        {
+          "fileId": "audio-1",
+          "fileChannel": 0,
+          "role": 1
+        },
+        {
+          "fileId": "audio-1",
+          "fileChannel": 1,
+          "role": 2
+        },
+        {
+          "fileId": "audio-1",
+          "fileChannel": 2,
+          "role": 3
+        },
+        {
+          "fileId": "audio-1",
+          "fileChannel": 3,
+          "role": 4
+        },
+        {
+          "fileId": "audio-1",
+          "fileChannel": 4,
+          "role": 5
+        },
+        {
+          "fileId": "audio-1",
+          "fileChannel": 5,
+          "role": 6
+        }
+      ]
+    },
+    "current": {
+      "gain": "3fe48e162fc19040",
+      "planSchema": 2,
+      "engine": "section-gain-v1",
+      "sectionGains": {
+        "schema": 1,
+        "rate": 48000,
+        "frames": "3120000",
+        "input": "37e5c4a13ff80f066a4747e9411885ed61abdf4382bbf9e36f2b3fd34eb1470e",
+        "intervals": [
+          [
+            "0",
+            "1396800",
+            "0000000000000000"
+          ],
+          [
+            "1396800",
+            "1771200",
+            "bff9edfa271b1e60"
+          ],
+          [
+            "1771200",
+            "3120000",
+            "0000000000000000"
+          ]
+        ]
+      },
+      "initialized": true,
+      "annotationProvenance": {
+        "schema": 1,
+        "input": "37e5c4a13ff80f066a4747e9411885ed61abdf4382bbf9e36f2b3fd34eb1470e",
+        "rate": 48000,
+        "frames": "3120000",
+        "revision": "0",
+        "nextId": "4",
+        "rows": [
+          [
+            "1",
+            "0",
+            "1396800",
+            "Applied LRA processing interval"
+          ],
+          [
+            "2",
+            "1396800",
+            "1771200",
+            "Applied LRA processing interval"
+          ],
+          [
+            "3",
+            "1771200",
+            "3120000",
+            "Applied LRA processing interval"
+          ]
+        ]
+      },
+      "componentPlans": [],
+      "wholeProgrammeGraph": ""
+    },
+    "jobRequirements": {
+      "format": "levelscope-job-requirements",
+      "schema": 1,
+      "id": "00000000000000000000000000000017",
+      "revision": 1,
+      "name": "Programme job requirements",
+      "base_id": "ebu-r128-2023-programme-linear-qc",
+      "base_version": "1.0.0",
+      "base_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+      "method": "EBU Tech 3342-2023 whole-programme LRA",
+      "applicability": "pre-produced-whole-programme-linear-audio",
+      "provenance_kind": "user-specified-job-requirement",
+      "provenance": "M19 synthetic test requirement, not a delivery recommendation",
+      "maximum_lra_tenths": 49,
+      "unavailable_reason": "",
+      "digest": "f4eca3efc67903aaa76a2ccda6671e65f0fab9fc911993cda84b6ae27915451d"
+    },
+    "proposalPolicy": {
+      "version": "section-preferences-v2",
+      "accounting": "connected-envelope-support-v2",
+      "region_limit": null,
+      "duration_thousandths": 200,
+      "additional_tenths_db": 30,
+      "cumulative_tenths_db": 120,
+      "reserve_tenths_db": 5,
+      "unavailable": ""
+    }
+  },
+  {
+    "host": "sequoia",
+    "case": "rates/44100",
+    "session_sha256": "6748e16bd2356e365f3d5b99543e5355bf8dd9309e253239d4915d4e1ccbae43",
+    "core_sha256": "3af8bb02e1c38ca4b70e39ccd44802a35f00efce927e5fdc18207271829fc665",
+    "programme": {
+      "schema": 8,
+      "id": "c0201acbe1a349959487a24a31644252",
+      "mode": "interleaved",
+      "purpose": "programme_audio",
+      "alignment": "0/1",
+      "layout": {
+        "count": 2,
+        "confirmed": true,
+        "manual": false,
+        "roles": [
+          1,
+          2
+        ]
+      },
+      "rangeBegin": "0",
+      "rangeEnd": "2866500",
+      "files": [
+        {
+          "id": "audio-1",
+          "locator": "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/rates/44100/programme.wav",
+          "media": {
+            "rate": "40e5888000000000",
+            "frames": "2866500",
+            "bytes": "17199104",
+            "channels": 2,
+            "bits": 24,
+            "modified": "1793881480788",
+            "format": "WAV file",
+            "sha256": "d290671a70bd92ace0e19bb9dcc1b23bc0296802844b78269409ca17d4fe26e1",
+            "provenance": "Legacy decoder role suggestions; confirm file-channel interpretation.",
+            "restriction": ""
+          }
+        }
+      ],
+      "channels": [
+        {
+          "fileId": "audio-1",
+          "fileChannel": 0,
+          "role": 1
+        },
+        {
+          "fileId": "audio-1",
+          "fileChannel": 1,
+          "role": 2
+        }
+      ]
+    },
+    "current": {
+      "gain": "401a1db8b7676648",
+      "planSchema": 2,
+      "engine": "section-gain-v1",
+      "sectionGains": {
+        "schema": 1,
+        "rate": 44100,
+        "frames": "2866500",
+        "input": "511e47e595332f458438920a30dc4e63ad0a2b85451d82b9b440e4fd50f8f406",
+        "intervals": [
+          [
+            "0",
+            "1283310",
+            "0000000000000000"
+          ],
+          [
+            "1283310",
+            "1627290",
+            "bff9edfa33efe1e0"
+          ],
+          [
+            "1627290",
+            "2866500",
+            "0000000000000000"
+          ]
+        ]
+      },
+      "initialized": true,
+      "annotationProvenance": {
+        "schema": 1,
+        "input": "511e47e595332f458438920a30dc4e63ad0a2b85451d82b9b440e4fd50f8f406",
+        "rate": 44100,
+        "frames": "2866500",
+        "revision": "0",
+        "nextId": "4",
+        "rows": [
+          [
+            "1",
+            "0",
+            "1283310",
+            "Applied LRA processing interval"
+          ],
+          [
+            "2",
+            "1283310",
+            "1627290",
+            "Applied LRA processing interval"
+          ],
+          [
+            "3",
+            "1627290",
+            "2866500",
+            "Applied LRA processing interval"
+          ]
+        ]
+      },
+      "componentPlans": [],
+      "wholeProgrammeGraph": ""
+    },
+    "jobRequirements": {
+      "format": "levelscope-job-requirements",
+      "schema": 1,
+      "id": "00000000000000000000000000000017",
+      "revision": 1,
+      "name": "Programme job requirements",
+      "base_id": "ebu-r128-2023-programme-linear-qc",
+      "base_version": "1.0.0",
+      "base_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+      "method": "EBU Tech 3342-2023 whole-programme LRA",
+      "applicability": "pre-produced-whole-programme-linear-audio",
+      "provenance_kind": "user-specified-job-requirement",
+      "provenance": "M19 synthetic test requirement, not a delivery recommendation",
+      "maximum_lra_tenths": 49,
+      "unavailable_reason": "",
+      "digest": "f4eca3efc67903aaa76a2ccda6671e65f0fab9fc911993cda84b6ae27915451d"
+    },
+    "proposalPolicy": {
+      "version": "section-preferences-v2",
+      "accounting": "connected-envelope-support-v2",
+      "region_limit": null,
+      "duration_thousandths": 200,
+      "additional_tenths_db": 30,
+      "cumulative_tenths_db": 120,
+      "reserve_tenths_db": 5,
+      "unavailable": ""
+    }
+  },
+  {
+    "host": "sequoia",
+    "case": "rates/96000",
+    "session_sha256": "809cb97ed531005c2ccd677cb60444ba08f4ce4639d2c0b27f94c9cda3c87686",
+    "core_sha256": "1c0a0d6c128330ad5a0c3f1803702e33c30c5aa906984fa2ba638a6dfbb29e7c",
+    "programme": {
+      "schema": 8,
+      "id": "5500974755bf484a8f34ef41d25e5d68",
+      "mode": "interleaved",
+      "purpose": "programme_audio",
+      "alignment": "0/1",
+      "layout": {
+        "count": 2,
+        "confirmed": true,
+        "manual": false,
+        "roles": [
+          1,
+          2
+        ]
+      },
+      "rangeBegin": "0",
+      "rangeEnd": "6240000",
+      "files": [
+        {
+          "id": "audio-1",
+          "locator": "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/rates/96000/programme.wav",
+          "media": {
+            "rate": "40f7700000000000",
+            "frames": "6240000",
+            "bytes": "37440104",
+            "channels": 2,
+            "bits": 24,
+            "modified": "1793881490192",
+            "format": "WAV file",
+            "sha256": "982aa37f9d124d02e20807b4631d4b71aa74c859a9733d382a6e1b80b1b7e482",
+            "provenance": "Legacy decoder role suggestions; confirm file-channel interpretation.",
+            "restriction": ""
+          }
+        }
+      ],
+      "channels": [
+        {
+          "fileId": "audio-1",
+          "fileChannel": 0,
+          "role": 1
+        },
+        {
+          "fileId": "audio-1",
+          "fileChannel": 1,
+          "role": 2
+        }
+      ]
+    },
+    "current": {
+      "gain": "401a324a0ec467d4",
+      "planSchema": 2,
+      "engine": "section-gain-v1",
+      "sectionGains": {
+        "schema": 1,
+        "rate": 96000,
+        "frames": "6240000",
+        "input": "9960a89156e7fb1672d7be4a7c3147236b2662cbf9346f2103d5c22edea40924",
+        "intervals": [
+          [
+            "0",
+            "2793600",
+            "0000000000000000"
+          ],
+          [
+            "2793600",
+            "3542400",
+            "bff9edfa33af81b0"
+          ],
+          [
+            "3542400",
+            "6240000",
+            "0000000000000000"
+          ]
+        ]
+      },
+      "initialized": true,
+      "annotationProvenance": {
+        "schema": 1,
+        "input": "9960a89156e7fb1672d7be4a7c3147236b2662cbf9346f2103d5c22edea40924",
+        "rate": 96000,
+        "frames": "6240000",
+        "revision": "0",
+        "nextId": "4",
+        "rows": [
+          [
+            "1",
+            "0",
+            "2793600",
+            "Applied LRA processing interval"
+          ],
+          [
+            "2",
+            "2793600",
+            "3542400",
+            "Applied LRA processing interval"
+          ],
+          [
+            "3",
+            "3542400",
+            "6240000",
+            "Applied LRA processing interval"
+          ]
+        ]
+      },
+      "componentPlans": [],
+      "wholeProgrammeGraph": ""
+    },
+    "jobRequirements": {
+      "format": "levelscope-job-requirements",
+      "schema": 1,
+      "id": "00000000000000000000000000000017",
+      "revision": 1,
+      "name": "Programme job requirements",
+      "base_id": "ebu-r128-2023-programme-linear-qc",
+      "base_version": "1.0.0",
+      "base_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+      "method": "EBU Tech 3342-2023 whole-programme LRA",
+      "applicability": "pre-produced-whole-programme-linear-audio",
+      "provenance_kind": "user-specified-job-requirement",
+      "provenance": "M19 synthetic test requirement, not a delivery recommendation",
+      "maximum_lra_tenths": 49,
+      "unavailable_reason": "",
+      "digest": "f4eca3efc67903aaa76a2ccda6671e65f0fab9fc911993cda84b6ae27915451d"
+    },
+    "proposalPolicy": {
+      "version": "section-preferences-v2",
+      "accounting": "connected-envelope-support-v2",
+      "region_limit": null,
+      "duration_thousandths": 200,
+      "additional_tenths_db": 30,
+      "cumulative_tenths_db": 120,
+      "reserve_tenths_db": 5,
+      "unavailable": ""
+    }
+  },
+  {
+    "host": "sequoia",
+    "case": "rates/192000",
+    "session_sha256": "2706b3e394b5312e7f815f7bbc399190bc404fac0db430bb1eec64d9d813abd4",
+    "core_sha256": "f6ec832b2a00a35000390e7caae5dd238393fa4505d005315419e161f1805e05",
+    "programme": {
+      "schema": 8,
+      "id": "38d616278a9c487fbc3243ddfac5d1d6",
+      "mode": "interleaved",
+      "purpose": "programme_audio",
+      "alignment": "0/1",
+      "layout": {
+        "count": 2,
+        "confirmed": true,
+        "manual": false,
+        "roles": [
+          1,
+          2
+        ]
+      },
+      "rangeBegin": "0",
+      "rangeEnd": "12480000",
+      "files": [
+        {
+          "id": "audio-1",
+          "locator": "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/sequoia-01/rates/192000/programme.wav",
+          "media": {
+            "rate": "4107700000000000",
+            "frames": "12480000",
+            "bytes": "74880104",
+            "channels": 2,
+            "bits": 24,
+            "modified": "1793881510383",
+            "format": "WAV file",
+            "sha256": "2f2641df989d0e4e2598f1e13ba173d1936563efaf081f03069bb617f5ab65dd",
+            "provenance": "Legacy decoder role suggestions; confirm file-channel interpretation.",
+            "restriction": ""
+          }
+        }
+      ],
+      "channels": [
+        {
+          "fileId": "audio-1",
+          "fileChannel": 0,
+          "role": 1
+        },
+        {
+          "fileId": "audio-1",
+          "fileChannel": 1,
+          "role": 2
+        }
+      ]
+    },
+    "current": {
+      "gain": "401a3c4553ce6744",
+      "planSchema": 2,
+      "engine": "section-gain-v1",
+      "sectionGains": {
+        "schema": 1,
+        "rate": 192000,
+        "frames": "12480000",
+        "input": "c7db5c4c9ead05377994386dc5b51ca3f7a8a352d6b2fc47d93dd09d39511af4",
+        "intervals": [
+          [
+            "0",
+            "5587200",
+            "0000000000000000"
+          ],
+          [
+            "5587200",
+            "7084800",
+            "bff9edfa35bdd850"
+          ],
+          [
+            "7084800",
+            "12480000",
+            "0000000000000000"
+          ]
+        ]
+      },
+      "initialized": true,
+      "annotationProvenance": {
+        "schema": 1,
+        "input": "c7db5c4c9ead05377994386dc5b51ca3f7a8a352d6b2fc47d93dd09d39511af4",
+        "rate": 192000,
+        "frames": "12480000",
+        "revision": "0",
+        "nextId": "4",
+        "rows": [
+          [
+            "1",
+            "0",
+            "5587200",
+            "Applied LRA processing interval"
+          ],
+          [
+            "2",
+            "5587200",
+            "7084800",
+            "Applied LRA processing interval"
+          ],
+          [
+            "3",
+            "7084800",
+            "12480000",
+            "Applied LRA processing interval"
+          ]
+        ]
+      },
+      "componentPlans": [],
+      "wholeProgrammeGraph": ""
+    },
+    "jobRequirements": {
+      "format": "levelscope-job-requirements",
+      "schema": 1,
+      "id": "00000000000000000000000000000017",
+      "revision": 1,
+      "name": "Programme job requirements",
+      "base_id": "ebu-r128-2023-programme-linear-qc",
+      "base_version": "1.0.0",
+      "base_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+      "method": "EBU Tech 3342-2023 whole-programme LRA",
+      "applicability": "pre-produced-whole-programme-linear-audio",
+      "provenance_kind": "user-specified-job-requirement",
+      "provenance": "M19 synthetic test requirement, not a delivery recommendation",
+      "maximum_lra_tenths": 49,
+      "unavailable_reason": "",
+      "digest": "f4eca3efc67903aaa76a2ccda6671e65f0fab9fc911993cda84b6ae27915451d"
+    },
+    "proposalPolicy": {
+      "version": "section-preferences-v2",
+      "accounting": "connected-envelope-support-v2",
+      "region_limit": null,
+      "duration_thousandths": 200,
+      "additional_tenths_db": 30,
+      "cumulative_tenths_db": 120,
+      "reserve_tenths_db": 5,
+      "unavailable": ""
+    }
+  },
+  {
+    "host": "high-sierra",
+    "case": "stereo",
+    "session_sha256": "93dd26cf31bf945b88b3dc8d962037081f23d31d454378e3df29f061e71d028f",
+    "core_sha256": "f161e61d27ccd0b55ec6cea1e825011b66513932eed9ace893aca48462f201e5",
+    "programme": {
+      "schema": 8,
+      "id": "bc4b1ff9db2148e29a16a0ef1f055c9e",
+      "mode": "interleaved",
+      "purpose": "programme_audio",
+      "alignment": "0/1",
+      "layout": {
+        "count": 2,
+        "confirmed": true,
+        "manual": false,
+        "roles": [
+          1,
+          2
+        ]
+      },
+      "rangeBegin": "0",
+      "rangeEnd": "3120000",
+      "files": [
+        {
+          "id": "audio-1",
+          "locator": "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/stereo/programme.wav",
+          "media": {
+            "rate": "40e7700000000000",
+            "frames": "3120000",
+            "bytes": "18720104",
+            "channels": 2,
+            "bits": 24,
+            "modified": "1793881520000",
+            "format": "WAV file",
+            "sha256": "7cd69948c9a6caeae2b2d32228e33732e4b0477fab486f238a0a5f420702cf5c",
+            "provenance": "Legacy decoder role suggestions; confirm file-channel interpretation.",
+            "restriction": ""
+          }
+        }
+      ],
+      "channels": [
+        {
+          "fileId": "audio-1",
+          "fileChannel": 0,
+          "role": 1
+        },
+        {
+          "fileId": "audio-1",
+          "fileChannel": 1,
+          "role": 2
+        }
+      ]
+    },
+    "current": {
+      "gain": "401a208cd95d5aac",
+      "planSchema": 2,
+      "engine": "section-gain-v1",
+      "sectionGains": {
+        "schema": 1,
+        "rate": 48000,
+        "frames": "3120000",
+        "input": "fcd11a393f59a890f199ad6c94a1acf5d8f34416f6b9426880cd27d4c3853b26",
+        "intervals": [
+          [
+            "0",
+            "1396800",
+            "0000000000000000"
+          ],
+          [
+            "1396800",
+            "1771200",
+            "bff9edfa2a59d4e0"
+          ],
+          [
+            "1771200",
+            "3120000",
+            "0000000000000000"
+          ]
+        ]
+      },
+      "initialized": true,
+      "annotationProvenance": {
+        "schema": 1,
+        "input": "fcd11a393f59a890f199ad6c94a1acf5d8f34416f6b9426880cd27d4c3853b26",
+        "rate": 48000,
+        "frames": "3120000",
+        "revision": "0",
+        "nextId": "4",
+        "rows": [
+          [
+            "1",
+            "0",
+            "1396800",
+            "Applied LRA processing interval"
+          ],
+          [
+            "2",
+            "1396800",
+            "1771200",
+            "Applied LRA processing interval"
+          ],
+          [
+            "3",
+            "1771200",
+            "3120000",
+            "Applied LRA processing interval"
+          ]
+        ]
+      },
+      "componentPlans": [],
+      "wholeProgrammeGraph": ""
+    },
+    "jobRequirements": {
+      "format": "levelscope-job-requirements",
+      "schema": 1,
+      "id": "00000000000000000000000000000017",
+      "revision": 1,
+      "name": "Programme job requirements",
+      "base_id": "ebu-r128-2023-programme-linear-qc",
+      "base_version": "1.0.0",
+      "base_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+      "method": "EBU Tech 3342-2023 whole-programme LRA",
+      "applicability": "pre-produced-whole-programme-linear-audio",
+      "provenance_kind": "user-specified-job-requirement",
+      "provenance": "M19 synthetic test requirement, not a delivery recommendation",
+      "maximum_lra_tenths": 49,
+      "unavailable_reason": "",
+      "digest": "f4eca3efc67903aaa76a2ccda6671e65f0fab9fc911993cda84b6ae27915451d"
+    },
+    "proposalPolicy": {
+      "version": "section-preferences-v2",
+      "accounting": "connected-envelope-support-v2",
+      "region_limit": null,
+      "duration_thousandths": 200,
+      "additional_tenths_db": 30,
+      "cumulative_tenths_db": 120,
+      "reserve_tenths_db": 5,
+      "unavailable": ""
+    }
+  },
+  {
+    "host": "high-sierra",
+    "case": "surround",
+    "session_sha256": "d64e41bb46ec6b59fce875b2e52b3ac3d9e853fbb27acf6c9ed41458a658ae98",
+    "core_sha256": "71e76ea829f898df3fbcad3071e5576f032b0969fbcab13809f388304ffdb120",
+    "programme": {
+      "schema": 8,
+      "id": "8359d65c25dc465c9fe59099a2b9f7f1",
+      "mode": "interleaved",
+      "purpose": "programme_audio",
+      "alignment": "0/1",
+      "layout": {
+        "count": 6,
+        "confirmed": true,
+        "manual": false,
+        "roles": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "rangeBegin": "0",
+      "rangeEnd": "3120000",
+      "files": [
+        {
+          "id": "audio-1",
+          "locator": "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/surround/programme.wav",
+          "media": {
+            "rate": "40e7700000000000",
+            "frames": "3120000",
+            "bytes": "56160104",
+            "channels": 6,
+            "bits": 24,
+            "modified": "1793881540000",
+            "format": "WAV file",
+            "sha256": "56c72e77ea2cfeb2828b339b10c5c4558c3c8cd945219601d23dbe0025cc29d4",
+            "provenance": "WAVE speaker mask",
+            "restriction": ""
+          }
+        }
+      ],
+      "channels": [
+        {
+          "fileId": "audio-1",
+          "fileChannel": 0,
+          "role": 1
+        },
+        {
+          "fileId": "audio-1",
+          "fileChannel": 1,
+          "role": 2
+        },
+        {
+          "fileId": "audio-1",
+          "fileChannel": 2,
+          "role": 3
+        },
+        {
+          "fileId": "audio-1",
+          "fileChannel": 3,
+          "role": 4
+        },
+        {
+          "fileId": "audio-1",
+          "fileChannel": 4,
+          "role": 5
+        },
+        {
+          "fileId": "audio-1",
+          "fileChannel": 5,
+          "role": 6
+        }
+      ]
+    },
+    "current": {
+      "gain": "3fe48e162fc19040",
+      "planSchema": 2,
+      "engine": "section-gain-v1",
+      "sectionGains": {
+        "schema": 1,
+        "rate": 48000,
+        "frames": "3120000",
+        "input": "37e5c4a13ff80f066a4747e9411885ed61abdf4382bbf9e36f2b3fd34eb1470e",
+        "intervals": [
+          [
+            "0",
+            "1396800",
+            "0000000000000000"
+          ],
+          [
+            "1396800",
+            "1771200",
+            "bff9edfa271b1e60"
+          ],
+          [
+            "1771200",
+            "3120000",
+            "0000000000000000"
+          ]
+        ]
+      },
+      "initialized": true,
+      "annotationProvenance": {
+        "schema": 1,
+        "input": "37e5c4a13ff80f066a4747e9411885ed61abdf4382bbf9e36f2b3fd34eb1470e",
+        "rate": 48000,
+        "frames": "3120000",
+        "revision": "0",
+        "nextId": "4",
+        "rows": [
+          [
+            "1",
+            "0",
+            "1396800",
+            "Applied LRA processing interval"
+          ],
+          [
+            "2",
+            "1396800",
+            "1771200",
+            "Applied LRA processing interval"
+          ],
+          [
+            "3",
+            "1771200",
+            "3120000",
+            "Applied LRA processing interval"
+          ]
+        ]
+      },
+      "componentPlans": [],
+      "wholeProgrammeGraph": ""
+    },
+    "jobRequirements": {
+      "format": "levelscope-job-requirements",
+      "schema": 1,
+      "id": "00000000000000000000000000000017",
+      "revision": 1,
+      "name": "Programme job requirements",
+      "base_id": "ebu-r128-2023-programme-linear-qc",
+      "base_version": "1.0.0",
+      "base_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+      "method": "EBU Tech 3342-2023 whole-programme LRA",
+      "applicability": "pre-produced-whole-programme-linear-audio",
+      "provenance_kind": "user-specified-job-requirement",
+      "provenance": "M19 synthetic test requirement, not a delivery recommendation",
+      "maximum_lra_tenths": 49,
+      "unavailable_reason": "",
+      "digest": "f4eca3efc67903aaa76a2ccda6671e65f0fab9fc911993cda84b6ae27915451d"
+    },
+    "proposalPolicy": {
+      "version": "section-preferences-v2",
+      "accounting": "connected-envelope-support-v2",
+      "region_limit": null,
+      "duration_thousandths": 200,
+      "additional_tenths_db": 30,
+      "cumulative_tenths_db": 120,
+      "reserve_tenths_db": 5,
+      "unavailable": ""
+    }
+  },
+  {
+    "host": "high-sierra",
+    "case": "rates/44100",
+    "session_sha256": "ceb6717a76c3e9dbd5e816b29f328306f1427e7138ec3d63280845a22fa85d46",
+    "core_sha256": "fb0df0523cdba8645fc8f7f3f64a73a0b11a5d73175d1ac53ca7a3122d3d55c2",
+    "programme": {
+      "schema": 8,
+      "id": "d8bc789859554fd9843f725d24a5f098",
+      "mode": "interleaved",
+      "purpose": "programme_audio",
+      "alignment": "0/1",
+      "layout": {
+        "count": 2,
+        "confirmed": true,
+        "manual": false,
+        "roles": [
+          1,
+          2
+        ]
+      },
+      "rangeBegin": "0",
+      "rangeEnd": "2866500",
+      "files": [
+        {
+          "id": "audio-1",
+          "locator": "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/rates/44100/programme.wav",
+          "media": {
+            "rate": "40e5888000000000",
+            "frames": "2866500",
+            "bytes": "17199104",
+            "channels": 2,
+            "bits": 24,
+            "modified": "1793881574000",
+            "format": "WAV file",
+            "sha256": "d290671a70bd92ace0e19bb9dcc1b23bc0296802844b78269409ca17d4fe26e1",
+            "provenance": "Legacy decoder role suggestions; confirm file-channel interpretation.",
+            "restriction": ""
+          }
+        }
+      ],
+      "channels": [
+        {
+          "fileId": "audio-1",
+          "fileChannel": 0,
+          "role": 1
+        },
+        {
+          "fileId": "audio-1",
+          "fileChannel": 1,
+          "role": 2
+        }
+      ]
+    },
+    "current": {
+      "gain": "401a1db8b7676648",
+      "planSchema": 2,
+      "engine": "section-gain-v1",
+      "sectionGains": {
+        "schema": 1,
+        "rate": 44100,
+        "frames": "2866500",
+        "input": "511e47e595332f458438920a30dc4e63ad0a2b85451d82b9b440e4fd50f8f406",
+        "intervals": [
+          [
+            "0",
+            "1283310",
+            "0000000000000000"
+          ],
+          [
+            "1283310",
+            "1627290",
+            "bff9edfa33efe1e0"
+          ],
+          [
+            "1627290",
+            "2866500",
+            "0000000000000000"
+          ]
+        ]
+      },
+      "initialized": true,
+      "annotationProvenance": {
+        "schema": 1,
+        "input": "511e47e595332f458438920a30dc4e63ad0a2b85451d82b9b440e4fd50f8f406",
+        "rate": 44100,
+        "frames": "2866500",
+        "revision": "0",
+        "nextId": "4",
+        "rows": [
+          [
+            "1",
+            "0",
+            "1283310",
+            "Applied LRA processing interval"
+          ],
+          [
+            "2",
+            "1283310",
+            "1627290",
+            "Applied LRA processing interval"
+          ],
+          [
+            "3",
+            "1627290",
+            "2866500",
+            "Applied LRA processing interval"
+          ]
+        ]
+      },
+      "componentPlans": [],
+      "wholeProgrammeGraph": ""
+    },
+    "jobRequirements": {
+      "format": "levelscope-job-requirements",
+      "schema": 1,
+      "id": "00000000000000000000000000000017",
+      "revision": 1,
+      "name": "Programme job requirements",
+      "base_id": "ebu-r128-2023-programme-linear-qc",
+      "base_version": "1.0.0",
+      "base_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+      "method": "EBU Tech 3342-2023 whole-programme LRA",
+      "applicability": "pre-produced-whole-programme-linear-audio",
+      "provenance_kind": "user-specified-job-requirement",
+      "provenance": "M19 synthetic test requirement, not a delivery recommendation",
+      "maximum_lra_tenths": 49,
+      "unavailable_reason": "",
+      "digest": "f4eca3efc67903aaa76a2ccda6671e65f0fab9fc911993cda84b6ae27915451d"
+    },
+    "proposalPolicy": {
+      "version": "section-preferences-v2",
+      "accounting": "connected-envelope-support-v2",
+      "region_limit": null,
+      "duration_thousandths": 200,
+      "additional_tenths_db": 30,
+      "cumulative_tenths_db": 120,
+      "reserve_tenths_db": 5,
+      "unavailable": ""
+    }
+  },
+  {
+    "host": "high-sierra",
+    "case": "rates/96000",
+    "session_sha256": "aa94d962373081e30492c86213a59f86cf67b875049d5d50ba4f9b9c68ea89a5",
+    "core_sha256": "5944481bbee779232578ae9a744d06c12104ddcf59291ac62e43b5f3b85b72a2",
+    "programme": {
+      "schema": 8,
+      "id": "e91f97e620264f8889cd0eb8d665f1f8",
+      "mode": "interleaved",
+      "purpose": "programme_audio",
+      "alignment": "0/1",
+      "layout": {
+        "count": 2,
+        "confirmed": true,
+        "manual": false,
+        "roles": [
+          1,
+          2
+        ]
+      },
+      "rangeBegin": "0",
+      "rangeEnd": "6240000",
+      "files": [
+        {
+          "id": "audio-1",
+          "locator": "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/rates/96000/programme.wav",
+          "media": {
+            "rate": "40f7700000000000",
+            "frames": "6240000",
+            "bytes": "37440104",
+            "channels": 2,
+            "bits": 24,
+            "modified": "1793881591000",
+            "format": "WAV file",
+            "sha256": "982aa37f9d124d02e20807b4631d4b71aa74c859a9733d382a6e1b80b1b7e482",
+            "provenance": "Legacy decoder role suggestions; confirm file-channel interpretation.",
+            "restriction": ""
+          }
+        }
+      ],
+      "channels": [
+        {
+          "fileId": "audio-1",
+          "fileChannel": 0,
+          "role": 1
+        },
+        {
+          "fileId": "audio-1",
+          "fileChannel": 1,
+          "role": 2
+        }
+      ]
+    },
+    "current": {
+      "gain": "401a324a0ec467d4",
+      "planSchema": 2,
+      "engine": "section-gain-v1",
+      "sectionGains": {
+        "schema": 1,
+        "rate": 96000,
+        "frames": "6240000",
+        "input": "9960a89156e7fb1672d7be4a7c3147236b2662cbf9346f2103d5c22edea40924",
+        "intervals": [
+          [
+            "0",
+            "2793600",
+            "0000000000000000"
+          ],
+          [
+            "2793600",
+            "3542400",
+            "bff9edfa33af81b0"
+          ],
+          [
+            "3542400",
+            "6240000",
+            "0000000000000000"
+          ]
+        ]
+      },
+      "initialized": true,
+      "annotationProvenance": {
+        "schema": 1,
+        "input": "9960a89156e7fb1672d7be4a7c3147236b2662cbf9346f2103d5c22edea40924",
+        "rate": 96000,
+        "frames": "6240000",
+        "revision": "0",
+        "nextId": "4",
+        "rows": [
+          [
+            "1",
+            "0",
+            "2793600",
+            "Applied LRA processing interval"
+          ],
+          [
+            "2",
+            "2793600",
+            "3542400",
+            "Applied LRA processing interval"
+          ],
+          [
+            "3",
+            "3542400",
+            "6240000",
+            "Applied LRA processing interval"
+          ]
+        ]
+      },
+      "componentPlans": [],
+      "wholeProgrammeGraph": ""
+    },
+    "jobRequirements": {
+      "format": "levelscope-job-requirements",
+      "schema": 1,
+      "id": "00000000000000000000000000000017",
+      "revision": 1,
+      "name": "Programme job requirements",
+      "base_id": "ebu-r128-2023-programme-linear-qc",
+      "base_version": "1.0.0",
+      "base_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+      "method": "EBU Tech 3342-2023 whole-programme LRA",
+      "applicability": "pre-produced-whole-programme-linear-audio",
+      "provenance_kind": "user-specified-job-requirement",
+      "provenance": "M19 synthetic test requirement, not a delivery recommendation",
+      "maximum_lra_tenths": 49,
+      "unavailable_reason": "",
+      "digest": "f4eca3efc67903aaa76a2ccda6671e65f0fab9fc911993cda84b6ae27915451d"
+    },
+    "proposalPolicy": {
+      "version": "section-preferences-v2",
+      "accounting": "connected-envelope-support-v2",
+      "region_limit": null,
+      "duration_thousandths": 200,
+      "additional_tenths_db": 30,
+      "cumulative_tenths_db": 120,
+      "reserve_tenths_db": 5,
+      "unavailable": ""
+    }
+  },
+  {
+    "host": "high-sierra",
+    "case": "rates/192000",
+    "session_sha256": "f54c0cfdad20630fd9be96e8aa16be809ce0cdf48cf22f977cba679c0e627e58",
+    "core_sha256": "d4a7ef16538e6f3e5002043b19f515f1886be69220e1d85f58821901fec3de6a",
+    "programme": {
+      "schema": 8,
+      "id": "c9bfb789230545eda2fb8d60bd863d13",
+      "mode": "interleaved",
+      "purpose": "programme_audio",
+      "alignment": "0/1",
+      "layout": {
+        "count": 2,
+        "confirmed": true,
+        "manual": false,
+        "roles": [
+          1,
+          2
+        ]
+      },
+      "rangeBegin": "0",
+      "rangeEnd": "12480000",
+      "files": [
+        {
+          "id": "audio-1",
+          "locator": "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/rates/192000/programme.wav",
+          "media": {
+            "rate": "4107700000000000",
+            "frames": "12480000",
+            "bytes": "74880104",
+            "channels": 2,
+            "bits": 24,
+            "modified": "1793881628000",
+            "format": "WAV file",
+            "sha256": "2f2641df989d0e4e2598f1e13ba173d1936563efaf081f03069bb617f5ab65dd",
+            "provenance": "Legacy decoder role suggestions; confirm file-channel interpretation.",
+            "restriction": ""
+          }
+        }
+      ],
+      "channels": [
+        {
+          "fileId": "audio-1",
+          "fileChannel": 0,
+          "role": 1
+        },
+        {
+          "fileId": "audio-1",
+          "fileChannel": 1,
+          "role": 2
+        }
+      ]
+    },
+    "current": {
+      "gain": "401a3c4553ce6744",
+      "planSchema": 2,
+      "engine": "section-gain-v1",
+      "sectionGains": {
+        "schema": 1,
+        "rate": 192000,
+        "frames": "12480000",
+        "input": "c7db5c4c9ead05377994386dc5b51ca3f7a8a352d6b2fc47d93dd09d39511af4",
+        "intervals": [
+          [
+            "0",
+            "5587200",
+            "0000000000000000"
+          ],
+          [
+            "5587200",
+            "7084800",
+            "bff9edfa35bdd850"
+          ],
+          [
+            "7084800",
+            "12480000",
+            "0000000000000000"
+          ]
+        ]
+      },
+      "initialized": true,
+      "annotationProvenance": {
+        "schema": 1,
+        "input": "c7db5c4c9ead05377994386dc5b51ca3f7a8a352d6b2fc47d93dd09d39511af4",
+        "rate": 192000,
+        "frames": "12480000",
+        "revision": "0",
+        "nextId": "4",
+        "rows": [
+          [
+            "1",
+            "0",
+            "5587200",
+            "Applied LRA processing interval"
+          ],
+          [
+            "2",
+            "5587200",
+            "7084800",
+            "Applied LRA processing interval"
+          ],
+          [
+            "3",
+            "7084800",
+            "12480000",
+            "Applied LRA processing interval"
+          ]
+        ]
+      },
+      "componentPlans": [],
+      "wholeProgrammeGraph": ""
+    },
+    "jobRequirements": {
+      "format": "levelscope-job-requirements",
+      "schema": 1,
+      "id": "00000000000000000000000000000017",
+      "revision": 1,
+      "name": "Programme job requirements",
+      "base_id": "ebu-r128-2023-programme-linear-qc",
+      "base_version": "1.0.0",
+      "base_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+      "method": "EBU Tech 3342-2023 whole-programme LRA",
+      "applicability": "pre-produced-whole-programme-linear-audio",
+      "provenance_kind": "user-specified-job-requirement",
+      "provenance": "M19 synthetic test requirement, not a delivery recommendation",
+      "maximum_lra_tenths": 49,
+      "unavailable_reason": "",
+      "digest": "f4eca3efc67903aaa76a2ccda6671e65f0fab9fc911993cda84b6ae27915451d"
+    },
+    "proposalPolicy": {
+      "version": "section-preferences-v2",
+      "accounting": "connected-envelope-support-v2",
+      "region_limit": null,
+      "duration_thousandths": 200,
+      "additional_tenths_db": 30,
+      "cumulative_tenths_db": 120,
+      "reserve_tenths_db": 5,
+      "unavailable": ""
+    }
+  }
+]

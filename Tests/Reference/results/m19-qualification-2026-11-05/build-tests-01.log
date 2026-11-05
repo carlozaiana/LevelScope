@@ -1,0 +1,21 @@
+[  2%] Built target LevelScopeMeasurementCore
+[ 60%] Built target LevelScopeStandaloneSupport
+[ 85%] Built target LevelScopeDiagnosticsUI
+[ 85%] Building OBJCXX object CMakeFiles/LevelScopeLraProposalTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeLraProposalTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeLraProposalTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o
+[ 90%] Building OBJCXX object CMakeFiles/LevelScopeLraProposalTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o
+[ 92%] Building OBJCXX object CMakeFiles/LevelScopeLraProposalTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o
+[ 92%] Building CXX object CMakeFiles/LevelScopeLraProposalTests.dir/Tests/LraProposalTests.cpp.o
+[ 95%] Building OBJCXX object CMakeFiles/LevelScopeLraProposalTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o
+[ 97%] Building OBJCXX object CMakeFiles/LevelScopeLraProposalTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_graphics/juce_graphics.mm.o
+/Users/fuzz/Developer/LevelScope/Tests/LraProposalTests.cpp:96:67: error: no member named 'monitorVolumeDb' in 'levelscope::standalone::OutputRouting'
+   96 |     s.setOutputRoute(channels==6?3:0,-1);s.sourceDocument.routing.monitorVolumeDb=-15;
+      |                                          ~~~~~~~~~~~~~~~~~~~~~~~~ ^
+[ 97%] Building OBJCXX object CMakeFiles/LevelScopeLraProposalTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_gui_basics/juce_gui_basics.mm.o
+1 error generated.
+make[3]: *** [CMakeFiles/LevelScopeLraProposalTests.dir/Tests/LraProposalTests.cpp.o] Error 1
+make[3]: *** Waiting for unfinished jobs....
+make[2]: *** [CMakeFiles/LevelScopeLraProposalTests.dir/all] Error 2
+make[1]: *** [CMakeFiles/LevelScopeLraProposalTests.dir/rule] Error 2
+make: *** [LevelScopeLraProposalTests] Error 2

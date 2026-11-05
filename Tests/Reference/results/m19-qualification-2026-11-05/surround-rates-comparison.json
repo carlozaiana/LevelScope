@@ -1,0 +1,125 @@
+{
+  "passed": true,
+  "candidate": "candidate-02",
+  "comparisons": [
+    {
+      "rate": 44100,
+      "numeric_fields_exactly_equal": {
+        "channels": true,
+        "passes": true,
+        "before_lra": true,
+        "after_lra": true,
+        "gain_db": true,
+        "rate": true
+      },
+      "sequoia": {
+        "channels": 6,
+        "seconds": 13.0871467500031,
+        "passes": 2,
+        "before_lra": 5.910635939929527,
+        "after_lra": 4.29003604659805,
+        "gain_db": 0.6395821642033148,
+        "rate": 44100
+      },
+      "high_sierra": {
+        "channels": 6,
+        "seconds": 24.8386163379997,
+        "passes": 2,
+        "before_lra": 5.910635939929527,
+        "after_lra": 4.29003604659805,
+        "gain_db": 0.6395821642033148,
+        "rate": 44100
+      },
+      "checks": {
+        "source_content": true,
+        "roles": true,
+        "requirements": true,
+        "policy": true,
+        "selected_envelope": true,
+        "global_gain": true
+      },
+      "sequoia_core_sha256": "0d8cb83441dbe5891e49cddc48a71a949b1cbb12a210869e414499c848207b9b",
+      "high_sierra_core_sha256": "64aa3ae12a0713714ea504b25cc15a41d3993b07e72b1204163fccddc1cde23e"
+    },
+    {
+      "rate": 96000,
+      "numeric_fields_exactly_equal": {
+        "channels": true,
+        "passes": true,
+        "before_lra": true,
+        "after_lra": true,
+        "gain_db": true,
+        "rate": true
+      },
+      "sequoia": {
+        "channels": 6,
+        "seconds": 26.58735675000027,
+        "passes": 2,
+        "before_lra": 5.910622107020206,
+        "after_lra": 4.290022209392269,
+        "gain_db": 0.6596678756194727,
+        "rate": 96000
+      },
+      "high_sierra": {
+        "channels": 6,
+        "seconds": 53.85556690899655,
+        "passes": 2,
+        "before_lra": 5.910622107020206,
+        "after_lra": 4.290022209392269,
+        "gain_db": 0.6596678756194727,
+        "rate": 96000
+      },
+      "checks": {
+        "source_content": true,
+        "roles": true,
+        "requirements": true,
+        "policy": true,
+        "selected_envelope": true,
+        "global_gain": true
+      },
+      "sequoia_core_sha256": "74d00e3e65600262a912977dd698f79cd62c16be38d1096da42bec8d088cacb0",
+      "high_sierra_core_sha256": "9f7fc0c73554fa0f1dad145b9c654781ea8e08dba5710a4d633bf6a8decb2929"
+    },
+    {
+      "rate": 192000,
+      "numeric_fields_exactly_equal": {
+        "channels": true,
+        "passes": true,
+        "before_lra": true,
+        "after_lra": true,
+        "gain_db": true,
+        "rate": true
+      },
+      "sequoia": {
+        "channels": 6,
+        "seconds": 54.70185508333519,
+        "passes": 2,
+        "before_lra": 5.910616285419398,
+        "after_lra": 4.290016372729607,
+        "gain_db": 0.6694154459738613,
+        "rate": 192000
+      },
+      "high_sierra": {
+        "channels": 6,
+        "seconds": 107.4455337809995,
+        "passes": 2,
+        "before_lra": 5.910616285419398,
+        "after_lra": 4.290016372729607,
+        "gain_db": 0.6694154459738613,
+        "rate": 192000
+      },
+      "checks": {
+        "source_content": true,
+        "roles": true,
+        "requirements": true,
+        "policy": true,
+        "selected_envelope": true,
+        "global_gain": true
+      },
+      "sequoia_core_sha256": "4f21615f80e5672c77d7e71159f4b62dc42656bb6047783384b31c0cd03b84ff",
+      "high_sierra_core_sha256": "79f7c2f7ac4e75ba2ee5d6a26ee64d767485a7541498e9f7802f56a2d3a0fc40"
+    }
+  ],
+  "physical_devices_opened": false,
+  "video_loaded": false
+}

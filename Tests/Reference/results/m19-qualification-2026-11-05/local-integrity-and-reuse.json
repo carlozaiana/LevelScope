@@ -1,0 +1,26 @@
+{
+  "packages": [
+    {
+      "candidate": "candidate-01",
+      "artifacts_checked": 377,
+      "mismatches": [],
+      "passed": true
+    },
+    {
+      "candidate": "candidate-02",
+      "artifacts_checked": 380,
+      "mismatches": [],
+      "passed": true
+    }
+  ],
+  "product_changes": [
+    "Source/Standalone/LraPassagesPanel.cpp",
+    "Source/Standalone/LraPassagesPanel.h"
+  ],
+  "reuse_reason": "Only replace custom-painted preview legend with standard Label; measurement, processing, proposal logic, sessions, requirements, export and audition unchanged. Fresh candidate-02 native Source/Propose/Apply/Current checks on both platforms.",
+  "candidate02_sources_match": true,
+  "existing_tags_unchanged": true,
+  "tag_count": 23,
+  "main": "51e47f300fcc38a386a5a92a7277029175cfab0c",
+  "passed": true
+}

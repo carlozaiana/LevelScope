@@ -1,0 +1,85 @@
+{
+  "date": "2026-11-05",
+  "qualified": false,
+  "ready_for_checkpoint_review": false,
+  "publication_authorized": false,
+  "checks": [
+    {
+      "name": "candidate-01: every frozen artifact unchanged",
+      "passed": true
+    },
+    {
+      "name": "candidate-01: manifest digest",
+      "passed": true
+    },
+    {
+      "name": "candidate-02: every frozen artifact unchanged",
+      "passed": true
+    },
+    {
+      "name": "candidate-02: manifest digest",
+      "passed": true
+    },
+    {
+      "name": "Current checkout still matches every candidate-02 manifest file",
+      "passed": true
+    },
+    {
+      "name": "Reuse restricted to UI legend correction",
+      "passed": true
+    },
+    {
+      "name": "Actual High Sierra package integrity",
+      "passed": true
+    },
+    {
+      "name": "Identical local/Golem frozen identity candidate-01",
+      "passed": true
+    },
+    {
+      "name": "Identical local/Golem frozen identity candidate-02",
+      "passed": true
+    },
+    {
+      "name": "sequoia: actual platform",
+      "passed": true
+    },
+    {
+      "name": "sequoia: all eleven groups",
+      "passed": true
+    },
+    {
+      "name": "sequoia: passing core original receipt",
+      "passed": true
+    },
+    {
+      "name": "sequoia: passing stereo original receipt",
+      "passed": true
+    },
+    {
+      "name": "sequoia: passing surround original receipt",
+      "passed": true
+    },
+    {
+      "name": "sequoia: passing rates original receipt",
+      "passed": true
+    },
+    {
+      "name": "sequoia: passing failures original receipt",
+      "passed": true
+    },
+    {
+      "name": "sequoia: passing inputs original receipt",
+      "passed": true
+    },
+    {
+      "name": "sequoia: passing gating original receipt",
+      "passed": true
+    },
+    {
+      "name": "sequoia: passing real original receipt",
+      "passed": true
+    }
+  ],
+  "failure": "'int' object is not iterable"
+}

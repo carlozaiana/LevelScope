@@ -1,0 +1,8 @@
+PLAY onset-baseline.wav | outputs 1/2 | monitor -5 dB
+STOP
+PLAY onset-candidate.wav | outputs 1/2 | monitor -5 dB
+STOP
+PLAY return-baseline.wav | outputs 1/2 | monitor -5 dB
+STOP
+PLAY return-candidate.wav | outputs 1/2 | monitor -5 dB
+STOP

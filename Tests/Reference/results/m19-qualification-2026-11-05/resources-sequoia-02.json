@@ -1,0 +1,13 @@
+{
+  "build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e",
+  "grouping_seconds": 0.0010865,
+  "planning_seconds": 0.6240605420000001,
+  "resident_bytes": 28999680,
+  "selected_regions": 540,
+  "available_regions": 1080,
+  "affected_frames": 414710400,
+  "cancelled_cleanly": true,
+  "passed": true,
+  "budget_seconds": 2.0,
+  "full_duration_audio_decoded": false
+}

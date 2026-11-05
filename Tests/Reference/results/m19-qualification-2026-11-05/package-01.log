@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "name": "M19 candidate-01",
+  "source_commit": "2da3ac4ccb03a75976403c03bbc3461d00639752",
+  "source_manifest_sha256": "4cfde8ef7436d066e3c7d0e070db9158778d7dceed20afdfefbd94b641523b2d",
+  "measurement_build": "0d1334c201daf85587e8d00dc261ed43d375a52e9f1d0a4136e4ac599479e18e",
+  "architectures": [
+    "arm64",
+    "x86_64"
+  ],
+  "intel_minimum": "10.13",
+  "native_launcher": "Same product objects, native main component; controlled file-picker completions and UI events; no physical audio/video",
+  "compiler": "Apple clang version 17.0.0 (clang-1700.0.13.5)\nTarget: arm64-apple-darwin24.6.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin\n",
+  "juce_commit": "4f43011b96eb0636104cb3e433894cda98243626",
+  "qualification_complete": false
+}

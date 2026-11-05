@@ -1,0 +1,43 @@
+{
+  "passed": true,
+  "device": "Saffire Pro 40 (Experimental)",
+  "rate": 48000,
+  "monitor_db": 0,
+  "outputs": "1/2",
+  "left_right_only": true,
+  "clips": [
+    {
+      "label": "Unchanged continuous reference",
+      "sha256": "6954b761bd4383950498868f8a5c650fb7858d263907898f2117aa4898ec161a",
+      "frames": 4771200,
+      "underruns": 0
+    },
+    {
+      "label": "onset-baseline",
+      "sha256": "b5f203d64b4489eea6c8d9afb0ce43b33ca7b4bde7b677b9b9bdc4d761d98aaa",
+      "frames": 384000,
+      "underruns": 0
+    },
+    {
+      "label": "onset-candidate",
+      "sha256": "7cbd90535e21b8fddcf477ab714a0b5925ef051ba44416d6f0574acd81bd2e8c",
+      "frames": 384000,
+      "underruns": 0
+    },
+    {
+      "label": "return-baseline",
+      "sha256": "528efec9991fdd4bd0ab3687cfd1ba528e051f3ae738463f9733417cdae3d220",
+      "frames": 384000,
+      "underruns": 0
+    },
+    {
+      "label": "return-candidate",
+      "sha256": "e43b7a7ae8e6a8862f5f20dddeddfa00e56f3201089249e177cff44e145432e9",
+      "frames": 384000,
+      "underruns": 0
+    }
+  ],
+  "device_closed": true,
+  "build": "993f26a9295201a87fedea54a60bc8ca57877e93bb8bebc11729ab5bf5d2af1a",
+  "perceptual_result": "Awaiting user observations; no full 5.1 listening claim"
+}
