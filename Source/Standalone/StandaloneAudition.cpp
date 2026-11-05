@@ -189,6 +189,9 @@ juce::String StandaloneAudition::selectDevice (int index, const juce::String& na
     return device ? juce::String() : message;
 }
 
+juce::StringArray StandaloneAudition::outputConfiguration() const
+{ return device ? device->getOutputChannelNames() : juce::StringArray{}; }
+
 juce::StringArray StandaloneAudition::outputNames() const
 {
     if (! device) return {};

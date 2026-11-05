@@ -668,8 +668,8 @@ void StandaloneMainComponent::chooseComposition()
                     {
                         safe->audioPanel.sourceChanged();
                         safe->documentNotice=before==safe->session.revision
-                            ?"Composition labels or locations updated; valid measurements retained; stopped, routes muted"
-                            :"Confirmed composition committed; stopped, routes muted, fresh measurements required";
+                            ?"Composition labels or locations updated; valid measurements retained; stopped, local monitoring restored when matched"
+                            :"Confirmed composition committed; stopped, local monitoring restored when matched; fresh measurements required";
                     }
                     else safe->documentNotice="Composition changed before adoption; previous session retained";
                 }

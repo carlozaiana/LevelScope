@@ -3,6 +3,7 @@
 #include "StandaloneAudition.h"
 #include "RememberedChannelRoles.h"
 #include "OutputDeviceSettings.h"
+#include "MonitoringSettings.h"
 #include "StandaloneSessionModel.h"
 #include <juce_gui_basics/juce_gui_basics.h>
 
@@ -24,7 +25,14 @@ private:
     StandaloneAudition& audio;
     std::function<void()> onChanged;
     RememberedChannelRoles roleMemory;
+    MonitoringSettings monitoring;
     OutputDeviceConnection connection;
+    juce::StringArray monitoringOutputs;
+    juce::String routingContext,volumeDevice,routingNotice;
+    juce::Label monitoringStatus;
+    juce::TextButton rememberRoutingButton { "Remember routing" };
+    void refreshMonitoring(bool discover = false, bool resetVolume = false);
+    void rememberRouting();
     uint64_t connectionRevision = 0;
     bool reviewing=false,editingOrder=false;
     juce::Label suggestionLabel;
@@ -37,7 +45,13 @@ private:
     juce::TextButton playButton { "Play selected" }, stopButton { "Stop" }, confirmButton { "Confirm roles" };
     juce::TextButton restartButton { "Restart" }, seekButton { "Seek" };
     juce::TextEditor seekPosition;
-    juce::Slider gain;
+    // valueChanged is synchronous even when JUCE queues listener notifications.
+    // Internal dontSendNotification restoration cannot masquerade as a user edit.
+    struct MonitorSlider final : juce::Slider
+    {
+        std::function<void()> explicitChange;
+        void valueChanged() override { if(explicitChange)explicitChange(); }
+    } gain;
     juce::Label statusLabel, heading;
     juce::Viewport viewport;
     juce::Component rows;

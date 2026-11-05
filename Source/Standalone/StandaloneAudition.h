@@ -60,6 +60,7 @@ public:
     juce::String selectDevice (int typeIndex, const juce::String& name);
     void selectOutputDevice(std::unique_ptr<juce::AudioIODevice> selected);
     juce::StringArray outputNames() const;
+    juce::StringArray outputConfiguration() const; // complete ordered metadata, also while disconnected
     juce::String connect (double sourceRate);
     void disconnect();
     // Authoritative session binding is refreshed before polling/start. Unexpected

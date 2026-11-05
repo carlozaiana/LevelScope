@@ -233,6 +233,7 @@ add_library(LevelScopeStandaloneSupport STATIC
     Source/Standalone/StandaloneMedia.cpp
     Source/Standalone/StandaloneAudition.cpp
     Source/Standalone/OutputDeviceSettings.cpp
+    Source/Standalone/MonitoringSettings.cpp
     Source/Standalone/StandaloneMeasurementService.cpp
     Source/Standalone/StandaloneWaveform.cpp
     Source/Standalone/RememberedChannelRoles.cpp

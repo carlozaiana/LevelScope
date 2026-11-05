@@ -87,6 +87,13 @@ public:
                 return std::unique_ptr<juce::AudioIODevice>(type->createDevice(wanted.name, {}));
         return {};
     }
+    juce::StringArray outputConfiguration(const OutputDeviceIdentity& wanted) override
+    {
+        // JUCE construction reads channel metadata and installs property listeners;
+        // no open(), start(), sample-rate change or output routing is requested.
+        const auto device = create(wanted);
+        return device ? device->getOutputChannelNames() : juce::StringArray{};
+    }
 private:
     std::unique_ptr<juce::AudioDeviceManager> manager;
 };
@@ -164,6 +171,19 @@ std::optional<OutputDeviceIdentity> OutputDeviceConnection::resolve()
         return {};
     }
     return matches.front()->identity;
+}
+std::optional<OutputDeviceIdentity> OutputDeviceConnection::monitoringIdentity() const
+{
+    if(!selected)return {};
+    std::optional<OutputDeviceIdentity> found;int count=0;
+    for(const auto& choice:available)
+        if(choice.identity.type==selected->type && (selected->uid.isNotEmpty() ? choice.identity.uid==selected->uid : choice.identity.name==selected->name))
+        {++count;if(choice.problem.isEmpty())found=choice.identity;}
+    return count==1?found:std::optional<OutputDeviceIdentity>{};
+}
+juce::StringArray OutputDeviceConnection::outputConfiguration()
+{
+    const auto known=monitoringIdentity();return known?catalog->outputConfiguration(*known):juce::StringArray{};
 }
 void OutputDeviceConnection::describeDisconnected()
 {

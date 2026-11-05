@@ -23,6 +23,8 @@ public:
     virtual ~OutputDeviceCatalog() = default;
     virtual std::vector<OutputDeviceChoice> scan() = 0;
     virtual std::unique_ptr<juce::AudioIODevice> create(const OutputDeviceIdentity&) = 0;
+    // Read-only metadata discovery: must never open/start an output.
+    virtual juce::StringArray outputConfiguration(const OutputDeviceIdentity&) { return {}; }
     static std::shared_ptr<OutputDeviceCatalog> system();
 };
 
@@ -54,6 +56,8 @@ public:
     void programmeChanged(double validatedRate);
     const std::vector<OutputDeviceChoice>& choices() const { return available; }
     const std::optional<OutputDeviceIdentity>& selection() const { return selected; }
+    std::optional<OutputDeviceIdentity> monitoringIdentity() const;
+    juce::StringArray outputConfiguration();
     bool automaticReconnect() const { return settings.automaticReconnect; }
     bool automaticSuppressed() const { return suppressed; }
     bool awaitingRate() const { return explicitPending && programmeRate <= 0; }

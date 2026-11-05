@@ -8,13 +8,17 @@ StandaloneAudioPanel::StandaloneAudioPanel (StandaloneSessionModel& model, Stand
                                            std::function<void()> changed,juce::File roleDirectory,
                                            std::shared_ptr<OutputDeviceCatalog> catalog, OutputDeviceSettings settings)
     : session (model), audio (engine), onChanged (std::move (changed)),roleMemory(roleDirectory),
-      connection(engine,std::move(catalog),std::move(settings))
+      monitoring(settings.file()),connection(engine,std::move(catalog),std::move(settings))
 {
     session.auditionBusy = [&engine] { return engine.active() && engine.getState() != AuditionState::cancelling; };
     for (auto* component : std::initializer_list<juce::Component*> {
         &deviceBox, &automaticReconnect, &scanButton, &openButton, &closeButton, &playButton,
-        &stopButton, &restartButton, &seekButton, &seekPosition, &confirmButton, &gain, &statusLabel, &heading, &viewport, &domainBox, &prepareButton, &auditionLabel, &layoutPreset,&suggestionLabel,&editOrder })
+        &stopButton, &restartButton, &seekButton, &seekPosition, &confirmButton, &gain, &statusLabel, &heading, &viewport, &domainBox, &prepareButton, &auditionLabel, &layoutPreset,&suggestionLabel,&editOrder,&monitoringStatus,&rememberRoutingButton })
         addAndMakeVisible (*component);
+    monitoringStatus.setFont(juce::Font(13.0f));monitoringStatus.setJustificationType(juce::Justification::topLeft);
+    monitoringStatus.setComponentID("monitoring-memory-status");
+    rememberRoutingButton.setTooltip("Remember the displayed role assignments for this Mac, interface and layout, including an all-muted configuration.");
+    rememberRoutingButton.onClick=[this]{rememberRouting();refresh();};
     deviceBox.setName("Output interface");
     deviceBox.setTextWhenNothingSelected ("Choose an output interface (offline analysis is available)");
     automaticReconnect.setToggleState(connection.automaticReconnect(),juce::dontSendNotification);
@@ -31,7 +35,11 @@ StandaloneAudioPanel::StandaloneAudioPanel (StandaloneSessionModel& model, Stand
         if (session.persistenceLoading || session.job.isActive() || audio.active()) return;
         const auto index=deviceBox.getSelectedId()-1;
         if(juce::isPositiveAndBelow(index,int(connection.choices().size())))
-            connection.select(connection.choices()[size_t(index)].identity);
+        {
+            const auto& choice=connection.choices()[size_t(index)].identity;
+            if(connection.selection() && choice==*connection.selection())return; // Ignore a queued notification after internal restoration.
+            connection.select(choice);
+        }
         actionError.clear();connectionChanged();refresh();onChanged();
     };
     openButton.onClick = [this]
@@ -112,7 +120,13 @@ StandaloneAudioPanel::StandaloneAudioPanel (StandaloneSessionModel& model, Stand
     gain.setTextValueSuffix (" dB");
     gain.setTooltip ("Monitor gain only. Adjust smoothly during playback. Processing and measurements are unaffected.");
     gain.setValue (-30, juce::dontSendNotification);
-    gain.onValueChange = [this] { audio.setMonitorGainDb (static_cast<float> (gain.getValue())); };
+    gain.explicitChange = [this]
+    {
+        audio.setMonitorGainDb(static_cast<float>(gain.getValue()));
+        // Only explicit slider/text/keyboard notifications persist a user value.
+        // Initialisation and every internal restoration use dontSendNotification.
+        if(const auto& id=connection.selection())monitoring.rememberVolume(*id,gain.getValue());
+    };
     heading.setText ("File channel / Speaker role / Device output (no downmix)", juce::dontSendNotification);
     heading.setFont (juce::Font (12.0f));
     statusLabel.setFont (juce::Font (13.0f));
@@ -134,13 +148,16 @@ StandaloneAudioPanel::StandaloneAudioPanel (StandaloneSessionModel& model, Stand
             session.setChannelRole (channel, juce::isPositiveAndBelow (index, static_cast<int> (supportedRoles.size()))
                 ? supportedRoles[static_cast<size_t> (index)] : session.sourceDocument.layout.count == 8
                 ? systemIRoleForAlias (roleBoxes[channel].getText()) : juce::AudioChannelSet::unknown);
-            onChanged();
+            refresh();onChanged();
         };
+        outputBoxes[channel].setName("Output for file channel "+juce::String(channel+1));
         outputBoxes[channel].onChange = [this, channel]
         {
-            session.setOutputRoute (channel, outputBoxes[channel].getSelectedId() - 2);
-            actionError.clear();
-            refresh();
+            if(audio.active()||session.job.isActive()||session.persistenceLoading||!session.sourceDocument.layout.confirmed)return;
+            const auto output=outputBoxes[channel].getSelectedId()-2;
+            if(output==session.sourceDocument.routing.fileToDevice[size_t(channel)])return; // Internal/queued notification, not a new route edit.
+            if(session.setOutputRoute(channel,output))rememberRouting();
+            actionError.clear();refresh();
         };
     }
     rebuildOutputs();
@@ -177,25 +194,69 @@ void StandaloneAudioPanel::refreshDeviceChoices()
 
 void StandaloneAudioPanel::connectionChanged()
 {
-    if(connectionRevision!=connection.deviceRevision())
-    {
-        connectionRevision=connection.deviceRevision();
-        gain.setValue(-30,juce::sendNotificationSync);
-        rebuildOutputs();
-    }
+    const bool changed=connectionRevision!=connection.deviceRevision();
+    connectionRevision=connection.deviceRevision();
+    refreshMonitoring(true,changed);
     refreshDeviceChoices();
+}
+
+void StandaloneAudioPanel::refreshMonitoring(bool discover,bool resetVolume)
+{
+    const auto& selected=connection.selection();
+    const auto volumeKey=selected?MonitoringSettings::identityKey(*selected):juce::String();
+    if(volumeDevice!=volumeKey || resetVolume)
+    {
+        volumeDevice=volumeKey;
+        const auto saved=selected?monitoring.volume(*selected):std::optional<double>{};
+        gain.setValue(saved.value_or(-30),juce::dontSendNotification);
+        audio.setMonitorGainDb(static_cast<float>(gain.getValue()));
+    }
+    auto outputs=monitoringOutputs;
+    if(discover)
+        outputs=audio.connected()?audio.outputConfiguration():selected?connection.outputConfiguration():audio.outputConfiguration();
+    else if(audio.connected())outputs=audio.outputConfiguration();
+    const auto identity=connection.monitoringIdentity();const auto& source=session.sourceDocument;
+    juce::String key=volumeKey+"|"+(identity?"identified":"unavailable")+"|";
+    key<<int(source.hasSource)<<int(source.layout.confirmed)<<int(session.sourceContentInvalid)<<int(session.persistenceLoading)<<"|";
+    for(int n=0;n<source.layout.count;++n)key<<int(source.layout.roles[n])<<",";
+    for(const auto& name:outputs)key<<"|"<<name.length()<<":"<<name;
+    if(routingContext==key)return; // Routine refresh never rewrites the user's live adjustments.
+    if(audio.active())audio.stop(); // Restore/reconfigure only while transport is stopped.
+    routingContext=key;monitoringOutputs=outputs;
+    session.sourceDocument.routing=OutputRouting();
+    if(!source.hasSource || !source.layout.confirmed || session.sourceContentInvalid || session.persistenceLoading)
+        routingNotice="Confirm this programme's speaker roles before restoring output routing.";
+    else if(!identity)
+        routingNotice="No uniquely identified interface available; routes muted. Select or scan an output. Offline analysis is available.";
+    else
+    {
+        const auto restored=monitoring.restore(*identity,monitoringOutputs,source.layout);
+        session.sourceDocument.routing=restored.routing;routingNotice=restored.explanation;
+    }
+    rebuildOutputs();
+}
+void StandaloneAudioPanel::rememberRouting()
+{
+    const auto id=connection.monitoringIdentity();const auto& source=session.sourceDocument;
+    if(audio.active() || session.job.isActive() || session.persistenceLoading || !id || !source.layout.confirmed)return;
+    if(MonitoringSettings::layoutKey(source.layout).isEmpty())return; // Existing other layouts stay manually usable.
+    if(source.routing.validate(source.layout.count,std::min(maxChannels,monitoringOutputs.size()),true).isNotEmpty())
+    {routingNotice="Resolve duplicate or unavailable outputs before this routing can be remembered.";return;}
+    if(monitoring.rememberRouting(*id,monitoringOutputs,source.layout,source.routing))
+        routingNotice="Remembered "+MonitoringSettings::layoutKey(source.layout)+" routing for "+id->name+", including muted roles.";
 }
 
 void StandaloneAudioPanel::rebuildOutputs()
 {
-    session.sourceDocument.routing = OutputRouting();
-    const auto names = audio.outputNames();
-    for (auto& box : outputBoxes)
+    auto names = monitoringOutputs;
+    while(names.size()>maxChannels)names.remove(names.size()-1);
+    for (int channel=0;channel<maxChannels;++channel)
     {
+        auto& box=outputBoxes[size_t(channel)];
         box.clear (juce::dontSendNotification);
         box.addItem ("Muted", 1);
         for (int i = 0; i < names.size(); ++i) box.addItem (juce::String (i + 1) + ": " + names[i], i + 2);
-        box.setSelectedId (1, juce::dontSendNotification);
+        box.setSelectedId(session.sourceDocument.routing.fileToDevice[size_t(channel)]+2,juce::dontSendNotification);
     }
 }
 
@@ -213,17 +274,18 @@ void StandaloneAudioPanel::sourceChanged(bool freshImport)
         suggestionLabel.setTooltip(proposal.explanation);
     }
     else suggestionLabel.setText(source.layout.confirmed?"Project channel assignments":source.media.layoutProvenance,juce::dontSendNotification);
+    routingContext.clear(); // A new/opened programme must map its own confirmed file order.
     audio.sourceChanged (session.sourceDocument.media);
     connection.programmeChanged(source.hasSource && !session.sourceContentInvalid && !session.persistenceLoading ? source.media.sampleRate : 0);
     connectionChanged();
     actionError.clear();
-    rebuildOutputs();
     refresh();
     resized();
 }
 
 void StandaloneAudioPanel::synchronize()
 {
+    refreshMonitoring();
     const bool previouslyInvalid = session.sourceContentInvalid;
     if ((session.sourceDocument.assembly || session.sourceDocument.composition) && !session.sourceContentInvalid && !session.persistenceLoading
         && !session.sourceDocument.matchesFileStamps())
@@ -289,7 +351,7 @@ void StandaloneAudioPanel::refresh()
         roleBoxes[channel].setTooltip (source.layout.count == 8
             ? "Select a role or enter a documented System I alias (L/R/C/LFE/Lss/Rss/Lrs/Rrs). Confirm roles afterwards."
             : "Select the original file-channel speaker role, then confirm.");
-        outputBoxes[channel].setEnabled (editable);
+        outputBoxes[channel].setEnabled(editable && source.layout.confirmed && !monitoringOutputs.isEmpty());
         int selected = 1;
         for (size_t role = 0; role < supportedRoles.size(); ++role)
             if (source.layout.roles[channel] == supportedRoles[role]) selected = static_cast<int> (role) + 2;
@@ -297,6 +359,15 @@ void StandaloneAudioPanel::refresh()
         if ((reviewing && !editingOrder) || !roleBoxes[channel].hasKeyboardFocus (true))
             roleBoxes[channel].setSelectedId (selected, juce::dontSendNotification);
     }
+    const auto monitorIdentity=connection.monitoringIdentity();
+    rememberRoutingButton.setEnabled(editable && monitorIdentity.has_value() && source.layout.confirmed
+        && MonitoringSettings::layoutKey(source.layout).isNotEmpty() && !monitoringOutputs.isEmpty()
+        && source.routing.validate(source.layout.count,std::min(maxChannels,monitoringOutputs.size()),true).isEmpty());
+    auto monitorText=routingNotice;
+    const auto savedVolume=connection.selection()?monitoring.volume(*connection.selection()):std::optional<double>{};
+    monitorText+="\nMonitor: "+juce::String(gain.getValue(),1)+" dB"+(savedVolume?" (last user setting on this Mac/interface).":" (no saved value; initial default is -30 dB).");
+    if(monitoring.warning().isNotEmpty())monitorText+="\n"+monitoring.warning();
+    monitoringStatus.setText(monitorText,juce::dontSendNotification);monitoringStatus.setTooltip(monitorText);
     juce::String status = actionError.isNotEmpty() ? actionError : audio.status();
     status << "\n" << connection.status();
     if(connection.settingsWarning().isNotEmpty())status << "\n" << connection.settingsWarning();
@@ -336,7 +407,9 @@ void StandaloneAudioPanel::resized()
     if(layoutPreset.isVisible())layoutPreset.setBounds(area.removeFromTop(28).reduced(2));
     suggestionLabel.setBounds(area.removeFromTop(40).reduced(2));
     suggestionLabel.setJustificationType(juce::Justification::centredLeft);
+    monitoringStatus.setBounds(area.removeFromTop(64).reduced(2));
     row = area.removeFromTop (30);
+    rememberRoutingButton.setBounds(row.removeFromRight(150).reduced(2));
     confirmButton.setBounds (row.removeFromRight (205).reduced (2));
     if(reviewing)editOrder.setBounds(row.removeFromRight(100).reduced(2));
     heading.setBounds (row.reduced (2));

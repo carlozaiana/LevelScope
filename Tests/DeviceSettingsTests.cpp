@@ -3,13 +3,13 @@
 
 namespace
 {
-struct ConnectionCounts { int creates=0, opens=0, starts=0; bool busy=false; juce::Array<double> rates{44100,48000,96000}; };
+struct ConnectionCounts { int creates=0, opens=0, starts=0; bool busy=false; juce::Array<double> rates{44100,48000,96000}; juce::StringArray outputs{"Left output","Right output"}; int probes=0; };
 struct SettingsDevice final : juce::AudioIODevice
 {
     SettingsDevice(const OutputDeviceIdentity& id,std::shared_ptr<ConnectionCounts> counts)
         :AudioIODevice(id.name,id.type),calls(std::move(counts)){}
     std::shared_ptr<ConnectionCounts> calls;bool opened=false;double rate=0;juce::BigInteger outputs;
-    juce::StringArray getOutputChannelNames()override{return {"Left output","Right output"};}
+    juce::StringArray getOutputChannelNames()override{return calls->outputs;}
     juce::StringArray getInputChannelNames()override{return {};}
     juce::Array<double> getAvailableSampleRates()override{return calls->rates;}
     juce::Array<int> getAvailableBufferSizes()override{return {256};}
@@ -36,6 +36,8 @@ struct SettingsCatalog final : OutputDeviceCatalog
     std::vector<OutputDeviceChoice> devices{{{"Injected","Studio output","uid-studio"},{}},{{"Injected","Other output","uid-other"},{}}};
     bool disappearOnCreate=false;
     std::vector<OutputDeviceChoice> scan()override{return devices;}
+    juce::StringArray outputConfiguration(const OutputDeviceIdentity& id)override
+    {++calls->probes;int matches=0;for(const auto& d:devices)if(d.identity==id&&d.problem.isEmpty())++matches;return matches==1?calls->outputs:juce::StringArray{};}
     std::unique_ptr<juce::AudioIODevice> create(const OutputDeviceIdentity& id)override
     {++calls->creates;if(disappearOnCreate)return {};return std::make_unique<SettingsDevice>(id,calls);}
 };
@@ -140,7 +142,7 @@ void panel(const juce::File& root)
     expect(std::all_of(s.sourceDocument.routing.fileToDevice.begin(),s.sourceDocument.routing.fileToDevice.end(),[](int route){return route<0;}),"automatic UI open leaves every physical route muted");
     expect(s.revision==revision&&s.documentRevision==document&&s.sourceDocument.layout.roles==sourceRoles&&s.currentStateDocument.staticGainDb==-3,"device preferences preserve roles, processing, document and audio identities");
     gain->setValue(0,juce::sendNotificationSync);button(ui,"Disconnect")->onClick();button(ui,"Connect")->onClick();
-    expect(gain->getValue()==-30&&audio.connected(),"explicit reconnect restores safe monitor level");stopped(audio,*catalog);
+    expect(gain->getValue()==0&&audio.connected(),"explicit reconnect restores the last user-set monitor level");stopped(audio,*catalog);
     s.job.begin(JobStage::analysis,s.revision);ui.refresh();const int opened=catalog->calls->opens;
     expect(!outputs->isEnabled()&&!automatic->isEnabled()&&!button(ui,"Connect")->isEnabled(),"active analysis locks connection edits while remaining offline-capable");
     button(ui,"Connect")->onClick();expect(catalog->calls->opens==opened,"disabled Connect handler cannot bypass active job guard");s.job.finish(s.job.ticket,s.revision,ErrorCode::none,"done");ui.refresh();
@@ -174,13 +176,14 @@ void projectReopen(const juce::File& root)
 }
 void discovery()
 {
-    // Read-only metadata lookup on the actual OS; no create/open/start call.
-    const auto outputs=OutputDeviceCatalog::system()->scan();int core=0,stable=0,ambiguous=0;
+    // Read-only metadata lookup on the actual OS; no open/start or device-setting changes.
+    const auto catalog=OutputDeviceCatalog::system();const auto outputs=catalog->scan();int core=0,stable=0,ambiguous=0;
     for(const auto& entry:outputs)
     {
         expect(entry.identity.type.isNotEmpty()&&entry.identity.name.isNotEmpty(),"native catalog gives visible backend and output name");
         if(entry.identity.type=="CoreAudio")++core;
-        if(entry.identity.uid.isNotEmpty()&&entry.problem.isEmpty())++stable;
+        if(entry.identity.uid.isNotEmpty()&&entry.problem.isEmpty())
+        {++stable;const auto names=catalog->outputConfiguration(entry.identity);expect(!names.isEmpty(),"native output configuration can be inspected without opening hardware");}
         if(entry.problem.isNotEmpty())++ambiguous;
     }
     expect(core==0||stable>0,"actual CoreAudio enumeration resolves a stable output UID without opening hardware");
@@ -201,11 +204,12 @@ void preparationGuard(const juce::File& root)
     stopped(audio,*catalog);
 }
 }
+#include "MonitoringRoutingChecks.h"
 int main(int argc,char** argv)
 {
     juce::ScopedJuceInitialiser_GUI gui;
     if(argc!=2)return 2;const juce::File root(argv[1]);if(root.exists())return 2;root.createDirectory();bool passed=false;juce::String error;
-    try{persistence(root.getChildFile("memory"));connectionIntent(root.getChildFile("intent"));unavailable(root.getChildFile("unavailable"));malformed(root.getChildFile("malformed"));auto ui=root.getChildFile("ui");ui.createDirectory();panel(ui);projectReopen(root.getChildFile("project"));preparationGuard(root.getChildFile("preparation"));discovery();passed=true;}
+    try{persistence(root.getChildFile("memory"));connectionIntent(root.getChildFile("intent"));unavailable(root.getChildFile("unavailable"));malformed(root.getChildFile("malformed"));auto ui=root.getChildFile("ui");ui.createDirectory();panel(ui);projectReopen(root.getChildFile("project"));preparationGuard(root.getChildFile("preparation"));routingMemory(root.getChildFile("routing"));discovery();passed=true;}
     catch(const std::exception& e){error=e.what();}
     auto report=juce::var(new juce::DynamicObject());auto* r=report.getDynamicObject();r->setProperty("passed",passed);r->setProperty("error",error);r->setProperty("checks",checks);
     r->setProperty("build",LEVELSCOPE_MEASUREMENT_BUILD);r->setProperty("os",juce::SystemStats::getOperatingSystemName());r->setProperty("physical_devices_opened",false);
