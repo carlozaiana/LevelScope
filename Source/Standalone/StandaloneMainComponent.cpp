@@ -657,8 +657,8 @@ void StandaloneMainComponent::chooseComposition()
                     {
                         safe->audioPanel.sourceChanged();
                         safe->documentNotice=before==safe->session.revision
-                            ?"Composition labels or locations updated; valid measurements retained; device closed, routes muted"
-                            :"Confirmed composition committed; device closed, routes muted, fresh measurements required";
+                            ?"Composition labels or locations updated; valid measurements retained; stopped, routes muted"
+                            :"Confirmed composition committed; stopped, routes muted, fresh measurements required";
                     }
                     else safe->documentNotice="Composition changed before adoption; previous session retained";
                 }
@@ -1066,7 +1066,7 @@ void StandaloneMainComponent::resized()
     auto transport=bounds.removeFromTop(32);
     inspectDomain.setBounds(transport.removeFromLeft(155).reduced(2));auditionDomainBox.setBounds(transport.removeFromLeft(165).reduced(2));
     timelinePlay.setBounds(transport.removeFromLeft(65).reduced(2));timelineStop.setBounds(transport.removeFromLeft(65).reduced(2));
-    audioSetupButton.setTooltip("Configure the device, channel roles and routing. Device opening is explicit.");
+    audioSetupButton.setTooltip("Choose this Mac's output and optional automatic reconnection; review channel roles and routing. Opening always leaves playback stopped.");
     sectionsButton.setBounds(transport.removeFromRight(160).reduced(2));diagnosticsButton.setBounds(transport.removeFromRight(190).reduced(2));positionLabel.setBounds(transport);
     timelineAvailableHeight=bounds.getHeight();timelineLayout.moveTimeline(0,timelineAvailableHeight,session.sourceDocument.layout.count,TimelineGainLane::height);
     auto bottom=bounds.removeFromBottom(timelineLayout.inspector);

@@ -5,30 +5,38 @@ namespace levelscope::standalone
 {
 // [BEGIN LS-STANDALONE-AUDIO-PANEL-IMPLEMENTATION]
 StandaloneAudioPanel::StandaloneAudioPanel (StandaloneSessionModel& model, StandaloneAudition& engine,
-                                           std::function<void()> changed,juce::File roleDirectory)
-    : session (model), audio (engine), onChanged (std::move (changed)),roleMemory(roleDirectory)
+                                           std::function<void()> changed,juce::File roleDirectory,
+                                           std::shared_ptr<OutputDeviceCatalog> catalog, OutputDeviceSettings settings)
+    : session (model), audio (engine), onChanged (std::move (changed)),roleMemory(roleDirectory),
+      connection(engine,std::move(catalog),std::move(settings))
 {
     session.auditionBusy = [&engine] { return engine.active() && engine.getState() != AuditionState::cancelling; };
     for (auto* component : std::initializer_list<juce::Component*> {
-        &typeBox, &deviceBox, &scanButton, &openButton, &closeButton, &playButton,
+        &deviceBox, &automaticReconnect, &scanButton, &openButton, &closeButton, &playButton,
         &stopButton, &restartButton, &seekButton, &seekPosition, &confirmButton, &gain, &statusLabel, &heading, &viewport, &domainBox, &prepareButton, &auditionLabel, &layoutPreset,&suggestionLabel,&editOrder })
         addAndMakeVisible (*component);
-    const auto& types = audio.deviceTypes();
-    for (int i = 0; i < types.size(); ++i) typeBox.addItem (types[i]->getTypeName(), i + 1);
-    if (! types.isEmpty()) typeBox.setSelectedId (1, juce::dontSendNotification);
-    deviceBox.setTextWhenNothingSelected ("Scan, then select an output device");
-    typeBox.onChange = [this] { scan(); };
+    deviceBox.setName("Output interface");
+    deviceBox.setTextWhenNothingSelected ("Choose an output interface (offline analysis is available)");
+    automaticReconnect.setToggleState(connection.automaticReconnect(),juce::dontSendNotification);
+    automaticReconnect.setTooltip("Off by default. Reconnect this Mac's last successful output when the programme rate is known. Playback stays stopped. Disconnect pauses automatic reconnection until LevelScope restarts.");
+    automaticReconnect.onClick = [this]
+    {
+        if(session.persistenceLoading || session.job.isActive() || audio.active())return;
+        connection.setAutomaticReconnect(automaticReconnect.getToggleState());
+        connectionChanged(); refresh(); onChanged();
+    };
     scanButton.onClick = [this] { scan(); };
     deviceBox.onChange = [this]
     {
-        if (session.persistenceLoading) return;
-        actionError = audio.selectDevice (typeBox.getSelectedId() - 1, deviceBox.getText());
-        gain.setValue (-30, juce::sendNotificationSync);
-        rebuildOutputs();
-        refresh();
+        if (session.persistenceLoading || session.job.isActive() || audio.active()) return;
+        const auto index=deviceBox.getSelectedId()-1;
+        if(juce::isPositiveAndBelow(index,int(connection.choices().size())))
+            connection.select(connection.choices()[size_t(index)].identity);
+        actionError.clear();connectionChanged();refresh();onChanged();
     };
-    openButton.onClick = [this] { if (session.persistenceLoading) return; actionError = audio.connect (session.sourceDocument.media.sampleRate); refresh(); };
-    closeButton.onClick = [this] { audio.disconnect(); actionError.clear(); refresh(); onChanged(); };
+    openButton.onClick = [this]
+    { if(session.persistenceLoading || session.job.isActive() || audio.active())return;connection.connect();actionError.clear();connectionChanged();refresh();onChanged(); };
+    closeButton.onClick = [this] { connection.disconnect();actionError.clear();connectionChanged();refresh();onChanged(); };
     domainBox.addItem ("Source", 1); domainBox.addItem ("Current State", 2);
     domainBox.setSelectedId (1, juce::dontSendNotification);
     domainBox.onChange = [this]
@@ -136,20 +144,46 @@ StandaloneAudioPanel::StandaloneAudioPanel (StandaloneSessionModel& model, Stand
         };
     }
     rebuildOutputs();
+    refreshDeviceChoices();
     sourceChanged();
 }
 
 void StandaloneAudioPanel::scan()
 {
-    if (session.persistenceLoading) return;
-    audio.disconnect();
-    deviceBox.clear (juce::dontSendNotification);
-    const auto devices = audio.scanOutputs (typeBox.getSelectedId() - 1);
-    for (int i = 0; i < devices.size(); ++i) deviceBox.addItem (devices[i], i + 1);
-    audio.selectDevice (-1, {});
-    rebuildOutputs();
-    actionError = devices.isEmpty() ? "No output devices found" : "Select a device; no device is open";
-    refresh();
+    if(session.persistenceLoading || session.job.isActive() || audio.active())return;
+    connection.rescan();actionError.clear();connectionChanged();refresh();onChanged();
+}
+
+void StandaloneAudioPanel::refreshDeviceChoices()
+{
+    deviceBox.clear(juce::dontSendNotification);
+    int chosen=0;
+    const auto& wanted=connection.selection();const auto& entries=connection.choices();
+    for(size_t i=0;i<entries.size();++i)
+    {
+        const auto& item=entries[i];
+        deviceBox.addItem(item.identity.name+" ("+item.identity.type+")",int(i)+1);
+        if(wanted && item.identity==*wanted)chosen=int(i)+1;
+    }
+    if(wanted && chosen==0)
+    {
+        chosen=int(entries.size())+1;
+        deviceBox.addItem(wanted->name+" (selected; unavailable)",chosen);
+        deviceBox.setItemEnabled(chosen,false);
+    }
+    deviceBox.setSelectedId(chosen,juce::dontSendNotification);
+    deviceBox.setTooltip(connection.status());
+}
+
+void StandaloneAudioPanel::connectionChanged()
+{
+    if(connectionRevision!=connection.deviceRevision())
+    {
+        connectionRevision=connection.deviceRevision();
+        gain.setValue(-30,juce::sendNotificationSync);
+        rebuildOutputs();
+    }
+    refreshDeviceChoices();
 }
 
 void StandaloneAudioPanel::rebuildOutputs()
@@ -180,6 +214,8 @@ void StandaloneAudioPanel::sourceChanged(bool freshImport)
     }
     else suggestionLabel.setText(source.layout.confirmed?"Project channel assignments":source.media.layoutProvenance,juce::dontSendNotification);
     audio.sourceChanged (session.sourceDocument.media);
+    connection.programmeChanged(source.hasSource && !session.sourceContentInvalid && !session.persistenceLoading ? source.media.sampleRate : 0);
+    connectionChanged();
     actionError.clear();
     rebuildOutputs();
     refresh();
@@ -223,11 +259,11 @@ void StandaloneAudioPanel::refresh()
         + (request.context.processing.sectionGains ? " + applied section gains" : "") + " | " + measurementStatus
         + "\n" + (requestError.isNotEmpty() ? requestError : "Playback does not measure or establish compliance."), juce::dontSendNotification);
     gain.setEnabled (true); // Listening volume remains live, even after an overload fault.
-    typeBox.setEnabled (editable);
+    automaticReconnect.setEnabled(editable);
     deviceBox.setEnabled (editable);
     scanButton.setEnabled (editable);
-    openButton.setEnabled (editable && source.hasSource && deviceBox.getSelectedId() > 0);
-    closeButton.setEnabled (audio.connected());
+    openButton.setEnabled (editable && connection.selection().has_value());
+    closeButton.setEnabled (audio.connected() || connection.selection().has_value());
     const auto routeError = source.routing.validate (source.layout.count, audio.outputNames().size());
     playButton.setEnabled (editable && audio.connected() && requestError.isEmpty() && routeError.isEmpty());
     stopButton.setEnabled (playing);
@@ -262,6 +298,8 @@ void StandaloneAudioPanel::refresh()
             roleBoxes[channel].setSelectedId (selected, juce::dontSendNotification);
     }
     juce::String status = actionError.isNotEmpty() ? actionError : audio.status();
+    status << "\n" << connection.status();
+    if(connection.settingsWarning().isNotEmpty())status << "\n" << connection.settingsWarning();
     if (audio.preparing()) status << " | " << juce::String (juce::roundToInt (100 * audio.preparationProgress())) << "%";
     if (playing || audio.getState() == AuditionState::finished)
         status << "  |  " << juce::String (audio.positionSeconds(), 1) << " s  |  underruns " << juce::String (audio.underruns());
@@ -280,9 +318,9 @@ void StandaloneAudioPanel::resized()
     prepareButton.setBounds (row.removeFromLeft (150).reduced (2));
     auditionLabel.setBounds (area.removeFromTop (45).reduced (2));
     row = area.removeFromTop (28);
-    typeBox.setBounds (row.removeFromLeft (115).reduced (2));
     scanButton.setBounds (row.removeFromRight (110).reduced (2));
     deviceBox.setBounds (row.reduced (2));
+    automaticReconnect.setBounds(area.removeFromTop(28).reduced(2));
     row = area.removeFromTop (30);
     openButton.setBounds (row.removeFromLeft (105).reduced (2));
     closeButton.setBounds (row.removeFromLeft (105).reduced (2));
@@ -293,7 +331,7 @@ void StandaloneAudioPanel::resized()
     restartButton.setBounds (row.removeFromLeft (90).reduced (2));
     seekButton.setBounds (row.removeFromRight (65).reduced (2));
     seekPosition.setBounds (row.reduced (2));
-    statusLabel.setBounds (area.removeFromTop (72).reduced (2));
+    statusLabel.setBounds (area.removeFromTop (112).reduced (2));
     layoutPreset.setVisible(session.sourceDocument.layout.count==8);
     if(layoutPreset.isVisible())layoutPreset.setBounds(area.removeFromTop(28).reduced(2));
     suggestionLabel.setBounds(area.removeFromTop(40).reduced(2));

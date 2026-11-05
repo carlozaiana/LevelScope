@@ -15,6 +15,13 @@ using namespace levelscope;
 using namespace levelscope::standalone;
 namespace
 {
+struct EmptyOutputCatalog final : OutputDeviceCatalog
+{
+    std::vector<OutputDeviceChoice> scan() override { return {}; }
+    std::unique_ptr<juce::AudioIODevice> create(const OutputDeviceIdentity&) override { return {}; }
+};
+std::shared_ptr<OutputDeviceCatalog> emptyOutputCatalog() { return std::make_shared<EmptyOutputCatalog>(); }
+OutputDeviceSettings noOutputSettings() { return OutputDeviceSettings(juce::File{}, {}); }
 juce::Array<juce::var> checks, cases;
 juce::File sampleDirectory;
 juce::var longEvidence;

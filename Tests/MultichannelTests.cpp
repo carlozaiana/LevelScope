@@ -462,7 +462,7 @@ void panelM7(const juce::File& dir)
     const auto file=dir.getChildFile("panel-71.wav");writePcm(file,signal(48000,8,96000),48000,24);auto r=validated(file);
     StandaloneSessionModel session;session.setValidatedSource(file,r.context.media);
     auto device=std::make_unique<Device>();device->outputCount=2;auto audio=std::make_unique<StandaloneAudition>(std::move(device));
-    StandaloneAudioPanel panel(session,*audio,[]{});panel.setSize(700,680);panel.resized();panel.refresh();
+    StandaloneAudioPanel panel(session,*audio,[]{},{},emptyOutputCatalog(),noOutputSettings());panel.setSize(700,680);panel.resized();panel.refresh();
     std::vector<juce::ComboBox*> roles;juce::ComboBox* preset=nullptr;int labels=0;
     const std::function<void(juce::Component&)> visit=[&](juce::Component& component)
     {

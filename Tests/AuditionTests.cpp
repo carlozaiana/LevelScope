@@ -233,7 +233,7 @@ void panelControls(const juce::File& dir)
     model.setValidatedSource(r.context.sourceFile,r.context.media);model.sourceDocument.layout=r.context.fileLayout;model.initializeCurrentStateFromSource();
     auto device=std::make_unique<Device>();auto* d=device.get();auto audio=std::make_unique<StandaloneAudition>(std::move(device));
     std::unique_ptr<StandaloneAudioPanel> panel;
-    panel=std::make_unique<StandaloneAudioPanel>(model,*audio,[&]{if(panel)panel->refresh();});panel->setSize(720,400);
+    panel=std::make_unique<StandaloneAudioPanel>(model,*audio,[&]{if(panel)panel->refresh();},juce::File{},emptyOutputCatalog(),noOutputSettings());panel->setSize(720,400);
     juce::ComboBox* domain=nullptr;juce::Slider* monitor=nullptr;juce::Label* status=nullptr;
     for(auto* child:panel->getChildren())
     {
@@ -287,7 +287,7 @@ void longProgramme(const juce::File& file)
     auto request=AuditionRequest::source(file,media.media,layoutFor(2));request.currentInitialized=true;
     auto d=std::make_unique<Device>();auto* device=d.get();auto audio=std::make_unique<StandaloneAudition>(std::move(d));
     StandaloneSessionModel model;model.setValidatedSource(file,media.media);model.sourceDocument.layout=request.context.fileLayout;
-    model.initializeCurrentStateFromSource();StandaloneAudioPanel panel(model,*audio,[]{});panel.setSize(720,400);
+    model.initializeCurrentStateFromSource();StandaloneAudioPanel panel(model,*audio,[]{},{},emptyOutputCatalog(),noOutputSettings());panel.setSize(720,400);
     request=model.auditionRequest();audio->synchronize(request,model.sourceDocument.routing);
     const uint64_t baseline=residentBytes();std::atomic<uint64_t> peak{baseline};std::atomic<bool> finished{false};
     std::thread sample([&]{while(!finished.load()){const auto rss=residentBytes();peak.store(std::max(peak.load(),rss));std::this_thread::sleep_for(std::chrono::milliseconds(5));}});

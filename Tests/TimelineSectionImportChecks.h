@@ -119,7 +119,7 @@ void rememberedOrders(const juce::File& root)
     expect(!initial.order.confirmed && initial.explanation.contains("standard"),"count proposes a reviewable order only");
     StandaloneSessionModel s;
     auto device=std::make_unique<Device>();auto* injected=device.get();StandaloneAudition audition(std::move(device));
-    StandaloneAudioPanel audio(s,audition,[]{},folder);int analyses=0;
+    StandaloneAudioPanel audio(s,audition,[]{},folder,emptyOutputCatalog(),noOutputSettings());int analyses=0;
     audio.onAnalyse=[&]{expect(s.sourceDocument.layout.confirmed,"analysis starts only after confirmation");++analyses;};
     auto pick=[&](const juce::String& name,ChannelRole role)
     {

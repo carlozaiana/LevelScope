@@ -24,9 +24,9 @@ StandaloneSessionModel reopened(StandaloneSessionModel& s,const juce::File& file
 void loadingGuards(const juce::File& root)
 {
     auto input=fixture(root.getChildFile("loading.wav"),48000,2,8192);auto s=sessionFor(input);
-    auto device=std::make_unique<Device>();auto* injected=device.get();StandaloneAudition audition(std::move(device));StandaloneAudioPanel panel(s,audition,[]{});
+    auto device=std::make_unique<Device>();auto* injected=device.get();StandaloneAudition audition(std::move(device));StandaloneAudioPanel panel(s,audition,[]{},{},emptyOutputCatalog(),noOutputSettings());
     s.persistenceLoading=true;panel.refresh();
-    for(const char* label:{"Open device","Prepare audition","Play selected","Restart","Seek"})
+    for(const char* label:{"Connect","Prepare audition","Play selected","Restart","Seek"})
     {
         juce::TextButton* found=nullptr;for(auto* child:panel.getChildren())if(auto* b=dynamic_cast<juce::TextButton*>(child))if(b->getButtonText()==label)found=b;
         expect(found&&!found->isEnabled(),"opening disables audition lifecycle controls");found->onClick();

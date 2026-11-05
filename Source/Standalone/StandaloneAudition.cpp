@@ -197,6 +197,13 @@ juce::StringArray StandaloneAudition::outputNames() const
     return names;
 }
 
+void StandaloneAudition::selectOutputDevice(std::unique_ptr<juce::AudioIODevice> selected)
+{
+    disconnect();
+    device = std::move(selected);
+    setMonitorGainDb(-30);
+}
+
 juce::String StandaloneAudition::connect (double sourceRate)
 {
     if (preparation.valid()) return "Wait for source preparation or cancellation before opening a device";
@@ -207,14 +214,14 @@ juce::String StandaloneAudition::connect (double sourceRate)
     outputs.setRange (0, outputNames().size(), true);
     if (outputs.isZero()) return "Device has no available outputs";
     if (! device->getAvailableSampleRates().contains (sourceRate))
-        return "Device does not offer the source sample rate; resampling is unavailable";
+        return "Incompatible programme rate: device does not offer " + juce::String(sourceRate, 0) + " Hz; resampling is unavailable";
     auto error = device->open ({}, outputs, sourceRate, device->getDefaultBufferSize());
     if (error.isNotEmpty() || ! device->isOpen() || std::abs (device->getCurrentSampleRate() - sourceRate) > 0.01
         || device->getActiveOutputChannels() != outputs)
     {
         device->close();
         state = AuditionState::failed;
-        message = error.isNotEmpty() ? error : "Device did not accept the requested sample rate and outputs";
+        message = error.isNotEmpty() ? "Output is busy or unavailable: " + error : "Device did not accept the requested sample rate and outputs";
         return message;
     }
     rate = sourceRate;

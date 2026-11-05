@@ -58,6 +58,7 @@ public:
     const juce::OwnedArray<juce::AudioIODeviceType>& deviceTypes();
     juce::StringArray scanOutputs (int typeIndex);
     juce::String selectDevice (int typeIndex, const juce::String& name);
+    void selectOutputDevice(std::unique_ptr<juce::AudioIODevice> selected);
     juce::StringArray outputNames() const;
     juce::String connect (double sourceRate);
     void disconnect();
@@ -74,6 +75,7 @@ public:
     void poll (bool picturePrerolled = true); // message thread; finish/failed notifications and worker join
     void setMonitorGainDb (float db) { if (std::isfinite (db)) fifo.gain.store (juce::Decibels::decibelsToGain (juce::jlimit (-60.0f, 0.0f, db))); }
     bool connected() const { return device != nullptr && device->isOpen(); }
+    double connectedRate() const { return connected() ? device->getCurrentSampleRate() : 0; }
     AuditionState getState() const { return state; }
     bool active() const { return state == AuditionState::preparing || state == AuditionState::cancelling
                              || state == AuditionState::buffering || state == AuditionState::playing; }

@@ -232,6 +232,7 @@ add_library(LevelScopeStandaloneSupport STATIC
     Source/Standalone/StandaloneCompliance.cpp
     Source/Standalone/StandaloneMedia.cpp
     Source/Standalone/StandaloneAudition.cpp
+    Source/Standalone/OutputDeviceSettings.cpp
     Source/Standalone/StandaloneMeasurementService.cpp
     Source/Standalone/StandaloneWaveform.cpp
     Source/Standalone/RememberedChannelRoles.cpp
@@ -596,5 +597,15 @@ if(LEVELSCOPE_BUILD_TIMELINE_PROGRESS_TESTS)
     target_link_libraries(LevelScopeTimelineProgressTests PRIVATE LevelScopeDiagnosticsUI juce::juce_gui_basics)
     if(NOT MSVC)
         target_compile_options(LevelScopeTimelineProgressTests PRIVATE -fno-fast-math -ffp-contract=off)
+    endif()
+endif()
+
+option(LEVELSCOPE_BUILD_DEVICE_SETTINGS_TESTS "Build remembered output and connection intent checks" OFF)
+if(LEVELSCOPE_BUILD_DEVICE_SETTINGS_TESTS)
+    juce_add_console_app(LevelScopeDeviceSettingsTests PRODUCT_NAME "LevelScope Device Settings Tests")
+    target_sources(LevelScopeDeviceSettingsTests PRIVATE Tests/DeviceSettingsTests.cpp Source/Standalone/StandaloneAudioPanel.cpp)
+    target_link_libraries(LevelScopeDeviceSettingsTests PRIVATE LevelScopeDiagnosticsUI juce::juce_gui_basics)
+    if(NOT MSVC)
+        target_compile_options(LevelScopeDeviceSettingsTests PRIVATE -fno-fast-math -ffp-contract=off)
     endif()
 endif()

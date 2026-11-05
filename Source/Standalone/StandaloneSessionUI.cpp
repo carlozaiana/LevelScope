@@ -140,7 +140,7 @@ void StandaloneMainComponent::installDocument(sessionfile::Document d,bool relin
     audition.disconnect();juce::String message;
     if(!prepared||!sessionfile::adopt(d,*prepared,session,message)){documentNotice=message;refreshSessionControls();return;}
     session.documentFile=pendingDocumentFile;if(relinking)session.documentChanged();
-    audioPanel.sourceChanged();videoPanel.restoreSessionReference();documentNotice="Opened stopped, device closed, routes muted";
+    audioPanel.sourceChanged();videoPanel.restoreSessionReference();documentNotice="Opened stopped, routes muted; output connection follows this Mac's preference";
     if(message.isNotEmpty())documentNotice+="\n"+message;
     refreshFromSession();
 }
