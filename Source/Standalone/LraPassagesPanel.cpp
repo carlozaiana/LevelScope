@@ -8,12 +8,13 @@ namespace levelscope::standalone
 LraPassagesPanel::LraPassagesPanel(StandaloneSessionModel& s,MeasurementDomain d):session(s),domain(d)
 {
     setName("LRA passages and candidate estimates");
-    for(auto* c:std::initializer_list<juce::Component*>{&source,&current,&refresh,&cancel,&assess,&previous,&next,&quiet,&status,&details,&list})addAndMakeVisible(c);
+    for(auto* c:std::initializer_list<juce::Component*>{&source,&current,&refresh,&cancel,&assess,&previous,&next,&quiet,&status,&legend,&details,&list})addAndMakeVisible(c);
     source.onClick=[this]{domain=MeasurementDomain::source;};current.onClick=[this]{domain=MeasurementDomain::currentState;};
     refresh.onClick=[this]{if(control)control->cancel=true;key.clear();runningKey.clear();};cancel.onClick=[this]{if(control)control->cancel=true;result={};updateList();status.setText("View job cancelled. Audio and measurements unchanged; Refresh to retry.",juce::dontSendNotification);};
     quiet.onClick=[this]{page=0;updateList();};previous.onClick=[this]{--page;updateList();};next.onClick=[this]{++page;updateList();};
     assess.onClick=[this]{if(assess.isEnabled()&&key==selectedKey()&&onAssess)onAssess();};
     details.setMultiLine(true);details.setReadOnly(true);details.setScrollbarsShown(true);details.setFont(14.f);
+    legend.setFont(14.f);legend.setText("Local gain preview only: grey = applied; cyan = estimate. Global gain is not yet selected.",juce::dontSendNotification);
     list.setRowHeight(32);status.setFont(14.f);setSize(1040,750);startTimerHz(10);timerCallback();
 }
 LraPassagesPanel::~LraPassagesPanel(){stopTimer();if(control)control->cancel=true;if(future.valid())future.wait();}
@@ -107,8 +108,7 @@ void LraPassagesPanel::selectedRowsChanged(int row)
 }
 void LraPassagesPanel::paint(juce::Graphics& g)
 {
-    g.fillAll(juce::Colour(0xff17212a));g.setColour(juce::Colours::lightgrey);g.setFont(13.f);
-    g.drawText("Local gain preview only — grey applied / cyan estimated; global gain not yet selected",preview.withHeight(20),juce::Justification::centredLeft);
+    g.fillAll(juce::Colour(0xff17212a));
     if(!result.selection||!result.selection->available)return;
     auto bounds=preview.withTrimmedTop(22).toFloat();const auto& s=*result.selection;
     const auto draw=[&](const processing::SectionGainPlan& p,juce::Colour c)
@@ -123,7 +123,7 @@ void LraPassagesPanel::resized()
 {
     auto r=getLocalBounds().reduced(10),buttons=r.removeFromTop(32);
     for(auto* b:{&source,&current,&refresh,&cancel,&assess})b->setBounds(buttons.removeFromLeft(160).reduced(2));
-    status.setBounds(r.removeFromTop(64));preview=r.removeFromTop(95);details.setBounds(r.removeFromBottom(185));
+    status.setBounds(r.removeFromTop(64));preview=r.removeFromTop(95);legend.setBounds(preview.withHeight(20));details.setBounds(r.removeFromBottom(185));
     auto nav=r.removeFromBottom(32);quiet.setBounds(nav.removeFromLeft(210));previous.setBounds(nav.removeFromLeft(150));next.setBounds(nav.removeFromLeft(150));list.setBounds(r.reduced(0,4));
 }
 }

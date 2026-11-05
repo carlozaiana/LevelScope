@@ -25,7 +25,7 @@ private:
     int page=0;
     juce::TextButton source{"Inspect Source"},current{"Inspect Current"},refresh{"Refresh passages"},cancel{"Cancel view job"},assess{"Assess candidate"},previous{"Previous 200"},next{"Next 200"};
     juce::ToggleButton quiet{"Quiet population"};
-    juce::Label status;
+    juce::Label status,legend;
     juce::TextEditor details;
     juce::ListBox list{"Measured LRA passages",this};
     juce::Rectangle<int> preview;
