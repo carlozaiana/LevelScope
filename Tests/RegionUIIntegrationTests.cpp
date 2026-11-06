@@ -184,7 +184,7 @@ void workflowChecks(StandaloneMainComponent& ui,const juce::File& root)
     const auto largeText=large.text();auto historical=*s.lastAppliedExplanation;historical.narrative=largeText;
     const auto attachment=encodeAppliedExplanation(historical);
     expect(attachment.size()<AppliedProposalExplanation::maximumBytes&&decodeAppliedExplanation(attachment,job)->narrative==largeText,"three complete 10000-interval narratives fit the unchanged history budget and round trip exactly");
-    Heartbeat pageHeartbeat;pageHeartbeat.begin();ProposalInspectionPanel largePanel(largeText);largePanel.addToDesktop(juce::ComponentPeer::windowHasTitleBar);largePanel.setVisible(true);
+    Heartbeat pageHeartbeat;pageHeartbeat.begin();ProposalInspectionPanel largePanel(largeText,{},RegionProposalReviewPanel::pageBytes);largePanel.addToDesktop(juce::ComponentPeer::windowHasTitleBar);largePanel.setVisible(true);
     expect(largePanel.pageCount()>100&&largePanel.allText()==largeText,"large M20 explanation remains completely accessible through bounded pages");
     const auto pageUntil=juce::Time::getMillisecondCounterHiRes()+3000;
     while(juce::Time::getMillisecondCounterHiRes()<pageUntil){largePanel.nextPage();juce::MessageManager::getInstance()->runDispatchLoopUntil(20);}
@@ -198,6 +198,8 @@ void workflowChecks(StandaloneMainComponent& ui,const juce::File& root)
     auto cancellation=juce::var(new juce::DynamicObject());cancellation.getDynamicObject()->setProperty("cancel_ms",cancelMs);cases.add(cancellation);
 }
 
+
+#include "Qualification/M20/HoldoutChecks.h"
 
 void exchangeChecks(const juce::File& from,const juce::File& root)
 {
@@ -275,10 +277,10 @@ void controlVariants(const juce::File& root)
 }
 int main(int argc,char** argv)
 {
-    juce::ScopedJuceInitialiser_GUI gui;const bool variants=argc==3&&juce::String(argv[2])=="--variants",exchange=argc==4&&juce::String(argv[2])=="--exchange";if(argc!=2&&!variants&&!exchange)return 2;const juce::File root(argv[1]);if(root.exists())return 2;root.createDirectory();bool passed=false;juce::String error;
+    juce::ScopedJuceInitialiser_GUI gui;const bool variants=argc==3&&juce::String(argv[2])=="--variants",exchange=argc==4&&juce::String(argv[2])=="--exchange",holdouts=argc==4&&juce::String(argv[2])=="--holdouts";if(argc!=2&&!variants&&!exchange&&!holdouts)return 2;const juce::File root(argv[1]);if(root.exists())return 2;root.createDirectory();bool passed=false;juce::String error;
     try
     {
-        if(exchange)exchangeChecks(juce::File(argv[3]),root);else if(variants)controlVariants(root);else
+        if(holdouts)controlledHoldouts(juce::File(argv[3]),root);else if(exchange)exchangeChecks(juce::File(argv[3]),root);else if(variants)controlVariants(root);else
         {
         auto s=programme(root.getChildFile("fixture"),2);editorChecks(s,root);
         auto ui=std::make_unique<StandaloneMainComponent>(emptyOutputCatalog(),noOutputSettings());Access::stopTimer(*ui);ui->setSize(1320,1100);ui->setName("LevelScope - isolated M20 integration test");ui->addToDesktop(juce::ComponentPeer::windowHasTitleBar);ui->setVisible(true);
