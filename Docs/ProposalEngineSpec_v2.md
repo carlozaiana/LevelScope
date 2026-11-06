@@ -1,6 +1,9 @@
 # LevelScope — Proposal Engine Specification v2
 
-Current entry point — 5 November 2026: **M19 candidate-02 is qualified within its
+Current published baseline — 6 November 2026: main/origin/main are
+`22961f03de7919e1de631f8b13eb4b852108ac0b`, including the three qualified
+[UI convenience slices](UIConveniencePublication-2026-11-06.md).
+**M19 candidate-02 is qualified within its
 approved impact-selected scope, published and integrated into main**, including the
 Intel true-peak optimisation. Checkpoint `m19-lra-passages-2026-11-05` targets
 `a14c88e8a94412eb2e2536860aa7cbd79de0dd39`; the subsequent documentation-only
@@ -9,7 +12,21 @@ records verification. Read [69 — Proposal Strategy and Audio Quality handover]
 [66 — exact M19 method](ProjectIndex/66_M19LraPassagesAndMeasuredCandidates.md), and
 [68 — qualification](ProjectIndex/68_M19QualificationAndHandover.md).
 Section 8.4 and the current part of section 22 record the approved development approach.
-No next processor or implementation milestone is approved by this documentation update.
+The M20 approval and staged implementation handover below supersede the earlier
+design-only boundary for that bounded scope.
+
+Approved continuation — 6 November 2026: [70 — M20 region formation and predictive
+gain planning](ProjectIndex/70_M20RegionFormationAndPredictiveGainPlanning.md)
+includes bounded splitting and boundary refinement in the first useful M20 slice,
+using the existing gain processor. It specifies section/analysis-region/processing-
+region terminology, strict areas versus hints, explicit margins/pins, independent
+split and activity accounting, predictive search, failed-candidate ranking and
+acceptance cases. Following the user-authorized advisory review, Logic may implement
+its owned core/service/session work and run focused non-audible checks on
+`codex/m20-region-planning`. UI controls/overlays follow a committed, focused-tested
+Logic interface/core checkpoint; full combined qualification follows UI integration.
+No M20 publication or merge into main is authorized. Strategy remains the rule-design
+owner and does not start production implementation.
 
 Historical status, 28 October 2026: Design clarified; bounded M13 candidate-02 implemented and qualified.
 [ProjectIndex 49](ProjectIndex/49_M13QualificationAndHandover.md) records actual-platform
@@ -175,10 +192,16 @@ Purpose:
 
 | Entity | Meaning and provenance |
 | --- | --- |
+| Section | User-defined or imported organisational span, with original bounds, name and provenance. A section may contain several analysis or processing regions. |
 | Editorial scene/edit | A user/editor-supplied narrative or cut annotation. An audio algorithm cannot certify it as a cinematic scene. |
-| Processing section | Exact source-frame interval used by an explicitly applied gain plan. It can differ from editorial annotations. |
-| Loudness region | Method-derived interval of similar measured behavior, with method/version/confidence. It is descriptive, not a verified scene or an applied change. |
+| Analysis region | Method-derived measured grouping, including a loudness grouping, with method/version and evidence. It is descriptive, not a verified scene or an applied correction. |
+| Processing region | Exact source-frame interval proposed or used for correction. Its geometry can differ from section annotations; transition support is explicitly accounted for. |
 | Peak event | Future grouped peak excursions with an explicitly defined threshold, duration, merge-gap, channel and interpolation policy. A maximum is not an event count. |
+
+Terminology clarified 6 November 2026: use these terms in new designs/explanations.
+The former “processing section” denotes a processing region; “loudness region” is a
+kind of analysis region. Existing `SectionGainPlan`, strategy IDs such as
+`section-led`, UI names and saved historical records are not broadly renamed.
 
 Marker import is optional for the eventual application. Dynamics-led operation
 needs no section map. Section-led methods may use manual sections, imported marker
@@ -195,11 +218,11 @@ suggestions; unsupported mandatory protection must reject a changing proposal
 rather than be silently ignored. A genuine no-change result needs no intervention
 and remains a no-op.
 
-### Measurement gates, loudness regions and DSP thresholds
+### Measurement gates, analysis regions and DSP thresholds
 
 Measurement gates select populations for authoritative metrics and must follow
 the measurement method. They are not edit boundaries or compressor thresholds.
-Loudness-region boundaries come from a separate versioned segmentation algorithm
+Analysis-region boundaries come from a separate versioned segmentation algorithm
 with detector/window, hysteresis, minimum duration and merge rules. Selecting such
 regions for processing requires an explicit mapping/confirmation policy.
 
@@ -209,6 +232,17 @@ median or a histogram percentile cannot be copied into a dBFS threshold as thoug
 they meant the same thing. A future loudness-controlled compressor may consume a
 compatible LUFS detector only through a defined, tested transfer rule. These
 mappings require qualification; M13 adds none of them.
+
+M20's proposed refinement contract separates a rough selection hint from a strict
+permitted local-processing area. Splits introduce internal correction boundaries;
+outer boundary ranges/pins and optional surrounding margins grant different
+permissions. Complete changed support, including old/new transitions, must fit
+the permitted area and avoid protected local material. Neither splitting nor a
+new annotation resets gain/duration budgets. Global-trim permission is separate
+and explicit; a local-area promise is not whole-chain output protection. See
+[70](ProjectIndex/70_M20RegionFormationAndPredictiveGainPlanning.md) for precise
+counts, controls, supported protection and failure behavior. No M20 processing is
+implemented by this design addition.
 
 ---
 
@@ -393,6 +427,14 @@ authority. Predictions must never relax delivery rules or be restored as measure
 The concrete handover, current methods/defaults, evidence and first design assignment
 are in [69](ProjectIndex/69_ProposalStrategyAndAudioQualityHandover.md). Independent
 preparation/progress/source-reuse work must not be hidden inside strategy design.
+
+The approved first implementation design is
+[70 — M20 region formation and predictive gain planning](ProjectIndex/70_M20RegionFormationAndPredictiveGainPlanning.md).
+Region formation and gain choice remain separate, versioned responsibilities but
+compare combined geometry/gain hypotheses before complete measurement. Proposed
+split/minimum-duration/boundary controls are experimental preservation/search inputs,
+not measurement rules. A proposed 0.01 LU shortlist band affects the ranking of
+failed measured alternatives only; exact all-rule compliance remains unchanged.
 
 ---
 
@@ -640,10 +682,10 @@ that conflict instead of extending a transition through protected material.
 
 ## 18. Future protection and region provenance
 
-Manual sections and optional marker annotations are usable without automatic scene
-recognition. Audio-derived loudness regions remain labelled as such, with method
-and confidence; they are not verified cinematic scenes. Editorial, processing,
-loudness-region and peak-event boundaries retain separate identities and provenance.
+Sections and optional marker annotations are usable without automatic scene
+recognition. Measured analysis regions remain labelled as such, with method and
+evidence; they are not verified cinematic scenes. Section annotations, analysis
+regions, processing regions and peak events retain separate identities/provenance.
 
 User protection instructions take precedence over automatic suggestions. A future
 protection model must distinguish no *additional local processing*, fixed processing
@@ -720,26 +762,34 @@ Retain synthetic success cases and eventual coordinated listening review.
 
 ## 22. Staged development roadmap
 
-### Current sequence — 5 November 2026
+### Current sequence — 6 November 2026
 
 M14–M18 and M19's bounded passage analysis/selective attenuation are implemented,
 qualified and included in published main. The former “after M18, no later than M19” combined runtime
 deferral has been discharged; it is not a current exemption for new processors.
 
-Next, the dedicated Strategy and Audio Quality chat reviews M19 evidence and proposes
-one bounded capability/method sequence under section 8.4. Review the alternatives
-(region/gain/transition/neighbour improvements versus qualified limiting and a first
-section-plus-limiter method), their failure examples, activity information, UI needs,
-costs and acceptance tests before assigning a milestone. Do not require all dynamics
-modules before useful rules, and do not authorize a limiter simply by naming it here.
+Following the user-authorized advisory review, the Logic Module chat may implement
+[M20 region formation and predictive gain planning](ProjectIndex/70_M20RegionFormationAndPredictiveGainPlanning.md)
+from main `22961f03de7919e1de631f8b13eb4b852108ac0b`. Its first useful slice includes bounded splitting/refinement, marker-free
+formation and one selected-section mode with optional explicit margins, using the
+qualified gain processor. Required data, advanced controls, resource limits, failure
+ranking, acceptance cases and ownership are recorded before implementation. Logic
+first records its impact plan, then implements and focused-tests its owned engine,
+service, session and explanation contracts. It commits a stable integrated core
+checkpoint and prepares the UI handover before UI begins controls/overlays; combined
+M20 qualification follows UI integration. Audible/device checks require user
+coordination; publication and merge remain unapproved. Adjustable ramps,
+broader neighbour processing and qualified limiting plus a first method remain
+subsequent evidence-led decisions; a complete dynamics suite is not a prerequisite.
 Later dynamics-led/mixed methods, protection, component-relative dialogue work,
 immersive expansion and VST3 parity require their own decisions. Numerical truth,
 explicit Apply and independent Current/artifact verification remain common.
 
-Track remembered device selection/open-on-selection/optional reconnection,
-initial import/analysis preparation feedback, session-wide verified-source
-reuse, optional project-owned audio and the inherited completion pause as independent
-performance/UI work. The user deferred a separate first-playback feedback task while
+The published UI convenience slices now cover remembered device connection,
+initial import/analysis preparation feedback and per-interface monitoring memory;
+preserve those behaviors in M20. Session-wide verified-source reuse, optional
+project-owned audio and the inherited completion pause remain independent work.
+The user deferred a separate first-playback feedback task while
 shared-source reuse is planned; see [69](ProjectIndex/69_ProposalStrategyAndAudioQualityHandover.md).
 
 ### Historical sequence and qualification decisions, M13–M17
