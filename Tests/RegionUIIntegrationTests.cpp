@@ -28,9 +28,10 @@ struct Heartbeat:private juce::Timer
     void timerCallback()override{const auto now=juce::Time::getMillisecondCounterHiRes();gaps.push_back(now-previous);previous=now;}
     void finish()
     {
-        stopTimer();expect(gaps.size()>20,"native M20 heartbeat collected meaningful samples");std::sort(gaps.begin(),gaps.end());
-        const auto p95=gaps[size_t(std::ceil(.95*gaps.size()))-1];auto v=juce::var(new juce::DynamicObject());
-        v.getDynamicObject()->setProperty("native_heartbeat_p95_ms",p95);v.getDynamicObject()->setProperty("native_heartbeat_max_ms",gaps.back());v.getDynamicObject()->setProperty("samples",int(gaps.size()));cases.add(v);
+        stopTimer();std::sort(gaps.begin(),gaps.end());
+        const auto p95=gaps.empty()?std::numeric_limits<double>::infinity():gaps[size_t(std::ceil(.95*gaps.size()))-1];auto v=juce::var(new juce::DynamicObject());
+        v.getDynamicObject()->setProperty("native_heartbeat_p95_ms",p95);v.getDynamicObject()->setProperty("native_heartbeat_max_ms",gaps.empty()?0.:gaps.back());v.getDynamicObject()->setProperty("samples",int(gaps.size()));cases.add(v);
+        expect(gaps.size()>20,"native M20 heartbeat collected meaningful samples");
         expect(p95<=100,"native M20 proposal/review heartbeat p95 <=100 ms");
     }
 };
@@ -185,7 +186,7 @@ void workflowChecks(StandaloneMainComponent& ui,const juce::File& root)
     expect(attachment.size()<AppliedProposalExplanation::maximumBytes&&decodeAppliedExplanation(attachment,job)->narrative==largeText,"three complete 10000-interval narratives fit the unchanged history budget and round trip exactly");
     Heartbeat pageHeartbeat;pageHeartbeat.begin();ProposalInspectionPanel largePanel(largeText);largePanel.addToDesktop(juce::ComponentPeer::windowHasTitleBar);largePanel.setVisible(true);
     expect(largePanel.pageCount()>100&&largePanel.allText()==largeText,"large M20 explanation remains completely accessible through bounded pages");
-    const auto pageUntil=juce::Time::getMillisecondCounterHiRes()+1000;
+    const auto pageUntil=juce::Time::getMillisecondCounterHiRes()+3000;
     while(juce::Time::getMillisecondCounterHiRes()<pageUntil){largePanel.nextPage();juce::MessageManager::getInstance()->runDispatchLoopUntil(20);}
     largePanel.removeFromDesktop();pageHeartbeat.finish();
     auto storage=juce::var(new juce::DynamicObject());storage.getDynamicObject()->setProperty("three_attempt_10000_interval_attachment_bytes",int64_t(attachment.size()));storage.getDynamicObject()->setProperty("complete_pages",largePanel.pageCount());cases.add(storage);
