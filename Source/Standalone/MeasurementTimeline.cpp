@@ -277,7 +277,7 @@ void MeasurementTimeline::resized()
     fit.setBounds(row.removeFromLeft(125));fitSelection.setBounds(row.removeFromLeft(100));row.removeFromLeft(8);seconds.setBounds(row.removeFromLeft(110));inspect.setBounds(row.removeFromLeft(118));seek.setBounds(row.removeFromLeft(65));follow.setBounds(row.removeFromLeft(76));
     navigationFeedback.setBounds(row);
     scroll.setBounds (b.removeFromBottom (16).withTrimmedLeft (55));
-    if(gainLane)gainLane->setBounds(b.removeFromBottom(TimelineGainLane::height));
+    if(gainLane)gainLane->setBounds(b.removeFromBottom(gainLane->preferredHeight()));
     b.removeFromTop (44); ruler=b.removeFromTop(waveformEnabled?24:0).withTrimmedLeft(waveformEnabled?85:55).withTrimmedRight(waveformEnabled?60:12); b.removeFromBottom (25); graph = b.withTrimmedLeft(waveformEnabled?85:55).withTrimmedRight(waveformEnabled?60:12);
     if(graph!=previousGraph)++navigationEpoch;
     rebuild();
@@ -361,7 +361,7 @@ void MeasurementTimeline::finishSectionGesture(int64_t end)
 void MeasurementTimeline::mouseDown(const juce::MouseEvent& e)
 {
     refreshSectionEditing();
-    gestureGain=gainLane&&gainLane->plotBounds().contains(e.getPosition()-gainLane->getPosition());
+    gestureGain=gainLane&&gainLane->inspectionBounds().contains(e.getPosition()-gainLane->getPosition());
     gesture=e.mods.isLeftButtonDown()&&programmeFrames()>0&&(graph.contains(e.getPosition())||ruler.contains(e.getPosition())||gestureGain);
     sectionGesture=gesture && sectionEditable && graph.contains(e.getPosition()) && !e.mods.isAltDown();
     movingBoundary=sectionGesture?boundaryHandle(e.position.x):std::nullopt;
@@ -402,7 +402,7 @@ void MeasurementTimeline::mouseUp(const juce::MouseEvent& e)
     }
     if(dragging||e.position.getDistanceFrom(downPoint)>=4||gestureEpoch!=navigationEpoch)return;
     if(gestureRuler&&ruler.contains(e.getPosition()))requestSeek(frameAt(e.position.x),gestureIdentity);
-    else if(gestureGain&&gainLane&&gainLane->plotBounds().contains(e.getPosition()-gainLane->getPosition()))
+    else if(gestureGain&&gainLane&&gainLane->inspectionBounds().contains(e.getPosition()-gainLane->getPosition()))
         gainLane->selectFrame(frameAt(e.position.x),true);
     else if(!gestureRuler&&graph.contains(e.getPosition()))
     {

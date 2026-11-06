@@ -1,5 +1,7 @@
 #pragma once
 #include "StandaloneSessionModel.h"
+#include "StandaloneRegionProposal.h"
+#include <limits>
 #include <juce_gui_basics/juce_gui_basics.h>
 
 namespace levelscope::standalone
@@ -13,7 +15,11 @@ public:
     void synchronize(const juce::String& confirmedProgramme);
     void setViewport(double begin,double end,int left,int width);
     void selectFrame(int64_t frame,bool notify);
-    juce::Rectangle<int> plotBounds() const {return {plotLeft,47,plotWidth,48};}
+    void inspectRegionAttempt(size_t);
+    bool diagnosticRegionInspection() const;
+    int preferredHeight() const {return height+(hasRegionLayers()?76:0);}
+    juce::Rectangle<int> plotBounds() const {return {plotLeft,47+(hasRegionLayers()?76:0),plotWidth,48};}
+    juce::Rectangle<int> inspectionBounds() const {return {plotLeft,47,plotWidth,plotBounds().getBottom()-47};}
     juce::String inspectionText() {return detail.getTooltip();}
     std::function<void(int64_t,int64_t,int64_t)> onSelection;
     std::function<void()> onChanged;
@@ -36,6 +42,11 @@ private:
     std::optional<ProcessingPlan> proposed;
     std::vector<proposal::ProgrammeSection> lraRows;
     bool automaticStale=false;
+    size_t regionAttempt=std::numeric_limits<size_t>::max();
+    const RegionAttempt* inspectedAttempt() const;
+    bool hasRegionLayers() const {return bool(session.regionPlanning)||(automatic&&bool(automatic->regionReview()));}
+    void rebuildProposalRows();
+    void paintRegionLayers(juce::Graphics&);
     const std::vector<proposal::ProgrammeSection>& rows() const;
     void adjacent(int direction);
     const proposal::ProgrammeSection* selected() const;

@@ -281,6 +281,8 @@ add_library(LevelScopeDiagnosticsUI STATIC
     Source/Standalone/TimelineGainLane.cpp
     Source/Standalone/ProposalWorkflowPanel.cpp
     Source/Standalone/LraPassagesPanel.cpp
+    Source/Standalone/RegionPlanningPanel.cpp
+    Source/Standalone/RegionProposalReviewPanel.cpp
     Source/Standalone/StandaloneDiagnosticsPanel.cpp)
 target_link_libraries(LevelScopeDiagnosticsUI PUBLIC LevelScopeStandaloneSupport juce::juce_gui_basics)
 
@@ -559,6 +561,24 @@ endif()
 option(LEVELSCOPE_BUILD_JOB_REQUIREMENTS_TESTS "Build M17 job requirements/presets checks" OFF)
 option(LEVELSCOPE_BUILD_LRA_PROPOSAL_TESTS "Build M19 bounded LRA proposal checks" OFF)
 option(LEVELSCOPE_BUILD_REGION_PLANNING_TESTS "Build focused M20 region planning checks" OFF)
+option(LEVELSCOPE_BUILD_REGION_UI_TESTS "Build focused M20 native UI integration checks" OFF)
+if(LEVELSCOPE_BUILD_REGION_UI_TESTS)
+    juce_add_console_app(LevelScopeRegionUITests PRODUCT_NAME "LevelScope Region UI Tests")
+    target_sources(LevelScopeRegionUITests PRIVATE
+        Tests/RegionUIIntegrationTests.cpp
+        Source/Standalone/StandaloneMainComponent.cpp
+        Source/Standalone/StandaloneSessionUI.cpp
+        Source/Standalone/StandaloneExportUI.cpp
+        Source/Standalone/StandaloneAudioPanel.cpp
+        Source/Standalone/StandaloneVideoPanel.cpp
+        Source/Standalone/StandaloneProgrammeImport.cpp
+        Source/Standalone/StandaloneCompositionImport.cpp)
+    target_compile_definitions(LevelScopeRegionUITests PRIVATE JUCE_MODAL_LOOPS_PERMITTED=1)
+    target_link_libraries(LevelScopeRegionUITests PRIVATE LevelScopeDiagnosticsUI juce::juce_gui_basics)
+    if(NOT MSVC)
+        target_compile_options(LevelScopeRegionUITests PRIVATE -fno-fast-math -ffp-contract=off)
+    endif()
+endif()
 if(LEVELSCOPE_BUILD_REGION_PLANNING_TESTS)
     juce_add_console_app(LevelScopeRegionPlanningTests PRODUCT_NAME "LevelScope Region Planning Tests")
     target_sources(LevelScopeRegionPlanningTests PRIVATE Tests/RegionPlanningTests.cpp)

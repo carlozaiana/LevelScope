@@ -52,6 +52,28 @@ TimelineGainLane::TimelineGainLane(StandaloneSessionModel& s):session(s)
 }
 const std::vector<proposal::ProgrammeSection>& TimelineGainLane::rows() const
 {return !lraRows.empty()?lraRows:automatic&&proposed?automatic->originalAnnotations().sections:session.sectionDocument.map().sections;}
+const RegionAttempt* TimelineGainLane::inspectedAttempt() const
+{
+    const auto review=automatic?automatic->regionReview():nullptr;
+    return review&&regionAttempt<review->attempts.size()?&review->attempts[regionAttempt]:nullptr;
+}
+bool TimelineGainLane::diagnosticRegionInspection() const
+{
+    const auto review=automatic?automatic->regionReview():nullptr;
+    return review&&regionAttempt<review->attempts.size()&&(regionAttempt!=review->retainedAttempt||review->attempts[regionAttempt].evaluation.verdict!=proposal::Verdict::pass);
+}
+void TimelineGainLane::rebuildProposalRows()
+{
+    lraRows.clear();
+    if(automatic&&(automatic->methodVersion()==proposal::lraTrimMethodVersion||automatic->regionReview())&&proposed&&proposed->sectionGains)
+    {uint64_t id=1;for(const auto& r:proposed->sectionGains->intervals)lraRows.push_back({id++,r.begin,r.end,automatic->regionReview()?"Proposed nominal processing interval":"Proposed LRA processing interval"});}
+}
+void TimelineGainLane::inspectRegionAttempt(size_t n)
+{
+    const auto review=automatic?automatic->regionReview():nullptr;if(!review||n>=review->attempts.size())return;
+    regionAttempt=n;const auto& plan=review->attempts[n].plan;proposed=ProcessingPlan{};proposed->staticGainDb=plan.globalDb;proposed->sectionGains=plan.envelope;
+    rebuildProposalRows();row=intervalAt(rows(),cursor);showSelection();updateControls();repaint();
+}
 void TimelineGainLane::adjacent(int direction)
 {
     if(!bindingMatches()||!selected())return;
@@ -95,10 +117,11 @@ void TimelineGainLane::synchronize(const juce::String& key)
     if(replaced||automatic!=session.sectionProposal||automaticStale!=stale||audioRevision!=session.revision||mapRevision!=map.revision||initialized!=session.hasCurrentStateInitialized()
         ||hasDraft!=bool(d)||(d&&editSerial!=d->editSerial))
     {
+        const bool newProposal=automatic!=session.sectionProposal;
         automatic=session.sectionProposal;automaticStale=stale;proposed=automatic?automatic->previewPlan():std::nullopt;
-        lraRows.clear();
-        if(automatic&&automatic->methodVersion()==proposal::lraTrimMethodVersion&&proposed&&proposed->sectionGains)
-        {uint64_t id=1;for(const auto& r:proposed->sectionGains->intervals)lraRows.push_back({id++,r.begin,r.end,"Proposed LRA processing interval"});}
+        if(newProposal)regionAttempt=automatic&&automatic->regionReview()?automatic->regionReview()->retainedAttempt:std::numeric_limits<size_t>::max();
+        if(const auto* attempt=inspectedAttempt()){proposed=ProcessingPlan{};proposed->staticGainDb=attempt->plan.globalDb;proposed->sectionGains=attempt->plan.envelope;}
+        rebuildProposalRows();
         audioRevision=session.revision;mapRevision=map.revision;initialized=session.hasCurrentStateInitialized();
         usableMap=input.isNotEmpty()&&map.inputIdentity==input&&map.valid();
         hasDraft=bool(d);editSerial=d?d->editSerial:0;fresh=usableMap&&session.sectionDraftFresh();
@@ -127,6 +150,21 @@ void TimelineGainLane::showSelection()
         const double local=proposed->sectionGains?proposed->sectionGains->gainAt(cursor):0.;
         description+="   Proposed local "+exact(local)+" dB / global "+exact(proposed->staticGainDb)+" dB / combined "+exact(local+proposed->staticGainDb)+" dB";
         if(!automatic->previewHasFinalGlobal())description+=" (rejected local selection with baseline global gain; combined candidate not measured)";
+        if(const auto* attempt=inspectedAttempt())
+        {
+            const auto& review=*automatic->regionReview();
+            description="Measured attempt "+juce::String(regionAttempt+1)+(diagnosticRegionInspection()?" — DIAGNOSTIC ONLY. ":" — retained recommendation. ")+description;
+            for(const auto& a:attempt->plan.assignments)if(a.geometry.support.begin<=cursor&&cursor<a.geometry.support.end)
+            {
+                description+="\nRoot "+(a.geometry.root<review.constraints.roots.size()?review.constraints.roots[a.geometry.root].id:"unavailable")+". "+a.geometry.reason;
+                description+="\nChanged-support outer edges ["+juce::String(a.geometry.support.begin)+", "+juce::String(a.geometry.support.end)+"); nominal plateau cuts "+juce::String(a.nominal.begin);
+                for(auto cut:a.geometry.cuts)description+=", "+juce::String(cut);description+=", "+juce::String(a.nominal.end)+". All values are exact source frames; ramps are included only in changed support.";
+                const size_t part=size_t(std::upper_bound(a.geometry.cuts.begin(),a.geometry.cuts.end(),cursor)-a.geometry.cuts.begin());
+                if(part<a.reductions.size())description+="\nAdditional plateau attenuation "+exact(a.reductions[part])+" dB";
+                if(part<a.requested.size()&&part<a.reserve.size()&&part<a.uncovered.size())description+="; requested / reserve achieved / deficit "+exact(a.requested[part])+" / "+exact(a.reserve[part])+" / "+exact(a.uncovered[part])+" dB.";
+            }
+            description+="\nActual private result: "+evaluationText(attempt->evaluation)+". Not Current verification. Complete attempts, support and transition coordinates are in Review.";
+        }
         if(automatic->lraSelection())for(const auto& c:automatic->lraSelection()->selected)if(c.passage.begin<=cursor&&cursor<c.passage.end)
         {
             description+="\nLRA region support ["+juce::String(c.passage.begin)+", "+juce::String(c.passage.end)+") frames; score "+exact(c.passage.score)+" LU*windows. Estimated requested/reduction "+exact(c.requested)+" / "+exact(c.reduction)+" dB; reserve "+exact(c.reserve)+", uncovered overshoot "+exact(c.uncovered)+". See Review for actual complete measured results.";break;
@@ -161,7 +199,7 @@ void TimelineGainLane::updateControls()
     else if(hasDraft&&!fresh)message="Stale draft. Discard it and draft on the current sections.";
     else if(supportError.isNotEmpty())message=supportError;
     else if(!idle)message="Inspection available. Stop playback or finish the job to edit.";
-    else if(proposed)message=(automaticStale?"STALE. ":automatic->status()==SectionProposalStatus::noSolution?"REJECTED. ":"Preview only. ")
+    else if(proposed)message=(automaticStale?"STALE. ":diagnosticRegionInspection()?"DIAGNOSTIC ATTEMPT — Apply unavailable. ":automatic->status()==SectionProposalStatus::noSolution?"REJECTED. ":"Preview only. ")
         +juce::String("Proposed global ")+juce::String(proposed->staticGainDb,9)+" dB. Click/arrow through changes for local + global gain and reasons. "
         +(automaticStale?"Apply unavailable. Generate a fresh proposal.":automatic->status()==SectionProposalStatus::noSolution?"Apply unavailable. Review the rejection.":"Apply proposal explicitly in the main controls.")
         +(automatic->previewHasFinalGlobal()?juce::String():" Global shown is baseline only; no final combined solution.");
@@ -219,6 +257,7 @@ void TimelineGainLane::resized()
 void TimelineGainLane::paint(juce::Graphics& g)
 {
     g.fillAll(juce::Colour(0xff18212a));
+    if(hasRegionLayers())paintRegionLayers(g);
     const auto box=plotBounds();if(box.getWidth()<2||viewEnd<=viewBegin)return;
     const auto x=[&](double f){return float(box.getX()+(f-viewBegin)*(box.getWidth()-1)/(viewEnd-viewBegin));};
     const auto y=[&](double db){return float(box.getCentreY()-db*(box.getHeight()-6)/24.);};
@@ -259,5 +298,38 @@ void TimelineGainLane::paint(juce::Graphics& g)
         }
     };
     draw(applied?&*applied:nullptr,0);if(draft)draw(&*draft,1);if(proposed)draw(proposed->sectionGains?&*proposed->sectionGains:nullptr,2);
+}
+void TimelineGainLane::paintRegionLayers(juce::Graphics& g)
+{
+    if(plotWidth<2||viewEnd<=viewBegin)return;
+    const auto x=[&](int64_t f){return float(plotLeft+(std::clamp(double(f),viewBegin,viewEnd)-viewBegin)*(plotWidth-1)/(viewEnd-viewBegin));};
+    const auto band=[&](int row,const char* label,juce::Colour colour,const std::vector<proposal::RegionSpan>& spans)
+    {
+        const float y=float(47+row*15);g.setFont(10.f);g.setColour(colour);g.drawText(label,0,int(y),plotLeft-4,14,juce::Justification::centredRight);
+        juce::Graphics::ScopedSaveState save(g);g.reduceClipRegion({plotLeft,int(y),plotWidth,14});g.setColour(juce::Colour(0xff111a23));g.fillRect(plotLeft,int(y),plotWidth,14);
+        for(auto s:spans)if(s.end>viewBegin&&s.begin<viewEnd){g.setColour(colour.withAlpha(.3f));g.fillRect(x(s.begin),y+1,std::max(1.f,x(s.end)-x(s.begin)),12.f);g.setColour(colour);g.drawVerticalLine(int(x(s.begin)),y+1,y+13);g.drawVerticalLine(int(x(s.end)),y+1,y+13);}
+    };
+    std::vector<proposal::RegionSpan> annotation,roots,allowed,protectedAreas,support;
+    for(const auto& row:session.sectionDocument.map().sections)annotation.push_back({row.begin,row.end});
+    const auto review=automatic?automatic->regionReview():nullptr;
+    const auto settings=review?std::optional<proposal::RegionPlanningSettings>(review->constraints.settings):session.regionPlanning;
+    if(review){for(const auto& r:review->constraints.roots){roots.push_back(r.hint);allowed.push_back(r.allowed);}if(const auto* a=inspectedAttempt())support=a->plan.activity.support;}
+    else if(settings)
+    {
+        const auto& map=session.sectionDocument.map();
+        if(settings->mode==proposal::RegionMode::automatic)allowed.push_back({0,map.frames});
+        else
+        {
+            auto hint=settings->selection;
+            if(settings->mode==proposal::RegionMode::selectedSection)for(const auto& s:map.sections)if(s.id==settings->sectionId){hint={s.begin,s.end};break;}
+            if(hint.end>hint.begin){roots.push_back(hint);allowed.push_back({std::max<int64_t>(0,hint.begin-int64_t(settings->leftMarginMs)*map.sampleRate/1000),std::min(map.frames,hint.end+int64_t(settings->rightMarginMs)*map.sampleRate/1000)});}
+        }
+    }
+    if(settings)protectedAreas=settings->protectedLocal;
+    band(0,"Annotations",juce::Colour(0xff9caabd),annotation);
+    band(1,settings&&settings->mode==proposal::RegionMode::automatic?"Measured roots":"Root hint",juce::Colour(0xffd7b5ff),roots);
+    band(2,"Allowed area",juce::Colour(0xff87c9b0),allowed);
+    band(3,"Protected",juce::Colour(0xffff9f85),protectedAreas);
+    band(4,"Changed support",juce::Colour(0xff83d9ff),support);
 }
 }

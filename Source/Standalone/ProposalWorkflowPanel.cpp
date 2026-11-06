@@ -3,7 +3,8 @@ namespace levelscope::standalone
 {
 ProposalWorkflowPanel::ProposalWorkflowPanel(StandaloneSessionModel& s):session(s)
 {
-    for(auto* b:{&propose,&review,&apply,&discard,&history,&preferences})addAndMakeVisible(b);
+    for(auto* b:{&propose,&review,&apply,&discard,&history,&preferences,&regions})addAndMakeVisible(b);
+    addAndMakeVisible(method);method.setFont(13.f);method.setMinimumHorizontalScale(1.f);
     propose.setColour(juce::TextButton::buttonColourId,juce::Colour(0xff346967));
     headline.setFont(juce::Font(17.f,juce::Font::bold));headline.setColour(juce::Label::textColourId,juce::Colour(0xffb7e6db));
     availability.setFont(12.f);availability.setMinimumHorizontalScale(1.f);
@@ -14,6 +15,7 @@ ProposalWorkflowPanel::ProposalWorkflowPanel(StandaloneSessionModel& s):session(
     review.onClick=[this]{if(review.isEnabled()&&onReview)onReview();};
     history.onClick=[this]{if(history.isEnabled()&&onHistory)onHistory();};
     preferences.onClick=[this]{if(preferences.isEnabled()&&onPreferences)onPreferences();};
+    regions.onClick=[this]{if(onRegions)onRegions();};
     apply.onClick=[this]{if(!apply.isEnabled())return;session.applySectionProposal();refresh();if(onChanged)onChanged();};
     discard.onClick=[this]{if(!discard.isEnabled())return;session.discardSectionProposal();refresh();if(onChanged)onChanged();};
     refresh();
@@ -31,14 +33,18 @@ void ProposalWorkflowPanel::refresh(float progress)
     else if(!session.currentState.hasMeasurement||session.currentStateNeedsRemeasurement())blocked="Re-measure Current State first.";
     else if(session.sectionTrimDraft)blocked="Apply or discard the manual gain draft first.";
     propose.setEnabled(blocked.isEmpty());review.setEnabled(bool(session.sectionProposal));
-    apply.setEnabled(session.canApplySectionProposal());discard.setEnabled(bool(session.sectionProposal)&&!busy);
+    apply.setEnabled(session.canApplySectionProposal()&&!diagnosticInspection);discard.setEnabled(bool(session.sectionProposal)&&!busy);
+    method.setText(session.regionPlanning?"ACTIVE: M20 experimental regions - "+juce::String(session.regionPlanning->mode==proposal::RegionMode::automatic?"automatic":session.regionPlanning->mode==proposal::RegionMode::selectedSection?"selected section":"temporary selection")
+        +(session.regionPlanning->allowGlobal?" | whole-programme global trim permitted":" | global gain fixed"):"ACTIVE: existing M19 / LRA-unset workflow (default)",juce::dontSendNotification);
+    method.setTooltip(method.getText()+". Region settings are private drafts until explicitly confirmed.");
     history.setEnabled(bool(session.lastAppliedExplanation));preferences.setEnabled(!busy);
     juce::String title="Proposal workflow",detail=session.sectionProposalNotice;
     if(session.job.stage==JobStage::proposal&&session.job.isActive())
     {
         title=session.job.state==JobState::cancelling?"Cancelling proposal":"Proposing — Current remains unchanged";
         if(progress>=0)title+="  "+juce::String(juce::roundToInt(100*progress))+"%";
-        detail=session.getSelectedTargetProfile().limits.hasMaxLoudnessRange?
+        detail=session.regionPlanning?
+            "Experimental region search: one auxiliary energy pass, at most 64 proxy plans and three complete private measurements. Forecasts do not establish compliance. Global permission and complete old/new transition support are enforced; Current remains unchanged.":session.getSelectedTargetProfile().limits.hasMaxLoudnessRange?
             "Measured LRA passages guide bounded attenuation; at most three private assessments. Estimates are not measurements. Final global trim can be positive; Apply requires an exact complete candidate pass. Cancel keeps applied settings.":
             "Global gain is considered first. If it cannot meet IL and true peak together, one section envelope is assessed with up to three private passes. Cancel job keeps the applied settings.";
     }
@@ -60,7 +66,7 @@ void ProposalWorkflowPanel::refresh(float progress)
     {
         if(actions.isNotEmpty())actions+="  ";
         actions+="Apply unavailable. ";
-        actions+=busy?"Stop playback or finish the job.":stale?"Generate a fresh proposal.":session.sectionProposal?"This outcome has no applicable correction.":"No ready proposal.";
+        actions+=busy?"Stop playback or finish the job.":stale?"Generate a fresh proposal.":diagnosticInspection?"A diagnostic attempt is being inspected. Select the retained recommendation in Review.":session.sectionProposal?"This outcome has no applicable correction.":"No ready proposal.";
     }
     if(!review.isEnabled())actions+="  Review needs a completed proposal.";
     if(!discard.isEnabled())actions+=session.sectionProposal?"  Discard needs an idle transport/job.":"  No proposal to discard.";
@@ -74,6 +80,7 @@ void ProposalWorkflowPanel::resized()
     propose.setBounds(row.removeFromLeft(112).reduced(2));review.setBounds(row.removeFromLeft(142).reduced(2));
     apply.setBounds(row.removeFromLeft(132).reduced(2));discard.setBounds(row.removeFromLeft(142).reduced(2));
     preferences.setBounds(row.removeFromRight(146).reduced(2));history.setBounds(row.removeFromRight(204).reduced(2));
+    row=r.removeFromTop(34);regions.setBounds(row.removeFromLeft(228).reduced(2));method.setBounds(row);
     headline.setBounds(r.removeFromTop(26));availability.setBounds(r.removeFromBottom(34));reason.setBounds(r.reduced(0,2));
 }
 }

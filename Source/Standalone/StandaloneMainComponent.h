@@ -13,6 +13,8 @@
 #include "TimelineGainLane.h"
 #include "ProposalWorkflowPanel.h"
 #include "LraPassagesPanel.h"
+#include "RegionPlanningPanel.h"
+#include "RegionProposalReviewPanel.h"
 
 #include <memory>
 #include <future>
@@ -54,6 +56,9 @@ private:
     TimelineGainLane gainLane{session};
     ProposalWorkflowPanel proposalPanel{session};
     std::unique_ptr<ProposalWindow> lraPassagesWindow;
+    std::unique_ptr<ProposalWindow> regionPlanningWindow;
+    void showRegionPlanning();
+    void proposeWithActiveMethod();
     juce::TextButton lraPassagesButton{"LRA passages..."};
     void showLraPassages(bool current=false);
     MeasurementTimeline timeline;

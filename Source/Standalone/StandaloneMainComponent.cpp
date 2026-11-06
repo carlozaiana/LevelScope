@@ -371,14 +371,14 @@ void StandaloneMainComponent::beginSectionProposal()
     const auto first=proposal::draftGlobalTrim(request.scalar());
     session.discardSectionProposal();session.selectedPage=WorkflowPage::currentState;
     // No attribution, copy or measurement for existing global-only/no-change outcomes.
-    if(first.status==proposal::TrimStatus::noChange||(!request.currentContext.profile.limits.hasMaxLoudnessRange&&first.status!=proposal::TrimStatus::noSolution))
+    if(!request.regionSettings&&(first.status==proposal::TrimStatus::noChange||(!request.currentContext.profile.limits.hasMaxLoudnessRange&&first.status!=proposal::TrimStatus::noSolution)))
     {
         JobControl control;const auto result=generateSectionProposal(request,control);
         if(result.value)session.acceptSectionProposal(*result.value);else {session.sectionProposalError=result.error;session.sectionProposalNotice=result.message;}
         refreshFromSession();return;
     }
     if(!session.job.begin(JobStage::proposal,session.revision))return;
-    sectionProposalTicket=session.job.ticket;session.job.message=request.currentContext.profile.limits.hasMaxLoudnessRange?"Assessing bounded LRA candidates; Current unchanged":"Assessing one section envelope; Current State unchanged";
+    sectionProposalTicket=session.job.ticket;session.job.message=request.regionSettings?"Assessing experimental regions; forecasts are not measurements; Current unchanged":request.currentContext.profile.limits.hasMaxLoudnessRange?"Assessing bounded LRA candidates; Current unchanged":"Assessing one section envelope; Current State unchanged";
     importControl=std::make_shared<JobControl>();
     sectionProposalResult=std::async(std::launch::async,[request,control=importControl]{return generateSectionProposal(request,*control);});
     refreshFromSession();
@@ -487,8 +487,8 @@ void StandaloneMainComponent::configureCurrentStateControls()
     preferencesButton.onClick=[this]{ProposalPreferencesPanel::showWindow(preferencesWindow, session, this, [this]{refreshFromSession();});};
     inspectProposalButton.onClick=[this]{reviewProposal(false);};
     addAndMakeVisible(preferencesButton);addAndMakeVisible(inspectProposalButton);
-    sectionProposalButton.onClick=[this]{if(session.getSelectedTargetProfile().limits.hasMaxLoudnessRange)showLraPassages(true);else beginSectionProposal();};
-    applySectionProposalButton.onClick=[this]{session.applySectionProposal();refreshFromSession();};
+    sectionProposalButton.onClick=[this]{proposeWithActiveMethod();};
+    applySectionProposalButton.onClick=[this]{if(gainLane.diagnosticRegionInspection())return;session.applySectionProposal();refreshFromSession();};
     discardSectionProposalButton.onClick=[this]{session.discardSectionProposal();refreshFromSession();};
     for(auto* button:{&sectionProposalButton,&applySectionProposalButton,&discardSectionProposalButton})addAndMakeVisible(*button);
     draftTrimButton.onClick = [this] { beginTrimProposal(); };
@@ -600,7 +600,7 @@ void StandaloneMainComponent::refreshFromSession()
     preferencesButton.setEnabled(!session.persistenceLoading&&!session.audioEditsBlocked()&&!session.job.isActive());
     inspectProposalButton.setEnabled(true);
     sectionProposalButton.setEnabled(!session.persistenceLoading&&!session.audioEditsBlocked()&&!session.job.isActive()&&session.currentState.hasMeasurement);
-    applySectionProposalButton.setEnabled(session.canApplySectionProposal());
+    applySectionProposalButton.setEnabled(session.canApplySectionProposal()&&!gainLane.diagnosticRegionInspection());
     discardSectionProposalButton.setEnabled(bool(session.sectionProposal)&&!session.job.isActive());
     discardTrimButton.setEnabled (!session.persistenceLoading && ! session.job.isActive() && session.trimDraft.has_value());
 
@@ -895,7 +895,8 @@ void StandaloneMainComponent::configureTimelineShell()
     });
     timeline.onTogglePlayback=[this]{if(audition.active()){audition.stop();refreshTimeline();}else playTimeline();};
     gainLane.onChanged=[this]{refreshFromSession();refreshTimeline();};
-    proposalPanel.onPropose=[this]{if(session.getSelectedTargetProfile().limits.hasMaxLoudnessRange)showLraPassages(true);else beginSectionProposal();refreshTimeline();};
+    proposalPanel.onPropose=[this]{proposeWithActiveMethod();refreshTimeline();};
+    proposalPanel.onRegions=[this]{showRegionPlanning();};
     lraPassagesButton.onClick=[this]{showLraPassages();};
     proposalPanel.onReview=[this]{reviewProposal(false);};proposalPanel.onHistory=[this]{reviewProposal(true);};
     proposalPanel.onPreferences=[this]{preferencesButton.onClick();};
@@ -917,7 +918,7 @@ void StandaloneMainComponent::configureTimelineShell()
     auditionDomainBox.onChange=[this]{session.selectAuditionDomain(auditionDomainBox.getSelectedId()==2?MeasurementDomain::currentState:MeasurementDomain::source);audioPanel.synchronize();refreshTimeline();};
     addAndMakeVisible(jobRequirementsPanel.informationLine());
     comparisonDivider.move=[this](int delta){timelineLayout.moveComparison(delta);resized();};
-    waveformDivider.move=[this](int delta){timelineLayout.moveTimeline(delta,timelineAvailableHeight,session.sourceDocument.layout.count,TimelineGainLane::height);resized();};
+    waveformDivider.move=[this](int delta){timelineLayout.moveTimeline(delta,timelineAvailableHeight,session.sourceDocument.layout.count,gainLane.preferredHeight());resized();};
     timeline.onRequestSeek=[this](int64_t frame,const juce::String& identity)
     {const auto error=TimelineTransport::seek(frame,identity,session,audition);refreshTimeline();return error;};
     sectionsButton.onClick=[this]{showSections();};
@@ -960,6 +961,18 @@ void StandaloneMainComponent::showLraPassages(bool current)
     lraPassagesWindow=std::make_unique<ProposalWindow>("LRA passages — inspection and candidate estimates",std::move(panel),this);
     lraPassagesWindow->present();
 }
+void StandaloneMainComponent::proposeWithActiveMethod()
+{
+    if(session.regionPlanning)beginSectionProposal();
+    else if(session.getSelectedTargetProfile().limits.hasMaxLoudnessRange)showLraPassages(true);
+    else beginSectionProposal();
+}
+void StandaloneMainComponent::showRegionPlanning()
+{
+    session.synchronizeSections();
+    RegionPlanningPanel::showWindow(regionPlanningWindow,session,this,[this]{refreshFromSession();refreshTimeline();},
+        [this]{beginSectionProposal();refreshTimeline();});
+}
 void StandaloneMainComponent::reviewProposal(bool historical)
 {
     if(historical?!session.lastAppliedExplanation:!session.sectionProposal)return;
@@ -973,8 +986,20 @@ void StandaloneMainComponent::reviewProposal(bool historical)
         return s.sectionProposalStale()?"STALE proposal snapshot — inputs changed. Apply unavailable. Generate again.":
             proposal->outcomeTitle()+". "+(s.canApplySectionProposal()?"Explicit Apply is in the main window.":"Apply unavailable. Current verification remains separate.");
     };
-    proposalInspectionWindow=std::make_unique<ProposalWindow>(historical?"Last applied proposal explanation":"Review complete proposal",
-        std::make_unique<ProposalInspectionPanel>(historical?session.appliedExplanationDisplayText():session.sectionProposalDisplayText(),std::move(status)),this);
+    std::unique_ptr<juce::Component> view;
+    if(!historical&&proposal->regionReview())
+    {
+        auto panel=std::make_unique<RegionProposalReviewPanel>(proposal,std::move(status));
+        panel->onInspect=[this,runtime,proposal](size_t attempt,int64_t begin,int64_t end)
+        {
+            if(session.sessionId!=runtime||session.sectionProposal!=proposal)return;
+            gainLane.inspectRegionAttempt(attempt);timeline.highlight(double(begin),double(end));
+            gainLane.selectFrame(begin,false);pageDetailBox.setText(gainLane.inspectionText(),false);refreshTimeline();
+        };
+        view=std::move(panel);
+    }
+    else view=std::make_unique<ProposalInspectionPanel>(historical?session.appliedExplanationDisplayText():session.sectionProposalDisplayText(),std::move(status));
+    proposalInspectionWindow=std::make_unique<ProposalWindow>(historical?"Last applied proposal explanation":"Review complete proposal",std::move(view),this);
     proposalInspectionWindow->present();
 }
 void StandaloneMainComponent::showSections()
@@ -1023,6 +1048,8 @@ void StandaloneMainComponent::refreshTimeline()
     const auto currentBinding=WaveformBinding::from(session.measurementContext(MeasurementDomain::currentState),MeasurementDomain::currentState);
     const bool valid=session.sourceDocument.hasSource && !session.sourceContentInvalid && session.sourceDocument.matchesFileStamps();
     gainLane.synchronize(valid&&session.sourceDocument.layout.confirmed?sourceBinding.runtime+sourceBinding.identity:juce::String{});
+    if(gainLane.getHeight()!=gainLane.preferredHeight()){resized();timeline.resized();}
+    proposalPanel.setDiagnosticInspection(gainLane.diagnosticRegionInspection());
     timeline.setProgramme(valid?session.sourceDocument.media.frames:0,valid?int(session.sourceDocument.media.sampleRate):1,valid?sourceBinding.runtime+sourceBinding.identity:juce::String());
     waveformCache.synchronize(sourceBinding,currentBinding,valid,session.hasCurrentStateInitialized());
     const auto view=waveformCache.view(domain==MeasurementDomain::source?sourceBinding:currentBinding);
@@ -1111,7 +1138,7 @@ void StandaloneMainComponent::resized()
     timelinePlay.setBounds(transport.removeFromLeft(65).reduced(2));timelineStop.setBounds(transport.removeFromLeft(65).reduced(2));
     audioSetupButton.setTooltip("Choose this Mac's output and optional automatic reconnection; review channel roles and routing. Opening always leaves playback stopped.");
     sectionsButton.setBounds(transport.removeFromRight(160).reduced(2));diagnosticsButton.setBounds(transport.removeFromRight(190).reduced(2));positionLabel.setBounds(transport);
-    timelineAvailableHeight=bounds.getHeight();timelineLayout.moveTimeline(0,timelineAvailableHeight,session.sourceDocument.layout.count,TimelineGainLane::height);
+    timelineAvailableHeight=bounds.getHeight();timelineLayout.moveTimeline(0,timelineAvailableHeight,session.sourceDocument.layout.count,gainLane.preferredHeight());
     auto bottom=bounds.removeFromBottom(timelineLayout.inspector);
     waveformDivider.setBounds(bounds.removeFromBottom(TimelineLayout::dividerHeight));
     proposalPanel.setBounds(bottom.removeFromTop(ProposalWorkflowPanel::height));
