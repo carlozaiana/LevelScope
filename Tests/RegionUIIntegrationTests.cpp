@@ -123,8 +123,21 @@ void workflowChecks(StandaloneMainComponent& ui,const juce::File& root)
     expect(s.auditionDomain==oldDomain&&Access::stopped(ui)&&s.revision==revision,"attempt/region inspection does not switch audition, connect, seek or apply");
     imageOf(panel,root.getChildFile("region-review.png"));imageOf(ui,root.getChildFile("main-regions.png"));
     panel.addToDesktop(juce::ComponentPeer::windowHasTitleBar);panel.setVisible(true);
-    const auto inspectUntil=juce::Time::getMillisecondCounterHiRes()+1000;
-    while(juce::Time::getMillisecondCounterHiRes()<inspectUntil){choose(panel,"Measured region attempt",1);choose(panel,"Measured region attempt",int(review->retainedAttempt+2));juce::MessageManager::getInstance()->runDispatchLoopUntil(20);}
+    const auto inspectUntil=juce::Time::getMillisecondCounterHiRes()+1000;std::vector<double> completeSwitch,actualSwitch;
+    while(juce::Time::getMillisecondCounterHiRes()<inspectUntil)
+    {
+        auto begin=juce::Time::getMillisecondCounterHiRes();choose(panel,"Measured region attempt",1);completeSwitch.push_back(juce::Time::getMillisecondCounterHiRes()-begin);
+        begin=juce::Time::getMillisecondCounterHiRes();choose(panel,"Measured region attempt",int(review->retainedAttempt+2));actualSwitch.push_back(juce::Time::getMillisecondCounterHiRes()-begin);juce::MessageManager::getInstance()->runDispatchLoopUntil(20);
+    }
+    std::sort(completeSwitch.begin(),completeSwitch.end());std::sort(actualSwitch.begin(),actualSwitch.end());
+    auto switchTiming=juce::var(new juce::DynamicObject());switchTiming.getDynamicObject()->setProperty("complete_review_switch_p95_ms",completeSwitch[size_t(std::ceil(.95*completeSwitch.size()))-1]);switchTiming.getDynamicObject()->setProperty("actual_review_switch_p95_ms",actualSwitch[size_t(std::ceil(.95*actualSwitch.size()))-1]);cases.add(switchTiming);
+    const auto visibleReport=[&]() -> ProposalInspectionPanel&
+    {for(auto* child:panel.getChildren())if(auto* report=dynamic_cast<ProposalInspectionPanel*>(child);report&&report->isVisible())return *report;throw std::runtime_error("No visible review page");};
+    const auto pageLocation=[](ProposalInspectionPanel& report)
+    {for(auto* child:report.getChildren())if(auto* label=dynamic_cast<juce::Label*>(child);label&&label->getText().startsWith("Complete inspection - page"))return label->getText();return juce::String();};
+    choose(panel,"Measured region attempt",1);expect(visibleReport().pageCount()>1,"complete explanation has multiple fully accessible pages");visibleReport().nextPage();const auto location=pageLocation(visibleReport());
+    choose(panel,"Measured region attempt",int(review->retainedAttempt+2));choose(panel,"Measured region attempt",1);
+    expect(location.isNotEmpty()&&pageLocation(visibleReport())==location,"switching between immutable reports preserves the user's inspection page");
     panel.removeFromDesktop();heartbeat.finish();
     const auto originalMap=s.sectionDocument.map();auto dense=originalMap;dense.sections.clear();dense.nextId=10001;++dense.revision;
     for(int64_t n=0;n<10000;++n)dense.sections.push_back({uint64_t(n+1),n*dense.frames/10000,(n+1)*dense.frames/10000,"Annotation "+juce::String(n+1)});

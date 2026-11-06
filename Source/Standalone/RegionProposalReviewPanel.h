@@ -17,7 +17,11 @@ private:
     juce::ComboBox attempts,regions;
     juce::Label label,authority;
     juce::TextButton inspect{"Inspect in timeline"};
-    std::unique_ptr<ProposalInspectionPanel> report;
+    // At most one complete explanation plus three immutable measured attempts.
+    // Keep each bounded page view, including its current page, when switching.
+    std::vector<std::unique_ptr<ProposalInspectionPanel>> reports;
+    ProposalInspectionPanel* report=nullptr;
+    juce::String attemptText(size_t) const;
     void chooseAttempt();
     void inspectSelection();
 };
