@@ -14,7 +14,7 @@ public:
 class ProposalInspectionPanel final : public juce::Component, private juce::Timer
 {
 public:
-    explicit ProposalInspectionPanel(juce::String,std::function<juce::String()> status = {});
+    explicit ProposalInspectionPanel(juce::String,std::function<juce::String()> status = {},size_t pageBytes = 4000);
     void resized() override;
     int pageCount() const { return int(pages.size()); }
     juce::String allText() const;

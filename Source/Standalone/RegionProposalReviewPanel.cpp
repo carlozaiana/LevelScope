@@ -62,7 +62,7 @@ void RegionProposalReviewPanel::chooseAttempt()
     if(report)report->setVisible(false);
     if(!reports[slot])
     {
-        reports[slot]=std::make_unique<ProposalInspectionPanel>(actualSelected?attemptText(size_t(n)):result->text(),statusText);
+        reports[slot]=std::make_unique<ProposalInspectionPanel>(actualSelected?attemptText(size_t(n)):result->text(),statusText,pageBytes);
         addChildComponent(*reports[slot]);
     }
     report=reports[slot].get();report->setVisible(true);resized();

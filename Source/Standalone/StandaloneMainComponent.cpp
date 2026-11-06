@@ -998,7 +998,7 @@ void StandaloneMainComponent::reviewProposal(bool historical)
         };
         view=std::move(panel);
     }
-    else view=std::make_unique<ProposalInspectionPanel>(historical?session.appliedExplanationDisplayText():session.sectionProposalDisplayText(),std::move(status));
+    else view=std::make_unique<ProposalInspectionPanel>(historical?session.appliedExplanationDisplayText():session.sectionProposalDisplayText(),std::move(status),historical&&session.lastAppliedExplanation->regionSettings?RegionProposalReviewPanel::pageBytes:4000);
     proposalInspectionWindow=std::make_unique<ProposalWindow>(historical?"Last applied proposal explanation":"Review complete proposal",std::move(view),this);
     proposalInspectionWindow->present();
 }

@@ -24,15 +24,15 @@ void ProposalPreferencesPanel::showWindow(std::unique_ptr<ProposalWindow>& windo
     // macOS key-window ordering. Raising an open editor keeps its pending edits.
     window->present();
 }
-ProposalInspectionPanel::ProposalInspectionPanel(juce::String text,std::function<juce::String()> statusCallback):statusText(std::move(statusCallback))
+ProposalInspectionPanel::ProposalInspectionPanel(juce::String text,std::function<juce::String()> statusCallback,size_t pageBytes):statusText(std::move(statusCallback))
 {
     // At most 10,000 correction rows; reports enforce their separate 16 MiB bound.
-    const auto bytes=text.toStdString();
+    const auto bytes=text.toStdString();pageBytes=std::clamp<size_t>(pageBytes,512,4000);
     for(size_t begin=0;begin<bytes.size();)
     {
         // Keep synchronous TextEditor layout within the 100 ms inspection
         // heartbeat budget on Intel High Sierra. Every byte remains accessible.
-        size_t end=std::min(begin+4000,bytes.size());
+        size_t end=std::min(begin+pageBytes,bytes.size());
         if(end<bytes.size())
         {
             const auto line=bytes.rfind('\n',end-1);

@@ -7,6 +7,7 @@ namespace levelscope::standalone
 class RegionProposalReviewPanel final : public juce::Component
 {
 public:
+    static constexpr size_t pageBytes=1500; // dense numeric histories on actual High Sierra
     RegionProposalReviewPanel(std::shared_ptr<const SectionProposalResult>,std::function<juce::String()>);
     std::function<void(size_t,int64_t,int64_t)> onInspect;
     void resized() override;
