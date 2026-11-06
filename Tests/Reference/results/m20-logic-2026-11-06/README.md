@@ -45,3 +45,8 @@ Combined qualification after UI integration must still cover native interaction,
 actual High Sierra/cross-platform, selected control variants and independent real
 holdouts with coordinated listening. Earlier M19/UI evidence is dependency evidence,
 not fresh M20 feature qualification.
+
+Local implementation commit: `6ce361e2e0cefd6e7fe9e9710a2bf09354e8c4bb`. All 386 manifest files
+were verified against its committed Git blobs. Raw native receipts retain their
+original CRLF/trailing-space output so their hashes and historical identities remain
+exact; source/document whitespace checks pass separately.

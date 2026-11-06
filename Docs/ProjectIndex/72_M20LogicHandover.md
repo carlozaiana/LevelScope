@@ -12,8 +12,9 @@ authorized. Published main remains `22961f03de7919e1de631f8b13eb4b852108ac0b`.
 The implementation stays in `/Users/fuzz/Developer/LevelScope`, branch
 `codex/m20-region-planning`, following design handover
 `b4ccb66b70ea4dcad227d106925fc04db493881e` and the pre-edit contract commit
-`37d6449`. The final local implementation/receipt commits are recorded below after
-checks complete. Integrate those commits into the existing UI working copy using
+`37d6449`. The local implementation commit is
+`6ce361e2e0cefd6e7fe9e9710a2bf09354e8c4bb`; the following documentation-only receipt records this
+identity without altering the tested source. Integrate those commits into the existing UI working copy using
 an appropriate `codex/` branch, preserving its pending work. Do not duplicate or
 move either checkout, use a folder inside `build` as a worktree, or touch the video
 working copy. UI owns controls/overlays; Logic remains the reviewer for constraints,
@@ -241,3 +242,17 @@ All 25 pre-existing tag objects/targets and main remain unchanged.
 publication or main integration.** Native UI, actual High Sierra/cross-platform,
 selected control variants and independent real-material/listening review remain
 required after UI integration.
+
+
+## Starter for the UI chat
+
+Continue M20 UI integration from the local Logic commit `6ce361e2e0cefd6e7fe9e9710a2bf09354e8c4bb`
+on `codex/m20-region-planning` (include its following documentation-only receipt).
+Read documents 70, 71 and 72. Use the existing UI working copy and an appropriate
+`codex/` branch; preserve pending UI work and keep main unchanged. Implement the
+explicit experimental controls, permissions/preview overlays and readable measured
+versus predicted explanations against the immutable Logic API. Reuse the existing
+proposal worker/completion/Apply/remeasurement boundaries. Do not change measurement
+arithmetic, processing or policy semantics without Logic/Strategy review. Finish
+UI stabilization, then freeze and run the agreed combined qualification; coordinate
+physical listening separately. No M20 publication or main merge is authorized.

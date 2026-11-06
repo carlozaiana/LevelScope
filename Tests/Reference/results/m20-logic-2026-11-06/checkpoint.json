@@ -1,0 +1,15 @@
+{
+  "implementation_commit": "6ce361e2e0cefd6e7fe9e9710a2bf09354e8c4bb",
+  "branch": "codex/m20-region-planning",
+  "source_manifest_sha256": "fd200ebdc2d1e1f43715bafcba4d2f8e8a166d28283176fcc7c408f990ca6249",
+  "measurement_build": "8c2397c14e757cd9f3c8580cd89c0a2bb065bc2e3de5a9eb97e30f03eb8f5254",
+  "committed_source_files_verified": 386,
+  "tested_app": "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/logic-handover-03/LevelScope Standalone.app",
+  "app_executable_sha256": "85775cfc34bfe77ca8b55d0b92addc9fa56e46cfae5cda4079c1f179a9a421c9",
+  "qualification": "Focused Logic-stage checks passed; M20 UI/combined qualification pending",
+  "main": "22961f03de7919e1de631f8b13eb4b852108ac0b",
+  "existing_checkpoint_tags_preserved": 25,
+  "published": false,
+  "merged": false,
+  "documentation_receipt": "This receipt and final commit pointers are saved in a following documentation-only commit; no product/test source changes."
+}
