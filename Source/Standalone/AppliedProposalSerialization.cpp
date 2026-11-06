@@ -132,7 +132,11 @@ std::vector<uint8_t> encodeAppliedExplanation(const AppliedProposalExplanation& 
 std::shared_ptr<const AppliedProposalExplanation> decodeAppliedExplanation(const std::vector<uint8_t>& bytes,JobControl& control)
 {
     require(bytes.size()<=AppliedProposalExplanation::maximumBytes,"Applied explanation exceeds 8 MiB");Reader r{bytes,control};const auto schema=r.u();require(schema==1||schema==2,"Unsupported applied explanation version");auto h=std::make_shared<AppliedProposalExplanation>();
-    for(auto* s:{&h->programmeId,&h->inputIdentity,&h->binding,&h->method,&h->narrative,&h->beforeIdentity,&h->afterIdentity})*s=r.t();
+    for(auto* s:{&h->programmeId,&h->inputIdentity,&h->binding,&h->method})*s=r.t();
+    // The complete narrative shares the existing 8 MiB attachment budget. The
+    // writer has always supported this; other strings retain their narrow bounds.
+    h->narrative=r.t(AppliedProposalExplanation::maximumBytes);
+    for(auto* s:{&h->beforeIdentity,&h->afterIdentity})*s=r.t();
     h->before=plan(r);h->after=plan(r);h->sampleRate=r.count(192000);h->frames=r.i();h->roles.count=r.count(maxChannels);h->roles.confirmed=true;
     for(int n=0;n<h->roles.count;++n)h->roles.roles[size_t(n)]=ChannelRole(r.count(2048));h->target=target(r);
     h->requirements=proposal::JobRequirements::fromJson(r.t());require(h->requirements.digest()==r.t(64),"Historical requirements digest mismatch");
