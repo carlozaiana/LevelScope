@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "os": "15.7.9",
+  "architecture": "arm64",
+  "source_commit": "18d87f9a3246ccbfa0c98963119aaff2e30f25aa",
+  "build": "2bc868fb5198536720a2fa41c9b359c7c931753e25e32e66bc2429c69072ee18",
+  "candidate_identity_sha256": "dc60a8d16297cfde17a1d491faf33885ce356021c0f5560278be5965ed0a4700",
+  "requested_cases": [
+    "ui"
+  ],
+  "physical_devices_opened": false,
+  "combined_qualification_complete": false,
+  "inputs": {},
+  "groups": [
+    {
+      "name": "ui",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/candidate-04/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-native-04/ui-files"
+      ],
+      "returncode": 0,
+      "seconds": 15.410271834000001,
+      "passed": true,
+      "checks": 93,
+      "receipt": "ui-files/result.json",
+      "receipt_sha256": "ea13943e650d2acd94a442abe78079960c1f2dda94c9410d8d4cfa6afcf1b374"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "package": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-device-settings-2026-11-05/candidate-01",
+    "artifacts_checked": 397,
+    "identity_sha256": "4b53d5d9c36052aaaf31e69ed53ca973257dcd2a103d91ae868cc97b225b0c13",
+    "unchanged": true
+  },
+  {
+    "package": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-preparation-feedback-2026-11-05/candidate-01",
+    "artifacts_checked": 397,
+    "identity_sha256": "680e68ff91c883f7659cf0dc743ba18be0d827e983cc2cad80bddfd95c3f36a7",
+    "unchanged": true
+  },
+  {
+    "package": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-monitoring-memory-2026-11-05/candidate-01",
+    "artifacts_checked": 404,
+    "identity_sha256": "2ac289757842cef6c97c6854aae3e447ed43b5dfb0f20f1f8aafffb67273b6fd",
+    "unchanged": true
+  },
+  {
+    "package": "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/logic-handover-03",
+    "artifacts_checked": 15,
+    "identity_sha256": "320844fb4b2a05033b073274af42051d263f9b16cb0eab38700e38ed2d60d7fc",
+    "unchanged": true
+  }
+]

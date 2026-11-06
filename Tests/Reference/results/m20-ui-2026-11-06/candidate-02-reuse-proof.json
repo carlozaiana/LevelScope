@@ -1,0 +1,11 @@
+{
+  "candidate_01_identity_sha256": "63f5a26e8aec81f7c4e3632584e0b1f06d439c5988c8d396509191a92b2ecf85",
+  "candidate_02_identity_sha256": "73e0c0008903d8eb57bb432734ad3ca9e7e45abdb987cace55a4ec5c56ee7505",
+  "changed_manifest_entries": [
+    "Source/Standalone/RegionProposalReviewPanel.cpp",
+    "Source/Standalone/RegionProposalReviewPanel.h",
+    "Tests/RegionUIIntegrationTests.cpp"
+  ],
+  "fresh_required": "native UI and cross-platform sessions",
+  "reuse": "candidate-01 numerical, control variants, device, preparation, timeline and existing-method groups; only immutable native review view retention changed"
+}

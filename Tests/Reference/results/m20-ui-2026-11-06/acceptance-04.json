@@ -1,0 +1,628 @@
+{
+  "non_audible_complete": true,
+  "m20_combined_qualified": false,
+  "listening_pending": true,
+  "publication_authorized": false,
+  "checks": [
+    {
+      "name": "Frozen identity 1",
+      "passed": true
+    },
+    {
+      "name": "Every frozen artifact 1",
+      "passed": true
+    },
+    {
+      "name": "Same package on actual Macs 1",
+      "passed": true
+    },
+    {
+      "name": "Frozen identity 2",
+      "passed": true
+    },
+    {
+      "name": "Every frozen artifact 2",
+      "passed": true
+    },
+    {
+      "name": "Same package on actual Macs 2",
+      "passed": true
+    },
+    {
+      "name": "Frozen identity 3",
+      "passed": true
+    },
+    {
+      "name": "Every frozen artifact 3",
+      "passed": true
+    },
+    {
+      "name": "Same package on actual Macs 3",
+      "passed": true
+    },
+    {
+      "name": "Frozen identity 4",
+      "passed": true
+    },
+    {
+      "name": "Every frozen artifact 4",
+      "passed": true
+    },
+    {
+      "name": "Same package on actual Macs 4",
+      "passed": true
+    },
+    {
+      "name": "Reuse is limited to explicit native review retention/paging changes; all other product inputs identical",
+      "passed": true
+    },
+    {
+      "name": "Actual platform and complete numerical run: sequoia",
+      "passed": true
+    },
+    {
+      "name": "All 19 explicit affected groups: sequoia",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: sequoia/control-variants",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/sequoia-01/control-variants-files/result.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: sequoia/core",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/sequoia-01/core.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: sequoia/stereo",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/sequoia-01/stereo.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: sequoia/surround",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/sequoia-01/surround.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: sequoia/heterogeneous",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/sequoia-01/heterogeneous.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: sequoia/failures",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/sequoia-01/failures.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: sequoia/population",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/sequoia-01/population.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: sequoia/audio",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/sequoia-01/audio.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: sequoia/gating",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/sequoia-01/gating.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: sequoia/cinema",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/sequoia-01/cinema.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: sequoia/devices",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/sequoia-01/devices-files/result.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: sequoia/preparation",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/sequoia-01/preparation-files/result.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: sequoia/timeline",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/sequoia-01/timeline.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: sequoia/requirements",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/sequoia-01/requirements.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: sequoia/section-smoke",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/sequoia-01/section-smoke.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: sequoia/legacy-core",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/sequoia-01/legacy-core.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: sequoia/legacy-stereo",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/sequoia-01/legacy-stereo.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: sequoia/legacy-failures",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/sequoia-01/legacy-failures.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: sequoia/legacy-gating",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/sequoia-01/legacy-gating.json",
+      "passed": true
+    },
+    {
+      "name": "Actual current native platform: sequoia",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/sequoia-native-04/ui-files/result.json",
+      "passed": true
+    },
+    {
+      "name": "Native checks used no physical outputs: sequoia",
+      "passed": true
+    },
+    {
+      "name": "Unchanged native response and cancellation criteria: sequoia",
+      "passed": true
+    },
+    {
+      "name": "Actual cached-planning target and bounded population storage: sequoia",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/exchange-on-sequoia-04/result.json",
+      "passed": true
+    },
+    {
+      "name": "Actual stereo/5.1 cross-platform session exchange: sequoia",
+      "passed": true
+    },
+    {
+      "name": "Actual platform and complete numerical run: high-sierra",
+      "passed": true
+    },
+    {
+      "name": "All 19 explicit affected groups: high-sierra",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: high-sierra/control-variants",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/golem-receipts-04/high-sierra-remainder-01/control-variants-files/result.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: high-sierra/core",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/golem-receipts-04/high-sierra-remainder-01/core.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: high-sierra/stereo",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/golem-receipts-04/high-sierra-remainder-01/stereo.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: high-sierra/surround",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/golem-receipts-04/high-sierra-remainder-01/surround.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: high-sierra/heterogeneous",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/golem-receipts-04/high-sierra-remainder-01/heterogeneous.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: high-sierra/failures",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/golem-receipts-04/high-sierra-remainder-01/failures.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: high-sierra/population",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/golem-receipts-04/high-sierra-remainder-01/population.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: high-sierra/audio",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/golem-receipts-04/high-sierra-remainder-01/audio.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: high-sierra/gating",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/golem-receipts-04/high-sierra-remainder-01/gating.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: high-sierra/cinema",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/golem-receipts-04/high-sierra-remainder-01/cinema.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: high-sierra/devices",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/golem-receipts-04/high-sierra-remainder-01/devices-files/result.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: high-sierra/preparation",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/golem-receipts-04/high-sierra-remainder-01/preparation-files/result.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: high-sierra/timeline",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/golem-receipts-04/high-sierra-remainder-01/timeline.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: high-sierra/requirements",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/golem-receipts-04/high-sierra-remainder-01/requirements.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: high-sierra/section-smoke",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/golem-receipts-04/high-sierra-remainder-01/section-smoke.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: high-sierra/legacy-core",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/golem-receipts-04/high-sierra-remainder-01/legacy-core.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: high-sierra/legacy-stereo",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/golem-receipts-04/high-sierra-remainder-01/legacy-stereo.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: high-sierra/legacy-failures",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/golem-receipts-04/high-sierra-remainder-01/legacy-failures.json",
+      "passed": true
+    },
+    {
+      "name": "Original numerical receipt integrity: high-sierra/legacy-gating",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/golem-receipts-04/high-sierra-remainder-01/legacy-gating.json",
+      "passed": true
+    },
+    {
+      "name": "Actual current native platform: high-sierra",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/golem-receipts-04/high-sierra-native-04/ui-files/result.json",
+      "passed": true
+    },
+    {
+      "name": "Native checks used no physical outputs: high-sierra",
+      "passed": true
+    },
+    {
+      "name": "Unchanged native response and cancellation criteria: high-sierra",
+      "passed": true
+    },
+    {
+      "name": "Actual cached-planning target and bounded population storage: high-sierra",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/golem-receipts-04/exchange-on-high-sierra-04/result.json",
+      "passed": true
+    },
+    {
+      "name": "Actual stereo/5.1 cross-platform session exchange: high-sierra",
+      "passed": true
+    },
+    {
+      "name": "Exact reported decisions, scalar results and activity/resource counts: stereo",
+      "passed": true
+    },
+    {
+      "name": "Exact reported decisions, scalar results and activity/resource counts: surround",
+      "passed": true
+    },
+    {
+      "name": "Exact reported decisions, scalar results and activity/resource counts: heterogeneous",
+      "passed": true
+    },
+    {
+      "name": "Exact reported decisions, scalar results and activity/resource counts: gating",
+      "passed": true
+    },
+    {
+      "name": "Exact reported decisions, scalar results and activity/resource counts: cinema",
+      "passed": true
+    },
+    {
+      "name": "All 15 pre-holdout control variants on both Macs",
+      "passed": true
+    },
+    {
+      "name": "Same variant decision and actual LRA: approved-defaults",
+      "passed": true
+    },
+    {
+      "name": "Same variant decision and actual LRA: minimum-1000",
+      "passed": true
+    },
+    {
+      "name": "Same variant decision and actual LRA: minimum-6000",
+      "passed": true
+    },
+    {
+      "name": "Same variant decision and actual LRA: splits-0",
+      "passed": true
+    },
+    {
+      "name": "Same variant decision and actual LRA: splits-1",
+      "passed": true
+    },
+    {
+      "name": "Same variant decision and actual LRA: splits-4",
+      "passed": true
+    },
+    {
+      "name": "Same variant decision and actual LRA: margin-500",
+      "passed": true
+    },
+    {
+      "name": "Same variant decision and actual LRA: margin-1500",
+      "passed": true
+    },
+    {
+      "name": "Same variant decision and actual LRA: margin-3000",
+      "passed": true
+    },
+    {
+      "name": "Same variant decision and actual LRA: need-tenths-5",
+      "passed": true
+    },
+    {
+      "name": "Same variant decision and actual LRA: need-tenths-30",
+      "passed": true
+    },
+    {
+      "name": "Same variant decision and actual LRA: persistence-300",
+      "passed": true
+    },
+    {
+      "name": "Same variant decision and actual LRA: persistence-3000",
+      "passed": true
+    },
+    {
+      "name": "Same variant decision and actual LRA: boundary-refinement-off",
+      "passed": true
+    },
+    {
+      "name": "Same variant decision and actual LRA: whole-programme-global-fixed",
+      "passed": true
+    },
+    {
+      "name": "Complete passed receipt: build/m20-ui-integration/holdouts-01/result.json",
+      "passed": true
+    },
+    {
+      "name": "Both fixed methods completed on all three independent inputs",
+      "passed": true
+    },
+    {
+      "name": "Original holdout byte-exact: /Users/fuzz/N15/Mixdown/DialogAmbiance.wav",
+      "passed": true
+    },
+    {
+      "name": "Original holdout byte-exact: /Users/fuzz/N15/Mixdown/MusicInBackAndForegroundSomeDialog.wav",
+      "passed": true
+    },
+    {
+      "name": "Original holdout byte-exact: /Users/fuzz/N15/Mixdown/5.1_Busy.wav",
+      "passed": true
+    }
+  ],
+  "hosts": {
+    "sequoia": {
+      "os": "15.7.9",
+      "architecture": "arm64",
+      "numerical_checks": 4248,
+      "native_checks": 93,
+      "exchange_checks": 36,
+      "heartbeat": [
+        {
+          "native_heartbeat_p95_ms": 27.39729166775942,
+          "native_heartbeat_max_ms": 119.086249999702,
+          "samples": 97
+        },
+        {
+          "native_heartbeat_p95_ms": 29.62145833298564,
+          "native_heartbeat_max_ms": 357.8430416658521,
+          "samples": 145
+        }
+      ],
+      "cancel_ms": 19.72391666844487,
+      "population": {
+        "synthetic_population_seconds": 10800,
+        "64_proxy_seconds": 1.7502115,
+        "analysis_sidecar_bytes": 35846608
+      }
+    },
+    "high-sierra": {
+      "os": "10.13.6",
+      "architecture": "x86_64",
+      "numerical_checks": 4247,
+      "native_checks": 93,
+      "exchange_checks": 36,
+      "heartbeat": [
+        {
+          "native_heartbeat_p95_ms": 50.78035999974236,
+          "native_heartbeat_max_ms": 489.4695289996453,
+          "samples": 122
+        },
+        {
+          "native_heartbeat_p95_ms": 69.39134099986404,
+          "native_heartbeat_max_ms": 1811.860707999673,
+          "samples": 65
+        }
+      ],
+      "cancel_ms": 83.87059199996293,
+      "population": {
+        "synthetic_population_seconds": 10800,
+        "64_proxy_seconds": 2.717895814,
+        "analysis_sidecar_bytes": 35846608
+      }
+    }
+  },
+  "comparisons": [
+    {
+      "group": "stereo",
+      "exact_reported_values": true
+    },
+    {
+      "group": "surround",
+      "exact_reported_values": true
+    },
+    {
+      "group": "heterogeneous",
+      "exact_reported_values": true
+    },
+    {
+      "group": "gating",
+      "exact_reported_values": true
+    },
+    {
+      "group": "cinema",
+      "exact_reported_values": true
+    }
+  ],
+  "source_changes_after_numerical_candidate": [
+    "Source/Standalone/RegionProposalReviewPanel.cpp",
+    "Source/Standalone/RegionProposalReviewPanel.h",
+    "Source/Standalone/StandaloneMainComponent.cpp",
+    "Source/Standalone/StandaloneProposalPreferences.cpp",
+    "Source/Standalone/StandaloneProposalPreferences.h",
+    "Tests/Qualification/M20/HoldoutChecks.h",
+    "Tests/RegionUIIntegrationTests.cpp"
+  ],
+  "product_commit": "18d87f9a3246ccbfa0c98963119aaff2e30f25aa",
+  "measurement_build": "2bc868fb5198536720a2fa41c9b359c7c931753e25e32e66bc2429c69072ee18",
+  "source_manifest_sha256": "4aead20a94867b8bf0ba17e6812ae48a994069f299b4df101764fe5b77c3f6f2",
+  "independent_holdout_checks": 87,
+  "remaining": "User will audition the two independently verified music comparison sessions. No listening/quality conclusion, M20 publication or main integration."
+}
