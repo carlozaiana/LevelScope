@@ -1,5 +1,11 @@
 # Remembered monitoring UI slice — 5 November 2026
 
+**Publication update, 6 November 2026:** all three convenience slices are now
+published and integrated into main at checkpoint `ui-convenience-2026-11-06`.
+See the [publication handover](UIConveniencePublication-2026-11-06.md) for exact
+identities and preservation checks. The review-time status below is historical;
+the frozen packages and qualification evidence remain unchanged.
+
 User-authorised continuation on `codex/ui-device-preparation-m19`, after the two
 completed device/preparation slices. Their commits and frozen packages remain
 preserved. Publication and main integration remain for review.

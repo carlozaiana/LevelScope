@@ -1,0 +1,14 @@
+UI convenience slices — 6 November 2026
+
+Publish the reviewed per-Mac output selection/reconnection, staged initial
+import/preparation feedback, and per-interface speaker-role routing/user monitor
+volume. Includes completed focused qualification and handovers.
+
+Combined tested product: 96159ebd79f762bea147b41ad696fd80f449dfc9.
+Measurement build: 4a44fc52dd01be5947cc5627041391dac42ac5e2ee76044c60dc2d8f0faa3b9a.
+Combined candidate passed 7270 focused checks on each actual Sequoia 15.7.9
+and High Sierra 10.13.6; earlier waveform/timeline and M19/Intel evidence reused.
+All three frozen packages preserved. No rebuild or physical-device use for
+publication. M19 proposal, measurement, history and export behavior retained.
+First-playback feedback, source reuse, project-owned audio, early waveform,
+completion pause and stereo fold-down remain separate work.

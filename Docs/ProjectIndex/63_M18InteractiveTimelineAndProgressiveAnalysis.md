@@ -681,23 +681,25 @@ rate-incompatible devices distinctly. Keep offline analysis and the output
 chooser available in each case. Test rate changes, missing interfaces, busy
 devices, explicit disconnect and a new session with the preference on and off.
 
-**UI continuation, 5 November 2026:** remembered per-Mac output selection,
-explicit connection intent and opt-in reconnection are implemented locally for review
+**UI continuation, published 6 November 2026:** remembered per-Mac output selection,
+explicit connection intent and opt-in reconnection were implemented
 at `55e5cd1603ed4b6366b244fed12895d48e90099b`. The following initial-import and analysis
 feedback slice is at `0a942b542a4c51824da19940f9500680e5a23c80`. Both preserved candidates
 passed focused Sequoia and actual High Sierra checks with injected outputs. They are
-not published or merged into main. See the [two-slice review receipt](../UIDeviceAndPreparation-2026-11-05.md)
+included in main at checkpoint `ui-convenience-2026-11-06`. See the [two-slice review receipt](../UIDeviceAndPreparation-2026-11-05.md)
 for exact builds, connection/session semantics, focused evidence, scope and manual checks.
 First-playback feedback and the other document-69 performance items remain separate.
 
-**Remembered monitoring, 5 November 2026:** the subsequent local UI slice at
+**Remembered monitoring, published 6 November 2026:** the subsequent UI slice at
 `96159ebd79f762bea147b41ad696fd80f449dfc9` remembers speaker-role routing per Mac,
 interface and stereo/5.1 layout, plus the last explicit user monitor level per interface.
 Matching output configuration and confirmed roles are required; deliberate mutes are
 retained. Connection intent and explicit Play remain separate. Its preserved build
 contains all three convenience slices and passed focused checks on Sequoia and actual
 High Sierra. See the [monitoring review receipt](../UIMonitoringMemory-2026-11-05.md).
-Publication and main integration remain for review.
+All three slices are published and integrated into main. The
+[publication handover](../UIConveniencePublication-2026-11-06.md) records the checkpoint,
+preserved builds, qualification reuse and remaining scope.
 
 **Stereo monitoring of 5.1** is a later, explicitly selected listening mode
 for either Source or Current. Label the fold-down at the transport and device

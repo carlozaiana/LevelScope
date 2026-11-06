@@ -1,0 +1,167 @@
+{
+  "date": "2026-11-06",
+  "checkpoint": "ui-convenience-2026-11-06",
+  "checkpoint_target": "b7350128d7b65507a5db434e38ecd73b8f2c4cfd",
+  "previous_main": "5fc8c6ee95e705077cf996cecbc6543dbc20d257",
+  "local_refs": "1927ffe6ba187f947e8457c2c29b88c0eef24781 refs/codex/turn-diffs/captures/1793969413954/15e23298-7bd6-4d74-be3e-f2582c2d3f9f/base\nbd52942ad17c2b954c80124cd60c898464edf81a refs/codex/turn-diffs/checkpoints/01ee18f45b47e72d8ea9b89d7f89a5aa/434b74ca7d2d5318ca43fcd4fd70743a/1793894035852/bd21bba7-183d-49cf-b3ae-efe197f629da\n2318f06e8dec02eb73b4725edcdd76152ad529c7 refs/codex/turn-diffs/checkpoints/49ae75fc747105533ea60fd62f648f09/cd249330413e7c5d20b0fc8abd57bac2/1793893089063/a0ca9176-ee6a-4760-af4d-010b6e0d6967\n7fdc205730e9dfff981c986aef23f5d0c4e63820 refs/codex/turn-diffs/checkpoints/7cde69e69c9cfe58a10fe790087255a8/210bb105b89eaa30d1d933c55d06b31d/1793969348669/512b4ab0-a3a0-4e05-84e5-080b0b724a98\n250b3c4267995b1a590aec84106470d8e28e6e46 refs/codex/turn-diffs/checkpoints/e849b122db20c233f35c93454246316f/8cab07c196950758940b2066a57b9495/1793713980271/7660dfc7-0ba9-4e05-a0a9-81208258243b\n09c8b8f6345c7c889f21f5399a38284ce1d353b2 refs/heads/codex/intel-multicore-true-peak\n9935ad725670958971c1aaed28d8e84f9b3d3e9a refs/heads/codex/logic-module\n5fc8c6ee95e705077cf996cecbc6543dbc20d257 refs/heads/codex/m19-lra-passages\nf192a8553e139d390056c9755f25eeb123bbc5e6 refs/heads/codex/standalone-scaffold\nb7350128d7b65507a5db434e38ecd73b8f2c4cfd refs/heads/codex/ui-device-preparation-m19\n51e47f300fcc38a386a5a92a7277029175cfab0c refs/heads/codex/ui-timeline-m18\n5e07bbd29930db34236d6dfcede7fea14983f90a refs/heads/codex/video-implementation\n5fc8c6ee95e705077cf996cecbc6543dbc20d257 refs/heads/main\n5fc8c6ee95e705077cf996cecbc6543dbc20d257 refs/remotes/origin/HEAD\n09c8b8f6345c7c889f21f5399a38284ce1d353b2 refs/remotes/origin/codex/intel-multicore-true-peak\nfc4e4b0d54456cb32ab68672ede0a772b663d749 refs/remotes/origin/codex/logic-module\n5fc8c6ee95e705077cf996cecbc6543dbc20d257 refs/remotes/origin/codex/m19-lra-passages\nf192a8553e139d390056c9755f25eeb123bbc5e6 refs/remotes/origin/codex/standalone-scaffold\n51e47f300fcc38a386a5a92a7277029175cfab0c refs/remotes/origin/codex/ui-timeline-m18\n5e07bbd29930db34236d6dfcede7fea14983f90a refs/remotes/origin/codex/video-implementation\n8883928775dba56ac0bbd1dc1f6f3eef67b90d6f refs/remotes/origin/docs/compliance-harness\n5fc8c6ee95e705077cf996cecbc6543dbc20d257 refs/remotes/origin/main\nff25847ebb948f97d84dbf90085ab02d99ecd248 refs/stash\nb3c6e845482dbe8a0ec9778d5a9ad7953e614609 refs/tags/high-sierra-pre-scaffold-2026-10-15\n556d387ad772dc5e604ead95f1525f60e66fd5f9 refs/tags/high-sierra-pre-scaffold-2026-10-15^{}\n29fc6cf327b2022a82a93117485f066c5d9ef64f refs/tags/intel-multicore-true-peak-2026-11-05\nc4eea6f1c4569ec4f31725694ddf34db8340f15e refs/tags/intel-multicore-true-peak-2026-11-05^{}\n3bbd1476cbc4e200f9d8f2776f53e06c4bf57180 refs/tags/m10-verified-pcm-export-2026-10-26\nfcd4c15fe78d6352f5e96faabf3eb52f942235e1 refs/tags/m10-verified-pcm-export-2026-10-26^{}\n2ddbd80e7ce0f5d42d72f8cc3d466925685f1fe0 refs/tags/m11-aligned-stem-composition-2026-10-26\ncfb1033aa7fb65a2655db276bee696161196bdeb refs/tags/m11-aligned-stem-composition-2026-10-26^{}\n4afecf3455f15792403a843772ef9e495de58ae5 refs/tags/m12-section-trim-sequoia-2026-10-27\n2fb0e3cfee22a527bacaa09c4ddace23129442fb refs/tags/m12-section-trim-sequoia-2026-10-27^{}\nbbcf9d7baca12decb7bbd6f835f4e52b8c0a8bb2 refs/tags/m13-bounded-section-proposals-2026-10-28\na9be070ab9eb5cb4f591ff9d991d8999c3a016d0 refs/tags/m13-bounded-section-proposals-2026-10-28^{}\n8523392cd96b76513f10c8441d236c8f16a9e5a1 refs/tags/m14-mono-rf64-sequoia-2026-10-29\n3d98284c2c0b7de92cfee70cb0007d43d1f04d1f refs/tags/m14-mono-rf64-sequoia-2026-10-29^{}\ne2c9fee7c5c8ac228a3487d2b7d8b9df45b92472 refs/tags/m15-marker-import-sequoia-2026-10-29\n1b56804ecfb469aef3276b2d4ac96039ce3e4cc1 refs/tags/m15-marker-import-sequoia-2026-10-29^{}\n3fb03c9d4ba0374f3b6be9e69b48639587e9bc82 refs/tags/m16-proposal-preferences-sequoia-2026-10-30\n73a7b25e71f87299fa2d93c1b1106c118c55beec refs/tags/m16-proposal-preferences-sequoia-2026-10-30^{}\nd243e4a68503bf719fc01ab2eefb2156d982ab20 refs/tags/m17-job-lra-presets-sequoia-2026-10-30\ne422f85ccbf7ae11876e6a31be2409937cb8381c refs/tags/m17-job-lra-presets-sequoia-2026-10-30^{}\nd147d88fc0173a70abaa624cef686c195685901a refs/tags/m18-interactive-timeline-2026-11-03\na9550d9d43ed70fde4c73f90e44081a706d30a67 refs/tags/m18-interactive-timeline-2026-11-03^{}\n38efad9937a3beecc05f2e2cfc73ddce758aed19 refs/tags/m19-lra-passages-2026-11-05\na14c88e8a94412eb2e2536860aa7cbd79de0dd39 refs/tags/m19-lra-passages-2026-11-05^{}\n673e382feeaa7e29e6e6abedbd56677aa2163ef3 refs/tags/m2-measured-compliance-2026-10-18\n01a34833ec06a0d237e098faadb23b398581e8f9 refs/tags/m2-measured-compliance-2026-10-18^{}\n4063ca0e73c5b24dfa079eb894f85e398e9fee50 refs/tags/m3-global-trim-2026-10-18\n62ab420cb15b3ce5e1c821c963a749a9a56ae4a7 refs/tags/m3-global-trim-2026-10-18^{}\ncc64c771a70ccf95e779a7fe7260749a4530c285 refs/tags/m4-measured-diagnostics-2026-10-18\n9a22749901d9f6d4b9c194c9c22c0a231f2494f6 refs/tags/m4-measured-diagnostics-2026-10-18^{}\ne36b4308374256ad36eff6c01d4d92325a06d3b0 refs/tags/m5-programme-sections-2026-10-20\nae88e187d288c53dbca1287e8341b74b9b5b2619 refs/tags/m5-programme-sections-2026-10-20^{}\n7f54eb1098471dc55bd75484f873a9f90e68ac05 refs/tags/m6-verified-current-state-audition-2026-10-24\nb57a1ed23cbe7d74afe98ed16ec8fd615db9d171 refs/tags/m6-verified-current-state-audition-2026-10-24^{}\n04d0c836fcbc3a7af72638a7514faacd32ae48a9 refs/tags/m7-pcm-7.1-2026-10-25\ncfbf3f981dece326d2363b911e5914ea61f1796c refs/tags/m7-pcm-7.1-2026-10-25^{}\n93908205c41de16c10b187bc00fcc1621e328c66 refs/tags/m8-reproducible-sessions-2026-10-25\n8e984889c5e73670f370c6c568c8ea1d7902a35c refs/tags/m8-reproducible-sessions-2026-10-25^{}\n0cb0e4bea6fd9d11cc4207e9b863d5fca2b70bff refs/tags/m9-separate-file-stereo-5.1-2026-10-25\n75843dcd017ec7990be2200454a10fc38beb44c4 refs/tags/m9-separate-file-stereo-5.1-2026-10-25^{}\n76affb667b6dab066cb36b2a2c741525b9b6eeac refs/tags/measurement-milestone-2026-10-17\nb29bc7c183743f35c6271d2d7ec8fb5ba1464591 refs/tags/measurement-milestone-2026-10-17^{}\n4c8bc35b788969e1f6e97dcdc57a601b01fff7cd refs/tags/standalone-scaffold-2026-10-15\nf192a8553e139d390056c9755f25eeb123bbc5e6 refs/tags/standalone-scaffold-2026-10-15^{}\n06f57524bedca1912c0d5c454f13561cec9ce5b4 refs/tags/video-checkpoint-2026-10-17\n700b9e77e439a8ca9bb7583adf826fac01dbe924 refs/tags/video-checkpoint-2026-10-17^{}\nd62c1159eeb2ffbb8b7ffc7c31014b842642d195 refs/tags/video-prores-checkpoint-2026-10-21\ndcc34aabba6b5b3ca4805e2965d21ffebf2e4d0a refs/tags/video-prores-checkpoint-2026-10-21^{}",
+  "packages": [
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-device-settings-2026-11-05/candidate-01",
+      "identity_sha256": "4b53d5d9c36052aaaf31e69ed53ca973257dcd2a103d91ae868cc97b225b0c13",
+      "source_commit": "55e5cd1603ed4b6366b244fed12895d48e90099b",
+      "measurement_build": "935fcf7c38de1ac1bc2240d07e7281d24c6f17f179c6e75c2b0a20615ee42dcc",
+      "artifacts_verified": 397,
+      "source_files": 376,
+      "qualification": {
+        "sequoia": {
+          "os": "15.7.9",
+          "architecture": "arm64",
+          "checks": 6938
+        },
+        "high-sierra": {
+          "os": "10.13.6",
+          "architecture": "x86_64",
+          "checks": 6939
+        }
+      }
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-preparation-feedback-2026-11-05/candidate-01",
+      "identity_sha256": "680e68ff91c883f7659cf0dc743ba18be0d827e983cc2cad80bddfd95c3f36a7",
+      "source_commit": "0a942b542a4c51824da19940f9500680e5a23c80",
+      "measurement_build": "2c5187d1c6cd122903fc419347308421c54899a46a5e2175b8610012eb74e991",
+      "artifacts_verified": 397,
+      "source_files": 379,
+      "qualification": {
+        "sequoia": {
+          "os": "15.7.9",
+          "architecture": "arm64",
+          "checks": 3140
+        },
+        "high-sierra": {
+          "os": "10.13.6",
+          "architecture": "x86_64",
+          "checks": 3140
+        }
+      }
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-monitoring-memory-2026-11-05/candidate-01",
+      "identity_sha256": "2ac289757842cef6c97c6854aae3e447ed43b5dfb0f20f1f8aafffb67273b6fd",
+      "source_commit": "96159ebd79f762bea147b41ad696fd80f449dfc9",
+      "measurement_build": "4a44fc52dd01be5947cc5627041391dac42ac5e2ee76044c60dc2d8f0faa3b9a",
+      "artifacts_verified": 404,
+      "source_files": 383,
+      "qualification": {
+        "sequoia": {
+          "os": "15.7.9",
+          "architecture": "arm64",
+          "checks": 7270
+        },
+        "high-sierra": {
+          "os": "10.13.6",
+          "architecture": "x86_64",
+          "checks": 7270
+        }
+      }
+    }
+  ],
+  "original_evidence_sha256": {
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-device-settings-2026-11-05/candidate-identity.json": "4b53d5d9c36052aaaf31e69ed53ca973257dcd2a103d91ae868cc97b225b0c13",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-device-settings-2026-11-05/high-sierra/session-playback.log": "f89e4c67221224b185d9f9b1c2be1080059b2a4ca9a6ecadc1f34e683088e2f7",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-device-settings-2026-11-05/high-sierra/summary.json": "39cb888673dda3fcbf27c255f8434696b82fcc5813bd773f5e4b8732ea0538e3",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-device-settings-2026-11-05/high-sierra/timeline.log": "7d8bb1e997699cdcdbafa27842d8f2aac2c872e6362526a080c153b405b7289f",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-device-settings-2026-11-05/high-sierra/session-playback.json": "7d66bbbe7bdfd5e689f16da39f177299ea30d207e6189675992a003917b521c3",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-device-settings-2026-11-05/high-sierra/devices.log": "77b35e4ff7309528962220635e58e0caccc6d50b7df48f0b9e4105cb7018c92f",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-device-settings-2026-11-05/high-sierra/audition.json": "69cd9b7e8512c81f8e0b214945a3d81066017878f1d8df054a158a19a53750e7",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-device-settings-2026-11-05/high-sierra/timeline.json": "ef5bc49339fb925a997be9f388cf720061db384ec73bab12572622784ac04dbe",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-device-settings-2026-11-05/high-sierra/audition.log": "b1ab9cc0022d1ab8f3c0ccff2dd6754d616eb3249a2bf0c224f212986f953b7e",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-device-settings-2026-11-05/high-sierra/device-files/result.json": "737e89376405ba731cd8875a450366c05af3be26cf63608ee20d47cd3cfe0717",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-device-settings-2026-11-05/high-sierra/device-files/ui/audio-setup.png": "e240a1a8e279729c27f64979020a3bc343302717e5c3795d92df00cfb298ea49",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-device-settings-2026-11-05/sequoia/session-playback.log": "f89e4c67221224b185d9f9b1c2be1080059b2a4ca9a6ecadc1f34e683088e2f7",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-device-settings-2026-11-05/sequoia/summary.json": "6d6092c96d560f8d0a34d36da337d404eb63d5c7c41d688dda7d10d776f91fee",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-device-settings-2026-11-05/sequoia/timeline.log": "7d8bb1e997699cdcdbafa27842d8f2aac2c872e6362526a080c153b405b7289f",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-device-settings-2026-11-05/sequoia/session-playback.json": "cdf9d32bcb281d681d79d1074bf19c0bf1d71e6632f5641a0c478d41c5548979",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-device-settings-2026-11-05/sequoia/devices.log": "2b35b0c720e4217029c680bae95bd044024afdc4539ed17f2d775ae5dacde27f",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-device-settings-2026-11-05/sequoia/audition.json": "83077688d42dcaae29db6c3e972a7020aab34d9f4c32edb5123edd8ec5ad1e41",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-device-settings-2026-11-05/sequoia/timeline.json": "9ebb374fec242e26510f6331fac76fc401bf88c83b129c7fe9f8a17b7533a854",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-device-settings-2026-11-05/sequoia/audition.log": "b1ab9cc0022d1ab8f3c0ccff2dd6754d616eb3249a2bf0c224f212986f953b7e",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-device-settings-2026-11-05/sequoia/device-files/result.json": "682baf71c21b33ba6b8d7f021395df5ad8fde1a8bbab93a71970db07d8da6bae",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-device-settings-2026-11-05/sequoia/device-files/ui/audio-setup.png": "dd75f107a7545fae3261005754027059a6f0b630b55ad9832e6ff04cc3ec6e3a",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-device-settings-2026-11-05/sandbox-attempt/summary.json": "d32b03c2dd5c07643ec5c43ab459c2b7a1caac18dd247593c34198f5d444cf5f",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-device-settings-2026-11-05/sandbox-attempt/audition.json": "2c57e1f7e1c7181bbb52a46442c256895a37c615712715432c3baac95eff2e55",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-device-settings-2026-11-05/sandbox-attempt/audition.log": "cc8d5b66fdec70be6cff606d810f60e8ce4e786d8fe1e60976d76b1dd9fee5f2",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-preparation-feedback-2026-11-05/candidate-identity.json": "680e68ff91c883f7659cf0dc743ba18be0d827e983cc2cad80bddfd95c3f36a7",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-preparation-feedback-2026-11-05/high-sierra/summary.json": "fea3c0abb911d92cd3a4fcfd0e9d0aa758df53b6017c4ee56be92c9a285dc49f",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-preparation-feedback-2026-11-05/high-sierra/preparation.log": "c2173648db4954803ea80bf7ac38cf27917fa2638923f92fecddb9a0d1d80797",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-preparation-feedback-2026-11-05/high-sierra/timeline.log": "7d8bb1e997699cdcdbafa27842d8f2aac2c872e6362526a080c153b405b7289f",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-preparation-feedback-2026-11-05/high-sierra/waveform.log": "e8ad18863893d38438374ba61318a56367735f88f75b4bf7a66c674438b9a0bc",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-preparation-feedback-2026-11-05/high-sierra/timeline.json": "6dded90d4bee77cd92f60740b05e4b6af38d443bb0fad6208f9ee1a79a36013b",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-preparation-feedback-2026-11-05/high-sierra/waveform.json": "bb95535f3af1a22e04929ed0befd9b937ec77fe309b66a710225dbe657b494c8",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-preparation-feedback-2026-11-05/high-sierra/preparation-files/import.png": "b40a01742015af6e3bef4415fa34963796ce834989e56ef38dc10527ffcae16c",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-preparation-feedback-2026-11-05/high-sierra/preparation-files/result.json": "ed0a36babfa4c6f6881acff6713ff5e4f3307852955672f45ed8255207dae85e",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-preparation-feedback-2026-11-05/high-sierra/preparation-files/measurement.png": "4cbe9046ebfc253c19072c8934d83273c08c975b84f9ba14507dc9128463e20b",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-preparation-feedback-2026-11-05/high-sierra/preparation-files/preparation.png": "17cc7610ff7733d8c9d6f0e4a5ab5b1c402e671cf26161317342e985ffb7ded2",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-preparation-feedback-2026-11-05/sequoia/summary.json": "972f0e1ae856046bf7efb38d6acd890f0f5d8f9eaa8db85e90b494a584b71e03",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-preparation-feedback-2026-11-05/sequoia/preparation.log": "c2173648db4954803ea80bf7ac38cf27917fa2638923f92fecddb9a0d1d80797",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-preparation-feedback-2026-11-05/sequoia/timeline.log": "7d8bb1e997699cdcdbafa27842d8f2aac2c872e6362526a080c153b405b7289f",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-preparation-feedback-2026-11-05/sequoia/waveform.log": "e8ad18863893d38438374ba61318a56367735f88f75b4bf7a66c674438b9a0bc",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-preparation-feedback-2026-11-05/sequoia/timeline.json": "bdd4432e9eeb5702c641b45faf175ea1f8d8fa83efafde1584f220e4e22045fb",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-preparation-feedback-2026-11-05/sequoia/waveform.json": "2b16f80313823e53fa4926a8dd09a978ad5eb3da4f9df290725864917ad59ee7",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-preparation-feedback-2026-11-05/sequoia/preparation-files/import.png": "c7b31d4c90644bb435592a4093a4d0beebe0064e739517c811dc5fda3a2a7ea1",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-preparation-feedback-2026-11-05/sequoia/preparation-files/result.json": "ed0a36babfa4c6f6881acff6713ff5e4f3307852955672f45ed8255207dae85e",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-preparation-feedback-2026-11-05/sequoia/preparation-files/measurement.png": "194d459c301316584fb81c433a3756aa74b58ce93da1a11347c8df1d359a5f90",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-preparation-feedback-2026-11-05/sequoia/preparation-files/preparation.png": "1be5fdda85c284a1b3c4b053ca146a37d1a10ead730980ca3ca143b4dca631f3",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-monitoring-memory-2026-11-05/candidate-identity.json": "2ac289757842cef6c97c6854aae3e447ed43b5dfb0f20f1f8aafffb67273b6fd",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-monitoring-memory-2026-11-05/high-sierra/session-playback.log": "f89e4c67221224b185d9f9b1c2be1080059b2a4ca9a6ecadc1f34e683088e2f7",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-monitoring-memory-2026-11-05/high-sierra/summary.json": "b8d837bb0bba32c5a861959011b8ffed7d7e9de2c32a32502431e82845662ff9",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-monitoring-memory-2026-11-05/high-sierra/preparation.log": "c2173648db4954803ea80bf7ac38cf27917fa2638923f92fecddb9a0d1d80797",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-monitoring-memory-2026-11-05/high-sierra/session-playback.json": "eaecd12c85255cddd42cd25ba1422300e29c65b91581bafc52b409f47eb9ea30",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-monitoring-memory-2026-11-05/high-sierra/devices.log": "2051f5386a7319e82826283b75c21268ad14736d4cde59e9aa4e0ade598fde9b",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-monitoring-memory-2026-11-05/high-sierra/audition.json": "388313b28666de3f92c4cf4342d758aca777444c36110db1698ffefba37cafde",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-monitoring-memory-2026-11-05/high-sierra/audition.log": "b1ab9cc0022d1ab8f3c0ccff2dd6754d616eb3249a2bf0c224f212986f953b7e",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-monitoring-memory-2026-11-05/high-sierra/device-files/result.json": "471763154a15cf07e924e0a818c9009193292313d0233bfb65f8f5f7665ade22",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-monitoring-memory-2026-11-05/high-sierra/device-files/ui/audio-setup.png": "a487cf7d181a9681c4d595304d6afab88983614b9030980409f3a022c25284cb",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-monitoring-memory-2026-11-05/high-sierra/device-files/routing/reordered-routing.png": "be2c8a72698989f72bfc07c89ce8a0bf5ebdb09d1f244eb5b460fe7dc8d2133f",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-monitoring-memory-2026-11-05/high-sierra/preparation-files/result.json": "f0e3588f0c5b57aaeaebd2e27781fa8c576f610912c7f378e47b276447b2a406",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-monitoring-memory-2026-11-05/sequoia/session-playback.log": "f89e4c67221224b185d9f9b1c2be1080059b2a4ca9a6ecadc1f34e683088e2f7",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-monitoring-memory-2026-11-05/sequoia/summary.json": "eed18adbaec40b7c58a6a708cc8eecf8dc5d4b130b7c1ef99e9eba5aef55a584",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-monitoring-memory-2026-11-05/sequoia/preparation.log": "c2173648db4954803ea80bf7ac38cf27917fa2638923f92fecddb9a0d1d80797",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-monitoring-memory-2026-11-05/sequoia/session-playback.json": "6d2d2bea4994a1b02a630553c21b99b0a54d62bf174799b59919b6a2a05412ec",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-monitoring-memory-2026-11-05/sequoia/devices.log": "2051f5386a7319e82826283b75c21268ad14736d4cde59e9aa4e0ade598fde9b",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-monitoring-memory-2026-11-05/sequoia/audition.json": "41ec658ceaaed1045dfb36e0e1c98158eb7580c6e6f21041b9e182ae9d274c0f",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-monitoring-memory-2026-11-05/sequoia/audition.log": "b1ab9cc0022d1ab8f3c0ccff2dd6754d616eb3249a2bf0c224f212986f953b7e",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-monitoring-memory-2026-11-05/sequoia/device-files/result.json": "23b85af0a7667af31a6c0a7acf5cc19374e25fdfddf337506a143c8bf3d33bf0",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-monitoring-memory-2026-11-05/sequoia/device-files/ui/audio-setup.png": "f58d6e9e92ab999fe1c4a62b9c31c5d1e15728cf4386de0cc5b3329e81b8b0df",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-monitoring-memory-2026-11-05/sequoia/device-files/routing/reordered-routing.png": "b5659da6a38b21a804f7a2bf95798c85bd633940672fe417033de73b20f81495",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/Tests/Reference/results/ui-monitoring-memory-2026-11-05/sequoia/preparation-files/result.json": "f0e3588f0c5b57aaeaebd2e27781fa8c576f610912c7f378e47b276447b2a406"
+  },
+  "worktrees": [
+    {
+      "path": "/Users/fuzz/Developer/LevelScope",
+      "head": "5fc8c6ee95e705077cf996cecbc6543dbc20d257",
+      "status": "?? .DS_Store\n?? Docs/.DS_Store\n?? Source/.DS_Store\n?? Source/Core/.DS_Store\n?? Source/Core/Processing/.DS_Store\n?? Tests/.DS_Store\n?? Tests/Profiling/.DS_Store\n?? Tests/Qualification/.DS_Store\n?? Tests/Reference/.DS_Store",
+      "index_sha256": "995be5d3e4f7703f912fde8cbe6db03633e85b98d99157e0df2c3eb816f3f892"
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope",
+      "head": "b7350128d7b65507a5db434e38ecd73b8f2c4cfd",
+      "status": "?? .DS_Store\n?? Source/.DS_Store\n?? Source/Core/.DS_Store\n?? Tests/.DS_Store\n?? Tests/Reference/.DS_Store",
+      "index_sha256": "20ee710d7ebf773f60727b9d6348e6fc95c25222f98c3fae4cfaf09c66512975"
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-publication-2026-11-03/integration",
+      "head": "5fc8c6ee95e705077cf996cecbc6543dbc20d257",
+      "status": "?? .DS_Store\n?? Tests/.DS_Store\n?? Tests/Reference/.DS_Store",
+      "index_sha256": "32cc57d41fefa28a3f0cb17d256bbb37711c7a5891f28cfcaccf64a9b6b6965a"
+    },
+    {
+      "path": "/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation",
+      "head": "5e07bbd29930db34236d6dfcede7fea14983f90a",
+      "status": "?? .DS_Store\n?? Source/.DS_Store\n?? Source/Core/.DS_Store\n?? Source/Core/Processing/.DS_Store\n?? Tests/.DS_Store\n?? Tests/Video/.DS_Store\n?? Tests/Video/results/.DS_Store",
+      "index_sha256": "2b7942b221805e6c891e942d14985c5114023dc395aa00e695bd3f4c482394d3"
+    }
+  ],
+  "physical_device_use": false,
+  "product_tree_matches_combined_tested_commit": true
+}

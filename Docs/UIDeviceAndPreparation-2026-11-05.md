@@ -1,5 +1,10 @@
 # UI continuation after M19 — 5 November 2026
 
+**Publication update, 6 November 2026:** these two slices and remembered routing /
+monitor volume are now published and integrated into main at checkpoint
+`ui-convenience-2026-11-06`. See the [publication handover](UIConveniencePublication-2026-11-06.md).
+The review-time status below is historical; all three tested packages are preserved.
+
 Authorised scope: two focused implementation slices on
 `codex/ui-device-preparation-m19`, from published main
 `5fc8c6ee95e705077cf996cecbc6543dbc20d257`. The M18 branch, M19/Intel checkpoints,

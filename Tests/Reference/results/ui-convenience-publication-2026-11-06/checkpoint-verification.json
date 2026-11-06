@@ -1,0 +1,74 @@
+{
+  "passed": true,
+  "checkpoint": "ui-convenience-2026-11-06",
+  "target": "b7350128d7b65507a5db434e38ecd73b8f2c4cfd",
+  "tag_object": "8edcd9000d62556b7b253658f6ca7c1f399f1469",
+  "previous_main": "5fc8c6ee95e705077cf996cecbc6543dbc20d257",
+  "existing_tag_refs_preserved": 48,
+  "existing_branch_refs_preserved_except_main": 7,
+  "packages_verified": [
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-device-settings-2026-11-05/candidate-01",
+      "identity_sha256": "4b53d5d9c36052aaaf31e69ed53ca973257dcd2a103d91ae868cc97b225b0c13",
+      "source_commit": "55e5cd1603ed4b6366b244fed12895d48e90099b",
+      "measurement_build": "935fcf7c38de1ac1bc2240d07e7281d24c6f17f179c6e75c2b0a20615ee42dcc",
+      "artifacts_verified": 397,
+      "source_files": 376,
+      "qualification": {
+        "sequoia": {
+          "os": "15.7.9",
+          "architecture": "arm64",
+          "checks": 6938
+        },
+        "high-sierra": {
+          "os": "10.13.6",
+          "architecture": "x86_64",
+          "checks": 6939
+        }
+      }
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-preparation-feedback-2026-11-05/candidate-01",
+      "identity_sha256": "680e68ff91c883f7659cf0dc743ba18be0d827e983cc2cad80bddfd95c3f36a7",
+      "source_commit": "0a942b542a4c51824da19940f9500680e5a23c80",
+      "measurement_build": "2c5187d1c6cd122903fc419347308421c54899a46a5e2175b8610012eb74e991",
+      "artifacts_verified": 397,
+      "source_files": 379,
+      "qualification": {
+        "sequoia": {
+          "os": "15.7.9",
+          "architecture": "arm64",
+          "checks": 3140
+        },
+        "high-sierra": {
+          "os": "10.13.6",
+          "architecture": "x86_64",
+          "checks": 3140
+        }
+      }
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-monitoring-memory-2026-11-05/candidate-01",
+      "identity_sha256": "2ac289757842cef6c97c6854aae3e447ed43b5dfb0f20f1f8aafffb67273b6fd",
+      "source_commit": "96159ebd79f762bea147b41ad696fd80f449dfc9",
+      "measurement_build": "4a44fc52dd01be5947cc5627041391dac42ac5e2ee76044c60dc2d8f0faa3b9a",
+      "artifacts_verified": 404,
+      "source_files": 383,
+      "qualification": {
+        "sequoia": {
+          "os": "15.7.9",
+          "architecture": "arm64",
+          "checks": 7270
+        },
+        "high-sierra": {
+          "os": "10.13.6",
+          "architecture": "x86_64",
+          "checks": 7270
+        }
+      }
+    }
+  ],
+  "original_evidence_files": 68,
+  "no_rebuild_or_runtime_tests": true,
+  "physical_device_use": false
+}

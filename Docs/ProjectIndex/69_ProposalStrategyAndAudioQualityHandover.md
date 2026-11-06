@@ -1,5 +1,13 @@
 # Proposal Strategy and Audio Quality — post-M19 design handover
 
+**UI baseline update, 6 November 2026:** main now also includes the three qualified
+UI convenience slices at `ui-convenience-2026-11-06`, checkpoint
+`b7350128d7b65507a5db434e38ecd73b8f2c4cfd`, followed by a documentation-only publication
+receipt. See the [short UI handover](../UIConveniencePublication-2026-11-06.md).
+M19's proposal, measurement, history and export implementation remains unchanged.
+The design-only scope and ownership below still apply; this update does not authorize
+strategy implementation or changing another chat's checkout.
+
 5 November 2026. **Design and analysis only.** The user approved the development
 approach below and this documentation handover. Qualified M19 is published and integrated
 into main as `m19-lra-passages-2026-11-05`, checkpoint
@@ -373,10 +381,12 @@ accumulating drift, sustained freezes and identity/lifecycle failures remain blo
 These are separate work items, not strategy prerequisites or new approval:
 
 - Remembered device selection, opening on explicit selection and optional reconnection
-  are separate planned device/UI work. Define the user's connection intent and lifecycle
-  before implementation; none of these behaviours changes in M19 publication.
-- Clearly show initial import/verified-source preparation and progressive analysis states,
-  progress/cancellation and pending versus authoritative results.
+  are completed by the separate UI continuation, published 6 November 2026. Its connection
+  intent, stopped transport and explicit Disconnect rules are documented in the UI handover.
+  It also adds per-Mac/interface speaker-role routing and explicit monitor-volume memory.
+- Initial import/analysis now shows validation, preparation/verification and measurement
+  stages, progress/cancellation and pending versus authoritative results. This is the
+  second published UI slice; first-playback preparation feedback remains deferred.
 - Design session-wide reuse of a verified source across analysis, proposals, audition
   and export where identities permit. M19 already shares one copy within its private
   passes; it does not supply session-wide ownership, sharing or persistent reuse.
