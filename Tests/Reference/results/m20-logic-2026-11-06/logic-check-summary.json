@@ -1,0 +1,236 @@
+{
+  "logic_handover_checks_passed": true,
+  "m20_combined_qualified": false,
+  "errors": [],
+  "required": [
+    "core",
+    "stereo",
+    "surround",
+    "heterogeneous",
+    "failures",
+    "audio",
+    "population",
+    "gating",
+    "cinema",
+    "legacy-core",
+    "legacy-stereo",
+    "legacy-surround",
+    "legacy-inputs",
+    "legacy-failures",
+    "legacy-gating",
+    "requirements",
+    "section-smoke"
+  ],
+  "results": {
+    "core": {
+      "sha256": "1e435aba2f7da72cf5958c1803c80764f0a4304a455bd5ca7f62c20715e17505",
+      "checks": 110,
+      "cases": []
+    },
+    "stereo": {
+      "sha256": "2dfba684f3eb2413190e54dec9b925d62384ec288e5275b9a91b52de696646cd",
+      "checks": 47,
+      "cases": [
+        {
+          "channels": 2,
+          "heterogeneous": false,
+          "before_lra": 5.910633862481411,
+          "after_lra": 4.400000001494526,
+          "proxy_count": 32,
+          "passes": 1,
+          "planning_seconds": 0.006572375,
+          "planning_bytes": 1463308
+        }
+      ]
+    },
+    "surround": {
+      "sha256": "735e5f22ce65e0b96486ab0c2ec543556f206c151e334322ed74069fefe08712",
+      "checks": 47,
+      "cases": [
+        {
+          "channels": 6,
+          "heterogeneous": false,
+          "before_lra": 5.910633850473452,
+          "after_lra": 4.290033958070723,
+          "proxy_count": 32,
+          "passes": 1,
+          "planning_seconds": 0.006584626000000001,
+          "planning_bytes": 1467280
+        }
+      ]
+    },
+    "heterogeneous": {
+      "sha256": "a86a6a9c9951bf35b3a1046fb61e615e453368bae888c13ec63e83b27653290c",
+      "checks": 41,
+      "cases": [
+        {
+          "channels": 2,
+          "heterogeneous": true,
+          "before_lra": 6.02059990447318,
+          "after_lra": 4.760704005699743,
+          "proxy_count": 32,
+          "passes": 1,
+          "planning_seconds": 0.007061959,
+          "planning_bytes": 1513968
+        }
+      ]
+    },
+    "failures": {
+      "sha256": "4d1e1c56b30d8d72f95fdf0e7bd16c908433743f88a83885717d36fc6e7a4b98",
+      "checks": 32,
+      "cases": []
+    },
+    "audio": {
+      "sha256": "1b919e3bb0cba6c174525646ba7a9efbf909c2269d507e75227961f887dc02a1",
+      "checks": 405,
+      "cases": []
+    },
+    "population": {
+      "sha256": "6056a120496ca0b19ecf9a0ad7d0517b2caf3fca72adc0c98ee1ebea4ea6c567",
+      "checks": 3,
+      "cases": [
+        {
+          "synthetic_population_seconds": 10800,
+          "64_proxy_seconds": 1.727356292,
+          "analysis_sidecar_bytes": 35846608
+        }
+      ]
+    },
+    "gating": {
+      "sha256": "54df8ebcb8b5abb71f5153c5e9673e469d4707fb852107796d4dc74cb5418354",
+      "checks": 17,
+      "cases": [
+        {
+          "model_only_counterexample": true,
+          "seed_predicted_lra": 6.999999883112739,
+          "deeper_predicted_lra": 25.98999916564194,
+          "newly_included_windows": 2971
+        },
+        {
+          "content_sha256": "be761575314f7b3f25031d67fbb2f4a0489238de011809f32ab4040ab3802935",
+          "frames": 28800000,
+          "before_lra": 9.9999998831127,
+          "before_integrated": -24.83640250735625,
+          "target_lra": 6.7,
+          "outcome": "No acceptable candidate in bounded region search",
+          "passes": 3,
+          "proxies": 64,
+          "gate_change_predicted": false,
+          "planning_seconds": 0.069381874,
+          "planning_bytes": 3720288,
+          "retained_lra": 6.999999884851839,
+          "retained_integrated": -23.19999985738417
+        }
+      ]
+    },
+    "cinema": {
+      "sha256": "10ce7cfe3f130d7ac6dfd9acd3e18abdbef737d03c7b2852d071c0864b14ecd4",
+      "checks": 14,
+      "cases": [
+        {
+          "content_sha256": "cfd57bea9a108db850b4e371de0f299f3396fbc1730e58e357380042a3064dd5",
+          "frames": 23040000,
+          "before_lra": 23.43533266525482,
+          "before_integrated": -20.90951235757125,
+          "target_lra": 15.0,
+          "outcome": "No acceptable candidate in bounded region search",
+          "passes": 3,
+          "proxies": 64,
+          "gate_change_predicted": true,
+          "planning_seconds": 0.070318166,
+          "planning_bytes": 3361316,
+          "retained_lra": 22.3851131954878,
+          "retained_integrated": -23.14378196134018
+        }
+      ]
+    },
+    "legacy-core": {
+      "sha256": "f8ae5bc2d500283bcb25cb1f48e82527e6635825bf319aa016c393fc8f7d6c2c",
+      "checks": 22,
+      "cases": []
+    },
+    "legacy-stereo": {
+      "sha256": "e3e551a941f539229ffa64d73462b5cd593e0d4853d45a088b99f3c977b45eb9",
+      "checks": 155,
+      "cases": [
+        {
+          "channels": 2,
+          "seconds": 8.571762625001371,
+          "passes": 2,
+          "before_lra": 5.910633862481411,
+          "after_lra": 4.290033958906193,
+          "gain_db": 6.531787296603095
+        }
+      ]
+    },
+    "legacy-surround": {
+      "sha256": "6cf17c5b05157de6853ee39741c2bec1c6541aa18138467fdd5e1d7f29f97365",
+      "checks": 135,
+      "cases": [
+        {
+          "channels": 6,
+          "seconds": 13.62570587500185,
+          "passes": 2,
+          "before_lra": 5.910633850473452,
+          "after_lra": 4.290033957501183,
+          "gain_db": 0.6423445637451621
+        }
+      ]
+    },
+    "legacy-inputs": {
+      "sha256": "6ef93212f8f33b0d520179f332e5956e4cd50d83ca73e4606096612c157f9fcc",
+      "checks": 171,
+      "cases": []
+    },
+    "legacy-failures": {
+      "sha256": "f79790e66dc7698ec8c668ac505d65dfc0baf8e152100e76a1e5ffbb4629d770",
+      "checks": 74,
+      "cases": []
+    },
+    "legacy-gating": {
+      "sha256": "06cd1aa15f331874cf7bce6ed3c60bea4de870c6ad34238275fdae10a2c284cb",
+      "checks": 16,
+      "cases": []
+    },
+    "requirements": {
+      "sha256": "49569e561495ccbf08b2bcdc8175d7b92aaf993155ea3e59d9e4d0e72663e2ae",
+      "checks": 489,
+      "cases": []
+    },
+    "section-smoke": {
+      "sha256": "1f84e6d6434ec0caab836cc517834c854725bc0d64459fe764b8f1ae1f46325a",
+      "checks": 366,
+      "cases": [
+        {
+          "rate": 48000,
+          "channels": 2,
+          "mode": 0,
+          "private_passes": 3,
+          "gain": 1.474076909607501,
+          "integrated": -23.00000020002954,
+          "true_peak": -1.453151928404762,
+          "capture_sha256": "80685b71581ce59fe45c0976420550e0422c0d5ca6ed75123a454af32c8d8b22"
+        },
+        {
+          "rate": 48000,
+          "channels": 6,
+          "mode": 0,
+          "private_passes": 3,
+          "gain": 1.783344207179866,
+          "integrated": -23.00000003242044,
+          "true_peak": -1.441638646767303,
+          "capture_sha256": "d86fbadba6c2ec9a0bf382ed56bdaa7ac450a3584960e8385e70f8dff98d895e"
+        }
+      ]
+    }
+  },
+  "measurement_build": "8c2397c14e757cd9f3c8580cd89c0a2bb065bc2e3de5a9eb97e30f03eb8f5254",
+  "source_manifest_sha256": "fd200ebdc2d1e1f43715bafcba4d2f8e8a166d28283176fcc7c408f990ca6249",
+  "pending": [
+    "UI implementation/integration and native responsiveness",
+    "actual Intel High Sierra and cross-platform checks",
+    "independent real holdouts/control variants and coordinated listening"
+  ],
+  "physical_devices_opened": false,
+  "video_loaded": false
+}

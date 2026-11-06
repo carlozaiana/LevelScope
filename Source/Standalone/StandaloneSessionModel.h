@@ -12,6 +12,7 @@
 #include "StandaloneCompliance.h"
 #include "StandaloneProposal.h"
 #include "StandaloneSectionProposal.h"
+#include "StandaloneRegionProposal.h"
 #include "AppliedProposalExplanation.h"
 #include "StandaloneAuditionRequest.h"
 #include "StandaloneSections.h"
@@ -226,7 +227,7 @@ public:
     juce::String documentId = juce::Uuid().toString(), programmeId = juce::Uuid().toString();
     uint64_t documentRevision = 0, savedDocumentRevision = 0;
     juce::File documentFile;
-    int openedSessionSchema = 8;
+    int openedSessionSchema = 9;
     juce::String restoredProfileId, restoredProfileVersion, restoredProfileDigest;
     bool videoUnresolved = false;
     proposal::SectionDocument sectionDocument;
@@ -242,6 +243,20 @@ public:
         return true;
     }
     proposal::ProposalPolicy proposalPolicy;
+    std::optional<proposal::RegionPlanningSettings> regionPlanning;
+    bool setRegionPlanning(std::optional<proposal::RegionPlanningSettings> value,juce::String& error)
+    {
+        if(audioEditsBlocked()||job.isActive()||persistenceLoading){error="Stop and finish the current job before changing region settings";return false;}
+        if(value)
+        {
+            error=value->validationError();if(error.isNotEmpty())return false;
+            if(value->inputIdentity!=sectionInputIdentity(measurementContext(MeasurementDomain::source)))
+            {error="Region settings belong to another programme interpretation";return false;}
+        }
+        if(bool(value)==bool(regionPlanning)&&(!value||value->digest()==regionPlanning->digest()))return true;
+        regionPlanning=std::move(value);documentChanged();trimDraft.reset();
+        trimNotice="Region settings changed; compatible measurements retained. Previous proposals are stale.";return true;
+    }
     std::optional<proposal::ProposalPolicy> lastAppliedProposalPolicy;
     juce::String lastAppliedProposalBinding; // provenance only, never audio/measurement authority
     juce::String lastAppliedProposalText; // legacy in-memory display, not verification
@@ -257,6 +272,7 @@ public:
         if(h.requirements.digest()!=jobRequirements.digest()||h.target.digest()!=getSelectedTargetProfile().digest()||h.applicability!=programmeApplicability)
             text+=" Requirements changed since application.";
         if(h.preferences.digest()!=proposalPolicy.digest())text+=" Proposal preferences changed since application.";
+        if(bool(h.regionSettings)!=bool(regionPlanning)||(h.regionSettings&&regionPlanning&&h.regionSettings->digest()!=regionPlanning->digest()))text+=" Region settings changed since application.";
         text+=currentState.hasMeasurement&&!currentStateNeedsRemeasurement()?" Current has its own independent measurement.":" Current is unverified; Re-measure Current State.";
         return text;
     }
@@ -385,6 +401,7 @@ public:
     SectionProposalRequest sectionProposalRequest() const
     {
         SectionProposalRequest r;r.policy=proposalPolicy;
+        r.regionSettings=regionPlanning;
         r.sourceContext=measurementContext(MeasurementDomain::source);
         r.currentContext=measurementContext(MeasurementDomain::currentState);
         if(source.hasMeasurement&&!sourceContentInvalid)r.source=source.analysis;
@@ -425,6 +442,8 @@ public:
         {sectionProposalError=ErrorCode::staleRevision;sectionProposalNotice="Stale proposal rejected. Generate again from current inputs.";return false;}
         if(sectionProposal->status()==SectionProposalStatus::noChange)return true;
         if(!canApplySectionProposal())return false;
+        const auto regionError=validateRegionProposalForApply(sectionProposalRequest(),*sectionProposal);
+        if(regionError.isNotEmpty()){sectionProposalError=ErrorCode::staleRevision;sectionProposalNotice=regionError;return false;}
         const auto accepted=sectionProposal;
         std::shared_ptr<const AppliedProposalExplanation> history;
         try
@@ -446,7 +465,7 @@ public:
                     getSelectedTargetProfile(),programmeApplicability).verdict!=proposal::Verdict::pass)return false;
             currentStateDocument.sectionGains=c.processing.sectionGains;
             currentStateDocument.sectionGainAnnotations=sectionDocument.map();
-            if(accepted->methodVersion()==proposal::lraTrimMethodVersion&&c.processing.sectionGains)
+            if((accepted->methodVersion()==proposal::lraTrimMethodVersion||accepted->methodVersion()==proposal::regionSearchVersion)&&c.processing.sectionGains)
             {
                 // Processing geometry is independent of editorial annotations.
                 auto& provenance=currentStateDocument.sectionGainAnnotations;provenance.sections.clear();provenance.nextId=1;
@@ -655,7 +674,7 @@ public:
     }
 
     void clearProposalApplicationProvenance()
-    {lastAppliedProposalPolicy.reset();lastAppliedProposalBinding.clear();lastAppliedProposalText.clear();lastAppliedExplanation.reset();}
+    {lastAppliedProposalPolicy.reset();lastAppliedProposalBinding.clear();lastAppliedProposalText.clear();lastAppliedExplanation.reset();regionPlanning.reset();}
 
     bool setValidatedSource (const juce::File& file, const MediaInfo& media)
     {

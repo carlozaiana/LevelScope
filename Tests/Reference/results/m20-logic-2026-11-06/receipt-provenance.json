@@ -1,0 +1,91 @@
+{
+  "population": {
+    "package": "logic-handover-01",
+    "receipt": "receipts-01/population.json",
+    "reuse": "Unchanged production sources and app; only the separate gating-test body changed in package 02."
+  },
+  "requirements": {
+    "package": "logic-handover-01",
+    "receipt": "receipts-01/requirements.json",
+    "reuse": "Unchanged production sources and app; only the separate gating-test body changed in package 02."
+  },
+  "legacy-surround": {
+    "package": "logic-handover-01",
+    "receipt": "receipts-01/legacy-surround.json",
+    "reuse": "Unchanged production sources and app; only the separate gating-test body changed in package 02."
+  },
+  "failures": {
+    "package": "logic-handover-01",
+    "receipt": "receipts-01/failures.json",
+    "reuse": "Unchanged production sources and app; only the separate gating-test body changed in package 02."
+  },
+  "legacy-inputs": {
+    "package": "logic-handover-01",
+    "receipt": "receipts-01/legacy-inputs.json",
+    "reuse": "Unchanged production sources and app; only the separate gating-test body changed in package 02."
+  },
+  "stereo": {
+    "package": "logic-handover-01",
+    "receipt": "receipts-01/stereo.json",
+    "reuse": "Unchanged production sources and app; only the separate gating-test body changed in package 02."
+  },
+  "heterogeneous": {
+    "package": "logic-handover-01",
+    "receipt": "receipts-01/heterogeneous.json",
+    "reuse": "Unchanged production sources and app; only the separate gating-test body changed in package 02."
+  },
+  "legacy-core": {
+    "package": "logic-handover-01",
+    "receipt": "receipts-01/legacy-core.json",
+    "reuse": "Unchanged production sources and app; only the separate gating-test body changed in package 02."
+  },
+  "legacy-gating": {
+    "package": "logic-handover-01",
+    "receipt": "receipts-01/legacy-gating.json",
+    "reuse": "Unchanged production sources and app; only the separate gating-test body changed in package 02."
+  },
+  "core": {
+    "package": "logic-handover-03",
+    "receipt": "receipts-03/core.json",
+    "fresh": true,
+    "executable_sha256": "abe16f04bab5c1b364eec09d851e68bf45d4125eafc6753c297eb508fb80e0a9",
+    "invocation": "build/m20-logic-2026-11-06/compile/LevelScopeRegionPlanningTests_artefacts/Release/LevelScopeRegionPlanningTests --group core --output build/m20-logic-2026-11-06/core-boundary-final.json",
+    "note": "Tested compile-tree executable and frozen package executable are byte-identical; added prior-envelope and short-radius permission checks."
+  },
+  "legacy-stereo": {
+    "package": "logic-handover-01",
+    "receipt": "receipts-01/legacy-stereo.json",
+    "reuse": "Unchanged production sources and app; only the separate gating-test body changed in package 02."
+  },
+  "audio": {
+    "package": "logic-handover-01",
+    "receipt": "receipts-01/audio.json",
+    "reuse": "Unchanged production sources and app; only the separate gating-test body changed in package 02."
+  },
+  "surround": {
+    "package": "logic-handover-01",
+    "receipt": "receipts-01/surround.json",
+    "reuse": "Unchanged production sources and app; only the separate gating-test body changed in package 02."
+  },
+  "legacy-failures": {
+    "package": "logic-handover-01",
+    "receipt": "receipts-01/legacy-failures.json",
+    "reuse": "Unchanged production sources and app; only the separate gating-test body changed in package 02."
+  },
+  "section-smoke": {
+    "package": "logic-handover-01",
+    "receipt": "receipts-01/section-smoke.json",
+    "reuse": "Unchanged production sources and app; only the separate gating-test body changed in package 02."
+  },
+  "cinema": {
+    "package": "logic-handover-01",
+    "receipt": "receipts-01/cinema.json",
+    "reuse": "Unchanged production sources and app; only the separate gating-test body changed in package 02."
+  },
+  "gating": {
+    "package": "logic-handover-02",
+    "receipt": "receipts-02/gating.json",
+    "fresh": true,
+    "historical_failure": "receipts-01/gating.json"
+  }
+}

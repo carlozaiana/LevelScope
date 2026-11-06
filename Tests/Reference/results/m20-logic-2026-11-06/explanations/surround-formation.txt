@@ -1,0 +1,28 @@
+cut 31.000000 strength 1.1205998923724270 Sustained low-need run boundary; preserve satisfactory material if complete measurement permits
+cut 29.500000 strength 1.1205998923724270 Sustained low-need run boundary; preserve satisfactory material if complete measurement permits; +/-1.5 s window-support alternative
+cut 32.500000 strength 1.1205998923724270 Sustained low-need run boundary; preserve satisfactory material if complete measurement permits; +/-1.5 s window-support alternative
+cut 31.100000 strength 1.1205998923724270 Persistent median correction-need change; centre hypothesis, not event onset
+cut 29.600000 strength 1.1205998923724270 Persistent median correction-need change; centre hypothesis, not event onset; +/-1.5 s window-support alternative
+cut 32.600000 strength 1.1205998923724270 Persistent median correction-need change; centre hypothesis, not event onset; +/-1.5 s window-support alternative
+cut 35.000000 strength 1.1205998923724270 Persistent median correction-need change; centre hypothesis, not event onset
+cut 33.500000 strength 1.1205998923724270 Persistent median correction-need change; centre hypothesis, not event onset; +/-1.5 s window-support alternative
+cut 36.500000 strength 1.1205998923724270 Persistent median correction-need change; centre hypothesis, not event onset; +/-1.5 s window-support alternative
+cut 35.100000 strength 1.1205998923724270 Sustained low-need run boundary; preserve satisfactory material if complete measurement permits
+cut 33.600000 strength 1.1205998923724270 Sustained low-need run boundary; preserve satisfactory material if complete measurement permits; +/-1.5 s window-support alternative
+cut 36.600000 strength 1.1205998923724270 Sustained low-need run boundary; preserve satisfactory material if complete measurement permits; +/-1.5 s window-support alternative
+geometry 29.100000:36.900000 Unsplit original root, fixed-ramp support edges
+geometry 29.500000:36.600000 Unsplit outer refinement with strongest combined boundary nominations
+geometry 29.100000:36.900000 Bounded split topology ordered by need-change strength and source frame 32.500000
+geometry 29.100000:36.900000 Bounded split topology ordered by need-change strength and source frame 32.600000
+geometry 29.500000:36.600000 Split topology with refined outer boundaries 32.600000
+geometry 29.100000:36.900000 Bounded split topology ordered by need-change strength and source frame 33.500000
+geometry 29.500000:36.600000 Split topology with refined outer boundaries 33.500000
+geometry 29.100000:36.900000 Bounded split topology ordered by need-change strength and source frame 33.600000
+geometry 29.100000:36.900000 Bounded split topology ordered by need-change strength and source frame 32.500000 33.600000
+geometry 29.500000:36.500000 Alternative exact outer processing support
+geometry 29.600000:36.600000 Alternative exact outer processing support
+geometry 29.600000:36.500000 Alternative exact outer processing support
+geometry 29.500000:35.100000 Alternative exact outer processing support
+geometry 31.000000:36.600000 Alternative exact outer processing support
+geometry 29.500000:35.000000 Alternative exact outer processing support
+geometry 29.600000:35.100000 Alternative exact outer processing support

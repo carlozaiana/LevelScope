@@ -2,6 +2,7 @@
 #include "StandaloneProcessing.h"
 #include "StandaloneSections.h"
 #include "AppliedProposalExplanation.h"
+#include "StandaloneRegionProposal.h"
 #include <juce_cryptography/juce_cryptography.h>
 
 namespace levelscope::standalone
@@ -10,6 +11,16 @@ proposal::TrimRequest SectionProposalRequest::scalar() const
 { auto r=trimRequest(source,current,sourceContext,currentContext,currentContext.profile,applicability);r.preferenceIdentity=policy.digest();r.preferencesAvailable=policy.validationError().isEmpty();return r; }
 juce::String SectionProposalRequest::binding() const
 {
+    if(regionSettings)
+    {
+        juce::String selected;
+        if(regionSettings->mode==proposal::RegionMode::selectedSection)
+            for(const auto& a:annotations.sections)if(a.id==regionSettings->sectionId)
+                selected=juce::String(a.id)+":"+juce::String(a.begin)+":"+juce::String(a.end);
+        const auto key=proposal::draftGlobalTrim(scalar()).identity+";"+proposal::regionSearchVersion+";"+regionSettings->digest()+";"+selected
+            +";"+currentContext.sessionId+";"+juce::String(currentContext.ticket.sessionRevision)+";"+juce::String(int(pendingManualDraft))+";"+policy.digest();
+        return juce::SHA256(key.toRawUTF8(),key.getNumBytesAsUTF8()).toHexString();
+    }
     const auto s=proposal::draftGlobalTrim(scalar()).identity+";"+(currentContext.profile.limits.hasMaxLoudnessRange?proposal::lraTrimMethodVersion:proposal::sectionTrimMethodVersion)
         +";"+proposal::sectionGeometryKey(annotations)+";"+proposal::sectionGeometryKey(appliedAnnotations)
         +";"+currentContext.sessionId+";"+juce::String(currentContext.ticket.sessionRevision)
@@ -27,6 +38,7 @@ std::optional<ProcessingPlan> SectionProposalResult::previewPlan() const
 }
 SectionProposalOutcome generateSectionProposal(const SectionProposalRequest& r,JobControl& control,const SnapshotStorage& storage)
 {
+    if(r.regionSettings)return generateRegionProposal(r,control,storage);
     if(r.currentContext.profile.limits.hasMaxLoudnessRange)return generateLraProposal(r,control,storage);
     auto out=std::shared_ptr<SectionProposalResult>(new SectionProposalResult);
     out->bound=r.binding();out->proposed=r.currentContext.processing;out->annotations=r.annotations;

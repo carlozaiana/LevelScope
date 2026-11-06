@@ -159,10 +159,10 @@ void sessionTests(const juce::File& root,StandaloneSessionModel& s)
     auto report=ex::report(ex::capture(s));expect(!report.hasProperty("artifact")&&report["current"]["evaluation"]["verdict"].toString()=="FAIL","measurement-only report exposes actual failure without artifact");
     auto bounded=generateSectionProposal(s.sectionProposalRequest(),control);expect(bounded.value&&(*bounded.value)->status()==SectionProposalStatus::noSolution&&(*bounded.value)->passes()==0&&(*bounded.value)->text().contains("Policy:"),"M19 broad high population cannot bypass duration policy for strict zero LRA; no private pass");
     r.maximumLraTenths=1000;++r.revision;s.setJobRequirements(r,error);
-    auto captured=sf::capture(s);const auto file=root.getChildFile("named.levelscope");expect(sf::save(captured,file,control).succeeded(),"schema 8 coherent session save");
+    auto captured=sf::capture(s);const auto file=root.getChildFile("named.levelscope");expect(sf::save(captured,file,control).succeeded(),"current schema coherent session save");
     r.name="Edits during save";++r.revision;s.setJobRequirements(r,error);sf::saved(s,captured,file);expect(s.documentRevision!=s.savedDocumentRevision,"changes after capture remain unsaved");
     const auto reopenStart=juce::Time::getMillisecondCounterHiRes();
-    auto read=sf::read(file,control);expect(read.document&&read.document->loadedSchema==8,"schema 8 decoded");auto verified=sf::verify(*read.document,control);StandaloneSessionModel reopened;
+    auto read=sf::read(file,control);expect(read.document&&read.document->loadedSchema==sf::schemaVersion,"current schema decoded");auto verified=sf::verify(*read.document,control);StandaloneSessionModel reopened;
     expect(verified.document&&sf::install(*verified.document,reopened,error),"verified named session reopen");
     expect(reopened.jobRequirements.digest()==captured.jobRequirements.digest()&&reopened.currentState.hasMeasurement&&reopened.evaluation(MeasurementDomain::currentState).verdict==Verdict::pass,"independent embedded definition and compatible caches reconstruct evaluation");
     const auto reopenMs=juce::Time::getMillisecondCounterHiRes()-reopenStart;expect(reopenMs<=5000,"short-session verify/reopen within five seconds");resources.getDynamicObject()->setProperty("short_session_reopen_ms",reopenMs);
@@ -175,7 +175,7 @@ void sessionTests(const juce::File& root,StandaloneSessionModel& s)
     complete.maximumMomentaryTenths=-1;complete.maximumShortTermTenths=-2;complete.maximumLraTenths.reset();complete.truePeakTenths.reset();
     expect(reopened.setJobRequirements(complete,error),"install complete custom target without remeasurement");reopened.setSelectedTargetProfileIndex(3);
     const auto customFile=root.getChildFile("complete-target.levelscope");expect(sf::save(sf::capture(reopened),customFile,control).succeeded(),"save complete target session");
-    auto custom=sf::read(customFile,control);expect(custom.document&&custom.document->loadedSchema==8,"M18 session identifies its newer reader requirement");
+    auto custom=sf::read(customFile,control);expect(custom.document&&custom.document->loadedSchema==sf::schemaVersion,"session identifies its current reader requirement");
     auto customVerified=sf::verify(*custom.document,control);StandaloneSessionModel roundtrip;
     expect(customVerified.document&&sf::install(*customVerified.document,roundtrip,error)&&roundtrip.jobRequirements.digest()==complete.digest(),"custom M/S and No Limit survive verified session reopen");
     expect(roundtrip.currentState.analysis&&roundtrip.evaluation(MeasurementDomain::currentState).rules.size()==3,"reopened cached measurement reevaluates only selected IL/M/S");

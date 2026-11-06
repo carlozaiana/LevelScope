@@ -1,0 +1,75 @@
+Measured region candidate ready
+Exact complete candidate passes every selected measured requirement. Apply explicitly while stopped, then independently remeasure Current. Predictions do not verify Current or an export.
+Experimental region planning / region-gain-search-v1 / window-energy-proxy-v1 / candidate-review-rank-v2
+Effective immutable settings: {"schema": 1, "method": "region-gain-search-v1", "constraints": "region-constraints-v1", "formation": "region-formation-v1", "proxy": "window-energy-proxy-v1", "rank": "candidate-review-rank-v2", "input": "fcd11a393f59a890f199ad6c94a1acf5d8f34416f6b9426880cd27d4c3853b26", "mode": 0, "section": "0", "selection": {"begin": "0", "end": "0"}, "splitting": true, "refinement": true, "fillGap": false, "global": true, "compare": false, "splits": 2, "leftMs": 0, "rightMs": 0, "minimumMs": 3000, "separationMs": 1000, "needTenths": 10, "persistenceMs": 1000, "start": null, "end": null, "cuts": [], "protection": "local-envelope-v1", "protected": []}
+Constraint binding f99687acc27a899d5665f34fc6dee780c423feb4880ea23fc1391569aaa443a3
+Roots 1 (omitted 0); proxy plans 32 / 64; duplicate audio plans 8; rejected 0.
+Geometry constructions 166; omitted cut nominations 0; omitted geometries 0. Search truncation never proves impossibility.
+Whole-programme global trim permitted separately: it may change audio outside the local area.
+Original root analysis:836304d93a9e17ec6905d60bbac39977793fe92b3bada84c40ca7f81bb0799e1:1396800:1771200; hint [1396800, 1771200); permitted [1396800, 1771200); support-edge ranges [1396800, 1627200] / [1540800, 1771200].
+
+Complete measured attempt 1 / dbab15651c3ee8059cea2230becc0f2943853f693b1ed23228c7a4fb89d452c2 (retained)
+Actual Private candidate (not Current State) evaluation: PASS
+Passes selected programme loudness, true-peak and LRA rules.
+programme-loudness: PASS | -22.999997 LUFS | min -23.200000 | max -22.800000 | delta 0.000003
+Within selected bounds.
+true-peak: PASS | -17.416731 dBTP | max -1.000000 | delta -16.416731
+Within selected bounds.
+loudness-range: PASS | 4.400000 LU | max 4.900000 | delta -0.500000
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+IL: -22.999997224379
+TP: -17.416730659309
+LRA: 4.400000001495
+M max: -17.698979881241
+S max: -18.684746479891
+sample peak: -17.416735629447
+Forecast IL -23.000000000001; LRA 4.399999999951; TP unknown (not a measured failure). Approximate window-energy proxy: uniform bin energy, filter/gain noncommutation and float-stage rounding. Sampled M/S cannot certify maxima; true peak unavailable. Empirical errors are not proven bounds. EOF drain retains global-scaled baseline shape; locally transformed filter-tail state is uncertain, not measured silence.
+Forecast gate entry/exit: I 0/0; LRA 0/0.
+Actual minus forecast (IL/LRA/P10/P95/sampled M): 0.000002775621 0.000000001544 -0.000000001694 -0.000000000150 0.000237473452. Empirical errors, not bounds.
+Changed support 264000 programme frames; 1 connected regions; max added 1.620599904474 dB; absolute local dB*frames 420059.495239534648; global 6.432557701825 dB.
+Root analysis:836304d93a9e17ec6905d60bbac39977793fe92b3bada84c40ca7f81bb0799e1:1396800:1771200; Alternative exact outer processing support; support [1416000, 1680000); nominal cuts 1418400, 1677600; additional reductions 1.620599904474 dB.
+Requested / achieved reserve / uncovered deficit by part: [1.620599904474 / 0.500000000000 / 0.000000000000] dB.
+Private assessment budget 3. Failed shortlist 0.01 LU is diagnostic ranking only, never a rule allowance.
+Preparation 0.214 s; auxiliary pass 0.042 s; cached planning 0.007 s; sidecar 85472 bytes; bounded additional planning allocation estimate 1463308 bytes.
+
+section-preferences-v2 / connected-envelope-support-v2
+Policy digest: 9020f36cdf7584536fc2708e4f57196cbf3ca8ef1d72e954ae8ad2e88bb48e27
+No region-count restriction; affected duration 20.0% (preservation preference, not broadcast rule).
+Additional attenuation 3.0 dB; cumulative local attenuation 12.0 dB; requested reserve 0.5 dB inside both caps.
+
+Target EBU R128-2023 programme QC / ebu-r128-2023-programme-linear-qc / 1.0.0 / eadd134fd7fad5f1bab870194e00c37cfb6ad8b32c63abe9b307bc9575a493bf
+IL -23.000000000 LUFS +/- 0.200000000 LU / True peak -1.000000000 dBTP / LRA 4.900000000 LU / Max M No Limit / Max S No Limit
+Selected programme loudness and true-peak rules for pre-produced whole-programme linear-audio QC. Excludes live exceptions, deliberate lower targets, short-form supplements and distribution-specific requirements.
+EBU R128-2023 (November 2023) / https://tech.ebu.ch/docs/r/r128.pdf
+Requirement provenance
+IL R128-2023 clauses h, i, k, l: -23 LUFS intended target; +/-0.2 LU QC allowance; whole-programme level gating.
+True peak R128-2023 clause m: maximum -1 dBTP for linear audio.
+LRA User-specified job requirement: Programme job requirements; EBU Tech 3342-2023 whole-programme LRA; M20 synthetic evaluation requirement. User provenance is not independently verified; not an EBU-mandated ceiling.
+Max M 
+Max S 
+Clause m separately permits +/-0.3 dB meter tolerance for signals band-limited to 20 kHz. Bandwidth is not certified here; this provision never relaxes the -1 dBTP evaluation ceiling.
+Frozen measured Current baseline (measured)
+IL LUFS = -29.087777588741
+True peak dBTP = -23.849288766864
+LRA LU = 5.910633862481
+Max M LUFS = -24.131346086109
+Max S LUFS = -24.133158949442
+Sample peak dBFS = -23.849293529205
+Current State evaluation: FAIL
+Fails one or more selected measured rules.
+programme-loudness: FAIL | -29.087778 LUFS | min -23.200000 | max -22.800000 | delta -6.087778
+Outside selected bounds.
+true-peak: PASS | -23.849289 dBTP | max -1.000000 | delta -22.849289
+Within selected bounds.
+loudness-range: FAIL | 5.910634 LU | max 4.900000 | delta 1.010634
+Outside selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Measurement 62015cc0c1daeb350144d2eb0fd37a592d5d187883dca238df43f2af7cc6cb15
+Method bs1770-5-ebu2023-m7.1 / build 8c2397c14e757cd9f3c8580cd89c0a2bb065bc2e3de5a9eb97e30f03eb8f5254 / Mac OSX 15.7.9;arm64;float32-samples;float64-analysis;no-fast-math;fp-contract-off
+Origin session d1b732e3749a4a649cb8ad8ed9aea1ab / job 1 / revision 1
+Initial Current from identical Source measurement 5f27b46d232d049ad7d3b142900457d132ec430525f451270ea212d4f48ed933

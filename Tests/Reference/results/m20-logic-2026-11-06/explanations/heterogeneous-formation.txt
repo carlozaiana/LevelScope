@@ -1,0 +1,28 @@
+cut 22.100000 strength 1.1205999044242123 Reserved paired interior low-need boundary
+cut 20.600000 strength 1.1205999044242123 Reserved paired interior low-need boundary; +/-1.5 s window-support alternative
+cut 23.600000 strength 1.1205999044242123 Reserved paired interior low-need boundary; +/-1.5 s window-support alternative
+cut 36.000000 strength 1.1205999044242123 Reserved paired interior low-need boundary
+cut 34.500000 strength 1.1205999044242123 Reserved paired interior low-need boundary; +/-1.5 s window-support alternative
+cut 37.500000 strength 1.1205999044242123 Reserved paired interior low-need boundary; +/-1.5 s window-support alternative
+cut 36.100000 strength 1.1205999044731794 Persistent median correction-need change; centre hypothesis, not event onset
+cut 34.600000 strength 1.1205999044731794 Persistent median correction-need change; centre hypothesis, not event onset; +/-1.5 s window-support alternative
+cut 37.600000 strength 1.1205999044731794 Persistent median correction-need change; centre hypothesis, not event onset; +/-1.5 s window-support alternative
+cut 42.000000 strength 1.1205999044731794 Persistent median correction-need change; centre hypothesis, not event onset
+cut 40.500000 strength 1.1205999044731794 Persistent median correction-need change; centre hypothesis, not event onset; +/-1.5 s window-support alternative
+cut 43.500000 strength 1.1205999044731794 Persistent median correction-need change; centre hypothesis, not event onset; +/-1.5 s window-support alternative
+geometry 12.000000:46.000000 Unsplit original root, fixed-ramp support edges
+geometry 34.600000:43.500000 Unsplit outer refinement with strongest combined boundary nominations
+geometry 12.000000:46.000000 Reserved two-cut unchanged-middle alternative, longest nominated low-need gap 22.100000 36.000000
+geometry 12.000000:46.000000 Reserved two-cut unchanged-middle alternative with inward window-support hypotheses 23.600000 34.500000
+geometry 12.000000:46.000000 Bounded split topology ordered by need-change strength and source frame 34.600000
+geometry 12.000000:46.000000 Bounded split topology ordered by need-change strength and source frame 34.600000 36.100000
+geometry 12.000000:46.000000 Bounded split topology ordered by need-change strength and source frame 36.100000
+geometry 12.000000:46.000000 Bounded split topology ordered by need-change strength and source frame 34.600000 37.600000
+geometry 12.000000:46.000000 Bounded split topology ordered by need-change strength and source frame 37.600000
+geometry 12.000000:46.000000 Bounded split topology ordered by need-change strength and source frame 34.600000 40.500000
+geometry 12.000000:46.000000 Bounded split topology ordered by need-change strength and source frame 40.500000
+geometry 12.000000:46.000000 Bounded split topology ordered by need-change strength and source frame 34.600000 42.000000
+geometry 12.000000:46.000000 Bounded split topology ordered by need-change strength and source frame 42.000000
+geometry 12.000000:46.000000 Bounded split topology ordered by need-change strength and source frame 36.100000 37.600000
+geometry 12.000000:46.000000 Bounded split topology ordered by need-change strength and source frame 20.600000
+geometry 12.000000:46.000000 Bounded split topology ordered by need-change strength and source frame 36.100000 40.500000

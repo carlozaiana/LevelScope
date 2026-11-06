@@ -4,7 +4,7 @@
 namespace levelscope::standalone::sessionfile
 {
 inline constexpr uint64_t maximumBytes = 128 * 1024 * 1024;
-inline constexpr int schemaVersion = 8, programmeAssemblyVersion = 8;
+inline constexpr int schemaVersion = 9, programmeAssemblyVersion = 9;
 struct ProfileReference { juce::String id, version, digest; };
 // Value snapshot: each save owns one coherent revision; shared analyses are immutable.
 struct Document
@@ -20,6 +20,7 @@ struct Document
     std::optional<proposal::markers::Receipt> markerImport;
     proposal::JobRequirements jobRequirements;
     proposal::ProposalPolicy proposalPolicy;
+    std::optional<proposal::RegionPlanningSettings> regionPlanning;
     std::optional<proposal::ProposalPolicy> lastAppliedProposalPolicy;
     juce::String lastAppliedProposalBinding;
     std::shared_ptr<const AppliedProposalExplanation> lastAppliedExplanation;

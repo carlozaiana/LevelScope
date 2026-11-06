@@ -3,9 +3,11 @@
 #include "VerifiedSource.h"
 #include "Core/Proposal/Methods/SectionTrimMethod.h"
 #include "Core/Proposal/LraPassages.h"
+#include "Core/Proposal/RegionPlanning.h"
 
 namespace levelscope::standalone
 {
+struct RegionProposalReview;
 struct SectionProposalRequest
 {
     ServiceContext sourceContext, currentContext;
@@ -15,6 +17,7 @@ struct SectionProposalRequest
     proposal::SectionMap annotations, appliedAnnotations;
     bool pendingManualDraft=false;
     std::shared_ptr<const proposal::SectionPeakMap> attribution;
+    std::optional<proposal::RegionPlanningSettings> regionSettings;
     proposal::TrimRequest scalar() const;
     juce::String binding() const;
 };
@@ -33,6 +36,7 @@ public:
     const juce::String& outcomeReason() const { return reason; }
     const juce::String& methodVersion() const { return method; }
     const std::optional<proposal::LraTrimSelection>& lraSelection() const { return lraSeed; }
+    const std::shared_ptr<const RegionProposalReview>& regionReview()const {return regions;}
     SectionProposalIssue issue() const { return problem; }
     const proposal::SectionMap& originalAnnotations() const { return annotations; }
     std::optional<ProcessingPlan> previewPlan() const;
@@ -49,6 +53,7 @@ private:
     juce::String bound,explanation,narrative,title,reason;
     juce::String method=proposal::sectionTrimMethodVersion;
     std::optional<proposal::LraTrimSelection> lraSeed;
+    std::shared_ptr<const RegionProposalReview> regions;
     SectionProposalIssue problem=SectionProposalIssue::inputs;
     proposal::SectionMap annotations;
     ProcessingPlan proposed;
@@ -60,6 +65,8 @@ private:
     friend ServiceResult<std::shared_ptr<const SectionProposalResult>> generateSectionProposal(
         const SectionProposalRequest&,JobControl&,const SnapshotStorage&);
     friend ServiceResult<std::shared_ptr<const SectionProposalResult>> generateLraProposal(
+        const SectionProposalRequest&,JobControl&,const SnapshotStorage&);
+    friend ServiceResult<std::shared_ptr<const SectionProposalResult>> generateRegionProposal(
         const SectionProposalRequest&,JobControl&,const SnapshotStorage&);
 };
 using SectionProposalOutcome=ServiceResult<std::shared_ptr<const SectionProposalResult>>;

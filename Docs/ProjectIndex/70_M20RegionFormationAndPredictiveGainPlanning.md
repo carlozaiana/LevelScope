@@ -331,8 +331,14 @@ requirements or M16 policy. Persist exact effective settings, not just these nam
    `q <= needThreshold/2` for at least the persistence duration. Rank these by the
    neighbouring median contrast, then earlier frame. Expand each nomination in
    order to its centre, minus 1.5 s, plus 1.5 s; deduplicate and discard out-of-range
-   coordinates, retaining up to 12 nonmandatory locations per root. This explores
-   window smearing without claiming event detection. Preserve
+   coordinates, retaining up to 12 nonmandatory locations per root. The initial
+   Logic experiment exposed crowding by nearly equal hypotheses around one edge.
+   Before this cap, reserve the two endpoints (and their ±1.5 s hypotheses) of one
+   interior low-need run with positive neighbouring median need on both sides,
+   ordered by the smaller neighbouring contrast then earliest start. Fill the
+   remaining slots with the ordinary ranked nominations. This keeps the promised
+   spared-middle topology reachable; it does not infer a scene boundary or alter
+   acceptance rules. This explores window smearing without claiming event detection. Preserve
    exact off-grid pins separately; pins must fit the split cap and legal geometry.
 4. Form at most 16 geometry alternatives per root: legal unsplit original first;
    unsplit outer refinement second, using the highest combined onset/return
@@ -340,6 +346,12 @@ requirements or M16 policy. Persist exact effective settings, not just these nam
    considering their combinations by decreasing summed cut strength and
    lexicographic source-frame order. Reserve a legal two-cut unchanged-middle
    alternative when available; one-cut variations must not consume all slots.
+   For that reservation, every available centre in the nominated gap must remain
+   at or below half the need threshold; an average must not hide an additional
+   loud passage. Choose the longest legal gap and also retain its inward 1.5 s
+   support hypothesis when both coordinates were nominated. Start those two
+   alternatives with the middle decision at zero, while preserving other gain
+   hypotheses. The original-root split cap and the 16-geometry total still apply.
    Inspect at most 256 topology/edge combinations per root, round robin across
    split counts, retaining up to 16 legal distinct geometries and reporting
    truncation. Outer edges are drawn from root limits, edge-range endpoints,

@@ -93,6 +93,8 @@ void validate(const AppliedProposalExplanation& h)
     require(h.programmeId.length()==32&&hash(h.inputIdentity)&&hash(h.binding),"Invalid explanation programme binding");
     require(h.beforeIdentity==proposalPlanIdentity(h.before)&&h.afterIdentity==proposalPlanIdentity(h.after)&&h.beforeIdentity!=h.afterIdentity,"Invalid explanation before/after identities");
     require(h.preferences.validationError().isEmpty()&&h.requirements.validationError().isEmpty(),"Invalid historical preferences or requirements");
+    require(!h.regionSettings||(h.method==proposal::regionSearchVersion&&h.regionSettings->validationError().isEmpty()&&h.regionSettings->inputIdentity==h.inputIdentity),"Invalid historical region constraints");
+    require(h.method!=proposal::regionSearchVersion||h.regionSettings.has_value(),"Missing historical region definition");
     require(h.source.domain==MeasurementDomain::source&&h.baseline.domain==MeasurementDomain::currentState&&(!h.candidate||h.candidate->domain==MeasurementDomain::privateCandidate),"Invalid historical measurement domains");
     require(h.source.content==h.baseline.content&&(!h.candidate||h.candidate->content==h.source.content),"Historical measurements belong to different source content");
     require(h.annotations.sections.empty()||(h.annotations.valid()&&h.annotations.inputIdentity==h.inputIdentity&&h.annotations.sampleRate==h.sampleRate&&h.annotations.frames==h.frames),"Historical annotations belong to different input");
@@ -109,7 +111,7 @@ void validate(const AppliedProposalExplanation& h)
 }
 std::vector<uint8_t> encodeAppliedExplanation(const AppliedProposalExplanation& h)
 {
-    validate(h);Writer w;w.u(1);
+    validate(h);Writer w;w.u(h.regionSettings?2:1);
     for(const auto* s:{&h.programmeId,&h.inputIdentity,&h.binding,&h.method,&h.narrative,&h.beforeIdentity,&h.afterIdentity})w.t(*s);
     plan(w,h.before);plan(w,h.after);w.u(h.sampleRate);w.u(h.frames);w.u(h.roles.count);for(int n=0;n<h.roles.count;++n)w.u(int(h.roles.roles[size_t(n)]));target(w,h.target);
     w.t(juce::JSON::toString(h.requirements.encode(),true));w.t(h.requirements.digest());w.t(juce::JSON::toString(h.preferences.encode(),true));w.t(h.preferences.digest());w.u(int(h.applicability));
@@ -124,11 +126,12 @@ std::vector<uint8_t> encodeAppliedExplanation(const AppliedProposalExplanation& 
     const auto& g=h.global;w.u(int(g.status));w.t(g.identity);w.t(g.explanation);w.f(g.originalGainDb);
     for(auto v:{g.totalGainDb,g.deltaDb,g.predictedIntegrated,g.predictedTruePeak})optional(w,v);
     measured(w,h.source);measured(w,h.baseline);w.u(bool(h.candidate));if(h.candidate)measured(w,*h.candidate);w.u(h.passes);
+    if(h.regionSettings)w.t(juce::JSON::toString(h.regionSettings->encode(),true));
     return std::move(w.bytes);
 }
 std::shared_ptr<const AppliedProposalExplanation> decodeAppliedExplanation(const std::vector<uint8_t>& bytes,JobControl& control)
 {
-    require(bytes.size()<=AppliedProposalExplanation::maximumBytes,"Applied explanation exceeds 8 MiB");Reader r{bytes,control};require(r.u()==1,"Unsupported applied explanation version");auto h=std::make_shared<AppliedProposalExplanation>();
+    require(bytes.size()<=AppliedProposalExplanation::maximumBytes,"Applied explanation exceeds 8 MiB");Reader r{bytes,control};const auto schema=r.u();require(schema==1||schema==2,"Unsupported applied explanation version");auto h=std::make_shared<AppliedProposalExplanation>();
     for(auto* s:{&h->programmeId,&h->inputIdentity,&h->binding,&h->method,&h->narrative,&h->beforeIdentity,&h->afterIdentity})*s=r.t();
     h->before=plan(r);h->after=plan(r);h->sampleRate=r.count(192000);h->frames=r.i();h->roles.count=r.count(maxChannels);h->roles.confirmed=true;
     for(int n=0;n<h->roles.count;++n)h->roles.roles[size_t(n)]=ChannelRole(r.count(2048));h->target=target(r);
@@ -144,6 +147,7 @@ std::shared_ptr<const AppliedProposalExplanation> decodeAppliedExplanation(const
     auto& g=h->global;g.status=proposal::TrimStatus(r.count(3));g.identity=r.t(64);g.explanation=r.t();g.originalGainDb=r.f();
     for(auto* v:{&g.totalGainDb,&g.deltaDb,&g.predictedIntegrated,&g.predictedTruePeak})*v=optional(r);
     h->source=measured(r);h->baseline=measured(r);if(r.b())h->candidate=measured(r);h->passes=r.count(3);
+    if(schema==2)h->regionSettings=proposal::RegionPlanningSettings::decode(juce::JSON::parse(r.t()));
     require(r.position==bytes.size(),"Trailing applied explanation data");validate(*h);return h;
 }
 }

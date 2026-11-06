@@ -1,0 +1,12 @@
+{
+  "from": "logic-handover-01",
+  "to": "logic-handover-02",
+  "changed_source_files": [
+    "Tests/RegionPlanningTests.cpp"
+  ],
+  "changed_artifacts": [
+    "bin/LevelScopeRegionPlanningTests"
+  ],
+  "product_implementation_and_app_byte_identical": true,
+  "reason": "Correct test expectation: exercise known deeper gate-crossing plan directly; selected measured attempts need not include a gate-changing forecast. Only gating test body changed. Other named checks reused with their original package identity."
+}

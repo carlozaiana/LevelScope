@@ -113,3 +113,27 @@ holdouts. Coordinate audible/device tests separately. No automatic video/full-fi
 three-hour workflow; reassess for concrete timing, latency, buffering, authoritative
 arithmetic or dependency changes. Main remains published UI convenience/M19.
 No M20 publication, checkpoint tag or merge is authorized.
+
+
+## Development observations (6 November; not combined qualification)
+
+The first integrated stereo workflow passed a complete candidate, explicit Apply,
+independent Current measurement and independently measured PCM24 artifact. The
+initial broad-root experiment did not find a passing candidate: nearly identical
+boundary strengths crowded the twelve cut slots around one of two high passages,
+and a low *average* need could hide loud material inside a proposed unchanged gap.
+Historical failed development receipts remain under the owned build directory.
+
+The finite pre-publication ordering in document 70 now reserves one paired interior
+low-need-run hypothesis before the cut cap, uses maximum available need for the
+spared-gap reservation, retains an inward window-support alternative, and explicitly
+seeds its middle decision at zero. This changes discovery coverage, not permissions,
+processing, defaults, measurement arithmetic or strict rule acceptance. Required
+reruns: formation/core, broad-root split-versus-unsplit comparison, simple stereo/5.1,
+full-resolution population proxy, cancellation/identity, and affected legacy callers.
+A positive usefulness finding and focused-tested interface are required before UI
+handover; these observations are not a claim of M20 qualification.
+
+Completed Logic-stage receipts and UI contracts are in [72](72_M20LogicHandover.md).
+The finite discovery correction passed the broad-root split-versus-unsplit usefulness
+case; no production measurement arithmetic, gain processing or transport was changed.

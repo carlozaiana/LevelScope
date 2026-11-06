@@ -1,5 +1,13 @@
 # LevelScope — Architecture Snapshot (Frozen Contracts + Implemented State)
 
+Current development update, 6 November 2026: published main is qualified M19 plus
+UI convenience integration `22961f03de7919e1de631f8b13eb4b852108ac0b`. The local M20
+Logic core adds immutable region permissions/geometry, an auxiliary energy model,
+bounded complete-plan search, measured candidate ranking and session schema 9.
+It reuses the existing meter and gain processor without changing their arithmetic.
+[ProjectIndex 72](ProjectIndex/72_M20LogicHandover.md) is the UI integration contract;
+native UI and combined High Sierra qualification remain pending. Main is unchanged.
+
 M13 qualification update, 28 October 2026: bounded candidate-02 is implemented
 and qualified on actual Sequoia/High Sierra; [ProjectIndex 47](ProjectIndex/47_M13BoundedSectionTrimProposals.md) is authoritative for this scope. The broader
 no-change rule covers all applicable explicitly selected, method-defined objectives;
@@ -20,9 +28,9 @@ This document is a **contract** for parallel development chats.
 Anything marked **Implemented** must be preserved.  
 Anything marked **Planned** must not be assumed to exist until integrated.
 
-Last updated: **2026-10-28** (qualified combined M12/M13 checkpoint publication).
+Last updated: **2026-11-06** (local M20 Logic handover; not combined qualification).
 
-**Current baseline:** main receives the qualified combined M12/M13 checkpoint
+**Historical M13 publication baseline:** main received the qualified combined M12/M13 checkpoint
 [`m13-bounded-section-proposals-2026-10-28`](https://github.com/carlozaiana/LevelScope/tree/m13-bounded-section-proposals-2026-10-28).
 Its peeled commit is the main revision at publication; M11
 `cfb1033aa7fb65a2655db276bee696161196bdeb` is preserved in its ancestry. M9 mono-channel assembly, M10 verified

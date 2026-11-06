@@ -1,0 +1,18 @@
+{
+  "os": "ProductName:\t\tmacOS\nProductVersion:\t\t15.7.9\nBuildVersion:\t\t24G830",
+  "architecture": "arm64",
+  "cpu": "Apple M1 Max",
+  "model": "Mac13,1",
+  "memory_bytes": "34359738368",
+  "app_architectures": "x86_64 arm64",
+  "intel_deployment_commands": [
+    [
+      "      cmd LC_VERSION_MIN_MACOSX",
+      "  cmdsize 16",
+      "  version 10.13",
+      "      sdk 15.5",
+      "Load command 10",
+      "      cmd LC_SOURCE_VERSION"
+    ]
+  ]
+}

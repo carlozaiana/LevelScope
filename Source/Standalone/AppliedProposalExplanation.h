@@ -23,6 +23,7 @@ struct AppliedProposalExplanation
     proposal::TargetProfile target;
     proposal::JobRequirements requirements;
     proposal::ProposalPolicy preferences;
+    std::optional<proposal::RegionPlanningSettings> regionSettings;
     proposal::Applicability applicability=proposal::Applicability::unconfirmed;
     proposal::SectionMap annotations;
     proposal::SectionTrimSeed selection;

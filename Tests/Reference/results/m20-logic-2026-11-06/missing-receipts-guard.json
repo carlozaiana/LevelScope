@@ -1,0 +1,52 @@
+{
+  "logic_handover_checks_passed": false,
+  "m20_combined_qualified": false,
+  "errors": [
+    "core: missing required receipt",
+    "stereo: missing required receipt",
+    "surround: missing required receipt",
+    "heterogeneous: missing required receipt",
+    "failures: missing required receipt",
+    "audio: missing required receipt",
+    "population: missing required receipt",
+    "gating: missing required receipt",
+    "cinema: missing required receipt",
+    "legacy-core: missing required receipt",
+    "legacy-stereo: missing required receipt",
+    "legacy-surround: missing required receipt",
+    "legacy-inputs: missing required receipt",
+    "legacy-failures: missing required receipt",
+    "legacy-gating: missing required receipt",
+    "requirements: missing required receipt",
+    "section-smoke: missing required receipt"
+  ],
+  "required": [
+    "core",
+    "stereo",
+    "surround",
+    "heterogeneous",
+    "failures",
+    "audio",
+    "population",
+    "gating",
+    "cinema",
+    "legacy-core",
+    "legacy-stereo",
+    "legacy-surround",
+    "legacy-inputs",
+    "legacy-failures",
+    "legacy-gating",
+    "requirements",
+    "section-smoke"
+  ],
+  "results": {},
+  "measurement_build": "8c2397c14e757cd9f3c8580cd89c0a2bb065bc2e3de5a9eb97e30f03eb8f5254",
+  "source_manifest_sha256": "d8995fa90ef563c9d176325b12f881fa6613ebcd8fe1a78fe52e870d5a2176a9",
+  "pending": [
+    "UI implementation/integration and native responsiveness",
+    "actual Intel High Sierra and cross-platform checks",
+    "independent real holdouts/control variants and coordinated listening"
+  ],
+  "physical_devices_opened": false,
+  "video_loaded": false
+}

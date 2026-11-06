@@ -27,6 +27,10 @@ its owned core/service/session work and run focused non-audible checks on
 Logic interface/core checkpoint; full combined qualification follows UI integration.
 No M20 publication or merge into main is authorized. Strategy remains the rule-design
 owner and does not start production implementation.
+The local Logic core is now implemented and focused-tested; [72 — UI integration
+handover](ProjectIndex/72_M20LogicHandover.md) records the exact package, immutable
+interfaces, schema-9 migration, evidence and remaining combined qualification.
+Advanced UI controls/overlays have not been implemented in this Logic stage.
 
 Historical status, 28 October 2026: Design clarified; bounded M13 candidate-02 implemented and qualified.
 [ProjectIndex 49](ProjectIndex/49_M13QualificationAndHandover.md) records actual-platform
@@ -241,8 +245,9 @@ the permitted area and avoid protected local material. Neither splitting nor a
 new annotation resets gain/duration budgets. Global-trim permission is separate
 and explicit; a local-area promise is not whole-chain output protection. See
 [70](ProjectIndex/70_M20RegionFormationAndPredictiveGainPlanning.md) for precise
-counts, controls, supported protection and failure behavior. No M20 processing is
-implemented by this design addition.
+counts, controls, supported protection and failure behavior. The local implementation
+and focused evidence are recorded in [72](ProjectIndex/72_M20LogicHandover.md);
+this is not published or combined-qualified M20 behavior.
 
 ---
 

@@ -1,0 +1,12 @@
+{
+  "accepted_package": "logic-handover-03",
+  "comparison_to": "logic-handover-01",
+  "changed_source_files": [
+    "Tests/RegionPlanningTests.cpp"
+  ],
+  "changed_artifacts": [
+    "bin/LevelScopeRegionPlanningTests"
+  ],
+  "product_implementation_and_app_byte_identical": true,
+  "evidence_reuse": "Core fresh with added prior-ramp boundary coverage; gating fresh from package02 with direct model counterexample. Other 15 checks reuse package01 receipts with unchanged test bodies and identical production implementation. Earlier failed receipts retained."
+}

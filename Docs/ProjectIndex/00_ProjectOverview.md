@@ -1,5 +1,12 @@
 # Project Overview
 
+Current development update, 6 November 2026: published main is qualified M19 plus
+UI convenience integration `22961f03de7919e1de631f8b13eb4b852108ac0b`. M20 region
+planning has a local, focused-tested Logic interface on `codex/m20-region-planning`;
+[72](72_M20LogicHandover.md) records UI ownership and pending combined qualification.
+It is not published or merged. Earlier milestone entries below retain their historical
+qualification context.
+
 M13 qualification update, 28 October 2026: bounded candidate-02 is implemented
 and qualified on actual Sequoia/High Sierra; [ProjectIndex 47](47_M13BoundedSectionTrimProposals.md) is authoritative for this scope. The broader
 no-change rule covers all applicable explicitly selected, method-defined objectives;

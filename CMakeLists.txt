@@ -221,7 +221,11 @@ add_library(LevelScopeStandaloneSupport STATIC
     Source/Core/Proposal/SectionPeakMap.cpp
     Source/Core/Proposal/Methods/SectionTrimMethod.cpp
     Source/Core/Proposal/LraPassages.cpp
+    Source/Core/Proposal/RegionPlanning.cpp
+    Source/Core/Proposal/RegionFormation.cpp
+    Source/Core/Proposal/RegionPrediction.cpp
     Source/Standalone/StandaloneLraProposal.cpp
+    Source/Standalone/StandaloneRegionProposal.cpp
     Source/Standalone/StandaloneSectionProposal.cpp
     Source/Standalone/AppliedProposalExplanation.cpp
     Source/Standalone/AppliedProposalSerialization.cpp
@@ -554,6 +558,16 @@ endif()
 
 option(LEVELSCOPE_BUILD_JOB_REQUIREMENTS_TESTS "Build M17 job requirements/presets checks" OFF)
 option(LEVELSCOPE_BUILD_LRA_PROPOSAL_TESTS "Build M19 bounded LRA proposal checks" OFF)
+option(LEVELSCOPE_BUILD_REGION_PLANNING_TESTS "Build focused M20 region planning checks" OFF)
+if(LEVELSCOPE_BUILD_REGION_PLANNING_TESTS)
+    juce_add_console_app(LevelScopeRegionPlanningTests PRODUCT_NAME "LevelScope Region Planning Tests")
+    target_sources(LevelScopeRegionPlanningTests PRIVATE Tests/RegionPlanningTests.cpp)
+    target_compile_definitions(LevelScopeRegionPlanningTests PRIVATE JUCE_MODAL_LOOPS_PERMITTED=1)
+    target_link_libraries(LevelScopeRegionPlanningTests PRIVATE LevelScopeDiagnosticsUI juce::juce_gui_basics)
+    if(NOT MSVC)
+        target_compile_options(LevelScopeRegionPlanningTests PRIVATE -fno-fast-math -ffp-contract=off)
+    endif()
+endif()
 if(LEVELSCOPE_BUILD_LRA_PROPOSAL_TESTS)
     juce_add_console_app(LevelScopeLraProposalTests PRODUCT_NAME "LevelScope LRA Proposal Tests")
     target_sources(LevelScopeLraProposalTests PRIVATE Tests/LraProposalTests.cpp)

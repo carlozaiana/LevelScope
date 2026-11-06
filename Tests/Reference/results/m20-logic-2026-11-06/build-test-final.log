@@ -1,0 +1,6 @@
+[  2%] Built target LevelScopeMeasurementCore
+[ 63%] Built target LevelScopeStandaloneSupport
+[ 87%] Built target LevelScopeDiagnosticsUI
+[ 90%] Building CXX object CMakeFiles/LevelScopeRegionPlanningTests.dir/Tests/RegionPlanningTests.cpp.o
+[ 90%] Linking CXX executable LevelScopeRegionPlanningTests_artefacts/Release/LevelScopeRegionPlanningTests
+[100%] Built target LevelScopeRegionPlanningTests

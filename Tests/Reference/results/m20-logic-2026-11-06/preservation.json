@@ -1,0 +1,26 @@
+{
+  "main": "22961f03de7919e1de631f8b13eb4b852108ac0b",
+  "origin_main": "22961f03de7919e1de631f8b13eb4b852108ac0b",
+  "existing_tag_objects_unchanged": 25,
+  "tag_targets": "Immutable original tag objects retained; explicit dereferenced targets in checkpoint-tags-preserved.txt",
+  "frozen_artifacts_verified": [
+    "LevelScope Standalone.app/Contents/Info.plist",
+    "LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone",
+    "LevelScope Standalone.app/Contents/PkgInfo",
+    "LevelScope Standalone.app/Contents/Resources/RecentFilesMenuTemplate.nib",
+    "bin/LevelScopeJobRequirementsTests",
+    "bin/LevelScopeLraProposalTests",
+    "bin/LevelScopeRegionPlanningTests",
+    "bin/LevelScopeSectionProposalTests",
+    "configuration/CMakeCache.txt",
+    "configuration/LevelScopeRegionPlanningTests-flags.make",
+    "configuration/LevelScopeRegionPlanningTests-link.txt",
+    "configuration/LevelScopeStandalone-flags.make",
+    "configuration/LevelScopeStandalone-link.txt",
+    "configuration/LevelScopeStandaloneSupport-flags.make",
+    "configuration/LevelScopeStandaloneSupport-link.txt"
+  ],
+  "no_publication": true,
+  "no_physical_devices_or_video": true,
+  "accepted_package": "logic-handover-03"
+}

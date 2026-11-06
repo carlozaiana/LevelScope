@@ -1,0 +1,275 @@
+[
+  {
+    "name": "core",
+    "command": [
+      "/usr/bin/time",
+      "-l",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/logic-handover-01/bin/LevelScopeRegionPlanningTests",
+      "--group",
+      "core",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/fixtures-01/core",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/receipts-01/core.json"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 3.401623083
+  },
+  {
+    "name": "stereo",
+    "command": [
+      "/usr/bin/time",
+      "-l",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/logic-handover-01/bin/LevelScopeRegionPlanningTests",
+      "--group",
+      "stereo",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/fixtures-01/stereo",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/receipts-01/stereo.json"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 4.452686208
+  },
+  {
+    "name": "surround",
+    "command": [
+      "/usr/bin/time",
+      "-l",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/logic-handover-01/bin/LevelScopeRegionPlanningTests",
+      "--group",
+      "surround",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/fixtures-01/surround",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/receipts-01/surround.json"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 7.811632499999999
+  },
+  {
+    "name": "heterogeneous",
+    "command": [
+      "/usr/bin/time",
+      "-l",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/logic-handover-01/bin/LevelScopeRegionPlanningTests",
+      "--group",
+      "heterogeneous",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/fixtures-01/heterogeneous",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/receipts-01/heterogeneous.json"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 6.905421208999998
+  },
+  {
+    "name": "failures",
+    "command": [
+      "/usr/bin/time",
+      "-l",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/logic-handover-01/bin/LevelScopeRegionPlanningTests",
+      "--group",
+      "failures",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/fixtures-01/failures",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/receipts-01/failures.json"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 1.3283862089999978
+  },
+  {
+    "name": "audio",
+    "command": [
+      "/usr/bin/time",
+      "-l",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/logic-handover-01/bin/LevelScopeRegionPlanningTests",
+      "--group",
+      "audio",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/fixtures-01/audio",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/receipts-01/audio.json"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 6.525782583000002
+  },
+  {
+    "name": "population",
+    "command": [
+      "/usr/bin/time",
+      "-l",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/logic-handover-01/bin/LevelScopeRegionPlanningTests",
+      "--group",
+      "population",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/fixtures-01/population",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/receipts-01/population.json"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 1.7462095420000026
+  },
+  {
+    "name": "legacy-core",
+    "command": [
+      "/usr/bin/time",
+      "-l",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/logic-handover-01/bin/LevelScopeLraProposalTests",
+      "--group",
+      "core",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/fixtures-01/legacy-core",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/receipts-01/legacy-core.json"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 0.4930829999999986
+  },
+  {
+    "name": "legacy-stereo",
+    "command": [
+      "/usr/bin/time",
+      "-l",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/logic-handover-01/bin/LevelScopeLraProposalTests",
+      "--group",
+      "stereo",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/fixtures-01/legacy-stereo",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/receipts-01/legacy-stereo.json"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 10.64497025
+  },
+  {
+    "name": "legacy-surround",
+    "command": [
+      "/usr/bin/time",
+      "-l",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/logic-handover-01/bin/LevelScopeLraProposalTests",
+      "--group",
+      "surround",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/fixtures-01/legacy-surround",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/receipts-01/legacy-surround.json"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 16.971149624999995
+  },
+  {
+    "name": "legacy-inputs",
+    "command": [
+      "/usr/bin/time",
+      "-l",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/logic-handover-01/bin/LevelScopeLraProposalTests",
+      "--group",
+      "inputs",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/fixtures-01/legacy-inputs",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/receipts-01/legacy-inputs.json"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 43.79247775
+  },
+  {
+    "name": "legacy-failures",
+    "command": [
+      "/usr/bin/time",
+      "-l",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/logic-handover-01/bin/LevelScopeLraProposalTests",
+      "--group",
+      "failures",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/fixtures-01/legacy-failures",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/receipts-01/legacy-failures.json"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 17.817447083000005
+  },
+  {
+    "name": "legacy-gating",
+    "command": [
+      "/usr/bin/time",
+      "-l",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/logic-handover-01/bin/LevelScopeLraProposalTests",
+      "--group",
+      "gating",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/fixtures-01/legacy-gating",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/receipts-01/legacy-gating.json"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 42.937026167
+  },
+  {
+    "name": "requirements",
+    "command": [
+      "/usr/bin/time",
+      "-l",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/logic-handover-01/bin/LevelScopeJobRequirementsTests",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/fixtures-01/requirements",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/receipts-01/requirements.json"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 29.139077375
+  },
+  {
+    "name": "section-smoke",
+    "command": [
+      "/usr/bin/time",
+      "-l",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/logic-handover-01/bin/LevelScopeSectionProposalTests",
+      "--smoke",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/fixtures-01/section-smoke",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/receipts-01/section-smoke.json"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 11.624067333
+  },
+  {
+    "name": "gating",
+    "command": [
+      "/usr/bin/time",
+      "-l",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/logic-handover-01/bin/LevelScopeRegionPlanningTests",
+      "--group",
+      "gating",
+      "--input",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/fixtures-01/legacy-gating/gating.wav",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/fixtures-01/gating",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/receipts-01/gating.json"
+    ],
+    "exit_code": 1,
+    "elapsed_seconds": 32.24834520900001
+  },
+  {
+    "name": "cinema",
+    "command": [
+      "/usr/bin/time",
+      "-l",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/logic-handover-01/bin/LevelScopeRegionPlanningTests",
+      "--group",
+      "cinema",
+      "--input",
+      "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/media/cinema-27m-35m.wav",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/fixtures-01/cinema",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/receipts-01/cinema.json"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 38.61420325
+  }
+]

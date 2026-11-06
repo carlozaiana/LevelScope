@@ -1,0 +1,126 @@
+No acceptable candidate in bounded region search
+No acceptable complete candidate in this finite region search. All measured failures remain inspectable; Apply unavailable. Limits/uncertain forecasts/omitted alternatives do not prove no solution exists.
+Experimental region planning / region-gain-search-v1 / window-energy-proxy-v1 / candidate-review-rank-v2
+Effective immutable settings: {"schema": 1, "method": "region-gain-search-v1", "constraints": "region-constraints-v1", "formation": "region-formation-v1", "proxy": "window-energy-proxy-v1", "rank": "candidate-review-rank-v2", "input": "e1c47ea6ae5b708fc52f6da755866aa1c43c0e70c10464f3fe0f9049c3d04948", "mode": 2, "section": "0", "selection": {"begin": "576000", "end": "2208000"}, "splitting": true, "refinement": true, "fillGap": false, "global": true, "compare": false, "splits": 2, "leftMs": 0, "rightMs": 0, "minimumMs": 3000, "separationMs": 1000, "needTenths": 10, "persistenceMs": 1000, "start": null, "end": null, "cuts": [], "protection": "local-envelope-v1", "protected": []}
+Constraint binding 53ecefa1f5e26526d8114a3ba093b7bc32bdbc685f6f0130e157a90e4810e13d
+Roots 1 (omitted 0); proxy plans 64 / 64; duplicate audio plans 1; rejected 1.
+Geometry constructions 28; omitted cut nominations 12; omitted geometries 65. Search truncation never proves impossibility.
+Whole-programme global trim permitted separately: it may change audio outside the local area.
+Original root selection:576000:2208000; hint [576000, 2208000); permitted [576000, 2208000); support-edge ranges [576000, 2064000] / [720000, 2208000].
+
+Complete measured attempt 1 / 35225d936ec53e9b37ca5a49a13af1d84f74bc6de19bdbf737cf742217863319
+Actual Private candidate (not Current State) evaluation: FAIL
+Fails one or more selected measured rules.
+programme-loudness: FAIL | -23.200001 LUFS | min -23.200000 | max -22.800000 | delta -0.200001
+Outside selected bounds.
+true-peak: PASS | -18.891644 dBTP | max -1.000000 | delta -17.891644
+Within selected bounds.
+loudness-range: FAIL | 6.020600 LU | max 4.900000 | delta 1.120600
+Outside selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+IL: -23.200000578074
+TP: -18.891643827468
+LRA: 6.020599906297
+M max: -19.173701146494
+S max: -19.175514006823
+sample peak: -18.891648341246
+Forecast IL -23.200000000000; LRA 6.020599904473; TP unknown (not a measured failure). Approximate window-energy proxy: uniform bin energy, filter/gain noncommutation and float-stage rounding. Sampled M/S cannot certify maxima; true peak unavailable. Empirical errors are not proven bounds. EOF drain retains global-scaled baseline shape; locally transformed filter-tail state is uncertain, not measured silence.
+Forecast gate entry/exit: I 0/0; LRA 0/0.
+Actual minus forecast (IL/LRA/P10/P95/sampled M): -0.000000578075 0.000000001824 -0.000000000551 0.000000001273 0.000428968776. Empirical errors, not bounds.
+Changed support 432000 programme frames; 1 connected regions; max added 1.620599904522 dB; absolute local dB*frames 692320.279211859452; global 4.957644941248 dB.
+Root selection:576000:2208000; Unsplit outer refinement with strongest combined boundary nominations; support [1660800, 2092800); nominal cuts 1663200, 2090400; additional reductions 1.620599904522 dB.
+Requested / achieved reserve / uncovered deficit by part: [1.620599904522 / 0.500000000000 / 0.000000000000] dB.
+
+Complete measured attempt 2 / dd522747d217d3ffc9404ed0f7a35fc7e2d65a29775eb0bc470d1b05af1045dd
+Actual Private candidate (not Current State) evaluation: FAIL
+Fails one or more selected measured rules.
+programme-loudness: FAIL | -23.200001 LUFS | min -23.200000 | max -22.800000 | delta -0.200001
+Outside selected bounds.
+true-peak: PASS | -18.891644 dBTP | max -1.000000 | delta -17.891644
+Within selected bounds.
+loudness-range: FAIL | 6.020600 LU | max 4.900000 | delta 1.120600
+Outside selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+IL: -23.200000578056
+TP: -18.891643827468
+LRA: 6.020599906297
+M max: -19.173701146494
+S max: -19.175514006823
+sample peak: -18.891648341246
+Forecast IL -23.200000000000; LRA 6.020599904473; TP unknown (not a measured failure). Approximate window-energy proxy: uniform bin energy, filter/gain noncommutation and float-stage rounding. Sampled M/S cannot certify maxima; true peak unavailable. Empirical errors are not proven bounds. EOF drain retains global-scaled baseline shape; locally transformed filter-tail state is uncertain, not measured silence.
+Forecast gate entry/exit: I 0/0; LRA 0/0.
+Actual minus forecast (IL/LRA/P10/P95/sampled M): -0.000000578057 0.000000001824 -0.000000000544 0.000000001280 0.000428968783. Empirical errors, not bounds.
+Changed support 432000 programme frames; 1 connected regions; max added 1.620599904522 dB; absolute local dB*frames 692320.279198110569; global 4.957644941240 dB.
+Root selection:576000:2208000; Split topology with refined outer boundaries; support [1660800, 2092800); nominal cuts 1663200, 1944000, 2090400; additional reductions 1.620599904473 1.620599904522 dB.
+Requested / achieved reserve / uncovered deficit by part: [1.620599904473 / 0.500000000000 / 0.000000000000] [1.620599904522 / 0.500000000000 / 0.000000000000] dB.
+
+Complete measured attempt 3 / 1b036961636dcf8c2c793f534a74910e7ff268a3ffb57da9d8aec56da717be25 (retained)
+Actual Private candidate (not Current State) evaluation: FAIL
+Fails one or more selected measured rules.
+programme-loudness: PASS | -23.000001 LUFS | min -23.200000 | max -22.800000 | delta -0.000001
+Within selected bounds.
+true-peak: PASS | -18.691644 dBTP | max -1.000000 | delta -17.691644
+Within selected bounds.
+loudness-range: FAIL | 6.020600 LU | max 4.900000 | delta 1.120600
+Outside selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+IL: -23.000000576210
+TP: -18.691643832775
+LRA: 6.020599904455
+M max: -18.973701142835
+S max: -18.975514005996
+sample peak: -18.691648604160
+Forecast IL -23.000000000000; LRA 6.020599904473; TP unknown (not a measured failure). Approximate window-energy proxy: uniform bin energy, filter/gain noncommutation and float-stage rounding. Sampled M/S cannot certify maxima; true peak unavailable. Empirical errors are not proven bounds. EOF drain retains global-scaled baseline shape; locally transformed filter-tail state is uncertain, not measured silence.
+Forecast gate entry/exit: I 0/0; LRA 0/0.
+Actual minus forecast (IL/LRA/P10/P95/sampled M): -0.000000576210 -0.000000000018 0.000000002119 0.000000002100 0.000428972435. Empirical errors, not bounds.
+Changed support 432000 programme frames; 1 connected regions; max added 1.620599904522 dB; absolute local dB*frames 692320.279211859452; global 5.157644941248 dB.
+Root selection:576000:2208000; Unsplit outer refinement with strongest combined boundary nominations; support [1660800, 2092800); nominal cuts 1663200, 2090400; additional reductions 1.620599904522 dB.
+Requested / achieved reserve / uncovered deficit by part: [1.620599904522 / 0.500000000000 / 0.000000000000] dB.
+Nonzero nominal correction interval shorter than minimum
+Private assessment budget 3. Failed shortlist 0.01 LU is diagnostic ranking only, never a rule allowance.
+Preparation 0.231 s; auxiliary pass 0.042 s; cached planning 0.014 s; sidecar 85472 bytes; bounded additional planning allocation estimate 1596464 bytes.
+
+section-preferences-v2 / connected-envelope-support-v2
+Policy digest: 7cd69da2e258a5bf11ba10a1b91354fc9ac446fcfb5f5b422c3c0a78b059cef2
+No region-count restriction; affected duration 60.0% (preservation preference, not broadcast rule).
+Additional attenuation 3.0 dB; cumulative local attenuation 12.0 dB; requested reserve 0.5 dB inside both caps.
+
+Target EBU R128-2023 programme QC / ebu-r128-2023-programme-linear-qc / 1.0.0 / eadd134fd7fad5f1bab870194e00c37cfb6ad8b32c63abe9b307bc9575a493bf
+IL -23.000000000 LUFS +/- 0.200000000 LU / True peak -1.000000000 dBTP / LRA 4.900000000 LU / Max M No Limit / Max S No Limit
+Selected programme loudness and true-peak rules for pre-produced whole-programme linear-audio QC. Excludes live exceptions, deliberate lower targets, short-form supplements and distribution-specific requirements.
+EBU R128-2023 (November 2023) / https://tech.ebu.ch/docs/r/r128.pdf
+Requirement provenance
+IL R128-2023 clauses h, i, k, l: -23 LUFS intended target; +/-0.2 LU QC allowance; whole-programme level gating.
+True peak R128-2023 clause m: maximum -1 dBTP for linear audio.
+LRA User-specified job requirement: Programme job requirements; EBU Tech 3342-2023 whole-programme LRA; M20 synthetic evaluation requirement. User provenance is not independently verified; not an EBU-mandated ceiling.
+Max M 
+Max S 
+Clause m separately permits +/-0.3 dB meter tolerance for signals band-limited to 20 kHz. Bandwidth is not certified here; this provision never relaxes the -1 dBTP evaluation ceiling.
+Frozen measured Current baseline (measured)
+IL LUFS = -27.743593858007
+True peak dBTP = -23.849288766864
+LRA LU = 6.020599904473
+Max M LUFS = -24.131346086109
+Max S LUFS = -24.133158949344
+Sample peak dBFS = -23.849293529205
+Current State evaluation: FAIL
+Fails one or more selected measured rules.
+programme-loudness: FAIL | -27.743594 LUFS | min -23.200000 | max -22.800000 | delta -4.743594
+Outside selected bounds.
+true-peak: PASS | -23.849289 dBTP | max -1.000000 | delta -22.849289
+Within selected bounds.
+loudness-range: FAIL | 6.020600 LU | max 4.900000 | delta 1.120600
+Outside selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Measurement 67c7b052c29245a84e5910be3844364d531312ed0e10fbcc5d7298120a8c7a38
+Method bs1770-5-ebu2023-m7.1 / build b37e5d3952a07a9285be40c99feb7a511e3f9b611b1924536af699117fc2896c / Mac OSX 15.7.9;arm64;float32-samples;float64-analysis;no-fast-math;fp-contract-off
+Origin session 4059897cfb4e4b968de757e564b1bd68 / job 1 / revision 1
+Initial Current from identical Source measurement 70254f6805c9f1b652cbca737561bb5e1dfc241882bd8ad2129c7d796c9c6b78

@@ -183,6 +183,7 @@ ServiceContext context (const Document& d,MeasurementDomain domain)
 }
 void validateCore (const Document& d)
 {
+    if(d.regionPlanning)require(d.regionPlanning->validationError().isEmpty(),"Invalid mandatory region definition");
     if(d.markerImport){const auto receipt=proposal::markers::decode(proposal::markers::encode(*d.markerImport));require(d.sections.valid()&&receipt.imported.inputIdentity==d.sections.inputIdentity&&receipt.imported.sampleRate==d.sections.sampleRate&&receipt.imported.frames==d.sections.frames,"Marker provenance belongs to different programme");}
 
     const auto uuidValid = [](const juce::String& id) { return id.length()==32 && id.containsOnly("0123456789abcdef"); };
@@ -294,6 +295,7 @@ V coreValue (const Document& d,const std::array<Bytes,2>& caches,const Bytes& ex
     put(cur,"componentPlans",juce::Array<V>());put(cur,"wholeProgrammeGraph","");put(v,"current",cur);
     auto pr=object();put(pr,"id",d.profile.id);put(pr,"version",d.profile.version);put(pr,"digest",d.profile.digest);put(pr,"applicability",static_cast<int>(d.applicability));put(v,"profile",pr);
     put(v,"jobRequirements",d.jobRequirements.encode());
+    put(v,"regionPlanning",d.regionPlanning?d.regionPlanning->encode():V());
     put(v,"proposalPolicy",d.proposalPolicy.encode());put(v,"lastAppliedProposalPolicy",d.lastAppliedProposalPolicy?d.lastAppliedProposalPolicy->encode():V());put(v,"lastAppliedProposalBinding",d.lastAppliedProposalBinding);
     put(v,"sections",sectionsValue(d.sections));put(v,"markerImport",d.markerImport?proposal::markers::encode(*d.markerImport):V());put(v,"audition",static_cast<int>(d.audition));
     auto video=object();put(video,"locator",d.reference.file.getFullPathName());put(video,"sha256",d.reference.sha256);put(video,"stream",d.reference.streamId);put(video,"offset",juce::String(d.reference.startOnAudio.text()));put(v,"video",video);
@@ -338,7 +340,13 @@ Document core (const V& v)
         require(integer<int64_t>(get(p,"rangeBegin"))==0&&integer<int64_t>(get(p,"rangeEnd"))==d.source.media.frames,"Only whole-programme sessions are supported");
     }
     else require(channels.isEmpty()&&mode=="interleaved","Channels reference a missing file record");
-    if(d.loadedSchema<6)d.notices.add("Older session migrated in memory to default proposal preferences; media, annotations and exact applied processing preserved. Saving writes schema 8 and requires an M18 reader; use Save As to retain the original older-readable copy. Old transient proposals are not restored.");
+    if(d.loadedSchema>=9)
+    {
+        require(v.hasProperty("regionPlanning"),"Missing explicit M20 selection/constraints field");
+        if(!v["regionPlanning"].isVoid())d.regionPlanning=proposal::RegionPlanningSettings::decode(v["regionPlanning"]);
+    }
+    else d.notices.add("Region planning is not selected in this older session. Exact audio/settings are retained. Saving writes schema 9 and requires an M20 reader; choose Save As to preserve the older-readable original.");
+    if(d.loadedSchema<6)d.notices.add("Older session migrated in memory to default proposal preferences; media, annotations and exact applied processing preserved. Saving writes schema 9 and requires an M20 reader; use Save As to retain the original older-readable copy. Old transient proposals are not restored.");
     else
     {
         d.proposalPolicy=proposal::ProposalPolicy::decode(v["proposalPolicy"]);
@@ -351,7 +359,7 @@ Document core (const V& v)
         try {d.jobRequirements=proposal::JobRequirements::decode(v["jobRequirements"]);}
         catch(const std::exception& e){d.jobRequirements=proposal::JobRequirements::unavailable(e.what());d.notices.add("Job requirements unavailable; core settings/media recovered. Explicit replacement required; no dependent approval is valid.");}
     }
-    else d.notices.add("No added LRA requirement in this older session. Saving writes schema 8 and requires an M18 reader; use Save As to retain the original.");
+    else d.notices.add("No added LRA requirement in this older session. Saving writes schema 9 and requires an M20 reader; use Save As to retain the original.");
     auto cur=get(v,"current");const auto plan=gainPlan(cur,d.loadedSchema>=4);d.current.isInitialized=boolean(get(cur,"initialized"));d.current.staticGainDb=plan.staticGainDb;d.current.sectionGains=plan.sectionGains;d.current.needsRemeasurement=d.current.isInitialized;
     if(d.loadedSchema>=4)d.current.sectionGainAnnotations=sections(get(cur,"annotationProvenance"));
     if(d.loadedSchema>=3)require(array(get(cur,"componentPlans"),0).isEmpty()&&str(cur,"wholeProgrammeGraph").isEmpty(),"Component DSP and arbitrary whole-programme graphs are not implemented in M12");
@@ -379,7 +387,7 @@ Document capture (StandaloneSessionModel& s)
 {
     if(s.hasActionableSectionProposal())throw std::runtime_error("Discard the transient proposal before saving; private candidate measurements are not saved as Current authority");
     if(s.sectionTrimDraft)throw std::runtime_error("Apply or discard the section-gain draft before saving; draft edits are not saved as applied audio");
-    s.synchronizeSections();Document d;d.id=s.documentId;d.programmeId=s.programmeId;d.runtimeId=s.sessionId;d.revision=s.documentRevision;d.source=s.sourceDocument;d.current=s.currentStateDocument;d.applicability=s.programmeApplicability;d.sections=s.sectionDocument.map();d.markerImport=s.markerImport;d.jobRequirements=s.jobRequirements;d.proposalPolicy=s.proposalPolicy;d.lastAppliedProposalPolicy=s.lastAppliedProposalPolicy;d.lastAppliedProposalBinding=s.lastAppliedProposalBinding;d.lastAppliedExplanation=s.lastAppliedExplanation;d.reference=s.referenceVideo;d.audition=s.auditionDomain;
+    s.synchronizeSections();Document d;d.id=s.documentId;d.programmeId=s.programmeId;d.runtimeId=s.sessionId;d.revision=s.documentRevision;d.source=s.sourceDocument;d.current=s.currentStateDocument;d.applicability=s.programmeApplicability;d.sections=s.sectionDocument.map();d.markerImport=s.markerImport;d.jobRequirements=s.jobRequirements;d.proposalPolicy=s.proposalPolicy;d.regionPlanning=s.regionPlanning;d.lastAppliedProposalPolicy=s.lastAppliedProposalPolicy;d.lastAppliedProposalBinding=s.lastAppliedProposalBinding;d.lastAppliedExplanation=s.lastAppliedExplanation;d.reference=s.referenceVideo;d.audition=s.auditionDomain;
     const auto p=s.getTargetProfile(s.selectedTargetProfileIndex);d.profile={p.id,p.definitionVersion,p.digest()};if(s.restoredProfileId.isNotEmpty())d.profile={s.restoredProfileId,s.restoredProfileVersion,s.restoredProfileDigest};
     for(auto domain:{MeasurementDomain::source,MeasurementDomain::currentState})
     {
@@ -550,7 +558,7 @@ bool install (const Document& d,StandaloneSessionModel& s,juce::String& error)
         validateCore(d);require(!s.audioEditsBlocked()&&!s.job.isActive(),"Stop audition and finish/cancel the current job before opening a session");
         require(!d.source.hasSource || !d.audioResolved || d.source.matchesFileStamps(),"Source changed after verification; previous session retained");
         require(d.reference.file==juce::File() || !d.videoResolved || (d.reference.file.existsAsFile() && d.reference.file.getSize()==d.verifiedVideoBytes && d.reference.file.getLastModificationTime().toMilliseconds()==d.verifiedVideoModified),"Reference picture changed after verification; previous session retained");
-        StandaloneSessionModel next;next.openedSessionSchema=d.loadedSchema;next.documentId=d.id;next.programmeId=d.programmeId;next.documentRevision=next.savedDocumentRevision=d.revision;next.sourceDocument=d.source;next.sourceDocument.routing=OutputRouting();next.currentStateDocument=d.current;next.currentStateDocument.needsRemeasurement=d.current.isInitialized;next.programmeApplicability=d.applicability;next.auditionDomain=d.audition;next.markerImport=d.markerImport;next.jobRequirements=d.jobRequirements;next.proposalPolicy=d.proposalPolicy;next.lastAppliedProposalPolicy=d.lastAppliedProposalPolicy;next.lastAppliedProposalBinding=d.lastAppliedProposalBinding;next.lastAppliedExplanation=d.lastAppliedExplanation;next.referenceVideo=d.reference;next.videoUnresolved=!d.videoResolved;
+        StandaloneSessionModel next;next.openedSessionSchema=d.loadedSchema;next.documentId=d.id;next.programmeId=d.programmeId;next.documentRevision=next.savedDocumentRevision=d.revision;next.sourceDocument=d.source;next.sourceDocument.routing=OutputRouting();next.currentStateDocument=d.current;next.currentStateDocument.needsRemeasurement=d.current.isInitialized;next.programmeApplicability=d.applicability;next.auditionDomain=d.audition;next.markerImport=d.markerImport;next.jobRequirements=d.jobRequirements;next.proposalPolicy=d.proposalPolicy;next.regionPlanning=d.regionPlanning;next.lastAppliedProposalPolicy=d.lastAppliedProposalPolicy;next.lastAppliedProposalBinding=d.lastAppliedProposalBinding;next.lastAppliedExplanation=d.lastAppliedExplanation;next.referenceVideo=d.reference;next.videoUnresolved=!d.videoResolved;
         if(!d.audioResolved){next.unresolvedSourceCache=d.sourceCache;next.unresolvedCurrentCache=d.currentCache;}
         next.sourceContentInvalid=d.source.hasSource&&!d.audioResolved;next.sourceDocument.importStatus=next.sourceContentInvalid?"Unresolved programme; relink identical audio":"Restored source; saved channel interpretation retained";
         next.currentStateDocument.sourcePathSnapshot=d.source.file.getFullPathName();next.currentStateDocument.basedOnSourceName=d.source.displayName;
