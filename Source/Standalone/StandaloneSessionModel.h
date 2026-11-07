@@ -294,6 +294,7 @@ public:
         proposal::SectionMap annotations;
         juce::String geometry, runtime;
         uint64_t audioRevision=0, editSerial=0;
+        bool processingRegions=false;
     };
     std::optional<SectionTrimDraft> sectionTrimDraft;
     juce::String sectionTrimNotice="No section-gain draft. Applied processing is independent of annotations.";
@@ -341,10 +342,35 @@ public:
     }
     bool setSectionDraftGain(size_t row,double db)
     {
-        if(audioEditsBlocked() || job.isActive() || !sectionDraftFresh() || row>=sectionTrimDraft->plan.intervals.size()
+        if(audioEditsBlocked() || job.isActive() || !sectionDraftFresh() || sectionTrimDraft->processingRegions || row>=sectionTrimDraft->plan.intervals.size()
             || !std::isfinite(db) || db < -12 || db > 12) return false;
         sectionTrimDraft->plan.intervals[row].db=db;++sectionTrimDraft->editSerial;
         sectionTrimNotice="DRAFT only: Apply explicitly while stopped, then re-measure Current State.";return true;
+    }
+    bool draftRemoveAppliedRegion(int64_t begin,int64_t end)
+    {
+        if(audioEditsBlocked()||job.isActive()||persistenceLoading||(sectionProposal&&lastAppliedProposalBinding!=sectionProposal->identity())||sourceContentInvalid
+            ||!sourceDocument.matchesFileStamps()||!currentStateDocument.isInitialized||!currentStateDocument.sectionGains)return false;
+        if(sectionTrimDraft&&(!sectionDraftFresh()||!sectionTrimDraft->processingRegions))return false;
+        const auto& active=*currentStateDocument.sectionGains;
+        const auto found=std::find_if(active.intervals.begin(),active.intervals.end(),[&](const auto& r){return r.begin==begin&&r.end==end;});
+        if(found==active.intervals.end()||found->db==0)return false;
+        if(!sectionTrimDraft)
+        {
+            synchronizeSections();const auto& map=sectionDocument.map();
+            if(!map.valid()||sectionDraftSupportError().isNotEmpty())return false;
+            SectionTrimDraft d;d.plan=active;d.annotations=map;d.annotations.sections.clear();d.annotations.nextId=1;
+            for(const auto& r:active.intervals)d.annotations.sections.push_back({d.annotations.nextId++,r.begin,r.end,"Manual processing region"});
+            d.geometry=sectionGeometry(map);d.runtime=sessionId;d.audioRevision=revision;d.processingRegions=true;
+            if(sectionProposal)discardSectionProposal(); // Retire only this already-applied preview; complete history remains.
+            sectionTrimDraft=std::move(d);
+        }
+        auto& d=*sectionTrimDraft;
+        const auto row=std::find_if(d.plan.intervals.begin(),d.plan.intervals.end(),[&](const auto& r){return r.begin==begin&&r.end==end;});
+        if(row==d.plan.intervals.end()||row->db==0)return false;
+        row->db=0;++d.editSerial;
+        sectionTrimNotice="DRAFT removal: local gain becomes 0 dB in this region; global gain and other plateaus stay unchanged. Boundary ramps are recomputed on Apply. Apply gains, then re-measure Current; Discard keeps applied audio.";
+        return true;
     }
     void discardSectionTrimDraft()
     {sectionTrimDraft.reset();sectionTrimNotice="Draft discarded. Applied processing and measurements unchanged.";}

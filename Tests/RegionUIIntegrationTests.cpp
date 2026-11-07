@@ -20,6 +20,9 @@ struct PreparationFeedbackTestAccess
     static void moveDivider(StandaloneMainComponent& c,int delta){c.waveformDivider.move(delta);}
     static juce::Viewport& inspector(StandaloneMainComponent& c){return c.inspectorViewport;}
     static int inspection(StandaloneMainComponent& c){return c.inspectDomain.getSelectedId();}
+    static StandaloneAudition& audio(StandaloneMainComponent& c){return c.audition;}
+    static void refreshTimeline(StandaloneMainComponent& c){c.refreshTimeline();}
+    static juce::Label& warning(StandaloneMainComponent& c){return c.monitorWarning;}
 };
 }
 namespace
@@ -153,6 +156,9 @@ void workflowChecks(StandaloneMainComponent& ui,const juce::File& root)
     std::sort(paints.begin(),paints.end());expect(paints[10]<=100,"all M20 geometry bands with 10000 annotations paint within 100 ms p95");
     auto denseTiming=juce::var(new juce::DynamicObject());denseTiming.getDynamicObject()->setProperty("m20_dense_geometry_p95_ms",paints[10]);cases.add(denseTiming);
     expect(s.sectionDocument.restore(originalMap,originalMap.inputIdentity),"restore original annotations after isolated paint stress");Access::refresh(ui);
+    const auto appliedBeforeDelete=proposalPlanIdentity(s.currentStateDocument.processingPlan());const auto proposalBeforeDelete=s.sectionProposal;
+    choose(lane,"Gain lane selection",3);lane.selectAt(48000*32,lane.plotBounds().getCentreY());
+    expect(lane.deleteSelected()&&s.sectionProposal==proposalBeforeDelete&&!s.sectionTrimDraft&&proposalPlanIdentity(s.currentStateDocument.processingPlan())==appliedBeforeDelete,"Backspace on proposed geometry cannot mutate the measured candidate or applied processing");
     const auto report=result->text();expect(report.contains("Total splits")&&report.contains("maximum cumulative attenuation")&&report.contains("actual transition count")&&report.contains("separate whole-programme change")&&report.contains("omitted cut"),"complete explanation retains independent counts, cumulative gains, global scope and omitted search work");
     auto failedRequirements=requirements;failedRequirements.maximumLraTenths=1;expect(s.setJobRequirements(failedRequirements,error),"diagnostic request has a strict deliberately unreachable LRA rule");
     Access::propose(ui);waitJob(ui);auto failed=s.sectionProposal;
@@ -181,6 +187,14 @@ void workflowChecks(StandaloneMainComponent& ui,const juce::File& root)
     const auto& restoredPlan=*reopened.prepared->model.currentStateDocument.sectionGains;
     restoredLane.selectAt(restoredPlan.intervals[1].begin,restoredLane.plotBounds().getBottom()+5);
     expect(restoredLane.inspectionText().contains("Applied processing region")&&!control<juce::TextButton>(restoredLane,"Set draft").isEnabled(),"saved processing regions remain directly selectable after reopening without a live proposal");
+    auto& removal=reopened.prepared->model;
+    const auto oldHistory=encodeAppliedExplanation(*removal.lastAppliedExplanation);const auto oldGlobal=removal.currentStateDocument.staticGainDb;
+    const auto nonzero=std::find_if(removal.currentStateDocument.sectionGains->intervals.begin(),removal.currentStateDocument.sectionGains->intervals.end(),[](const auto& r){return r.db!=0;});
+    expect(nonzero!=removal.currentStateDocument.sectionGains->intervals.end()&&removal.draftRemoveAppliedRegion(nonzero->begin,nonzero->end),"reopened applied region stages removal independently of annotation geometry");
+    expect(removal.applySectionTrimDraft()&&removal.currentStateNeedsRemeasurement()&&!removal.currentState.hasMeasurement&&removal.currentStateDocument.staticGainDb==oldGlobal,"reopened region removal explicitly applies and requires independent Current measurement");
+    expect(encodeAppliedExplanation(*removal.lastAppliedExplanation)==oldHistory&&removal.appliedExplanationStatus().containsIgnoreCase("historical"),"region removal retains complete explanation as historical");
+    const auto removedFile=root.getChildFile("removed-region.levelscope");expect(sf::save(sf::capture(removal),removedFile,job).succeeded(),"save applied region removal");auto removedRead=sf::read(removedFile,job);auto removedOpen=sf::verify(*removedRead.document,job);
+    expect(removedOpen.prepared&&!removedOpen.prepared->model.currentState.hasMeasurement&&removedOpen.prepared->model.currentStateNeedsRemeasurement()&&encodeAppliedExplanation(*removedOpen.prepared->model.lastAppliedExplanation)==oldHistory,"reopened removal retains unverified Current and intact historical explanation");
     // Stress the new documentary text at the supported interval capacity. These
     // synthetic plans are presentation fixtures, never candidates for Apply.
     auto large=*review;large.constraints.frames=int64_t(10000)*48000;large.attempts.resize(3,review->attempts.front());
@@ -205,6 +219,22 @@ void workflowChecks(StandaloneMainComponent& ui,const juce::File& root)
     expect(!s.sectionProposal&&s.job.state==JobState::cancelled&&proposalPlanIdentity(s.currentStateDocument.processingPlan())==applied,"main cancellation cannot apply a partial region result or roll back applied audio");
     const auto cancelMs=juce::Time::getMillisecondCounterHiRes()-cancelledAt;expect(cancelMs<=1000,"native region cancellation completes within one second");
     auto cancellation=juce::var(new juce::DynamicObject());cancellation.getDynamicObject()->setProperty("cancel_ms",cancelMs);cases.add(cancellation);
+}
+
+void overloadBannerChecks(const juce::File& root)
+{
+    const auto file=root.getChildFile("centre-overload.wav");juce::AudioBuffer<float> pcm(6,48000);pcm.clear();
+    for(int n=0;n<48000;++n)pcm.setSample(2,n,.9f);floatFile(file,48000,pcm);JobControl job;const auto media=validateMedia(file,job);expect(media.succeeded(),"known Centre-only overload fixture");
+    auto output=std::make_unique<Device>();auto* device=output.get();
+    StandaloneMainComponent ui(emptyOutputCatalog(),noOutputSettings(),std::move(output));Access::stopTimer(ui);ui.setSize(1320,1100);ui.addToDesktop(juce::ComponentPeer::windowHasTitleBar);ui.setVisible(true);
+    auto& s=Access::model(ui);expect(s.setValidatedSource(file,media.media),"overload UI owns source fixture");s.sourceDocument.layout=layoutFor(6);expect(s.initializeCurrentStateFromSource(),"overload UI Current initialized");s.setCurrentGainDb(12);s.selectAuditionDomain(MeasurementDomain::currentState);
+    Access::refresh(ui);for(int ch=0;ch<6;++ch)s.sourceDocument.routing.fileToDevice[ch]=ch;
+    auto& a=Access::audio(ui);a.sourceChanged(media.media);const auto request=s.auditionRequest();a.synchronize(request,s.sourceDocument.routing);expect(a.connect(48000).isEmpty(),"connect injected output only");a.setMonitorGainDb(0);
+    expect(a.play(request,s.sourceDocument.routing).isEmpty(),"explicit injected overload playback");awaitPlaying(a,*device);juce::AudioBuffer<float> out(12,256);device->tick(out);a.poll();Access::refreshTimeline(ui);
+    auto& banner=Access::warning(ui);expect(banner.isVisible()&&banner.getText().contains("Centre (channel 3, output 3)")&&banner.getText().contains("Lower monitor volume")&&ui.getLocalBounds().contains(banner.getBounds()),"main window prominently exposes actual overload role/output/source position and recovery advice");
+    expect(out.getMagnitude(0,256)==0&&!a.active()&&s.currentStateDocument.staticGainDb==12,"banner accompanies stopped silent output without changing applied processing");imageOf(ui,root.getChildFile("monitor-overload.png"));
+    a.setMonitorGainDb(-30);a.stop();Access::refreshTimeline(ui);expect(banner.isVisible()&&!a.active(),"main warning survives volume adjustment and Stop without automatic playback");
+    expect(a.play(request,s.sourceDocument.routing).isEmpty(),"explicit reduced-monitor recovery");awaitPlaying(a,*device);device->tick(out);a.poll();Access::refreshTimeline(ui);expect(!banner.isVisible()&&a.active(),"successful explicit recovery clears banner");a.stop();ui.removeFromDesktop();
 }
 
 void convenienceChecks(StandaloneMainComponent& ui,const juce::File& root)
@@ -396,7 +426,7 @@ int main(int argc,char** argv)
     {
         if(recover)recoverMusic(juce::File(argv[3]),juce::File(argv[4]),root);else if(listening)refreshListening(juce::File(argv[3]),root);else if(holdouts)controlledHoldouts(juce::File(argv[3]),root);else if(exchange)exchangeChecks(juce::File(argv[3]),root);else if(variants)controlVariants(root);else
         {
-        auto s=programme(root.getChildFile("fixture"),2);editorChecks(s,root);
+        overloadBannerChecks(root);auto s=programme(root.getChildFile("fixture"),2);editorChecks(s,root);
         auto ui=std::make_unique<StandaloneMainComponent>(emptyOutputCatalog(),noOutputSettings());Access::stopTimer(*ui);ui->setSize(1320,1100);ui->setName("LevelScope - isolated M20 integration test");ui->addToDesktop(juce::ComponentPeer::windowHasTitleBar);ui->setVisible(true);
         auto busy=Access::model(*ui).auditionBusy;Access::model(*ui)=s;Access::model(*ui).auditionBusy=busy;Access::refresh(*ui);convenienceChecks(*ui,root);workflowChecks(*ui,root);
         }

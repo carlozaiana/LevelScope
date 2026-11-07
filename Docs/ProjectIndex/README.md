@@ -15,6 +15,7 @@ This folder is the persistent orientation layer for future development chats. Re
 
 ## Task-based quick start
 
+- [75 — Monitor warnings, gain-lane deletion and peak overlay](75_TimelineMonitoringDeletionAndPeakOverlay.md): explicit recovery/Apply, preserved explanation history, and qualified over-target waveform markers.
 - [74 — Timeline inspection convenience](74_TimelineInspectionConvenience.md): new blend, gain/peak inspection, paired domain shortcut and layout; qualified on both Macs, with separate recovered music sessions.
 - **M20 UI and non-audible acceptance complete; user listening pending:** [73 — current UI integration and independent review handover](73_M20UIIntegrationAndIndependentReview.md), with preserved candidate 04 and exact evidence. Continue on `codex/m20-ui-integration`; main remains the published UI convenience/M19 baseline. No M20 publication or merge is authorized.
 

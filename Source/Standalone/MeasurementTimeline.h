@@ -30,6 +30,9 @@ public:
     void setReferenceMeasurement(std::shared_ptr<const measurement::Result>,bool inspectingCurrent);
     juce::String rangePeakText(int64_t begin,int64_t end) const;
     TimelineBlend& visibilityBlend(){return blend;}
+    void setPeakTarget(std::optional<double> dbtp,bool measured);
+    juce::ToggleButton& peakVisibility(){return overTargetPeaks;}
+    bool sampleExceedsTarget(double value,int64_t frame) const;
     const std::vector<proposal::PlotBucket>& shortTermGatePlot() const {return gatedShortTerm;}
     const std::vector<bool>& changedMomentaryColumns() const {return changedMomentary;}
     void setTransport(int64_t frame,bool seekAllowed,const juce::String& reason,const juce::String& identity);
@@ -97,6 +100,11 @@ private:
     juce::TextButton zoomIn { "Zoom +" }, zoomOut { "Zoom -" }, fit { "Whole programme" }, fitSelection {"Fit selection"}, inspect { "Inspect seconds" };
     juce::TextButton seek {"Seek"};
     juce::ToggleButton follow {"Follow"};
+    juce::ToggleButton overTargetPeaks {"Peaks over target"};
+    std::optional<double> peakTarget;
+    double peakCeiling=1;
+    bool peakMeasurementCurrent=false;
+    bool peakOverlayActive() const {return overTargetPeaks.getToggleState()&&peakTarget&&peakMeasurementCurrent&&!preview;}
     juce::Label navigationFeedback;
     int64_t playhead=0;
     bool canSeek=false,dragging=false,gesture=false,gestureRuler=false,gestureGain=false;

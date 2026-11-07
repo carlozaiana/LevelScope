@@ -44,10 +44,27 @@ void appearanceChecks(const juce::File& root)
     expect(ui.rangePeakText(0,128).contains("selected sample peak -1.938 dBFS at frame 4"),"sample peak readout retains absolute magnitude and actual minimum sample position");
     const auto boundary=ui.rangePeakText(50,80);expect(boundary.contains("covering overview peak")&&boundary.contains("boundary bins/coverage")&&boundary.contains("Regional true peak is not available"),"boundary overlap is explicit and PCM is never labelled true peak");
     ui.setWaveform(overview,false,{"L","R"});expect(ui.rangePeakText(0,128).contains("INCOMPLETE"),"unaccepted waveform cannot assert completed selected peak");ui.setWaveform(overview,true,{"L","R"});
+    ui.setPeakTarget(-6,true);expect(!ui.peakVisibility().getToggleState()&&ui.peakVisibility().isEnabled(),"over-target overlay defaults off with a measured finite target");
+    ui.peakVisibility().setToggleState(true,juce::sendNotificationSync);
+    expect(ui.sampleExceedsTarget(-.8,4)&&!ui.sampleExceedsTarget(.5,75)&&!ui.sampleExceedsTarget(std::pow(10.,-6./20),75),"peak overlay uses magnitude, exact retained position and strict numeric ceiling without rounded comparisons");
+    imageOf(ui,root.getChildFile("over-target-peaks.png"));
+    ui.setViewRange(50,80);expect(!ui.sampleExceedsTarget(-.8,4),"covering overview extremum outside visible passage cannot create a false in-view marker");ui.setViewRange(0,512);
+    ui.setWaveform(overview,false,{"L","R"});expect(!ui.sampleExceedsTarget(-.8,4),"incomplete waveform cannot claim a target exceedance");ui.setWaveform(overview,true,{"L","R"});
+    ui.setPeakTarget(-6,false);expect(!ui.peakVisibility().isEnabled()&&!ui.sampleExceedsTarget(-.8,4),"unverified Current suppresses peak verdict overlay");
+    ui.setPeakTarget({},true);expect(!ui.peakVisibility().isEnabled()&&!ui.sampleExceedsTarget(-.8,4)&&ui.peakVisibility().getTooltip().contains("No Limit"),"No Limit disables highlight without inventing a ceiling");
+    ui.setPeakTarget(-1,true);expect(!ui.sampleExceedsTarget(-.8,4),"target changes immediately update the numeric threshold");ui.peakVisibility().setToggleState(false,juce::dontSendNotification);
     blend.setValue(-1,juce::sendNotificationSync);imageOf(ui,root.getChildFile("waveform-only.png"));blend.setValue(0,juce::dontSendNotification);imageOf(ui,root.getChildFile("blend-centre.png"));
     auto surround=waveform::Overview::create({512,48000,6},std::make_shared<waveform::Budget>());juce::AudioBuffer<float> six(6,512);six.clear();
     for(int ch=0;ch<6;++ch)six.setSample(ch,80+ch,float(.1*(ch+1)));
     expect(surround->append(six.getArrayOfReadPointers(),6,512,0)&&surround->finish(),"six-channel sample overview fixture");ui.setWaveform(surround,true,{"L","R","C","LFE","Ls","Rs"});
     const auto sixPeaks=ui.rangePeakText(64,128);expect(sixPeaks.contains("LFE: selected sample peak")&&sixPeaks.contains("Rs: selected sample peak")&&sixPeaks.contains("frame 85"),"5.1 selection retains each role and its own sample peak position");
     imageOf(ui,root.getChildFile("surround-blend.png"));
+    juce::AudioBuffer<float> intersample(2,5000);
+    for(int c=0;c<2;++c)for(int n=0;n<5000;++n)intersample.setSample(c,n,float(.9*std::sin(juce::MathConstants<double>::twoPi*.25*n+juce::MathConstants<double>::pi*.25)));
+    measurement::OfflineMeasurement meter(48000,{measurement::Role::left,measurement::Role::right});meter.push(intersample.getArrayOfReadPointers(),5000);const auto& result=meter.finish();
+    expect(result.samplePeak.value&&result.truePeak.value&&*result.samplePeak.value< -3&&*result.truePeak.value> -3,"actual measured inter-sample fixture exceeds TP target while PCM samples do not");
+    auto intersamplePcm=waveform::Overview::create({5000,48000,2},std::make_shared<waveform::Budget>());expect(intersamplePcm->append(intersample.getArrayOfReadPointers(),2,5000,0)&&intersamplePcm->finish(),"matching true-peak-only overview");
+    ui.setProgramme(5000,48000,"true-peak-only");ui.setWaveform(intersamplePcm,true,{"L","R"});ui.setAnalysis(proposal::analyzeProgramme(result,"measured-true-peak-only"));ui.setPeakTarget(-3,true);ui.peakVisibility().setToggleState(true,juce::sendNotificationSync);
+    expect(!ui.sampleExceedsTarget(intersample.getSample(0,100),100),"sample markers never pretend to be inter-sample true peaks");imageOf(ui,root.getChildFile("true-peak-only-warning.png"));
+
 }

@@ -34,7 +34,7 @@ namespace levelscope::standalone
 class StandaloneMainComponent final : public juce::Component, private juce::Timer
 {
 public:
-    explicit StandaloneMainComponent(std::shared_ptr<OutputDeviceCatalog> = {}, OutputDeviceSettings = OutputDeviceSettings());
+    explicit StandaloneMainComponent(std::shared_ptr<OutputDeviceCatalog> = {}, OutputDeviceSettings = OutputDeviceSettings(),std::unique_ptr<juce::AudioIODevice> = {});
     ~StandaloneMainComponent() override;
     void requestClose (std::function<void()>);
 
@@ -77,6 +77,8 @@ private:
     void chooseMix();
     void showTools();
     void refreshTimeline();
+    juce::Label monitorWarning;
+    juce::TextButton monitorSetup{"Monitor volume..."};
     void playTimeline(MeasurementTimeline* origin=nullptr);
     void toggleInspectionAudition();
     void showSections();

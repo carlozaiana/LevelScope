@@ -16,6 +16,8 @@ public:
     void setViewport(double begin,double end,int left,int width);
     void selectFrame(int64_t frame,bool notify);
     void selectAt(int64_t frame,int y);
+    bool deleteSelected();
+    void clearDeleteSelection(){deleteArmed=false;}
     void inspectRegionAttempt(size_t);
     bool diagnosticRegionInspection() const;
     int preferredHeight() const {return height+(hasRegionLayers()?76:0);}
@@ -30,6 +32,10 @@ private:
     StandaloneSessionModel& session;
     juce::Label legend,notice,detail,dbLabel;
     juce::TextButton previous{"<"},next{">"},stage{"Set draft"},apply{"Apply gains"},discard{"Discard gains"};
+    juce::TextButton undoDelete{"Undo delete"};
+    std::optional<proposal::SectionMap> deletedAnnotation;
+    uint64_t deletedRevision=0;
+    bool deleteArmed=false;
     juce::TextEditor gain;
     juce::ComboBox selectionKind;
     juce::String programme,runtime,input,supportError,draftError,feedback;

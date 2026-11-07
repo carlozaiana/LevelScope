@@ -189,9 +189,12 @@ void lifecycle(const juce::File& dir)
     d->rejectOpen=false;a->connect(48000);a->setMonitorGainDb(0);
     a->play(r,map);awaitPlaying(*a,*d);juce::AudioBuffer<float> out(12,256);d->tick(out);a->poll();
     expect(a->getState()==AuditionState::failed&&out.getMagnitude(0,256)==0&&a->positionFrames()==0,"monitor fault silences entire first callback and preserves presented position");
+    const auto warning=a->monitorOverloadWarning();expect(warning.contains("PLAYBACK STOPPED")&&warning.contains("channel 1")&&warning.contains("output 12")&&warning.contains("frame ")&&warning.contains("Lower monitor volume")&&warning.contains("press Play again"),"overload warning identifies channel, output, source position and explicit recovery");
     const auto* copy=a->preparedCopy();a->setMonitorGainDb(-40);a->poll();expect(!a->active()&&!d->isPlaying(),"monitor adjustment after fault never auto-resumes");
+    expect(a->monitorOverloadWarning()==warning,"monitor adjustment retains warning until explicit retry");a->stop();expect(a->monitorOverloadWarning()==warning,"Stop does not hide unresolved monitor overload");
     Capture recovered(2,48000);a->setCaptureObserver(&recovered);a->play(r,map);awaitPlaying(*a,*d);drain(*a,*d,256);
     expect(a->preparedCopy()==copy&&recovered.data.getMagnitude(0,48000)>1,"explicit recovery reuses copy and preserves over-full-scale processing");
+    expect(a->monitorOverloadWarning().isEmpty(),"explicit successful recovery clears old overload warning");
     a->setCaptureObserver(nullptr);a->play(r,map,true);awaitPlaying(*a,*d);d->tick(out);
     std::this_thread::sleep_for(std::chrono::milliseconds(10));const auto presented=a->positionFrames();
     a->setMonitorGainDb(0);d->tick(out);a->poll();
@@ -349,7 +352,9 @@ int main(int argc,char** argv)
         for(int i=1;i+1<argc;++i)if(juce::String(argv[i])=="--samples")
         {sampleDirectory=juce::File(argv[i+1]);expect(!sampleDirectory.exists()&&sampleDirectory.createDirectory().wasOk(),"fresh sample evidence directory");}
         juce::File longSource;for(int i=1;i+1<argc;++i)if(juce::String(argv[i])=="--long-source")longSource=juce::File(argv[i+1]);
-        if(longSource!=juce::File())longProgramme(longSource);
+        bool monitorOnly=false;for(int i=1;i<argc;++i)monitorOnly|=juce::String(argv[i])=="--monitor-only";
+        if(monitorOnly){Temp temp;bufferAndOracle();lifecycle(temp.directory);}
+        else if(longSource!=juce::File())longProgramme(longSource);
         else{Temp temp;bufferAndOracle();storageFailures(temp.directory);asynchronousPreparation(temp.directory);modelGuards(temp.directory);panelControls(temp.directory);lifecycle(temp.directory);parityMatrix(temp.directory);exceptionalSignals(temp.directory);}
         passed=true;}
     catch(const std::exception& e){std::cerr<<"M6 FAIL: "<<e.what()<<'\n';}

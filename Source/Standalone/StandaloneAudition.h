@@ -95,6 +95,7 @@ public:
     static uint64_t hostTimeNs() noexcept;
     uint64_t underruns() const { return fifo.underrunBlocks(); }
     const juce::String& status() const { return message; }
+    const juce::String& monitorOverloadWarning() const { return overloadWarning; }
     ErrorCode failureCode() const { return fault; }
 private:
     // Lazy factory: injected/headless devices never construct the host manager.
@@ -105,6 +106,7 @@ private:
     std::atomic<bool> cancel { false }, decodeFailed { false }, deviceStopped { false };
     AuditionState state = AuditionState::disconnected;
     juce::String message = "Device closed. Select an output explicitly.";
+    juce::String overloadWarning; // Message-thread latch; monitor adjustment alone does not restart playback.
     double rate = 0;
     int64_t sourceRate = 0, startFrame = 0, heldFrame = 0, sourceFrames = 0;
     juce::String sourceHash;

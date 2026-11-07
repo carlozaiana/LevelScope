@@ -163,6 +163,9 @@ void layout(StandaloneSessionModel& s,const juce::File& root)
 }
 #include "TimelineAppearanceChecks.h"
 #include "TimelineGainLaneChecks.h"
+namespace {
+#include "TimelineDeletionChecks.h"
+}
 #include "Standalone/AutomaticSourceAnalysis.h"
 #include "TimelineSectionImportChecks.h"
 int main(int argc,char** argv)
@@ -173,7 +176,7 @@ int main(int argc,char** argv)
     {
         expect(rootPath.isNotEmpty(),"explicit owned fixture root");juce::File root(rootPath);expect(!root.exists()&&root.createDirectory().wasOk(),"create fresh test directory");
         reducedWindows();concurrentPublication();auto request=fixture(root.getChildFile("mix.wav"),48000,2,240013);StandaloneSessionModel s;expect(s.setValidatedSource(request.context.sourceFile,request.context.media),"verified interleaved source");s.sourceDocument.layout=request.context.fileLayout;
-        partial(s,root);navigation(s,root);layout(s,root);appearanceChecks(root);gainLaneChecks(s,root);transportFocusChecks(s);gainDenseChecks(root);presetDismissal(root);drawSections(root);rememberedOrders(root);passed=true;
+        partial(s,root);navigation(s,root);layout(s,root);appearanceChecks(root);deletionChecks(root);gainLaneChecks(s,root);transportFocusChecks(s);gainDenseChecks(root);presetDismissal(root);drawSections(root);rememberedOrders(root);passed=true;
     }
     catch(const std::exception& e){error=e.what();std::cerr<<error<<'\n';}
     auto* report=new juce::DynamicObject();report->setProperty("passed",passed);report->setProperty("failure",error);report->setProperty("checks",juce::var(checks));report->setProperty("build",LEVELSCOPE_MEASUREMENT_BUILD);report->setProperty("physical_devices_opened",false);report->setProperty("performance",juce::var(cases));

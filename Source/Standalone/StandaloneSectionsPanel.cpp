@@ -124,7 +124,7 @@ void StandaloneSectionsPanel::timerCallback()
     const bool editable=!session.audioEditsBlocked()&&!session.job.isActive();
     importMarkers.setEnabled(editable&&document.map().valid()&&(!canImportMarkers||canImportMarkers()));pasteMarkers.setEnabled(importMarkers.isEnabled());
     draftGainButton.setEnabled(editable && !session.sectionTrimDraft && !session.sectionProposal && session.currentStateDocument.isInitialized);
-    setGainButton.setEnabled(editable && session.sectionDraftFresh());gainEditor.setEnabled(setGainButton.isEnabled());
+    setGainButton.setEnabled(editable && session.sectionDraftFresh()&&!session.sectionTrimDraft->processingRegions);gainEditor.setEnabled(setGainButton.isEnabled());
     applyGainButton.setEnabled(editable && session.sectionDraftFresh());discardGainButton.setEnabled(session.sectionTrimDraft.has_value());
     auto gainText=session.sectionTrimNotice;
     if(session.sectionTrimDraft&&!session.sectionDraftFresh())gainText="STALE DRAFT: discard/recreate after input, processing or annotation geometry changes. Applied audio retained.";
@@ -202,7 +202,7 @@ void StandaloneSectionsPanel::refreshDetails()
     }
     text << "No section I/LRA or section compliance verdict. Crossing/padded windows are excluded from summaries and inspectable below. Section edits never seek, play or process audio.";
     gainEditor.setText({},false);
-    if(session.sectionTrimDraft && session.sectionDraftFresh())
+    if(session.sectionTrimDraft && session.sectionDraftFresh()&&!session.sectionTrimDraft->processingRegions)
         for(size_t n=0;n<session.sectionTrimDraft->annotations.sections.size();++n)
             if(session.sectionTrimDraft->annotations.sections[n].id==row->id)
             {

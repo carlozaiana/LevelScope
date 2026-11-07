@@ -22,7 +22,7 @@ template<class Rows> size_t intervalAt(const Rows& rows,int64_t frame)
 TimelineGainLane::TimelineGainLane(StandaloneSessionModel& s):session(s)
 {
     setName("Current section gain lane");setInterceptsMouseClicks(false,true);setBufferedToImage(true);
-    for(auto* c:std::initializer_list<juce::Component*>{&legend,&notice,&detail,&previous,&next,&gain,&dbLabel,&stage,&apply,&discard})addAndMakeVisible(c);
+    for(auto* c:std::initializer_list<juce::Component*>{&legend,&notice,&detail,&previous,&next,&gain,&dbLabel,&stage,&apply,&discard,&undoDelete})addAndMakeVisible(c);
     for(auto* label:{&legend,&notice,&detail,&dbLabel}){label->setFont(13.f);label->setInterceptsMouseClicks(false,false);}
     legend.setText("CURRENT section gain (dB)   |   Solid: applied   /   Dashed: draft",juce::dontSendNotification);
     legend.setTooltip("All programme channels, before global trim. This lane always describes Current processing.");
@@ -33,6 +33,13 @@ TimelineGainLane::TimelineGainLane(StandaloneSessionModel& s):session(s)
     gain.onReturnKey=[this]{stageValue();};
     gain.onEscapeKey=[this]{dirty=false;feedback.clear();showSelection();updateControls();};
     stage.onClick=[this]{stageValue();};
+    undoDelete.onClick=[this]
+    {
+        if(!deletedAnnotation||!bindingMatches()||session.sectionDocument.map().revision!=deletedRevision
+            ||session.audioEditsBlocked()||session.job.isActive()||session.sectionTrimDraft)return;
+        auto restored=*deletedAnnotation;restored.revision=deletedRevision+1;
+        if(session.sectionDocument.restore(restored,input)){session.documentChanged();deletedAnnotation.reset();afterAction();}
+    };
     apply.onClick=[this]
     {
         if(!bindingMatches()||dirty||!apply.isEnabled())return;
@@ -54,7 +61,7 @@ TimelineGainLane::TimelineGainLane(StandaloneSessionModel& s):session(s)
     selectionKind.addItem("Select sections",1);selectionKind.addItem("Select applied regions",2);selectionKind.addItem("Select proposed regions",3);
     selectionKind.setSelectedId(1,juce::dontSendNotification);
     selectionKind.setTooltip("Sections are editable annotations. Processing regions inspect fixed gain intervals, including after reopening. Click a gain readout below the lane to select its region.");
-    selectionKind.onChange=[this]{rebuildProposalRows();selectFrame(cursor,true);};
+    selectionKind.onChange=[this]{deleteArmed=false;rebuildProposalRows();selectFrame(cursor,true);};
 }
 const std::vector<proposal::ProgrammeSection>& TimelineGainLane::rows() const
 {return !lraRows.empty()?lraRows:session.sectionDocument.map().sections;}
@@ -111,6 +118,7 @@ void TimelineGainLane::synchronize(const juce::String& key)
     const bool replaced=key!=programme||runtime!=session.sessionId;
     if(replaced)
     {
+        deleteArmed=false;deletedAnnotation.reset();
         programme=key;runtime=session.sessionId;cursor=0;
         input.clear();
         if(key.isNotEmpty()&&session.sourceDocument.layout.confirmed)
@@ -121,11 +129,13 @@ void TimelineGainLane::synchronize(const juce::String& key)
         }
     }
     const auto& map=session.sectionDocument.map();const auto& d=session.sectionTrimDraft;
+    if(deletedAnnotation&&map.revision!=deletedRevision)deletedAnnotation.reset();
     const bool stale=session.sectionProposalStale();
     if(replaced||automatic!=session.sectionProposal||automaticStale!=stale||audioRevision!=session.revision||mapRevision!=map.revision||initialized!=session.hasCurrentStateInitialized()
         ||hasDraft!=bool(d)||(d&&editSerial!=d->editSerial))
     {
         const bool newProposal=automatic!=session.sectionProposal;
+        deleteArmed=false;
         automatic=session.sectionProposal;automaticStale=stale;proposed=automatic?automatic->previewPlan():std::nullopt;
         if(newProposal)regionAttempt=automatic&&automatic->regionReview()?automatic->regionReview()->retainedAttempt:std::numeric_limits<size_t>::max();
         if(const auto* attempt=inspectedAttempt()){proposed=ProcessingPlan{};proposed->staticGainDb=attempt->plan.globalDb;proposed->sectionGains=attempt->plan.envelope;}
@@ -152,12 +162,13 @@ void TimelineGainLane::showSelection()
     const auto* section=selected();
     if(!section){detail.setText("No confirmed sections",juce::dontSendNotification);detail.setTooltip({});gain.setText({},false);return;}
     double stored=0;
-    if(fresh&&selectionKind.getSelectedId()==1)stored=session.sectionTrimDraft->plan.intervals[row].db;
+    if(fresh&&!session.sectionTrimDraft->processingRegions&&selectionKind.getSelectedId()==1)stored=session.sectionTrimDraft->plan.intervals[row].db;
     else if(applied&&(geometryMatches||selectionKind.getSelectedId()==2))stored=applied->intervals[intervalAt(applied->intervals,cursor)].db;
     gain.setText(exact(stored),false);
     auto description=section->name+"   ["+juce::String(section->begin)+", "+juce::String(section->end)+")";
     if(initialized)description+="   Applied: "+exact(applied?applied->gainAt(cursor):0.)+" dB";
-    if(selectionKind.getSelectedId()!=1)description+=" (at cursor; nominal interval shown, transitions may cross its edges). Inspect only.";
+    if(selectionKind.getSelectedId()!=1)description+=" (at cursor; nominal interval shown, transitions may cross its edges).";
+    if(fresh&&session.sectionTrimDraft->processingRegions)description+=" | removal draft local "+exact(draft?draft->gainAt(cursor):0.)+" dB";
     if(initialized)description+=" | applied global "+exact(session.currentStateDocument.staticGainDb)+" dB";
     if(proposed)
     {
@@ -196,7 +207,7 @@ void TimelineGainLane::updateControls()
 {
     if(measured!=session.currentState.hasMeasurement){measured=session.currentState.hasMeasurement;feedback.clear();}
     const bool idle=!session.audioEditsBlocked()&&!session.job.isActive();
-    const bool editable=selectionKind.getSelectedId()==1&&selected()&&initialized&&supportError.isEmpty()&&idle&&!session.sectionProposal&&(!hasDraft||fresh);
+    const bool editable=selectionKind.getSelectedId()==1&&selected()&&initialized&&supportError.isEmpty()&&idle&&!session.sectionProposal&&(!hasDraft||(fresh&&!session.sectionTrimDraft->processingRegions));
     previous.setEnabled(selected()&&row>0);next.setEnabled(selected()&&row+1<rows().size());
     if(selectionKind.getSelectedId()==1&&automatic&&!automatic->selection().corrections.empty())
     {
@@ -206,7 +217,8 @@ void TimelineGainLane::updateControls()
     previous.setTooltip("Inspect previous section or processing region");next.setTooltip("Inspect next section or processing region");
     for(auto* c:std::initializer_list<juce::Component*>{&gain,&dbLabel,&stage,&apply,&discard})c->setVisible(!automatic);
     gain.setEnabled(editable);stage.setEnabled(editable);
-    apply.setEnabled(editable&&fresh&&!dirty&&draftError.isEmpty());discard.setEnabled((hasDraft||dirty)&&idle);
+    apply.setEnabled(initialized&&idle&&!session.sectionProposal&&supportError.isEmpty()&&fresh&&!dirty&&draftError.isEmpty());discard.setEnabled((hasDraft||dirty)&&idle);
+    undoDelete.setVisible(deletedAnnotation.has_value());undoDelete.setEnabled(deletedAnnotation&&idle&&!hasDraft&&bindingMatches());
     juce::String message;
     if(!usableMap)message="Confirm programme audio and channel roles to inspect sections.";
     else if(!initialized)message="Current is not initialised.";
@@ -221,11 +233,11 @@ void TimelineGainLane::updateControls()
     else if(feedback.isNotEmpty())message=feedback;
     else if(dirty)message="Unstaged field. Return or Set draft stages it; Apply is separate.";
     else if(draftError.isNotEmpty())message=draftError;
-    else if(hasDraft)message="Draft only. Apply gains changes Current; Discard keeps applied audio.";
-    else if(selectionKind.getSelectedId()!=1)message="Processing-region inspection only. Select sections to edit manually; use arrows for every interval, including narrow regions.";
+    else if(hasDraft)message=session.sectionTrimDraft->processingRegions?session.sectionTrimNotice:"Draft only. Apply gains changes Current; Discard keeps applied audio.";
+    else if(selectionKind.getSelectedId()!=1)message="Click an applied region, then Backspace to draft removal of its local gain. Apply/Discard remain explicit. Proposed regions are read-only.";
     else if(!geometryMatches)message="Annotations changed. Applied ramps stay fixed; a new draft starts at 0 dB.";
     else if(session.currentStateNeedsRemeasurement())message="Current unverified. Re-measure Current State to verify the applied gain.";
-    else message="Click a section to inspect. Enter a gain and choose Set draft.";
+    else message="Click a section to inspect. Backspace removes its annotation into a neighbour; applied audio stays unchanged. Enter a gain and choose Set draft.";
     if(!geometryMatches&&fresh)message+=" Other sections start at 0 dB on changed annotations.";
     legend.setText(automatic?"CURRENT local gain (dB)   |   Green solid = applied   /   Cyan dotted = proposal":
         "CURRENT local gain (dB)   |   Green solid = applied   /   Amber dashed = manual draft",juce::dontSendNotification);
@@ -256,8 +268,36 @@ void TimelineGainLane::selectAt(int64_t frame,int y)
 {
     const auto base=plotBounds().getBottom();
     if(y>=base&&y<base+20&&applied)selectionKind.setSelectedId(2,juce::dontSendNotification);
-    else if(y>=base+20&&y<base+42)selectionKind.setSelectedId(proposed&&proposed->sectionGains?3:1,juce::dontSendNotification);
-    rebuildProposalRows();selectFrame(frame,true);
+    else if(y>=base+20&&y<base+42)selectionKind.setSelectedId(proposed&&proposed->sectionGains?3:hasDraft&&fresh&&session.sectionTrimDraft->processingRegions?2:1,juce::dontSendNotification);
+    rebuildProposalRows();selectFrame(frame,true);deleteArmed=selected()!=nullptr;
+}
+bool TimelineGainLane::deleteSelected()
+{
+    if(!deleteArmed||!selected())return false;
+    deleteArmed=false; // One explicit selection per deletion; held Backspace cannot cascade.
+    if(!bindingMatches()||session.audioEditsBlocked()||session.job.isActive()||session.persistenceLoading)
+    {feedback="Stop playback and finish the job before deleting.";updateControls();return true;}
+    if(dirty){feedback="Stage or discard the gain field edit before deleting.";updateControls();return true;}
+    if(selectionKind.getSelectedId()==3)
+    {feedback="Proposed regions belong to the complete measured proposal. Apply or Discard the proposal first.";notice.setText(feedback,juce::dontSendNotification);notice.setTooltip(feedback);return true;}
+    if(selectionKind.getSelectedId()==2)
+    {
+        const auto region=*selected();
+        if(session.draftRemoveAppliedRegion(region.begin,region.end)){afterAction();return true;}
+        feedback="Cannot remove this region: it has no local gain, or an unapplied proposal/stale or section draft needs Discard first.";
+        notice.setText(feedback,juce::dontSendNotification);notice.setTooltip(feedback);return true;
+    }
+    if(hasDraft){feedback="Apply or Discard the gain draft before deleting annotations.";updateControls();return true;}
+    auto map=session.sectionDocument.map();if(map.sections.size()<2)
+    {feedback="The final whole-programme annotation must remain; there are no section boundaries left to delete.";updateControls();return true;}
+    deletedAnnotation=map;
+    if(row>0)map.sections[row-1].end=map.sections[row].end;
+    else map.sections[1].begin=0;
+    map.sections.erase(map.sections.begin()+ptrdiff_t(row));++map.revision;deletedRevision=map.revision;
+    if(!session.sectionDocument.restore(map,input)){deletedAnnotation.reset();return true;}
+    session.documentChanged();afterAction();
+    feedback="Section annotation deleted into its neighbour. Audio/gains/measurements unchanged. Undo delete restores the annotation.";
+    notice.setText(feedback,juce::dontSendNotification);notice.setTooltip(feedback);resized();return true;
 }
 void TimelineGainLane::setViewport(double begin,double end,int left,int width)
 {
@@ -269,6 +309,7 @@ void TimelineGainLane::resized()
     auto b=getLocalBounds();auto top=b.removeFromTop(22);selectionKind.setBounds(top.removeFromRight(195));legend.setBounds(top);notice.setBounds(b.removeFromTop(24));
     auto controls=b.removeFromBottom(28).reduced(2,1);
     previous.setBounds(controls.removeFromLeft(27));next.setBounds(controls.removeFromLeft(27));
+    if(deletedAnnotation)undoDelete.setBounds(controls.removeFromLeft(100));
     if(!automatic)
     {
         discard.setBounds(controls.removeFromRight(105));apply.setBounds(controls.removeFromRight(100));stage.setBounds(controls.removeFromRight(86));

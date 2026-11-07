@@ -18,7 +18,7 @@ def sha(path):
 
 def main():
     region_groups = ('core', 'stereo', 'surround', 'heterogeneous', 'failures', 'population', 'audio', 'gating', 'cinema')
-    other_groups = ('control-variants', 'ui', 'devices', 'preparation', 'timeline', 'requirements', 'section-smoke', 'legacy-core', 'legacy-stereo', 'legacy-failures', 'legacy-gating')
+    other_groups = ('monitor', 'control-variants', 'ui', 'devices', 'preparation', 'timeline', 'requirements', 'section-smoke', 'legacy-core', 'legacy-stereo', 'legacy-failures', 'legacy-gating')
     parser = argparse.ArgumentParser()
     parser.add_argument('candidate', type=Path)
     parser.add_argument('destination', type=Path)
@@ -57,6 +57,9 @@ def main():
                     supplied = args.gating_input if case == 'gating' else args.cinema_input
                     assert supplied and supplied.is_file(), 'Explicit bounded input required for ' + case
                     arguments += ['--input', str(supplied.resolve())]
+            elif case == 'monitor':
+                target = 'LevelScopeAuditionTests'
+                arguments = ['--monitor-only', '--report', str(output)]
             elif case.startswith('legacy-'):
                 target = 'LevelScopeLraProposalTests'
                 arguments = ['--group', case[7:], '--root', str(root), '--output', str(output)]

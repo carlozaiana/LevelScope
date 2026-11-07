@@ -94,8 +94,8 @@ juce::String measurementsText (const MeasurementSummary& summary)
 }
 // [BEGIN LS-STANDALONE-WORKFLOW-SHELL]
 
-StandaloneMainComponent::StandaloneMainComponent(std::shared_ptr<OutputDeviceCatalog> catalog, OutputDeviceSettings settings)
-    : audioPanel(session, audition, [this] { refreshFromSession(); }, {}, std::move(catalog), std::move(settings))
+StandaloneMainComponent::StandaloneMainComponent(std::shared_ptr<OutputDeviceCatalog> catalog, OutputDeviceSettings settings,std::unique_ptr<juce::AudioIODevice> output)
+    : audition(std::move(output)),audioPanel(session, audition, [this] { refreshFromSession(); }, {}, std::move(catalog), std::move(settings))
 {
     configureSessionControls();
     configureLabels();
@@ -880,6 +880,11 @@ void StandaloneMainComponent::paint (juce::Graphics& g)
 
 void StandaloneMainComponent::configureTimelineShell()
 {
+    addChildComponent(monitorWarning);addChildComponent(monitorSetup);
+    monitorWarning.setName("Monitor overload warning");monitorWarning.setFont(juce::Font(15.f,juce::Font::bold));
+    monitorWarning.setColour(juce::Label::backgroundColourId,juce::Colour(0xff4a231d));
+    monitorWarning.setColour(juce::Label::textColourId,juce::Colour(0xffffdfbf));
+    monitorSetup.onClick=[this]{showAudioSetup();};
     audioPanel.onAnalyse=[this]
     {
         beginMeasurement(MeasurementDomain::source);
@@ -1080,6 +1085,9 @@ void StandaloneMainComponent::refreshTimeline()
     {loudnessProgress->abandon();loudnessProgress.reset();}
     timeline.setPreview(loudnessProgress?loudnessProgress->view(domain==MeasurementDomain::source?sourceBinding:currentBinding):nullptr);
     const auto& measured=domain==MeasurementDomain::source?session.source:session.currentState;
+    const auto limits=session.getSelectedTargetProfile().limits;
+    const auto peakLimit=limits.hasTruePeakCeiling?std::optional<double>(limits.truePeakCeilingDbtp):std::nullopt;
+    timeline.setPeakTarget(peakLimit,valid&&measured.hasMeasurement&&(domain==MeasurementDomain::source||!session.currentStateNeedsRemeasurement()));
     buildWaveformButton.setEnabled(valid && measured.hasMeasurement && !view.data && !session.job.isActive() && !session.audioEditsBlocked());
     timelineDiagnostics.select(measured.analysis,session.measurementContext(domain),domain);timelineDiagnostics.poll();
     const auto result=timelineDiagnostics.result();auto analysis=result?result->analysis:nullptr;
@@ -1108,12 +1116,18 @@ void StandaloneMainComponent::refreshTimeline()
         editor.setWaveform(sectionWave.data,sectionWave.accepted,channels);
         editor.setPreview(loudnessProgress?loudnessProgress->view(binding):nullptr);
         editor.setReferenceMeasurement(reference,sectionsPanel->inspectionDomain()==MeasurementDomain::currentState&&session.currentState.hasMeasurement&&!session.currentStateNeedsRemeasurement());
+        editor.setPeakTarget(peakLimit,valid&&(sectionsPanel->inspectionDomain()==MeasurementDomain::source?session.source.hasMeasurement:session.currentState.hasMeasurement&&!session.currentStateNeedsRemeasurement()));
         editor.refreshSectionEditing();
         editor.setTransport(audition.positionFrames(),seekReason.isEmpty(),seekReason,audition.boundIdentity());
         sectionsPanel->setPlaybackState(timelinePlay.isEnabled(),timelineStop.isEnabled(),session.auditionDomain==MeasurementDomain::source?"Original":"Current");
     }
     positionLabel.setText(juce::String(audition.positionSeconds(),3)+" s  ·  "+(audition.connected()?"Device open":"Device closed"),juce::dontSendNotification);
     positionLabel.setTooltip(audition.status());
+    const auto warning=audition.monitorOverloadWarning();
+    const bool warningVisible=warning.isNotEmpty(),visibilityChanged=monitorWarning.isVisible()!=warningVisible;
+    monitorWarning.setText(warning,juce::dontSendNotification);monitorWarning.setTooltip(warning);
+    monitorWarning.setVisible(warningVisible);monitorSetup.setVisible(warningVisible);
+    if(visibilityChanged)resized();
 }
 void StandaloneMainComponent::refreshJobFeedback()
 {
@@ -1161,6 +1175,11 @@ void StandaloneMainComponent::resized()
     timelinePlay.setBounds(transport.removeFromLeft(65).reduced(2));timelineStop.setBounds(transport.removeFromLeft(65).reduced(2));
     audioSetupButton.setTooltip("Choose this Mac's output and optional automatic reconnection; review channel roles and routing. Opening always leaves playback stopped.");
     sectionsButton.setBounds(transport.removeFromRight(160).reduced(2));diagnosticsButton.setBounds(transport.removeFromRight(190).reduced(2));positionLabel.setBounds(transport);
+    if(monitorWarning.isVisible())
+    {
+        auto warning=bounds.removeFromTop(64).reduced(0,2);
+        monitorSetup.setBounds(warning.removeFromRight(145).reduced(4,16));monitorWarning.setBounds(warning);
+    }
     timelineAvailableHeight=bounds.getHeight();timelineLayout.moveTimeline(0,timelineAvailableHeight,session.sourceDocument.layout.count,gainLane.preferredHeight());
     auto bottom=bounds.removeFromBottom(timelineLayout.inspector);
     waveformDivider.setBounds(bounds.removeFromBottom(TimelineLayout::dividerHeight));
