@@ -1,5 +1,6 @@
 #include "TimelineGainLane.h"
 #include "TimelineGainOutline.h"
+#include "TimelineAppearance.h"
 #include <iomanip>
 #include <limits>
 #include <locale>
@@ -49,9 +50,14 @@ TimelineGainLane::TimelineGainLane(StandaloneSessionModel& s):session(s)
     previous.setTooltip("Inspect previous section");next.setTooltip("Inspect next section");
     previous.onClick=[this]{adjacent(-1);};
     next.onClick=[this]{adjacent(1);};
+    addAndMakeVisible(selectionKind);selectionKind.setName("Gain lane selection");
+    selectionKind.addItem("Select sections",1);selectionKind.addItem("Select applied regions",2);selectionKind.addItem("Select proposed regions",3);
+    selectionKind.setSelectedId(1,juce::dontSendNotification);
+    selectionKind.setTooltip("Sections are editable annotations. Processing regions inspect fixed gain intervals, including after reopening. Click a gain readout below the lane to select its region.");
+    selectionKind.onChange=[this]{rebuildProposalRows();selectFrame(cursor,true);};
 }
 const std::vector<proposal::ProgrammeSection>& TimelineGainLane::rows() const
-{return !lraRows.empty()?lraRows:automatic&&proposed?automatic->originalAnnotations().sections:session.sectionDocument.map().sections;}
+{return !lraRows.empty()?lraRows:session.sectionDocument.map().sections;}
 const RegionAttempt* TimelineGainLane::inspectedAttempt() const
 {
     const auto review=automatic?automatic->regionReview():nullptr;
@@ -65,19 +71,21 @@ bool TimelineGainLane::diagnosticRegionInspection() const
 void TimelineGainLane::rebuildProposalRows()
 {
     lraRows.clear();
-    if(automatic&&(automatic->methodVersion()==proposal::lraTrimMethodVersion||automatic->regionReview())&&proposed&&proposed->sectionGains)
-    {uint64_t id=1;for(const auto& r:proposed->sectionGains->intervals)lraRows.push_back({id++,r.begin,r.end,automatic->regionReview()?"Proposed nominal processing interval":"Proposed LRA processing interval"});}
+    const bool proposal=selectionKind.getSelectedId()==3;
+    const auto* plan=proposal?(proposed&&proposed->sectionGains?&*proposed->sectionGains:nullptr):selectionKind.getSelectedId()==2&&applied?&*applied:nullptr;
+    if(plan){uint64_t id=1;for(const auto& r:plan->intervals)lraRows.push_back({id++,r.begin,r.end,proposal?"Proposed processing region":"Applied processing region"});}
 }
 void TimelineGainLane::inspectRegionAttempt(size_t n)
 {
     const auto review=automatic?automatic->regionReview():nullptr;if(!review||n>=review->attempts.size())return;
     regionAttempt=n;const auto& plan=review->attempts[n].plan;proposed=ProcessingPlan{};proposed->staticGainDb=plan.globalDb;proposed->sectionGains=plan.envelope;
+    selectionKind.setSelectedId(3,juce::dontSendNotification);
     rebuildProposalRows();row=intervalAt(rows(),cursor);showSelection();updateControls();repaint();
 }
 void TimelineGainLane::adjacent(int direction)
 {
     if(!bindingMatches()||!selected())return;
-    if(automatic&&!automatic->selection().corrections.empty())
+    if(selectionKind.getSelectedId()==1&&automatic&&!automatic->selection().corrections.empty())
     {
         const auto& changes=automatic->selection().corrections;
         if(direction>0){for(const auto& c:changes)if(c.begin>cursor){selectFrame(c.begin,true);return;}}
@@ -121,11 +129,15 @@ void TimelineGainLane::synchronize(const juce::String& key)
         automatic=session.sectionProposal;automaticStale=stale;proposed=automatic?automatic->previewPlan():std::nullopt;
         if(newProposal)regionAttempt=automatic&&automatic->regionReview()?automatic->regionReview()->retainedAttempt:std::numeric_limits<size_t>::max();
         if(const auto* attempt=inspectedAttempt()){proposed=ProcessingPlan{};proposed->staticGainDb=attempt->plan.globalDb;proposed->sectionGains=attempt->plan.envelope;}
-        rebuildProposalRows();
         audioRevision=session.revision;mapRevision=map.revision;initialized=session.hasCurrentStateInitialized();
         usableMap=input.isNotEmpty()&&map.inputIdentity==input&&map.valid();
         hasDraft=bool(d);editSerial=d?d->editSerial:0;fresh=usableMap&&session.sectionDraftFresh();
         applied=usableMap&&initialized?session.currentStateDocument.sectionGains:std::nullopt;
+        if(newProposal&&proposed&&proposed->sectionGains)selectionKind.setSelectedId(3,juce::dontSendNotification);
+        if(selectionKind.getSelectedId()==3&&(!proposed||!proposed->sectionGains))selectionKind.setSelectedId(applied?2:1,juce::dontSendNotification);
+        if(selectionKind.getSelectedId()==2&&!applied)selectionKind.setSelectedId(1,juce::dontSendNotification);
+        selectionKind.setItemEnabled(2,bool(applied));selectionKind.setItemEnabled(3,proposed&&proposed->sectionGains.has_value());
+        rebuildProposalRows();
         geometryMatches=!applied||session.sectionGeometry(map)==session.sectionGeometry(session.currentStateDocument.sectionGainAnnotations);
         supportError=usableMap&&initialized?session.sectionDraftSupportError():juce::String{};
         draftError=fresh?d->plan.validationError():juce::String{};
@@ -140,11 +152,13 @@ void TimelineGainLane::showSelection()
     const auto* section=selected();
     if(!section){detail.setText("No confirmed sections",juce::dontSendNotification);detail.setTooltip({});gain.setText({},false);return;}
     double stored=0;
-    if(fresh)stored=session.sectionTrimDraft->plan.intervals[row].db;
-    else if(applied&&geometryMatches)stored=applied->intervals[intervalAt(applied->intervals,cursor)].db;
+    if(fresh&&selectionKind.getSelectedId()==1)stored=session.sectionTrimDraft->plan.intervals[row].db;
+    else if(applied&&(geometryMatches||selectionKind.getSelectedId()==2))stored=applied->intervals[intervalAt(applied->intervals,cursor)].db;
     gain.setText(exact(stored),false);
     auto description=section->name+"   ["+juce::String(section->begin)+", "+juce::String(section->end)+")";
     if(initialized)description+="   Applied: "+exact(applied?applied->gainAt(cursor):0.)+" dB";
+    if(selectionKind.getSelectedId()!=1)description+=" (at cursor; nominal interval shown, transitions may cross its edges). Inspect only.";
+    if(initialized)description+=" | applied global "+exact(session.currentStateDocument.staticGainDb)+" dB";
     if(proposed)
     {
         const double local=proposed->sectionGains?proposed->sectionGains->gainAt(cursor):0.;
@@ -182,14 +196,14 @@ void TimelineGainLane::updateControls()
 {
     if(measured!=session.currentState.hasMeasurement){measured=session.currentState.hasMeasurement;feedback.clear();}
     const bool idle=!session.audioEditsBlocked()&&!session.job.isActive();
-    const bool editable=selected()&&initialized&&supportError.isEmpty()&&idle&&!session.sectionProposal&&(!hasDraft||fresh);
+    const bool editable=selectionKind.getSelectedId()==1&&selected()&&initialized&&supportError.isEmpty()&&idle&&!session.sectionProposal&&(!hasDraft||fresh);
     previous.setEnabled(selected()&&row>0);next.setEnabled(selected()&&row+1<rows().size());
-    if(automatic&&!automatic->selection().corrections.empty())
+    if(selectionKind.getSelectedId()==1&&automatic&&!automatic->selection().corrections.empty())
     {
         const auto& changes=automatic->selection().corrections;
         previous.setEnabled(selected()&&cursor>changes.front().begin);next.setEnabled(selected()&&cursor<changes.back().begin);
     }
-    previous.setTooltip(automatic?"Inspect previous proposed change":"Inspect previous section");next.setTooltip(automatic?"Inspect next proposed change":"Inspect next section");
+    previous.setTooltip("Inspect previous section or processing region");next.setTooltip("Inspect next section or processing region");
     for(auto* c:std::initializer_list<juce::Component*>{&gain,&dbLabel,&stage,&apply,&discard})c->setVisible(!automatic);
     gain.setEnabled(editable);stage.setEnabled(editable);
     apply.setEnabled(editable&&fresh&&!dirty&&draftError.isEmpty());discard.setEnabled((hasDraft||dirty)&&idle);
@@ -208,6 +222,7 @@ void TimelineGainLane::updateControls()
     else if(dirty)message="Unstaged field. Return or Set draft stages it; Apply is separate.";
     else if(draftError.isNotEmpty())message=draftError;
     else if(hasDraft)message="Draft only. Apply gains changes Current; Discard keeps applied audio.";
+    else if(selectionKind.getSelectedId()!=1)message="Processing-region inspection only. Select sections to edit manually; use arrows for every interval, including narrow regions.";
     else if(!geometryMatches)message="Annotations changed. Applied ramps stay fixed; a new draft starts at 0 dB.";
     else if(session.currentStateNeedsRemeasurement())message="Current unverified. Re-measure Current State to verify the applied gain.";
     else message="Click a section to inspect. Enter a gain and choose Set draft.";
@@ -237,6 +252,13 @@ void TimelineGainLane::selectFrame(int64_t frame,bool notify)
     dirty=false;feedback.clear();showSelection();updateControls();repaint();
     if(notify&&onSelection){const auto& s=rows()[row];onSelection(s.begin,s.end,cursor);}
 }
+void TimelineGainLane::selectAt(int64_t frame,int y)
+{
+    const auto base=plotBounds().getBottom();
+    if(y>=base&&y<base+20&&applied)selectionKind.setSelectedId(2,juce::dontSendNotification);
+    else if(y>=base+20&&y<base+42)selectionKind.setSelectedId(proposed&&proposed->sectionGains?3:1,juce::dontSendNotification);
+    rebuildProposalRows();selectFrame(frame,true);
+}
 void TimelineGainLane::setViewport(double begin,double end,int left,int width)
 {
     if(begin==viewBegin&&end==viewEnd&&left==plotLeft&&width==plotWidth)return;
@@ -244,7 +266,7 @@ void TimelineGainLane::setViewport(double begin,double end,int left,int width)
 }
 void TimelineGainLane::resized()
 {
-    auto b=getLocalBounds();legend.setBounds(b.removeFromTop(22));notice.setBounds(b.removeFromTop(24));
+    auto b=getLocalBounds();auto top=b.removeFromTop(22);selectionKind.setBounds(top.removeFromRight(195));legend.setBounds(top);notice.setBounds(b.removeFromTop(24));
     auto controls=b.removeFromBottom(28).reduced(2,1);
     previous.setBounds(controls.removeFromLeft(27));next.setBounds(controls.removeFromLeft(27));
     if(!automatic)
@@ -256,14 +278,15 @@ void TimelineGainLane::resized()
 }
 void TimelineGainLane::paint(juce::Graphics& g)
 {
-    g.fillAll(juce::Colour(0xff18212a));
+    g.fillAll(palette::panel());
     if(hasRegionLayers())paintRegionLayers(g);
+    paintReadouts(g);
     const auto box=plotBounds();if(box.getWidth()<2||viewEnd<=viewBegin)return;
     const auto x=[&](double f){return float(box.getX()+(f-viewBegin)*(box.getWidth()-1)/(viewEnd-viewBegin));};
     const auto y=[&](double db){return float(box.getCentreY()-db*(box.getHeight()-6)/24.);};
     g.setFont(11.f);g.setColour(juce::Colours::lightgrey);
     for(int db:{12,0,-12})g.drawText(juce::String(db)+" dB",0,int(y(db))-7,box.getX()-5,14,juce::Justification::centredRight);
-    g.reduceClipRegion(box);g.setColour(juce::Colour(0xff101820));g.fillRect(box);
+    g.reduceClipRegion(box);g.setColour(palette::card());g.fillRect(box);
     const auto* s=selected();if(!s)return;
     g.setColour(juce::Colour(0xff263440));
     if(s->end>viewBegin&&s->begin<viewEnd)g.fillRect(x(std::max<double>(s->begin,viewBegin)),float(box.getY()),x(std::min<double>(s->end,viewEnd))-x(std::max<double>(s->begin,viewBegin)),float(box.getHeight()));
@@ -298,6 +321,28 @@ void TimelineGainLane::paint(juce::Graphics& g)
         }
     };
     draw(applied?&*applied:nullptr,0);if(draft)draw(&*draft,1);if(proposed)draw(proposed->sectionGains?&*proposed->sectionGains:nullptr,2);
+}
+void TimelineGainLane::paintReadouts(juce::Graphics& g)
+{
+    if(!usableMap||plotWidth<2||viewEnd<=viewBegin)return;
+    const auto x=[&](int64_t frame){return plotLeft+int((std::clamp(double(frame),viewBegin,viewEnd)-viewBegin)*(plotWidth-1)/(viewEnd-viewBegin));};
+    const auto draw=[&](const processing::SectionGainPlan* plan,int line,const juce::String& title,juce::Colour colour)
+    {
+        const int y=plotBounds().getBottom()+line*20;g.setColour(colour);g.setFont(11.f);
+        g.drawText(title,0,y,plotLeft-4,20,juce::Justification::centredRight);
+        const auto label=[&](int64_t begin,int64_t end,double db)
+        {
+            if(end<=viewBegin||begin>=viewEnd)return;
+            const auto left=x(begin),right=x(end);g.drawVerticalLine(left,float(y),float(y+17));
+            if(right-left>=24)g.drawText(juce::String(db,2)+" dB",left+2,y,right-left-4,18,juce::Justification::centred);
+        };
+        if(plan)for(size_t i=intervalAt(plan->intervals,int64_t(viewBegin));i<plan->intervals.size()&&plan->intervals[i].begin<viewEnd;++i)
+        {const auto& r=plan->intervals[i];label(r.begin,r.end,r.db);}
+        else for(const auto& r:session.sectionDocument.map().sections)label(r.begin,r.end,0);
+    };
+    draw(applied?&*applied:nullptr,0,"Applied",juce::Colour(0xff81d5b4));
+    if(proposed)draw(proposed->sectionGains?&*proposed->sectionGains:nullptr,1,automaticStale?"Stale prop.":diagnosticRegionInspection()||automatic->status()==SectionProposalStatus::noSolution?"Rejected prop.":"Proposed",juce::Colour(0xff83d9ff));
+    else if(draft)draw(&*draft,1,"Draft",juce::Colour(0xffffc171));
 }
 void TimelineGainLane::paintRegionLayers(juce::Graphics& g)
 {

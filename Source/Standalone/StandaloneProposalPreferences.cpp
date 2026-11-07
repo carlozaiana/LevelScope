@@ -1,8 +1,9 @@
+#include "TimelineAppearance.h"
 #include "StandaloneProposalPreferences.h"
 namespace levelscope::standalone
 {
 ProposalWindow::ProposalWindow(const juce::String& title, std::unique_ptr<juce::Component> content, juce::Component* owner)
-    : DocumentWindow(title, juce::Colour(0xff20242b), allButtons)
+    : DocumentWindow(title, palette::panel(), allButtons)
 {
     const auto size = content->getLocalBounds();
     setUsingNativeTitleBar(true); setResizable(true,false); setResizeLimits(800,570,1600,1200);

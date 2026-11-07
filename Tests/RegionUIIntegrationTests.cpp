@@ -15,6 +15,10 @@ struct PreparationFeedbackTestAccess
     static TimelineGainLane& lane(StandaloneMainComponent& c){return c.gainLane;}
     static ProposalWorkflowPanel& proposal(StandaloneMainComponent& c){return c.proposalPanel;}
     static bool stopped(StandaloneMainComponent& c){return !c.audition.active()&&!c.audition.connected();}
+    static MeasurementTimeline& timeline(StandaloneMainComponent& c){return c.timeline;}
+    static void moveDivider(StandaloneMainComponent& c,int delta){c.waveformDivider.move(delta);}
+    static juce::Viewport& inspector(StandaloneMainComponent& c){return c.inspectorViewport;}
+    static int inspection(StandaloneMainComponent& c){return c.inspectDomain.getSelectedId();}
 };
 }
 namespace
@@ -172,6 +176,10 @@ void workflowChecks(StandaloneMainComponent& ui,const juce::File& root)
     JobControl job;const auto path=root.getChildFile("ui-session.levelscope");expect(sf::save(sf::capture(s),path,job).succeeded(),"UI settings and applied history saved in schema9");auto document=sf::read(path,job);expect(document.succeeded(),"UI session read");auto reopened=sf::verify(*document.document,job);
     expect(reopened.prepared&&reopened.prepared->model.regionPlanning&&reopened.prepared->model.lastAppliedExplanation&&!reopened.prepared->model.sectionProposal,"reopened session restores settings/history, never a private candidate");
     expect(reopened.prepared->model.lastAppliedExplanation->narrative==s.lastAppliedExplanation->narrative,"full historical explanation survives exact save/reopen");
+    TimelineGainLane restoredLane(reopened.prepared->model);restoredLane.setSize(1100,restoredLane.preferredHeight());restoredLane.synchronize("reopened-region");
+    const auto& restoredPlan=*reopened.prepared->model.currentStateDocument.sectionGains;
+    restoredLane.selectAt(restoredPlan.intervals[1].begin,restoredLane.plotBounds().getBottom()+5);
+    expect(restoredLane.inspectionText().contains("Applied processing region")&&!control<juce::TextButton>(restoredLane,"Set draft").isEnabled(),"saved processing regions remain directly selectable after reopening without a live proposal");
     // Stress the new documentary text at the supported interval capacity. These
     // synthetic plans are presentation fixtures, never candidates for Apply.
     auto large=*review;large.constraints.frames=int64_t(10000)*48000;large.attempts.resize(3,review->attempts.front());
@@ -196,6 +204,47 @@ void workflowChecks(StandaloneMainComponent& ui,const juce::File& root)
     expect(!s.sectionProposal&&s.job.state==JobState::cancelled&&proposalPlanIdentity(s.currentStateDocument.processingPlan())==applied,"main cancellation cannot apply a partial region result or roll back applied audio");
     const auto cancelMs=juce::Time::getMillisecondCounterHiRes()-cancelledAt;expect(cancelMs<=1000,"native region cancellation completes within one second");
     auto cancellation=juce::var(new juce::DynamicObject());cancellation.getDynamicObject()->setProperty("cancel_ms",cancelMs);cases.add(cancellation);
+}
+
+void convenienceChecks(StandaloneMainComponent& ui,const juce::File& root)
+{
+    auto& s=Access::model(ui);const auto revision=s.revision;const auto source=s.source.analysis,current=s.currentState.analysis;
+    Access::timeline(ui).focusForTransport();
+    const juce::KeyPress shortcut('A',juce::ModifierKeys::commandModifier|juce::ModifierKeys::shiftModifier,0);
+    expect(ui.keyPressed(shortcut)&&s.auditionDomain==MeasurementDomain::currentState&&Access::inspection(ui)==2&&Access::stopped(ui),"Cmd Shift A pairs inspection and audition Current without connecting or starting playback");
+    expect(ui.keyPressed(shortcut)&&s.auditionDomain==MeasurementDomain::source&&Access::inspection(ui)==1,"shortcut toggles both domains back to Original");
+    s.job.begin(JobStage::waveform,s.revision);ui.keyPressed(shortcut);expect(s.auditionDomain==MeasurementDomain::source,"active job blocks domain toggle");s.job.finish(s.job.ticket,s.revision,ErrorCode::none,"done");
+    const auto busy=s.auditionBusy;s.auditionBusy=[]{return true;};ui.keyPressed(shortcut);expect(s.auditionDomain==MeasurementDomain::source,"active transport/preparation blocks shortcut without changing audition");s.auditionBusy=busy;
+    expect(s.revision==revision&&s.source.analysis==source&&s.currentState.analysis==current,"inspection controls cannot alter measurements or processing");
+    auto& viewport=Access::inspector(ui);const int before=viewport.getHeight();Access::moveDivider(ui,100);
+    expect(viewport.getHeight()<before&&viewport.getViewedComponent()->getHeight()>=TimelineLayout::defaultInspector,"downward divider gives graph room while preserving all lower controls in viewport");
+    viewport.setViewPosition(0,viewport.getViewedComponent()->getHeight());expect(viewport.getViewPositionY()>0,"compressed inspector controls remain scroll-accessible");viewport.setViewPosition(0,0);Access::moveDivider(ui,-100);
+    expect(control<juce::Label>(ui,"Programme filename").getText()==s.sourceDocument.file.getFileName(),"programme filename appears above session status");
+    imageOf(ui,root.getChildFile("inspection-convenience.png"));
+}
+
+void refreshListening(const juce::File& from,const juce::File& root)
+{
+    for(auto method:{"m19","m20"})
+    {
+        const auto input=from.getChildFile(method).getChildFile("inspection.levelscope");JobControl job;auto read=sf::read(input,job);expect(read.succeeded(),"preserved comparison session reads");
+        const auto before=read.document;const auto plan=proposalPlanIdentity(before->current.processingPlan());
+        const auto history=encodeAppliedExplanation(*before->lastAppliedExplanation);const auto required=before->jobRequirements.digest();
+        const auto expectedSource=before->sourceCache,expectedCurrent=before->currentCache;
+        expect(bool(expectedSource)&&bool(expectedCurrent),"original comparison carries independent reference results");
+        auto prepared=sf::verify(*before,job);StandaloneSessionModel s;juce::String notice;
+        expect(prepared.prepared&&sf::adopt(*prepared.document,*prepared.prepared,s,notice),"normal session adoption validates original media");
+        measuredComposition(s,MeasurementDomain::source);measuredComposition(s,MeasurementDomain::currentState);
+        const auto same=[](const auto& a,const auto& b)
+        {return a.integrated.value==b.integrated.value&&a.lra.value==b.lra.value&&a.truePeak.value==b.truePeak.value&&a.samplePeak.value==b.samplePeak.value&&a.momentaryMax.value==b.momentaryMax.value&&a.shortTermMax.value==b.shortTermMax.value&&a.samplePeakFrames==b.samplePeakFrames&&a.truePeakEighthFrames==b.truePeakEighthFrames;};
+        expect(same(s.source.analysis->detail,expectedSource->detail)&&same(s.currentState.analysis->detail,expectedCurrent->detail),"UI-only build independently reproduces all six scalars and peak positions for Original and Current");
+        expect(proposalPlanIdentity(s.currentStateDocument.processingPlan())==plan&&s.jobRequirements.digest()==required&&encodeAppliedExplanation(*s.lastAppliedExplanation)==history,"comparison gains, requirements and complete historical explanation preserved exactly");
+        expect(s.evaluation(MeasurementDomain::currentState).verdict==Verdict::pass,"same applied comparison passes independently under new build identity");
+        const auto folder=root.getChildFile(method);folder.createDirectory();const auto output=folder.getChildFile("inspection.levelscope");
+        expect(sf::save(sf::capture(s),output,job).succeeded(),"save new verified comparison copy without replacing preserved original");
+        const auto check=sf::read(output,job);const auto verified=sf::verify(*check.document,job);
+        expect(verified.prepared&&verified.prepared->model.currentState.hasMeasurement,"new comparison reopens verified in matching build");
+    }
 }
 
 
@@ -277,14 +326,14 @@ void controlVariants(const juce::File& root)
 }
 int main(int argc,char** argv)
 {
-    juce::ScopedJuceInitialiser_GUI gui;const bool variants=argc==3&&juce::String(argv[2])=="--variants",exchange=argc==4&&juce::String(argv[2])=="--exchange",holdouts=argc==4&&juce::String(argv[2])=="--holdouts";if(argc!=2&&!variants&&!exchange&&!holdouts)return 2;const juce::File root(argv[1]);if(root.exists())return 2;root.createDirectory();bool passed=false;juce::String error;
+    juce::ScopedJuceInitialiser_GUI gui;const bool variants=argc==3&&juce::String(argv[2])=="--variants",exchange=argc==4&&juce::String(argv[2])=="--exchange",holdouts=argc==4&&juce::String(argv[2])=="--holdouts",listening=argc==4&&juce::String(argv[2])=="--refresh-listening";if(argc!=2&&!variants&&!exchange&&!holdouts&&!listening)return 2;const juce::File root(argv[1]);if(root.exists())return 2;root.createDirectory();bool passed=false;juce::String error;
     try
     {
-        if(holdouts)controlledHoldouts(juce::File(argv[3]),root);else if(exchange)exchangeChecks(juce::File(argv[3]),root);else if(variants)controlVariants(root);else
+        if(listening)refreshListening(juce::File(argv[3]),root);else if(holdouts)controlledHoldouts(juce::File(argv[3]),root);else if(exchange)exchangeChecks(juce::File(argv[3]),root);else if(variants)controlVariants(root);else
         {
         auto s=programme(root.getChildFile("fixture"),2);editorChecks(s,root);
         auto ui=std::make_unique<StandaloneMainComponent>(emptyOutputCatalog(),noOutputSettings());Access::stopTimer(*ui);ui->setSize(1320,1100);ui->setName("LevelScope - isolated M20 integration test");ui->addToDesktop(juce::ComponentPeer::windowHasTitleBar);ui->setVisible(true);
-        auto busy=Access::model(*ui).auditionBusy;Access::model(*ui)=s;Access::model(*ui).auditionBusy=busy;Access::refresh(*ui);workflowChecks(*ui,root);
+        auto busy=Access::model(*ui).auditionBusy;Access::model(*ui)=s;Access::model(*ui).auditionBusy=busy;Access::refresh(*ui);convenienceChecks(*ui,root);workflowChecks(*ui,root);
         }
         passed=true;
     }

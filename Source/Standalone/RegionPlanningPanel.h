@@ -1,4 +1,5 @@
 #pragma once
+#include "TimelineAppearance.h"
 #include "StandaloneProposalPreferences.h"
 
 namespace levelscope::standalone
@@ -38,7 +39,7 @@ public:
     std::function<void()> onChanged,onAssess;
     void resized() override;
     static std::optional<int64_t> exactFrame(juce::String);
-    void paint(juce::Graphics& g) override {g.fillAll(juce::Colour(0xff17212a));}
+    void paint(juce::Graphics& g) override {g.fillAll(palette::panel());}
     // Parsing/validation is shared by explicit Confirm and Confirm and assess.
     juce::String readDraft(std::optional<proposal::RegionPlanningSettings>&) const;
 private:

@@ -74,6 +74,10 @@ void gainLaneChecks(StandaloneSessionModel& s,const juce::File& root)
     expect(s.sectionTrimDraft->plan.intervals[2].db==0,"changed annotations start a new zero baseline rather than moving old gains");
     button(lane,"Discard gains")->onClick();
     lane.selectFrame(document.map().frames,true);expect(lane.inspectionText().contains("at frame "+juce::String(document.map().frames-1)),"EOF lane click inspects last actual sample");
+    lane.selectAt(100000,lane.plotBounds().getBottom()+5);
+    expect(lane.inspectionText().contains("Applied processing region")&&!laneEditor(lane)->isEnabled()&&s.currentState.analysis==remeasured,"click applied readout selects immutable processing region and preserves verification");
+    button(ui,"Fit selection")->onClick();expect(ui.viewRange()==std::make_pair(96000.,192000.),"region fit follows applied interval even after annotation boundary moved");
+    for(auto* child:lane.getChildren())if(auto* choice=dynamic_cast<juce::ComboBox*>(child))choice->setSelectedId(1,juce::sendNotificationSync);
     imageOf(ui,root.getChildFile("gain-applied.png"));
     // Updates arriving from the existing Sections window also refresh this lane.
     expect(s.beginSectionTrimDraft()&&s.setSectionDraftGain(2,4.123456789123456),"external window stages exact draft");

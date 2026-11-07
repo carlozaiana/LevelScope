@@ -2,6 +2,7 @@
 #include "Core/Proposal/AnalysisEngine.h"
 #include "Core/Waveform/WaveformOverview.h"
 #include "StandaloneLoudnessPreview.h"
+#include "TimelineAppearance.h"
 #include <juce_gui_basics/juce_gui_basics.h>
 
 namespace levelscope::standalone
@@ -21,10 +22,16 @@ public:
     void focusForTransport();
     bool keyPressed(const juce::KeyPress&) override;
     std::function<void()> onTogglePlayback;
+    std::function<void()> onToggleInspectionAudition;
     void setProgramme(int64_t frames,int sampleRate,const juce::String& identity);
     void setAnalysis (std::shared_ptr<const proposal::ProgramAnalysis>);
     void setWaveform(std::shared_ptr<const waveform::Overview>,bool accepted,const juce::StringArray& channels);
     void setPreview(std::shared_ptr<const LoudnessPreview>);
+    void setReferenceMeasurement(std::shared_ptr<const measurement::Result>,bool inspectingCurrent);
+    juce::String rangePeakText(int64_t begin,int64_t end) const;
+    TimelineBlend& visibilityBlend(){return blend;}
+    const std::vector<proposal::PlotBucket>& shortTermGatePlot() const {return gatedShortTerm;}
+    const std::vector<bool>& changedMomentaryColumns() const {return changedMomentary;}
     void setTransport(int64_t frame,bool seekAllowed,const juce::String& reason,const juce::String& identity);
     std::function<juce::String(int64_t,const juce::String&)> onRequestSeek;
     std::pair<double,double> viewRange() const {return {viewBegin,viewEnd};}
@@ -65,6 +72,11 @@ private:
     int knownRate=1;
     juce::String programmeIdentity;
     proposal::TimelinePlot plot;
+    TimelineBlend blend;
+    std::shared_ptr<const measurement::Result> originalMeasurement;
+    bool currentInspection=false;
+    std::vector<proposal::PlotBucket> gatedShortTerm;
+    std::vector<bool> changedMomentary;
     std::shared_ptr<const waveform::Overview> waveformData;
     std::vector<waveform::Column> waveformColumns;
     juce::StringArray channelNames;
@@ -102,6 +114,7 @@ private:
     void requestSeek(int64_t,const juce::String&);
     void navigationMessage(const juce::String&);
     void zoom (double factor);
+    void zoomAt(double factor,float x);
     void scrollBarMoved (juce::ScrollBar*, double) override;
 };
 juce::String diagnosticWindowText (const proposal::DiagnosticWindow&, int sampleRate, int64_t programmeFrames, bool ungated = false);

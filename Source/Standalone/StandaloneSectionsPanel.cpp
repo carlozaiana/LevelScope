@@ -197,7 +197,7 @@ void StandaloneSectionsPanel::refreshDetails()
             if (located.truePeak) text << " TP " << juce::String (*peak.trueDbtp, 6) << " dBTP @ eighth-frame " << juce::String (peak.truePeakEighthFrame);
             text << "\n";
         }
-        text << "Local peak maxima are not measured; absence of a programme maximum does not establish peak safety.\n";
+        text << "Local true-peak maxima are not measured; absence of a programme maximum does not establish peak safety.\n";
         text << annotateDiagnostics (*measured, session.getSelectedTargetProfile(), session.programmeApplicability).text << "\n";
     }
     text << "No section I/LRA or section compliance verdict. Crossing/padded windows are excluded from summaries and inspectable below. Section edits never seek, play or process audio.";
@@ -218,7 +218,7 @@ void StandaloneSectionsPanel::refreshDetails()
     }
     else text << "unity section gain; ";
     text << "final global trim " << juce::String(session.currentStateDocument.staticGainDb,12) << " dB. Curves/settings are not measurements.";
-    if(session.sectionProposal&&session.sectionProposal->status()==SectionProposalStatus::ready)
+    if(session.sectionProposal&&session.sectionProposal->status()==SectionProposalStatus::ready&&session.sectionProposal->peaks())
     {
         const bool fresh=session.sectionGeometry(document.map())==session.sectionProposal->peaks()->geometry;
         text << "\n" << (fresh?"PROPOSED settings only (not applied): ":"STALE PROPOSAL geometry; cannot Apply: ");
@@ -227,6 +227,7 @@ void StandaloneSectionsPanel::refreshDetails()
                  << " dB; additional reduction " << juce::String(correction.reductionDb,12)
                  << "; reserve " << juce::String(correction.reserveDb,12) << "; uncovered deficit " << juce::String(correction.uncoveredDb,12) << " dB.";
     }
+    text+="\n"+timeline.rangePeakText(row->begin,row->end);
     summary.setText (text, false);
 }
 int StandaloneSectionsPanel::getNumRows() { return static_cast<int> (document.map().sections.size()); }
@@ -285,7 +286,7 @@ void StandaloneSectionsPanel::resized()
     auto choose = b.removeFromTop (28); windowKind.setBounds (choose.removeFromLeft (240)); windowScope.setBounds (choose.removeFromLeft (200));
     inspection.setBounds (b.removeFromBottom (55)); b.removeFromBottom (4); windowList.setBounds (b);
 }
-void StandaloneSectionsPanel::paint (juce::Graphics& g) { g.fillAll (juce::Colour (0xff151b24)); }
+void StandaloneSectionsPanel::paint (juce::Graphics& g) { g.fillAll (palette::panel()); }
 void StandaloneSectionsPanel::GainView::paint(juce::Graphics& g)
 {
     g.fillAll(juce::Colour(0xff101820));g.setFont(12);g.setColour(juce::Colours::white);
@@ -307,7 +308,7 @@ void StandaloneSectionsPanel::GainView::paint(juce::Graphics& g)
     };
     draw(session.currentStateDocument.sectionGains?&*session.currentStateDocument.sectionGains:nullptr,juce::Colours::lightgreen);
     if(session.sectionTrimDraft)draw(&session.sectionTrimDraft->plan,juce::Colours::orange);
-    if(session.sectionProposal&&session.sectionProposal->status()==SectionProposalStatus::ready
+    if(session.sectionProposal&&session.sectionProposal->status()==SectionProposalStatus::ready&&session.sectionProposal->peaks()
         &&session.sectionGeometry(session.sectionDocument.map())==session.sectionProposal->peaks()->geometry)
         draw(&*session.sectionProposal->plan().sectionGains,juce::Colours::cyan);
 }

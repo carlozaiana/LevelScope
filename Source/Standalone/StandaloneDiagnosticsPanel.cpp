@@ -1,3 +1,4 @@
+#include "TimelineAppearance.h"
 #include "StandaloneDiagnosticsPanel.h"
 
 namespace levelscope::standalone
@@ -22,12 +23,12 @@ StandaloneDiagnosticsPanel::StandaloneDiagnosticsPanel (const StandaloneSessionM
     for (auto* box : { &summary, &details })
     {
         box->setMultiLine (true); box->setReadOnly (true); box->setFont (13.0f);
-        box->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0xff202631));
+        box->setColour (juce::TextEditor::backgroundColourId, palette::card());
         box->setColour (juce::TextEditor::textColourId, juce::Colours::white); addAndMakeVisible (*box);
     }
     summary.setName ("Measured diagnostics availability and interpretation"); details.setName ("Full-resolution diagnostic inspection");
     for (auto* c : std::array<juce::Component*, 7> { &domainBox, &rankingBox, &rebuildButton, &cancelButton, &status, &timeline, &ranking }) addAndMakeVisible (*c);
-    ranking.setRowHeight (25); ranking.setColour (juce::ListBox::backgroundColourId, juce::Colour (0xff202631));
+    ranking.setRowHeight (25); ranking.setColour (juce::ListBox::backgroundColourId, palette::card());
     setSize (1040, 850); startTimerHz (10);
 }
 StandaloneDiagnosticsPanel::~StandaloneDiagnosticsPanel() { stopTimer(); controller.cancel(); }
@@ -153,7 +154,7 @@ void StandaloneDiagnosticsPanel::resized()
 }
 void StandaloneDiagnosticsPanel::paintDistribution (juce::Graphics& g)
 {
-    g.setColour (juce::Colour (0xff202631)); g.fillRect (distributionBounds); g.setColour (juce::Colours::white); g.setFont (12.f);
+    g.setColour (palette::card()); g.fillRect (distributionBounds); g.setColour (juce::Colours::white); g.setFont (12.f);
     auto b = distributionBounds.reduced (8);
     g.drawText ("LRA DISTRIBUTION (loudness axis, not programme time). Green included / grey excluded; white CDF at 1 LU bin edges.", b.removeFromTop (18), juce::Justification::left);
     if (! displayed) return;
@@ -185,5 +186,5 @@ void StandaloneDiagnosticsPanel::paintDistribution (juce::Graphics& g)
     g.setColour (juce::Colours::white); g.drawText (juce::String (low, 0) + " LUFS", labels, juce::Justification::left);
     g.drawText (juce::String (high, 0) + " LUFS", labels, juce::Justification::right);
 }
-void StandaloneDiagnosticsPanel::paint (juce::Graphics& g) { g.fillAll (juce::Colour (0xff151b24)); paintDistribution (g); }
+void StandaloneDiagnosticsPanel::paint (juce::Graphics& g) { g.fillAll (palette::panel()); paintDistribution (g); }
 }

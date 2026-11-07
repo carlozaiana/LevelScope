@@ -7,11 +7,11 @@ struct TimelineLayout
     // The fixed 22 px information line now sits outside this height: 168+22
     // retains the old 190 px default. Travel is 120 px (previously 48).
     static constexpr int minimumComparison=90,defaultComparison=168,maximumComparison=210;
-    static constexpr int informationHeight=22,dividerHeight=8,minimumTimeline=220,minimumInspector=290;
-    int comparison=defaultComparison,inspector=minimumInspector;
+    static constexpr int informationHeight=22,dividerHeight=8,minimumTimeline=220,minimumInspector=150,defaultInspector=290;
+    int comparison=defaultComparison,inspector=defaultInspector;
     void moveComparison(int delta){comparison=juce::jlimit(minimumComparison,maximumComparison,comparison+delta);}
     void moveTimeline(int delta,int available,int channels=0,int laneHeight=0){inspector=juce::jlimit(minimumInspector,std::max(minimumInspector,available-std::max(minimumTimeline,137+16*channels)-laneHeight-dividerHeight),inspector-delta);}
-    void reset(){comparison=defaultComparison;inspector=minimumInspector;}
+    void reset(){comparison=defaultComparison;inspector=defaultInspector;}
 };
 class TimelineDivider final : public juce::Component
 {

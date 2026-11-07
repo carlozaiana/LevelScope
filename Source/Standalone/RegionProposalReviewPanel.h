@@ -1,4 +1,5 @@
 #pragma once
+#include "TimelineAppearance.h"
 #include "StandaloneRegionProposal.h"
 #include "StandaloneProposalPreferences.h"
 
@@ -11,7 +12,7 @@ public:
     RegionProposalReviewPanel(std::shared_ptr<const SectionProposalResult>,std::function<juce::String()>);
     std::function<void(size_t,int64_t,int64_t)> onInspect;
     void resized() override;
-    void paint(juce::Graphics& g) override {g.fillAll(juce::Colour(0xff17212a));}
+    void paint(juce::Graphics& g) override {g.fillAll(palette::panel());}
 private:
     std::shared_ptr<const SectionProposalResult> result;
     std::function<juce::String()> statusText;

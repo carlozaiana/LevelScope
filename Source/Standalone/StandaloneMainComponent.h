@@ -52,9 +52,11 @@ private:
     juce::TextButton openMixButton{"Open Mix..."},toolsButton{"Session / tools..."},audioSetupButton{"Audio setup..."},
         timelinePlay{"Play"},timelineStop{"Stop"},sectionsButton{"Sections / gain..."};
     juce::ComboBox inspectDomain, auditionDomainBox;
-    juce::Label positionLabel;
+    juce::Label positionLabel,sourceFilename;
     TimelineGainLane gainLane{session};
     ProposalWorkflowPanel proposalPanel{session};
+    juce::Component inspectorContent;
+    juce::Viewport inspectorViewport;
     std::unique_ptr<ProposalWindow> lraPassagesWindow;
     std::unique_ptr<ProposalWindow> regionPlanningWindow;
     void showRegionPlanning();
@@ -76,6 +78,7 @@ private:
     void showTools();
     void refreshTimeline();
     void playTimeline(MeasurementTimeline* origin=nullptr);
+    void toggleInspectionAudition();
     void showSections();
     juce::TextButton newSessionButton { "New session" }, openSessionButton { "Open session..." },
         saveSessionButton { "Save session" }, saveAsSessionButton { "Save as..." },

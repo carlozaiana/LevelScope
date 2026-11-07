@@ -1,3 +1,4 @@
+#include "TimelineAppearance.h"
 #include "ProposalWorkflowPanel.h"
 namespace levelscope::standalone
 {
@@ -9,7 +10,7 @@ ProposalWorkflowPanel::ProposalWorkflowPanel(StandaloneSessionModel& s):session(
     headline.setFont(juce::Font(17.f,juce::Font::bold));headline.setColour(juce::Label::textColourId,juce::Colour(0xffb7e6db));
     availability.setFont(12.f);availability.setMinimumHorizontalScale(1.f);
     reason.setMultiLine(true);reason.setReadOnly(true);reason.setScrollbarsShown(true);reason.setFont(14.f);reason.setName("Proposal outcome and next action");
-    reason.setColour(juce::TextEditor::backgroundColourId,juce::Colour(0xff18212a));
+    reason.setColour(juce::TextEditor::backgroundColourId,palette::card());
     for(auto* c:std::initializer_list<juce::Component*>{&headline,&reason,&availability})addAndMakeVisible(c);
     propose.onClick=[this]{if(propose.isEnabled()&&onPropose)onPropose();};
     review.onClick=[this]{if(review.isEnabled()&&onReview)onReview();};

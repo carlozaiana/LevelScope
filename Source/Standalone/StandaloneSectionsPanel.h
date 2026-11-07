@@ -17,6 +17,7 @@ public:
     MeasurementTimeline& timelineView() {return timeline;}
     void refreshMeasuredView() {timeline.setAnalysis(measured?measured->analysis:nullptr);}
     MeasurementDomain inspectionDomain() const {return domainBox.getSelectedId()==2?MeasurementDomain::currentState:MeasurementDomain::source;}
+    void selectInspectionDomain(MeasurementDomain domain){domainBox.setSelectedId(domain==MeasurementDomain::source?1:2,juce::dontSendNotification);synchronize();}
     void setPlaybackState(bool canPlay,bool canStop,const juce::String& domain);
     bool keyPressed(const juce::KeyPress& key) override {return timeline.keyPressed(key);}
     std::function<void()> onPlay,onStop;

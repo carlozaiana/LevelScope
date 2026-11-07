@@ -8,7 +8,7 @@ namespace
 class ProgrammeWindow final : public juce::DocumentWindow
 {
 public:
-    explicit ProgrammeWindow(ProgrammeImportPanel& p):DocumentWindow("Import channel files",juce::Colour(0xff181b20),DocumentWindow::closeButton),panel(p)
+    explicit ProgrammeWindow(ProgrammeImportPanel& p):DocumentWindow("Import channel files",palette::panel(),DocumentWindow::closeButton),panel(p)
     {setUsingNativeTitleBar(true);setContentNonOwned(&p,true);centreWithSize(820,520);setVisible(true);}
     void closeButtonPressed() override {panel.cancel();}
 private:ProgrammeImportPanel& panel;
@@ -16,7 +16,7 @@ private:ProgrammeImportPanel& panel;
 class CompositionWindow final : public juce::DocumentWindow
 {
 public:
-    explicit CompositionWindow(CompositionImportPanel& p):DocumentWindow("Compose M&E + dialogue",juce::Colour(0xff181b20),closeButton),panel(p)
+    explicit CompositionWindow(CompositionImportPanel& p):DocumentWindow("Compose M&E + dialogue",palette::panel(),closeButton),panel(p)
     {setUsingNativeTitleBar(true);setContentNonOwned(&p,true);centreWithSize(p.getWidth(),p.getHeight());setVisible(true);}
     void closeButtonPressed() override{panel.cancel();}
 private:CompositionImportPanel& panel;
@@ -25,7 +25,7 @@ class DiagnosticsWindow final : public juce::DocumentWindow
 {
 public:
     explicit DiagnosticsWindow (StandaloneDiagnosticsPanel& p)
-        : DocumentWindow ("LevelScope - Measured diagnostics", juce::Colour (0xff151b24), DocumentWindow::allButtons), panel (p)
+        : DocumentWindow ("LevelScope - Measured diagnostics", palette::panel(), DocumentWindow::allButtons), panel (p)
     {
         setUsingNativeTitleBar (true); setResizable (true, false); setResizeLimits (900, 800, 2400, 1600);
         setContentNonOwned (&panel, true); centreWithSize (1040, 850); setVisible (true);
@@ -38,7 +38,7 @@ class ReferenceWindow final : public juce::DocumentWindow
 {
 public:
     explicit ReferenceWindow (juce::Component& panel)
-        : DocumentWindow ("LevelScope - Reference picture", juce::Colour (0xff181b20), DocumentWindow::allButtons)
+        : DocumentWindow ("LevelScope - Reference picture", palette::panel(), DocumentWindow::allButtons)
     {
         setUsingNativeTitleBar (true); setResizable (true, false); setResizeLimits (620, 480, 2400, 1600);
         setContentNonOwned (&panel, true); centreWithSize (700, 600); setVisible (true);
@@ -49,7 +49,7 @@ class SectionsWindow final : public juce::DocumentWindow
 {
 public:
     explicit SectionsWindow (StandaloneSectionsPanel& p)
-        : DocumentWindow ("LevelScope - Programme sections", juce::Colour (0xff151b24), DocumentWindow::allButtons), panel (p)
+        : DocumentWindow ("LevelScope - Programme sections", palette::panel(), DocumentWindow::allButtons), panel (p)
     {
         setUsingNativeTitleBar (true); setResizable (true, false); setResizeLimits (1000, 700, 2400, 1800);
         viewport.setViewedComponent(&panel,false);setContentNonOwned (&viewport, false);
@@ -506,7 +506,7 @@ void StandaloneMainComponent::configureReadOnlyBox (juce::TextEditor& box)
     box.setCaretVisible (false);
     box.setScrollbarsShown (true);
 
-    box.setColour (juce::TextEditor::backgroundColourId, juce::Colour (0xff20242b));
+    box.setColour (juce::TextEditor::backgroundColourId, palette::card());
     box.setColour (juce::TextEditor::textColourId, juce::Colour (0xffeef1f7));
     box.setColour (juce::TextEditor::outlineColourId, juce::Colour (0xff3a3f4a));
     box.setColour (juce::TextEditor::focusedOutlineColourId, juce::Colour (0xff6f7788));
@@ -871,7 +871,7 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
 
 void StandaloneMainComponent::paint (juce::Graphics& g)
 {
-    g.fillAll (juce::Colour (0xff15171c));
+    g.fillAll (palette::panel());
 
     g.setColour (juce::Colour (0xff2a2d35));
     g.drawRoundedRectangle (getLocalBounds().toFloat().reduced (12.0f), 10.0f, 1.0f);
@@ -891,9 +891,10 @@ void StandaloneMainComponent::configureTimelineShell()
         refreshFromSession();
         refreshTimeline();
         for(const auto& row:session.sectionDocument.map().sections)
-            if(row.id==id){gainLane.selectFrame(row.begin,false);pageDetailBox.setText(gainLane.inspectionText(),false);break;}
+            if(row.id==id){gainLane.selectFrame(row.begin,true);break;}
     });
     timeline.onTogglePlayback=[this]{if(audition.active()){audition.stop();refreshTimeline();}else playTimeline();};
+    timeline.onToggleInspectionAudition=[this]{toggleInspectionAudition();};
     gainLane.onChanged=[this]{refreshFromSession();refreshTimeline();};
     proposalPanel.onPropose=[this]{proposeWithActiveMethod();refreshTimeline();};
     proposalPanel.onRegions=[this]{showRegionPlanning();};
@@ -923,8 +924,14 @@ void StandaloneMainComponent::configureTimelineShell()
     {const auto error=TimelineTransport::seek(frame,identity,session,audition);refreshTimeline();return error;};
     sectionsButton.onClick=[this]{showSections();};
     buildWaveformButton.onClick=[this]{beginWaveform();};
-    timeline.onInspect=[this](const juce::String& text){pageDetailBox.setText(text.startsWith("Current section gain settings")?text:inspectDomain.getText()+" | "+text,false);};
+    timeline.onInspect=[this](const juce::String& text){pageDetailBox.setText(inspectDomain.getText()+" | "+text,false);};
     setWantsKeyboardFocus(true);
+    addAndMakeVisible(sourceFilename);sourceFilename.setName("Programme filename");sourceFilename.setFont(14.f);
+    sourceFilename.setMinimumHorizontalScale(1.f);sessionStatus.setFont(11.f);
+    addAndMakeVisible(inspectorViewport);inspectorViewport.setViewedComponent(&inspectorContent,false);inspectorViewport.setScrollBarsShown(true,false);
+    for(auto* c:std::initializer_list<juce::Component*>{&proposalPanel,&measureSourceButton,&remeasureCurrentStateButton,&currentGain,&applicabilityConfirmation,&buildWaveformButton,&pageDetailBox})inspectorContent.addAndMakeVisible(c);
+    inspectDomain.setTooltip("Inspect independently, or Cmd+Shift+A to switch inspection and audition together while stopped.");
+    auditionDomainBox.setTooltip("Cmd+Shift+A switches inspection and audition together while stopped. Playback always requires Play.");
 }
 void StandaloneMainComponent::chooseMix()
 {
@@ -1014,6 +1021,7 @@ void StandaloneMainComponent::showSections()
         auto& view=sectionsPanel->timelineView();
         view.onRequestSeek=timeline.onRequestSeek;
         view.onTogglePlayback=[this]{if(audition.active())sectionsPanel->onStop();else sectionsPanel->onPlay();};
+        view.onToggleInspectionAudition=timeline.onToggleInspectionAudition;
     }
     if(!sectionsWindow)sectionsWindow=std::make_unique<SectionsWindow>(*sectionsPanel);
     sectionsPanel->resume();
@@ -1041,6 +1049,17 @@ bool StandaloneMainComponent::keyPressed(const juce::KeyPress& key)
     }
     return timeline.keyPressed(key);
 }
+void StandaloneMainComponent::toggleInspectionAudition()
+{
+    if(session.audioEditsBlocked()||session.job.isActive()||session.persistenceLoading)
+    {pageDetailBox.setText("Stop playback/preparation or finish the job before switching inspection and audition (Cmd+Shift+A).",false);return;}
+    if(!session.sourceDocument.hasSource||!session.hasCurrentStateInitialized())return;
+    const auto next=session.auditionDomain==MeasurementDomain::source?MeasurementDomain::currentState:MeasurementDomain::source;
+    session.selectAuditionDomain(next);inspectDomain.setSelectedId(next==MeasurementDomain::source?1:2,juce::dontSendNotification);
+    if(sectionsPanel)sectionsPanel->selectInspectionDomain(next);
+    audioPanel.synchronize();timeline.clearHighlight();refreshTimeline();
+    pageDetailBox.setText(inspectDomain.getText()+" + "+auditionDomainBox.getText()+". Stopped; press Play to listen.",false);
+}
 void StandaloneMainComponent::refreshTimeline()
 {
     const auto domain=inspectDomain.getSelectedId()==2?MeasurementDomain::currentState:MeasurementDomain::source;
@@ -1065,6 +1084,9 @@ void StandaloneMainComponent::refreshTimeline()
     timelineDiagnostics.select(measured.analysis,session.measurementContext(domain),domain);timelineDiagnostics.poll();
     const auto result=timelineDiagnostics.result();auto analysis=result?result->analysis:nullptr;
     timeline.setAnalysis(analysis);
+    const auto original=session.source.hasMeasurement&&!session.sourceContentInvalid?session.source.analysis:nullptr;
+    const auto reference=original?std::shared_ptr<const measurement::Result>(original,&original->detail):nullptr;
+    timeline.setReferenceMeasurement(reference,domain==MeasurementDomain::currentState&&session.currentState.hasMeasurement&&!session.currentStateNeedsRemeasurement());
     auditionDomainBox.setSelectedId(session.auditionDomain==MeasurementDomain::source?1:2,juce::dontSendNotification);
     auditionDomainBox.setEnabled(!session.audioEditsBlocked()&&!session.job.isActive());
     timelinePlay.setEnabled(!session.job.isActive()&&!session.persistenceLoading&&!audition.active()&&session.sourceDocument.hasSource);
@@ -1085,6 +1107,7 @@ void StandaloneMainComponent::refreshTimeline()
         sectionsPanel->refreshMeasuredView();
         editor.setWaveform(sectionWave.data,sectionWave.accepted,channels);
         editor.setPreview(loudnessProgress?loudnessProgress->view(binding):nullptr);
+        editor.setReferenceMeasurement(reference,sectionsPanel->inspectionDomain()==MeasurementDomain::currentState&&session.currentState.hasMeasurement&&!session.currentStateNeedsRemeasurement());
         editor.refreshSectionEditing();
         editor.setTransport(audition.positionFrames(),seekReason.isEmpty(),seekReason,audition.boundIdentity());
         sectionsPanel->setPlaybackState(timelinePlay.isEnabled(),timelineStop.isEnabled(),session.auditionDomain==MeasurementDomain::source?"Original":"Current");
@@ -1126,7 +1149,7 @@ void StandaloneMainComponent::resized()
     auto top=bounds.removeFromTop(32);
     openMixButton.setBounds(top.removeFromLeft(125).reduced(2));videoButton.setBounds(top.removeFromLeft(155).reduced(2));
     saveSessionButton.setBounds(top.removeFromLeft(115).reduced(2));toolsButton.setBounds(top.removeFromLeft(160).reduced(2));
-    audioSetupButton.setBounds(top.removeFromRight(150).reduced(2));sessionStatus.setBounds(top.reduced(5,0));bounds.removeFromTop(7);
+    audioSetupButton.setBounds(top.removeFromRight(150).reduced(2));top.reduce(5,0);sourceFilename.setBounds(top.removeFromTop(17));sessionStatus.setBounds(top);bounds.removeFromTop(7);
     auto feedback = bounds.removeFromTop(56);
     cancelJobButton.setBounds(feedback.removeFromRight(110).withSizeKeepingCentre(106,28));
     auto progressArea = feedback.removeFromRight(165);jobProgress.setBounds(progressArea.reduced(8,18));
@@ -1141,6 +1164,8 @@ void StandaloneMainComponent::resized()
     timelineAvailableHeight=bounds.getHeight();timelineLayout.moveTimeline(0,timelineAvailableHeight,session.sourceDocument.layout.count,gainLane.preferredHeight());
     auto bottom=bounds.removeFromBottom(timelineLayout.inspector);
     waveformDivider.setBounds(bounds.removeFromBottom(TimelineLayout::dividerHeight));
+    inspectorViewport.setBounds(bottom);inspectorContent.setSize(std::max(1,bottom.getWidth()-inspectorViewport.getScrollBarThickness()),std::max(TimelineLayout::defaultInspector,bottom.getHeight()));
+    bottom=inspectorContent.getLocalBounds();
     proposalPanel.setBounds(bottom.removeFromTop(ProposalWorkflowPanel::height));
     auto processing=bottom.removeFromTop(32);
     measureSourceButton.setBounds(processing.removeFromLeft(150).reduced(2));remeasureCurrentStateButton.setBounds(processing.removeFromLeft(190).reduced(2));

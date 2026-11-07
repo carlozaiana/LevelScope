@@ -36,6 +36,7 @@ void StandaloneMainComponent::refreshSessionControls()
     if(busy&&documentControl)text+=" | "+juce::String(fileOperation==FileOperation::save?"Saving snapshot":"Opening/verifying media")+" "+juce::String(juce::roundToInt(100*documentControl->progress.load()))+"%";
     else if(documentNotice.isNotEmpty())text+=" | "+documentNotice.replace("\n","; ");
     sessionStatus.setText(text,juce::dontSendNotification);sessionStatus.setTooltip(documentNotice);
+    sourceFilename.setText(session.sourceDocument.displayName,juce::dontSendNotification);sourceFilename.setTooltip(session.sourceDocument.fullPath);
 }
 void StandaloneMainComponent::confirmDiscard(std::function<void()> action)
 {

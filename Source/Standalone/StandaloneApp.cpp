@@ -11,7 +11,7 @@ class StandaloneMainWindow final : public juce::DocumentWindow
 public:
     explicit StandaloneMainWindow (const juce::String& name)
         : juce::DocumentWindow (name,
-                                juce::Colour (0xff15171c),
+                                levelscope::standalone::palette::panel(),
                                 juce::DocumentWindow::allButtons)
     {
         setUsingNativeTitleBar (true);
