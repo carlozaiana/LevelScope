@@ -24,10 +24,13 @@ void deletionChecks(const juce::File& root)
     expect(s.sectionTrimDraft&&s.sectionTrimDraft->processingRegions&&s.sectionTrimDraft->plan.intervals[1].db==0&&s.sectionTrimDraft->plan.intervals[0].db==-1&&s.sectionTrimDraft->plan.intervals[2].db==2,"applied-region deletion drafts only selected local gain removal");
     expect(s.currentState.analysis==verified&&s.currentStateDocument.sectionGains->audioKey()==plan&&s.currentStateDocument.staticGainDb==2,"removal draft preserves measurement, applied plan and global gain");
     expect(!laneEditor(lane)->isEnabled()&&button(lane,"Apply gains")->isEnabled(),"region removal has explicit Apply/Discard and cannot enter the section-index editor");
+    expect(laneEditor(lane)->getText()=="0","disabled removal field displays the draft plateau, not the old applied gain");
     imageOf(ui,root.getChildFile("region-removal-draft.png"));button(lane,"Discard gains")->onClick();expect(!s.sectionTrimDraft&&s.currentState.analysis==verified,"discard region removal retains verified Current");
     // Different annotation geometry must never make a region edit reset unrelated applied gains.
     expect(doc.moveEnd(doc.map().sections[0].id,90000,error),"move annotation independently of processing");lane.synchronize("delete");select(100000,2);ui.keyPressed(juce::KeyPress(juce::KeyPress::backspaceKey));
     expect(s.sectionTrimDraft&&s.sectionTrimDraft->plan.intervals[1].begin==96000&&s.sectionTrimDraft->plan.intervals[0].db==-1,"region removal uses applied interval geometry despite changed annotations");
+    bool falseResetNotice=false;for(auto* child:lane.getChildren())if(auto* label=dynamic_cast<juce::Label*>(child))falseResetNotice|=label->getText().contains("Other sections start at 0 dB");
+    expect(!falseResetNotice&&laneEditor(lane)->getText()=="0","changed annotations do not mislabel preserved neighbours or the selected removal draft");
     button(lane,"Apply gains")->onClick();expect(!s.sectionTrimDraft&&!s.currentState.hasMeasurement&&s.currentStateNeedsRemeasurement()&&s.source.analysis==original&&s.currentStateDocument.staticGainDb==2,"Apply removal invalidates only Current and retains global gain/Source");
     const auto& applied=*s.currentStateDocument.sectionGains;expect(applied.intervals.size()==3&&applied.intervals[0].db==-1&&applied.intervals[1].db==0&&applied.intervals[2].db==2,"Apply preserves neighbouring plateaus and leaves selected local gain at unity");
     select(100000,2);ui.keyPressed(juce::KeyPress(juce::KeyPress::backspaceKey));expect(!s.sectionTrimDraft,"already-unity region removal is a no-op");

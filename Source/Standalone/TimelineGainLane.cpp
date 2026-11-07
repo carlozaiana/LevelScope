@@ -162,7 +162,8 @@ void TimelineGainLane::showSelection()
     const auto* section=selected();
     if(!section){detail.setText("No confirmed sections",juce::dontSendNotification);detail.setTooltip({});gain.setText({},false);return;}
     double stored=0;
-    if(fresh&&!session.sectionTrimDraft->processingRegions&&selectionKind.getSelectedId()==1)stored=session.sectionTrimDraft->plan.intervals[row].db;
+    if(fresh&&session.sectionTrimDraft->processingRegions)stored=session.sectionTrimDraft->plan.intervals[intervalAt(session.sectionTrimDraft->plan.intervals,cursor)].db;
+    else if(fresh&&selectionKind.getSelectedId()==1)stored=session.sectionTrimDraft->plan.intervals[row].db;
     else if(applied&&(geometryMatches||selectionKind.getSelectedId()==2))stored=applied->intervals[intervalAt(applied->intervals,cursor)].db;
     gain.setText(exact(stored),false);
     auto description=section->name+"   ["+juce::String(section->begin)+", "+juce::String(section->end)+")";
@@ -201,7 +202,9 @@ void TimelineGainLane::showSelection()
         }
     }
     detail.setText(description.upToFirstOccurrenceOf("\n",false,false),juce::dontSendNotification);
-    detail.setTooltip(description+" at frame "+juce::String(cursor)+". The field shows the section setting; the applied readout includes transitions.");
+    detail.setTooltip(description+" at frame "+juce::String(cursor)+(fresh&&session.sectionTrimDraft->processingRegions
+        ?". The disabled field shows the draft region plateau; the applied readout includes transitions."
+        :". The field shows the section setting; the applied readout includes transitions."));
 }
 void TimelineGainLane::updateControls()
 {
@@ -238,7 +241,7 @@ void TimelineGainLane::updateControls()
     else if(!geometryMatches)message="Annotations changed. Applied ramps stay fixed; a new draft starts at 0 dB.";
     else if(session.currentStateNeedsRemeasurement())message="Current unverified. Re-measure Current State to verify the applied gain.";
     else message="Click a section to inspect. Backspace removes its annotation into a neighbour; applied audio stays unchanged. Enter a gain and choose Set draft.";
-    if(!geometryMatches&&fresh)message+=" Other sections start at 0 dB on changed annotations.";
+    if(!geometryMatches&&fresh&&!session.sectionTrimDraft->processingRegions)message+=" Other sections start at 0 dB on changed annotations.";
     legend.setText(automatic?"CURRENT local gain (dB)   |   Green solid = applied   /   Cyan dotted = proposal":
         "CURRENT local gain (dB)   |   Green solid = applied   /   Amber dashed = manual draft",juce::dontSendNotification);
     notice.setText(message,juce::dontSendNotification);notice.setTooltip(message);
