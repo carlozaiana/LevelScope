@@ -930,8 +930,8 @@ void StandaloneMainComponent::configureTimelineShell()
     sourceFilename.setMinimumHorizontalScale(1.f);sessionStatus.setFont(11.f);
     addAndMakeVisible(inspectorViewport);inspectorViewport.setViewedComponent(&inspectorContent,false);inspectorViewport.setScrollBarsShown(true,false);
     for(auto* c:std::initializer_list<juce::Component*>{&proposalPanel,&measureSourceButton,&remeasureCurrentStateButton,&currentGain,&applicabilityConfirmation,&buildWaveformButton,&pageDetailBox})inspectorContent.addAndMakeVisible(c);
-    inspectDomain.setTooltip("Inspect independently, or Cmd+Shift+A to switch inspection and audition together while stopped.");
-    auditionDomainBox.setTooltip("Cmd+Shift+A switches inspection and audition together while stopped. Playback always requires Play.");
+    inspectDomain.setTooltip("Inspect independently, or A to switch inspection and audition together while stopped.");
+    auditionDomainBox.setTooltip("A switches inspection and audition together while stopped. Playback always requires Play.");
 }
 void StandaloneMainComponent::chooseMix()
 {
@@ -1052,7 +1052,7 @@ bool StandaloneMainComponent::keyPressed(const juce::KeyPress& key)
 void StandaloneMainComponent::toggleInspectionAudition()
 {
     if(session.audioEditsBlocked()||session.job.isActive()||session.persistenceLoading)
-    {pageDetailBox.setText("Stop playback/preparation or finish the job before switching inspection and audition (Cmd+Shift+A).",false);return;}
+    {pageDetailBox.setText("Stop playback/preparation or finish the job before switching inspection and audition (A).",false);return;}
     if(!session.sourceDocument.hasSource||!session.hasCurrentStateInitialized())return;
     const auto next=session.auditionDomain==MeasurementDomain::source?MeasurementDomain::currentState:MeasurementDomain::source;
     session.selectAuditionDomain(next);inspectDomain.setSelectedId(next==MeasurementDomain::source?1:2,juce::dontSendNotification);

@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstdlib>
 #include "VideoTiming.h"
+#include "Core/Measurement/GatePopulation.h"
 
 namespace levelscope::standalone
 {
@@ -137,7 +138,7 @@ bool MeasurementTimeline::keyPressed(const juce::KeyPress& key)
     if(juce::Component::getCurrentlyModalComponent())return false;
     for(auto* c=juce::Component::getCurrentlyFocusedComponent();c;c=c->getParentComponent())
         if(dynamic_cast<juce::TextEditor*>(c))return false;
-    if(key.getModifiers().isCommandDown()&&key.getModifiers().isShiftDown()
+    if(!key.getModifiers().isAnyModifierKeyDown()
         &&(key.getKeyCode()=='A'||key.getKeyCode()=='a')&&onToggleInspectionAudition)
     {onToggleInspectionAudition();return true;}
     if(key!=juce::KeyPress::spaceKey||!onTogglePlayback)return false;
@@ -192,6 +193,9 @@ void MeasurementTimeline::zoomAt(double factor,float px)
 void MeasurementTimeline::setReferenceMeasurement(std::shared_ptr<const measurement::Result> value,bool current)
 {
     if(value==originalMeasurement&&current==currentInspection)return;
+    if(value!=originalMeasurement)
+        originalIntegratedGateEnergy=value&&value->integratedRelativeGate
+            ?measurement::relativeGateEnergy(value->momentary,false):std::nullopt;
     originalMeasurement=std::move(value);currentInspection=current;rebuild();
 }
 juce::String MeasurementTimeline::rangePeakText(int64_t begin,int64_t end) const
@@ -321,15 +325,19 @@ void MeasurementTimeline::rebuild()
         auto w=std::lower_bound(analysis->lraWindows.begin(),analysis->lraWindows.end(),viewBegin,[](const auto& v,double f){return v.end<f;});
         for(;w!=analysis->lraWindows.end()&&w->end<=viewEnd&&w->end<=analysis->frames;++w)
             if(w->lufs)(w->included?gatedShortTerm[column(w->end)].included:gatedShortTerm[column(w->end)].excluded).add(*w->lufs,w->end);
-        if(currentInspection&&originalMeasurement&&originalMeasurement->frames==analysis->frames&&originalMeasurement->sampleRate==analysis->sampleRate)
+        if(currentInspection&&originalMeasurement&&originalIntegratedGateEnergy&&analysis->integratedGate
+            &&originalMeasurement->frames==analysis->frames&&originalMeasurement->sampleRate==analysis->sampleRate)
         {
             changedMomentary.resize(count,false);
             const auto& source=originalMeasurement->momentary;
             auto m=std::lower_bound(analysis->momentary.begin(),analysis->momentary.end(),viewBegin,[](const auto& v,double f){return v.end<f;});
-            for(;m!=analysis->momentary.end()&&m->end<=viewEnd;++m)
+            for(;m!=analysis->momentary.end()&&m->end-analysis->sampleRate/10<viewEnd;++m)
             {
                 const auto n=size_t(m-analysis->momentary.begin());
-                if(n<source.size()&&source[n].endFrame==m->end&&source[n].energy!=m->energy)
+                // Compare the exact measured IL populations, each against its own
+                // gate. A gain/value difference alone does not change membership.
+                if(m->end>viewBegin&&n<source.size()&&source[n].endFrame==m->end
+                    &&measurement::includedInPopulation(source[n].energy,*originalIntegratedGateEnergy,false)!=m->included)
                 {
                     const auto first=column(std::max<int64_t>(0,m->end-analysis->sampleRate/10)),last=column(m->end);
                     for(auto c=first;c<=last;++c)changedMomentary[c]=true;

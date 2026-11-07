@@ -4,6 +4,7 @@
 #include "Standalone/TimelineTransport.h"
 #include "Standalone/TimelineLayout.h"
 #include <future>
+#include "Core/Measurement/GatePopulation.h"
 
 namespace
 {

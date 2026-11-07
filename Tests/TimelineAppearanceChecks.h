@@ -4,15 +4,29 @@ void appearanceChecks(const juce::File& root)
     MeasurementTimeline ui;ui.setSize(1150,540);ui.setProgramme(240000,48000,"appearance");ui.setWaveform({},false,{"L","R"});
     auto a=std::make_shared<proposal::ProgramAnalysis>();a->sampleRate=48000;a->frames=240000;a->integratedGate=-40;a->lraGate=-50;
     auto original=std::make_shared<measurement::Result>();original->sampleRate=48000;original->frames=a->frames;
-    for(int n=0;n<4;++n)
-    {proposal::DiagnosticWindow w;w.end=19200+n*4800;w.begin=w.end-19200;w.energy=n==2?.02:.01;w.lufs=measurement::OfflineMeasurement::loudness(w.energy);w.included=true;a->momentary.push_back(w);original->momentary.push_back({w.end,.01});}
+    const double sourceEnergy[]{1.,.01,.1,.03,.002,.001},currentEnergy[]{2.,.1,.01,.03,.003,.001};
+    measurement::Result current;
+    for(int n=0;n<6;++n){original->momentary.push_back({19200+n*4800,sourceEnergy[n]});current.momentary.push_back({19200+n*4800,currentEnergy[n]});}
+    const auto sourceGate=measurement::relativeGateEnergy(original->momentary,false),currentGate=measurement::relativeGateEnergy(current.momentary,false);
+    original->integratedRelativeGate=measurement::OfflineMeasurement::loudness(*sourceGate);a->integratedGate=measurement::OfflineMeasurement::loudness(*currentGate);
+    for(const auto& m:current.momentary)
+    {proposal::DiagnosticWindow w;w.end=m.endFrame;w.begin=w.end-19200;w.energy=m.energy;w.lufs=measurement::OfflineMeasurement::loudness(w.energy);w.included=measurement::includedInPopulation(w.energy,*currentGate,false);a->momentary.push_back(w);}
     for(int n=0;n<3;++n)
     {proposal::DiagnosticWindow w;w.begin=n*4800;w.end=w.begin+144000;w.energy=.01;w.lufs=n==1?-60:-30;w.included=n!=1;a->lraWindows.push_back(w);w.included=false;a->shortTerm.push_back(w);}
     ui.setAnalysis(a);ui.setReferenceMeasurement(original,true);
-    expect(std::any_of(ui.changedMomentaryColumns().begin(),ui.changedMomentaryColumns().end(),[](bool b){return b;}),"Current-only comparison marks differing measured M samples");
+    const auto redAt=[&](double seconds){const auto range=ui.viewRange();const auto& bins=ui.changedMomentaryColumns();const auto n=size_t((seconds*48000-range.first)*bins.size()/(range.second-range.first));return n<bins.size()&&bool(bins[n]);};
+    expect(redAt(.45)&&redAt(.55),"red marks both excluded-to-included and included-to-excluded measured IL membership changes");
+    expect(redAt(.65),"unchanged momentary energy is red when its measured gate membership changes because the programme gate moves");
+    expect(!redAt(.35)&&!redAt(.75)&&!redAt(.85),"changed energy with unchanged membership and unchanged energy are not red");
+    ui.setViewRange(.42*48000,.48*48000);expect(redAt(.45),"red cadence cell survives a viewport wholly inside the cell before its window end");ui.setViewRange(0,240000);
+    auto uniform=std::make_shared<proposal::ProgramAnalysis>(*a);uniform->integratedGate=*original->integratedRelativeGate+measurement::OfflineMeasurement::loudness(4.)-measurement::OfflineMeasurement::loudness(1.);
+    for(size_t n=0;n<uniform->momentary.size();++n){auto& w=uniform->momentary[n];w.energy=sourceEnergy[n]*4;w.included=measurement::includedInPopulation(sourceEnergy[n],*sourceGate,false);}
+    ui.setAnalysis(uniform);expect(std::none_of(ui.changedMomentaryColumns().begin(),ui.changedMomentaryColumns().end(),[](bool b){return b;}),"uniform gain with unchanged population never turns the relative line red");ui.setAnalysis(a);
+    ui.setViewRange(0,48000);imageOf(ui,root.getChildFile("relative-membership.png"));ui.setViewRange(0,240000);
+    ui.setReferenceMeasurement({},true);expect(ui.changedMomentaryColumns().empty(),"missing Original measurement cannot create membership highlights");ui.setReferenceMeasurement(original,true);
     size_t included=0,excluded=0;for(const auto& bin:ui.shortTermGatePlot()){included+=bin.included.count;excluded+=bin.excluded.count;}
     expect(included==2&&excluded==1&&a->shortTerm[1].lufs==-60&&!a->shortTerm[1].included,"short-term colour retains exact measured LRA membership without mutating ungated measurements");
-    ui.setReferenceMeasurement(original,false);expect(ui.changedMomentaryColumns().empty()&&a->integratedGate==-40,"Original suppresses red comparison only; measured relative gate is unchanged");
+    ui.setReferenceMeasurement(original,false);expect(ui.changedMomentaryColumns().empty()&&a->integratedGate==measurement::OfflineMeasurement::loudness(*currentGate),"Original suppresses red comparison only; measured relative gate is unchanged");
     auto preview=std::make_shared<LoudnessPreview>(240000,48000);preview->window(false,{19200,.02});preview->publish(24000,true);ui.setPreview(preview);
     expect(ui.shortTermGatePlot().empty()&&ui.changedMomentaryColumns().empty(),"incomplete previews never acquire completed gate membership or difference highlights");ui.setPreview({});
     auto& blend=ui.visibilityBlend();expect(blend.waveformAlpha()==1&&blend.loudnessAlpha()==1,"centre preserves original full visibility of both layers");

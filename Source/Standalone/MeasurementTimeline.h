@@ -74,6 +74,7 @@ private:
     proposal::TimelinePlot plot;
     TimelineBlend blend;
     std::shared_ptr<const measurement::Result> originalMeasurement;
+    std::optional<double> originalIntegratedGateEnergy;
     bool currentInspection=false;
     std::vector<proposal::PlotBucket> gatedShortTerm;
     std::vector<bool> changedMomentary;

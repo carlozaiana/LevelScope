@@ -1,6 +1,7 @@
 #include "CompositionTestFixtures.h"
 #include "Standalone/StandaloneMainComponent.h"
 #include "Standalone/RegionReviewFormatting.h"
+#include "Core/Measurement/GatePopulation.h"
 
 namespace levelscope::standalone
 {
@@ -210,9 +211,13 @@ void convenienceChecks(StandaloneMainComponent& ui,const juce::File& root)
 {
     auto& s=Access::model(ui);const auto revision=s.revision;const auto source=s.source.analysis,current=s.currentState.analysis;
     Access::timeline(ui).focusForTransport();
-    const juce::KeyPress shortcut('A',juce::ModifierKeys::commandModifier|juce::ModifierKeys::shiftModifier,0);
-    expect(ui.keyPressed(shortcut)&&s.auditionDomain==MeasurementDomain::currentState&&Access::inspection(ui)==2&&Access::stopped(ui),"Cmd Shift A pairs inspection and audition Current without connecting or starting playback");
+    const juce::KeyPress shortcut('A',juce::ModifierKeys{},'a');
+    expect(ui.keyPressed(shortcut)&&s.auditionDomain==MeasurementDomain::currentState&&Access::inspection(ui)==2&&Access::stopped(ui),"A pairs inspection and audition Current without connecting or starting playback");
     expect(ui.keyPressed(shortcut)&&s.auditionDomain==MeasurementDomain::source&&Access::inspection(ui)==1,"shortcut toggles both domains back to Original");
+    expect(!ui.keyPressed(juce::KeyPress('A',juce::ModifierKeys::commandModifier|juce::ModifierKeys::shiftModifier,0))&&s.auditionDomain==MeasurementDomain::source,"old modified shortcut no longer toggles inspection/audition");
+    juce::TextEditor typing;ui.addAndMakeVisible(typing);typing.setBounds(20,20,150,24);typing.grabKeyboardFocus();
+    expect(!ui.keyPressed(shortcut)&&s.auditionDomain==MeasurementDomain::source,"typing A in a text field never switches inspection/audition");
+    ui.removeChildComponent(&typing);Access::timeline(ui).focusForTransport();
     s.job.begin(JobStage::waveform,s.revision);ui.keyPressed(shortcut);expect(s.auditionDomain==MeasurementDomain::source,"active job blocks domain toggle");s.job.finish(s.job.ticket,s.revision,ErrorCode::none,"done");
     const auto busy=s.auditionBusy;s.auditionBusy=[]{return true;};ui.keyPressed(shortcut);expect(s.auditionDomain==MeasurementDomain::source,"active transport/preparation blocks shortcut without changing audition");s.auditionBusy=busy;
     expect(s.revision==revision&&s.source.analysis==source&&s.currentState.analysis==current,"inspection controls cannot alter measurements or processing");
@@ -221,6 +226,44 @@ void convenienceChecks(StandaloneMainComponent& ui,const juce::File& root)
     viewport.setViewPosition(0,viewport.getViewedComponent()->getHeight());expect(viewport.getViewPositionY()>0,"compressed inspector controls remain scroll-accessible");viewport.setViewPosition(0,0);Access::moveDivider(ui,-100);
     expect(control<juce::Label>(ui,"Programme filename").getText()==s.sourceDocument.file.getFileName(),"programme filename appears above session status");
     imageOf(ui,root.getChildFile("inspection-convenience.png"));
+}
+
+juce::var gateInspectionReport(const measurement::Result& original,const measurement::Result& current)
+{
+    auto report=juce::var(new juce::DynamicObject());
+    for(bool isCurrent:{false,true})
+    {
+        const auto& r=isCurrent?current:original;const auto gate=measurement::relativeGateEnergy(r.lraWindows,true);
+        auto row=juce::var(new juce::DynamicObject());auto* d=row.getDynamicObject();int visible=0,excluded=0;std::optional<double> minimum;juce::Array<juce::var> excludedEnds;
+        for(const auto& w:r.lraWindows)if(w.endFrame<=r.frames&&w.energy>0)
+        {
+            ++visible;const auto loudness=measurement::OfflineMeasurement::loudness(w.energy);minimum=minimum?std::min(*minimum,loudness):loudness;
+            if(!gate||!measurement::includedInPopulation(w.energy,*gate,true)){++excluded;excludedEnds.add(double(w.endFrame)/r.sampleRate);}
+        }
+        d->setProperty("relative_lra_gate_lufs",r.lraRelativeGate?juce::var(*r.lraRelativeGate):juce::var());d->setProperty("minimum_visible_s_lufs",minimum?juce::var(*minimum):juce::var());
+        d->setProperty("finite_visible_s_windows",visible);d->setProperty("excluded_visible_s_windows",excluded);d->setProperty("excluded_s_window_end_seconds",excludedEnds);
+        MeasurementTimeline timeline;timeline.setSize(1150,540);timeline.setProgramme(r.frames,r.sampleRate,"gate-report");timeline.setAnalysis(proposal::analyzeProgramme(r,"gate-report"));
+        size_t plotted=0,plottedExcluded=0;for(const auto& bin:timeline.shortTermGatePlot()){plotted+=bin.included.count+bin.excluded.count;plottedExcluded+=bin.excluded.count;}
+        expect(plotted==size_t(visible)&&plottedExcluded==size_t(excluded),"actual comparison short-term plotted membership exactly matches measured population");
+        report.getDynamicObject()->setProperty(isCurrent?"current":"original",row);
+    }
+    const auto og=measurement::relativeGateEnergy(original.momentary,false),cg=measurement::relativeGateEnergy(current.momentary,false);
+    expect(og&&cg&&original.momentary.size()==current.momentary.size(),"paired comparison has matching measured momentary windows and gates");
+    juce::Array<juce::var> changed;
+    MeasurementTimeline timeline;timeline.setSize(1150,540);timeline.setProgramme(current.frames,current.sampleRate,"gate-changes");timeline.setAnalysis(proposal::analyzeProgramme(current,"gate-changes"));timeline.setReferenceMeasurement(std::make_shared<measurement::Result>(original),true);
+    for(size_t n=0;n<current.momentary.size();++n)
+    {
+        const auto& o=original.momentary[n];const auto& c=current.momentary[n];
+        const bool oi=measurement::includedInPopulation(o.energy,*og,false),ci=measurement::includedInPopulation(c.energy,*cg,false);if(oi==ci)continue;
+        auto row=juce::var(new juce::DynamicObject());auto* d=row.getDynamicObject();const auto begin=c.endFrame-current.sampleRate/10;
+        d->setProperty("begin_seconds",double(begin)/current.sampleRate);d->setProperty("end_seconds",double(c.endFrame)/current.sampleRate);d->setProperty("original_included",oi);d->setProperty("current_included",ci);
+        d->setProperty("original_m_lufs",measurement::OfflineMeasurement::loudness(o.energy));d->setProperty("current_m_lufs",measurement::OfflineMeasurement::loudness(c.energy));changed.add(row);
+        timeline.setViewRange(begin+current.sampleRate*.02,c.endFrame-current.sampleRate*.02);
+        const auto& bins=timeline.changedMomentaryColumns();expect(!bins.empty()&&bins[bins.size()/2],"actual changed-membership cell remains red when zoomed inside its sampled cadence");
+    }
+    report.getDynamicObject()->setProperty("original_il_gate_lufs",original.integratedRelativeGate?juce::var(*original.integratedRelativeGate):juce::var());
+    report.getDynamicObject()->setProperty("current_il_gate_lufs",current.integratedRelativeGate?juce::var(*current.integratedRelativeGate):juce::var());
+    report.getDynamicObject()->setProperty("membership_change_cells",changed);return report;
 }
 
 void refreshListening(const juce::File& from,const juce::File& root)
@@ -247,6 +290,7 @@ void refreshListening(const juce::File& from,const juce::File& root)
         expect(proposalPlanIdentity(s.currentStateDocument.processingPlan())==plan&&s.jobRequirements.digest()==required&&encodeAppliedExplanation(*s.lastAppliedExplanation)==history,"comparison gains, requirements and complete historical explanation preserved exactly");
         expect(s.evaluation(MeasurementDomain::currentState).verdict==Verdict::pass,"same applied comparison passes independently under new build identity");
         const auto folder=root.getChildFile(method);folder.createDirectory();const auto output=folder.getChildFile("inspection.levelscope");
+        folder.getChildFile("gate-inspection.json").replaceWithText(juce::JSON::toString(gateInspectionReport(s.source.analysis->detail,s.currentState.analysis->detail),true));
         expect(sf::save(sf::capture(s),output,job).succeeded(),"save new verified comparison copy without replacing preserved original");
         const auto check=sf::read(output,job);const auto verified=sf::verify(*check.document,job);
         expect(verified.prepared&&verified.prepared->model.currentState.hasMeasurement,"new comparison reopens verified in matching build");
