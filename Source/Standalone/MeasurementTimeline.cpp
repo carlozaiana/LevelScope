@@ -513,7 +513,7 @@ void MeasurementTimeline::paint (juce::Graphics& g)
             "PCM waveform unavailable | use Build waveform for an existing measurement";
         if(waveformData && !waveformAccepted)heading+=" | ANALYSING - incomplete: "+juce::String(waveformData->coveredFrames(waveformPublication))+" / "+juce::String(programmeFrames())+" frames";
         g.drawText(heading,10,31,getWidth()-20,18,juce::Justification::left);
-        g.drawText(preview?"ANALYSING - incomplete | M amber, S blue: gates pending | LUFS at right; PCM at left.":"M amber / excluded grey; S blue / outside LRA gate blue-grey. Current: red IL gate = measured M differs from Original.",10,49,getWidth()-20,18,juce::Justification::left);
+        g.drawText(preview?"ANALYSING - incomplete | M amber, S blue: gates pending | LUFS at right; PCM at left.":"M amber / excluded grey; S blue / outside LRA gate blue-grey. Current: red IL gate = M gate membership differs from Original.",10,49,getWidth()-20,18,juce::Justification::left);
     }
     else
     {

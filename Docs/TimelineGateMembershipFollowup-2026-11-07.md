@@ -39,3 +39,35 @@ the new app a new measurement build identity. Fresh comparison copies are
 therefore independently remeasured, checked against the previous six scalars
 and sample/true-peak positions, and saved separately with the original complete
 historical explanations and exact processing plans.
+
+## Measured comparison findings
+
+Each of the three distinct states has **2,727 finite displayed short-term
+windows and zero exclusions**. The Original result is identical in both sessions.
+
+| State | Lowest displayed S (LUFS) | Relative LRA gate (LUFS) |
+| --- | ---: | ---: |
+| Original | -41.22650001310821 | -41.95005352865540 |
+| M19 Current | -42.19079245304594 | -44.24610304240639 |
+| M20 Current | -42.86442383015300 | -44.30113281687761 |
+
+Thus the absence of blue-grey in these examples is expected, independently of
+colour perception. The existing synthetic regression also verifies an actually
+excluded S window remains in the excluded display category.
+
+M19 contains 88 changed-membership cadence cells; M20 contains 59. Both include
+the cells ending at 131.6, 261.7, 261.9 and 262.0 seconds, changing from excluded
+Original to included Current. These are actual sampled-window classifications,
+not a claim that every interpolated point in the wider passage crosses a gate.
+M19's IL relative gate is -31.95981413624387 LUFS for Original and
+-34.25312986301650 LUFS for Current. At the 131.6-second window end, M is
+-32.31645274536555 LUFS (Original, excluded) and -33.28074519078556 LUFS
+(Current, included).
+
+The first follow-up package (candidate 03, commit
+`bb1bd06a2b27a88d592901c26016fe9d1732ec3d`) passed 919 timeline and 105 native UI
+checks on each actual Mac. Its independent comparison refresh passed 185 checks.
+Visual inspection then found the legend still described the previous
+amplitude-difference rule. The final package corrects only that legend string;
+the gate/shortcut implementation is unchanged. The final timeline rendering is
+checked again, while unchanged native workflow evidence is reused.

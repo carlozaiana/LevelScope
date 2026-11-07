@@ -1,5 +1,7 @@
 # Timeline inspection convenience — 7 November 2026
 
+**Follow-up:** [gate-membership correction and plain A shortcut](TimelineGateMembershipFollowup-2026-11-07.md) supersede the original red-marker rule and chord described in this frozen-candidate handover.
+
 Continuation of the preserved M20 UI candidate on `codex/m20-ui-integration`.
 This is a display/interaction slice before the user's independent listening review.
 M20 publication and main integration remain pending. Candidate 04 and all session files found at the start of this slice remain preserved.

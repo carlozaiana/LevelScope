@@ -3,17 +3,19 @@
 Implemented locally on `codex/m20-ui-integration`, before the user's M19/M20 listening
 review. Main publication/integration remains pending.
 
+The latest [gate-membership and plain-A follow-up](../TimelineGateMembershipFollowup-2026-11-07.md) supersedes the original red-marker rule and shortcut, with new preserved app/session copies.
+
 Read [the complete handover](../UIInspectionConvenience-2026-11-07.md) for exact app,
 session paths, limits, source commits, test evidence and manual checklist.
 
 The slice adds the left-margin waveform/loudness blend, downward divider travel
 with scroll-accessible lower controls, aligned gain readouts, selection of applied
 processing regions after reopen, qualified per-channel sample-peak inspection,
-stopped Cmd+Shift+A for paired inspection/audition switching, programme filename,
+stopped A for paired inspection/audition switching, programme filename,
 Target/Original/Current row order, fixed header preset controls, pointer-anchored
 wheel zoom and the existing plugin background palette. Short-term colours describe
 measured LRA membership. The IL relative gate remains in both domains; only Current
-adds red double-width parts for actual measured momentary differences.
+adds red double-width parts for actual measured momentary gate-membership differences.
 
 No measurement, processing, proposal, export, device-policy or session-schema changes.
 The combined waveform overview budget remains 128 MiB. Detailed sample reading and
