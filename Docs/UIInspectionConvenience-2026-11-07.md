@@ -97,3 +97,52 @@ affected UI/target/timeline behavior.
    Original retains its ordinary relative-gate line. Review blue-grey S exclusions.
 6. Audition Current using the same interface/routing/monitor volume in both music
    sessions. Compare 0:48–1:03 and 1:17–1:40. Listening judgment remains the user's.
+
+## Preserved package and exact evidence
+
+- App implementation commit: `a37938e33ba764ebffff901b7b4cf3864a5b95cc`.
+- Final package/test-tool commit: `086f316d8f7e1a6387697487f140ececf3dd60fc`.
+- Development app: `/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-inspection-2026-11-07/candidate-02/LevelScope Standalone.app`.
+- Measurement build: `7910deeff7be3718604a7cd02992894f561266157b72d6d5d38f8dc8068705e5`.
+- App SHA-256: `8b4bcc28e1a638ed958daa9adbf52cd06aba16adf9a6085ae20af693cd7599a4`.
+- Universal arm64/x86_64; Intel minimum macOS 10.13.
+
+Candidate 01 was tested on both Macs. Candidate 02 has byte-identical application
+code/binary and adds only the corrected test utility and music recovery checks.
+Both packages remain frozen. The receipt proves this equivalence explicitly.
+
+| Focused group | Sequoia 15.7.9 arm64 | High Sierra 10.13.6 Intel |
+| --- | ---: | ---: |
+| Timeline/appearance/navigation | 913 | 913 |
+| Native proposal/inspection/persistence UI | 103 | 103 |
+| Target requirements/presets | 489 | 489 |
+| Total | **1,505** | **1,505** |
+| Native review heartbeat p95 | 28.6 ms | 50.8 ms |
+| Dense-history paging heartbeat p95 | 30.4 ms | 70.0 ms |
+| Dense 10,000-annotation lane paint p95 | 12.4 ms | 34.4 ms |
+| Cancellation | 29.5 ms | 65.9 ms |
+
+As in the earlier qualification, maximum heartbeat gaps include cold setup,
+snapshots and test-only full-text reconstruction (up to 1.895 s on High Sierra).
+The p95 results do not claim all cold operations complete within 100 ms. No physical
+output was opened. High Sierra tar emitted extended-attribute warnings; the test
+runner independently verified every frozen artifact hash before and after the run.
+
+Fixed music recovery passed **65 checks** on Sequoia. Both newly generated outcomes
+exactly match the committed original plans, six measured scalar values, requirements,
+preferences, method settings, pass decisions and private-pass counts. Each applied
+Current also exactly reproduces its new private assessment's sample/true-peak
+positions. Both new sessions reopen verified. The old M20 pathname's later manual
+DialogAmbiance work remains byte-exact, as does the old M19 file. The corrected
+refresh utility is separately checked to reject the changed input cleanly before
+measurement or writing. The original test-only crash is retained as a failure.
+
+New listening sessions:
+
+- M19: `/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-inspection-2026-11-07/listening-recovery-02/MusicInBackAndForegroundSomeDialog/m19/inspection.levelscope`
+- M20: `/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-inspection-2026-11-07/listening-recovery-02/MusicInBackAndForegroundSomeDialog/m20/inspection.levelscope`
+
+[Acceptance and preservation receipt](../Tests/Reference/results/ui-inspection-2026-11-07/acceptance.json).
+The evidence folder contains exact platform receipts, rendered screenshots, recovery
+results/reasons, frozen identities and a SHA-256 inventory. Original audio is not
+committed. Main/origin remain `22961f03de7919e1de631f8b13eb4b852108ac0b`.

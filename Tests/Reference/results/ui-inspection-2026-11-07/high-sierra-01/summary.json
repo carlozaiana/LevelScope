@@ -1,0 +1,63 @@
+{
+  "passed": true,
+  "os": "10.13.6",
+  "architecture": "x86_64",
+  "source_commit": "a37938e33ba764ebffff901b7b4cf3864a5b95cc",
+  "build": "7910deeff7be3718604a7cd02992894f561266157b72d6d5d38f8dc8068705e5",
+  "candidate_identity_sha256": "a7a47eb58c52176c1b8b9be75c9f2fadefc552edf42cf0fea65e5a711a3c06da",
+  "requested_cases": [
+    "timeline",
+    "ui",
+    "requirements"
+  ],
+  "physical_devices_opened": false,
+  "combined_qualification_complete": false,
+  "inputs": {},
+  "groups": [
+    {
+      "name": "timeline",
+      "command": [
+        "/Users/fuzz/LevelScope-UI-inspection-2026-11-07/candidate-01/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/LevelScope-UI-inspection-2026-11-07/high-sierra-01/timeline-files",
+        "--output",
+        "/Users/fuzz/LevelScope-UI-inspection-2026-11-07/high-sierra-01/timeline.json"
+      ],
+      "returncode": 0,
+      "seconds": 2.406105513,
+      "passed": true,
+      "checks": 913,
+      "receipt": "timeline.json",
+      "receipt_sha256": "c0fddbbec162241eba19e886c5d3b38e48a489041d8fb0759820c4250b33cc39"
+    },
+    {
+      "name": "ui",
+      "command": [
+        "/Users/fuzz/LevelScope-UI-inspection-2026-11-07/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/LevelScope-UI-inspection-2026-11-07/high-sierra-01/ui-files"
+      ],
+      "returncode": 0,
+      "seconds": 32.80953142,
+      "passed": true,
+      "checks": 103,
+      "receipt": "ui-files/result.json",
+      "receipt_sha256": "655688e0e34cf3a06df79382b685960de9ec45badedde05e1e0887d15ce0c3d0"
+    },
+    {
+      "name": "requirements",
+      "command": [
+        "/Users/fuzz/LevelScope-UI-inspection-2026-11-07/candidate-01/bin/LevelScopeJobRequirementsTests",
+        "--root",
+        "/Users/fuzz/LevelScope-UI-inspection-2026-11-07/high-sierra-01/requirements-files",
+        "--output",
+        "/Users/fuzz/LevelScope-UI-inspection-2026-11-07/high-sierra-01/requirements.json"
+      ],
+      "returncode": 0,
+      "seconds": 54.317217328000005,
+      "passed": true,
+      "checks": 489,
+      "receipt": "requirements.json",
+      "receipt_sha256": "235ce5a1de638178d0af4bbd13ce60be8517bd313c9b148b7510c739342afa0c"
+    }
+  ]
+}

@@ -15,6 +15,7 @@ This folder is the persistent orientation layer for future development chats. Re
 
 ## Task-based quick start
 
+- [74 — Timeline inspection convenience](74_TimelineInspectionConvenience.md): new blend, gain/peak inspection, paired domain shortcut and layout; qualified on both Macs, with separate recovered music sessions.
 - **M20 UI and non-audible acceptance complete; user listening pending:** [73 — current UI integration and independent review handover](73_M20UIIntegrationAndIndependentReview.md), with preserved candidate 04 and exact evidence. Continue on `codex/m20-ui-integration`; main remains the published UI convenience/M19 baseline. No M20 publication or merge is authorized.
 
 - **M20 approved implementation handover — region formation and predictive gain planning:** [70 — bounded design, controls, acceptance cases and staged ownership](70_M20RegionFormationAndPredictiveGainPlanning.md). Continue on `codex/m20-region-planning` from published main `22961f03de7919e1de631f8b13eb4b852108ac0b`, preserving the UI convenience slices. Logic owns constraints, formation/prediction, measured selection, sessions and explanations; UI follows a committed, focused-tested core/interface checkpoint. Full combined qualification follows UI integration. Splitting and boundary refinement are in the first useful slice. No M20 publication or merge authorized.
