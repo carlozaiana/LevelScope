@@ -21,3 +21,11 @@ No proposal-search, measurement/DSP, export or session-schema change. An applied
 manual removal keeps the last proposal explanation intact and historical. Testing
 uses injected outputs only, on actual Sequoia and High Sierra, with unchanged
 qualification evidence/deferrals reused.
+
+Final product/test commit: `3c853e4c855b047ed990a899fde586fa2d952aaf`.
+Preserved package: `build/ui-safety-editing-2026-11-07/candidate-02/LevelScope Standalone.app`.
+Actual Sequoia 15.7.9 arm64 and High Sierra 10.13.6 Intel each pass 1,438 focused
+checks (1,199 timeline + 128 native UI/history + 111 injected monitor). The final
+removal draft field displays 0 dB and never claims neighbouring gains are reset.
+The handover links the full evidence and manual checklist. Existing running app,
+session files, prior packages and main remain unchanged.

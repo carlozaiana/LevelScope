@@ -1,0 +1,62 @@
+{
+  "passed": true,
+  "os": "10.13.6",
+  "architecture": "x86_64",
+  "source_commit": "6d58347bb29c0f121bc1adea1db4c61a9c74123a",
+  "build": "b74e401f73d3713e43d967e7696188d026c5b3c8040ab8af85faae715559901c",
+  "candidate_identity_sha256": "f6aa603fd4e20cfe0c14cfa859b5e86d1d85bf1d1d17144eed7d2bcbaa6fdc0b",
+  "requested_cases": [
+    "timeline",
+    "ui",
+    "monitor"
+  ],
+  "physical_devices_opened": false,
+  "combined_qualification_complete": false,
+  "inputs": {},
+  "groups": [
+    {
+      "name": "timeline",
+      "command": [
+        "/Users/fuzz/LevelScope-UI-safety-editing-2026-11-07/candidate-01/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/LevelScope-UI-safety-editing-2026-11-07/high-sierra-01/timeline-files",
+        "--output",
+        "/Users/fuzz/LevelScope-UI-safety-editing-2026-11-07/high-sierra-01/timeline.json"
+      ],
+      "returncode": 0,
+      "seconds": 3.0414586139999997,
+      "passed": true,
+      "checks": 1197,
+      "receipt": "timeline.json",
+      "receipt_sha256": "caf7dea454e16ad8c4f09bc575b7e396c797cea4cd86f9113ae539ac69ebc2fe"
+    },
+    {
+      "name": "ui",
+      "command": [
+        "/Users/fuzz/LevelScope-UI-safety-editing-2026-11-07/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/LevelScope-UI-safety-editing-2026-11-07/high-sierra-01/ui-files"
+      ],
+      "returncode": 0,
+      "seconds": 34.643297025,
+      "passed": true,
+      "checks": 128,
+      "receipt": "ui-files/result.json",
+      "receipt_sha256": "54997889d4988e5cc13870e06048f2a28e52d32b523a71b7347803d43aacc2c4"
+    },
+    {
+      "name": "monitor",
+      "command": [
+        "/Users/fuzz/LevelScope-UI-safety-editing-2026-11-07/candidate-01/bin/LevelScopeAuditionTests",
+        "--monitor-only",
+        "--report",
+        "/Users/fuzz/LevelScope-UI-safety-editing-2026-11-07/high-sierra-01/monitor.json"
+      ],
+      "returncode": 0,
+      "seconds": 0.4913585780000034,
+      "passed": true,
+      "checks": 111,
+      "receipt": "monitor.json",
+      "receipt_sha256": "5bc6c6a9ecde7aa28e7eda12915ac2b4537e152fcef57af666338cdd1f858f86"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "previous_candidate_artifacts_unchanged": 420,
+  "previous_identity_unchanged": true,
+  "listening_sessions_unchanged_since_task_start": {
+    "m19": {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-inspection-2026-11-07/listening-gate-04/m19/inspection.levelscope",
+      "sha256": "58c19211870f8f062b00d91cb1dc5c1fb1e1f58190cbaeb5ab1a6585f2c0110f",
+      "matches_previous_receipt": true
+    },
+    "m20": {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-inspection-2026-11-07/listening-gate-04/m20/inspection.levelscope",
+      "sha256": "86a8d845fb6c1eced2a2fc31364a7562a5735842da2c07e525f29a96dcfe075b",
+      "matches_previous_receipt": false
+    }
+  },
+  "main_and_origin_main_unchanged": "22961f03de7919e1de631f8b13eb4b852108ac0b",
+  "user_app_restarted": false,
+  "physical_devices_opened": false
+}
