@@ -71,3 +71,40 @@ Visual inspection then found the legend still described the previous
 amplitude-difference rule. The final package corrects only that legend string;
 the gate/shortcut implementation is unchanged. The final timeline rendering is
 checked again, while unchanged native workflow evidence is reused.
+
+## Final preserved build and focused qualification
+
+- Final package: `build/ui-inspection-2026-11-07/candidate-04`.
+- App: `/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-inspection-2026-11-07/candidate-04/LevelScope Standalone.app`.
+- Exact source commit: `6120b65caf9d88219ad5ded4914a6d070776f149`.
+- Measurement build: `af2af77617baf191ba57d1bc9393ef39c818e566dbf9a33e36a030c4ac1f3bea`.
+- App executable SHA-256: `275c909a324b02bc8dde301f76fd9760cb02b19976dd5447819579dbc96384d6`.
+- Universal arm64/x86_64; Intel minimum macOS 10.13.
+
+Final timeline checks: **919 pass on Sequoia 15.7.9 and 919 pass on actual High
+Sierra 10.13.6**. The preceding candidate's **105 native UI/shortcut checks on each
+Mac** are reused: the preservation audit verifies that the only product/test
+source difference is the corrected legend string. Both final rendered gate
+screenshots were visually inspected. Independent refresh of both listening copies
+passes **185 checks**, reproducing the six measured scalars and all sample/true-peak
+positions exactly, preserving gains/requirements/explanations, and reopening with
+verified Current. The final gate reports exactly match the first follow-up audit.
+
+The existing cold-setup/large-history heartbeat limitation and all prior
+qualification deferrals remain unchanged. No physical devices were opened. All
+four inspection packages and both original listening copies have verified hashes;
+main/origin remain `22961f03de7919e1de631f8b13eb4b852108ac0b`. No publication or
+main integration occurred. Listening quality remains for the user's review.
+
+New session copies, already applied and independently verified:
+
+- M19: `/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-inspection-2026-11-07/listening-gate-04/m19/inspection.levelscope`.
+- M20: `/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-inspection-2026-11-07/listening-gate-04/m20/inspection.levelscope`.
+
+Manual check: open the new app and one new session. While stopped, press A to
+switch Original/Current. Zoom near 131.6 s and 261.7–262.0 s: the relative line
+remains, with red membership-change cells only in Current. Type A into a text
+field to check that text entry remains independent. Blue-grey S exclusions are
+absent in these particular sessions; no Apply or proposal regeneration is needed.
+
+[Exact receipts and preservation audit](../Tests/Reference/results/ui-gate-followup-2026-11-07/acceptance.json).
