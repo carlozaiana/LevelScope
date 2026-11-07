@@ -227,7 +227,13 @@ void refreshListening(const juce::File& from,const juce::File& root)
 {
     for(auto method:{"m19","m20"})
     {
+        JobControl preflight;const auto read=sf::read(from.getChildFile(method).getChildFile("inspection.levelscope"),preflight);
+        expect(read.document&&read.document->lastAppliedExplanation&&read.document->source.file.getFileName()=="MusicInBackAndForegroundSomeDialog.wav","preflight rejects changed comparison documents before remeasurement or writing");
+    }
+    for(auto method:{"m19","m20"})
+    {
         const auto input=from.getChildFile(method).getChildFile("inspection.levelscope");JobControl job;auto read=sf::read(input,job);expect(read.succeeded(),"preserved comparison session reads");
+        expect(read.document&&read.document->lastAppliedExplanation&&read.document->source.file.getFileName()=="MusicInBackAndForegroundSomeDialog.wav","comparison still contains the original music programme and applied explanation; changed user session must be preserved");
         const auto before=read.document;const auto plan=proposalPlanIdentity(before->current.processingPlan());
         const auto history=encodeAppliedExplanation(*before->lastAppliedExplanation);const auto required=before->jobRequirements.digest();
         const auto expectedSource=before->sourceCache,expectedCurrent=before->currentCache;
@@ -249,6 +255,21 @@ void refreshListening(const juce::File& from,const juce::File& root)
 
 
 #include "Qualification/M20/HoldoutChecks.h"
+
+void recoverMusic(const juce::File& inputs,const juce::File& evidence,const juce::File& root)
+{
+    controlledHoldouts(inputs,root,"MusicInBackAndForegroundSomeDialog.wav");
+    for(auto method:{"m19","m20"})
+    {
+        const auto fresh=juce::JSON::parse(root.getChildFile("MusicInBackAndForegroundSomeDialog").getChildFile(method).getChildFile("result.json"));
+        const auto original=juce::JSON::parse(evidence.getChildFile(method).getChildFile("result.json"));
+        for(auto key:{"content_sha256","requirements","preferences","settings","baseline","outcome","private_passes","apply_available","retained_actual_candidate","independent_current","inspection_only_plan"})
+            expect(juce::JSON::toString(fresh[key],true)==juce::JSON::toString(original[key],true),(juce::String("Recovered fixed comparison exactly matches archived ")+method+" "+key).toRawUTF8());
+        const auto file=root.getChildFile("MusicInBackAndForegroundSomeDialog").getChildFile(method).getChildFile("inspection.levelscope");
+        JobControl job;const auto read=sf::read(file,job);expect(read.document&&read.document->lastAppliedExplanation,"recovered comparison has complete newly generated explanation");
+        const auto verified=sf::verify(*read.document,job);expect(verified.prepared&&verified.prepared->model.currentState.hasMeasurement,"recovered comparison reopens independently verified in new UI build");
+    }
+}
 
 void exchangeChecks(const juce::File& from,const juce::File& root)
 {
@@ -326,10 +347,10 @@ void controlVariants(const juce::File& root)
 }
 int main(int argc,char** argv)
 {
-    juce::ScopedJuceInitialiser_GUI gui;const bool variants=argc==3&&juce::String(argv[2])=="--variants",exchange=argc==4&&juce::String(argv[2])=="--exchange",holdouts=argc==4&&juce::String(argv[2])=="--holdouts",listening=argc==4&&juce::String(argv[2])=="--refresh-listening";if(argc!=2&&!variants&&!exchange&&!holdouts&&!listening)return 2;const juce::File root(argv[1]);if(root.exists())return 2;root.createDirectory();bool passed=false;juce::String error;
+    juce::ScopedJuceInitialiser_GUI gui;const bool variants=argc==3&&juce::String(argv[2])=="--variants",exchange=argc==4&&juce::String(argv[2])=="--exchange",holdouts=argc==4&&juce::String(argv[2])=="--holdouts",listening=argc==4&&juce::String(argv[2])=="--refresh-listening",recover=argc==5&&juce::String(argv[2])=="--recover-music";if(argc!=2&&!variants&&!exchange&&!holdouts&&!listening&&!recover)return 2;const juce::File root(argv[1]);if(root.exists())return 2;root.createDirectory();bool passed=false;juce::String error;
     try
     {
-        if(listening)refreshListening(juce::File(argv[3]),root);else if(holdouts)controlledHoldouts(juce::File(argv[3]),root);else if(exchange)exchangeChecks(juce::File(argv[3]),root);else if(variants)controlVariants(root);else
+        if(recover)recoverMusic(juce::File(argv[3]),juce::File(argv[4]),root);else if(listening)refreshListening(juce::File(argv[3]),root);else if(holdouts)controlledHoldouts(juce::File(argv[3]),root);else if(exchange)exchangeChecks(juce::File(argv[3]),root);else if(variants)controlVariants(root);else
         {
         auto s=programme(root.getChildFile("fixture"),2);editorChecks(s,root);
         auto ui=std::make_unique<StandaloneMainComponent>(emptyOutputCatalog(),noOutputSettings());Access::stopTimer(*ui);ui->setSize(1320,1100);ui->setName("LevelScope - isolated M20 integration test");ui->addToDesktop(juce::ComponentPeer::windowHasTitleBar);ui->setVisible(true);

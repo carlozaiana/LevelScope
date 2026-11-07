@@ -14,7 +14,7 @@ juce::var holdoutPlan(const ProcessingPlan& p)
     {auto row=juce::var(new juce::DynamicObject());auto* r=row.getDynamicObject();r->setProperty("begin_frame",juce::String(part.begin));r->setProperty("end_frame_exclusive",juce::String(part.end));r->setProperty("plateau_db",part.db);rows.add(row);}
     o->setProperty("nominal_intervals",rows);return value;
 }
-void controlledHoldouts(const juce::File& inputs,const juce::File& root)
+void controlledHoldouts(const juce::File& inputs,const juce::File& root,const juce::String& onlyInput = {})
 {
     struct Input{const char* name;const char* hash;int channels;};
     const Input files[]={
@@ -23,6 +23,7 @@ void controlledHoldouts(const juce::File& inputs,const juce::File& root)
         {"5.1_Busy.wav","4fa30bfd9a8fbb64e68fc00eaf11f8adf81ead8502d05ce639b22cc07645d7b6",6}};
     for(const auto& input:files)
     {
+        if(onlyInput.isNotEmpty()&&onlyInput!=input.name)continue;
         const auto file=inputs.getChildFile(input.name),directory=root.getChildFile(file.getFileNameWithoutExtension());expect(directory.createDirectory().wasOk(),"owned independent-review output directory");
         JobControl job;auto media=validateMedia(file,job);expect(media.succeeded()&&media.media.sha256==input.hash&&media.media.channels==input.channels&&media.media.sampleRate==48000,"independent input matches the precommitted content and explicit iXML role order");
         StandaloneSessionModel baseline;expect(baseline.setValidatedSource(file,media.media),"adopt independent source read-only");baseline.sourceDocument.layout=layoutFor(input.channels);baseline.setSelectedTargetProfileIndex(1);baseline.setProgrammeApplicability(Applicability::preProducedLinearProgramme);
@@ -64,6 +65,7 @@ void controlledHoldouts(const juce::File& inputs,const juce::File& root)
                 expect(s.applySectionProposal()&&s.currentStateNeedsRemeasurement(),"owned model Apply leaves Current unverified");auto verified=measuredComposition(s,MeasurementDomain::currentState);
                 expect(s.evaluation(MeasurementDomain::currentState).verdict==Verdict::pass,"independent Current passes every declared rule after actual Apply");
                 expect(juce::JSON::toString(holdoutMetrics(verified.detail),true)==juce::JSON::toString(holdoutMetrics(result->assessment()->detail),true),"independent Current exactly reproduces all six privately measured scalar metrics");row->setProperty("independent_current",holdoutMetrics(verified.detail));
+                expect(verified.detail.samplePeakFrames==result->assessment()->detail.samplePeakFrames&&verified.detail.truePeakEighthFrames==result->assessment()->detail.truePeakEighthFrames,"independent Current exactly reproduces private sample and true-peak positions");
             }
             else expect(!s.applySectionProposal()&&proposalPlanIdentity(s.currentStateDocument.processingPlan())==applied,"measured failure or unavailable outcome cannot Apply into the owned model");
             expect(sf::save(sf::capture(s),destination.getChildFile("inspection.levelscope"),job).succeeded(),"save owned inspection state with verification authority kept accurate");

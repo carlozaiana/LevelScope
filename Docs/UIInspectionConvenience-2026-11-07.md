@@ -2,8 +2,7 @@
 
 Continuation of the preserved M20 UI candidate on `codex/m20-ui-integration`.
 This is a display/interaction slice before the user's independent listening review.
-M20 publication and main integration remain pending. Candidate 04 and the original
-M19/M20 comparison sessions remain preserved.
+M20 publication and main integration remain pending. Candidate 04 and all session files found at the start of this slice remain preserved.
 
 ## Behavior
 
@@ -62,10 +61,18 @@ population. The -70 LUFS absolute gate remains separate. See
 No measurement, processing, proposal/search/ranking, export, session-schema or
 monitoring-policy change. The 128 MiB combined overview budget is unchanged.
 Existing M20 decisions and the independent comparison protocol are retained.
-The new build identity requires independent remeasurement of the already-applied
-music plans; new listening copies preserve the original plans/history/requirements
-and compare all six measured scalars and sample/true-peak positions exactly.
-No proposal is regenerated or tuned against the held-out files.
+The new build identity requires independently verified listening copies. The old
+M20 comparison pathname now holds a later DialogAmbiance session with manual gains
+(saved before this slice); it is not overwritten. A test-only refresh utility first
+assumed the original history was present and crashed on that missing pointer, after
+successfully refreshing M19. The missing-history guard is corrected. To recover a
+valid paired comparison, the fixed music-only protocol is repeated with unchanged
+settings and algorithms, and both applied plans, all six scalar results, requirements,
+preferences, method settings and decisions are compared exactly with the committed
+original receipts. New explanation provenance identifies the new assessment; it is
+not presented as recovered bytes of the unavailable original M20 attachment. No
+policy is tuned against these files. Original numerical evidence remains the
+predeclared run; recovery is a reproducibility check, not a new independent holdout.
 
 Focused checks cover the new interactions, min/max positions and incomplete data,
 actual native UI, unchanged explicit Apply/remeasure, stale/rejected candidates,
