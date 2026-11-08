@@ -17,7 +17,11 @@ void manualWorkflowChecks(const juce::File& root)
     const auto answer=[&](SectionEditPrompt& prompt,int choice,const char* png=nullptr)
     {
         expect(prompt.window()!=nullptr,"section edit has explicit gain choices");if(png)imageOf(*prompt.window(),root.getChildFile(png));
-        prompt.window()->exitModalState(choice);juce::MessageManager::getInstance()->runDispatchLoopUntil(20);
+        prompt.window()->exitModalState(choice);
+        const auto closedAt=juce::Time::getMillisecondCounterHiRes();
+        while((prompt.active()||juce::Component::getCurrentlyModalComponent()!=nullptr)&&juce::Time::getMillisecondCounterHiRes()-closedAt<1500)
+            juce::MessageManager::getInstance()->runDispatchLoopUntil(10);
+        auto* dismissal=new juce::DynamicObject();dismissal->setProperty("section_dialog_dismiss_ms",juce::Time::getMillisecondCounterHiRes()-closedAt);cases.add(juce::var(dismissal));
         expect(!prompt.active()&&juce::Component::getCurrentlyModalComponent()==nullptr,"section choice closes completely");ui.focusForTransport();
     };
     select(120000);const auto verified=s.currentState.analysis;
