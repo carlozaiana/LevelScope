@@ -140,7 +140,7 @@ private:
 
     JobRequirementsPanel jobRequirementsPanel { session, [this] { refreshFromSession(); } };
     juce::ComboBox targetProfileBox;
-    juce::ToggleButton applicabilityConfirmation { "Confirm pre-produced whole-programme linear-audio QC" };
+    juce::Label qcScope;
 
     juce::TextButton importButton { "Import" };
     juce::TextButton analyzeButton { "Analyze" };

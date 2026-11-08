@@ -23,6 +23,7 @@ struct PreparationFeedbackTestAccess
     static StandaloneAudition& audio(StandaloneMainComponent& c){return c.audition;}
     static void refreshTimeline(StandaloneMainComponent& c){c.refreshTimeline();}
     static juce::Label& warning(StandaloneMainComponent& c){return c.monitorWarning;}
+    static juce::Label& scope(StandaloneMainComponent& c){return c.qcScope;}
 };
 }
 namespace
@@ -185,8 +186,9 @@ void workflowChecks(StandaloneMainComponent& ui,const juce::File& root)
     expect(reopened.prepared->model.lastAppliedExplanation->narrative==s.lastAppliedExplanation->narrative,"full historical explanation survives exact save/reopen");
     TimelineGainLane restoredLane(reopened.prepared->model);restoredLane.setSize(1100,restoredLane.preferredHeight());restoredLane.synchronize("reopened-region");
     const auto& restoredPlan=*reopened.prepared->model.currentStateDocument.sectionGains;
+    control<juce::ComboBox>(restoredLane,"Gain lane selection").setSelectedId(2,juce::sendNotificationSync);
     restoredLane.selectAt(restoredPlan.intervals[1].begin,restoredLane.plotBounds().getBottom()+5);
-    expect(restoredLane.inspectionText().contains("Applied processing region")&&!control<juce::TextButton>(restoredLane,"Set draft").isEnabled(),"saved processing regions remain directly selectable after reopening without a live proposal");
+    expect(restoredLane.inspectionText().contains("Applied processing region")&&!control<juce::TextEditor>(restoredLane,"Timeline section draft gain dB").isEnabled(),"saved processing regions remain directly selectable after reopening without a live proposal");
     auto& removal=reopened.prepared->model;
     const auto oldHistory=encodeAppliedExplanation(*removal.lastAppliedExplanation);const auto oldGlobal=removal.currentStateDocument.staticGainDb;
     const auto nonzero=std::find_if(removal.currentStateDocument.sectionGains->intervals.begin(),removal.currentStateDocument.sectionGains->intervals.end(),[](const auto& r){return r.db!=0;});
@@ -227,6 +229,7 @@ void overloadBannerChecks(const juce::File& root)
     for(int n=0;n<48000;++n)pcm.setSample(2,n,.9f);floatFile(file,48000,pcm);JobControl job;const auto media=validateMedia(file,job);expect(media.succeeded(),"known Centre-only overload fixture");
     auto output=std::make_unique<Device>();auto* device=output.get();
     StandaloneMainComponent ui(emptyOutputCatalog(),noOutputSettings(),std::move(output));Access::stopTimer(ui);ui.setSize(1320,1100);ui.addToDesktop(juce::ComponentPeer::windowHasTitleBar);ui.setVisible(true);
+    expect(!find<juce::ToggleButton>(ui,"Confirm pre-produced whole-programme linear-audio QC")&&Access::scope(ui).isVisible()&&Access::scope(ui).getText().contains("this file"),"main UI replaces scope confirmation with automatic file-limit explanation");
     auto& s=Access::model(ui);expect(s.setValidatedSource(file,media.media),"overload UI owns source fixture");s.sourceDocument.layout=layoutFor(6);expect(s.initializeCurrentStateFromSource(),"overload UI Current initialized");s.setCurrentGainDb(12);s.selectAuditionDomain(MeasurementDomain::currentState);
     Access::refresh(ui);for(int ch=0;ch<6;++ch)s.sourceDocument.routing.fileToDevice[ch]=ch;
     auto& a=Access::audio(ui);a.sourceChanged(media.media);const auto request=s.auditionRequest();a.synchronize(request,s.sourceDocument.routing);expect(a.connect(48000).isEmpty(),"connect injected output only");a.setMonitorGainDb(0);

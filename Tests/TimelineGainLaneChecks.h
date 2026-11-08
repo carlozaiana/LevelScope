@@ -44,7 +44,7 @@ void gainLaneChecks(StandaloneSessionModel& s,const juce::File& root)
     stageGain(lane,"-1.234567891234567");
     expect(s.sectionTrimDraft&&s.sectionTrimDraft->plan.intervals[1].db==precise&&s.currentState.analysis==verified&&s.revision==revision,"Return stages exact precision without applying or invalidating");
     expect(button(lane,"Apply gains")->isEnabled()&&laneNotice(lane).contains("DRAFT"),"draft visibly identified and explicit Apply enabled");
-    laneEditor(lane)->setText("13",false);laneEditor(lane)->onTextChange();button(lane,"Set draft")->onClick();
+    laneEditor(lane)->setText("13",false);laneEditor(lane)->onTextChange();laneEditor(lane)->onReturnKey();
     expect(s.sectionTrimDraft->plan.intervals[1].db==precise&&!button(lane,"Apply gains")->isEnabled(),"invalid unstaged value cannot accidentally apply previous draft");
     button(lane,"Discard gains")->onClick();expect(!s.sectionTrimDraft&&s.currentState.analysis==verified&&s.revision==revision,"Discard leaves exact applied audio and measurement intact");
     for(const auto* invalid:{"nan","inf","1 trailing","12.00001","-12.00001",""}){stageGain(lane,invalid);expect(!s.sectionTrimDraft,"invalid numerical text creates no draft");}
@@ -71,11 +71,14 @@ void gainLaneChecks(StandaloneSessionModel& s,const juce::File& root)
     lane.synchronize("gain-source");
     expect(!button(lane,"Apply gains")->isEnabled()&&laneNotice(lane).contains("Stale")&&s.currentStateDocument.sectionGains->audioKey()==appliedKey&&s.currentState.analysis==remeasured,"geometry edits stale draft without moving applied ramps or losing measurement");
     button(lane,"Discard gains")->onClick();lane.selectFrame(100000,true);stageGain(lane,"-2");
-    expect(s.sectionTrimDraft->plan.intervals[2].db==0,"changed annotations start a new zero baseline rather than moving old gains");
+    expect(section_edit::uniform(&s.sectionTrimDraft->plan,192000,240013)==3.0000000000000004,"changed annotations retain existing gains in unrelated passages");
     button(lane,"Discard gains")->onClick();
     lane.selectFrame(document.map().frames,true);expect(lane.inspectionText().contains("at frame "+juce::String(document.map().frames-1)),"EOF lane click inspects last actual sample");
     lane.selectAt(100000,lane.plotBounds().getBottom()+5);
-    expect(lane.inspectionText().contains("Applied processing region")&&!laneEditor(lane)->isEnabled()&&s.currentState.analysis==remeasured,"click applied readout selects immutable processing region and preserves verification");
+    expect(lane.inspectionText().contains("Section")&&laneEditor(lane)->isEnabled(),"readout click retains section selection mode");
+    for(auto* child:lane.getChildren())if(auto* choice=dynamic_cast<juce::ComboBox*>(child))choice->setSelectedId(2,juce::sendNotificationSync);
+    lane.selectAt(100000,lane.plotBounds().getBottom()+5);
+    expect(lane.inspectionText().contains("Applied processing region")&&!laneEditor(lane)->isEnabled()&&s.currentState.analysis==remeasured,"explicit applied-region mode selects processing interval and preserves verification");
     button(ui,"Fit selection")->onClick();expect(ui.viewRange()==std::make_pair(96000.,192000.),"region fit follows applied interval even after annotation boundary moved");
     for(auto* child:lane.getChildren())if(auto* choice=dynamic_cast<juce::ComboBox*>(child))choice->setSelectedId(1,juce::sendNotificationSync);
     imageOf(ui,root.getChildFile("gain-applied.png"));
@@ -88,7 +91,7 @@ void gainLaneChecks(StandaloneSessionModel& s,const juce::File& root)
     lane.selectFrame(0,false);stageGain(lane,"1.234567891234567");other.synchronize();
     expect(otherField&&otherField->getText().getDoubleValue()==1.234567891234567,"existing Sections editor observes the main timeline's exact staged value");
     s.discardSectionTrimDraft();lane.synchronize("gain-source");other.synchronize();
-    expect(otherField->getText().isEmpty(),"discard clears the old draft field in the Sections window");
+    expect(otherField->getText()=="0","discard restores applied gain in the Sections window");
     auto previousRuntime=s.sessionId;s.sessionId=juce::Uuid().toString();
     stageGain(lane,"2");expect(!s.sectionTrimDraft,"stale runtime cannot stage through an old visible binding");s.sessionId=previousRuntime;
     stageGain(lane,"1");

@@ -428,14 +428,9 @@ void StandaloneMainComponent::configureTargetProfileBox()
 
     addAndMakeVisible (targetProfileBox);
     addAndMakeVisible(jobRequirementsPanel);
-    applicabilityConfirmation.setTooltip ("Confirm programme context. Excludes live exceptions, deliberate lower targets, short-form supplements and distribution-specific requirements.");
-    applicabilityConfirmation.onClick = [this]
-    {
-        session.setProgrammeApplicability (applicabilityConfirmation.getToggleState()
-            ? proposal::Applicability::preProducedLinearProgramme : proposal::Applicability::unconfirmed);
-        refreshFromSession();
-    };
-    addAndMakeVisible (applicabilityConfirmation);
+    qcScope.setText("PASS / FAIL applies to this file and the selected measured limits.",juce::dontSendNotification);
+    qcScope.setTooltip("The complete imported file is evaluated automatically. For excerpts, results describe the excerpt; they do not certify the parent programme or unselected delivery requirements.");
+    addAndMakeVisible(qcScope);
 }
 
 void StandaloneMainComponent::configureNavigationButtons()
@@ -576,8 +571,6 @@ void StandaloneMainComponent::refreshFromSession()
                                 juce::dontSendNotification);
 
     targetProfileBox.setSelectedId (session.selectedTargetProfileIndex + 1, juce::dontSendNotification);
-    applicabilityConfirmation.setToggleState (session.programmeApplicability == proposal::Applicability::preProducedLinearProgramme, juce::dontSendNotification);
-    applicabilityConfirmation.setEnabled (session.sourceDocument.hasSource && ! session.job.isActive() && !session.persistenceLoading);
 
     clearSourceButton.setEnabled (!session.persistenceLoading && (session.sourceDocument.hasSource || session.job.isActive()));
     chooseProgrammeButton.setEnabled(canReplaceSession());
@@ -593,7 +586,7 @@ void StandaloneMainComponent::refreshFromSession()
     measureSourceButton.setEnabled (!session.persistenceLoading && ! session.job.isActive() && ! session.sourceContentInvalid && measurementError.isEmpty());
     measureSourceButton.setTooltip (measurementError);
     remeasureCurrentStateButton.setEnabled (!session.persistenceLoading && ! session.job.isActive() && ! session.sourceContentInvalid && session.hasCurrentStateInitialized() && measurementError.isEmpty());
-    currentGain.setEnabled (! session.audioEditsBlocked() && ! session.job.isActive() && session.hasCurrentStateInitialized());
+    currentGain.setEnabled (! session.audioEditsBlocked() && ! session.job.isActive() && session.hasCurrentStateInitialized() && !(session.sectionTrimDraft&&session.sectionTrimDraft->rollbackAnnotations));
     currentGain.setValue (session.currentStateDocument.staticGainDb, juce::dontSendNotification);
     draftTrimButton.setEnabled (!session.persistenceLoading && session.getWorkflowReadiness().canDraftProposal());
     applyTrimButton.setEnabled (session.canApplyTrim());
@@ -934,7 +927,7 @@ void StandaloneMainComponent::configureTimelineShell()
     addAndMakeVisible(sourceFilename);sourceFilename.setName("Programme filename");sourceFilename.setFont(14.f);
     sourceFilename.setMinimumHorizontalScale(1.f);sessionStatus.setFont(11.f);
     addAndMakeVisible(inspectorViewport);inspectorViewport.setViewedComponent(&inspectorContent,false);inspectorViewport.setScrollBarsShown(true,false);
-    for(auto* c:std::initializer_list<juce::Component*>{&proposalPanel,&measureSourceButton,&remeasureCurrentStateButton,&currentGain,&applicabilityConfirmation,&buildWaveformButton,&pageDetailBox})inspectorContent.addAndMakeVisible(c);
+    for(auto* c:std::initializer_list<juce::Component*>{&proposalPanel,&measureSourceButton,&remeasureCurrentStateButton,&currentGain,&qcScope,&buildWaveformButton,&pageDetailBox})inspectorContent.addAndMakeVisible(c);
     inspectDomain.setTooltip("Inspect independently, or A to switch inspection and audition together while stopped.");
     auditionDomainBox.setTooltip("A switches inspection and audition together while stopped. Playback always requires Play.");
 }
@@ -1189,7 +1182,7 @@ void StandaloneMainComponent::resized()
     auto processing=bottom.removeFromTop(32);
     measureSourceButton.setBounds(processing.removeFromLeft(150).reduced(2));remeasureCurrentStateButton.setBounds(processing.removeFromLeft(190).reduced(2));
     currentGain.setBounds(processing.removeFromLeft(300).reduced(2));
-    auto applicability=bottom.removeFromTop(26);buildWaveformButton.setBounds(applicability.removeFromRight(150));applicabilityConfirmation.setBounds(applicability);
+    auto applicability=bottom.removeFromTop(26);buildWaveformButton.setBounds(applicability.removeFromRight(150));qcScope.setBounds(applicability);
     pageDetailBox.setBounds(bottom.reduced(0,3));timeline.setBounds(bounds.reduced(0,4));
 }
 

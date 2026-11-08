@@ -3,6 +3,7 @@
 #include "Core/Waveform/WaveformOverview.h"
 #include "StandaloneLoudnessPreview.h"
 #include "TimelineAppearance.h"
+#include "SectionEditPrompt.h"
 #include <juce_gui_basics/juce_gui_basics.h>
 
 namespace levelscope::standalone
@@ -11,13 +12,17 @@ namespace levelscope::standalone
 // processing or profile reference. All navigation is in audio-source frames.
 class TimelineGainLane;
 class StandaloneSessionModel;
-class MeasurementTimeline final : public juce::Component, private juce::ScrollBar::Listener
+class MeasurementTimeline final : public juce::Component, public juce::TooltipClient, private juce::ScrollBar::Listener
 {
 public:
     MeasurementTimeline();
     void attachGainLane(TimelineGainLane&);
     void bindSectionEditing(StandaloneSessionModel&,std::function<void(uint64_t)>);
     void refreshSectionEditing();
+    void changeSectionEnd(uint64_t,int64_t);
+    SectionEditPrompt* editPrompt(){return sectionEdit.get();}
+    juce::String peakHoverText(juce::Point<float>) const;
+    juce::String getTooltip() override {return peakHoverText(getMouseXYRelative().toFloat());}
     void mouseMove(const juce::MouseEvent&) override;
     void focusForTransport();
     bool keyPressed(const juce::KeyPress&) override;
@@ -59,6 +64,8 @@ public:
     std::function<void(const juce::String&)> onInspect;
 private:
     StandaloneSessionModel* sectionSession=nullptr;
+    std::unique_ptr<SectionEditPrompt> sectionEdit;
+    juce::TooltipWindow hoverTips{this,350};
     std::function<void(uint64_t)> sectionEdited;
     juce::String sectionInput,sectionRuntime;
     uint64_t sectionRevision=0, audioRevision=0;

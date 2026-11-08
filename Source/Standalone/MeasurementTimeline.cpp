@@ -396,6 +396,7 @@ void MeasurementTimeline::resized()
 }
 void MeasurementTimeline::bindSectionEditing(StandaloneSessionModel& session,std::function<void(uint64_t)> changed)
 {
+    if(sectionSession!=&session)sectionEdit=std::make_unique<SectionEditPrompt>(session);
     sectionSession=&session;
     sectionEdited=std::move(changed);
     refreshSectionEditing();
@@ -406,7 +407,7 @@ void MeasurementTimeline::refreshSectionEditing()
     auto& session=*sectionSession;
     const auto& map=session.sectionDocument.map();
     const bool editable=knownFrames>0 && map.frames==knownFrames && !map.sections.empty() && session.sourceDocument.layout.confirmed
-        && !session.sourceContentInvalid && !session.audioEditsBlocked() && !session.job.isActive();
+        && !session.sourceContentInvalid && !session.audioEditsBlocked() && !session.job.isActive() && !session.sectionTrimDraft;
     if(sectionRuntime==session.sessionId && audioRevision==session.revision && sectionInput==map.inputIdentity
         && sectionRevision==map.revision && sectionEditable==editable)return;
     sectionRuntime=session.sessionId;audioRevision=session.revision;sectionInput=map.inputIdentity;
@@ -435,10 +436,64 @@ std::optional<size_t> MeasurementTimeline::boundaryHandle(float px) const
     consider(near);
     return best;
 }
+juce::String MeasurementTimeline::peakHoverText(juce::Point<float> pointer) const
+{
+    if(!peakOverlayActive()||blend.waveformAlpha()<=0||!graph.toFloat().contains(pointer)||viewEnd<=viewBegin)return {};
+    const auto x=[&](double frame){return float(graph.getX()+(frame-viewBegin)*(graph.getWidth()-1)/(viewEnd-viewBegin));};
+    float distance=8.f;juce::String text;
+    const auto describe=[&](int channel,double db,double frame,bool truePeak)
+    {
+        const auto name=channelNames[channel].isNotEmpty()?channelNames[channel]:"Channel "+juce::String(channel+1);
+        return juce::String(currentInspection?"Current":"Original")+" | "+name+" | "+timecode(int64_t(frame),programmeRate())
+            +"\n"+(truePeak?"Measured programme true peak: ":"Sample peak: ")+juce::String(db,3)+(truePeak?" dBTP":" dBFS")
+            +"\nPosition: "+juce::String(frame/programmeRate(),6)+" s ("+(truePeak?juce::String(int64_t(std::llround(frame*8)))+"/8":juce::String(int64_t(frame)))+" frames)"
+            +"\nTarget: "+juce::String(*peakTarget,2)+" dBTP"
+            +"\nApproximate additional reduction: "+juce::String(*peakTarget-db,3)+" dB"
+            +"\n"+(truePeak?"Guidance for this measured maximum. Apply, then re-measure Current.":"Sample-based guidance; inter-sample peaks may be higher. Apply, then re-measure Current.");
+    };
+    if(waveformData&&waveformAccepted)
+    {
+        const int channels=waveformData->spec.channels;const float height=float(graph.getHeight())/channels;
+        double scale=1;for(const auto& col:waveformColumns)if(col.available())for(int c=0;c<channels;++c)
+            scale=std::max(scale,double(std::max(std::abs(col.channels[size_t(c)].minimum),std::abs(col.channels[size_t(c)].maximum))));
+        const int channel=std::clamp(int((pointer.y-graph.getY())/height),0,channels-1);
+        const float centre=graph.getY()+(channel+.5f)*height;
+        const auto visit=[&](float value,int64_t frame)
+        {
+            if(!sampleExceedsTarget(value,frame))return;
+            const auto d=pointer.getDistanceFrom({x(double(frame)),centre-float(value/scale)*height*.44f});
+            if(d<distance){distance=d;text=describe(channel,20*std::log10(std::abs(value)),double(frame),false);}
+        };
+        for(const auto& col:waveformColumns)if(col.available()){const auto& e=col.channels[size_t(channel)];visit(e.minimum,e.minimumFrame);visit(e.maximum,e.maximumFrame);}
+    }
+    if(text.isNotEmpty())return text;
+    if(analysis)for(const auto& peak:analysis->peaks)if(peak.trueDbtp&&*peak.trueDbtp>*peakTarget)
+    {
+        const double frame=peak.truePeakEighthFrame/8.;if(frame<viewBegin||frame>viewEnd)continue;
+        const auto top=waveformData?graph.getY()+peak.channel*graph.getHeight()/waveformData->spec.channels:graph.getY();
+        if(juce::Rectangle<float>(x(frame)-3,float(top),51,15).contains(pointer))return describe(peak.channel,*peak.trueDbtp,frame,true);
+    }
+    return {};
+}
 void MeasurementTimeline::mouseMove(const juce::MouseEvent& e)
 {
     setMouseCursor(graph.contains(e.getPosition()) && boundaryHandle(e.position.x)
         ? juce::MouseCursor::LeftRightResizeCursor : juce::MouseCursor::NormalCursor);
+}
+void MeasurementTimeline::changeSectionEnd(uint64_t id,int64_t frame)
+{
+    if(!sectionSession||!sectionEdit)return;
+    const auto before=sectionSession->sectionDocument.map();auto edited=sectionSession->sectionDocument;
+    const auto it=std::find_if(before.sections.begin(),before.sections.end(),[&](const auto& r){return r.id==id;});
+    if(it==before.sections.end()||it->end==frame)return;
+    juce::String error;if(!edited.moveEnd(id,frame,error)){navigationMessage(error);return;}
+    sectionEdit->request(*this,before,edited.map(),false,it->begin,it->end,it->end,frame,
+        [safe=juce::Component::SafePointer<MeasurementTimeline>(this),id](bool accepted,bool)
+        {
+            if(!safe)return;auto& self=*safe;self.refreshSectionEditing();
+            if(self.sectionEdited)self.sectionEdited(id);
+            self.navigationMessage(accepted?(self.sectionSession->sectionTrimDraft?"Section + gain DRAFT. Apply or Discard both changes.":"Section changed. Applied gain stays in place."):self.sectionSession->sectionTrimNotice);
+        });
 }
 void MeasurementTimeline::finishSectionGesture(int64_t end)
 {
@@ -453,8 +508,8 @@ void MeasurementTimeline::finishSectionGesture(int64_t end)
     if(movingBoundary)
     {
         const auto n=*movingBoundary;
-        selected=map.sections[n].id;
-        accepted=document.moveEnd(selected,std::clamp(end,map.sections[n].begin+1,map.sections[n+1].end-1),error);
+        changeSectionEnd(map.sections[n].id,std::clamp(end,map.sections[n].begin+1,map.sections[n+1].end-1));
+        return;
     }
     else
     {

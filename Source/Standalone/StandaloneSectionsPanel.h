@@ -40,11 +40,16 @@ private:
     juce::ComboBox domainBox, windowKind, windowScope;
     juce::TextButton splitButton { "Split at frame" }, moveButton { "Move end" }, mergeButton { "Merge next" }, renameButton { "Rename" };
     juce::TextButton rebuildButton { "Build sections" }, cancelButton { "Cancel sections" };
-    juce::TextButton draftGainButton { "Draft section gains" }, setGainButton { "Set draft gain" },
-        applyGainButton { "Apply section trims" }, discardGainButton { "Discard draft" };
+    juce::TextButton applyGainButton { "Apply section trims" }, discardGainButton { "Discard draft" };
     juce::TextButton importMarkers { "Import markers..." }, pasteMarkers { "Paste positions..." };
     std::unique_ptr<MarkerImportWindow> markerWindow;
     juce::TextEditor gainEditor;
+    juce::Label gainLabel;
+    bool gainDirty=false;
+    juce::String gainOpening,gainGeometry;
+    uint64_t gainAudioRevision=0;
+    bool commitGain();
+    SectionEditPrompt sectionEdit{session};
     juce::Label gainStatus;
     struct GainView final : juce::Component
     {

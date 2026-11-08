@@ -6,6 +6,8 @@ bool preflightMarkerImport(const StandaloneSessionModel& s,const proposal::marke
 {
     try
     {
+        if(s.sectionTrimDraft&&s.sectionTrimDraft->rollbackAnnotations)
+        {error="Apply or Discard the paired section/gain edit before importing markers.";return false;}
         if(s.sessionId!=p.runtime||!s.sectionDocument.map().valid()||s.sectionDocument.map().digest()!=p.previousMap
            ||s.sourceContentInvalid||p.receipt.imported.inputIdentity!=sectionInputIdentity(s.measurementContext(MeasurementDomain::source)))
         {error="Stale marker preview: programme, annotation map or runtime changed. Preview again.";return false;}

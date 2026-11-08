@@ -1,6 +1,7 @@
 #pragma once
 #include "StandaloneSessionModel.h"
 #include "StandaloneRegionProposal.h"
+#include "SectionEditPrompt.h"
 #include <limits>
 #include <juce_gui_basics/juce_gui_basics.h>
 
@@ -17,6 +18,7 @@ public:
     void selectFrame(int64_t frame,bool notify);
     void selectAt(int64_t frame,int y);
     bool deleteSelected();
+    SectionEditPrompt& editPrompt(){return sectionEdit;}
     void clearDeleteSelection(){deleteArmed=false;}
     void inspectRegionAttempt(size_t);
     bool diagnosticRegionInspection() const;
@@ -30,8 +32,9 @@ public:
     void paint(juce::Graphics&) override;
 private:
     StandaloneSessionModel& session;
+    SectionEditPrompt sectionEdit{session};
     juce::Label legend,notice,detail,dbLabel;
-    juce::TextButton previous{"<"},next{">"},stage{"Set draft"},apply{"Apply gains"},discard{"Discard gains"};
+    juce::TextButton previous{"<"},next{">"},apply{"Apply gains"},discard{"Discard gains"};
     juce::TextButton undoDelete{"Undo delete"};
     std::optional<proposal::SectionMap> deletedAnnotation;
     uint64_t deletedRevision=0;
@@ -61,7 +64,7 @@ private:
     const proposal::ProgrammeSection* selected() const;
     void showSelection();
     void updateControls();
-    void stageValue();
+    bool stageValue();
     bool bindingMatches() const;
     void afterAction();
 };

@@ -47,6 +47,14 @@ void appearanceChecks(const juce::File& root)
     ui.setPeakTarget(-6,true);expect(!ui.peakVisibility().getToggleState()&&ui.peakVisibility().isEnabled(),"over-target overlay defaults off with a measured finite target");
     ui.peakVisibility().setToggleState(true,juce::sendNotificationSync);
     expect(ui.sampleExceedsTarget(-.8,4)&&!ui.sampleExceedsTarget(.5,75)&&!ui.sampleExceedsTarget(std::pow(10.,-6./20),75),"peak overlay uses magnitude, exact retained position and strict numeric ceiling without rounded comparisons");
+    const auto hoverBox=ui.graphBounds();
+    const juce::Point<float> peakPoint{float(hoverBox.getX()+4.*(hoverBox.getWidth()-1)/512.),float(hoverBox.getY()+hoverBox.getHeight()*.25+.8*.44*hoverBox.getHeight()/2.)};
+    const auto hover=ui.peakHoverText(peakPoint);
+    expect(hover.contains("Original | L")&&hover.contains("Sample peak: -1.938 dBFS")&&hover.contains("-4.062 dB")&&hover.contains("4 frames")&&!hover.contains("Above numeric ceiling"),"hover identifies actual negative sample, role, exact frame and additional reduction without redundant delta");
+    ui.setReferenceMeasurement({},true);expect(ui.peakHoverText(peakPoint).startsWith("Current"),"hover explicitly identifies Current without adding monitor/global gain again");
+    blend.setValue(1,juce::sendNotificationSync);expect(ui.peakHoverText(peakPoint).isEmpty(),"hidden waveform markers have no hover target");blend.setValue(0,juce::dontSendNotification);
+    ui.setPeakTarget(-6,false);expect(ui.peakHoverText(peakPoint).isEmpty(),"unverified measurement cannot supply hover guidance");ui.setPeakTarget(-6,true);
+    juce::TooltipWindow tip;tip.displayTip({120,120},ui.peakHoverText(peakPoint));imageOf(tip,root.getChildFile("peak-hover.png"));tip.hideTip();
     imageOf(ui,root.getChildFile("over-target-peaks.png"));
     ui.setViewRange(50,80);expect(!ui.sampleExceedsTarget(-.8,4),"covering overview extremum outside visible passage cannot create a false in-view marker");ui.setViewRange(0,512);
     ui.setWaveform(overview,false,{"L","R"});expect(!ui.sampleExceedsTarget(-.8,4),"incomplete waveform cannot claim a target exceedance");ui.setWaveform(overview,true,{"L","R"});
@@ -65,6 +73,9 @@ void appearanceChecks(const juce::File& root)
     expect(result.samplePeak.value&&result.truePeak.value&&*result.samplePeak.value< -3&&*result.truePeak.value> -3,"actual measured inter-sample fixture exceeds TP target while PCM samples do not");
     auto intersamplePcm=waveform::Overview::create({5000,48000,2},std::make_shared<waveform::Budget>());expect(intersamplePcm->append(intersample.getArrayOfReadPointers(),2,5000,0)&&intersamplePcm->finish(),"matching true-peak-only overview");
     ui.setProgramme(5000,48000,"true-peak-only");ui.setWaveform(intersamplePcm,true,{"L","R"});ui.setAnalysis(proposal::analyzeProgramme(result,"measured-true-peak-only"));ui.setPeakTarget(-3,true);ui.peakVisibility().setToggleState(true,juce::sendNotificationSync);
+    const auto measuredAnalysis=proposal::analyzeProgramme(result,"measured-true-peak-only");const auto& tp=measuredAnalysis->peaks.front();const auto tpBox=ui.graphBounds();
+    const juce::Point<float> tpPoint{float(tpBox.getX()+(tp.truePeakEighthFrame/8.)*(tpBox.getWidth()-1)/5000.)+4,float(tpBox.getY()+4)};
+    expect(ui.peakHoverText(tpPoint).contains("Measured programme true peak:")&&ui.peakHoverText(tpPoint).contains("/8 frames"),"TP marker hover uses measured true peak and fractional sample position");
     expect(!ui.sampleExceedsTarget(intersample.getSample(0,100),100),"sample markers never pretend to be inter-sample true peaks");imageOf(ui,root.getChildFile("true-peak-only-warning.png"));
 
 }
