@@ -1,0 +1,74 @@
+{
+  "passed": true,
+  "source_commit": "2c419cd45d2f16ae4a2dbe0bf8f63e82577a5a81",
+  "measurement_build": "cb4c35c17598dff01e1251dae96bdaea98fe63b484dbea9928ca735df227e3fe",
+  "candidate_identity_sha256": "fe4358c6bbda979f9b0b14d04d004c676d760cbfd4c77c72d141768955f9fc56",
+  "app_path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-manual-workflow-2026-11-08/candidate-02/LevelScope Standalone.app",
+  "app_sha256": "47377ced89c0185a5589ac214de71744f42e2a4e8ffa6fceb5843f47aa710cd1",
+  "hosts": {
+    "sequoia": {
+      "os": "15.7.9",
+      "architecture": "arm64",
+      "groups": [
+        {
+          "name": "timeline",
+          "checks": 1519,
+          "passed": true,
+          "seconds": 2.902525875,
+          "candidate_identity_sha256": "fe4358c6bbda979f9b0b14d04d004c676d760cbfd4c77c72d141768955f9fc56"
+        },
+        {
+          "name": "ui",
+          "checks": 129,
+          "passed": true,
+          "seconds": 15.889329833,
+          "candidate_identity_sha256": "79220e02c5e2a1e7a3570ed3f61c35bab436872272edf9abaa85ee7e4659a154"
+        },
+        {
+          "name": "requirements",
+          "checks": 489,
+          "passed": true,
+          "seconds": 28.586696709,
+          "candidate_identity_sha256": "79220e02c5e2a1e7a3570ed3f61c35bab436872272edf9abaa85ee7e4659a154"
+        }
+      ],
+      "total_checks": 2137
+    },
+    "high-sierra": {
+      "os": "10.13.6",
+      "architecture": "x86_64",
+      "groups": [
+        {
+          "name": "timeline",
+          "checks": 1519,
+          "passed": true,
+          "seconds": 4.404076118,
+          "candidate_identity_sha256": "fe4358c6bbda979f9b0b14d04d004c676d760cbfd4c77c72d141768955f9fc56"
+        },
+        {
+          "name": "ui",
+          "checks": 129,
+          "passed": true,
+          "seconds": 34.121708288,
+          "candidate_identity_sha256": "79220e02c5e2a1e7a3570ed3f61c35bab436872272edf9abaa85ee7e4659a154"
+        },
+        {
+          "name": "requirements",
+          "checks": 489,
+          "passed": true,
+          "seconds": 53.91361311000001,
+          "candidate_identity_sha256": "79220e02c5e2a1e7a3570ed3f61c35bab436872272edf9abaa85ee7e4659a154"
+        }
+      ],
+      "total_checks": 2137
+    }
+  },
+  "visual_review": "Both actual hosts: sample tooltip with only approximate reduction, readable keep/remove/move-gain dialogs, paired draft, removed confirmation and Set draft controls.",
+  "previous_package_artifacts_preserved": 424,
+  "main_and_origin_main_unchanged": "22961f03de7919e1de631f8b13eb4b852108ac0b",
+  "physical_devices_opened": false,
+  "user_app_restarted": false,
+  "publication_authorized": false,
+  "combined_qualification_complete": false,
+  "scope": "Affected timeline/model/persistence and target workflows only. Core measurement, proposal and DSP source is unchanged. Existing monitoring/device/video/long-media qualification is reused; no physical listening test."
+}

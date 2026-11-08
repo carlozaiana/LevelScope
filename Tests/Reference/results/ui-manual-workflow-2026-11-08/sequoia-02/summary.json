@@ -1,0 +1,32 @@
+{
+  "passed": true,
+  "os": "15.7.9",
+  "architecture": "arm64",
+  "source_commit": "2c419cd45d2f16ae4a2dbe0bf8f63e82577a5a81",
+  "build": "cb4c35c17598dff01e1251dae96bdaea98fe63b484dbea9928ca735df227e3fe",
+  "candidate_identity_sha256": "fe4358c6bbda979f9b0b14d04d004c676d760cbfd4c77c72d141768955f9fc56",
+  "requested_cases": [
+    "timeline"
+  ],
+  "physical_devices_opened": false,
+  "combined_qualification_complete": false,
+  "inputs": {},
+  "groups": [
+    {
+      "name": "timeline",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-manual-workflow-2026-11-08/candidate-02/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-manual-workflow-2026-11-08/sequoia-02/timeline-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-manual-workflow-2026-11-08/sequoia-02/timeline.json"
+      ],
+      "returncode": 0,
+      "seconds": 2.902525875,
+      "passed": true,
+      "checks": 1519,
+      "receipt": "timeline.json",
+      "receipt_sha256": "f8b5cc5e0aec47e5493eac74286d8189097eb04f33d6caa8304f82aca72c26e3"
+    }
+  ]
+}

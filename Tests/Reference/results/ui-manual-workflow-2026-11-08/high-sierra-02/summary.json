@@ -1,0 +1,32 @@
+{
+  "passed": true,
+  "os": "10.13.6",
+  "architecture": "x86_64",
+  "source_commit": "2c419cd45d2f16ae4a2dbe0bf8f63e82577a5a81",
+  "build": "cb4c35c17598dff01e1251dae96bdaea98fe63b484dbea9928ca735df227e3fe",
+  "candidate_identity_sha256": "fe4358c6bbda979f9b0b14d04d004c676d760cbfd4c77c72d141768955f9fc56",
+  "requested_cases": [
+    "timeline"
+  ],
+  "physical_devices_opened": false,
+  "combined_qualification_complete": false,
+  "inputs": {},
+  "groups": [
+    {
+      "name": "timeline",
+      "command": [
+        "/Users/fuzz/LevelScope-UI-manual-workflow-2026-11-08/candidate-02/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/LevelScope-UI-manual-workflow-2026-11-08/high-sierra-02/timeline-files",
+        "--output",
+        "/Users/fuzz/LevelScope-UI-manual-workflow-2026-11-08/high-sierra-02/timeline.json"
+      ],
+      "returncode": 0,
+      "seconds": 4.404076118,
+      "passed": true,
+      "checks": 1519,
+      "receipt": "timeline.json",
+      "receipt_sha256": "6175ca19577b481dce07d32ca8a4bdb21854d9a4bbfe7d453985d1cd4bd6b0c8"
+    }
+  ]
+}
