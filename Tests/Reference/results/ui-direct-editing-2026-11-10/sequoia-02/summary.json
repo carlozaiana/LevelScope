@@ -1,0 +1,63 @@
+{
+  "passed": true,
+  "os": "15.7.9",
+  "architecture": "arm64",
+  "source_commit": "082d45ff7d88768f44bd9b557f16da561f2b7d93",
+  "build": "b5a537b6aefe2d5fbe4a7d3b6d0d033eb87c0a5dd0e9fce37c03cc59a57079cf",
+  "candidate_identity_sha256": "83e9ef034d8908a341b3f73ba946d0b2383532d8f8714b910710e6f6b568ea31",
+  "requested_cases": [
+    "timeline",
+    "ui",
+    "requirements"
+  ],
+  "physical_devices_opened": false,
+  "combined_qualification_complete": false,
+  "inputs": {},
+  "groups": [
+    {
+      "name": "timeline",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-direct-editing-2026-11-10/candidate-02/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-direct-editing-2026-11-10/sequoia-02/timeline-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-direct-editing-2026-11-10/sequoia-02/timeline.json"
+      ],
+      "returncode": 0,
+      "seconds": 2.783455917,
+      "passed": true,
+      "checks": 1992,
+      "receipt": "timeline.json",
+      "receipt_sha256": "de78f7c79ed524612aaaf98a1ec1fa052809f6efa13a4184585053eff315e968"
+    },
+    {
+      "name": "ui",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-direct-editing-2026-11-10/candidate-02/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-direct-editing-2026-11-10/sequoia-02/ui-files"
+      ],
+      "returncode": 0,
+      "seconds": 17.058456292000002,
+      "passed": true,
+      "checks": 144,
+      "receipt": "ui-files/result.json",
+      "receipt_sha256": "58ce03a34f1be905ae7772658a8766229408f0d7b3a891b194dcd8c865bb5525"
+    },
+    {
+      "name": "requirements",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-direct-editing-2026-11-10/candidate-02/bin/LevelScopeJobRequirementsTests",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-direct-editing-2026-11-10/sequoia-02/requirements-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-direct-editing-2026-11-10/sequoia-02/requirements.json"
+      ],
+      "returncode": 0,
+      "seconds": 28.942223917,
+      "passed": true,
+      "checks": 489,
+      "receipt": "requirements.json",
+      "receipt_sha256": "fa0455af8c7822e1e519a41fb791a7feea1850b67bb0be3acd3a2ad530ea1dbd"
+    }
+  ]
+}

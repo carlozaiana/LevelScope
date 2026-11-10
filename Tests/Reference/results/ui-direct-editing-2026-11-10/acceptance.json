@@ -1,0 +1,147 @@
+{
+  "passed": true,
+  "source_commit": "082d45ff7d88768f44bd9b557f16da561f2b7d93",
+  "measurement_build": "b5a537b6aefe2d5fbe4a7d3b6d0d033eb87c0a5dd0e9fce37c03cc59a57079cf",
+  "candidate_identity_sha256": "90bf3bc9fc9f0da90711476e903d25dc04866fa608f37e853dddcf2422bee625",
+  "app_path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-direct-editing-2026-11-10/candidate-02/LevelScope Standalone.app",
+  "app_sha256": "19dbc2a7a9e10fa46fc3865bc57e2d732c5233a54d4150182163fb71ce1bdf20",
+  "hosts": {
+    "sequoia": {
+      "os": "15.7.9",
+      "architecture": "arm64",
+      "groups": [
+        {
+          "name": "timeline",
+          "command": [
+            "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-direct-editing-2026-11-10/candidate-02/bin/LevelScopeTimelineProgressTests",
+            "--root",
+            "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-direct-editing-2026-11-10/sequoia-02/timeline-files",
+            "--output",
+            "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-direct-editing-2026-11-10/sequoia-02/timeline.json"
+          ],
+          "returncode": 0,
+          "seconds": 2.783455917,
+          "passed": true,
+          "checks": 1992,
+          "receipt": "timeline.json",
+          "receipt_sha256": "de78f7c79ed524612aaaf98a1ec1fa052809f6efa13a4184585053eff315e968"
+        },
+        {
+          "name": "ui",
+          "command": [
+            "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-direct-editing-2026-11-10/candidate-02/bin/LevelScopeRegionUITests",
+            "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-direct-editing-2026-11-10/sequoia-02/ui-files"
+          ],
+          "returncode": 0,
+          "seconds": 17.058456292000002,
+          "passed": true,
+          "checks": 144,
+          "receipt": "ui-files/result.json",
+          "receipt_sha256": "58ce03a34f1be905ae7772658a8766229408f0d7b3a891b194dcd8c865bb5525"
+        },
+        {
+          "name": "requirements",
+          "command": [
+            "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-direct-editing-2026-11-10/candidate-02/bin/LevelScopeJobRequirementsTests",
+            "--root",
+            "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-direct-editing-2026-11-10/sequoia-02/requirements-files",
+            "--output",
+            "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-direct-editing-2026-11-10/sequoia-02/requirements.json"
+          ],
+          "returncode": 0,
+          "seconds": 28.942223917,
+          "passed": true,
+          "checks": 489,
+          "receipt": "requirements.json",
+          "receipt_sha256": "fa0455af8c7822e1e519a41fb791a7feea1850b67bb0be3acd3a2ad530ea1dbd"
+        }
+      ],
+      "total_checks": 2625,
+      "performance": [
+        {
+          "synthetic_three_hour_preview_bytes": 3455488,
+          "synthetic_prepare_p95_ms": 1.359249997884035
+        },
+        {
+          "dense_10000_sections_prepare_paint_ms": 11.47916666418314
+        },
+        {
+          "dense_10000_sections_commit_ms": 15.99729166552424
+        }
+      ]
+    },
+    "high-sierra": {
+      "os": "10.13.6",
+      "architecture": "x86_64",
+      "groups": [
+        {
+          "name": "timeline",
+          "command": [
+            "/Users/fuzz/LevelScope-UI-direct-editing-2026-11-10/candidate-02/bin/LevelScopeTimelineProgressTests",
+            "--root",
+            "/Users/fuzz/LevelScope-UI-direct-editing-2026-11-10/high-sierra-02/timeline-files",
+            "--output",
+            "/Users/fuzz/LevelScope-UI-direct-editing-2026-11-10/high-sierra-02/timeline.json"
+          ],
+          "returncode": 0,
+          "seconds": 3.4271163529999997,
+          "passed": true,
+          "checks": 1992,
+          "receipt": "timeline.json",
+          "receipt_sha256": "9df1f223b2f4f826bc086e1f9ec1e8cf0e64e2939d6129253a74fb1b268ef826"
+        },
+        {
+          "name": "ui",
+          "command": [
+            "/Users/fuzz/LevelScope-UI-direct-editing-2026-11-10/candidate-02/bin/LevelScopeRegionUITests",
+            "/Users/fuzz/LevelScope-UI-direct-editing-2026-11-10/high-sierra-02/ui-files"
+          ],
+          "returncode": 0,
+          "seconds": 37.266172092,
+          "passed": true,
+          "checks": 144,
+          "receipt": "ui-files/result.json",
+          "receipt_sha256": "d8826c93b5c83d4775318ab360425b390c7b4109f846479ce83b5fc2dc1230fe"
+        },
+        {
+          "name": "requirements",
+          "command": [
+            "/Users/fuzz/LevelScope-UI-direct-editing-2026-11-10/candidate-02/bin/LevelScopeJobRequirementsTests",
+            "--root",
+            "/Users/fuzz/LevelScope-UI-direct-editing-2026-11-10/high-sierra-02/requirements-files",
+            "--output",
+            "/Users/fuzz/LevelScope-UI-direct-editing-2026-11-10/high-sierra-02/requirements.json"
+          ],
+          "returncode": 0,
+          "seconds": 53.795874248,
+          "passed": true,
+          "checks": 489,
+          "receipt": "requirements.json",
+          "receipt_sha256": "61f53c07ae90a9f81664607df5ff7b9be35cdb5730af14d596819b0774e64d2f"
+        }
+      ],
+      "total_checks": 2625,
+      "performance": [
+        {
+          "synthetic_three_hour_preview_bytes": 3455488,
+          "synthetic_prepare_p95_ms": 3.915213000029325
+        },
+        {
+          "dense_10000_sections_prepare_paint_ms": 33.76044099964201
+        },
+        {
+          "dense_10000_sections_commit_ms": 34.49467900022864
+        }
+      ]
+    }
+  },
+  "previous_package_artifacts_preserved": 427,
+  "main_and_origin_main_unchanged": "22961f03de7919e1de631f8b13eb4b852108ac0b",
+  "physical_devices_opened": false,
+  "user_app_restarted": false,
+  "publication_authorized": false,
+  "combined_qualification_complete": false,
+  "visual_review": "Both hosts: direct gain field, selection and neighbour choices, abbreviated peak tooltip, provisional waveform and five unavailable Current values.",
+  "superseded_candidate": "candidate-01 remains preserved; visual review found a Unicode dash encoding defect and the same encoding issue in new command labels. Candidate-02 uses explicit Unicode decoding, adds displayed-text assertions, and routes Command-O through the common pending-edit guard. All three groups rerun on both hosts.",
+  "scope": "Affected timeline/manual model/persistence, proposal UI integration and target workflows. Core measurement, proposal and DSP source unchanged. Reuse unchanged monitoring/device, long-media, video and independent listening evidence."
+}
