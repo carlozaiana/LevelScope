@@ -1166,9 +1166,9 @@ void StandaloneMainComponent::refreshTimeline()
         auto sectionWave=waveformCache.view(binding);
         if(!sectionWave.data&&valid&&session.hasCurrentStateInitialized()&&sectionsPanel->inspectionDomain()==MeasurementDomain::currentState)sectionWave=waveformCache.gainPreview(sourceBinding);
         if(sectionWave.data&&sectionsPanel->inspectionDomain()==MeasurementDomain::currentState&&session.currentStateNeedsRemeasurement()&&sectionWave.accepted){sectionWave.previewBase=currentPlan;sectionWave.accepted=false;}
-        editor.setGainPreview(sectionWave.previewBase,currentPlan);
         editor.setProgramme(valid?session.sourceDocument.media.frames:0,valid?int(session.sourceDocument.media.sampleRate):1,
                             valid?sourceBinding.runtime+sourceBinding.identity:juce::String());
+        editor.setGainPreview(sectionWave.previewBase,currentPlan);
         sectionsPanel->refreshMeasuredView();
         if(sectionsPanel->inspectionDomain()==MeasurementDomain::currentState&&session.currentStateNeedsRemeasurement())editor.setAnalysis(nullptr);
         editor.setWaveform(sectionWave.data,sectionWave.accepted,channels);

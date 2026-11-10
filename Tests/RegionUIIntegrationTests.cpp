@@ -24,6 +24,7 @@ struct PreparationFeedbackTestAccess
     static void refreshTimeline(StandaloneMainComponent& c){c.refreshTimeline();}
     static juce::Label& warning(StandaloneMainComponent& c){return c.monitorWarning;}
     static juce::Label& scope(StandaloneMainComponent& c){return c.qcScope;}
+    static juce::Slider& globalGain(StandaloneMainComponent& c){return c.currentGain;}
 };
 }
 namespace
@@ -282,6 +283,18 @@ void directCommandChecks(StandaloneMainComponent& ui,const juce::File& root)
     expect(ui.performCommand(StandaloneMainComponent::undoEdit)&&s.currentStateNeedsRemeasurement(),"Undo after measurement invalidates Current independently");
     timeline.focusForTransport();expect(ui.keyPressed(juce::KeyPress('A',juce::ModifierKeys{},'a'))&&Access::inspection(ui)==2&&timeline.isGainPreview()&&!timeline.displayedWaveform().empty(),"unverified Current keeps a gain-adjusted waveform from its last completed cache");
     imageOf(ui,root.getChildFile("direct-current-status.png"));
+    Access::globalGain(ui).setValue(5,juce::sendNotificationSync);Access::refresh(ui);
+    expect(s.currentStateDocument.staticGainDb==5&&timeline.isGainPreview(),"global gain 5 dB leaves an unverified Current waveform preview");
+    auto& remeasure=control<juce::TextButton>(ui,"Re-measure Current State");expect(remeasure.isEnabled(),"Current remeasurement is available after global gain entry");
+    remeasure.onClick();
+    // Paint synchronously before a timer refresh can replace the cleared overview.
+    // This is the transition from the reported native paint-thread crash.
+    imageOf(ui,root.getChildFile("remeasure-after-global-gain.png"));
+    expect(s.job.isActive()&&Access::stopped(ui)&&!timeline.isGainPreview()&&timeline.displayedWaveform().empty(),"immediate remeasurement repaint has retired the preview and preserves stopped transport");
+    waitJob(ui);expect(s.currentState.hasMeasurement&&!s.currentStateNeedsRemeasurement()&&s.currentState.analysis->context.processing.staticGainDb==5,"global-gain remeasurement completes and verifies the exact applied 5 dB setting");
+    Access::globalGain(ui).setValue(6,juce::sendNotificationSync);Access::refresh(ui);remeasure.onClick();Access::cancel(ui);
+    imageOf(ui,root.getChildFile("remeasure-cancel-after-gain.png"));waitJob(ui);
+    expect(s.job.state==JobState::cancelled&&s.currentStateNeedsRemeasurement()&&!s.currentState.hasMeasurement&&Access::stopped(ui),"cancelling preparation after a gain edit paints safely and cannot verify Current");
 }
 
 juce::var gateInspectionReport(const measurement::Result& original,const measurement::Result& current)

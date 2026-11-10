@@ -84,7 +84,7 @@ void MeasurementTimeline::setPeakTarget(std::optional<double> dbtp,bool measured
 }
 bool MeasurementTimeline::sampleExceedsTarget(double value,int64_t frame) const
 {
-    return peakOverlayActive()&&(waveformAccepted||previewBase)&&std::isfinite(value)&&frame>=viewBegin&&frame<viewEnd
+    return peakOverlayActive()&&(waveformAccepted||isGainPreview())&&std::isfinite(value)&&frame>=viewBegin&&frame<viewEnd
         &&std::abs(value)>peakCeiling;
 }
 void MeasurementTimeline::setProgramme(int64_t frames,int rate,const juce::String& identity)
@@ -92,14 +92,19 @@ void MeasurementTimeline::setProgramme(int64_t frames,int rate,const juce::Strin
     if(identity==programmeIdentity&&frames==knownFrames&&rate==knownRate)return;
     programmeIdentity=identity;knownFrames=std::max<int64_t>(0,frames);knownRate=std::max(1,rate);
     analysis.reset();preview.reset();waveformData.reset();originalMeasurement.reset();selection.reset();inspectedRange.reset();inspectedFrame.reset();inspection.clear();seconds.setText("0",false);
+    clearGainPreview();waveformAccepted=false;waveformPublication=0;
     viewBegin=0;viewEnd=std::max<double>(1,knownFrames);++navigationEpoch;rebuild();
 }
 void MeasurementTimeline::setWaveform(std::shared_ptr<const waveform::Overview> data,bool accepted,const juce::StringArray& channels)
 {
     const auto publication=data?data->publication():0;
-    if(waveformEnabled && data==waveformData && publication==waveformPublication && accepted==waveformAccepted && channels==channelNames)return;
+    const bool clearingPreview=!data&&previewBase.has_value();
+    if(waveformEnabled && data==waveformData && publication==waveformPublication && accepted==waveformAccepted && channels==channelNames&&!clearingPreview)return;
     const auto previousFrames=programmeFrames();const auto previousRate=programmeRate();
-    waveformEnabled=true;waveformData=std::move(data);waveformAccepted=accepted;waveformPublication=publication;channelNames=channels;
+    // Measurement preparation and programme replacement can paint before the
+    // next timer refresh. A retired overview must also retire its gain binding.
+    if(!data)clearGainPreview();
+    waveformEnabled=true;waveformData=std::move(data);waveformAccepted=accepted&&bool(waveformData);waveformPublication=publication;channelNames=channels;
     if(programmeFrames()!=previousFrames || programmeRate()!=previousRate || viewEnd<=1)
     {viewBegin=0;viewEnd=std::max<double>(1,programmeFrames());selection.reset();}
     inspectedChannel=waveformData?juce::jlimit(0,waveformData->spec.channels-1,inspectedChannel):0;
@@ -387,7 +392,7 @@ void MeasurementTimeline::rebuild()
     }
     if(waveformData)waveformPublication=waveformData->publication();
     waveformColumns=waveformData?waveformData->reduce(int64_t(std::floor(viewBegin)),int64_t(std::ceil(viewEnd)),std::max(1,graph.getWidth()),waveformPublication):std::vector<waveform::Column>{};
-    if(previewBase)
+    if(isGainPreview())
     {
         const auto gain=[](const ProcessingPlan& p,int64_t f){return p.staticGainDb+(p.sectionGains?p.sectionGains->gainAt(f):0.);};
         for(auto& col:waveformColumns)if(col.available())for(int c=0;c<waveformData->spec.channels;++c)
@@ -631,13 +636,13 @@ void MeasurementTimeline::paint (juce::Graphics& g)
         juce::String heading=waveformData?"PCM waveform overview | "+juce::String(waveformData->binFrames)+" frames/bin ("+juce::String(1000.*waveformData->binFrames/programmeRate(),3)+" ms)":
             "PCM waveform unavailable | use Build waveform for an existing measurement";
         if(waveformData && !waveformAccepted&&!previewBase)heading+=" | ANALYSING - incomplete: "+juce::String(waveformData->coveredFrames(waveformPublication))+" / "+juce::String(programmeFrames())+" frames";
-        if(previewBase)heading="CURRENT GAIN PREVIEW | "+juce::String(1000.*waveformData->binFrames/programmeRate(),3)+" ms/bin | Not measured";
+        if(isGainPreview())heading="CURRENT GAIN PREVIEW | "+juce::String(1000.*waveformData->binFrames/programmeRate(),3)+" ms/bin | Not measured";
         if(overTargetPeaks.getToggleState())
         {
             bool overs=false;for(const auto& col:waveformColumns)if(col.available())for(int c=0;waveformData&&c<waveformData->spec.channels;++c)
                 overs=overs||sampleExceedsTarget(col.channels[size_t(c)].minimum,col.channels[size_t(c)].minimumFrame)||sampleExceedsTarget(col.channels[size_t(c)].maximum,col.channels[size_t(c)].maximumFrame);
             if(analysis&&peakMeasurementCurrent)for(const auto& p:analysis->peaks)overs=overs||(p.trueDbtp&&*p.trueDbtp>std::min(peakTarget.value_or(0.),currentInspection?peakTarget.value_or(0.):0.)&&p.truePeakEighthFrame/8.>=viewBegin&&p.truePeakEighthFrame/8.<viewEnd);
-            heading+=!(waveformAccepted||previewBase)?" | Peak data unavailable":overs?" | Peak warnings":" | "+juce::String(previewBase?"Preview: ":"")+"No overs in this view.";
+            heading+=!(waveformAccepted||isGainPreview())?" | Peak data unavailable":overs?" | Peak warnings":" | "+juce::String(isGainPreview()?"Preview: ":"")+"No overs in this view.";
         }
         g.drawText(heading,10,31,std::max(0,getWidth()-205),18,juce::Justification::left);
         g.drawText(preview?"ANALYSING - incomplete | M amber, S blue: gates pending | LUFS at right; PCM at left.":"M amber / excluded grey; S blue / outside LRA gate blue-grey. Current: red IL gate = M gate membership differs from Original.",10,49,getWidth()-20,18,juce::Justification::left);

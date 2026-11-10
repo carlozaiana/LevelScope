@@ -63,5 +63,17 @@ void gainPreviewChecks(const juce::File& root)
     expect(kept&&scaled&&cache.retainedBytes()==memory,"preview preserves unchanged extrema and positions while applying the actual transition envelope at retained samples");
     expect(!ui.sampleExceedsTarget(.99,100)&&!ui.sampleExceedsTarget(1.,100)&&ui.sampleExceedsTarget(1.01,100),"No Limit uses strict greater-than-zero dBFS for provisional sample warnings");
     expect(ui.rangePeakText(0,512).contains("preview"),"preview cannot be inspected as an exact current regional measurement");imageOf(ui,root.getChildFile("gain-preview.png"));
+    ui.setWaveform({},false,{});
+    imageOf(ui,root.getChildFile("gain-preview-retired.png"));
+    expect(!ui.isGainPreview()&&ui.displayedWaveform().empty()&&!ui.sampleExceedsTarget(2.,100),"retiring the overview also retires gain-preview and provisional peak authority before repaint");
+    ui.setGainPreview(fallback.previewBase,changed);
+    imageOf(ui,root.getChildFile("gain-preview-awaiting-data.png"));
+    expect(!ui.isGainPreview()&&!ui.sampleExceedsTarget(2.,100),"staging a new gain binding without waveform data is safe and cannot advertise available peaks");
+    ui.setWaveform(data,false,{"L","R"});expect(ui.isGainPreview(),"replacement overview can adopt its explicitly supplied gain binding");
+    ui.setProgramme(512,48000,"another-programme");
+    imageOf(ui,root.getChildFile("gain-preview-new-programme.png"));
+    expect(!ui.isGainPreview()&&ui.displayedWaveform().empty(),"New or Open clears the old programme's gain preview before painting");
+    ui.setWaveform(data,false,{"L","R"});expect(!ui.isGainPreview()&&!ui.sampleExceedsTarget(2.,100),"new progressive overview cannot inherit an old programme's gain or peak authority");
+    ui.setGainPreview(fallback.previewBase,changed);expect(ui.isGainPreview(),"same numeric gain key can be bound again after retirement");
     auto stale=source;stale.runtime="reopened";cache.synchronize(stale,current,true,true,&changed);expect(!cache.gainPreview(stale).data,"preview cannot survive a different session/source identity");
 }
