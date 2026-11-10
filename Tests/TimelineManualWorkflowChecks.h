@@ -5,11 +5,17 @@ void manualWorkflowChecks(const juce::File& root)
     expect(s.setValidatedSource(req.context.sourceFile,req.context.media),"manual fixture imported");s.sourceDocument.layout=req.context.fileLayout;measure(s,Domain::source);s.synchronizeSections();
     const auto original=s.source.analysis;auto& document=s.sectionDocument;juce::String error;
     TimelineGainLane lane(s);MeasurementTimeline ui;ui.setSize(1150,640);ui.attachGainLane(lane);ui.bindSectionEditing(s,[&](uint64_t){lane.synchronize("manual");});ui.setProgramme(240013,48000,"manual");lane.synchronize("manual");
-    ui.addToDesktop(juce::ComponentPeer::windowHasTitleBar);ui.setVisible(true);ui.focusForTransport();
+    ui.addToDesktop(juce::ComponentPeer::windowHasTitleBar);ui.setVisible(true);ui.toFront(true);pump(20);ui.focusForTransport();
     auto state=s.manualState();state.globalDb=4;expect(s.commitManualEdit(state,"Global trim"),"global trim participates in Undo");lane.synchronize("manual");
     const auto graph=ui.graphBounds();draw(ui,float(graph.getX()+graph.getWidth()*.2),float(graph.getX()+graph.getWidth()*.4));
     expect(document.map().sections.size()==3,"draw section commits immediately");const auto middle=document.map().sections[1];lane.selectFrame(middle.begin,false);stageGain(lane,"-2");
     const auto gainKey=s.currentStateDocument.sectionGains->audioKey();
+    auto* field=laneEditor(lane);field->grabKeyboardFocus();field->setText("-3",false);field->onTextChange();
+    const bool returnHandled=ui.getPeer()->handleKeyPress(juce::KeyPress(juce::KeyPress::returnKey));
+    const auto returnStart=juce::Time::getMillisecondCounterHiRes();while(!ui.hasKeyboardFocus(false)&&juce::Time::getMillisecondCounterHiRes()-returnStart<1500)pump(10);
+    expect(returnHandled&&ui.hasKeyboardFocus(false),"native Return commits gain and returns focus to the timeline");
+    expect(ui.getPeer()->handleKeyPress(juce::KeyPress('Z',juce::ModifierKeys::commandModifier,0))&&s.currentStateDocument.sectionGains->audioKey()==gainKey,"native Command-Z immediately after Return undoes processing, not just editor text");
+
     draw(ui,float(graph.getX()+graph.getWidth()*.6),float(graph.getX()+graph.getWidth()*.8));
     expect(document.map().sections.size()==5&&!s.sectionTrimDraft&&s.currentStateDocument.sectionGains->audioKey()==gainKey&&s.currentStateNeedsRemeasurement(),"draw a second section immediately after gain entry without Apply or measurement");
     const auto undoCount=s.manualHistory->undoCount();expect(s.undoManual()&&document.map().sections.size()==3&&s.currentStateDocument.sectionGains->audioKey()==gainKey,"Undo drawing preserves audio");expect(s.undoManual(true)&&document.map().sections.size()==5&&s.manualHistory->undoCount()==undoCount,"Redo drawing restores exact sections");
@@ -37,7 +43,9 @@ void manualWorkflowChecks(const juce::File& root)
     const auto rightMouse=[&](float px){const auto t=juce::Time::getCurrentTime();juce::Point<float> p{px,float(graph.getCentreY())};return juce::MouseEvent{juce::Desktop::getInstance().getMainMouseSource(),p,juce::ModifierKeys(juce::ModifierKeys::rightButtonModifier),0,0,0,0,0,&ui,&ui,t,p,t,1,false};};
     ui.refreshSectionEditing();ui.mouseDown(rightMouse(x(begin)-.1f));ui.mouseDrag(rightMouse(x(end)+.1f));ui.mouseUp(rightMouse(x(end)+.1f));
     expect(lane.selectedCount()==3,"right-drag selects fully enclosed waveform sections without drawing or panning");
-    imageOf(ui,root.getChildFile("multi-selection.png"));ui.removeFromDesktop();
+    imageOf(ui,root.getChildFile("multi-selection.png"));const auto selectedState=s.manualState();
+    expect(lane.deleteSelected()&&!lane.editPrompt().active()&&document.map().sections.size()==1&&!s.currentStateDocument.sectionGains&&s.currentStateDocument.staticGainDb==4,"marquee deletion resets all enclosed sections and merges zero neighbours in one action");
+    expect(s.undoManual()&&s.manualState()==selectedState,"one Undo restores the entire multi-section deletion");ui.removeFromDesktop();
 }
 void gainPreviewChecks(const juce::File& root)
 {
