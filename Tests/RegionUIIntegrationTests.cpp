@@ -266,9 +266,14 @@ void directCommandChecks(StandaloneMainComponent& ui,const juce::File& root)
     auto& s=Access::model(ui);s.discardSectionProposal();s.discardSectionTrimDraft();s.synchronizeSections();Access::refresh(ui);auto& timeline=Access::timeline(ui);
     expect(ui.getMenuBarNames()==juce::StringArray({"File","Edit","View","Transport","Analysis"}),"native menu model exposes the five command groups");
     expect(ui.getMenuForIndex(0,{}).getNumItems()>3&&ui.getMenuForIndex(4,{}).getNumItems()>1,"File and Analysis menus expose working existing actions");
+    const auto editMenu=ui.getMenuForIndex(1,{});bool undoText=false,redoText=false;
+    for(juce::PopupMenu::MenuItemIterator i(editMenu,false);i.next();){const auto& item=i.getItem();if(item.itemID==StandaloneMainComponent::undoEdit)undoText=item.text==juce::String::fromUTF8("Undo (⌘Z)");if(item.itemID==StandaloneMainComponent::redoEdit)redoText=item.text==juce::String::fromUTF8("Redo (⇧⌘Z)");}
+    expect(undoText&&redoText,"native menu labels retain Command and Shift Unicode symbols");
     timeline.focusForTransport();const auto source=s.source.analysis;auto before=s.manualState();const auto id=before.map.sections.front().id;
     expect(s.setManualSectionGains({id},-1),"direct UI test applies a local gain");Access::refresh(ui);
     expect(!s.currentState.hasMeasurement&&!s.currentState.analysis&&s.currentStateNeedsRemeasurement()&&s.source.analysis==source,"direct change clears all Current measurement values, preserving Original");
+    int unavailable=0;std::function<void(juce::Component&)> countUnavailable=[&](juce::Component& c){if(auto* label=dynamic_cast<juce::Label*>(&c);label&&label->getText()==juce::String::charToString(0x2014))++unavailable;for(auto* child:c.getChildren())countUnavailable(*child);};countUnavailable(ui);
+    expect(unavailable==5,"all five unverified Current cells display the intended Unicode dash");
     expect(ui.keyPressed(juce::KeyPress('Z',juce::ModifierKeys::commandModifier,0))&&s.manualState()==before,"main Command-Z dispatches the shared edit history");
     expect(ui.keyPressed(juce::KeyPress('Z',juce::ModifierKeys::commandModifier|juce::ModifierKeys::shiftModifier,0))&&s.currentStateDocument.sectionGains,"main Shift-Command-Z redoes the committed edit");
     const auto warnings=timeline.peakVisibility().getToggleState();expect(ui.performCommand(StandaloneMainComponent::peakWarnings)&&timeline.peakVisibility().getToggleState()!=warnings,"View menu toggles the same peak-warning control");ui.performCommand(StandaloneMainComponent::peakWarnings);

@@ -18,7 +18,7 @@ public:
         setResizable (true, true);
         setResizeLimits (1120, 950, 2400, 1600);
         auto* content=new levelscope::standalone::StandaloneMainComponent();setContentOwned(content,true);
-        juce::PopupMenu appMenu;appMenu.addItem(levelscope::standalone::StandaloneMainComponent::preferences,"Preferences… (⌘,)");
+        juce::PopupMenu appMenu;appMenu.addItem(levelscope::standalone::StandaloneMainComponent::preferences,juce::String::fromUTF8("Preferences… (⌘,)"));
         juce::MenuBarModel::setMacMainMenu(content,&appMenu);
         centreWithSize (getWidth(), getHeight());
         setVisible (true);

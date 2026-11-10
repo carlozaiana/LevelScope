@@ -20,7 +20,7 @@ public:
         if(!next.gains){completed(session.commitManualEdit(next,"Move section boundary"),false);return;}
         auto moved=next;const auto plateau=[&](int64_t f){for(const auto& r:moved.gains->intervals)if(r.begin<=f&&f<r.end)return r.db;return 0.;};
         section_edit::setRange(*moved.gains,std::min(oldBoundary,newBoundary),std::max(oldBoundary,newBoundary),plateau(newBoundary>oldBoundary?oldBoundary-1:oldBoundary));
-        show(owner,before,"Move section boundary","Keep the gain in place, or move it with the section? Changes apply immediately. Undo: ⌘Z.",
+        show(owner,before,"Move section boundary","Keep the gain in place, or move it with the section? Changes apply immediately. Undo: Command-Z.",
              {{"Keep gain in place",next},{"Move gain with section",moved}},std::move(completed));
     }
     void requestDelete(juce::Component& owner,int64_t begin,int64_t end,std::function<void(bool,bool)> completed)

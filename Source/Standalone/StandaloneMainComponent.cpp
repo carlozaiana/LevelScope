@@ -1043,11 +1043,12 @@ juce::StringArray StandaloneMainComponent::getMenuBarNames(){return {"File","Edi
 juce::PopupMenu StandaloneMainComponent::getMenuForIndex(int index,const juce::String&)
 {
     juce::PopupMenu menu;const bool idle=!session.audioEditsBlocked()&&!session.job.isActive()&&!session.persistenceLoading;
-    if(index==0){menu.addItem(newDocument,"New session",newSessionButton.isEnabled());menu.addItem(openDocument,"Open session…",openSessionButton.isEnabled());menu.addItem(openAudio,"Open mix… (⌘O)",openMixButton.isEnabled());menu.addSeparator();menu.addItem(saveDocument,"Save session (⌘S)",saveSessionButton.isEnabled());menu.addItem(saveDocumentAs,"Save session as…",saveAsSessionButton.isEnabled());}
-    if(index==1){menu.addItem(removeBoundaries,"Remove section boundaries only",idle&&session.sectionDocument.map().sections.size()>1);menu.addSeparator();auto* text=dynamic_cast<juce::TextEditor*>(juce::Component::getCurrentlyFocusedComponent());menu.addItem(undoEdit,"Undo (⌘Z)",text||session.canUndoManual());menu.addItem(redoEdit,"Redo (⇧⌘Z)",text||session.canUndoManual(true));}
-    if(index==2){menu.addItem(peakWarnings,"Peak warnings",true,timeline.peakVisibility().getToggleState());menu.addItem(sectionsView,"Sections and gain…",sectionsButton.isEnabled());}
+    const auto utf8=[](const char* text){return juce::String::fromUTF8(text);};
+    if(index==0){menu.addItem(newDocument,"New session",newSessionButton.isEnabled());menu.addItem(openDocument,utf8("Open session…"),openSessionButton.isEnabled());menu.addItem(openAudio,utf8("Open mix… (⌘O)"),openMixButton.isEnabled());menu.addSeparator();menu.addItem(saveDocument,utf8("Save session (⌘S)"),saveSessionButton.isEnabled());menu.addItem(saveDocumentAs,utf8("Save session as…"),saveAsSessionButton.isEnabled());}
+    if(index==1){menu.addItem(removeBoundaries,"Remove section boundaries only",idle&&session.sectionDocument.map().sections.size()>1);menu.addSeparator();auto* text=dynamic_cast<juce::TextEditor*>(juce::Component::getCurrentlyFocusedComponent());menu.addItem(undoEdit,utf8("Undo (⌘Z)"),text||session.canUndoManual());menu.addItem(redoEdit,utf8("Redo (⇧⌘Z)"),text||session.canUndoManual(true));}
+    if(index==2){menu.addItem(peakWarnings,"Peak warnings",true,timeline.peakVisibility().getToggleState());menu.addItem(sectionsView,utf8("Sections and gain…"),sectionsButton.isEnabled());}
     if(index==3)menu.addItem(playStop,audition.active()?"Stop (Space)":"Play (Space)",timelineStop.isEnabled()||timelinePlay.isEnabled());
-    if(index==4){menu.addItem(measureOriginal,"Measure Original",idle&&measureSourceButton.isEnabled());menu.addItem(measureCurrent,"Re-measure Current State (⌘R)",idle&&remeasureCurrentStateButton.isEnabled());menu.addSeparator();menu.addItem(proposalPreferences,"Proposal limits…",preferencesButton.isEnabled());}
+    if(index==4){menu.addItem(measureOriginal,"Measure Original",idle&&measureSourceButton.isEnabled());menu.addItem(measureCurrent,utf8("Re-measure Current State (⌘R)"),idle&&remeasureCurrentStateButton.isEnabled());menu.addSeparator();menu.addItem(proposalPreferences,utf8("Proposal limits…"),preferencesButton.isEnabled());}
     return menu;
 }
 bool StandaloneMainComponent::performCommand(int id)
@@ -1096,7 +1097,7 @@ bool StandaloneMainComponent::keyPressed(const juce::KeyPress& key)
         if(key.getKeyCode()=='z'||key.getKeyCode()=='Z')return performCommand(key.getModifiers().isShiftDown()?redoEdit:undoEdit);
         if(key.getKeyCode()=='r'||key.getKeyCode()=='R')return performCommand(measureCurrent);
         if(key.getKeyCode()==',')return performCommand(preferences);
-        if(key.getKeyCode()=='o'||key.getKeyCode()=='O'){chooseMix();return true;}
+        if(key.getKeyCode()=='o'||key.getKeyCode()=='O')return performCommand(openAudio);
     }
     return timeline.keyPressed(key);
 }

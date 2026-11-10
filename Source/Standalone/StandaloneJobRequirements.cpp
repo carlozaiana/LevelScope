@@ -101,7 +101,7 @@ void JobRequirementsPanel::refresh()
         rowNames[size_t(row)].setTooltip(origin+"\n"+evaluationText(result));
         for(size_t col=0;col<5;++col)
         {
-            auto& label=measured[size_t(row)*5+col];juce::String text=row==1&&session.currentStateNeedsRemeasurement()?"—":"--";
+            auto& label=measured[size_t(row)*5+col];juce::String text=row==1&&session.currentStateNeedsRemeasurement()?juce::String::charToString(0x2014):juce::String("--");
             if(summary.analysis)
             {
                 const auto& d=summary.analysis->detail;
