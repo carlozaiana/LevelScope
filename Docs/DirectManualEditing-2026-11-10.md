@@ -1,5 +1,9 @@
 # Direct manual editing — 10 November 2026
 
+**Build update:** candidate-02 below is superseded for use by the
+[Re-measure preview crash correction](RemeasurePreviewCrash-2026-11-10.md).
+The original package and its qualification receipts remain preserved.
+
 Continuation of the reviewed manual-workflow package on `codex/direct-manual-editing`.
 The previously preserved package, running user app, listening sessions and main are
 not replaced. Publication/main integration remains for review.

@@ -1,5 +1,11 @@
 # Direct manual editing — 10 November 2026
 
+Latest correction: [Re-measure after gain editing](../RemeasurePreviewCrash-2026-11-10.md).
+The original candidate-02 remains preserved but is superseded for use by that fix.
+Corrected app source: `5ac6ac57530004ab28167e65e63fda7475b09b68`; 2,154 affected
+checks passed on each actual host. The crash was reproduced before the fix with
+the same null-pointer paint failure as the user report.
+
 See [handover](../DirectManualEditing-2026-11-10.md) for immediate section gains,
 session-local disk-backed Undo/Redo, full-section marquee selection, reset/merge
 semantics, provisional waveform feedback, default peak warnings and native menus.

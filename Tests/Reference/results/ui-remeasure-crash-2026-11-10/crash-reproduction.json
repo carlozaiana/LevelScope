@@ -1,0 +1,34 @@
+{
+  "reported_app_commit": "082d45ff7d88768f44bd9b557f16da561f2b7d93",
+  "reported_arm64_uuid": "1C55E59F-16B6-350E-85E7-24A310783EC9",
+  "user_report_sha256": "87c7e6256808e3e53acf7937f444b39f2895f109eb556fc8b06dfa3e8f6aa909",
+  "reproducer_exit_code": 139,
+  "reproducer_binary_sha256": "e1d516cf00a2ad719dcddce9ce123d7b45a38f51f17acff94c6a6dbe08a99d8d",
+  "reproducer_exception": {
+    "codes": "0x0000000000000001, 0x0000000000000010",
+    "rawCodes": [
+      1,
+      16
+    ],
+    "type": "EXC_BAD_ACCESS",
+    "signal": "SIGSEGV",
+    "subtype": "KERN_INVALID_ADDRESS at 0x0000000000000010"
+  },
+  "reproducer_top_frames": [
+    {
+      "imageOffset": 4483316,
+      "symbol": "levelscope::standalone::MeasurementTimeline::paint(juce::Graphics&)",
+      "symbolLocation": 776,
+      "imageIndex": 0
+    },
+    {
+      "imageOffset": 4483064,
+      "symbol": "levelscope::standalone::MeasurementTimeline::paint(juce::Graphics&)",
+      "symbolLocation": 524,
+      "imageIndex": 0
+    }
+  ],
+  "reproducer_report_sha256": "9497e32f1ade4cd2d7425f0baba4336c17141d2e731516d57c064bf7adb5dfc8",
+  "reproduction": "Set global gain to 5 dB with Current gain preview visible, click Re-measure Current State, synchronously paint before the timer refresh. Same paint+776/paint+524 frames and null+0x10 fault as the user report. Synthetic programme and injected output only.",
+  "physical_devices_opened": false
+}
