@@ -17,10 +17,14 @@ public:
         setUsingNativeTitleBar (true);
         setResizable (true, true);
         setResizeLimits (1120, 950, 2400, 1600);
-        setContentOwned (new levelscope::standalone::StandaloneMainComponent(), true);
+        auto* content=new levelscope::standalone::StandaloneMainComponent();setContentOwned(content,true);
+        juce::PopupMenu appMenu;appMenu.addItem(levelscope::standalone::StandaloneMainComponent::preferences,"Preferences… (⌘,)");
+        juce::MenuBarModel::setMacMainMenu(content,&appMenu);
         centreWithSize (getWidth(), getHeight());
         setVisible (true);
     }
+
+    ~StandaloneMainWindow() override {juce::MenuBarModel::setMacMainMenu(nullptr);}
 
     void closeButtonPressed() override
     {

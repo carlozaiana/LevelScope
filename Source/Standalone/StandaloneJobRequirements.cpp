@@ -90,7 +90,7 @@ void JobRequirementsPanel::refresh()
         const auto& summary=row==0?session.source:session.currentState;
         const auto domain=row==0?MeasurementDomain::source:MeasurementDomain::currentState;
         const auto result=session.evaluation(domain);
-        rowNames[size_t(row)].setText(juce::String(row==0?"Original":"Current")+"  |  "+(summary.hasMeasurement?"Ready":row==1&&session.currentStateNeedsRemeasurement()?"Unverified":"Pending")+(result.verdict==proposal::Verdict::pass?" / PASS":result.verdict==proposal::Verdict::fail?" / FAIL":""),juce::dontSendNotification);
+        rowNames[size_t(row)].setText(juce::String(row==0?"Original":"Current")+"  |  "+(summary.hasMeasurement?"Ready":row==1&&session.currentStateNeedsRemeasurement()?"Needs re-measurement":"Pending")+(result.verdict==proposal::Verdict::pass?" / PASS":result.verdict==proposal::Verdict::fail?" / FAIL":""),juce::dontSendNotification);
         auto origin=summary.statusText;
         if(summary.analysis)
         {
@@ -101,7 +101,7 @@ void JobRequirementsPanel::refresh()
         rowNames[size_t(row)].setTooltip(origin+"\n"+evaluationText(result));
         for(size_t col=0;col<5;++col)
         {
-            auto& label=measured[size_t(row)*5+col];juce::String text="--";
+            auto& label=measured[size_t(row)*5+col];juce::String text=row==1&&session.currentStateNeedsRemeasurement()?"—":"--";
             if(summary.analysis)
             {
                 const auto& d=summary.analysis->detail;

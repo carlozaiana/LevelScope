@@ -17,6 +17,7 @@
 #include "StandaloneAuditionRequest.h"
 #include "StandaloneSections.h"
 #include "SectionGainEditing.h"
+#include "ManualEditHistory.h"
 #include "Core/Proposal/MarkerImport.h"
 #include "Core/Proposal/Model/JobRequirements.h"
 #include <functional>
@@ -319,6 +320,68 @@ public:
         probe.frames=map.frames; probe.intervals={{0,map.frames,1}};
         c.processing.sectionGains=probe;c.processing.schemaVersion=2;c.processing.engineVersion=processing::SectionGainPlan::version;
         return ProgrammeGainProcessor::validationError(c);
+    }
+    std::shared_ptr<ManualEditHistory> manualHistory;
+    ManualEditState manualState() const {return {sectionDocument.map(),currentStateDocument.sectionGains,currentStateDocument.staticGainDb};}
+    bool manualEditAllowed() const
+    {
+        return !audioEditsBlocked()&&!job.isActive()&&!persistenceLoading&&!sectionTrimDraft&&!sourceContentInvalid
+            &&sourceDocument.hasSource&&sourceDocument.matchesFileStamps()&&sectionDocument.map().valid()
+            &&(!sectionProposal||lastAppliedProposalBinding==sectionProposal->identity());
+    }
+    bool installManualState(ManualEditState next)
+    {
+        auto before=manualState();
+        const bool changedAudio=before.globalDb!=next.globalDb
+            ||(before.gains?before.gains->audioKey():juce::String())!=(next.gains?next.gains->audioKey():juce::String());
+        next.map.revision=sectionDocument.map().revision+1;
+        if(!sectionDocument.restore(next.map,before.map.inputIdentity))return false;
+        if(sectionProposal&&lastAppliedProposalBinding==sectionProposal->identity())discardSectionProposal();
+        currentStateDocument.sectionGains=next.gains;currentStateDocument.staticGainDb=next.globalDb;
+        if(changedAudio)
+        {
+            currentStateDocument.sectionGainAnnotations=next.gains?section_edit::provenance(*next.gains,next.map):proposal::SectionMap{};
+            invalidateCurrentProcessing();
+        }
+        else documentChanged();
+        sectionTrimNotice=changedAudio?"Gain applied. Current needs re-measurement. Undo: Command-Z.":"Sections updated. Audio unchanged. Undo: Command-Z.";
+        return true;
+    }
+    bool commitManualEdit(ManualEditState next,const juce::String& label)
+    {
+        if(!manualEditAllowed()||!next.map.valid()||next.map.inputIdentity!=sectionDocument.map().inputIdentity)return false;
+        if(next.gains){*next.gains=next.gains->canonical();if(next.gains->validationError().isNotEmpty())return false;if(next.gains->isUnity())next.gains.reset();}
+        const auto before=manualState();if(before==next)return true;
+        const bool changedAudio=before.globalDb!=next.globalDb||(before.gains?before.gains->audioKey():juce::String())!=(next.gains?next.gains->audioKey():juce::String());
+        if(changedAudio)
+        {
+            if(!currentStateDocument.isInitialized)return false;
+            auto context=measurementContext(MeasurementDomain::currentState);context.processing.staticGainDb=next.globalDb;context.processing.sectionGains=next.gains;
+            context.processing.schemaVersion=next.gains?2:1;context.processing.engineVersion=next.gains?processing::SectionGainPlan::version:"static-gain-v1";
+            if(OfflineAnalysisService::validateRequest(context,MeasurementDomain::currentState).isNotEmpty())return false;
+        }
+        if(!manualHistory||manualHistory->runtime!=sessionId)manualHistory=std::make_shared<ManualEditHistory>(sessionId);
+        if(!manualHistory->push(before,next,label)){sectionTrimNotice="Edit not applied: the Undo journal could not be written. Check available temporary storage.";return false;}
+        return installManualState(std::move(next));
+    }
+    bool setManualSectionGains(const std::vector<uint64_t>& ids,double db)
+    {
+        if(!std::isfinite(db)||db< -12||db>12||ids.empty())return false;
+        auto next=manualState();auto plan=next.gains.value_or(processing::SectionGainPlan{});
+        if(!next.gains){plan.inputIdentity=next.map.inputIdentity;plan.frames=next.map.frames;plan.sampleRate=next.map.sampleRate;plan.intervals={{0,plan.frames,0}};}
+        for(auto id:ids){auto i=std::find_if(next.map.sections.begin(),next.map.sections.end(),[id](const auto& s){return s.id==id;});if(i==next.map.sections.end())return false;section_edit::setRange(plan,i->begin,i->end,db);}
+        next.gains=std::move(plan);return commitManualEdit(std::move(next),ids.size()>1?"Set selected section gains":"Set section gain");
+    }
+    bool canUndoManual(bool redo=false) const
+    {
+        if(!manualEditAllowed()||!manualHistory||manualHistory->runtime!=sessionId)return false;
+        const auto e=manualHistory->peek(redo);return e&&(manualState()==(redo?e->before:e->after));
+    }
+    bool undoManual(bool redo=false)
+    {
+        if(!canUndoManual(redo))return false;
+        auto e=manualHistory->peek(redo);if(!e||!installManualState(redo?e->after:e->before))return false;
+        manualHistory->stepped(redo);return true;
     }
     bool beginSectionTrimDraft()
     {

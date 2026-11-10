@@ -45,17 +45,26 @@ bool WaveformCache::accept(const WaveformBinding& completed,const WaveformBindin
     if(!progress || !active.sameJob(completed) || !completed.sameJob(expected)
         || progress->state()!=WaveformProgress::State::complete)return false;
     auto data=progress->overview();if(!data||!data->complete())return false;
-    slots[completed.domain==MeasurementDomain::source?0:1]={completed,std::move(data)};progress.reset();return true;
+    slots[completed.domain==MeasurementDomain::source?0:1]={completed,std::move(data),{}};progress.reset();return true;
 }
 void WaveformCache::reject(const WaveformBinding& completed)
 {if(progress&&active.sameJob(completed)){progress->abandon();progress.reset();}}
-void WaveformCache::synchronize(const WaveformBinding& source,const WaveformBinding& current,bool valid,bool initialized)
+void WaveformCache::synchronize(const WaveformBinding& source,const WaveformBinding& current,bool valid,bool initialized,const ProcessingPlan* plan)
 {
     if(!valid||!slots[0].binding.sameAudio(source))slots[0]={};
-    if(!valid||!initialized||!slots[1].binding.sameAudio(current))slots[1]={};
+    if(!valid||!initialized||(!slots[1].binding.sameAudio(current)&&(!plan||!lastSource.sameAudio(source))))slots[1]={};
+    if(plan&&slots[1].binding.sameAudio(current))slots[1].plan=*plan;
+    lastSource=source;
     if(progress&&(!valid||!active.sameJob(active.domain==MeasurementDomain::source?source:current)
         ||(active.domain==MeasurementDomain::currentState&&!initialized)))
     {progress->abandon();progress.reset();}
+}
+WaveformView WaveformCache::gainPreview(const WaveformBinding& source) const
+{
+    if(!lastSource.sameAudio(source))return {};
+    if(slots[1].data)return {slots[1].data,false,WaveformProgress::State::complete,slots[1].plan};
+    if(slots[0].data&&slots[0].binding.sameAudio(source))return {slots[0].data,false,WaveformProgress::State::complete,ProcessingPlan{}};
+    return {};
 }
 bool WaveformCache::shareInitialCurrent(const AnalysisSnapshot& source,const AnalysisSnapshot& current)
 {
@@ -70,14 +79,14 @@ bool WaveformCache::shareInitialCurrent(const AnalysisSnapshot& source,const Ana
         || OfflineAnalysisService::identityFor(current.context,MeasurementDomain::source,current.measuredContentHash)!=source.identity
         || current.identity!=OfflineAnalysisService::identityFor(current.context,current.domain,current.measuredContentHash)
         || !slots[0].data || slots[0].binding.identity!=source.identity || slots[0].binding.runtime!=source.context.sessionId)return false;
-    slots[1]={WaveformBinding::from(current.context,MeasurementDomain::currentState),slots[0].data};return true;
+    slots[1]={WaveformBinding::from(current.context,MeasurementDomain::currentState),slots[0].data,{}};return true;
 }
 WaveformView WaveformCache::view(const WaveformBinding& binding) const
 {
-    if(progress&&active.sameJob(binding))return {progress->overview(),false,progress->state()};
+    if(progress&&active.sameJob(binding))return {progress->overview(),false,progress->state(),{}};
     if(binding.domain!=MeasurementDomain::source&&binding.domain!=MeasurementDomain::currentState)return {};
     const auto& slot=slots[binding.domain==MeasurementDomain::source?0:1];
-    if(slot.data&&slot.binding.sameAudio(binding))return {slot.data,true,WaveformProgress::State::complete};
+    if(slot.data&&slot.binding.sameAudio(binding))return {slot.data,true,WaveformProgress::State::complete,{}};
     return {};
 }
 }

@@ -31,12 +31,18 @@ namespace levelscope::standalone
 {
 // [BEGIN LS-STANDALONE-WORKFLOW-SHELL]
 
-class StandaloneMainComponent final : public juce::Component, private juce::Timer
+class StandaloneMainComponent final : public juce::Component, public juce::MenuBarModel, private juce::Timer
 {
 public:
     explicit StandaloneMainComponent(std::shared_ptr<OutputDeviceCatalog> = {}, OutputDeviceSettings = OutputDeviceSettings(),std::unique_ptr<juce::AudioIODevice> = {});
     ~StandaloneMainComponent() override;
     void requestClose (std::function<void()>);
+    enum Command {newDocument=2001,openDocument,openAudio,saveDocument,saveDocumentAs,undoEdit,redoEdit,peakWarnings,sectionsView,playStop,measureOriginal,measureCurrent,preferences,proposalPreferences,removeBoundaries};
+    juce::StringArray getMenuBarNames() override;
+    juce::PopupMenu getMenuForIndex(int,const juce::String&) override;
+    void menuItemSelected(int id,int) override {performCommand(id);}
+    bool performCommand(int);
+
 
     void paint (juce::Graphics& g) override;
     void resized() override;

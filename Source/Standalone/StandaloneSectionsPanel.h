@@ -2,6 +2,7 @@
 #include "StandaloneSections.h"
 #include "StandaloneSessionModel.h"
 #include "MeasurementTimeline.h"
+#include "TimelineGainLane.h"
 #include "StandaloneMarkerImportPanel.h"
 
 namespace levelscope::standalone
@@ -12,6 +13,7 @@ public:
     explicit StandaloneSectionsPanel (StandaloneSessionModel&);
     ~StandaloneSectionsPanel() override;
     void synchronize() { timerCallback(); }
+    bool commitPendingGain(){return commitGain()&&manualLane.commitPending();}
     void suspend();
     void resume();
     MeasurementTimeline& timelineView() {return timeline;}
@@ -59,6 +61,7 @@ private:
     } gainView { session };
     juce::TextEditor boundary, name, summary, inspection;
     juce::Label boundaryLabel, nameLabel, status;
+    TimelineGainLane manualLane{session};
     MeasurementTimeline timeline;
     juce::ListBox sectionList { "Programme sections", this };
     struct Windows final : juce::ListBoxModel

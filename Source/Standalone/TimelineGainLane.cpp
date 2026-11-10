@@ -22,15 +22,15 @@ template<class Rows> size_t intervalAt(const Rows& rows,int64_t frame)
 TimelineGainLane::TimelineGainLane(StandaloneSessionModel& s):session(s)
 {
     setName("Current section gain lane");setInterceptsMouseClicks(false,true);setBufferedToImage(true);
-    for(auto* c:std::initializer_list<juce::Component*>{&legend,&notice,&detail,&previous,&next,&gain,&dbLabel,&apply,&discard,&undoDelete})addAndMakeVisible(c);
+    for(auto* c:std::initializer_list<juce::Component*>{&legend,&notice,&detail,&previous,&next,&gain,&dbLabel})addAndMakeVisible(c);
     for(auto* label:{&legend,&notice,&detail,&dbLabel}){label->setFont(13.f);label->setInterceptsMouseClicks(false,false);}
     legend.setText("CURRENT section gain (dB)   |   Solid: applied   /   Dashed: draft",juce::dontSendNotification);
     legend.setTooltip("All programme channels, before global trim. This lane always describes Current processing.");
-    dbLabel.setText("Draft dB",juce::dontSendNotification);gain.setName("Timeline section draft gain dB");
-    gain.setTooltip("Enter -12 to +12 dB. Return or leaving the field stages the value; Apply gains changes Current.");
-    gain.setInputRestrictions(36);gain.setSelectAllWhenFocused(true);
+    dbLabel.setText("Local dB",juce::dontSendNotification);gain.setName("Timeline section gain dB");
+    gain.setTooltip("Enter -12 to +12 dB. Return or leaving the field applies it immediately. Command-Z undoes the edit.");
+    gain.setInputRestrictions(36);gain.setSelectAllWhenFocused(true);gain.setJustification(juce::Justification::centred);
     gain.onTextChange=[this]{dirty=true;feedback.clear();updateControls();};
-    gain.onReturnKey=[this]{stageValue();};
+    gain.onReturnKey=[this]{if(stageValue())if(auto* parent=getParentComponent();parent&&parent->isShowing()&&parent->getPeer()){parent->setWantsKeyboardFocus(true);parent->grabKeyboardFocus();}};
     gain.onEscapeKey=[this]{dirty=false;feedback.clear();showSelection();updateControls();};
     gain.onFocusLost=[this]{if(dirty)stageValue();};
     undoDelete.onClick=[this]
@@ -119,7 +119,7 @@ void TimelineGainLane::synchronize(const juce::String& key)
     const bool replaced=key!=programme||runtime!=session.sessionId;
     if(replaced)
     {
-        deleteArmed=false;deletedAnnotation.reset();
+        deleteArmed=false;deletedAnnotation.reset();selectedIds.clear();rangeSelection=false;
         programme=key;runtime=session.sessionId;cursor=0;
         input.clear();
         if(key.isNotEmpty()&&session.sourceDocument.layout.confirmed)
@@ -154,6 +154,7 @@ void TimelineGainLane::synchronize(const juce::String& key)
         draftError=fresh?d->plan.validationError():juce::String{};
         draft=fresh&&draftError.isEmpty()?std::optional<processing::SectionGainPlan>(d->plan.canonical()):std::nullopt;
         cursor=std::clamp<int64_t>(cursor,0,std::max<int64_t>(0,map.frames-1));row=intervalAt(rows(),cursor);
+        selectedIds.erase(std::remove_if(selectedIds.begin(),selectedIds.end(),[&](auto id){return std::none_of(map.sections.begin(),map.sections.end(),[&](const auto& r){return r.id==id;});}),selectedIds.end());
         dirty=false;feedback.clear();showSelection();resized();repaint();
     }
     updateControls();
@@ -163,10 +164,14 @@ void TimelineGainLane::showSelection()
     const auto* section=selected();
     if(!section){detail.setText("No confirmed sections",juce::dontSendNotification);detail.setTooltip({});gain.setText({},false);return;}
     const auto* displayed=fresh?&session.sectionTrimDraft->plan:applied?&*applied:nullptr;
-    const auto stored=section_edit::uniform(displayed,section->begin,section->end);
+    auto stored=section_edit::uniform(displayed,section->begin,section->end);
+    if(selectedIds.size()>1)for(const auto& r:session.sectionDocument.map().sections)if(std::find(selectedIds.begin(),selectedIds.end(),r.id)!=selectedIds.end())
+        if(section_edit::uniform(displayed,r.begin,r.end)!=stored)stored.reset();
     gain.setText(stored?exact(*stored):juce::String(),false);
     gain.setTextToShowWhenEmpty(stored?juce::String():"Mixed",juce::Colours::lightgrey);
-    auto description=section->name+"   ["+juce::String(section->begin)+", "+juce::String(section->end)+")";
+    int64_t selectedEnd=section->end;
+    if(selectedIds.size()>1)for(const auto& r:session.sectionDocument.map().sections)if(std::find(selectedIds.begin(),selectedIds.end(),r.id)!=selectedIds.end())selectedEnd=std::max(selectedEnd,r.end);
+    auto description=(selectedIds.size()>1?juce::String(selectedIds.size())+" selected sections":section->name)+"   ["+juce::String(section->begin)+", "+juce::String(selectedEnd)+")";
     if(initialized)description+="   Applied: "+exact(applied?applied->gainAt(cursor):0.)+" dB";
     if(selectionKind.getSelectedId()!=1)description+=" (at cursor; nominal interval shown, transitions may cross its edges).";
     if(fresh&&session.sectionTrimDraft->processingRegions)description+=" | draft local "+exact(draft?draft->gainAt(cursor):0.)+" dB";
@@ -210,7 +215,7 @@ void TimelineGainLane::updateControls()
 {
     if(measured!=session.currentState.hasMeasurement){measured=session.currentState.hasMeasurement;feedback.clear();}
     const bool idle=!session.audioEditsBlocked()&&!session.job.isActive();
-    const bool editable=selectionKind.getSelectedId()==1&&selected()&&initialized&&supportError.isEmpty()&&idle&&!session.sectionProposal&&(!hasDraft||(fresh&&!session.sectionTrimDraft->processingRegions));
+    const bool editable=(!rangeSelection||!selectedIds.empty())&&selectionKind.getSelectedId()==1&&selected()&&initialized&&supportError.isEmpty()&&idle&&session.manualEditAllowed();
     previous.setEnabled(selected()&&row>0);next.setEnabled(selected()&&row+1<rows().size());
     if(selectionKind.getSelectedId()==1&&automatic&&!automatic->selection().corrections.empty())
     {
@@ -218,12 +223,13 @@ void TimelineGainLane::updateControls()
         previous.setEnabled(selected()&&cursor>changes.front().begin);next.setEnabled(selected()&&cursor<changes.back().begin);
     }
     previous.setTooltip("Inspect previous section or processing region");next.setTooltip("Inspect next section or processing region");
-    for(auto* c:std::initializer_list<juce::Component*>{&gain,&dbLabel,&apply,&discard})c->setVisible(!automatic);
+    for(auto* c:std::initializer_list<juce::Component*>{&gain,&dbLabel})c->setVisible(!automatic||session.lastAppliedProposalBinding==automatic->identity());
+    apply.setVisible(false);discard.setVisible(false);undoDelete.setVisible(false);
     gain.setEnabled(editable);
     std::istringstream field(gain.getText().trim().toStdString());field.imbue(std::locale::classic());double entered=0;
     const bool validField=(field>>entered)&&(field>>std::ws).eof()&&std::isfinite(entered)&&entered>=-12&&entered<=12;
     apply.setEnabled((!dirty||validField)&&initialized&&idle&&!session.sectionProposal&&supportError.isEmpty()&&(fresh||dirty)&&draftError.isEmpty());discard.setEnabled((hasDraft||dirty)&&idle);
-    undoDelete.setVisible(deletedAnnotation.has_value());undoDelete.setEnabled(deletedAnnotation&&idle&&!hasDraft&&bindingMatches());
+    undoDelete.setVisible(false);undoDelete.setEnabled(deletedAnnotation&&idle&&!hasDraft&&bindingMatches());
     juce::String message;
     if(!usableMap)message="Confirm programme audio and channel roles to inspect sections.";
     else if(!initialized)message="Current is not initialised.";
@@ -236,27 +242,27 @@ void TimelineGainLane::updateControls()
         +(automatic->previewHasFinalGlobal()?juce::String():" Global shown is baseline only; no final combined solution.");
     else if(session.sectionProposal)message="This proposal has no gain preview. Review the outcome, or Discard to edit manually.";
     else if(feedback.isNotEmpty())message=feedback;
-    else if(dirty)message="Editing local gain. Return or leaving the field stages it; Apply is separate.";
+    else if(dirty)message="Editing local gain. Return or leaving the field applies it. Command-Z undoes it.";
     else if(draftError.isNotEmpty())message=draftError;
     else if(hasDraft)message=session.sectionTrimDraft->processingRegions?session.sectionTrimNotice:"Draft only. Apply gains changes Current; Discard keeps applied audio.";
-    else if(selectionKind.getSelectedId()!=1)message="Click an applied region, then Backspace to draft removal of its local gain. Apply/Discard remain explicit. Proposed regions are read-only.";
+    else if(selectionKind.getSelectedId()!=1)message="Click an applied region, then Backspace to reset or merge its gain. Proposed regions remain read-only.";
     else if(!geometryMatches)message="Sections and gain regions differ. New edits retain existing gains outside the selected passage.";
-    else if(session.currentStateNeedsRemeasurement())message="Current unverified. Re-measure Current State to verify the applied gain.";
-    else message="Click a section to inspect. Backspace removes its annotation into a neighbour; applied audio stays unchanged. Enter a gain; Return or leaving the field stages it.";
+    else if(session.currentStateNeedsRemeasurement())message="Current needs re-measurement. Continue editing, or re-measure when ready.";
+    else message="Click a gain readout to edit. Drag this lane to select whole sections. Backspace resets/merges; Command-Z undoes.";
 
     legend.setText(automatic?"CURRENT local gain (dB)   |   Green solid = applied   /   Cyan dotted = proposal":
-        "CURRENT local gain (dB)   |   Green solid = applied   /   Amber dashed = manual draft",juce::dontSendNotification);
+        "CURRENT local gain (dB)   |   Shaded: transition   /   Command-Z: Undo",juce::dontSendNotification);
     notice.setText(message,juce::dontSendNotification);notice.setTooltip(message);
 }
 bool TimelineGainLane::stageValue()
 {
     if(!dirty)return true;
-    if(!bindingMatches()||!gain.isEnabled()||session.audioEditsBlocked()||session.job.isActive()||session.sectionProposal)return false;
+    if(!bindingMatches()||!gain.isEnabled()||session.audioEditsBlocked()||session.job.isActive()||!session.manualEditAllowed())return false;
     std::istringstream in(gain.getText().trim().toStdString());in.imbue(std::locale::classic());double value=0;
     if(!(in>>value)||!(in>>std::ws).eof()||!std::isfinite(value)||value < -12||value > 12)
     {feedback="Enter one finite value from -12 to +12 dB. Nothing applied.";updateControls();return false;}
-    if(!hasDraft&&!session.beginSectionTrimDraft()){feedback=session.sectionTrimNotice;updateControls();return false;}
-    if(!session.setSectionDraftGain(row,value)){feedback=session.sectionTrimNotice;updateControls();return false;}
+    auto ids=selectedIds;if(ids.empty()&&selected())ids.push_back(selected()->id);
+    if(!session.setManualSectionGains(ids,value)){feedback=session.sectionTrimNotice;updateControls();return false;}
     afterAction();return true;
 }
 void TimelineGainLane::afterAction()
@@ -269,60 +275,78 @@ void TimelineGainLane::selectFrame(int64_t frame,bool notify)
     if(dirty&&!stageValue())return;
     const auto& map=session.sectionDocument.map();if(!usableMap||map.sections.empty()||!bindingMatches())return;
     cursor=std::clamp<int64_t>(frame,0,map.frames-1);row=intervalAt(rows(),cursor);
-    dirty=false;feedback.clear();showSelection();updateControls();repaint();
+    rangeSelection=false;selectedIds.clear();if(selectionKind.getSelectedId()==1&&selected())selectedIds.push_back(selected()->id);
+    dirty=false;feedback.clear();showSelection();updateControls();resized();repaint();
     if(notify&&onSelection){const auto& s=rows()[row];onSelection(s.begin,s.end,cursor);}
 }
 void TimelineGainLane::selectAt(int64_t frame,int /*y*/)
 {
     rebuildProposalRows();selectFrame(frame,true);deleteArmed=selected()!=nullptr;
 }
+void TimelineGainLane::selectRange(int64_t begin,int64_t end)
+{
+    if(dirty&&!stageValue())return;
+    if(!bindingMatches()||selectionKind.getSelectedId()!=1)return;
+    if(end<begin)std::swap(begin,end);rangeSelection=true;selectedIds.clear();
+    for(const auto& r:rows())if(r.begin>=begin&&r.end<=end)selectedIds.push_back(r.id);
+    deleteArmed=!selectedIds.empty();
+    if(deleteArmed)
+    {
+        const auto first=std::find_if(rows().begin(),rows().end(),[&](const auto& r){return r.id==selectedIds.front();});
+        const auto last=std::find_if(rows().begin(),rows().end(),[&](const auto& r){return r.id==selectedIds.back();});
+        row=size_t(first-rows().begin());cursor=first->begin;
+        if(onSelection)onSelection(first->begin,last->end,cursor);
+    }
+    showSelection();updateControls();gain.setEnabled(deleteArmed&&session.manualEditAllowed());resized();repaint();
+    if(!deleteArmed)notice.setText("No fully enclosed sections selected.",juce::dontSendNotification);
+}
+void TimelineGainLane::editReadout(int64_t frame)
+{
+    selectAt(frame,0);resized();if(gain.isEnabled()&&gain.isShowing()){gain.grabKeyboardFocus();gain.selectAll();}
+}
 bool TimelineGainLane::deleteSelected()
 {
     if(!deleteArmed||!selected())return false;
-    deleteArmed=false; // One explicit selection per deletion; held Backspace cannot cascade.
-    if(!bindingMatches()||session.audioEditsBlocked()||session.job.isActive()||session.persistenceLoading)
-    {feedback="Stop playback and finish the job before deleting.";updateControls();return true;}
-    if(dirty){feedback="Commit or discard the gain field edit before deleting.";updateControls();return true;}
-    if(selectionKind.getSelectedId()==3)
-    {feedback="Proposed regions belong to the complete measured proposal. Apply or Discard the proposal first.";notice.setText(feedback,juce::dontSendNotification);notice.setTooltip(feedback);return true;}
-    if(selectionKind.getSelectedId()==2)
-    {
-        const auto region=*selected();
-        if(session.draftRemoveAppliedRegion(region.begin,region.end)){afterAction();return true;}
-        feedback="Cannot remove this region: it has no local gain, or an unapplied proposal/stale or section draft needs Discard first.";
-        notice.setText(feedback,juce::dontSendNotification);notice.setTooltip(feedback);return true;
-    }
-    if(hasDraft){feedback="Apply or Discard the gain draft before deleting annotations.";updateControls();return true;}
-    auto map=session.sectionDocument.map();if(map.sections.size()<2)
-    {feedback="The final whole-programme annotation must remain; there are no section boundaries left to delete.";updateControls();return true;}
-    const auto before=map;const auto removed=map.sections[row];
-    if(row>0)map.sections[row-1].end=removed.end;else map.sections[1].begin=0;
-    map.sections.erase(map.sections.begin()+ptrdiff_t(row));++map.revision;
-    sectionEdit.request(*this,before,map,true,removed.begin,removed.end,0,0,
-        [safe=juce::Component::SafePointer<TimelineGainLane>(this),before](bool accepted,bool withGain)
-        {
-            if(!safe)return;auto& self=*safe;
-            if(accepted&&!withGain){self.deletedAnnotation=before;self.deletedRevision=self.session.sectionDocument.map().revision;}
-            self.afterAction();
-            if(accepted&&!withGain){self.feedback="Section annotation deleted. Applied gains unchanged. Undo delete restores the annotation.";self.updateControls();self.resized();}
-        });
+    if(dirty&&!stageValue())return true;
+    if(selectionKind.getSelectedId()==3){feedback="Apply or Discard the proposal before manual editing.";updateControls();return true;}
+    if(!bindingMatches()||!session.manualEditAllowed())return true;
+    auto begin=selected()->begin,end=selected()->end;
+    if(selectionKind.getSelectedId()==1&&!selectedIds.empty())for(const auto& r:rows())if(std::find(selectedIds.begin(),selectedIds.end(),r.id)!=selectedIds.end())
+    {begin=std::min(begin,r.begin);end=std::max(end,r.end);}
+    deleteArmed=false;
+    sectionEdit.requestDelete(*this,begin,end,[safe=juce::Component::SafePointer<TimelineGainLane>(this)](bool,bool){if(safe){safe->selectedIds.clear();safe->afterAction();}});
     return true;
+}
+bool TimelineGainLane::removeSelectedBoundaries()
+{
+    if(selectionKind.getSelectedId()!=1||selectedIds.empty()||!bindingMatches()||!session.manualEditAllowed()||!stageValue())return false;
+    auto next=session.manualState();auto& rows=next.map.sections;size_t first=rows.size(),last=0;
+    for(size_t n=0;n<rows.size();++n)if(std::find(selectedIds.begin(),selectedIds.end(),rows[n].id)!=selectedIds.end()){first=std::min(first,n);last=n;}
+    if(first==rows.size()||rows.size()==1)return false;
+    if(first>0)--first;if(last+1<rows.size())++last;
+    rows[first].end=rows[last].end;rows.erase(rows.begin()+ptrdiff_t(first+1),rows.begin()+ptrdiff_t(last+1));
+    const auto accepted=session.commitManualEdit(std::move(next),"Remove section boundaries only");
+    if(accepted){selectedIds.clear();afterAction();}return accepted;
 }
 void TimelineGainLane::setViewport(double begin,double end,int left,int width)
 {
     if(begin==viewBegin&&end==viewEnd&&left==plotLeft&&width==plotWidth)return;
-    viewBegin=begin;viewEnd=end;plotLeft=left;plotWidth=width;repaint();
+    viewBegin=begin;viewEnd=end;plotLeft=left;plotWidth=width;resized();repaint();
 }
 void TimelineGainLane::resized()
 {
     auto b=getLocalBounds();auto top=b.removeFromTop(22);selectionKind.setBounds(top.removeFromRight(195));legend.setBounds(top);notice.setBounds(b.removeFromTop(24));
     auto controls=b.removeFromBottom(28).reduced(2,1);
     previous.setBounds(controls.removeFromLeft(27));next.setBounds(controls.removeFromLeft(27));
-    if(deletedAnnotation)undoDelete.setBounds(controls.removeFromLeft(100));
-    if(!automatic)
+    if(!automatic||session.lastAppliedProposalBinding==automatic->identity())
     {
-        discard.setBounds(controls.removeFromRight(105));apply.setBounds(controls.removeFromRight(100));
-        gain.setBounds(controls.removeFromRight(156));dbLabel.setBounds(controls.removeFromRight(60));
+        gain.setBounds(controls.removeFromRight(110));dbLabel.setVisible(true);dbLabel.setBounds(controls.removeFromRight(60));
+        if(const auto* s=selected();s&&selectedIds.size()<=1&&selectionKind.getSelectedId()==1&&viewEnd>viewBegin)
+        {
+            const auto left=plotLeft+int((std::max(viewBegin,double(s->begin))-viewBegin)*plotWidth/(viewEnd-viewBegin));
+            const auto right=plotLeft+int((std::min(viewEnd,double(s->end))-viewBegin)*plotWidth/(viewEnd-viewBegin));
+            if(right-left>=55){const auto width=std::min(140,right-left-4);gain.setBounds((left+right-width)/2,plotBounds().getBottom(),width,20);dbLabel.setVisible(false);}
+        }
     }
     detail.setBounds(controls);
 }
@@ -347,6 +371,9 @@ void TimelineGainLane::paint(juce::Graphics& g)
         const auto& r=rows[i];if(r.begin<viewBegin)continue;const int px=int(x(r.begin));
         if(px!=previousX){g.setColour(juce::Colour(0xff566570));g.drawVerticalLine(px,float(box.getY()),float(box.getBottom()));previousX=px;}
     }
+    if(selectedIds.size()>1)for(const auto& r:session.sectionDocument.map().sections)
+        if(std::find(selectedIds.begin(),selectedIds.end(),r.id)!=selectedIds.end()&&r.end>viewBegin&&r.begin<viewEnd)
+        {g.setColour(juce::Colour(0xff81d5b4).withAlpha(.2f));g.fillRect(x(std::max<double>(r.begin,viewBegin)),float(box.getY()),x(std::min<double>(r.end,viewEnd))-x(std::max<double>(r.begin,viewBegin)),float(box.getHeight()));}
     if(!initialized)return;
     // Clip in frame space first, including ramps whose centres are outside the view.
     // Canonical transition endpoints match SectionGainPlan::gainAt, including shortened ramps.
@@ -370,6 +397,11 @@ void TimelineGainLane::paint(juce::Graphics& g)
             }
         }
     };
+    if(applied)for(size_t n=1;n<applied->intervals.size();++n)
+    {
+        const auto radius=applied->radius(n),frame=applied->intervals[n].begin;
+        const auto a=x(frame-radius),b=x(frame+radius);g.setColour(juce::Colour(0xff81d5b4).withAlpha(.12f));g.fillRect(a,float(box.getY()),std::max(1.f,b-a),float(box.getHeight()));
+    }
     draw(applied?&*applied:nullptr,0);if(draft)draw(&*draft,1);if(proposed)draw(proposed->sectionGains?&*proposed->sectionGains:nullptr,2);
 }
 void TimelineGainLane::paintReadouts(juce::Graphics& g)
@@ -390,7 +422,19 @@ void TimelineGainLane::paintReadouts(juce::Graphics& g)
         {const auto& r=plan->intervals[i];label(r.begin,r.end,r.db);}
         else for(const auto& r:session.sectionDocument.map().sections)label(r.begin,r.end,0);
     };
-    draw(applied?&*applied:nullptr,0,"Applied",juce::Colour(0xff81d5b4));
+    if(selectionKind.getSelectedId()==1)
+    {
+        const auto y=plotBounds().getBottom();g.setFont(11.f);
+        for(const auto& r:session.sectionDocument.map().sections)if(r.end>viewBegin&&r.begin<viewEnd)
+        {
+            const auto l=x(r.begin),w=x(r.end)-l;const bool chosen=std::find(selectedIds.begin(),selectedIds.end(),r.id)!=selectedIds.end();
+            if(chosen){g.setColour(juce::Colour(0xff81d5b4).withAlpha(.2f));g.fillRect(l,plotBounds().getY(),w,plotBounds().getHeight());}
+            g.setColour(juce::Colour(0xff81d5b4));g.drawVerticalLine(l,float(y),float(y+18));
+            const auto value=section_edit::uniform(applied?&*applied:nullptr,r.begin,r.end);
+            if(w>=24)g.drawText(value?juce::String(*value,2)+" dB":"Mixed",l+2,y,w-4,18,juce::Justification::centred);
+        }
+    }
+    else draw(applied?&*applied:nullptr,0,"Applied",juce::Colour(0xff81d5b4));
     if(proposed)draw(proposed->sectionGains?&*proposed->sectionGains:nullptr,1,automaticStale?"Stale prop.":diagnosticRegionInspection()||automatic->status()==SectionProposalStatus::noSolution?"Rejected prop.":"Proposed",juce::Colour(0xff83d9ff));
     else if(draft)draw(&*draft,1,"Draft",juce::Colour(0xffffc171));
 }

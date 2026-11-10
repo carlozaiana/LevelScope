@@ -18,6 +18,11 @@ public:
     void selectFrame(int64_t frame,bool notify);
     void selectAt(int64_t frame,int y);
     bool deleteSelected();
+    bool removeSelectedBoundaries();
+    void selectRange(int64_t begin,int64_t end);
+    void editReadout(int64_t frame);
+    size_t selectedCount() const {return selectedIds.size();}
+    bool commitPending(){return stageValue();}
     SectionEditPrompt& editPrompt(){return sectionEdit;}
     void clearDeleteSelection(){deleteArmed=false;}
     void inspectRegionAttempt(size_t);
@@ -38,12 +43,13 @@ private:
     juce::TextButton undoDelete{"Undo delete"};
     std::optional<proposal::SectionMap> deletedAnnotation;
     uint64_t deletedRevision=0;
-    bool deleteArmed=false;
+    bool deleteArmed=false,rangeSelection=false;
     juce::TextEditor gain;
     juce::ComboBox selectionKind;
     juce::String programme,runtime,input,supportError,draftError,feedback;
     uint64_t audioRevision=0,mapRevision=0,editSerial=0;
     bool initialized=false,hasDraft=false,fresh=false,geometryMatches=true,dirty=false,usableMap=false,measured=false;
+    std::vector<uint64_t> selectedIds;
     size_t row=0;
     int64_t cursor=0;
     double viewBegin=0,viewEnd=1;

@@ -188,7 +188,7 @@ void workflowChecks(StandaloneMainComponent& ui,const juce::File& root)
     const auto& restoredPlan=*reopened.prepared->model.currentStateDocument.sectionGains;
     control<juce::ComboBox>(restoredLane,"Gain lane selection").setSelectedId(2,juce::sendNotificationSync);
     restoredLane.selectAt(restoredPlan.intervals[1].begin,restoredLane.plotBounds().getBottom()+5);
-    expect(restoredLane.inspectionText().contains("Applied processing region")&&!control<juce::TextEditor>(restoredLane,"Timeline section draft gain dB").isEnabled(),"saved processing regions remain directly selectable after reopening without a live proposal");
+    expect(restoredLane.inspectionText().contains("Applied processing region")&&!control<juce::TextEditor>(restoredLane,"Timeline section gain dB").isEnabled(),"saved processing regions remain directly selectable after reopening without a live proposal");
     auto& removal=reopened.prepared->model;
     const auto oldHistory=encodeAppliedExplanation(*removal.lastAppliedExplanation);const auto oldGlobal=removal.currentStateDocument.staticGainDb;
     const auto nonzero=std::find_if(removal.currentStateDocument.sectionGains->intervals.begin(),removal.currentStateDocument.sectionGains->intervals.end(),[](const auto& r){return r.db!=0;});
@@ -259,6 +259,24 @@ void convenienceChecks(StandaloneMainComponent& ui,const juce::File& root)
     viewport.setViewPosition(0,viewport.getViewedComponent()->getHeight());expect(viewport.getViewPositionY()>0,"compressed inspector controls remain scroll-accessible");viewport.setViewPosition(0,0);Access::moveDivider(ui,-100);
     expect(control<juce::Label>(ui,"Programme filename").getText()==s.sourceDocument.file.getFileName(),"programme filename appears above session status");
     imageOf(ui,root.getChildFile("inspection-convenience.png"));
+}
+
+void directCommandChecks(StandaloneMainComponent& ui,const juce::File& root)
+{
+    auto& s=Access::model(ui);s.discardSectionProposal();s.discardSectionTrimDraft();s.synchronizeSections();Access::refresh(ui);auto& timeline=Access::timeline(ui);
+    expect(ui.getMenuBarNames()==juce::StringArray({"File","Edit","View","Transport","Analysis"}),"native menu model exposes the five command groups");
+    expect(ui.getMenuForIndex(0,{}).getNumItems()>3&&ui.getMenuForIndex(4,{}).getNumItems()>1,"File and Analysis menus expose working existing actions");
+    timeline.focusForTransport();const auto source=s.source.analysis;auto before=s.manualState();const auto id=before.map.sections.front().id;
+    expect(s.setManualSectionGains({id},-1),"direct UI test applies a local gain");Access::refresh(ui);
+    expect(!s.currentState.hasMeasurement&&!s.currentState.analysis&&s.currentStateNeedsRemeasurement()&&s.source.analysis==source,"direct change clears all Current measurement values, preserving Original");
+    expect(ui.keyPressed(juce::KeyPress('Z',juce::ModifierKeys::commandModifier,0))&&s.manualState()==before,"main Command-Z dispatches the shared edit history");
+    expect(ui.keyPressed(juce::KeyPress('Z',juce::ModifierKeys::commandModifier|juce::ModifierKeys::shiftModifier,0))&&s.currentStateDocument.sectionGains,"main Shift-Command-Z redoes the committed edit");
+    const auto warnings=timeline.peakVisibility().getToggleState();expect(ui.performCommand(StandaloneMainComponent::peakWarnings)&&timeline.peakVisibility().getToggleState()!=warnings,"View menu toggles the same peak-warning control");ui.performCommand(StandaloneMainComponent::peakWarnings);
+    expect(ui.performCommand(StandaloneMainComponent::measureCurrent),"Analysis command starts explicit Current measurement");waitJob(ui);
+    expect(s.currentState.hasMeasurement&&!s.currentStateNeedsRemeasurement()&&Access::stopped(ui),"explicit measurement restores verification without connecting playback");
+    expect(ui.performCommand(StandaloneMainComponent::undoEdit)&&s.currentStateNeedsRemeasurement(),"Undo after measurement invalidates Current independently");
+    timeline.focusForTransport();expect(ui.keyPressed(juce::KeyPress('A',juce::ModifierKeys{},'a'))&&Access::inspection(ui)==2&&timeline.isGainPreview()&&!timeline.displayedWaveform().empty(),"unverified Current keeps a gain-adjusted waveform from its last completed cache");
+    imageOf(ui,root.getChildFile("direct-current-status.png"));
 }
 
 juce::var gateInspectionReport(const measurement::Result& original,const measurement::Result& current)
@@ -431,7 +449,7 @@ int main(int argc,char** argv)
         {
         overloadBannerChecks(root);auto s=programme(root.getChildFile("fixture"),2);editorChecks(s,root);
         auto ui=std::make_unique<StandaloneMainComponent>(emptyOutputCatalog(),noOutputSettings());Access::stopTimer(*ui);ui->setSize(1320,1100);ui->setName("LevelScope - isolated M20 integration test");ui->addToDesktop(juce::ComponentPeer::windowHasTitleBar);ui->setVisible(true);
-        auto busy=Access::model(*ui).auditionBusy;Access::model(*ui)=s;Access::model(*ui).auditionBusy=busy;Access::refresh(*ui);convenienceChecks(*ui,root);workflowChecks(*ui,root);
+        auto busy=Access::model(*ui).auditionBusy;Access::model(*ui)=s;Access::model(*ui).auditionBusy=busy;Access::refresh(*ui);convenienceChecks(*ui,root);workflowChecks(*ui,root);directCommandChecks(*ui,root);
         }
         passed=true;
     }

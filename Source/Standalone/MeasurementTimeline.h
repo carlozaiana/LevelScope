@@ -17,6 +17,7 @@ class MeasurementTimeline final : public juce::Component, public juce::TooltipCl
 public:
     MeasurementTimeline();
     void attachGainLane(TimelineGainLane&);
+    TimelineGainLane* attachedGainLane() const {return gainLane;}
     void bindSectionEditing(StandaloneSessionModel&,std::function<void(uint64_t)>);
     void refreshSectionEditing();
     void changeSectionEnd(uint64_t,int64_t);
@@ -27,10 +28,14 @@ public:
     void focusForTransport();
     bool keyPressed(const juce::KeyPress&) override;
     std::function<void()> onTogglePlayback;
+    std::function<bool(bool)> onUndo;
+    std::function<void()> onRemeasure;
     std::function<void()> onToggleInspectionAudition;
     void setProgramme(int64_t frames,int sampleRate,const juce::String& identity);
     void setAnalysis (std::shared_ptr<const proposal::ProgramAnalysis>);
     void setWaveform(std::shared_ptr<const waveform::Overview>,bool accepted,const juce::StringArray& channels);
+    void setGainPreview(std::optional<ProcessingPlan> base,const ProcessingPlan& current={});
+    bool isGainPreview() const {return previewBase.has_value();}
     void setPreview(std::shared_ptr<const LoudnessPreview>);
     void setReferenceMeasurement(std::shared_ptr<const measurement::Result>,bool inspectingCurrent);
     juce::String rangePeakText(int64_t begin,int64_t end) const;
@@ -90,6 +95,9 @@ private:
     std::vector<bool> changedMomentary;
     std::shared_ptr<const waveform::Overview> waveformData;
     std::vector<waveform::Column> waveformColumns;
+    std::optional<ProcessingPlan> previewBase;
+    ProcessingPlan previewCurrent;
+    juce::String previewGainKey;
     juce::StringArray channelNames;
     uint64_t waveformPublication=0;
     bool waveformAccepted=false,waveformEnabled=false;
@@ -107,14 +115,14 @@ private:
     juce::TextButton zoomIn { "Zoom +" }, zoomOut { "Zoom -" }, fit { "Whole programme" }, fitSelection {"Fit selection"}, inspect { "Inspect seconds" };
     juce::TextButton seek {"Seek"};
     juce::ToggleButton follow {"Follow"};
-    juce::ToggleButton overTargetPeaks {"Peaks over target"};
+    juce::ToggleButton overTargetPeaks {"Peak warnings"};
     std::optional<double> peakTarget;
     double peakCeiling=1;
     bool peakMeasurementCurrent=false;
-    bool peakOverlayActive() const {return overTargetPeaks.getToggleState()&&peakTarget&&peakMeasurementCurrent&&!preview;}
+    bool peakOverlayActive() const {return overTargetPeaks.getToggleState()&&(peakMeasurementCurrent||previewBase)&&!preview;}
     juce::Label navigationFeedback;
     int64_t playhead=0;
-    bool canSeek=false,dragging=false,gesture=false,gestureRuler=false,gestureGain=false;
+    bool canSeek=false,dragging=false,gesture=false,gestureRuler=false,gestureGain=false,selectGesture=false;
     juce::String seekReason,transportIdentity,gestureIdentity;
     uint64_t navigationEpoch=0,gestureEpoch=0;
     juce::Point<float> downPoint;

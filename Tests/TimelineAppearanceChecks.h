@@ -38,19 +38,21 @@ void appearanceChecks(const juce::File& root)
     juce::MouseEvent e{juce::Desktop::getInstance().getMainMouseSource(),p,juce::ModifierKeys(juce::ModifierKeys::commandModifier),0,0,0,0,0,&ui,&ui,t,p,t,1,false};
     juce::MouseWheelDetails wheel{};wheel.deltaY=1;ui.mouseWheelMove(e,wheel);const auto after=ui.viewRange();
     expect(std::abs((before.first+.75*(before.second-before.first))-(after.first+.75*(after.second-after.first)))<.1,"Command-wheel anchors the frame at the pointer, independent of selected section");
+    const auto beforePan=ui.viewRange();juce::MouseEvent pan{juce::Desktop::getInstance().getMainMouseSource(),p,juce::ModifierKeys(juce::ModifierKeys::commandModifier|juce::ModifierKeys::shiftModifier),0,0,0,0,0,&ui,&ui,t,p,t,1,false};ui.mouseWheelMove(pan,wheel);
+    expect(ui.viewRange().second-ui.viewRange().first==beforePan.second-beforePan.first&&ui.viewRange().first!=beforePan.first,"Shift-Command-wheel pans horizontally without changing zoom");
     ui.setProgramme(512,48000,"peaks");auto overview=waveform::Overview::create({512,48000,2},std::make_shared<waveform::Budget>());
     juce::AudioBuffer<float> samples(2,512);samples.clear();samples.setSample(0,4,-.8f);samples.setSample(0,75,.5f);samples.setSample(1,75,.25f);
     expect(overview->append(samples.getArrayOfReadPointers(),2,512,0)&&overview->finish(),"known PCM extrema fixture");ui.setWaveform(overview,true,{"L","R"});
     expect(ui.rangePeakText(0,128).contains("selected sample peak -1.938 dBFS at frame 4"),"sample peak readout retains absolute magnitude and actual minimum sample position");
     const auto boundary=ui.rangePeakText(50,80);expect(boundary.contains("covering overview peak")&&boundary.contains("boundary bins/coverage")&&boundary.contains("Regional true peak is not available"),"boundary overlap is explicit and PCM is never labelled true peak");
     ui.setWaveform(overview,false,{"L","R"});expect(ui.rangePeakText(0,128).contains("INCOMPLETE"),"unaccepted waveform cannot assert completed selected peak");ui.setWaveform(overview,true,{"L","R"});
-    ui.setPeakTarget(-6,true);expect(!ui.peakVisibility().getToggleState()&&ui.peakVisibility().isEnabled(),"over-target overlay defaults off with a measured finite target");
+    ui.setPeakTarget(-6,true);expect(ui.peakVisibility().getToggleState()&&ui.peakVisibility().isEnabled(),"over-target overlay defaults on with a measured finite target");
     ui.peakVisibility().setToggleState(true,juce::sendNotificationSync);
     expect(ui.sampleExceedsTarget(-.8,4)&&!ui.sampleExceedsTarget(.5,75)&&!ui.sampleExceedsTarget(std::pow(10.,-6./20),75),"peak overlay uses magnitude, exact retained position and strict numeric ceiling without rounded comparisons");
     const auto hoverBox=ui.graphBounds();
     const juce::Point<float> peakPoint{float(hoverBox.getX()+4.*(hoverBox.getWidth()-1)/512.),float(hoverBox.getY()+hoverBox.getHeight()*.25+.8*.44*hoverBox.getHeight()/2.)};
     const auto hover=ui.peakHoverText(peakPoint);
-    expect(hover.contains("Original | L")&&hover.contains("Sample peak: -1.938 dBFS")&&hover.contains("-4.062 dB")&&hover.contains("4 frames")&&!hover.contains("Above numeric ceiling"),"hover identifies actual negative sample, role, exact frame and additional reduction without redundant delta");
+    expect(hover.contains("Original | L")&&hover.contains("Sample peak: -1.938 dBFS")&&hover.contains("-4.062 dB")&&!hover.contains("frames")&&!hover.contains("Position:")&&hover.contains("00:00:00.000")&&!hover.contains("Above numeric ceiling"),"hover identifies actual negative sample, role, exact frame and additional reduction without redundant delta");
     ui.setReferenceMeasurement({},true);expect(ui.peakHoverText(peakPoint).startsWith("Current"),"hover explicitly identifies Current without adding monitor/global gain again");
     blend.setValue(1,juce::sendNotificationSync);expect(ui.peakHoverText(peakPoint).isEmpty(),"hidden waveform markers have no hover target");blend.setValue(0,juce::dontSendNotification);
     ui.setPeakTarget(-6,false);expect(ui.peakHoverText(peakPoint).isEmpty(),"unverified measurement cannot supply hover guidance");ui.setPeakTarget(-6,true);
@@ -58,8 +60,8 @@ void appearanceChecks(const juce::File& root)
     imageOf(ui,root.getChildFile("over-target-peaks.png"));
     ui.setViewRange(50,80);expect(!ui.sampleExceedsTarget(-.8,4),"covering overview extremum outside visible passage cannot create a false in-view marker");ui.setViewRange(0,512);
     ui.setWaveform(overview,false,{"L","R"});expect(!ui.sampleExceedsTarget(-.8,4),"incomplete waveform cannot claim a target exceedance");ui.setWaveform(overview,true,{"L","R"});
-    ui.setPeakTarget(-6,false);expect(!ui.peakVisibility().isEnabled()&&!ui.sampleExceedsTarget(-.8,4),"unverified Current suppresses peak verdict overlay");
-    ui.setPeakTarget({},true);expect(!ui.peakVisibility().isEnabled()&&!ui.sampleExceedsTarget(-.8,4)&&ui.peakVisibility().getTooltip().contains("No Limit"),"No Limit disables highlight without inventing a ceiling");
+    ui.setPeakTarget(-6,false);expect(ui.peakVisibility().isEnabled()&&!ui.sampleExceedsTarget(-.8,4),"unverified Current suppresses peak verdict overlay");
+    ui.setPeakTarget({},true);expect(ui.peakVisibility().isEnabled()&&!ui.sampleExceedsTarget(-.8,4)&&ui.peakVisibility().getTooltip().contains("No Limit"),"No Limit retains the available toggle and uses the documented 0 dBFS ceiling");
     ui.setPeakTarget(-1,true);expect(!ui.sampleExceedsTarget(-.8,4),"target changes immediately update the numeric threshold");ui.peakVisibility().setToggleState(false,juce::dontSendNotification);
     blend.setValue(-1,juce::sendNotificationSync);imageOf(ui,root.getChildFile("waveform-only.png"));blend.setValue(0,juce::dontSendNotification);imageOf(ui,root.getChildFile("blend-centre.png"));
     auto surround=waveform::Overview::create({512,48000,6},std::make_shared<waveform::Budget>());juce::AudioBuffer<float> six(6,512);six.clear();
@@ -75,7 +77,13 @@ void appearanceChecks(const juce::File& root)
     ui.setProgramme(5000,48000,"true-peak-only");ui.setWaveform(intersamplePcm,true,{"L","R"});ui.setAnalysis(proposal::analyzeProgramme(result,"measured-true-peak-only"));ui.setPeakTarget(-3,true);ui.peakVisibility().setToggleState(true,juce::sendNotificationSync);
     const auto measuredAnalysis=proposal::analyzeProgramme(result,"measured-true-peak-only");const auto& tp=measuredAnalysis->peaks.front();const auto tpBox=ui.graphBounds();
     const juce::Point<float> tpPoint{float(tpBox.getX()+(tp.truePeakEighthFrame/8.)*(tpBox.getWidth()-1)/5000.)+4,float(tpBox.getY()+4)};
-    expect(ui.peakHoverText(tpPoint).contains("Measured programme true peak:")&&ui.peakHoverText(tpPoint).contains("/8 frames"),"TP marker hover uses measured true peak and fractional sample position");
+    expect(ui.peakHoverText(tpPoint).contains("Measured programme true peak:")&&!ui.peakHoverText(tpPoint).contains("frames"),"TP marker hover uses measured true peak and fractional sample position");
     expect(!ui.sampleExceedsTarget(intersample.getSample(0,100),100),"sample markers never pretend to be inter-sample true peaks");imageOf(ui,root.getChildFile("true-peak-only-warning.png"));
+
+    intersample.applyGain(1.3f);measurement::OfflineMeasurement originalOvers(48000,{measurement::Role::left,measurement::Role::right});originalOvers.push(intersample.getArrayOfReadPointers(),5000);const auto overs=originalOvers.finish();
+    expect(*overs.samplePeak.value<0&&*overs.truePeak.value>0,"Original fixture has measured inter-sample overs without sample overs");
+    const auto maxima=proposal::analyzeProgramme(overs,"original-overs");ui.setReferenceMeasurement({},false);ui.setAnalysis(maxima);ui.setPeakTarget({},true);
+    const auto& maximum=maxima->peaks.front();const juce::Point<float> overPoint{float(tpBox.getX()+(maximum.truePeakEighthFrame/8.)*(tpBox.getWidth()-1)/5000.)+4,float(tpBox.getY()+4)};
+    expect(ui.peakHoverText(overPoint).contains("Measured programme true peak:")&&ui.peakHoverText(overPoint).contains("0 dBTP (No Limit)"),"No Limit still exposes stored Original true-peak maxima above zero without another measurement");
 
 }

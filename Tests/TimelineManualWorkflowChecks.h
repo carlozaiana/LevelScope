@@ -1,87 +1,59 @@
-// Focused regression of the user's draw -> gain -> resize/delete -> redraw workflow.
 void manualWorkflowChecks(const juce::File& root)
 {
-    auto req=fixture(root.getChildFile("manual-workflow.wav"),48000,2,240013);StandaloneSessionModel s;
-    expect(s.setValidatedSource(req.context.sourceFile,req.context.media),"manual workflow source");s.sourceDocument.layout=req.context.fileLayout;s.setSelectedTargetProfileIndex(1);
-    expect(s.programmeApplicability==proposal::Applicability::preProducedLinearProgramme,"fresh imports evaluate supported file limits without confirmation");
-    measure(s,Domain::source);if(!s.hasCurrentStateInitialized())s.initializeCurrentStateFromSource();
-    expect(s.evaluation(Domain::source).verdict!=proposal::Verdict::notEvaluated,"completed Source is evaluated without checking an applicability control");
-    s.setCurrentGainDb(4);measure(s,Domain::currentState);s.synchronizeSections();juce::String error;
-    auto& document=s.sectionDocument;expect(document.split(1,96000,error)&&document.split(document.map().sections.back().id,192000,error),"draw manual section inside programme");
-    const auto id=document.map().sections[1].id;
-    TimelineGainLane lane(s);MeasurementTimeline ui;ui.setSize(1150,650);ui.attachGainLane(lane);ui.setProgramme(req.context.media.frames,48000,"manual");ui.setWaveform({},false,{"L","R"});
-    ui.bindSectionEditing(s,[&](uint64_t){lane.synchronize("manual");});lane.synchronize("manual");
+    auto req=fixture(root.getChildFile("manual.wav"),48000,2,240013);StandaloneSessionModel s;
+    expect(s.programmeApplicability==proposal::Applicability::preProducedLinearProgramme,"automatic file-limit scope needs no confirmation");
+    expect(s.setValidatedSource(req.context.sourceFile,req.context.media),"manual fixture imported");s.sourceDocument.layout=req.context.fileLayout;measure(s,Domain::source);s.synchronizeSections();
+    const auto original=s.source.analysis;auto& document=s.sectionDocument;juce::String error;
+    TimelineGainLane lane(s);MeasurementTimeline ui;ui.setSize(1150,640);ui.attachGainLane(lane);ui.bindSectionEditing(s,[&](uint64_t){lane.synchronize("manual");});ui.setProgramme(240013,48000,"manual");lane.synchronize("manual");
     ui.addToDesktop(juce::ComponentPeer::windowHasTitleBar);ui.setVisible(true);ui.focusForTransport();
-    auto* editor=laneEditor(lane);expect(button(lane,"Set draft")==nullptr,"redundant Set draft button removed");
-    const auto select=[&](int64_t frame){lane.selectAt(frame,lane.plotBounds().getCentreY());ui.focusForTransport();};
-    const auto answer=[&](SectionEditPrompt& prompt,int choice,const char* png=nullptr)
-    {
-        expect(prompt.window()!=nullptr,"section edit has explicit gain choices");if(png)imageOf(*prompt.window(),root.getChildFile(png));
-        prompt.window()->exitModalState(choice);
-        const auto closedAt=juce::Time::getMillisecondCounterHiRes();
-        while((prompt.active()||juce::Component::getCurrentlyModalComponent()!=nullptr)&&juce::Time::getMillisecondCounterHiRes()-closedAt<1500)
-            juce::MessageManager::getInstance()->runDispatchLoopUntil(10);
-        auto* dismissal=new juce::DynamicObject();dismissal->setProperty("section_dialog_dismiss_ms",juce::Time::getMillisecondCounterHiRes()-closedAt);cases.add(juce::var(dismissal));
-        expect(!prompt.active()&&juce::Component::getCurrentlyModalComponent()==nullptr,"section choice closes completely");ui.focusForTransport();
-    };
-    select(120000);const auto verified=s.currentState.analysis;
-    editor->setText("-2",false);editor->onTextChange();editor->onFocusLost();
-    expect(s.sectionDraftFresh()&&section_edit::uniform(&s.sectionTrimDraft->plan,96000,192000)==-2&&s.currentState.analysis==verified&&!s.currentStateDocument.sectionGains,"leaving numeric field drafts -2 without changing Current");
-    button(lane,"Apply gains")->onClick();
-    expect(s.currentStateDocument.staticGainDb==4&&s.currentStateDocument.sectionGains->gainAt(120000)==-2&&s.currentStateNeedsRemeasurement(),"Apply yields global +4/local -2 and unverified Current");
-    measure(s,Domain::currentState);lane.synchronize("manual");const auto applied=s.currentStateDocument.sectionGains->audioKey();const auto measured=s.currentState.analysis;
-    lane.selectAt(120000,lane.plotBounds().getBottom()+5);
-    expect(editor->isEnabled()&&lane.inspectionText().contains("Section"),"clicking applied readout preserves manual section mode");
-    // Cancellation and annotation-only edits never rewrite the gain envelope.
-    ui.changeSectionEnd(document.map().sections[0].id,100000);answer(*ui.editPrompt(),0,"boundary-gain-choice.png");
-    expect(document.map().sections[0].end==96000&&!s.sectionTrimDraft&&s.currentState.analysis==measured,"Cancel leaves annotation, audio and verification intact");
-    ui.changeSectionEnd(document.map().sections[0].id,100000);answer(*ui.editPrompt(),1);
-    expect(document.map().sections[0].end==100000&&s.currentStateDocument.sectionGains->audioKey()==applied&&s.currentState.analysis==measured,"Keep gain in place changes only annotation boundary");
-    // Split within the adjusted annotation: the applied envelope remains exact.
-    uint64_t nested=0;expect(document.defineInterval(120000,140000,nested,error),"draw nested section");s.documentChanged();lane.synchronize("manual");select(125000);
-    expect(editor->getText()=="-2"&&s.currentStateDocument.sectionGains->audioKey()==applied,"nested section inherits existing local plateau without moving ramps");
-    stageGain(lane,"-3");
-    expect(section_edit::uniform(&s.sectionTrimDraft->plan,96000,120000)==-2&&section_edit::uniform(&s.sectionTrimDraft->plan,140000,192000)==-2&&section_edit::uniform(&s.sectionTrimDraft->plan,0,96000)==0,"editing nested section preserves every other existing gain");
-    button(lane,"Discard gains")->onClick();
-    // This section crosses the old processing cut at 96000.
-    select(92000);expect(editor->getText().isEmpty()&&editor->getTextToShowWhenEmpty()=="Mixed","section crossing multiple applied gains displays Mixed");
-    // Move a real gain boundary and confirm that both parts remain a single draft.
-    ui.changeSectionEnd(document.map().sections[0].id,96000);answer(*ui.editPrompt(),1);
-    const auto before=document.map();ui.changeSectionEnd(before.sections[0].id,104000);answer(*ui.editPrompt(),2);
-    expect(s.sectionTrimDraft&&s.sectionTrimDraft->rollbackAnnotations&&document.map().sections[0].end==104000&&s.currentStateDocument.sectionGains->audioKey()==applied&&s.currentState.analysis==measured,"Move gain stages paired geometry with applied Current unchanged");
-    expect(section_edit::uniform(&s.sectionTrimDraft->plan,96000,104000)==0&&section_edit::uniform(&s.sectionTrimDraft->plan,104000,192000)==-2,"expanding side fills only the swept nominal span");
-    expect(!s.setCurrentGainDb(5),"paired edit prevents an unrelated global change before Apply/Discard");
-    bool saveBlocked=false;try{sessionfile::capture(s);}catch(const std::exception&){saveBlocked=true;}expect(saveBlocked,"cannot save provisional geometry as applied processing");
-    proposal::markers::Preview markerPreview;juce::String markerError;
-    expect(!preflightMarkerImport(s,markerPreview,markerError)&&markerError.contains("paired section/gain"),"marker import cannot replace provisional paired annotations");
-    imageOf(ui,root.getChildFile("paired-boundary-draft.png"));s.discardSectionTrimDraft();lane.synchronize("manual");ui.refreshSectionEditing();
-    expect(document.map().sections[0].end==96000&&s.currentState.analysis==measured&&!s.sectionTrimDraft,"Discard restores section boundary and exact measured Current");
-    ui.changeSectionEnd(document.map().sections[0].id,104000);answer(*ui.editPrompt(),2);expect(s.applySectionTrimDraft(),"Apply paired boundary edit");lane.synchronize("manual");
-    expect(document.map().sections[0].end==104000&&s.currentStateDocument.sectionGains->gainAt(99000)==0&&s.currentStateDocument.sectionGains->gainAt(130000)==-2&&s.currentStateDocument.staticGainDb==4&&s.currentStateNeedsRemeasurement(),"paired Apply commits matching geometry/gain and invalidates only Current");
-    measure(s,Domain::currentState);lane.synchronize("manual");const auto newMeasured=s.currentState.analysis;
-    // Delete the nested section and local gain together, then Discard both.
-    select(125000);expect(lane.deleteSelected(),"delete selected nested annotation");answer(lane.editPrompt(),2,"delete-gain-choice.png");
-    expect(s.sectionTrimDraft&&s.sectionTrimDraft->rollbackAnnotations&&std::none_of(document.map().sections.begin(),document.map().sections.end(),[&](const auto& r){return r.id==nested;}),"delete-with-gain shows provisional annotation removal");
-    expect(section_edit::uniform(&s.sectionTrimDraft->plan,120000,140000)==0&&s.currentState.analysis==newMeasured,"delete-with-gain drafts local unity without changing verified Current");
-    s.discardSectionTrimDraft();lane.synchronize("manual");expect(std::any_of(document.map().sections.begin(),document.map().sections.end(),[&](const auto& r){return r.id==nested;})&&s.currentState.analysis==newMeasured,"Discard brings deleted annotation and applied gain back together");
-    select(125000);lane.deleteSelected();answer(lane.editPrompt(),2);expect(s.applySectionTrimDraft(),"apply section plus gain removal");lane.synchronize("manual");
-    JobControl job;auto saved=sessionfile::capture(s);const auto file=root.getChildFile("manual-paired.levelscope");
-    expect(sessionfile::save(saved,file,job).succeeded(),"save final paired manual edit with matching processing provenance");auto read=sessionfile::read(file,job);auto checked=sessionfile::verify(*read.document,job);
-    expect(checked.prepared&&checked.prepared->model.currentStateNeedsRemeasurement()&&checked.prepared->model.currentStateDocument.sectionGains->audioKey()==s.currentStateDocument.sectionGains->audioKey(),"save/reopen retains exact edited processing and unverified Current");
-    saved.applicability=proposal::Applicability::unconfirmed;StandaloneSessionModel legacy;
-    expect(sessionfile::install(saved,legacy,error)&&legacy.programmeApplicability==proposal::Applicability::preProducedLinearProgramme,"legacy unchecked sessions adopt automatic file-limit evaluation");
-    saved.applicability=proposal::Applicability::liveProgramme;
-    expect(sessionfile::install(saved,legacy,error)&&legacy.programmeApplicability==proposal::Applicability::liveProgramme&&legacy.evaluation(Domain::currentState).verdict!=proposal::Verdict::pass,"explicit unsupported legacy applicability is not silently promoted to a pass");
-    // A modal answer cannot alter a newer programme/map.
-    ui.changeSectionEnd(document.map().sections.front().id,105000);const auto pending=document.map().digest();
-    expect(document.rename(document.map().sections.front().id,"Changed while question open",error),"external edit while question open");
-    const auto newer=document.map().digest();answer(*ui.editPrompt(),2);
-    expect(newer!=pending&&document.map().digest()==newer&&!s.sectionTrimDraft,"stale modal answer cannot edit newer annotations or audio");
-    StandaloneSectionsPanel other(s);other.suspend();juce::TextEditor* field=nullptr;
-    for(auto* child:other.getChildren())if(child->getName()=="Section draft gain dB")field=dynamic_cast<juce::TextEditor*>(child);
-    expect(field&&field->isEnabled()&&!button(other,"Set draft gain")&&!button(other,"Draft section gains"),"Sections window offers direct gain entry without draft buttons");
-    const auto oldPlan=s.currentStateDocument.sectionGains->audioKey();field->setText("-1.25",false);field->onTextChange();field->onFocusLost();
-    expect(s.sectionDraftFresh()&&section_edit::uniform(&s.sectionTrimDraft->plan,0,104000)==-1.25&&s.currentStateDocument.sectionGains->audioKey()==oldPlan,"Sections focus loss stages gain with applied processing unchanged");
-    button(other,"Discard draft")->onClick();expect(!s.sectionTrimDraft&&s.currentStateDocument.sectionGains->audioKey()==oldPlan,"Sections Discard preserves applied plan");
-    ui.removeFromDesktop();
+    auto state=s.manualState();state.globalDb=4;expect(s.commitManualEdit(state,"Global trim"),"global trim participates in Undo");lane.synchronize("manual");
+    const auto graph=ui.graphBounds();draw(ui,float(graph.getX()+graph.getWidth()*.2),float(graph.getX()+graph.getWidth()*.4));
+    expect(document.map().sections.size()==3,"draw section commits immediately");const auto middle=document.map().sections[1];lane.selectFrame(middle.begin,false);stageGain(lane,"-2");
+    const auto gainKey=s.currentStateDocument.sectionGains->audioKey();
+    draw(ui,float(graph.getX()+graph.getWidth()*.6),float(graph.getX()+graph.getWidth()*.8));
+    expect(document.map().sections.size()==5&&!s.sectionTrimDraft&&s.currentStateDocument.sectionGains->audioKey()==gainKey&&s.currentStateNeedsRemeasurement(),"draw a second section immediately after gain entry without Apply or measurement");
+    const auto undoCount=s.manualHistory->undoCount();expect(s.undoManual()&&document.map().sections.size()==3&&s.currentStateDocument.sectionGains->audioKey()==gainKey,"Undo drawing preserves audio");expect(s.undoManual(true)&&document.map().sections.size()==5&&s.manualHistory->undoCount()==undoCount,"Redo drawing restores exact sections");
+    const auto before=s.manualState();
+    const auto answer=[&](int value){auto* prompt=ui.editPrompt();expect(prompt->window()!=nullptr,"boundary movement offers keep/move gain");prompt->window()->exitModalState(value);const auto start=juce::Time::getMillisecondCounterHiRes();while(prompt->active()&&juce::Time::getMillisecondCounterHiRes()-start<1500)pump(10);expect(!prompt->active(),"boundary choice dismisses");};
+    const auto boundary=document.map().sections.front().end;ui.changeSectionEnd(document.map().sections.front().id,boundary+500);imageOf(*ui.editPrompt()->window(),root.getChildFile("move-boundary-choices.png"));answer(1);
+    expect(s.currentStateDocument.sectionGains->audioKey()==gainKey&&document.map().sections.front().end==boundary+500,"Keep gain in place moves only annotations");s.undoManual();ui.refreshSectionEditing();
+    ui.changeSectionEnd(document.map().sections.front().id,boundary+500);answer(2);
+    expect(section_edit::uniform(&*s.currentStateDocument.sectionGains,boundary,boundary+500)==0&&!s.sectionTrimDraft,"Move gain immediately extends the expanding side");expect(s.undoManual()&&s.manualState()==before,"boundary Undo restores both geometry and exact processing");
+    // Hundreds of journal entries remain available without retaining programme data in RAM.
+    const auto id=document.map().sections[1].id;const auto count=s.manualHistory->undoCount();
+    for(int n=0;n<260;++n)expect(s.setManualSectionGains({id},n%2?-3:-4),"journal accepts another direct edit");
+    expect(s.manualHistory->undoCount()==count+260,"Undo has no arbitrary 100-step cap");
+    for(int n=0;n<260;++n)expect(s.undoManual(),"journal reads and undoes earlier edit");
+    expect(s.manualState()==before&&s.source.analysis==original&&!s.currentState.hasMeasurement,"long Undo restores exact processing without falsely restoring measurement authority");
+    expect(s.setManualSectionGains({id},-1)&&!s.canUndoManual(true),"new edit after Undo truncates the redo branch");
+    auto saved=sessionfile::capture(s);JobControl job;const auto path=root.getChildFile("direct.levelscope");
+    expect(sessionfile::save(saved,path,job).succeeded(),"direct edits can be saved without a draft resolution step");auto read=sessionfile::read(path,job);auto checked=sessionfile::verify(*read.document,job);
+    expect(checked.prepared&&checked.prepared->model.currentStateNeedsRemeasurement()&&checked.prepared->model.currentStateDocument.sectionGains->audioKey()==s.currentStateDocument.sectionGains->audioKey()&&!checked.prepared->model.canUndoManual(),"reopen preserves exact gains, independent verification and a fresh session-local history");
+    saved.applicability=proposal::Applicability::unconfirmed;StandaloneSessionModel legacy;expect(sessionfile::install(saved,legacy,error)&&legacy.programmeApplicability==proposal::Applicability::preProducedLinearProgramme,"legacy unchecked session adopts automatic file-limit scope");
+    saved.applicability=proposal::Applicability::liveProgramme;expect(sessionfile::install(saved,legacy,error)&&legacy.programmeApplicability==proposal::Applicability::liveProgramme,"unsupported saved scope is not silently promoted");
+    // Gain-lane and right-waveform marquee share fully enclosed section semantics.
+    lane.synchronize("manual");const auto& sections=document.map().sections;const auto begin=sections[1].begin,end=sections[3].end;
+    const auto x=[&](int64_t f){return graph.getX()+float(double(f)*(graph.getWidth()-1)/240013.);};
+    const auto rightMouse=[&](float px){const auto t=juce::Time::getCurrentTime();juce::Point<float> p{px,float(graph.getCentreY())};return juce::MouseEvent{juce::Desktop::getInstance().getMainMouseSource(),p,juce::ModifierKeys(juce::ModifierKeys::rightButtonModifier),0,0,0,0,0,&ui,&ui,t,p,t,1,false};};
+    ui.refreshSectionEditing();ui.mouseDown(rightMouse(x(begin)-.1f));ui.mouseDrag(rightMouse(x(end)+.1f));ui.mouseUp(rightMouse(x(end)+.1f));
+    expect(lane.selectedCount()==3,"right-drag selects fully enclosed waveform sections without drawing or panning");
+    imageOf(ui,root.getChildFile("multi-selection.png"));ui.removeFromDesktop();
+}
+void gainPreviewChecks(const juce::File& root)
+{
+    WaveformCache cache;WaveformBinding source{"preview-runtime","original",{1,1},Domain::source},current{"preview-runtime","unity",{1,1},Domain::currentState};
+    auto progress=cache.begin(source);auto data=progress->begin({512,48000,2});juce::AudioBuffer<float> samples(2,512);samples.clear();samples.setSample(0,4,-.8f);samples.setSample(0,200,1.2f);
+    expect(data&&data->append(samples.getArrayOfReadPointers(),2,512,0),"preview uses actual measured-sample overview");progress->finish(data);expect(cache.accept(source,source),"complete source cache accepted");
+    ProcessingPlan unity;cache.synchronize(source,current,true,true,&unity);const auto memory=cache.retainedBytes();const auto fallback=cache.gainPreview(source);
+    expect(fallback.data==data&&fallback.previewBase&&cache.retainedBytes()==memory,"preview shares source overview without another slab");
+    ProcessingPlan changed;processing::SectionGainPlan gain;gain.inputIdentity=juce::String::repeatedString("a",64);gain.sampleRate=48000;gain.frames=512;gain.intervals={{0,128,0},{128,512,-6}};changed.sectionGains=gain;
+    MeasurementTimeline ui;ui.setSize(1150,470);ui.setProgramme(512,48000,"preview");ui.setWaveform(data,true,{"L","R"});const auto before=ui.displayedWaveform();ui.setReferenceMeasurement({},true);ui.setGainPreview(fallback.previewBase,changed);ui.setPeakTarget({},false);
+    expect(ui.isGainPreview()&&ui.peakVisibility().getToggleState()&&ui.peakVisibility().isEnabled(),"unverified gain preview retains default-on warnings without a target");
+    const auto& after=ui.displayedWaveform();bool kept=false,scaled=false;
+    for(size_t n=0;n<after.size();++n)if(after[n].available())
+    {const auto& a=after[n].channels[0];const auto& b=before[n].channels[0];if(b.minimumFrame==4)kept|=a.minimum==b.minimum&&a.minimumFrame==4;if(b.maximumFrame==200)scaled|=std::abs(a.maximum-float(1.2*std::pow(10.,gain.gainAt(200)/20.)))<1e-6&&a.maximumFrame==200;}
+    expect(kept&&scaled&&cache.retainedBytes()==memory,"preview preserves unchanged extrema and positions while applying the actual transition envelope at retained samples");
+    expect(!ui.sampleExceedsTarget(.99,100)&&!ui.sampleExceedsTarget(1.,100)&&ui.sampleExceedsTarget(1.01,100),"No Limit uses strict greater-than-zero dBFS for provisional sample warnings");
+    expect(ui.rangePeakText(0,512).contains("preview"),"preview cannot be inspected as an exact current regional measurement");imageOf(ui,root.getChildFile("gain-preview.png"));
+    auto stale=source;stale.runtime="reopened";cache.synchronize(stale,current,true,true,&changed);expect(!cache.gainPreview(stale).data,"preview cannot survive a different session/source identity");
 }
