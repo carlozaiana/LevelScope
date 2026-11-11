@@ -1,5 +1,7 @@
 # Direct manual editing — 10 November 2026
 
+Continuation: [Timeline selection and boundary editing](78_TimelineSelectionBoundaries.md).
+
 Latest correction: [Re-measure after gain editing](../RemeasurePreviewCrash-2026-11-10.md).
 The original candidate-02 remains preserved but is superseded for use by that fix.
 Corrected app source: `5ac6ac57530004ab28167e65e63fda7475b09b68`; 2,154 affected

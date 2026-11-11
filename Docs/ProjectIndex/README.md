@@ -88,3 +88,5 @@ This folder is the persistent orientation layer for future development chats. Re
 - [M18 interactive timeline and later playback roadmap](63_M18InteractiveTimelineAndProgressiveAnalysis.md#playback-roadmap-following-m18)
 
 - [77 — Direct manual editing](77_DirectManualEditing.md)
+
+- [78 — Timeline selection and boundary editing](78_TimelineSelectionBoundaries.md)
