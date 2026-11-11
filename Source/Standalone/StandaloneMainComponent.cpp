@@ -307,6 +307,7 @@ void StandaloneMainComponent::timerCallback()
 
 void StandaloneMainComponent::beginMeasurement (MeasurementDomain domain)
 {
+    if(session.boundaryBatch){jobLabel.setText("Finish boundary edits: Enter to review, Esc to cancel.",juce::dontSendNotification);return;}
     if (session.job.isActive() || session.sourceContentInvalid || session.persistenceLoading) return;
     if (domain == MeasurementDomain::currentState && ! session.hasCurrentStateInitialized()) return;
     auto context = session.measurementContext (domain);
@@ -314,6 +315,12 @@ void StandaloneMainComponent::beginMeasurement (MeasurementDomain domain)
     if(domain==MeasurementDomain::source)
         automaticSource.attemptedSource(session);
     audition.stop();
+    // Keep command focus on a stable surface before the initiating measurement
+    // button is disabled. JUCE must not transfer it to a neighbouring text field.
+    auto* focusView=&timeline;
+    for(auto* c=juce::Component::getCurrentlyFocusedComponent();c;c=c->getParentComponent())
+        if(auto* view=dynamic_cast<MeasurementTimeline*>(c)){focusView=view;break;}
+    focusView->focusForTransport();
     if (! session.job.begin (JobStage::analysis, session.revision)) return;
     analysisTicket = session.job.ticket;
     analysisDomain = domain;
@@ -349,7 +356,7 @@ void StandaloneMainComponent::beginWaveform()
 
 void StandaloneMainComponent::beginTrimProposal()
 {
-    if (session.persistenceLoading || ! session.getWorkflowReadiness().canDraftProposal()) return;
+    if (session.audioEditsBlocked() || ! session.getWorkflowReadiness().canDraftProposal()) return;
     const auto request = session.currentTrimRequest();
     session.discardTrim();
     if (! session.job.begin (JobStage::proposal, session.revision)) return;
@@ -572,10 +579,10 @@ void StandaloneMainComponent::refreshFromSession()
 
     targetProfileBox.setSelectedId (session.selectedTargetProfileIndex + 1, juce::dontSendNotification);
 
-    clearSourceButton.setEnabled (!session.persistenceLoading && (session.sourceDocument.hasSource || session.job.isActive()));
+    clearSourceButton.setEnabled (!session.boundaryBatch && !session.persistenceLoading && (session.sourceDocument.hasSource || session.job.isActive()));
     chooseProgrammeButton.setEnabled(canReplaceSession());
     chooseCompositionButton.setEnabled(canReplaceSession());
-    chooseSourceButton.setEnabled (! session.job.isActive() && !session.persistenceLoading);
+    chooseSourceButton.setEnabled (!session.boundaryBatch && ! session.job.isActive() && !session.persistenceLoading);
     targetProfileBox.setEnabled (!session.audioEditsBlocked() && !session.job.isActive());
     jobRequirementsPanel.refresh();
     refreshJobFeedback();
@@ -583,12 +590,12 @@ void StandaloneMainComponent::refreshFromSession()
     initializeCurrentStateButton.setEnabled (! session.audioEditsBlocked() && ! session.job.isActive() && session.canInitializeCurrentStateFromSource());
     clearCurrentStateButton.setEnabled (! session.audioEditsBlocked() && ! session.job.isActive() && session.hasCurrentStateInitialized());
     const auto measurementError = OfflineAnalysisService::validateRequest (session.measurementContext (MeasurementDomain::source), MeasurementDomain::source);
-    measureSourceButton.setEnabled (!session.persistenceLoading && ! session.job.isActive() && ! session.sourceContentInvalid && measurementError.isEmpty());
+    measureSourceButton.setEnabled (!session.boundaryBatch && !session.persistenceLoading && ! session.job.isActive() && ! session.sourceContentInvalid && measurementError.isEmpty());
     measureSourceButton.setTooltip (measurementError);
-    remeasureCurrentStateButton.setEnabled (!session.persistenceLoading && ! session.job.isActive() && ! session.sourceContentInvalid && session.hasCurrentStateInitialized() && measurementError.isEmpty());
+    remeasureCurrentStateButton.setEnabled (!session.boundaryBatch && !session.persistenceLoading && ! session.job.isActive() && ! session.sourceContentInvalid && session.hasCurrentStateInitialized() && measurementError.isEmpty());
     currentGain.setEnabled (! session.audioEditsBlocked() && ! session.job.isActive() && session.hasCurrentStateInitialized() && !(session.sectionTrimDraft&&session.sectionTrimDraft->rollbackAnnotations));
     currentGain.setValue (session.currentStateDocument.staticGainDb, juce::dontSendNotification);
-    draftTrimButton.setEnabled (!session.persistenceLoading && session.getWorkflowReadiness().canDraftProposal());
+    draftTrimButton.setEnabled (!session.audioEditsBlocked() && session.getWorkflowReadiness().canDraftProposal());
     applyTrimButton.setEnabled (session.canApplyTrim());
     preferencesButton.setEnabled(!session.persistenceLoading&&!session.audioEditsBlocked()&&!session.job.isActive());
     inspectProposalButton.setEnabled(true);
@@ -968,6 +975,7 @@ void StandaloneMainComponent::showLraPassages(bool current)
 }
 void StandaloneMainComponent::proposeWithActiveMethod()
 {
+    if(session.boundaryBatch)return;
     if(session.regionPlanning)beginSectionProposal();
     else if(session.getSelectedTargetProfile().limits.hasMaxLoudnessRange)showLraPassages(true);
     else beginSectionProposal();
@@ -1016,7 +1024,7 @@ void StandaloneMainComponent::showSections()
         sectionsPanel->canImportMarkers=[this]{return canReplaceSession();};
         sectionsPanel->onPlay=[this]{playTimeline(&sectionsPanel->timelineView());};
         sectionsPanel->onStop=[this]{audition.stop();refreshTimeline();};
-        auto& view=sectionsPanel->timelineView();
+        auto& view=sectionsPanel->timelineView();view.setTransitionShading(timeline.transitionShading());
         view.onRequestSeek=timeline.onRequestSeek;
         view.onTogglePlayback=[this]{if(audition.active())sectionsPanel->onStop();else sectionsPanel->onPlay();};
         view.onToggleInspectionAudition=timeline.onToggleInspectionAudition;
@@ -1033,6 +1041,7 @@ void StandaloneMainComponent::showSections()
 }
 void StandaloneMainComponent::playTimeline(MeasurementTimeline* origin)
 {
+    if(session.boundaryBatch){jobLabel.setText("Finish boundary edits: Enter to review, Esc to cancel.",juce::dontSendNotification);return;}
     if(session.job.isActive()||session.persistenceLoading)return;
     (origin?*origin:timeline).focusForTransport();
     if(!audition.connected()){showAudioSetup();return;}
@@ -1046,7 +1055,7 @@ juce::PopupMenu StandaloneMainComponent::getMenuForIndex(int index,const juce::S
     const auto utf8=[](const char* text){return juce::String::fromUTF8(text);};
     if(index==0){menu.addItem(newDocument,"New session",newSessionButton.isEnabled());menu.addItem(openDocument,utf8("Open session…"),openSessionButton.isEnabled());menu.addItem(openAudio,utf8("Open mix… (⌘O)"),openMixButton.isEnabled());menu.addSeparator();menu.addItem(saveDocument,utf8("Save session (⌘S)"),saveSessionButton.isEnabled());menu.addItem(saveDocumentAs,utf8("Save session as…"),saveAsSessionButton.isEnabled());}
     if(index==1){menu.addItem(removeBoundaries,"Remove section boundaries only",idle&&session.sectionDocument.map().sections.size()>1);menu.addSeparator();auto* text=dynamic_cast<juce::TextEditor*>(juce::Component::getCurrentlyFocusedComponent());menu.addItem(undoEdit,utf8("Undo (⌘Z)"),text||session.canUndoManual());menu.addItem(redoEdit,utf8("Redo (⇧⌘Z)"),text||session.canUndoManual(true));}
-    if(index==2){menu.addItem(peakWarnings,"Peak warnings",true,timeline.peakVisibility().getToggleState());menu.addItem(sectionsView,utf8("Sections and gain…"),sectionsButton.isEnabled());}
+    if(index==2){menu.addItem(transitionBands,"Gain transition shading (Current)",true,timeline.transitionShading());menu.addItem(peakWarnings,"Peak warnings",true,timeline.peakVisibility().getToggleState());menu.addItem(sectionsView,utf8("Sections and gain…"),sectionsButton.isEnabled());}
     if(index==3)menu.addItem(playStop,audition.active()?"Stop (Space)":"Play (Space)",timelineStop.isEnabled()||timelinePlay.isEnabled());
     if(index==4){menu.addItem(measureOriginal,"Measure Original",idle&&measureSourceButton.isEnabled());menu.addItem(measureCurrent,utf8("Re-measure Current State (⌘R)"),idle&&remeasureCurrentStateButton.isEnabled());menu.addSeparator();menu.addItem(proposalPreferences,utf8("Proposal limits…"),preferencesButton.isEnabled());}
     return menu;
@@ -1067,6 +1076,9 @@ bool StandaloneMainComponent::performCommand(int id)
             if(auto* text=dynamic_cast<juce::TextEditor*>(juce::Component::getCurrentlyFocusedComponent()))return id==undoEdit?text->undo():text->redo();
             if(!commitEditors()||!session.undoManual(id==redoEdit))return false;
             refreshFromSession();refreshTimeline();if(sectionsPanel)sectionsPanel->synchronize();return true;
+        case transitionBands:
+            timeline.setTransitionShading(!timeline.transitionShading());
+            if(sectionsPanel)sectionsPanel->timelineView().setTransitionShading(timeline.transitionShading());return true;
         case peakWarnings:
             timeline.peakVisibility().setToggleState(!timeline.peakVisibility().getToggleState(),juce::sendNotificationSync);
             if(sectionsPanel)sectionsPanel->timelineView().peakVisibility().setToggleState(timeline.peakVisibility().getToggleState(),juce::sendNotificationSync);return true;
@@ -1151,7 +1163,7 @@ void StandaloneMainComponent::refreshTimeline()
     timeline.setReferenceMeasurement(reference,domain==MeasurementDomain::currentState);
     auditionDomainBox.setSelectedId(session.auditionDomain==MeasurementDomain::source?1:2,juce::dontSendNotification);
     auditionDomainBox.setEnabled(!session.audioEditsBlocked()&&!session.job.isActive());
-    timelinePlay.setEnabled(!session.job.isActive()&&!session.persistenceLoading&&!audition.active()&&session.sourceDocument.hasSource);
+    timelinePlay.setEnabled(!session.boundaryBatch&&!session.job.isActive()&&!session.persistenceLoading&&!audition.active()&&session.sourceDocument.hasSource);
     timelineStop.setEnabled(audition.active());
     jobRequirementsPanel.refreshAvailability();
     proposalPanel.refresh(importControl?importControl->progress.load():-1);
@@ -1209,6 +1221,7 @@ void StandaloneMainComponent::refreshJobFeedback()
         text = {"Source validated: confirm channel roles", "Open Audio setup to review the proposed channel order, then Confirm roles and analyse.", -1};
     else if(!active && !session.sourceDocument.hasSource && session.job.state == JobState::idle)
         text = {"Ready to import", "Open Mix to begin. Output connection is optional for offline analysis.", -1};
+    if(!active&&session.boundaryBatch)text={juce::String(session.pendingBoundaryCount())+(session.pendingBoundaryCount()==1?" boundary change pending":" boundary changes pending"), "Enter: review Move gain with sections / Cancel. Esc: cancel. Zoom and pan remain available; playback and measurement wait for this edit.", -1};
     jobLabel.setText(text.title, juce::dontSendNotification);jobLabel.setTooltip(text.title);
     jobDetail.setText(text.detail, juce::dontSendNotification);jobDetail.setTooltip(text.detail);
     jobFraction = text.fraction;jobProgress.setVisible(active);

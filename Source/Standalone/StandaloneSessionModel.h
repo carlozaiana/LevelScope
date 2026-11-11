@@ -18,6 +18,7 @@
 #include "StandaloneSections.h"
 #include "SectionGainEditing.h"
 #include "ManualEditHistory.h"
+#include "BoundaryEditing.h"
 #include "Core/Proposal/MarkerImport.h"
 #include "Core/Proposal/Model/JobRequirements.h"
 #include <functional>
@@ -189,7 +190,7 @@ public:
     std::function<bool()> auditionBusy;
     MeasurementDomain auditionDomain = MeasurementDomain::source;
     bool persistenceLoading = false;
-    bool audioEditsBlocked() const { return persistenceLoading || (auditionBusy && auditionBusy()); }
+    bool audioEditsBlocked() const { return persistenceLoading || (auditionBusy && auditionBusy()) || boundaryBatch.has_value(); }
     bool selectAuditionDomain (MeasurementDomain domain)
     {
         if (domain != MeasurementDomain::source && domain != MeasurementDomain::currentState) return false;
@@ -322,12 +323,38 @@ public:
         return ProgrammeGainProcessor::validationError(c);
     }
     std::shared_ptr<ManualEditHistory> manualHistory;
+    std::optional<BoundaryEditBatch> boundaryBatch;
+    uint64_t boundaryEditSerial=0;
     ManualEditState manualState() const {return {sectionDocument.map(),currentStateDocument.sectionGains,currentStateDocument.staticGainDb};}
-    bool manualEditAllowed() const
+    bool boundaryEditAllowed() const
     {
-        return !audioEditsBlocked()&&!job.isActive()&&!persistenceLoading&&!sectionTrimDraft&&!sourceContentInvalid
+        return !(auditionBusy&&auditionBusy())&&!job.isActive()&&!persistenceLoading&&!sectionTrimDraft&&!sourceContentInvalid
             &&sourceDocument.hasSource&&sourceDocument.matchesFileStamps()&&sectionDocument.map().valid()
             &&(!sectionProposal||lastAppliedProposalBinding==sectionProposal->identity());
+    }
+    bool manualEditAllowed() const {return !boundaryBatch&&boundaryEditAllowed();}
+    bool boundaryBatchFresh() const {return boundaryBatch&&boundaryBatch->runtime==sessionId&&boundaryBatch->revision==revision&&boundaryBatch->before==manualState();}
+    size_t pendingBoundaryCount() const
+    {size_t n=0;if(boundaryBatch)for(size_t i=0;i<boundaryBatch->next.map.sections.size();++i)n+=boundaryBatch->before.map.sections[i].end!=boundaryBatch->next.map.sections[i].end;return n;}
+    void cancelBoundaryBatch(){if(boundaryBatch){boundaryBatch.reset();++boundaryEditSerial;sectionTrimNotice="Boundary changes cancelled. Applied gains retained.";}}
+    bool stageBoundary(size_t index,int64_t frame)
+    {
+        if(!boundaryEditAllowed())return false;
+        if(boundaryBatch&&!boundaryBatchFresh()){cancelBoundaryBatch();return false;}
+        const auto before=boundaryBatch?boundaryBatch->before:manualState();auto map=boundaryBatch?boundaryBatch->next.map:before.map;
+        if(index+1>=map.sections.size()||frame<=map.sections[index].begin||frame>=map.sections[index+1].end)return false;
+        map.sections[index].end=frame;map.sections[index+1].begin=frame;
+        auto next=moveBoundaryGains(before,map);if(!next){sectionTrimNotice="Boundary not moved: leave enough space for the gain transitions.";return false;}
+        boundaryBatch=BoundaryEditBatch{before,*next,sessionId,revision};++boundaryEditSerial;
+        if(!pendingBoundaryCount()){cancelBoundaryBatch();return true;}
+        sectionTrimNotice=juce::String(pendingBoundaryCount())+(pendingBoundaryCount()==1?" boundary change pending":" boundary changes pending")+" - Enter to review, Esc to cancel.";return true;
+    }
+    bool applyBoundaryBatch()
+    {
+        if(!boundaryEditAllowed()||!boundaryBatchFresh()){cancelBoundaryBatch();return false;}
+        auto pending=*boundaryBatch;boundaryBatch.reset();
+        if(!commitManualEdit(pending.next,"Move gain with sections")){boundaryBatch=std::move(pending);return false;}
+        ++boundaryEditSerial;return true;
     }
     bool installManualState(ManualEditState next)
     {

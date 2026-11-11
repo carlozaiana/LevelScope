@@ -283,15 +283,29 @@ void directCommandChecks(StandaloneMainComponent& ui,const juce::File& root)
     expect(ui.performCommand(StandaloneMainComponent::undoEdit)&&s.currentStateNeedsRemeasurement(),"Undo after measurement invalidates Current independently");
     timeline.focusForTransport();expect(ui.keyPressed(juce::KeyPress('A',juce::ModifierKeys{},'a'))&&Access::inspection(ui)==2&&timeline.isGainPreview()&&!timeline.displayedWaveform().empty(),"unverified Current keeps a gain-adjusted waveform from its last completed cache");
     imageOf(ui,root.getChildFile("direct-current-status.png"));
+    Access::globalGain(ui).setValue(4,juce::sendNotificationSync);Access::refresh(ui);
     Access::globalGain(ui).setValue(5,juce::sendNotificationSync);Access::refresh(ui);
     expect(s.currentStateDocument.staticGainDb==5&&timeline.isGainPreview(),"global gain 5 dB leaves an unverified Current waveform preview");
     auto& remeasure=control<juce::TextButton>(ui,"Re-measure Current State");expect(remeasure.isEnabled(),"Current remeasurement is available after global gain entry");
-    remeasure.onClick();
+    remeasure.setWantsKeyboardFocus(true);remeasure.grabKeyboardFocus();
+    expect(remeasure.hasKeyboardFocus(false),"regression starts with keyboard focus on Re-measure");remeasure.onClick();
     // Paint synchronously before a timer refresh can replace the cleared overview.
     // This is the transition from the reported native paint-thread crash.
     imageOf(ui,root.getChildFile("remeasure-after-global-gain.png"));
     expect(s.job.isActive()&&Access::stopped(ui)&&!timeline.isGainPreview()&&timeline.displayedWaveform().empty(),"immediate remeasurement repaint has retired the preview and preserves stopped transport");
     waitJob(ui);expect(s.currentState.hasMeasurement&&!s.currentStateNeedsRemeasurement()&&s.currentState.analysis->context.processing.staticGainDb==5,"global-gain remeasurement completes and verifies the exact applied 5 dB setting");
+    expect(timeline.hasKeyboardFocus(false),"Re-measure transfers focus to the stable timeline before disabling its button");
+    const auto undo=juce::KeyPress('Z',juce::ModifierKeys::commandModifier,0),redo=juce::KeyPress('Z',juce::ModifierKeys::commandModifier|juce::ModifierKeys::shiftModifier,0);
+    const auto endpoint=s.manualState();const auto history=s.manualHistory->undoCount();
+    expect(history>=2&&ui.getPeer()->handleKeyPress(undo)&&ui.getPeer()->handleKeyPress(undo)&&s.manualHistory->undoCount()==history-2,"two native Command-Z events after measurement work without another mouse click");
+    expect(s.currentStateNeedsRemeasurement()&&!s.currentState.hasMeasurement&&s.source.analysis==source,"Undo preserves Original and invalidates Current authority");
+    expect(ui.getPeer()->handleKeyPress(redo)&&ui.getPeer()->handleKeyPress(redo)&&s.manualState()==endpoint,"native Shift-Command-Z restores both edits after measurement");
+    const bool shading=timeline.transitionShading();expect(ui.performCommand(StandaloneMainComponent::transitionBands)&&timeline.transitionShading()!=shading,"View menu toggles waveform gain transition bands");ui.performCommand(StandaloneMainComponent::transitionBands);
+    expect(s.stageBoundary(0,s.sectionDocument.map().sections.front().end+10),"main window can stage a shared boundary batch");Access::refresh(ui);
+    expect(!remeasure.isEnabled()&&!ui.performCommand(StandaloneMainComponent::measureCurrent)&&!ui.performCommand(StandaloneMainComponent::newDocument)&&!ui.performCommand(StandaloneMainComponent::saveDocument)&&Access::stopped(ui),"pending boundaries block measurement, document replacement and saving while playback stays stopped");
+    bool boundaryReason=false;for(auto* c:Access::proposal(ui).getChildren())if(auto* label=dynamic_cast<juce::Label*>(c);label&&label->getText().startsWith("Propose unavailable."))boundaryReason=label->getText().contains("Finish boundary edits with Enter, or cancel with Esc.")&&!label->getText().contains("Stop playback");
+    expect(boundaryReason,"disabled proposal actions name the pending boundary edit instead of stopped playback");
+    imageOf(ui,root.getChildFile("main-boundary-pending.png"));s.cancelBoundaryBatch();Access::refresh(ui);
     Access::globalGain(ui).setValue(6,juce::sendNotificationSync);Access::refresh(ui);remeasure.onClick();Access::cancel(ui);
     imageOf(ui,root.getChildFile("remeasure-cancel-after-gain.png"));waitJob(ui);
     expect(s.job.state==JobState::cancelled&&s.currentStateNeedsRemeasurement()&&!s.currentState.hasMeasurement&&Access::stopped(ui),"cancelling preparation after a gain edit paints safely and cannot verify Current");

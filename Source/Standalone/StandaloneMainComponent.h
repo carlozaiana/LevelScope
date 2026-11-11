@@ -37,7 +37,7 @@ public:
     explicit StandaloneMainComponent(std::shared_ptr<OutputDeviceCatalog> = {}, OutputDeviceSettings = OutputDeviceSettings(),std::unique_ptr<juce::AudioIODevice> = {});
     ~StandaloneMainComponent() override;
     void requestClose (std::function<void()>);
-    enum Command {newDocument=2001,openDocument,openAudio,saveDocument,saveDocumentAs,undoEdit,redoEdit,peakWarnings,sectionsView,playStop,measureOriginal,measureCurrent,preferences,proposalPreferences,removeBoundaries};
+    enum Command {newDocument=2001,openDocument,openAudio,saveDocument,saveDocumentAs,undoEdit,redoEdit,peakWarnings,sectionsView,playStop,measureOriginal,measureCurrent,preferences,proposalPreferences,removeBoundaries,transitionBands};
     juce::StringArray getMenuBarNames() override;
     juce::PopupMenu getMenuForIndex(int,const juce::String&) override;
     void menuItemSelected(int id,int) override {performCommand(id);}

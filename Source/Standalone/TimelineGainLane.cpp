@@ -5,6 +5,7 @@
 #include <limits>
 #include <locale>
 #include <sstream>
+#include <unordered_set>
 
 namespace levelscope::standalone
 {
@@ -132,7 +133,7 @@ void TimelineGainLane::synchronize(const juce::String& key)
     const auto& map=session.sectionDocument.map();const auto& d=session.sectionTrimDraft;
     if(deletedAnnotation&&map.revision!=deletedRevision)deletedAnnotation.reset();
     const bool stale=session.sectionProposalStale();
-    if(replaced||automatic!=session.sectionProposal||automaticStale!=stale||audioRevision!=session.revision||mapRevision!=map.revision||initialized!=session.hasCurrentStateInitialized()
+    if(replaced||boundarySerial!=session.boundaryEditSerial||automatic!=session.sectionProposal||automaticStale!=stale||audioRevision!=session.revision||mapRevision!=map.revision||initialized!=session.hasCurrentStateInitialized()
         ||hasDraft!=bool(d)||(d&&editSerial!=d->editSerial))
     {
         const bool newProposal=automatic!=session.sectionProposal;
@@ -141,6 +142,7 @@ void TimelineGainLane::synchronize(const juce::String& key)
         if(newProposal)regionAttempt=automatic&&automatic->regionReview()?automatic->regionReview()->retainedAttempt:std::numeric_limits<size_t>::max();
         if(const auto* attempt=inspectedAttempt()){proposed=ProcessingPlan{};proposed->staticGainDb=attempt->plan.globalDb;proposed->sectionGains=attempt->plan.envelope;}
         audioRevision=session.revision;mapRevision=map.revision;initialized=session.hasCurrentStateInitialized();
+        boundarySerial=session.boundaryEditSerial;
         usableMap=input.isNotEmpty()&&map.inputIdentity==input&&map.valid();
         hasDraft=bool(d);editSerial=d?d->editSerial:0;fresh=usableMap&&session.sectionDraftFresh();
         applied=usableMap&&initialized?session.currentStateDocument.sectionGains:std::nullopt;
@@ -153,6 +155,7 @@ void TimelineGainLane::synchronize(const juce::String& key)
         supportError=usableMap&&initialized?session.sectionDraftSupportError():juce::String{};
         draftError=fresh?d->plan.validationError():juce::String{};
         draft=fresh&&draftError.isEmpty()?std::optional<processing::SectionGainPlan>(d->plan.canonical()):std::nullopt;
+        if(session.boundaryBatch)draft=session.boundaryBatch->next.gains;
         cursor=std::clamp<int64_t>(cursor,0,std::max<int64_t>(0,map.frames-1));row=intervalAt(rows(),cursor);
         selectedIds.erase(std::remove_if(selectedIds.begin(),selectedIds.end(),[&](auto id){return std::none_of(map.sections.begin(),map.sections.end(),[&](const auto& r){return r.id==id;});}),selectedIds.end());
         dirty=false;feedback.clear();showSelection();resized();repaint();
@@ -171,7 +174,7 @@ void TimelineGainLane::showSelection()
     gain.setTextToShowWhenEmpty(stored?juce::String():"Mixed",juce::Colours::lightgrey);
     int64_t selectedEnd=section->end;
     if(selectedIds.size()>1)for(const auto& r:session.sectionDocument.map().sections)if(std::find(selectedIds.begin(),selectedIds.end(),r.id)!=selectedIds.end())selectedEnd=std::max(selectedEnd,r.end);
-    auto description=(selectedIds.size()>1?juce::String(selectedIds.size())+" selected sections":section->name)+"   ["+juce::String(section->begin)+", "+juce::String(selectedEnd)+")";
+    auto description=selectedIds.size()>1?juce::String(selectedIds.size())+" selected sections in "+juce::String(selectedSpans().size())+" passage(s)":section->name+"   ["+juce::String(section->begin)+", "+juce::String(selectedEnd)+")";
     if(initialized)description+="   Applied: "+exact(applied?applied->gainAt(cursor):0.)+" dB";
     if(selectionKind.getSelectedId()!=1)description+=" (at cursor; nominal interval shown, transitions may cross its edges).";
     if(fresh&&session.sectionTrimDraft->processingRegions)description+=" | draft local "+exact(draft?draft->gainAt(cursor):0.)+" dB";
@@ -252,6 +255,7 @@ void TimelineGainLane::updateControls()
 
     legend.setText(automatic?"CURRENT local gain (dB)   |   Green solid = applied   /   Cyan dotted = proposal":
         "CURRENT local gain (dB)   |   Shaded: transition   /   Command-Z: Undo",juce::dontSendNotification);
+    if(session.boundaryBatch){message=session.sectionTrimNotice;legend.setText("CURRENT local gain | Solid: applied / Amber dashed: pending boundaries",juce::dontSendNotification);}
     notice.setText(message,juce::dontSendNotification);notice.setTooltip(message);
 }
 bool TimelineGainLane::stageValue()
@@ -268,6 +272,7 @@ bool TimelineGainLane::stageValue()
 void TimelineGainLane::afterAction()
 {
     dirty=false;synchronize(programme);showSelection();feedback=session.sectionTrimNotice;updateControls();
+    if(selectionKind.getSelectedId()==1)deleteArmed=!selectedIds.empty();
     if(onChanged)onChanged();
 }
 void TimelineGainLane::selectFrame(int64_t frame,bool notify)
@@ -300,9 +305,31 @@ void TimelineGainLane::selectRange(int64_t begin,int64_t end)
     showSelection();updateControls();gain.setEnabled(deleteArmed&&session.manualEditAllowed());resized();repaint();
     if(!deleteArmed)notice.setText("No fully enclosed sections selected.",juce::dontSendNotification);
 }
+std::vector<std::pair<int64_t,int64_t>> TimelineGainLane::selectedSpans() const
+{
+    std::vector<std::pair<int64_t,int64_t>> spans;if(selectionKind.getSelectedId()!=1)return spans;
+    const std::unordered_set<uint64_t> ids(selectedIds.begin(),selectedIds.end());
+    for(const auto& r:session.sectionDocument.map().sections)if(ids.count(r.id))
+    {if(!spans.empty()&&spans.back().second==r.begin)spans.back().second=r.end;else spans.emplace_back(r.begin,r.end);}
+    return spans;
+}
+void TimelineGainLane::toggleSection(int64_t frame)
+{
+    if(!commitPending()||!bindingMatches()||selectionKind.getSelectedId()!=1||session.boundaryBatch)return;
+    const auto& map=session.sectionDocument.map();auto i=intervalAt(map.sections,std::clamp<int64_t>(frame,0,map.frames-1));if(i>=map.sections.size())return;
+    const auto id=map.sections[i].id;auto found=std::find(selectedIds.begin(),selectedIds.end(),id);
+    if(found==selectedIds.end())selectedIds.push_back(id);else selectedIds.erase(found);
+    rangeSelection=true;deleteArmed=!selectedIds.empty();
+    if(deleteArmed){row=0;while(row<map.sections.size()&&std::find(selectedIds.begin(),selectedIds.end(),map.sections[row].id)==selectedIds.end())++row;cursor=map.sections[row].begin;}
+    dirty=false;feedback.clear();showSelection();updateControls();resized();repaint();
+    const auto spans=selectedSpans();if(onSelection)onSelection(spans.empty()?0:spans.front().first,spans.empty()?0:spans.back().second,cursor);
+    if(spans.empty())notice.setText("No sections selected. Command-click a section to add it.",juce::dontSendNotification);
+}
 void TimelineGainLane::editReadout(int64_t frame)
 {
-    selectAt(frame,0);resized();if(gain.isEnabled()&&gain.isShowing()){gain.grabKeyboardFocus();gain.selectAll();}
+    const auto spans=selectedSpans();
+    if(selectedIds.size()<2||std::none_of(spans.begin(),spans.end(),[&](const auto& s){return frame>=s.first&&frame<s.second;}))selectAt(frame,0);
+    resized();if(gain.isEnabled()&&gain.isShowing()){gain.grabKeyboardFocus();gain.selectAll();}
 }
 bool TimelineGainLane::deleteSelected()
 {
@@ -310,6 +337,11 @@ bool TimelineGainLane::deleteSelected()
     if(dirty&&!stageValue())return true;
     if(selectionKind.getSelectedId()==3){feedback="Apply or Discard the proposal before manual editing.";updateControls();return true;}
     if(!bindingMatches()||!session.manualEditAllowed())return true;
+    const auto spans=selectedSpans();
+    if(spans.size()>1)
+    {
+        deleteArmed=false;sectionEdit.requestResetSeparate(*this,spans,[safe=juce::Component::SafePointer<TimelineGainLane>(this)](bool,bool){if(safe){safe->selectedIds.clear();safe->afterAction();}});return true;
+    }
     auto begin=selected()->begin,end=selected()->end;
     if(selectionKind.getSelectedId()==1&&!selectedIds.empty())for(const auto& r:rows())if(std::find(selectedIds.begin(),selectedIds.end(),r.id)!=selectedIds.end())
     {begin=std::min(begin,r.begin);end=std::max(end,r.end);}
@@ -320,6 +352,7 @@ bool TimelineGainLane::deleteSelected()
 bool TimelineGainLane::removeSelectedBoundaries()
 {
     if(selectionKind.getSelectedId()!=1||selectedIds.empty()||!bindingMatches()||!session.manualEditAllowed()||!stageValue())return false;
+    if(selectedSpans().size()>1){feedback="Remove boundaries only needs one contiguous passage. Separate selections can reset their gains with Delete.";updateControls();return false;}
     auto next=session.manualState();auto& rows=next.map.sections;size_t first=rows.size(),last=0;
     for(size_t n=0;n<rows.size();++n)if(std::find(selectedIds.begin(),selectedIds.end(),rows[n].id)!=selectedIds.end()){first=std::min(first,n);last=n;}
     if(first==rows.size()||rows.size()==1)return false;
@@ -363,7 +396,7 @@ void TimelineGainLane::paint(juce::Graphics& g)
     g.reduceClipRegion(box);g.setColour(palette::card());g.fillRect(box);
     const auto* s=selected();if(!s)return;
     g.setColour(juce::Colour(0xff263440));
-    if(s->end>viewBegin&&s->begin<viewEnd)g.fillRect(x(std::max<double>(s->begin,viewBegin)),float(box.getY()),x(std::min<double>(s->end,viewEnd))-x(std::max<double>(s->begin,viewBegin)),float(box.getHeight()));
+    if((!rangeSelection||!selectedIds.empty())&&s->end>viewBegin&&s->begin<viewEnd)g.fillRect(x(std::max<double>(s->begin,viewBegin)),float(box.getY()),x(std::min<double>(s->end,viewEnd))-x(std::max<double>(s->begin,viewBegin)),float(box.getHeight()));
     const auto& rows=this->rows();
     int previousX=-1;
     for(size_t i=intervalAt(rows,int64_t(viewBegin));i<rows.size()&&rows[i].begin<viewEnd;++i)
@@ -402,7 +435,7 @@ void TimelineGainLane::paint(juce::Graphics& g)
         const auto radius=applied->radius(n),frame=applied->intervals[n].begin;
         const auto a=x(frame-radius),b=x(frame+radius);g.setColour(juce::Colour(0xff81d5b4).withAlpha(.12f));g.fillRect(a,float(box.getY()),std::max(1.f,b-a),float(box.getHeight()));
     }
-    draw(applied?&*applied:nullptr,0);if(draft)draw(&*draft,1);if(proposed)draw(proposed->sectionGains?&*proposed->sectionGains:nullptr,2);
+    draw(applied?&*applied:nullptr,0);if(draft||session.boundaryBatch)draw(draft?&*draft:nullptr,1);if(proposed)draw(proposed->sectionGains?&*proposed->sectionGains:nullptr,2);
 }
 void TimelineGainLane::paintReadouts(juce::Graphics& g)
 {

@@ -28,6 +28,7 @@ void ProposalWorkflowPanel::refresh(float progress)
     juce::String blocked;
     if(session.persistenceLoading)blocked="Finish opening the session.";
     else if(session.job.isActive())blocked="Finish or cancel the current job.";
+    else if(session.boundaryBatch)blocked="Finish boundary edits with Enter, or cancel with Esc.";
     else if(session.audioEditsBlocked())blocked="Stop playback to change processing.";
     else if(session.sourceContentInvalid||!session.sourceDocument.matchesFileStamps())blocked="Resolve the programme audio before proposing.";
     else if(!session.source.hasMeasurement)blocked="Measure Source first.";
@@ -67,7 +68,7 @@ void ProposalWorkflowPanel::refresh(float progress)
     {
         if(actions.isNotEmpty())actions+="  ";
         actions+="Apply unavailable. ";
-        actions+=busy?"Stop playback or finish the job.":stale?"Generate a fresh proposal.":diagnosticInspection?"A diagnostic attempt is being inspected. Select the retained recommendation in Review.":session.sectionProposal?"This outcome has no applicable correction.":"No ready proposal.";
+        actions+=session.boundaryBatch?"Finish boundary edits with Enter, or cancel with Esc.":busy?"Stop playback or finish the job.":stale?"Generate a fresh proposal.":diagnosticInspection?"A diagnostic attempt is being inspected. Select the retained recommendation in Review.":session.sectionProposal?"This outcome has no applicable correction.":"No ready proposal.";
     }
     if(!review.isEnabled())actions+="  Review needs a completed proposal.";
     if(!discard.isEnabled())actions+=session.sectionProposal?"  Discard needs an idle transport/job.":"  No proposal to discard.";

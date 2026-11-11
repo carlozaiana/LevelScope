@@ -1,0 +1,64 @@
+// Native timeline gestures plus model invariants for discontiguous and batched edits.
+void batchEditingChecks(const juce::File& root)
+{
+    auto req=fixture(root.getChildFile("batch.wav"),48000,2,240000);StandaloneSessionModel s;
+    expect(s.setValidatedSource(req.context.sourceFile,req.context.media),"batch fixture imported");s.sourceDocument.layout=req.context.fileLayout;measure(s,Domain::source);s.synchronizeSections();
+    juce::String error;for(int n=1;n<8;++n)expect(s.sectionDocument.split(s.sectionDocument.map().sections.back().id,n*30000,error),"eight independent sections prepared");
+    auto initial=s.manualState();initial.globalDb=3;expect(s.commitManualEdit(initial,"Global gain"),"independent global gain for batch checks");
+    TimelineGainLane lane(s);MeasurementTimeline ui;ui.setSize(1150,640);ui.attachGainLane(lane);ui.setProgramme(240000,48000,"batch");lane.synchronize("batch");ui.bindSectionEditing(s,[&](uint64_t){lane.synchronize("batch");});ui.setReferenceMeasurement({},true);
+    juce::AudioFormatManager formats;formats.registerBasicFormats();std::unique_ptr<juce::AudioFormatReader> reader(formats.createReaderFor(req.context.sourceFile));juce::AudioBuffer<float> pcm(2,240000);
+    auto overview=waveform::Overview::create({240000,48000,2},std::make_shared<waveform::Budget>());
+    expect(reader&&reader->read(&pcm,0,240000,0,true,true)&&overview->append(pcm.getArrayOfReadPointers(),2,240000,0)&&overview->finish(),"transition rendering uses an overview of the actual fixture samples");ui.setWaveform(overview,true,{"L","R"});
+    ui.addToDesktop(juce::ComponentPeer::windowHasTitleBar);ui.setVisible(true);ui.toFront(true);pump(20);ui.focusForTransport();
+    const auto event=[&](float x,float y,bool command,bool down){const auto t=juce::Time::getCurrentTime();juce::Point<float> p{x,y};return juce::MouseEvent{juce::Desktop::getInstance().getMainMouseSource(),p,juce::ModifierKeys((command?juce::ModifierKeys::commandModifier:0)|(down?juce::ModifierKeys::leftButtonModifier:0)),0,0,0,0,0,&ui,&ui,t,p,t,1,false};};
+    const auto x=[&](int64_t f){const auto range=ui.viewRange();return float(ui.graphBounds().getX()+(f-range.first)*(ui.graphBounds().getWidth()-1)/(range.second-range.first));};
+    const auto select=[&](int n,bool command,bool graph){const auto f=n*30000+15000;const auto y=float(graph?ui.graphBounds().getCentreY():lane.getY()+lane.plotBounds().getCentreY());ui.mouseDown(event(x(f),y,command,true));ui.mouseUp(event(x(f),y,command,false));};
+    select(2,false,false);select(5,true,true);select(7,true,false);
+    expect(lane.selectedCount()==3&&lane.selectedSpans()==std::vector<std::pair<int64_t,int64_t>>{{60000,90000},{150000,180000},{210000,240000}},"Command-click in waveform and lane selects sections 3, 6 and 8 with untouched gaps");
+    select(5,true,true);expect(lane.selectedCount()==2,"Command-click selected section removes only that section");select(5,true,true);
+    lane.editReadout(75000);expect(lane.selectedCount()==3,"clicking a selected gain readout retains the separate selection");
+    const auto before=s.manualState();const auto count=s.manualHistory->undoCount();stageGain(lane,"-2");
+    expect(s.manualHistory->undoCount()==count+1&&s.currentStateDocument.staticGainDb==3,"one absolute multi-section gain entry is one Undo and preserves global gain");
+    for(int n=0;n<8;++n)expect(section_edit::uniform(&*s.currentStateDocument.sectionGains,n*30000,(n+1)*30000)==std::optional<double>(n==2||n==5||n==7?-2:0),"absolute gain changes only selected section interiors");
+    expect(s.undoManual()&&s.manualState()==before&&s.undoManual(true),"one Undo and Redo restores the whole separate gain edit");lane.synchronize("batch");
+    select(2,false,false);select(5,true,true);select(7,true,false);ui.setGainPreview(ProcessingPlan{},s.measurementContext(Domain::currentState).processing);imageOf(ui,root.getChildFile("separate-selection.png"));
+    const auto gained=s.manualState();expect(lane.deleteSelected()&&lane.editPrompt().active(),"separate Delete offers a reset scoped to selected passages");
+    lane.editPrompt().window()->exitModalState(1);for(int n=0;n<100&&lane.editPrompt().active();++n)pump(10);
+    expect(!lane.editPrompt().active()&&!s.currentStateDocument.sectionGains&&s.sectionDocument.map().sections.size()==8&&s.currentStateDocument.staticGainDb==3,"separate reset keeps gap boundaries and global gain");
+    expect(s.undoManual()&&s.manualState()==gained,"one Undo restores separate reset");lane.synchronize("batch");
+    select(1,false,true);expect(lane.selectedCount()==1,"ordinary waveform click replaces separate selection");
+    select(1,true,true);expect(lane.selectedCount()==0&&lane.selectedSpans().empty()&&!laneEditor(lane)->isEnabled()&&!lane.deleteSelected(),"toggling off the final section leaves no editable or deletable selection");
+    // Exact displayed ramp support, including shortening at nearby boundaries.
+    ui.refreshSectionEditing();auto spans=ui.transitionSpans();expect(spans.size()==5&&spans.front()==std::make_pair<int64_t,int64_t>(57600,62400),"transition overlay reuses applied 100 ms envelope support");
+    ui.setViewRange(100000,140000);expect(ui.transitionSpans().empty(),"offscreen transitions do not fabricate edge markers");ui.setViewRange(0,240000);
+    ui.setReferenceMeasurement({},false);expect(ui.transitionSpans().empty(),"Original never shows Current processing transition bands");ui.setReferenceMeasurement({},true);ui.setTransitionShading(false);expect(ui.transitionSpans().empty(),"transition shading can be hidden");ui.setTransitionShading(true);
+    const auto drag=[&](int64_t from,int64_t to){const auto y=float(ui.graphBounds().getCentreY());ui.mouseDown(event(x(from),y,true,true));ui.mouseDrag(event(x(to),y,true,true));ui.mouseUp(event(x(to),y,true,false));};
+    measure(s,Domain::currentState);const auto verified=s.currentState.analysis;
+    const auto applied=s.manualState();const auto history=s.manualHistory->undoCount();
+    drag(60000,62500);expect(s.boundaryBatch&&s.pendingBoundaryCount()==1&&s.manualState()==applied&&s.currentState.analysis==verified&&!s.currentStateNeedsRemeasurement()&&!ui.editPrompt()->active(),"Command boundary drag is pending and does not ask for confirmation on release");
+    const auto first=s.boundaryBatch->next.map.sections[1].end;
+    ui.setViewRange(120000,195000);ui.refreshSectionEditing();drag(150000,147500);
+    expect(s.boundaryBatch&&s.pendingBoundaryCount()==2&&s.boundaryBatch->next.map.sections[1].end==first&&s.manualState()==applied&&s.manualHistory->undoCount()==history,"zoom and second drag preserve a single unapplied boundary batch");
+    expect(!s.stageBoundary(1,0)&&!s.stageBoundary(1,90000)&&!s.setManualSectionGains({applied.map.sections[0].id},-5),"crossing, collapse and competing processing edits are rejected during a batch");
+    ui.setViewRange(0,240000);ui.refreshSectionEditing();ui.focusForTransport();imageOf(ui,root.getChildFile("pending-boundaries.png"));
+    expect(ui.getPeer()->handleKeyPress(juce::KeyPress(juce::KeyPress::returnKey))&&ui.editPrompt()->active(),"Enter reviews all pending boundaries together");
+    auto* dialog=ui.editPrompt()->window();int buttons=0;for(auto* c:dialog->getChildren())if(dynamic_cast<juce::TextButton*>(c))++buttons;
+    expect(buttons==2&&button(*dialog,"Move gain with sections")&&button(*dialog,"Cancel"),"batch confirmation has exactly Move gain with sections and Cancel");imageOf(*dialog,root.getChildFile("boundary-batch-confirmation.png"));
+    const auto pending=s.boundaryBatch->next;dialog->exitModalState(1);for(int n=0;n<100&&ui.editPrompt()->active();++n)pump(10);
+    expect(!s.boundaryBatch&&s.manualState()==pending&&s.manualHistory->undoCount()==history+1&&s.currentStateNeedsRemeasurement(),"confirmed batch applies geometry and gains atomically with one Undo and independent verification");
+    expect(ui.getPeer()->handleKeyPress(juce::KeyPress('Z',juce::ModifierKeys::commandModifier,0))&&s.manualState()==applied,"native Undo immediately after batch restores every original boundary and gain");
+    ui.refreshSectionEditing();lane.synchronize("batch");drag(60000,61000);ui.focusForTransport();expect(ui.getPeer()->handleKeyPress(juce::KeyPress(juce::KeyPress::escapeKey))&&!s.boundaryBatch&&s.manualState()==applied,"Escape discards pending boundaries without changing audio or history");
+    expect(s.stageBoundary(1,62000)&&s.stageBoundary(4,148000),"first model edit order accepted");auto finalA=s.boundaryBatch->next;s.cancelBoundaryBatch();
+    expect(s.stageBoundary(4,148000)&&s.stageBoundary(1,61000)&&s.stageBoundary(1,62000)&&s.boundaryBatch->next==finalA,"final gains depend on original sections and final edges, not drag order or intermediate positions");
+    ui.refreshSectionEditing();ui.focusForTransport();ui.keyPressed(juce::KeyPress(juce::KeyPress::returnKey));ui.editPrompt()->window()->exitModalState(0);for(int n=0;n<100&&ui.editPrompt()->active();++n)pump(10);
+    expect(!s.boundaryBatch&&s.manualState()==applied,"dialog Cancel discards the complete batch");
+    expect(s.stageBoundary(1,62000),"stale test stages boundary");++s.revision;expect(!s.applyBoundaryBatch()&&!s.boundaryBatch&&s.manualState()==applied,"stale audio revision cannot apply a boundary batch");
+    auto compact=applied;compact.map.sections[1].end=89500;compact.map.sections[2].begin=89500;auto moved=moveBoundaryGains(applied,compact.map);expect(moved&&moved->gains&&moved->gains->radius(1)==250,"nearby boundaries retain exact engine-shortened transitions");
+    expect(s.stageBoundary(1,62000),"shared-window batch staged");
+    StandaloneSectionsPanel other(s);other.suspend();other.timelineView().refreshSectionEditing();ui.focusForTransport();
+    expect(other.timelineView().keyPressed(juce::KeyPress(juce::KeyPress::escapeKey))&&!s.boundaryBatch&&s.manualState()==applied,"Sections window cancels the same shared batch without editing applied audio");ui.refreshSectionEditing();
+    auto wrong=compact.map;wrong.sampleRate=44100;expect(!moveBoundaryGains(applied,wrong),"boundary editing cannot rebind the programme rate");
+    auto mixed=applied;auto& gains=*mixed.gains;section_edit::setRange(gains,70000,75000,-4);auto edges=mixed.map;edges.sections[1].end=65000;edges.sections[2].begin=65000;auto kept=moveBoundaryGains(mixed,edges);
+    expect(kept&&section_edit::uniform(&*kept->gains,70000,75000)==-4&&section_edit::uniform(&*kept->gains,60000,65000)==0,"moving an edge preserves surviving internal gain changes and extends only the adjacent plateau");
+    ui.removeFromDesktop();
+}

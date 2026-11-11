@@ -10,6 +10,34 @@ public:
     explicit SectionEditPrompt(StandaloneSessionModel& s):session(s){}
     juce::AlertWindow* window() const {return dialog.get();}
     bool active() const {return bool(dialog);}
+    void requestResetSeparate(juce::Component& owner,const std::vector<std::pair<int64_t,int64_t>>& spans,std::function<void(bool,bool)> completed)
+    {
+        if(!available()){completed(false,false);return;}
+        const auto before=session.manualState();auto next=before;
+        if(next.gains)for(const auto& span:spans)section_edit::setRange(*next.gains,span.first,span.second,0);
+        for(auto it=spans.rbegin();it!=spans.rend();++it)
+        {
+            auto& rows=next.map.sections;auto first=std::find_if(rows.begin(),rows.end(),[&](const auto& r){return r.begin==it->first;});
+            auto last=std::find_if(rows.begin(),rows.end(),[&](const auto& r){return r.end==it->second;});
+            if(first==rows.end()||last==rows.end()){completed(false,false);return;}
+            first->end=last->end;rows.erase(first+1,last+1);
+        }
+        show(owner,before.map,"Reset separate sections","Reset local gains only in selected passages. Boundaries around unselected passages are kept. Global gain stays unchanged.",{{"Set selected sections to 0 dB",next}},std::move(completed));
+    }
+    void requestBoundaryBatch(juce::Component& owner,std::function<void(bool,bool)> completed)
+    {
+        if(dialog||!session.boundaryEditAllowed()||!session.boundaryBatchFresh()){completed(false,false);return;}
+        const auto serial=session.boundaryEditSerial;
+        dialog=std::make_unique<juce::AlertWindow>("Move section boundaries",juce::String(session.pendingBoundaryCount())+(session.pendingBoundaryCount()==1?" boundary change. Move its gains":" boundary changes. Move their gains")+" and transitions together; one Undo restores the whole edit.",juce::MessageBoxIconType::QuestionIcon,&owner);
+        dialog->addButton("Move gain with sections",1);dialog->addButton("Cancel",0,juce::KeyPress(juce::KeyPress::escapeKey));
+        dialog->enterModalState(true,juce::ModalCallbackFunction::create([safe=juce::Component::SafePointer<SectionEditPrompt>(this),serial,completed](int answer)
+        {
+            if(!safe)return;auto& self=*safe;auto closed=std::move(self.dialog);closed->setVisible(false);
+            bool accepted=false;
+            if(answer==1&&self.session.boundaryEditSerial==serial)accepted=self.session.applyBoundaryBatch();else self.session.cancelBoundaryBatch();
+            completed(accepted,accepted);
+        }),false);
+    }
     void request(juce::Component& owner,const proposal::SectionMap& before,const proposal::SectionMap& after,
                  bool deleting,int64_t begin,int64_t end,int64_t oldBoundary,int64_t newBoundary,
                  std::function<void(bool,bool)> completed)

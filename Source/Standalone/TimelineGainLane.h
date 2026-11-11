@@ -17,11 +17,14 @@ public:
     void setViewport(double begin,double end,int left,int width);
     void selectFrame(int64_t frame,bool notify);
     void selectAt(int64_t frame,int y);
+    void toggleSection(int64_t frame);
+    std::vector<std::pair<int64_t,int64_t>> selectedSpans() const;
     bool deleteSelected();
     bool removeSelectedBoundaries();
     void selectRange(int64_t begin,int64_t end);
     void editReadout(int64_t frame);
     size_t selectedCount() const {return selectedIds.size();}
+    bool selectsSections() const {return selectionKind.getSelectedId()==1;}
     bool commitPending(){return stageValue();}
     SectionEditPrompt& editPrompt(){return sectionEdit;}
     void clearDeleteSelection(){deleteArmed=false;}
@@ -47,7 +50,7 @@ private:
     juce::TextEditor gain;
     juce::ComboBox selectionKind;
     juce::String programme,runtime,input,supportError,draftError,feedback;
-    uint64_t audioRevision=0,mapRevision=0,editSerial=0;
+    uint64_t audioRevision=0,mapRevision=0,editSerial=0,boundarySerial=0;
     bool initialized=false,hasDraft=false,fresh=false,geometryMatches=true,dirty=false,usableMap=false,measured=false;
     std::vector<uint64_t> selectedIds;
     size_t row=0;

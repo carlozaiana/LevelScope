@@ -36,6 +36,9 @@ public:
     void setWaveform(std::shared_ptr<const waveform::Overview>,bool accepted,const juce::StringArray& channels);
     void setGainPreview(std::optional<ProcessingPlan> base,const ProcessingPlan& current={});
     bool isGainPreview() const {return waveformData&&previewBase.has_value();}
+    void setTransitionShading(bool shown){showTransitions=shown;repaint();}
+    bool transitionShading() const {return showTransitions;}
+    std::vector<std::pair<int64_t,int64_t>> transitionSpans() const;
     void setPreview(std::shared_ptr<const LoudnessPreview>);
     void setReferenceMeasurement(std::shared_ptr<const measurement::Result>,bool inspectingCurrent);
     juce::String rangePeakText(int64_t begin,int64_t end) const;
@@ -54,7 +57,7 @@ public:
     const std::vector<waveform::Column>& displayedWaveform() const {return waveformColumns;}
     void setViewRange (double beginFrame, double endFrame);
     void highlight (double beginFrame, double endFrame, bool reveal = true);
-    void clearHighlight() { selection.reset();inspectedRange.reset();fitSelection.setEnabled(false);repaint(); }
+    void clearHighlight() { gainSelection=false;selection.reset();inspectedRange.reset();fitSelection.setEnabled(false);repaint(); }
     void setSectionBoundaries (std::vector<int64_t> frames) { sectionBoundaries = std::move (frames); repaint(); }
     bool inspectSeconds (double seconds);
     juce::String inspectionText() const { return inspection; }
@@ -75,6 +78,8 @@ private:
     juce::String sectionInput,sectionRuntime;
     uint64_t sectionRevision=0, audioRevision=0;
     bool sectionEditable=false, sectionGesture=false;
+    bool commandGesture=false,batchBoundaryGesture=false,gainSelection=false,showTransitions=true;
+    uint64_t boundarySerial=0;
     std::optional<size_t> boundaryHandle(float x) const;
     std::optional<size_t> movingBoundary;
     int64_t dragFrame=0;
