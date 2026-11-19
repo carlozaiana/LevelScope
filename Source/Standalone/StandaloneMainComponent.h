@@ -61,6 +61,8 @@ private:
     juce::Label positionLabel,sourceFilename;
     TimelineGainLane gainLane{session};
     ProposalWorkflowPanel proposalPanel{session};
+    // Enabled after the preserved native authority gate; see ProjectIndex 83.
+    bool eventAlternativeSelectionQualified=true;
     juce::Component inspectorContent;
     juce::Viewport inspectorViewport;
     std::unique_ptr<ProposalWindow> lraPassagesWindow;

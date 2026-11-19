@@ -18,11 +18,12 @@ def sha(path):
 
 def main():
     region_groups = ('core', 'stereo', 'surround', 'heterogeneous', 'failures', 'population', 'audio', 'gating', 'cinema')
-    other_groups = ('monitor', 'control-variants', 'ui', 'devices', 'preparation', 'timeline', 'requirements', 'section-smoke', 'legacy-core', 'legacy-stereo', 'legacy-failures', 'legacy-gating')
+    other_groups = ('monitor', 'control-variants', 'ui', 'event-ui', 'devices', 'preparation', 'timeline', 'requirements', 'section-smoke', 'legacy-core', 'legacy-stereo', 'legacy-failures', 'legacy-gating')
+    event_groups = ('event-stereo', 'event-surround', 'event-fallback')
     parser = argparse.ArgumentParser()
     parser.add_argument('candidate', type=Path)
     parser.add_argument('destination', type=Path)
-    parser.add_argument('--case', action='append', required=True, choices=region_groups + other_groups)
+    parser.add_argument('--case', action='append', required=True, choices=region_groups + other_groups + event_groups)
     parser.add_argument('--gating-input', type=Path)
     parser.add_argument('--cinema-input', type=Path)
     args = parser.parse_args()
@@ -50,7 +51,10 @@ def main():
     try:
         for case in args.case:
             root, output = destination / (case + '-files'), destination / (case + '.json')
-            if case in region_groups:
+            if case in event_groups:
+                target = 'LevelScopeEventPlanningTests'
+                arguments = ['--group', case[6:], '--root', str(root), '--output', str(output)]
+            elif case in region_groups:
                 target = 'LevelScopeRegionPlanningTests'
                 arguments = ['--group', case, '--root', str(root), '--output', str(output)]
                 if case in ('gating', 'cinema'):
@@ -63,12 +67,14 @@ def main():
             elif case.startswith('legacy-'):
                 target = 'LevelScopeLraProposalTests'
                 arguments = ['--group', case[7:], '--root', str(root), '--output', str(output)]
-            elif case in ('ui', 'control-variants', 'devices', 'preparation'):
-                target = {'control-variants': 'LevelScopeRegionUITests', 'ui': 'LevelScopeRegionUITests', 'devices': 'LevelScopeDeviceSettingsTests',
+            elif case in ('ui', 'event-ui', 'control-variants', 'devices', 'preparation'):
+                target = {'event-ui': 'LevelScopeRegionUITests', 'control-variants': 'LevelScopeRegionUITests', 'ui': 'LevelScopeRegionUITests', 'devices': 'LevelScopeDeviceSettingsTests',
                           'preparation': 'LevelScopePreparationFeedbackTests'}[case]
                 arguments, output = [str(root)], root / 'result.json'
                 if case == 'control-variants':
                     arguments += ['--variants']
+                elif case == 'event-ui':
+                    arguments += ['--event-ui']
             else:
                 target = {'timeline': 'LevelScopeTimelineProgressTests', 'requirements': 'LevelScopeJobRequirementsTests',
                           'section-smoke': 'LevelScopeSectionProposalTests'}[case]

@@ -19,6 +19,7 @@ public:
     int pageCount() const { return int(pages.size()); }
     juce::String allText() const;
     void nextPage();
+    void refreshStatus() { timerCallback(); }
 private:
     std::vector<juce::String> pages;int page=0;
     std::function<juce::String()> statusText;juce::Label status;

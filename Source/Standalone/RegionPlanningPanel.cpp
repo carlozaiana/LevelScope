@@ -85,16 +85,25 @@ RegionPlanningPanel::RegionPlanningPanel(StandaloneSessionModel& s):session(s)
     section.setName("Original planning section");
     const char* names[]={"Maximum splits per original root (0-4)","Left margin seconds (0-3, step 0.1)","Right margin seconds (0-3, step 0.1)","Minimum nominal interval seconds (0.5-10)","Minimum unchanged separation seconds (0-3)","Need-change threshold LU (0.5-3)","Need persistence seconds (0.3-3)"};
     for(size_t n=0;n<fields.size();++n){labels[n].setText(names[n],juce::dontSendNotification);fields[n].setName(names[n]);body.addAndMakeVisible(labels[n]);body.addAndMakeVisible(fields[n]);fields[n].setInputRestrictions(8);}
-    for(auto* c:std::initializer_list<juce::Component*>{&heading,&methodLabel,&modeLabel,&sectionLabel,&selectionLabel,&edgeLabel,&footnote,&method,&mode,&section,&selectionBegin,&selectionEnd,&startRange,&startMin,&startMax,&endRange,&endMin,&endMax,&startPin,&endPin,&splitting,&refinement,&fillGap,&global,&compare,&cuts,&protection})body.addAndMakeVisible(c);
+    for(auto* c:std::initializer_list<juce::Component*>{&heading,&methodLabel,&modeLabel,&sectionLabel,&selectionLabel,&edgeLabel,&footnote,&method,&mode,&section,&selectionBegin,&selectionEnd,&startRange,&startMin,&startMax,&endRange,&endMin,&endMax,&startPin,&endPin,&splitting,&refinement,&fillGap,&global,&compare,&completeEvents,&automaticMargins,&eventNote,&cuts,&protection})body.addAndMakeVisible(c);
     for(auto* c:std::initializer_list<juce::Component*>{&status,&confirm,&assess,&discard})addAndMakeVisible(c);
     status.setMultiLine(true);status.setReadOnly(true);status.setScrollbarsShown(true);status.setFont(13.f);status.setName("Region draft validation and effective permissions");
     const char* frames[]={"Temporary begin frame","Temporary end frame","Processing start minimum frame","Processing start maximum frame","Processing end minimum frame","Processing end maximum frame"};
     int n=0;for(auto* f:{&selectionBegin,&selectionEnd,&startMin,&startMax,&endMin,&endMax}){f->setName(frames[n++]);f->setInputRestrictions(19);f->setTextToShowWhenEmpty("Exact source frame",juce::Colours::grey);}
+    completeEvents.setName("Prefer complete-event treatment");automaticMargins.setName("Allow automatic outward margins");
+    eventNote.setFont(13.f);eventNote.setMinimumHorizontalScale(1.f);
+    completeEvents.onClick=[this]
+    {
+        if(completeEvents.getToggleState())compare.setToggleState(true,juce::dontSendNotification);
+        else {automaticMargins.setToggleState(false,juce::dontSendNotification);if(mode.getSelectedId()==1){fields[1].setText("0.0",false);fields[2].setText("0.0",false);}}
+        feedback="Boundary preference changed in this private draft. Review permissions, then Confirm settings.";updateEnabled();
+    };
+    automaticMargins.onClick=[this]{if(!automaticMargins.getToggleState()){fields[1].setText("0.0",false);fields[2].setText("0.0",false);}feedback="Automatic margin permission changed in this private draft. Context reading alone grants no processing permission.";updateEnabled();};
     method.onChange=[this]{feedback.clear();updateEnabled();};
     mode.onChange=[this]
     {
         // A mode change is a visible private draft reset of mode-specific permissions.
-        global.setToggleState(mode.getSelectedId()==1,juce::dontSendNotification);
+        global.setToggleState(mode.getSelectedId()==1,juce::dontSendNotification);automaticMargins.setToggleState(false,juce::dontSendNotification);
         startRange.setToggleState(false,juce::dontSendNotification);endRange.setToggleState(false,juce::dontSendNotification);cuts.load({});
         fields[1].setText("0.0",false);fields[2].setText("0.0",false);feedback="Mode changed in the private draft; margins and edge/cut restrictions reset. Review before confirming.";updateEnabled();
     };
@@ -113,6 +122,7 @@ void RegionPlanningPanel::load()
 {
     runtime=session.sessionId;input=sectionInputIdentity(session.measurementContext(MeasurementDomain::source));baseDigest=settingsKey(session);annotations=session.sectionDocument.map();
     auto s=session.regionPlanning.value_or(proposal::RegionPlanningSettings::defaults(proposal::RegionMode::automatic,input));
+    loadedFeatures=s.eventFeatures;completeEvents.setToggleState(s.schema==2&&s.preferCompleteEvent,juce::dontSendNotification);automaticMargins.setToggleState(s.allowAutomaticMargins,juce::dontSendNotification);
     method.setSelectedId(session.regionPlanning?2:1,juce::dontSendNotification);mode.setSelectedId(int(s.mode)+1,juce::dontSendNotification);
     section.clear(juce::dontSendNotification);for(size_t n=0;n<annotations.sections.size();++n){const auto& r=annotations.sections[n];section.addItem(r.name+" "+spanText({r.begin,r.end}),int(n+1));if(r.id==s.sectionId)section.setSelectedId(int(n+1),juce::dontSendNotification);}
     if(section.getSelectedId()==0&&!annotations.sections.empty())section.setSelectedId(1,juce::dontSendNotification);
@@ -131,7 +141,8 @@ juce::String RegionPlanningPanel::readDraft(std::optional<proposal::RegionPlanni
     if(method.getSelectedId()==1)return {};
     if(!session.sourceDocument.hasSource||!session.sourceDocument.layout.confirmed||session.sourceContentInvalid)return "Import and confirm programme roles first.";
     if(auto error=cuts.pendingError();error.isNotEmpty())return error;if(auto error=protection.pendingError();error.isNotEmpty())return error;
-    auto s=proposal::RegionPlanningSettings::defaults(proposal::RegionMode(mode.getSelectedId()-1),input);
+    auto s=completeEvents.getToggleState()?proposal::RegionPlanningSettings::eventDefaults(proposal::RegionMode(mode.getSelectedId()-1),input):proposal::RegionPlanningSettings::defaults(proposal::RegionMode(mode.getSelectedId()-1),input);
+    if(s.schema==2){s.eventFeatures=loadedFeatures;s.allowAutomaticMargins=s.mode==proposal::RegionMode::automatic&&automaticMargins.getToggleState();}
     if(s.mode==proposal::RegionMode::selectedSection)
     {
         const int n=section.getSelectedId()-1;if(n<0||size_t(n)>=annotations.sections.size())return "Select an original section.";
@@ -150,7 +161,7 @@ juce::String RegionPlanningPanel::readDraft(std::optional<proposal::RegionPlanni
         if(*v<minimum[n]||*v>maximum[n])return labels[n].getText()+": value outside the approved range.";
         *values[n]=*v*(n==0||n==5?1:100);
     }
-    s.allowSplitting=splitting.getToggleState();s.allowRefinement=refinement.getToggleState();s.fillShortGap=fillGap.getToggleState();s.allowGlobal=global.getToggleState();s.compareAlternatives=compare.getToggleState();
+    s.allowSplitting=splitting.getToggleState();s.allowRefinement=refinement.getToggleState();s.fillShortGap=fillGap.getToggleState();s.allowGlobal=global.getToggleState();s.compareAlternatives=s.schema==2||compare.getToggleState();
     const auto edge=[&](bool enabled,bool pin,const auto& a,const auto& b,std::optional<proposal::RegionEdgeRange>& r)->bool
     {if(!enabled)return true;auto x=exactFrame(a.getText()),y=pin?x:exactFrame(b.getText());if(!x||!y)return false;r=proposal::RegionEdgeRange{*x,*y};return true;};
     if(!edge(startRange.getToggleState(),startPin.getToggleState(),startMin,startMax,s.start)||!edge(endRange.getToggleState(),endPin.getToggleState(),endMin,endMax,s.end))return "Use exact integer source frames for edge ranges/pins.";
@@ -161,7 +172,10 @@ juce::String RegionPlanningPanel::readDraft(std::optional<proposal::RegionPlanni
 juce::String RegionPlanningPanel::geometryText(const proposal::RegionPlanningSettings& s)const
 {
     const auto c=geometry(s,session);juce::String text;
-    if(s.mode==proposal::RegionMode::automatic)text="Automatic: measured roots will be resolved by assessment; no outward movement beyond each seed. Protections exclude additional local change.\n";
+    if(s.schema==2)text="Prefer complete-event treatment (experimental). Comparative assessment is required; partial/uncertain passes need explicit review and selection. "+juce::String(s.eventFeatures.hopMs)+" ms feature cadence is not proven onset accuracy.\n";
+    if(s.mode==proposal::RegionMode::automatic)text+=s.allowAutomaticMargins?
+        "Automatic margins explicitly permitted: left "+juce::String(s.leftMarginMs/1000.,1)+" s, right "+juce::String(s.rightMarginMs/1000.,1)+" s. Assessment freezes each root's ownership and shows requested versus effective clipped areas/ranges. Context grants no permission.\n":
+        "Automatic: measured roots will be resolved by assessment; no outward movement beyond each seed. Protections exclude additional local change.\n";
     for(const auto& r:c.roots)
     {
         const int64_t left=int64_t(s.leftMarginMs)*c.sampleRate/1000,right=int64_t(s.rightMarginMs)*c.sampleRate/1000;
@@ -181,15 +195,23 @@ void RegionPlanningPanel::commit(bool after)
 }
 void RegionPlanningPanel::updateEnabled()
 {
-    const bool experimental=method.getSelectedId()==2,selected=mode.getSelectedId()!=1;
+    const bool experimental=method.getSelectedId()==2,selected=mode.getSelectedId()!=1,event=completeEvents.getToggleState();
+    completeEvents.setEnabled(experimental);automaticMargins.setEnabled(experimental&&event&&!selected);
+    const auto selectedMode=mode.getSelectedId();
+    mode.changeItemText(1,event?"Automatic - measured seeds with explicit permissions":"Automatic - refine measured seeds inward");
+    // JUCE does not refresh the displayed text in changeItemText. Keep both
+    // text and ID aligned without issuing a mode-change permission reset.
+    mode.setSelectedId(selectedMode,juce::dontSendNotification);
+    eventNote.setText(event?"Experimental: prefers supported-complete measured passes. Partial or uncertain coverage needs explicit selection; this is not phrase recognition.":"Complete-event preference is off. Confirm settings to activate this private draft's selected method.",juce::dontSendNotification);
     mode.setEnabled(experimental);section.setEnabled(experimental&&mode.getSelectedId()==2);
     selectionBegin.setEnabled(experimental&&mode.getSelectedId()==3);selectionEnd.setEnabled(selectionBegin.isEnabled());
-    for(size_t n=0;n<fields.size();++n)fields[n].setEnabled(experimental&&((n!=1&&n!=2)||selected));
-    for(auto* t:{&splitting,&refinement,&fillGap,&global,&compare})t->setEnabled(experimental);
+    for(size_t n=0;n<fields.size();++n)fields[n].setEnabled(experimental&&((n!=1&&n!=2)||selected||(event&&automaticMargins.getToggleState())));
+    for(auto* t:{&splitting,&refinement,&fillGap,&global})t->setEnabled(experimental);compare.setEnabled(experimental&&!event);
     startRange.setEnabled(experimental&&selected);endRange.setEnabled(experimental&&selected);
     startPin.setEnabled(startRange.isEnabled()&&startRange.getToggleState());endPin.setEnabled(endRange.isEnabled()&&endRange.getToggleState());
     startMin.setEnabled(startPin.isEnabled());startMax.setEnabled(startPin.isEnabled()&&!startPin.getToggleState());endMin.setEnabled(endPin.isEnabled());endMax.setEnabled(endPin.isEnabled()&&!endPin.getToggleState());
     cuts.setEnabled(experimental&&selected);protection.setEnabled(experimental);
+    timerCallback();
 }
 void RegionPlanningPanel::timerCallback()
 {
@@ -206,9 +228,10 @@ void RegionPlanningPanel::resized()
 {
     auto r=getLocalBounds().reduced(12);auto actions=r.removeFromBottom(34);
     confirm.setBounds(actions.removeFromLeft(175).reduced(2));assess.setBounds(actions.removeFromLeft(190).reduced(2));discard.setBounds(actions.removeFromLeft(200).reduced(2));
-    status.setBounds(r.removeFromBottom(140).reduced(0,4));viewport.setBounds(r);body.setSize(std::max(760,viewport.getWidth()-18),1110);
+    status.setBounds(r.removeFromBottom(140).reduced(0,4));viewport.setBounds(r);body.setSize(std::max(760,viewport.getWidth()-18),1220);
     auto b=body.getLocalBounds().reduced(4);heading.setBounds(b.removeFromTop(32));
     auto row=b.removeFromTop(34);methodLabel.setBounds(row.removeFromLeft(180));method.setBounds(row.reduced(2));
+    completeEvents.setBounds(b.removeFromTop(28));eventNote.setBounds(b.removeFromTop(50));automaticMargins.setBounds(b.removeFromTop(28));
     row=b.removeFromTop(34);modeLabel.setBounds(row.removeFromLeft(180));mode.setBounds(row.reduced(2));
     sectionLabel.setBounds(b.removeFromTop(24));section.setBounds(b.removeFromTop(30).reduced(2));
     selectionLabel.setBounds(b.removeFromTop(24));row=b.removeFromTop(30);selectionBegin.setBounds(row.removeFromLeft(row.getWidth()/2).reduced(2));selectionEnd.setBounds(row.reduced(2));

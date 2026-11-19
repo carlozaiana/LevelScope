@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/Proposal/RegionPlanning.h"
+#include "StandaloneRegionProposal.h"
 #include <iomanip>
 #include <limits>
 #include <sstream>
@@ -8,6 +9,23 @@ namespace levelscope::standalone
 {
 inline juce::String regionExact(double value)
 {std::ostringstream s;s.imbue(std::locale::classic());s<<std::setprecision(std::numeric_limits<double>::max_digits10)<<value;return s.str();}
+inline juce::String eventAttemptCoverage(const RegionAttempt& a)
+{return a.family=="measured global-only"?"Measured global-only; no local event treatment":juce::String(proposal::eventCoverageName(a.coverage.category));}
+inline juce::String eventCoverageSummary(const proposal::EventCoverage& coverage)
+{
+    const auto full=coverage.text();
+    return full.substring(0,1200)+"\nSummary only; the complete attempt report preserves every event and reason.";
+}
+inline juce::String regionAttemptAuthority(const SectionProposalResult& result,size_t n)
+{
+    const auto r=result.regionReview();if(!r||n>=r->attempts.size())return "No measured attempt";
+    const auto& a=r->attempts[n];if(!r->eventMode)return n==r->retainedAttempt&&a.evaluation.verdict==proposal::Verdict::pass?"Retained measured recommendation":"Diagnostic only";
+    const auto label=eventAttemptCoverage(a);
+    if(a.evaluation.verdict!=proposal::Verdict::pass)return "Measured failure / unavailable - "+label;
+    if(r->selectedAttempt==n&&result.explicitlySelectedAlternative())return "Selected passing alternative - "+label;
+    if(r->recommendedAttempt==n)return "Recommended measured pass - "+label;
+    return "Review only - measured pass - "+label;
+}
 // Documentary presentation only. No ranking, geometry or acceptance changes.
 inline juce::String regionActivityDescription(const proposal::RegionPlan& p,int rate,int64_t frames,bool full=true)
 {

@@ -1,6 +1,7 @@
 #include "TimelineGainLane.h"
 #include "TimelineGainOutline.h"
 #include "TimelineAppearance.h"
+#include "RegionReviewFormatting.h"
 #include <iomanip>
 #include <limits>
 #include <locale>
@@ -75,7 +76,9 @@ const RegionAttempt* TimelineGainLane::inspectedAttempt() const
 bool TimelineGainLane::diagnosticRegionInspection() const
 {
     const auto review=automatic?automatic->regionReview():nullptr;
-    return review&&regionAttempt<review->attempts.size()&&(regionAttempt!=review->retainedAttempt||review->attempts[regionAttempt].evaluation.verdict!=proposal::Verdict::pass);
+    if(!review||regionAttempt>=review->attempts.size())return false;
+    if(review->eventMode)return !review->selectedAttempt||*review->selectedAttempt!=regionAttempt||automatic->status()!=SectionProposalStatus::ready||review->attempts[regionAttempt].evaluation.verdict!=proposal::Verdict::pass;
+    return regionAttempt!=review->retainedAttempt||review->attempts[regionAttempt].evaluation.verdict!=proposal::Verdict::pass;
 }
 void TimelineGainLane::rebuildProposalRows()
 {
@@ -137,9 +140,14 @@ void TimelineGainLane::synchronize(const juce::String& key)
         ||hasDraft!=bool(d)||(d&&editSerial!=d->editSerial))
     {
         const bool newProposal=automatic!=session.sectionProposal;
+        const auto oldReview=automatic?automatic->regionReview():nullptr,newReview=session.sectionProposal?session.sectionProposal->regionReview():nullptr;
+        const bool sameInvocation=oldReview&&newReview&&oldReview->eventMode&&newReview->eventMode&&oldReview->resultIdentity==newReview->resultIdentity;
+        const auto inspectedId=sameInvocation&&regionAttempt<oldReview->attempts.size()?oldReview->attempts[regionAttempt].attemptIdentity:juce::String();
         deleteArmed=false;
         automatic=session.sectionProposal;automaticStale=stale;proposed=automatic?automatic->previewPlan():std::nullopt;
-        if(newProposal)regionAttempt=automatic&&automatic->regionReview()?automatic->regionReview()->retainedAttempt:std::numeric_limits<size_t>::max();
+        if(newProposal&&!sameInvocation)regionAttempt=automatic&&automatic->regionReview()?automatic->regionReview()->retainedAttempt:std::numeric_limits<size_t>::max();
+        if(sameInvocation&&inspectedId.isNotEmpty())
+        {const auto it=std::find_if(newReview->attempts.begin(),newReview->attempts.end(),[&](const auto& a){return a.attemptIdentity==inspectedId;});regionAttempt=size_t(it-newReview->attempts.begin());}
         if(const auto* attempt=inspectedAttempt()){proposed=ProcessingPlan{};proposed->staticGainDb=attempt->plan.globalDb;proposed->sectionGains=attempt->plan.envelope;}
         audioRevision=session.revision;mapRevision=map.revision;initialized=session.hasCurrentStateInitialized();
         boundarySerial=session.boundaryEditSerial;
@@ -187,7 +195,8 @@ void TimelineGainLane::showSelection()
         if(const auto* attempt=inspectedAttempt())
         {
             const auto& review=*automatic->regionReview();
-            description="Measured attempt "+juce::String(regionAttempt+1)+(diagnosticRegionInspection()?" — DIAGNOSTIC ONLY. ":" — retained recommendation. ")+description;
+            description="Measured attempt "+juce::String(regionAttempt+1)+" — "+regionAttemptAuthority(*automatic,regionAttempt)+". "+description;
+            if(review.eventMode)description+="\n"+eventCoverageSummary(attempt->coverage);
             for(const auto& a:attempt->plan.assignments)if(a.geometry.support.begin<=cursor&&cursor<a.geometry.support.end)
             {
                 description+="\nRoot "+(a.geometry.root<review.constraints.roots.size()?review.constraints.roots[a.geometry.root].id:"unavailable")+". "+a.geometry.reason;
@@ -239,6 +248,7 @@ void TimelineGainLane::updateControls()
     else if(hasDraft&&!fresh)message="Stale draft. Discard it and draft on the current sections.";
     else if(supportError.isNotEmpty())message=supportError;
     else if(!idle)message="Inspection available. Stop playback or finish the job to edit.";
+    else if(proposed&&automatic->regionReview()&&automatic->regionReview()->eventMode)message=automaticStale?"STALE event proposal; Apply unavailable.":regionAttemptAuthority(*automatic,regionAttempt)+(diagnosticRegionInspection()?". Apply unavailable for this inspection; use Review to select an owned measured pass.":". Apply explicitly while stopped, then re-measure Current.");
     else if(proposed)message=(automaticStale?"STALE. ":diagnosticRegionInspection()?"DIAGNOSTIC ATTEMPT — Apply unavailable. ":automatic->status()==SectionProposalStatus::noSolution?"REJECTED. ":"Preview only. ")
         +juce::String("Proposed global ")+juce::String(proposed->staticGainDb,9)+" dB. Click/arrow through changes for local + global gain and reasons. "
         +(automaticStale?"Apply unavailable. Generate a fresh proposal.":automatic->status()==SectionProposalStatus::noSolution?"Apply unavailable. Review the rejection.":"Apply proposal explicitly in the main controls.")
@@ -468,7 +478,7 @@ void TimelineGainLane::paintReadouts(juce::Graphics& g)
         }
     }
     else draw(applied?&*applied:nullptr,0,"Applied",juce::Colour(0xff81d5b4));
-    if(proposed)draw(proposed->sectionGains?&*proposed->sectionGains:nullptr,1,automaticStale?"Stale prop.":diagnosticRegionInspection()||automatic->status()==SectionProposalStatus::noSolution?"Rejected prop.":"Proposed",juce::Colour(0xff83d9ff));
+    if(proposed)draw(proposed->sectionGains?&*proposed->sectionGains:nullptr,1,automaticStale?"Stale prop.":automatic->regionReview()&&automatic->regionReview()->eventMode?(diagnosticRegionInspection()?"Review only":"Selected prop."):diagnosticRegionInspection()||automatic->status()==SectionProposalStatus::noSolution?"Rejected prop.":"Proposed",juce::Colour(0xff83d9ff));
     else if(draft)draw(&*draft,1,"Draft",juce::Colour(0xffffc171));
 }
 void TimelineGainLane::paintRegionLayers(juce::Graphics& g)
