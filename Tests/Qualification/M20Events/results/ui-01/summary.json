@@ -1,0 +1,118 @@
+{
+  "passed": true,
+  "os": "15.7.9",
+  "architecture": "arm64",
+  "source_commit": "8b28348dee77179b395253728d71818404bd5022",
+  "build": "b5f978a7c9a5b2c5488c1aab9ee5503fb0e2e3838a57f26dc333f9e9f685cff8",
+  "candidate_identity_sha256": "88d4209ff33e546ae084d1ae3db62e062306e76624564408b88e8f2c95ef5439",
+  "requested_cases": [
+    "event-ui",
+    "ui",
+    "timeline",
+    "event-stereo",
+    "event-surround",
+    "event-fallback"
+  ],
+  "physical_devices_opened": false,
+  "combined_qualification_complete": false,
+  "inputs": {},
+  "groups": [
+    {
+      "name": "event-ui",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-complete-event-ui-2026-11-20/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-complete-event-ui-2026-11-20/sequoia-01/event-ui-files",
+        "--event-ui"
+      ],
+      "returncode": 0,
+      "seconds": 18.785465207999998,
+      "passed": true,
+      "checks": 144,
+      "receipt": "event-ui-files/result.json",
+      "receipt_sha256": "c6bc948fe00aa45a63751a99081e7bb3908e67316e87c27808aec580791f46e6"
+    },
+    {
+      "name": "ui",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-complete-event-ui-2026-11-20/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-complete-event-ui-2026-11-20/sequoia-01/ui-files"
+      ],
+      "returncode": 0,
+      "seconds": 18.060606083000003,
+      "passed": true,
+      "checks": 163,
+      "receipt": "ui-files/result.json",
+      "receipt_sha256": "d1d59017b249a824ad131fe6f5bf1b1957149851ca6358c113771a5fdc3b8c56"
+    },
+    {
+      "name": "timeline",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-complete-event-ui-2026-11-20/candidate-01/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-complete-event-ui-2026-11-20/sequoia-01/timeline-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-complete-event-ui-2026-11-20/sequoia-01/timeline.json"
+      ],
+      "returncode": 0,
+      "seconds": 2.7750461669999993,
+      "passed": true,
+      "checks": 2299,
+      "receipt": "timeline.json",
+      "receipt_sha256": "5ea0c08ef0cf43f7abff5cc72ecdedb3aa81905275f81823361ee2734e3b06a1"
+    },
+    {
+      "name": "event-stereo",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-complete-event-ui-2026-11-20/candidate-01/bin/LevelScopeEventPlanningTests",
+        "--group",
+        "stereo",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-complete-event-ui-2026-11-20/sequoia-01/event-stereo-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-complete-event-ui-2026-11-20/sequoia-01/event-stereo.json"
+      ],
+      "returncode": 0,
+      "seconds": 8.661391166999998,
+      "passed": true,
+      "checks": 55,
+      "receipt": "event-stereo.json",
+      "receipt_sha256": "bcddbec355f3ba59c72a2005db6deadb11104a3801fc56ddd3aebe031b42b7da"
+    },
+    {
+      "name": "event-surround",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-complete-event-ui-2026-11-20/candidate-01/bin/LevelScopeEventPlanningTests",
+        "--group",
+        "surround",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-complete-event-ui-2026-11-20/sequoia-01/event-surround-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-complete-event-ui-2026-11-20/sequoia-01/event-surround.json"
+      ],
+      "returncode": 0,
+      "seconds": 10.341694750000002,
+      "passed": true,
+      "checks": 52,
+      "receipt": "event-surround.json",
+      "receipt_sha256": "755b6aa4bfa278bb0404e71fc9ae7834be1772b5a4da295c84cb4515957876bc"
+    },
+    {
+      "name": "event-fallback",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-complete-event-ui-2026-11-20/candidate-01/bin/LevelScopeEventPlanningTests",
+        "--group",
+        "fallback",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-complete-event-ui-2026-11-20/sequoia-01/event-fallback-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-complete-event-ui-2026-11-20/sequoia-01/event-fallback.json"
+      ],
+      "returncode": 0,
+      "seconds": 6.221484833999995,
+      "passed": true,
+      "checks": 54,
+      "receipt": "event-fallback.json",
+      "receipt_sha256": "8d71c7ae0c0e1e580bfb06fe1495aee753bffc857585f501d2c25e308e1eec37"
+    }
+  ]
+}

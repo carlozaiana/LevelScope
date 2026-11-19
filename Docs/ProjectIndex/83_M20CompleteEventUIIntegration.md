@@ -79,4 +79,70 @@ identified an immediately stale report-status line after selection; the final
 candidate refreshes report/inspection status synchronously and disables redundant
 selection of an already selected recommendation. Complete event evidence remains
 available through bounded pages; the short live coverage summary is explicitly
-labelled as a summary. Final package qualification is recorded below when complete.
+labelled as a summary.
+
+## Preserved combined candidate and focused results
+
+Tested implementation: `8b28348dee77179b395253728d71818404bd5022`, local branch
+`codex/m20-complete-event-ui-2026-11-20`. Later receipt-only commits do not change
+the package or its implementation identity. No push, tag or main merge.
+
+App:
+`/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-complete-event-ui-2026-11-20/candidate-01/LevelScope Standalone.app`
+
+Measurement build: `b5f978a7c9a5b2c5488c1aab9ee5503fb0e2e3838a57f26dc333f9e9f685cff8`.
+Source/test manifest: `0d64f55c6b8fb440b871b95fea1829d524e4e9f87e883e2aa807f06405516133`.
+Executable SHA-256: `b4ba593f73f24c71e05770075605cbfb4047a5b6408418a56d8d8a066c4b12e3`.
+App and all three test executables contain arm64 and x86_64, Intel minimum 10.13.
+
+All six selected groups passed on actual macOS 15.7.9 / 24G830 arm64:
+
+| Group | Passing assertions |
+| --- | ---: |
+| New native event workflow and authority | 144 |
+| Existing native UI, keyboard Undo and manual workflow | 163 |
+| Timeline, waveform/loudness, selections and boundary batches | 2,299 |
+| Event stereo service, independent Current and actual export | 55 |
+| Event 5.1 service, independent Current and actual export | 52 |
+| Explicit partial fallback service and persistence | 54 |
+| **Total** | **2,767** |
+
+The final native event run measured review-switch p95 **13.25 ms**, heartbeat p95
+**40.55 ms**, maximum **424.07 ms**; Propose cancellation **19.69 ms** and Current
+measurement cancellation **63.89 ms**. These are short synthetic native runs, not
+long-form or maximum-latency guarantees. The heartbeat includes test-driven review
+creation and snapshot work. Every required p95 and cancellation check passed.
+
+[Evidence map](../../Tests/Qualification/M20Events/results/ui-01/README.md) and
+[acceptance receipt](../../Tests/Qualification/M20Events/results/ui-01/acceptance.json)
+bind results to the exact frozen candidate. The source/artifact hashes were checked
+before and after the run. Seventy-three Core/service/test files in the reuse map
+remain byte-identical to Logic package 03. Detector tuning, numerical DSP/meter,
+session/history schemas, storage caps and export authority were not changed.
+Original packages 01–03, the accepted UI package, all 25 tags, main/origin-main,
+other worktree heads and accepted design documents were verified unchanged.
+
+Actual High Sierra/new-method cross-platform execution, broader detector controls,
+independent holdouts and coordinated listening remain pending. This is focused
+UI integration readiness, **not combined M20 musical qualification**. The real
+music entrance uncertainty and measured cinema/gate failures remain as documented
+in 81/82. No physical device was opened and no audible test was performed.
+
+## Short manual checklist
+
+1. Open **Method / region planning...**, select M20 and explicitly enable
+   **Prefer complete-event treatment**. Confirm that automatic outward margins
+   start off and Proposal limits still has the existing allowance (20% on a new
+   session). Settings remain private until **Confirm settings**.
+2. Propose and open **Review proposal**. Browse complete evidence and individual
+   attempts; inspection must not change audio or selection. For **Review required**,
+   inspect a measured pass and explicitly choose **Use this measured alternative**.
+   Its partial/uncertain label must remain visible.
+3. Inspect another attempt: Apply should be unavailable for that diagnostic display.
+   Return to the selected attempt, explicitly **Apply proposal** while stopped,
+   then independently **Re-measure Current State**. Cancelling measurement must
+   retain the applied gain and leave Current unverified.
+4. Save/reopen and inspect **Last applied explanation**. Historical evidence should
+   remain accessible without live selection/Apply authority. A later gain or target
+   change should make its historical context clear; current verification stays
+   independent. The previous Undo, Command-click and boundary-batch workflows remain.
