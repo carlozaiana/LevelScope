@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "os": "15.7.9",
+  "architecture": "arm64",
+  "source_commit": "4043f79d650a1a00778612be824562bce81464c2",
+  "build": "cb4c35c17598dff01e1251dae96bdaea98fe63b484dbea9928ca735df227e3fe",
+  "candidate_identity_sha256": "79220e02c5e2a1e7a3570ed3f61c35bab436872272edf9abaa85ee7e4659a154",
+  "requested_cases": [
+    "ui",
+    "requirements"
+  ],
+  "physical_devices_opened": false,
+  "combined_qualification_complete": false,
+  "inputs": {},
+  "groups": [
+    {
+      "name": "ui",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-manual-workflow-2026-11-08/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-manual-workflow-2026-11-08/sequoia-ui-requirements-01/ui-files"
+      ],
+      "returncode": 0,
+      "seconds": 15.889329833,
+      "passed": true,
+      "checks": 129,
+      "receipt": "ui-files/result.json",
+      "receipt_sha256": "1319a0f7a7a2631f8eb598dbea7d8aa0b9bfc1c9d9dafaa0ef3c100222b7b62e"
+    },
+    {
+      "name": "requirements",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-manual-workflow-2026-11-08/candidate-01/bin/LevelScopeJobRequirementsTests",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-manual-workflow-2026-11-08/sequoia-ui-requirements-01/requirements-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-manual-workflow-2026-11-08/sequoia-ui-requirements-01/requirements.json"
+      ],
+      "returncode": 0,
+      "seconds": 28.586696709,
+      "passed": true,
+      "checks": 489,
+      "receipt": "requirements.json",
+      "receipt_sha256": "fb07fff3758a2bce0bf4384f98109bb122caf5b4f84ccfea72f63b6295cd6a2f"
+    }
+  ]
+}

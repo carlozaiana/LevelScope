@@ -1,0 +1,69 @@
+{
+  "passed": true,
+  "source_commit": "3c853e4c855b047ed990a899fde586fa2d952aaf",
+  "measurement_build": "160f9c55675c802e775cd1fac308cc0caddbbf0a858547dde0efcdcbff412141",
+  "candidate_identity_sha256": "7b0b9ab8db98ab7cc7abc95956695e11a327b6263ca88c4b0941cdc7e634da60",
+  "app_path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-safety-editing-2026-11-07/candidate-02/LevelScope Standalone.app",
+  "app_sha256": "6af4aa654e8b5132eceb8965d7b2f909742eade9000a71fa237a0d5d1a240acc",
+  "hosts": {
+    "sequoia": {
+      "os": "15.7.9",
+      "architecture": "arm64",
+      "groups": [
+        {
+          "name": "timeline",
+          "checks": 1199,
+          "seconds": 2.2929442079999998,
+          "passed": true
+        },
+        {
+          "name": "ui",
+          "checks": 128,
+          "seconds": 15.789269749999999,
+          "passed": true
+        },
+        {
+          "name": "monitor",
+          "checks": 111,
+          "seconds": 0.8625895419999985,
+          "passed": true
+        }
+      ],
+      "total_checks": 1438
+    },
+    "high-sierra": {
+      "os": "10.13.6",
+      "architecture": "x86_64",
+      "groups": [
+        {
+          "name": "timeline",
+          "checks": 1199,
+          "seconds": 3.0424779610000003,
+          "passed": true
+        },
+        {
+          "name": "ui",
+          "checks": 128,
+          "seconds": 35.13940835,
+          "passed": true
+        },
+        {
+          "name": "monitor",
+          "checks": 111,
+          "seconds": 0.4866075500000022,
+          "passed": true
+        }
+      ],
+      "total_checks": 1438
+    }
+  },
+  "visual_review": "Both hosts: prominent legible overload banner; 0 dB removal draft/field beside unchanged applied gains; orange retained sample marker; measured TP-only event without fabricated sample exceedance. Candidate 01 superseded to correct a disabled field still displaying the applied value and misleading annotation-reset text.",
+  "prior_candidate_artifacts_preserved": 420,
+  "existing_listening_sessions_preserved_since_start": true,
+  "main_and_origin_main_unchanged": "22961f03de7919e1de631f8b13eb4b852108ac0b",
+  "physical_devices_opened": false,
+  "user_app_restarted": false,
+  "combined_qualification_complete": false,
+  "publication_authorized": false,
+  "qualification_scope": "Focused timeline, native proposal/history and injected monitor checks only. Existing unchanged M19/M20 numerical, long-media and video evidence remains dependency evidence; no physical-output/listening qualification performed."
+}

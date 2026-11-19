@@ -1,4 +1,5 @@
 #include "StandaloneRegionProposal.h"
+#include "RegionReviewFormatting.h"
 #include "StandaloneLraProposal.h"
 #include "StandaloneProcessing.h"
 #include "AppliedProposalExplanation.h"
@@ -115,6 +116,7 @@ juce::String RegionProposalReview::text()const
         s+="Forecast gate entry/exit: I "+juce::String(a.prediction.integratedEntered)+"/"+juce::String(a.prediction.integratedLeft)+"; LRA "+juce::String(a.prediction.lraEntered)+"/"+juce::String(a.prediction.lraLeft)+".\n";
         s+="Actual minus forecast (IL/LRA/P10/P95/sampled M):";for(const auto& error:a.signedPredictionError)s+=" "+(error?juce::String(*error,12):juce::String("unknown"));s+=". Empirical errors, not bounds.\n";
         s+="Changed support "+juce::String(a.plan.activity.affectedFrames)+" programme frames; "+juce::String(a.plan.activity.support.size())+" connected regions; max added "+juce::String(a.plan.activity.maximumAdditional,12)+" dB; absolute local dB*frames "+juce::String(a.plan.activity.absoluteDbFrames,12)+"; global "+juce::String(a.plan.globalDb,12)+" dB.\n";
+        s+=regionActivityDescription(a.plan,constraints.sampleRate,constraints.frames);
         for(const auto& part:a.plan.assignments)
         {
             s+="Root "+constraints.roots[part.geometry.root].id+"; "+part.geometry.reason+"; support ["+juce::String(part.geometry.support.begin)+", "+juce::String(part.geometry.support.end)+"); nominal cuts "+juce::String(part.nominal.begin);
@@ -124,6 +126,7 @@ juce::String RegionProposalReview::text()const
         }
     }
     for(const auto& why:restrictions)s+=why+"\n";
+    for(const auto& why:formation.reasons)s+="Formation limitation: "+why+"\n";
     return s+"Private assessment budget 3. Failed shortlist 0.01 LU is diagnostic ranking only, never a rule allowance.\nPreparation "+juce::String(preparationSeconds,3)+" s; auxiliary pass "+juce::String(sidecarSeconds,3)+" s; cached planning "+juce::String(planningSeconds,3)+" s; sidecar "+juce::String(sidecarBytes)+" bytes; bounded additional planning allocation estimate "+juce::String(planningBytes)+" bytes.\n";
 }
 

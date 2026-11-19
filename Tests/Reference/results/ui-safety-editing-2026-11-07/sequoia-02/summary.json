@@ -1,0 +1,62 @@
+{
+  "passed": true,
+  "os": "15.7.9",
+  "architecture": "arm64",
+  "source_commit": "3c853e4c855b047ed990a899fde586fa2d952aaf",
+  "build": "160f9c55675c802e775cd1fac308cc0caddbbf0a858547dde0efcdcbff412141",
+  "candidate_identity_sha256": "7b0b9ab8db98ab7cc7abc95956695e11a327b6263ca88c4b0941cdc7e634da60",
+  "requested_cases": [
+    "timeline",
+    "ui",
+    "monitor"
+  ],
+  "physical_devices_opened": false,
+  "combined_qualification_complete": false,
+  "inputs": {},
+  "groups": [
+    {
+      "name": "timeline",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-safety-editing-2026-11-07/candidate-02/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-safety-editing-2026-11-07/sequoia-02/timeline-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-safety-editing-2026-11-07/sequoia-02/timeline.json"
+      ],
+      "returncode": 0,
+      "seconds": 2.2929442079999998,
+      "passed": true,
+      "checks": 1199,
+      "receipt": "timeline.json",
+      "receipt_sha256": "825d14d17f10ad1ed37eab7558f11b284e4cc16edf1f8b080ea325478ad995b3"
+    },
+    {
+      "name": "ui",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-safety-editing-2026-11-07/candidate-02/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-safety-editing-2026-11-07/sequoia-02/ui-files"
+      ],
+      "returncode": 0,
+      "seconds": 15.789269749999999,
+      "passed": true,
+      "checks": 128,
+      "receipt": "ui-files/result.json",
+      "receipt_sha256": "1e4639baa84d841bbea6fe42b1b523fb3c819a930dc2f74c25e5c37e1211865d"
+    },
+    {
+      "name": "monitor",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-safety-editing-2026-11-07/candidate-02/bin/LevelScopeAuditionTests",
+        "--monitor-only",
+        "--report",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-safety-editing-2026-11-07/sequoia-02/monitor.json"
+      ],
+      "returncode": 0,
+      "seconds": 0.8625895419999985,
+      "passed": true,
+      "checks": 111,
+      "receipt": "monitor.json",
+      "receipt_sha256": "1a35b5b2cd73b2f20043023540017846345ec4af6407364c0379549fc3514bcb"
+    }
+  ]
+}

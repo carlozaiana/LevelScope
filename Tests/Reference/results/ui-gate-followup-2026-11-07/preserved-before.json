@@ -1,0 +1,15 @@
+{
+  "candidate-01": {
+    "identity_sha256": "a7a47eb58c52176c1b8b9be75c9f2fadefc552edf42cf0fea65e5a711a3c06da",
+    "artifacts_verified": 423
+  },
+  "candidate-02": {
+    "identity_sha256": "48b6bf3be2babdc3a8bac207a12ff69e6b2dddaace7e3d409a0806aad54cdf71",
+    "artifacts_verified": 423
+  },
+  "sessions": {
+    "m19": "1aff7053d53294f9b680937dee40df9338aab36768c8558c36d469fa2f31ef46",
+    "m20": "f2353fa966af439fbff7bf6fef02fea2ab13fe0c131795ec6ca81b6ffa3a1f1b"
+  },
+  "main": "22961f03de7919e1de631f8b13eb4b852108ac0b"
+}

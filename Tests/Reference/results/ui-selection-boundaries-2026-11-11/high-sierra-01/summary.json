@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "os": "10.13.6",
+  "architecture": "x86_64",
+  "source_commit": "c4b4620de88fb74f44016832fde8d9cba61160b6",
+  "build": "cc96acef55316d0ad8d0e1ced47587b1c5ec661b188ee9da1c00694d962284e9",
+  "candidate_identity_sha256": "901f0b589c08927cb642f0c84ff7b930fe39be1d87d12f696db05b73e23a45ed",
+  "requested_cases": [
+    "timeline",
+    "ui"
+  ],
+  "physical_devices_opened": false,
+  "combined_qualification_complete": false,
+  "inputs": {},
+  "groups": [
+    {
+      "name": "timeline",
+      "command": [
+        "/Users/fuzz/LevelScope-UI-selection-boundaries-2026-11-11/candidate-01/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/LevelScope-UI-selection-boundaries-2026-11-11/high-sierra-01/timeline-files",
+        "--output",
+        "/Users/fuzz/LevelScope-UI-selection-boundaries-2026-11-11/high-sierra-01/timeline.json"
+      ],
+      "returncode": 0,
+      "seconds": 4.2331464500000004,
+      "passed": true,
+      "checks": 2299,
+      "receipt": "timeline.json",
+      "receipt_sha256": "fb8ac33960f3d520df2fe64c2a32f4847a6186f15514cfbb3331ad744a127b04"
+    },
+    {
+      "name": "ui",
+      "command": [
+        "/Users/fuzz/LevelScope-UI-selection-boundaries-2026-11-11/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/LevelScope-UI-selection-boundaries-2026-11-11/high-sierra-01/ui-files"
+      ],
+      "returncode": 0,
+      "seconds": 41.801468709000005,
+      "passed": true,
+      "checks": 163,
+      "receipt": "ui-files/result.json",
+      "receipt_sha256": "a5bc6850148456140d4e788c2fcd092eeec658aa071a8a1c0b8b44174f0b0dd6"
+    }
+  ]
+}

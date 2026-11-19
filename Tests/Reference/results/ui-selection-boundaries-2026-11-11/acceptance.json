@@ -1,0 +1,90 @@
+{
+  "passed": true,
+  "source_commit": "c4b4620de88fb74f44016832fde8d9cba61160b6",
+  "measurement_build": "cc96acef55316d0ad8d0e1ced47587b1c5ec661b188ee9da1c00694d962284e9",
+  "candidate_identity_sha256": "901f0b589c08927cb642f0c84ff7b930fe39be1d87d12f696db05b73e23a45ed",
+  "app_path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-selection-boundaries-2026-11-11/candidate-01/LevelScope Standalone.app",
+  "app_sha256": "136d5207bc53f00a3d7e9ca03cb1395e78decb5a0660558f6624e2f027a561cc",
+  "hosts": {
+    "sequoia": {
+      "os": "15.7.9",
+      "architecture": "arm64",
+      "groups": [
+        {
+          "name": "timeline",
+          "command": [
+            "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-selection-boundaries-2026-11-11/candidate-01/bin/LevelScopeTimelineProgressTests",
+            "--root",
+            "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-selection-boundaries-2026-11-11/sequoia-01/timeline-files",
+            "--output",
+            "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-selection-boundaries-2026-11-11/sequoia-01/timeline.json"
+          ],
+          "returncode": 0,
+          "seconds": 3.152779375,
+          "passed": true,
+          "checks": 2299,
+          "receipt": "timeline.json",
+          "receipt_sha256": "c497fbfc756a579232b64eea13b84cb6e7c5145f1f346767cacfc7e64371cb07"
+        },
+        {
+          "name": "ui",
+          "command": [
+            "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-selection-boundaries-2026-11-11/candidate-01/bin/LevelScopeRegionUITests",
+            "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-selection-boundaries-2026-11-11/sequoia-01/ui-files"
+          ],
+          "returncode": 0,
+          "seconds": 18.579799334,
+          "passed": true,
+          "checks": 163,
+          "receipt": "ui-files/result.json",
+          "receipt_sha256": "1ed3cacfdd7f487f505ae0ab05f7684971354a4acc71835adbd7f332423e0303"
+        }
+      ],
+      "total_checks": 2462
+    },
+    "high-sierra": {
+      "os": "10.13.6",
+      "architecture": "x86_64",
+      "groups": [
+        {
+          "name": "timeline",
+          "command": [
+            "/Users/fuzz/LevelScope-UI-selection-boundaries-2026-11-11/candidate-01/bin/LevelScopeTimelineProgressTests",
+            "--root",
+            "/Users/fuzz/LevelScope-UI-selection-boundaries-2026-11-11/high-sierra-01/timeline-files",
+            "--output",
+            "/Users/fuzz/LevelScope-UI-selection-boundaries-2026-11-11/high-sierra-01/timeline.json"
+          ],
+          "returncode": 0,
+          "seconds": 4.2331464500000004,
+          "passed": true,
+          "checks": 2299,
+          "receipt": "timeline.json",
+          "receipt_sha256": "fb8ac33960f3d520df2fe64c2a32f4847a6186f15514cfbb3331ad744a127b04"
+        },
+        {
+          "name": "ui",
+          "command": [
+            "/Users/fuzz/LevelScope-UI-selection-boundaries-2026-11-11/candidate-01/bin/LevelScopeRegionUITests",
+            "/Users/fuzz/LevelScope-UI-selection-boundaries-2026-11-11/high-sierra-01/ui-files"
+          ],
+          "returncode": 0,
+          "seconds": 41.801468709000005,
+          "passed": true,
+          "checks": 163,
+          "receipt": "ui-files/result.json",
+          "receipt_sha256": "a5bc6850148456140d4e788c2fcd092eeec658aa071a8a1c0b8b44174f0b0dd6"
+        }
+      ],
+      "total_checks": 2462
+    }
+  },
+  "previous_package_artifacts_preserved": 425,
+  "main_unchanged": "22961f03de7919e1de631f8b13eb4b852108ac0b",
+  "physical_devices_opened": false,
+  "publication_authorized": true,
+  "main_integration_authorized": false,
+  "combined_qualification_complete": false,
+  "branch": "codex/timeline-selection-boundaries-2026-11-11",
+  "scope": "Native Undo/Redo focus after remeasurement; separate section selection and absolute gains with protected gaps; exact Current transition bands; shared pending boundary edits with confirmation, cancellation, staleness and one Undo. Unchanged core/DSP, proposal, export, device, video, long-duration and listening evidence reused."
+}

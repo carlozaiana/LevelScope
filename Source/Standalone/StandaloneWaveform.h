@@ -38,6 +38,7 @@ struct WaveformView
     std::shared_ptr<const waveform::Overview> data;
     bool accepted=false;
     WaveformProgress::State state=WaveformProgress::State::waiting;
+    std::optional<ProcessingPlan> previewBase;
 };
 // Runtime-only Source/Current cache. A single pool accounts for live, obsolete
 // worker-owned and shared overviews alike, including temporary display storage.
@@ -47,15 +48,17 @@ public:
     std::shared_ptr<WaveformProgress> begin(const WaveformBinding&);
     bool accept(const WaveformBinding& completed,const WaveformBinding& expected);
     void reject(const WaveformBinding&);
-    void synchronize(const WaveformBinding& source,const WaveformBinding& current,bool sourceValid,bool currentInitialized);
+    void synchronize(const WaveformBinding& source,const WaveformBinding& current,bool sourceValid,bool currentInitialized,const ProcessingPlan* currentPlan=nullptr);
     bool shareInitialCurrent(const AnalysisSnapshot& source,const AnalysisSnapshot& current);
     WaveformView view(const WaveformBinding&) const;
+    WaveformView gainPreview(const WaveformBinding& source) const;
     size_t retainedBytes() const {return budget->used();}
 private:
-    struct Slot {WaveformBinding binding;std::shared_ptr<const waveform::Overview> data;};
+    struct Slot {WaveformBinding binding;std::shared_ptr<const waveform::Overview> data;ProcessingPlan plan;};
     std::shared_ptr<waveform::Budget> budget=std::make_shared<waveform::Budget>();
     std::array<Slot,2> slots{};
     WaveformBinding active;
+    WaveformBinding lastSource;
     std::shared_ptr<WaveformProgress> progress;
 };
 }

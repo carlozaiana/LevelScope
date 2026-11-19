@@ -1,0 +1,10 @@
+{
+  "from_candidate_identity_sha256": "79220e02c5e2a1e7a3570ed3f61c35bab436872272edf9abaa85ee7e4659a154",
+  "to_candidate_identity_sha256": "fe4358c6bbda979f9b0b14d04d004c676d760cbfd4c77c72d141768955f9fc56",
+  "changed_artifacts": [
+    "bin/LevelScopeTimelineProgressTests",
+    "source/Tests/TimelineDeletionChecks.h",
+    "source/Tests/TimelineManualWorkflowChecks.h"
+  ],
+  "reason": "Only the timeline test harness changed to wait for actual asynchronous dialog dismissal. The entire application, every Source file, UI and requirements test binaries are byte-identical. Reuse those completed groups on each actual host."
+}

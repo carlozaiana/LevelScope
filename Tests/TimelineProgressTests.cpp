@@ -4,6 +4,7 @@
 #include "Standalone/TimelineTransport.h"
 #include "Standalone/TimelineLayout.h"
 #include <future>
+#include "Core/Measurement/GatePopulation.h"
 
 namespace
 {
@@ -149,15 +150,28 @@ void layout(StandaloneSessionModel& s,const juce::File& root)
     panel.setSize(1100,layout.comparison);panel.informationLine().setBounds(0,98,1100,TimelineLayout::informationHeight);panel.resized();
     for(auto* c:panel.getChildren())if(auto* field=dynamic_cast<juce::TextEditor*>(c))expect(field->getHeight()>=22&&field->getFont().getHeight()==16.f&&panel.getLocalBounds().contains(field->getBounds()),"compressed target fields retain font size and useful height");
     auto* presetButton=button(panel,"Save as preset...");expect(presetButton&&presetButton->getHeight()==22&&presetButton->getRight()<=230,"compact preset controls occupy the unused header cell without covering Target fields");
+    int targetY=-1,originalY=-1,currentY=-1;
+    for(auto* c:panel.getChildren())if(auto* label=dynamic_cast<juce::Label*>(c))
+    {if(label->getText()=="Target")targetY=label->getY();else if(label->getText().startsWith("Original"))originalY=label->getY();else if(label->getText().startsWith("Current"))currentY=label->getY();}
+    expect(targetY>=22&&targetY<originalY&&originalY<currentY,"measurement rows are Target, Original, Current");
+    panel.setSize(1100,210);expect(presetButton->getY()==0&&presetButton->getRight()<=230,"preset controls stay in the metric header at expanded height too");panel.setSize(1100,layout.comparison);
     expect(panel.informationLine().getY()==98&&panel.informationLine().getHeight()==22,"information line remains fixed outside compressed comparison above");
     imageOf(shell,root.getChildFile("compact.png"));
-    layout.moveTimeline(-130,600,6);expect(layout.inspector==std::min(TimelineLayout::minimumInspector+130,600-233-TimelineLayout::dividerHeight),"lower divider releases waveform height to inspector");layout.moveTimeline(-1000,600,8);expect(600-layout.inspector-8>=137+8*16,"lower divider preserves controls, scrollbar and channel labels");
-    layout.reset();expect(layout.inspector==TimelineLayout::minimumInspector&&layout.comparison==168,"Reset layout restores both dividers");
+    layout.moveTimeline(-130,600,6);expect(layout.inspector==std::min(TimelineLayout::defaultInspector+130,600-233-TimelineLayout::dividerHeight),"lower divider releases waveform height to inspector");layout.moveTimeline(-1000,600,8);expect(600-layout.inspector-8>=137+8*16,"lower divider preserves controls, scrollbar and channel labels");
+    layout.reset();layout.moveTimeline(100,900,2,170);expect(layout.inspector==190,"lower divider moves down from the default while lower controls remain scroll-accessible");layout.reset();expect(layout.inspector==TimelineLayout::defaultInspector&&layout.comparison==168,"Reset layout restores both dividers");
 }
 }
+#include "TimelineAppearanceChecks.h"
 #include "TimelineGainLaneChecks.h"
+namespace {
+#include "TimelineDeletionChecks.h"
+}
 #include "Standalone/AutomaticSourceAnalysis.h"
 #include "TimelineSectionImportChecks.h"
+namespace {
+#include "TimelineManualWorkflowChecks.h"
+#include "TimelineBatchEditingChecks.h"
+}
 int main(int argc,char** argv)
 {
     juce::ScopedJuceInitialiser_GUI gui;juce::String rootPath,output,error;bool passed=false;
@@ -166,7 +180,7 @@ int main(int argc,char** argv)
     {
         expect(rootPath.isNotEmpty(),"explicit owned fixture root");juce::File root(rootPath);expect(!root.exists()&&root.createDirectory().wasOk(),"create fresh test directory");
         reducedWindows();concurrentPublication();auto request=fixture(root.getChildFile("mix.wav"),48000,2,240013);StandaloneSessionModel s;expect(s.setValidatedSource(request.context.sourceFile,request.context.media),"verified interleaved source");s.sourceDocument.layout=request.context.fileLayout;
-        partial(s,root);navigation(s,root);layout(s,root);gainLaneChecks(s,root);transportFocusChecks(s);gainDenseChecks(root);presetDismissal(root);drawSections(root);rememberedOrders(root);passed=true;
+        partial(s,root);navigation(s,root);layout(s,root);appearanceChecks(root);manualWorkflowChecks(root);batchEditingChecks(root);gainPreviewChecks(root);deletionChecks(root);gainLaneChecks(s,root);transportFocusChecks(s);gainDenseChecks(root);presetDismissal(root);drawSections(root);rememberedOrders(root);passed=true;
     }
     catch(const std::exception& e){error=e.what();std::cerr<<error<<'\n';}
     auto* report=new juce::DynamicObject();report->setProperty("passed",passed);report->setProperty("failure",error);report->setProperty("checks",juce::var(checks));report->setProperty("build",LEVELSCOPE_MEASUREMENT_BUILD);report->setProperty("physical_devices_opened",false);report->setProperty("performance",juce::var(cases));

@@ -1,0 +1,132 @@
+{
+  "passed": true,
+  "app_commit": "a37938e33ba764ebffff901b7b4cf3864a5b95cc",
+  "package_commit": "086f316d8f7e1a6387697487f140ececf3dd60fc",
+  "measurement_build": "7910deeff7be3718604a7cd02992894f561266157b72d6d5d38f8dc8068705e5",
+  "app_sha256": "8b4bcc28e1a638ed958daa9adbf52cd06aba16adf9a6085ae20af693cd7599a4",
+  "test_only_changes_after_native_checks": [
+    "Tests/Qualification/M20/HoldoutChecks.h",
+    "Tests/RegionUIIntegrationTests.cpp"
+  ],
+  "hosts": {
+    "sequoia-01": {
+      "os": "15.7.9",
+      "architecture": "arm64",
+      "checks": 1505,
+      "groups": [
+        {
+          "name": "timeline",
+          "checks": 913,
+          "seconds": 1.9772983330000002
+        },
+        {
+          "name": "ui",
+          "checks": 103,
+          "seconds": 15.185177083000001
+        },
+        {
+          "name": "requirements",
+          "checks": 489,
+          "seconds": 28.76901775
+        }
+      ],
+      "native_cases": [
+        {
+          "complete_review_switch_p95_ms": 0.1128749996423721,
+          "actual_review_switch_p95_ms": 0.06366666592657566
+        },
+        {
+          "native_heartbeat_p95_ms": 28.56345833465457,
+          "native_heartbeat_max_ms": 128.5129583328962,
+          "samples": 94
+        },
+        {
+          "m20_dense_geometry_p95_ms": 12.42483333311975
+        },
+        {
+          "native_heartbeat_p95_ms": 30.41024999879301,
+          "native_heartbeat_max_ms": 358.7555833328515,
+          "samples": 143
+        },
+        {
+          "three_attempt_10000_interval_attachment_bytes": 3297549,
+          "complete_pages": 2280
+        },
+        {
+          "cancel_ms": 29.45341666787863
+        }
+      ]
+    },
+    "high-sierra-01": {
+      "os": "10.13.6",
+      "architecture": "x86_64",
+      "checks": 1505,
+      "groups": [
+        {
+          "name": "timeline",
+          "checks": 913,
+          "seconds": 2.406105513
+        },
+        {
+          "name": "ui",
+          "checks": 103,
+          "seconds": 32.80953142
+        },
+        {
+          "name": "requirements",
+          "checks": 489,
+          "seconds": 54.317217328000005
+        }
+      ],
+      "native_cases": [
+        {
+          "complete_review_switch_p95_ms": 0.202271000482142,
+          "actual_review_switch_p95_ms": 0.1432689996436238
+        },
+        {
+          "native_heartbeat_p95_ms": 50.76087699923664,
+          "native_heartbeat_max_ms": 609.8232859997079,
+          "samples": 118
+        },
+        {
+          "m20_dense_geometry_p95_ms": 34.43948899954557
+        },
+        {
+          "native_heartbeat_p95_ms": 69.98920900002122,
+          "native_heartbeat_max_ms": 1894.985620999709,
+          "samples": 60
+        },
+        {
+          "three_attempt_10000_interval_attachment_bytes": 3297555,
+          "complete_pages": 2280
+        },
+        {
+          "cancel_ms": 65.87369699962437
+        }
+      ]
+    }
+  },
+  "recovery": {
+    "checks": 65,
+    "m19": {
+      "session": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-inspection-2026-11-07/listening-recovery-02/MusicInBackAndForegroundSomeDialog/m19/inspection.levelscope",
+      "sha256": "1aff7053d53294f9b680937dee40df9338aab36768c8558c36d469fa2f31ef46"
+    },
+    "m20": {
+      "session": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-inspection-2026-11-07/listening-recovery-02/MusicInBackAndForegroundSomeDialog/m20/inspection.levelscope",
+      "sha256": "f2353fa966af439fbff7bf6fef02fea2ab13fe0c131795ec6ca81b6ffa3a1f1b"
+    },
+    "changed_session_guard": "clean expected rejection before measurements/writes",
+    "initial_harness_failure": "Null historical attachment assumed by test-only refresh; SIGSEGV. Changed M20 pathname holds later DialogAmbiance edits; app workflow is unaffected. Corrected by preflight and separate fixed-protocol music recovery."
+  },
+  "preserved": {
+    "build/m20-ui-integration/holdouts-01/MusicInBackAndForegroundSomeDialog/m19/inspection.levelscope": "17a531c4aa0c7affac825ffdb1bd396add20728846396257b35a5e2ab0bc8031",
+    "build/m20-ui-integration/holdouts-01/MusicInBackAndForegroundSomeDialog/m20/inspection.levelscope": "560d6e143fc4d5a51a404dc4ba66bc32b20cb99902656407bf81ea988a03cfb2",
+    "m20_candidate_04_artifacts": 414,
+    "main": "22961f03de7919e1de631f8b13eb4b852108ac0b"
+  },
+  "physical_devices_opened": false,
+  "listening_pending": true,
+  "publication_authorized": false,
+  "archive_note": "High Sierra tar reported unsupported extended attributes; the runner verified every listed artifact hash before and after all tests."
+}

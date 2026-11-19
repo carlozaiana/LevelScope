@@ -2,6 +2,7 @@
 #include "StandaloneSections.h"
 #include "StandaloneSessionModel.h"
 #include "MeasurementTimeline.h"
+#include "TimelineGainLane.h"
 #include "StandaloneMarkerImportPanel.h"
 
 namespace levelscope::standalone
@@ -12,11 +13,13 @@ public:
     explicit StandaloneSectionsPanel (StandaloneSessionModel&);
     ~StandaloneSectionsPanel() override;
     void synchronize() { timerCallback(); }
+    bool commitPendingGain(){return commitGain()&&manualLane.commitPending();}
     void suspend();
     void resume();
     MeasurementTimeline& timelineView() {return timeline;}
     void refreshMeasuredView() {timeline.setAnalysis(measured?measured->analysis:nullptr);}
     MeasurementDomain inspectionDomain() const {return domainBox.getSelectedId()==2?MeasurementDomain::currentState:MeasurementDomain::source;}
+    void selectInspectionDomain(MeasurementDomain domain){domainBox.setSelectedId(domain==MeasurementDomain::source?1:2,juce::dontSendNotification);synchronize();}
     void setPlaybackState(bool canPlay,bool canStop,const juce::String& domain);
     bool keyPressed(const juce::KeyPress& key) override {return timeline.keyPressed(key);}
     std::function<void()> onPlay,onStop;
@@ -39,11 +42,16 @@ private:
     juce::ComboBox domainBox, windowKind, windowScope;
     juce::TextButton splitButton { "Split at frame" }, moveButton { "Move end" }, mergeButton { "Merge next" }, renameButton { "Rename" };
     juce::TextButton rebuildButton { "Build sections" }, cancelButton { "Cancel sections" };
-    juce::TextButton draftGainButton { "Draft section gains" }, setGainButton { "Set draft gain" },
-        applyGainButton { "Apply section trims" }, discardGainButton { "Discard draft" };
+    juce::TextButton applyGainButton { "Apply section trims" }, discardGainButton { "Discard draft" };
     juce::TextButton importMarkers { "Import markers..." }, pasteMarkers { "Paste positions..." };
     std::unique_ptr<MarkerImportWindow> markerWindow;
     juce::TextEditor gainEditor;
+    juce::Label gainLabel;
+    bool gainDirty=false;
+    juce::String gainOpening,gainGeometry;
+    uint64_t gainAudioRevision=0;
+    bool commitGain();
+    SectionEditPrompt sectionEdit{session};
     juce::Label gainStatus;
     struct GainView final : juce::Component
     {
@@ -53,6 +61,7 @@ private:
     } gainView { session };
     juce::TextEditor boundary, name, summary, inspection;
     juce::Label boundaryLabel, nameLabel, status;
+    TimelineGainLane manualLane{session};
     MeasurementTimeline timeline;
     juce::ListBox sectionList { "Programme sections", this };
     struct Windows final : juce::ListBoxModel

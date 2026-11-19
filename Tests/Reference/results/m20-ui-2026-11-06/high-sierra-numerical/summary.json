@@ -1,0 +1,370 @@
+{
+  "passed": true,
+  "os": "10.13.6",
+  "architecture": "x86_64",
+  "source_commit": "f050893ea750c2e2d89254401a701c69d0541f8a",
+  "build": "c8acd24e4cf79c17ee30631e39aede547626dffd47b525739cf6e360f97a8393",
+  "candidate_identity_sha256": "63f5a26e8aec81f7c4e3632584e0b1f06d439c5988c8d396509191a92b2ecf85",
+  "requested_cases": [
+    "control-variants",
+    "core",
+    "stereo",
+    "surround",
+    "heterogeneous",
+    "failures",
+    "population",
+    "audio",
+    "gating",
+    "cinema",
+    "devices",
+    "preparation",
+    "timeline",
+    "requirements",
+    "section-smoke",
+    "legacy-core",
+    "legacy-stereo",
+    "legacy-failures",
+    "legacy-gating"
+  ],
+  "physical_devices_opened": false,
+  "combined_qualification_complete": false,
+  "inputs": {
+    "gating": {
+      "path": "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/gating/gating.wav",
+      "sha256": "be761575314f7b3f25031d67fbb2f4a0489238de011809f32ab4040ab3802935"
+    },
+    "cinema": {
+      "path": "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/media/cinema-27m-35m.wav",
+      "sha256": "cfd57bea9a108db850b4e371de0f299f3396fbc1730e58e357380042a3064dd5"
+    }
+  },
+  "groups": [
+    {
+      "name": "control-variants",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/control-variants-files",
+        "--variants"
+      ],
+      "returncode": 0,
+      "seconds": 41.523930569,
+      "passed": true,
+      "checks": 127,
+      "receipt": "control-variants-files/result.json",
+      "receipt_sha256": "1c132a4c74cd9f4fa766dd96856d6b93be9a20c005ad4d908856c0d9e7e54ca8"
+    },
+    {
+      "name": "core",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/candidate-01/bin/LevelScopeRegionPlanningTests",
+        "--group",
+        "core",
+        "--root",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/core-files",
+        "--output",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/core.json"
+      ],
+      "returncode": 0,
+      "seconds": 7.073542281000002,
+      "passed": true,
+      "checks": 110,
+      "receipt": "core.json",
+      "receipt_sha256": "98909c6f22df277666c0627f77c1edee7f4c547bad19b93a206de3f429b612ae"
+    },
+    {
+      "name": "stereo",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/candidate-01/bin/LevelScopeRegionPlanningTests",
+        "--group",
+        "stereo",
+        "--root",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/stereo-files",
+        "--output",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/stereo.json"
+      ],
+      "returncode": 0,
+      "seconds": 8.225310638000003,
+      "passed": true,
+      "checks": 48,
+      "receipt": "stereo.json",
+      "receipt_sha256": "85ff836d7cfe266f66078d71f45b6526a85c4293edf719346d2140d1dfda1815"
+    },
+    {
+      "name": "surround",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/candidate-01/bin/LevelScopeRegionPlanningTests",
+        "--group",
+        "surround",
+        "--root",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/surround-files",
+        "--output",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/surround.json"
+      ],
+      "returncode": 0,
+      "seconds": 16.04396634700001,
+      "passed": true,
+      "checks": 48,
+      "receipt": "surround.json",
+      "receipt_sha256": "e96c0cec8b0d74559d252b6f465dd23b58e816eece022cd41f2c1a2611bce8c0"
+    },
+    {
+      "name": "heterogeneous",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/candidate-01/bin/LevelScopeRegionPlanningTests",
+        "--group",
+        "heterogeneous",
+        "--root",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/heterogeneous-files",
+        "--output",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/heterogeneous.json"
+      ],
+      "returncode": 0,
+      "seconds": 12.920511862000012,
+      "passed": true,
+      "checks": 42,
+      "receipt": "heterogeneous.json",
+      "receipt_sha256": "7056e1b2066defea30408d84f74c62334131f242aaad1b0daf15d39af55af6bc"
+    },
+    {
+      "name": "failures",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/candidate-01/bin/LevelScopeRegionPlanningTests",
+        "--group",
+        "failures",
+        "--root",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/failures-files",
+        "--output",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/failures.json"
+      ],
+      "returncode": 0,
+      "seconds": 2.4975412069999976,
+      "passed": true,
+      "checks": 32,
+      "receipt": "failures.json",
+      "receipt_sha256": "27aecf7a002a3f38cdf818d30668f4bab502c90ed56fa2e7ed7c41e73572b417"
+    },
+    {
+      "name": "population",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/candidate-01/bin/LevelScopeRegionPlanningTests",
+        "--group",
+        "population",
+        "--root",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/population-files",
+        "--output",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/population.json"
+      ],
+      "returncode": 0,
+      "seconds": 2.7926919749999968,
+      "passed": true,
+      "checks": 2,
+      "receipt": "population.json",
+      "receipt_sha256": "46c3b7483998dca619bf0f0c68b08f6ae5aa6f6c1b4d2e6fc72625fb14cbb56c"
+    },
+    {
+      "name": "audio",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/candidate-01/bin/LevelScopeRegionPlanningTests",
+        "--group",
+        "audio",
+        "--root",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/audio-files",
+        "--output",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/audio.json"
+      ],
+      "returncode": 0,
+      "seconds": 12.875181190000006,
+      "passed": true,
+      "checks": 405,
+      "receipt": "audio.json",
+      "receipt_sha256": "4fa6657d32393f7c835cd5d2e3448db930fac88b393dc7156ac674300a505688"
+    },
+    {
+      "name": "gating",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/candidate-01/bin/LevelScopeRegionPlanningTests",
+        "--group",
+        "gating",
+        "--root",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/gating-files",
+        "--output",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/gating.json",
+        "--input",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/high-sierra-01/gating/gating.wav"
+      ],
+      "returncode": 0,
+      "seconds": 63.180891075999995,
+      "passed": true,
+      "checks": 17,
+      "receipt": "gating.json",
+      "receipt_sha256": "1761d29763ce3490ae61c5dd454916c09f678ac2a8b7d04786419d73c354f428"
+    },
+    {
+      "name": "cinema",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/candidate-01/bin/LevelScopeRegionPlanningTests",
+        "--group",
+        "cinema",
+        "--root",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/cinema-files",
+        "--output",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/cinema.json",
+        "--input",
+        "/Users/fuzz/LevelScope-M19-qualification-2026-11-05/media/cinema-27m-35m.wav"
+      ],
+      "returncode": 0,
+      "seconds": 75.15520565899999,
+      "passed": true,
+      "checks": 14,
+      "receipt": "cinema.json",
+      "receipt_sha256": "0575712e50cf878f1d27595b418d7a3e06340c3307c283d193b780002366826b"
+    },
+    {
+      "name": "devices",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/candidate-01/bin/LevelScopeDeviceSettingsTests",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/devices-files"
+      ],
+      "returncode": 0,
+      "seconds": 1.327867169000001,
+      "passed": true,
+      "checks": 445,
+      "receipt": "devices-files/result.json",
+      "receipt_sha256": "20d4ebc07d1cb1e3c5ca95c139eadf7dfe1636a31b93eecff57f624616009123"
+    },
+    {
+      "name": "preparation",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/candidate-01/bin/LevelScopePreparationFeedbackTests",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/preparation-files"
+      ],
+      "returncode": 0,
+      "seconds": 5.4289670489999935,
+      "passed": true,
+      "checks": 946,
+      "receipt": "preparation-files/result.json",
+      "receipt_sha256": "245732876c14314f2c2f2fbc7092601a773b0617b88aa551b85366929ab1523c"
+    },
+    {
+      "name": "timeline",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/candidate-01/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/timeline-files",
+        "--output",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/timeline.json"
+      ],
+      "returncode": 0,
+      "seconds": 2.146396675999995,
+      "passed": true,
+      "checks": 889,
+      "receipt": "timeline.json",
+      "receipt_sha256": "6748459611f7afbcf19a27e9ad2d0c400ea183818cd77d0437b5d880cd731561"
+    },
+    {
+      "name": "requirements",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/candidate-01/bin/LevelScopeJobRequirementsTests",
+        "--root",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/requirements-files",
+        "--output",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/requirements.json"
+      ],
+      "returncode": 0,
+      "seconds": 54.51977680499999,
+      "passed": true,
+      "checks": 489,
+      "receipt": "requirements.json",
+      "receipt_sha256": "a5256c982023fbe0709ff7c69f6feb86e84f809f503ac923be6add20b130e613"
+    },
+    {
+      "name": "section-smoke",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/candidate-01/bin/LevelScopeSectionProposalTests",
+        "--root",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/section-smoke-files",
+        "--output",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/section-smoke.json",
+        "--smoke"
+      ],
+      "returncode": 0,
+      "seconds": 27.021738631999995,
+      "passed": true,
+      "checks": 366,
+      "receipt": "section-smoke.json",
+      "receipt_sha256": "6e0eaea19ede8da6e2b7e2c761ba75bc23475f9a7cf69d92463e3ac6649061b5"
+    },
+    {
+      "name": "legacy-core",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/candidate-01/bin/LevelScopeLraProposalTests",
+        "--group",
+        "core",
+        "--root",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/legacy-core-files",
+        "--output",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/legacy-core.json"
+      ],
+      "returncode": 0,
+      "seconds": 0.0459131200000229,
+      "passed": true,
+      "checks": 22,
+      "receipt": "legacy-core.json",
+      "receipt_sha256": "a552ff7016be9ab8ff50ac8ce788f9174888be7539ed782365e6b687253dddbe"
+    },
+    {
+      "name": "legacy-stereo",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/candidate-01/bin/LevelScopeLraProposalTests",
+        "--group",
+        "stereo",
+        "--root",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/legacy-stereo-files",
+        "--output",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/legacy-stereo.json"
+      ],
+      "returncode": 0,
+      "seconds": 19.674220466999998,
+      "passed": true,
+      "checks": 155,
+      "receipt": "legacy-stereo.json",
+      "receipt_sha256": "a31c55dd4998dc7d0f0ef9e3f3d8f094abf8789a50e1874a9bdfd32e0e59159c"
+    },
+    {
+      "name": "legacy-failures",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/candidate-01/bin/LevelScopeLraProposalTests",
+        "--group",
+        "failures",
+        "--root",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/legacy-failures-files",
+        "--output",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/legacy-failures.json"
+      ],
+      "returncode": 0,
+      "seconds": 32.93312555900002,
+      "passed": true,
+      "checks": 74,
+      "receipt": "legacy-failures.json",
+      "receipt_sha256": "d1c6788fbf0f98f19f3bd5c0223ededfedd1219c5ca40aa5779662c4cd1d062c"
+    },
+    {
+      "name": "legacy-gating",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/candidate-01/bin/LevelScopeLraProposalTests",
+        "--group",
+        "gating",
+        "--root",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/legacy-gating-files",
+        "--output",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-remainder-01/legacy-gating.json"
+      ],
+      "returncode": 0,
+      "seconds": 74.381529785,
+      "passed": true,
+      "checks": 16,
+      "receipt": "legacy-gating.json",
+      "receipt_sha256": "292340f6486bcaf1487a04b81b786d82ab498b486b4ed7343f4f8800133635ac"
+    }
+  ]
+}

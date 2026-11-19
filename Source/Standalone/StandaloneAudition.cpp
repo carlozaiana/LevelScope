@@ -73,6 +73,7 @@ int64_t StandaloneAudition::positionFrames() const
 void StandaloneAudition::sourceChanged (const MediaInfo& media)
 {
     stop();
+    overloadWarning.clear();
     preparedSource.reset(); expectedIdentity.clear();
     fault = ErrorCode::none;
     sourceRate = static_cast<int64_t> (media.sampleRate);
@@ -271,6 +272,7 @@ void StandaloneAudition::disconnect()
 void StandaloneAudition::synchronize (const AuditionRequest& request, const OutputRouting& routing)
 {
     const auto key = request.identity();
+    if(key!=expectedIdentity)overloadWarning.clear();
     if (active() && (key != expectedIdentity
         || ((state == AuditionState::playing || state == AuditionState::buffering) && routing.fileToDevice != playingRouting.fileToDevice)
         || (state == AuditionState::preparing && playAfterPreparation && routing.fileToDevice != pendingRouting.fileToDevice)))
@@ -347,6 +349,7 @@ juce::String StandaloneAudition::play (const AuditionRequest& request, const Out
 
 void StandaloneAudition::startDecoder (const AuditionRequest& request, const OutputRouting& routing)
 {
+    overloadWarning.clear();
     playingRequest = request; playingRouting = routing;
     const auto media = request.context.media;
     fifo.reset (media.channels, routing);
@@ -462,6 +465,17 @@ void StandaloneAudition::poll (bool picturePrerolled)
         || (state == AuditionState::playing && ! device->isPlaying());
     if (failed || (fifo.endOfFile.load() && fifo.drained() && positionFrames() >= sourceFrames))
     {
+        if(fifo.overloaded())
+        {
+            const auto channel=fifo.faultChannel();
+            const auto frame=startFrame+static_cast<int64_t>(fifo.faultFrame());
+            const auto role=channel>=0&&channel<playingRequest.context.fileLayout.count
+                ?juce::AudioChannelSet::getChannelTypeName(playingRequest.context.fileLayout.roles[size_t(channel)]):juce::String("Unknown role");
+            const auto output=channel>=0&&channel<maxChannels?playingRouting.fileToDevice[size_t(channel)]+1:0;
+            overloadWarning="PLAYBACK STOPPED - Monitor overload: "+role+" (channel "+juce::String(channel+1)
+                +", output "+juce::String(output)+"), "+juce::String(double(frame)/sourceRate,6)+" s (frame "+juce::String(frame)+").\n"
+                +"Lower monitor volume in Audio setup, then press Play again. Processing gain is unchanged.";
+        }
         if (decodeFailed.load()) fault = workerFailure;
         heldFrame = failed ? positionFrames() : sourceFrames;
         stopWorker();

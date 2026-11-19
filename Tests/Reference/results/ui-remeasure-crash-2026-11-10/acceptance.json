@@ -1,0 +1,88 @@
+{
+  "passed": true,
+  "source_commit": "5ac6ac57530004ab28167e65e63fda7475b09b68",
+  "measurement_build": "cbe021a9ba51b864d8234bd1a66d5a04d459e5738da7a26825eeeabfdb10e271",
+  "candidate_identity_sha256": "49267208818df14228cae7385b2e44070f9bc8dd57693d512968bae80ceeba9a",
+  "app_path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-remeasure-crash-2026-11-10/candidate-01/LevelScope Standalone.app",
+  "app_sha256": "ded6a692d817f563ee453af734c1be480968544de9ae191b4e5ec60ec20cb97c",
+  "hosts": {
+    "sequoia": {
+      "os": "15.7.9",
+      "architecture": "arm64",
+      "groups": [
+        {
+          "name": "timeline",
+          "command": [
+            "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-remeasure-crash-2026-11-10/candidate-01/bin/LevelScopeTimelineProgressTests",
+            "--root",
+            "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-remeasure-crash-2026-11-10/sequoia-01/timeline-files",
+            "--output",
+            "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-remeasure-crash-2026-11-10/sequoia-01/timeline.json"
+          ],
+          "returncode": 0,
+          "seconds": 2.791428292,
+          "passed": true,
+          "checks": 2001,
+          "receipt": "timeline.json",
+          "receipt_sha256": "de01351b3b5dbfac9bdecd8fd38fe4569b3b9465b53b6bb04dcda120d2a3cb0c"
+        },
+        {
+          "name": "ui",
+          "command": [
+            "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-remeasure-crash-2026-11-10/candidate-01/bin/LevelScopeRegionUITests",
+            "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-remeasure-crash-2026-11-10/sequoia-01/ui-files"
+          ],
+          "returncode": 0,
+          "seconds": 18.296690875,
+          "passed": true,
+          "checks": 153,
+          "receipt": "ui-files/result.json",
+          "receipt_sha256": "6b70a14a6e4603dd4d5f2baea570618a26d386a18d06890874fbd25bc063ec8a"
+        }
+      ],
+      "total_checks": 2154
+    },
+    "high-sierra": {
+      "os": "10.13.6",
+      "architecture": "x86_64",
+      "groups": [
+        {
+          "name": "timeline",
+          "command": [
+            "/Users/fuzz/LevelScope-UI-remeasure-crash-2026-11-10/candidate-01/bin/LevelScopeTimelineProgressTests",
+            "--root",
+            "/Users/fuzz/LevelScope-UI-remeasure-crash-2026-11-10/high-sierra-01/timeline-files",
+            "--output",
+            "/Users/fuzz/LevelScope-UI-remeasure-crash-2026-11-10/high-sierra-01/timeline.json"
+          ],
+          "returncode": 0,
+          "seconds": 3.549579003,
+          "passed": true,
+          "checks": 2001,
+          "receipt": "timeline.json",
+          "receipt_sha256": "24477401c23a72e57a4a5fe33b3be11f1eb83e1c438786c446afe0de229584a3"
+        },
+        {
+          "name": "ui",
+          "command": [
+            "/Users/fuzz/LevelScope-UI-remeasure-crash-2026-11-10/candidate-01/bin/LevelScopeRegionUITests",
+            "/Users/fuzz/LevelScope-UI-remeasure-crash-2026-11-10/high-sierra-01/ui-files"
+          ],
+          "returncode": 0,
+          "seconds": 40.49548282,
+          "passed": true,
+          "checks": 153,
+          "receipt": "ui-files/result.json",
+          "receipt_sha256": "e47bfeac5e938641902aac53c207833bb4605236f8d61eefa3d3b5949d4168ed"
+        }
+      ],
+      "total_checks": 2154
+    }
+  },
+  "previous_package_artifacts_preserved": 428,
+  "main_unchanged": "22961f03de7919e1de631f8b13eb4b852108ac0b",
+  "physical_devices_opened": false,
+  "publication_authorized": false,
+  "combined_qualification_complete": false,
+  "scope": "Fix and regression coverage for retiring a gain-preview waveform at measurement preparation and programme replacement. Reproduces original SIGSEGV before fix; tests immediate paint after +5 dB and Re-measure, completion, cancellation, unavailable data and fresh binding. Existing target, measurement/DSP, device/routing, long-duration, video and listening evidence reused."
+}

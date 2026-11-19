@@ -1,0 +1,18 @@
+{
+  "baseline": "172bf6088f85b3523f25ffd4328c9e8a5a43f8cc",
+  "main": "22961f03de7919e1de631f8b13eb4b852108ac0b",
+  "preserved_app_identity_sha256": "8910bd611caf919f5d6d327df0e541237bf15b26d9603a6003c515cda1e77410",
+  "preserved_artifacts": 420,
+  "listening_sessions": {
+    "m19": {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-inspection-2026-11-07/listening-gate-04/m19/inspection.levelscope",
+      "sha256": "58c19211870f8f062b00d91cb1dc5c1fb1e1f58190cbaeb5ab1a6585f2c0110f",
+      "matches_previous_receipt": true
+    },
+    "m20": {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-inspection-2026-11-07/listening-gate-04/m20/inspection.levelscope",
+      "sha256": "86a8d845fb6c1eced2a2fc31364a7562a5735842da2c07e525f29a96dcfe075b",
+      "matches_previous_receipt": false
+    }
+  }
+}

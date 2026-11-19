@@ -1,0 +1,384 @@
+{
+  "passed": true,
+  "os": "15.7.9",
+  "architecture": "arm64",
+  "source_commit": "f050893ea750c2e2d89254401a701c69d0541f8a",
+  "build": "c8acd24e4cf79c17ee30631e39aede547626dffd47b525739cf6e360f97a8393",
+  "candidate_identity_sha256": "63f5a26e8aec81f7c4e3632584e0b1f06d439c5988c8d396509191a92b2ecf85",
+  "requested_cases": [
+    "ui",
+    "control-variants",
+    "core",
+    "stereo",
+    "surround",
+    "heterogeneous",
+    "failures",
+    "population",
+    "audio",
+    "gating",
+    "cinema",
+    "devices",
+    "preparation",
+    "timeline",
+    "requirements",
+    "section-smoke",
+    "legacy-core",
+    "legacy-stereo",
+    "legacy-failures",
+    "legacy-gating"
+  ],
+  "physical_devices_opened": false,
+  "combined_qualification_complete": false,
+  "inputs": {
+    "gating": {
+      "path": "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/fixtures-01/legacy-gating/gating.wav",
+      "sha256": "be761575314f7b3f25031d67fbb2f4a0489238de011809f32ab4040ab3802935"
+    },
+    "cinema": {
+      "path": "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/media/cinema-27m-35m.wav",
+      "sha256": "cfd57bea9a108db850b4e371de0f299f3396fbc1730e58e357380042a3064dd5"
+    }
+  },
+  "groups": [
+    {
+      "name": "ui",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/ui-files"
+      ],
+      "returncode": 0,
+      "seconds": 14.374480292000001,
+      "passed": true,
+      "checks": 91,
+      "receipt": "ui-files/result.json",
+      "receipt_sha256": "b7b6306a3cd2bf2c780bcd9cef134aecae603482bdcc09474be115fea8ea6583"
+    },
+    {
+      "name": "control-variants",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/control-variants-files",
+        "--variants"
+      ],
+      "returncode": 0,
+      "seconds": 22.951984374999995,
+      "passed": true,
+      "checks": 127,
+      "receipt": "control-variants-files/result.json",
+      "receipt_sha256": "95e45f0064f6095567653c59153bc5e2ce03701177bae9f2f491c9e39ae8a0e8"
+    },
+    {
+      "name": "core",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/candidate-01/bin/LevelScopeRegionPlanningTests",
+        "--group",
+        "core",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/core-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/core.json"
+      ],
+      "returncode": 0,
+      "seconds": 3.206013666000004,
+      "passed": true,
+      "checks": 110,
+      "receipt": "core.json",
+      "receipt_sha256": "98909c6f22df277666c0627f77c1edee7f4c547bad19b93a206de3f429b612ae"
+    },
+    {
+      "name": "stereo",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/candidate-01/bin/LevelScopeRegionPlanningTests",
+        "--group",
+        "stereo",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/stereo-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/stereo.json"
+      ],
+      "returncode": 0,
+      "seconds": 4.555651042000001,
+      "passed": true,
+      "checks": 48,
+      "receipt": "stereo.json",
+      "receipt_sha256": "3bf1d4383154a4a4c4684fdc34c61df589945a604a1248c6bae3f7bd59c0499f"
+    },
+    {
+      "name": "surround",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/candidate-01/bin/LevelScopeRegionPlanningTests",
+        "--group",
+        "surround",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/surround-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/surround.json"
+      ],
+      "returncode": 0,
+      "seconds": 8.051266583,
+      "passed": true,
+      "checks": 48,
+      "receipt": "surround.json",
+      "receipt_sha256": "8362058be2b625bde05adf1ecfa462cbe96107d5518df3d00d29d16e46217881"
+    },
+    {
+      "name": "heterogeneous",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/candidate-01/bin/LevelScopeRegionPlanningTests",
+        "--group",
+        "heterogeneous",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/heterogeneous-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/heterogeneous.json"
+      ],
+      "returncode": 0,
+      "seconds": 7.040247999999998,
+      "passed": true,
+      "checks": 42,
+      "receipt": "heterogeneous.json",
+      "receipt_sha256": "a0a76c79cfefd70b78678e87480b1e88ff067fe7d946cdf7aa82c9ea509948cc"
+    },
+    {
+      "name": "failures",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/candidate-01/bin/LevelScopeRegionPlanningTests",
+        "--group",
+        "failures",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/failures-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/failures.json"
+      ],
+      "returncode": 0,
+      "seconds": 1.3934154579999998,
+      "passed": true,
+      "checks": 32,
+      "receipt": "failures.json",
+      "receipt_sha256": "27aecf7a002a3f38cdf818d30668f4bab502c90ed56fa2e7ed7c41e73572b417"
+    },
+    {
+      "name": "population",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/candidate-01/bin/LevelScopeRegionPlanningTests",
+        "--group",
+        "population",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/population-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/population.json"
+      ],
+      "returncode": 0,
+      "seconds": 1.8181062080000032,
+      "passed": true,
+      "checks": 3,
+      "receipt": "population.json",
+      "receipt_sha256": "32e67b1a607019c954b16ceb5b37f5869ae7f5610384dfa799cf351e72c29945"
+    },
+    {
+      "name": "audio",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/candidate-01/bin/LevelScopeRegionPlanningTests",
+        "--group",
+        "audio",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/audio-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/audio.json"
+      ],
+      "returncode": 0,
+      "seconds": 6.614925457999995,
+      "passed": true,
+      "checks": 405,
+      "receipt": "audio.json",
+      "receipt_sha256": "4fa6657d32393f7c835cd5d2e3448db930fac88b393dc7156ac674300a505688"
+    },
+    {
+      "name": "gating",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/candidate-01/bin/LevelScopeRegionPlanningTests",
+        "--group",
+        "gating",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/gating-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/gating.json",
+        "--input",
+        "/Users/fuzz/Developer/LevelScope/build/m20-logic-2026-11-06/fixtures-01/legacy-gating/gating.wav"
+      ],
+      "returncode": 0,
+      "seconds": 34.845485666,
+      "passed": true,
+      "checks": 17,
+      "receipt": "gating.json",
+      "receipt_sha256": "9718b41defb934d40448fe594c25ea528b845fa7c88a33577ed3bb05b3389b33"
+    },
+    {
+      "name": "cinema",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/candidate-01/bin/LevelScopeRegionPlanningTests",
+        "--group",
+        "cinema",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/cinema-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/cinema.json",
+        "--input",
+        "/Users/fuzz/Developer/LevelScope/build/m19-qualification-2026-11-05/media/cinema-27m-35m.wav"
+      ],
+      "returncode": 0,
+      "seconds": 36.69286762500002,
+      "passed": true,
+      "checks": 14,
+      "receipt": "cinema.json",
+      "receipt_sha256": "31b55def6bb8ebbe1ca5d629bf73f318032ba0ef364f24268eddade3f109bb9f"
+    },
+    {
+      "name": "devices",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/candidate-01/bin/LevelScopeDeviceSettingsTests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/devices-files"
+      ],
+      "returncode": 0,
+      "seconds": 1.0266551670000013,
+      "passed": true,
+      "checks": 445,
+      "receipt": "devices-files/result.json",
+      "receipt_sha256": "c7c5d0c3a0a8c8de0c8c8e7e4f3d471c16e2f61b47956198dc524fa75879e3fb"
+    },
+    {
+      "name": "preparation",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/candidate-01/bin/LevelScopePreparationFeedbackTests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/preparation-files"
+      ],
+      "returncode": 0,
+      "seconds": 2.598994916999999,
+      "passed": true,
+      "checks": 946,
+      "receipt": "preparation-files/result.json",
+      "receipt_sha256": "245732876c14314f2c2f2fbc7092601a773b0617b88aa551b85366929ab1523c"
+    },
+    {
+      "name": "timeline",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/candidate-01/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/timeline-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/timeline.json"
+      ],
+      "returncode": 0,
+      "seconds": 2.099761958999977,
+      "passed": true,
+      "checks": 889,
+      "receipt": "timeline.json",
+      "receipt_sha256": "18c3daf8f5647325328447ca828f83d6412874cf48c148c706b7ad031e11a823"
+    },
+    {
+      "name": "requirements",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/candidate-01/bin/LevelScopeJobRequirementsTests",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/requirements-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/requirements.json"
+      ],
+      "returncode": 0,
+      "seconds": 29.057851,
+      "passed": true,
+      "checks": 489,
+      "receipt": "requirements.json",
+      "receipt_sha256": "7ac63d0441d80ded37aabf7248a5dab746a64a735643fd30c02a632eb8bfd02e"
+    },
+    {
+      "name": "section-smoke",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/candidate-01/bin/LevelScopeSectionProposalTests",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/section-smoke-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/section-smoke.json",
+        "--smoke"
+      ],
+      "returncode": 0,
+      "seconds": 12.268937958999999,
+      "passed": true,
+      "checks": 366,
+      "receipt": "section-smoke.json",
+      "receipt_sha256": "197d216c15b589424b7b727f847ea7db1eb6885592682ed56fc8a69edf4734b8"
+    },
+    {
+      "name": "legacy-core",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/candidate-01/bin/LevelScopeLraProposalTests",
+        "--group",
+        "core",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/legacy-core-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/legacy-core.json"
+      ],
+      "returncode": 0,
+      "seconds": 0.49621083400001,
+      "passed": true,
+      "checks": 22,
+      "receipt": "legacy-core.json",
+      "receipt_sha256": "b235b33671265ba578cd79b00eb02d40fa287690cc28d7c56916a9d5662525e5"
+    },
+    {
+      "name": "legacy-stereo",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/candidate-01/bin/LevelScopeLraProposalTests",
+        "--group",
+        "stereo",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/legacy-stereo-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/legacy-stereo.json"
+      ],
+      "returncode": 0,
+      "seconds": 10.725368709000008,
+      "passed": true,
+      "checks": 155,
+      "receipt": "legacy-stereo.json",
+      "receipt_sha256": "a557e06355c2d8a4542aaf2804cdbbe1f3cab4e364ba524ad1f1d609dd2448ef"
+    },
+    {
+      "name": "legacy-failures",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/candidate-01/bin/LevelScopeLraProposalTests",
+        "--group",
+        "failures",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/legacy-failures-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/legacy-failures.json"
+      ],
+      "returncode": 0,
+      "seconds": 18.176317833000013,
+      "passed": true,
+      "checks": 74,
+      "receipt": "legacy-failures.json",
+      "receipt_sha256": "6fef81705c12e8e586a67cc5d174727b64b059bb77354ae3695091b1bdd1b1cf"
+    },
+    {
+      "name": "legacy-gating",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/candidate-01/bin/LevelScopeLraProposalTests",
+        "--group",
+        "gating",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/legacy-gating-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/sequoia-01/legacy-gating.json"
+      ],
+      "returncode": 0,
+      "seconds": 41.18836529099997,
+      "passed": true,
+      "checks": 16,
+      "receipt": "legacy-gating.json",
+      "receipt_sha256": "292340f6486bcaf1487a04b81b786d82ab498b486b4ed7343f4f8800133635ac"
+    }
+  ]
+}

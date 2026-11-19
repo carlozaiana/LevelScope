@@ -16,6 +16,9 @@
 #include "AppliedProposalExplanation.h"
 #include "StandaloneAuditionRequest.h"
 #include "StandaloneSections.h"
+#include "SectionGainEditing.h"
+#include "ManualEditHistory.h"
+#include "BoundaryEditing.h"
 #include "Core/Proposal/MarkerImport.h"
 #include "Core/Proposal/Model/JobRequirements.h"
 #include <functional>
@@ -187,7 +190,7 @@ public:
     std::function<bool()> auditionBusy;
     MeasurementDomain auditionDomain = MeasurementDomain::source;
     bool persistenceLoading = false;
-    bool audioEditsBlocked() const { return persistenceLoading || (auditionBusy && auditionBusy()); }
+    bool audioEditsBlocked() const { return persistenceLoading || (auditionBusy && auditionBusy()) || boundaryBatch.has_value(); }
     bool selectAuditionDomain (MeasurementDomain domain)
     {
         if (domain != MeasurementDomain::source && domain != MeasurementDomain::currentState) return false;
@@ -221,7 +224,7 @@ public:
     std::shared_ptr<const AnalysisSnapshot> unresolvedSourceCache, unresolvedCurrentCache;
 
     int selectedTargetProfileIndex = 0;
-    proposal::Applicability programmeApplicability = proposal::Applicability::unconfirmed;
+    proposal::Applicability programmeApplicability = proposal::Applicability::preProducedLinearProgramme;
     uint64_t revision = 0;
     juce::String sessionId = juce::Uuid().toString(); // unique runtime opening, never loaded from disk
     juce::String documentId = juce::Uuid().toString(), programmeId = juce::Uuid().toString();
@@ -294,6 +297,8 @@ public:
         proposal::SectionMap annotations;
         juce::String geometry, runtime;
         uint64_t audioRevision=0, editSerial=0;
+        bool processingRegions=false;
+        std::optional<proposal::SectionMap> rollbackAnnotations;
     };
     std::optional<SectionTrimDraft> sectionTrimDraft;
     juce::String sectionTrimNotice="No section-gain draft. Applied processing is independent of annotations.";
@@ -317,6 +322,94 @@ public:
         c.processing.sectionGains=probe;c.processing.schemaVersion=2;c.processing.engineVersion=processing::SectionGainPlan::version;
         return ProgrammeGainProcessor::validationError(c);
     }
+    std::shared_ptr<ManualEditHistory> manualHistory;
+    std::optional<BoundaryEditBatch> boundaryBatch;
+    uint64_t boundaryEditSerial=0;
+    ManualEditState manualState() const {return {sectionDocument.map(),currentStateDocument.sectionGains,currentStateDocument.staticGainDb};}
+    bool boundaryEditAllowed() const
+    {
+        return !(auditionBusy&&auditionBusy())&&!job.isActive()&&!persistenceLoading&&!sectionTrimDraft&&!sourceContentInvalid
+            &&sourceDocument.hasSource&&sourceDocument.matchesFileStamps()&&sectionDocument.map().valid()
+            &&(!sectionProposal||lastAppliedProposalBinding==sectionProposal->identity());
+    }
+    bool manualEditAllowed() const {return !boundaryBatch&&boundaryEditAllowed();}
+    bool boundaryBatchFresh() const {return boundaryBatch&&boundaryBatch->runtime==sessionId&&boundaryBatch->revision==revision&&boundaryBatch->before==manualState();}
+    size_t pendingBoundaryCount() const
+    {size_t n=0;if(boundaryBatch)for(size_t i=0;i<boundaryBatch->next.map.sections.size();++i)n+=boundaryBatch->before.map.sections[i].end!=boundaryBatch->next.map.sections[i].end;return n;}
+    void cancelBoundaryBatch(){if(boundaryBatch){boundaryBatch.reset();++boundaryEditSerial;sectionTrimNotice="Boundary changes cancelled. Applied gains retained.";}}
+    bool stageBoundary(size_t index,int64_t frame)
+    {
+        if(!boundaryEditAllowed())return false;
+        if(boundaryBatch&&!boundaryBatchFresh()){cancelBoundaryBatch();return false;}
+        const auto before=boundaryBatch?boundaryBatch->before:manualState();auto map=boundaryBatch?boundaryBatch->next.map:before.map;
+        if(index+1>=map.sections.size()||frame<=map.sections[index].begin||frame>=map.sections[index+1].end)return false;
+        map.sections[index].end=frame;map.sections[index+1].begin=frame;
+        auto next=moveBoundaryGains(before,map);if(!next){sectionTrimNotice="Boundary not moved: leave enough space for the gain transitions.";return false;}
+        boundaryBatch=BoundaryEditBatch{before,*next,sessionId,revision};++boundaryEditSerial;
+        if(!pendingBoundaryCount()){cancelBoundaryBatch();return true;}
+        sectionTrimNotice=juce::String(pendingBoundaryCount())+(pendingBoundaryCount()==1?" boundary change pending":" boundary changes pending")+" - Enter to review, Esc to cancel.";return true;
+    }
+    bool applyBoundaryBatch()
+    {
+        if(!boundaryEditAllowed()||!boundaryBatchFresh()){cancelBoundaryBatch();return false;}
+        auto pending=*boundaryBatch;boundaryBatch.reset();
+        if(!commitManualEdit(pending.next,"Move gain with sections")){boundaryBatch=std::move(pending);return false;}
+        ++boundaryEditSerial;return true;
+    }
+    bool installManualState(ManualEditState next)
+    {
+        auto before=manualState();
+        const bool changedAudio=before.globalDb!=next.globalDb
+            ||(before.gains?before.gains->audioKey():juce::String())!=(next.gains?next.gains->audioKey():juce::String());
+        next.map.revision=sectionDocument.map().revision+1;
+        if(!sectionDocument.restore(next.map,before.map.inputIdentity))return false;
+        if(sectionProposal&&lastAppliedProposalBinding==sectionProposal->identity())discardSectionProposal();
+        currentStateDocument.sectionGains=next.gains;currentStateDocument.staticGainDb=next.globalDb;
+        if(changedAudio)
+        {
+            currentStateDocument.sectionGainAnnotations=next.gains?section_edit::provenance(*next.gains,next.map):proposal::SectionMap{};
+            invalidateCurrentProcessing();
+        }
+        else documentChanged();
+        sectionTrimNotice=changedAudio?"Gain applied. Current needs re-measurement. Undo: Command-Z.":"Sections updated. Audio unchanged. Undo: Command-Z.";
+        return true;
+    }
+    bool commitManualEdit(ManualEditState next,const juce::String& label)
+    {
+        if(!manualEditAllowed()||!next.map.valid()||next.map.inputIdentity!=sectionDocument.map().inputIdentity)return false;
+        if(next.gains){*next.gains=next.gains->canonical();if(next.gains->validationError().isNotEmpty())return false;if(next.gains->isUnity())next.gains.reset();}
+        const auto before=manualState();if(before==next)return true;
+        const bool changedAudio=before.globalDb!=next.globalDb||(before.gains?before.gains->audioKey():juce::String())!=(next.gains?next.gains->audioKey():juce::String());
+        if(changedAudio)
+        {
+            if(!currentStateDocument.isInitialized)return false;
+            auto context=measurementContext(MeasurementDomain::currentState);context.processing.staticGainDb=next.globalDb;context.processing.sectionGains=next.gains;
+            context.processing.schemaVersion=next.gains?2:1;context.processing.engineVersion=next.gains?processing::SectionGainPlan::version:"static-gain-v1";
+            if(OfflineAnalysisService::validateRequest(context,MeasurementDomain::currentState).isNotEmpty())return false;
+        }
+        if(!manualHistory||manualHistory->runtime!=sessionId)manualHistory=std::make_shared<ManualEditHistory>(sessionId);
+        if(!manualHistory->push(before,next,label)){sectionTrimNotice="Edit not applied: the Undo journal could not be written. Check available temporary storage.";return false;}
+        return installManualState(std::move(next));
+    }
+    bool setManualSectionGains(const std::vector<uint64_t>& ids,double db)
+    {
+        if(!std::isfinite(db)||db< -12||db>12||ids.empty())return false;
+        auto next=manualState();auto plan=next.gains.value_or(processing::SectionGainPlan{});
+        if(!next.gains){plan.inputIdentity=next.map.inputIdentity;plan.frames=next.map.frames;plan.sampleRate=next.map.sampleRate;plan.intervals={{0,plan.frames,0}};}
+        for(auto id:ids){auto i=std::find_if(next.map.sections.begin(),next.map.sections.end(),[id](const auto& s){return s.id==id;});if(i==next.map.sections.end())return false;section_edit::setRange(plan,i->begin,i->end,db);}
+        next.gains=std::move(plan);return commitManualEdit(std::move(next),ids.size()>1?"Set selected section gains":"Set section gain");
+    }
+    bool canUndoManual(bool redo=false) const
+    {
+        if(!manualEditAllowed()||!manualHistory||manualHistory->runtime!=sessionId)return false;
+        const auto e=manualHistory->peek(redo);return e&&(manualState()==(redo?e->before:e->after));
+    }
+    bool undoManual(bool redo=false)
+    {
+        if(!canUndoManual(redo))return false;
+        auto e=manualHistory->peek(redo);if(!e||!installManualState(redo?e->after:e->before))return false;
+        manualHistory->stepped(redo);return true;
+    }
     bool beginSectionTrimDraft()
     {
         if(audioEditsBlocked() || job.isActive() || sectionTrimDraft || sectionProposal || !currentStateDocument.isInitialized || sourceContentInvalid) return false;
@@ -326,28 +419,75 @@ public:
         if(error.isNotEmpty()){sectionTrimNotice=error;return false;}
         SectionTrimDraft d;d.annotations=map;d.geometry=sectionGeometry(map);d.runtime=sessionId;d.audioRevision=revision;
         d.plan.inputIdentity=map.inputIdentity;d.plan.sampleRate=map.sampleRate;d.plan.frames=map.frames;
-        const auto& active=currentStateDocument.sectionGains;
-        const bool sameGeometry=active && sectionGeometry(currentStateDocument.sectionGainAnnotations)==d.geometry;
-        for(const auto& row:map.sections)
-        {
-            double gain=0;
-            if(sameGeometry) for(const auto& applied:active->intervals)
-                if(applied.begin<=row.begin && applied.end>=row.end) {gain=applied.db;break;}
-            d.plan.intervals.push_back({row.begin,row.end,gain});
-        }
+        if(currentStateDocument.sectionGains)d.plan=*currentStateDocument.sectionGains;
+        else d.plan.intervals={{0,map.frames,0}};
+        for(const auto& row:map.sections)section_edit::split(d.plan,row.end);
         sectionTrimDraft=std::move(d);
-        sectionTrimNotice=sameGeometry?"DRAFT copied from applied gains; no audio change.":"DRAFT initialized to 0 dB on current annotations; no audio change.";
+        sectionTrimNotice="DRAFT copied from existing gains; other passages stay unchanged. Apply explicitly, then re-measure Current.";
         return true;
     }
     bool setSectionDraftGain(size_t row,double db)
     {
-        if(audioEditsBlocked() || job.isActive() || !sectionDraftFresh() || row>=sectionTrimDraft->plan.intervals.size()
+        if(audioEditsBlocked() || job.isActive() || !sectionDraftFresh() || sectionTrimDraft->processingRegions || row>=sectionDocument.map().sections.size()
             || !std::isfinite(db) || db < -12 || db > 12) return false;
-        sectionTrimDraft->plan.intervals[row].db=db;++sectionTrimDraft->editSerial;
+        const auto& section=sectionDocument.map().sections[row];
+        auto next=sectionTrimDraft->plan;section_edit::setRange(next,section.begin,section.end,db);
+        const auto error=next.validationError();if(error.isNotEmpty()){sectionTrimNotice=error;return false;}
+        sectionTrimDraft->plan=std::move(next);++sectionTrimDraft->editSerial;
         sectionTrimNotice="DRAFT only: Apply explicitly while stopped, then re-measure Current State.";return true;
     }
+    bool draftRemoveAppliedRegion(int64_t begin,int64_t end)
+    {
+        if(audioEditsBlocked()||job.isActive()||persistenceLoading||(sectionProposal&&lastAppliedProposalBinding!=sectionProposal->identity())||sourceContentInvalid
+            ||!sourceDocument.matchesFileStamps()||!currentStateDocument.isInitialized||!currentStateDocument.sectionGains)return false;
+        if(sectionTrimDraft&&(!sectionDraftFresh()||!sectionTrimDraft->processingRegions))return false;
+        const auto& active=*currentStateDocument.sectionGains;
+        const auto found=std::find_if(active.intervals.begin(),active.intervals.end(),[&](const auto& r){return r.begin==begin&&r.end==end;});
+        if(found==active.intervals.end()||found->db==0)return false;
+        if(!sectionTrimDraft)
+        {
+            synchronizeSections();const auto& map=sectionDocument.map();
+            if(!map.valid()||sectionDraftSupportError().isNotEmpty())return false;
+            SectionTrimDraft d;d.plan=active;d.annotations=map;d.annotations.sections.clear();d.annotations.nextId=1;
+            for(const auto& r:active.intervals)d.annotations.sections.push_back({d.annotations.nextId++,r.begin,r.end,"Manual processing region"});
+            d.geometry=sectionGeometry(map);d.runtime=sessionId;d.audioRevision=revision;d.processingRegions=true;
+            if(sectionProposal)discardSectionProposal(); // Retire only this already-applied preview; complete history remains.
+            sectionTrimDraft=std::move(d);
+        }
+        auto& d=*sectionTrimDraft;
+        const auto row=std::find_if(d.plan.intervals.begin(),d.plan.intervals.end(),[&](const auto& r){return r.begin==begin&&r.end==end;});
+        if(row==d.plan.intervals.end()||row->db==0)return false;
+        row->db=0;++d.editSerial;
+        sectionTrimNotice="DRAFT removal: local gain becomes 0 dB in this region; global gain and other plateaus stay unchanged. Boundary ramps are recomputed on Apply. Apply gains, then re-measure Current; Discard keeps applied audio.";
+        return true;
+    }
+    // With-gain geometry edits are shown provisionally; save is already blocked for drafts.
+    // Discard restores both halves; Apply commits annotations and gain as one operation.
+    bool editSectionAnnotations(const proposal::SectionMap& before,const proposal::SectionMap& after,
+                                std::optional<processing::SectionGainPlan> gainPlan={})
+    {
+        if(audioEditsBlocked()||job.isActive()||persistenceLoading||sectionTrimDraft||sourceContentInvalid
+            ||!sourceDocument.matchesFileStamps()||sectionDocument.map().digest()!=before.digest()
+            ||!after.valid()||after.inputIdentity!=before.inputIdentity)return false;
+        if(!gainPlan)
+        {if(!sectionDocument.restore(after,before.inputIdentity))return false;documentChanged();return true;}
+        if(!currentStateDocument.isInitialized||gainPlan->validationError().isNotEmpty()
+            ||(sectionProposal&&lastAppliedProposalBinding!=sectionProposal->identity()))return false;
+        if(sectionProposal)discardSectionProposal();
+        SectionTrimDraft d;d.plan=std::move(*gainPlan);d.annotations=after;d.geometry=sectionGeometry(after);
+        d.runtime=sessionId;d.audioRevision=revision;d.processingRegions=true;d.rollbackAnnotations=before;
+        if(!sectionDocument.restore(after,before.inputIdentity))return false;
+        sectionTrimDraft=std::move(d);
+        sectionTrimNotice="DRAFT section + gain edit. Apply commits both; Discard restores both. Current audio is unchanged until Apply; boundary smoothing is retained.";
+        return true;
+    }
     void discardSectionTrimDraft()
-    {sectionTrimDraft.reset();sectionTrimNotice="Draft discarded. Applied processing and measurements unchanged.";}
+    {
+        if(sectionTrimDraft&&sectionTrimDraft->rollbackAnnotations&&sectionTrimDraft->runtime==sessionId
+            &&sectionTrimDraft->geometry==sectionGeometry(sectionDocument.map()))
+        {auto map=*sectionTrimDraft->rollbackAnnotations;map.revision=sectionDocument.map().revision+1;sectionDocument.restore(map,map.inputIdentity);}
+        sectionTrimDraft.reset();sectionTrimNotice="Draft discarded. Applied processing and measurements unchanged.";
+    }
     bool applySectionTrimDraft()
     {
         if(audioEditsBlocked() || job.isActive() || !sectionDraftFresh())
@@ -363,9 +503,9 @@ public:
         const auto oldKey=currentStateDocument.sectionGains?currentStateDocument.sectionGains->audioKey():juce::String();
         const auto newKey=next.isUnity()?juce::String():next.audioKey();
         if(oldKey==newKey)
-        {sectionTrimDraft.reset();sectionTrimNotice="NO CHANGE: applied samples, revision and valid measurements retained.";return true;}
+        {if(sectionTrimDraft->rollbackAnnotations)documentChanged();sectionTrimDraft.reset();sectionTrimNotice="Applied annotations; audio unchanged and valid measurements retained.";return true;}
         currentStateDocument.sectionGains=c.processing.sectionGains;
-        currentStateDocument.sectionGainAnnotations=next.isUnity()?proposal::SectionMap{}:sectionTrimDraft->annotations;
+        currentStateDocument.sectionGainAnnotations=next.isUnity()?proposal::SectionMap{}:section_edit::provenance(next,sectionDocument.map());
         sectionTrimDraft.reset();invalidateCurrentProcessing();
         sectionTrimNotice="APPLIED; Current State UNVERIFIED. Re-measure explicitly; no automatic correction or rollback.";return true;
     }
@@ -592,7 +732,7 @@ public:
     {
         if (! currentStateDocument.isInitialized || ! std::isfinite (gain) || gain < -60 || gain > 24) return false;
         if (gain == currentStateDocument.staticGainDb) return true;
-        if (audioEditsBlocked()) return false;
+        if (audioEditsBlocked()||(sectionTrimDraft&&sectionTrimDraft->rollbackAnnotations)) return false;
         currentStateDocument.staticGainDb = gain;
         invalidateCurrentProcessing();
         return true;
@@ -687,7 +827,7 @@ public:
         source = MeasurementSummary();
         currentState = MeasurementSummary();
         currentStateDocument.clear();
-        programmeApplicability = proposal::Applicability::unconfirmed;
+        programmeApplicability = proposal::Applicability::preProducedLinearProgramme;
 
         if (sourceDocument.hasSource)
         {
@@ -703,7 +843,7 @@ public:
         ++revision; documentChanged(); programmeId = juce::Uuid().toString();
         discardTrim(); clearProposalApplicationProvenance(); sourceContentInvalid = false; unresolvedSourceCache.reset(); unresolvedCurrentCache.reset(); sourceDocument.setValidatedProgramme(group);
         source = MeasurementSummary(); currentState = MeasurementSummary(); currentStateDocument.clear();
-        programmeApplicability = proposal::Applicability::unconfirmed;
+        programmeApplicability = proposal::Applicability::preProducedLinearProgramme;
         initialCurrentPending = true;
         currentState.statusText = "Awaiting first completed Source measurement";
         source.statusText = "Complete aligned programme; measurement not run";
@@ -726,7 +866,7 @@ public:
         ++revision;documentChanged();if(!editing)programmeId=juce::Uuid().toString();
         discardTrim();clearProposalApplicationProvenance();sourceContentInvalid=false;unresolvedSourceCache.reset();unresolvedCurrentCache.reset();
         sourceDocument.setValidatedComposition(recipe);source=MeasurementSummary();currentState=MeasurementSummary();
-        currentStateDocument.clear();programmeApplicability=proposal::Applicability::unconfirmed;
+        currentStateDocument.clear();programmeApplicability=proposal::Applicability::preProducedLinearProgramme;
         if(keepCurrent){currentStateDocument.initializeFromSource(sourceDocument);currentStateDocument.staticGainDb=retainedGain;}
         source.statusText="Original confirmed composition; measurement not run";
         currentState.statusText = keepCurrent ? "UNVERIFIED: composition changed; applied global gain retained"
@@ -743,7 +883,7 @@ public:
         discardTrim(); clearProposalApplicationProvenance(); sourceContentInvalid = false; unresolvedSourceCache.reset(); unresolvedCurrentCache.reset();
         sourceDocument.clear();
         currentStateDocument.clear();
-        programmeApplicability = proposal::Applicability::unconfirmed;
+        programmeApplicability = proposal::Applicability::preProducedLinearProgramme;
 
         source = MeasurementSummary();
         currentState = MeasurementSummary();

@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "os": "10.13.6",
+  "architecture": "x86_64",
+  "source_commit": "18d87f9a3246ccbfa0c98963119aaff2e30f25aa",
+  "build": "2bc868fb5198536720a2fa41c9b359c7c931753e25e32e66bc2429c69072ee18",
+  "candidate_identity_sha256": "dc60a8d16297cfde17a1d491faf33885ce356021c0f5560278be5965ed0a4700",
+  "requested_cases": [
+    "ui"
+  ],
+  "physical_devices_opened": false,
+  "combined_qualification_complete": false,
+  "inputs": {},
+  "groups": [
+    {
+      "name": "ui",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/candidate-04/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/LevelScope-M20-UI-qualification-2026-11-06/high-sierra-native-04/ui-files"
+      ],
+      "returncode": 0,
+      "seconds": 32.095306740999995,
+      "passed": true,
+      "checks": 93,
+      "receipt": "ui-files/result.json",
+      "receipt_sha256": "4f14b1f1ae485a531514b5c378be4dd0ad6bb547ef6171fd8ee18fedc013de34"
+    }
+  ]
+}

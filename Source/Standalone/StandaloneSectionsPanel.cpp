@@ -41,34 +41,25 @@ StandaloneSectionsPanel::StandaloneSectionsPanel (StandaloneSessionModel& s) : s
     mergeButton.onClick = [this] { performEdit (2); }; renameButton.onClick = [this] { performEdit (3); };
     rebuildButton.onClick = [this] { editNotice.clear(); diagnostics.retry(); sections.retry(); synchronize(); };
     cancelButton.onClick = [this] { editNotice.clear(); diagnostics.cancel(); sections.cancel(); synchronize(); };
-    gainEditor.setName("Section draft gain dB");gainEditor.setText("0",false);
-    gainEditor.setTooltip("Full precision gain for the selected annotation, -12 to +12 dB. Draft only until Apply.");
+    gainEditor.setName("Section gain dB");gainEditor.setText("0",false);
+    gainEditor.setTooltip("Enter -12 to +12 dB. Return or leaving the field applies the value. Command-Z undoes it; Mixed means existing gains differ within the section.");
     gainStatus.setName("Section draft and applied processing status");gainView.setName("Applied and draft section-gain curves");
-    draftGainButton.onClick=[this]{session.beginSectionTrimDraft();synchronize();refreshDetails();if(onChanged)onChanged();};
-    setGainButton.onClick=[this]
-    {
-        const auto* row=selectedSection();double db=0;std::istringstream in(gainEditor.getText().trim().toStdString());in.imbue(std::locale::classic());
-        if(!row || !(in>>db) || !(in>>std::ws).eof() || !std::isfinite(db) || db < -12 || db > 12)
-            session.sectionTrimNotice="Enter one finite gain from -12 to +12 dB; nothing applied.";
-        else
-        {
-            bool accepted=false;
-            if(session.sectionTrimDraft) for(size_t n=0;n<session.sectionTrimDraft->annotations.sections.size();++n)
-                if(session.sectionTrimDraft->annotations.sections[n].id==row->id) accepted=session.setSectionDraftGain(n,db);
-            if(!accepted) session.sectionTrimNotice="Draft is unavailable or stale. Discard and draft again; nothing applied.";
-        }
-        synchronize();
-    };
-    applyGainButton.onClick=[this]{session.applySectionTrimDraft();synchronize();if(onChanged)onChanged();};
-    discardGainButton.onClick=[this]{session.discardSectionTrimDraft();synchronize();if(onChanged)onChanged();};
-    for(auto* c:std::initializer_list<juce::Component*>{&draftGainButton,&setGainButton,&applyGainButton,&discardGainButton,&gainEditor,&gainStatus,&gainView})addAndMakeVisible(*c);
+    gainLabel.setText("Local gain (dB)",juce::dontSendNotification);
+    gainEditor.onTextChange=[this]{if(!gainDirty){gainOpening=session.sessionId;gainAudioRevision=session.revision;gainGeometry=session.sectionGeometry(document.map());}gainDirty=true;};
+    gainEditor.onReturnKey=[this]{if(commitGain())timeline.focusForTransport();};gainEditor.onFocusLost=[this]{if(gainDirty)commitGain();};
+    gainEditor.onEscapeKey=[this]{gainDirty=false;refreshDetails();};
+    applyGainButton.onClick=[this]{if(!commitGain())return;session.applySectionTrimDraft();synchronize();if(onChanged)onChanged();};
+    discardGainButton.onClick=[this]{gainDirty=false;session.discardSectionTrimDraft();synchronize();refreshDetails();if(onChanged)onChanged();};
+    for(auto* c:std::initializer_list<juce::Component*>{&gainLabel,&gainEditor,&gainStatus})addAndMakeVisible(*c);
     importMarkers.onClick=[this]{markerWindow=std::make_unique<MarkerImportWindow>(session,false,canImportMarkers,[this]{synchronize();if(onChanged)onChanged();});};
     pasteMarkers.onClick=[this]{markerWindow=std::make_unique<MarkerImportWindow>(session,true,canImportMarkers,[this]{synchronize();if(onChanged)onChanged();});};
     addAndMakeVisible(importMarkers);addAndMakeVisible(pasteMarkers);
+    timeline.attachGainLane(manualLane);manualLane.onChanged=[this]{synchronize();if(onChanged)onChanged();};
     timeline.bindSectionEditing(session,[this](uint64_t id)
     {
         selectedId=id;
         synchronize();
+        if(const auto* r=selectedSection())manualLane.selectFrame(r->begin,false);
         if(onChanged)onChanged();
     });
     addAndMakeVisible(play);
@@ -91,6 +82,7 @@ void StandaloneSectionsPanel::timerCallback()
     const auto input = session.sourceContentInvalid ? juce::String() : sectionInputIdentity (context);
     if (! session.sourceContentInvalid && document.bind (input, input.isNotEmpty() ? static_cast<int> (context.media.sampleRate) : 0, input.isNotEmpty() ? context.media.frames : 0))
     { selectedId = 0; editNotice.clear(); session.markerImport.reset(); }
+    manualLane.synchronize(input.isNotEmpty()?session.sessionId+input:juce::String());
     const auto key = document.map().valid() ? document.map().digest() : juce::String();
     const bool mapChanged = key != mapKey;
     if (mapChanged)
@@ -122,10 +114,15 @@ void StandaloneSectionsPanel::timerCallback()
     rebuildButton.setEnabled (snapshot != nullptr && ! busy);
     status.setText (editNotice.isNotEmpty() ? editNotice : diagnostics.busy() ? diagnostics.status : sections.status, juce::dontSendNotification);
     const bool editable=!session.audioEditsBlocked()&&!session.job.isActive();
-    importMarkers.setEnabled(editable&&document.map().valid()&&(!canImportMarkers||canImportMarkers()));pasteMarkers.setEnabled(importMarkers.isEnabled());
-    draftGainButton.setEnabled(editable && !session.sectionTrimDraft && !session.sectionProposal && session.currentStateDocument.isInitialized);
-    setGainButton.setEnabled(editable && session.sectionDraftFresh());gainEditor.setEnabled(setGainButton.isEnabled());
-    applyGainButton.setEnabled(editable && session.sectionDraftFresh());discardGainButton.setEnabled(session.sectionTrimDraft.has_value());
+    importMarkers.setEnabled(editable&&!(session.sectionTrimDraft&&session.sectionTrimDraft->rollbackAnnotations)&&document.map().valid()&&(!canImportMarkers||canImportMarkers()));pasteMarkers.setEnabled(importMarkers.isEnabled());
+    const bool canEditGain=editable&&selectedSection()&&session.currentStateDocument.isInitialized&&!session.sectionProposal&&session.sectionDraftSupportError().isEmpty()
+        &&(!session.sectionTrimDraft||(session.sectionDraftFresh()&&!session.sectionTrimDraft->processingRegions));
+    gainEditor.setEnabled(canEditGain);
+    std::istringstream field(gainEditor.getText().trim().toStdString());field.imbue(std::locale::classic());double entered=0;
+    const bool validField=(field>>entered)&&(field>>std::ws).eof()&&std::isfinite(entered)&&entered>=-12&&entered<=12;
+    applyGainButton.setEnabled(editable&&(!gainDirty||validField)&&(session.sectionDraftFresh()||(gainDirty&&canEditGain)));
+    discardGainButton.setEnabled(editable&&(session.sectionTrimDraft.has_value()||gainDirty));
+    for(auto* b:{&splitButton,&moveButton,&mergeButton,&renameButton})b->setEnabled(editable&&selectedSection()&&!session.sectionTrimDraft);
     auto gainText=session.sectionTrimNotice;
     if(session.sectionTrimDraft&&!session.sectionDraftFresh())gainText="STALE DRAFT: discard/recreate after input, processing or annotation geometry changes. Applied audio retained.";
     if(session.currentStateDocument.sectionGains && session.sectionGeometry(document.map())!=session.sectionGeometry(session.currentStateDocument.sectionGainAnnotations))
@@ -148,9 +145,22 @@ const proposal::DiagnosticWindow* StandaloneSectionsPanel::windowAt (int row) co
     const auto& a = *measured->analysis; const auto& windows = windowKind.getSelectedId() == 1 ? a.momentary : windowKind.getSelectedId() == 2 ? a.shortTerm : a.lraWindows;
     return *n < windows.size() ? &windows[*n] : nullptr;
 }
+bool StandaloneSectionsPanel::commitGain()
+{
+    if(!gainDirty)return true;
+    if(gainOpening!=session.sessionId||gainAudioRevision!=session.revision||gainGeometry!=session.sectionGeometry(document.map())||!gainEditor.isEnabled())
+    {session.sectionTrimNotice="Gain field is stale; Escape or Discard before editing again.";return false;}
+    double db=0;std::istringstream in(gainEditor.getText().trim().toStdString());in.imbue(std::locale::classic());
+    if(!(in>>db)||!(in>>std::ws).eof()||!std::isfinite(db)||db< -12||db>12)
+    {session.sectionTrimNotice="Enter one finite gain from -12 to +12 dB; nothing applied.";synchronize();return false;}
+    const auto& rows=document.map().sections;
+    const auto it=std::find_if(rows.begin(),rows.end(),[&](const auto& r){return r.id==selectedId;});
+    if(it==rows.end()||!session.setManualSectionGains({selectedId},db))return false;
+    gainDirty=false;synchronize();refreshDetails();if(onChanged)onChanged();return true;
+}
 void StandaloneSectionsPanel::performEdit (int operation)
 {
-    if (session.persistenceLoading) return;
+    if (session.persistenceLoading||session.audioEditsBlocked()||session.job.isActive()||!commitGain()||session.sectionTrimDraft) return;
     const auto* row = selectedSection(); if (! row) return;
     int64_t frame = 0;
     if (operation < 2)
@@ -160,11 +170,21 @@ void StandaloneSectionsPanel::performEdit (int operation)
         if (bytes.empty() || parsed.ec != std::errc() || parsed.ptr != bytes.data() + bytes.size())
         { editNotice = "Enter a whole audio-source frame number; fractional or rounded seconds are not accepted."; synchronize(); return; }
     }
+    if(operation==1){timeline.changeSectionEnd(row->id,frame);return;}
+    if(operation==2)
+    {
+        const auto before=document.map();auto edited=document;juce::String error;
+        const auto next=std::find_if(before.sections.begin(),before.sections.end(),[&](const auto& r){return r.begin==row->end;});
+        if(next==before.sections.end()||!edited.mergeNext(row->id,error)){editNotice=error;synchronize();return;}
+        sectionEdit.request(*this,before,edited.map(),true,next->begin,next->end,0,0,
+            [safe=juce::Component::SafePointer<StandaloneSectionsPanel>(this)](bool,bool){if(safe){safe->synchronize();if(safe->onChanged)safe->onChanged();}});
+        return;
+    }
     juce::String error;
-    const auto previousRevision = document.map().revision;
-    const bool ok = operation == 0 ? document.split (row->id, frame, error) : operation == 1 ? document.moveEnd (row->id, frame, error)
-        : operation == 2 ? document.mergeNext (row->id, error) : document.rename (row->id, name.getText(), error);
-    if (ok && previousRevision != document.map().revision) session.documentChanged();
+    auto edited=document;
+    bool ok = operation == 0 ? edited.split (row->id, frame, error) : operation == 1 ? edited.moveEnd (row->id, frame, error)
+        : operation == 2 ? edited.mergeNext (row->id, error) : edited.rename (row->id, name.getText(), error);
+    if(ok){auto next=session.manualState();next.map=edited.map();ok=session.commitManualEdit(std::move(next),operation==0?"Split section":"Rename section");}
     editNotice = ok ? "Section edit accepted. Audio and measurements unchanged; section-led proposals require matching geometry." : error;
     synchronize();if(onChanged)onChanged();
 }
@@ -197,19 +217,17 @@ void StandaloneSectionsPanel::refreshDetails()
             if (located.truePeak) text << " TP " << juce::String (*peak.trueDbtp, 6) << " dBTP @ eighth-frame " << juce::String (peak.truePeakEighthFrame);
             text << "\n";
         }
-        text << "Local peak maxima are not measured; absence of a programme maximum does not establish peak safety.\n";
+        text << "Local true-peak maxima are not measured; absence of a programme maximum does not establish peak safety.\n";
         text << annotateDiagnostics (*measured, session.getSelectedTargetProfile(), session.programmeApplicability).text << "\n";
     }
     text << "No section I/LRA or section compliance verdict. Crossing/padded windows are excluded from summaries and inspectable below. Section edits never seek, play or process audio.";
-    gainEditor.setText({},false);
-    if(session.sectionTrimDraft && session.sectionDraftFresh())
-        for(size_t n=0;n<session.sectionTrimDraft->annotations.sections.size();++n)
-            if(session.sectionTrimDraft->annotations.sections[n].id==row->id)
-            {
-                std::ostringstream exact;exact.imbue(std::locale::classic());
-                exact<<std::setprecision(std::numeric_limits<double>::max_digits10)<<session.sectionTrimDraft->plan.intervals[n].db;
-                gainEditor.setText(exact.str(),false);
-            }
+    if(!gainDirty)
+    {
+        const auto* plan=session.sectionDraftFresh()?&session.sectionTrimDraft->plan:session.currentStateDocument.sectionGains?&*session.currentStateDocument.sectionGains:nullptr;
+        const auto value=section_edit::uniform(plan,row->begin,row->end);
+        std::ostringstream exact;exact.imbue(std::locale::classic());if(value)exact<<std::setprecision(std::numeric_limits<double>::max_digits10)<<*value;
+        gainEditor.setText(exact.str(),false);gainEditor.setTextToShowWhenEmpty(value?juce::String():"Mixed",juce::Colours::lightgrey);
+    }
     text << "\nApplied gains (independent of current annotations): ";
     if(const auto& active=session.currentStateDocument.sectionGains)
     {
@@ -218,7 +236,7 @@ void StandaloneSectionsPanel::refreshDetails()
     }
     else text << "unity section gain; ";
     text << "final global trim " << juce::String(session.currentStateDocument.staticGainDb,12) << " dB. Curves/settings are not measurements.";
-    if(session.sectionProposal&&session.sectionProposal->status()==SectionProposalStatus::ready)
+    if(session.sectionProposal&&session.sectionProposal->status()==SectionProposalStatus::ready&&session.sectionProposal->peaks())
     {
         const bool fresh=session.sectionGeometry(document.map())==session.sectionProposal->peaks()->geometry;
         text << "\n" << (fresh?"PROPOSED settings only (not applied): ":"STALE PROPOSAL geometry; cannot Apply: ");
@@ -227,6 +245,7 @@ void StandaloneSectionsPanel::refreshDetails()
                  << " dB; additional reduction " << juce::String(correction.reductionDb,12)
                  << "; reserve " << juce::String(correction.reserveDb,12) << "; uncovered deficit " << juce::String(correction.uncoveredDb,12) << " dB.";
     }
+    text+="\n"+timeline.rangePeakText(row->begin,row->end);
     summary.setText (text, false);
 }
 int StandaloneSectionsPanel::getNumRows() { return static_cast<int> (document.map().sections.size()); }
@@ -240,6 +259,7 @@ void StandaloneSectionsPanel::paintListBoxItem (int n, juce::Graphics& g, int w,
 void StandaloneSectionsPanel::selectedRowsChanged (int row)
 {
     if (refreshing || row < 0 || row >= getNumRows()) return;
+    if(!commitGain())return;
     selectedId = document.map().sections[static_cast<size_t> (row)].id; refreshDetails();
     if (const auto* s = selectedSection()) timeline.highlight (static_cast<double> (s->begin), static_cast<double> (s->end));
 }
@@ -275,17 +295,17 @@ void StandaloneSectionsPanel::resized()
     splitButton.setBounds (edit.removeFromLeft (120)); moveButton.setBounds (edit.removeFromLeft (100)); mergeButton.setBounds (edit.removeFromLeft (100));
     nameLabel.setBounds (edit.removeFromLeft (45)); renameButton.setBounds (edit.removeFromRight (90)); name.setBounds (edit);
     b.removeFromTop (6); sectionList.setBounds (b.removeFromTop (100)); b.removeFromTop (6);
-    auto gainRow=b.removeFromTop(28);draftGainButton.setBounds(gainRow.removeFromLeft(165));gainEditor.setBounds(gainRow.removeFromLeft(165));setGainButton.setBounds(gainRow.removeFromLeft(140));applyGainButton.setBounds(gainRow.removeFromLeft(165));discardGainButton.setBounds(gainRow.removeFromLeft(140));
-    gainStatus.setBounds(b.removeFromTop(40));gainView.setBounds(b.removeFromTop(90));b.removeFromTop(4);
+    auto gainRow=b.removeFromTop(28);gainLabel.setBounds(gainRow.removeFromLeft(130));gainEditor.setBounds(gainRow.removeFromLeft(165));applyGainButton.setBounds(gainRow.removeFromLeft(165));discardGainButton.setBounds(gainRow.removeFromLeft(140));
+    gainStatus.setBounds(b.removeFromTop(32));b.removeFromTop(4);
     auto transport=b.removeFromTop(28);
     play.setBounds(transport.removeFromLeft(70));stop.setBounds(transport.removeFromLeft(70));
     auditionDomain.setBounds(transport);
-    timeline.setBounds (b.removeFromTop (310)); b.removeFromTop (6);
+    timeline.setBounds (b.removeFromTop (400)); b.removeFromTop (6);
     summary.setBounds (b.removeFromTop (std::max (160, b.getHeight() * 54 / 100))); b.removeFromTop (6);
     auto choose = b.removeFromTop (28); windowKind.setBounds (choose.removeFromLeft (240)); windowScope.setBounds (choose.removeFromLeft (200));
     inspection.setBounds (b.removeFromBottom (55)); b.removeFromBottom (4); windowList.setBounds (b);
 }
-void StandaloneSectionsPanel::paint (juce::Graphics& g) { g.fillAll (juce::Colour (0xff151b24)); }
+void StandaloneSectionsPanel::paint (juce::Graphics& g) { g.fillAll (palette::panel()); }
 void StandaloneSectionsPanel::GainView::paint(juce::Graphics& g)
 {
     g.fillAll(juce::Colour(0xff101820));g.setFont(12);g.setColour(juce::Colours::white);
@@ -307,7 +327,7 @@ void StandaloneSectionsPanel::GainView::paint(juce::Graphics& g)
     };
     draw(session.currentStateDocument.sectionGains?&*session.currentStateDocument.sectionGains:nullptr,juce::Colours::lightgreen);
     if(session.sectionTrimDraft)draw(&session.sectionTrimDraft->plan,juce::Colours::orange);
-    if(session.sectionProposal&&session.sectionProposal->status()==SectionProposalStatus::ready
+    if(session.sectionProposal&&session.sectionProposal->status()==SectionProposalStatus::ready&&session.sectionProposal->peaks()
         &&session.sectionGeometry(session.sectionDocument.map())==session.sectionProposal->peaks()->geometry)
         draw(&*session.sectionProposal->plan().sectionGains,juce::Colours::cyan);
 }

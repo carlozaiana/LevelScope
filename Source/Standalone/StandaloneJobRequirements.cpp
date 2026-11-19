@@ -1,4 +1,5 @@
 #include "StandaloneJobRequirements.h"
+#include "TimelineAppearance.h"
 #include <stdexcept>
 
 namespace levelscope::standalone
@@ -89,7 +90,7 @@ void JobRequirementsPanel::refresh()
         const auto& summary=row==0?session.source:session.currentState;
         const auto domain=row==0?MeasurementDomain::source:MeasurementDomain::currentState;
         const auto result=session.evaluation(domain);
-        rowNames[size_t(row)].setText(juce::String(row==0?"Original":"Current")+"  |  "+(summary.hasMeasurement?"Ready":row==1&&session.currentStateNeedsRemeasurement()?"Unverified":"Pending")+(result.verdict==proposal::Verdict::pass?" / PASS":result.verdict==proposal::Verdict::fail?" / FAIL":""),juce::dontSendNotification);
+        rowNames[size_t(row)].setText(juce::String(row==0?"Original":"Current")+"  |  "+(summary.hasMeasurement?"Ready":row==1&&session.currentStateNeedsRemeasurement()?"Needs re-measurement":"Pending")+(result.verdict==proposal::Verdict::pass?" / PASS":result.verdict==proposal::Verdict::fail?" / FAIL":""),juce::dontSendNotification);
         auto origin=summary.statusText;
         if(summary.analysis)
         {
@@ -100,7 +101,7 @@ void JobRequirementsPanel::refresh()
         rowNames[size_t(row)].setTooltip(origin+"\n"+evaluationText(result));
         for(size_t col=0;col<5;++col)
         {
-            auto& label=measured[size_t(row)*5+col];juce::String text="--";
+            auto& label=measured[size_t(row)*5+col];juce::String text=row==1&&session.currentStateNeedsRemeasurement()?juce::String::charToString(0x2014):juce::String("--");
             if(summary.analysis)
             {
                 const auto& d=summary.analysis->detail;
@@ -208,29 +209,26 @@ void JobRequirementsPanel::loadPreset()
 int JobRequirementsPanel::rowHeight() const
 {
     const int available=getHeight()-(status.getParentComponent()==this?22:0);
-    return juce::jlimit(22,54,(available-22-(available<112?0:24))/3);
+    return juce::jlimit(22,62,(available-22)/3);
 }
 void JobRequirementsPanel::resized()
 {
     auto r=getLocalBounds();const int labelWidth=230,colWidth=(r.getWidth()-labelWidth)/5;
-    const bool compact=getHeight()-(status.getParentComponent()==this?22:0)<112;
     auto heading=r.removeFromTop(22);auto leading=heading.removeFromLeft(labelWidth);
     for(auto& h:headers)h.setBounds(heading.removeFromLeft(colWidth));
     const int height=rowHeight();
-    for(size_t row=0;row<3;++row)
+    for(size_t row:{size_t(2),size_t(0),size_t(1)})
     {
         auto line=r.removeFromTop(height);rowNames[row].setBounds(line.removeFromLeft(labelWidth));
         for(size_t col=0;col<5;++col)
         {auto cell=line.removeFromLeft(colWidth).reduced(4,std::min(3,std::max(0,(height-22)/2)));if(row==2)fields[col].setBounds(cell);else measured[row*5+col].setBounds(cell);}
     }
-    auto choices=compact?leading:r.removeFromTop(24);
-    if(!compact)choices.removeFromLeft(labelWidth);
-    profiles.setBounds(choices.removeFromLeft(compact?123:280).reduced(2,0));save.setBounds(choices.removeFromLeft(compact?107:160).reduced(2,0));
+    profiles.setBounds(leading.removeFromLeft(123).reduced(2,0));save.setBounds(leading.reduced(2,0));
     if(status.getParentComponent()==this)status.setBounds(r);
 }
 void JobRequirementsPanel::paint(juce::Graphics& g)
 {
-    g.fillAll(juce::Colour(0xff202730));g.setColour(juce::Colour(0xff394451));
+    g.fillAll(palette::panel());g.setColour(juce::Colour(0xff394451));
     for(int n=0;n<=3;++n)g.drawHorizontalLine(22+n*rowHeight(),0.f,float(getWidth()));
 }
 }

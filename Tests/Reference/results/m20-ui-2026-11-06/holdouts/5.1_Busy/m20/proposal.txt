@@ -1,0 +1,238 @@
+No acceptable candidate in bounded region search
+No acceptable complete candidate in this finite region search. All measured failures remain inspectable; Apply unavailable. Limits/uncertain forecasts/omitted alternatives do not prove no solution exists.
+Experimental region planning / region-gain-search-v1 / window-energy-proxy-v1 / candidate-review-rank-v2
+Effective immutable settings: {"schema": 1, "method": "region-gain-search-v1", "constraints": "region-constraints-v1", "formation": "region-formation-v1", "proxy": "window-energy-proxy-v1", "rank": "candidate-review-rank-v2", "input": "18b95b001ee38128823e4b71d011af169796f37655e993dbc40a52b0404ed586", "mode": 0, "section": "0", "selection": {"begin": "0", "end": "0"}, "splitting": true, "refinement": true, "fillGap": false, "global": true, "compare": false, "splits": 2, "leftMs": 0, "rightMs": 0, "minimumMs": 3000, "separationMs": 1000, "needTenths": 10, "persistenceMs": 1000, "start": null, "end": null, "cuts": [], "protection": "local-envelope-v1", "protected": []}
+Constraint binding 454d2773fb2af5a13fbfe5866cc8b61094defb79dd3e569a144f3fdec6305998
+Roots 6 (omitted 0); proxy plans 64 / 64; duplicate audio plans 5; rejected 0.
+Geometry constructions 339; omitted cut nominations 0; omitted geometries 11. Search truncation never proves impossibility.
+Whole-programme global trim permitted separately: it may change audio outside the local area.
+Original root analysis:802dbf0e0806528a5be1d66920147c0f1285fdb60ebc92118a46681666ed58bc:5404800:5956800; hint [5404800, 5956800); permitted [5404800, 5956800); support-edge ranges [5404800, 5812800] / [5548800, 5956800].
+Original root analysis:802dbf0e0806528a5be1d66920147c0f1285fdb60ebc92118a46681666ed58bc:0:230400; hint [0, 230400); permitted [0, 230400); support-edge ranges [0, 86400] / [144000, 230400].
+Original root analysis:802dbf0e0806528a5be1d66920147c0f1285fdb60ebc92118a46681666ed58bc:6609600:7104000; hint [6609600, 7104000); permitted [6609600, 7104000); support-edge ranges [6609600, 6960000] / [6753600, 7104000].
+Original root analysis:802dbf0e0806528a5be1d66920147c0f1285fdb60ebc92118a46681666ed58bc:3182400:3422400; hint [3182400, 3422400); permitted [3182400, 3422400); support-edge ranges [3182400, 3278400] / [3326400, 3422400].
+Original root analysis:802dbf0e0806528a5be1d66920147c0f1285fdb60ebc92118a46681666ed58bc:1689600:1910400; hint [1689600, 1910400); permitted [1689600, 1910400); support-edge ranges [1689600, 1766400] / [1833600, 1910400].
+Original root analysis:802dbf0e0806528a5be1d66920147c0f1285fdb60ebc92118a46681666ed58bc:7137600:7281600; hint [7137600, 7281600); permitted [7137600, 7281600); support-edge ranges [7137600, 7137600] / [7281600, 7281600].
+
+Complete measured attempt 1 / 6f0f3e6fd5021bb4305f6c90cfa0df73edeb89a9395dabaedbff58709add71e7 (retained)
+Actual Private candidate (not Current State) evaluation: FAIL
+Fails one or more selected measured rules.
+programme-loudness: PASS | -23.199930 LUFS | min -23.200000 | max -22.800000 | delta -0.199930
+Within selected bounds.
+true-peak: FAIL | 3.585850 dBTP | max -1.000000 | delta 4.585850
+Outside selected bounds.
+loudness-range: PASS | 13.791393 LU | max 14.500000 | delta -0.708607
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+IL: -23.199929632454
+TP: 3.585849758671
+LRA: 13.791392538514
+M max: -13.291070054573
+S max: -18.564037925726
+sample peak: 3.545713008581
+Forecast IL -23.200000000000; LRA 13.791373168785; TP unknown (not a measured failure). Approximate window-energy proxy: uniform bin energy, filter/gain noncommutation and float-stage rounding. Sampled M/S cannot certify maxima; true peak unavailable. Empirical errors are not proven bounds. EOF drain retains global-scaled baseline shape; locally transformed filter-tail state is uncertain, not measured silence. Full-population gate membership changes; constant-gain/local-LRA shortcuts are invalid.
+Forecast gate entry/exit: I 54/6; LRA 0/0.
+Actual minus forecast (IL/LRA/P10/P95/sampled M): 0.000070367546 0.000019369729 -0.000000000994 0.000019368736 0.042346009885. Empirical errors, not bounds.
+Changed support 1540800 programme frames; 6 connected regions; max added 3.000000000000 dB; absolute local dB*frames 2709701.561243537813; global 5.492040876643 dB.
+Independent activity accounting (not an audio-quality score)
+New splits per original root: root 1 = 1; root 2 = 0; root 3 = 2; root 4 = 0; root 5 = 0; root 6 = 0;
+Total splits 3; decision parts including unchanged gaps 8; connected changed regions 6.
+Newly affected duration including old/new ramps: 1540800 / 8923042 programme frames = 32.100000000000001 s = 17.267653788920864%.
+Nominal engine intervals 13 / 10000; actual transition count 12; longest changed run 552000 frames; margin activity 0 frames.
+Maximum added attenuation 3 dB; maximum cumulative attenuation 3 dB; absolute local dB*frames 2709701.5612435378.
+Cumulative non-unity local-envelope support: 1540800 frames in 6 components; distinct from newly affected duration.
+Global gain 5.4920408766433226 dB; delta 5.4920408766433226 dB - separate whole-programme change, excluded from the local duration percentage.
+Complete changed support (half-open source frames, old/new ramps included):
+[0, 153600)
+[1689600, 1910400)
+[3182400, 3422400)
+[5404800, 5956800)
+[6609600, 6813600)
+[6933600, 7104000)
+Complete nominal plan and fixed transitions (source frames; these are not changed-support edges):
+[0, 151200) plateau -3 dB
+[151200, 1692000) plateau 0 dB; incoming ramp [148800, 153600), nominal cut 151200, radius 2400
+[1692000, 1908000) plateau -1.3335759564243865 dB; incoming ramp [1689600, 1694400), nominal cut 1692000, radius 2400
+[1908000, 3184800) plateau 0 dB; incoming ramp [1905600, 1910400), nominal cut 1908000, radius 2400
+[3184800, 3420000) plateau -1.0003003327512197 dB; incoming ramp [3182400, 3187200), nominal cut 3184800, radius 2400
+[3420000, 5407200) plateau 0 dB; incoming ramp [3417600, 3422400), nominal cut 3420000, radius 2400
+[5407200, 5808000) plateau -2.1460715549275911 dB; incoming ramp [5404800, 5409600), nominal cut 5407200, radius 2400
+[5808000, 5954400) plateau -2.0226977391884766 dB; incoming ramp [5805600, 5810400), nominal cut 5808000, radius 2400
+[5954400, 6612000) plateau 0 dB; incoming ramp [5952000, 5956800), nominal cut 5954400, radius 2400
+[6612000, 6811200) plateau -1.9367996489040067 dB; incoming ramp [6609600, 6614400), nominal cut 6612000, radius 2400
+[6811200, 6936000) plateau 0 dB; incoming ramp [6808800, 6813600), nominal cut 6811200, radius 2400
+[6936000, 7101600) plateau -1.1515676213703792 dB; incoming ramp [6933600, 6938400), nominal cut 6936000, radius 2400
+[7101600, 8923042) plateau 0 dB; incoming ramp [7099200, 7104000), nominal cut 7101600, radius 2400
+Root analysis:802dbf0e0806528a5be1d66920147c0f1285fdb60ebc92118a46681666ed58bc:0:230400; Alternative exact outer processing support; support [0, 153600); nominal cuts 0, 151200; additional reductions 3.000000000000 dB.
+Requested / achieved reserve / uncovered deficit by part: [3.444312209846 / 0.055687790154 / 0.000000000000] dB.
+Root analysis:802dbf0e0806528a5be1d66920147c0f1285fdb60ebc92118a46681666ed58bc:5404800:5956800; Bounded split topology ordered by need-change strength and source frame; support [5404800, 5956800); nominal cuts 5407200, 5808000, 5954400; additional reductions 2.146071554928 2.022697739188 dB.
+Requested / achieved reserve / uncovered deficit by part: [2.146071554928 / 0.500000000000 / 0.000000000000] [2.022697739188 / 0.500000000000 / 0.000000000000] dB.
+Root analysis:802dbf0e0806528a5be1d66920147c0f1285fdb60ebc92118a46681666ed58bc:3182400:3422400; Unsplit original root, fixed-ramp support edges; support [3182400, 3422400); nominal cuts 3184800, 3420000; additional reductions 1.000300332751 dB.
+Requested / achieved reserve / uncovered deficit by part: [2.000600665502 / 0.000000000000 / 0.500300332751] dB.
+Root analysis:802dbf0e0806528a5be1d66920147c0f1285fdb60ebc92118a46681666ed58bc:6609600:7104000; Reserved two-cut unchanged-middle alternative, longest nominated low-need gap; support [6609600, 7104000); nominal cuts 6612000, 6811200, 6936000, 7101600; additional reductions 1.936799648904 0.000000000000 1.151567621370 dB.
+Requested / achieved reserve / uncovered deficit by part: [1.936799648904 / 0.500000000000 / 0.000000000000] [0.904219735776 / 0.000000000000 / 0.404219735776] [1.151567621370 / 0.500000000000 / 0.000000000000] dB.
+Root analysis:802dbf0e0806528a5be1d66920147c0f1285fdb60ebc92118a46681666ed58bc:1689600:1910400; Unsplit original root, fixed-ramp support edges; support [1689600, 1910400); nominal cuts 1692000, 1908000; additional reductions 1.333575956424 dB.
+Requested / achieved reserve / uncovered deficit by part: [1.333575956424 / 0.500000000000 / 0.000000000000] dB.
+
+Complete measured attempt 2 / 87eb771129f60be21a2bfd2c5a5ea73153c8a867bf7729e464438f00cb16cf2f
+Actual Private candidate (not Current State) evaluation: FAIL
+Fails one or more selected measured rules.
+programme-loudness: PASS | -22.999930 LUFS | min -23.200000 | max -22.800000 | delta 0.000070
+Within selected bounds.
+true-peak: FAIL | 3.785850 dBTP | max -1.000000 | delta 4.785850
+Outside selected bounds.
+loudness-range: PASS | 13.791393 LU | max 14.500000 | delta -0.708607
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+IL: -22.999929631787
+TP: 3.785849756152
+LRA: 13.791392536665
+M max: -13.091070049118
+S max: -18.364037926102
+sample peak: 3.745713113428
+Forecast IL -23.000000000000; LRA 13.791373168784; TP unknown (not a measured failure). Approximate window-energy proxy: uniform bin energy, filter/gain noncommutation and float-stage rounding. Sampled M/S cannot certify maxima; true peak unavailable. Empirical errors are not proven bounds. EOF drain retains global-scaled baseline shape; locally transformed filter-tail state is uncertain, not measured silence. Full-population gate membership changes; constant-gain/local-LRA shortcuts are invalid.
+Forecast gate entry/exit: I 54/6; LRA 0/0.
+Actual minus forecast (IL/LRA/P10/P95/sampled M): 0.000070368213 0.000019367881 -0.000000001037 0.000019366843 0.042346015340. Empirical errors, not bounds.
+Changed support 1540800 programme frames; 6 connected regions; max added 3.000000000000 dB; absolute local dB*frames 2709701.561243537813; global 5.692040876643 dB.
+Independent activity accounting (not an audio-quality score)
+New splits per original root: root 1 = 1; root 2 = 0; root 3 = 2; root 4 = 0; root 5 = 0; root 6 = 0;
+Total splits 3; decision parts including unchanged gaps 8; connected changed regions 6.
+Newly affected duration including old/new ramps: 1540800 / 8923042 programme frames = 32.100000000000001 s = 17.267653788920864%.
+Nominal engine intervals 13 / 10000; actual transition count 12; longest changed run 552000 frames; margin activity 0 frames.
+Maximum added attenuation 3 dB; maximum cumulative attenuation 3 dB; absolute local dB*frames 2709701.5612435378.
+Cumulative non-unity local-envelope support: 1540800 frames in 6 components; distinct from newly affected duration.
+Global gain 5.6920408766433219 dB; delta 5.6920408766433219 dB - separate whole-programme change, excluded from the local duration percentage.
+Complete changed support (half-open source frames, old/new ramps included):
+[0, 153600)
+[1689600, 1910400)
+[3182400, 3422400)
+[5404800, 5956800)
+[6609600, 6813600)
+[6933600, 7104000)
+Complete nominal plan and fixed transitions (source frames; these are not changed-support edges):
+[0, 151200) plateau -3 dB
+[151200, 1692000) plateau 0 dB; incoming ramp [148800, 153600), nominal cut 151200, radius 2400
+[1692000, 1908000) plateau -1.3335759564243865 dB; incoming ramp [1689600, 1694400), nominal cut 1692000, radius 2400
+[1908000, 3184800) plateau 0 dB; incoming ramp [1905600, 1910400), nominal cut 1908000, radius 2400
+[3184800, 3420000) plateau -1.0003003327512197 dB; incoming ramp [3182400, 3187200), nominal cut 3184800, radius 2400
+[3420000, 5407200) plateau 0 dB; incoming ramp [3417600, 3422400), nominal cut 3420000, radius 2400
+[5407200, 5808000) plateau -2.1460715549275911 dB; incoming ramp [5404800, 5409600), nominal cut 5407200, radius 2400
+[5808000, 5954400) plateau -2.0226977391884766 dB; incoming ramp [5805600, 5810400), nominal cut 5808000, radius 2400
+[5954400, 6612000) plateau 0 dB; incoming ramp [5952000, 5956800), nominal cut 5954400, radius 2400
+[6612000, 6811200) plateau -1.9367996489040067 dB; incoming ramp [6609600, 6614400), nominal cut 6612000, radius 2400
+[6811200, 6936000) plateau 0 dB; incoming ramp [6808800, 6813600), nominal cut 6811200, radius 2400
+[6936000, 7101600) plateau -1.1515676213703792 dB; incoming ramp [6933600, 6938400), nominal cut 6936000, radius 2400
+[7101600, 8923042) plateau 0 dB; incoming ramp [7099200, 7104000), nominal cut 7101600, radius 2400
+Root analysis:802dbf0e0806528a5be1d66920147c0f1285fdb60ebc92118a46681666ed58bc:0:230400; Alternative exact outer processing support; support [0, 153600); nominal cuts 0, 151200; additional reductions 3.000000000000 dB.
+Requested / achieved reserve / uncovered deficit by part: [3.444312209846 / 0.055687790154 / 0.000000000000] dB.
+Root analysis:802dbf0e0806528a5be1d66920147c0f1285fdb60ebc92118a46681666ed58bc:5404800:5956800; Bounded split topology ordered by need-change strength and source frame; support [5404800, 5956800); nominal cuts 5407200, 5808000, 5954400; additional reductions 2.146071554928 2.022697739188 dB.
+Requested / achieved reserve / uncovered deficit by part: [2.146071554928 / 0.500000000000 / 0.000000000000] [2.022697739188 / 0.500000000000 / 0.000000000000] dB.
+Root analysis:802dbf0e0806528a5be1d66920147c0f1285fdb60ebc92118a46681666ed58bc:3182400:3422400; Unsplit original root, fixed-ramp support edges; support [3182400, 3422400); nominal cuts 3184800, 3420000; additional reductions 1.000300332751 dB.
+Requested / achieved reserve / uncovered deficit by part: [2.000600665502 / 0.000000000000 / 0.500300332751] dB.
+Root analysis:802dbf0e0806528a5be1d66920147c0f1285fdb60ebc92118a46681666ed58bc:6609600:7104000; Reserved two-cut unchanged-middle alternative, longest nominated low-need gap; support [6609600, 7104000); nominal cuts 6612000, 6811200, 6936000, 7101600; additional reductions 1.936799648904 0.000000000000 1.151567621370 dB.
+Requested / achieved reserve / uncovered deficit by part: [1.936799648904 / 0.500000000000 / 0.000000000000] [0.904219735776 / 0.000000000000 / 0.404219735776] [1.151567621370 / 0.500000000000 / 0.000000000000] dB.
+Root analysis:802dbf0e0806528a5be1d66920147c0f1285fdb60ebc92118a46681666ed58bc:1689600:1910400; Unsplit original root, fixed-ramp support edges; support [1689600, 1910400); nominal cuts 1692000, 1908000; additional reductions 1.333575956424 dB.
+Requested / achieved reserve / uncovered deficit by part: [1.333575956424 / 0.500000000000 / 0.000000000000] dB.
+
+Complete measured attempt 3 / f90b531c30646c1bfd5b4827bd3763f1e6c4eb74d3af3ee9344001cf2d278e17
+Actual Private candidate (not Current State) evaluation: FAIL
+Fails one or more selected measured rules.
+programme-loudness: PASS | -23.199927 LUFS | min -23.200000 | max -22.800000 | delta -0.199927
+Within selected bounds.
+true-peak: FAIL | 3.629934 dBTP | max -1.000000 | delta 4.629934
+Outside selected bounds.
+loudness-range: PASS | 13.602742 LU | max 14.500000 | delta -0.897258
+Within selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+IL: -23.199927488846
+TP: 3.629933949138
+LRA: 13.602742305005
+M max: -13.246986053007
+S max: -18.884154269060
+sample peak: 3.589797388645
+Forecast IL -23.200000000000; LRA 13.602742306764; TP unknown (not a measured failure). Approximate window-energy proxy: uniform bin energy, filter/gain noncommutation and float-stage rounding. Sampled M/S cannot certify maxima; true peak unavailable. Empirical errors are not proven bounds. EOF drain retains global-scaled baseline shape; locally transformed filter-tail state is uncertain, not measured silence. Full-population gate membership changes; constant-gain/local-LRA shortcuts are invalid.
+Forecast gate entry/exit: I 61/28; LRA 0/0.
+Actual minus forecast (IL/LRA/P10/P95/sampled M): 0.000072511154 -0.000000001759 -0.000000000816 -0.000000002575 0.042346015183. Empirical errors, not bounds.
+Changed support 1732800 programme frames; 5 connected regions; max added 3.000000000000 dB; absolute local dB*frames 3463259.933866527863; global 5.536124872911 dB.
+Independent activity accounting (not an audio-quality score)
+New splits per original root: root 1 = 0; root 2 = 0; root 3 = 0; root 4 = 0; root 5 = 0; root 6 = 0;
+Total splits 0; decision parts including unchanged gaps 5; connected changed regions 5.
+Newly affected duration including old/new ramps: 1732800 / 8923042 programme frames = 36.100000000000001 s = 19.419386348287951%.
+Nominal engine intervals 10 / 10000; actual transition count 9; longest changed run 552000 frames; margin activity 0 frames.
+Maximum added attenuation 3 dB; maximum cumulative attenuation 3 dB; absolute local dB*frames 3463259.9338665279.
+Cumulative non-unity local-envelope support: 1732800 frames in 5 components; distinct from newly affected duration.
+Global gain 5.5361248729113015 dB; delta 5.5361248729113015 dB - separate whole-programme change, excluded from the local duration percentage.
+Complete changed support (half-open source frames, old/new ramps included):
+[0, 225600)
+[1689600, 1910400)
+[3182400, 3422400)
+[5404800, 5956800)
+[6609600, 7104000)
+Complete nominal plan and fixed transitions (source frames; these are not changed-support edges):
+[0, 223200) plateau -3 dB
+[223200, 1692000) plateau 0 dB; incoming ramp [220800, 225600), nominal cut 223200, radius 2400
+[1692000, 1908000) plateau -1.3335759564243865 dB; incoming ramp [1689600, 1694400), nominal cut 1692000, radius 2400
+[1908000, 3184800) plateau 0 dB; incoming ramp [1905600, 1910400), nominal cut 1908000, radius 2400
+[3184800, 3420000) plateau -2.0006006655024393 dB; incoming ramp [3182400, 3187200), nominal cut 3184800, radius 2400
+[3420000, 5407200) plateau 0 dB; incoming ramp [3417600, 3422400), nominal cut 3420000, radius 2400
+[5407200, 5954400) plateau -2.1241865415351562 dB; incoming ramp [5404800, 5409600), nominal cut 5407200, radius 2400
+[5954400, 6612000) plateau 0 dB; incoming ramp [5952000, 5956800), nominal cut 5954400, radius 2400
+[6612000, 7101600) plateau -1.7824987239065564 dB; incoming ramp [6609600, 6614400), nominal cut 6612000, radius 2400
+[7101600, 8923042) plateau 0 dB; incoming ramp [7099200, 7104000), nominal cut 7101600, radius 2400
+Root analysis:802dbf0e0806528a5be1d66920147c0f1285fdb60ebc92118a46681666ed58bc:0:230400; Alternative exact outer processing support; support [0, 225600); nominal cuts 0, 223200; additional reductions 3.000000000000 dB.
+Requested / achieved reserve / uncovered deficit by part: [3.444312209846 / 0.055687790154 / 0.000000000000] dB.
+Root analysis:802dbf0e0806528a5be1d66920147c0f1285fdb60ebc92118a46681666ed58bc:5404800:5956800; Unsplit original root, fixed-ramp support edges; support [5404800, 5956800); nominal cuts 5407200, 5954400; additional reductions 2.124186541535 dB.
+Requested / achieved reserve / uncovered deficit by part: [2.124186541535 / 0.500000000000 / 0.000000000000] dB.
+Root analysis:802dbf0e0806528a5be1d66920147c0f1285fdb60ebc92118a46681666ed58bc:6609600:7104000; Unsplit original root, fixed-ramp support edges; support [6609600, 7104000); nominal cuts 6612000, 7101600; additional reductions 1.782498723907 dB.
+Requested / achieved reserve / uncovered deficit by part: [1.782498723907 / 0.500000000000 / 0.000000000000] dB.
+Root analysis:802dbf0e0806528a5be1d66920147c0f1285fdb60ebc92118a46681666ed58bc:3182400:3422400; Unsplit original root, fixed-ramp support edges; support [3182400, 3422400); nominal cuts 3184800, 3420000; additional reductions 2.000600665502 dB.
+Requested / achieved reserve / uncovered deficit by part: [2.000600665502 / 0.500000000000 / 0.000000000000] dB.
+Root analysis:802dbf0e0806528a5be1d66920147c0f1285fdb60ebc92118a46681666ed58bc:1689600:1910400; Unsplit original root, fixed-ramp support edges; support [1689600, 1910400); nominal cuts 1692000, 1908000; additional reductions 1.333575956424 dB.
+Requested / achieved reserve / uncovered deficit by part: [1.333575956424 / 0.500000000000 / 0.000000000000] dB.
+Formation limitation: analysis:802dbf0e0806528a5be1d66920147c0f1285fdb60ebc92118a46681666ed58bc:7137600:7281600: no nominated geometry fits the declared ranges; this is a bounded method limitation
+Private assessment budget 3. Failed shortlist 0.01 LU is diagnostic ranking only, never a rule allowance.
+Preparation 1.822 s; auxiliary pass 0.264 s; cached planning 0.035 s; sidecar 240240 bytes; bounded additional planning allocation estimate 2388772 bytes.
+
+section-preferences-v2 / connected-envelope-support-v2
+Policy digest: 9020f36cdf7584536fc2708e4f57196cbf3ca8ef1d72e954ae8ad2e88bb48e27
+No region-count restriction; affected duration 20.0% (preservation preference, not broadcast rule).
+Additional attenuation 3.0 dB; cumulative local attenuation 12.0 dB; requested reserve 0.5 dB inside both caps.
+
+Target EBU R128-2023 programme QC / ebu-r128-2023-programme-linear-qc / 1.0.0 / 2d44e8aad6b22bc21fbfab121b5528ad8c9836bb2027235a26e7f29da7d0d7ba
+IL -23.000000000 LUFS +/- 0.200000000 LU / True peak -1.000000000 dBTP / LRA 14.500000000 LU / Max M No Limit / Max S No Limit
+Selected programme loudness and true-peak rules for pre-produced whole-programme linear-audio QC. Excludes live exceptions, deliberate lower targets, short-form supplements and distribution-specific requirements.
+EBU R128-2023 (November 2023) / https://tech.ebu.ch/docs/r/r128.pdf
+Requirement provenance
+IL R128-2023 clauses h, i, k, l: -23 LUFS intended target; +/-0.2 LU QC allowance; whole-programme level gating.
+True peak R128-2023 clause m: maximum -1 dBTP for linear audio.
+LRA User-specified job requirement: Programme job requirements; EBU Tech 3342-2023 whole-programme LRA; Independent engineering comparison; no delivery-compliance claim. User provenance is not independently verified; not an EBU-mandated ceiling.
+Max M 
+Max S 
+Clause m separately permits +/-0.3 dB meter tolerance for signals band-limited to 20 kHz. Bandwidth is not certified here; this provision never relaxes the -1 dBTP evaluation ceiling.
+Frozen measured Current baseline (measured)
+IL LUFS = -27.656171553062
+True peak dBTP = -0.572614727258
+LRA LU = 15.548069238423
+Max M LUFS = -17.955846665497
+Max S LUFS = -21.668124650286
+Sample peak dBFS = -0.612751315882
+Current State evaluation: FAIL
+Fails one or more selected measured rules.
+programme-loudness: FAIL | -27.656172 LUFS | min -23.200000 | max -22.800000 | delta -4.656172
+Outside selected bounds.
+true-peak: FAIL | -0.572615 dBTP | max -1.000000 | delta 0.427385
+Outside selected bounds.
+loudness-range: FAIL | 15.548069 LU | max 14.500000 | delta 1.048069
+Outside selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Measurement a8c3e10e90fda85aac3e2767b10c34d914243dba7ce273486937750fff15ddce
+Method bs1770-5-ebu2023-m7.1 / build 2bc868fb5198536720a2fa41c9b359c7c931753e25e32e66bc2429c69072ee18 / Mac OSX 15.7.9;arm64;float32-samples;float64-analysis;no-fast-math;fp-contract-off
+Origin session 7017a23354db48608e8f14571004ca92 / job 1 / revision 1
+Initial Current from identical Source measurement a391f0cec62a13ede3af078bb6fba2e4265b2853ef94982e7faacfb145e767a9

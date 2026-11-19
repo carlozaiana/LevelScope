@@ -8,7 +8,7 @@ namespace
 class ProgrammeWindow final : public juce::DocumentWindow
 {
 public:
-    explicit ProgrammeWindow(ProgrammeImportPanel& p):DocumentWindow("Import channel files",juce::Colour(0xff181b20),DocumentWindow::closeButton),panel(p)
+    explicit ProgrammeWindow(ProgrammeImportPanel& p):DocumentWindow("Import channel files",palette::panel(),DocumentWindow::closeButton),panel(p)
     {setUsingNativeTitleBar(true);setContentNonOwned(&p,true);centreWithSize(820,520);setVisible(true);}
     void closeButtonPressed() override {panel.cancel();}
 private:ProgrammeImportPanel& panel;
@@ -16,7 +16,7 @@ private:ProgrammeImportPanel& panel;
 class CompositionWindow final : public juce::DocumentWindow
 {
 public:
-    explicit CompositionWindow(CompositionImportPanel& p):DocumentWindow("Compose M&E + dialogue",juce::Colour(0xff181b20),closeButton),panel(p)
+    explicit CompositionWindow(CompositionImportPanel& p):DocumentWindow("Compose M&E + dialogue",palette::panel(),closeButton),panel(p)
     {setUsingNativeTitleBar(true);setContentNonOwned(&p,true);centreWithSize(p.getWidth(),p.getHeight());setVisible(true);}
     void closeButtonPressed() override{panel.cancel();}
 private:CompositionImportPanel& panel;
@@ -25,7 +25,7 @@ class DiagnosticsWindow final : public juce::DocumentWindow
 {
 public:
     explicit DiagnosticsWindow (StandaloneDiagnosticsPanel& p)
-        : DocumentWindow ("LevelScope - Measured diagnostics", juce::Colour (0xff151b24), DocumentWindow::allButtons), panel (p)
+        : DocumentWindow ("LevelScope - Measured diagnostics", palette::panel(), DocumentWindow::allButtons), panel (p)
     {
         setUsingNativeTitleBar (true); setResizable (true, false); setResizeLimits (900, 800, 2400, 1600);
         setContentNonOwned (&panel, true); centreWithSize (1040, 850); setVisible (true);
@@ -38,7 +38,7 @@ class ReferenceWindow final : public juce::DocumentWindow
 {
 public:
     explicit ReferenceWindow (juce::Component& panel)
-        : DocumentWindow ("LevelScope - Reference picture", juce::Colour (0xff181b20), DocumentWindow::allButtons)
+        : DocumentWindow ("LevelScope - Reference picture", palette::panel(), DocumentWindow::allButtons)
     {
         setUsingNativeTitleBar (true); setResizable (true, false); setResizeLimits (620, 480, 2400, 1600);
         setContentNonOwned (&panel, true); centreWithSize (700, 600); setVisible (true);
@@ -49,7 +49,7 @@ class SectionsWindow final : public juce::DocumentWindow
 {
 public:
     explicit SectionsWindow (StandaloneSectionsPanel& p)
-        : DocumentWindow ("LevelScope - Programme sections", juce::Colour (0xff151b24), DocumentWindow::allButtons), panel (p)
+        : DocumentWindow ("LevelScope - Programme sections", palette::panel(), DocumentWindow::allButtons), panel (p)
     {
         setUsingNativeTitleBar (true); setResizable (true, false); setResizeLimits (1000, 700, 2400, 1800);
         viewport.setViewedComponent(&panel,false);setContentNonOwned (&viewport, false);
@@ -94,8 +94,8 @@ juce::String measurementsText (const MeasurementSummary& summary)
 }
 // [BEGIN LS-STANDALONE-WORKFLOW-SHELL]
 
-StandaloneMainComponent::StandaloneMainComponent(std::shared_ptr<OutputDeviceCatalog> catalog, OutputDeviceSettings settings)
-    : audioPanel(session, audition, [this] { refreshFromSession(); }, {}, std::move(catalog), std::move(settings))
+StandaloneMainComponent::StandaloneMainComponent(std::shared_ptr<OutputDeviceCatalog> catalog, OutputDeviceSettings settings,std::unique_ptr<juce::AudioIODevice> output)
+    : audition(std::move(output)),audioPanel(session, audition, [this] { refreshFromSession(); }, {}, std::move(catalog), std::move(settings))
 {
     configureSessionControls();
     configureLabels();
@@ -307,6 +307,7 @@ void StandaloneMainComponent::timerCallback()
 
 void StandaloneMainComponent::beginMeasurement (MeasurementDomain domain)
 {
+    if(session.boundaryBatch){jobLabel.setText("Finish boundary edits: Enter to review, Esc to cancel.",juce::dontSendNotification);return;}
     if (session.job.isActive() || session.sourceContentInvalid || session.persistenceLoading) return;
     if (domain == MeasurementDomain::currentState && ! session.hasCurrentStateInitialized()) return;
     auto context = session.measurementContext (domain);
@@ -314,6 +315,12 @@ void StandaloneMainComponent::beginMeasurement (MeasurementDomain domain)
     if(domain==MeasurementDomain::source)
         automaticSource.attemptedSource(session);
     audition.stop();
+    // Keep command focus on a stable surface before the initiating measurement
+    // button is disabled. JUCE must not transfer it to a neighbouring text field.
+    auto* focusView=&timeline;
+    for(auto* c=juce::Component::getCurrentlyFocusedComponent();c;c=c->getParentComponent())
+        if(auto* view=dynamic_cast<MeasurementTimeline*>(c)){focusView=view;break;}
+    focusView->focusForTransport();
     if (! session.job.begin (JobStage::analysis, session.revision)) return;
     analysisTicket = session.job.ticket;
     analysisDomain = domain;
@@ -349,7 +356,7 @@ void StandaloneMainComponent::beginWaveform()
 
 void StandaloneMainComponent::beginTrimProposal()
 {
-    if (session.persistenceLoading || ! session.getWorkflowReadiness().canDraftProposal()) return;
+    if (session.audioEditsBlocked() || ! session.getWorkflowReadiness().canDraftProposal()) return;
     const auto request = session.currentTrimRequest();
     session.discardTrim();
     if (! session.job.begin (JobStage::proposal, session.revision)) return;
@@ -371,14 +378,14 @@ void StandaloneMainComponent::beginSectionProposal()
     const auto first=proposal::draftGlobalTrim(request.scalar());
     session.discardSectionProposal();session.selectedPage=WorkflowPage::currentState;
     // No attribution, copy or measurement for existing global-only/no-change outcomes.
-    if(first.status==proposal::TrimStatus::noChange||(!request.currentContext.profile.limits.hasMaxLoudnessRange&&first.status!=proposal::TrimStatus::noSolution))
+    if(!request.regionSettings&&(first.status==proposal::TrimStatus::noChange||(!request.currentContext.profile.limits.hasMaxLoudnessRange&&first.status!=proposal::TrimStatus::noSolution)))
     {
         JobControl control;const auto result=generateSectionProposal(request,control);
         if(result.value)session.acceptSectionProposal(*result.value);else {session.sectionProposalError=result.error;session.sectionProposalNotice=result.message;}
         refreshFromSession();return;
     }
     if(!session.job.begin(JobStage::proposal,session.revision))return;
-    sectionProposalTicket=session.job.ticket;session.job.message=request.currentContext.profile.limits.hasMaxLoudnessRange?"Assessing bounded LRA candidates; Current unchanged":"Assessing one section envelope; Current State unchanged";
+    sectionProposalTicket=session.job.ticket;session.job.message=request.regionSettings?"Assessing experimental regions; forecasts are not measurements; Current unchanged":request.currentContext.profile.limits.hasMaxLoudnessRange?"Assessing bounded LRA candidates; Current unchanged":"Assessing one section envelope; Current State unchanged";
     importControl=std::make_shared<JobControl>();
     sectionProposalResult=std::async(std::launch::async,[request,control=importControl]{return generateSectionProposal(request,*control);});
     refreshFromSession();
@@ -428,14 +435,9 @@ void StandaloneMainComponent::configureTargetProfileBox()
 
     addAndMakeVisible (targetProfileBox);
     addAndMakeVisible(jobRequirementsPanel);
-    applicabilityConfirmation.setTooltip ("Confirm programme context. Excludes live exceptions, deliberate lower targets, short-form supplements and distribution-specific requirements.");
-    applicabilityConfirmation.onClick = [this]
-    {
-        session.setProgrammeApplicability (applicabilityConfirmation.getToggleState()
-            ? proposal::Applicability::preProducedLinearProgramme : proposal::Applicability::unconfirmed);
-        refreshFromSession();
-    };
-    addAndMakeVisible (applicabilityConfirmation);
+    qcScope.setText("PASS / FAIL applies to this file and the selected measured limits.",juce::dontSendNotification);
+    qcScope.setTooltip("The complete imported file is evaluated automatically. For excerpts, results describe the excerpt; they do not certify the parent programme or unselected delivery requirements.");
+    addAndMakeVisible(qcScope);
 }
 
 void StandaloneMainComponent::configureNavigationButtons()
@@ -478,7 +480,7 @@ void StandaloneMainComponent::configureCurrentStateControls()
     currentGain.setTextBoxStyle (juce::Slider::TextBoxRight, false, 100, 24);
     currentGain.setTextValueSuffix (" dB trim");
     currentGain.setTooltip ("Current State static gain, including LFE. Re-measure after editing. Audition selection is separate; Stop before editing processing gain.");
-    currentGain.onValueChange = [this] { session.setCurrentGainDb (currentGain.getValue()); refreshFromSession(); };
+    currentGain.onValueChange = [this] { session.synchronizeSections();auto next=session.manualState();next.globalDb=currentGain.getValue();session.commitManualEdit(std::move(next),"Change global gain");refreshFromSession(); };
     addAndMakeVisible (currentGain);
 
     addAndMakeVisible (initializeCurrentStateButton);
@@ -487,8 +489,8 @@ void StandaloneMainComponent::configureCurrentStateControls()
     preferencesButton.onClick=[this]{ProposalPreferencesPanel::showWindow(preferencesWindow, session, this, [this]{refreshFromSession();});};
     inspectProposalButton.onClick=[this]{reviewProposal(false);};
     addAndMakeVisible(preferencesButton);addAndMakeVisible(inspectProposalButton);
-    sectionProposalButton.onClick=[this]{if(session.getSelectedTargetProfile().limits.hasMaxLoudnessRange)showLraPassages(true);else beginSectionProposal();};
-    applySectionProposalButton.onClick=[this]{session.applySectionProposal();refreshFromSession();};
+    sectionProposalButton.onClick=[this]{proposeWithActiveMethod();};
+    applySectionProposalButton.onClick=[this]{if(gainLane.diagnosticRegionInspection())return;session.applySectionProposal();refreshFromSession();};
     discardSectionProposalButton.onClick=[this]{session.discardSectionProposal();refreshFromSession();};
     for(auto* button:{&sectionProposalButton,&applySectionProposalButton,&discardSectionProposalButton})addAndMakeVisible(*button);
     draftTrimButton.onClick = [this] { beginTrimProposal(); };
@@ -506,7 +508,7 @@ void StandaloneMainComponent::configureReadOnlyBox (juce::TextEditor& box)
     box.setCaretVisible (false);
     box.setScrollbarsShown (true);
 
-    box.setColour (juce::TextEditor::backgroundColourId, juce::Colour (0xff20242b));
+    box.setColour (juce::TextEditor::backgroundColourId, palette::card());
     box.setColour (juce::TextEditor::textColourId, juce::Colour (0xffeef1f7));
     box.setColour (juce::TextEditor::outlineColourId, juce::Colour (0xff3a3f4a));
     box.setColour (juce::TextEditor::focusedOutlineColourId, juce::Colour (0xff6f7788));
@@ -576,13 +578,11 @@ void StandaloneMainComponent::refreshFromSession()
                                 juce::dontSendNotification);
 
     targetProfileBox.setSelectedId (session.selectedTargetProfileIndex + 1, juce::dontSendNotification);
-    applicabilityConfirmation.setToggleState (session.programmeApplicability == proposal::Applicability::preProducedLinearProgramme, juce::dontSendNotification);
-    applicabilityConfirmation.setEnabled (session.sourceDocument.hasSource && ! session.job.isActive() && !session.persistenceLoading);
 
-    clearSourceButton.setEnabled (!session.persistenceLoading && (session.sourceDocument.hasSource || session.job.isActive()));
+    clearSourceButton.setEnabled (!session.boundaryBatch && !session.persistenceLoading && (session.sourceDocument.hasSource || session.job.isActive()));
     chooseProgrammeButton.setEnabled(canReplaceSession());
     chooseCompositionButton.setEnabled(canReplaceSession());
-    chooseSourceButton.setEnabled (! session.job.isActive() && !session.persistenceLoading);
+    chooseSourceButton.setEnabled (!session.boundaryBatch && ! session.job.isActive() && !session.persistenceLoading);
     targetProfileBox.setEnabled (!session.audioEditsBlocked() && !session.job.isActive());
     jobRequirementsPanel.refresh();
     refreshJobFeedback();
@@ -590,17 +590,17 @@ void StandaloneMainComponent::refreshFromSession()
     initializeCurrentStateButton.setEnabled (! session.audioEditsBlocked() && ! session.job.isActive() && session.canInitializeCurrentStateFromSource());
     clearCurrentStateButton.setEnabled (! session.audioEditsBlocked() && ! session.job.isActive() && session.hasCurrentStateInitialized());
     const auto measurementError = OfflineAnalysisService::validateRequest (session.measurementContext (MeasurementDomain::source), MeasurementDomain::source);
-    measureSourceButton.setEnabled (!session.persistenceLoading && ! session.job.isActive() && ! session.sourceContentInvalid && measurementError.isEmpty());
+    measureSourceButton.setEnabled (!session.boundaryBatch && !session.persistenceLoading && ! session.job.isActive() && ! session.sourceContentInvalid && measurementError.isEmpty());
     measureSourceButton.setTooltip (measurementError);
-    remeasureCurrentStateButton.setEnabled (!session.persistenceLoading && ! session.job.isActive() && ! session.sourceContentInvalid && session.hasCurrentStateInitialized() && measurementError.isEmpty());
-    currentGain.setEnabled (! session.audioEditsBlocked() && ! session.job.isActive() && session.hasCurrentStateInitialized());
+    remeasureCurrentStateButton.setEnabled (!session.boundaryBatch && !session.persistenceLoading && ! session.job.isActive() && ! session.sourceContentInvalid && session.hasCurrentStateInitialized() && measurementError.isEmpty());
+    currentGain.setEnabled (! session.audioEditsBlocked() && ! session.job.isActive() && session.hasCurrentStateInitialized() && !(session.sectionTrimDraft&&session.sectionTrimDraft->rollbackAnnotations));
     currentGain.setValue (session.currentStateDocument.staticGainDb, juce::dontSendNotification);
-    draftTrimButton.setEnabled (!session.persistenceLoading && session.getWorkflowReadiness().canDraftProposal());
+    draftTrimButton.setEnabled (!session.audioEditsBlocked() && session.getWorkflowReadiness().canDraftProposal());
     applyTrimButton.setEnabled (session.canApplyTrim());
     preferencesButton.setEnabled(!session.persistenceLoading&&!session.audioEditsBlocked()&&!session.job.isActive());
     inspectProposalButton.setEnabled(true);
     sectionProposalButton.setEnabled(!session.persistenceLoading&&!session.audioEditsBlocked()&&!session.job.isActive()&&session.currentState.hasMeasurement);
-    applySectionProposalButton.setEnabled(session.canApplySectionProposal());
+    applySectionProposalButton.setEnabled(session.canApplySectionProposal()&&!gainLane.diagnosticRegionInspection());
     discardSectionProposalButton.setEnabled(bool(session.sectionProposal)&&!session.job.isActive());
     discardTrimButton.setEnabled (!session.persistenceLoading && ! session.job.isActive() && session.trimDraft.has_value());
 
@@ -871,7 +871,7 @@ juce::String StandaloneMainComponent::buildPageDetailText() const
 
 void StandaloneMainComponent::paint (juce::Graphics& g)
 {
-    g.fillAll (juce::Colour (0xff15171c));
+    g.fillAll (palette::panel());
 
     g.setColour (juce::Colour (0xff2a2d35));
     g.drawRoundedRectangle (getLocalBounds().toFloat().reduced (12.0f), 10.0f, 1.0f);
@@ -880,6 +880,11 @@ void StandaloneMainComponent::paint (juce::Graphics& g)
 
 void StandaloneMainComponent::configureTimelineShell()
 {
+    addChildComponent(monitorWarning);addChildComponent(monitorSetup);
+    monitorWarning.setName("Monitor overload warning");monitorWarning.setFont(juce::Font(15.f,juce::Font::bold));
+    monitorWarning.setColour(juce::Label::backgroundColourId,juce::Colour(0xff4a231d));
+    monitorWarning.setColour(juce::Label::textColourId,juce::Colour(0xffffdfbf));
+    monitorSetup.onClick=[this]{showAudioSetup();};
     audioPanel.onAnalyse=[this]
     {
         beginMeasurement(MeasurementDomain::source);
@@ -891,11 +896,13 @@ void StandaloneMainComponent::configureTimelineShell()
         refreshFromSession();
         refreshTimeline();
         for(const auto& row:session.sectionDocument.map().sections)
-            if(row.id==id){gainLane.selectFrame(row.begin,false);pageDetailBox.setText(gainLane.inspectionText(),false);break;}
+            if(row.id==id){gainLane.selectFrame(row.begin,true);break;}
     });
     timeline.onTogglePlayback=[this]{if(audition.active()){audition.stop();refreshTimeline();}else playTimeline();};
+    timeline.onToggleInspectionAudition=[this]{toggleInspectionAudition();};
     gainLane.onChanged=[this]{refreshFromSession();refreshTimeline();};
-    proposalPanel.onPropose=[this]{if(session.getSelectedTargetProfile().limits.hasMaxLoudnessRange)showLraPassages(true);else beginSectionProposal();refreshTimeline();};
+    proposalPanel.onPropose=[this]{proposeWithActiveMethod();refreshTimeline();};
+    proposalPanel.onRegions=[this]{showRegionPlanning();};
     lraPassagesButton.onClick=[this]{showLraPassages();};
     proposalPanel.onReview=[this]{reviewProposal(false);};proposalPanel.onHistory=[this]{reviewProposal(true);};
     proposalPanel.onPreferences=[this]{preferencesButton.onClick();};
@@ -917,13 +924,19 @@ void StandaloneMainComponent::configureTimelineShell()
     auditionDomainBox.onChange=[this]{session.selectAuditionDomain(auditionDomainBox.getSelectedId()==2?MeasurementDomain::currentState:MeasurementDomain::source);audioPanel.synchronize();refreshTimeline();};
     addAndMakeVisible(jobRequirementsPanel.informationLine());
     comparisonDivider.move=[this](int delta){timelineLayout.moveComparison(delta);resized();};
-    waveformDivider.move=[this](int delta){timelineLayout.moveTimeline(delta,timelineAvailableHeight,session.sourceDocument.layout.count,TimelineGainLane::height);resized();};
+    waveformDivider.move=[this](int delta){timelineLayout.moveTimeline(delta,timelineAvailableHeight,session.sourceDocument.layout.count,gainLane.preferredHeight());resized();};
     timeline.onRequestSeek=[this](int64_t frame,const juce::String& identity)
     {const auto error=TimelineTransport::seek(frame,identity,session,audition);refreshTimeline();return error;};
     sectionsButton.onClick=[this]{showSections();};
     buildWaveformButton.onClick=[this]{beginWaveform();};
-    timeline.onInspect=[this](const juce::String& text){pageDetailBox.setText(text.startsWith("Current section gain settings")?text:inspectDomain.getText()+" | "+text,false);};
+    timeline.onInspect=[this](const juce::String& text){pageDetailBox.setText(inspectDomain.getText()+" | "+text,false);};
     setWantsKeyboardFocus(true);
+    addAndMakeVisible(sourceFilename);sourceFilename.setName("Programme filename");sourceFilename.setFont(14.f);
+    sourceFilename.setMinimumHorizontalScale(1.f);sessionStatus.setFont(11.f);
+    addAndMakeVisible(inspectorViewport);inspectorViewport.setViewedComponent(&inspectorContent,false);inspectorViewport.setScrollBarsShown(true,false);
+    for(auto* c:std::initializer_list<juce::Component*>{&proposalPanel,&measureSourceButton,&remeasureCurrentStateButton,&currentGain,&qcScope,&buildWaveformButton,&pageDetailBox})inspectorContent.addAndMakeVisible(c);
+    inspectDomain.setTooltip("Inspect independently, or A to switch inspection and audition together while stopped.");
+    auditionDomainBox.setTooltip("A switches inspection and audition together while stopped. Playback always requires Play.");
 }
 void StandaloneMainComponent::chooseMix()
 {
@@ -960,6 +973,19 @@ void StandaloneMainComponent::showLraPassages(bool current)
     lraPassagesWindow=std::make_unique<ProposalWindow>("LRA passages — inspection and candidate estimates",std::move(panel),this);
     lraPassagesWindow->present();
 }
+void StandaloneMainComponent::proposeWithActiveMethod()
+{
+    if(session.boundaryBatch)return;
+    if(session.regionPlanning)beginSectionProposal();
+    else if(session.getSelectedTargetProfile().limits.hasMaxLoudnessRange)showLraPassages(true);
+    else beginSectionProposal();
+}
+void StandaloneMainComponent::showRegionPlanning()
+{
+    session.synchronizeSections();
+    RegionPlanningPanel::showWindow(regionPlanningWindow,session,this,[this]{refreshFromSession();refreshTimeline();},
+        [this]{beginSectionProposal();refreshTimeline();});
+}
 void StandaloneMainComponent::reviewProposal(bool historical)
 {
     if(historical?!session.lastAppliedExplanation:!session.sectionProposal)return;
@@ -973,8 +999,20 @@ void StandaloneMainComponent::reviewProposal(bool historical)
         return s.sectionProposalStale()?"STALE proposal snapshot — inputs changed. Apply unavailable. Generate again.":
             proposal->outcomeTitle()+". "+(s.canApplySectionProposal()?"Explicit Apply is in the main window.":"Apply unavailable. Current verification remains separate.");
     };
-    proposalInspectionWindow=std::make_unique<ProposalWindow>(historical?"Last applied proposal explanation":"Review complete proposal",
-        std::make_unique<ProposalInspectionPanel>(historical?session.appliedExplanationDisplayText():session.sectionProposalDisplayText(),std::move(status)),this);
+    std::unique_ptr<juce::Component> view;
+    if(!historical&&proposal->regionReview())
+    {
+        auto panel=std::make_unique<RegionProposalReviewPanel>(proposal,std::move(status));
+        panel->onInspect=[this,runtime,proposal](size_t attempt,int64_t begin,int64_t end)
+        {
+            if(session.sessionId!=runtime||session.sectionProposal!=proposal)return;
+            gainLane.inspectRegionAttempt(attempt);timeline.highlight(double(begin),double(end));
+            gainLane.selectFrame(begin,false);pageDetailBox.setText(gainLane.inspectionText(),false);refreshTimeline();
+        };
+        view=std::move(panel);
+    }
+    else view=std::make_unique<ProposalInspectionPanel>(historical?session.appliedExplanationDisplayText():session.sectionProposalDisplayText(),std::move(status),historical&&session.lastAppliedExplanation->regionSettings?RegionProposalReviewPanel::pageBytes:4000);
+    proposalInspectionWindow=std::make_unique<ProposalWindow>(historical?"Last applied proposal explanation":"Review complete proposal",std::move(view),this);
     proposalInspectionWindow->present();
 }
 void StandaloneMainComponent::showSections()
@@ -986,9 +1024,14 @@ void StandaloneMainComponent::showSections()
         sectionsPanel->canImportMarkers=[this]{return canReplaceSession();};
         sectionsPanel->onPlay=[this]{playTimeline(&sectionsPanel->timelineView());};
         sectionsPanel->onStop=[this]{audition.stop();refreshTimeline();};
-        auto& view=sectionsPanel->timelineView();
+        auto& view=sectionsPanel->timelineView();view.setTransitionShading(timeline.transitionShading());
         view.onRequestSeek=timeline.onRequestSeek;
         view.onTogglePlayback=[this]{if(audition.active())sectionsPanel->onStop();else sectionsPanel->onPlay();};
+        view.onToggleInspectionAudition=timeline.onToggleInspectionAudition;
+        view.onUndo=[this](bool redo){return performCommand(redo?redoEdit:undoEdit);};
+        view.onRemeasure=[this]{performCommand(measureCurrent);};
+        view.peakVisibility().setToggleState(timeline.peakVisibility().getToggleState(),juce::dontSendNotification);
+        view.peakVisibility().onClick=[this]{timeline.peakVisibility().setToggleState(sectionsPanel->timelineView().peakVisibility().getToggleState(),juce::dontSendNotification);timeline.repaint();sectionsPanel->timelineView().repaint();};
     }
     if(!sectionsWindow)sectionsWindow=std::make_unique<SectionsWindow>(*sectionsPanel);
     sectionsPanel->resume();
@@ -998,11 +1041,62 @@ void StandaloneMainComponent::showSections()
 }
 void StandaloneMainComponent::playTimeline(MeasurementTimeline* origin)
 {
+    if(session.boundaryBatch){jobLabel.setText("Finish boundary edits: Enter to review, Esc to cancel.",juce::dontSendNotification);return;}
     if(session.job.isActive()||session.persistenceLoading)return;
     (origin?*origin:timeline).focusForTransport();
     if(!audition.connected()){showAudioSetup();return;}
     audioPanel.synchronize();const auto error=audition.play(session.auditionRequest(),session.sourceDocument.routing);
     if(error.isNotEmpty())jobLabel.setText(error,juce::dontSendNotification);refreshTimeline();
+}
+juce::StringArray StandaloneMainComponent::getMenuBarNames(){return {"File","Edit","View","Transport","Analysis"};}
+juce::PopupMenu StandaloneMainComponent::getMenuForIndex(int index,const juce::String&)
+{
+    juce::PopupMenu menu;const bool idle=!session.audioEditsBlocked()&&!session.job.isActive()&&!session.persistenceLoading;
+    const auto utf8=[](const char* text){return juce::String::fromUTF8(text);};
+    if(index==0){menu.addItem(newDocument,"New session",newSessionButton.isEnabled());menu.addItem(openDocument,utf8("Open session…"),openSessionButton.isEnabled());menu.addItem(openAudio,utf8("Open mix… (⌘O)"),openMixButton.isEnabled());menu.addSeparator();menu.addItem(saveDocument,utf8("Save session (⌘S)"),saveSessionButton.isEnabled());menu.addItem(saveDocumentAs,utf8("Save session as…"),saveAsSessionButton.isEnabled());}
+    if(index==1){menu.addItem(removeBoundaries,"Remove section boundaries only",idle&&session.sectionDocument.map().sections.size()>1);menu.addSeparator();auto* text=dynamic_cast<juce::TextEditor*>(juce::Component::getCurrentlyFocusedComponent());menu.addItem(undoEdit,utf8("Undo (⌘Z)"),text||session.canUndoManual());menu.addItem(redoEdit,utf8("Redo (⇧⌘Z)"),text||session.canUndoManual(true));}
+    if(index==2){menu.addItem(transitionBands,"Gain transition shading (Current)",true,timeline.transitionShading());menu.addItem(peakWarnings,"Peak warnings",true,timeline.peakVisibility().getToggleState());menu.addItem(sectionsView,utf8("Sections and gain…"),sectionsButton.isEnabled());}
+    if(index==3)menu.addItem(playStop,audition.active()?"Stop (Space)":"Play (Space)",timelineStop.isEnabled()||timelinePlay.isEnabled());
+    if(index==4){menu.addItem(measureOriginal,"Measure Original",idle&&measureSourceButton.isEnabled());menu.addItem(measureCurrent,utf8("Re-measure Current State (⌘R)"),idle&&remeasureCurrentStateButton.isEnabled());menu.addSeparator();menu.addItem(proposalPreferences,utf8("Proposal limits…"),preferencesButton.isEnabled());}
+    return menu;
+}
+bool StandaloneMainComponent::performCommand(int id)
+{
+    if(juce::Component::getCurrentlyModalComponent())return false;
+    const auto commitEditors=[this]{return gainLane.commitPending()&&(!sectionsPanel||sectionsPanel->commitPendingGain());};
+    const auto click=[](juce::Button& button){if(!button.isEnabled()||!button.onClick)return false;button.onClick();return true;};
+    switch(id)
+    {
+        case newDocument:return commitEditors()&&click(newSessionButton);
+        case openDocument:return commitEditors()&&click(openSessionButton);
+        case openAudio:return commitEditors()&&click(openMixButton);
+        case saveDocument:return commitEditors()&&click(saveSessionButton);
+        case saveDocumentAs:return commitEditors()&&click(saveAsSessionButton);
+        case undoEdit:case redoEdit:
+            if(auto* text=dynamic_cast<juce::TextEditor*>(juce::Component::getCurrentlyFocusedComponent()))return id==undoEdit?text->undo():text->redo();
+            if(!commitEditors()||!session.undoManual(id==redoEdit))return false;
+            refreshFromSession();refreshTimeline();if(sectionsPanel)sectionsPanel->synchronize();return true;
+        case transitionBands:
+            timeline.setTransitionShading(!timeline.transitionShading());
+            if(sectionsPanel)sectionsPanel->timelineView().setTransitionShading(timeline.transitionShading());return true;
+        case peakWarnings:
+            timeline.peakVisibility().setToggleState(!timeline.peakVisibility().getToggleState(),juce::sendNotificationSync);
+            if(sectionsPanel)sectionsPanel->timelineView().peakVisibility().setToggleState(timeline.peakVisibility().getToggleState(),juce::sendNotificationSync);return true;
+        case removeBoundaries:
+        {
+            TimelineGainLane* selected=&gainLane;
+            for(auto* c=juce::Component::getCurrentlyFocusedComponent();c;c=c->getParentComponent())
+                if(auto* view=dynamic_cast<MeasurementTimeline*>(c);view&&view->attachedGainLane()){selected=view->attachedGainLane();break;}
+            const auto changed=selected->removeSelectedBoundaries();if(changed){refreshFromSession();refreshTimeline();}return changed;
+        }
+        case sectionsView:return commitEditors()&&click(sectionsButton);
+        case playStop:if(audition.active()){audition.stop();refreshTimeline();return true;}return commitEditors()&&click(timelinePlay);
+        case measureOriginal:return commitEditors()&&click(measureSourceButton);
+        case measureCurrent:if(!commitEditors())return false;return click(remeasureCurrentStateButton);
+        case preferences:showAudioSetup();return true;
+        case proposalPreferences:return click(preferencesButton);
+        default:return false;
+    }
 }
 bool StandaloneMainComponent::keyPressed(const juce::KeyPress& key)
 {
@@ -1011,10 +1105,24 @@ bool StandaloneMainComponent::keyPressed(const juce::KeyPress& key)
     if(juce::Component::getCurrentlyModalComponent()!=nullptr)return false;
     if(key.getModifiers().isCommandDown())
     {
-        if(key.getKeyCode()=='s'||key.getKeyCode()=='S'){beginSaveSession(false);return true;}
-        if(key.getKeyCode()=='o'||key.getKeyCode()=='O'){chooseMix();return true;}
+        if(key.getKeyCode()=='s'||key.getKeyCode()=='S')return performCommand(saveDocument);
+        if(key.getKeyCode()=='z'||key.getKeyCode()=='Z')return performCommand(key.getModifiers().isShiftDown()?redoEdit:undoEdit);
+        if(key.getKeyCode()=='r'||key.getKeyCode()=='R')return performCommand(measureCurrent);
+        if(key.getKeyCode()==',')return performCommand(preferences);
+        if(key.getKeyCode()=='o'||key.getKeyCode()=='O')return performCommand(openAudio);
     }
     return timeline.keyPressed(key);
+}
+void StandaloneMainComponent::toggleInspectionAudition()
+{
+    if(session.audioEditsBlocked()||session.job.isActive()||session.persistenceLoading)
+    {pageDetailBox.setText("Stop playback/preparation or finish the job before switching inspection and audition (A).",false);return;}
+    if(!session.sourceDocument.hasSource||!session.hasCurrentStateInitialized())return;
+    const auto next=session.auditionDomain==MeasurementDomain::source?MeasurementDomain::currentState:MeasurementDomain::source;
+    session.selectAuditionDomain(next);inspectDomain.setSelectedId(next==MeasurementDomain::source?1:2,juce::dontSendNotification);
+    if(sectionsPanel)sectionsPanel->selectInspectionDomain(next);
+    audioPanel.synchronize();timeline.clearHighlight();refreshTimeline();
+    pageDetailBox.setText(inspectDomain.getText()+" + "+auditionDomainBox.getText()+". Stopped; press Play to listen.",false);
 }
 void StandaloneMainComponent::refreshTimeline()
 {
@@ -1023,9 +1131,18 @@ void StandaloneMainComponent::refreshTimeline()
     const auto currentBinding=WaveformBinding::from(session.measurementContext(MeasurementDomain::currentState),MeasurementDomain::currentState);
     const bool valid=session.sourceDocument.hasSource && !session.sourceContentInvalid && session.sourceDocument.matchesFileStamps();
     gainLane.synchronize(valid&&session.sourceDocument.layout.confirmed?sourceBinding.runtime+sourceBinding.identity:juce::String{});
+    if(gainLane.getHeight()!=gainLane.preferredHeight()){resized();timeline.resized();}
+    proposalPanel.setDiagnosticInspection(gainLane.diagnosticRegionInspection());
+    timeline.peakVisibility().onClick=[this]{if(sectionsPanel){sectionsPanel->timelineView().peakVisibility().setToggleState(timeline.peakVisibility().getToggleState(),juce::dontSendNotification);sectionsPanel->timelineView().repaint();}timeline.repaint();};
+    timeline.onUndo=[this](bool redo){return performCommand(redo?redoEdit:undoEdit);};
+    timeline.onRemeasure=[this]{performCommand(measureCurrent);};
     timeline.setProgramme(valid?session.sourceDocument.media.frames:0,valid?int(session.sourceDocument.media.sampleRate):1,valid?sourceBinding.runtime+sourceBinding.identity:juce::String());
-    waveformCache.synchronize(sourceBinding,currentBinding,valid,session.hasCurrentStateInitialized());
-    const auto view=waveformCache.view(domain==MeasurementDomain::source?sourceBinding:currentBinding);
+    const auto currentPlan=session.currentStateDocument.processingPlan();
+    waveformCache.synchronize(sourceBinding,currentBinding,valid,session.hasCurrentStateInitialized(),&currentPlan);
+    auto view=waveformCache.view(domain==MeasurementDomain::source?sourceBinding:currentBinding);
+    if(!view.data&&valid&&session.hasCurrentStateInitialized()&&domain==MeasurementDomain::currentState)view=waveformCache.gainPreview(sourceBinding);
+    if(view.data&&domain==MeasurementDomain::currentState&&session.currentStateNeedsRemeasurement()&&view.accepted){view.previewBase=currentPlan;view.accepted=false;}
+    timeline.setGainPreview(view.previewBase,currentPlan);
     juce::StringArray channels;for(int c=0;c<session.sourceDocument.layout.count;++c)
         channels.add(juce::AudioChannelSet::getAbbreviatedChannelTypeName(session.sourceDocument.layout.roles[size_t(c)]));
     timeline.setWaveform(view.data,view.accepted,channels);
@@ -1034,13 +1151,19 @@ void StandaloneMainComponent::refreshTimeline()
     {loudnessProgress->abandon();loudnessProgress.reset();}
     timeline.setPreview(loudnessProgress?loudnessProgress->view(domain==MeasurementDomain::source?sourceBinding:currentBinding):nullptr);
     const auto& measured=domain==MeasurementDomain::source?session.source:session.currentState;
+    const auto limits=session.getSelectedTargetProfile().limits;
+    const auto peakLimit=limits.hasTruePeakCeiling?std::optional<double>(limits.truePeakCeilingDbtp):std::nullopt;
+    timeline.setPeakTarget(peakLimit,valid&&measured.hasMeasurement&&(domain==MeasurementDomain::source||!session.currentStateNeedsRemeasurement()));
     buildWaveformButton.setEnabled(valid && measured.hasMeasurement && !view.data && !session.job.isActive() && !session.audioEditsBlocked());
     timelineDiagnostics.select(measured.analysis,session.measurementContext(domain),domain);timelineDiagnostics.poll();
     const auto result=timelineDiagnostics.result();auto analysis=result?result->analysis:nullptr;
     timeline.setAnalysis(analysis);
+    const auto original=session.source.hasMeasurement&&!session.sourceContentInvalid?session.source.analysis:nullptr;
+    const auto reference=original?std::shared_ptr<const measurement::Result>(original,&original->detail):nullptr;
+    timeline.setReferenceMeasurement(reference,domain==MeasurementDomain::currentState);
     auditionDomainBox.setSelectedId(session.auditionDomain==MeasurementDomain::source?1:2,juce::dontSendNotification);
     auditionDomainBox.setEnabled(!session.audioEditsBlocked()&&!session.job.isActive());
-    timelinePlay.setEnabled(!session.job.isActive()&&!session.persistenceLoading&&!audition.active()&&session.sourceDocument.hasSource);
+    timelinePlay.setEnabled(!session.boundaryBatch&&!session.job.isActive()&&!session.persistenceLoading&&!audition.active()&&session.sourceDocument.hasSource);
     timelineStop.setEnabled(audition.active());
     jobRequirementsPanel.refreshAvailability();
     proposalPanel.refresh(importControl?importControl->progress.load():-1);
@@ -1052,18 +1175,29 @@ void StandaloneMainComponent::refreshTimeline()
     {
         auto& editor=sectionsPanel->timelineView();
         const auto& binding=sectionsPanel->inspectionDomain()==MeasurementDomain::source?sourceBinding:currentBinding;
-        const auto sectionWave=waveformCache.view(binding);
+        auto sectionWave=waveformCache.view(binding);
+        if(!sectionWave.data&&valid&&session.hasCurrentStateInitialized()&&sectionsPanel->inspectionDomain()==MeasurementDomain::currentState)sectionWave=waveformCache.gainPreview(sourceBinding);
+        if(sectionWave.data&&sectionsPanel->inspectionDomain()==MeasurementDomain::currentState&&session.currentStateNeedsRemeasurement()&&sectionWave.accepted){sectionWave.previewBase=currentPlan;sectionWave.accepted=false;}
         editor.setProgramme(valid?session.sourceDocument.media.frames:0,valid?int(session.sourceDocument.media.sampleRate):1,
                             valid?sourceBinding.runtime+sourceBinding.identity:juce::String());
+        editor.setGainPreview(sectionWave.previewBase,currentPlan);
         sectionsPanel->refreshMeasuredView();
+        if(sectionsPanel->inspectionDomain()==MeasurementDomain::currentState&&session.currentStateNeedsRemeasurement())editor.setAnalysis(nullptr);
         editor.setWaveform(sectionWave.data,sectionWave.accepted,channels);
         editor.setPreview(loudnessProgress?loudnessProgress->view(binding):nullptr);
+        editor.setReferenceMeasurement(reference,sectionsPanel->inspectionDomain()==MeasurementDomain::currentState);
+        editor.setPeakTarget(peakLimit,valid&&(sectionsPanel->inspectionDomain()==MeasurementDomain::source?session.source.hasMeasurement:session.currentState.hasMeasurement&&!session.currentStateNeedsRemeasurement()));
         editor.refreshSectionEditing();
         editor.setTransport(audition.positionFrames(),seekReason.isEmpty(),seekReason,audition.boundIdentity());
         sectionsPanel->setPlaybackState(timelinePlay.isEnabled(),timelineStop.isEnabled(),session.auditionDomain==MeasurementDomain::source?"Original":"Current");
     }
     positionLabel.setText(juce::String(audition.positionSeconds(),3)+" s  ·  "+(audition.connected()?"Device open":"Device closed"),juce::dontSendNotification);
     positionLabel.setTooltip(audition.status());
+    const auto warning=audition.monitorOverloadWarning();
+    const bool warningVisible=warning.isNotEmpty(),visibilityChanged=monitorWarning.isVisible()!=warningVisible;
+    monitorWarning.setText(warning,juce::dontSendNotification);monitorWarning.setTooltip(warning);
+    monitorWarning.setVisible(warningVisible);monitorSetup.setVisible(warningVisible);
+    if(visibilityChanged)resized();
 }
 void StandaloneMainComponent::refreshJobFeedback()
 {
@@ -1087,6 +1221,7 @@ void StandaloneMainComponent::refreshJobFeedback()
         text = {"Source validated: confirm channel roles", "Open Audio setup to review the proposed channel order, then Confirm roles and analyse.", -1};
     else if(!active && !session.sourceDocument.hasSource && session.job.state == JobState::idle)
         text = {"Ready to import", "Open Mix to begin. Output connection is optional for offline analysis.", -1};
+    if(!active&&session.boundaryBatch)text={juce::String(session.pendingBoundaryCount())+(session.pendingBoundaryCount()==1?" boundary change pending":" boundary changes pending"), "Enter: review Move gain with sections / Cancel. Esc: cancel. Zoom and pan remain available; playback and measurement wait for this edit.", -1};
     jobLabel.setText(text.title, juce::dontSendNotification);jobLabel.setTooltip(text.title);
     jobDetail.setText(text.detail, juce::dontSendNotification);jobDetail.setTooltip(text.detail);
     jobFraction = text.fraction;jobProgress.setVisible(active);
@@ -1099,7 +1234,7 @@ void StandaloneMainComponent::resized()
     auto top=bounds.removeFromTop(32);
     openMixButton.setBounds(top.removeFromLeft(125).reduced(2));videoButton.setBounds(top.removeFromLeft(155).reduced(2));
     saveSessionButton.setBounds(top.removeFromLeft(115).reduced(2));toolsButton.setBounds(top.removeFromLeft(160).reduced(2));
-    audioSetupButton.setBounds(top.removeFromRight(150).reduced(2));sessionStatus.setBounds(top.reduced(5,0));bounds.removeFromTop(7);
+    audioSetupButton.setBounds(top.removeFromRight(150).reduced(2));top.reduce(5,0);sourceFilename.setBounds(top.removeFromTop(17));sessionStatus.setBounds(top);bounds.removeFromTop(7);
     auto feedback = bounds.removeFromTop(56);
     cancelJobButton.setBounds(feedback.removeFromRight(110).withSizeKeepingCentre(106,28));
     auto progressArea = feedback.removeFromRight(165);jobProgress.setBounds(progressArea.reduced(8,18));
@@ -1111,14 +1246,21 @@ void StandaloneMainComponent::resized()
     timelinePlay.setBounds(transport.removeFromLeft(65).reduced(2));timelineStop.setBounds(transport.removeFromLeft(65).reduced(2));
     audioSetupButton.setTooltip("Choose this Mac's output and optional automatic reconnection; review channel roles and routing. Opening always leaves playback stopped.");
     sectionsButton.setBounds(transport.removeFromRight(160).reduced(2));diagnosticsButton.setBounds(transport.removeFromRight(190).reduced(2));positionLabel.setBounds(transport);
-    timelineAvailableHeight=bounds.getHeight();timelineLayout.moveTimeline(0,timelineAvailableHeight,session.sourceDocument.layout.count,TimelineGainLane::height);
+    if(monitorWarning.isVisible())
+    {
+        auto warning=bounds.removeFromTop(64).reduced(0,2);
+        monitorSetup.setBounds(warning.removeFromRight(145).reduced(4,16));monitorWarning.setBounds(warning);
+    }
+    timelineAvailableHeight=bounds.getHeight();timelineLayout.moveTimeline(0,timelineAvailableHeight,session.sourceDocument.layout.count,gainLane.preferredHeight());
     auto bottom=bounds.removeFromBottom(timelineLayout.inspector);
     waveformDivider.setBounds(bounds.removeFromBottom(TimelineLayout::dividerHeight));
+    inspectorViewport.setBounds(bottom);inspectorContent.setSize(std::max(1,bottom.getWidth()-inspectorViewport.getScrollBarThickness()),std::max(TimelineLayout::defaultInspector,bottom.getHeight()));
+    bottom=inspectorContent.getLocalBounds();
     proposalPanel.setBounds(bottom.removeFromTop(ProposalWorkflowPanel::height));
     auto processing=bottom.removeFromTop(32);
     measureSourceButton.setBounds(processing.removeFromLeft(150).reduced(2));remeasureCurrentStateButton.setBounds(processing.removeFromLeft(190).reduced(2));
     currentGain.setBounds(processing.removeFromLeft(300).reduced(2));
-    auto applicability=bottom.removeFromTop(26);buildWaveformButton.setBounds(applicability.removeFromRight(150));applicabilityConfirmation.setBounds(applicability);
+    auto applicability=bottom.removeFromTop(26);buildWaveformButton.setBounds(applicability.removeFromRight(150));qcScope.setBounds(applicability);
     pageDetailBox.setBounds(bottom.reduced(0,3));timeline.setBounds(bounds.reduced(0,4));
 }
 

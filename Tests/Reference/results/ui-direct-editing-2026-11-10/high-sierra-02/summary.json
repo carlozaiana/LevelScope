@@ -1,0 +1,63 @@
+{
+  "passed": true,
+  "os": "10.13.6",
+  "architecture": "x86_64",
+  "source_commit": "082d45ff7d88768f44bd9b557f16da561f2b7d93",
+  "build": "b5a537b6aefe2d5fbe4a7d3b6d0d033eb87c0a5dd0e9fce37c03cc59a57079cf",
+  "candidate_identity_sha256": "83e9ef034d8908a341b3f73ba946d0b2383532d8f8714b910710e6f6b568ea31",
+  "requested_cases": [
+    "timeline",
+    "ui",
+    "requirements"
+  ],
+  "physical_devices_opened": false,
+  "combined_qualification_complete": false,
+  "inputs": {},
+  "groups": [
+    {
+      "name": "timeline",
+      "command": [
+        "/Users/fuzz/LevelScope-UI-direct-editing-2026-11-10/candidate-02/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/LevelScope-UI-direct-editing-2026-11-10/high-sierra-02/timeline-files",
+        "--output",
+        "/Users/fuzz/LevelScope-UI-direct-editing-2026-11-10/high-sierra-02/timeline.json"
+      ],
+      "returncode": 0,
+      "seconds": 3.4271163529999997,
+      "passed": true,
+      "checks": 1992,
+      "receipt": "timeline.json",
+      "receipt_sha256": "9df1f223b2f4f826bc086e1f9ec1e8cf0e64e2939d6129253a74fb1b268ef826"
+    },
+    {
+      "name": "ui",
+      "command": [
+        "/Users/fuzz/LevelScope-UI-direct-editing-2026-11-10/candidate-02/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/LevelScope-UI-direct-editing-2026-11-10/high-sierra-02/ui-files"
+      ],
+      "returncode": 0,
+      "seconds": 37.266172092,
+      "passed": true,
+      "checks": 144,
+      "receipt": "ui-files/result.json",
+      "receipt_sha256": "d8826c93b5c83d4775318ab360425b390c7b4109f846479ce83b5fc2dc1230fe"
+    },
+    {
+      "name": "requirements",
+      "command": [
+        "/Users/fuzz/LevelScope-UI-direct-editing-2026-11-10/candidate-02/bin/LevelScopeJobRequirementsTests",
+        "--root",
+        "/Users/fuzz/LevelScope-UI-direct-editing-2026-11-10/high-sierra-02/requirements-files",
+        "--output",
+        "/Users/fuzz/LevelScope-UI-direct-editing-2026-11-10/high-sierra-02/requirements.json"
+      ],
+      "returncode": 0,
+      "seconds": 53.795874248,
+      "passed": true,
+      "checks": 489,
+      "receipt": "requirements.json",
+      "receipt_sha256": "61f53c07ae90a9f81664607df5ff7b9be35cdb5730af14d596819b0774e64d2f"
+    }
+  ]
+}

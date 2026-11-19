@@ -13,6 +13,8 @@
 #include "TimelineGainLane.h"
 #include "ProposalWorkflowPanel.h"
 #include "LraPassagesPanel.h"
+#include "RegionPlanningPanel.h"
+#include "RegionProposalReviewPanel.h"
 
 #include <memory>
 #include <future>
@@ -29,12 +31,18 @@ namespace levelscope::standalone
 {
 // [BEGIN LS-STANDALONE-WORKFLOW-SHELL]
 
-class StandaloneMainComponent final : public juce::Component, private juce::Timer
+class StandaloneMainComponent final : public juce::Component, public juce::MenuBarModel, private juce::Timer
 {
 public:
-    explicit StandaloneMainComponent(std::shared_ptr<OutputDeviceCatalog> = {}, OutputDeviceSettings = OutputDeviceSettings());
+    explicit StandaloneMainComponent(std::shared_ptr<OutputDeviceCatalog> = {}, OutputDeviceSettings = OutputDeviceSettings(),std::unique_ptr<juce::AudioIODevice> = {});
     ~StandaloneMainComponent() override;
     void requestClose (std::function<void()>);
+    enum Command {newDocument=2001,openDocument,openAudio,saveDocument,saveDocumentAs,undoEdit,redoEdit,peakWarnings,sectionsView,playStop,measureOriginal,measureCurrent,preferences,proposalPreferences,removeBoundaries,transitionBands};
+    juce::StringArray getMenuBarNames() override;
+    juce::PopupMenu getMenuForIndex(int,const juce::String&) override;
+    void menuItemSelected(int id,int) override {performCommand(id);}
+    bool performCommand(int);
+
 
     void paint (juce::Graphics& g) override;
     void resized() override;
@@ -50,10 +58,15 @@ private:
     juce::TextButton openMixButton{"Open Mix..."},toolsButton{"Session / tools..."},audioSetupButton{"Audio setup..."},
         timelinePlay{"Play"},timelineStop{"Stop"},sectionsButton{"Sections / gain..."};
     juce::ComboBox inspectDomain, auditionDomainBox;
-    juce::Label positionLabel;
+    juce::Label positionLabel,sourceFilename;
     TimelineGainLane gainLane{session};
     ProposalWorkflowPanel proposalPanel{session};
+    juce::Component inspectorContent;
+    juce::Viewport inspectorViewport;
     std::unique_ptr<ProposalWindow> lraPassagesWindow;
+    std::unique_ptr<ProposalWindow> regionPlanningWindow;
+    void showRegionPlanning();
+    void proposeWithActiveMethod();
     juce::TextButton lraPassagesButton{"LRA passages..."};
     void showLraPassages(bool current=false);
     MeasurementTimeline timeline;
@@ -70,7 +83,10 @@ private:
     void chooseMix();
     void showTools();
     void refreshTimeline();
+    juce::Label monitorWarning;
+    juce::TextButton monitorSetup{"Monitor volume..."};
     void playTimeline(MeasurementTimeline* origin=nullptr);
+    void toggleInspectionAudition();
     void showSections();
     juce::TextButton newSessionButton { "New session" }, openSessionButton { "Open session..." },
         saveSessionButton { "Save session" }, saveAsSessionButton { "Save as..." },
@@ -130,7 +146,7 @@ private:
 
     JobRequirementsPanel jobRequirementsPanel { session, [this] { refreshFromSession(); } };
     juce::ComboBox targetProfileBox;
-    juce::ToggleButton applicabilityConfirmation { "Confirm pre-produced whole-programme linear-audio QC" };
+    juce::Label qcScope;
 
     juce::TextButton importButton { "Import" };
     juce::TextButton analyzeButton { "Analyze" };

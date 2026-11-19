@@ -21,6 +21,11 @@ This folder is the persistent orientation layer for future development chats. Re
 
 - **M20 boundary and duration amendment — accepted for bounded implementation, 19 November 2026:** [70 — agreed complete-event preference and experimental 60% allowance](70_M20RegionFormationAndPredictiveGainPlanning.md#boundary-and-duration-amendment-for-logic-review). Records through-decay coverage, ranking, explicit partial/uncertain fallback, adaptive scheduling and Strategy's acceptance of final review 80 under the user's conditional start authorization. Retain 20% as conservative and preserve shipped defaults/sessions. Logic owns core/service/session work and focused checks through a tested interface and UI handover; audible tests and publication remain separate.
 
+- [76 — Manual timeline workflow](76_ManualTimelineWorkflow.md): automatic file-limit evaluation, peak hover, direct gain entry, preserved gains and explicit paired section/gain edits.
+- [75 — Monitor warnings, gain-lane deletion and peak overlay](75_TimelineMonitoringDeletionAndPeakOverlay.md): explicit recovery/Apply, preserved explanation history, and qualified over-target waveform markers.
+- [74 — Timeline inspection convenience](74_TimelineInspectionConvenience.md): new blend, gain/peak inspection, paired domain shortcut and layout; qualified on both Macs, with separate recovered music sessions.
+- **M20 UI and non-audible acceptance complete; user listening pending:** [73 — current UI integration and independent review handover](73_M20UIIntegrationAndIndependentReview.md), with preserved candidate 04 and exact evidence. Continue on `codex/m20-ui-integration`; main remains the published UI convenience/M19 baseline. No M20 publication or merge is authorized.
+
 - **M20 approved implementation handover — region formation and predictive gain planning:** [70 — bounded design, controls, acceptance cases and staged ownership](70_M20RegionFormationAndPredictiveGainPlanning.md). Continue on `codex/m20-region-planning` from published main `22961f03de7919e1de631f8b13eb4b852108ac0b`, preserving the UI convenience slices. Logic owns constraints, formation/prediction, measured selection, sessions and explanations; UI follows a committed, focused-tested core/interface checkpoint. Full combined qualification follows UI integration. Splitting and boundary refinement are in the first useful slice. No M20 publication or merge authorized.
 
 - **Post-M19 strategy design starting point:** [69 — Proposal Strategy and Audio Quality handover](69_ProposalStrategyAndAudioQualityHandover.md). Approved capability-plus-first-method development approach, exact M19 defaults/evidence/interfaces, owner boundaries and original design-only starter. Its execution boundary is superseded only for the bounded M20 scope in [70](70_M20RegionFormationAndPredictiveGainPlanning.md); new limiter/dynamics and broader neighbour work remain separate. The shared [proposal specification](../ProposalEngineSpec_v2.md) and [58 — roadmap](58_LraWorkflowAndInteractiveTimelineDesign.md) identify historical status explicitly.
@@ -87,3 +92,7 @@ This folder is the persistent orientation layer for future development chats. Re
 - [59 — M16 qualification and handover](59_M16QualificationAndHandover.md)
 
 - [M18 interactive timeline and later playback roadmap](63_M18InteractiveTimelineAndProgressiveAnalysis.md#playback-roadmap-following-m18)
+
+- [77 — Direct manual editing](77_DirectManualEditing.md)
+
+- [78 — Timeline selection and boundary editing](78_TimelineSelectionBoundaries.md)

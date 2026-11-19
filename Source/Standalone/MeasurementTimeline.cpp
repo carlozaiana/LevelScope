@@ -2,7 +2,9 @@
 #include "TimelineGainLane.h"
 #include <cmath>
 #include <cstdlib>
+#include <juce_cryptography/juce_cryptography.h>
 #include "VideoTiming.h"
+#include "Core/Measurement/GatePopulation.h"
 
 namespace levelscope::standalone
 {
@@ -35,6 +37,10 @@ juce::String diagnosticWindowText (const proposal::DiagnosticWindow& w, int rate
 MeasurementTimeline::MeasurementTimeline()
 {
     setName ("Measured audio-source timeline");
+    addAndMakeVisible(blend);blend.onValueChange=[this]{repaint();};
+    addAndMakeVisible(overTargetPeaks);overTargetPeaks.setName("Show peaks over target");
+    overTargetPeaks.setToggleState(true,juce::dontSendNotification);overTargetPeaks.setTooltip("Sample-peak warnings use the target ceiling, or 0 dBFS with No Limit. TP! marks measured per-channel maxima.");
+    overTargetPeaks.onClick=[this]{repaint();};
     for (auto* b : { &zoomIn, &zoomOut, &fit, &fitSelection,&inspect, &seek }) addAndMakeVisible (*b);
     addAndMakeVisible(follow);seek.setVisible(false);follow.setVisible(false);
     addAndMakeVisible(navigationFeedback);navigationFeedback.setFont(12.f);
@@ -66,23 +72,49 @@ void MeasurementTimeline::setAnalysis (std::shared_ptr<const proposal::ProgramAn
     if(!waveformData&&!preview&&knownFrames==0){selection.reset();inspectedRange.reset();inspectedFrame.reset();inspection.clear();viewBegin=0;viewEnd=analysis?double(analysis->frames):1;}
     rebuild();
 }
+void MeasurementTimeline::setPeakTarget(std::optional<double> dbtp,bool measured)
+{
+    if(dbtp&&!std::isfinite(*dbtp))dbtp.reset();
+    if(peakTarget==dbtp&&peakMeasurementCurrent==measured)return;
+    peakTarget=dbtp;peakMeasurementCurrent=measured;
+    peakCeiling=dbtp?std::pow(10.,*dbtp/20.):1.;
+    overTargetPeaks.setEnabled(true);
+    overTargetPeaks.setTooltip("Orange circles: retained sample peaks above "+juce::String(peakTarget.value_or(0.),1)+" dBFS. No Limit uses 0 dBFS. TP! marks measured per-channel true-peak maxima, not every inter-sample over. Preview warnings are provisional; monitor gain is excluded.");
+    repaint();
+}
+bool MeasurementTimeline::sampleExceedsTarget(double value,int64_t frame) const
+{
+    return peakOverlayActive()&&(waveformAccepted||isGainPreview())&&std::isfinite(value)&&frame>=viewBegin&&frame<viewEnd
+        &&std::abs(value)>peakCeiling;
+}
 void MeasurementTimeline::setProgramme(int64_t frames,int rate,const juce::String& identity)
 {
     if(identity==programmeIdentity&&frames==knownFrames&&rate==knownRate)return;
     programmeIdentity=identity;knownFrames=std::max<int64_t>(0,frames);knownRate=std::max(1,rate);
-    analysis.reset();preview.reset();waveformData.reset();selection.reset();inspectedRange.reset();inspectedFrame.reset();inspection.clear();seconds.setText("0",false);
+    analysis.reset();preview.reset();waveformData.reset();originalMeasurement.reset();selection.reset();inspectedRange.reset();inspectedFrame.reset();inspection.clear();seconds.setText("0",false);
+    clearGainPreview();gainSelection=false;waveformAccepted=false;waveformPublication=0;
     viewBegin=0;viewEnd=std::max<double>(1,knownFrames);++navigationEpoch;rebuild();
 }
 void MeasurementTimeline::setWaveform(std::shared_ptr<const waveform::Overview> data,bool accepted,const juce::StringArray& channels)
 {
     const auto publication=data?data->publication():0;
-    if(waveformEnabled && data==waveformData && publication==waveformPublication && accepted==waveformAccepted && channels==channelNames)return;
+    const bool clearingPreview=!data&&previewBase.has_value();
+    if(waveformEnabled && data==waveformData && publication==waveformPublication && accepted==waveformAccepted && channels==channelNames&&!clearingPreview)return;
     const auto previousFrames=programmeFrames();const auto previousRate=programmeRate();
-    waveformEnabled=true;waveformData=std::move(data);waveformAccepted=accepted;waveformPublication=publication;channelNames=channels;
+    // Measurement preparation and programme replacement can paint before the
+    // next timer refresh. A retired overview must also retire its gain binding.
+    if(!data)clearGainPreview();
+    waveformEnabled=true;waveformData=std::move(data);waveformAccepted=accepted&&bool(waveformData);waveformPublication=publication;channelNames=channels;
     if(programmeFrames()!=previousFrames || programmeRate()!=previousRate || viewEnd<=1)
     {viewBegin=0;viewEnd=std::max<double>(1,programmeFrames());selection.reset();}
     inspectedChannel=waveformData?juce::jlimit(0,waveformData->spec.channels-1,inspectedChannel):0;
     resized();
+}
+void MeasurementTimeline::setGainPreview(std::optional<ProcessingPlan> base,const ProcessingPlan& current)
+{
+    const auto key=[](const ProcessingPlan& p){const auto value=juce::String(p.staticGainDb,17)+";"+(p.sectionGains?p.sectionGains->audioKey():juce::String());return juce::SHA256(value.toRawUTF8(),value.getNumBytesAsUTF8()).toHexString();};
+    const auto next=base?key(*base)+"=>"+key(current):juce::String();if(next==previewGainKey)return;
+    previewGainKey=next;previewBase=std::move(base);previewCurrent=current;rebuild();
 }
 void MeasurementTimeline::setPreview(std::shared_ptr<const LoudnessPreview> value)
 {
@@ -131,11 +163,54 @@ void MeasurementTimeline::focusForTransport()
     setWantsKeyboardFocus(true);
     if(isShowing()&&getPeer()!=nullptr)grabKeyboardFocus();
 }
+std::vector<std::pair<int64_t,int64_t>> MeasurementTimeline::transitionSpans() const
+{
+    std::vector<std::pair<int64_t,int64_t>> result;
+    if(!currentInspection||!showTransitions)return result;
+    const auto* plan=sectionSession?(sectionSession->boundaryBatch?&sectionSession->boundaryBatch->next.gains:&sectionSession->currentStateDocument.sectionGains):&previewCurrent.sectionGains;
+    if(!*plan)return result;
+    const auto& p=**plan;const auto& rows=p.intervals;
+    auto it=std::lower_bound(rows.begin(),rows.end(),viewBegin,[&](const auto& r,double f){return r.end+int64_t(p.sampleRate*.05)<f;});
+    for(size_t n=std::max<size_t>(1,size_t(it-rows.begin()));n<rows.size();++n)
+    {
+        const auto radius=p.radius(n),a=rows[n].begin-radius,b=rows[n].begin+radius;
+        if(a>=viewEnd)break;
+        if(radius>0&&b>viewBegin&&rows[n].db!=rows[n-1].db)result.emplace_back(a,b);
+    }
+    return result;
+}
 bool MeasurementTimeline::keyPressed(const juce::KeyPress& key)
 {
-    if(key!=juce::KeyPress::spaceKey||!onTogglePlayback||juce::Component::getCurrentlyModalComponent())return false;
+    if(juce::Component::getCurrentlyModalComponent())return false;
     for(auto* c=juce::Component::getCurrentlyFocusedComponent();c;c=c->getParentComponent())
         if(dynamic_cast<juce::TextEditor*>(c))return false;
+    if(sectionSession&&sectionSession->boundaryBatch)
+    {
+        if(key==juce::KeyPress::escapeKey){sectionSession->cancelBoundaryBatch();refreshSectionEditing();if(sectionEdited)sectionEdited(0);navigationMessage("Boundary changes cancelled.");return true;}
+        if(key==juce::KeyPress::returnKey)
+        {
+            sectionEdit->requestBoundaryBatch(*this,[safe=juce::Component::SafePointer<MeasurementTimeline>(this)](bool accepted,bool)
+            {if(safe){safe->refreshSectionEditing();if(safe->sectionEdited)safe->sectionEdited(0);safe->focusForTransport();safe->navigationMessage(accepted?"Boundary changes applied. Command-Z undoes the whole edit.":safe->sectionSession->sectionTrimNotice);}});return true;
+        }
+    }
+    if((key==juce::KeyPress::backspaceKey||key==juce::KeyPress::deleteKey)&&!key.getModifiers().isAnyModifierKeyDown()&&gainLane
+        &&juce::Component::getCurrentlyFocusedComponent()==this)
+        return gainLane->deleteSelected();
+    if(key.getModifiers().isCommandDown())
+    {
+        if((key.getKeyCode()=='Z'||key.getKeyCode()=='z'))
+        {
+            const bool redo=key.getModifiers().isShiftDown();
+            if(onUndo)return onUndo(redo);
+            if(sectionSession&&sectionSession->undoManual(redo)){refreshSectionEditing();if(sectionEdited)sectionEdited(0);return true;}
+            return false;
+        }
+        if((key.getKeyCode()=='R'||key.getKeyCode()=='r')&&onRemeasure){onRemeasure();return true;}
+    }
+    if(!key.getModifiers().isAnyModifierKeyDown()
+        &&(key.getKeyCode()=='A'||key.getKeyCode()=='a')&&onToggleInspectionAudition)
+    {onToggleInspectionAudition();return true;}
+    if(key!=juce::KeyPress::spaceKey||!onTogglePlayback)return false;
     focusForTransport();onTogglePlayback();return true;
 }
 void MeasurementTimeline::attachGainLane(TimelineGainLane& lane)
@@ -143,10 +218,11 @@ void MeasurementTimeline::attachGainLane(TimelineGainLane& lane)
     gainLane=&lane;addAndMakeVisible(lane);
     lane.onSelection=[this](int64_t begin,int64_t end,int64_t frame)
     {
+        gainSelection=true;
         inspectedFrame=frame;inspectedEntry=juce::String(double(frame)/programmeRate(),9);seconds.setText(inspectedEntry,false);
         highlight(double(begin),double(end),false);
         if(frame<viewBegin||frame>viewEnd){const auto width=viewEnd-viewBegin;setViewRange(frame-width*.2,frame+width*.8);}
-        if(onInspect)onInspect("Current section gain settings  |  "+gainLane->inspectionText());
+        if(onInspect)onInspect("Current section gain settings  |  "+gainLane->inspectionText()+"\n"+(gainLane->selectedSpans().size()>1?"Separate selected passages; intervening audio is unselected.":"Inspected audio: "+rangePeakText(begin,end)));
     };
     resized();
 }
@@ -175,6 +251,58 @@ void MeasurementTimeline::zoom (double factor)
     const auto centre = selection?std::clamp(selection->first,viewBegin,viewEnd):(viewBegin + viewEnd) / 2, half = (viewEnd - viewBegin) * factor / 2;
     setViewRange (centre - half, centre + half);
 }
+void MeasurementTimeline::zoomAt(double factor,float px)
+{
+    if(graph.getWidth()<2||programmeFrames()<=0)return;
+    const auto fraction=std::clamp((double(px)-graph.getX())/(graph.getWidth()-1),0.,1.);
+    const auto anchor=viewBegin+fraction*(viewEnd-viewBegin);
+    const auto finest=waveformData?double(waveformData->binFrames):programmeRate()*.1;
+    const auto width=std::clamp((viewEnd-viewBegin)*factor,std::min(double(programmeFrames()),finest),double(programmeFrames()));
+    setViewRange(anchor-fraction*width,anchor+(1-fraction)*width);
+}
+void MeasurementTimeline::setReferenceMeasurement(std::shared_ptr<const measurement::Result> value,bool current)
+{
+    if(value==originalMeasurement&&current==currentInspection)return;
+    if(value!=originalMeasurement)
+        originalIntegratedGateEnergy=value&&value->integratedRelativeGate
+            ?measurement::relativeGateEnergy(value->momentary,false):std::nullopt;
+    originalMeasurement=std::move(value);currentInspection=current;rebuild();
+}
+juce::String MeasurementTimeline::rangePeakText(int64_t begin,int64_t end) const
+{
+    if(previewBase)return "Current gain preview only. Peak values and loudness need re-measurement.";
+    juce::String text="Selected frames ["+juce::String(begin)+", "+juce::String(end)+")\n";
+    bool foundTrue=false;
+    if(waveformData)
+    {
+        const auto bins=waveformData->reduce(begin,end,1);
+        if(!bins.empty()&&bins[0].available())
+        {
+            const auto& bin=bins[0];
+            text+="PCM overview covers ["+juce::String(bin.begin)+", "+juce::String(bin.coveredEnd)+") frames";
+            if(!waveformAccepted||bin.coveredEnd<end)text+=" — INCOMPLETE";
+            text+=".\n";
+            for(int c=0;c<waveformData->spec.channels;++c)
+            {
+                const auto& e=bin.channels[size_t(c)];
+                const bool negative=std::abs(e.minimum)>std::abs(e.maximum)||(std::abs(e.minimum)==std::abs(e.maximum)&&e.minimumFrame<e.maximumFrame);
+                const auto magnitude=std::abs(negative?e.minimum:e.maximum);const auto frame=negative?e.minimumFrame:e.maximumFrame;
+                const bool exact=waveformAccepted&&bin.coveredEnd>=end&&frame>=begin&&frame<end;
+                const auto name=channelNames[c].isEmpty()?juce::String(c+1):channelNames[c];
+                text+=name+": "+(exact?"selected sample peak ":"covering overview peak ")+(magnitude>0?juce::String(20*std::log10(magnitude),3)+" dBFS":"-inf dBFS (silence)")+" at frame "+juce::String(frame);
+                if(!exact)text+="; boundary bins/coverage prevent an exact selected-interval maximum";
+                text+="\n";
+            }
+        }
+        else text+="PCM overview coverage pending.\n";
+    }
+    else text+="Sample peak unavailable for this range: Build waveform for the inspected state.\n";
+    if(analysis&&!preview)for(const auto& peak:analysis->peaks)
+        if(peak.trueDbtp&&peak.truePeakEighthFrame>=begin*8&&peak.truePeakEighthFrame<end*8)
+        {foundTrue=true;text+="Channel "+juce::String(peak.channel+1)+" measured programme true-peak maximum lies here: "+juce::String(*peak.trueDbtp,3)+" dBTP at "+juce::String(peak.truePeakEighthFrame)+"/8 frames.\n";}
+    if(!foundTrue)text+="Regional true peak is not available from the PCM overview; no peak-safety claim.\n";
+    return text;
+}
 void MeasurementTimeline::highlight (double begin, double end, bool reveal)
 {
     if (programmeFrames()<=0) return;
@@ -200,7 +328,7 @@ bool MeasurementTimeline::inspectFrame(double frame)
     inspectedFrame=int64_t(std::floor(frame));inspectedEntry=juce::String(double(*inspectedFrame)/rate,9);seconds.setText(inspectedEntry,false);
     inspectedRange=std::make_pair(std::min(double(frames-1),frame),std::min(double(frames),frame+1));
     inspection="Audio-source "+juce::String(value,6)+" s; cursor frame "+juce::String(int64_t(std::floor(frame)))+"\n";
-    if(waveformData)
+    if(waveformData&&!previewBase)
     {
         const auto bin=waveformData->inspect(std::min<int64_t>(frames-1,int64_t(std::floor(frame))));
         if(bin)
@@ -258,8 +386,49 @@ void MeasurementTimeline::rebuild()
     plot = {};
     if(preview){previewCoverage=preview->coverage();plot=preview->reduce(viewBegin,viewEnd,std::max(1,graph.getWidth()),previewCoverage);}
     else if (analysis) plot = proposal::prepareTimeline (*analysis, viewBegin, viewEnd, std::max (1, graph.getWidth()));
+    // UI-only classification. Short-term loudness remains the original ungated
+    // series; its colour describes membership in the independently measured LRA population.
+    gatedShortTerm.clear();changedMomentary.clear();
+    if(analysis&&!preview&&viewEnd>viewBegin)
+    {
+        const auto count=std::max<size_t>(1,plot.shortTerm.size());gatedShortTerm.resize(count);
+        const auto column=[&](int64_t end){return size_t(std::clamp(int((end-viewBegin)*count/(viewEnd-viewBegin)),0,int(count)-1));};
+        auto w=std::lower_bound(analysis->lraWindows.begin(),analysis->lraWindows.end(),viewBegin,[](const auto& v,double f){return v.end<f;});
+        for(;w!=analysis->lraWindows.end()&&w->end<=viewEnd&&w->end<=analysis->frames;++w)
+            if(w->lufs)(w->included?gatedShortTerm[column(w->end)].included:gatedShortTerm[column(w->end)].excluded).add(*w->lufs,w->end);
+        if(currentInspection&&originalMeasurement&&originalIntegratedGateEnergy&&analysis->integratedGate
+            &&originalMeasurement->frames==analysis->frames&&originalMeasurement->sampleRate==analysis->sampleRate)
+        {
+            changedMomentary.resize(count,false);
+            const auto& source=originalMeasurement->momentary;
+            auto m=std::lower_bound(analysis->momentary.begin(),analysis->momentary.end(),viewBegin,[](const auto& v,double f){return v.end<f;});
+            for(;m!=analysis->momentary.end()&&m->end-analysis->sampleRate/10<viewEnd;++m)
+            {
+                const auto n=size_t(m-analysis->momentary.begin());
+                // Compare the exact measured IL populations, each against its own
+                // gate. A gain/value difference alone does not change membership.
+                if(m->end>viewBegin&&n<source.size()&&source[n].endFrame==m->end
+                    &&measurement::includedInPopulation(source[n].energy,*originalIntegratedGateEnergy,false)!=m->included)
+                {
+                    const auto first=column(std::max<int64_t>(0,m->end-analysis->sampleRate/10)),last=column(m->end);
+                    for(auto c=first;c<=last;++c)changedMomentary[c]=true;
+                }
+            }
+        }
+    }
     if(waveformData)waveformPublication=waveformData->publication();
     waveformColumns=waveformData?waveformData->reduce(int64_t(std::floor(viewBegin)),int64_t(std::ceil(viewEnd)),std::max(1,graph.getWidth()),waveformPublication):std::vector<waveform::Column>{};
+    if(isGainPreview())
+    {
+        const auto gain=[](const ProcessingPlan& p,int64_t f){return p.staticGainDb+(p.sectionGains?p.sectionGains->gainAt(f):0.);};
+        for(auto& col:waveformColumns)if(col.available())for(int c=0;c<waveformData->spec.channels;++c)
+        {
+            auto& e=col.channels[size_t(c)];
+            e.minimum=float(e.minimum*std::pow(10.,(gain(previewCurrent,e.minimumFrame)-gain(*previewBase,e.minimumFrame))/20.));
+            e.maximum=float(e.maximum*std::pow(10.,(gain(previewCurrent,e.maximumFrame)-gain(*previewBase,e.maximumFrame))/20.));
+            if(e.minimum>e.maximum){std::swap(e.minimum,e.maximum);std::swap(e.minimumFrame,e.maximumFrame);}
+        }
+    }
     updatingScroll = true;
     scroll.setRangeLimits (0, std::max<double>(1,programmeFrames()));
     scroll.setCurrentRange (viewBegin, viewEnd - viewBegin, juce::dontSendNotification);
@@ -276,14 +445,17 @@ void MeasurementTimeline::resized()
     zoomIn.setBounds (row.removeFromLeft (80)); zoomOut.setBounds (row.removeFromLeft (80));
     fit.setBounds(row.removeFromLeft(125));fitSelection.setBounds(row.removeFromLeft(100));row.removeFromLeft(8);seconds.setBounds(row.removeFromLeft(110));inspect.setBounds(row.removeFromLeft(118));seek.setBounds(row.removeFromLeft(65));follow.setBounds(row.removeFromLeft(76));
     navigationFeedback.setBounds(row);
+    overTargetPeaks.setBounds(std::max(10,getWidth()-185),30,180,20);
     scroll.setBounds (b.removeFromBottom (16).withTrimmedLeft (55));
-    if(gainLane)gainLane->setBounds(b.removeFromBottom(TimelineGainLane::height));
+    if(gainLane)gainLane->setBounds(b.removeFromBottom(gainLane->preferredHeight()));
     b.removeFromTop (44); ruler=b.removeFromTop(waveformEnabled?24:0).withTrimmedLeft(waveformEnabled?85:55).withTrimmedRight(waveformEnabled?60:12); b.removeFromBottom (25); graph = b.withTrimmedLeft(waveformEnabled?85:55).withTrimmedRight(waveformEnabled?60:12);
+    blend.setBounds(2,graph.getY(),18,std::max(0,graph.getHeight()));
     if(graph!=previousGraph)++navigationEpoch;
     rebuild();
 }
 void MeasurementTimeline::bindSectionEditing(StandaloneSessionModel& session,std::function<void(uint64_t)> changed)
 {
+    if(sectionSession!=&session)sectionEdit=std::make_unique<SectionEditPrompt>(session);
     sectionSession=&session;
     sectionEdited=std::move(changed);
     refreshSectionEditing();
@@ -292,11 +464,13 @@ void MeasurementTimeline::refreshSectionEditing()
 {
     if(!sectionSession)return;
     auto& session=*sectionSession;
-    const auto& map=session.sectionDocument.map();
+    if(session.boundaryBatch&&!session.boundaryBatchFresh())session.cancelBoundaryBatch();
+    const auto& map=session.boundaryBatch?session.boundaryBatch->next.map:session.sectionDocument.map();
     const bool editable=knownFrames>0 && map.frames==knownFrames && !map.sections.empty() && session.sourceDocument.layout.confirmed
-        && !session.sourceContentInvalid && !session.audioEditsBlocked() && !session.job.isActive();
+        && session.boundaryEditAllowed();
     if(sectionRuntime==session.sessionId && audioRevision==session.revision && sectionInput==map.inputIdentity
-        && sectionRevision==map.revision && sectionEditable==editable)return;
+        && sectionRevision==map.revision && sectionEditable==editable&&boundarySerial==session.boundaryEditSerial)return;
+    boundarySerial=session.boundaryEditSerial;
     sectionRuntime=session.sessionId;audioRevision=session.revision;sectionInput=map.inputIdentity;
     sectionRevision=map.revision;sectionEditable=editable;
     sectionBoundaries.clear();
@@ -323,16 +497,70 @@ std::optional<size_t> MeasurementTimeline::boundaryHandle(float px) const
     consider(near);
     return best;
 }
+juce::String MeasurementTimeline::peakHoverText(juce::Point<float> pointer) const
+{
+    if(!peakOverlayActive()||blend.waveformAlpha()<=0||!getLocalBounds().toFloat().contains(pointer)||viewEnd<=viewBegin)return {};
+    const auto x=[&](double frame){return float(graph.getX()+(frame-viewBegin)*(graph.getWidth()-1)/(viewEnd-viewBegin));};
+    float distance=8.f;juce::String text;
+    const auto describe=[&](int channel,double db,double frame,bool truePeak)
+    {
+        const auto threshold=truePeak&&!currentInspection?std::min(peakTarget.value_or(0.),0.):peakTarget.value_or(0.);
+        const auto name=channelNames[channel].isNotEmpty()?channelNames[channel]:"Channel "+juce::String(channel+1);
+        return juce::String(currentInspection?"Current":"Original")+" | "+name+" | "+timecode(int64_t(frame),programmeRate())
+            +"\n"+(truePeak?"Measured programme true peak: ":previewBase?"Preview sample peak: ":"Sample peak: ")+juce::String(db,3)+(truePeak?" dBTP":" dBFS")
+            +"\n"+(peakTarget?"Target: "+juce::String(*peakTarget,2)+" dBTP":juce::String(truePeak?"Warning threshold: 0 dBTP (No Limit)":"Warning threshold: 0 dBFS (No Limit)"))
+            +"\nApproximate additional reduction: "+juce::String(threshold-db,3)+" dB"
+            +"\n"+(truePeak?"Guidance for this measured maximum. Re-measure Current after editing.":"Sample-based guidance; inter-sample peaks may be higher. Re-measure Current after editing.");
+    };
+    if(waveformData&&(waveformAccepted||previewBase)&&graph.toFloat().contains(pointer))
+    {
+        const int channels=waveformData->spec.channels;const float height=float(graph.getHeight())/channels;
+        double scale=1;for(const auto& col:waveformColumns)if(col.available())for(int c=0;c<channels;++c)
+            scale=std::max(scale,double(std::max(std::abs(col.channels[size_t(c)].minimum),std::abs(col.channels[size_t(c)].maximum))));
+        const int channel=std::clamp(int((pointer.y-graph.getY())/height),0,channels-1);
+        const float centre=graph.getY()+(channel+.5f)*height;
+        const auto visit=[&](float value,int64_t frame)
+        {
+            if(!sampleExceedsTarget(value,frame))return;
+            const auto d=pointer.getDistanceFrom({x(double(frame)),centre-float(value/scale)*height*.44f});
+            if(d<distance){distance=d;text=describe(channel,20*std::log10(std::abs(value)),double(frame),false);}
+        };
+        for(const auto& col:waveformColumns)if(col.available()){const auto& e=col.channels[size_t(channel)];visit(e.minimum,e.minimumFrame);visit(e.maximum,e.maximumFrame);}
+    }
+    if(text.isNotEmpty())return text;
+    if(analysis&&peakMeasurementCurrent&&!previewBase)for(const auto& peak:analysis->peaks)if(peak.trueDbtp&&*peak.trueDbtp>std::min(peakTarget.value_or(0.),currentInspection?peakTarget.value_or(0.):0.))
+    {
+        const double frame=peak.truePeakEighthFrame/8.;if(frame<viewBegin||frame>viewEnd)continue;
+        const auto top=waveformData?graph.getY()+peak.channel*graph.getHeight()/waveformData->spec.channels:graph.getY();
+        if(juce::Rectangle<float>(x(frame)-3,float(top),51,15).contains(pointer))return describe(peak.channel,*peak.trueDbtp,frame,true);
+    }
+    return {};
+}
 void MeasurementTimeline::mouseMove(const juce::MouseEvent& e)
 {
     setMouseCursor(graph.contains(e.getPosition()) && boundaryHandle(e.position.x)
         ? juce::MouseCursor::LeftRightResizeCursor : juce::MouseCursor::NormalCursor);
 }
+void MeasurementTimeline::changeSectionEnd(uint64_t id,int64_t frame)
+{
+    if(!sectionSession||!sectionEdit)return;
+    const auto before=sectionSession->sectionDocument.map();auto edited=sectionSession->sectionDocument;
+    const auto it=std::find_if(before.sections.begin(),before.sections.end(),[&](const auto& r){return r.id==id;});
+    if(it==before.sections.end()||it->end==frame)return;
+    juce::String error;if(!edited.moveEnd(id,frame,error)){navigationMessage(error);return;}
+    sectionEdit->request(*this,before,edited.map(),false,it->begin,it->end,it->end,frame,
+        [safe=juce::Component::SafePointer<MeasurementTimeline>(this),id](bool accepted,bool)
+        {
+            if(!safe)return;auto& self=*safe;self.refreshSectionEditing();
+            if(self.sectionEdited)self.sectionEdited(id);
+            self.navigationMessage(accepted?("Section changed. Command-Z undoes it."):self.sectionSession->sectionTrimNotice);
+        });
+}
 void MeasurementTimeline::finishSectionGesture(int64_t end)
 {
     refreshSectionEditing();
     if(!sectionEditable || gestureEpoch!=navigationEpoch || !sectionSession->sourceDocument.matchesFileStamps())return;
-    auto& document=sectionSession->sectionDocument;
+    auto document=sectionSession->sectionDocument;
     const auto& map=document.map();
     juce::String error;
     uint64_t selected=0;
@@ -341,17 +569,24 @@ void MeasurementTimeline::finishSectionGesture(int64_t end)
     if(movingBoundary)
     {
         const auto n=*movingBoundary;
-        selected=map.sections[n].id;
-        accepted=document.moveEnd(selected,std::clamp(end,map.sections[n].begin+1,map.sections[n+1].end-1),error);
+        if(batchBoundaryGesture||sectionSession->boundaryBatch)
+        {
+            const auto& rows=sectionSession->boundaryBatch?sectionSession->boundaryBatch->next.map.sections:map.sections;
+            sectionSession->stageBoundary(n,std::clamp(end,rows[n].begin+1,rows[n+1].end-1));
+            refreshSectionEditing();if(sectionEdited)sectionEdited(0);focusForTransport();navigationMessage(sectionSession->sectionTrimNotice);return;
+        }
+        changeSectionEnd(map.sections[n].id,std::clamp(end,map.sections[n].begin+1,map.sections[n+1].end-1));
+        return;
     }
     else
     {
+        if(sectionSession->boundaryBatch){navigationMessage("Finish boundary edits: Enter to review, Esc to cancel.");return;}
         const auto start=frameAt(downPoint.x);
         if(start==end)return;
         accepted=document.defineInterval(std::min(start,end),std::max(start,end),selected,error);
     }
     if(!accepted){navigationMessage(error);return;}
-    if(map.revision!=before)sectionSession->documentChanged();
+    if(map.revision!=before){auto next=sectionSession->manualState();next.map=map;if(!sectionSession->commitManualEdit(std::move(next),"Draw section")){navigationMessage(sectionSession->sectionTrimNotice);return;}}
     refreshSectionEditing();
     if(sectionEdited)sectionEdited(selected);
     const auto it=std::find_if(map.sections.begin(),map.sections.end(),[selected](const auto& row){return row.id==selected;});
@@ -360,10 +595,16 @@ void MeasurementTimeline::finishSectionGesture(int64_t end)
 }
 void MeasurementTimeline::mouseDown(const juce::MouseEvent& e)
 {
+    if(gainLane&&!gainLane->commitPending())return;
     refreshSectionEditing();
-    gestureGain=gainLane&&gainLane->plotBounds().contains(e.getPosition()-gainLane->getPosition());
-    gesture=e.mods.isLeftButtonDown()&&programmeFrames()>0&&(graph.contains(e.getPosition())||ruler.contains(e.getPosition())||gestureGain);
-    sectionGesture=gesture && sectionEditable && graph.contains(e.getPosition()) && !e.mods.isAltDown();
+    gestureGain=gainLane&&gainLane->inspectionBounds().contains(e.getPosition()-gainLane->getPosition());
+    if(gainLane&&!gestureGain)gainLane->clearDeleteSelection();
+    commandGesture=e.mods.isCommandDown();
+    const auto handle=sectionEditable&&graph.contains(e.getPosition())?boundaryHandle(e.position.x):std::nullopt;
+    batchBoundaryGesture=commandGesture&&handle.has_value();
+    selectGesture=gestureGain||(e.mods.isRightButtonDown()&&graph.contains(e.getPosition()))||(commandGesture&&!handle&&graph.contains(e.getPosition()));
+    gesture=(e.mods.isLeftButtonDown()||selectGesture)&&programmeFrames()>0&&(graph.contains(e.getPosition())||ruler.contains(e.getPosition())||gestureGain);
+    sectionGesture=gesture && !selectGesture && sectionEditable && graph.contains(e.getPosition()) && !e.mods.isAltDown();
     movingBoundary=sectionGesture?boundaryHandle(e.position.x):std::nullopt;
     dragFrame=frameAt(e.position.x);
     dragging=false;gestureRuler=ruler.contains(e.getPosition());downPoint=e.position;dragBegin=viewBegin;dragEnd=viewEnd;gestureEpoch=navigationEpoch;gestureIdentity=transportIdentity;
@@ -371,6 +612,12 @@ void MeasurementTimeline::mouseDown(const juce::MouseEvent& e)
 void MeasurementTimeline::mouseDrag(const juce::MouseEvent& e)
 {
     if(!gesture)return;
+    if(selectGesture)
+    {
+        if(gestureEpoch!=navigationEpoch||!gainLane)return;
+        if(e.position.getDistanceFrom(downPoint)>=4){dragging=true;gainLane->selectRange(frameAt(downPoint.x),frameAt(e.position.x));}
+        return;
+    }
     if(sectionGesture)
     {
         if(gestureEpoch!=navigationEpoch)return;
@@ -378,7 +625,7 @@ void MeasurementTimeline::mouseDrag(const juce::MouseEvent& e)
         if(movingBoundary || std::abs(e.position.x-downPoint.x)>=4)dragging=true;
         if(movingBoundary)
         {
-            const auto& rows=sectionSession->sectionDocument.map().sections;
+            const auto& rows=sectionSession->boundaryBatch?sectionSession->boundaryBatch->next.map.sections:sectionSession->sectionDocument.map().sections;
             if(*movingBoundary+1<rows.size())dragFrame=std::clamp(dragFrame,rows[*movingBoundary].begin+1,rows[*movingBoundary+1].end-1);
         }
         repaint();
@@ -400,12 +647,19 @@ void MeasurementTimeline::mouseUp(const juce::MouseEvent& e)
         const auto delta=std::abs(e.position.x-downPoint.x);
         if((movingBoundary && delta>0) || delta>=4){finishSectionGesture(frameAt(e.position.x));return;}
     }
+    if(selectGesture&&dragging){focusForTransport();return;}
     if(dragging||e.position.getDistanceFrom(downPoint)>=4||gestureEpoch!=navigationEpoch)return;
+    if(commandGesture&&gainLane&&(gestureGain||graph.contains(e.getPosition())))
+    {focusForTransport();gainLane->toggleSection(frameAt(e.position.x));return;}
     if(gestureRuler&&ruler.contains(e.getPosition()))requestSeek(frameAt(e.position.x),gestureIdentity);
-    else if(gestureGain&&gainLane&&gainLane->plotBounds().contains(e.getPosition()-gainLane->getPosition()))
-        gainLane->selectFrame(frameAt(e.position.x),true);
+    else if(gestureGain&&gainLane&&gainLane->inspectionBounds().contains(e.getPosition()-gainLane->getPosition()))
+    {focusForTransport();const auto y=e.y-gainLane->getY();
+        if(y>=gainLane->plotBounds().getBottom())gainLane->editReadout(frameAt(e.position.x));
+        else gainLane->selectAt(frameAt(e.position.x),y);}
     else if(!gestureRuler&&graph.contains(e.getPosition()))
     {
+        gainSelection=false;focusForTransport();
+        if(gainLane)gainLane->selectAt(frameAt(e.position.x),0);
         if(waveformData)inspectedChannel=juce::jlimit(0,waveformData->spec.channels-1,(e.y-graph.getY())*waveformData->spec.channels/std::max(1,graph.getHeight()));
         inspectFrame(double(frameAt(e.position.x)));
     }
@@ -413,23 +667,31 @@ void MeasurementTimeline::mouseUp(const juce::MouseEvent& e)
 void MeasurementTimeline::mouseWheelMove(const juce::MouseEvent& e,const juce::MouseWheelDetails& w)
 {
     follow.setToggleState(false,juce::dontSendNotification);
-    if(e.mods.isCommandDown()||e.mods.isCtrlDown())zoom(w.deltaY>0?.8:1.25);
+    if((e.mods.isCommandDown()||e.mods.isCtrlDown())&&!e.mods.isShiftDown())zoomAt(w.deltaY>0?.8:1.25,e.position.x);
     else {const auto shift=-(w.deltaX!=0?w.deltaX:w.deltaY)*(viewEnd-viewBegin);setViewRange(viewBegin+shift,viewEnd+shift);}
 }
 void MeasurementTimeline::paint (juce::Graphics& g)
 {
-    g.fillAll (juce::Colour (0xff171c24)); g.setFont (12.0f); g.setColour (juce::Colours::white);
+    g.fillAll (palette::graph()); g.setFont (12.0f); g.setColour (juce::Colours::white);
     if(waveformEnabled)
     {
         juce::String heading=waveformData?"PCM waveform overview | "+juce::String(waveformData->binFrames)+" frames/bin ("+juce::String(1000.*waveformData->binFrames/programmeRate(),3)+" ms)":
             "PCM waveform unavailable | use Build waveform for an existing measurement";
-        if(waveformData && !waveformAccepted)heading+=" | ANALYSING - incomplete: "+juce::String(waveformData->coveredFrames(waveformPublication))+" / "+juce::String(programmeFrames())+" frames";
-        g.drawText(heading,10,31,getWidth()-20,18,juce::Justification::left);
-        g.drawText(preview?"ANALYSING - incomplete, not a programme result | M amber: gate pending; S blue: ungated | LUFS at right, PCM at left.":"Loudness overlay: measured M orange (excluded grey), S blue; window-end times. LUFS scale at right; PCM amplitude at left.",10,49,getWidth()-20,18,juce::Justification::left);
+        if(waveformData && !waveformAccepted&&!previewBase)heading+=" | ANALYSING - incomplete: "+juce::String(waveformData->coveredFrames(waveformPublication))+" / "+juce::String(programmeFrames())+" frames";
+        if(isGainPreview())heading="CURRENT GAIN PREVIEW | "+juce::String(1000.*waveformData->binFrames/programmeRate(),3)+" ms/bin | Not measured";
+        if(overTargetPeaks.getToggleState())
+        {
+            bool overs=false;for(const auto& col:waveformColumns)if(col.available())for(int c=0;waveformData&&c<waveformData->spec.channels;++c)
+                overs=overs||sampleExceedsTarget(col.channels[size_t(c)].minimum,col.channels[size_t(c)].minimumFrame)||sampleExceedsTarget(col.channels[size_t(c)].maximum,col.channels[size_t(c)].maximumFrame);
+            if(analysis&&peakMeasurementCurrent)for(const auto& p:analysis->peaks)overs=overs||(p.trueDbtp&&*p.trueDbtp>std::min(peakTarget.value_or(0.),currentInspection?peakTarget.value_or(0.):0.)&&p.truePeakEighthFrame/8.>=viewBegin&&p.truePeakEighthFrame/8.<viewEnd);
+            heading+=!(waveformAccepted||isGainPreview())?" | Peak data unavailable":overs?" | Peak warnings":" | "+juce::String(isGainPreview()?"Preview: ":"")+"No overs in this view.";
+        }
+        g.drawText(heading,10,31,std::max(0,getWidth()-205),18,juce::Justification::left);
+        g.drawText(preview?"ANALYSING - incomplete | M amber, S blue: gates pending | LUFS at right; PCM at left.":"M amber / excluded grey; S blue / outside LRA gate blue-grey. Current: red IL gate = M gate membership differs from Original.",10,49,getWidth()-20,18,juce::Justification::left);
     }
     else
     {
-        g.drawText("Audio-source time | M included: orange; M excluded: grey; S: blue (ungated)",55,31,getWidth()-60,18,juce::Justification::left);
+        g.drawText("Audio-source time | M included: orange; M excluded: grey; S: blue (ungated)",55,31,std::max(0,getWidth()-250),18,juce::Justification::left);
         g.drawText("Points at window ends, every 100 ms. Per-column min/max retains extrema and mixed membership; no interpolation across gaps.",55,49,getWidth()-60,18,juce::Justification::left);
     }
     if(!ruler.isEmpty())
@@ -450,29 +712,49 @@ void MeasurementTimeline::paint (juce::Graphics& g)
         }
     }
     if(programmeFrames()==0||graph.isEmpty()){g.drawText("No measured timeline",getLocalBounds(),juce::Justification::centred);return;}
-    if(waveformData)paintWaveform(g);
+    if(waveformData){g.beginTransparencyLayer(blend.waveformAlpha());paintWaveform(g);g.endTransparencyLayer();}
     double low = -75, high = -10;
     for (const auto* series : { &plot.momentary, &plot.shortTerm }) for (const auto& b : *series)
         for (const auto* v : { &b.included, &b.excluded, &b.ungated }) if (v->count)
         { low = std::min (low, v->minimum - 2); high = std::max (high, v->maximum + 2); }
     const auto y = [&] (double value) { return static_cast<float> (graph.getBottom() - (value - low) * graph.getHeight() / (high - low)); };
     const auto x = [&] (double frame) { return static_cast<float> (graph.getX() + (frame - viewBegin) * (graph.getWidth()-1) / (viewEnd - viewBegin)); };
+    g.beginTransparencyLayer(blend.loudnessAlpha());
     for (double v = std::ceil (low / 10) * 10; v <= high; v += 10)
     {
         g.setColour (juce::Colour (0xff303744).withAlpha(waveformData?.3f:1.f)); g.drawHorizontalLine (static_cast<int> (y(v)), static_cast<float> (graph.getX()), static_cast<float> (graph.getRight()));
         g.setColour (juce::Colours::lightgrey); g.drawText(juce::String(v,0)+(waveformEnabled?" LUFS":""),waveformEnabled?graph.getRight()+3:0,static_cast<int>(y(v))-7,waveformEnabled?57:48,15,juce::Justification::right);
     }
-    g.saveState(); g.reduceClipRegion (graph);
+    g.endTransparencyLayer();g.saveState(); g.reduceClipRegion (graph);
     // Intervals outside the viewport must not become fabricated edge markers.
     // Zero-width channel-peak markers are visible only at their actual position.
-    if (selection && ((selection->second > viewBegin && selection->first < viewEnd)
+    if(currentInspection&&showTransitions)
+    {
+        g.setColour(juce::Colour(sectionSession&&sectionSession->boundaryBatch?0xffffc171:0xff81d5b4).withAlpha(.12f));
+        float lastRight=-1;
+        for(const auto& span:transitionSpans())
+        {
+            const auto left=x(std::max<double>(span.first,viewBegin));
+            const auto right=std::max(left+1.f,x(std::min<double>(span.second,viewEnd)));
+            if(right>lastRight)g.fillRect(std::max(lastRight,left),float(graph.getY()),right-std::max(lastRight,left),float(graph.getHeight()));
+            lastRight=std::max(lastRight,right);
+        }
+    }
+    if(gainSelection&&gainLane&&gainLane->selectsSections())
+    {
+        g.setColour(juce::Colours::yellow.withAlpha(.16f));
+        for(const auto& span:gainLane->selectedSpans())if(span.second>viewBegin&&span.first<viewEnd)
+            g.fillRect(x(std::max<double>(span.first,viewBegin)),float(graph.getY()),std::max(1.f,x(std::min<double>(span.second,viewEnd))-x(std::max<double>(span.first,viewBegin))),float(graph.getHeight()));
+    }
+    else if (selection && ((selection->second > viewBegin && selection->first < viewEnd)
         || (selection->first == selection->second && selection->first >= viewBegin && selection->first <= viewEnd)))
     {
         const auto left = x (std::clamp (selection->first, viewBegin, viewEnd));
         const auto right = x (std::clamp (selection->second, viewBegin, viewEnd));
         g.setColour (juce::Colours::yellow.withAlpha (.16f)); g.fillRect (left, static_cast<float> (graph.getY()), std::max (2.f, right - left), static_cast<float> (graph.getHeight()));
     }
-    for (const auto* series : { &plot.momentary, &plot.shortTerm })
+    g.beginTransparencyLayer(blend.loudnessAlpha());
+    for (const auto* series : { &plot.momentary, gatedShortTerm.empty()?&plot.shortTerm:&gatedShortTerm })
     {
         std::array<const proposal::ValueExtent*,3> previous{};
         for (size_t n = 0; n < series->size(); ++n)
@@ -481,7 +763,8 @@ void MeasurementTimeline::paint (juce::Graphics& g)
             const auto& b = (*series)[n]; int category = 0;
             for (const auto* v : { &b.excluded, &b.included, &b.ungated })
             {
-                g.setColour (preview&&series==&plot.momentary ? juce::Colour(0xffffce80) : category == 0 ? juce::Colour (0xff89909b) : category == 1 ? juce::Colour (0xffffb65c) : juce::Colour (0xff62c9ff));
+                g.setColour (series==&gatedShortTerm?(category==0?juce::Colour(0xff75899e):juce::Colour(0xff62c9ff)):
+                    preview&&series==&plot.momentary ? juce::Colour(0xffffce80) : category == 0 ? juce::Colour (0xff89909b) : category == 1 ? juce::Colour (0xffffb65c) : juce::Colour (0xff62c9ff));
                 auto& last=previous[size_t(category++)];if(!v->count)continue;
                 const auto point=v->count==1?x(double(v->firstEnd)):px;
                 g.drawLine(point,y(v->maximum),point,y(v->minimum)+1.f,1.3f);
@@ -492,22 +775,39 @@ void MeasurementTimeline::paint (juce::Graphics& g)
             }
         }
     }
-    if(analysis&&!preview) for (const auto& peak : analysis->peaks) for (bool truePeak : { false, true }) if (truePeak ? peak.trueDbtp.has_value() : peak.sampleDbfs.has_value())
+    g.endTransparencyLayer();g.beginTransparencyLayer(blend.waveformAlpha());
+    if(analysis&&!preview&&!previewBase) for (const auto& peak : analysis->peaks) for (bool truePeak : { false, true }) if (truePeak ? peak.trueDbtp.has_value() : peak.sampleDbfs.has_value())
     {
         const auto frame = truePeak ? peak.truePeakEighthFrame / 8. : static_cast<double> (peak.sampleFrame);
         if (frame >= viewBegin && frame <= viewEnd)
         {
-            const auto top = graph.getY() + (truePeak ? 0 : 16);
-            g.setColour (truePeak ? juce::Colours::pink : juce::Colours::lightgrey);
+            const bool exceeds=truePeak&&peakOverlayActive()&&*peak.trueDbtp>std::min(peakTarget.value_or(0.),currentInspection?peakTarget.value_or(0.):0.);
+            const auto top = exceeds&&waveformData?graph.getY()+peak.channel*graph.getHeight()/waveformData->spec.channels:graph.getY()+(truePeak?0:16);
+            g.setColour (exceeds?juce::Colour(0xffff9d42):truePeak ? juce::Colours::pink : juce::Colours::lightgrey);
             g.drawVerticalLine (static_cast<int> (x(frame)), static_cast<float> (top), static_cast<float> (top + 13));
-            g.drawText (juce::String (truePeak ? "TP" : "SP") + juce::String (peak.channel + 1), static_cast<int> (x(frame)) + 2, top, 40, 14, juce::Justification::left);
+            g.drawText (juce::String (exceeds?"TP!":truePeak ? "TP" : "SP") + juce::String (peak.channel + 1), static_cast<int> (x(frame)) + 2, top, 48, 14, juce::Justification::left);
         }
     }
+    g.endTransparencyLayer();g.beginTransparencyLayer(blend.loudnessAlpha());
     g.setColour (juce::Colours::lightgreen.withAlpha (preview?0.f:.75f)); g.drawHorizontalLine (static_cast<int> (y(-70)), static_cast<float> (graph.getX()), static_cast<float> (graph.getRight()));
-    if (!preview && analysis && analysis->integratedGate) g.drawHorizontalLine (static_cast<int> (y(*analysis->integratedGate)), static_cast<float> (graph.getX()), static_cast<float> (graph.getRight()));
+    if (!preview && analysis && analysis->integratedGate)
+    {
+        const auto gateY=y(*analysis->integratedGate);
+        g.drawHorizontalLine(int(gateY),float(graph.getX()),float(graph.getRight()));
+        g.setColour(juce::Colour(0xffff3232));
+        for(size_t n=0;n<changedMomentary.size();)
+        {
+            if(!changedMomentary[n]){++n;continue;}const auto first=n;
+            while(n<changedMomentary.size()&&changedMomentary[n])++n;
+            g.drawLine(graph.getX()+float(first)*graph.getWidth()/changedMomentary.size(),gateY,
+                       graph.getX()+float(n)*graph.getWidth()/changedMomentary.size(),gateY,2.f);
+        }
+    }
+    g.endTransparencyLayer();
     // Source-frame annotations are independent of video offset and plot reduction.
     // Do not clamp offscreen boundaries into fabricated edge markers.
     g.setColour (juce::Colours::violet.withAlpha (.7f));
+    if(sectionSession&&sectionSession->boundaryBatch)g.setColour(juce::Colour(0xffffc171));
     int previousBoundaryPixel=graph.getX()-1;
     for(auto it=std::lower_bound(sectionBoundaries.begin(),sectionBoundaries.end(),viewBegin);
         it!=sectionBoundaries.end() && *it<=viewEnd;++it)
@@ -515,7 +815,9 @@ void MeasurementTimeline::paint (juce::Graphics& g)
         if(*it<=0 || *it>=programmeFrames())continue;
         const int pixel=int(x(double(*it)));
         if(pixel==previousBoundaryPixel)continue;
-        g.drawVerticalLine(pixel,float(graph.getY()),float(graph.getBottom()));
+        if(sectionSession&&sectionSession->boundaryBatch)
+        {const float dashes[]{4,3};g.drawDashedLine({float(pixel),float(graph.getY()),float(pixel),float(graph.getBottom())},dashes,2);}
+        else g.drawVerticalLine(pixel,float(graph.getY()),float(graph.getBottom()));
         previousBoundaryPixel=pixel;
     }
     if(gesture && sectionGesture && dragging && gestureEpoch==navigationEpoch)
@@ -560,6 +862,12 @@ void MeasurementTimeline::paintWaveform(juce::Graphics& g)
         g.drawHorizontalLine(int(top+height),float(graph.getX()),float(graph.getRight()));
         const auto y=[&](float v){return centre-float(v/scale)*(height*.44f);};
         g.saveState();g.reduceClipRegion(graph);
+        if(peakOverlayActive()&&(waveformAccepted||previewBase))
+        {
+            const auto level=peakCeiling;g.setColour(juce::Colour(0xffff9d42).withAlpha(.45f));
+            if(level<=scale)for(auto sign:{-1.,1.})for(int px=graph.getX();px<graph.getRight();px+=9)
+                g.drawLine(float(px),y(float(sign*level)),float(std::min(px+4,graph.getRight())),y(float(sign*level)),1.f);
+        }
         for(const auto& col:waveformColumns)if(col.available())
         {
             const auto& e=col.channels[size_t(c)];const float midpoint=x((double(col.begin)+col.coveredEnd)/2);
@@ -571,6 +879,9 @@ void MeasurementTimeline::paintWaveform(juce::Graphics& g)
                 g.fillEllipse(x(double(e.minimumFrame))-1,y(e.minimum)-1,2,2);
                 g.fillEllipse(x(double(e.maximumFrame))-1,y(e.maximum)-1,2,2);
             }
+            g.setColour(juce::Colour(0xffff9d42));
+            if(sampleExceedsTarget(e.minimum,e.minimumFrame))g.drawEllipse(x(double(e.minimumFrame))-3,y(e.minimum)-3,6,6,1.8f);
+            if(e.maximumFrame!=e.minimumFrame&&sampleExceedsTarget(e.maximum,e.maximumFrame))g.drawEllipse(x(double(e.maximumFrame))-3,y(e.maximum)-3,6,6,1.8f);
         }
         g.restoreState();
     }

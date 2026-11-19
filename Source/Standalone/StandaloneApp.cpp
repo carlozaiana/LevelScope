@@ -11,16 +11,20 @@ class StandaloneMainWindow final : public juce::DocumentWindow
 public:
     explicit StandaloneMainWindow (const juce::String& name)
         : juce::DocumentWindow (name,
-                                juce::Colour (0xff15171c),
+                                levelscope::standalone::palette::panel(),
                                 juce::DocumentWindow::allButtons)
     {
         setUsingNativeTitleBar (true);
         setResizable (true, true);
         setResizeLimits (1120, 950, 2400, 1600);
-        setContentOwned (new levelscope::standalone::StandaloneMainComponent(), true);
+        auto* content=new levelscope::standalone::StandaloneMainComponent();setContentOwned(content,true);
+        juce::PopupMenu appMenu;appMenu.addItem(levelscope::standalone::StandaloneMainComponent::preferences,juce::String::fromUTF8("Preferences… (⌘,)"));
+        juce::MenuBarModel::setMacMainMenu(content,&appMenu);
         centreWithSize (getWidth(), getHeight());
         setVisible (true);
     }
+
+    ~StandaloneMainWindow() override {juce::MenuBarModel::setMacMainMenu(nullptr);}
 
     void closeButtonPressed() override
     {

@@ -2,6 +2,8 @@
 #include "Core/Proposal/AnalysisEngine.h"
 #include "Core/Waveform/WaveformOverview.h"
 #include "StandaloneLoudnessPreview.h"
+#include "TimelineAppearance.h"
+#include "SectionEditPrompt.h"
 #include <juce_gui_basics/juce_gui_basics.h>
 
 namespace levelscope::standalone
@@ -10,21 +12,42 @@ namespace levelscope::standalone
 // processing or profile reference. All navigation is in audio-source frames.
 class TimelineGainLane;
 class StandaloneSessionModel;
-class MeasurementTimeline final : public juce::Component, private juce::ScrollBar::Listener
+class MeasurementTimeline final : public juce::Component, public juce::TooltipClient, private juce::ScrollBar::Listener
 {
 public:
     MeasurementTimeline();
     void attachGainLane(TimelineGainLane&);
+    TimelineGainLane* attachedGainLane() const {return gainLane;}
     void bindSectionEditing(StandaloneSessionModel&,std::function<void(uint64_t)>);
     void refreshSectionEditing();
+    void changeSectionEnd(uint64_t,int64_t);
+    SectionEditPrompt* editPrompt(){return sectionEdit.get();}
+    juce::String peakHoverText(juce::Point<float>) const;
+    juce::String getTooltip() override {return peakHoverText(getMouseXYRelative().toFloat());}
     void mouseMove(const juce::MouseEvent&) override;
     void focusForTransport();
     bool keyPressed(const juce::KeyPress&) override;
     std::function<void()> onTogglePlayback;
+    std::function<bool(bool)> onUndo;
+    std::function<void()> onRemeasure;
+    std::function<void()> onToggleInspectionAudition;
     void setProgramme(int64_t frames,int sampleRate,const juce::String& identity);
     void setAnalysis (std::shared_ptr<const proposal::ProgramAnalysis>);
     void setWaveform(std::shared_ptr<const waveform::Overview>,bool accepted,const juce::StringArray& channels);
+    void setGainPreview(std::optional<ProcessingPlan> base,const ProcessingPlan& current={});
+    bool isGainPreview() const {return waveformData&&previewBase.has_value();}
+    void setTransitionShading(bool shown){showTransitions=shown;repaint();}
+    bool transitionShading() const {return showTransitions;}
+    std::vector<std::pair<int64_t,int64_t>> transitionSpans() const;
     void setPreview(std::shared_ptr<const LoudnessPreview>);
+    void setReferenceMeasurement(std::shared_ptr<const measurement::Result>,bool inspectingCurrent);
+    juce::String rangePeakText(int64_t begin,int64_t end) const;
+    TimelineBlend& visibilityBlend(){return blend;}
+    void setPeakTarget(std::optional<double> dbtp,bool measured);
+    juce::ToggleButton& peakVisibility(){return overTargetPeaks;}
+    bool sampleExceedsTarget(double value,int64_t frame) const;
+    const std::vector<proposal::PlotBucket>& shortTermGatePlot() const {return gatedShortTerm;}
+    const std::vector<bool>& changedMomentaryColumns() const {return changedMomentary;}
     void setTransport(int64_t frame,bool seekAllowed,const juce::String& reason,const juce::String& identity);
     std::function<juce::String(int64_t,const juce::String&)> onRequestSeek;
     std::pair<double,double> viewRange() const {return {viewBegin,viewEnd};}
@@ -34,7 +57,7 @@ public:
     const std::vector<waveform::Column>& displayedWaveform() const {return waveformColumns;}
     void setViewRange (double beginFrame, double endFrame);
     void highlight (double beginFrame, double endFrame, bool reveal = true);
-    void clearHighlight() { selection.reset();inspectedRange.reset();fitSelection.setEnabled(false);repaint(); }
+    void clearHighlight() { gainSelection=false;selection.reset();inspectedRange.reset();fitSelection.setEnabled(false);repaint(); }
     void setSectionBoundaries (std::vector<int64_t> frames) { sectionBoundaries = std::move (frames); repaint(); }
     bool inspectSeconds (double seconds);
     juce::String inspectionText() const { return inspection; }
@@ -49,10 +72,14 @@ public:
     std::function<void(const juce::String&)> onInspect;
 private:
     StandaloneSessionModel* sectionSession=nullptr;
+    std::unique_ptr<SectionEditPrompt> sectionEdit;
+    juce::TooltipWindow hoverTips{this,350};
     std::function<void(uint64_t)> sectionEdited;
     juce::String sectionInput,sectionRuntime;
     uint64_t sectionRevision=0, audioRevision=0;
     bool sectionEditable=false, sectionGesture=false;
+    bool commandGesture=false,batchBoundaryGesture=false,gainSelection=false,showTransitions=true;
+    uint64_t boundarySerial=0;
     std::optional<size_t> boundaryHandle(float x) const;
     std::optional<size_t> movingBoundary;
     int64_t dragFrame=0;
@@ -65,8 +92,18 @@ private:
     int knownRate=1;
     juce::String programmeIdentity;
     proposal::TimelinePlot plot;
+    TimelineBlend blend;
+    std::shared_ptr<const measurement::Result> originalMeasurement;
+    std::optional<double> originalIntegratedGateEnergy;
+    bool currentInspection=false;
+    std::vector<proposal::PlotBucket> gatedShortTerm;
+    std::vector<bool> changedMomentary;
     std::shared_ptr<const waveform::Overview> waveformData;
     std::vector<waveform::Column> waveformColumns;
+    std::optional<ProcessingPlan> previewBase;
+    ProcessingPlan previewCurrent;
+    juce::String previewGainKey;
+    void clearGainPreview(){previewBase.reset();previewCurrent={};previewGainKey.clear();}
     juce::StringArray channelNames;
     uint64_t waveformPublication=0;
     bool waveformAccepted=false,waveformEnabled=false;
@@ -84,9 +121,14 @@ private:
     juce::TextButton zoomIn { "Zoom +" }, zoomOut { "Zoom -" }, fit { "Whole programme" }, fitSelection {"Fit selection"}, inspect { "Inspect seconds" };
     juce::TextButton seek {"Seek"};
     juce::ToggleButton follow {"Follow"};
+    juce::ToggleButton overTargetPeaks {"Peak warnings"};
+    std::optional<double> peakTarget;
+    double peakCeiling=1;
+    bool peakMeasurementCurrent=false;
+    bool peakOverlayActive() const {return overTargetPeaks.getToggleState()&&(peakMeasurementCurrent||isGainPreview())&&!preview;}
     juce::Label navigationFeedback;
     int64_t playhead=0;
-    bool canSeek=false,dragging=false,gesture=false,gestureRuler=false,gestureGain=false;
+    bool canSeek=false,dragging=false,gesture=false,gestureRuler=false,gestureGain=false,selectGesture=false;
     juce::String seekReason,transportIdentity,gestureIdentity;
     uint64_t navigationEpoch=0,gestureEpoch=0;
     juce::Point<float> downPoint;
@@ -102,6 +144,7 @@ private:
     void requestSeek(int64_t,const juce::String&);
     void navigationMessage(const juce::String&);
     void zoom (double factor);
+    void zoomAt(double factor,float x);
     void scrollBarMoved (juce::ScrollBar*, double) override;
 };
 juce::String diagnosticWindowText (const proposal::DiagnosticWindow&, int sampleRate, int64_t programmeFrames, bool ungated = false);

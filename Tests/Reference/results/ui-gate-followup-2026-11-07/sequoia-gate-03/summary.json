@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "os": "15.7.9",
+  "architecture": "arm64",
+  "source_commit": "bb1bd06a2b27a88d592901c26016fe9d1732ec3d",
+  "build": "a42c38e981f07a42f45a75a1e7e430bb7c52e5885f9d17aa4acc55282178d778",
+  "candidate_identity_sha256": "d2e806d754371067e16ac70472ff8d20785972df61fe55aace7c7f125c6f7eff",
+  "requested_cases": [
+    "timeline",
+    "ui"
+  ],
+  "physical_devices_opened": false,
+  "combined_qualification_complete": false,
+  "inputs": {},
+  "groups": [
+    {
+      "name": "timeline",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-inspection-2026-11-07/candidate-03/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-inspection-2026-11-07/sequoia-gate-03/timeline-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-inspection-2026-11-07/sequoia-gate-03/timeline.json"
+      ],
+      "returncode": 0,
+      "seconds": 2.049188709,
+      "passed": true,
+      "checks": 919,
+      "receipt": "timeline.json",
+      "receipt_sha256": "ce4532f54a7fe92df29d24f4c58d19f0d8693a8334f5db25ff5e1fab37b53f7b"
+    },
+    {
+      "name": "ui",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-inspection-2026-11-07/candidate-03/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-inspection-2026-11-07/sequoia-gate-03/ui-files"
+      ],
+      "returncode": 0,
+      "seconds": 15.236008459,
+      "passed": true,
+      "checks": 105,
+      "receipt": "ui-files/result.json",
+      "receipt_sha256": "e3935c8f31812640ba0d5c6ccba1a6bbfded709515f7136933a84b1a10135ba9"
+    }
+  ]
+}

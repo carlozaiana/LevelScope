@@ -114,7 +114,10 @@ proposal::MeasuredProgramme measuredProgrammeForSnapshot (const std::shared_ptr<
 proposal::Evaluation evaluateSnapshot (const AnalysisSnapshot* analysis, const ServiceContext& expected,
                                       MeasurementDomain domain, const TargetProfile& profile, proposal::Applicability applicability)
 {
-    return proposal::evaluateMeasuredProgramme (profile, measuredProgrammeForSnapshot (analysis, expected, domain, applicability));
+    auto result=proposal::evaluateMeasuredProgramme (profile, measuredProgrammeForSnapshot (analysis, expected, domain, applicability));
+    if(result.message.startsWith("Confirm applicability:"))
+        result.message="This saved evaluation context is unsupported. Automatic file-limit checking supports whole-file linear-audio QC; it does not add live or distribution-specific methods.";
+    return result;
 }
 
 juce::String evaluationText (const proposal::Evaluation& e)

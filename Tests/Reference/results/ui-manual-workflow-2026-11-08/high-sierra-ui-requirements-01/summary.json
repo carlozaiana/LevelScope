@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "os": "10.13.6",
+  "architecture": "x86_64",
+  "source_commit": "4043f79d650a1a00778612be824562bce81464c2",
+  "build": "cb4c35c17598dff01e1251dae96bdaea98fe63b484dbea9928ca735df227e3fe",
+  "candidate_identity_sha256": "79220e02c5e2a1e7a3570ed3f61c35bab436872272edf9abaa85ee7e4659a154",
+  "requested_cases": [
+    "ui",
+    "requirements"
+  ],
+  "physical_devices_opened": false,
+  "combined_qualification_complete": false,
+  "inputs": {},
+  "groups": [
+    {
+      "name": "ui",
+      "command": [
+        "/Users/fuzz/LevelScope-UI-manual-workflow-2026-11-08/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/LevelScope-UI-manual-workflow-2026-11-08/high-sierra-ui-requirements-01/ui-files"
+      ],
+      "returncode": 0,
+      "seconds": 34.121708288,
+      "passed": true,
+      "checks": 129,
+      "receipt": "ui-files/result.json",
+      "receipt_sha256": "7d0f95e706a2477527aca714a836585474abaa566a91b7ff0f5a3332ec04c97d"
+    },
+    {
+      "name": "requirements",
+      "command": [
+        "/Users/fuzz/LevelScope-UI-manual-workflow-2026-11-08/candidate-01/bin/LevelScopeJobRequirementsTests",
+        "--root",
+        "/Users/fuzz/LevelScope-UI-manual-workflow-2026-11-08/high-sierra-ui-requirements-01/requirements-files",
+        "--output",
+        "/Users/fuzz/LevelScope-UI-manual-workflow-2026-11-08/high-sierra-ui-requirements-01/requirements.json"
+      ],
+      "returncode": 0,
+      "seconds": 53.91361311000001,
+      "passed": true,
+      "checks": 489,
+      "receipt": "requirements.json",
+      "receipt_sha256": "e18a8617efc4ad1d16c754bb30be71141f52366993f0e1326a04dc780fa75a5b"
+    }
+  ]
+}

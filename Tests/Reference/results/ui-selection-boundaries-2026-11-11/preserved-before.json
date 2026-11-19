@@ -1,0 +1,7 @@
+{
+  "baseline": "c7094cd66f6a7457c1fe8bdab4e0e1c51737dda6",
+  "main": "22961f03de7919e1de631f8b13eb4b852108ac0b",
+  "candidate_path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-remeasure-crash-2026-11-10/candidate-01",
+  "identity_sha256": "49267208818df14228cae7385b2e44070f9bc8dd57693d512968bae80ceeba9a",
+  "artifacts": 425
+}
