@@ -1,0 +1,14 @@
+{
+  "package": "logic-handover-03",
+  "command": [
+    "/Users/fuzz/Developer/LevelScope/build/m20-events-2026-11-19/logic-handover-03/bin/LevelScopeEventPlanningTests",
+    "--group",
+    "core",
+    "--root",
+    "/Users/fuzz/Developer/LevelScope/build/m20-events-2026-11-19/qualification-final/fixtures/event-core",
+    "--output",
+    "/Users/fuzz/Developer/LevelScope/build/m20-events-2026-11-19/qualification-final/receipts/event-core.json"
+  ],
+  "exit_code": 1,
+  "wall_seconds": 0.29365695799999997
+}

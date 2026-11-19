@@ -11,7 +11,11 @@ bool finite(const measurement::Metric& m){return m.status==measurement::Status::
 }
 std::optional<double> lraFinalGlobalGain(const AnalysisSnapshot& a,const proposal::TargetProfile& p)
 {
-    const auto& d=a.detail;const auto& l=p.limits;const double before=a.context.processing.staticGainDb;
+    return lraFinalGlobalGain(a.detail,a.context.processing.staticGainDb,p);
+}
+std::optional<double> lraFinalGlobalGain(const measurement::Result& d,double before,const proposal::TargetProfile& p)
+{
+    const auto& l=p.limits;
     if(p.validationError().isNotEmpty()||!l.hasIntegratedLoudnessTarget||!l.hasTruePeakCeiling
         ||!finite(d.integrated)||!finite(d.truePeak)||(l.hasMaxMomentary&&!finite(d.momentaryMax))
         ||(l.hasMaxShortTerm&&!finite(d.shortTermMax))||!std::isfinite(before))return {};

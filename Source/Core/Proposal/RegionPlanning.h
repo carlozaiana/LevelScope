@@ -1,5 +1,6 @@
 #pragma once
 #include "LraPassages.h"
+#include "EventFeatureDefinition.h"
 #include <array>
 #include <chrono>
 
@@ -29,6 +30,8 @@ struct RegionPlanningSettings
     uint64_t sectionId=0;
     RegionSpan selection;
     bool allowSplitting=true,allowRefinement=true,fillShortGap=false,allowGlobal=true,compareAlternatives=false;
+    bool preferCompleteEvent=false,allowAutomaticMargins=false;
+    EventFeatureDefinition eventFeatures;
     int maximumSplits=2,leftMarginMs=0,rightMarginMs=0,minimumIntervalMs=3000,separationMs=1000;
     int needThresholdTenths=10,persistenceMs=1000;
     std::optional<RegionEdgeRange> start,end;
@@ -38,6 +41,8 @@ struct RegionPlanningSettings
     juce::String protectionMethod="local-envelope-v1";
     std::vector<RegionSpan> protectedLocal;
     static RegionPlanningSettings defaults(RegionMode,const juce::String& input);
+    static RegionPlanningSettings eventDefaults(RegionMode,const juce::String& input);
+    const char* methodVersion()const {return schema==2?eventSearchVersion:regionSearchVersion;}
     juce::String validationError()const;
     juce::var encode()const;
     static RegionPlanningSettings decode(const juce::var&); // throws; never widens unknown permissions
@@ -51,6 +56,8 @@ struct PlanningRoot
     std::vector<RegionEdgeRange> internalCuts;
     bool userSelected=false;
     double score=0;
+    RegionSpan requestedAllowed,ownership;
+    juce::String permissionNotice;
 };
 struct RegionConstraints
 {
@@ -81,7 +88,8 @@ struct RegionFormation
     std::vector<juce::String> reasons;
 };
 RegionFormation formRegions(const RegionConstraints&,const ProgramAnalysis&,double ceiling,
-    const std::function<bool()>& cancelled=[] {return false;});
+    const std::function<bool()>& cancelled=[] {return false;},
+    const std::vector<std::vector<RegionGeometry>>* preferred=nullptr);
 struct RegionAssignment
 {
     RegionGeometry geometry;

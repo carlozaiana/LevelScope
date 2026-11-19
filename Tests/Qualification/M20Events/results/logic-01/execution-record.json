@@ -1,0 +1,206 @@
+{
+  "scope": "Focused Sequoia Logic interface checks, not combined M20 qualification",
+  "source_base": "dcdff7ddbbe91abb1a64048f4c3486d88807537d",
+  "final_package": "/Users/fuzz/Developer/LevelScope/build/m20-events-2026-11-19/logic-handover-03",
+  "source_manifest_sha256": "131ddde3204d54da6cfe63645004332a358ab9ce26e0561958ad2be76e6c8596",
+  "measurement_build": "12d44f32d59488dcc03c9d88edea96d4c03a98b439fd9cd37d8d15078276c6a7",
+  "cpu": "Apple M1 Max",
+  "memory_bytes": 34359738368,
+  "os": "macOS 15.7.9 (24G830)",
+  "execution_architecture": "arm64",
+  "built_architectures": [
+    "arm64",
+    "x86_64"
+  ],
+  "intel_minimum_os": "10.13 (LC_VERSION_MIN_MACOSX verified)",
+  "checks": 3919,
+  "groups": [
+    {
+      "name": "event-core",
+      "package": "logic-handover-03",
+      "checks": 47,
+      "max_rss_bytes": null
+    },
+    {
+      "name": "event-features",
+      "package": "logic-handover-01",
+      "checks": 72,
+      "max_rss_bytes": 25608192
+    },
+    {
+      "name": "event-stereo",
+      "package": "logic-handover-01",
+      "checks": 55,
+      "max_rss_bytes": 18808832
+    },
+    {
+      "name": "event-surround",
+      "package": "logic-handover-01",
+      "checks": 52,
+      "max_rss_bytes": 20938752
+    },
+    {
+      "name": "event-heterogeneous",
+      "package": "logic-handover-01",
+      "checks": 52,
+      "max_rss_bytes": 19775488
+    },
+    {
+      "name": "event-fallback",
+      "package": "logic-handover-02",
+      "checks": 54,
+      "max_rss_bytes": 18497536
+    },
+    {
+      "name": "event-population",
+      "package": "logic-handover-02",
+      "checks": 4,
+      "max_rss_bytes": 100057088
+    },
+    {
+      "name": "music-legacy20",
+      "package": "logic-handover-01",
+      "checks": 13,
+      "max_rss_bytes": 16105472
+    },
+    {
+      "name": "music-event20",
+      "package": "logic-handover-01",
+      "checks": 12,
+      "max_rss_bytes": 20922368
+    },
+    {
+      "name": "music-margin20",
+      "package": "logic-handover-01",
+      "checks": 12,
+      "max_rss_bytes": 20185088
+    },
+    {
+      "name": "music-margin40",
+      "package": "logic-handover-01",
+      "checks": 12,
+      "max_rss_bytes": 20332544
+    },
+    {
+      "name": "music-margin60",
+      "package": "logic-handover-01",
+      "checks": 12,
+      "max_rss_bytes": 20250624
+    },
+    {
+      "name": "event-gating",
+      "package": "logic-handover-01",
+      "checks": 12,
+      "max_rss_bytes": 23609344
+    },
+    {
+      "name": "event-cinema",
+      "package": "logic-handover-01",
+      "checks": 12,
+      "max_rss_bytes": 23068672
+    },
+    {
+      "name": "region-core",
+      "package": "logic-handover-01",
+      "checks": 110,
+      "max_rss_bytes": 25542656
+    },
+    {
+      "name": "region-stereo",
+      "package": "logic-handover-01",
+      "checks": 48,
+      "max_rss_bytes": 17088512
+    },
+    {
+      "name": "region-surround",
+      "package": "logic-handover-01",
+      "checks": 48,
+      "max_rss_bytes": 18366464
+    },
+    {
+      "name": "region-heterogeneous",
+      "package": "logic-handover-01",
+      "checks": 42,
+      "max_rss_bytes": 18071552
+    },
+    {
+      "name": "region-failures",
+      "package": "logic-handover-01",
+      "checks": 32,
+      "max_rss_bytes": 13877248
+    },
+    {
+      "name": "region-audio",
+      "package": "logic-handover-01",
+      "checks": 405,
+      "max_rss_bytes": 268926976
+    },
+    {
+      "name": "region-population",
+      "package": "logic-handover-01",
+      "checks": 3,
+      "max_rss_bytes": 76546048
+    },
+    {
+      "name": "lra-core",
+      "package": "logic-handover-01",
+      "checks": 22,
+      "max_rss_bytes": 23166976
+    },
+    {
+      "name": "lra-stereo",
+      "package": "logic-handover-01",
+      "checks": 155,
+      "max_rss_bytes": 34488320
+    },
+    {
+      "name": "lra-inputs",
+      "package": "logic-handover-01",
+      "checks": 171,
+      "max_rss_bytes": 234930176
+    },
+    {
+      "name": "region-ui",
+      "package": "logic-handover-01",
+      "checks": 163,
+      "max_rss_bytes": 181387264
+    },
+    {
+      "name": "timeline",
+      "package": "logic-handover-01",
+      "checks": 2299,
+      "max_rss_bytes": 130629632
+    }
+  ],
+  "package_equivalence": [
+    {
+      "before": "logic-handover-01",
+      "after": "logic-handover-02",
+      "production_and_app_byte_identical": true,
+      "source_changes": [
+        "Tests/EventPlanningTests.cpp",
+        "Tests/Qualification/M20Events/check_logic.py",
+        "Tests/Qualification/M20Events/run_selected.py"
+      ],
+      "artifact_changes": [
+        "bin/LevelScopeEventPlanningTests"
+      ]
+    },
+    {
+      "before": "logic-handover-02",
+      "after": "logic-handover-03",
+      "production_and_app_byte_identical": true,
+      "source_changes": [
+        "Tests/EventPlanningTests.cpp"
+      ],
+      "artifact_changes": [
+        "bin/LevelScopeEventPlanningTests"
+      ]
+    }
+  ],
+  "receipt_reuse": "24 groups originally run on package01. Package02 added fallback/population tests and manifest requirements only. Package03 added five event-core assertions only; core rerun against package03. All production sources, build identity and standalone app unchanged. Original receipts and both earlier packages preserved.",
+  "physical_devices_opened": false,
+  "video_loaded": false,
+  "main_unchanged": "22961f03de7919e1de631f8b13eb4b852108ac0b",
+  "combined_qualified": false
+}

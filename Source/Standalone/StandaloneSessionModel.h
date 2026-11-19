@@ -230,7 +230,7 @@ public:
     juce::String documentId = juce::Uuid().toString(), programmeId = juce::Uuid().toString();
     uint64_t documentRevision = 0, savedDocumentRevision = 0;
     juce::File documentFile;
-    int openedSessionSchema = 9;
+    int openedSessionSchema = 10;
     juce::String restoredProfileId, restoredProfileVersion, restoredProfileDigest;
     bool videoUnresolved = false;
     proposal::SectionDocument sectionDocument;
@@ -569,10 +569,18 @@ public:
     {
         return !audioEditsBlocked()&&!job.isActive()&&!sectionTrimDraft&&sectionProposalError==ErrorCode::none&&sectionProposal
             &&(sectionProposal->status()==SectionProposalStatus::ready||sectionProposal->status()==SectionProposalStatus::globalOnly)
-            &&sectionProposal->identity()==sectionProposalRequest().binding()&&sourceDocument.matchesFileStamps();
+            &&sectionProposal->identity()==sectionProposalRequest().binding()&&sourceDocument.matchesFileStamps()
+            &&(sectionProposal->methodVersion()!=proposal::eventSearchVersion||validateEventRegionProposalForApply(sectionProposalRequest(),*sectionProposal).isEmpty());
     }
     bool hasActionableSectionProposal() const
     {return sectionProposal&&(sectionProposal->status()==SectionProposalStatus::ready||sectionProposal->status()==SectionProposalStatus::globalOnly)&&sectionProposal->identity()==sectionProposalRequest().binding();}
+    bool selectMeasuredRegionAlternative(const juce::String& resultId,const juce::String& attemptId)
+    {
+        if(audioEditsBlocked()||job.isActive()||sectionTrimDraft)return false;
+        const auto selected=selectMeasuredEventAlternative(sectionProposalRequest(),sectionProposal,resultId,attemptId);
+        if(!selected.value){sectionProposalNotice=selected.message;return false;}
+        sectionProposal=*selected.value;sectionProposalError=ErrorCode::none;sectionProposalNotice=sectionProposal->text();return true;
+    }
     void discardSectionProposal()
     {sectionProposal.reset();sectionProposalError=ErrorCode::none;sectionProposalNotice="Proposal discarded. Applied settings and measurements preserved.";}
     bool applySectionProposal()
@@ -601,11 +609,11 @@ public:
         {
             auto c=measurementContext(MeasurementDomain::privateCandidate);c.processing=accepted->plan();
             if(OfflineAnalysisService::validateRequest(c,MeasurementDomain::privateCandidate).isNotEmpty()
-                ||evaluateSnapshot(accepted->assessment().get(),c,MeasurementDomain::privateCandidate,
-                    getSelectedTargetProfile(),programmeApplicability).verdict!=proposal::Verdict::pass)return false;
+                ||(accepted->eventAssessment()?accepted->eventAssessment()->evaluation(sectionProposalRequest(),c.processing):evaluateSnapshot(accepted->assessment().get(),c,MeasurementDomain::privateCandidate,
+                    getSelectedTargetProfile(),programmeApplicability)).verdict!=proposal::Verdict::pass)return false;
             currentStateDocument.sectionGains=c.processing.sectionGains;
             currentStateDocument.sectionGainAnnotations=sectionDocument.map();
-            if((accepted->methodVersion()==proposal::lraTrimMethodVersion||accepted->methodVersion()==proposal::regionSearchVersion)&&c.processing.sectionGains)
+            if((accepted->methodVersion()==proposal::lraTrimMethodVersion||accepted->methodVersion()==proposal::regionSearchVersion||accepted->methodVersion()==proposal::eventSearchVersion)&&c.processing.sectionGains)
             {
                 // Processing geometry is independent of editorial annotations.
                 auto& provenance=currentStateDocument.sectionGainAnnotations;provenance.sections.clear();provenance.nextId=1;

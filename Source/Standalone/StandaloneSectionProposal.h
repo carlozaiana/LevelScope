@@ -8,6 +8,7 @@
 namespace levelscope::standalone
 {
 struct RegionProposalReview;
+class RegionAssessmentReceipt;
 struct SectionProposalRequest
 {
     ServiceContext sourceContext, currentContext;
@@ -21,7 +22,7 @@ struct SectionProposalRequest
     proposal::TrimRequest scalar() const;
     juce::String binding() const;
 };
-enum class SectionProposalStatus { unavailable, noChange, globalOnly, noSolution, ready };
+enum class SectionProposalStatus { unavailable, noChange, globalOnly, noSolution, ready, reviewRequired };
 enum class SectionProposalIssue { none, inputs, unsupportedRequirements, preferences, candidateRejected };
 // Only the service constructs accepted results. Callers get immutable access and
 // must still compare the request binding before Apply. Never session-cache this.
@@ -40,11 +41,14 @@ public:
     SectionProposalIssue issue() const { return problem; }
     const proposal::SectionMap& originalAnnotations() const { return annotations; }
     std::optional<ProcessingPlan> previewPlan() const;
-    bool previewHasFinalGlobal() const { return state==SectionProposalStatus::ready||state==SectionProposalStatus::globalOnly||bool(candidate); }
+    bool previewHasFinalGlobal() const { return state==SectionProposalStatus::ready||state==SectionProposalStatus::globalOnly||bool(candidate)||bool(eventReceipt); }
     const ProcessingPlan& plan() const { return proposed; }
     const proposal::SectionTrimSeed& selection() const { return seed; }
     const proposal::TrimProposal& global() const { return scalarResult; }
     const std::shared_ptr<const AnalysisSnapshot>& assessment() const { return candidate; }
+    const std::shared_ptr<const RegionAssessmentReceipt>& eventAssessment()const {return eventReceipt;}
+    const juce::String& selectedAuthority()const {return selectionAuthority;}
+    bool explicitlySelectedAlternative()const {return userSelectedAlternative;}
     const std::shared_ptr<const proposal::SectionPeakMap>& peaks() const { return attribution; }
     int passes() const { return passCount; }
 private:
@@ -60,6 +64,9 @@ private:
     proposal::SectionTrimSeed seed;
     proposal::TrimProposal scalarResult;
     std::shared_ptr<const AnalysisSnapshot> candidate;
+    std::shared_ptr<const RegionAssessmentReceipt> eventReceipt;
+    juce::String selectionAuthority;
+    bool userSelectedAlternative=false;
     std::shared_ptr<const proposal::SectionPeakMap> attribution;
     int passCount=0;
     friend ServiceResult<std::shared_ptr<const SectionProposalResult>> generateSectionProposal(
@@ -68,6 +75,10 @@ private:
         const SectionProposalRequest&,JobControl&,const SnapshotStorage&);
     friend ServiceResult<std::shared_ptr<const SectionProposalResult>> generateRegionProposal(
         const SectionProposalRequest&,JobControl&,const SnapshotStorage&);
+    friend ServiceResult<std::shared_ptr<const SectionProposalResult>> generateEventRegionProposal(
+        const SectionProposalRequest&,JobControl&,const SnapshotStorage&);
+    friend ServiceResult<std::shared_ptr<const SectionProposalResult>> selectMeasuredEventAlternative(
+        const SectionProposalRequest&,const std::shared_ptr<const SectionProposalResult>&,const juce::String&,const juce::String&);
 };
 using SectionProposalOutcome=ServiceResult<std::shared_ptr<const SectionProposalResult>>;
 SectionProposalOutcome generateSectionProposal(const SectionProposalRequest&,JobControl&,const SnapshotStorage& = {});

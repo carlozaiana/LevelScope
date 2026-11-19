@@ -222,10 +222,15 @@ add_library(LevelScopeStandaloneSupport STATIC
     Source/Core/Proposal/Methods/SectionTrimMethod.cpp
     Source/Core/Proposal/LraPassages.cpp
     Source/Core/Proposal/RegionPlanning.cpp
+    Source/Core/Proposal/EventFeatureDefinition.cpp
+    Source/Core/Proposal/EventFeatures.cpp
+    Source/Core/Proposal/EventCoverage.cpp
     Source/Core/Proposal/RegionFormation.cpp
     Source/Core/Proposal/RegionPrediction.cpp
     Source/Standalone/StandaloneLraProposal.cpp
     Source/Standalone/StandaloneRegionProposal.cpp
+    Source/Standalone/RegionAssessmentReceipt.cpp
+    Source/Standalone/StandaloneEventRegionProposal.cpp
     Source/Standalone/StandaloneSectionProposal.cpp
     Source/Standalone/AppliedProposalExplanation.cpp
     Source/Standalone/AppliedProposalSerialization.cpp
@@ -577,6 +582,15 @@ if(LEVELSCOPE_BUILD_REGION_UI_TESTS)
     target_link_libraries(LevelScopeRegionUITests PRIVATE LevelScopeDiagnosticsUI juce::juce_gui_basics)
     if(NOT MSVC)
         target_compile_options(LevelScopeRegionUITests PRIVATE -fno-fast-math -ffp-contract=off)
+    endif()
+endif()
+if(LEVELSCOPE_BUILD_REGION_PLANNING_TESTS)
+    juce_add_console_app(LevelScopeEventPlanningTests PRODUCT_NAME "LevelScope Event Planning Tests")
+    target_sources(LevelScopeEventPlanningTests PRIVATE Tests/EventPlanningTests.cpp)
+    target_compile_definitions(LevelScopeEventPlanningTests PRIVATE JUCE_MODAL_LOOPS_PERMITTED=1)
+    target_link_libraries(LevelScopeEventPlanningTests PRIVATE LevelScopeDiagnosticsUI juce::juce_gui_basics)
+    if(NOT MSVC)
+        target_compile_options(LevelScopeEventPlanningTests PRIVATE -fno-fast-math -ffp-contract=off)
     endif()
 endif()
 if(LEVELSCOPE_BUILD_REGION_PLANNING_TESTS)

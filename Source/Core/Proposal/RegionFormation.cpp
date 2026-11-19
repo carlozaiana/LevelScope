@@ -75,7 +75,7 @@ std::vector<RegionCut> nominate(const RegionConstraints& c,const PlanningRoot& r
 juce::String geometryKey(const RegionGeometry& g)
 {juce::String s=juce::String(g.support.begin)+":"+juce::String(g.support.end);for(auto f:g.cuts)s+=";"+juce::String(f);return s;}
 }
-RegionFormation formRegions(const RegionConstraints& c,const ProgramAnalysis& a,double ceiling,const std::function<bool()>& cancel)
+RegionFormation formRegions(const RegionConstraints& c,const ProgramAnalysis& a,double ceiling,const std::function<bool()>& cancel,const std::vector<std::vector<RegionGeometry>>* preferred)
 {
     RegionFormation out;out.alternatives.resize(c.roots.size());out.nominations.resize(c.roots.size());
     if(c.error.isNotEmpty()){out.reasons.push_back(c.error);return out;}
@@ -83,6 +83,14 @@ RegionFormation formRegions(const RegionConstraints& c,const ProgramAnalysis& a,
     {
         if(cancel()){out.cancelled=true;return out;}const auto& root=c.roots[rootIndex];
         auto nominations=nominate(c,root,a,ceiling,cancel);if(cancel()){out.cancelled=true;return out;}
+        if(preferred&&rootIndex<preferred->size())
+        {
+            std::vector<RegionCut> eventCuts;
+            for(const auto& g:(*preferred)[rootIndex])for(auto f:{g.support.begin,g.support.end})
+                if(eventCuts.size()<4&&std::none_of(eventCuts.begin(),eventCuts.end(),[&](auto x){return x.frame==f;}))eventCuts.push_back({f,1e5,"Supported event edge; permission and full-ramp validation still required"});
+            const auto keep=12-eventCuts.size();if(nominations.size()>keep){out.omittedCuts+=nominations.size()-keep;nominations.resize(keep);}
+            nominations.insert(nominations.begin(),eventCuts.begin(),eventCuts.end());
+        }
         if(nominations.size()>12){out.omittedCuts+=nominations.size()-12;nominations.resize(12);}out.nominations[rootIndex]=nominations;
         const int maximum=c.settings.allowSplitting?c.settings.maximumSplits:0;
         std::vector<RegionCut> locations=nominations;
@@ -143,6 +151,8 @@ RegionFormation formRegions(const RegionConstraints& c,const ProgramAnalysis& a,
             if(keys.insert(geometryKey(g)).second)retained.push_back(std::move(g));
         };
         if(root.internalCuts.empty())add(root.hint,{},"Unsplit original root, fixed-ramp support edges");
+        if(preferred&&rootIndex<preferred->size())for(const auto& g:(*preferred)[rootIndex])
+            if(g.cuts.size()<=size_t(maximum))add(g.support,{g.cuts,g.strength},g.reason);
         if(root.internalCuts.empty()&&!edges.empty())add(edges.front().span,{},"Unsplit outer refinement with strongest combined boundary nominations");
         // Reserve a two-cut topology before single-cut alternatives fill the list.
         if(maximum>=2)

@@ -1,0 +1,32 @@
+[
+  {
+    "name": "event-fallback",
+    "package": "/Users/fuzz/Developer/LevelScope/build/m20-events-2026-11-19/logic-handover-02",
+    "command": [
+      "/Users/fuzz/Developer/LevelScope/build/m20-events-2026-11-19/logic-handover-02/bin/LevelScopeEventPlanningTests",
+      "--group",
+      "fallback",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m20-events-2026-11-19/qualification-01/fixtures/event-fallback",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m20-events-2026-11-19/qualification-01/receipts/event-fallback.json"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 6.913805542
+  },
+  {
+    "name": "event-population",
+    "package": "/Users/fuzz/Developer/LevelScope/build/m20-events-2026-11-19/logic-handover-02",
+    "command": [
+      "/Users/fuzz/Developer/LevelScope/build/m20-events-2026-11-19/logic-handover-02/bin/LevelScopeEventPlanningTests",
+      "--group",
+      "population",
+      "--root",
+      "/Users/fuzz/Developer/LevelScope/build/m20-events-2026-11-19/qualification-01/fixtures/event-population",
+      "--output",
+      "/Users/fuzz/Developer/LevelScope/build/m20-events-2026-11-19/qualification-01/receipts/event-population.json"
+    ],
+    "exit_code": 0,
+    "wall_seconds": 1.8037131660000005
+  }
+]

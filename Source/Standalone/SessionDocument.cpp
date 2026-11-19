@@ -304,7 +304,7 @@ V coreValue (const Document& d,const std::array<Bytes,2>& caches,const Bytes& ex
 }
 Document core (const V& v)
 {
-    Document d;d.loadedSchema=number(get(v,"schema"),1,schemaVersion);d.id=str(v,"documentId",36);d.revision=integer<uint64_t>(get(v,"revision"));auto p=get(v,"programme");require(number(get(p,"schema"),1,programmeAssemblyVersion)==d.loadedSchema,"Programme/core schema mismatch");d.programmeId=str(p,"id",36);
+    Document d;d.loadedSchema=number(get(v,"schema"),1,schemaVersion);d.id=str(v,"documentId",36);d.revision=integer<uint64_t>(get(v,"revision"));auto p=get(v,"programme");const int programmeSchema=number(get(p,"schema"),1,programmeAssemblyVersion);require(programmeSchema==d.loadedSchema||(d.loadedSchema==10&&programmeSchema==9),"Programme/core schema mismatch");d.programmeId=str(p,"id",36);
     const auto mode=str(p,"mode");require((mode=="interleaved"||(mode=="mono_files"&&d.loadedSchema>=2)||(mode=="composition"&&d.loadedSchema>=3))&&str(p,"purpose")=="programme_audio"&&str(p,"alignment")=="0/1","Unsupported programme assembly");
     auto files=array(get(p,"files"),mode=="interleaved"?1:6);auto channels=array(get(p,"channels"),maxChannels);
     if(mode=="composition")
@@ -343,10 +343,10 @@ Document core (const V& v)
     if(d.loadedSchema>=9)
     {
         require(v.hasProperty("regionPlanning"),"Missing explicit M20 selection/constraints field");
-        if(!v["regionPlanning"].isVoid())d.regionPlanning=proposal::RegionPlanningSettings::decode(v["regionPlanning"]);
+        if(!v["regionPlanning"].isVoid()){d.regionPlanning=proposal::RegionPlanningSettings::decode(v["regionPlanning"]);require(d.loadedSchema>=10||d.regionPlanning->schema==1,"New event settings require session schema 10");}
     }
-    else d.notices.add("Region planning is not selected in this older session. Exact audio/settings are retained. Saving writes schema 9 and requires an M20 reader; choose Save As to preserve the older-readable original.");
-    if(d.loadedSchema<6)d.notices.add("Older session migrated in memory to default proposal preferences; media, annotations and exact applied processing preserved. Saving writes schema 9 and requires an M20 reader; use Save As to retain the original older-readable copy. Old transient proposals are not restored.");
+    else d.notices.add("Region planning is not selected in this older session. Exact audio/settings are retained. Saving writes schema 10 and requires an M20 event-preference reader; choose Save As to preserve the older-readable original.");
+    if(d.loadedSchema<6)d.notices.add("Older session migrated in memory to default proposal preferences; media, annotations and exact applied processing preserved. Saving writes schema 10 and requires an M20 event-preference reader; use Save As to retain the original older-readable copy. Old transient proposals are not restored.");
     else
     {
         d.proposalPolicy=proposal::ProposalPolicy::decode(v["proposalPolicy"]);
@@ -359,7 +359,7 @@ Document core (const V& v)
         try {d.jobRequirements=proposal::JobRequirements::decode(v["jobRequirements"]);}
         catch(const std::exception& e){d.jobRequirements=proposal::JobRequirements::unavailable(e.what());d.notices.add("Job requirements unavailable; core settings/media recovered. Explicit replacement required; no dependent approval is valid.");}
     }
-    else d.notices.add("No added LRA requirement in this older session. Saving writes schema 9 and requires an M20 reader; use Save As to retain the original.");
+    else d.notices.add("No added LRA requirement in this older session. Saving writes schema 10 and requires an M20 event-preference reader; use Save As to retain the original.");
     auto cur=get(v,"current");const auto plan=gainPlan(cur,d.loadedSchema>=4);d.current.isInitialized=boolean(get(cur,"initialized"));d.current.staticGainDb=plan.staticGainDb;d.current.sectionGains=plan.sectionGains;d.current.needsRemeasurement=d.current.isInitialized;
     if(d.loadedSchema>=4)d.current.sectionGainAnnotations=sections(get(cur,"annotationProvenance"));
     if(d.loadedSchema>=3)require(array(get(cur,"componentPlans"),0).isEmpty()&&str(cur,"wholeProgrammeGraph").isEmpty(),"Component DSP and arbitrary whole-programme graphs are not implemented in M12");

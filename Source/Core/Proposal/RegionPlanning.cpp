@@ -86,14 +86,20 @@ bool supported(RegionSpan s,const std::vector<PlanningRoot>& roots)
 
 RegionPlanningSettings RegionPlanningSettings::defaults(RegionMode mode,const juce::String& input)
 {RegionPlanningSettings s;s.mode=mode;s.inputIdentity=input;s.allowGlobal=mode==RegionMode::automatic;return s;}
+RegionPlanningSettings RegionPlanningSettings::eventDefaults(RegionMode mode,const juce::String& input)
+{auto s=defaults(mode,input);s.schema=2;s.preferCompleteEvent=true;s.compareAlternatives=true;return s;}
 juce::String RegionPlanningSettings::validationError()const
 {
-    if(schema!=1||!hashValid(inputIdentity)||int(mode)<0||int(mode)>2)return "Unsupported region settings version, input or mode";
+    if((schema!=1&&schema!=2)||!hashValid(inputIdentity)||int(mode)<0||int(mode)>2)return "Unsupported region settings version, input or mode";
+    if(schema==1&&(preferCompleteEvent||allowAutomaticMargins||eventFeatures.hopMs!=10))return "Legacy region settings cannot carry event permissions";
+    if(schema==2&&(!preferCompleteEvent||!compareAlternatives||eventFeatures.validationError().isNotEmpty()))return "Event preference requires explicit valid features and comparative assessment";
     if(maximumSplits<0||maximumSplits>4||leftMarginMs<0||leftMarginMs>3000||leftMarginMs%100||rightMarginMs<0||rightMarginMs>3000||rightMarginMs%100
         ||minimumIntervalMs<500||minimumIntervalMs>10000||minimumIntervalMs%100||separationMs<0||separationMs>3000||separationMs%100
         ||needThresholdTenths<5||needThresholdTenths>30||persistenceMs<300||persistenceMs>3000||persistenceMs%100)return "Region controls outside documented range/steps";
     if(protectionMethod!="local-envelope-v1")return "Unsupported mandatory protection; only no additional local-envelope change is implemented";
-    if(mode==RegionMode::automatic&&(leftMarginMs||rightMarginMs||start||end||!internalCuts.empty()))return "Automatic mode refines each frozen seed inward; user edges/margins/cuts require a selected root";
+    if(mode==RegionMode::automatic&&(start||end||!internalCuts.empty()))return "Automatic roots do not accept selected-root pins";
+    if(mode==RegionMode::automatic&&(leftMarginMs||rightMarginMs)&&(schema==1||!allowAutomaticMargins))return "Automatic outward margins need explicit versioned permission";
+    if(mode!=RegionMode::automatic&&allowAutomaticMargins)return "Automatic margin permission does not apply to selected roots";
     if(mode==RegionMode::selectedSection&&sectionId==0)return "Select an original section";
     if(mode==RegionMode::selection&&(selection.begin<0||selection.begin>=selection.end))return "Invalid temporary selection";
     if(internalCuts.size()>4||(!allowSplitting&&!internalCuts.empty())||internalCuts.size()>size_t(maximumSplits))return "Internal constraints exceed original-root split allowance";
@@ -106,7 +112,8 @@ juce::String RegionPlanningSettings::validationError()const
 V RegionPlanningSettings::encode()const
 {
     require(validationError().isEmpty(),validationError().toRawUTF8());auto v=object();
-    put(v,"schema",schema);put(v,"method",regionSearchVersion);put(v,"constraints",regionConstraintsVersion);put(v,"formation",regionFormationVersion);put(v,"proxy",regionProxyVersion);put(v,"rank",regionRankVersion);
+    put(v,"schema",schema);put(v,"method",methodVersion());put(v,"constraints",schema==2?eventConstraintsVersion:regionConstraintsVersion);put(v,"formation",schema==2?eventFormationVersion:regionFormationVersion);put(v,"proxy",regionProxyVersion);put(v,"rank",schema==2?eventRankVersion:regionRankVersion);
+    if(schema==2){put(v,"boundaryPreference","prefer-complete-event");put(v,"automaticMargins",allowAutomaticMargins);put(v,"eventFeatures",eventFeatures.encode());put(v,"coverage",eventCoverageVersion);put(v,"schedule",eventScheduleVersion);}
     put(v,"input",inputIdentity);put(v,"mode",int(mode));put(v,"section",juce::String(sectionId));put(v,"selection",span(selection));
     put(v,"splitting",allowSplitting);put(v,"refinement",allowRefinement);put(v,"fillGap",fillShortGap);put(v,"global",allowGlobal);put(v,"compare",compareAlternatives);
     put(v,"splits",maximumSplits);put(v,"leftMs",leftMarginMs);put(v,"rightMs",rightMarginMs);put(v,"minimumMs",minimumIntervalMs);put(v,"separationMs",separationMs);put(v,"needTenths",needThresholdTenths);put(v,"persistenceMs",persistenceMs);
@@ -116,9 +123,11 @@ V RegionPlanningSettings::encode()const
 RegionPlanningSettings RegionPlanningSettings::decode(const V& v)
 {
     require(v.isObject(),"Missing region definition");
-    for(auto pair:{std::pair<const char*,const char*>{"method",regionSearchVersion},{"constraints",regionConstraintsVersion},{"formation",regionFormationVersion},{"proxy",regionProxyVersion},{"rank",regionRankVersion}})
+    auto s=RegionPlanningSettings{};s.schema=number(v["schema"]);require(s.schema==1||s.schema==2,"Unsupported region schema");
+    for(auto pair:{std::pair<const char*,const char*>{"method",s.methodVersion()},{"constraints",s.schema==2?eventConstraintsVersion:regionConstraintsVersion},{"formation",s.schema==2?eventFormationVersion:regionFormationVersion},{"proxy",regionProxyVersion},{"rank",s.schema==2?eventRankVersion:regionRankVersion}})
         require(v[pair.first].toString()==pair.second,"Unknown mandatory region method version");
-    auto s=RegionPlanningSettings{};s.schema=number(v["schema"]);s.inputIdentity=v["input"].toString();s.mode=RegionMode(number(v["mode"]));s.sectionId=uint64_t(integer(v["section"]));s.selection=span(v["selection"]);
+    if(s.schema==2){require(v["boundaryPreference"].toString()=="prefer-complete-event"&&v["coverage"].toString()==eventCoverageVersion&&v["schedule"].toString()==eventScheduleVersion,"Unknown event treatment semantics");s.preferCompleteEvent=true;s.allowAutomaticMargins=flag(v["automaticMargins"]);s.eventFeatures=EventFeatureDefinition::decode(v["eventFeatures"]);}
+    s.inputIdentity=v["input"].toString();s.mode=RegionMode(number(v["mode"]));s.sectionId=uint64_t(integer(v["section"]));s.selection=span(v["selection"]);
     s.allowSplitting=flag(v["splitting"]);s.allowRefinement=flag(v["refinement"]);s.fillShortGap=flag(v["fillGap"]);s.allowGlobal=flag(v["global"]);s.compareAlternatives=flag(v["compare"]);
     s.maximumSplits=number(v["splits"]);s.leftMarginMs=number(v["leftMs"]);s.rightMarginMs=number(v["rightMs"]);s.minimumIntervalMs=number(v["minimumMs"]);s.separationMs=number(v["separationMs"]);s.needThresholdTenths=number(v["needTenths"]);s.persistenceMs=number(v["persistenceMs"]);
     if(!v.hasProperty("start")||!v.hasProperty("end"))throw std::invalid_argument("Missing region edge permissions");
@@ -157,6 +166,24 @@ RegionConstraints resolveRegionConstraints(const RegionPlanningSettings& s,const
             }
         }
         c.omittedRoots=p.high.size()-c.roots.size();
+        // Ownership includes frozen neighbours omitted by the eight-root search cap.
+        // It is resolved once, never enlarged after a root/candidate is skipped.
+        for(auto& r:c.roots)
+        {
+            r.ownership={0,c.frames};
+            for(const auto& h:p.high)
+            {
+                if(h.end<=r.hint.begin)r.ownership.begin=std::max(r.ownership.begin,h.end+(r.hint.begin-h.end)/2);
+                if(h.begin>=r.hint.end)r.ownership.end=std::min(r.ownership.end,r.hint.end+(h.begin-r.hint.end)/2);
+            }
+            r.requestedAllowed=r.allowed;
+            if(s.schema==2&&s.allowAutomaticMargins)
+            {
+                r.requestedAllowed={std::max<int64_t>(0,r.hint.begin-int64_t(s.leftMarginMs)*c.sampleRate/1000),std::min(c.frames,r.hint.end+int64_t(s.rightMarginMs)*c.sampleRate/1000)};
+                r.allowed={std::max(r.requestedAllowed.begin,r.ownership.begin),std::min(r.requestedAllowed.end,r.ownership.end)};
+                if(!(r.allowed==r.requestedAllowed))r.permissionNotice="Requested outward margin clipped by frozen midpoint ownership";
+            }
+        }
     }
     else
     {
@@ -169,7 +196,7 @@ RegionConstraints resolveRegionConstraints(const RegionPlanningSettings& s,const
         }
         if(r.hint.begin<0||r.hint.begin>=r.hint.end||r.hint.end>c.frames){c.error="Selection is outside the programme";return c;}
         r.id=(s.mode==RegionMode::selectedSection?"section:"+juce::String(s.sectionId):juce::String("selection"))+":"+juce::String(r.hint.begin)+":"+juce::String(r.hint.end);
-        r.allowed={std::max<int64_t>(0,r.hint.begin-int64_t(s.leftMarginMs)*c.sampleRate/1000),std::min(c.frames,r.hint.end+int64_t(s.rightMarginMs)*c.sampleRate/1000)};r.internalCuts=s.internalCuts;c.roots.push_back(r);
+        r.allowed={std::max<int64_t>(0,r.hint.begin-int64_t(s.leftMarginMs)*c.sampleRate/1000),std::min(c.frames,r.hint.end+int64_t(s.rightMarginMs)*c.sampleRate/1000)};r.requestedAllowed=r.allowed;r.ownership={0,c.frames};r.internalCuts=s.internalCuts;c.roots.push_back(r);
     }
     const auto minimum=durationFrames(s.minimumIntervalMs,c.sampleRate);
     for(auto& r:c.roots)

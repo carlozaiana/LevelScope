@@ -1,0 +1,122 @@
+[
+  {
+    "name": "event-core",
+    "exit_code": 0,
+    "wall_seconds": 0.33569604200000003
+  },
+  {
+    "name": "event-features",
+    "exit_code": 0,
+    "wall_seconds": 1.117137125
+  },
+  {
+    "name": "event-stereo",
+    "exit_code": 0,
+    "wall_seconds": 8.253509208
+  },
+  {
+    "name": "event-surround",
+    "exit_code": 0,
+    "wall_seconds": 11.094687917
+  },
+  {
+    "name": "event-heterogeneous",
+    "exit_code": 0,
+    "wall_seconds": 6.523645499999997
+  },
+  {
+    "name": "music-legacy20",
+    "exit_code": 0,
+    "wall_seconds": 11.735029166
+  },
+  {
+    "name": "music-event20",
+    "exit_code": 0,
+    "wall_seconds": 16.109786417000002
+  },
+  {
+    "name": "music-margin20",
+    "exit_code": 0,
+    "wall_seconds": 15.062747250000001
+  },
+  {
+    "name": "music-margin40",
+    "exit_code": 0,
+    "wall_seconds": 17.056572333000005
+  },
+  {
+    "name": "music-margin60",
+    "exit_code": 0,
+    "wall_seconds": 15.273139125
+  },
+  {
+    "name": "event-gating",
+    "exit_code": 0,
+    "wall_seconds": 34.70722550000001
+  },
+  {
+    "name": "event-cinema",
+    "exit_code": 0,
+    "wall_seconds": 40.099430874999996
+  },
+  {
+    "name": "region-core",
+    "exit_code": 0,
+    "wall_seconds": 3.361002584000005
+  },
+  {
+    "name": "region-stereo",
+    "exit_code": 0,
+    "wall_seconds": 4.4609185000000195
+  },
+  {
+    "name": "region-surround",
+    "exit_code": 0,
+    "wall_seconds": 8.168088333000014
+  },
+  {
+    "name": "region-heterogeneous",
+    "exit_code": 0,
+    "wall_seconds": 6.961725916999995
+  },
+  {
+    "name": "region-failures",
+    "exit_code": 0,
+    "wall_seconds": 1.3709291250000035
+  },
+  {
+    "name": "region-audio",
+    "exit_code": 0,
+    "wall_seconds": 6.488039334000007
+  },
+  {
+    "name": "region-population",
+    "exit_code": 0,
+    "wall_seconds": 1.8026830420000124
+  },
+  {
+    "name": "lra-core",
+    "exit_code": 0,
+    "wall_seconds": 0.44504216600000746
+  },
+  {
+    "name": "lra-stereo",
+    "exit_code": 0,
+    "wall_seconds": 10.480096000000003
+  },
+  {
+    "name": "lra-inputs",
+    "exit_code": 0,
+    "wall_seconds": 44.1200795
+  },
+  {
+    "name": "region-ui",
+    "exit_code": 0,
+    "wall_seconds": 18.785128750000013
+  },
+  {
+    "name": "timeline",
+    "exit_code": 0,
+    "wall_seconds": 2.7626345410000113
+  }
+]

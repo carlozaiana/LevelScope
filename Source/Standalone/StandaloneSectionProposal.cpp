@@ -17,7 +17,7 @@ juce::String SectionProposalRequest::binding() const
         if(regionSettings->mode==proposal::RegionMode::selectedSection)
             for(const auto& a:annotations.sections)if(a.id==regionSettings->sectionId)
                 selected=juce::String(a.id)+":"+juce::String(a.begin)+":"+juce::String(a.end);
-        const auto key=proposal::draftGlobalTrim(scalar()).identity+";"+proposal::regionSearchVersion+";"+regionSettings->digest()+";"+selected
+        const auto key=proposal::draftGlobalTrim(scalar()).identity+";"+regionSettings->methodVersion()+";"+regionSettings->digest()+";"+selected
             +";"+currentContext.sessionId+";"+juce::String(currentContext.ticket.sessionRevision)+";"+juce::String(int(pendingManualDraft))+";"+policy.digest();
         return juce::SHA256(key.toRawUTF8(),key.getNumBytesAsUTF8()).toHexString();
     }
@@ -32,13 +32,14 @@ std::optional<ProcessingPlan> SectionProposalResult::previewPlan() const
     if(state==SectionProposalStatus::ready)return proposed;
     if(state==SectionProposalStatus::globalOnly&&scalarResult.totalGainDb){auto p=proposed;p.staticGainDb=*scalarResult.totalGainDb;return p;}
     if(candidate)return candidate->context.processing;
+    if(regions&&regions->eventMode&&regions->retainedAttempt<regions->attempts.size())return regions->attempts[regions->retainedAttempt].receipt->context().processing;
     if(!seed.plan.intervals.empty()&&seed.plan.validationError().isEmpty())
     {auto p=proposed;p.sectionGains=seed.plan.canonical();p.schemaVersion=2;p.engineVersion=processing::SectionGainPlan::version;return p;}
     return {};
 }
 SectionProposalOutcome generateSectionProposal(const SectionProposalRequest& r,JobControl& control,const SnapshotStorage& storage)
 {
-    if(r.regionSettings)return generateRegionProposal(r,control,storage);
+    if(r.regionSettings)return r.regionSettings->schema==2?generateEventRegionProposal(r,control,storage):generateRegionProposal(r,control,storage);
     if(r.currentContext.profile.limits.hasMaxLoudnessRange)return generateLraProposal(r,control,storage);
     auto out=std::shared_ptr<SectionProposalResult>(new SectionProposalResult);
     out->bound=r.binding();out->proposed=r.currentContext.processing;out->annotations=r.annotations;

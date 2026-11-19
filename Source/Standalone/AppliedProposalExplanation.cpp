@@ -1,5 +1,6 @@
 #include "AppliedProposalExplanation.h"
 #include "StandaloneSections.h"
+#include "StandaloneRegionProposal.h"
 #include <juce_cryptography/juce_cryptography.h>
 #include <cstring>
 namespace levelscope::standalone
@@ -43,13 +44,21 @@ AppliedProposalExplanation captureProposalExplanation(const SectionProposalReque
     else if(global.totalGainDb)h.after.staticGainDb=*global.totalGainDb;
     h.beforeIdentity=proposalPlanIdentity(h.before);h.afterIdentity=proposalPlanIdentity(h.after);
     h.target=r.currentContext.profile;h.requirements=requirements;h.preferences=r.policy;h.applicability=r.applicability;
-    if(result&&result->methodVersion()==proposal::regionSearchVersion)h.regionSettings=r.regionSettings;
+    if(result&&(result->methodVersion()==proposal::regionSearchVersion||result->methodVersion()==proposal::eventSearchVersion))h.regionSettings=r.regionSettings;
     h.annotations=result?result->originalAnnotations():r.annotations;h.global=global;h.selection.policy=r.policy;
     h.source=proposalMeasurementRecord(*r.source,h.target,h.applicability);h.baseline=proposalMeasurementRecord(*r.current,h.target,h.applicability);
     if(result)
     {
         h.narrative=result->narrativeText();h.selection=result->selection();h.passes=result->passes();
         if(result->assessment())h.candidate=proposalMeasurementRecord(*result->assessment(),h.target,h.applicability);
+        if(result->eventAssessment())
+        {
+            const auto& receipt=*result->eventAssessment();ProposalMeasurementRecord record;
+            record.identity=receipt.snapshotIdentity();record.content=receipt.content();record.method=receipt.method();
+            const auto& c=receipt.context();record.build=c.buildVersion;record.platform=c.platformAndFloatingPointMode;
+            record.originSession=c.sessionId;record.originJob=c.ticket.id;record.originRevision=c.ticket.sessionRevision;record.domain=MeasurementDomain::privateCandidate;
+            const auto& d=receipt.measured();record.metrics={d.integrated,d.truePeak,d.lra,d.momentaryMax,d.shortTermMax,d.samplePeak};record.evaluation=evaluationText(receipt.evaluation(r,h.after));h.candidate=std::move(record);
+        }
     }
     else h.narrative=global.explanation;
     return h;
@@ -75,7 +84,7 @@ juce::String AppliedProposalExplanation::text() const
         +proposalTargetText(target)
         +requirements.text()+"\n"+preferences.text()+"\n"
         +proposalMeasurementText(source,"Source baseline")+"\n"+proposalMeasurementText(baseline,"Current baseline before Apply")+"\n"
-        +((method==proposal::lraTrimMethodVersion||method==proposal::regionSearchVersion)?juce::String("LRA method: complete local/global candidate assessments are recorded above; scalar estimates alone do not establish LRA acceptance."):proposal::trimProposalText(global))
+        +((method==proposal::lraTrimMethodVersion||method==proposal::regionSearchVersion||method==proposal::eventSearchVersion)?juce::String("LRA method: complete local/global candidate assessments are recorded above; scalar estimates alone do not establish LRA acceptance."):proposal::trimProposalText(global))
         +"\nApplied global gain "+juce::String(after.staticGainDb,12)+" dB (before "+juce::String(before.staticGainDb,12)+" dB).\n";
     t << "Programme " << sampleRate << " Hz / " << frames << " frames. Confirmed file order";
     for(int n=0;n<roles.count;++n)t << " " << n+1 << "=" << juce::AudioChannelSet::getAbbreviatedChannelTypeName(roles.roles[size_t(n)]);
