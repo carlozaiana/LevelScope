@@ -14,6 +14,10 @@ No publication/main merge or new physical-device use is authorized by this check
 
 ## Exact tested package
 
+Implementation/evidence commit: `4cbcca7f6b63b792b9a8ccbe73dbd5702ee311c5` on
+`codex/m20-region-planning`. The checkpoint receipt is a separate documentation-only
+follow-up; no tested implementation changed after that commit.
+
 `/Users/fuzz/Developer/LevelScope/build/m20-events-2026-11-19/logic-handover-03/LevelScope Standalone.app`
 
 Source/test manifest `131ddde3204d54da6cfe63645004332a358ab9ce26e0561958ad2be76e6c8596`;

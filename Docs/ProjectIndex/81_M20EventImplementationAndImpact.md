@@ -78,6 +78,8 @@ All comparisons leave Current and originals untouched.
 ## Frozen identity and fresh results
 
 - Combined source base: `dcdff7ddbbe91abb1a64048f4c3486d88807537d`.
+- Local implementation/evidence commit: `4cbcca7f6b63b792b9a8ccbe73dbd5702ee311c5`;
+  [separate documentation receipt](../../Tests/Qualification/M20Events/results/logic-01/checkpoint.md).
 - Final local package: `build/m20-events-2026-11-19/logic-handover-03`.
 - Source/test manifest SHA-256: `131ddde3204d54da6cfe63645004332a358ab9ce26e0561958ad2be76e6c8596`.
 - Production build identity: `12d44f32d59488dcc03c9d88edea96d4c03a98b439fd9cd37d8d15078276c6a7`.
