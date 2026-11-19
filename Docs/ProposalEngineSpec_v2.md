@@ -1,5 +1,19 @@
 # LevelScope — Proposal Engine Specification v2
 
+Accepted implementation refinement — 19 November 2026: [M20 boundary and duration proposal](ProjectIndex/70_M20RegionFormationAndPredictiveGainPlanning.md#boundary-and-duration-amendment-for-logic-review)
+separates correction need, event extent and processing transitions; proposes bounded
+event-based placement and explicitly permitted automatic outward refinement; and
+records a 60% experimental affected-duration configuration with 20% retained as
+conservative. The user accepts the refined complete-event preference, coverage/ranking
+and explicit partial/uncertain fallback rules. Existing defaults/sessions and exact
+compliance thresholds remain unchanged. **Strategy accepted the final Logic review
+and approves explicit dispatch of bounded implementation and focused non-audible
+checks under the user's conditional authorization.** Read the
+[acceptance receipt](ProjectIndex/70_M20RegionFormationAndPredictiveGainPlanning.md#strategy-acceptance-and-implementation-dispatch)
+and [final contract](ProjectIndex/80_M20CompleteEventFinalReview.md). Logic starts on
+Strategy's message using the accepted UI continuation as its source base; publication,
+main integration and audible/device checks remain separate.
+
 Current published baseline — 6 November 2026: main/origin/main are
 `22961f03de7919e1de631f8b13eb4b852108ac0b`, including the three qualified
 [UI convenience slices](UIConveniencePublication-2026-11-06.md).
