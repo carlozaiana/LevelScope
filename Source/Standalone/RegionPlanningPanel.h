@@ -46,6 +46,7 @@ private:
     StandaloneSessionModel& session;
     juce::String runtime,input,baseDigest,feedback;
     proposal::SectionMap annotations;
+    proposal::EventFeatureDefinition loadedFeatures;
     juce::Viewport viewport;juce::Component body;
     juce::Label heading,methodLabel,modeLabel,sectionLabel,selectionLabel,edgeLabel,footnote;
     juce::ComboBox method,mode,section;
@@ -53,6 +54,8 @@ private:
     juce::ToggleButton startRange{"Restrict processing start"},endRange{"Restrict processing end"},
         startPin{"Pin start"},endPin{"Pin end"},splitting{"Allow splitting"},refinement{"Allow boundary refinement"},
         fillGap{"Consider filling a short gap"},global{"Allow global trim of the whole programme"},compare{"Assess alternatives after a passing candidate"};
+    juce::ToggleButton completeEvents{"Prefer complete-event treatment"},automaticMargins{"Allow automatic outward margins"};
+    juce::Label eventNote;
     std::array<juce::Label,7> labels;std::array<juce::TextEditor,7> fields;
     RegionFrameRows cuts{"Internal nominal cuts - source frames; ranges or exact pins",true,4};
     RegionFrameRows protection{"No additional local-envelope change - [begin, end) source frames",false,128};

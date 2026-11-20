@@ -36,7 +36,7 @@ void ProposalWorkflowPanel::refresh(float progress)
     else if(session.sectionTrimDraft)blocked="Apply or discard the manual gain draft first.";
     propose.setEnabled(blocked.isEmpty());review.setEnabled(bool(session.sectionProposal));
     apply.setEnabled(session.canApplySectionProposal()&&!diagnosticInspection);discard.setEnabled(bool(session.sectionProposal)&&!busy);
-    method.setText(session.regionPlanning?"ACTIVE: M20 experimental regions - "+juce::String(session.regionPlanning->mode==proposal::RegionMode::automatic?"automatic":session.regionPlanning->mode==proposal::RegionMode::selectedSection?"selected section":"temporary selection")
+    method.setText(session.regionPlanning?(session.regionPlanning->schema==2?"ACTIVE: Prefer complete-event treatment - ":"ACTIVE: M20 experimental regions - ")+juce::String(session.regionPlanning->mode==proposal::RegionMode::automatic?"automatic":session.regionPlanning->mode==proposal::RegionMode::selectedSection?"selected section":"temporary selection")
         +(session.regionPlanning->allowGlobal?" | whole-programme global trim permitted":" | global gain fixed"):"ACTIVE: existing M19 / LRA-unset workflow (default)",juce::dontSendNotification);
     method.setTooltip(method.getText()+". Region settings are private drafts until explicitly confirmed.");
     history.setEnabled(bool(session.lastAppliedExplanation));preferences.setEnabled(!busy);
@@ -68,7 +68,7 @@ void ProposalWorkflowPanel::refresh(float progress)
     {
         if(actions.isNotEmpty())actions+="  ";
         actions+="Apply unavailable. ";
-        actions+=session.boundaryBatch?"Finish boundary edits with Enter, or cancel with Esc.":busy?"Stop playback or finish the job.":stale?"Generate a fresh proposal.":diagnosticInspection?"A diagnostic attempt is being inspected. Select the retained recommendation in Review.":session.sectionProposal?"This outcome has no applicable correction.":"No ready proposal.";
+        actions+=session.boundaryBatch?"Finish boundary edits with Enter, or cancel with Esc.":busy?"Stop playback or finish the job.":stale?"Generate a fresh proposal.":session.sectionProposal&&session.sectionProposal->status()==SectionProposalStatus::reviewRequired?"Review a passing attempt, then choose Use this measured alternative. Inspection alone does not select it.":diagnosticInspection?"A different or unselected attempt is displayed. Inspect the selected measured attempt in Review; selecting an alternative is a separate action.":session.sectionProposal?"This outcome has no applicable correction.":"No ready proposal.";
     }
     if(!review.isEnabled())actions+="  Review needs a completed proposal.";
     if(!discard.isEnabled())actions+=session.sectionProposal?"  Discard needs an idle transport/job.":"  No proposal to discard.";

@@ -1,0 +1,41 @@
+{
+  "normalization": "Text logs/reports only: CRLF to LF and trailing whitespace removed. Raw runs unchanged; all JSON receipts and package manifests are exact copies.",
+  "files": {
+    "ui.log": {
+      "raw_run_sha256": "8ef3fd199c468f354f7909e964b0a45f6136575aaadf53a5762979dff7a11541",
+      "repository_copy_sha256": "6868ae52fb9b818171402ded2163b4bafd1c9b0117958b5fa893c61010a4d958"
+    },
+    "event-stereo.log": {
+      "raw_run_sha256": "733e139648acc4b44020c81a1f1d36a9515c6edc57d93ab43d4faafda312ab7d",
+      "repository_copy_sha256": "2b60c17885ea2cfa55c32238ce45925998801876ab3d5728ae58cc6d323bf7a6"
+    },
+    "timeline.log": {
+      "raw_run_sha256": "9ecff17c313de3d6fa3405bc0f1187f7658e22724bf6e5660cb28293ac462fcc",
+      "repository_copy_sha256": "9ecff17c313de3d6fa3405bc0f1187f7658e22724bf6e5660cb28293ac462fcc"
+    },
+    "event-fallback.log": {
+      "raw_run_sha256": "d932dd01b96fd611ccf710dcac54073c6b184cca62ff17e237866d0d15bcc388",
+      "repository_copy_sha256": "1881be2f21b0084d584b9e964b699e11a4067910bb9cdb9208714dff1aba4a62"
+    },
+    "event-ui.log": {
+      "raw_run_sha256": "a1f0aed3bafc344fb5318600e88f800ccaf4ddc8738593f17288389120bdfc22",
+      "repository_copy_sha256": "1f8a079001533441408447fec9c557abcf74db6483d192e5d6a05bbd335ad6c1"
+    },
+    "event-surround.log": {
+      "raw_run_sha256": "9d2bc9bd532faddd54868ee3fb295d45f4a349e8ff8d0ab8b0a5932888707c49",
+      "repository_copy_sha256": "c9a23a243015a5f471bedf481941be6f1d1915b34d26c1eac13902c8769fee25"
+    },
+    "reports/event-fallback.txt": {
+      "raw_run_sha256": "00f7440f50f4d5abe313063d9388b81272bfdb79801324b0abc66efa71db6751",
+      "repository_copy_sha256": "fb63f302d47437b7f684d83561a9eeeff6d2f771e9bbe00004fc52af3cd0792d"
+    },
+    "reports/event-surround.txt": {
+      "raw_run_sha256": "269ee225b67ac7259974e128dbab453dbbe3f6ddbf3122d1349df32f0aae3ccd",
+      "repository_copy_sha256": "9367eb2b4c5991114ad03ad6d954e5da030099a271bc8344f1b3be85c4257fa9"
+    },
+    "reports/event-stereo.txt": {
+      "raw_run_sha256": "f657609543351fce043081120a4c0f3be845dfaa349899bec4e10b5f2394d6df",
+      "repository_copy_sha256": "3956226cbb78a2f673bd7e2819e6e8c61c90d4d653f78ff51a437e56c1c1032b"
+    }
+  }
+}

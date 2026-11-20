@@ -1,0 +1,12 @@
+{
+  "candidate_path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-complete-event-ui-2026-11-20/candidate-01",
+  "gate_path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-complete-event-ui-2026-11-20/authority-gate-01",
+  "run_path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-complete-event-ui-2026-11-20/sequoia-01",
+  "implementation_commit": "8b28348dee77179b395253728d71818404bd5022",
+  "source_snapshot_matches_worktree": true,
+  "os": "macOS 15.7.9 (24G830) arm64",
+  "no_physical_device_or_listening": true,
+  "no_installed_app_or_plugin_replacement": true,
+  "source_and_artifact_hashes_checked_before_and_after": true,
+  "source_changes_after_candidate_freeze": false
+}

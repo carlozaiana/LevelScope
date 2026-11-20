@@ -990,25 +990,42 @@ void StandaloneMainComponent::reviewProposal(bool historical)
 {
     if(historical?!session.lastAppliedExplanation:!session.sectionProposal)return;
     const auto runtime=session.sessionId;const auto proposal=session.sectionProposal;const auto history=session.lastAppliedExplanation;
-    auto status=[safe=juce::Component::SafePointer<StandaloneMainComponent>(this),runtime,proposal,history,historical]() -> juce::String
+    auto binding=std::make_shared<std::shared_ptr<const SectionProposalResult>>(proposal);
+    auto status=[safe=juce::Component::SafePointer<StandaloneMainComponent>(this),runtime,binding,history,historical]() -> juce::String
     {
         if(!safe||safe->session.sessionId!=runtime)return "Historical inspection snapshot from a previous session opening. Cannot Apply.";
         auto& s=safe->session;
         if(historical)return s.lastAppliedExplanation==history?s.appliedExplanationStatus():"An older applied explanation snapshot. A newer proposal has been applied.";
-        if(s.sectionProposal!=proposal)return "Previous proposal snapshot — discarded, replaced or applied. Cannot Apply this snapshot.";
+        if(s.sectionProposal!=*binding)return "Previous proposal snapshot — discarded, replaced or applied. Cannot Apply this snapshot.";
         return s.sectionProposalStale()?"STALE proposal snapshot — inputs changed. Apply unavailable. Generate again.":
-            proposal->outcomeTitle()+". "+(s.canApplySectionProposal()?"Explicit Apply is in the main window.":"Apply unavailable. Current verification remains separate.");
+            (*binding)->outcomeTitle()+". "+(s.canApplySectionProposal()&&!safe->gainLane.diagnosticRegionInspection()?"Explicit Apply is in the main window.":"Apply unavailable. Inspect the selected attempt and resolve any pending edit/job; Current verification stays separate.");
     };
     std::unique_ptr<juce::Component> view;
     if(!historical&&proposal->regionReview())
     {
         auto panel=std::make_unique<RegionProposalReviewPanel>(proposal,std::move(status));
-        panel->onInspect=[this,runtime,proposal](size_t attempt,int64_t begin,int64_t end)
+        panel->onInspect=[this,runtime,binding](size_t attempt,int64_t begin,int64_t end)
         {
-            if(session.sessionId!=runtime||session.sectionProposal!=proposal)return;
+            if(session.sessionId!=runtime||session.sectionProposal!=*binding)return;
             gainLane.inspectRegionAttempt(attempt);timeline.highlight(double(begin),double(end));
             gainLane.selectFrame(begin,false);pageDetailBox.setText(gainLane.inspectionText(),false);refreshTimeline();
         };
+        auto blocked=[safe=juce::Component::SafePointer<StandaloneMainComponent>(this),runtime,binding]() -> juce::String
+        {
+            if(!safe||safe->session.sessionId!=runtime||safe->session.sectionProposal!=*binding)return "Previous proposal/session snapshot. Reopen Review for the current result.";
+            const auto& s=safe->session;
+            if(s.boundaryBatch||s.sectionTrimDraft)return "Finish or cancel pending manual edits before selecting an alternative.";
+            if(s.audioEditsBlocked()||s.job.isActive()||s.persistenceLoading)return "Stop playback and finish or cancel the current job before selecting.";
+            if(s.sectionProposalStale()||s.sourceContentInvalid)return "Stale inputs, requirements or preferences. Generate a fresh proposal.";
+            return {};
+        };
+        panel->configureMeasuredSelection(eventAlternativeSelectionQualified,blocked,
+            [safe=juce::Component::SafePointer<StandaloneMainComponent>(this),binding,blocked](const juce::String& resultId,const juce::String& attemptId) -> std::shared_ptr<const SectionProposalResult>
+            {
+                if(!safe||!safe->eventAlternativeSelectionQualified||blocked().isNotEmpty())return {};
+                if(!safe->session.selectMeasuredRegionAlternative(resultId,attemptId))return {};
+                *binding=safe->session.sectionProposal;safe->refreshFromSession();safe->refreshTimeline();return *binding;
+            });
         view=std::move(panel);
     }
     else view=std::make_unique<ProposalInspectionPanel>(historical?session.appliedExplanationDisplayText():session.sectionProposalDisplayText(),std::move(status),historical&&session.lastAppliedExplanation->regionSettings?RegionProposalReviewPanel::pageBytes:4000);
