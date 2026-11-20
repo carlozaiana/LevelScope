@@ -223,6 +223,7 @@ add_library(LevelScopeStandaloneSupport STATIC
     Source/Core/Proposal/LraPassages.cpp
     Source/Core/Proposal/RegionPlanning.cpp
     Source/Core/Proposal/EventFeatureDefinition.cpp
+    Source/Core/Proposal/InnerEventTracker.cpp
     Source/Core/Proposal/EventFeatures.cpp
     Source/Core/Proposal/EventCoverage.cpp
     Source/Core/Proposal/RegionFormation.cpp

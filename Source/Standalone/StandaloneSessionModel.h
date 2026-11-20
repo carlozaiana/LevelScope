@@ -570,7 +570,7 @@ public:
         return !audioEditsBlocked()&&!job.isActive()&&!sectionTrimDraft&&sectionProposalError==ErrorCode::none&&sectionProposal
             &&(sectionProposal->status()==SectionProposalStatus::ready||sectionProposal->status()==SectionProposalStatus::globalOnly)
             &&sectionProposal->identity()==sectionProposalRequest().binding()&&sourceDocument.matchesFileStamps()
-            &&(sectionProposal->methodVersion()!=proposal::eventSearchVersion||validateEventRegionProposalForApply(sectionProposalRequest(),*sectionProposal).isEmpty());
+            &&(!proposal::isEventMethod(sectionProposal->methodVersion())||validateEventRegionProposalForApply(sectionProposalRequest(),*sectionProposal).isEmpty());
     }
     bool hasActionableSectionProposal() const
     {return sectionProposal&&(sectionProposal->status()==SectionProposalStatus::ready||sectionProposal->status()==SectionProposalStatus::globalOnly)&&sectionProposal->identity()==sectionProposalRequest().binding();}
@@ -613,7 +613,7 @@ public:
                     getSelectedTargetProfile(),programmeApplicability)).verdict!=proposal::Verdict::pass)return false;
             currentStateDocument.sectionGains=c.processing.sectionGains;
             currentStateDocument.sectionGainAnnotations=sectionDocument.map();
-            if((accepted->methodVersion()==proposal::lraTrimMethodVersion||accepted->methodVersion()==proposal::regionSearchVersion||accepted->methodVersion()==proposal::eventSearchVersion)&&c.processing.sectionGains)
+            if((accepted->methodVersion()==proposal::lraTrimMethodVersion||accepted->methodVersion()==proposal::regionSearchVersion||proposal::isEventMethod(accepted->methodVersion()))&&c.processing.sectionGains)
             {
                 // Processing geometry is independent of editorial annotations.
                 auto& provenance=currentStateDocument.sectionGainAnnotations;provenance.sections.clear();provenance.nextId=1;

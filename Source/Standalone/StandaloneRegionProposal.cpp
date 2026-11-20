@@ -101,7 +101,7 @@ std::vector<Alternative> alternatives(const RegionConstraints& c,const RegionFor
 
 juce::String RegionProposalReview::text()const
 {
-    juce::String s="Experimental region planning / "+juce::String(eventMode?proposal::eventSearchVersion:proposal::regionSearchVersion)+" / "+proposal::regionProxyVersion+" / "+(eventMode?proposal::eventRankVersion:proposal::regionRankVersion)+"\n";
+    juce::String s="Experimental region planning / "+juce::String(constraints.settings.methodVersion())+" / "+proposal::regionProxyVersion+" / "+(eventMode?proposal::eventRankVersion:proposal::regionRankVersion)+"\n";
     s+="Effective immutable settings: "+juce::JSON::toString(constraints.settings.encode(),true)+"\nConstraint binding "+constraints.identity+"\n";
     s+="Roots "+juce::String(constraints.roots.size())+" (omitted "+juce::String(constraints.omittedRoots)+"); proxy plans "+juce::String(proxyEvaluations)+" / 64; duplicate audio plans "+juce::String(duplicatePlans)+"; rejected "+juce::String(rejectedPlans)+".\n";
     s+="Geometry constructions "+juce::String(formation.constructions)+"; omitted cut nominations "+juce::String(formation.omittedCuts)+"; omitted geometries "+juce::String(formation.omittedGeometries)+". Search truncation never proves impossibility.\n";
@@ -113,6 +113,7 @@ juce::String RegionProposalReview::text()const
         s+="Recommended attempt "+(recommendedAttempt?juce::String(*recommendedAttempt+1):"none")+"; selected attempt "+(selectedAttempt?juce::String(*selectedAttempt+1):"none")+". Inspection alone never selects Apply.\n";
         for(const auto& root:constraints.roots)s+="Permission: "+root.permissionNotice+"\n";
         if(eventEvidence)s+="Current-only rise cells (processing-associated context, not Source event evidence): "+juce::String(std::count_if(eventEvidence->cells.begin(),eventEvidence->cells.end(),[](const auto& cell){return (cell.flags&2)!=0;}))+"\n";
+        if(eventEvidence&&constraints.settings.schema==3)s+=eventEvidence->innerDescription();
         if(eventEvidence)for(const auto& g:eventEvidence->groups)s+="Source event "+g.id+" onset ["+juce::String(g.onset.begin)+", "+juce::String(g.onset.end)+") decay ["+juce::String(g.decay.begin)+", "+juce::String(g.decay.end)+"); onset raw-peak witness channel "+juce::String(g.onsetPeakChannel+1)+" frame "+juce::String(g.onsetPeakFrame)+"; baseline included need-window indices "+juce::String(g.firstNeedWindow)+".."+juce::String(g.lastNeedWindow)+" ("+juce::String(g.needWindowCount)+" included, exact inclusion/ceiling predicate); "+g.reason+"\n";
     }
     for(size_t n=0;n<attempts.size();++n)
@@ -141,7 +142,7 @@ juce::String RegionProposalReview::text()const
 
 juce::String validateRegionProposalForApply(const SectionProposalRequest& r,const SectionProposalResult& result)
 {
-    if(result.methodVersion()==proposal::eventSearchVersion)return validateEventRegionProposalForApply(r,result);
+    if(proposal::isEventMethod(result.methodVersion()))return validateEventRegionProposalForApply(r,result);
     if(result.methodVersion()!=proposal::regionSearchVersion)return {};
     if(!r.regionSettings||result.identity()!=r.binding()||!result.regionReview())return "Stale or missing region constraints";
     const auto& review=*result.regionReview();

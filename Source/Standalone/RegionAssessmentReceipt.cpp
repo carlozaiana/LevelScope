@@ -29,7 +29,7 @@ RegionAssessmentReceipt::RegionAssessmentReceipt(const AnalysisSnapshot& actual,
 }
 juce::String RegionAssessmentReceipt::validationError(const SectionProposalRequest& r,const ProcessingPlan& plan)const
 {
-    if(!r.regionSettings||r.regionSettings->schema!=2||r.binding()!=binding||r.pendingManualDraft)return "Stale event assessment request or pending manual draft";
+    if(!r.regionSettings||!proposal::isEventMethod(r.regionSettings->methodVersion())||r.binding()!=binding||r.pendingManualDraft)return "Stale event assessment request or pending manual draft";
     auto expected=r.currentContext;expected.processing=plan;
     if(proposalPlanIdentity(plan)!=planIdentity||r.currentContext.profile.digest()!=profileDigest||r.applicability!=applicability)return "Assessment belongs to another exact plan/requirement definition";
     if(!r.source||!r.current||!r.sourceContext.sourceFilesMatch()||!r.currentContext.sourceFilesMatch())return "Programme members changed after assessment";

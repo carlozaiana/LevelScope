@@ -1,4 +1,5 @@
 #include "StandaloneRegionProposal.h"
+#include <array>
 #include "RegionReviewFormatting.h"
 #include "StandaloneLraProposal.h"
 #include "StandaloneProcessing.h"
@@ -25,7 +26,7 @@ ProcessingPlan processingPlan(const RegionPlan& p)
     ProcessingPlan out;out.staticGainDb=p.globalDb;
     if(!p.envelope.isUnity()){out.sectionGains=p.envelope;out.schemaVersion=2;out.engineVersion=processing::SectionGainPlan::version;}return out;
 }
-struct ProxyChoice {RegionPlan plan;RegionPrediction forecast;RegionReviewScore score;EventCoverage coverage;bool measured=false,original=false;};
+struct ProxyChoice {RegionPlan plan;RegionPrediction forecast;RegionReviewScore score;EventCoverage coverage;bool measured=false,original=false,localised=false;};
 struct Alternative {size_t root=0;RegionAssignment assignment;};
 juce::String digest(const juce::String& s){return juce::SHA256(s.toRawUTF8(),s.getNumBytesAsUTF8()).toHexString();}
 size_t coverageBytes(const EventCoverage& c)
@@ -116,7 +117,7 @@ std::vector<Alternative> alternatives(const RegionConstraints& c,const RegionFor
 SectionProposalOutcome generateEventRegionProposal(const SectionProposalRequest& r,JobControl& control,const SnapshotStorage& storage)
 {
     using namespace proposal;
-    auto out=std::shared_ptr<SectionProposalResult>(new SectionProposalResult);out->bound=r.binding();out->method=eventSearchVersion;out->proposed=r.currentContext.processing;out->annotations=r.annotations;out->seed.policy=r.policy;
+    auto out=std::shared_ptr<SectionProposalResult>(new SectionProposalResult);out->bound=r.binding();out->method=r.regionSettings?r.regionSettings->methodVersion():eventSearchVersion;out->proposed=r.currentContext.processing;out->annotations=r.annotations;out->seed.policy=r.policy;
     auto review=std::make_shared<RegionProposalReview>();out->regions=review;review->eventMode=true;review->resultIdentity=juce::Uuid().toString();
     const auto finish=[&]()->SectionProposalOutcome
     {
@@ -180,7 +181,7 @@ SectionProposalOutcome generateEventRegionProposal(const SectionProposalRequest&
             coarsePlanningSeconds=seconds(coarseStart);
             if(cancelled())return finish();if(coarseExpired)return {{},ErrorCode::unavailable,"Coarse event nominations exceeded planning watchdog; no Apply authority"};
             start=Clock::now();
-            EventFeatureCollector features(review->constraints,coarse,*analysis,OfflineAnalysisService::measurementRoles(context.fileLayout),limits.maxLoudnessRangeLu,out->bound,r.source->identity,regionPlanIdentity(before,context.processing.staticGainDb));
+            EventFeatureCollector features(review->constraints,coarse,*analysis,OfflineAnalysisService::measurementRoles(context.fileLayout),limits.maxLoudnessRangeLu,out->bound,r.source->identity,regionPlanIdentity(before,context.processing.staticGainDb),&r.source->detail);
             if(fixedPlanning+features.reservedBytes()+size_t(context.media.channels)*4096*2*sizeof(float)>planningBudget)return {{},ErrorCode::unavailable,"Event features exceed combined planning budget"};
             ProgrammeGainProcessor processor(context.processing);juce::AudioBuffer<float> audio(context.media.channels,4096),dry(context.media.channels,4096);
             for(int64_t frame=0;frame<before.frames;)
@@ -192,9 +193,9 @@ SectionProposalOutcome generateEventRegionProposal(const SectionProposalRequest&
                 features.push(dry.getArrayOfReadPointers(),audio.getArrayOfReadPointers(),count,cancelled);
                 collector.push(audio.getArrayOfReadPointers(),count);frame+=count;control.setProgress(.1f+.15f*float(double(frame)/before.frames));
             }
-            events=features.finish();review->eventEvidence=events;review->featureBytes=events->storageBytes();review->featureHighWaterBytes=events->highWaterBytes;
+            sidecar=collector.finish();events=features.finish(sidecar.get(),cancelled);review->eventEvidence=events;review->featureBytes=events->storageBytes();review->featureHighWaterBytes=events->highWaterBytes;
             fixedPlanning+=events->highWaterBytes;
-            sidecar=collector.finish();review->sidecarSeconds=seconds(start);review->sidecarBytes=sidecar->storageBytes();
+            review->sidecarSeconds=seconds(start);review->sidecarBytes=sidecar->storageBytes();
         }
         std::vector<ProxyChoice> pool;pool.reserve(64);review->attempts.reserve(3);std::set<juce::String> seen;std::vector<Alternative> choices;size_t cursor=0;
         double planningSeconds=coarsePlanningSeconds;bool exhausted=false;const double watchdog=planningWatchdogSeconds;
@@ -202,6 +203,10 @@ SectionProposalOutcome generateEventRegionProposal(const SectionProposalRequest&
         const auto abortPlanning=[&]{if(planning&&planningSeconds+seconds(planningStart)>watchdog)exhausted=true;return control.isCancelled()||exhausted;};
         const auto beginPlanning=[&]{planningStart=Clock::now();planning=true;};
         const auto endPlanning=[&]{planningSeconds+=seconds(planningStart);planning=false;review->planningSeconds=planningSeconds;};
+        // Bound the overlapping geometry variants, ordering buffers and moved-from
+        // container capacity while alternatives are flattened, before allocation.
+        if(r.regionSettings->schema==3&&fixedPlanning+review->constraints.roots.size()*384*1024>planningBudget)
+            return {{},ErrorCode::unavailable,"Region formation scratch exceeds combined allocation budget"};
         beginPlanning();
         if(!globalFirst){review->formation=formEventRegions(review->constraints,*analysis,limits.maxLoudnessRangeLu,*events,abortPlanning);choices=alternatives(review->constraints,review->formation,*analysis,before,r.policy,limits.maxLoudnessRangeLu,abortPlanning);}endPlanning();
         size_t geometryBytes=choices.capacity()*sizeof(Alternative)+review->formation.alternatives.capacity()*sizeof(std::vector<RegionGeometry>);for(const auto& choice:choices)geometryBytes+=assignmentBytes(choice.assignment);
@@ -222,15 +227,33 @@ SectionProposalOutcome generateEventRegionProposal(const SectionProposalRequest&
             for(const auto& p:pool)used+=sizeof(ProxyChoice)+planBytes(p.plan)+coverageBytes(p.coverage)+p.forecast.limitations.getNumBytesAsUTF8()*4;
             for(const auto& attempt:review->attempts)used+=sizeof(RegionAttempt)+planBytes(attempt.plan)+coverageBytes(attempt.coverage)+(attempt.receipt?attempt.receipt->storageBytes():0);
             if(used>planningBudget)throw std::runtime_error("Region model/search 64 MiB allocation budget exceeded; no partial Apply authority");
+            if(r.regionSettings->schema==3)
+            {
+                // Three retained reports plus the selected view, history and encoded
+                // text can overlap. These fixed-row bounds include UTF-8 capacity.
+                used+=512*1024+(events?events->groups.size()*8192+events->attacks.size()*1536:0);
+                if(used>planningBudget)throw std::runtime_error("Region reports and history exceed combined planning budget");
+            }
             review->planningBytes=std::max(review->planningBytes,used);
             ProxyChoice choice;choice.plan=std::move(plan);
             if(events)choice.coverage=assessEventCoverage(before,choice.plan,review->constraints,*events,*analysis,limits.maxLoudnessRangeLu);
+            choice.localised=std::any_of(choice.plan.assignments.begin(),choice.plan.assignments.end(),[](const auto& a){return a.geometry.family!=BoundaryFamily::coarse;});
             choice.original=std::all_of(choice.plan.assignments.begin(),choice.plan.assignments.end(),[&](const auto& a){return a.geometry.cuts.empty()&&a.geometry.support==review->constraints.roots[a.geometry.root].hint;});
             if(sidecar)choice.forecast=predictRegionPlan(*analysis,*sidecar,before,r.currentContext.processing.staticGainDb,choice.plan,abortPlanning);
             else
             {const double delta=choice.plan.globalDb-r.currentContext.processing.staticGainDb;choice.forecast.integrated=*r.current->detail.integrated.value+delta;choice.forecast.lra=r.current->detail.lra.value;choice.forecast.limitations="Global-only estimate; full candidate measurement remains required";}
             if(abortPlanning()||choice.forecast.cancelled)return {};
             choice.score=regionPredictedScore(choice.forecast,r.currentContext.profile,choice.plan.activity,choice.plan.identity);++review->proxyEvaluations;pool.push_back(std::move(choice));return pool.size()-1;
+        };
+        std::array<uint16_t,2> jointRoots{};
+        const auto jointComparison=[&](const RegionPlan& plan)
+        {
+            std::array<uint16_t,2> present{};
+            for(const auto& part:plan.assignments)
+                if(part.geometry.family!=BoundaryFamily::coarse&&std::any_of(part.reductions.begin(),part.reductions.end(),[](double d){return d>0;}))
+                    present[part.geometry.family==BoundaryFamily::innerAfter?0:1]|=uint16_t(1u<<part.geometry.root);
+            for(size_t i=0;i<present.size();++i)if(jointRoots[i]&&(present[i]&jointRoots[i])==jointRoots[i])return true;
+            return false;
         };
         const auto beam=[&]
         {
@@ -257,17 +280,20 @@ SectionProposalOutcome generateEventRegionProposal(const SectionProposalRequest&
             // complete unsplit challenger, with the NEW permissions enforced.
             // Its nominal M19 outer cuts may need to move inward for ramps to fit.
             beginPlanning();std::vector<RegionAssignment> seeds;
+            size_t seedChecks=0,blockedSeeds=0;
             for(size_t root=0;root<review->constraints.roots.size();++root)
             {
                 auto found=std::find_if(choices.begin(),choices.end(),[&](const auto& a){return a.root==root&&a.assignment.geometry.cuts.empty()&&a.assignment.geometry.support==review->constraints.roots[root].hint;});
                 if(found==choices.end())continue;
                 auto candidate=seeds;candidate.push_back(found->assignment);
                 auto plan=constructRegionPlan(before,r.currentContext.processing.staticGainDb,review->constraints,r.policy,candidate,r.currentContext.processing.staticGainDb);
+                ++seedChecks;if(plan.error.isNotEmpty())++blockedSeeds;
                 if(plan.error.isEmpty())seeds=std::move(candidate);
             }
             if(!seeds.empty()){auto index=add(constructRegionPlan(before,r.currentContext.processing.staticGainDb,review->constraints,r.policy,seeds,r.currentContext.processing.staticGainDb));if(index)globalVariants(*index,32);}
             // Complete family shares the same finite proxy budget. Preserve its
             // per-root nominees before the generic beam can favour short supports.
+            const auto originalSeeds=seeds;
             seeds.clear();
             for(size_t root=0;root<review->constraints.roots.size();++root)
             {
@@ -275,10 +301,64 @@ SectionProposalOutcome generateEventRegionProposal(const SectionProposalRequest&
                 if(found==choices.end())continue;
                 auto candidate=seeds;candidate.push_back(found->assignment);
                 auto plan=constructRegionPlan(before,context.processing.staticGainDb,review->constraints,r.policy,candidate,context.processing.staticGainDb);
+                ++seedChecks;if(plan.error.isNotEmpty())++blockedSeeds;
                 if(plan.error.isEmpty())seeds=std::move(candidate);
                 else if(review->restrictions.size()<48)review->restrictions.push_back("Complete-event alternative: "+plan.error);
             }
             if(!seeds.empty()){auto index=add(constructRegionPlan(before,context.processing.staticGainDb,review->constraints,r.policy,seeds,context.processing.staticGainDb));if(index)globalVariants(*index,32);}
+            if(r.regionSettings->schema==3)
+            {
+                const auto jointEnd=std::min<size_t>(32,review->proxyEvaluations+8);
+                std::vector<RegionAssignment> afterSeed;
+                for(auto family:{BoundaryFamily::innerAfter,BoundaryFamily::innerDecay})
+                {
+                    auto joint=originalSeeds;
+                    bool replaced=false;
+                    for(size_t root=0;root<review->constraints.roots.size();++root)
+                    {
+                        const auto nominee=std::find_if(choices.begin(),choices.end(),[&](const auto& a){
+                            return a.root==root&&a.assignment.geometry.family==family&&
+                                std::any_of(a.assignment.reductions.begin(),a.assignment.reductions.end(),[](double d){return d>0;});});
+                        if(nominee==choices.end())continue;
+                        auto trial=joint;
+                        const auto old=std::find_if(trial.begin(),trial.end(),[&](const auto& a){return a.geometry.root==root;});
+                        if(old==trial.end())trial.push_back(nominee->assignment);else *old=nominee->assignment;
+                        const auto plan=constructRegionPlan(before,r.currentContext.processing.staticGainDb,review->constraints,r.policy,trial,r.currentContext.processing.staticGainDb);
+                        ++seedChecks;if(plan.error.isNotEmpty())++blockedSeeds;
+                        if(plan.error.isEmpty()){joint=std::move(trial);replaced=true;}
+                        else {++review->rejectedPlans;review->restrictions.push_back(nominee->assignment.geometry.reason+" omitted: "+plan.error);}
+                    }
+                    if(!replaced)continue;
+                    for(const auto& part:joint)if(part.geometry.family==family)
+                        jointRoots[family==BoundaryFamily::innerAfter?0:1]|=uint16_t(1u<<part.geometry.root);
+                    if(family==BoundaryFamily::innerAfter)afterSeed=joint;
+                    if(review->proxyEvaluations<jointEnd)
+                        if(auto index=add(constructRegionPlan(before,r.currentContext.processing.staticGainDb,review->constraints,r.policy,joint,r.currentContext.processing.staticGainDb)))
+                            globalVariants(*index,jointEnd);
+                }
+                // Try a shallower and a deeper dose, then a leave-one-out plan.
+                // These compete for the remaining first-stage beam evaluations.
+                for(int variant=0;variant<3&&!afterSeed.empty()&&review->proxyEvaluations<32;++variant)
+                {
+                    auto trial=afterSeed;
+                    if(variant==2)
+                    {
+                        auto remove=std::find_if(trial.begin(),trial.end(),[](const auto& a){return a.geometry.family==BoundaryFamily::coarse;});
+                        if(remove==trial.end())remove=trial.begin();
+                        trial.erase(remove);
+                    }
+                    else for(auto& a:trial)if(a.geometry.family!=BoundaryFamily::coarse)
+                    {
+                        const auto chosen=std::find_if(choices.begin(),choices.end(),[&](const auto& other){
+                            const auto& b=other.assignment;
+                            return other.root==a.geometry.root&&b.geometry.family==a.geometry.family&&b.geometry.support==a.geometry.support
+                                &&(variant==0?b.reductions<a.reductions:b.reductions>a.reductions);});
+                        if(chosen!=choices.end())a=chosen->assignment;
+                    }
+                    if(!trial.empty())if(auto index=add(constructRegionPlan(before,r.currentContext.processing.staticGainDb,review->constraints,r.policy,trial,r.currentContext.processing.staticGainDb)))globalVariants(*index,32);
+                }
+            }
+            if(r.regionSettings->schema==3)review->restrictions.push_back("Seed construction legality checks "+juce::String(seedChecks)+", rejected "+juce::String(blockedSeeds)+". Only distinct legal non-neutral full plans enter prediction.");
             endPlanning();
         }
         OfflineAnalysisService worker;std::vector<RegionReviewScore> measuredRanks;
@@ -293,7 +373,7 @@ SectionProposalOutcome generateEventRegionProposal(const SectionProposalRequest&
                 if(last.coverage.complete()&&last.evaluation.verdict==Verdict::fail)
                 {
                     const auto gain=lraFinalGlobalGain(last.receipt->measured(),last.plan.globalDb,r.currentContext.profile);
-                    if(gain){auto plan=last.plan;plan.globalDb=*gain;plan.error=validateRegionPlan(before,context.processing.staticGainDb,review->constraints,r.policy,plan);priority=add(std::move(plan));if(priority){priorityRepairUsed=true;review->restrictions.push_back("One measured-feedback scalar repair has priority; it consumes a comparison slot and preserves local geometry.");}}
+                    if(gain){auto plan=last.plan;plan.globalDb=*gain;plan.error=validateRegionPlan(before,r.currentContext.processing.staticGainDb,review->constraints,r.policy,plan);priority=add(std::move(plan));if(priority){priorityRepairUsed=true;review->restrictions.push_back("One measured-feedback scalar repair has priority; it consumes a comparison slot and preserves local geometry.");}}
                 }
             }
             if(!globalFirst)
@@ -319,29 +399,48 @@ SectionProposalOutcome generateEventRegionProposal(const SectionProposalRequest&
                 const bool screening=p.score.complete&&p.score.failedRules==0
                     &&(!limits.hasMaxMomentary||p.forecast.momentarySampled.has_value())
                     &&(!limits.hasMaxShortTerm||p.forecast.shortTermSampled.has_value());
-                schedule.push_back({p.score,p.coverage,p.measured,p.original,screening});
+                schedule.push_back({p.score,p.coverage.forRanking(),p.measured,p.original,screening,p.localised&&jointComparison(p.plan)});
             }
             auto next=priority?priority:chooseEventAssessment(schedule,pass==0,selectCompleteEventPass(measuredRanks,measuredCoverage).has_value());
             endPlanning();
             if(exhausted)return {{},ErrorCode::unavailable,"Region planning watchdog exhausted; no partial Apply authority"};
             if(control.isCancelled())return finish();if(!next)break;
-            auto chosen=pool[*next];pool[*next].measured=true;
+            const auto& chosen=pool[*next];pool[*next].measured=true;
             context.processing=processingPlan(chosen.plan);JobControl assessment;assessment.parent=&control;assessment.parentProgress=&control.progress;assessment.progressBase=.25f+float(pass)*.24f;assessment.progressScale=.24f;
             start=Clock::now();++out->passCount;const auto actual=worker.analyzeCandidate(context,**copy.value,assessment);if(!actual.value)return {{},actual.error,actual.message};
             RegionAttempt attempt;attempt.plan=chosen.plan;attempt.prediction=chosen.forecast;attempt.seconds=seconds(start);attempt.snapshotIdentity=actual.value->identity;
             attempt.receipt=std::shared_ptr<const RegionAssessmentReceipt>(new RegionAssessmentReceipt(*actual.value,r));
-            attempt.coverage=chosen.coverage;attempt.family=globalFirst?"measured global-only":chosen.coverage.complete()?"supported-complete":chosen.original?"original boundaries":"tighter/spared/other";
+            attempt.coverage=chosen.coverage;attempt.family=globalFirst?"measured global-only":chosen.coverage.complete()?"supported-complete":chosen.original?"original boundaries":jointComparison(chosen.plan)?"joint need-localised inner comparison":chosen.localised?"single inner substitution":"tighter/spared/other";
             attempt.attemptIdentity=digest(review->resultIdentity+";"+chosen.plan.identity+";"+attempt.receipt->identity());
             attempt.evaluation=attempt.receipt->evaluation(r,context.processing);
             const auto& d=actual.value->detail;attempt.measured={d.integrated,d.truePeak,d.lra,d.momentaryMax,d.shortTermMax,d.samplePeak};
             std::array<std::optional<double>,5> predicted{chosen.forecast.integrated,chosen.forecast.lra,chosen.forecast.p10,chosen.forecast.p95,chosen.forecast.momentarySampled};
             std::array<std::optional<double>,5> values{d.integrated.value,d.lra.value,d.p10,d.p95,d.momentaryMax.value};
             for(size_t n=0;n<values.size();++n)if(values[n]&&predicted[n])attempt.signedPredictionError[n]=*values[n]-*predicted[n];
-            measuredRanks.push_back(regionMeasuredScore(attempt.evaluation,attempt.plan.activity,attempt.plan.identity));measuredCoverage.push_back(attempt.coverage);review->attempts.push_back(std::move(attempt));
+            measuredRanks.push_back(regionMeasuredScore(attempt.evaluation,attempt.plan.activity,attempt.plan.identity));measuredCoverage.push_back(attempt.coverage.forRanking());review->attempts.push_back(std::move(attempt));
             // actual's full populations die at this iteration boundary; only the
             // privately minted compact receipt remains. No private cache is Current.
             if(globalFirst)break;
         }
+        if(r.regionSettings->schema==3)
+        {
+            for(const auto& choice:pool)
+            {
+                juce::String line="Proxy "+choice.plan.identity+" global "+regionExact(choice.plan.globalDb);
+                for(const auto& a:choice.plan.assignments)
+                {
+                    line+=" root "+juce::String(a.geometry.root+1)+" "+(a.geometry.family==BoundaryFamily::innerAfter?"inner-after":a.geometry.family==BoundaryFamily::innerDecay?"inner-decay":"coarse")
+                        +" ["+juce::String(a.geometry.support.begin)+","+juce::String(a.geometry.support.end)+") gains";
+                    for(double db:a.reductions)line+=" "+regionExact(db);
+                }
+                line+=" estimated IL "+(choice.forecast.integrated?regionExact(*choice.forecast.integrated):"unavailable")
+                    +" LRA "+(choice.forecast.lra?regionExact(*choice.forecast.lra):"unavailable");
+                review->restrictions.push_back(line+(choice.measured?" assessed":" unmeasured within shared comparison budget"));
+            }
+            review->restrictions.push_back("Unvisited round-robin gain/geometry variants: "+juce::String(choices.size()-cursor)+". Reserved seeds and overlapping variants share the same proxy and exact limits.");
+        }
+        if(r.regionSettings->schema==3&&std::none_of(review->attempts.begin(),review->attempts.end(),[&](const auto& a){return jointComparison(a.plan);}))
+            review->restrictions.push_back("Joint inner comparison did not reach exact assessment. Consult the proxy ledger, permission limits and complete/original/repair priorities.");
         if(review->attempts.size()==3)review->restrictions.push_back("Three exact assessments used; remaining gain/boundary alternatives were not measured. No optimality claim.");
         review->searchTruncated=cursor<choices.size()||review->constraints.omittedRoots||review->formation.omittedCuts||review->formation.omittedGeometries;
         auto best=selectCompleteEventPass(measuredRanks,measuredCoverage);
@@ -369,7 +468,7 @@ SectionProposalOutcome generateEventRegionProposal(const SectionProposalRequest&
 
 juce::String validateEventRegionProposalForApply(const SectionProposalRequest& r,const SectionProposalResult& result)
 {
-    if(result.methodVersion()!=proposal::eventSearchVersion||!r.regionSettings||r.regionSettings->schema!=2||r.pendingManualDraft||result.identity()!=r.binding()||!result.regionReview())return "Stale/missing event request";
+    if(!r.regionSettings||!proposal::isEventMethod(result.methodVersion())||result.methodVersion()!=r.regionSettings->methodVersion()||r.pendingManualDraft||result.identity()!=r.binding()||!result.regionReview())return "Stale/missing event request";
     const auto& review=*result.regionReview();
     if(!review.eventMode||!review.selectedAttempt||*review.selectedAttempt>=review.attempts.size()||review.constraints.settings.digest()!=r.regionSettings->digest())return "No explicitly authorized measured event attempt";
     const auto& a=review.attempts[*review.selectedAttempt];
@@ -383,7 +482,7 @@ juce::String validateEventRegionProposalForApply(const SectionProposalRequest& r
 }
 SectionProposalOutcome selectMeasuredEventAlternative(const SectionProposalRequest& r,const std::shared_ptr<const SectionProposalResult>& source,const juce::String& resultId,const juce::String& attemptId)
 {
-    if(!source||source->methodVersion()!=proposal::eventSearchVersion||source->identity()!=r.binding()||r.pendingManualDraft||!source->regionReview()||source->regionReview()->resultIdentity!=resultId)return {{},ErrorCode::staleRevision,"Stale/missing event result; inspection cannot authorize Apply"};
+    if(!source||!r.regionSettings||!proposal::isEventMethod(source->methodVersion())||source->methodVersion()!=r.regionSettings->methodVersion()||source->identity()!=r.binding()||r.pendingManualDraft||!source->regionReview()||source->regionReview()->resultIdentity!=resultId)return {{},ErrorCode::staleRevision,"Stale/missing event result; inspection cannot authorize Apply"};
     const auto& old=*source->regionReview();const auto i=std::find_if(old.attempts.begin(),old.attempts.end(),[&](const auto& a){return a.attemptIdentity==attemptId;});
     if(i==old.attempts.end()||!i->receipt||i->receipt->evaluation(r,processingPlan(i->plan)).verdict!=proposal::Verdict::pass)return {{},ErrorCode::invalidRequest,"Only an owned, actual passing measured alternative may be selected"};
     auto result=std::shared_ptr<SectionProposalResult>(new SectionProposalResult(*source));auto review=std::make_shared<RegionProposalReview>(old);

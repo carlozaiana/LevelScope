@@ -46,7 +46,7 @@ EventCoverage assessEventCoverage(const Plan& before,const RegionPlan& plan,cons
         for(size_t n=1;n<a.reductions.size();++n)if(a.reductions[n]!=a.reductions[n-1])
         {
             ++out.newInternalTransitions;const auto cut=a.geometry.cuts[n-1];
-            const bool supported=a.geometry.root<evidence.needCuts.size()&&std::any_of(evidence.needCuts[a.geometry.root].begin(),evidence.needCuts[a.geometry.root].end(),[&](auto x){return x.frame==cut;});
+            const bool supported=a.geometry.root<evidence.needCuts.size()&&std::any_of(evidence.needCuts[a.geometry.root].begin(),evidence.needCuts[a.geometry.root].end(),[&](auto x){return x.frame==cut&&(c.settings.schema<3||x.origin==cut);});
             if(!supported)++out.unsupportedTransitions;
         }
     }
@@ -54,7 +54,7 @@ EventCoverage assessEventCoverage(const Plan& before,const RegionPlan& plan,cons
     for(const auto& g:evidence.groups)
     {
         if(g.root>=c.roots.size())continue;
-        const RegionSpan extent{g.onset.begin,g.endingSupported?g.decay.end:std::min(before.frames,c.roots[g.root].hint.end+int64_t(c.sampleRate)*3)};
+        const RegionSpan extent{g.onset.begin,g.endingSupported?g.decay.end:g.outerGroup>=0?g.observedEnd:std::min(before.frames,c.roots[g.root].hint.end+int64_t(c.sampleRate)*3)};
         if(!std::any_of(plan.activity.support.begin(),plan.activity.support.end(),[&](auto d){return overlap(d,extent);}))continue;
         GroupTreatment t;t.groupId=g.id;t.extent=extent;t.incomplete=g.incomplete||!g.corroborated||!g.endingSupported;
         t.needBearing=g.needAssociated&&std::any_of(plan.activity.support.begin(),plan.activity.support.end(),[&](auto d){return needIn(analysis,{std::max({d.begin,extent.begin,c.roots[g.root].hint.begin}),std::min({d.end,extent.end,c.roots[g.root].hint.end})},ceiling);});
@@ -94,7 +94,35 @@ EventCoverage assessEventCoverage(const Plan& before,const RegionPlan& plan,cons
         }
         if(t.incomplete)t.reason+="Event evidence incomplete/uncertain: "+g.reason+"; ";
         if(!t.incomplete&&!t.knownPartial)t.reason="Intended nonzero correction covers supported onset through decay";
+        if(g.outerGroup>=0)
+            t.reason="Inner interpretation of "+evidence.groups[size_t(g.outerGroup)].id+"; "+t.reason;
         partial|=t.knownPartial;incomplete|=t.incomplete;out.groups.push_back(std::move(t));
+    }
+    if(c.settings.schema==3)
+    {
+        partial=false;
+        const auto treatment=[&](const EventGroup& g)->const GroupTreatment*{
+            const auto it=std::find_if(out.groups.begin(),out.groups.end(),[&](const auto& t){return t.groupId==g.id;});
+            return it==out.groups.end()?nullptr:&*it;
+        };
+        for(size_t n=0;n<evidence.groups.size();++n)
+        {
+            const auto& outer=evidence.groups[n];if(outer.outerGroup>=0)continue;
+            const auto* t=treatment(outer);
+            bool anyRival=false,anyMiss=false,allMiss=true;
+            for(const auto& rival:evidence.groups)if(rival.outerGroup==int(n))
+            {
+                const auto* child=treatment(rival);
+                anyRival=true;anyMiss|=child&&child->knownPartial;allMiss&=child&&child->knownPartial;
+            }
+            const bool outerMiss=t&&t->knownPartial;
+            if(anyRival&&((outerMiss&&!allMiss)||(!outerMiss&&anyMiss)))
+            {
+                incomplete=true;
+                out.notice+="Continuing and inner interpretations disagree on truncation for "+outer.id+"; inspect each ending. ";
+            }
+            partial|=outerMiss&&(!anyRival||allMiss);
+        }
     }
     for(auto root:changedRoots)
     {
@@ -105,7 +133,7 @@ EventCoverage assessEventCoverage(const Plan& before,const RegionPlan& plan,cons
     if(out.signature.empty()){incomplete=true;out.notice+="No supported event signature for changed measured need; ";}
     out.category=partial?(incomplete?EventCoverageClass::partialAndUncertain:EventCoverageClass::knownPartial):(incomplete?EventCoverageClass::uncertain:EventCoverageClass::supportedComplete);
     std::sort(out.signature.begin(),out.signature.end());
-    juce::String key=evidence.identity+";"+plan.identity+";"+eventCoverageVersion+";"+juce::String(int(out.category));
+    juce::String key=evidence.identity+";"+plan.identity+";"+c.settings.coverageVersion()+";"+juce::String(int(out.category));
     for(const auto& g:out.groups)key+=";"+g.groupId+":"+juce::String(int(g.knownPartial))+":"+juce::String(int(g.incomplete));out.identity=hash(key);return out;
 }
 RegionFormation formEventRegions(const RegionConstraints& c,const ProgramAnalysis& a,double ceiling,
@@ -116,7 +144,7 @@ RegionFormation formEventRegions(const RegionConstraints& c,const ProgramAnalysi
     for(size_t root=0;root<c.roots.size();++root)
     {
         std::optional<RegionSpan> complete;int64_t decayReturn=0;
-        for(const auto& g:evidence.groups)if(g.root==root&&g.needAssociated&&g.corroborated&&g.endingSupported&&!g.incomplete)
+        for(const auto& g:evidence.groups)if(g.outerGroup<0&&g.root==root&&g.needAssociated&&g.corroborated&&g.endingSupported&&!g.incomplete)
         {
             RegionSpan span{std::max<int64_t>(0,g.onset.begin-ramp),std::min(c.frames,g.decay.end+ramp)};
             if(!complete)complete=span;else{complete->begin=std::min(complete->begin,span.begin);complete->end=std::max(complete->end,span.end);}
@@ -127,10 +155,24 @@ RegionFormation formEventRegions(const RegionConstraints& c,const ProgramAnalysi
             RegionGeometry g;g.root=root;g.support=*complete;g.reason="Supported complete-event boundary nominee; exact coverage still checked";g.strength=1e6;preferred[root].push_back(g);
             if(decayReturn>complete->begin&&decayReturn<complete->end){g.support.end=decayReturn;g.reason="Explicit in-decay return alternative; not equivalent complete coverage";preferred[root].push_back(g);}
         }
+        if(c.settings.schema==3&&c.settings.allowRefinement)
+            for(const auto& inner:evidence.groups)if(inner.root==root&&inner.innerNominee)
+            {
+                const auto nominate=[&](RegionSpan ending,BoundaryFamily family)
+                {
+                    if(!ending.end)return;
+                    RegionGeometry g;g.root=root;g.family=family;g.strength=inner.capturedExcess;
+                    g.support={inner.onset.begin-ramp,ending.end+ramp};
+                    g.reason=(family==BoundaryFamily::innerAfter?"Inner passage after-return ":"Inner passage in-decay return ")+inner.id;
+                    preferred[root].push_back(std::move(g));
+                };
+                if(inner.endingSupported)nominate(inner.decay,BoundaryFamily::innerAfter);
+                nominate(inner.inDecay,BoundaryFamily::innerDecay);
+            }
     }
     auto out=formRegions(c,a,ceiling,cancelled,&preferred);
     for(size_t r=0;r<preferred.size();++r)for(const auto& g:preferred[r])
-        if(!c.roots[r].start.contains(g.support.begin)||!c.roots[r].end.contains(g.support.end))out.reasons.push_back("Root "+juce::String(r+1)+": complete-event/decay alternative conflicts with explicit permission, ownership or minimum length");
+        if(!c.roots[r].start.contains(g.support.begin)||!c.roots[r].end.contains(g.support.end))out.reasons.push_back("Root "+juce::String(r+1)+": "+g.reason+" ["+juce::String(g.support.begin)+", "+juce::String(g.support.end)+") conflicts with explicit permission, ownership or minimum length");
     return out;
 }
 std::optional<size_t> selectCompleteEventPass(const std::vector<RegionReviewScore>& scores,const std::vector<EventCoverage>& coverage)
@@ -141,6 +183,12 @@ std::optional<size_t> selectCompleteEventPass(const std::vector<RegionReviewScor
         if(!best||key(n)<key(*best))best=n;
     return best;
 }
+EventCoverage EventCoverage::forRanking()const
+{
+    EventCoverage rank;rank.category=category;rank.signature=signature;
+    rank.unsupportedTransitions=unsupportedTransitions;rank.newInternalTransitions=newInternalTransitions;
+    return rank;
+}
 std::optional<size_t> chooseEventAssessment(const std::vector<EventAssessmentChoice>& choices,bool first,bool completePass)
 {
     const auto best=[&](int family,bool screeningOnly)->std::optional<size_t>
@@ -150,23 +198,24 @@ std::optional<size_t> chooseEventAssessment(const std::vector<EventAssessmentCho
         for(size_t n=0;n<choices.size();++n)
         {
             const auto& c=choices[n];auto s=c.score;
-            const bool eligible=!c.measured&&(family==0?c.coverage.complete():family==1?c.original:family==2?!c.original&&!c.coverage.complete():true)&&(!screeningOnly||c.screening);
+            const bool eligible=!c.measured&&(family==0?c.coverage.complete():family==1?c.original:family==2?!c.original&&!c.coverage.complete():family==4?c.localised:true)&&(!screeningOnly||c.screening);
             if(!eligible)s.complete=false;
             else
             {
                 if(!fallback||s.id<choices[*fallback].score.id)fallback=n;
                 if(c.screening)s.allPass=true; // forecast ranking ONLY; never measured authority
             }
-            scores.push_back(s);coverage.push_back(c.coverage);
+            scores.push_back(s);if(family==0)coverage.push_back(c.coverage.forRanking());
         }
         if(family==0)if(auto n=selectCompleteEventPass(scores,coverage))return n;
         if(auto n=selectRegionReview(scores))return n;
         return fallback;
     };
-    if(first){if(auto n=best(0,true))return n;if(auto n=best(1,false))return n;return best(3,false);}
+    if(first){if(auto n=best(0,true))return n;if(auto n=best(1,false))return n;if(auto n=best(4,true))return n;return best(3,false);}
     if(!completePass)if(auto n=best(0,false))return n;
     const bool originalMeasured=std::any_of(choices.begin(),choices.end(),[](const auto& c){return c.measured&&c.original;});
     if(!originalMeasured)if(auto n=best(1,false))return n;
+    if(auto n=best(4,true))return n;
     if(auto n=best(2,false))return n;
     return best(3,false);
 }

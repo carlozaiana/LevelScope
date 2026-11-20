@@ -74,7 +74,16 @@ struct RegionConstraints
 };
 RegionConstraints resolveRegionConstraints(const RegionPlanningSettings&,const SectionMap&,
     const LraPassages&,const processing::SectionGainPlan&);
-struct RegionCut {int64_t frame=0;double strength=0;juce::String reason;};
+enum class EdgeDirection { unspecified, rising, falling, paired };
+enum class BoundaryFamily { coarse, innerAfter, innerDecay };
+struct RegionCut
+{
+    int64_t frame=0;
+    double strength=0;
+    juce::String reason;
+    EdgeDirection direction=EdgeDirection::unspecified;
+    int64_t origin=-1;
+};
 struct RegionGeometry
 {
     size_t root=0;
@@ -82,6 +91,7 @@ struct RegionGeometry
     std::vector<int64_t> cuts; // nominal internal plateau cuts
     juce::String reason;
     double strength=0;
+    BoundaryFamily family=BoundaryFamily::coarse;
 };
 struct RegionFormation
 {

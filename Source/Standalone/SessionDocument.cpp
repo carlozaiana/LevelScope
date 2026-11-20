@@ -267,7 +267,7 @@ std::shared_ptr<const AnalysisSnapshot> cache (const Bytes& b,MeasurementDomain 
 }
 V coreValue (const Document& d,const std::array<Bytes,2>& caches,const Bytes& explanation = {})
 {
-    auto v=object();put(v,"schema",schemaVersion);put(v,"documentId",d.id);put(v,"revision",unsignedValue(d.revision));
+    auto v=object();put(v,"schema",writerSchema(d));put(v,"documentId",d.id);put(v,"revision",unsignedValue(d.revision));
     auto p=object();put(p,"schema",programmeAssemblyVersion);put(p,"id",d.programmeId);put(p,"mode",d.source.composition?"composition":d.source.assembly?"mono_files":"interleaved");put(p,"purpose","programme_audio");put(p,"alignment","0/1");
     juce::Array<V> files,channels;
     if(d.source.hasSource)
@@ -304,7 +304,7 @@ V coreValue (const Document& d,const std::array<Bytes,2>& caches,const Bytes& ex
 }
 Document core (const V& v)
 {
-    Document d;d.loadedSchema=number(get(v,"schema"),1,schemaVersion);d.id=str(v,"documentId",36);d.revision=integer<uint64_t>(get(v,"revision"));auto p=get(v,"programme");const int programmeSchema=number(get(p,"schema"),1,programmeAssemblyVersion);require(programmeSchema==d.loadedSchema||(d.loadedSchema==10&&programmeSchema==9),"Programme/core schema mismatch");d.programmeId=str(p,"id",36);
+    Document d;d.loadedSchema=number(get(v,"schema"),1,innerSchemaVersion);d.id=str(v,"documentId",36);d.revision=integer<uint64_t>(get(v,"revision"));auto p=get(v,"programme");const int programmeSchema=number(get(p,"schema"),1,programmeAssemblyVersion);require(programmeSchema==d.loadedSchema||((d.loadedSchema==10||d.loadedSchema==11)&&programmeSchema==9),"Programme/core schema mismatch");d.programmeId=str(p,"id",36);
     const auto mode=str(p,"mode");require((mode=="interleaved"||(mode=="mono_files"&&d.loadedSchema>=2)||(mode=="composition"&&d.loadedSchema>=3))&&str(p,"purpose")=="programme_audio"&&str(p,"alignment")=="0/1","Unsupported programme assembly");
     auto files=array(get(p,"files"),mode=="interleaved"?1:6);auto channels=array(get(p,"channels"),maxChannels);
     if(mode=="composition")
@@ -343,7 +343,7 @@ Document core (const V& v)
     if(d.loadedSchema>=9)
     {
         require(v.hasProperty("regionPlanning"),"Missing explicit M20 selection/constraints field");
-        if(!v["regionPlanning"].isVoid()){d.regionPlanning=proposal::RegionPlanningSettings::decode(v["regionPlanning"]);require(d.loadedSchema>=10||d.regionPlanning->schema==1,"New event settings require session schema 10");}
+        if(!v["regionPlanning"].isVoid()){d.regionPlanning=proposal::RegionPlanningSettings::decode(v["regionPlanning"]);require(d.loadedSchema>=8+d.regionPlanning->schema,"Region settings exceed the saved document version");}
     }
     else d.notices.add("Region planning is not selected in this older session. Exact audio/settings are retained. Saving writes schema 10 and requires an M20 event-preference reader; choose Save As to preserve the older-readable original.");
     if(d.loadedSchema<6)d.notices.add("Older session migrated in memory to default proposal preferences; media, annotations and exact applied processing preserved. Saving writes schema 10 and requires an M20 event-preference reader; use Save As to retain the original older-readable copy. Old transient proposals are not restored.");
@@ -382,6 +382,12 @@ bool aliasesMedia (const juce::File& file,const Document& d)
 void hook (const FileHooks& h,const char* stage){if(h.reached)h.reached(stage);if(h.fail&&h.fail(stage))throw Failure{juce::String(stage)=="space"?ErrorCode::insufficientDiskSpace:ErrorCode::writeFailed,"Injected session "+juce::String(stage)+" failure"};}
 template<class F> Outcome run (F f)
 {try{return f();}catch(const Failure& e){return{{},e.code,e.message};}catch(const std::exception& e){return{{},ErrorCode::invalidMetadata,e.what()};}catch(...){return{{},ErrorCode::invalidMetadata,"Session operation failed"};}}
+}
+int writerSchema(const Document& d)
+{
+    const auto& history=d.lastAppliedExplanation;
+    return (d.regionPlanning&&d.regionPlanning->schema==3)||(history&&history->regionSettings&&history->regionSettings->schema==3)
+        ?innerSchemaVersion:schemaVersion;
 }
 Document capture (StandaloneSessionModel& s)
 {
@@ -464,6 +470,7 @@ Outcome read (const juce::File& file,JobControl& c)
                     input.setPosition(int64_t(80+length+offset));Bytes bytes(size_t(n),0);require(input.read(bytes.data(),int(n))==int(n),"Truncated applied explanation");
                     require(hashValid(str(e,"sha256",64))&&digest(bytes)==str(e,"sha256",64),"Applied explanation checksum mismatch");
                     auto h=decodeAppliedExplanation(bytes,c);
+                    require(!h->regionSettings||d.loadedSchema>=8+h->regionSettings->schema,"History/settings exceed document version");
                     require(h->programmeId==d.programmeId&&h->inputIdentity==sectionInputIdentity(context(d,MeasurementDomain::source)),"Applied explanation belongs to different programme");
                     d.lastAppliedExplanation=std::move(h);
                 }
@@ -595,7 +602,7 @@ bool adopt (const Document& d,Prepared& prepared,StandaloneSessionModel& s,juce:
 bool saved (StandaloneSessionModel& s,const Document& d,const juce::File& file)
 {
     if(s.sessionId!=d.runtimeId||s.documentId!=d.id||d.revision>s.documentRevision)return false;
-    s.documentFile=file;s.openedSessionSchema=schemaVersion;s.savedDocumentRevision=d.revision;return true;
+    s.documentFile=file;s.openedSessionSchema=writerSchema(d);s.savedDocumentRevision=d.revision;return true;
 }
 bool relinkAudio (Document& d,const juce::File& f)
 {if(!d.source.hasSource||d.source.assembly||d.source.composition)return false;d.source.file=f;d.source.fullPath=f.getFullPathName();d.source.displayName=f.getFileName();d.audioResolved=false;return true;}

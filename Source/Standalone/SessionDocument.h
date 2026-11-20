@@ -4,7 +4,7 @@
 namespace levelscope::standalone::sessionfile
 {
 inline constexpr uint64_t maximumBytes = 128 * 1024 * 1024;
-inline constexpr int schemaVersion = 10, programmeAssemblyVersion = 9;
+inline constexpr int schemaVersion = 10, innerSchemaVersion = 11, programmeAssemblyVersion = 9;
 struct ProfileReference { juce::String id, version, digest; };
 // Value snapshot: each save owns one coherent revision; shared analyses are immutable.
 struct Document
@@ -52,6 +52,7 @@ struct FileHooks
     std::function<void(const char*)> reached;
     std::function<void(const juce::File&)> beforeCreate;
 };
+int writerSchema(const Document&);
 Document capture (StandaloneSessionModel&);
 bool coreFits (const Document&, juce::String&); // bounded preflight, no file/media I/O
 Outcome save (const Document&, const juce::File&, JobControl&, const FileHooks& = {});

@@ -1,7 +1,10 @@
 #include "CompositionTestFixtures.h"
 #include "Core/Proposal/EventPlanning.h"
 #include "Standalone/StandaloneRegionProposal.h"
+#include "Standalone/StandaloneProcessing.h"
 #include <thread>
+#include "Core/Proposal/InnerEventTracker.h"
+#include "EventAllocationProbe.h"
 #include <type_traits>
 using namespace levelscope::proposal;
 namespace {
@@ -69,31 +72,33 @@ void core()
  EventAssessmentChoice original{shortScore,partial,false,true,true},whole{longScore,full,false,false,true},other{shortScore,partial,false,false,true};
  expect(chooseEventAssessment({original,whole,other},true,false)==1,"eligible complete first");whole.screening=false;expect(chooseEventAssessment({original,whole,other},true,false)==0,"original first when complete forecast fails");original.measured=true;expect(chooseEventAssessment({original,whole,other},false,false)==1,"partial pass cannot suppress unmeasured complete challenger");original.measured=false;expect(chooseEventAssessment({original,whole,other},false,true)==0,"complete pass reserves original comparison");original.measured=whole.measured=other.measured=true;expect(!chooseEventAssessment({original,whole,other},false,true),"exhausted pool has no fabricated assessment");
 }
-std::shared_ptr<const EventEvidence> extract(int rate,int hop,int chunk,int mode,int seconds=10)
+std::shared_ptr<const EventEvidence> extract(int rate,int hop,int chunk,int mode,int seconds,bool inner)
 {
- auto p=unity(seconds,rate);auto a=analysis(p);auto c=area(p,{3*rate,(seconds-3)*rate});c.settings.eventFeatures.hopMs=hop;c.identity="feature-constraints";
+ auto p=unity(seconds,rate);auto a=analysis(p);auto c=area(p,{3*rate,(seconds-3)*rate});if(inner){c.settings=RegionPlanningSettings::innerDefaults(RegionMode::selection,p.inputIdentity);c.settings.selection=c.roots.front().hint;}c.settings.eventFeatures.hopMs=hop;c.identity="feature-constraints";
  auto formed=formRegions(c,*a,5);const int channels=(mode==3||mode==6||mode==7)?6:2;auto roles=OfflineAnalysisService::measurementRoles(layoutFor(channels));if(mode==7)std::reverse(roles.begin(),roles.end());EventFeatureCollector collector(c,formed,*a,roles,5,"binding","source",regionPlanIdentity(p,0));
  juce::AudioBuffer<float> source(channels,chunk),current(channels,chunk);
  for(int64_t first=0;first<p.frames;first+=chunk){const int n=int(std::min<int64_t>(chunk,p.frames-first));for(int ch=0;ch<channels;++ch)for(int k=0;k<n;++k){double t=double(first+k)/rate;double gain=t<3?0:t<6?.15:t<6.7?.15*std::exp(-(t-6)*15):0;double v=gain*std::sin(2*juce::MathConstants<double>::pi*60*t);if(mode==1&&ch==1)v=-v;if(mode==2)v=0;if(mode==3&&ch!=3)v=0;if(mode==4)v=.1;if(mode==9)v=t>=2&&std::fmod(t-2,1.4)<.15?.15*std::sin(2*juce::MathConstants<double>::pi*60*t):0;if(mode==10&&t>=5)v=std::numeric_limits<double>::quiet_NaN();if(mode==11&&t>=3)v=.15*std::sin(2*juce::MathConstants<double>::pi*60*t);if(mode==8)v=.02*std::sin(2*juce::MathConstants<double>::pi*60*t);if(mode==5)v*=20;if((mode==6&&ch==3)||(mode==7&&ch==2))v=0;source.setSample(ch,k,float(v));current.setSample(ch,k,float(v*(mode==8&&t>=4&&t<6?1.:.5)));}collector.push(source.getArrayOfReadPointers(),current.getArrayOfReadPointers(),n);}return collector.finish();
 }
-void features()
+void features(bool inner=false)
 {
+ const auto run=[&](int rate,int hop,int chunk,int mode,int seconds=10){return extract(rate,hop,chunk,mode,seconds,inner);};
  for(int rate:{44100,48000,96000,192000})for(int hop:{5,10,20})
  {
-  auto a=extract(rate,hop,4096,0),b=extract(rate,hop,137,0);expect(a->identity==b->identity,"feature filters/cadence invariant to chunking");expect(a->highWaterBytes<=10*1024*1024,"feature storage within cap");
+  auto a=run(rate,hop,4096,0),b=run(rate,hop,137,0);expect(a->identity==b->identity,"feature filters/cadence invariant to chunking");expect(a->highWaterBytes<=10*1024*1024,"feature storage within cap");
   auto g=std::find_if(a->groups.begin(),a->groups.end(),[](auto& x){return x.needAssociated&&x.corroborated&&x.endingSupported&&!x.incomplete;});
   expect(g!=a->groups.end(),"known synthetic attack and decay supported");expect(g->firstNeedWindow>=0&&g->needWindowCount>0&&g->onsetPeakFrame>=g->onset.begin&&g->onsetPeakFrame<g->onset.end,"raw attack witness and exact baseline-window association retained");expect(g->onset.begin<=3*rate&&g->onset.end>=3*rate&&g->decay.end>6*rate,"onset bracket includes first sample and return follows decay");
   auto row=juce::var(new juce::DynamicObject());row.getDynamicObject()->setProperty("rate",rate);row.getDynamicObject()->setProperty("hop_ms",hop);row.getDynamicObject()->setProperty("onset_begin",g->onset.begin);row.getDynamicObject()->setProperty("decay_end",g->decay.end);row.getDynamicObject()->setProperty("feature_bytes",int64_t(a->highWaterBytes));cases.add(row);
  }
- auto phase=extract(48000,10,4096,1),normal=extract(48000,10,4096,0);expect(phase->identity==normal->identity,"antiphase stereo preserves per-channel event evidence");expect(extract(48000,10,4096,2)->groups.empty(),"silence does not fabricate events");expect(extract(48000,10,4096,3)->groups.empty(),"LFE-only activity cannot create correction event");
- auto over=extract(48000,10,4096,5);expect(!over->groups.empty(),"finite over-full-scale composition remains analyzable without attenuation");auto surround=extract(48000,10,4096,6),reordered=extract(48000,10,4096,7);expect(!surround->groups.empty()&&surround->groups.size()==reordered->groups.size()&&surround->groups[0].onset==reordered->groups[0].onset&&surround->groups[0].decay==reordered->groups[0].decay,"ordered 5.1 role handling preserves event extents after explicit permutation");
- auto overflow=extract(48000,5,4096,9,120);expect(overflow->groups.size()==64&&overflow->omittedGroups>0&&overflow->incompleteRoots[0],"summary overflow marks root incomplete without raising storage cap");auto openEnd=extract(48000,10,4096,11);expect(std::any_of(openEnd->groups.begin(),openEnd->groups.end(),[](const auto& g){return !g.endingSupported&&g.incomplete;}),"EOF never invents a supported decay");bool nonfinite=false;try{extract(48000,10,4096,10);}catch(...){nonfinite=true;}expect(nonfinite,"non-finite Source evidence fails safely");
- auto processingOnly=extract(48000,10,4096,8);expect(std::any_of(processingOnly->cells.begin(),processingOnly->cells.end(),[](const auto& c){return c.begin>=4*48000&&(c.flags&2);}),"Current-only rise is labelled processing context");expect(std::none_of(processingOnly->groups.begin(),processingOnly->groups.end(),[](const auto& g){return g.onset.begin>48000&&g.corroborated;}),"existing gain automation cannot create Source event authority");
- auto dc=extract(48000,10,4096,4);expect(std::none_of(dc->groups.begin(),dc->groups.end(),[](const auto& g){return g.onset.begin>24000&&g.corroborated;}),"constant DC is not a later musical event");
- auto p=unity(10800);auto a=analysis(p);RegionConstraints c;c.frames=p.frames;c.sampleRate=p.sampleRate;c.settings=RegionPlanningSettings::eventDefaults(RegionMode::automatic,p.inputIdentity);c.settings.eventFeatures.hopMs=5;c.identity="stress";RegionFormation formation;formation.nominations.resize(8);
+ auto phase=run(48000,10,4096,1),normal=run(48000,10,4096,0);expect(phase->identity==normal->identity,"antiphase stereo preserves per-channel event evidence");expect(run(48000,10,4096,2)->groups.empty(),"silence does not fabricate events");expect(run(48000,10,4096,3)->groups.empty(),"LFE-only activity cannot create correction event");
+ auto over=run(48000,10,4096,5);expect(!over->groups.empty(),"finite over-full-scale composition remains analyzable without attenuation");auto surround=run(48000,10,4096,6),reordered=run(48000,10,4096,7);expect(!surround->groups.empty()&&surround->groups.size()==reordered->groups.size()&&surround->groups[0].onset==reordered->groups[0].onset&&surround->groups[0].decay==reordered->groups[0].decay,"ordered 5.1 role handling preserves event extents after explicit permutation");
+ auto overflow=run(48000,5,4096,9,120);expect((inner?overflow->groups.size()+overflow->attacks.size():overflow->groups.size())==64&&overflow->omittedGroups>0&&overflow->incompleteRoots[0],"summary overflow marks root incomplete without raising storage cap");auto openEnd=run(48000,10,4096,11);expect(std::any_of(openEnd->groups.begin(),openEnd->groups.end(),[](const auto& g){return !g.endingSupported&&g.incomplete;}),"EOF never invents a supported decay");bool nonfinite=false;try{run(48000,10,4096,10);}catch(...){nonfinite=true;}expect(nonfinite,"non-finite Source evidence fails safely");
+ auto processingOnly=run(48000,10,4096,8);expect(std::any_of(processingOnly->cells.begin(),processingOnly->cells.end(),[](const auto& c){return c.begin>=4*48000&&(c.flags&2);}),"Current-only rise is labelled processing context");expect(std::none_of(processingOnly->groups.begin(),processingOnly->groups.end(),[](const auto& g){return g.onset.begin>48000&&g.corroborated;}),"existing gain automation cannot create Source event authority");
+ auto dc=run(48000,10,4096,4);expect(std::none_of(dc->groups.begin(),dc->groups.end(),[](const auto& g){return g.onset.begin>24000&&g.corroborated;}),"constant DC is not a later musical event");
+ auto p=unity(10800);auto a=analysis(p);RegionConstraints c;c.frames=p.frames;c.sampleRate=p.sampleRate;c.settings=(inner?RegionPlanningSettings::innerDefaults:RegionPlanningSettings::eventDefaults)(RegionMode::automatic,p.inputIdentity);c.settings.eventFeatures.hopMs=5;c.identity="stress";RegionFormation formation;formation.nominations.resize(8);
  for(int n=0;n<8;++n){PlanningRoot root;root.hint={int64_t(100+n*1200)*48000,int64_t(1100+n*1200)*48000};root.allowed=root.hint;c.roots.push_back(root);for(int k=0;k<12;++k)formation.nominations[n].push_back({root.hint.begin+int64_t(k+1)*70*48000,1,"bounded nomination"});}
- EventFeatureCollector stress(c,formation,*a,{measurement::Role::left,measurement::Role::right},5,"stress","source",regionPlanIdentity(p,0));expect(stress.reservedBytes()<=10*1024*1024,"eight-root three-hour-sized 5ms reservation fits without PCM decode");
- auto row=juce::var(new juce::DynamicObject());row.getDynamicObject()->setProperty("three_hour_feature_reserved",int64_t(stress.reservedBytes()));cases.add(row);
+ event_allocation::Scope heap;EventFeatureCollector stress(c,formation,*a,{measurement::Role::left,measurement::Role::right},5,"stress","source",regionPlanIdentity(p,0));expect(stress.reservedBytes()<=10*1024*1024,"eight-root three-hour-sized 5ms reservation fits without PCM decode");
+ const auto actual=heap.stop();if(event_allocation::Scope::supported)expect(heap.valid()&&actual<=10*1024*1024,"actual worst reserved feature heap fits 10 MiB");
+ auto row=juce::var(new juce::DynamicObject());row.getDynamicObject()->setProperty("actual_feature_peak_heap_bytes",int64_t(actual));row.getDynamicObject()->setProperty("three_hour_feature_reserved",int64_t(stress.reservedBytes()));cases.add(row);
 }
 StandaloneSessionModel programme(const juce::File& root,int channels,bool heterogeneous=false)
 {
@@ -117,12 +122,12 @@ juce::File modifiedCore(const juce::File& from,const juce::File& to,const std::f
     auto out=to.createOutputStream();expect(bool(out),"owned session mutation stream");out->write("LSSESS01",8);out->writeInt64(juce::int64(text.size()));const auto hash=juce::SHA256(text.data(),text.size()).toHexString();out->write(hash.toRawUTF8(),64);out->write(text.data(),text.size());out->write(data+80+size,bytes.getSize()-80-size);out->flush();expect(out->getStatus().wasOk(),"exact session core checksum");return to;
 }
 
-void workflow(const juce::File& root,int channels,bool heterogeneous,bool fallback=false)
+void workflow(const juce::File& root,int channels,bool heterogeneous,bool fallback=false,bool inner=false)
 {
  auto s=programme(root,channels,heterogeneous);auto requirements=s.jobRequirements;requirements.maximumLraTenths=49;requirements.provenance="Event workflow test";juce::String error;expect(s.setJobRequirements(requirements,error),"test requirement");
- auto settings=RegionPlanningSettings::eventDefaults(RegionMode::automatic,sectionInputIdentity(s.measurementContext(MeasurementDomain::source)));settings.allowAutomaticMargins=true;settings.leftMarginMs=settings.rightMarginMs=1000;if(fallback){settings=RegionPlanningSettings::eventDefaults(RegionMode::selection,settings.inputIdentity);settings.selection={int64_t(48000)*302/10,int64_t(48000)*36};settings.allowGlobal=true;}expect(s.setRegionPlanning(settings,error),"explicit event preference");auto policy=s.proposalPolicy;policy.durationThousandths=600;expect(s.setProposalPolicy(policy,error),"explicit 60 percent experiment, default unchanged");
- const auto original=s;const auto request=s.sectionProposalRequest();JobControl job;auto outcome=generateSectionProposal(request,job);if(!outcome.value)std::cerr<<outcome.message<<std::endl;expect(bool(outcome.value),"event service complete");auto proposed=*outcome.value;root.getChildFile("proposal.txt").replaceWithText(proposed->text());
- expect(proposed->methodVersion()==eventSearchVersion&&proposed->passes()<=3,"versioned bounded service");auto review=proposed->regionReview();expect(review&&review->eventEvidence&&review->proxyEvaluations<=64&&review->planningBytes<=64*1024*1024,"bounded auxiliary/formation/search evidence");expect(!proposed->assessment(),"private full populations not retained");
+ const auto defaults=inner?RegionPlanningSettings::innerDefaults:RegionPlanningSettings::eventDefaults;auto settings=defaults(RegionMode::automatic,sectionInputIdentity(s.measurementContext(MeasurementDomain::source)));settings.allowAutomaticMargins=true;settings.leftMarginMs=settings.rightMarginMs=1000;if(fallback){settings=defaults(RegionMode::selection,settings.inputIdentity);settings.selection={int64_t(48000)*302/10,int64_t(48000)*36};settings.allowGlobal=true;}expect(s.setRegionPlanning(settings,error),"explicit event preference");auto policy=s.proposalPolicy;policy.durationThousandths=600;expect(s.setProposalPolicy(policy,error),"explicit 60 percent experiment, default unchanged");
+ const auto original=s;const auto request=s.sectionProposalRequest();JobControl job;event_allocation::Scope allocations;auto outcome=generateSectionProposal(request,job);if(!outcome.value)std::cerr<<outcome.message<<std::endl;expect(bool(outcome.value),"event service complete");auto proposed=*outcome.value;root.getChildFile("proposal.txt").replaceWithText(proposed->text());
+ expect(proposed->methodVersion()==settings.methodVersion()&&proposed->passes()<=3,"versioned bounded service");auto review=proposed->regionReview();expect(review&&review->eventEvidence&&review->proxyEvaluations<=64&&review->planningBytes<=64*1024*1024,"bounded auxiliary/formation/search evidence");expect(!proposed->assessment(),"private full populations not retained");
  expect(s.job.begin(JobStage::proposal,s.revision),"ordinary UI job begins after request capture");auto ticket=s.job.ticket;expect(s.job.finish(ticket,s.revision,ErrorCode::none,"test complete"),"ordinary completion ticket accepted");expect(s.acceptSectionProposal(proposed),"matching immutable completion");expect(s.revision==original.revision&&s.currentState.analysis==original.currentState.analysis,"planning preserves Current");
  size_t passing=0;for(auto& a:review->attempts){expect(a.receipt&&a.receipt->measured().momentary.empty()&&a.receipt->measured().shortTerm.empty()&&a.receipt->measured().lraWindows.empty(),"compact receipt holds no window populations");if(a.evaluation.verdict==Verdict::pass)++passing;}
  expect(passing>0,"representative candidate has measured passing alternative");
@@ -136,9 +141,11 @@ void workflow(const juce::File& root,int channels,bool heterogeneous,bool fallba
  s.setOutputRoute(0,-1);expect(s.canApplySectionProposal(),"monitor muting preserves all-channel receipt");expect(s.applySectionProposal()&&s.currentStateNeedsRemeasurement(),"explicit Apply makes Current unverified");
  const auto measured=measuredComposition(s,MeasurementDomain::currentState);const auto& expected=proposed->eventAssessment()->measured();expect(measured.detail.integrated.value==expected.integrated.value&&measured.detail.lra.value==expected.lra.value&&measured.detail.channelTruePeaks==expected.channelTruePeaks&&measured.detail.channelSamplePeaks==expected.channelSamplePeaks&&measured.detail.truePeakEighthFrames==expected.truePeakEighthFrames&&measured.detail.samplePeakFrames==expected.samplePeakFrames,"independent Current exact scalar and every-channel peak/location agreement");
  expect(s.evaluation(MeasurementDomain::currentState).verdict==Verdict::pass,"independent Current passes");
- auto history=decodeAppliedExplanation(encodeAppliedExplanation(*s.lastAppliedExplanation),job);expect(history&&history->method==eventSearchVersion&&history->regionSettings->digest()==settings.digest()&&history->narrative.contains("Selected passing alternative"),"attachment3 keeps selection explanation and independent definition");
- const auto path=root.getChildFile("session.levelscope");expect(sf::save(sf::capture(s),path,job).succeeded(),"schema10 session save");auto read=sf::read(path,job);expect(read.document&&read.document->loadedSchema==10,"explicit document10/programme9 pairing");auto opened=sf::verify(*read.document,job);expect(opened.prepared&&!opened.prepared->model.sectionProposal&&opened.prepared->model.lastAppliedExplanation,"reopen retains history not private Apply authority");
+ auto history=decodeAppliedExplanation(encodeAppliedExplanation(*s.lastAppliedExplanation),job);expect(history&&history->method==settings.methodVersion()&&history->regionSettings->digest()==settings.digest()&&history->narrative.contains("Selected passing alternative"),"versioned history keeps selection explanation and independent definition");
+ const auto path=root.getChildFile("session.levelscope");expect(sf::save(sf::capture(s),path,job).succeeded(),"versioned session save");auto read=sf::read(path,job);expect(read.document&&read.document->loadedSchema==(inner?11:10),"document version follows method");auto opened=sf::verify(*read.document,job);expect(opened.prepared&&!opened.prepared->model.sectionProposal&&opened.prepared->model.lastAppliedExplanation,"reopen retains history not private Apply authority");
+ const auto workflowBytes=allocations.stop();if(event_allocation::Scope::supported)expect(allocations.valid()&&workflowBytes<=64*1024*1024,"measured concurrent workflow heap through history and reopen fits 64 MiB");
  auto oldPath=modifiedCore(path,root.getChildFile("bad-schema9.levelscope"),[](juce::var& v){v.getDynamicObject()->setProperty("schema",9);});expect(!sf::read(oldPath,job).succeeded(),"schema9 cannot claim new event settings");
+ if(inner){auto forged=modifiedCore(path,root.getChildFile("bad-schema10.levelscope"),[](juce::var& v){v.getDynamicObject()->setProperty("schema",10);});expect(!sf::read(forged,job).succeeded(),"schema 10 refuses settings 3");}
  auto destination=root.getChildFile("export");destination.createDirectory();auto rendered=ex::render(ex::capture(s),destination,job);expect(rendered.value&&ex::artifactEvaluation(**rendered.value,ex::capture(s)).verdict==Verdict::pass&&(*rendered.value)->analysis().context.processing.staticGainDb==0,"finalized PCM export independently measured without second gain");
  const auto noop=generateSectionProposal(s.sectionProposalRequest(),job);expect(noop.value&&(*noop.value)->status()==SectionProposalStatus::noChange&&(*noop.value)->passes()==0,"already passing all requirements remains no-op");
  JobControl early;early.cancel=true;expect(!generateSectionProposal(request,early).value,"pre-cancelled proposal cannot authorize");JobControl cancel;std::atomic<bool> done{false};std::thread interrupter([&]{while(!done){if(cancel.progress>=.15f){cancel.cancel=true;break;}std::this_thread::sleep_for(std::chrono::milliseconds(1));}});auto cancelled=generateSectionProposal(request,cancel);done=true;interrupter.join();expect(!cancelled.value&&cancelled.error==ErrorCode::cancelled,"cancel auxiliary collection yields no partial authority");
@@ -147,17 +154,36 @@ void workflow(const juce::File& root,int channels,bool heterogeneous,bool fallba
   JobControl late;std::atomic<bool> ended{false};std::thread stop([&]{while(!ended){if(late.progress>=.8f){late.cancel=true;break;}std::this_thread::sleep_for(std::chrono::milliseconds(1));}});auto stopped=generateSectionProposal(request,late);ended=true;stop.join();expect(!stopped.value&&stopped.error==ErrorCode::cancelled,"cancel third assessment discards earlier passing Apply authority");
   auto missing=request;const auto file=original.sourceDocument.file;auto moved=root.getChildFile("owned-temporarily-missing.wav");expect(file.moveFileTo(moved),"move only owned fixture");const auto staleError=validateEventRegionProposalForApply(missing,*proposed);const bool restored=moved.moveFileTo(file);expect(restored&&staleError.isNotEmpty(),"missing source cannot use old measured receipt");
  }
- auto row=juce::var(new juce::DynamicObject());auto* o=row.getDynamicObject();o->setProperty("channels",channels);o->setProperty("passes",proposed->passes());o->setProperty("proxies",int(review->proxyEvaluations));o->setProperty("feature_high_water",int64_t(review->featureHighWaterBytes));o->setProperty("planning_bytes",int64_t(review->planningBytes));o->setProperty("planning_seconds",review->planningSeconds);o->setProperty("extraction_seconds",review->sidecarSeconds);o->setProperty("outcome",proposed->outcomeTitle());cases.add(row);
+ auto row=juce::var(new juce::DynamicObject());auto* o=row.getDynamicObject();o->setProperty("channels",channels);o->setProperty("actual_workflow_peak_heap_bytes",int64_t(workflowBytes));o->setProperty("passes",proposed->passes());o->setProperty("proxies",int(review->proxyEvaluations));o->setProperty("feature_high_water",int64_t(review->featureHighWaterBytes));o->setProperty("planning_bytes",int64_t(review->planningBytes));o->setProperty("planning_seconds",review->planningSeconds);o->setProperty("extraction_seconds",review->sidecarSeconds);o->setProperty("outcome",proposed->outcomeTitle());cases.add(row);
 }
-void population()
+void population(bool inner=false,const juce::File& root={})
 {
+    event_allocation::Scope allocations;
+    StandaloneSessionModel retained;std::shared_ptr<const SectionProposalResult> retainedResult;
+    std::vector<uint8_t> history;juce::String reviewText;
+    if(inner)
+    {
+        retained=programme(root,2);juce::String error;JobControl job;
+        auto req=retained.jobRequirements;req.maximumLraTenths=49;req.provenance="Concurrent resource control";
+        auto settings=RegionPlanningSettings::innerDefaults(RegionMode::automatic,sectionInputIdentity(retained.measurementContext(MeasurementDomain::source)));
+        settings.allowAutomaticMargins=true;settings.leftMarginMs=settings.rightMarginMs=1000;
+        auto policy=retained.proposalPolicy;policy.durationThousandths=600;
+        expect(retained.setJobRequirements(req,error)&&retained.setRegionPlanning(settings,error)&&retained.setProposalPolicy(policy,error),"explicit stress settings");
+        auto result=generateSectionProposal(retained.sectionProposalRequest(),job);
+        expect(bool(result.value),"complete measured service for concurrent resource test");
+        retainedResult=*result.value;const auto review=retainedResult->regionReview();
+        expect(review&&review->attempts.size()==3,"retain all three actual assessment receipts");
+        auto pass=std::find_if(review->attempts.begin(),review->attempts.end(),[](const auto& a){return a.evaluation.verdict==Verdict::pass;});
+        expect(pass!=review->attempts.end()&&retained.acceptSectionProposal(retainedResult)&&retained.selectMeasuredRegionAlternative(review->resultIdentity,pass->attemptIdentity)&&retained.applySectionProposal(),"actual selected review and history");
+        reviewText=review->text();history=encodeAppliedExplanation(*retained.lastAppliedExplanation);
+    }
     auto p=unity(10800);auto a=std::make_shared<ProgramAnalysis>();a->snapshotIdentity="stress";a->sampleRate=p.sampleRate;a->frames=p.frames;a->p10=a->p95=-40.691;
     PredictionSidecar sidecar;sidecar.sampleRate=p.sampleRate;sidecar.frames=p.frames;sidecar.channels=2;sidecar.roles={measurement::Role::left,measurement::Role::right};sidecar.baselineSnapshot="stress";sidecar.baselinePlan=regionPlanIdentity(p,0);
     const int64_t step=p.sampleRate/10;sidecar.bins.reserve(108015);
     for(int64_t begin=0;begin<p.frames+p.sampleRate*3/2;begin+=step){PredictionBin b;b.begin=begin;b.end=begin+step;b.drain=begin>=p.frames;b.weightedEnergy=double(step)*1e-4;sidecar.bins.push_back(b);}
     for(int64_t end=p.sampleRate*4/10;end<=p.frames;end+=step){DiagnosticWindow w;w.begin=end-p.sampleRate*4/10;w.end=end;w.energy=1e-4;w.included=true;w.lufs=-40.691;a->momentary.push_back(w);}
     for(int64_t end=p.sampleRate*3;end<=p.frames;end+=step){DiagnosticWindow w;w.begin=end-p.sampleRate*3;w.end=end;w.energy=1e-4;w.included=true;w.lufs=-40.691;a->shortTerm.push_back(w);a->lraWindows.push_back(w);}
-    RegionConstraints c;c.frames=p.frames;c.sampleRate=p.sampleRate;c.settings=RegionPlanningSettings::eventDefaults(RegionMode::automatic,p.inputIdentity);c.settings.eventFeatures.hopMs=5;c.identity="combined-resource";RegionFormation formation;formation.nominations.resize(8);
+    RegionConstraints c;c.frames=p.frames;c.sampleRate=p.sampleRate;c.settings=(inner?RegionPlanningSettings::innerDefaults:RegionPlanningSettings::eventDefaults)(RegionMode::automatic,p.inputIdentity);c.settings.eventFeatures.hopMs=5;c.identity="combined-resource";RegionFormation formation;formation.nominations.resize(8);
     for(int n=0;n<8;++n){PlanningRoot root;root.hint={int64_t(100+n*1200)*48000,int64_t(1100+n*1200)*48000};root.allowed=root.hint;c.roots.push_back(root);for(int k=0;k<12;++k)formation.nominations[n].push_back({root.hint.begin+int64_t(k+1)*70*48000,1,"bounded nomination"});}
     EventFeatureCollector featureReservation(c,formation,*a,{measurement::Role::left,measurement::Role::right},5,"combined","source",regionPlanIdentity(p,0));
     const size_t scratch=sidecar.bins.size()*2*sizeof(double)+(a->momentary.size()+a->shortTerm.size()+a->lraWindows.size())*sizeof(measurement::Window)+a->lraWindows.size()*2*sizeof(double)+1024*1024;
@@ -175,26 +201,69 @@ void population()
 #endif
     const auto cancelStart=std::chrono::steady_clock::now();RegionPlan changed;changed.envelope=p;changed.globalDb=1;auto cancelled=predictRegionPlan(*a,sidecar,p,0,changed,[]{return true;});
     expect(cancelled.cancelled&&std::chrono::duration<double>(std::chrono::steady_clock::now()-cancelStart).count()<1,"large-population cancellation within one second");
-    auto row=juce::var(new juce::DynamicObject());row.getDynamicObject()->setProperty("synthetic_population_seconds",10800);row.getDynamicObject()->setProperty("64_proxy_seconds",seconds);row.getDynamicObject()->setProperty("analysis_sidecar_bytes",int64_t(a->storageBytes()+sidecar.storageBytes()));row.getDynamicObject()->setProperty("concurrent_reserved_and_scratch_bytes",int64_t(concurrent));row.getDynamicObject()->setProperty("maximum_feature_reservation",int64_t(featureReservation.reservedBytes()));cases.add(row);
+    const auto actualBytes=allocations.stop();if(event_allocation::Scope::supported)expect(allocations.valid()&&actualBytes<=64*1024*1024,"actual simultaneous population, feature and model heap blocks fit 64 MiB");
+    auto row=juce::var(new juce::DynamicObject());row.getDynamicObject()->setProperty("actual_peak_heap_bytes",int64_t(actualBytes));row.getDynamicObject()->setProperty("concurrent_history_bytes",int64_t(history.size()));row.getDynamicObject()->setProperty("concurrent_review_utf8_bytes",int64_t(reviewText.getNumBytesAsUTF8()));row.getDynamicObject()->setProperty("synthetic_population_seconds",10800);row.getDynamicObject()->setProperty("64_proxy_seconds",seconds);row.getDynamicObject()->setProperty("analysis_sidecar_bytes",int64_t(a->storageBytes()+sidecar.storageBytes()));row.getDynamicObject()->setProperty("concurrent_reserved_and_scratch_bytes",int64_t(concurrent));row.getDynamicObject()->setProperty("maximum_feature_reservation",int64_t(featureReservation.reservedBytes()));cases.add(row);
 }
 
-void external(const juce::File& root,const juce::File& file,int experiment)
+#include "InnerEventEvidenceChecks.h"
+#include "InnerEventControlChecks.h"
+#include "InnerListeningChecks.h"
+void external(const juce::File& root,const juce::File& file,int experiment,bool listening)
 {
  expect(root.createDirectory().wasOk(),"new read-only media comparison root");JobControl job;auto media=validateMedia(file,job);expect(media.succeeded()&&media.media.frames<=int64_t(media.media.sampleRate)*600,"bounded existing programme, no full film");
  StandaloneSessionModel s;expect(s.setValidatedSource(file,media.media),"adopt verified existing input");s.sourceDocument.layout=layoutFor(media.media.channels);s.setSelectedTargetProfileIndex(1);s.setProgrammeApplicability(Applicability::preProducedLinearProgramme);measuredComposition(s,MeasurementDomain::source);s.synchronizeSections();
  auto requirements=s.jobRequirements;requirements.maximumLraTenths=media.media.channels==6?150:media.media.frames==28800000?67:180;requirements.provenance="Predeclared development comparison, not delivery default";juce::String error;expect(s.setJobRequirements(requirements,error),"external requirement");
- auto settings=experiment==0?RegionPlanningSettings::defaults(RegionMode::automatic,sectionInputIdentity(s.measurementContext(MeasurementDomain::source))):RegionPlanningSettings::eventDefaults(RegionMode::automatic,sectionInputIdentity(s.measurementContext(MeasurementDomain::source)));
- if(experiment>=2){settings.allowAutomaticMargins=true;settings.leftMarginMs=settings.rightMarginMs=1000;}expect(s.setRegionPlanning(settings,error),"explicit version and margins");auto policy=s.proposalPolicy;policy.durationThousandths=experiment==3?400:experiment>=4?600:200;expect(s.setProposalPolicy(policy,error),"explicit duration comparison");
- auto before=s.currentState.analysis;auto result=generateSectionProposal(s.sectionProposalRequest(),job);if(!result.value)std::cerr<<result.message<<std::endl;expect(bool(result.value),"bounded external comparison completes safely");auto proposed=*result.value;root.getChildFile("proposal.txt").replaceWithText(proposed->text());expect(s.currentState.analysis==before&&!s.currentStateNeedsRemeasurement(),"external comparison leaves Current untouched");auto review=proposed->regionReview();expect(review&&proposed->passes()<=3&&review->proxyEvaluations<=64&&review->planningBytes<=64*1024*1024,"external shared budgets");
+ const auto defaults=experiment>=5?RegionPlanningSettings::innerDefaults:RegionPlanningSettings::eventDefaults;
+ auto settings=experiment==0?RegionPlanningSettings::defaults(RegionMode::automatic,sectionInputIdentity(s.measurementContext(MeasurementDomain::source))):defaults(RegionMode::automatic,sectionInputIdentity(s.measurementContext(MeasurementDomain::source)));
+ if(experiment>=2&&experiment!=5){settings.allowAutomaticMargins=true;settings.leftMarginMs=settings.rightMarginMs=1000;}expect(s.setRegionPlanning(settings,error),"explicit version and margins");auto policy=s.proposalPolicy;policy.durationThousandths=experiment==3?400:(experiment==4||experiment==7)?600:200;expect(s.setProposalPolicy(policy,error),"explicit duration comparison");
+ auto before=s.currentState.analysis;event_allocation::Scope allocations;auto result=generateSectionProposal(s.sectionProposalRequest(),job);if(!result.value)std::cerr<<result.message<<std::endl;expect(bool(result.value),"bounded external comparison completes safely");const auto actualBytes=allocations.stop();if(event_allocation::Scope::supported)expect(allocations.valid()&&actualBytes<=64*1024*1024,"actual entire external assessment heap within planning limit");auto proposed=*result.value;root.getChildFile("proposal.txt").replaceWithText(proposed->text());expect(s.currentState.analysis==before&&!s.currentStateNeedsRemeasurement(),"external comparison leaves Current untouched");auto review=proposed->regionReview();expect(review&&proposed->passes()<=3&&review->proxyEvaluations<=64&&review->planningBytes<=64*1024*1024,"external shared budgets");
  if(proposed->status()==SectionProposalStatus::ready)expect(validateRegionProposalForApply(s.sectionProposalRequest(),*proposed).isEmpty(),"any ready external result has exact measured authority");
- auto row=juce::var(new juce::DynamicObject());auto* o=row.getDynamicObject();o->setProperty("content_sha256",media.media.sha256);o->setProperty("frames",media.media.frames);o->setProperty("experiment",experiment);o->setProperty("outcome",proposed->outcomeTitle());o->setProperty("passes",proposed->passes());o->setProperty("proxies",int(review->proxyEvaluations));o->setProperty("planning_seconds",review->planningSeconds);o->setProperty("extraction_seconds",review->sidecarSeconds);o->setProperty("planning_bytes",int64_t(review->planningBytes));o->setProperty("feature_high_water",int64_t(review->featureHighWaterBytes));cases.add(row);
+ juce::Array<juce::var> attempts;
+ for(size_t index=0;index<review->attempts.size();++index)
+ {
+     const auto& attempt=review->attempts[index];if(!attempt.receipt)continue;
+     juce::var item(new juce::DynamicObject());auto* obj=item.getDynamicObject();
+     const auto& m=attempt.receipt->measured();
+     obj->setProperty("plan",attempt.plan.identity);obj->setProperty("family",attempt.family);
+     obj->setProperty("coverage",eventCoverageName(attempt.coverage.category));obj->setProperty("pass",attempt.evaluation.verdict==Verdict::pass);
+     obj->setProperty("receipt",attempt.receipt->identity());obj->setProperty("attempt",attempt.attemptIdentity);
+     obj->setProperty("snapshot",attempt.snapshotIdentity);obj->setProperty("global_db",attempt.plan.globalDb);
+     obj->setProperty("affected_frames",attempt.plan.activity.affectedFrames);
+     const auto metric=[&](const char* key,std::optional<double> value){if(value)obj->setProperty(key,*value);};
+     metric("il",m.integrated.value);metric("lra",m.lra.value);metric("tp",m.truePeak.value);metric("m_max",m.momentaryMax.value);metric("s_max",m.shortTermMax.value);
+     metric("p10",m.p10);metric("p95",m.p95);metric("lra_gate",m.lraRelativeGate);metric("il_gate",m.integratedRelativeGate);
+     obj->setProperty("il_included",int(m.integratedIncluded));obj->setProperty("lra_included",int(m.lraIncluded));
+     juce::Array<juce::var> peaks;for(size_t n=0;n<m.channelTruePeaks.size();++n){juce::var pk(new juce::DynamicObject());pk.getDynamicObject()->setProperty("linear",m.channelTruePeaks[n]);pk.getDynamicObject()->setProperty("eighth_frame",m.truePeakEighthFrames[n]);peaks.add(pk);}obj->setProperty("ordered_true_peaks",peaks);
+     if(listening)
+     {
+         const auto wave="attempt-"+juce::String(index+1)+".wav";
+         writeListeningWave(root.getChildFile(wave),file,attempt.receipt->context(),m);
+         obj->setProperty("listening_pcm",wave);
+     }
+     if(listening&&attempt.evaluation.verdict==Verdict::pass)
+     {
+         auto copy=s;
+         expect(copy.acceptSectionProposal(proposed)&&copy.selectMeasuredRegionAlternative(review->resultIdentity,attempt.attemptIdentity)&&copy.applySectionProposal(),"explicit measured selection and stopped Apply on listening copy");
+         const auto fresh=measuredComposition(copy,MeasurementDomain::currentState);
+         expect(fresh.detail.integrated.value==m.integrated.value&&fresh.detail.lra.value==m.lra.value&&fresh.detail.channelTruePeaks==m.channelTruePeaks&&fresh.detail.truePeakEighthFrames==m.truePeakEighthFrames,"independent listening Current reproduces exact assessment");
+         copy.auditionDomain=MeasurementDomain::currentState;
+         const auto name="attempt-"+juce::String(index+1)+".levelscope";const auto destination=root.getChildFile(name);
+         expect(!destination.exists()&&sf::save(sf::capture(copy),destination,job).succeeded(),"save new independently measured listening session");
+         auto read=sf::read(destination,job);expect(read.document&&read.document->loadedSchema==(experiment>=5?11:10),"validate listening session container");
+         auto verified=sf::verify(*read.document,job);expect(verified.prepared&&!verified.prepared->model.sectionProposal&&verified.prepared->model.lastAppliedExplanation,"reopened listening copy has documentary history only");
+         obj->setProperty("listening_session",name);obj->setProperty("current_snapshot",fresh.identity);
+     }
+     attempts.add(item);
+ }
+ if(listening&&experiment==6)expect(sf::save(sf::capture(s),root.getChildFile("source-reference.levelscope"),job).succeeded(),"save neutral Source reference");
+ auto row=juce::var(new juce::DynamicObject());auto* o=row.getDynamicObject();o->setProperty("actual_assessment_peak_heap_bytes",int64_t(actualBytes));o->setProperty("settings",settings.encode());o->setProperty("attempts",attempts);o->setProperty("source_snapshot",s.sectionProposalRequest().source->identity);o->setProperty("current_snapshot",before->identity);o->setProperty("content_sha256",media.media.sha256);o->setProperty("frames",media.media.frames);o->setProperty("experiment",experiment);o->setProperty("outcome",proposed->outcomeTitle());o->setProperty("passes",proposed->passes());o->setProperty("proxies",int(review->proxyEvaluations));o->setProperty("planning_seconds",review->planningSeconds);o->setProperty("extraction_seconds",review->sidecarSeconds);o->setProperty("planning_bytes",int64_t(review->planningBytes));o->setProperty("feature_high_water",int64_t(review->featureHighWaterBytes));cases.add(row);
 }
 
 }
 int main(int argc,char** argv)
 {
- juce::ScopedJuceInitialiser_GUI gui;juce::String group,root,output,input;int experiment=0;bool passed=false;juce::String failure;
- for(int n=1;n<argc;++n){juce::String a(argv[n]);if(a=="--group"&&n+1<argc)group=argv[++n];else if(a=="--root"&&n+1<argc)root=argv[++n];else if(a=="--output"&&n+1<argc)output=argv[++n];else if(a=="--input"&&n+1<argc)input=argv[++n];else if(a=="--experiment"&&n+1<argc)experiment=juce::String(argv[++n]).getIntValue();else return 2;}
- try{if(group=="core")core();else if(group=="features")features();else if(group=="stereo")workflow(juce::File(root),2,false);else if(group=="surround")workflow(juce::File(root),6,false);else if(group=="heterogeneous")workflow(juce::File(root),2,true);else if(group=="fallback")workflow(juce::File(root),2,false,true);else if(group=="population")population();else if(group=="external")external(juce::File(root),juce::File(input),experiment);else throw std::runtime_error("Explicit required event test group missing");passed=true;}catch(const std::exception& e){failure=e.what();}
+ juce::ScopedJuceInitialiser_GUI gui;juce::String group,root,output,input;int experiment=0;bool listening=false;bool passed=false;juce::String failure;
+ for(int n=1;n<argc;++n){juce::String a(argv[n]);if(a=="--listening")listening=true;else if(a=="--group"&&n+1<argc)group=argv[++n];else if(a=="--root"&&n+1<argc)root=argv[++n];else if(a=="--output"&&n+1<argc)output=argv[++n];else if(a=="--input"&&n+1<argc)input=argv[++n];else if(a=="--experiment"&&n+1<argc)experiment=juce::String(argv[++n]).getIntValue();else return 2;}
+ try{if(group=="saved-listening")savedListening(juce::File(root),juce::File(input));else if(group=="inner-features")features(true);else if(group=="inner-controls")innerControls();else if(group=="inner-stereo")workflow(juce::File(root),2,false,false,true);else if(group=="inner-surround")workflow(juce::File(root),6,false,false,true);else if(group=="inner-fallback")workflow(juce::File(root),2,false,true,true);else if(group=="inner-population")population(true,juce::File(root));else if(group=="inner-evidence")inspectInnerMusic(juce::File(root),juce::File(input));else if(group=="core")core();else if(group=="features")features();else if(group=="stereo")workflow(juce::File(root),2,false);else if(group=="surround")workflow(juce::File(root),6,false);else if(group=="heterogeneous")workflow(juce::File(root),2,true);else if(group=="fallback")workflow(juce::File(root),2,false,true);else if(group=="population")population();else if(group=="external")external(juce::File(root),juce::File(input),experiment,listening);else throw std::runtime_error("Explicit required event test group missing");passed=true;}catch(const std::exception& e){failure=e.what();}
  auto v=juce::var(new juce::DynamicObject());auto* o=v.getDynamicObject();o->setProperty("suite","M20 complete-event Logic checks");o->setProperty("group",group);o->setProperty("passed",passed);o->setProperty("failure",failure);o->setProperty("checks",checks);o->setProperty("cases",cases);o->setProperty("build",LEVELSCOPE_MEASUREMENT_BUILD);o->setProperty("devices_opened",false);o->setProperty("combined_qualified",false);if(output.isNotEmpty())juce::File(output).replaceWithText(juce::JSON::toString(v,true));std::cout<<(passed?"PASS ":"FAIL ")<<group<<" "<<failure<<std::endl;return passed?0:1;
 }

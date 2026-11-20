@@ -1,4 +1,5 @@
 #include "EventPlanning.h"
+#include "InnerEventTracker.h"
 #include <algorithm>
 #include <cmath>
 #include <numeric>
@@ -20,7 +21,7 @@ double median(std::array<double,64> v,size_t count)
 size_t EventEvidence::storageBytes()const
 {
     size_t n=sizeof(*this)+roles.capacity()*sizeof(measurement::Role)+cells.capacity()*sizeof(EventCell)
-        +retainedContexts.capacity()*sizeof(RegionSpan)+groups.capacity()*sizeof(EventGroup)+(incompleteRoots.capacity()+7)/8;
+        +attacks.capacity()*sizeof(AttackWitness)+retainedContexts.capacity()*sizeof(RegionSpan)+groups.capacity()*sizeof(EventGroup)+(incompleteRoots.capacity()+7)/8;
     for(const auto& g:groups)n+=(g.id.getNumBytesAsUTF8()+g.reason.getNumBytesAsUTF8())*4;
     n+=needCuts.capacity()*sizeof(std::vector<RegionCut>);for(const auto& row:needCuts){n+=row.capacity()*sizeof(RegionCut);for(const auto& cut:row)n+=cut.reason.getNumBytesAsUTF8()*4;}
     for(const auto* s:{&binding,&sourceSnapshot,&currentSnapshot,&baselinePlan,&constraintsIdentity,&definitionDigest,&identity})n+=s->getNumBytesAsUTF8()*4;
@@ -49,6 +50,7 @@ struct EventFeatureCollector::Impl
     const ProgramAnalysis& currentAnalysis;
     double ceiling=0,ah=0,al=0;
     std::shared_ptr<EventEvidence> data=std::make_shared<EventEvidence>();
+    std::unique_ptr<InnerEventTracker> inner;
     std::array<Filter,capacity> filters;
     std::array<Hop,16> hops;
     std::array<Feature,64> backgrounds;
@@ -59,9 +61,9 @@ struct EventFeatureCollector::Impl
     bool finished=false;
     Impl(const RegionConstraints& c,const RegionFormation& formation,const ProgramAnalysis& a,
         const std::vector<measurement::Role>& roles,double target,juce::String binding,
-        juce::String sourceSnapshot,juce::String before):constraints(c),currentAnalysis(a),ceiling(target)
+        juce::String sourceSnapshot,juce::String before,const measurement::Result* measuredSource):constraints(c),currentAnalysis(a),ceiling(target)
     {
-        require(c.error.isEmpty()&&c.settings.schema==2&&c.roots.size()<=8,"Invalid event feature constraints");
+        require(c.error.isEmpty()&&c.settings.schema>=2&&c.roots.size()<=8,"Invalid event feature constraints");
         require(a.sampleRate==c.sampleRate&&a.frames==c.frames&&roles.size()<=capacity&&roles.size()>0,"Event feature programme mismatch");
         require(std::isfinite(target)&&a.p10.has_value(),"Event feature need unavailable");
         data->binding=std::move(binding);data->sourceSnapshot=std::move(sourceSnapshot);data->currentSnapshot=a.snapshotIdentity;
@@ -85,8 +87,10 @@ struct EventFeatureCollector::Impl
         for(auto span:data->retainedContexts)cells+=size_t((span.end-span.begin)*1000/(int64_t(c.sampleRate)*hop)+3);
         const size_t groups=c.roots.size()*EventFeatureDefinition::maximumGroupsPerRoot;
         // Account worst-case bounded reason/ID storage before any large reservation.
-        const size_t planned=sizeof(Impl)+sizeof(EventEvidence)+cells*sizeof(EventCell)+groups*(sizeof(EventGroup)+2048)+16384;
+        const size_t innerBytes=c.settings.schema==3?sizeof(InnerEventTracker)+groups*sizeof(AttackWitness):0;
+        const size_t planned=sizeof(Impl)+innerBytes+sizeof(EventEvidence)+cells*sizeof(EventCell)+groups*(sizeof(EventGroup)+2048)+16384;
         require(planned<=EventFeatureDefinition::maximumBytes,"Event feature reservations exceed 10 MiB sub-budget");
+        if(c.settings.schema==3)inner=std::make_unique<InnerEventTracker>(c,a,measuredSource,target,*data);
         data->cells.reserve(cells);data->groups.reserve(groups);data->reservedBytes=planned;data->highWaterBytes=planned;
         constexpr double pi=3.141592653589793238462643383279502884;
         ah=std::exp(-2*pi*EventFeatureDefinition::hpHz/c.sampleRate);al=std::exp(-2*pi*EventFeatureDefinition::lowHz/c.sampleRate);
@@ -150,6 +154,7 @@ struct EventFeatureCollector::Impl
         require(std::isfinite(cell.broadband)&&std::isfinite(cell.low)&&std::isfinite(cell.current),"Non-finite event feature accumulation");
         const bool detail=std::any_of(data->retainedContexts.begin(),data->retainedContexts.end(),[&](auto s){return overlap(s,{cell.begin,cell.end});});
         if(detail){require(data->cells.size()<data->cells.capacity(),"Event detail reservation exhausted");data->cells.push_back(cell);}
+        if(inner)inner->begin(cell,accumulating.peakFrame,accumulating.peakChannel,feature.fast,feature.low,bg,bgLow);
         for(size_t r=0;r<constraints.roots.size();++r)
         {
             const auto& root=constraints.roots[r];const auto halo=int64_t(data->sampleRate)*3;auto& s=roots[r];
@@ -163,13 +168,19 @@ struct EventFeatureCollector::Impl
             const bool sustained=f&&position-s.fastStart>=int64_t(data->sampleRate)*80/1000;
             const bool corroborated=(dual||sustained)&&count==size_t(EventFeatureDefinition::backgroundMs/hopMs);
             const bool attack=(f||l)&&!s.latched;
+            if(inner)
+            {
+                auto earliest=std::max<int64_t>(0,s.fastStart-int64_t(data->sampleRate)*(20-hopMs)/1000);
+                if(dual)earliest=std::min(earliest,std::max<int64_t>(0,s.lowStart-int64_t(data->sampleRate)*(80-hopMs)/1000));
+                inner->observe(r,s.active?int(*s.active):-1,attack,fast||low,corroborated,earliest);
+            }
             if(!fast&&!low)s.latched=false;
             if(attack)
             {
                 s.latched=true;
                 if(!s.active)
                 {
-                    if(s.groups>=EventFeatureDefinition::maximumGroupsPerRoot){data->incompleteRoots[r]=true;++data->omittedGroups;continue;}
+                    if(s.groups>=EventFeatureDefinition::maximumGroupsPerRoot||(inner&&!data->reserveSummary(r))){data->incompleteRoots[r]=true;++data->omittedGroups;continue;}
                     ++s.groups;EventGroup g;g.root=r;
                     const auto firstFast=s.fastStart<0?position:std::max<int64_t>(0,s.fastStart-int64_t(data->sampleRate)*(20-hopMs)/1000);
                     const auto firstLow=s.lowStart<0?position:std::max<int64_t>(0,s.lowStart-int64_t(data->sampleRate)*(80-hopMs)/1000);
@@ -209,14 +220,15 @@ struct EventFeatureCollector::Impl
                 }
             }
         }
+        if(inner)inner->advance();
         backgrounds[backgroundCount%backgrounds.size()]=feature;++backgroundCount;
         accumulating={};accumulating.begin=position;++cellIndex;
         nextEnd=std::min(data->frames,(cellIndex+1)*int64_t(data->sampleRate)*hopMs/1000);
     }
 };
 EventFeatureCollector::EventFeatureCollector(const RegionConstraints& c,const RegionFormation& f,const ProgramAnalysis& a,
-    const std::vector<measurement::Role>& roles,double ceiling,juce::String binding,juce::String source,juce::String before)
-:impl(std::make_unique<Impl>(c,f,a,roles,ceiling,std::move(binding),std::move(source),std::move(before))){}
+    const std::vector<measurement::Role>& roles,double ceiling,juce::String binding,juce::String source,juce::String before,const measurement::Result* measuredSource)
+:impl(std::make_unique<Impl>(c,f,a,roles,ceiling,std::move(binding),std::move(source),std::move(before),measuredSource)){}
 EventFeatureCollector::~EventFeatureCollector()=default;
 void EventFeatureCollector::push(const float* const* source,const float* const* current,int count,const std::function<bool()>& cancelled)
 {
@@ -235,14 +247,16 @@ void EventFeatureCollector::push(const float* const* source,const float* const* 
         ++x.position;x.accumulating.end=x.position;if(x.position==x.nextEnd)x.emit();
     }
 }
-std::shared_ptr<const EventEvidence> EventFeatureCollector::finish()
+std::shared_ptr<const EventEvidence> EventFeatureCollector::finish(const PredictionSidecar* baseline,const std::function<bool()>& cancelled)
 {
     auto& x=*impl;if(x.finished)return x.data;require(x.position==x.data->frames,"Incomplete Source event pass");
     for(size_t r=0;r<x.constraints.roots.size();++r)x.finalizeGroup(r);
+    if(x.inner)x.inner->finish(baseline,cancelled);
     juce::String summaries;for(const auto& g:x.data->groups)summaries+=g.id+":"+juce::String(g.onset.begin)+":"+juce::String(g.decay.end)+":"+juce::String(int(g.corroborated))+":"+juce::String(int(g.incomplete))+":"+juce::String(int(g.needAssociated))+";";
+    if(x.inner)summaries+=x.data->innerDigest();
     const auto cellHash=juce::SHA256(x.data->cells.data(),x.data->cells.size()*sizeof(EventCell)).toHexString();
     x.data->identity=digest(x.data->binding+";"+x.data->sourceSnapshot+";"+x.data->currentSnapshot+";"+x.data->baselinePlan+";"+x.data->constraintsIdentity+";"+x.data->definitionDigest+";"+cellHash+";"+summaries);
-    x.data->highWaterBytes=std::max(x.data->reservedBytes,x.data->storageBytes()+sizeof(Impl));
+    x.data->highWaterBytes=std::max(x.data->reservedBytes,x.data->storageBytes()+sizeof(Impl)+(x.inner?sizeof(InnerEventTracker):0));
     require(x.data->highWaterBytes<=EventFeatureDefinition::maximumBytes,"Event high-water exceeds 10 MiB");
     x.finished=x.data->finished=true;return x.data;
 }

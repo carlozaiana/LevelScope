@@ -39,7 +39,7 @@ std::optional<ProcessingPlan> SectionProposalResult::previewPlan() const
 }
 SectionProposalOutcome generateSectionProposal(const SectionProposalRequest& r,JobControl& control,const SnapshotStorage& storage)
 {
-    if(r.regionSettings)return r.regionSettings->schema==2?generateEventRegionProposal(r,control,storage):generateRegionProposal(r,control,storage);
+    if(r.regionSettings)return r.regionSettings->schema>=2?generateEventRegionProposal(r,control,storage):generateRegionProposal(r,control,storage);
     if(r.currentContext.profile.limits.hasMaxLoudnessRange)return generateLraProposal(r,control,storage);
     auto out=std::shared_ptr<SectionProposalResult>(new SectionProposalResult);
     out->bound=r.binding();out->proposed=r.currentContext.processing;out->annotations=r.annotations;
