@@ -9,7 +9,7 @@ juce::var EventFeatureDefinition::encode()const
 {
     if(validationError().isNotEmpty())throw std::invalid_argument(validationError().toStdString());
     auto v=juce::var(new juce::DynamicObject());auto* o=v.getDynamicObject();
-    o->setProperty("version",eventFeaturesVersion);o->setProperty("filters","continuous-first-order-hp-lp-v1");
+    o->setProperty("version",innerEntrances?innerFeaturesVersion:eventFeaturesVersion);o->setProperty("filters","continuous-first-order-hp-lp-v1");
     o->setProperty("channels","non-lfe-energy-mean-and-role-witness-v1");
     o->setProperty("silence","separate-floor-onset-and-return-v1");
     for(auto p:{std::pair<const char*,int>{"hopMs",hopMs},{"hpHz",hpHz},{"lowHz",lowHz},
@@ -19,12 +19,27 @@ juce::var EventFeatureDefinition::encode()const
         {"lastAttackMs",lastAttackMs},{"decayDb",decayDb},{"decayPersistMs",decayPersistMs},
         {"returnDb",returnDb},{"returnPersistMs",returnPersistMs},{"contextMs",contextMs}})
         o->setProperty(p.first,p.second);
+    if(innerEntrances)
+    {
+        o->setProperty("predecessors",predecessors);
+        o->setProperty("referenceStepDb",referenceStepDb);
+        o->setProperty("momentaryStepLu",momentaryStepLu);
+        o->setProperty("neighbourhoodMs",neighbourhoodMs);
+        o->setProperty("comparableDb",comparableDb);
+        o->setProperty("recentReferences",recentReferences);
+        o->setProperty("attribution","included-window-excess-weighted-bin-share-v1");
+        o->setProperty("pairing","one-live-inner-directed-edges-v1");
+        o->setProperty("missing","retain-outer-report-incomplete-v1");
+        o->setProperty("rolePath","same-role-tentative-v1");
+        o->setProperty("eventLocations",6);
+        o->setProperty("innerProxySlots",8);
+    }
     return v;
 }
 EventFeatureDefinition EventFeatureDefinition::decode(const juce::var& v)
 {
     if(!v.isObject()||!v["hopMs"].isInt())throw std::invalid_argument("Missing explicit event feature definition");
-    EventFeatureDefinition out;out.hopMs=int(v["hopMs"]);const auto expected=out.encode();
+    EventFeatureDefinition out;out.hopMs=int(v["hopMs"]);out.innerEntrances=v["version"].toString()==innerFeaturesVersion;const auto expected=out.encode();
     if(v.getDynamicObject()->getProperties().size()!=expected.getDynamicObject()->getProperties().size())throw std::invalid_argument("Unknown event feature fields");
     for(const auto& p:expected.getDynamicObject()->getProperties())
         if(!v.hasProperty(p.name)||!v[p.name].equalsWithSameType(p.value))throw std::invalid_argument("Unsupported event feature hypothesis");

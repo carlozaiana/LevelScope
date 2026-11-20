@@ -88,11 +88,13 @@ RegionPlanningSettings RegionPlanningSettings::defaults(RegionMode mode,const ju
 {RegionPlanningSettings s;s.mode=mode;s.inputIdentity=input;s.allowGlobal=mode==RegionMode::automatic;return s;}
 RegionPlanningSettings RegionPlanningSettings::eventDefaults(RegionMode mode,const juce::String& input)
 {auto s=defaults(mode,input);s.schema=2;s.preferCompleteEvent=true;s.compareAlternatives=true;return s;}
+RegionPlanningSettings RegionPlanningSettings::innerDefaults(RegionMode mode,const juce::String& input)
+{auto settings=eventDefaults(mode,input);settings.schema=3;settings.eventFeatures.innerEntrances=true;return settings;}
 juce::String RegionPlanningSettings::validationError()const
 {
-    if((schema!=1&&schema!=2)||!hashValid(inputIdentity)||int(mode)<0||int(mode)>2)return "Unsupported region settings version, input or mode";
+    if((schema<1||schema>3||eventFeatures.innerEntrances!=(schema==3))||!hashValid(inputIdentity)||int(mode)<0||int(mode)>2)return "Unsupported region settings version, input or mode";
     if(schema==1&&(preferCompleteEvent||allowAutomaticMargins||eventFeatures.hopMs!=10))return "Legacy region settings cannot carry event permissions";
-    if(schema==2&&(!preferCompleteEvent||!compareAlternatives||eventFeatures.validationError().isNotEmpty()))return "Event preference requires explicit valid features and comparative assessment";
+    if(schema>=2&&(!preferCompleteEvent||!compareAlternatives||eventFeatures.validationError().isNotEmpty()))return "Event preference requires explicit valid features and comparative assessment";
     if(maximumSplits<0||maximumSplits>4||leftMarginMs<0||leftMarginMs>3000||leftMarginMs%100||rightMarginMs<0||rightMarginMs>3000||rightMarginMs%100
         ||minimumIntervalMs<500||minimumIntervalMs>10000||minimumIntervalMs%100||separationMs<0||separationMs>3000||separationMs%100
         ||needThresholdTenths<5||needThresholdTenths>30||persistenceMs<300||persistenceMs>3000||persistenceMs%100)return "Region controls outside documented range/steps";
@@ -112,8 +114,8 @@ juce::String RegionPlanningSettings::validationError()const
 V RegionPlanningSettings::encode()const
 {
     require(validationError().isEmpty(),validationError().toRawUTF8());auto v=object();
-    put(v,"schema",schema);put(v,"method",methodVersion());put(v,"constraints",schema==2?eventConstraintsVersion:regionConstraintsVersion);put(v,"formation",schema==2?eventFormationVersion:regionFormationVersion);put(v,"proxy",regionProxyVersion);put(v,"rank",schema==2?eventRankVersion:regionRankVersion);
-    if(schema==2){put(v,"boundaryPreference","prefer-complete-event");put(v,"automaticMargins",allowAutomaticMargins);put(v,"eventFeatures",eventFeatures.encode());put(v,"coverage",eventCoverageVersion);put(v,"schedule",eventScheduleVersion);}
+    put(v,"schema",schema);put(v,"method",methodVersion());put(v,"constraints",schema>=2?eventConstraintsVersion:regionConstraintsVersion);put(v,"formation",formationVersion());put(v,"proxy",regionProxyVersion);put(v,"rank",schema>=2?eventRankVersion:regionRankVersion);
+    if(schema>=2){put(v,"boundaryPreference","prefer-complete-event");put(v,"automaticMargins",allowAutomaticMargins);put(v,"eventFeatures",eventFeatures.encode());put(v,"coverage",coverageVersion());put(v,"schedule",scheduleVersion());}
     put(v,"input",inputIdentity);put(v,"mode",int(mode));put(v,"section",juce::String(sectionId));put(v,"selection",span(selection));
     put(v,"splitting",allowSplitting);put(v,"refinement",allowRefinement);put(v,"fillGap",fillShortGap);put(v,"global",allowGlobal);put(v,"compare",compareAlternatives);
     put(v,"splits",maximumSplits);put(v,"leftMs",leftMarginMs);put(v,"rightMs",rightMarginMs);put(v,"minimumMs",minimumIntervalMs);put(v,"separationMs",separationMs);put(v,"needTenths",needThresholdTenths);put(v,"persistenceMs",persistenceMs);
@@ -123,10 +125,10 @@ V RegionPlanningSettings::encode()const
 RegionPlanningSettings RegionPlanningSettings::decode(const V& v)
 {
     require(v.isObject(),"Missing region definition");
-    auto s=RegionPlanningSettings{};s.schema=number(v["schema"]);require(s.schema==1||s.schema==2,"Unsupported region schema");
-    for(auto pair:{std::pair<const char*,const char*>{"method",s.methodVersion()},{"constraints",s.schema==2?eventConstraintsVersion:regionConstraintsVersion},{"formation",s.schema==2?eventFormationVersion:regionFormationVersion},{"proxy",regionProxyVersion},{"rank",s.schema==2?eventRankVersion:regionRankVersion}})
+    auto s=RegionPlanningSettings{};s.schema=number(v["schema"]);require(s.schema>=1&&s.schema<=3,"Unsupported region schema");
+    for(auto pair:{std::pair<const char*,const char*>{"method",s.methodVersion()},{"constraints",s.schema>=2?eventConstraintsVersion:regionConstraintsVersion},{"formation",s.formationVersion()},{"proxy",regionProxyVersion},{"rank",s.schema>=2?eventRankVersion:regionRankVersion}})
         require(v[pair.first].toString()==pair.second,"Unknown mandatory region method version");
-    if(s.schema==2){require(v["boundaryPreference"].toString()=="prefer-complete-event"&&v["coverage"].toString()==eventCoverageVersion&&v["schedule"].toString()==eventScheduleVersion,"Unknown event treatment semantics");s.preferCompleteEvent=true;s.allowAutomaticMargins=flag(v["automaticMargins"]);s.eventFeatures=EventFeatureDefinition::decode(v["eventFeatures"]);}
+    if(s.schema>=2){require(v["boundaryPreference"].toString()=="prefer-complete-event"&&v["coverage"].toString()==s.coverageVersion()&&v["schedule"].toString()==s.scheduleVersion(),"Unknown event treatment semantics");s.preferCompleteEvent=true;s.allowAutomaticMargins=flag(v["automaticMargins"]);s.eventFeatures=EventFeatureDefinition::decode(v["eventFeatures"]);}
     s.inputIdentity=v["input"].toString();s.mode=RegionMode(number(v["mode"]));s.sectionId=uint64_t(integer(v["section"]));s.selection=span(v["selection"]);
     s.allowSplitting=flag(v["splitting"]);s.allowRefinement=flag(v["refinement"]);s.fillShortGap=flag(v["fillGap"]);s.allowGlobal=flag(v["global"]);s.compareAlternatives=flag(v["compare"]);
     s.maximumSplits=number(v["splits"]);s.leftMarginMs=number(v["leftMs"]);s.rightMarginMs=number(v["rightMs"]);s.minimumIntervalMs=number(v["minimumMs"]);s.separationMs=number(v["separationMs"]);s.needThresholdTenths=number(v["needTenths"]);s.persistenceMs=number(v["persistenceMs"]);
@@ -177,7 +179,7 @@ RegionConstraints resolveRegionConstraints(const RegionPlanningSettings& s,const
                 if(h.begin>=r.hint.end)r.ownership.end=std::min(r.ownership.end,r.hint.end+(h.begin-r.hint.end)/2);
             }
             r.requestedAllowed=r.allowed;
-            if(s.schema==2&&s.allowAutomaticMargins)
+            if(s.schema>=2&&s.allowAutomaticMargins)
             {
                 r.requestedAllowed={std::max<int64_t>(0,r.hint.begin-int64_t(s.leftMarginMs)*c.sampleRate/1000),std::min(c.frames,r.hint.end+int64_t(s.rightMarginMs)*c.sampleRate/1000)};
                 r.allowed={std::max(r.requestedAllowed.begin,r.ownership.begin),std::min(r.requestedAllowed.end,r.ownership.end)};

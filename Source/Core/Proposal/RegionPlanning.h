@@ -42,7 +42,11 @@ struct RegionPlanningSettings
     std::vector<RegionSpan> protectedLocal;
     static RegionPlanningSettings defaults(RegionMode,const juce::String& input);
     static RegionPlanningSettings eventDefaults(RegionMode,const juce::String& input);
-    const char* methodVersion()const {return schema==2?eventSearchVersion:regionSearchVersion;}
+    static RegionPlanningSettings innerDefaults(RegionMode,const juce::String& input);
+    const char* formationVersion()const {return schema==3?innerFormationVersion:schema==2?eventFormationVersion:regionFormationVersion;}
+    const char* coverageVersion()const {return schema==3?innerCoverageVersion:eventCoverageVersion;}
+    const char* scheduleVersion()const {return schema==3?innerScheduleVersion:eventScheduleVersion;}
+    const char* methodVersion()const {return schema==3?innerSearchVersion:schema==2?eventSearchVersion:regionSearchVersion;}
     juce::String validationError()const;
     juce::var encode()const;
     static RegionPlanningSettings decode(const juce::var&); // throws; never widens unknown permissions
