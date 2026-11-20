@@ -15,6 +15,8 @@ This folder is the persistent orientation layer for future development chats. Re
 
 ## Task-based quick start
 
+- **M20 competing boundaries, frozen Logic handover.** The matched 20% run measured a passing, partial and uncertain plan covering both disputed passages. The 28-group offline qualification, listening copies, exact failures and next native UI work are in [87 — Logic handover](87_M20InnerBoundaryLogicHandover.md).
+
 - **M20 boundary rule revision accepted, 20 November 2026:** [86 — Strategy review and implementation authorization](86_M20BoundaryRuleImplementationDecision.md), [85 — evidence and accepted proposal](85_M20BoundaryInvestigationAndRuleProposal.md), and [current task](../LogicImplementationCurrentTask.md). Logic_Implementation_2 may implement and qualify the bounded competing-entrance, independent-release and directed-edge changes through a tested Logic/UI handover. The completed UI continuation is the implementation base. Physical listening and publication remain separate.
 
 - **Current Logic assignment, 20 November 2026.** The [M20 boundary investigation and rule proposal](85_M20BoundaryInvestigationAndRuleProposal.md) was accepted in decision 86. The [Logic_Implementation_2 handover](84_LogicImplementation2Handover.md) and [current task record](../LogicImplementationCurrentTask.md) identify the local checkpoints and next decision. The [completed UI integration](/Users/fuzz/.codex/worktrees/a411/LevelScope/Docs/ProjectIndex/83_M20CompleteEventUIIntegration.md) is included in the Logic implementation base.

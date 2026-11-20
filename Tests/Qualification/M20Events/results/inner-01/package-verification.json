@@ -1,0 +1,63 @@
+{
+  "commit": "af950527cbd3ddb9ba34b8963167797b22bf4d7b",
+  "archived_files_verified_against_git": 426,
+  "binary_load_commands": {
+    "LevelScope Standalone": {
+      "archs": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_load_command": "LC_VERSION_MIN_MACOSX 10.13"
+    },
+    "LevelScopeEventPlanningTests": {
+      "archs": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_load_command": "LC_VERSION_MIN_MACOSX 10.13"
+    },
+    "LevelScopeLraProposalTests": {
+      "archs": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_load_command": "LC_VERSION_MIN_MACOSX 10.13"
+    },
+    "LevelScopeRegionPlanningTests": {
+      "archs": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_load_command": "LC_VERSION_MIN_MACOSX 10.13"
+    },
+    "LevelScopeRegionUITests": {
+      "archs": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_load_command": "LC_VERSION_MIN_MACOSX 10.13"
+    },
+    "LevelScopeTimelineProgressTests": {
+      "archs": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_load_command": "LC_VERSION_MIN_MACOSX 10.13"
+    }
+  },
+  "package_identity_sha256": "da714861bab2c40fd05ab350feead3a06b84b29884993298519b1ada2925c5ed",
+  "comparison_key_sha256": "37f3c2695432d19d315c040b7294b1aeebc1b41a22ee167ee3a7420016e051f4",
+  "distinct_listening_waves": 7,
+  "verified_session_copies": 5,
+  "native_execution": "macOS 15.7.9 arm64",
+  "raw_report_sha256": {
+    "cinema.txt": "e197c158719259dac3577a160a9c78c0a5fa0389fa5b6697084d2a038dba7e21",
+    "gate.txt": "6ad3c2c81068f51b2afbf8a65214b0bb0e90825a7f85d5a134131a09036ecb7c",
+    "inner-margin20.txt": "b1d0bcbd33d0508fa8bbd131acfba4eaef01897c5a046b0137d42038a02bb0dc",
+    "inner-margin60.txt": "e8c6e3f67340adacaf2fcd8d245072780326ac614fdee951bc8e8cfeb087bb5e",
+    "inner-strict20.txt": "3f3ff09fe99ad62bb31e0d0b4410925ca82cc6812c62fd1dba6d48e5ba0b82d9",
+    "prior-margin20.txt": "6cefa2537d1a9bd824804b001d2d75e1d340db4d750c086fb5e98fae8b61d502",
+    "prior-margin60.txt": "70acaf5c476843b6b6811ca5cc13031b917a7099565b1d150e47ac2bb6de983c",
+    "prior-strict20.txt": "fc5abbab2021aac8230539ecc5e0bcfb29cf884c711ab4a6f4305b6959aa8f99"
+  }
+}

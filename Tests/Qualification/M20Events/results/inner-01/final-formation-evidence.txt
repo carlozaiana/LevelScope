@@ -1,0 +1,214 @@
+Source witness root 3 frame 487680 onset support 0 confirmation 0 prior decisions 0/0 fast/low reference dB -25.750/-27.990 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 532800 onset support 0 confirmation 0 prior decisions 0/487680 fast/low reference dB -24.475/-26.066 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 553920 onset support 551040 confirmation 556320 prior decisions 487680/532800 fast/low reference dB -32.671/-52.506 entry step 0.000 dB; two preceding attacks within 1 s unavailable; inner decision 0
+Source witness root 3 frame 566400 onset support 562560 confirmation 567840 prior decisions 532800/553920 fast/low reference dB -27.057/-40.414 entry step -2.581 dB; reference step below threshold; inner decision 0
+Source witness root 3 frame 579360 onset support 576480 confirmation 581760 prior decisions 553920/566400 fast/low reference dB -24.307/-39.910 entry step 2.750 dB; reference step below threshold; inner decision 0
+Source witness root 3 frame 592320 onset support 588480 confirmation 593760 prior decisions 566400/579360 fast/low reference dB -14.591/-18.358 entry step 9.716 dB surrounding M -23.90/-19.44 LUFS; inner entrance; inner decision 592320
+Source witness root 3 frame 617280 onset support 613440 confirmation 618720 prior decisions 579360/592320 fast/low reference dB -13.828/-17.436 entry step 0.922 dB; comparable member; inner decision 592320
+Source witness root 3 frame 642720 onset support 638880 confirmation 644160 prior decisions 592320/617280 fast/low reference dB -13.722/-17.114 entry step 0.000 dB; comparable member; inner decision 592320
+Source witness root 3 frame 668640 onset support 663840 confirmation 669120 prior decisions 617280/642720 fast/low reference dB -14.137/-16.631 entry step 0.000 dB; comparable member; inner decision 592320
+Source witness root 3 frame 695040 onset support 689760 confirmation 695040 prior decisions 642720/668640 fast/low reference dB -14.429/-16.093 entry step 0.000 dB; comparable member; inner decision 592320
+Source witness root 3 frame 718080 onset support 714240 confirmation 719520 prior decisions 668640/695040 fast/low reference dB -13.551/-17.857 entry step 0.000 dB; comparable member; inner decision 592320
+Source witness root 3 frame 743520 onset support 739680 confirmation 744960 prior decisions 695040/718080 fast/low reference dB -13.621/-17.652 entry step 0.000 dB; comparable member; inner decision 592320
+Source witness root 3 frame 772800 onset support 0 confirmation 0 prior decisions 718080/743520 fast/low reference dB -17.455/-15.700 entry step 0.000 dB; comparable member; inner decision 592320
+Source witness root 3 frame 798720 onset support 0 confirmation 0 prior decisions 743520/772800 fast/low reference dB -16.576/-16.996 entry step 0.000 dB; comparable member; inner decision 592320
+Source witness root 3 frame 823200 onset support 0 confirmation 0 prior decisions 772800/798720 fast/low reference dB -20.313/-16.171 entry step 0.000 dB; comparable member; inner decision 592320
+Source witness root 3 frame 844800 onset support 840960 confirmation 846240 prior decisions 798720/823200 fast/low reference dB -14.137/-17.095 entry step 2.440 dB; comparable member; inner decision 592320
+Source witness root 3 frame 869760 onset support 865920 confirmation 871200 prior decisions 823200/844800 fast/low reference dB -14.557/-18.058 entry step -0.420 dB; comparable member; inner decision 592320
+Source witness root 3 frame 895200 onset support 891360 confirmation 896640 prior decisions 844800/869760 fast/low reference dB -14.037/-17.469 entry step 0.000 dB; comparable member; inner decision 592320
+Source witness root 3 frame 925440 onset support 0 confirmation 0 prior decisions 869760/895200 fast/low reference dB -26.046/-18.250 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 947040 onset support 942240 confirmation 947520 prior decisions 895200/925440 fast/low reference dB -13.831/-15.860 entry step 0.000 dB; comparable member; inner decision 592320
+Source witness root 3 frame 971040 onset support 967200 confirmation 972480 prior decisions 925440/947040 fast/low reference dB -14.361/-18.262 entry step -0.530 dB; comparable member; inner decision 592320
+Source witness root 3 frame 997920 onset support 993120 confirmation 998400 prior decisions 947040/971040 fast/low reference dB -14.364/-15.984 entry step 0.000 dB; comparable member; inner decision 592320
+Source witness root 3 frame 1021440 onset support 1017600 confirmation 1022880 prior decisions 971040/997920 fast/low reference dB -13.590/-17.566 entry step 0.000 dB; comparable member; inner decision 592320
+Source witness root 3 frame 1046880 onset support 1043040 confirmation 1048320 prior decisions 997920/1021440 fast/low reference dB -13.716/-17.110 entry step 0.000 dB; comparable member; inner decision 592320
+Source witness root 3 frame 1072320 onset support 1068480 confirmation 1073760 prior decisions 1021440/1046880 fast/low reference dB -14.428/-17.586 entry step 0.000 dB; comparable member; inner decision 592320
+Source witness root 3 frame 1098720 onset support 1093920 confirmation 1099200 prior decisions 1046880/1072320 fast/low reference dB -13.536/-15.431 entry step 0.000 dB; comparable member; inner decision 592320
+Source witness root 3 frame 1122240 onset support 1118400 confirmation 1123680 prior decisions 1072320/1098720 fast/low reference dB -13.600/-18.034 entry step 0.000 dB; comparable member; inner decision 592320
+Source witness root 3 frame 1147680 onset support 1143840 confirmation 1149120 prior decisions 1098720/1122240 fast/low reference dB -14.102/-17.921 entry step 0.000 dB; comparable member; inner decision 592320
+Source witness root 3 frame 1177440 onset support 0 confirmation 0 prior decisions 1122240/1147680 fast/low reference dB -18.141/-16.176 entry step 0.000 dB; comparable member; inner decision 592320
+Source witness root 3 frame 1202880 onset support 0 confirmation 0 prior decisions 1147680/1177440 fast/low reference dB -16.907/-16.708 entry step 0.000 dB; comparable member; inner decision 592320
+Source witness root 3 frame 1225440 onset support 1222080 confirmation 1227360 prior decisions 1177440/1202880 fast/low reference dB -14.075/-15.193 entry step 2.832 dB; comparable member; inner decision 592320
+Source witness root 3 frame 1248960 onset support 1245120 confirmation 1250400 prior decisions 1202880/1225440 fast/low reference dB -13.929/-17.137 entry step 0.146 dB; comparable member; inner decision 592320
+Source witness root 3 frame 1274400 onset support 1270080 confirmation 1275360 prior decisions 1225440/1248960 fast/low reference dB -14.807/-17.684 entry step 0.000 dB; comparable member; inner decision 592320
+Source witness root 3 frame 1300800 onset support 1295520 confirmation 1300800 prior decisions 1248960/1274400 fast/low reference dB -14.270/-15.941 entry step 0.000 dB; comparable member; inner decision 592320
+Source witness root 3 frame 1329120 onset support 0 confirmation 0 prior decisions 1274400/1300800 fast/low reference dB -25.712/-16.712 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 1351200 onset support 1345920 confirmation 1351200 prior decisions 1300800/1329120 fast/low reference dB -13.277/-15.171 entry step 0.000 dB; comparable member; inner decision 592320
+Source witness root 3 frame 1379040 onset support 0 confirmation 0 prior decisions 1329120/1351200 fast/low reference dB -28.440/-45.034 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 1387680 onset support 0 confirmation 0 prior decisions 1351200/1379040 fast/low reference dB -24.861/-37.248 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 1400640 onset support 1396800 confirmation 1402080 prior decisions 1379040/1387680 fast/low reference dB -14.189/-18.168 entry step 10.673 dB surrounding M -21.33/-17.39 LUFS; distinct entrance while inner slot occupied; inner decision 592320
+Source witness root 3 frame 1426080 onset support 1421760 confirmation 1427040 prior decisions 1387680/1400640 fast/low reference dB -14.114/-17.402 entry step 0.766 dB; comparable member; inner decision 592320
+Source witness root 3 frame 1452480 onset support 1447200 confirmation 1452480 prior decisions 1400640/1426080 fast/low reference dB -14.148/-16.665 entry step 0.000 dB; comparable member; inner decision 592320
+Source witness root 3 frame 1501920 onset support 0 confirmation 0 prior decisions 1426080/1452480 fast/low reference dB -32.371/-36.547 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 1519200 onset support 0 confirmation 0 prior decisions 1452480/1501920 fast/low reference dB -30.168/-32.241 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 1587360 onset support 0 confirmation 0 prior decisions 1501920/1519200 fast/low reference dB 0.000/0.000 entry step 0.000 dB; post-attack reference clipped; inner decision 0
+Source witness root 1 frame 2284800 onset support 0 confirmation 0 prior decisions 0/0 fast/low reference dB -32.719/-35.623 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 2287680 onset support 0 confirmation 0 prior decisions 0/2284800 fast/low reference dB -35.261/-36.024 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 2338080 onset support 0 confirmation 0 prior decisions 2284800/2287680 fast/low reference dB -32.819/-33.233 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 2361120 onset support 0 confirmation 0 prior decisions 2287680/2338080 fast/low reference dB -30.308/-38.259 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 2393760 onset support 0 confirmation 0 prior decisions 2338080/2361120 fast/low reference dB -28.276/-39.790 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 2453760 onset support 0 confirmation 0 prior decisions 2361120/2393760 fast/low reference dB -30.922/-41.122 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 2461920 onset support 0 confirmation 0 prior decisions 2393760/2453760 fast/low reference dB -31.388/-40.147 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 2491680 onset support 0 confirmation 0 prior decisions 2453760/2461920 fast/low reference dB -33.728/-37.294 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 2496000 onset support 0 confirmation 0 prior decisions 2461920/2491680 fast/low reference dB -29.555/-38.496 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 2520960 onset support 2515680 confirmation 2522880 prior decisions 2491680/2496000 fast/low reference dB -22.366/-32.447 entry step 7.190 dB surrounding M -25.80/-6.40 LUFS; inner entrance; inner decision 2520960
+Source witness root 1 frame 2537280 onset support 0 confirmation 0 prior decisions 2496000/2520960 fast/low reference dB -11.545/-25.947 entry step 0.000 dB; comparable member; inner decision 2520960
+Source witness root 1 frame 2541600 onset support 2536800 confirmation 2542080 prior decisions 2520960/2537280 fast/low reference dB -7.439/-22.733 entry step 4.106 dB; comparable member; inner decision 2520960
+Source witness root 1 frame 2561760 onset support 0 confirmation 0 prior decisions 2537280/2541600 fast/low reference dB -14.137/-23.372 entry step 0.000 dB; comparable member; inner decision 2520960
+Source witness root 1 frame 2576160 onset support 2574720 confirmation 2579040 prior decisions 2541600/2561760 fast/low reference dB -21.380/-31.579 entry step -8.846 dB; reference step below threshold; inner decision 0
+Source witness root 1 frame 2589600 onset support 2588160 confirmation 2592480 prior decisions 2561760/2576160 fast/low reference dB -8.569/-25.715 entry step 5.568 dB; comparable member; inner decision 2520960
+Source witness root 1 frame 2622720 onset support 0 confirmation 0 prior decisions 2576160/2589600 fast/low reference dB -16.248/-34.507 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 2646720 onset support 0 confirmation 0 prior decisions 2589600/2622720 fast/low reference dB -29.910/-33.459 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 2664000 onset support 0 confirmation 0 prior decisions 2622720/2646720 fast/low reference dB -29.822/-36.244 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 2666880 onset support 0 confirmation 0 prior decisions 2646720/2664000 fast/low reference dB -30.082/-36.217 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 2682240 onset support 2678400 confirmation 2683680 prior decisions 2664000/2666880 fast/low reference dB -13.911/-31.131 entry step 15.911 dB surrounding M -26.49/-9.75 LUFS; distinct entrance while inner slot occupied; inner decision 2520960
+Source witness root 1 frame 2695200 onset support 0 confirmation 0 prior decisions 2666880/2682240 fast/low reference dB -11.946/-25.877 entry step 0.000 dB; comparable member; inner decision 2520960
+Source witness root 1 frame 2698560 onset support 0 confirmation 0 prior decisions 2682240/2695200 fast/low reference dB -11.946/-25.001 entry step 0.000 dB; comparable member; inner decision 2520960
+Source witness root 1 frame 2752320 onset support 0 confirmation 0 prior decisions 2695200/2698560 fast/low reference dB -13.091/-26.183 entry step 0.000 dB; comparable member; inner decision 2520960
+Source witness root 1 frame 2792160 onset support 0 confirmation 0 prior decisions 2698560/2752320 fast/low reference dB -27.705/-30.611 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 2834400 onset support 0 confirmation 0 prior decisions 2752320/2792160 fast/low reference dB -30.004/-43.179 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 2855040 onset support 0 confirmation 0 prior decisions 2792160/2834400 fast/low reference dB -29.677/-44.085 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 2866080 onset support 0 confirmation 0 prior decisions 2834400/2855040 fast/low reference dB -30.476/-40.118 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 2901600 onset support 0 confirmation 0 prior decisions 2855040/2866080 fast/low reference dB -30.458/-42.989 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 2931360 onset support 0 confirmation 0 prior decisions 2866080/2901600 fast/low reference dB -27.868/-37.165 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 2948160 onset support 0 confirmation 0 prior decisions 2901600/2931360 fast/low reference dB -30.856/-38.542 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 2966400 onset support 0 confirmation 0 prior decisions 2931360/2948160 fast/low reference dB -27.242/-37.573 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 3000000 onset support 0 confirmation 0 prior decisions 2948160/2966400 fast/low reference dB -33.870/-46.108 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 2 frame 3696480 onset support 0 confirmation 0 prior decisions 0/0 fast/low reference dB -31.278/-35.600 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 2 frame 3768000 onset support 0 confirmation 0 prior decisions 0/3696480 fast/low reference dB -28.029/-38.769 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 2 frame 3780960 onset support 0 confirmation 0 prior decisions 3696480/3768000 fast/low reference dB -27.192/-33.672 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 2 frame 3802560 onset support 0 confirmation 0 prior decisions 3768000/3780960 fast/low reference dB -26.159/-36.945 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 2 frame 3827040 onset support 3822240 confirmation 3827520 prior decisions 3780960/3802560 fast/low reference dB -14.310/-16.532 entry step 11.850 dB surrounding M -22.46/-17.22 LUFS; inner entrance; inner decision 3827040
+Source witness root 2 frame 3852480 onset support 3847680 confirmation 3852960 prior decisions 3802560/3827040 fast/low reference dB -13.937/-15.909 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 3877920 onset support 3873120 confirmation 3878400 prior decisions 3827040/3852480 fast/low reference dB -13.965/-15.367 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 3902880 onset support 3897600 confirmation 3902880 prior decisions 3852480/3877920 fast/low reference dB -13.786/-15.620 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 3928320 onset support 3923520 confirmation 3928800 prior decisions 3877920/3902880 fast/low reference dB -14.221/-16.217 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 3953760 onset support 3948480 confirmation 3953760 prior decisions 3902880/3928320 fast/low reference dB -13.885/-15.305 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 3978720 onset support 3973920 confirmation 3979200 prior decisions 3928320/3953760 fast/low reference dB -13.731/-15.247 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 4004640 onset support 4001280 confirmation 4006560 prior decisions 3953760/3978720 fast/low reference dB -13.664/-14.811 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 4032480 onset support 0 confirmation 0 prior decisions 3978720/4004640 fast/low reference dB -16.938/-16.980 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 4055040 onset support 4051680 confirmation 4056960 prior decisions 4004640/4032480 fast/low reference dB -14.192/-15.900 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 4080000 onset support 4074720 confirmation 4080000 prior decisions 4032480/4055040 fast/low reference dB -14.650/-16.258 entry step -0.359 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 4105440 onset support 4100640 confirmation 4105920 prior decisions 4055040/4080000 fast/low reference dB -13.818/-15.439 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 4130400 onset support 4125120 confirmation 4130400 prior decisions 4080000/4105440 fast/low reference dB -14.314/-16.083 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 4158720 onset support 0 confirmation 0 prior decisions 4105440/4130400 fast/low reference dB -24.518/-16.944 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 2 frame 4181280 onset support 4176000 confirmation 4181280 prior decisions 4130400/4158720 fast/low reference dB -13.617/-15.241 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 4206240 onset support 4201440 confirmation 4206720 prior decisions 4158720/4181280 fast/low reference dB -13.511/-14.706 entry step 0.535 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 4231680 onset support 4226880 confirmation 4232160 prior decisions 4181280/4206240 fast/low reference dB -14.463/-16.705 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 4256640 onset support 4251360 confirmation 4256640 prior decisions 4206240/4231680 fast/low reference dB -14.230/-15.963 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 4282080 onset support 4277280 confirmation 4282560 prior decisions 4231680/4256640 fast/low reference dB -14.043/-15.779 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 4306080 onset support 4301760 confirmation 4307040 prior decisions 4256640/4282080 fast/low reference dB -14.294/-17.256 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 4332480 onset support 4327680 confirmation 4332960 prior decisions 4282080/4306080 fast/low reference dB -14.095/-16.153 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 4357920 onset support 4352640 confirmation 4357920 prior decisions 4306080/4332480 fast/low reference dB -13.947/-15.681 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 4383360 onset support 4378080 confirmation 4383360 prior decisions 4332480/4357920 fast/low reference dB -14.216/-15.981 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 4408800 onset support 4405440 confirmation 4410720 prior decisions 4357920/4383360 fast/low reference dB -13.942/-15.155 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 4436640 onset support 0 confirmation 0 prior decisions 4383360/4408800 fast/low reference dB -16.850/-16.902 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 4459200 onset support 0 confirmation 0 prior decisions 4408800/4436640 fast/low reference dB -14.102/-15.868 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 4484160 onset support 4478880 confirmation 4484160 prior decisions 4436640/4459200 fast/low reference dB -14.627/-16.777 entry step -0.525 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 4509600 onset support 4504320 confirmation 4509600 prior decisions 4459200/4484160 fast/low reference dB -14.160/-15.847 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 4534080 onset support 4528800 confirmation 4534560 prior decisions 4484160/4509600 fast/low reference dB -14.157/-16.600 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 4562880 onset support 0 confirmation 0 prior decisions 4509600/4534080 fast/low reference dB -29.682/-16.269 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 2 frame 4585440 onset support 4580160 confirmation 4585440 prior decisions 4534080/4562880 fast/low reference dB -14.168/-16.221 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 4608960 onset support 4604640 confirmation 4609920 prior decisions 4562880/4585440 fast/low reference dB -26.086/-41.009 entry step -11.918 dB; reference step below threshold; inner decision 0
+Source witness root 2 frame 4615200 onset support 0 confirmation 0 prior decisions 4585440/4608960 fast/low reference dB -30.897/-40.532 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 2 frame 4621440 onset support 0 confirmation 0 prior decisions 4608960/4615200 fast/low reference dB -23.784/-32.873 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 2 frame 4634400 onset support 4630080 confirmation 4635360 prior decisions 4615200/4621440 fast/low reference dB -14.240/-17.189 entry step 9.545 dB surrounding M -20.07/-19.79 LUFS; comparable member; inner decision 3827040
+Source witness root 2 frame 4672800 onset support 4668960 confirmation 4674240 prior decisions 4621440/4634400 fast/low reference dB -13.736/-15.566 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 4710240 onset support 4706400 confirmation 4711680 prior decisions 4634400/4672800 fast/low reference dB -14.409/-16.514 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 4760640 onset support 4756800 confirmation 4762080 prior decisions 4672800/4710240 fast/low reference dB -14.387/-16.492 entry step 0.000 dB; comparable member; inner decision 3827040
+Source witness root 2 frame 4785600 onset support 0 confirmation 0 prior decisions 4710240/4760640 fast/low reference dB -23.871/-36.851 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 2 frame 4798560 onset support 4794240 confirmation 4799520 prior decisions 4760640/4785600 fast/low reference dB -15.095/-17.767 entry step -0.708 dB; comparable member; inner decision 3827040
+Source witness root 5 frame 8262720 onset support 0 confirmation 0 prior decisions 0/0 fast/low reference dB -26.669/-34.830 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 5 frame 8278560 onset support 0 confirmation 0 prior decisions 0/8262720 fast/low reference dB -30.602/-34.475 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 5 frame 8285280 onset support 0 confirmation 0 prior decisions 8262720/8278560 fast/low reference dB -27.452/-38.883 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 5 frame 8316000 onset support 8312160 confirmation 8317440 prior decisions 8278560/8285280 fast/low reference dB -25.153/-35.290 entry step 2.299 dB; reference step below threshold; inner decision 0
+Source witness root 5 frame 8322720 onset support 0 confirmation 0 prior decisions 8285280/8316000 fast/low reference dB -22.770/-36.037 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 5 frame 8355840 onset support 8352000 confirmation 8357280 prior decisions 8316000/8322720 fast/low reference dB -23.060/-34.118 entry step 1.172 dB; reference step below threshold; inner decision 0
+Source witness root 5 frame 8410560 onset support 8406240 confirmation 8411520 prior decisions 8322720/8355840 fast/low reference dB -24.207/-33.369 entry step 0.000 dB; two preceding attacks within 1 s unavailable; inner decision 0
+Source witness root 5 frame 8428800 onset support 8425440 confirmation 8431680 prior decisions 8355840/8410560 fast/low reference dB -21.086/-33.911 entry step 0.000 dB; two preceding attacks within 1 s unavailable; inner decision 0
+Source witness root 5 frame 8448960 onset support 8445120 confirmation 8450400 prior decisions 8410560/8428800 fast/low reference dB -17.598/-29.332 entry step 4.038 dB; reference step below threshold; inner decision 0
+Source witness root 5 frame 8466720 onset support 8463360 confirmation 8468640 prior decisions 8428800/8448960 fast/low reference dB -16.602/-27.152 entry step 2.180 dB; reference step below threshold; inner decision 0
+Source witness root 5 frame 8484000 onset support 8480160 confirmation 8485440 prior decisions 8448960/8466720 fast/low reference dB -15.811/-27.654 entry step 0.791 dB; reference step below threshold; inner decision 0
+Source witness root 5 frame 8502240 onset support 8499360 confirmation 8504640 prior decisions 8466720/8484000 fast/low reference dB -15.626/-28.203 entry step 0.185 dB; reference step below threshold; inner decision 0
+Source witness root 5 frame 8520000 onset support 8516160 confirmation 8521440 prior decisions 8484000/8502240 fast/low reference dB -16.105/-28.996 entry step -0.478 dB; reference step below threshold; inner decision 0
+Source witness root 5 frame 8540160 onset support 8534880 confirmation 8540160 prior decisions 8502240/8520000 fast/low reference dB -18.152/-29.029 entry step -0.827 dB; reference step below threshold; inner decision 0
+Source witness root 5 frame 8556480 onset support 8553120 confirmation 8558400 prior decisions 8520000/8540160 fast/low reference dB -22.429/-35.556 entry step -6.324 dB; reference step below threshold; inner decision 0
+Source witness root 5 frame 8583840 onset support 8582400 confirmation 8586720 prior decisions 8540160/8556480 fast/low reference dB -23.557/-36.666 entry step -5.405 dB; reference step below threshold; inner decision 0
+Source witness root 5 frame 8656800 onset support 0 confirmation 0 prior decisions 8556480/8583840 fast/low reference dB -27.736/-32.904 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 5 frame 8670720 onset support 0 confirmation 0 prior decisions 8583840/8656800 fast/low reference dB -27.774/-30.427 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 5 frame 8702880 onset support 0 confirmation 0 prior decisions 8656800/8670720 fast/low reference dB -32.749/-32.896 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 5 frame 8706720 onset support 0 confirmation 0 prior decisions 8670720/8702880 fast/low reference dB -33.771/-32.972 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 5 frame 8743680 onset support 0 confirmation 0 prior decisions 8702880/8706720 fast/low reference dB -30.401/-40.800 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 5 frame 8750400 onset support 0 confirmation 0 prior decisions 8706720/8743680 fast/low reference dB -30.408/-36.443 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 5 frame 8769600 onset support 8764320 confirmation 8769600 prior decisions 8743680/8750400 fast/low reference dB -29.059/-36.998 entry step 1.342 dB; reference step below threshold; inner decision 0
+Source witness root 4 frame 8929440 onset support 0 confirmation 0 prior decisions 0/0 fast/low reference dB -31.441/-37.710 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 4 frame 8940000 onset support 8938560 confirmation 8942880 prior decisions 0/8929440 fast/low reference dB -23.899/-39.662 entry step 0.000 dB; two preceding attacks within 1 s unavailable; inner decision 0
+Source witness root 4 frame 8955360 onset support 0 confirmation 0 prior decisions 8929440/8940000 fast/low reference dB -24.456/-34.777 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 4 frame 8997600 onset support 0 confirmation 0 prior decisions 8940000/8955360 fast/low reference dB -33.793/-44.409 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 4 frame 9029760 onset support 9024480 confirmation 9029760 prior decisions 8955360/8997600 fast/low reference dB -38.421/-39.250 entry step 0.000 dB; two preceding attacks within 1 s unavailable; inner decision 0
+Source witness root 4 frame 9048480 onset support 9044160 confirmation 9049440 prior decisions 8997600/9029760 fast/low reference dB -38.320/-37.563 entry step 0.000 dB; two preceding attacks within 1 s unavailable; inner decision 0
+Source witness root 4 frame 9063360 onset support 0 confirmation 0 prior decisions 9029760/9048480 fast/low reference dB -35.466/-34.584 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 4 frame 9110400 onset support 9106560 confirmation 9111840 prior decisions 9048480/9063360 fast/low reference dB -28.416/-40.275 entry step 0.000 dB; two preceding attacks within 1 s unavailable; inner decision 0
+Source witness root 4 frame 9253440 onset support 0 confirmation 0 prior decisions 9063360/9110400 fast/low reference dB -22.637/-36.023 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 4 frame 9271200 onset support 0 confirmation 0 prior decisions 9110400/9253440 fast/low reference dB -25.210/-36.765 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 4 frame 9315840 onset support 0 confirmation 0 prior decisions 9253440/9271200 fast/low reference dB -31.383/-41.191 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 4 frame 9329760 onset support 0 confirmation 0 prior decisions 9271200/9315840 fast/low reference dB -36.544/-41.759 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 4 frame 9338880 onset support 0 confirmation 0 prior decisions 9315840/9329760 fast/low reference dB -29.367/-39.725 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 4 frame 9342720 onset support 0 confirmation 0 prior decisions 9329760/9338880 fast/low reference dB -30.364/-39.766 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 4 frame 9376320 onset support 9371040 confirmation 9378720 prior decisions 9338880/9342720 fast/low reference dB -31.756/-40.644 entry step -0.920 dB; reference step below threshold; inner decision 0
+Source witness root 4 frame 9415680 onset support 9414240 confirmation 9418560 prior decisions 9342720/9376320 fast/low reference dB -26.586/-41.042 entry step 0.000 dB; two preceding attacks within 1 s unavailable; inner decision 0
+Source witness root 4 frame 9431040 onset support 0 confirmation 0 prior decisions 9376320/9415680 fast/low reference dB 0.000/0.000 entry step 0.000 dB; post-attack reference clipped; inner decision 0
+Inner interpretation aafd05167af7fc40d848c9030c033671cb702fe6abb907af4a7c8e8ea037caf4 of e20dff9ccce84900cf579eebd399a51dfae2306cc690e5e1eb26bc355b809937; last comparable [1451520, 1452480); in-decay [1456800, 1466400); after-return [1470720, 1485120); captured window excess 63.68050 (retained pair)
+Inner interpretation c5a913c50d2ae35a7fa0a5c2ee39d3efe15258880194ece50b17d674eb451e55 of d0faf3c543c763a9664180da351c2742b31d8614eeca71bd4387445a49710aa2; last comparable [2751360, 2752320); in-decay [2773440, 2783040); after-return [2818080, 2832480); captured window excess 343.78980 (retained pair)
+Inner interpretation ab78058a899e7f8b056e30ed32a42197f32f04bb4ae751f2c92c5f426ee250d2 of 14f84f7d90759195a5f8940483d59dad587b0b049741b52cc2831f55ef5ecdad; last comparable [4797600, 4798560); in-decay [4803360, 4812960); after-return [0, 0); captured window excess 147.41720 (retained pair)
+Omitted witnesses 0, occupied-slot conflicts 2
+Geometry root 1 [2395200, 2889600) Unsplit original root, fixed-ramp support edges
+Geometry root 1 [2510880, 2837280) Inner passage after-return c5a913c50d2ae35a7fa0a5c2ee39d3efe15258880194ece50b17d674eb451e55
+Geometry root 1 [2510880, 2787840) Inner passage in-decay return c5a913c50d2ae35a7fa0a5c2ee39d3efe15258880194ece50b17d674eb451e55
+Geometry root 1 [2400000, 2856000) Unsplit outer refinement with strongest combined boundary nominations
+Geometry root 1 [2395200, 2889600) Bounded split topology ordered by need-change strength and source frame
+Geometry root 1 [2395200, 2889600) Bounded split topology ordered by need-change strength and source frame
+Geometry root 1 [2395200, 2889600) Bounded split topology ordered by need-change strength and source frame
+Geometry root 1 [2395200, 2889600) Bounded split topology ordered by need-change strength and source frame
+Geometry root 1 [2395200, 2889600) Bounded split topology ordered by need-change strength and source frame
+Geometry root 1 [2400000, 2784000) Alternative exact outer processing support
+Geometry root 1 [2472000, 2856000) Alternative exact outer processing support
+Geometry root 1 [2400000, 2712000) Alternative exact outer processing support
+Geometry root 1 [2472000, 2784000) Alternative exact outer processing support
+Geometry root 1 [2544000, 2856000) Alternative exact outer processing support
+Geometry root 1 [2472000, 2712000) Alternative exact outer processing support
+Geometry root 1 [2544000, 2784000) Alternative exact outer processing support
+Geometry root 2 [3787200, 4684800) Unsplit original root, fixed-ramp support edges
+Geometry root 2 [3811200, 4656000) Unsplit outer refinement with strongest combined boundary nominations
+Geometry root 2 [3787200, 4684800) Bounded split topology ordered by need-change strength and source frame
+Geometry root 2 [3787200, 4684800) Bounded split topology ordered by need-change strength and source frame
+Geometry root 2 [3787200, 4684800) Bounded split topology ordered by need-change strength and source frame
+Geometry root 2 [3811200, 4584000) Alternative exact outer processing support
+Geometry root 2 [3883200, 4656000) Alternative exact outer processing support
+Geometry root 2 [3811200, 4512000) Alternative exact outer processing support
+Geometry root 2 [3883200, 4584000) Alternative exact outer processing support
+Geometry root 2 [3955200, 4656000) Alternative exact outer processing support
+Geometry root 2 [3883200, 4512000) Alternative exact outer processing support
+Geometry root 2 [3955200, 4584000) Alternative exact outer processing support
+Geometry root 2 [3955200, 4512000) Alternative exact outer processing support
+Geometry root 2 [3787200, 4656000) Alternative exact outer processing support
+Geometry root 2 [3787200, 4584000) Alternative exact outer processing support
+Geometry root 2 [3787200, 4512000) Alternative exact outer processing support
+Geometry root 3 [614400, 1444800) Unsplit original root, fixed-ramp support edges
+Geometry root 3 [583680, 1489920) Inner passage after-return aafd05167af7fc40d848c9030c033671cb702fe6abb907af4a7c8e8ea037caf4
+Geometry root 3 [583680, 1471200) Inner passage in-decay return aafd05167af7fc40d848c9030c033671cb702fe6abb907af4a7c8e8ea037caf4
+Geometry root 3 [638400, 1094400) Unsplit outer refinement with strongest combined boundary nominations
+Geometry root 3 [614400, 1444800) Reserved two-cut unchanged-middle alternative, longest nominated low-need gap
+Geometry root 3 [614400, 1444800) Bounded split topology ordered by need-change strength and source frame
+Geometry root 3 [614400, 1444800) Bounded split topology ordered by need-change strength and source frame
+Geometry root 3 [614400, 1444800) Bounded split topology ordered by need-change strength and source frame
+Geometry root 3 [614400, 1444800) Bounded split topology ordered by need-change strength and source frame
+Geometry root 3 [614400, 1444800) Bounded split topology ordered by need-change strength and source frame
+Geometry root 3 [614400, 1444800) Bounded split topology ordered by need-change strength and source frame
+Geometry root 3 [614400, 1444800) Bounded split topology ordered by need-change strength and source frame
+Geometry root 3 [614400, 1444800) Bounded split topology ordered by need-change strength and source frame
+Geometry root 3 [614400, 1444800) Bounded split topology ordered by need-change strength and source frame
+Geometry root 3 [614400, 1444800) Bounded split topology ordered by need-change strength and source frame
+Geometry root 3 [614400, 1444800) Bounded split topology ordered by need-change strength and source frame
+Geometry root 4 [9057600, 9288000) Unsplit original root, fixed-ramp support edges
+Geometry root 5 [8404800, 8644800) Unsplit original root, fixed-ramp support edges

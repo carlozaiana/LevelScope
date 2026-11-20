@@ -1,0 +1,264 @@
+{
+  "source": "af950527cbd3ddb9ba34b8963167797b22bf4d7b",
+  "measurement_build": "4c57ba6ac54d35ecc1b1d3e166eb43713991b3d6795eeaaf46b310268e29e6e3",
+  "package_identity_sha256": "da714861bab2c40fd05ab350feead3a06b84b29884993298519b1ada2925c5ed",
+  "system": "15.7.9",
+  "architecture": "arm64",
+  "devices_opened": false,
+  "planned": [
+    "prior-margin20",
+    "inner-margin20",
+    "prior-strict20",
+    "inner-strict20",
+    "prior-margin60",
+    "inner-margin60",
+    "inner-evidence",
+    "inner-controls",
+    "inner-features",
+    "inner-population",
+    "inner-stereo",
+    "inner-surround",
+    "inner-fallback",
+    "core",
+    "features",
+    "stereo",
+    "fallback",
+    "saved-m19",
+    "saved-m20",
+    "gate",
+    "cinema",
+    "region-core",
+    "region-failures",
+    "region-stereo",
+    "lra-core",
+    "ui",
+    "event-ui",
+    "timeline"
+  ],
+  "runs": {
+    "prior-margin20": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 39.358,
+      "checks": 39,
+      "failure": "",
+      "receipt_sha256": "c5454510a47ee5df355d593fa8f05fc120c8207f7c49220fde160bf5cd5eeb85"
+    },
+    "inner-margin20": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 39.288,
+      "checks": 40,
+      "failure": "",
+      "receipt_sha256": "fec88b0061b341e390444b6e8d55e5363eea008604b7bf042c5fcb74b8171b21"
+    },
+    "prior-strict20": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 16.108,
+      "checks": 13,
+      "failure": "",
+      "receipt_sha256": "bb3b92c22fc627726d05b008bef4e5d67727998dd225a175f7517de82db276c7"
+    },
+    "inner-strict20": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 15.162,
+      "checks": 13,
+      "failure": "",
+      "receipt_sha256": "1ebbb70bb9a2c45923d67bd5924ac5c66ad2e18ec6c7fa6b8591f1420477345e"
+    },
+    "prior-margin60": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 16.182,
+      "checks": 13,
+      "failure": "",
+      "receipt_sha256": "bcb90c62fdf3022b6c90266190774e4476a896affadbe9d9acbc4695c35d6dcd"
+    },
+    "inner-margin60": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 15.232,
+      "checks": 13,
+      "failure": "",
+      "receipt_sha256": "235f676c23d87adddb8e2477d3e86f6f36894d9f242d1018b9df1b0ed92454bc"
+    },
+    "inner-evidence": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 4.726,
+      "checks": 37,
+      "failure": "",
+      "receipt_sha256": "34fbcf94c0a290fb5a79351c7e6e93c4cd5a53005154f98c3afbd919e6090421"
+    },
+    "inner-controls": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 0.02,
+      "checks": 22,
+      "failure": "",
+      "receipt_sha256": "689a8c28d02963dadaa00d625698a0666c5d703edc27be819c38b1ae6569c335"
+    },
+    "inner-features": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 1.085,
+      "checks": 73,
+      "failure": "",
+      "receipt_sha256": "8111189bc90063fbe690865390fc63e9fbce3733222f939f8cb01ef1316a0d3a"
+    },
+    "inner-population": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 5.34,
+      "checks": 18,
+      "failure": "",
+      "receipt_sha256": "efc6f1cd5c62c949ed23f25ac76bbeb415d2871adc5d060b066b5925834d0050"
+    },
+    "inner-stereo": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 8.03,
+      "checks": 60,
+      "failure": "",
+      "receipt_sha256": "a429ff3f2e84832db984fe09b8f681be19ca12b5b1d6d6fae560e43058984480"
+    },
+    "inner-surround": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 10.376,
+      "checks": 57,
+      "failure": "",
+      "receipt_sha256": "612c1dbf33757f50e27948e8a094f8c09adf0dcac906c9e659dc79ef4ccc1143"
+    },
+    "inner-fallback": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 6.288,
+      "checks": 59,
+      "failure": "",
+      "receipt_sha256": "5e82773a10c3af5745fa5f7b180b5346cc8c90dd773e99182f550af4ed9ffd84"
+    },
+    "core": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 0.021,
+      "checks": 47,
+      "failure": "",
+      "receipt_sha256": "11af2b64d0bccef9bdb40c0b271d51c4b8f42215b76fd84089bcdc87f0e4a70b"
+    },
+    "features": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 1.077,
+      "checks": 73,
+      "failure": "",
+      "receipt_sha256": "3f6f22b319dda239777fb91055f32f54fd22b8f6033c11355801a7b0f0986a37"
+    },
+    "stereo": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 7.948,
+      "checks": 56,
+      "failure": "",
+      "receipt_sha256": "5de07f9a2674b38a3307b60cda4346b3a65979fddd2c1d2886c5654863f1471a"
+    },
+    "fallback": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 6.194,
+      "checks": 55,
+      "failure": "",
+      "receipt_sha256": "9fec01dfdd489d29f1b60f0ba9fa3e57ccbaab81e734e4360fc51b7c992d87d6"
+    },
+    "saved-m19": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 10.16,
+      "checks": 12,
+      "failure": "",
+      "receipt_sha256": "61375fe64a60af3341b103f74fa40ceb45d88a58b88ca076aa56269795899a3e"
+    },
+    "saved-m20": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 11.611,
+      "checks": 12,
+      "failure": "",
+      "receipt_sha256": "61375fe64a60af3341b103f74fa40ceb45d88a58b88ca076aa56269795899a3e"
+    },
+    "gate": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 32.223,
+      "checks": 13,
+      "failure": "",
+      "receipt_sha256": "67d6118106de7c89c6f7c4aa62ce47839f237b2b1b3a8d7fb45b32207e7b6290"
+    },
+    "cinema": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 40.289,
+      "checks": 13,
+      "failure": "",
+      "receipt_sha256": "3f76ce6c18e48441905954b08f1abb9d033d61e38e70582303d82fbf85b15f16"
+    },
+    "region-core": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 2.994,
+      "checks": 110,
+      "failure": "",
+      "receipt_sha256": "4dd77c5b9f16948d3e5ea588ec87efedf11eaf2789f4e8ced7fe3d02abebe7b0"
+    },
+    "region-failures": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 1.345,
+      "checks": 32,
+      "failure": "",
+      "receipt_sha256": "258d4911e237a6f5a49f6f9097e05e91dd2cfa50a95c31843222b1dd905e6f63"
+    },
+    "region-stereo": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 4.576,
+      "checks": 48,
+      "failure": "",
+      "receipt_sha256": "2886a4535755f98be0bd92eaec11e479a44be8d38e8a97620697e55364f05bc5"
+    },
+    "lra-core": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 3.133,
+      "checks": 22,
+      "failure": "",
+      "receipt_sha256": "1a2710c7aea3c7c5a76ce2032e6bf46370a68b2bbbe0801271ff1c3d4f1cf4aa"
+    },
+    "ui": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 18.303,
+      "checks": 163,
+      "failure": "",
+      "receipt_sha256": "934ad338eb1c986400de4015f7cb94eb91e32514c8eb35729336057bfea4183c"
+    },
+    "event-ui": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 17.598,
+      "checks": 144,
+      "failure": "",
+      "receipt_sha256": "d70d2982545e72554fb17fa3628cb162ed33a851d5d4305235f23433f927a6c4"
+    },
+    "timeline": {
+      "passed": true,
+      "code": 0,
+      "wall_s": 5.388,
+      "checks": 2299,
+      "failure": "",
+      "receipt_sha256": "dd4d4e72334b0548e01ec36452b1022995d536c9877f14b5247aca7cdc760135"
+    }
+  }
+}

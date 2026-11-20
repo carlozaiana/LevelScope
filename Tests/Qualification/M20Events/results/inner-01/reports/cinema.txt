@@ -1,0 +1,497 @@
+No acceptable candidate in bounded region search
+No acceptable candidate in this bounded search. Measured failures and limits remain visible; this does not establish that no solution exists.
+Experimental region planning / region-gain-search-v3 / window-energy-proxy-v1 / candidate-review-rank-v3
+Effective immutable settings: {"schema": 3, "method": "region-gain-search-v3", "constraints": "region-constraints-v2", "formation": "region-formation-v3", "proxy": "window-energy-proxy-v1", "rank": "candidate-review-rank-v3", "boundaryPreference": "prefer-complete-event", "automaticMargins": true, "eventFeatures": {"version": "event-boundary-features-v2", "filters": "continuous-first-order-hp-lp-v1", "channels": "non-lfe-energy-mean-and-role-witness-v1", "silence": "separate-floor-onset-and-return-v1", "hopMs": 10, "hpHz": 20, "lowHz": 160, "fastMs": 20, "lowMs": 80, "backgroundMs": 250, "floorDb": -80, "fastRiseDb": 6, "lowRiseDb": 3, "fastPersistMs": 20, "lowPersistMs": 40, "agreementMs": 80, "groupMs": 1000, "lastAttackMs": 100, "decayDb": 6, "decayPersistMs": 200, "returnDb": 3, "returnPersistMs": 300, "contextMs": 3000, "predecessors": 2, "referenceStepDb": 6, "momentaryStepLu": 3, "neighbourhoodMs": 1000, "comparableDb": 6, "recentReferences": 3, "attribution": "included-window-excess-weighted-bin-share-v1", "pairing": "one-live-inner-directed-edges-v1", "missing": "retain-outer-report-incomplete-v1", "rolePath": "same-role-tentative-v1", "eventLocations": 6, "innerProxySlots": 8}, "coverage": "event-treatment-coverage-v2", "schedule": "event-assessment-schedule-v2", "input": "10330a3981a5f22018e5edc95d4e3c31974e7671ab512c6d0e9a47bb2ef66c4e", "mode": 0, "section": "0", "selection": {"begin": "0", "end": "0"}, "splitting": true, "refinement": true, "fillGap": false, "global": true, "compare": true, "splits": 2, "leftMs": 1000, "rightMs": 1000, "minimumMs": 3000, "separationMs": 1000, "needTenths": 10, "persistenceMs": 1000, "start": null, "end": null, "cuts": [], "protection": "local-envelope-v1", "protected": []}
+Constraint binding c62f20612a51cab2ce047b330f6b4583025bb845087d62ad09d02440be061c06
+Roots 4 (omitted 0); proxy plans 64 / 64; duplicate audio plans 8; rejected 2.
+Geometry constructions 319; omitted cut nominations 26; omitted geometries 35. Search truncation never proves impossibility.
+Whole-programme global trim permitted separately: it may change audio outside the local area.
+Original root analysis:8e7cc1853229ae6f66b93e891d58bc8463761e2ce5d6e8be98647f44d31b5cf0:8784000:13171200; hint [8784000, 13171200); permitted [8736000, 13219200); support-edge ranges [8736000, 13075200] / [8880000, 13219200].
+Original root analysis:8e7cc1853229ae6f66b93e891d58bc8463761e2ce5d6e8be98647f44d31b5cf0:2937600:3897600; hint [2937600, 3897600); permitted [2930400, 3945600); support-edge ranges [2930400, 3801600] / [3074400, 3945600].
+Original root analysis:8e7cc1853229ae6f66b93e891d58bc8463761e2ce5d6e8be98647f44d31b5cf0:2049600:2923200; hint [2049600, 2923200); permitted [2001600, 2930400); support-edge ranges [2001600, 2786400] / [2145600, 2930400].
+Original root analysis:8e7cc1853229ae6f66b93e891d58bc8463761e2ce5d6e8be98647f44d31b5cf0:0:259200; hint [0, 259200); permitted [0, 307200); support-edge ranges [0, 163200] / [144000, 307200].
+Event result 7a419859f7e048b48d7376fa961f3469; feature reserved/high-water bytes 540604 / 1147936.
+Recommended attempt none; selected attempt none. Inspection alone never selects Apply.
+Permission: 
+Permission: Requested outward margin clipped by frozen midpoint ownership
+Permission: Requested outward margin clipped by frozen midpoint ownership
+Permission: 
+Current-only rise cells (processing-associated context, not Source event evidence): 0
+Source witness root 4 frame 6720 onset support 0 confirmation 0 prior decisions 0/0 fast/low reference dB -34.503/-36.512 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 4 frame 11040 onset support 6720 confirmation 12480 prior decisions 0/6720 fast/low reference dB -22.768/-23.827 entry step 0.000 dB; two preceding attacks within 1 s unavailable; inner decision 0
+Source witness root 4 frame 22080 onset support 0 confirmation 0 prior decisions 6720/11040 fast/low reference dB -34.455/-39.008 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 4 frame 41280 onset support 36960 confirmation 42240 prior decisions 11040/22080 fast/low reference dB -22.217/-23.468 entry step 0.591 dB; reference step below threshold; inner decision 0
+Source witness root 4 frame 58080 onset support 0 confirmation 0 prior decisions 22080/41280 fast/low reference dB -37.674/-40.958 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 4 frame 71520 onset support 67200 confirmation 72480 prior decisions 41280/58080 fast/low reference dB -21.901/-23.341 entry step 0.339 dB; reference step below threshold; inner decision 0
+Source witness root 4 frame 88320 onset support 84000 confirmation 89280 prior decisions 58080/71520 fast/low reference dB -32.587/-40.073 entry step 8.720 dB surrounding M -24.15/-22.78 LUFS; missing or insufficient sustained level change; inner decision 0
+Source witness root 4 frame 101760 onset support 97440 confirmation 102720 prior decisions 71520/88320 fast/low reference dB -22.013/-23.513 entry step -0.051 dB; reference step below threshold; inner decision 0
+Source witness root 4 frame 111840 onset support 0 confirmation 0 prior decisions 88320/101760 fast/low reference dB -37.695/-44.220 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 4 frame 121920 onset support 117120 confirmation 122400 prior decisions 101760/111840 fast/low reference dB -32.661/-37.081 entry step 11.439 dB surrounding M -22.78/-23.61 LUFS; missing or insufficient sustained level change; inner decision 0
+Source witness root 4 frame 132000 onset support 128160 confirmation 133440 prior decisions 111840/121920 fast/low reference dB -21.517/-23.609 entry step 11.144 dB surrounding M -22.78/-23.75 LUFS; missing or insufficient sustained level change; inner decision 0
+Source witness root 4 frame 154560 onset support 150240 confirmation 156960 prior decisions 121920/132000 fast/low reference dB -34.036/-38.748 entry step -1.593 dB; reference step below threshold; inner decision 0
+Source witness root 4 frame 162720 onset support 158400 confirmation 163680 prior decisions 132000/154560 fast/low reference dB -21.375/-23.696 entry step 0.204 dB; reference step below threshold; inner decision 0
+Source witness root 4 frame 180960 onset support 0 confirmation 0 prior decisions 154560/162720 fast/low reference dB -36.669/-44.125 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 4 frame 192960 onset support 188640 confirmation 193920 prior decisions 162720/180960 fast/low reference dB -21.359/-23.469 entry step 2.661 dB; reference step below threshold; inner decision 0
+Source witness root 4 frame 220800 onset support 216960 confirmation 222240 prior decisions 180960/192960 fast/low reference dB -40.760/-45.540 entry step -6.377 dB; reference step below threshold; inner decision 0
+Source witness root 4 frame 249120 onset support 245760 confirmation 251040 prior decisions 192960/220800 fast/low reference dB -42.836/-47.508 entry step 0.000 dB; two preceding attacks within 1 s unavailable; inner decision 0
+Source witness root 4 frame 313920 onset support 0 confirmation 0 prior decisions 220800/249120 fast/low reference dB -41.654/-51.549 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 4 frame 357600 onset support 0 confirmation 0 prior decisions 249120/313920 fast/low reference dB -43.020/-56.728 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 4 frame 376800 onset support 374400 confirmation 379680 prior decisions 313920/357600 fast/low reference dB -44.624/-57.469 entry step 0.000 dB; two preceding attacks within 1 s unavailable; inner decision 0
+Source witness root 4 frame 383040 onset support 379200 confirmation 384480 prior decisions 357600/376800 fast/low reference dB -35.212/-50.093 entry step 7.808 dB surrounding M -34.92/-31.88 LUFS; inner entrance; inner decision 383040
+Source witness root 3 frame 1941120 onset support 0 confirmation 0 prior decisions 0/0 fast/low reference dB -43.933/-46.443 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 1971360 onset support 0 confirmation 0 prior decisions 0/1941120 fast/low reference dB -45.901/-49.315 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 1986720 onset support 0 confirmation 0 prior decisions 1941120/1971360 fast/low reference dB -43.210/-48.267 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 2035680 onset support 0 confirmation 0 prior decisions 1971360/1986720 fast/low reference dB -40.510/-44.174 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 2050080 onset support 0 confirmation 0 prior decisions 1986720/2035680 fast/low reference dB -36.531/-37.699 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 2052960 onset support 0 confirmation 0 prior decisions 2035680/2050080 fast/low reference dB -36.164/-37.343 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 2059680 onset support 0 confirmation 0 prior decisions 2050080/2052960 fast/low reference dB -43.348/-48.047 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 2062560 onset support 0 confirmation 0 prior decisions 2052960/2059680 fast/low reference dB -44.176/-49.118 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 2072160 onset support 2068320 confirmation 2073600 prior decisions 2059680/2062560 fast/low reference dB -24.797/-25.727 entry step 18.551 dB surrounding M -34.21/-26.86 LUFS; inner entrance; inner decision 2072160
+Source witness root 3 frame 2092320 onset support 0 confirmation 0 prior decisions 2062560/2072160 fast/low reference dB -30.776/-31.968 entry step 0.000 dB; comparable member; inner decision 2072160
+Source witness root 3 frame 2098080 onset support 0 confirmation 0 prior decisions 2072160/2092320 fast/low reference dB -31.047/-31.265 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 2133120 onset support 2128800 confirmation 2134080 prior decisions 2092320/2098080 fast/low reference dB -22.272/-23.367 entry step 8.504 dB surrounding M -27.26/-27.37 LUFS; comparable member; inner decision 2072160
+Source witness root 3 frame 2179680 onset support 0 confirmation 0 prior decisions 2098080/2133120 fast/low reference dB -42.262/-44.000 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 2193600 onset support 2189280 confirmation 2194560 prior decisions 2133120/2179680 fast/low reference dB -26.451/-25.460 entry step 0.000 dB; comparable member; inner decision 2072160
+Source witness root 3 frame 2213760 onset support 0 confirmation 0 prior decisions 2179680/2193600 fast/low reference dB -30.867/-31.687 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 2230560 onset support 0 confirmation 0 prior decisions 2193600/2213760 fast/low reference dB -30.782/-31.130 entry step 0.000 dB; comparable member; inner decision 2072160
+Source witness root 3 frame 2233920 onset support 0 confirmation 0 prior decisions 2213760/2230560 fast/low reference dB -30.782/-31.409 entry step 0.000 dB; comparable member; inner decision 2072160
+Source witness root 3 frame 2254080 onset support 2250240 confirmation 2255520 prior decisions 2230560/2233920 fast/low reference dB -21.588/-23.313 entry step 9.194 dB surrounding M -27.66/-27.28 LUFS; comparable member; inner decision 2072160
+Source witness root 3 frame 2267040 onset support 0 confirmation 0 prior decisions 2233920/2254080 fast/low reference dB -37.101/-32.586 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 2281920 onset support 0 confirmation 0 prior decisions 2254080/2267040 fast/low reference dB -30.887/-31.396 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 2294880 onset support 0 confirmation 0 prior decisions 2267040/2281920 fast/low reference dB -31.470/-31.124 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 2311680 onset support 2307840 confirmation 2313120 prior decisions 2281920/2294880 fast/low reference dB -40.832/-44.174 entry step 3.223 dB; reference step below threshold; inner decision 0
+Source witness root 3 frame 2333280 onset support 2329440 confirmation 2334720 prior decisions 2294880/2311680 fast/low reference dB -30.551/-33.662 entry step 9.099 dB surrounding M -23.83/-26.69 LUFS; comparable member; inner decision 2072160
+Source witness root 3 frame 2351520 onset support 2350080 confirmation 2354400 prior decisions 2311680/2333280 fast/low reference dB -30.804/-31.082 entry step 3.340 dB; reference step below threshold; inner decision 0
+Source witness root 3 frame 2365920 onset support 0 confirmation 0 prior decisions 2333280/2351520 fast/low reference dB -38.297/-42.140 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 2375520 onset support 2371200 confirmation 2376480 prior decisions 2351520/2365920 fast/low reference dB -22.009/-23.708 entry step 8.795 dB surrounding M -26.87/-25.58 LUFS; comparable member; inner decision 2072160
+Source witness root 3 frame 2392800 onset support 2391360 confirmation 2395680 prior decisions 2365920/2375520 fast/low reference dB -30.271/-35.970 entry step 7.447 dB surrounding M -24.50/-26.82 LUFS; missing or insufficient sustained level change; inner decision 0
+Source witness root 3 frame 2423040 onset support 0 confirmation 0 prior decisions 2375520/2392800 fast/low reference dB -38.071/-42.618 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 2425920 onset support 2420640 confirmation 2426880 prior decisions 2392800/2423040 fast/low reference dB -38.621/-42.731 entry step 0.964 dB; reference step below threshold; inner decision 0
+Source witness root 3 frame 2436000 onset support 2432160 confirmation 2437440 prior decisions 2423040/2425920 fast/low reference dB -26.147/-25.575 entry step 11.923 dB surrounding M -26.82/-27.15 LUFS; comparable member; inner decision 2072160
+Source witness root 3 frame 2454720 onset support 2451360 confirmation 2456640 prior decisions 2425920/2436000 fast/low reference dB -30.938/-32.370 entry step -4.618 dB; reference step below threshold; inner decision 0
+Source witness root 3 frame 2463840 onset support 0 confirmation 0 prior decisions 2436000/2454720 fast/low reference dB -31.067/-31.901 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 2496960 onset support 2492640 confirmation 2497920 prior decisions 2454720/2463840 fast/low reference dB -22.627/-23.566 entry step 8.311 dB surrounding M -27.55/-27.51 LUFS; comparable member; inner decision 2072160
+Source witness root 3 frame 2525760 onset support 2521440 confirmation 2526720 prior decisions 2463840/2496960 fast/low reference dB -31.061/-31.451 entry step 0.000 dB; two preceding attacks within 1 s unavailable; inner decision 0
+Source witness root 3 frame 2533440 onset support 2529600 confirmation 2534880 prior decisions 2496960/2525760 fast/low reference dB -30.773/-30.911 entry step 13.661 dB surrounding M -24.66/-24.16 LUFS; missing or insufficient sustained level change; inner decision 0
+Source witness root 3 frame 2557440 onset support 2553120 confirmation 2558400 prior decisions 2525760/2533440 fast/low reference dB -24.119/-25.372 entry step 6.655 dB surrounding M -28.00/-26.40 LUFS; comparable member; inner decision 2072160
+Source witness root 3 frame 2582400 onset support 2577120 confirmation 2584320 prior decisions 2533440/2557440 fast/low reference dB -30.605/-30.825 entry step 0.000 dB; two preceding attacks within 1 s unavailable; inner decision 0
+Source witness root 3 frame 2607840 onset support 2602560 confirmation 2609280 prior decisions 2557440/2582400 fast/low reference dB -36.232/-38.828 entry step 0.000 dB; two preceding attacks within 1 s unavailable; inner decision 0
+Source witness root 3 frame 2617920 onset support 2614080 confirmation 2619360 prior decisions 2582400/2607840 fast/low reference dB -22.546/-23.838 entry step 8.059 dB surrounding M -26.87/-26.28 LUFS; comparable member; inner decision 2072160
+Source witness root 3 frame 2628000 onset support 2622720 confirmation 2628960 prior decisions 2607840/2617920 fast/low reference dB -28.729/-29.374 entry step 2.272 dB; reference step below threshold; inner decision 0
+Source witness root 3 frame 2650560 onset support 2646720 confirmation 2652000 prior decisions 2617920/2628000 fast/low reference dB -29.377/-30.836 entry step 6.162 dB surrounding M -24.11/-23.66 LUFS; missing or insufficient sustained level change; inner decision 0
+Source witness root 3 frame 2666880 onset support 0 confirmation 0 prior decisions 2628000/2650560 fast/low reference dB -36.146/-38.664 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 2678880 onset support 2674560 confirmation 2679840 prior decisions 2650560/2666880 fast/low reference dB -26.259/-24.847 entry step 6.567 dB surrounding M -26.37/-24.32 LUFS; comparable member; inner decision 2072160
+Source witness root 3 frame 2692320 onset support 0 confirmation 0 prior decisions 2666880/2678880 fast/low reference dB -35.973/-33.121 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 2697120 onset support 0 confirmation 0 prior decisions 2678880/2692320 fast/low reference dB -29.577/-31.681 entry step 0.000 dB; comparable member; inner decision 2072160
+Source witness root 3 frame 2708160 onset support 2703840 confirmation 2709120 prior decisions 2692320/2697120 fast/low reference dB -27.584/-30.530 entry step 17.786 dB surrounding M -23.66/-22.19 LUFS; comparable member; inner decision 2072160
+Source witness root 3 frame 2730720 onset support 2726400 confirmation 2731680 prior decisions 2697120/2708160 fast/low reference dB -28.550/-33.233 entry step 3.145 dB; comparable member; inner decision 2072160
+Source witness root 3 frame 2739360 onset support 2735040 confirmation 2740320 prior decisions 2708160/2730720 fast/low reference dB -22.500/-23.581 entry step 6.948 dB surrounding M -24.27/-25.05 LUFS; comparable member; inner decision 2072160
+Source witness root 3 frame 2756160 onset support 2752320 confirmation 2757600 prior decisions 2730720/2739360 fast/low reference dB -28.218/-35.843 entry step -0.596 dB; comparable member; inner decision 2072160
+Source witness root 2 frame 2799840 onset support 2795520 confirmation 2800800 prior decisions 0/0 fast/low reference dB -23.844/-24.912 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 2799840 onset support 2795520 confirmation 2800800 prior decisions 2739360/2756160 fast/low reference dB -23.844/-24.912 entry step 0.000 dB; comparable member; inner decision 2072160
+Source witness root 2 frame 2812800 onset support 0 confirmation 0 prior decisions 0/2799840 fast/low reference dB -36.192/-32.814 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 2812800 onset support 0 confirmation 0 prior decisions 2756160/2799840 fast/low reference dB -36.192/-32.814 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 2 frame 2828160 onset support 2824800 confirmation 2830080 prior decisions 2799840/2812800 fast/low reference dB -31.175/-31.268 entry step 1.800 dB; reference step below threshold; inner decision 0
+Source witness root 3 frame 2828160 onset support 2824800 confirmation 2830080 prior decisions 2799840/2812800 fast/low reference dB -31.175/-31.268 entry step 1.800 dB; reference step below threshold; inner decision 0
+Source witness root 2 frame 2856960 onset support 0 confirmation 0 prior decisions 2812800/2828160 fast/low reference dB -40.292/-45.887 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 2856960 onset support 0 confirmation 0 prior decisions 2812800/2828160 fast/low reference dB -40.292/-45.887 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 2 frame 2896800 onset support 0 confirmation 0 prior decisions 2828160/2856960 fast/low reference dB -30.535/-31.131 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 3 frame 2896800 onset support 0 confirmation 0 prior decisions 2828160/2856960 fast/low reference dB -30.535/-31.131 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 2 frame 2923200 onset support 2917920 confirmation 2925120 prior decisions 2856960/2896800 fast/low reference dB -41.103/-46.421 entry step 0.000 dB; two preceding attacks within 1 s unavailable; inner decision 0
+Source witness root 3 frame 2923200 onset support 2917920 confirmation 2925120 prior decisions 2856960/2896800 fast/low reference dB -41.103/-46.421 entry step 0.000 dB; two preceding attacks within 1 s unavailable; inner decision 0
+Source witness root 2 frame 2940000 onset support 2936640 confirmation 2941920 prior decisions 2896800/2923200 fast/low reference dB -37.983/-45.019 entry step 8.409 dB surrounding M -33.99/-28.39 LUFS; role-specific tentative entrance; inner decision 2940000
+Source witness root 3 frame 2940000 onset support 2936640 confirmation 2941920 prior decisions 2896800/2923200 fast/low reference dB -37.983/-45.019 entry step 8.409 dB surrounding M -33.99/-28.39 LUFS; distinct entrance while inner slot occupied; inner decision 0
+Source witness root 2 frame 2954400 onset support 2950560 confirmation 2955840 prior decisions 2923200/2940000 fast/low reference dB -29.256/-36.989 entry step 8.728 dB surrounding M -34.30/-29.01 LUFS; distinct entrance while inner slot occupied; inner decision 2940000
+Source witness root 3 frame 2954400 onset support 2950560 confirmation 2955840 prior decisions 2923200/2940000 fast/low reference dB -29.256/-36.989 entry step 8.728 dB surrounding M -34.30/-29.01 LUFS; distinct entrance while inner slot occupied; inner decision 2072160
+Source witness root 2 frame 2978880 onset support 2974560 confirmation 2979840 prior decisions 2940000/2954400 fast/low reference dB -35.664/-41.012 entry step 1.794 dB; reference step below threshold; inner decision 0
+Source witness root 3 frame 2978880 onset support 2974560 confirmation 2979840 prior decisions 2940000/2954400 fast/low reference dB -35.664/-41.012 entry step 1.794 dB; reference step below threshold; inner decision 0
+Source witness root 2 frame 3042720 onset support 3038400 confirmation 3043680 prior decisions 2954400/2978880 fast/low reference dB -25.150/-24.854 entry step 0.000 dB; two preceding attacks within 1 s unavailable; inner decision 0
+Source witness root 3 frame 3042720 onset support 3038400 confirmation 3043680 prior decisions 2954400/2978880 fast/low reference dB -25.150/-24.854 entry step 0.000 dB; comparable member; inner decision 2072160
+Source witness root 2 frame 3068640 onset support 3063360 confirmation 3068640 prior decisions 2978880/3042720 fast/low reference dB -27.853/-30.159 entry step 0.000 dB; two preceding attacks within 1 s unavailable; inner decision 0
+Source witness root 2 frame 3103200 onset support 3098880 confirmation 3104160 prior decisions 3042720/3068640 fast/low reference dB -22.372/-23.621 entry step 0.000 dB; two preceding attacks within 1 s unavailable; inner decision 0
+Source witness root 2 frame 3111360 onset support 3107040 confirmation 3112320 prior decisions 3068640/3103200 fast/low reference dB -27.736/-29.221 entry step 0.031 dB; reference step below threshold; inner decision 0
+Source witness root 2 frame 3133440 onset support 3129600 confirmation 3134880 prior decisions 3103200/3111360 fast/low reference dB -23.478/-24.310 entry step -0.559 dB; reference step below threshold; inner decision 0
+Source witness root 2 frame 3158400 onset support 0 confirmation 0 prior decisions 3111360/3133440 fast/low reference dB -35.278/-39.047 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 2 frame 3162720 onset support 3158400 confirmation 3163680 prior decisions 3133440/3158400 fast/low reference dB -23.505/-24.794 entry step 13.523 dB surrounding M -22.55/-21.72 LUFS; comparable member; inner decision 2940000
+Source witness root 2 frame 3186720 onset support 3182400 confirmation 3187680 prior decisions 3158400/3162720 fast/low reference dB -28.976/-30.183 entry step -4.098 dB; reference step below threshold; inner decision 0
+Source witness root 2 frame 3194400 onset support 3190080 confirmation 3195360 prior decisions 3162720/3186720 fast/low reference dB -20.578/-22.076 entry step 5.059 dB; reference step below threshold; inner decision 0
+Source witness root 2 frame 3208800 onset support 0 confirmation 0 prior decisions 3186720/3194400 fast/low reference dB -36.520/-33.487 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 2 frame 3215520 onset support 0 confirmation 0 prior decisions 3194400/3208800 fast/low reference dB -35.273/-38.312 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 2 frame 3244800 onset support 3240480 confirmation 3245760 prior decisions 3208800/3215520 fast/low reference dB -28.192/-30.763 entry step 7.081 dB surrounding M -22.82/-22.44 LUFS; comparable member; inner decision 2940000
+Source witness root 2 frame 3254880 onset support 3251040 confirmation 3256320 prior decisions 3215520/3244800 fast/low reference dB -22.028/-23.439 entry step 6.164 dB surrounding M -22.57/-22.62 LUFS; missing or insufficient sustained level change; inner decision 0
+Source witness root 2 frame 3272160 onset support 0 confirmation 0 prior decisions 3244800/3254880 fast/low reference dB -34.360/-40.146 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 2 frame 3278400 onset support 3274080 confirmation 3279360 prior decisions 3254880/3272160 fast/low reference dB -34.239/-39.443 entry step 6.560 dB surrounding M -21.96/-22.06 LUFS; missing or insufficient sustained level change; inner decision 0
+Source witness root 2 frame 3285120 onset support 3280800 confirmation 3286080 prior decisions 3272160/3278400 fast/low reference dB -24.169/-25.251 entry step 10.070 dB surrounding M -21.75/-21.96 LUFS; missing or insufficient sustained level change; inner decision 0
+Source witness root 2 frame 3310080 onset support 3306240 confirmation 3311520 prior decisions 3278400/3285120 fast/low reference dB -26.847/-30.458 entry step 6.248 dB surrounding M -22.62/-24.48 LUFS; comparable member; inner decision 2940000
+Source witness root 2 frame 3338400 onset support 3334080 confirmation 3340800 prior decisions 3285120/3310080 fast/low reference dB -34.538/-40.893 entry step 0.000 dB; comparable member; inner decision 2940000
+Source witness root 2 frame 3371520 onset support 0 confirmation 0 prior decisions 3310080/3338400 fast/low reference dB -28.863/-30.126 entry step 0.000 dB; comparable member; inner decision 2940000
+Source witness root 2 frame 3396480 onset support 3395040 confirmation 3399360 prior decisions 3338400/3371520 fast/low reference dB -37.371/-43.316 entry step 0.000 dB; two preceding attacks within 1 s unavailable; inner decision 0
+Source witness root 2 frame 3401760 onset support 3396480 confirmation 3401760 prior decisions 3371520/3396480 fast/low reference dB -33.870/-37.040 entry step -1.062 dB; comparable member; inner decision 2940000
+Source witness root 2 frame 3432480 onset support 3428160 confirmation 3433440 prior decisions 3396480/3401760 fast/low reference dB -29.218/-30.165 entry step 6.876 dB surrounding M -23.46/-22.87 LUFS; comparable member; inner decision 2940000
+Source witness root 2 frame 3462240 onset support 3457920 confirmation 3463200 prior decisions 3401760/3432480 fast/low reference dB -33.678/-36.504 entry step 0.000 dB; comparable member; inner decision 2940000
+Source witness root 2 frame 3492960 onset support 3488640 confirmation 3493920 prior decisions 3432480/3462240 fast/low reference dB -28.729/-30.034 entry step 0.000 dB; comparable member; inner decision 2940000
+Source witness root 2 frame 3523200 onset support 3518880 confirmation 3524160 prior decisions 3462240/3492960 fast/low reference dB -33.601/-35.817 entry step 0.000 dB; comparable member; inner decision 2940000
+Source witness root 2 frame 3550080 onset support 0 confirmation 0 prior decisions 3492960/3523200 fast/low reference dB -44.956/-53.079 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 2 frame 3553440 onset support 3549120 confirmation 3554400 prior decisions 3523200/3550080 fast/low reference dB -33.993/-36.226 entry step 0.136 dB; comparable member; inner decision 2940000
+Source witness root 2 frame 3575520 onset support 0 confirmation 0 prior decisions 3550080/3553440 fast/low reference dB -43.420/-52.841 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 2 frame 3583680 onset support 3579360 confirmation 3584640 prior decisions 3553440/3575520 fast/low reference dB -33.843/-36.409 entry step 0.508 dB; comparable member; inner decision 2940000
+Source witness root 2 frame 3613920 onset support 3609600 confirmation 3614880 prior decisions 3575520/3583680 fast/low reference dB -34.249/-36.463 entry step 3.478 dB; comparable member; inner decision 2940000
+Source witness root 2 frame 3633600 onset support 3630720 confirmation 3636000 prior decisions 3583680/3613920 fast/low reference dB -39.172/-49.780 entry step 0.000 dB; two preceding attacks within 1 s unavailable; inner decision 0
+Source witness root 2 frame 3644640 onset support 3640320 confirmation 3645600 prior decisions 3613920/3633600 fast/low reference dB -33.680/-37.336 entry step 4.592 dB; comparable member; inner decision 2940000
+Source witness root 2 frame 3674400 onset support 3670560 confirmation 3675840 prior decisions 3633600/3644640 fast/low reference dB -10.499/-13.209 entry step 23.180 dB surrounding M -11.33/-7.09 LUFS; distinct entrance while inner slot occupied; inner decision 2940000
+Source witness root 2 frame 3692160 onset support 0 confirmation 0 prior decisions 3644640/3674400 fast/low reference dB -12.425/-12.579 entry step 0.000 dB; comparable member; inner decision 2940000
+Source witness root 2 frame 3907200 onset support 0 confirmation 0 prior decisions 3674400/3692160 fast/low reference dB -36.739/-36.243 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 2 frame 3953760 onset support 0 confirmation 0 prior decisions 3692160/3907200 fast/low reference dB -36.735/-38.193 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 2 frame 4017600 onset support 0 confirmation 0 prior decisions 3907200/3953760 fast/low reference dB -33.512/-36.652 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 8664960 onset support 0 confirmation 0 prior decisions 0/0 fast/low reference dB -51.246/-56.994 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 8683680 onset support 8679360 confirmation 8684640 prior decisions 0/8664960 fast/low reference dB -38.599/-44.279 entry step 0.000 dB; two preceding attacks within 1 s unavailable; inner decision 0
+Source witness root 1 frame 8714880 onset support 0 confirmation 0 prior decisions 8664960/8683680 fast/low reference dB -41.919/-44.696 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 8720640 onset support 8715360 confirmation 8721120 prior decisions 8683680/8714880 fast/low reference dB -34.398/-37.559 entry step 6.720 dB surrounding M -27.83/-37.93 LUFS; missing or insufficient sustained level change; inner decision 0
+Source witness root 1 frame 8769120 onset support 8765280 confirmation 8770560 prior decisions 8714880/8720640 fast/low reference dB -31.968/-40.459 entry step 0.000 dB; two preceding attacks within 1 s unavailable; inner decision 0
+Source witness root 1 frame 8794560 onset support 0 confirmation 0 prior decisions 8720640/8769120 fast/low reference dB -46.170/-49.575 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 8823840 onset support 8820480 confirmation 8825760 prior decisions 8769120/8794560 fast/low reference dB -45.179/-53.708 entry step 0.000 dB; two preceding attacks within 1 s unavailable; inner decision 0
+Source witness root 1 frame 8855520 onset support 8851680 confirmation 8856960 prior decisions 8794560/8823840 fast/low reference dB -27.571/-30.483 entry step 0.000 dB; two preceding attacks within 1 s unavailable; inner decision 0
+Source witness root 1 frame 8877120 onset support 0 confirmation 0 prior decisions 8823840/8855520 fast/low reference dB -30.308/-30.220 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 8897760 onset support 8892960 confirmation 8898240 prior decisions 8855520/8877120 fast/low reference dB -29.431/-28.864 entry step 5.197 dB; reference step below threshold; inner decision 0
+Source witness root 1 frame 8919360 onset support 0 confirmation 0 prior decisions 8877120/8897760 fast/low reference dB -31.020/-30.653 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 8927520 onset support 0 confirmation 0 prior decisions 8897760/8919360 fast/low reference dB -31.235/-33.860 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 8936640 onset support 0 confirmation 0 prior decisions 8919360/8927520 fast/low reference dB -28.982/-29.641 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 8938560 onset support 0 confirmation 0 prior decisions 8927520/8936640 fast/low reference dB -29.293/-29.641 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 8948160 onset support 0 confirmation 0 prior decisions 8936640/8938560 fast/low reference dB -31.023/-33.263 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 8955840 onset support 8952000 confirmation 8957280 prior decisions 8938560/8948160 fast/low reference dB -30.183/-38.224 entry step 3.395 dB; reference step below threshold; inner decision 0
+Source witness root 1 frame 8959680 onset support 8955360 confirmation 8962560 prior decisions 8948160/8955840 fast/low reference dB -28.891/-30.106 entry step 3.341 dB; reference step below threshold; inner decision 0
+Source witness root 1 frame 8979840 onset support 8975520 confirmation 8983200 prior decisions 8955840/8959680 fast/low reference dB -28.946/-29.792 entry step 0.802 dB; reference step below threshold; inner decision 0
+Source witness root 1 frame 8987520 onset support 0 confirmation 0 prior decisions 8959680/8979840 fast/low reference dB -28.925/-32.566 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 8993280 onset support 8988960 confirmation 8996640 prior decisions 8979840/8987520 fast/low reference dB -33.987/-39.232 entry step 3.606 dB; reference step below threshold; inner decision 0
+Source witness root 1 frame 9020640 onset support 9016800 confirmation 9022080 prior decisions 8987520/8993280 fast/low reference dB -29.383/-29.474 entry step 3.492 dB; reference step below threshold; inner decision 0
+Source witness root 1 frame 9031680 onset support 9027840 confirmation 9033120 prior decisions 8993280/9020640 fast/low reference dB -31.003/-34.514 entry step -1.619 dB; reference step below threshold; inner decision 0
+Source witness root 1 frame 9036960 onset support 9034560 confirmation 9039840 prior decisions 9020640/9031680 fast/low reference dB -31.061/-36.797 entry step 8.053 dB surrounding M -24.17/-24.47 LUFS; missing or insufficient sustained level change; inner decision 0
+Source witness root 1 frame 9057120 onset support 0 confirmation 0 prior decisions 9031680/9036960 fast/low reference dB -37.346/-40.661 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 9061920 onset support 9058080 confirmation 9063360 prior decisions 9036960/9057120 fast/low reference dB -30.827/-29.162 entry step 7.635 dB surrounding M -23.57/-22.91 LUFS; missing or insufficient sustained level change; inner decision 0
+Source witness root 1 frame 9078240 onset support 9073920 confirmation 9079200 prior decisions 9057120/9061920 fast/low reference dB -30.231/-37.633 entry step 14.035 dB surrounding M -24.47/-23.32 LUFS; missing or insufficient sustained level change; inner decision 0
+Source witness root 1 frame 9089280 onset support 0 confirmation 0 prior decisions 9061920/9078240 fast/low reference dB -28.718/-32.576 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 9103680 onset support 9099360 confirmation 9107040 prior decisions 9078240/9089280 fast/low reference dB -30.293/-28.860 entry step 3.812 dB; reference step below threshold; inner decision 0
+Source witness root 1 frame 9110880 onset support 0 confirmation 0 prior decisions 9089280/9103680 fast/low reference dB -29.350/-33.158 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 9116640 onset support 0 confirmation 0 prior decisions 9103680/9110880 fast/low reference dB -31.859/-36.645 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 9122880 onset support 9117600 confirmation 9124800 prior decisions 9110880/9116640 fast/low reference dB -28.824/-30.100 entry step 3.686 dB; reference step below threshold; inner decision 0
+Source witness root 1 frame 9137280 onset support 0 confirmation 0 prior decisions 9116640/9122880 fast/low reference dB -30.996/-35.682 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 9154080 onset support 9148800 confirmation 9155040 prior decisions 9122880/9137280 fast/low reference dB -29.852/-35.354 entry step 4.883 dB; reference step below threshold; inner decision 0
+Source witness root 1 frame 9166080 onset support 0 confirmation 0 prior decisions 9137280/9154080 fast/low reference dB -29.011/-29.855 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 9185280 onset support 0 confirmation 0 prior decisions 9154080/9166080 fast/low reference dB -28.717/-30.113 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 9201600 onset support 9196320 confirmation 9202080 prior decisions 9166080/9185280 fast/low reference dB -26.633/-35.270 entry step 2.590 dB; reference step below threshold; inner decision 0
+Source witness root 1 frame 9228000 onset support 0 confirmation 0 prior decisions 9185280/9201600 fast/low reference dB -30.252/-32.770 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 9243840 onset support 9240000 confirmation 9245280 prior decisions 9201600/9228000 fast/low reference dB -27.277/-31.767 entry step 1.492 dB; reference step below threshold; inner decision 0
+Source witness root 1 frame 9260640 onset support 0 confirmation 0 prior decisions 9228000/9243840 fast/low reference dB -29.660/-36.348 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 9266880 onset support 0 confirmation 0 prior decisions 9243840/9260640 fast/low reference dB -28.523/-31.048 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 9282720 onset support 0 confirmation 0 prior decisions 9260640/9266880 fast/low reference dB -30.231/-35.496 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 9289440 onset support 0 confirmation 0 prior decisions 9266880/9282720 fast/low reference dB -29.542/-33.235 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 9297600 onset support 0 confirmation 0 prior decisions 9282720/9289440 fast/low reference dB -28.726/-34.678 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 9310080 onset support 0 confirmation 0 prior decisions 9289440/9297600 fast/low reference dB -29.183/-30.515 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 9320640 onset support 0 confirmation 0 prior decisions 9297600/9310080 fast/low reference dB -28.565/-32.503 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 9323520 onset support 9318720 confirmation 9324000 prior decisions 9310080/9320640 fast/low reference dB -28.996/-32.944 entry step 1.867 dB; reference step below threshold; inner decision 0
+Source witness root 1 frame 9331200 onset support 0 confirmation 0 prior decisions 9320640/9323520 fast/low reference dB -30.505/-32.337 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 9341280 onset support 9336960 confirmation 9342240 prior decisions 9323520/9331200 fast/low reference dB -30.778/-34.639 entry step 6.378 dB surrounding M -22.27/-21.26 LUFS; missing or insufficient sustained level change; inner decision 0
+Source witness root 1 frame 9349440 onset support 9345120 confirmation 9350400 prior decisions 9331200/9341280 fast/low reference dB -27.164/-30.063 entry step 4.574 dB; reference step below threshold; inner decision 0
+Source witness root 1 frame 9371520 onset support 0 confirmation 0 prior decisions 9341280/9349440 fast/low reference dB -29.096/-31.947 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 9379680 onset support 9374400 confirmation 9380160 prior decisions 9349440/9371520 fast/low reference dB -28.602/-33.544 entry step 2.883 dB; reference step below threshold; inner decision 0
+Source witness root 1 frame 9392640 onset support 9387360 confirmation 9394080 prior decisions 9371520/9379680 fast/low reference dB -29.330/-33.166 entry step 4.303 dB; reference step below threshold; inner decision 0
+Source witness root 1 frame 9400800 onset support 9397440 confirmation 9402720 prior decisions 9379680/9392640 fast/low reference dB -29.387/-34.812 entry step 11.084 dB surrounding M -21.51/-22.10 LUFS; missing or insufficient sustained level change; inner decision 0
+Source witness root 1 frame 9412800 onset support 9407520 confirmation 9412800 prior decisions 9392640/9400800 fast/low reference dB -28.526/-31.355 entry step 2.331 dB; reference step below threshold; inner decision 0
+Source witness root 1 frame 9433440 onset support 0 confirmation 0 prior decisions 9400800/9412800 fast/low reference dB -29.039/-32.854 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 9437280 onset support 9433920 confirmation 9440160 prior decisions 9412800/9433440 fast/low reference dB -28.803/-33.570 entry step 1.491 dB; reference step below threshold; inner decision 0
+Source witness root 1 frame 9452640 onset support 0 confirmation 0 prior decisions 9433440/9437280 fast/low reference dB -29.048/-30.527 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 9474240 onset support 9468960 confirmation 9476640 prior decisions 9437280/9452640 fast/low reference dB -30.437/-32.555 entry step 0.434 dB; reference step below threshold; inner decision 0
+Source witness root 1 frame 9493920 onset support 9488640 confirmation 9493920 prior decisions 9452640/9474240 fast/low reference dB -31.400/-29.325 entry step 2.356 dB; reference step below threshold; inner decision 0
+Source witness root 1 frame 9514560 onset support 9510240 confirmation 9515520 prior decisions 9474240/9493920 fast/low reference dB -27.750/-30.168 entry step 4.059 dB; reference step below threshold; inner decision 0
+Source witness root 1 frame 9535200 onset support 0 confirmation 0 prior decisions 9493920/9514560 fast/low reference dB -29.467/-29.960 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 9549600 onset support 0 confirmation 0 prior decisions 9514560/9535200 fast/low reference dB -31.727/-37.207 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Source witness root 1 frame 9577440 onset support 0 confirmation 0 prior decisions 9535200/9549600 fast/low reference dB -28.513/-29.228 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Inner interpretation a408ebc07a40fe0002c6f596ffb1f7cabf90f6020584b67ba1d351e999d0e0ab of 9885d079af611d29ded6a5c8e537be67842cb667111df262f73c246af05c11e1; last comparable [382080, 383040); in-decay [0, 0); after-return [0, 0); captured window excess 0.00000 (unselected or incomplete pair)
+Inner interpretation fb6194f56c0ae94f1a9b784f343564456ce18e18fd98afaa0195bd6537d91934 of 7f202e560c504eeb372449efa9a9fed7fa34917e6b58d32f2113c906a8e29f76; last comparable [3041760, 3042720); in-decay [0, 0); after-return [0, 0); captured window excess 127.63587 (unselected or incomplete pair)
+Inner interpretation 3ac39a855f1ba2a0a440d8e8b89965dc384147732566396602bb97d4e6bde499 of 6dde03f406bec8d6bdb12b1995efbce0f473c78090eb63c3634e6ac38b6af012; last comparable [3691200, 3692160); in-decay [3754080, 3763680); after-return [0, 0); captured window excess 937.75780 (retained pair)
+Omitted witnesses 191, occupied-slot conflicts 4
+Source event e26c9037e4d6ee98488216fcadd176294e2625c0e2d392f6f7b7ece61b0b6bed onset [1440, 6720) decay [253440, 267840); onset raw-peak witness channel 1 frame 6304; baseline included need-window indices 0..24 (25 included, exact inclusion/ceiling predicate); Tentative Source rise; corroboration incomplete
+Source event 9885d079af611d29ded6a5c8e537be67842cb667111df262f73c246af05c11e1 onset [310080, 313920) decay [0, 0); onset raw-peak witness channel 1 frame 313464; baseline included need-window indices -1..-1 (0 included, exact inclusion/ceiling predicate); Tentative Source rise; corroboration incomplete; Onset/ending detail or confirmed ending unavailable
+Source event a408ebc07a40fe0002c6f596ffb1f7cabf90f6020584b67ba1d351e999d0e0ab onset [379200, 384480) decay [0, 0); onset raw-peak witness channel 1 frame 382933; baseline included need-window indices -1..-1 (0 included, exact inclusion/ceiling predicate); Corroborated inner Source rise within continuing activity; return unsealed at context limit; onset or ending detail incomplete
+Source event 7f202e560c504eeb372449efa9a9fed7fa34917e6b58d32f2113c906a8e29f76 onset [1935840, 1941120) decay [0, 0); onset raw-peak witness channel 1 frame 1940701; baseline included need-window indices 427..579 (151 included, exact inclusion/ceiling predicate); Tentative Source rise; corroboration incomplete; Onset/ending detail or confirmed ending unavailable
+Source event fb6194f56c0ae94f1a9b784f343564456ce18e18fd98afaa0195bd6537d91934 onset [2068320, 2073600) decay [0, 0); onset raw-peak witness channel 1 frame 2071888; baseline included need-window indices 427..579 (151 included, exact inclusion/ceiling predicate); Corroborated inner Source rise within continuing activity; another distinct rise while the inner slot was occupied; return unsealed at context limit; onset or ending detail incomplete
+Source event 6dde03f406bec8d6bdb12b1995efbce0f473c78090eb63c3634e6ac38b6af012 onset [2795520, 2799840) decay [0, 0); onset raw-peak witness channel 2 frame 2799458; baseline included need-window indices 612..782 (171 included, exact inclusion/ceiling predicate); Broadband and low-band persistent Source rise; Onset/ending detail or confirmed ending unavailable
+Source event 3ac39a855f1ba2a0a440d8e8b89965dc384147732566396602bb97d4e6bde499 onset [2936640, 2941920) decay [0, 0); onset raw-peak witness channel 3 frame 2939934; baseline included need-window indices 612..782 (171 included, exact inclusion/ceiling predicate); Tentative role-specific inner rise; another distinct rise while the inner slot was occupied; return unsealed at context limit; onset or ending detail incomplete
+Source event c9756f748a3abffe38226b3a9bf7a56ae3010faf2cb3ba0fdf84b86667b4ff17 onset [8659680, 8664960) decay [0, 0); onset raw-peak witness channel 3 frame 8664662; baseline included need-window indices 1830..2714 (885 included, exact inclusion/ceiling predicate); Tentative Source rise; corroboration incomplete; Onset/ending detail or confirmed ending unavailable
+
+Complete measured attempt 1 / affa188241d1a537b4d2e72c0022ae813c4dff6b0c6c7ba7eaf51f0a4ef857e2
+Actual Private candidate (not Current State) evaluation: FAIL
+Fails one or more selected measured rules.
+programme-loudness: PASS | -23.000021 LUFS | min -23.200000 | max -22.800000 | delta -0.000021
+Within selected bounds.
+true-peak: FAIL | -0.790036 dBTP | max -1.000000 | delta 0.209964
+Outside selected bounds.
+loudness-range: FAIL | 23.584763 LU | max 15.000000 | delta 8.584763
+Outside selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Family original boundaries / attempt 4150d1a406d0d8f04883ca0c99d493f1ebd7640fc2c25604e1e29ffe58ee9d5a
+Event coverage: Known partial + uncertain. Editorial evidence, not a measured delivery rule.
+Root 1: missing/capped event association; 
+e26c9037e4d6ee98488216fcadd176294e2625c0e2d392f6f7b7ece61b0b6bed [1440, 267840): Return precedes supported decay end; Event evidence incomplete/uncertain: Tentative Source rise; corroboration incomplete; 
+7f202e560c504eeb372449efa9a9fed7fa34917e6b58d32f2113c906a8e29f76 [1935840, 3067200): Incidental event has no independently established intended schedule; Event evidence incomplete/uncertain: Tentative Source rise; corroboration incomplete; Onset/ending detail or confirmed ending unavailable; 
+fb6194f56c0ae94f1a9b784f343564456ce18e18fd98afaa0195bd6537d91934 [2068320, 3067200): Inner interpretation of 7f202e560c504eeb372449efa9a9fed7fa34917e6b58d32f2113c906a8e29f76; Incidental event has no independently established intended schedule; Event evidence incomplete/uncertain: Corroborated inner Source rise within continuing activity; another distinct rise while the inner slot was occupied; return unsealed at context limit; onset or ending detail incomplete; 
+6dde03f406bec8d6bdb12b1995efbce0f473c78090eb63c3634e6ac38b6af012 [2795520, 4041600): Intended correction not reached by earliest plausible onset; Event evidence incomplete/uncertain: Broadband and low-band persistent Source rise; Onset/ending detail or confirmed ending unavailable; 
+3ac39a855f1ba2a0a440d8e8b89965dc384147732566396602bb97d4e6bde499 [2936640, 4041600): Inner interpretation of 6dde03f406bec8d6bdb12b1995efbce0f473c78090eb63c3634e6ac38b6af012; Intended correction not reached by earliest plausible onset; Event evidence incomplete/uncertain: Tentative role-specific inner rise; another distinct rise while the inner slot was occupied; return unsealed at context limit; onset or ending detail incomplete; 
+c9756f748a3abffe38226b3a9bf7a56ae3010faf2cb3ba0fdf84b86667b4ff17 [8659680, 13315200): Event evidence incomplete/uncertain: Tentative Source rise; corroboration incomplete; Onset/ending detail or confirmed ending unavailable; 
+IL: -23.000020804501
+TP: -0.790036004769
+LRA: 23.584762674508
+M max: -6.841999288612
+S max: -11.424486120825
+sample peak: -1.293834101310
+Forecast IL -23.000000000000; LRA 23.584762675617; TP unknown (not a measured failure). Approximate window-energy proxy: uniform bin energy, filter/gain noncommutation and float-stage rounding. Sampled M/S cannot certify maxima; true peak unavailable. Empirical errors are not proven bounds. EOF drain retains global-scaled baseline shape; locally transformed filter-tail state is uncertain, not measured silence. Full-population gate membership changes; constant-gain/local-LRA shortcuts are invalid.
+Forecast gate entry/exit: I 361/2; LRA 279/0.
+Actual minus forecast (IL/LRA/P10/P95/sampled M): -0.000020804501 -0.000000001108 0.000000001616 0.000000000508 0.200516439539. Empirical errors, not bounds.
+Changed support 5606400 programme frames; 3 connected regions; max added 3.000000000000 dB; absolute local dB*frames 16688767.978392630816; global 1.356827620496 dB.
+Independent activity accounting (not an audio-quality score)
+New splits per original root: root 1 = 0; root 2 = 0; root 3 = 0; root 4 = 0;
+Total splits 0; decision parts including unchanged gaps 3; connected changed regions 3.
+Newly affected duration including old/new ramps: 5606400 / 23040000 programme frames = 116.8 s = 24.333333333333332%.
+Nominal engine intervals 6 / 10000; actual transition count 5; longest changed run 4387200 frames; margin activity 0 frames.
+Maximum added attenuation 3 dB; maximum cumulative attenuation 3 dB; absolute local dB*frames 16688767.978392631.
+Cumulative non-unity local-envelope support: 5606400 frames in 3 components; distinct from newly affected duration.
+Global gain 1.3568276204958565 dB; delta 1.3568276204958565 dB - separate whole-programme change, excluded from the local duration percentage.
+Complete changed support (half-open source frames, old/new ramps included):
+[0, 259200)
+[2937600, 3897600)
+[8784000, 13171200)
+Complete nominal plan and fixed transitions (source frames; these are not changed-support edges):
+[0, 256800) plateau -2.6322740591613396 dB
+[256800, 2940000) plateau 0 dB; incoming ramp [254400, 259200), nominal cut 256800, radius 2400
+[2940000, 3895200) plateau -3 dB; incoming ramp [2937600, 2942400), nominal cut 2940000, radius 2400
+[3895200, 8786400) plateau 0 dB; incoming ramp [3892800, 3897600), nominal cut 3895200, radius 2400
+[8786400, 13168800) plateau -3 dB; incoming ramp [8784000, 8788800), nominal cut 8786400, radius 2400
+[13168800, 23040000) plateau 0 dB; incoming ramp [13166400, 13171200), nominal cut 13168800, radius 2400
+Root analysis:8e7cc1853229ae6f66b93e891d58bc8463761e2ce5d6e8be98647f44d31b5cf0:8784000:13171200; Unsplit original root, fixed-ramp support edges; support [8784000, 13171200); nominal cuts 8786400, 13168800; additional reductions 3.000000000000 dB.
+Requested / achieved reserve / uncovered deficit by part: [9.300181717692 / 0.000000000000 / 5.800181717692] dB.
+Root analysis:8e7cc1853229ae6f66b93e891d58bc8463761e2ce5d6e8be98647f44d31b5cf0:2937600:3897600; Unsplit original root, fixed-ramp support edges; support [2937600, 3897600); nominal cuts 2940000, 3895200; additional reductions 3.000000000000 dB.
+Requested / achieved reserve / uncovered deficit by part: [16.812275431635 / 0.000000000000 / 13.312275431635] dB.
+Root analysis:8e7cc1853229ae6f66b93e891d58bc8463761e2ce5d6e8be98647f44d31b5cf0:0:259200; Unsplit original root, fixed-ramp support edges; support [0, 259200); nominal cuts 0, 256800; additional reductions 2.632274059161 dB.
+Requested / achieved reserve / uncovered deficit by part: [2.632274059161 / 0.500000000000 / 0.000000000000] dB.
+
+Complete measured attempt 2 / 1588aa4cd75d5350fb106fefd5016a8984410c26774aa7e3ca335b182346506a
+Actual Private candidate (not Current State) evaluation: FAIL
+Fails one or more selected measured rules.
+programme-loudness: PASS | -23.000543 LUFS | min -23.200000 | max -22.800000 | delta -0.000543
+Within selected bounds.
+true-peak: PASS | -2.665319 dBTP | max -1.000000 | delta -1.665319
+Within selected bounds.
+loudness-range: FAIL | 23.124639 LU | max 15.000000 | delta 8.124639
+Outside selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Family tighter/spared/other / attempt 1473f6b1c12c04febcb7a998a185ee8dc32dcd0baa267c059740c6fd04bacd18
+Event coverage: Known partial + uncertain. Editorial evidence, not a measured delivery rule.
+Root 1: missing/capped event association; 
+e26c9037e4d6ee98488216fcadd176294e2625c0e2d392f6f7b7ece61b0b6bed [1440, 267840): Return precedes supported decay end; Event evidence incomplete/uncertain: Tentative Source rise; corroboration incomplete; 
+6dde03f406bec8d6bdb12b1995efbce0f473c78090eb63c3634e6ac38b6af012 [2795520, 4041600): Intended correction not reached by earliest plausible onset; Event evidence incomplete/uncertain: Broadband and low-band persistent Source rise; Onset/ending detail or confirmed ending unavailable; 
+3ac39a855f1ba2a0a440d8e8b89965dc384147732566396602bb97d4e6bde499 [2936640, 4041600): Inner interpretation of 6dde03f406bec8d6bdb12b1995efbce0f473c78090eb63c3634e6ac38b6af012; Intended correction not reached by earliest plausible onset; Event evidence incomplete/uncertain: Tentative role-specific inner rise; another distinct rise while the inner slot was occupied; return unsealed at context limit; onset or ending detail incomplete; 
+c9756f748a3abffe38226b3a9bf7a56ae3010faf2cb3ba0fdf84b86667b4ff17 [8659680, 13315200): Event evidence incomplete/uncertain: Tentative Source rise; corroboration incomplete; Onset/ending detail or confirmed ending unavailable; 
+IL: -23.000543350574
+TP: -2.665319118251
+LRA: 23.124639129213
+M max: -8.717282416347
+S max: -13.299769246875
+sample peak: -3.169117145731
+Forecast IL -23.000000000000; LRA 23.124639131128; TP unknown (not a measured failure). Approximate window-energy proxy: uniform bin energy, filter/gain noncommutation and float-stage rounding. Sampled M/S cannot certify maxima; true peak unavailable. Empirical errors are not proven bounds. EOF drain retains global-scaled baseline shape; locally transformed filter-tail state is uncertain, not measured silence. Full-population gate membership changes; constant-gain/local-LRA shortcuts are invalid.
+Forecast gate entry/exit: I 167/4; LRA 129/0.
+Actual minus forecast (IL/LRA/P10/P95/sampled M): -0.000543350574 -0.000000001914 0.000000002307 0.000000000393 0.200516437308. Empirical errors, not bounds.
+Changed support 1636800 programme frames; 3 connected regions; max added 3.000000000000 dB; absolute local dB*frames 4809974.415165066719; global -0.518455505009 dB.
+Independent activity accounting (not an audio-quality score)
+New splits per original root: root 1 = 0; root 2 = 0; root 3 = 0; root 4 = 0;
+Total splits 0; decision parts including unchanged gaps 3; connected changed regions 3.
+Newly affected duration including old/new ramps: 1636800 / 23040000 programme frames = 34.100000000000001 s = 7.104166666666667%.
+Nominal engine intervals 6 / 10000; actual transition count 5; longest changed run 1123200 frames; margin activity 0 frames.
+Maximum added attenuation 3 dB; maximum cumulative attenuation 3 dB; absolute local dB*frames 4809974.4151650667.
+Cumulative non-unity local-envelope support: 1636800 frames in 3 components; distinct from newly affected duration.
+Global gain -0.51845550500914683 dB; delta -0.51845550500914683 dB - separate whole-programme change, excluded from the local duration percentage.
+Complete changed support (half-open source frames, old/new ramps included):
+[0, 177600)
+[3523200, 3859200)
+[12004800, 13128000)
+Complete nominal plan and fixed transitions (source frames; these are not changed-support edges):
+[0, 175200) plateau -2.6322740591613396 dB
+[175200, 3525600) plateau 0 dB; incoming ramp [172800, 177600), nominal cut 175200, radius 2400
+[3525600, 3856800) plateau -3 dB; incoming ramp [3523200, 3528000), nominal cut 3525600, radius 2400
+[3856800, 12007200) plateau 0 dB; incoming ramp [3854400, 3859200), nominal cut 3856800, radius 2400
+[12007200, 13125600) plateau -3 dB; incoming ramp [12004800, 12009600), nominal cut 12007200, radius 2400
+[13125600, 23040000) plateau 0 dB; incoming ramp [13123200, 13128000), nominal cut 13125600, radius 2400
+Root analysis:8e7cc1853229ae6f66b93e891d58bc8463761e2ce5d6e8be98647f44d31b5cf0:0:259200; Alternative exact outer processing support; support [0, 177600); nominal cuts 0, 175200; additional reductions 2.632274059161 dB.
+Requested / achieved reserve / uncovered deficit by part: [2.632274059161 / 0.500000000000 / 0.000000000000] dB.
+Root analysis:8e7cc1853229ae6f66b93e891d58bc8463761e2ce5d6e8be98647f44d31b5cf0:2937600:3897600; Unsplit outer refinement with strongest combined boundary nominations; support [3523200, 3859200); nominal cuts 3525600, 3856800; additional reductions 3.000000000000 dB.
+Requested / achieved reserve / uncovered deficit by part: [16.832832087127 / 0.000000000000 / 13.332832087127] dB.
+Root analysis:8e7cc1853229ae6f66b93e891d58bc8463761e2ce5d6e8be98647f44d31b5cf0:8784000:13171200; Unsplit outer refinement with strongest combined boundary nominations; support [12004800, 13128000); nominal cuts 12007200, 13125600; additional reductions 3.000000000000 dB.
+Requested / achieved reserve / uncovered deficit by part: [9.567399059884 / 0.000000000000 / 6.067399059884] dB.
+
+Complete measured attempt 3 / 92742a5950394b8dd4b425c895b3c75e18c336b533110bc1a45a41f14580f02a (retained)
+Actual Private candidate (not Current State) evaluation: FAIL
+Fails one or more selected measured rules.
+programme-loudness: PASS | -23.000542 LUFS | min -23.200000 | max -22.800000 | delta -0.000542
+Within selected bounds.
+true-peak: PASS | -2.680134 dBTP | max -1.000000 | delta -1.680134
+Within selected bounds.
+loudness-range: FAIL | 23.124639 LU | max 15.000000 | delta 8.124639
+Outside selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Family tighter/spared/other / attempt 24193361193d40181544791d73f74b5144fcfb77c1c99bda2eddfb9559287550
+Event coverage: Known partial + uncertain. Editorial evidence, not a measured delivery rule.
+Root 1: missing/capped event association; 
+e26c9037e4d6ee98488216fcadd176294e2625c0e2d392f6f7b7ece61b0b6bed [1440, 267840): Return precedes supported decay end; Event evidence incomplete/uncertain: Tentative Source rise; corroboration incomplete; 
+6dde03f406bec8d6bdb12b1995efbce0f473c78090eb63c3634e6ac38b6af012 [2795520, 4041600): Intended correction not reached by earliest plausible onset; Event evidence incomplete/uncertain: Broadband and low-band persistent Source rise; Onset/ending detail or confirmed ending unavailable; 
+3ac39a855f1ba2a0a440d8e8b89965dc384147732566396602bb97d4e6bde499 [2936640, 4041600): Inner interpretation of 6dde03f406bec8d6bdb12b1995efbce0f473c78090eb63c3634e6ac38b6af012; Intended correction not reached by earliest plausible onset; Event evidence incomplete/uncertain: Tentative role-specific inner rise; another distinct rise while the inner slot was occupied; return unsealed at context limit; onset or ending detail incomplete; 
+c9756f748a3abffe38226b3a9bf7a56ae3010faf2cb3ba0fdf84b86667b4ff17 [8659680, 13315200): Event evidence incomplete/uncertain: Tentative Source rise; corroboration incomplete; Onset/ending detail or confirmed ending unavailable; 
+IL: -23.000541692416
+TP: -2.680134088139
+LRA: 23.124639131581
+M max: -8.732097200955
+S max: -13.314584032898
+sample peak: -3.183932190943
+Forecast IL -23.000000000000; LRA 23.124639131129; TP unknown (not a measured failure). Approximate window-energy proxy: uniform bin energy, filter/gain noncommutation and float-stage rounding. Sampled M/S cannot certify maxima; true peak unavailable. Empirical errors are not proven bounds. EOF drain retains global-scaled baseline shape; locally transformed filter-tail state is uncertain, not measured silence. Full-population gate membership changes; constant-gain/local-LRA shortcuts are invalid.
+Forecast gate entry/exit: I 165/4; LRA 129/0.
+Actual minus forecast (IL/LRA/P10/P95/sampled M): -0.000541692416 0.000000000452 -0.000000001600 -0.000000001148 0.200516438386. Empirical errors, not bounds.
+Changed support 1636800 programme frames; 3 connected regions; max added 3.000000000000 dB; absolute local dB*frames 4579387.207582533360; global -0.533270290695 dB.
+Independent activity accounting (not an audio-quality score)
+New splits per original root: root 1 = 0; root 2 = 0; root 3 = 0; root 4 = 0;
+Total splits 0; decision parts including unchanged gaps 3; connected changed regions 3.
+Newly affected duration including old/new ramps: 1636800 / 23040000 programme frames = 34.100000000000001 s = 7.104166666666667%.
+Nominal engine intervals 6 / 10000; actual transition count 5; longest changed run 1123200 frames; margin activity 0 frames.
+Maximum added attenuation 3 dB; maximum cumulative attenuation 3 dB; absolute local dB*frames 4579387.2075825334.
+Cumulative non-unity local-envelope support: 1636800 frames in 3 components; distinct from newly affected duration.
+Global gain -0.5332702906949045 dB; delta -0.5332702906949045 dB - separate whole-programme change, excluded from the local duration percentage.
+Complete changed support (half-open source frames, old/new ramps included):
+[0, 177600)
+[3523200, 3859200)
+[12004800, 13128000)
+Complete nominal plan and fixed transitions (source frames; these are not changed-support edges):
+[0, 175200) plateau -1.3161370295806698 dB
+[175200, 3525600) plateau 0 dB; incoming ramp [172800, 177600), nominal cut 175200, radius 2400
+[3525600, 3856800) plateau -3 dB; incoming ramp [3523200, 3528000), nominal cut 3525600, radius 2400
+[3856800, 12007200) plateau 0 dB; incoming ramp [3854400, 3859200), nominal cut 3856800, radius 2400
+[12007200, 13125600) plateau -3 dB; incoming ramp [12004800, 12009600), nominal cut 12007200, radius 2400
+[13125600, 23040000) plateau 0 dB; incoming ramp [13123200, 13128000), nominal cut 13125600, radius 2400
+Root analysis:8e7cc1853229ae6f66b93e891d58bc8463761e2ce5d6e8be98647f44d31b5cf0:0:259200; Alternative exact outer processing support; support [0, 177600); nominal cuts 0, 175200; additional reductions 1.316137029581 dB.
+Requested / achieved reserve / uncovered deficit by part: [2.632274059161 / 0.000000000000 / 0.816137029581] dB.
+Root analysis:8e7cc1853229ae6f66b93e891d58bc8463761e2ce5d6e8be98647f44d31b5cf0:2937600:3897600; Unsplit outer refinement with strongest combined boundary nominations; support [3523200, 3859200); nominal cuts 3525600, 3856800; additional reductions 3.000000000000 dB.
+Requested / achieved reserve / uncovered deficit by part: [16.832832087127 / 0.000000000000 / 13.332832087127] dB.
+Root analysis:8e7cc1853229ae6f66b93e891d58bc8463761e2ce5d6e8be98647f44d31b5cf0:8784000:13171200; Unsplit outer refinement with strongest combined boundary nominations; support [12004800, 13128000); nominal cuts 12007200, 13125600; additional reductions 3.000000000000 dB.
+Requested / achieved reserve / uncovered deficit by part: [9.567399059884 / 0.000000000000 / 6.067399059884] dB.
+Seed construction legality checks 5, rejected 1. Only distinct legal non-neutral full plans enter prediction.
+Unchanged separation after ramps is shorter than requested
+Proxy 9693ffd269afcc5be1616108a2473938897b3551426390403fcfed247de654ab global 0 root 1 coarse [8784000,13171200) gains 3 root 2 coarse [2937600,3897600) gains 3 root 4 coarse [0,259200) gains 2.6322740591613396 estimated IL -24.356827620495856 LRA 23.584762675695295 unmeasured within shared comparison budget
+Proxy affa188241d1a537b4d2e72c0022ae813c4dff6b0c6c7ba7eaf51f0a4ef857e2 global 1.3568276204958565 root 1 coarse [8784000,13171200) gains 3 root 2 coarse [2937600,3897600) gains 3 root 4 coarse [0,259200) gains 2.6322740591613396 estimated IL -23.000000000000387 LRA 23.584762675616606 assessed
+Proxy 833d7fa751d91d50843ff01adefe5c59856d601900bd29686d226002c30c1b69 global 1.1568276204958572 root 1 coarse [8784000,13171200) gains 3 root 2 coarse [2937600,3897600) gains 3 root 4 coarse [0,259200) gains 2.6322740591613396 estimated IL -23.200000000000326 LRA 23.584762675624081 unmeasured within shared comparison budget
+Proxy 11faae8b8b3bd3969e05b6834ccaac7f825300ac95584c6593f890359f688e3d global 1.5568276204958558 root 1 coarse [8784000,13171200) gains 3 root 2 coarse [2937600,3897600) gains 3 root 4 coarse [0,259200) gains 2.6322740591613396 estimated IL -22.800000000000427 LRA 23.58476267561046 unmeasured within shared comparison budget
+Proxy 69e87fe9eccc8b155e7b98a0b0976b28649a5b61a22a3d4bd432b4c3f7c4180e global 0 root 1 coarse [8784000,13171200) gains 3 root 2 inner-decay [2931840,3768480) gains 3 root 4 coarse [0,259200) gains 2.6322740591613396 estimated IL -24.34168659025228 LRA 23.573344464846173 unmeasured within shared comparison budget
+Proxy ffd02386b4a372eab37f3fe6b87db906a5b8f22b8caa5c6827f90bf7d7b1132c global 1.3416865902522801 root 1 coarse [8784000,13171200) gains 3 root 2 inner-decay [2931840,3768480) gains 3 root 4 coarse [0,259200) gains 2.6322740591613396 estimated IL -23.000000000000377 LRA 23.57334446477163 unmeasured within shared comparison budget
+Proxy 91839a8cd1718648a9f5fa4662a9b4386255bc26e2ebeb0398dcbb65f58dbc78 global 1.1416865902522808 root 1 coarse [8784000,13171200) gains 3 root 2 inner-decay [2931840,3768480) gains 3 root 4 coarse [0,259200) gains 2.6322740591613396 estimated IL -23.200000000000319 LRA 23.573344464777545 unmeasured within shared comparison budget
+Proxy d48bd3912b5bdd553caa466d506182189eb6d0b9147d8dc32254ea19bc384b2a global 1.5416865902522794 root 1 coarse [8784000,13171200) gains 3 root 2 inner-decay [2931840,3768480) gains 3 root 4 coarse [0,259200) gains 2.6322740591613396 estimated IL -22.800000000000413 LRA 23.573344464762084 unmeasured within shared comparison budget
+Proxy 890b5047ea3d81f1c27777fbc4e2d2f58e04bb601567699a76694ea1efc00ddc global 0 root 1 coarse [12004800,13128000) gains 3 root 2 inner-decay [2931840,3768480) gains 3 root 4 coarse [0,259200) gains 2.6322740591613396 estimated IL -22.588020111152016 LRA 23.205323981313853 unmeasured within shared comparison budget
+Proxy a39cfc10109b429dfd51cf6a173f89f4118392027bff6e31340332cbc5b3e7b5 global -0.4119798888479842 root 1 coarse [12004800,13128000) gains 3 root 2 inner-decay [2931840,3768480) gains 3 root 4 coarse [0,259200) gains 2.6322740591613396 estimated IL -22.999999999999883 LRA 23.205323981335926 unmeasured within shared comparison budget
+Proxy 252149edcd9de6fd9e3d8e4c530b058ef0c47ef0b94c8b97255f6aa3f6d28d68 global -0.61197988884798349 root 1 coarse [12004800,13128000) gains 3 root 2 inner-decay [2931840,3768480) gains 3 root 4 coarse [0,259200) gains 2.6322740591613396 estimated IL -23.199999999999839 LRA 23.205323981338694 unmeasured within shared comparison budget
+Proxy 9a6403608d838fccc60757549e624f900bc3f0bde5647ecfbe347fcafff0a9a4 global -0.21197988884798491 root 1 coarse [12004800,13128000) gains 3 root 2 inner-decay [2931840,3768480) gains 3 root 4 coarse [0,259200) gains 2.6322740591613396 estimated IL -22.799999999999944 LRA 23.20532398132244 unmeasured within shared comparison budget
+Proxy 9e3cb70dbb469ddb8f119c9ca25a1be225fd9cb8011430fe0c9c51210bdd1202 global 0 root 4 coarse [0,249600) gains 2.6322740591613396 root 1 coarse [12004800,13128000) gains 3 root 2 inner-decay [2931840,3768480) gains 3 estimated IL -22.590144638071592 LRA 23.205323981313853 unmeasured within shared comparison budget
+Proxy 8903ac8edff3a81f96d9e70649dbe3e2bf9910056c5080f76aebf36988e99ff6 global -0.40985536192840755 root 4 coarse [0,249600) gains 2.6322740591613396 root 1 coarse [12004800,13128000) gains 3 root 2 inner-decay [2931840,3768480) gains 3 estimated IL -22.99999999999989 LRA 23.205323981330924 unmeasured within shared comparison budget
+Proxy 207040e9fd26f16b6233dc3dbe95ba51af9f22c0f7d14772432c06a4554ad70c global -0.60985536192840684 root 4 coarse [0,249600) gains 2.6322740591613396 root 1 coarse [12004800,13128000) gains 3 root 2 inner-decay [2931840,3768480) gains 3 estimated IL -23.199999999999839 LRA 23.205323981349601 unmeasured within shared comparison budget
+Proxy 3c1a2166e32ef67bb9fa47a9970348cc6ed4e517b521dbb4f5eef1770e4423a4 global -0.20985536192840826 root 4 coarse [0,249600) gains 2.6322740591613396 root 1 coarse [12004800,13128000) gains 3 root 2 inner-decay [2931840,3768480) gains 3 estimated IL -22.799999999999944 LRA 23.205323981323161 unmeasured within shared comparison budget
+Proxy 45a9da752939471a8138a5e0d85b02dad3f31ef68c45ef2ac84c9ae93a0793b9 global 0 root 1 coarse [8784000,13171200) gains 3 3 root 4 coarse [0,249600) gains 2.6322740591613396 root 2 inner-decay [2931840,3768480) gains 3 estimated IL -24.343570092658943 LRA 23.573344464846173 unmeasured within shared comparison budget
+Proxy 12d671e117fdae7af457acf88a5531b3650049e8b033cd6c3db1d1c00718d7f3 global 1.3435700926589433 root 1 coarse [8784000,13171200) gains 3 3 root 4 coarse [0,249600) gains 2.6322740591613396 root 2 inner-decay [2931840,3768480) gains 3 estimated IL -23.000000000000369 LRA 23.57334446476645 unmeasured within shared comparison budget
+Proxy a3d7f4ccfa54559b683f1f78d862db825d22856ac18451b9da6fd4fbd81e55ce global 1.143570092658944 root 1 coarse [8784000,13171200) gains 3 3 root 4 coarse [0,249600) gains 2.6322740591613396 root 2 inner-decay [2931840,3768480) gains 3 estimated IL -23.200000000000319 LRA 23.573344464777023 unmeasured within shared comparison budget
+Proxy c5c3df0176959608a3c631e46988c4b40ad35adc9fc47d687654290ba4dac9fd global 1.5435700926589426 root 1 coarse [8784000,13171200) gains 3 3 root 4 coarse [0,249600) gains 2.6322740591613396 root 2 inner-decay [2931840,3768480) gains 3 estimated IL -22.800000000000431 LRA 23.573344464759867 unmeasured within shared comparison budget
+Proxy ad871ba2a4a305f1af8de692faf26523412521ce1ab5fdcee70a319fba648c22 global 0 root 2 coarse [3523200,3859200) gains 3 root 4 coarse [0,249600) gains 2.6322740591613396 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.472569091564278 LRA 23.124639131103486 unmeasured within shared comparison budget
+Proxy 7618e694ad2c438b7c8c62f978893bffed98eec12fa7ec1d7664edafc5fae529 global -0.52743090843572205 root 2 coarse [3523200,3859200) gains 3 root 4 coarse [0,249600) gains 2.6322740591613396 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.999999999999861 LRA 23.124639131131392 unmeasured within shared comparison budget
+Proxy 506013cbb13d12eb735c3731e9030f89ae6f8aedc4bef2258c818f74fe7f821a global -0.72743090843572134 root 2 coarse [3523200,3859200) gains 3 root 4 coarse [0,249600) gains 2.6322740591613396 root 1 coarse [12004800,13128000) gains 3 estimated IL -23.199999999999804 LRA 23.12463913113961 unmeasured within shared comparison budget
+Proxy 832b1934274eb25e2a69ae2e98e0f229c0ecc6d39eab08d8bc2e596889c8d57c global -0.32743090843572276 root 2 coarse [3523200,3859200) gains 3 root 4 coarse [0,249600) gains 2.6322740591613396 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.799999999999915 LRA 23.124639131122994 unmeasured within shared comparison budget
+Proxy 3bf9fb9fafcd3c3dc722aa8bbea2e65e3a3047713116412ca54468f30e17090f global 0 root 3 coarse [2049600,2923200) gains 2.4336478189786668 2.3941898691179624 root 2 coarse [3523200,3859200) gains 3 root 4 coarse [0,249600) gains 2.6322740591613396 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.58140182879028 LRA 23.205323981313853 unmeasured within shared comparison budget
+Proxy aaddbfb3ec274e511527915c29d21f2f093c760386d5c3a2bead753f5da55dee global -0.41859817120971954 root 3 coarse [2049600,2923200) gains 2.4336478189786668 2.3941898691179624 root 2 coarse [3523200,3859200) gains 3 root 4 coarse [0,249600) gains 2.6322740591613396 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.999999999999904 LRA 23.205323981337944 unmeasured within shared comparison budget
+Proxy 8c0e61013a1869fa627c0edfffe35c40c4baab5f010f369034b4b8e28cca76ae global -0.61859817120971883 root 3 coarse [2049600,2923200) gains 2.4336478189786668 2.3941898691179624 root 2 coarse [3523200,3859200) gains 3 root 4 coarse [0,249600) gains 2.6322740591613396 root 1 coarse [12004800,13128000) gains 3 estimated IL -23.199999999999854 LRA 23.205323981343554 unmeasured within shared comparison budget
+Proxy aa41184b72560b7b43e5f12cc12a5136e4450c39b278ea55fcbd9d7601f33ddc global -0.21859817120972025 root 3 coarse [2049600,2923200) gains 2.4336478189786668 2.3941898691179624 root 2 coarse [3523200,3859200) gains 3 root 4 coarse [0,249600) gains 2.6322740591613396 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.799999999999937 LRA 23.205323981328622 unmeasured within shared comparison budget
+Proxy 8898864ee2ab5dccce439e8c7c5142b1eb7fb15ca156f8667b3835273b857f18 global 0 root 4 coarse [0,177600) gains 2.6322740591613396 root 2 coarse [3523200,3859200) gains 3 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.481544494990853 LRA 23.124639131103486 unmeasured within shared comparison budget
+Proxy 1588aa4cd75d5350fb106fefd5016a8984410c26774aa7e3ca335b182346506a global -0.51845550500914683 root 4 coarse [0,177600) gains 2.6322740591613396 root 2 coarse [3523200,3859200) gains 3 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.999999999999861 LRA 23.124639131127719 assessed
+Proxy 34dcc74e1c13886722daf92d15097cdbda1ec73f5bfe54494917131f2ec9784d global -0.71845550500914612 root 4 coarse [0,177600) gains 2.6322740591613396 root 2 coarse [3523200,3859200) gains 3 root 1 coarse [12004800,13128000) gains 3 estimated IL -23.199999999999818 LRA 23.124639131141667 unmeasured within shared comparison budget
+Proxy 1bc550ec07a9ce220b853c17b5048fbd2d4bfb79e128fe9787b5dcaf7df20bcb global -0.31845550500914754 root 4 coarse [0,177600) gains 2.6322740591613396 root 2 coarse [3523200,3859200) gains 3 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.799999999999923 LRA 23.12463913111419 unmeasured within shared comparison budget
+Proxy ca57e37967945f42c2b0bcf19c0752ebe7f373146479fa1ee819ebcb2428595d global 0 root 1 coarse [8784000,13171200) gains 3 3 root 4 coarse [0,177600) gains 2.6322740591613396 root 2 coarse [3523200,3859200) gains 3 estimated IL -24.190131230407385 LRA 23.318738497804674 unmeasured within shared comparison budget
+Proxy 39aeaa1179a3cacc90e65d8ac7dc1f09a52f5a4e0cb14225a82f03959e8cae72 global 1.1901312304073848 root 1 coarse [8784000,13171200) gains 3 3 root 4 coarse [0,177600) gains 2.6322740591613396 root 2 coarse [3523200,3859200) gains 3 estimated IL -23.00000000000033 LRA 23.318738497740199 unmeasured within shared comparison budget
+Proxy 160a6c2bc6bfb7944aedaf853359259105fd3714094b52b6d27a2374532a75f9 global 0.99013123040738549 root 1 coarse [8784000,13171200) gains 3 3 root 4 coarse [0,177600) gains 2.6322740591613396 root 2 coarse [3523200,3859200) gains 3 estimated IL -23.200000000000266 LRA 23.318738497748953 unmeasured within shared comparison budget
+Proxy f1a868ee76fc6de71cc7b194d8d2bc109072048ca50124ad6901bff106ffdfdf global 1.3901312304073841 root 1 coarse [8784000,13171200) gains 3 3 root 4 coarse [0,177600) gains 2.6322740591613396 root 2 coarse [3523200,3859200) gains 3 estimated IL -22.800000000000374 LRA 23.318738497729381 unmeasured within shared comparison budget
+Proxy 15ac551974597de31266384a25d0689a277b3577d94544e273240c1545178bcf global 0 root 2 coarse [2937600,3897600) gains 3 3 root 4 coarse [0,177600) gains 2.6322740591613396 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.616445955593438 LRA 23.205323981313853 unmeasured within shared comparison budget
+Proxy 5c2dfa1d4f4929716befd20928b98f9b3bc1c9a83196992ad276b64cee06e80e global -0.38355404440656216 root 2 coarse [2937600,3897600) gains 3 3 root 4 coarse [0,177600) gains 2.6322740591613396 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.999999999999893 LRA 23.2053239813274 unmeasured within shared comparison budget
+Proxy d3f02c507303a43bcc0b6d5653816fac74a99542c07a90c766e42c492e0c3fe0 global -0.58355404440656145 root 2 coarse [2937600,3897600) gains 3 3 root 4 coarse [0,177600) gains 2.6322740591613396 root 1 coarse [12004800,13128000) gains 3 estimated IL -23.19999999999985 LRA 23.205323981344137 unmeasured within shared comparison budget
+Proxy c2ff8b03ae7887d3713105f5d9258af289e9bf4798285b7c1154ca0576a7f84e global -0.18355404440656287 root 2 coarse [2937600,3897600) gains 3 3 root 4 coarse [0,177600) gains 2.6322740591613396 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.799999999999951 LRA 23.205323981320731 unmeasured within shared comparison budget
+Proxy d94009206be77ebd423849dc675effdc0d29d3754c6e0db01c4076de0743084e global 0 root 3 coarse [2049600,2923200) gains 2.4673954957207833 2.1012386356790778 root 2 coarse [3523200,3859200) gains 3 root 4 coarse [0,249600) gains 2.6322740591613396 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.580869312373274 LRA 23.205323981313853 unmeasured within shared comparison budget
+Proxy 705862b8b5fc08447152633acf053f0dfe70fe28da6360b9590d2c17a78c6dce global -0.41913068762672623 root 3 coarse [2049600,2923200) gains 2.4673954957207833 2.1012386356790778 root 2 coarse [3523200,3859200) gains 3 root 4 coarse [0,249600) gains 2.6322740591613396 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.999999999999897 LRA 23.205323981330526 unmeasured within shared comparison budget
+Proxy b79afa9038aab0920bad72e3b2e0daf3b69a3c05f6e826013c407bdfb101ddbf global -0.61913068762672552 root 3 coarse [2049600,2923200) gains 2.4673954957207833 2.1012386356790778 root 2 coarse [3523200,3859200) gains 3 root 4 coarse [0,249600) gains 2.6322740591613396 root 1 coarse [12004800,13128000) gains 3 estimated IL -23.199999999999843 LRA 23.2053239813464 unmeasured within shared comparison budget
+Proxy 29f84aca30603734e40335ea0644f0300d017ffc0a0784f00378f58c76356235 global -0.21913068762672694 root 3 coarse [2049600,2923200) gains 2.4673954957207833 2.1012386356790778 root 2 coarse [3523200,3859200) gains 3 root 4 coarse [0,249600) gains 2.6322740591613396 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.799999999999933 LRA 23.205323981322135 unmeasured within shared comparison budget
+Proxy fe12757cef82c17ec1bbfa04a6641bdc54eedfbc10710afc700bd5991f919690 global 0 root 4 coarse [0,259200) gains 1.3161370295806698 root 2 coarse [3523200,3859200) gains 3 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.458290315271125 LRA 23.124639131103486 unmeasured within shared comparison budget
+Proxy c15ac2ced6a2819a00282e070d88d0216288e42e2deeada9f79bc0f623dcac74 global -0.54170968472887537 root 4 coarse [0,259200) gains 1.3161370295806698 root 2 coarse [3523200,3859200) gains 3 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.999999999999872 LRA 23.124639131130113 unmeasured within shared comparison budget
+Proxy 6de95e42b3a040bb424005509fdc9722920246f6f25c743af9c030fca31d290f global -0.74170968472887466 root 4 coarse [0,259200) gains 1.3161370295806698 root 2 coarse [3523200,3859200) gains 3 root 1 coarse [12004800,13128000) gains 3 estimated IL -23.1999999999998 LRA 23.124639131139613 unmeasured within shared comparison budget
+Proxy d397e677dc200a822931879adaae6b0ed13c620eddde79201e9b61b648148245 global -0.34170968472887608 root 4 coarse [0,259200) gains 1.3161370295806698 root 2 coarse [3523200,3859200) gains 3 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.799999999999919 LRA 23.124639131118531 unmeasured within shared comparison budget
+Proxy 909739bfb4df1b0e4ea45bcad5d10aa82d9e1b9f916473a9d98942f643438029 global 0 root 3 coarse [2049600,2817600) gains 2.4336478189786668 root 2 coarse [3523200,3859200) gains 3 root 4 coarse [0,249600) gains 2.6322740591613396 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.572994123722001 LRA 23.203497420314143 unmeasured within shared comparison budget
+Proxy fb756236fcc73d67ed5231388376fad6374e2a4ab29652d513888a60f5dc8273 global -0.42700587627799891 root 3 coarse [2049600,2817600) gains 2.4336478189786668 root 2 coarse [3523200,3859200) gains 3 root 4 coarse [0,249600) gains 2.6322740591613396 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.999999999999893 LRA 23.203497420333107 unmeasured within shared comparison budget
+Proxy 67d3af4a96733b71475f1f4b8e1c9b5403822f0a96ab82c451fe777508c79b59 global -0.6270058762779982 root 3 coarse [2049600,2817600) gains 2.4336478189786668 root 2 coarse [3523200,3859200) gains 3 root 4 coarse [0,249600) gains 2.6322740591613396 root 1 coarse [12004800,13128000) gains 3 estimated IL -23.199999999999832 LRA 23.203497420344345 unmeasured within shared comparison budget
+Proxy 272ff2035b12045606a7251bb3042f46bb917c4bfa80d7cfbfe9f6e745b0da83 global -0.22700587627799962 root 3 coarse [2049600,2817600) gains 2.4336478189786668 root 2 coarse [3523200,3859200) gains 3 root 4 coarse [0,249600) gains 2.6322740591613396 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.799999999999923 LRA 23.203497420323306 unmeasured within shared comparison budget
+Proxy 2be80a33410072396dc068c2063c24fd004fc32afedff4eb49ce12a7e2ced9e2 global 0 root 4 coarse [0,249600) gains 1.3161370295806698 root 2 coarse [3523200,3859200) gains 3 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.458278494281949 LRA 23.124639131103486 unmeasured within shared comparison budget
+Proxy 1cee5857b37918221c0ed34093b8d1d87b3a5c7c37656054c10a56455dc19411 global -0.54172150571805133 root 4 coarse [0,249600) gains 1.3161370295806698 root 2 coarse [3523200,3859200) gains 3 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.999999999999858 LRA 23.124639131131911 unmeasured within shared comparison budget
+Proxy afb57e6c6fdf0b753f8920bb2e4f7a381d440db05c486512b21a07e3f2da8ec3 global -0.74172150571805062 root 4 coarse [0,249600) gains 1.3161370295806698 root 2 coarse [3523200,3859200) gains 3 root 1 coarse [12004800,13128000) gains 3 estimated IL -23.199999999999804 LRA 23.124639131142899 unmeasured within shared comparison budget
+Proxy 976b6fb8bca32d8e6a14fcfea3b04afad3614e7365a6246c96a4cc2dcaa9cb7b global -0.34172150571805204 root 4 coarse [0,249600) gains 1.3161370295806698 root 2 coarse [3523200,3859200) gains 3 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.799999999999915 LRA 23.12463913111991 unmeasured within shared comparison budget
+Proxy 8dfc75f1ff5d694f96964784bce602a84a438de6d253389eba052bbaf37ebc0e global 0 root 3 coarse [2049600,2745600) gains 2.4336478189786668 root 4 coarse [0,249600) gains 1.3161370295806698 root 2 coarse [3523200,3859200) gains 3 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.554589900065956 LRA 23.187134531672378 unmeasured within shared comparison budget
+Proxy 1913e59b028a379c464345aa016c9bd62a6e1ac0026a1b84c2f8cf2bb38948b4 global -0.44541009993404401 root 3 coarse [2049600,2745600) gains 2.4336478189786668 root 4 coarse [0,249600) gains 1.3161370295806698 root 2 coarse [3523200,3859200) gains 3 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.99999999999989 LRA 23.187134531695961 unmeasured within shared comparison budget
+Proxy a5abf033c269efd0e1c2aa9ae0395f6744d6802ccf4bb7b1aa66f3c1adfbc006 global -0.6454100999340433 root 3 coarse [2049600,2745600) gains 2.4336478189786668 root 4 coarse [0,249600) gains 1.3161370295806698 root 2 coarse [3523200,3859200) gains 3 root 1 coarse [12004800,13128000) gains 3 estimated IL -23.199999999999839 LRA 23.187134531707144 unmeasured within shared comparison budget
+Proxy 7edeb81f2a3ceeb7f86d1a830b0173dc616eff23a20f325f21cb8504dfc15212 global -0.24541009993404472 root 3 coarse [2049600,2745600) gains 2.4336478189786668 root 4 coarse [0,249600) gains 1.3161370295806698 root 2 coarse [3523200,3859200) gains 3 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.799999999999937 LRA 23.187134531679892 unmeasured within shared comparison budget
+Proxy 9a52172f1ade3ff88208e3f5a9c1649c12d91da72cf7f0e0c55840662dacb51b global 0 root 4 coarse [0,177600) gains 1.3161370295806698 root 2 coarse [3523200,3859200) gains 3 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.466729709305095 LRA 23.124639131103486 unmeasured within shared comparison budget
+Proxy 92742a5950394b8dd4b425c895b3c75e18c336b533110bc1a45a41f14580f02a global -0.5332702906949045 root 4 coarse [0,177600) gains 1.3161370295806698 root 2 coarse [3523200,3859200) gains 3 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.999999999999869 LRA 23.12463913112877 assessed
+Proxy 22c616a3fdb0782767ac953ccccda5749fb5d76a4f7b854076c8439255ecfaf1 global -0.73327029069490379 root 4 coarse [0,177600) gains 1.3161370295806698 root 2 coarse [3523200,3859200) gains 3 root 1 coarse [12004800,13128000) gains 3 estimated IL -23.199999999999818 LRA 23.124639131140821 unmeasured within shared comparison budget
+Proxy a357f261a6e8b7c4d201585d5f7b3e74ff6b9f4faa979cf82bb6782f257b2d65 global -0.33327029069490521 root 4 coarse [0,177600) gains 1.3161370295806698 root 2 coarse [3523200,3859200) gains 3 root 1 coarse [12004800,13128000) gains 3 estimated IL -22.799999999999915 LRA 23.124639131123377 unmeasured within shared comparison budget
+Unvisited round-robin gain/geometry variants: 293. Reserved seeds and overlapping variants share the same proxy and exact limits.
+Joint inner comparison did not reach exact assessment. Consult the proxy ledger, permission limits and complete/original/repair priorities.
+Three exact assessments used; remaining gain/boundary alternatives were not measured. No optimality claim.
+Private assessment budget 3. Failed shortlist 0.01 LU is diagnostic ranking only, never a rule allowance.
+Preparation 4.707 s; auxiliary pass 1.304 s; cached planning 0.078 s; sidecar 616688 bytes; bounded additional planning allocation estimate 6178092 bytes.
+
+section-preferences-v2 / connected-envelope-support-v2
+Policy digest: 7cd69da2e258a5bf11ba10a1b91354fc9ac446fcfb5f5b422c3c0a78b059cef2
+No region-count restriction; affected duration 60.0% (preservation preference, not broadcast rule).
+Additional attenuation 3.0 dB; cumulative local attenuation 12.0 dB; requested reserve 0.5 dB inside both caps.
+
+Target EBU R128-2023 programme QC / ebu-r128-2023-programme-linear-qc / 1.0.0 / 53e9ce8cc54f2f68c139f493d8f2ad43d79e6fd2d38d30edf62ca503a7dbafec
+IL -23.000000000 LUFS +/- 0.200000000 LU / True peak -1.000000000 dBTP / LRA 15.000000000 LU / Max M No Limit / Max S No Limit
+Selected programme loudness and true-peak rules for pre-produced whole-programme linear-audio QC. Excludes live exceptions, deliberate lower targets, short-form supplements and distribution-specific requirements.
+EBU R128-2023 (November 2023) / https://tech.ebu.ch/docs/r/r128.pdf
+Requirement provenance
+IL R128-2023 clauses h, i, k, l: -23 LUFS intended target; +/-0.2 LU QC allowance; whole-programme level gating.
+True peak R128-2023 clause m: maximum -1 dBTP for linear audio.
+LRA User-specified job requirement: Programme job requirements; EBU Tech 3342-2023 whole-programme LRA; Predeclared development comparison, not delivery default. User provenance is not independently verified; not an EBU-mandated ceiling.
+Max M 
+Max S 
+Clause m separately permits +/-0.3 dB meter tolerance for signals band-limited to 20 kHz. Bandwidth is not certified here; this provision never relaxes the -1 dBTP evaluation ceiling.
+Frozen measured Current baseline (measured)
+IL LUFS = -20.909512357571
+True peak dBTP = -1.925859350392
+LRA LU = 23.435332665255
+Max M LUFS = -5.198826910163
+Max S LUFS = -9.781313741220
+Sample peak dBFS = -1.998662911160
+Current State evaluation: FAIL
+Fails one or more selected measured rules.
+programme-loudness: FAIL | -20.909512 LUFS | min -23.200000 | max -22.800000 | delta 2.090488
+Outside selected bounds.
+true-peak: PASS | -1.925859 dBTP | max -1.000000 | delta -0.925859
+Within selected bounds.
+loudness-range: FAIL | 23.435333 LU | max 15.000000 | delta 8.435333
+Outside selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Measurement 833e9e3b32b77e1cb96c7e78269d813649b23bf16e57d4a494b43811ddb8bf53
+Method bs1770-5-ebu2023-m7.1 / build 4c57ba6ac54d35ecc1b1d3e166eb43713991b3d6795eeaaf46b310268e29e6e3 / Mac OSX 15.7.9;arm64;float32-samples;float64-analysis;no-fast-math;fp-contract-off
+Origin session 9167e34ddb99480c933c73def7ffb3df / job 1 / revision 1
+Initial Current from identical Source measurement f56d8c433beb37f0cfc53d818ca613960738aabe82ceb9028bddd501289f889d

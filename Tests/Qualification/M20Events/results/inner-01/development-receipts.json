@@ -1,0 +1,27 @@
+[
+  {
+    "file": "/Users/fuzz/Developer/LevelScope/build/m20-inner-2026-11-20/stage-01.json",
+    "sha256": "827ec6caea616a11f5af3a78751d14006cfae776559b92774ac072849cae8234",
+    "observation": "Initial sandbox run could not write the normal verified-source cache."
+  },
+  {
+    "file": "/Users/fuzz/Developer/LevelScope/build/m20-inner-2026-11-20/stage-02.json",
+    "sha256": "4bde7a00b2ce0b4d72f857c228a9081a0a553d2fb08f4997ea52e378a6fb07b1",
+    "observation": "With cache access the original stage-2 source and canonical-ramp checks passed."
+  },
+  {
+    "file": "/Users/fuzz/Developer/LevelScope/build/m20-inner-2026-11-20/joint-01.json",
+    "sha256": "7052a6b72d7d8a80f310c5bb7cc2032e9bb96d0b392c7a5d3cb5570ee90fe6c3",
+    "observation": "All three exact assessments failed TP. Both inner pairs reached the proxy pool, but the residual classifier let single substitutions displace the full comparison."
+  },
+  {
+    "file": "/Users/fuzz/Developer/LevelScope/build/m20-inner-2026-11-20/joint-01/proposal.txt",
+    "sha256": "2de25695b27c0bac7576d17ac5531b4148efafad089c64e06df17f73b13ee427",
+    "observation": "Whole-plan report from that initial scheduler, retained for diagnosis."
+  },
+  {
+    "file": "/Users/fuzz/Developer/LevelScope/build/m20-inner-2026-11-20/preview-01/run.json",
+    "sha256": "9ea7bab06f2bb9c17e74cda3b5355cc317b427adad10bedd19e9c401ed459f87",
+    "observation": "The joint-family repair, source-file PCM readback, stereo/5.1 authority, earlier return and synthetic feature checks passed before freezing."
+  }
+]

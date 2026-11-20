@@ -1,0 +1,261 @@
+No acceptable candidate in bounded region search
+No acceptable candidate in this bounded search. Measured failures and limits remain visible; this does not establish that no solution exists.
+Experimental region planning / region-gain-search-v3 / window-energy-proxy-v1 / candidate-review-rank-v3
+Effective immutable settings: {"schema": 3, "method": "region-gain-search-v3", "constraints": "region-constraints-v2", "formation": "region-formation-v3", "proxy": "window-energy-proxy-v1", "rank": "candidate-review-rank-v3", "boundaryPreference": "prefer-complete-event", "automaticMargins": true, "eventFeatures": {"version": "event-boundary-features-v2", "filters": "continuous-first-order-hp-lp-v1", "channels": "non-lfe-energy-mean-and-role-witness-v1", "silence": "separate-floor-onset-and-return-v1", "hopMs": 10, "hpHz": 20, "lowHz": 160, "fastMs": 20, "lowMs": 80, "backgroundMs": 250, "floorDb": -80, "fastRiseDb": 6, "lowRiseDb": 3, "fastPersistMs": 20, "lowPersistMs": 40, "agreementMs": 80, "groupMs": 1000, "lastAttackMs": 100, "decayDb": 6, "decayPersistMs": 200, "returnDb": 3, "returnPersistMs": 300, "contextMs": 3000, "predecessors": 2, "referenceStepDb": 6, "momentaryStepLu": 3, "neighbourhoodMs": 1000, "comparableDb": 6, "recentReferences": 3, "attribution": "included-window-excess-weighted-bin-share-v1", "pairing": "one-live-inner-directed-edges-v1", "missing": "retain-outer-report-incomplete-v1", "rolePath": "same-role-tentative-v1", "eventLocations": 6, "innerProxySlots": 8}, "coverage": "event-treatment-coverage-v2", "schedule": "event-assessment-schedule-v2", "input": "e7cab623a7afc351e2d2ca3b04a740f2f20e2d791eb32a9416055d0cc9ffe411", "mode": 0, "section": "0", "selection": {"begin": "0", "end": "0"}, "splitting": true, "refinement": true, "fillGap": false, "global": true, "compare": true, "splits": 2, "leftMs": 1000, "rightMs": 1000, "minimumMs": 3000, "separationMs": 1000, "needTenths": 10, "persistenceMs": 1000, "start": null, "end": null, "cuts": [], "protection": "local-envelope-v1", "protected": []}
+Constraint binding 77d586c58e290c9faa18d78db4e3920d75880dafe501c4c0d27d9bca4ec9cf23
+Roots 2 (omitted 0); proxy plans 64 / 64; duplicate audio plans 4; rejected 0.
+Geometry constructions 218; omitted cut nominations 3; omitted geometries 0. Search truncation never proves impossibility.
+Whole-programme global trim permitted separately: it may change audio outside the local area.
+Original root analysis:9dd310c3510962449e5644c94d9c4a2eb526a0cb4337e45cc1c2d3ecec36e0ce:6412800:9427200; hint [6412800, 9427200); permitted [6364800, 9475200); support-edge ranges [6364800, 9331200] / [6508800, 9475200].
+Original root analysis:9dd310c3510962449e5644c94d9c4a2eb526a0cb4337e45cc1c2d3ecec36e0ce:0:1521600; hint [0, 1521600); permitted [0, 1569600); support-edge ranges [0, 1425600] / [144000, 1569600].
+Event result be93e347e74a4ef8973404ad452aa523; feature reserved/high-water bytes 258568 / 616032.
+Recommended attempt none; selected attempt none. Inspection alone never selects Apply.
+Permission: 
+Permission: 
+Current-only rise cells (processing-associated context, not Source event evidence): 0
+Source witness root 1 frame 6480960 onset support 6477120 confirmation 6482400 prior decisions 0/0 fast/low reference dB -24.029/-40.506 entry step 0.000 dB; no corroborated inner entrance; inner decision 0
+Omitted witnesses 0, occupied-slot conflicts 0
+Source event 51da0feffd5079e2e1986701ab67f5911911e8d42ca06de68c4f3b06dd173e83 onset [6477120, 6480960) decay [9362880, 9377280); onset raw-peak witness channel 1 frame 6480662; baseline included need-window indices 1336..1934 (599 included, exact inclusion/ceiling predicate); Broadband and low-band persistent Source rise
+
+Complete measured attempt 1 / c0f930da84e9d453ee59edf92d1070545bc5536f025e2b5bb30dbabb17140723 (retained)
+Actual Private candidate (not Current State) evaluation: FAIL
+Fails one or more selected measured rules.
+programme-loudness: PASS | -23.200000 LUFS | min -23.200000 | max -22.800000 | delta -0.200000
+Within selected bounds.
+true-peak: PASS | -19.265071 dBTP | max -1.000000 | delta -18.265071
+Within selected bounds.
+loudness-range: FAIL | 7.000000 LU | max 6.700000 | delta 0.300000
+Outside selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Family original boundaries / attempt 765d436395d1b5998787635461f2ee8d082034d7eb29d7c2efe79c8e4504d800
+Event coverage: Uncertain. Editorial evidence, not a measured delivery rule.
+Root 2: missing/capped event association; 
+51da0feffd5079e2e1986701ab67f5911911e8d42ca06de68c4f3b06dd173e83 [6477120, 9377280): Intended nonzero correction covers supported onset through decay
+IL: -23.199999857384
+TP: -19.265070940231
+LRA: 6.999999884852
+M max: -19.262978421963
+S max: -19.264992219132
+sample peak: -19.265073405266
+Forecast IL -23.199999999999; LRA 6.999999883112; TP unknown (not a measured failure). Approximate window-energy proxy: uniform bin energy, filter/gain noncommutation and float-stage rounding. Sampled M/S cannot certify maxima; true peak unavailable. Empirical errors are not proven bounds. EOF drain retains global-scaled baseline shape; locally transformed filter-tail state is uncertain, not measured silence.
+Forecast gate entry/exit: I 0/0; LRA 0/0.
+Actual minus forecast (IL/LRA/P10/P95/sampled M): 0.000000142615 0.000000001740 -0.000000000637 0.000000001103 0.000667822109. Empirical errors, not bounds.
+Changed support 4536000 programme frames; 2 connected regions; max added 3.000000000000 dB; absolute local dB*frames 12984479.719055976719; global 3.734924391747 dB.
+Independent activity accounting (not an audio-quality score)
+New splits per original root: root 1 = 0; root 2 = 0;
+Total splits 0; decision parts including unchanged gaps 2; connected changed regions 2.
+Newly affected duration including old/new ramps: 4536000 / 28800000 programme frames = 94.5 s = 15.75%.
+Nominal engine intervals 4 / 10000; actual transition count 3; longest changed run 3014400 frames; margin activity 0 frames.
+Maximum added attenuation 3 dB; maximum cumulative attenuation 3 dB; absolute local dB*frames 12984479.719055977.
+Cumulative non-unity local-envelope support: 4536000 frames in 2 components; distinct from newly affected duration.
+Global gain 3.7349243917466701 dB; delta 3.7349243917466701 dB - separate whole-programme change, excluded from the local duration percentage.
+Complete changed support (half-open source frames, old/new ramps included):
+[0, 1521600)
+[6412800, 9427200)
+Complete nominal plan and fixed transitions (source frames; these are not changed-support edges):
+[0, 1519200) plateau -3 dB
+[1519200, 6415200) plateau 0 dB; incoming ramp [1516800, 1521600), nominal cut 1519200, radius 2400
+[6415200, 9424800) plateau -2.7999999066507106 dB; incoming ramp [6412800, 6417600), nominal cut 6415200, radius 2400
+[9424800, 28800000) plateau 0 dB; incoming ramp [9422400, 9427200), nominal cut 9424800, radius 2400
+Root analysis:9dd310c3510962449e5644c94d9c4a2eb526a0cb4337e45cc1c2d3ecec36e0ce:6412800:9427200; Unsplit original root, fixed-ramp support edges; support [6412800, 9427200); nominal cuts 6415200, 9424800; additional reductions 2.799999906651 dB.
+Requested / achieved reserve / uncovered deficit by part: [2.799999906651 / 0.500000000000 / 0.000000000000] dB.
+Root analysis:9dd310c3510962449e5644c94d9c4a2eb526a0cb4337e45cc1c2d3ecec36e0ce:0:1521600; Unsplit original root, fixed-ramp support edges; support [0, 1521600); nominal cuts 0, 1519200; additional reductions 3.000000000000 dB.
+Requested / achieved reserve / uncovered deficit by part: [3.799999883346 / 0.000000000000 / 0.299999883346] dB.
+
+Complete measured attempt 2 / c58ceecd410a2d6db4fb6b40d1881159535359590e4e5c86cd407bb019a41ba9
+Actual Private candidate (not Current State) evaluation: FAIL
+Fails one or more selected measured rules.
+programme-loudness: PASS | -23.200000 LUFS | min -23.200000 | max -22.800000 | delta -0.200000
+Within selected bounds.
+true-peak: PASS | -17.227613 dBTP | max -1.000000 | delta -16.227613
+Within selected bounds.
+loudness-range: FAIL | 10.000000 LU | max 6.700000 | delta 3.300000
+Outside selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Family supported-complete / attempt a509b23b35f840d02b6b3cbc60e7352fc4700f0a1fe00f5bac0aeb590f9d4eea
+Event coverage: Supported complete. Editorial evidence, not a measured delivery rule.
+
+51da0feffd5079e2e1986701ab67f5911911e8d42ca06de68c4f3b06dd173e83 [6477120, 9377280): Intended nonzero correction covers supported onset through decay
+IL: -23.199999987117
+TP: -17.227613441309
+LRA: 9.999999883466
+M max: -17.225520882522
+S max: -17.227534686889
+sample peak: -17.227615977062
+Forecast IL -23.200000000000; LRA 9.999999883112; TP unknown (not a measured failure). Approximate window-energy proxy: uniform bin energy, filter/gain noncommutation and float-stage rounding. Sampled M/S cannot certify maxima; true peak unavailable. Empirical errors are not proven bounds. EOF drain retains global-scaled baseline shape; locally transformed filter-tail state is uncertain, not measured silence.
+Forecast gate entry/exit: I 0/0; LRA 0/0.
+Actual minus forecast (IL/LRA/P10/P95/sampled M): 0.000000012883 0.000000000354 -0.000000002591 -0.000000002237 0.000667825970. Empirical errors, not bounds.
+Changed support 2909760 programme frames; 1 connected regions; max added 2.799999906651 dB; absolute local dB*frames 8133887.728824049234; global 2.772381927326 dB.
+Independent activity accounting (not an audio-quality score)
+New splits per original root: root 1 = 0; root 2 = 0;
+Total splits 0; decision parts including unchanged gaps 1; connected changed regions 1.
+Newly affected duration including old/new ramps: 2909760 / 28800000 programme frames = 60.619999999999997 s = 10.103333333333333%.
+Nominal engine intervals 3 / 10000; actual transition count 2; longest changed run 2909760 frames; margin activity 0 frames.
+Maximum added attenuation 2.7999999066507106 dB; maximum cumulative attenuation 2.7999999066507106 dB; absolute local dB*frames 8133887.7288240492.
+Cumulative non-unity local-envelope support: 2909760 frames in 1 components; distinct from newly affected duration.
+Global gain 2.7723819273264745 dB; delta 2.7723819273264745 dB - separate whole-programme change, excluded from the local duration percentage.
+Complete changed support (half-open source frames, old/new ramps included):
+[6472320, 9382080)
+Complete nominal plan and fixed transitions (source frames; these are not changed-support edges):
+[0, 6474720) plateau 0 dB
+[6474720, 9379680) plateau -2.7999999066507106 dB; incoming ramp [6472320, 6477120), nominal cut 6474720, radius 2400
+[9379680, 28800000) plateau 0 dB; incoming ramp [9377280, 9382080), nominal cut 9379680, radius 2400
+Root analysis:9dd310c3510962449e5644c94d9c4a2eb526a0cb4337e45cc1c2d3ecec36e0ce:6412800:9427200; Supported complete-event boundary nominee; exact coverage still checked; support [6472320, 9382080); nominal cuts 6474720, 9379680; additional reductions 2.799999906651 dB.
+Requested / achieved reserve / uncovered deficit by part: [2.799999906651 / 0.500000000000 / 0.000000000000] dB.
+
+Complete measured attempt 3 / 9074d61fb0891533f098ddf8ac732b2d4bd98781b5e1fe2bc9fec91a5210d486
+Actual Private candidate (not Current State) evaluation: FAIL
+Fails one or more selected measured rules.
+programme-loudness: PASS | -23.000000 LUFS | min -23.200000 | max -22.800000 | delta 0.000000
+Within selected bounds.
+true-peak: PASS | -17.027614 dBTP | max -1.000000 | delta -16.027614
+Within selected bounds.
+loudness-range: FAIL | 10.000000 LU | max 6.700000 | delta 3.300000
+Outside selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Family supported-complete / attempt a8c06ab8fe368d041c64867ea718c2f99d7b8f5347b0d47d8def60aaf32f6aa2
+Event coverage: Supported complete. Editorial evidence, not a measured delivery rule.
+
+51da0feffd5079e2e1986701ab67f5911911e8d42ca06de68c4f3b06dd173e83 [6477120, 9377280): Intended nonzero correction covers supported onset through decay
+IL: -22.999999997704
+TP: -17.027613564526
+LRA: 9.999999882708
+M max: -17.025520891924
+S max: -17.027534695609
+sample peak: -17.027616028673
+Forecast IL -23.000000012883; LRA 9.999999883112; TP unknown (not a measured failure). Approximate window-energy proxy: uniform bin energy, filter/gain noncommutation and float-stage rounding. Sampled M/S cannot certify maxima; true peak unavailable. Empirical errors are not proven bounds. EOF drain retains global-scaled baseline shape; locally transformed filter-tail state is uncertain, not measured silence.
+Forecast gate entry/exit: I 0/0; LRA 0/0.
+Actual minus forecast (IL/LRA/P10/P95/sampled M): 0.000000015179 -0.000000000404 0.000000002332 0.000000001928 0.000667829451. Empirical errors, not bounds.
+Changed support 2909760 programme frames; 1 connected regions; max added 2.799999906651 dB; absolute local dB*frames 8133887.728824049234; global 2.972381914443 dB.
+Independent activity accounting (not an audio-quality score)
+New splits per original root: root 1 = 0; root 2 = 0;
+Total splits 0; decision parts including unchanged gaps 1; connected changed regions 1.
+Newly affected duration including old/new ramps: 2909760 / 28800000 programme frames = 60.619999999999997 s = 10.103333333333333%.
+Nominal engine intervals 3 / 10000; actual transition count 2; longest changed run 2909760 frames; margin activity 0 frames.
+Maximum added attenuation 2.7999999066507106 dB; maximum cumulative attenuation 2.7999999066507106 dB; absolute local dB*frames 8133887.7288240492.
+Cumulative non-unity local-envelope support: 2909760 frames in 1 components; distinct from newly affected duration.
+Global gain 2.9723819144432682 dB; delta 2.9723819144432682 dB - separate whole-programme change, excluded from the local duration percentage.
+Complete changed support (half-open source frames, old/new ramps included):
+[6472320, 9382080)
+Complete nominal plan and fixed transitions (source frames; these are not changed-support edges):
+[0, 6474720) plateau 0 dB
+[6474720, 9379680) plateau -2.7999999066507106 dB; incoming ramp [6472320, 6477120), nominal cut 6474720, radius 2400
+[9379680, 28800000) plateau 0 dB; incoming ramp [9377280, 9382080), nominal cut 9379680, radius 2400
+Root analysis:9dd310c3510962449e5644c94d9c4a2eb526a0cb4337e45cc1c2d3ecec36e0ce:6412800:9427200; Supported complete-event boundary nominee; exact coverage still checked; support [6472320, 9382080); nominal cuts 6474720, 9379680; additional reductions 2.799999906651 dB.
+Requested / achieved reserve / uncovered deficit by part: [2.799999906651 / 0.500000000000 / 0.000000000000] dB.
+Seed construction legality checks 3, rejected 0. Only distinct legal non-neutral full plans enter prediction.
+One measured-feedback scalar repair has priority; it consumes a comparison slot and preserves local geometry.
+Proxy 705d76d1c360eed467d4a7141f58b1545511a7adafb91b47e0aa7b3c3e419703 global 0 root 1 coarse [6412800,9427200) gains 2.7999999066507106 root 2 coarse [0,1521600) gains 3 estimated IL -26.934924391746669 LRA 6.9999998831127392 unmeasured within shared comparison budget
+Proxy 5babfb9af700eabe468091dadd162a0436958cbf0efe819d2b51d1d271939cab global 3.9349243917466694 root 1 coarse [6412800,9427200) gains 2.7999999066507106 root 2 coarse [0,1521600) gains 3 estimated IL -22.999999999999201 LRA 6.9999998831115597 unmeasured within shared comparison budget
+Proxy c0f930da84e9d453ee59edf92d1070545bc5536f025e2b5bb30dbabb17140723 global 3.7349243917466701 root 1 coarse [6412800,9427200) gains 2.7999999066507106 root 2 coarse [0,1521600) gains 3 estimated IL -23.19999999999925 LRA 6.9999998831119967 assessed
+Proxy ed803344da902441acb9b23dd8ffcef245bad93b144df3dd3e35fff813ce1bde global 4.1349243917466687 root 1 coarse [6412800,9427200) gains 2.7999999066507106 root 2 coarse [0,1521600) gains 3 estimated IL -22.799999999999176 LRA 6.9999998831116628 unmeasured within shared comparison budget
+Proxy 737ded5cd88d21591232a4465eab3ffb059f42c3683274ccf96b76ccc5cca489 global 0 root 1 coarse [6472320,9382080) gains 2.7999999066507106 estimated IL -25.972381927326474 LRA 9.9999998831127002 unmeasured within shared comparison budget
+Proxy 229a5836c4accfd9a03a9725d8f8d248381394161ba87920845ba6077ff5e534 global 2.9723819273264738 root 1 coarse [6472320,9382080) gains 2.7999999066507106 estimated IL -22.999999999999432 LRA 9.9999998831118937 unmeasured within shared comparison budget
+Proxy c58ceecd410a2d6db4fb6b40d1881159535359590e4e5c86cd407bb019a41ba9 global 2.7723819273264745 root 1 coarse [6472320,9382080) gains 2.7999999066507106 estimated IL -23.199999999999548 LRA 9.9999998831120394 assessed
+Proxy e55bc7500cc45a32e118fa6cc8f697f29c9172140cc595dfcff6ade5942b25eb global 3.1723819273264731 root 1 coarse [6472320,9382080) gains 2.7999999066507106 estimated IL -22.79999999999945 LRA 9.9999998831119399 unmeasured within shared comparison budget
+Proxy d2f79877c22753a1a458413806016acdf29dcc9f9fdbaaab92d9c093f5d50916 global 0 root 1 coarse [6472320,9382080) gains 2.7999999066507106 root 2 coarse [0,1521600) gains 3 estimated IL -26.927526478594739 LRA 6.9999998831127392 unmeasured within shared comparison budget
+Proxy c2f007ed4ad3659698a72ab96a10331209fc690de2858771df370dc6494e9431 global 3.9275264785947392 root 1 coarse [6472320,9382080) gains 2.7999999066507106 root 2 coarse [0,1521600) gains 3 estimated IL -22.999999999999183 LRA 6.99999988311178 unmeasured within shared comparison budget
+Proxy 684dedf110905a87d7094957e8febfbf9f625bbaa4b1cfc841b4224c294b939e global 3.72752647859474 root 1 coarse [6472320,9382080) gains 2.7999999066507106 root 2 coarse [0,1521600) gains 3 estimated IL -23.199999999999125 LRA 6.9999998831115597 unmeasured within shared comparison budget
+Proxy faf203de1e1e9965e104cfa845dae3d8e0f218a2e57792fcb5422b0edbcd0958 global 4.1275264785947385 root 1 coarse [6472320,9382080) gains 2.7999999066507106 root 2 coarse [0,1521600) gains 3 estimated IL -22.799999999999084 LRA 6.9999998831116486 unmeasured within shared comparison budget
+Proxy 24789f2475a6069752bfb4a4552e390806369a66fc5ab9446a878011e06a6744 global 0 root 2 coarse [0,1516800) gains 3 root 1 coarse [6412800,9427200) gains 2.7999999066507106 estimated IL -26.934567705543866 LRA 6.9999998831127392 unmeasured within shared comparison budget
+Proxy d75ca1fd914130a97cd0dba980b8ecd764fc82bb546a2e570ebdd4455b8db42a global 3.9345677055438664 root 2 coarse [0,1516800) gains 3 root 1 coarse [6412800,9427200) gains 2.7999999066507106 estimated IL -22.999999999999144 LRA 6.9999998831115917 unmeasured within shared comparison budget
+Proxy f2bfb0bdf02f7e70fa2ef6e56ac1934fba374a52d72c1b6cf292f137cf633ee3 global 3.7345677055438671 root 2 coarse [0,1516800) gains 3 root 1 coarse [6412800,9427200) gains 2.7999999066507106 estimated IL -23.199999999999218 LRA 6.9999998831115917 unmeasured within shared comparison budget
+Proxy 21a4c579057b2874fb6b98dfbf8d6b8746ae6c14dd2ad970c8e98952b95ea6bc global 4.1345677055438657 root 2 coarse [0,1516800) gains 3 root 1 coarse [6412800,9427200) gains 2.7999999066507106 estimated IL -22.799999999999137 LRA 6.9999998831117693 unmeasured within shared comparison budget
+Proxy 49298797503f1cc8de23ea463044e1ba7e8b506f94ef42add5cbd1c3ee448e4a global 0 root 1 coarse [6472320,9374880) gains 2.7999999066507106 root 2 coarse [0,1521600) gains 3 estimated IL -26.927017667789347 LRA 6.9999998831127392 unmeasured within shared comparison budget
+Proxy 97805e93e53d162eeaf1d393762d5e6e439cf38ede134543d686471ff16b4628 global 3.9270176677893467 root 1 coarse [6472320,9374880) gains 2.7999999066507106 root 2 coarse [0,1521600) gains 3 estimated IL -22.999999999999165 LRA 6.999999883111677 unmeasured within shared comparison budget
+Proxy b3c7ab5d478bda959e205b626a1e804cc586d0c4fc39d2fc9b855f2ef9c4080d global 3.7270176677893474 root 1 coarse [6472320,9374880) gains 2.7999999066507106 root 2 coarse [0,1521600) gains 3 estimated IL -23.199999999999211 LRA 6.9999998831119328 unmeasured within shared comparison budget
+Proxy c4e6ec8a9452a71d70d246e29f9d87089c22f7aff2cb2fe80123fde2a026e2c1 global 4.127017667789346 root 1 coarse [6472320,9374880) gains 2.7999999066507106 root 2 coarse [0,1521600) gains 3 estimated IL -22.799999999999137 LRA 6.999999883111613 unmeasured within shared comparison budget
+Proxy d23b674b30936145cd5fe5eb32cc4a4b9a97099964a9e0f226e7ccf24ba74154 global 0 root 1 coarse [6446400,9417600) gains 2.7999999066507106 root 2 coarse [0,1521600) gains 3 estimated IL -26.931868821929367 LRA 6.9999998831127392 unmeasured within shared comparison budget
+Proxy 1f7424929f0a91b0f9b408d51b0947fa845cb823546da218955f1699ffdac64c global 3.9318688219293669 root 1 coarse [6446400,9417600) gains 2.7999999066507106 root 2 coarse [0,1521600) gains 3 estimated IL -22.999999999999215 LRA 6.999999883111709 unmeasured within shared comparison budget
+Proxy 0788dc26d228494ea1524fdab423bcff8fbf6e8b9cc5b4293754fa347122a338 global 3.7318688219293676 root 1 coarse [6446400,9417600) gains 2.7999999066507106 root 2 coarse [0,1521600) gains 3 estimated IL -23.199999999999179 LRA 6.9999998831117871 unmeasured within shared comparison budget
+Proxy df15b6c307c3324ca38de73431b71825acd78aac9b391fbf7febee06ffab082b global 4.1318688219293662 root 1 coarse [6446400,9417600) gains 2.7999999066507106 root 2 coarse [0,1521600) gains 3 estimated IL -22.79999999999912 LRA 6.999999883111709 unmeasured within shared comparison budget
+Proxy 974e75e22b1a40ae2b2f49d2ca5b2039fdc4f9ec0f6c75c8309c0dbf2c1032fc global 0 root 2 coarse [0,1516800) gains 3 3 root 1 coarse [6472320,9382080) gains 2.7999999066507106 estimated IL -26.927170399440701 LRA 6.9999998831127392 unmeasured within shared comparison budget
+Proxy 7b06118fb7ff4c1270afb592f27ee77be42f1a4eb49f2393e623cb95973b8acf global 3.9271703994407012 root 2 coarse [0,1516800) gains 3 3 root 1 coarse [6472320,9382080) gains 2.7999999066507106 estimated IL -22.999999999999172 LRA 6.9999998831115278 unmeasured within shared comparison budget
+Proxy 74b928b1ef1976f54000881f8091b2252a0ae082e185fce16e94b38cd1da6360 global 3.7271703994407019 root 2 coarse [0,1516800) gains 3 3 root 1 coarse [6472320,9382080) gains 2.7999999066507106 estimated IL -23.1999999999992 LRA 6.9999998831115633 unmeasured within shared comparison budget
+Proxy 0bb436cb834ad57b4d28e361abe2f1719e1cde0202d0880f58c613f97567ff2a global 4.1271703994407005 root 2 coarse [0,1516800) gains 3 3 root 1 coarse [6472320,9382080) gains 2.7999999066507106 estimated IL -22.799999999999198 LRA 6.9999998831118191 unmeasured within shared comparison budget
+Proxy 4a2ba4a0b25a7f196e8e29f460ccc2fc1c3abc6f9eca5a43cfd37e2031007838 global 0 root 1 coarse [6412800,9427200) gains 2.7999999066507106 2.7999999063562298 root 2 coarse [0,1521600) gains 3 estimated IL -26.934924391741884 LRA 6.9999998831127392 unmeasured within shared comparison budget
+Proxy 5ecd1219172109cb459714ae281418c0e866686dcd740f2cb516e85a0df191b9 global 3.9349243917418839 root 1 coarse [6412800,9427200) gains 2.7999999066507106 2.7999999063562298 root 2 coarse [0,1521600) gains 3 estimated IL -22.999999999999218 LRA 6.9999998831117303 unmeasured within shared comparison budget
+Proxy 7889e9ac48ed7005fe6c0b3efc0db5e68ad5599f0a9815d76cd2682293122433 global 3.7349243917418846 root 1 coarse [6412800,9427200) gains 2.7999999066507106 2.7999999063562298 root 2 coarse [0,1521600) gains 3 estimated IL -23.199999999999267 LRA 6.9999998831119612 unmeasured within shared comparison budget
+Proxy ab263a210371b21b6eb9404a4fa5dc96709c65890160adef72065daf93be94ad global 4.1349243917418832 root 1 coarse [6412800,9427200) gains 2.7999999066507106 2.7999999063562298 root 2 coarse [0,1521600) gains 3 estimated IL -22.799999999999141 LRA 6.9999998831116805 unmeasured within shared comparison budget
+Proxy f3ebe13396980dee3c5b17cb0345c6d9de8c75b13e2df1f66a37d67030c4bf86 global 0 root 1 coarse [6446400,9417600) gains 2.7999999066507106 2.7999999063562298 root 2 coarse [0,1516800) gains 3 3 estimated IL -26.931512386577321 LRA 6.9999998831127392 unmeasured within shared comparison budget
+Proxy 5bb419a9ba18682c929ee38702a970948300a97b0787c2dfbbc223f263ced820 global 3.9315123865773209 root 1 coarse [6446400,9417600) gains 2.7999999066507106 2.7999999063562298 root 2 coarse [0,1516800) gains 3 3 estimated IL -22.999999999999194 LRA 6.9999998831117018 unmeasured within shared comparison budget
+Proxy 69b19d3aa38e6e11f352ed397c43a01b9ad3c9916921fd9eca62814ede20ce2c global 3.7315123865773216 root 1 coarse [6446400,9417600) gains 2.7999999066507106 2.7999999063562298 root 2 coarse [0,1516800) gains 3 3 estimated IL -23.199999999999154 LRA 6.999999883111645 unmeasured within shared comparison budget
+Proxy 696913501ae8049dc56b544071c932c90a625c7e01803528e60e5055de6dba54 global 4.1315123865773202 root 1 coarse [6446400,9417600) gains 2.7999999066507106 2.7999999063562298 root 2 coarse [0,1516800) gains 3 3 estimated IL -22.799999999999184 LRA 6.999999883111947 unmeasured within shared comparison budget
+Proxy f8617d493feea7652583ae425187623261b594a99771c3bf4a625158c24f3e87 global 0 root 2 coarse [0,1492800) gains 3 root 1 coarse [6472320,9382080) gains 2.7999999066507106 estimated IL -26.925391300414244 LRA 6.9999998831127392 unmeasured within shared comparison budget
+Proxy ba693f32150a01f69c13a5114dd3211c1f181493908ef7c460a2fae78cb07198 global 3.925391300414244 root 2 coarse [0,1492800) gains 3 root 1 coarse [6472320,9382080) gains 2.7999999066507106 estimated IL -22.999999999999204 LRA 6.9999998831117942 unmeasured within shared comparison budget
+Proxy 03480144ff3f2dbea736d34d43cf3e69d12d5ec89259adae23e8407986f5f764 global 3.7253913004142447 root 2 coarse [0,1492800) gains 3 root 1 coarse [6472320,9382080) gains 2.7999999066507106 estimated IL -23.199999999999196 LRA 6.99999988311178 unmeasured within shared comparison budget
+Proxy 1f84fcce5b17f2e6fd17198de0d9841cd60606f98e0470023a6fd5f23f567faf global 4.1253913004142433 root 2 coarse [0,1492800) gains 3 root 1 coarse [6472320,9382080) gains 2.7999999066507106 estimated IL -22.799999999999187 LRA 6.9999998831116343 unmeasured within shared comparison budget
+Proxy 315dbbe321efa32e381a3c8100cf0b6fb99cd9f9d8daea04a459e262f843a858 global 0 root 1 coarse [6412800,9427200) gains 2.7999999066507106 2.799999906353082 root 2 coarse [0,1492800) gains 3 estimated IL -26.932785574227005 LRA 6.9999998831127392 unmeasured within shared comparison budget
+Proxy 33bf5be48c0e2cdb55438e978494d26ce9298762dbc6b31ab6782fdc86b7ec54 global 3.9327855742270046 root 1 coarse [6412800,9427200) gains 2.7999999066507106 2.799999906353082 root 2 coarse [0,1492800) gains 3 estimated IL -22.999999999999208 LRA 6.9999998831118191 unmeasured within shared comparison budget
+Proxy 2aae2e0ffa892c43646f219f67f09a643dadfdbe3dbc016992a75c8a93cb7d6b global 3.7327855742270053 root 1 coarse [6412800,9427200) gains 2.7999999066507106 2.799999906353082 root 2 coarse [0,1492800) gains 3 estimated IL -23.199999999999143 LRA 6.999999883111709 unmeasured within shared comparison budget
+Proxy fc0d19f0bad5c19eecbc810c5ad738eb6d80239ead244d220b39565837087228 global 4.1327855742270039 root 1 coarse [6412800,9427200) gains 2.7999999066507106 2.799999906353082 root 2 coarse [0,1492800) gains 3 estimated IL -22.799999999999198 LRA 6.9999998831115811 unmeasured within shared comparison budget
+Proxy ed0e6ba74438704f37d23bfe6e62ef886d4834e6d7f06cc084a2a0d8d5930fda global 0 root 2 coarse [0,1444800) gains 3 root 1 coarse [6472320,9382080) gains 2.7999999066507106 estimated IL -26.921834961629155 LRA 6.9999998831127321 unmeasured within shared comparison budget
+Proxy 1a2d37c521065df0331adb79050ec0201568d36e667a0894cb91e59bd9d3357e global 3.9218349616291555 root 2 coarse [0,1444800) gains 3 root 1 coarse [6472320,9382080) gains 2.7999999066507106 estimated IL -22.999999999999169 LRA 6.9999998831118369 unmeasured within shared comparison budget
+Proxy dd695424b4ced3861a56264a804be5f9af03ef2e7e68eba0790369be09ee08f9 global 3.7218349616291562 root 2 coarse [0,1444800) gains 3 root 1 coarse [6472320,9382080) gains 2.7999999066507106 estimated IL -23.199999999999246 LRA 6.9999998831117658 unmeasured within shared comparison budget
+Proxy ea073039a4e64ca1b6b26dd291fdb9925d8a42152d495abf5568feb224744e02 global 4.1218349616291547 root 2 coarse [0,1444800) gains 3 root 1 coarse [6472320,9382080) gains 2.7999999066507106 estimated IL -22.799999999999059 LRA 6.9999998831117942 unmeasured within shared comparison budget
+Proxy 9074d61fb0891533f098ddf8ac732b2d4bd98781b5e1fe2bc9fec91a5210d486 global 2.9723819144432682 root 1 coarse [6472320,9382080) gains 2.7999999066507106 estimated IL -23.000000012882577 LRA 9.9999998831119861 assessed
+Proxy c0ed14ba5c49d67e7d938dba1e406eeed715567de10703f5ecd94ee97908342e global 0 root 1 coarse [6412800,9427200) gains 2.7999999062058789 2.7999999066507106 root 2 coarse [0,1492800) gains 3 estimated IL -26.932785574223487 LRA 6.9999998831127392 unmeasured within shared comparison budget
+Proxy 94f8f354700ec33276508ffd98b6e62c5b927bd9061e374de5a877350d4ee813 global 3.9327855742234874 root 1 coarse [6412800,9427200) gains 2.7999999062058789 2.7999999066507106 root 2 coarse [0,1492800) gains 3 estimated IL -22.999999999999236 LRA 6.999999883111709 unmeasured within shared comparison budget
+Proxy dd5e0c52a66d4a7a2e067b0fc397cbe460326485299942cd017acb77bf8497ee global 3.7327855742234881 root 1 coarse [6412800,9427200) gains 2.7999999062058789 2.7999999066507106 root 2 coarse [0,1492800) gains 3 estimated IL -23.199999999999228 LRA 6.9999998831117551 unmeasured within shared comparison budget
+Proxy f5a4078cdf65e96ac7f58c8d275a891b3adf49af15385bf852c2ea5ca1e5b766 global 4.1327855742234867 root 1 coarse [6412800,9427200) gains 2.7999999062058789 2.7999999066507106 root 2 coarse [0,1492800) gains 3 estimated IL -22.799999999999176 LRA 6.999999883111645 unmeasured within shared comparison budget
+Proxy 4f5cb4fa642a9af3aca7a366197b338faa823a238440f881e33954fecd26853d global 0 root 2 coarse [0,1420800) gains 3 root 1 coarse [6472320,9382080) gains 2.7999999066507106 estimated IL -26.905873965357454 LRA 6.9999998831127321 unmeasured within shared comparison budget
+Proxy dd402393f8a8c84f623bb4bd142924c383eb1d739c07b8de3e18997907d40b1d global 3.9058739653574541 root 2 coarse [0,1420800) gains 3 root 1 coarse [6472320,9382080) gains 2.7999999066507106 estimated IL -22.999999999999144 LRA 6.9999998831117125 unmeasured within shared comparison budget
+Proxy 77de47f51a2fd8957e4f2a19ef67572ab6b76b562443ed626659f233f6cc0076 global 3.7058739653574548 root 2 coarse [0,1420800) gains 3 root 1 coarse [6472320,9382080) gains 2.7999999066507106 estimated IL -23.199999999999214 LRA 6.9999998831116805 unmeasured within shared comparison budget
+Proxy 6a0e0b7d107a1e91b54bd3c515ac2a77603a6edbbfd130be46ba7d82b909dce8 global 4.1058739653574534 root 2 coarse [0,1420800) gains 3 root 1 coarse [6472320,9382080) gains 2.7999999066507106 estimated IL -22.799999999999311 LRA 6.9999998831115562 unmeasured within shared comparison budget
+Proxy 89ecc0223b8b32b123e6d28fb1ec8eabfd5eed20893ce01313639a97c364e7c1 global 0 root 1 coarse [6412800,9427200) gains 2.7999999062058789 2.7999999066507106 2.7999999063562298 root 2 coarse [0,1420800) gains 3 estimated IL -26.913235055497687 LRA 6.9999998831127392 unmeasured within shared comparison budget
+Proxy 07555360ed60210f8c88901a264d2c06608ad3a203b97793f1ee717e57ec8208 global 3.9132350554976867 root 1 coarse [6412800,9427200) gains 2.7999999062058789 2.7999999066507106 2.7999999063562298 root 2 coarse [0,1420800) gains 3 estimated IL -22.999999999999222 LRA 6.9999998831118582 unmeasured within shared comparison budget
+Proxy 85c63da2c30be36ff7e9c23358db062fb83b0161420b9eb58a0d402998c3e588 global 3.7132350554976874 root 1 coarse [6412800,9427200) gains 2.7999999062058789 2.7999999066507106 2.7999999063562298 root 2 coarse [0,1420800) gains 3 estimated IL -23.199999999999214 LRA 6.99999988311178 unmeasured within shared comparison budget
+Proxy 878941037723eeab6c8bf8c0bfe8600512ed43775142d924e79df16f7d97bb1f global 4.113235055497686 root 1 coarse [6412800,9427200) gains 2.7999999062058789 2.7999999066507106 2.7999999063562298 root 2 coarse [0,1420800) gains 3 estimated IL -22.799999999999205 LRA 6.9999998831116272 unmeasured within shared comparison budget
+Proxy 6276294924a205f0be5fd9bbfc8cf49c89cc247ba06019f3370142d89bb92d4e global 0 root 2 coarse [0,1372800) gains 3 root 1 coarse [6472320,9382080) gains 2.7999999066507106 estimated IL -26.870602406807539 LRA 6.9999998831127321 unmeasured within shared comparison budget
+Proxy 11f36d004ca49928ea9c506e25e6b5ff7e3b70883766c315f483e5f9fa6a58b2 global 3.8706024068075386 root 2 coarse [0,1372800) gains 3 root 1 coarse [6472320,9382080) gains 2.7999999066507106 estimated IL -22.999999999999229 LRA 6.999999883111844 unmeasured within shared comparison budget
+Proxy 23893ce0e2ef52c3dd7693a87fc1e5e0e410d23ec7c69120847ce605f3469dcd global 3.6706024068075394 root 2 coarse [0,1372800) gains 3 root 1 coarse [6472320,9382080) gains 2.7999999066507106 estimated IL -23.19999999999926 LRA 6.9999998831116841 unmeasured within shared comparison budget
+Unvisited round-robin gain/geometry variants: 158. Reserved seeds and overlapping variants share the same proxy and exact limits.
+Joint inner comparison did not reach exact assessment. Consult the proxy ledger, permission limits and complete/original/repair priorities.
+Three exact assessments used; remaining gain/boundary alternatives were not measured. No optimality claim.
+Private assessment budget 3. Failed shortlist 0.01 LU is diagnostic ranking only, never a rule allowance.
+Preparation 1.958 s; auxiliary pass 0.713 s; cached planning 0.073 s; sidecar 770272 bytes; bounded additional planning allocation estimate 5150480 bytes.
+
+section-preferences-v2 / connected-envelope-support-v2
+Policy digest: 7cd69da2e258a5bf11ba10a1b91354fc9ac446fcfb5f5b422c3c0a78b059cef2
+No region-count restriction; affected duration 60.0% (preservation preference, not broadcast rule).
+Additional attenuation 3.0 dB; cumulative local attenuation 12.0 dB; requested reserve 0.5 dB inside both caps.
+
+Target EBU R128-2023 programme QC / ebu-r128-2023-programme-linear-qc / 1.0.0 / 9b4b0bf7dce7923511c4ab92d9d41082e2c6257eac7b1aad2ac5ab8a6e567497
+IL -23.000000000 LUFS +/- 0.200000000 LU / True peak -1.000000000 dBTP / LRA 6.700000000 LU / Max M No Limit / Max S No Limit
+Selected programme loudness and true-peak rules for pre-produced whole-programme linear-audio QC. Excludes live exceptions, deliberate lower targets, short-form supplements and distribution-specific requirements.
+EBU R128-2023 (November 2023) / https://tech.ebu.ch/docs/r/r128.pdf
+Requirement provenance
+IL R128-2023 clauses h, i, k, l: -23 LUFS intended target; +/-0.2 LU QC allowance; whole-programme level gating.
+True peak R128-2023 clause m: maximum -1 dBTP for linear audio.
+LRA User-specified job requirement: Programme job requirements; EBU Tech 3342-2023 whole-programme LRA; Predeclared development comparison, not delivery default. User provenance is not independently verified; not an EBU-mandated ceiling.
+Max M 
+Max S 
+Clause m separately permits +/-0.3 dB meter tolerance for signals band-limited to 20 kHz. Bandwidth is not certified here; this provision never relaxes the -1 dBTP evaluation ceiling.
+Frozen measured Current baseline (measured)
+IL LUFS = -24.836402507356
+True peak dBTP = -19.999995255699
+LRA LU = 9.999999883113
+Max M LUFS = -19.997902808909
+Max S LUFS = -19.999916611979
+Sample peak dBFS = -19.999997929123
+Current State evaluation: FAIL
+Fails one or more selected measured rules.
+programme-loudness: FAIL | -24.836403 LUFS | min -23.200000 | max -22.800000 | delta -1.836403
+Outside selected bounds.
+true-peak: PASS | -19.999995 dBTP | max -1.000000 | delta -18.999995
+Within selected bounds.
+loudness-range: FAIL | 10.000000 LU | max 6.700000 | delta 3.300000
+Outside selected bounds.
+LRA is informative when the profile has no LRA rule. Verdict uses full precision.
+No complete delivery, metadata or future encoded-export verification.
+
+Measurement 3caf0ef6cffe36acae1fca773afaaf60f01359ef675c7f63bf4fce9e8c973208
+Method bs1770-5-ebu2023-m7.1 / build 4c57ba6ac54d35ecc1b1d3e166eb43713991b3d6795eeaaf46b310268e29e6e3 / Mac OSX 15.7.9;arm64;float32-samples;float64-analysis;no-fast-math;fp-contract-off
+Origin session a1a27c9942c1485d90d538b0775ca4df / job 1 / revision 1
+Initial Current from identical Source measurement 90161c151f11b3fd14fda966f315b07a94c7487b1f5d1b0c5cdbfb8dec2faaee
