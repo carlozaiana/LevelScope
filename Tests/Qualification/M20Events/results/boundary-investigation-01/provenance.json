@@ -1,0 +1,40 @@
+{
+  "status": "Read-only observations of unchanged production rules, no new correction assessments or listening",
+  "logic_head": "8e50899d5487cef0466a8bd7ba30559047f972be",
+  "input": "/Users/fuzz/N15/Mixdown/MusicInBackAndForegroundSomeDialog.wav",
+  "source_sha256": "7ba6404041c94c909df290a6829a0fe92ce594329a1d575490c2bb4a5b6cc8f0",
+  "production_measurement_build": "12d44f32d59488dcc03c9d88edea96d4c03a98b439fd9cd37d8d15078276c6a7",
+  "original_trace_directory": "/Users/fuzz/Developer/LevelScope/build/m20-boundary-investigation-2026-11-20",
+  "files_sha256": {
+    "diagnostic.json": "fe8a42886a3d740dc11e69241ffa9202efc5eb8e0487cebd34eae57a556da2b1",
+    "groups.csv": "628ce6401c05044130024156271157ad51c3dcf5f1e7c901c2282d0324f5e8a6",
+    "windows.csv": "d148ab994451fbe18c7da3c65f1320abb75b43e27a15f873acc2994743272d61",
+    "geometry.csv": "fb2b2307f7e71647035869fce17744c8d83f79b039f4b56d83d4930b38871f11",
+    "trace.csv": "2377d3cac4a2d11a86f75ccc46c24cc9ffabaf2d5667a464aee14d5a67dedb4d",
+    "trace.cpp": "8465eb451905ddc39db84328e95cd849129d9d297593859bbdd2fadc07453b17",
+    "prepare_trace.py": "79cd6adcd049983ac1d905f3501887d46d3b858bb51ac08bf1f715485926b246",
+    "saved-plan-summary.json": "5fd86ad6747efc750be70b9d75bc2d6f1e676feaf89b9be4a761d20d8f2e871f",
+    "run.log": "5c7e912476d06b3af02a94b61c8151238c72710485af375819f04ad851ba77e1"
+  },
+  "zip_sha256": "37cacc3fa0182c1b232a1b5770753df00eba626137b587d54122b02b1fc4602c",
+  "saved_sessions": {
+    "m19": {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-inspection-2026-11-07/listening-gate-04/m19/inspection.levelscope",
+      "sha256": "58c19211870f8f062b00d91cb1dc5c1fb1e1f58190cbaeb5ab1a6585f2c0110f",
+      "core_sha256": "f3ae168c9c29688c4bbba79a3a8456fe00382d3839e55c1f6a4586d11852716e",
+      "history_sha256": "ac1e41412d9cbed061fe26f807871735426af4b3e07785170313f41aabda4720",
+      "stored_geometry_matches_summary": true
+    },
+    "m20": {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-inspection-2026-11-07/listening-gate-04/m20/inspection.levelscope",
+      "sha256": "86a8d845fb6c1eced2a2fc31364a7562a5735842da2c07e525f29a96dcfe075b",
+      "core_sha256": "3c94a8dac9fa68bd703cb8a522d113664ba8e848721b0bbd5f6caa387bd96fea",
+      "history_sha256": "314f577ad77aea8249db59c3a3007e3169550c8fb06928bafd828ca305e54d48",
+      "stored_geometry_matches_summary": true
+    }
+  },
+  "full_plan_report": {
+    "path": "Tests/Qualification/M20Events/results/logic-01/reports/music-margin60.txt",
+    "sha256": "c3fae4d6b24514296071674957a6ef1d7dbec43e4574ba4e574bb7735443872a"
+  }
+}
