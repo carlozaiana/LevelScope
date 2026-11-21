@@ -1,0 +1,120 @@
+{
+  "passed": true,
+  "os": "15.7.9",
+  "architecture": "arm64",
+  "source_commit": "ce31c4679782c69d02c29ddc675fee086b89395c",
+  "build": "aa2ef42883b323fbf6a2dc84dcc40d6fafdcc1ec5db8cc1ac1e74fdead997531",
+  "candidate_identity_sha256": "8f1497d12d4d5a1c3a0e8cd4aa3e864cc70a540023a399041d5dbd808ac93e79",
+  "requested_cases": [
+    "inner-ui",
+    "event-ui",
+    "ui",
+    "timeline",
+    "inner-stereo",
+    "inner-surround"
+  ],
+  "physical_devices_opened": false,
+  "combined_qualification_complete": false,
+  "inputs": {
+    "inner-ui": {
+      "path": "/Users/fuzz/Developer/LevelScope/build/m20-inner-2026-11-20/listening-01/sessions/inner-margin20-attempt-3.levelscope",
+      "sha256": "9a652152fb1bbbe7d299b80be8c937a4eff9e8028095767eec12e7111ab5845a"
+    }
+  },
+  "groups": [
+    {
+      "name": "inner-ui",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-competing-boundary-ui-2026-11-21/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-competing-boundary-ui-2026-11-21/sequoia-01/inner-ui-files",
+        "--inner-ui",
+        "/Users/fuzz/Developer/LevelScope/build/m20-inner-2026-11-20/listening-01/sessions/inner-margin20-attempt-3.levelscope"
+      ],
+      "returncode": 0,
+      "seconds": 44.708223083,
+      "passed": true,
+      "checks": 281,
+      "receipt": "inner-ui-files/result.json",
+      "receipt_sha256": "0f97913a6894e209f1b16aaa355ecb1c026c814d4942f1948539eba4a769c224"
+    },
+    {
+      "name": "event-ui",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-competing-boundary-ui-2026-11-21/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-competing-boundary-ui-2026-11-21/sequoia-01/event-ui-files",
+        "--event-ui"
+      ],
+      "returncode": 0,
+      "seconds": 17.727720583999997,
+      "passed": true,
+      "checks": 144,
+      "receipt": "event-ui-files/result.json",
+      "receipt_sha256": "e6d4ba097dc42dffb048a0c45c4968c771c5f15829b8cec512af7a40c88299b5"
+    },
+    {
+      "name": "ui",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-competing-boundary-ui-2026-11-21/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-competing-boundary-ui-2026-11-21/sequoia-01/ui-files"
+      ],
+      "returncode": 0,
+      "seconds": 18.218828708000004,
+      "passed": true,
+      "checks": 163,
+      "receipt": "ui-files/result.json",
+      "receipt_sha256": "a75cdaff541ac005ae08c9a6e3b2ee8a49b7f4e6035fd2f5d954abf2f2da26ef"
+    },
+    {
+      "name": "timeline",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-competing-boundary-ui-2026-11-21/candidate-01/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-competing-boundary-ui-2026-11-21/sequoia-01/timeline-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-competing-boundary-ui-2026-11-21/sequoia-01/timeline.json"
+      ],
+      "returncode": 0,
+      "seconds": 2.9791617909999957,
+      "passed": true,
+      "checks": 2299,
+      "receipt": "timeline.json",
+      "receipt_sha256": "258812a237049c647de3c87679b02c2af744cd4f68fad0a4099a7957817849b8"
+    },
+    {
+      "name": "inner-stereo",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-competing-boundary-ui-2026-11-21/candidate-01/bin/LevelScopeEventPlanningTests",
+        "--group",
+        "inner-stereo",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-competing-boundary-ui-2026-11-21/sequoia-01/inner-stereo-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-competing-boundary-ui-2026-11-21/sequoia-01/inner-stereo.json"
+      ],
+      "returncode": 0,
+      "seconds": 8.450151958000006,
+      "passed": true,
+      "checks": 60,
+      "receipt": "inner-stereo.json",
+      "receipt_sha256": "4e58147647b02c61ce7adc8df4cc7e1a2bd1342d775f7c97d89c37d3a874099c"
+    },
+    {
+      "name": "inner-surround",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-competing-boundary-ui-2026-11-21/candidate-01/bin/LevelScopeEventPlanningTests",
+        "--group",
+        "inner-surround",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-competing-boundary-ui-2026-11-21/sequoia-01/inner-surround-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-competing-boundary-ui-2026-11-21/sequoia-01/inner-surround.json"
+      ],
+      "returncode": 0,
+      "seconds": 10.422818583000009,
+      "passed": true,
+      "checks": 57,
+      "receipt": "inner-surround.json",
+      "receipt_sha256": "4367118fa3bf009589b5e5723a922e4bb7b83191e57be209e6283f8dee890496"
+    }
+  ]
+}

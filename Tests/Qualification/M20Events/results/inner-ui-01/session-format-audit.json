@@ -1,0 +1,42 @@
+[
+  {
+    "owned_file": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-competing-boundary-ui-2026-11-21/sequoia-01/inner-ui-files/schema-1.levelscope",
+    "sha256": "8caa088b3e7841674061485c1a12cc96b9ac1dea52a97158c1d7d3cfd2cc13f1",
+    "bytes": 67833,
+    "document": 10,
+    "programme": 9,
+    "applied_attachment": null
+  },
+  {
+    "owned_file": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-competing-boundary-ui-2026-11-21/sequoia-01/inner-ui-files/schema-2.levelscope",
+    "sha256": "5f39151518d3ff19d1f61f5465d3cfc61cac8bb891f0b31948e779d3e2eaff49",
+    "bytes": 68531,
+    "document": 10,
+    "programme": 9,
+    "applied_attachment": null
+  },
+  {
+    "owned_file": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-competing-boundary-ui-2026-11-21/sequoia-01/inner-ui-files/schema-3.levelscope",
+    "sha256": "5d332cadf75b7f65bfd92afd8466a846008b5b6f93195d23e879b13a4fb2072b",
+    "bytes": 68900,
+    "document": 11,
+    "programme": 9,
+    "applied_attachment": null
+  },
+  {
+    "owned_file": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-competing-boundary-ui-2026-11-21/sequoia-01/inner-ui-files/history-only.levelscope",
+    "sha256": "dbd9884a8e6ece22bb58a0c787dc083c36235ad5b4db0d98364348b1d35f7aa4",
+    "bytes": 372877,
+    "document": 11,
+    "programme": 9,
+    "applied_attachment": 4
+  },
+  {
+    "owned_file": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-competing-boundary-ui-2026-11-21/sequoia-01/inner-ui-files/native-applied.levelscope",
+    "sha256": "bc25076be970f6f73f88ebb46eb58c5d7ff20b6cf787fab0c3d902f7d2dd1365",
+    "bytes": 374527,
+    "document": 11,
+    "programme": 9,
+    "applied_attachment": 4
+  }
+]

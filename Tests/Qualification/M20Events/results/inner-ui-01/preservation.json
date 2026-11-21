@@ -1,0 +1,57 @@
+{
+  "passed": true,
+  "checks": {
+    "main": true,
+    "origin_main": true,
+    "tags": true,
+    "prior_ui_branch": true,
+    "unrelated_files": true,
+    "listening_materials": true,
+    "manuals": true,
+    "local_manual_tree": true,
+    "six_frozen_packages": true,
+    "other_worktree:/Users/fuzz/Developer/LevelScope": true,
+    "other_worktree:/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-publication-2026-11-03/integration": true,
+    "other_worktree:/Users/fuzz/Developer/LevelScope-worktrees/UserManual": true,
+    "other_worktree:/Users/fuzz/Developer/LevelScope-worktrees/VideoImplementation": true
+  },
+  "tag_count": 26,
+  "listening_files": 15,
+  "manual_files": 72,
+  "packages": [
+    {
+      "path": "/Users/fuzz/Developer/LevelScope/build/m20-inner-2026-11-20/candidate-01",
+      "identity_sha256": "da714861bab2c40fd05ab350feead3a06b84b29884993298519b1ada2925c5ed",
+      "verified_artifacts": 16
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-complete-event-ui-2026-11-20/candidate-01",
+      "identity_sha256": "88d4209ff33e546ae084d1ae3db62e062306e76624564408b88e8f2c95ef5439",
+      "verified_artifacts": 443
+    },
+    {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/ui-selection-boundaries-2026-11-11/candidate-01",
+      "identity_sha256": "901f0b589c08927cb642f0c84ff7b930fe39be1d87d12f696db05b73e23a45ed",
+      "verified_artifacts": 427
+    },
+    {
+      "path": "/Users/fuzz/Developer/LevelScope/build/m20-events-2026-11-19/logic-handover-01",
+      "identity_sha256": "3d394c973aaaa22ba419e065657379b72ce8760d74e3a9a542fe076284c83dd9",
+      "verified_artifacts": 16
+    },
+    {
+      "path": "/Users/fuzz/Developer/LevelScope/build/m20-events-2026-11-19/logic-handover-02",
+      "identity_sha256": "de8c6625ed570997821edc2638b328fdbc6834d8a1b6cbf1330be99e3dd716ae",
+      "verified_artifacts": 16
+    },
+    {
+      "path": "/Users/fuzz/Developer/LevelScope/build/m20-events-2026-11-19/logic-handover-03",
+      "identity_sha256": "2027ac45a7e4697dc5e4d007e068e0661df3d4dbfc3ec775aa3d29fdf94c80de",
+      "verified_artifacts": 16
+    }
+  ],
+  "main": "22961f03de7919e1de631f8b13eb4b852108ac0b",
+  "integration_commit": "ce31c4679782c69d02c29ddc675fee086b89395c",
+  "physical_devices_opened": false,
+  "publication_performed": false
+}
