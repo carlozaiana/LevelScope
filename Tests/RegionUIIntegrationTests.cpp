@@ -1,6 +1,8 @@
 #include "CompositionTestFixtures.h"
 #include "Standalone/StandaloneMainComponent.h"
 #include "Standalone/RegionReviewFormatting.h"
+#include "Standalone/SessionSavePresentation.h"
+#include "Standalone/ProposalPresentation.h"
 #include "Core/Measurement/GatePopulation.h"
 
 namespace levelscope::standalone
@@ -14,6 +16,14 @@ struct PreparationFeedbackTestAccess
     static juce::String historyStatus(StandaloneMainComponent& c){return c.session.appliedExplanationStatus();}
     static bool proposalPending(StandaloneMainComponent& c){return c.sectionProposalResult.valid();}
     static void closeReview(StandaloneMainComponent& c){c.proposalInspectionWindow.reset();}
+    static void settings(StandaloneMainComponent& c){c.showRegionPlanning();}
+    static RegionPlanningPanel* settingsPanel(StandaloneMainComponent& c){return c.regionPlanningWindow?dynamic_cast<RegionPlanningPanel*>(c.regionPlanningWindow->getContentComponent()):nullptr;}
+    static void closeSettings(StandaloneMainComponent& c){c.regionPlanningWindow.reset();}
+    static void save(StandaloneMainComponent& c,bool copy=false){c.beginSaveSession(copy);}
+    static void open(StandaloneMainComponent& c,const juce::File& f){c.beginOpenSession(f);}
+    static bool filePending(StandaloneMainComponent& c){return c.documentResult.valid();}
+    static void deterministicChooser(StandaloneMainComponent& c){c.useNativeSessionFileChooser=false;}
+    static juce::String fileNotice(StandaloneMainComponent& c){return c.documentNotice;}
     static StandaloneSessionModel& model(StandaloneMainComponent& c){return c.session;}
     static void stopTimer(StandaloneMainComponent& c){c.stopTimer();}
     static void tick(StandaloneMainComponent& c){c.timerCallback();}
@@ -479,13 +489,14 @@ void controlVariants(const juce::File& root)
 }
 
 #include "EventUIIntegrationChecks.h"
+#include "InnerUIIntegrationChecks.h"
 }
 int main(int argc,char** argv)
 {
-    juce::ScopedJuceInitialiser_GUI gui;const bool events=argc==3&&juce::String(argv[2])=="--event-ui",variants=argc==3&&juce::String(argv[2])=="--variants",exchange=argc==4&&juce::String(argv[2])=="--exchange",holdouts=argc==4&&juce::String(argv[2])=="--holdouts",listening=argc==4&&juce::String(argv[2])=="--refresh-listening",recover=argc==5&&juce::String(argv[2])=="--recover-music";if(argc!=2&&!variants&&!exchange&&!holdouts&&!listening&&!recover&&!events)return 2;const juce::File root(argv[1]);if(root.exists())return 2;root.createDirectory();bool passed=false;juce::String error;
+    juce::ScopedJuceInitialiser_GUI gui;const bool inner=argc==4&&juce::String(argv[2])=="--inner-ui",events=argc==3&&juce::String(argv[2])=="--event-ui",variants=argc==3&&juce::String(argv[2])=="--variants",exchange=argc==4&&juce::String(argv[2])=="--exchange",holdouts=argc==4&&juce::String(argv[2])=="--holdouts",listening=argc==4&&juce::String(argv[2])=="--refresh-listening",recover=argc==5&&juce::String(argv[2])=="--recover-music";if(argc!=2&&!variants&&!exchange&&!holdouts&&!listening&&!recover&&!events&&!inner)return 2;const juce::File root(argv[1]);if(root.exists())return 2;root.createDirectory();bool passed=false;juce::String error;
     try
     {
-        if(events)eventUIChecks(root);else if(recover)recoverMusic(juce::File(argv[3]),juce::File(argv[4]),root);else if(listening)refreshListening(juce::File(argv[3]),root);else if(holdouts)controlledHoldouts(juce::File(argv[3]),root);else if(exchange)exchangeChecks(juce::File(argv[3]),root);else if(variants)controlVariants(root);else
+        if(inner)innerUIChecks(root,juce::File(argv[3]));else if(events)eventUIChecks(root);else if(recover)recoverMusic(juce::File(argv[3]),juce::File(argv[4]),root);else if(listening)refreshListening(juce::File(argv[3]),root);else if(holdouts)controlledHoldouts(juce::File(argv[3]),root);else if(exchange)exchangeChecks(juce::File(argv[3]),root);else if(variants)controlVariants(root);else
         {
         overloadBannerChecks(root);auto s=programme(root.getChildFile("fixture"),2);editorChecks(s,root);
         auto ui=std::make_unique<StandaloneMainComponent>(emptyOutputCatalog(),noOutputSettings());Access::stopTimer(*ui);ui->setSize(1320,1100);ui->setName("LevelScope - isolated M20 integration test");ui->addToDesktop(juce::ComponentPeer::windowHasTitleBar);ui->setVisible(true);

@@ -976,9 +976,9 @@ void StandaloneMainComponent::showLraPassages(bool current)
 void StandaloneMainComponent::proposeWithActiveMethod()
 {
     if(session.boundaryBatch)return;
-    if(session.regionPlanning)beginSectionProposal();
-    else if(session.getSelectedTargetProfile().limits.hasMaxLoudnessRange)showLraPassages(true);
-    else beginSectionProposal();
+    // One UI action; the existing shared dispatcher preserves each supported
+    // no-LRA, global-only, mono and explicitly versioned region path.
+    beginSectionProposal();
 }
 void StandaloneMainComponent::showRegionPlanning()
 {

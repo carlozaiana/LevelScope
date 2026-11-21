@@ -1,5 +1,6 @@
 #include "TimelineAppearance.h"
 #include "ProposalWorkflowPanel.h"
+#include "ProposalPresentation.h"
 namespace levelscope::standalone
 {
 ProposalWorkflowPanel::ProposalWorkflowPanel(StandaloneSessionModel& s):session(s)
@@ -36,9 +37,9 @@ void ProposalWorkflowPanel::refresh(float progress)
     else if(session.sectionTrimDraft)blocked="Apply or discard the manual gain draft first.";
     propose.setEnabled(blocked.isEmpty());review.setEnabled(bool(session.sectionProposal));
     apply.setEnabled(session.canApplySectionProposal()&&!diagnosticInspection);discard.setEnabled(bool(session.sectionProposal)&&!busy);
-    method.setText(session.regionPlanning?(session.regionPlanning->schema==2?"ACTIVE: Prefer complete-event treatment - ":"ACTIVE: M20 experimental regions - ")+juce::String(session.regionPlanning->mode==proposal::RegionMode::automatic?"automatic":session.regionPlanning->mode==proposal::RegionMode::selectedSection?"selected section":"temporary selection")
-        +(session.regionPlanning->allowGlobal?" | whole-programme global trim permitted":" | global gain fixed"):"ACTIVE: existing M19 / LRA-unset workflow (default)",juce::dontSendNotification);
-    method.setTooltip(method.getText()+". Region settings are private drafts until explicitly confirmed.");
+    method.setText(session.regionPlanning?"Planning: "+proposalPlanningName(*session.regionPlanning)+" | "+juce::String(session.regionPlanning->mode==proposal::RegionMode::automatic?"automatic":session.regionPlanning->mode==proposal::RegionMode::selectedSection?"selected section":"temporary selection")
+        +(session.regionPlanning->allowGlobal?" | whole-programme global trim permitted":" | global gain fixed"):"Planning: Standard proposals (default)",juce::dontSendNotification);
+    method.setTooltip(method.getText()+". Settings remain private until confirmed."+(session.regionPlanning?"\n"+proposalDefinitionText(*session.regionPlanning):juce::String()));
     history.setEnabled(bool(session.lastAppliedExplanation));preferences.setEnabled(!busy);
     juce::String title="Proposal workflow",detail=session.sectionProposalNotice;
     if(session.job.stage==JobStage::proposal&&session.job.isActive())

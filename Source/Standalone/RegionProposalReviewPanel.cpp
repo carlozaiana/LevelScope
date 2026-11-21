@@ -12,11 +12,14 @@ RegionProposalReviewPanel::RegionProposalReviewPanel(std::shared_ptr<const Secti
     coverage.setColour(juce::TextEditor::backgroundColourId,palette::card());useAlternative.onClick=[this]{useMeasuredAlternative();};
     authority.setFont(13.f);authority.setMinimumHorizontalScale(1.f);
     attempts.setName("Measured region attempt");regions.setName("Proposed processing root");attempts.addItem("Complete explanation - all attempts, restrictions and provenance",1);
-    const auto review=result->regionReview();reports.resize(review?review->attempts.size()+1:1);
+    const auto review=result->regionReview();const bool competing=review&&review->constraints.settings.schema==3;
+    reports.resize(review?review->attempts.size()+1+(competing?2:0):1);
     if(review)for(size_t n=0;n<review->attempts.size();++n)
     {
         const auto& a=review->attempts[n];attempts.addItem("Attempt "+juce::String(n+1)+(a.evaluation.verdict==proposal::Verdict::pass?" - measured PASS":" - measured failure / unavailable")+(review->eventMode?" | "+eventAttemptCoverage(a):n==review->retainedAttempt?" (retained)":""),int(n+2));
     }
+    if(competing)
+    {attempts.addSeparator();attempts.addItem("Shared boundary evidence - continuing and inner readings",sharedEvidenceId);attempts.addItem("Predicted comparisons - unmeasured alternatives are not selectable",proxyComparisonsId);}
     attempts.setSelectedId(1,juce::dontSendNotification);attempts.onChange=[this]{chooseAttempt();inspectSelection();};
     inspect.onClick=[this]{inspectSelection();};chooseAttempt();setSize(1100,920);startTimerHz(4);
 }
@@ -30,6 +33,13 @@ juce::String RegionProposalReviewPanel::attemptText(size_t n) const
         if(review->eventEvidence)for(const auto& g:review->eventEvidence->groups)
             if(std::any_of(a.coverage.groups.begin(),a.coverage.groups.end(),[&](const auto& treatment){return treatment.groupId==g.id;}))
                 text+="Event "+g.id+"; onset bracket ["+juce::String(g.onset.begin)+", "+juce::String(g.onset.end)+"), last attack ["+juce::String(g.lastAttack.begin)+", "+juce::String(g.lastAttack.end)+"), supported/uncertain decay ["+juce::String(g.decay.begin)+", "+juce::String(g.decay.end)+").\nNeed windows "+juce::String(g.firstNeedWindow)+" to "+juce::String(g.lastNeedWindow)+"; channel witness mask "+juce::String(g.witnesses)+"; "+g.reason+"\n";
+        if(review->constraints.settings.schema==3)
+        {
+            text+="Measured family: "+a.family+". Boundary choices by root:\n";
+            for(const auto& part:a.plan.assignments)
+                text+="Root "+juce::String(part.geometry.root+1)+": "+regionBoundaryFamily(part.geometry.family)+"; "+part.geometry.reason+".\n";
+            text+="Shared boundary evidence retains every physical witness and rival interpretation while browsing attempts. Predicted comparisons identifies plans that never received an exact assessment.\n";
+        }
         text+="\nExact permissions, requested/effective areas, pins and omitted comparisons remain in Complete explanation.\n";
     }
     text+="ACTUAL measured rule result:\n"+evaluationText(a.evaluation)+"\n";
@@ -66,14 +76,44 @@ void RegionProposalReviewPanel::chooseAttempt()
         }
     }
     inspect.setEnabled(actualSelected||(review&&n<0&&review->retainedAttempt<review->attempts.size()));regions.setEnabled(actualSelected);
-    const size_t slot=actualSelected?size_t(n+1):0;
+    const bool evidence=attempts.getSelectedId()==sharedEvidenceId,proxies=attempts.getSelectedId()==proxyComparisonsId;
+    const size_t slot=evidence?review->attempts.size()+1:proxies?review->attempts.size()+2:actualSelected?size_t(n+1):0;
     if(report)report->setVisible(false);
     if(!reports[slot])
     {
-        reports[slot]=std::make_unique<ProposalInspectionPanel>(actualSelected?attemptText(size_t(n)):result->text(),statusText,pageBytes);
+        reports[slot]=std::make_unique<ProposalInspectionPanel>(evidence?sharedEvidenceText():proxies?proxyComparisonsText():actualSelected?attemptText(size_t(n)):result->text(),statusText,pageBytes);
         addChildComponent(*reports[slot]);
     }
     report=reports[slot].get();report->setVisible(true);refreshSelection();resized();
+}
+juce::String RegionProposalReviewPanel::sharedEvidenceText()const
+{
+    const auto review=result->regionReview();const auto& evidence=review->eventEvidence;
+    juce::String text="SHARED BOUNDARY EVIDENCE - descriptive, not a measured pass or a selectable plan\n"
+        "A continuing passage and a possible inner beginning are competing readings of the same physical evidence. An earlier in-decay return can expose a tail still included by the later return or continuing reading. Unresolved evidence blocks an automatic complete recommendation.\n";
+    if(!evidence)return text+"No retained evidence is available. Missing evidence does not establish completeness.\n";
+    text+="Immutable evidence "+evidence->identity+"; definition "+evidence->definitionDigest+".\n";
+    const auto bracket=[&](proposal::RegionSpan span)
+    {return "["+juce::String(span.begin)+", "+juce::String(span.end)+") source frames"+(evidence->sampleRate>0?" ("+juce::String(double(span.begin)/evidence->sampleRate,3)+" - "+juce::String(double(span.end)/evidence->sampleRate,3)+" s)":juce::String());};
+    for(const auto& group:evidence->groups)
+    {
+        text+="\nRoot "+juce::String(group.root+1)+" | "+(group.outerGroup>=0?"Inner reading":"Continuing reading")+" | "+group.id+"\n";
+        if(group.outerGroup>=0&&size_t(group.outerGroup)<evidence->groups.size())text+="Rival continuing reading "+evidence->groups[size_t(group.outerGroup)].id+"\n";
+        text+="Possible beginning "+bracket(group.onset)+"; final comparable attack "+bracket(group.lastAttack)+".\n";
+        text+="Earlier in-decay fall "+(group.inDecay.end>group.inDecay.begin?bracket(group.inDecay):"unresolved / not retained")+".\n";
+        text+="Later background return "+(group.decay.end>group.decay.begin?bracket(group.decay):"unresolved / not retained")+(group.endingSupported?" (supported bracket)":" (ending remains uncertain)")+".\n";
+        text+=group.reason+(group.incomplete?" Detail is incomplete; do not infer silence or completeness.":"")+"\n";
+    }
+    text+="\nFULL SHARED WITNESS LEDGER\n"+evidence->innerDescription();
+    return text+"\nThese are evidence brackets, not necessarily gain ramp edges. The selected actual attempt report contains its exact gain envelope and parse-specific misses.\n";
+}
+juce::String RegionProposalReviewPanel::proxyComparisonsText()const
+{
+    const auto review=result->regionReview();juce::String text="PREDICTED COMPARISONS - predictions cannot establish a pass\n"
+        "inner-after means the later background return; inner-decay means an earlier release during decay; coarse means the original or measured-need edges. Every row describes a whole-programme plan, including global gain and other roots.\n"
+        "Unmeasured plans have no receipt and cannot be selected or applied. An assessed row's exact result belongs to the matching plan identity in the measured-attempt menu. Other gain variants need their own measurement.\n";
+    for(const auto& row:review->restrictions)text+=row+"\n";
+    return text+"\nShared caps: "+juce::String(review->proxyEvaluations)+" / 64 predictions; "+juce::String(review->attempts.size())+" / 3 exact assessments. Omission is not failure, impossibility or proof of the best musical treatment.\n";
 }
 void RegionProposalReviewPanel::inspectSelection()
 {
@@ -99,7 +139,8 @@ void RegionProposalReviewPanel::refreshSelection()
     if(blocked.isEmpty()&&(!review->attempts[size_t(n)].receipt||review->attempts[size_t(n)].attemptIdentity.isEmpty()||review->attempts[size_t(n)].evaluation.verdict!=proposal::Verdict::pass))blocked="Only an owned actual measured pass may be selected.";
     if(blocked.isEmpty()&&review->selectedAttempt==size_t(n))blocked=result->explicitlySelectedAlternative()?"This measured alternative is selected. Apply remains explicit in the main window.":"This measured recommendation is already selected. Apply remains explicit in the main window.";
     useAlternative.setEnabled(event&&blocked.isEmpty());useAlternative.setTooltip(blocked.isNotEmpty()?blocked:"Select this measured plan without applying it. Its coverage limitations stay visible.");
-    juce::String text=actual?regionAttemptAuthority(*result,size_t(n)):"Complete explanation: all attempts, baseline, restrictions and evidence.";
+    const bool documentary=attempts.getSelectedId()==sharedEvidenceId||attempts.getSelectedId()==proxyComparisonsId;
+    juce::String text=actual?regionAttemptAuthority(*result,size_t(n)):documentary?"Documentary evidence / predicted comparisons. No plan selection or Apply authority from this view.":"Complete explanation: all attempts, baseline, restrictions and evidence.";
     if(event)text+="\nRecommended: "+(review->recommendedAttempt?"attempt "+juce::String(*review->recommendedAttempt+1):"none")+"; selected: "+(review->selectedAttempt?"attempt "+juce::String(*review->selectedAttempt+1):"none")+". Browsing does not change selection.";
     else text+=" Inspection never auditions a private candidate.";
     if(statusText)text+="\n"+statusText();

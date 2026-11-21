@@ -103,7 +103,8 @@ private:
     juce::String documentNotice;
     bool relinkingVideo = false;
     juce::String relinkingMember;
-    bool migrationSaveApproved = false;
+    int migrationSaveApprovedSchema = 0;
+    bool useNativeSessionFileChooser = true; // test harness may use the JUCE chooser window
     enum class FileOperation { none, save, open, relink } fileOperation = FileOperation::none;
     void configureSessionControls();
     void pollSessionOperation();

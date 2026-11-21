@@ -15,6 +15,8 @@ This folder is the persistent orientation layer for future development chats. Re
 
 ## Task-based quick start
 
+- **M20 competing-boundary native UI integration:** [88 — settings round trips, evidence review and prospective Save As](88_M20CompetingBoundaryUIIntegration.md). Local continuation above Logic checkpoint `a6d0fb3`; preserves earlier UI work. See its frozen-build evidence and remaining combined qualification before any main integration.
+
 - **M20 competing boundaries, frozen Logic handover.** The matched 20% run measured a passing, partial and uncertain plan covering both disputed passages. The 28-group offline qualification, listening copies, exact failures and next native UI work are in [87 — Logic handover](87_M20InnerBoundaryLogicHandover.md).
 
 - **M20 boundary rule revision accepted, 20 November 2026:** [86 — Strategy review and implementation authorization](86_M20BoundaryRuleImplementationDecision.md), [85 — evidence and accepted proposal](85_M20BoundaryInvestigationAndRuleProposal.md), and [current task](../LogicImplementationCurrentTask.md). Logic_Implementation_2 may implement and qualify the bounded competing-entrance, independent-release and directed-edge changes through a tested Logic/UI handover. The completed UI continuation is the implementation base. Physical listening and publication remain separate.

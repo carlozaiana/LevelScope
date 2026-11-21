@@ -200,6 +200,7 @@ void TimelineGainLane::showSelection()
             for(const auto& a:attempt->plan.assignments)if(a.geometry.support.begin<=cursor&&cursor<a.geometry.support.end)
             {
                 description+="\nRoot "+(a.geometry.root<review.constraints.roots.size()?review.constraints.roots[a.geometry.root].id:"unavailable")+". "+a.geometry.reason;
+                if(review.constraints.settings.schema==3)description+="\n"+regionBoundaryFamily(a.geometry.family)+". Review shared boundary evidence for competing beginnings/returns and unresolved coverage.";
                 description+="\nChanged-support outer edges ["+juce::String(a.geometry.support.begin)+", "+juce::String(a.geometry.support.end)+"); nominal plateau cuts "+juce::String(a.nominal.begin);
                 for(auto cut:a.geometry.cuts)description+=", "+juce::String(cut);description+=", "+juce::String(a.nominal.end)+". All values are exact source frames; ramps are included only in changed support.";
                 const size_t part=size_t(std::upper_bound(a.geometry.cuts.begin(),a.geometry.cuts.end(),cursor)-a.geometry.cuts.begin());

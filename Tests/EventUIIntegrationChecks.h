@@ -4,11 +4,11 @@ void eventEditorChecks(StandaloneSessionModel& s,const juce::File& root)
 {
     const auto baseline=s.currentState.analysis;const auto revision=s.revision;
     const auto policy=s.proposalPolicy.digest();RegionPlanningPanel panel(s);
-    expect(!s.regionPlanning&&!control<juce::ToggleButton>(panel,"Prefer complete-event treatment").getToggleState(),"event treatment is not a new-session default");
+    expect(!s.regionPlanning&&control<juce::ComboBox>(panel,"Proposal method").getSelectedId()==1,"event treatment is not a new-session default");
     expect(s.proposalPolicy.durationThousandths==200&&s.proposalPolicy.additionalTenths==30&&s.proposalPolicy.cumulativeTenths==120&&s.proposalPolicy.reserveTenths==5,"conservative duration/gain/reserve defaults unchanged");
     std::optional<RegionPlanningSettings> draft;choose(panel,"Proposal method",2);
     expect(panel.readDraft(draft).isEmpty()&&draft->schema==1&&!draft->allowAutomaticMargins,"choosing M20 alone preserves legacy schema1");
-    toggle(panel,"Prefer complete-event treatment",true);
+    choose(panel,"Proposal method",3);
     expect(panel.readDraft(draft).isEmpty()&&draft->schema==2&&draft->preferCompleteEvent&&draft->compareAlternatives&&!draft->allowAutomaticMargins&&draft->leftMarginMs==0&&draft->rightMarginMs==0,"explicit event draft requires comparison without granting outward margins");
     expect(!control<juce::ToggleButton>(panel,"Assess alternatives after a passing candidate").isEnabled()&&!control<juce::TextEditor>(panel,"Left margin seconds (0-3, step 0.1)").isEnabled(),"comparison cannot be disabled and unpermitted automatic margins cannot be edited");
     expect(!s.regionPlanning&&s.currentState.analysis==baseline&&s.revision==revision,"private event opt-in changes no active settings or audio");
@@ -21,7 +21,7 @@ void eventEditorChecks(StandaloneSessionModel& s,const juce::File& root)
     imageOf(panel,root.getChildFile("event-settings.png"));
     choose(panel,"Region mode",3);text(panel,"Temporary begin frame","1449600");text(panel,"Temporary end frame","1728000");
     expect(panel.readDraft(draft).isEmpty()&&!draft->allowGlobal&&!draft->allowAutomaticMargins&&draft->selection.begin==1449600,"selected passage uses exact frames with global permission reset");
-    choose(panel,"Region mode",1);toggle(panel,"Prefer complete-event treatment",false);click(panel,"Confirm settings");
+    choose(panel,"Region mode",1);choose(panel,"Proposal method",2);click(panel,"Confirm settings");
     expect(s.regionPlanning->schema==1&&!s.regionPlanning->allowAutomaticMargins&&s.regionPlanning->leftMarginMs==0,"explicit preference removal returns to legacy semantics");
     choose(panel,"Proposal method",1);click(panel,"Confirm settings");expect(!s.regionPlanning&&s.currentState.analysis==baseline,"M19 remains available without changing measurement");
 }

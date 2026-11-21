@@ -11,6 +11,11 @@ inline juce::String regionExact(double value)
 {std::ostringstream s;s.imbue(std::locale::classic());s<<std::setprecision(std::numeric_limits<double>::max_digits10)<<value;return s.str();}
 inline juce::String eventAttemptCoverage(const RegionAttempt& a)
 {return a.family=="measured global-only"?"Measured global-only; no local event treatment":juce::String(proposal::eventCoverageName(a.coverage.category));}
+inline juce::String regionBoundaryFamily(proposal::BoundaryFamily family)
+{
+    return family==proposal::BoundaryFamily::innerAfter?"Inner beginning / later background return":
+        family==proposal::BoundaryFamily::innerDecay?"Inner beginning / earlier in-decay return":"Original or measured-need boundaries";
+}
 inline juce::String eventCoverageSummary(const proposal::EventCoverage& coverage)
 {
     const auto full=coverage.text();

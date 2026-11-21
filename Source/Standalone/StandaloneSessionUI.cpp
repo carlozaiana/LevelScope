@@ -1,4 +1,5 @@
 #include "StandaloneMainComponent.h"
+#include "SessionSavePresentation.h"
 
 namespace levelscope::standalone
 {
@@ -78,32 +79,33 @@ void StandaloneMainComponent::beginSaveSession(bool saveAs,std::function<void()>
     {documentNotice="Discard the transient section-led proposal before saving. Applied settings remain saved normally.";refreshSessionControls();return;}
     if(session.sectionTrimDraft)
     {documentNotice="Apply or discard the section-gain draft in Programme sections before saving. Draft edits are not saved as applied audio.";refreshSessionControls();return;}
-    const bool monoSections=session.sourceDocument.media.channels==1 && session.currentStateDocument.sectionGains.has_value();
-    if(!migrationSaveApproved && (monoSections || (session.openedSessionSchema<sessionfile::schemaVersion
-        && !saveAs && session.documentFile!=juce::File())))
+    sessionfile::Document snapshot;
+    try {snapshot=sessionfile::capture(session);}
+    catch(const std::exception& e){documentNotice="Cannot capture session: "+juce::String(e.what());refreshSessionControls();return;}
+    const auto compatibility=SessionSavePresentation::forDocument(snapshot,session.openedSessionSchema,session.documentFile);
+    const auto runtime=session.sessionId;
+    if(migrationSaveApprovedSchema<compatibility.writer && !saveAs && compatibility.upgradesExisting)
     {
         juce::Component::SafePointer<StandaloneMainComponent> safe(this);
         juce::AlertWindow::showAsync(juce::MessageBoxOptions().withIconType(juce::MessageBoxIconType::WarningIcon).withTitle("Session format upgrade")
-            .withMessage(monoSections ? "Saving writes schema 10 and requires an M20 event-preference reader, including proposal preferences, mono processing and marker provenance. Choose Save As to retain your original file; no audio processing is removed."
-                : "Saving writes schema 10 and requires an M20 event-preference reader. Choose Save As to retain your original older-readable copy.")
-            .withButton("Save As").withButton("Save").withButton("Cancel"),[safe,continuation](int choice)
-            {if(!safe || (choice!=1 && choice!=2))return;safe->migrationSaveApproved=true;safe->beginSaveSession(choice==1,continuation);safe->migrationSaveApproved=false;});
+            .withMessage(compatibility.message)
+            .withButton("Save As").withButton("Save").withButton("Cancel"),[safe,continuation,runtime,writer=compatibility.writer](int choice)
+            {if(!safe||safe->session.sessionId!=runtime||(choice!=1&&choice!=2))return;juce::ScopedValueSetter<int> approval(safe->migrationSaveApprovedSchema,writer);safe->beginSaveSession(choice==1,continuation);});
         return;
     }
     if(saveAs||session.documentFile==juce::File())
     {
-        sessionChooser=std::make_unique<juce::FileChooser>(monoSections?"Save session (requires M20 event-preference reader)":"Save LevelScope session",session.documentFile==juce::File()?juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile("Untitled.levelscope"):((monoSections || session.openedSessionSchema<sessionfile::schemaVersion)?session.documentFile.getSiblingFile(session.documentFile.getFileNameWithoutExtension()+(monoSections?"-M20.levelscope":"-M20.levelscope")):session.documentFile),"*.levelscope");
+        sessionChooser=std::make_unique<juce::FileChooser>(compatibility.title,compatibility.suggestedCopy,"*.levelscope",useNativeSessionFileChooser);
         juce::Component::SafePointer<StandaloneMainComponent> safe(this);
-        sessionChooser->launchAsync(juce::FileBrowserComponent::saveMode|juce::FileBrowserComponent::canSelectFiles|juce::FileBrowserComponent::warnAboutOverwriting,[safe,continuation](const auto& picker)
+        sessionChooser->launchAsync(juce::FileBrowserComponent::saveMode|juce::FileBrowserComponent::canSelectFiles|juce::FileBrowserComponent::warnAboutOverwriting,[safe,continuation,runtime,writer=compatibility.writer](const auto& picker)
         {
-            if(!safe||picker.getResult()==juce::File())return;
+            if(!safe||safe->session.sessionId!=runtime||picker.getResult()==juce::File())return;
             // Setting the destination is not a successful save; restore it until completion.
             auto original=safe->session.documentFile;safe->session.documentFile=picker.getResult();
-            safe->migrationSaveApproved=true;safe->beginSaveSession(false,continuation);safe->migrationSaveApproved=false;safe->session.documentFile=original;
+            juce::ScopedValueSetter<int> approval(safe->migrationSaveApprovedSchema,writer);safe->beginSaveSession(false,continuation);safe->session.documentFile=original;
         });return;
     }
-    try { capturedSave=sessionfile::capture(session); }
-    catch(const std::exception& e){documentNotice="Cannot capture session: "+juce::String(e.what());refreshSessionControls();return;}
+    capturedSave=std::move(snapshot);
     pendingDocumentFile=session.documentFile;afterSave=std::move(continuation);fileOperation=FileOperation::save;documentControl=std::make_shared<JobControl>();
     documentResult=std::async(std::launch::async,[snapshot=*capturedSave,file=pendingDocumentFile,c=documentControl]{return sessionfile::save(snapshot,file,*c);});refreshSessionControls();
 }

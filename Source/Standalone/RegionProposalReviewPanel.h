@@ -9,6 +9,7 @@ class RegionProposalReviewPanel final : public juce::Component, private juce::Ti
 {
 public:
     static constexpr size_t pageBytes=1500; // dense numeric histories on actual High Sierra
+    static constexpr int sharedEvidenceId=1001,proxyComparisonsId=1002;
     RegionProposalReviewPanel(std::shared_ptr<const SectionProposalResult>,std::function<juce::String()>);
     std::function<void(size_t,int64_t,int64_t)> onInspect;
     using Selection=std::function<std::shared_ptr<const SectionProposalResult>(const juce::String&,const juce::String&)>;
@@ -28,11 +29,12 @@ private:
     std::function<juce::String()> selectionBlocked;
     Selection selectMeasured;
     juce::String selectionNotice;
-    // At most one complete explanation plus three immutable measured attempts.
+    // Complete explanation, three immutable attempts and two documentary views.
     // Keep each bounded page view, including its current page, when switching.
     std::vector<std::unique_ptr<ProposalInspectionPanel>> reports;
     ProposalInspectionPanel* report=nullptr;
     juce::String attemptText(size_t) const;
+    juce::String sharedEvidenceText() const,proxyComparisonsText() const;
     void chooseAttempt();
     void inspectSelection();
     void useMeasuredAlternative();
