@@ -81,6 +81,7 @@ void standardCapabilityChecks(StandaloneMainComponent& ui,const juce::File& root
 
 void innerUIChecks(const juce::File& root,const juce::File& supplied)
 {
+    inspectionPollingChecks();
     auto& look=juce::LookAndFeel::getDefaultLookAndFeel();const bool nativeAlerts=look.isUsingNativeAlertWindows();look.setUsingNativeAlertWindows(false);
     struct Restore{juce::LookAndFeel& l;bool native;~Restore(){l.setUsingNativeAlertWindows(native);}} restoreLook{look,nativeAlerts};
     StandaloneMainComponent ui(emptyOutputCatalog(),noOutputSettings());Access::stopTimer(ui);Access::deterministicChooser(ui);ui.setSize(1320,1100);ui.addToDesktop(juce::ComponentPeer::windowHasTitleBar);ui.setVisible(true);

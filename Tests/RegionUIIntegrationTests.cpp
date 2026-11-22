@@ -62,6 +62,24 @@ struct Heartbeat:private juce::Timer
         expect(p95<=100,"native M20 proposal/review heartbeat p95 <=100 ms");
     }
 };
+void inspectionPollingChecks()
+{
+    int standaloneCalls=0,ownedCalls=0;
+    ProposalInspectionPanel standalone("Standalone report",[&]{++standaloneCalls;return "Live standalone status";});
+    ProposalInspectionPanel owned("Embedded report",[&]{++ownedCalls;return "Parent-refreshed status";},1500,false);
+    standalone.addToDesktop(juce::ComponentPeer::windowHasTitleBar);owned.addToDesktop(juce::ComponentPeer::windowHasTitleBar);
+    standalone.setVisible(false);owned.setVisible(true);
+    const auto hidden=standaloneCalls,initialOwned=ownedCalls;
+    juce::MessageManager::getInstance()->runDispatchLoopUntil(650);
+    expect(standaloneCalls==hidden,"hidden standalone inspection does not poll status");
+    expect(ownedCalls==initialOwned,"embedded inspection has no duplicate status timer");
+    owned.refreshStatus();expect(ownedCalls==initialOwned+1,"parent can synchronously refresh visible embedded status");
+    standalone.setVisible(true);juce::MessageManager::getInstance()->runDispatchLoopUntil(650);
+    expect(standaloneCalls>hidden,"visible standalone inspection retains live status polling");
+    standalone.setVisible(false);const auto closed=standaloneCalls;
+    juce::MessageManager::getInstance()->runDispatchLoopUntil(650);
+    expect(standaloneCalls==closed,"closing inspection stops background status work");
+}
 template<class T> T* find(juce::Component& root,const juce::String& name)
 {
     if(auto* c=dynamic_cast<T*>(&root))

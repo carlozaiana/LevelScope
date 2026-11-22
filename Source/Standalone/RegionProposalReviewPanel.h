@@ -38,6 +38,6 @@ private:
     void chooseAttempt();
     void inspectSelection();
     void useMeasuredAlternative();
-    void timerCallback() override {refreshSelection();}
+    void timerCallback() override {if(isShowing())refreshSelection();}
 };
 }

@@ -14,12 +14,12 @@ public:
 class ProposalInspectionPanel final : public juce::Component, private juce::Timer
 {
 public:
-    explicit ProposalInspectionPanel(juce::String,std::function<juce::String()> status = {},size_t pageBytes = 4000);
+    explicit ProposalInspectionPanel(juce::String,std::function<juce::String()> status = {},size_t pageBytes = 4000,bool pollStatus = true);
     void resized() override;
     int pageCount() const { return int(pages.size()); }
     juce::String allText() const;
     void nextPage();
-    void refreshStatus() { timerCallback(); }
+    void refreshStatus();
 private:
     std::vector<juce::String> pages;int page=0;
     std::function<juce::String()> statusText;juce::Label status;

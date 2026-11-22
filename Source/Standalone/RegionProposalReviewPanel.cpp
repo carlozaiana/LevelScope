@@ -81,7 +81,9 @@ void RegionProposalReviewPanel::chooseAttempt()
     if(report)report->setVisible(false);
     if(!reports[slot])
     {
-        reports[slot]=std::make_unique<ProposalInspectionPanel>(evidence?sharedEvidenceText():proxies?proxyComparisonsText():actualSelected?attemptText(size_t(n)):result->text(),statusText,pageBytes);
+        // This parent owns status refresh for the visible report. Cached hidden
+        // pages must not run independent polling/authority checks in the background.
+        reports[slot]=std::make_unique<ProposalInspectionPanel>(evidence?sharedEvidenceText():proxies?proxyComparisonsText():actualSelected?attemptText(size_t(n)):result->text(),statusText,pageBytes,false);
         addChildComponent(*reports[slot]);
     }
     report=reports[slot].get();report->setVisible(true);refreshSelection();resized();

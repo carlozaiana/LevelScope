@@ -25,7 +25,7 @@ void ProposalPreferencesPanel::showWindow(std::unique_ptr<ProposalWindow>& windo
     // macOS key-window ordering. Raising an open editor keeps its pending edits.
     window->present();
 }
-ProposalInspectionPanel::ProposalInspectionPanel(juce::String text,std::function<juce::String()> statusCallback,size_t pageBytes):statusText(std::move(statusCallback))
+ProposalInspectionPanel::ProposalInspectionPanel(juce::String text,std::function<juce::String()> statusCallback,size_t pageBytes,bool pollStatus):statusText(std::move(statusCallback))
 {
     // At most 10,000 correction rows; reports enforce their separate 16 MiB bound.
     const auto bytes=text.toStdString();pageBytes=std::clamp<size_t>(pageBytes,512,4000);
@@ -43,7 +43,7 @@ ProposalInspectionPanel::ProposalInspectionPanel(juce::String text,std::function
         pages.push_back(juce::String::fromUTF8(bytes.data()+begin,int(end-begin)));begin=end;
     }
     if(pages.empty())pages.push_back("No proposal available.");
-    addAndMakeVisible(status);status.setMinimumHorizontalScale(1.f);timerCallback();if(statusText)startTimerHz(2);
+    addAndMakeVisible(status);status.setMinimumHorizontalScale(1.f);refreshStatus();if(statusText&&pollStatus)startTimerHz(2);
     view.setMultiLine(true);view.setReadOnly(true);view.setScrollbarsShown(true);view.setName("Complete proposal - paginated");
     for(auto* c:std::initializer_list<juce::Component*>{&view,&location,&previous,&next})addAndMakeVisible(c);
     previous.onClick=[this]{if(page>0)--page;refresh();};next.onClick=[this]{nextPage();};setSize(850,650);refresh();
@@ -52,7 +52,8 @@ juce::String ProposalInspectionPanel::allText()const {juce::String s;for(const a
 void ProposalInspectionPanel::nextPage(){if(page+1<int(pages.size()))++page;refresh();}
 void ProposalInspectionPanel::refresh()
 {view.setText(pages[size_t(page)],false);view.moveCaretToTop(false);location.setText("Complete inspection - page "+juce::String(page+1)+" / "+juce::String(pages.size())+". No corrections omitted.",juce::dontSendNotification);previous.setEnabled(page>0);next.setEnabled(page+1<int(pages.size()));}
-void ProposalInspectionPanel::timerCallback(){status.setText(statusText?statusText():"Complete inspection snapshot",juce::dontSendNotification);}
+void ProposalInspectionPanel::refreshStatus(){status.setText(statusText?statusText():"Complete inspection snapshot",juce::dontSendNotification);}
+void ProposalInspectionPanel::timerCallback(){if(isShowing())refreshStatus();}
 void ProposalInspectionPanel::resized()
 {auto r=getLocalBounds().reduced(12);status.setBounds(r.removeFromTop(54));auto footer=r.removeFromBottom(32);previous.setBounds(footer.removeFromLeft(140));next.setBounds(footer.removeFromRight(140));location.setBounds(footer);view.setBounds(r.reduced(0,5));}
 std::optional<int> ProposalPreferencesPanel::exactUnits(juce::String text,bool tenths)
