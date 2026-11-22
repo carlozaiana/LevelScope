@@ -24,7 +24,8 @@ private:
     juce::Label label,authority;
     juce::TextButton inspect{"Inspect in timeline"};
     juce::TextButton useAlternative{"Use this measured alternative"};
-    juce::TextEditor coverage;
+    std::vector<std::unique_ptr<juce::TextEditor>> coverageViews;
+    juce::TextEditor* coverage=nullptr;
     bool selectionQualified=false;
     std::function<juce::String()> selectionBlocked;
     Selection selectMeasured;

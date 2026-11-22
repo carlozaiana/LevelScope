@@ -6,14 +6,14 @@ namespace levelscope::standalone
 RegionProposalReviewPanel::RegionProposalReviewPanel(std::shared_ptr<const SectionProposalResult> r,std::function<juce::String()> s):result(std::move(r)),statusText(std::move(s))
 {
     setName("Region attempts - forecasts and complete private measurements");
-    for(auto* c:std::initializer_list<juce::Component*>{&attempts,&regions,&label,&authority,&inspect,&useAlternative,&coverage})addAndMakeVisible(c);
+    for(auto* c:std::initializer_list<juce::Component*>{&attempts,&regions,&label,&authority,&inspect,&useAlternative})addAndMakeVisible(c);
     label.setText("Browse measured attempts for inspection. Recommendation and explicit selection are separate; inspection never changes audio.",juce::dontSendNotification);
-    coverage.setName("Measured alternative coverage and gains");coverage.setMultiLine(true);coverage.setReadOnly(true);coverage.setScrollbarsShown(true);coverage.setFont(13.f);
-    coverage.setColour(juce::TextEditor::backgroundColourId,palette::card());useAlternative.onClick=[this]{useMeasuredAlternative();};
+    useAlternative.onClick=[this]{useMeasuredAlternative();};
     authority.setFont(13.f);authority.setMinimumHorizontalScale(1.f);
     attempts.setName("Measured region attempt");regions.setName("Proposed processing root");attempts.addItem("Complete explanation - all attempts, restrictions and provenance",1);
     const auto review=result->regionReview();const bool competing=review&&review->constraints.settings.schema==3;
     reports.resize(review?review->attempts.size()+1+(competing?2:0):1);
+    coverageViews.resize(reports.size());
     if(review)for(size_t n=0;n<review->attempts.size();++n)
     {
         const auto& a=review->attempts[n];attempts.addItem("Attempt "+juce::String(n+1)+(a.evaluation.verdict==proposal::Verdict::pass?" - measured PASS":" - measured failure / unavailable")+(review->eventMode?" | "+eventAttemptCoverage(a):n==review->retainedAttempt?" (retained)":""),int(n+2));
@@ -78,6 +78,17 @@ void RegionProposalReviewPanel::chooseAttempt()
     inspect.setEnabled(actualSelected||(review&&n<0&&review->retainedAttempt<review->attempts.size()));regions.setEnabled(actualSelected);
     const bool evidence=attempts.getSelectedId()==sharedEvidenceId,proxies=attempts.getSelectedId()==proxyComparisonsId;
     const size_t slot=evidence?review->attempts.size()+1:proxies?review->attempts.size()+2:actualSelected?size_t(n+1):0;
+    if(coverage)coverage->setVisible(false);
+    if(!coverageViews[slot])
+    {
+        // Retain the shaped, scrollable summary alongside its cached report.
+        // Repeated switching must not rebuild identical CoreText layouts.
+        auto summary=std::make_unique<juce::TextEditor>();
+        summary->setName("Measured alternative coverage and gains");summary->setMultiLine(true);summary->setReadOnly(true);
+        summary->setScrollbarsShown(true);summary->setFont(13.f);summary->setColour(juce::TextEditor::backgroundColourId,palette::card());
+        addChildComponent(*summary);coverageViews[slot]=std::move(summary);
+    }
+    coverage=coverageViews[slot].get();
     if(report)report->setVisible(false);
     if(!reports[slot])
     {
@@ -132,7 +143,7 @@ void RegionProposalReviewPanel::refreshSelection()
 {
     const auto review=result->regionReview();const int n=attempts.getSelectedId()-2;
     const bool event=review&&review->eventMode,actual=review&&n>=0&&size_t(n)<review->attempts.size();
-    useAlternative.setVisible(event);coverage.setVisible(event);
+    useAlternative.setVisible(event);coverage->setVisible(event);
     juce::String blocked;
     if(!selectionQualified)blocked="Measured-alternative selection awaits integrated authority qualification.";
     else if(!selectMeasured||!selectionBlocked)blocked="Selection is unavailable in this inspection snapshot.";
@@ -156,7 +167,7 @@ void RegionProposalReviewPanel::refreshSelection()
         details+="\nExact interval gains, ramp support, all measured values and forecast limitations are in the attempt report below.";
     }
     if(event&&blocked.isNotEmpty())details+="\n"+blocked;
-    if(coverage.getText()!=details){coverage.setText(details,false);coverage.moveCaretToTop(false);}
+    if(coverage->getText()!=details){coverage->setText(details,false);coverage->moveCaretToTop(false);}
     if(report)report->refreshStatus();
 }
 void RegionProposalReviewPanel::useMeasuredAlternative()
@@ -170,6 +181,6 @@ void RegionProposalReviewPanel::useMeasuredAlternative()
 void RegionProposalReviewPanel::resized()
 {
     auto r=getLocalBounds().reduced(10);label.setBounds(r.removeFromTop(28));attempts.setBounds(r.removeFromTop(32).reduced(1));
-    auto line=r.removeFromTop(32);inspect.setBounds(line.removeFromRight(180).reduced(1));if(useAlternative.isVisible())useAlternative.setBounds(line.removeFromRight(245).reduced(1));regions.setBounds(line.reduced(1));authority.setBounds(r.removeFromTop(76));if(coverage.isVisible())coverage.setBounds(r.removeFromTop(150).reduced(0,3));if(report)report->setBounds(r);
+    auto line=r.removeFromTop(32);inspect.setBounds(line.removeFromRight(180).reduced(1));if(useAlternative.isVisible())useAlternative.setBounds(line.removeFromRight(245).reduced(1));regions.setBounds(line.reduced(1));authority.setBounds(r.removeFromTop(76));if(coverage&&coverage->isVisible())coverage->setBounds(r.removeFromTop(150).reduced(0,3));if(report)report->setBounds(r);
 }
 }

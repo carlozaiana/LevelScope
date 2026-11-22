@@ -89,8 +89,14 @@ void eventUIChecks(const juce::File& root)
     bool freshStatus=false;for(auto* child:view().getChildren())if(auto* label=dynamic_cast<juce::Label*>(child))freshStatus|=label->getText().contains("Selected passing alternative")&&label->getText().contains("Explicit Apply is in the main window");
     expect(freshStatus,"selection and inspection refresh the report's status immediately without stale Review required text");
     imageOf(*panel,root.getChildFile("selected-partial-review.png"));imageOf(ui,root.getChildFile("selected-partial-main.png"));
+    const auto summaryView=[&]() -> juce::TextEditor* {for(auto* child:panel->getChildren())if(auto* e=dynamic_cast<juce::TextEditor*>(child);e&&e->isVisible()&&e->getName()=="Measured alternative coverage and gains")return e;return nullptr;};
+    const auto* selectedSummary=summaryView();
     std::vector<double> switches;for(int k=0;k<40;++k){const auto start=juce::Time::getMillisecondCounterHiRes();choose(*panel,"Measured region attempt",k%2?int(passing+2):1);switches.push_back(juce::Time::getMillisecondCounterHiRes()-start);juce::MessageManager::getInstance()->runDispatchLoopUntil(20);}
     std::sort(switches.begin(),switches.end());expect(switches[37]<=100,"native complete/actual review switching p95 <=100 ms");auto timing=juce::var(new juce::DynamicObject());timing.getDynamicObject()->setProperty("event_review_switch_p95_ms",switches[37]);cases.add(timing);heartbeat.finish();
+    expect(selectedSummary&&summaryView()==selectedSummary,"switching reuses the selected attempt's shaped coverage summary");
+    choose(*panel,"Measured region attempt",1);const auto* completeSummary=summaryView();const auto completeText=completeSummary?completeSummary->getText():juce::String();
+    choose(*panel,"Measured region attempt",int(passing+2));choose(*panel,"Measured region attempt",1);
+    expect(completeSummary&&completeSummary!=selectedSummary&&summaryView()==completeSummary&&summaryView()->getText()==completeText,"complete explanation retains its separate summary without dropping status text");
     choose(*panel,"Measured region attempt",int(passing+2));click(*panel,"Inspect in timeline");Access::refresh(ui);
     s.auditionBusy=[]{return true;};Access::refresh(ui);expect(!control<juce::TextButton>(Access::proposal(ui),"Apply proposal").isEnabled()&&!s.applySectionProposal(),"selected actual pass still cannot Apply during transport activity");s.auditionBusy=busy;Access::refresh(ui);
     click(Access::proposal(ui),"Apply proposal");expect(s.currentStateNeedsRemeasurement()&&!s.currentState.hasMeasurement&&s.lastAppliedExplanation,"explicit Apply makes Current unverified and captures history");
