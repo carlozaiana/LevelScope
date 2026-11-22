@@ -1,0 +1,65 @@
+{
+  "passed": true,
+  "os": "15.7.9",
+  "architecture": "arm64",
+  "source_commit": "2f90dab6eaa25f9d2ce9f033341c948b2994d9da",
+  "build": "5cf1b904db533a8ee8379325833a6e0bf8efd4f0e8f88956a654ce9fa4b026e7",
+  "candidate_identity_sha256": "f44c1fea69a41416c3c1dd0284a3a5b9cd52757bc484f9623cbb7fb13aa48dd3",
+  "requested_cases": [
+    "event-ui",
+    "inner-ui",
+    "ui"
+  ],
+  "physical_devices_opened": false,
+  "combined_qualification_complete": false,
+  "inputs": {
+    "inner-ui": {
+      "path": "/Users/fuzz/Developer/LevelScope/build/m20-inner-2026-11-20/listening-01/sessions/inner-margin20-attempt-3.levelscope",
+      "sha256": "9a652152fb1bbbe7d299b80be8c937a4eff9e8028095767eec12e7111ab5845a"
+    }
+  },
+  "groups": [
+    {
+      "name": "event-ui",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-competing-boundary-ui-2026-11-21/candidate-03/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-combined-qualification-2026-11-22/final-sequoia-01/event-ui-files",
+        "--event-ui"
+      ],
+      "returncode": 0,
+      "seconds": 22.127824667,
+      "passed": true,
+      "checks": 146,
+      "receipt": "event-ui-files/result.json",
+      "receipt_sha256": "2475a92ff2efc19d55a5a4665d0ece6dde217b81dad7f9c41fff3b200fce0f43"
+    },
+    {
+      "name": "inner-ui",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-competing-boundary-ui-2026-11-21/candidate-03/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-combined-qualification-2026-11-22/final-sequoia-01/inner-ui-files",
+        "--inner-ui",
+        "/Users/fuzz/Developer/LevelScope/build/m20-inner-2026-11-20/listening-01/sessions/inner-margin20-attempt-3.levelscope"
+      ],
+      "returncode": 0,
+      "seconds": 46.674027083000006,
+      "passed": true,
+      "checks": 286,
+      "receipt": "inner-ui-files/result.json",
+      "receipt_sha256": "d5df4f8f5aa4d57945697187e305cf467638ca19f1a0580197819cbcd6f99ddd"
+    },
+    {
+      "name": "ui",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-competing-boundary-ui-2026-11-21/candidate-03/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-combined-qualification-2026-11-22/final-sequoia-01/ui-files"
+      ],
+      "returncode": 0,
+      "seconds": 18.324819583000007,
+      "passed": true,
+      "checks": 163,
+      "receipt": "ui-files/result.json",
+      "receipt_sha256": "375e0a055562e919741c31a6784a80e9b4d6f217714c37684ca970e1e1472f68"
+    }
+  ]
+}

@@ -15,7 +15,8 @@ This folder is the persistent orientation layer for future development chats. Re
 
 ## Task-based quick start
 
-- **M20 competing-boundary native UI integration:** [88 — settings round trips, evidence review and prospective Save As](88_M20CompetingBoundaryUIIntegration.md). Local continuation above Logic checkpoint `a6d0fb3`; preserves earlier UI work. Frozen universal candidate `ce31c46` passes 3,004 focused Sequoia assertions. Main/tags/manuals remain untouched; actual High Sierra, independent programme validation and coordinated listening remain pending.
+- **M20 combined focused qualification:** [89 — actual High Sierra, platform exchange, independent programmes and listening](89_M20CombinedFocusedQualification.md). Final preserved candidate `2f90dab` passes 595 affected native assertions on each actual Mac after a narrow review-text caching fix. Exact numerical/boundary comparisons and bilateral schema-11 exchange pass; both independent holdouts honestly yield no selectable correction. The user accepts the development listening result. Supports later main integration within the documented finite scope; video/endurance and the inherited completion pause remain separate. Main/tags/manuals are unchanged; no publication or merge authorized.
+- **Prior M20 competing-boundary native UI integration:** [88 — settings round trips, evidence review and prospective Save As](88_M20CompetingBoundaryUIIntegration.md). Original universal candidate `ce31c46` and its 3,004 focused Sequoia assertions remain preserved; document 89 records the subsequent qualification and replacement.
 
 - **M20 competing boundaries, frozen Logic handover.** The matched 20% run measured a passing, partial and uncertain plan covering both disputed passages. The 28-group offline qualification, listening copies, exact failures and next native UI work are in [87 — Logic handover](87_M20InnerBoundaryLogicHandover.md).
 

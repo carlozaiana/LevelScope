@@ -1,0 +1,87 @@
+{
+  "passed": false,
+  "os": "10.13.6",
+  "architecture": "x86_64",
+  "host": "Golem.local",
+  "candidate_identity_sha256": "8f1497d12d4d5a1c3a0e8cd4aa3e864cc70a540023a399041d5dbd808ac93e79",
+  "build": "aa2ef42883b323fbf6a2dc84dcc40d6fafdcc1ec5db8cc1ac1e74fdead997531",
+  "source_commit": "ce31c4679782c69d02c29ddc675fee086b89395c",
+  "planned": [
+    "inner-stereo",
+    "inner-surround",
+    "inner-population",
+    "event-ui"
+  ],
+  "groups": [
+    {
+      "name": "inner-stereo",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-integrated-qualification-2026-11-22/candidate-01/bin/LevelScopeEventPlanningTests",
+        "--group",
+        "inner-stereo",
+        "--root",
+        "/Users/fuzz/LevelScope-M20-integrated-qualification-2026-11-22/high-sierra-03/inner-stereo-files",
+        "--output",
+        "/Users/fuzz/LevelScope-M20-integrated-qualification-2026-11-22/high-sierra-03/inner-stereo.json"
+      ],
+      "seconds": 14.935207831,
+      "returncode": 0,
+      "passed": true,
+      "checks": 60,
+      "receipt": "inner-stereo.json",
+      "receipt_sha256": "f6f144231e3c0959378a7de4d05b0e0589940170ec4bcc0a894fe63cacc40ca0"
+    },
+    {
+      "name": "inner-surround",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-integrated-qualification-2026-11-22/candidate-01/bin/LevelScopeEventPlanningTests",
+        "--group",
+        "inner-surround",
+        "--root",
+        "/Users/fuzz/LevelScope-M20-integrated-qualification-2026-11-22/high-sierra-03/inner-surround-files",
+        "--output",
+        "/Users/fuzz/LevelScope-M20-integrated-qualification-2026-11-22/high-sierra-03/inner-surround.json"
+      ],
+      "seconds": 21.359575448999998,
+      "returncode": 0,
+      "passed": true,
+      "checks": 57,
+      "receipt": "inner-surround.json",
+      "receipt_sha256": "882da13cdb46c68dc07936e16b736bc2b357094cc773c8015705261086b48089"
+    },
+    {
+      "name": "inner-population",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-integrated-qualification-2026-11-22/candidate-01/bin/LevelScopeEventPlanningTests",
+        "--group",
+        "inner-population",
+        "--root",
+        "/Users/fuzz/LevelScope-M20-integrated-qualification-2026-11-22/high-sierra-03/inner-population-files",
+        "--output",
+        "/Users/fuzz/LevelScope-M20-integrated-qualification-2026-11-22/high-sierra-03/inner-population.json"
+      ],
+      "seconds": 9.633348433000002,
+      "returncode": 0,
+      "passed": true,
+      "checks": 17,
+      "receipt": "inner-population.json",
+      "receipt_sha256": "d6b8d38788c905f05865a52c57d8d87dd3e895432bab550d6eadecf136a8f346"
+    },
+    {
+      "name": "event-ui",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-integrated-qualification-2026-11-22/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/LevelScope-M20-integrated-qualification-2026-11-22/high-sierra-03/event-ui-files",
+        "--event-ui"
+      ],
+      "seconds": 15.106244887999999,
+      "returncode": 1,
+      "passed": false,
+      "checks": 94,
+      "receipt": "event-ui-files/result.json",
+      "receipt_sha256": "61253b7f81e14a6de9d8caaeb15a01c5e790eb031de467b052f69a340cc430c5"
+    }
+  ],
+  "physical_devices_opened": false,
+  "video_or_endurance_run": false
+}

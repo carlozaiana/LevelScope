@@ -1,0 +1,60 @@
+{
+  "passed": true,
+  "os": "10.13.6",
+  "architecture": "x86_64",
+  "host": "Golem.local",
+  "candidate_identity_sha256": "f44c1fea69a41416c3c1dd0284a3a5b9cd52757bc484f9623cbb7fb13aa48dd3",
+  "build": "5cf1b904db533a8ee8379325833a6e0bf8efd4f0e8f88956a654ce9fa4b026e7",
+  "source_commit": "2f90dab6eaa25f9d2ce9f033341c948b2994d9da",
+  "planned": [
+    "event-ui",
+    "inner-ui",
+    "ui"
+  ],
+  "groups": [
+    {
+      "name": "event-ui",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-integrated-qualification-2026-11-22/candidate-03/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/LevelScope-M20-integrated-qualification-2026-11-22/final-high-sierra-01/event-ui-files",
+        "--event-ui"
+      ],
+      "seconds": 44.587541461,
+      "returncode": 0,
+      "passed": true,
+      "checks": 146,
+      "receipt": "event-ui-files/result.json",
+      "receipt_sha256": "eca15f3574106ca58de939a7ba928b5fff4068b72996fbe871b900a23868c00f"
+    },
+    {
+      "name": "inner-ui",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-integrated-qualification-2026-11-22/candidate-03/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/LevelScope-M20-integrated-qualification-2026-11-22/final-high-sierra-01/inner-ui-files",
+        "--inner-ui",
+        "/Users/fuzz/LevelScope-M20-integrated-qualification-2026-11-22/inputs/development-02.levelscope"
+      ],
+      "seconds": 98.492733657,
+      "returncode": 0,
+      "passed": true,
+      "checks": 286,
+      "receipt": "inner-ui-files/result.json",
+      "receipt_sha256": "857cf1b2cc76aaa6e9d6d69561e889f372004958ff828ff08aa07cbb88b87daa"
+    },
+    {
+      "name": "ui",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-integrated-qualification-2026-11-22/candidate-03/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/LevelScope-M20-integrated-qualification-2026-11-22/final-high-sierra-01/ui-files"
+      ],
+      "seconds": 42.22936981199999,
+      "returncode": 0,
+      "passed": true,
+      "checks": 163,
+      "receipt": "ui-files/result.json",
+      "receipt_sha256": "04ea0c489ee336cf18c1fdd05f0cf1b527b3eb417ae4e51510987aff9b3c4738"
+    }
+  ],
+  "physical_devices_opened": false,
+  "video_or_endurance_run": false
+}

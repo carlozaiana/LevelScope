@@ -1,0 +1,430 @@
+{
+  "mode": "local-control",
+  "measurement_build": "aa2ef42883b323fbf6a2dc84dcc40d6fafdcc1ec5db8cc1ac1e74fdead997531",
+  "origin": "Mac OSX 15.7.9;arm64;float32-samples;float64-analysis;no-fast-math;fp-contract-off",
+  "receiver": "Mac OSX 15.7.9;arm64;float32-samples;float64-analysis;no-fast-math;fp-contract-off",
+  "source_cache_adopted": true,
+  "current_cache_adopted": true,
+  "source_sha256": "7ba6404041c94c909df290a6829a0fe92ce594329a1d575490c2bb4a5b6cc8f0",
+  "input_session_sha256": "85131864b8070eead7187e2bc2b69dc937c41971b2baa05da4f7a509a2b52522",
+  "settings": {
+    "schema": 3,
+    "method": "region-gain-search-v3",
+    "constraints": "region-constraints-v2",
+    "formation": "region-formation-v3",
+    "proxy": "window-energy-proxy-v1",
+    "rank": "candidate-review-rank-v3",
+    "boundaryPreference": "prefer-complete-event",
+    "automaticMargins": true,
+    "eventFeatures": {
+      "version": "event-boundary-features-v2",
+      "filters": "continuous-first-order-hp-lp-v1",
+      "channels": "non-lfe-energy-mean-and-role-witness-v1",
+      "silence": "separate-floor-onset-and-return-v1",
+      "hopMs": 10,
+      "hpHz": 20,
+      "lowHz": 160,
+      "fastMs": 20,
+      "lowMs": 80,
+      "backgroundMs": 250,
+      "floorDb": -80,
+      "fastRiseDb": 6,
+      "lowRiseDb": 3,
+      "fastPersistMs": 20,
+      "lowPersistMs": 40,
+      "agreementMs": 80,
+      "groupMs": 1000,
+      "lastAttackMs": 100,
+      "decayDb": 6,
+      "decayPersistMs": 200,
+      "returnDb": 3,
+      "returnPersistMs": 300,
+      "contextMs": 3000,
+      "predecessors": 2,
+      "referenceStepDb": 6,
+      "momentaryStepLu": 3,
+      "neighbourhoodMs": 1000,
+      "comparableDb": 6,
+      "recentReferences": 3,
+      "attribution": "included-window-excess-weighted-bin-share-v1",
+      "pairing": "one-live-inner-directed-edges-v1",
+      "missing": "retain-outer-report-incomplete-v1",
+      "rolePath": "same-role-tentative-v1",
+      "eventLocations": 6,
+      "innerProxySlots": 8
+    },
+    "coverage": "event-treatment-coverage-v2",
+    "schedule": "event-assessment-schedule-v2",
+    "input": "b23987667c713873d3085c7d1e7c53c9cb911f8cf2f10b3ecf0671d56b2a1b26",
+    "mode": 0,
+    "section": "0",
+    "selection": {
+      "begin": "0",
+      "end": "0"
+    },
+    "splitting": true,
+    "refinement": true,
+    "fillGap": false,
+    "global": true,
+    "compare": true,
+    "splits": 2,
+    "leftMs": 1000,
+    "rightMs": 1000,
+    "minimumMs": 3000,
+    "separationMs": 1000,
+    "needTenths": 10,
+    "persistenceMs": 1000,
+    "start": null,
+    "end": null,
+    "cuts": [],
+    "protection": "local-envelope-v1",
+    "protected": []
+  },
+  "settings_digest": "2b8f429a395030d53b2aced7c34eefc18e5e78935ab1d6f4f499ee787ef90075",
+  "requirements": {
+    "format": "levelscope-job-requirements",
+    "schema": 1,
+    "id": "00000000000000000000000000000017",
+    "revision": 1,
+    "name": "Programme job requirements",
+    "base_id": "ebu-r128-2023-programme-linear-qc",
+    "base_version": "1.0.0",
+    "base_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+    "method": "EBU Tech 3342-2023 whole-programme LRA",
+    "applicability": "pre-produced-whole-programme-linear-audio",
+    "provenance_kind": "user-specified-job-requirement",
+    "provenance": "Predeclared development comparison, not delivery default",
+    "maximum_lra_tenths": 180,
+    "unavailable_reason": "",
+    "digest": "f9b91bc17050201a0e1a498913f917f9cc87d5ff7b4e0edf37855be15e4e723e"
+  },
+  "policy": {
+    "version": "section-preferences-v2",
+    "accounting": "connected-envelope-support-v2",
+    "region_limit": null,
+    "duration_thousandths": 200,
+    "additional_tenths_db": 30,
+    "cumulative_tenths_db": 120,
+    "reserve_tenths_db": 5,
+    "unavailable": ""
+  },
+  "roles": [
+    "L",
+    "R"
+  ],
+  "history_sha256": "5907bf50288e7c942462a350881216aaacd49605fa7168017bfd4a1b6c76b7e2",
+  "sections_digest": "5ece30d5998ad3128f31a148b8bbfbd5eb9b26c8bf8f8f606ba5291143080be4",
+  "canonical_processing": {
+    "identity": "338695d33c3f3abdaad61a44559f8fadba54d090844d2e68c2dac497b6cd8470",
+    "global_db": -0.9657341997706048,
+    "gain_audio_key": "section-gain-v1;after-composition;before-static-gain-v1;float32-stage-rounding;1;48000;13228800;b23987667c713873d3085c7d1e7c53c9cb911f8cf2f10b3ecf0671d56b2a1b26;0:586080:0x0p+0;586080:1468800:-0x1.63c7c0dcb6b2p+0;1468800:2513280:0x0p+0;2513280:2785440:-0x1.8p+1;2785440:3789600:0x0p+0;3789600:4682400:-0x1.e280bb8deb9p+0;4682400:9060000:0x0p+0;9060000:9285600:-0x1.471c3c3a7978p+0;9285600:13228800:0x0p+0;",
+    "intervals": [
+      {
+        "begin_frame": 0,
+        "end_frame_exclusive": 586080,
+        "plateau_db": 0.0
+      },
+      {
+        "begin_frame": 586080,
+        "end_frame_exclusive": 1468800,
+        "plateau_db": -1.389766744504136
+      },
+      {
+        "begin_frame": 1468800,
+        "end_frame_exclusive": 2513280,
+        "plateau_db": 0.0
+      },
+      {
+        "begin_frame": 2513280,
+        "end_frame_exclusive": 2785440,
+        "plateau_db": -3.0
+      },
+      {
+        "begin_frame": 2785440,
+        "end_frame_exclusive": 3789600,
+        "plateau_db": 0.0
+      },
+      {
+        "begin_frame": 3789600,
+        "end_frame_exclusive": 4682400,
+        "plateau_db": -1.884776804111937
+      },
+      {
+        "begin_frame": 4682400,
+        "end_frame_exclusive": 9060000,
+        "plateau_db": 0.0
+      },
+      {
+        "begin_frame": 9060000,
+        "end_frame_exclusive": 9285600,
+        "plateau_db": -1.277774585987089
+      },
+      {
+        "begin_frame": 9285600,
+        "end_frame_exclusive": 13228800,
+        "plateau_db": 0.0
+      }
+    ]
+  },
+  "origin_source": {
+    "il_lufs": -20.52332735194665,
+    "tp_dbtp": -0.03570755833520098,
+    "lra_lu": 19.0429288941828,
+    "maximum_m_lufs": -5.886343711280075,
+    "maximum_s_lufs": -10.00330817227852,
+    "sample_peak_dbfs": -0.6113336391728194,
+    "p10": -35.83080938864134,
+    "p95": -16.78788049445854,
+    "il_relative_gate": -31.95981413624387,
+    "lra_relative_gate": -41.9500535286554,
+    "il_included": 1957,
+    "lra_included": 2742,
+    "sample_peaks_linear": [
+      0.932037353515625,
+      0.932037353515625
+    ],
+    "sample_peak_frames": [
+      11757714,
+      11757714
+    ],
+    "true_peaks_linear": [
+      0.9958974539530863,
+      0.9958974539530863
+    ],
+    "true_peak_eighth_frames": [
+      94061853,
+      94061853
+    ]
+  },
+  "origin_current": {
+    "il_lufs": -22.99973455947885,
+    "tp_dbtp": -1.001442149935259,
+    "lra_lu": 17.40040702075101,
+    "maximum_m_lufs": -9.852077909977213,
+    "maximum_s_lufs": -13.95692525254372,
+    "sample_peak_dbfs": -1.577067685240847,
+    "p10": -36.79654359377744,
+    "p95": -19.39613657302642,
+    "il_relative_gate": -34.24574006731258,
+    "lra_relative_gate": -44.23869217395102,
+    "il_included": 2045,
+    "lra_included": 2742,
+    "sample_peaks_linear": [
+      0.8339626789093018,
+      0.8339626789093018
+    ],
+    "sample_peak_frames": [
+      11757714,
+      11757714
+    ],
+    "true_peaks_linear": [
+      0.8911029727739248,
+      0.8911029727739248
+    ],
+    "true_peak_eighth_frames": [
+      94061853,
+      94061853
+    ]
+  },
+  "receiver_source": {
+    "il_lufs": -20.52332735194665,
+    "tp_dbtp": -0.03570755833520098,
+    "lra_lu": 19.0429288941828,
+    "maximum_m_lufs": -5.886343711280075,
+    "maximum_s_lufs": -10.00330817227852,
+    "sample_peak_dbfs": -0.6113336391728194,
+    "p10": -35.83080938864134,
+    "p95": -16.78788049445854,
+    "il_relative_gate": -31.95981413624387,
+    "lra_relative_gate": -41.9500535286554,
+    "il_included": 1957,
+    "lra_included": 2742,
+    "sample_peaks_linear": [
+      0.932037353515625,
+      0.932037353515625
+    ],
+    "sample_peak_frames": [
+      11757714,
+      11757714
+    ],
+    "true_peaks_linear": [
+      0.9958974539530863,
+      0.9958974539530863
+    ],
+    "true_peak_eighth_frames": [
+      94061853,
+      94061853
+    ]
+  },
+  "receiver_current": {
+    "il_lufs": -22.99973455947885,
+    "tp_dbtp": -1.001442149935259,
+    "lra_lu": 17.40040702075101,
+    "maximum_m_lufs": -9.852077909977213,
+    "maximum_s_lufs": -13.95692525254372,
+    "sample_peak_dbfs": -1.577067685240847,
+    "p10": -36.79654359377744,
+    "p95": -19.39613657302642,
+    "il_relative_gate": -34.24574006731258,
+    "lra_relative_gate": -44.23869217395102,
+    "il_included": 2045,
+    "lra_included": 2742,
+    "sample_peaks_linear": [
+      0.8339626789093018,
+      0.8339626789093018
+    ],
+    "sample_peak_frames": [
+      11757714,
+      11757714
+    ],
+    "true_peaks_linear": [
+      0.8911029727739248,
+      0.8911029727739248
+    ],
+    "true_peak_eighth_frames": [
+      94061853,
+      94061853
+    ]
+  },
+  "saved_session_sha256": "57cab992e9d8b75a79f3ff0b2825384cb151a90ffbc22dd82d415b6cdf90e01c",
+  "process_max_rss_bytes": 19382272,
+  "checks": [
+    {
+      "name": "read document11/programme9 with applied history and both origin caches",
+      "passed": true
+    },
+    {
+      "name": "fourth applied explanation attachment format",
+      "passed": true
+    },
+    {
+      "name": "expected competing method and permissions",
+      "passed": true
+    },
+    {
+      "name": "receiving audio matches source content",
+      "passed": true
+    },
+    {
+      "name": "explicitly substitute verified locator only in memory",
+      "passed": true
+    },
+    {
+      "name": "normal session preparation and adoption",
+      "passed": true
+    },
+    {
+      "name": "actual sender/receiver platform relationship as requested",
+      "passed": true
+    },
+    {
+      "name": "same frozen measurement build on both ends",
+      "passed": true
+    },
+    {
+      "name": "same origin for Source and Current",
+      "passed": true
+    },
+    {
+      "name": "reopened document grants no live proposal authority",
+      "passed": true
+    },
+    {
+      "name": "exact history bytes preserved",
+      "passed": true
+    },
+    {
+      "name": "exact settings, processing and annotation geometry",
+      "passed": true
+    },
+    {
+      "name": "target and preservation policy identical",
+      "passed": true
+    },
+    {
+      "name": "same confirmed ordered channel assignment",
+      "passed": true
+    },
+    {
+      "name": "all physical routes muted",
+      "passed": true
+    },
+    {
+      "name": "begin composition measurement",
+      "passed": true
+    },
+    {
+      "name": "composition measurement completes",
+      "passed": true
+    },
+    {
+      "name": "accept exact composition measurement",
+      "passed": true
+    },
+    {
+      "name": "begin composition measurement",
+      "passed": true
+    },
+    {
+      "name": "composition measurement completes",
+      "passed": true
+    },
+    {
+      "name": "accept exact composition measurement",
+      "passed": true
+    },
+    {
+      "name": "independent receiving Current passes declared rules",
+      "passed": true
+    },
+    {
+      "name": "save independently measured receiving document",
+      "passed": true
+    },
+    {
+      "name": "reread receiving schema11",
+      "passed": true
+    },
+    {
+      "name": "normal same-platform reopen",
+      "passed": true
+    },
+    {
+      "name": "reopened document grants no live proposal authority",
+      "passed": true
+    },
+    {
+      "name": "exact history bytes preserved",
+      "passed": true
+    },
+    {
+      "name": "exact settings, processing and annotation geometry",
+      "passed": true
+    },
+    {
+      "name": "target and preservation policy identical",
+      "passed": true
+    },
+    {
+      "name": "same confirmed ordered channel assignment",
+      "passed": true
+    },
+    {
+      "name": "all physical routes muted",
+      "passed": true
+    },
+    {
+      "name": "receiving caches valid after independent remeasure and reopen",
+      "passed": true
+    },
+    {
+      "name": "receiving platform cache identities retained",
+      "passed": true
+    },
+    {
+      "name": "exchange source session and audio byte-exact after test",
+      "passed": true
+    }
+  ],
+  "passed": true
+}

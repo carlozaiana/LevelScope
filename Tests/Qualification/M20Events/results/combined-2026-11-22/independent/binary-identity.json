@@ -1,0 +1,10 @@
+{
+  "source_commit": "ce31c4679782c69d02c29ddc675fee086b89395c",
+  "measurement_build": "aa2ef42883b323fbf6a2dc84dcc40d6fafdcc1ec5db8cc1ac1e74fdead997531",
+  "protocol": "bb723fa6cd4eee849aee9673d655b034c4a08d7b256a6cbb2c171837c8dab853",
+  "harness_cpp": "1a2e4f588dc6d4402c875c427935108d613d5c7e90fa3f250326419355249b2f",
+  "build_driver": "5cbc893e7412cda44a1bd96657a49a73d4a8617e7aae639e2ee15207df4833b1",
+  "supplemental_universal": "1161e56c07cf36c598b2e7b00d8c8797fb7b66da51d99694674a2903bcdbc67b",
+  "original_executable_relinked": "65a873022b5acda3af5c77cad2b5e5627e5b5b91886a8365e87083edf60cbbf1",
+  "original_frozen_executable": "65a873022b5acda3af5c77cad2b5e5627e5b5b91886a8365e87083edf60cbbf1"
+}

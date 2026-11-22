@@ -1,0 +1,488 @@
+{
+  "mode": "holdout",
+  "measurement_build": "aa2ef42883b323fbf6a2dc84dcc40d6fafdcc1ec5db8cc1ac1e74fdead997531",
+  "file": "DialogAmbiance.wav",
+  "sha256": "602485eef95774826a575b0069d358e6723a31f6928dbd6e04dd0df44c98eb90",
+  "roles": [
+    "L",
+    "R"
+  ],
+  "frames": 7248001,
+  "baseline": {
+    "il_lufs": -24.58752422850437,
+    "tp_dbtp": -0.03570755833520098,
+    "lra_lu": 16.66071689459983,
+    "maximum_m_lufs": -12.66641487869988,
+    "maximum_s_lufs": -17.02240946132181,
+    "sample_peak_dbfs": -0.6113336391728194,
+    "p10": -36.43803676793438,
+    "p95": -19.77731987333454,
+    "il_relative_gate": -35.89664397326236,
+    "lra_relative_gate": -45.87457751149087,
+    "il_included": 1102,
+    "lra_included": 1496,
+    "sample_peaks_linear": [
+      0.932037353515625,
+      0.932037353515625
+    ],
+    "sample_peak_frames": [
+      5776914,
+      5776914
+    ],
+    "true_peaks_linear": [
+      0.9958974539530863,
+      0.9958974539530863
+    ],
+    "true_peak_eighth_frames": [
+      46215453,
+      46215453
+    ]
+  },
+  "platform": "Mac OSX 15.7.9;arm64;float32-samples;float64-analysis;no-fast-math;fp-contract-off",
+  "requirements": {
+    "format": "levelscope-job-requirements",
+    "schema": 1,
+    "id": "00000000000000000000000000000017",
+    "revision": 1,
+    "name": "Programme job requirements",
+    "base_id": "ebu-r128-2023-programme-linear-qc",
+    "base_version": "1.0.0",
+    "base_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+    "method": "EBU Tech 3342-2023 whole-programme LRA",
+    "applicability": "pre-produced-whole-programme-linear-audio",
+    "provenance_kind": "user-specified-job-requirement",
+    "provenance": "Independent engineering comparison; no delivery-compliance claim",
+    "maximum_lra_tenths": 156,
+    "unavailable_reason": "",
+    "digest": "a91054f1057f0aac5780b3ec252e31d772b11f3433e2704ee0da74168d341b1c"
+  },
+  "policy": {
+    "version": "section-preferences-v2",
+    "accounting": "connected-envelope-support-v2",
+    "region_limit": null,
+    "duration_thousandths": 200,
+    "additional_tenths_db": 30,
+    "cumulative_tenths_db": 120,
+    "reserve_tenths_db": 5,
+    "unavailable": ""
+  },
+  "settings": {
+    "schema": 3,
+    "method": "region-gain-search-v3",
+    "constraints": "region-constraints-v2",
+    "formation": "region-formation-v3",
+    "proxy": "window-energy-proxy-v1",
+    "rank": "candidate-review-rank-v3",
+    "boundaryPreference": "prefer-complete-event",
+    "automaticMargins": true,
+    "eventFeatures": {
+      "version": "event-boundary-features-v2",
+      "filters": "continuous-first-order-hp-lp-v1",
+      "channels": "non-lfe-energy-mean-and-role-witness-v1",
+      "silence": "separate-floor-onset-and-return-v1",
+      "hopMs": 10,
+      "hpHz": 20,
+      "lowHz": 160,
+      "fastMs": 20,
+      "lowMs": 80,
+      "backgroundMs": 250,
+      "floorDb": -80,
+      "fastRiseDb": 6,
+      "lowRiseDb": 3,
+      "fastPersistMs": 20,
+      "lowPersistMs": 40,
+      "agreementMs": 80,
+      "groupMs": 1000,
+      "lastAttackMs": 100,
+      "decayDb": 6,
+      "decayPersistMs": 200,
+      "returnDb": 3,
+      "returnPersistMs": 300,
+      "contextMs": 3000,
+      "predecessors": 2,
+      "referenceStepDb": 6,
+      "momentaryStepLu": 3,
+      "neighbourhoodMs": 1000,
+      "comparableDb": 6,
+      "recentReferences": 3,
+      "attribution": "included-window-excess-weighted-bin-share-v1",
+      "pairing": "one-live-inner-directed-edges-v1",
+      "missing": "retain-outer-report-incomplete-v1",
+      "rolePath": "same-role-tentative-v1",
+      "eventLocations": 6,
+      "innerProxySlots": 8
+    },
+    "coverage": "event-treatment-coverage-v2",
+    "schedule": "event-assessment-schedule-v2",
+    "input": "eaf88aead2e6a0d81d27b061055e74b00882cd4bd923bf2d67a6d2ac94fd937b",
+    "mode": 0,
+    "section": "0",
+    "selection": {
+      "begin": "0",
+      "end": "0"
+    },
+    "splitting": true,
+    "refinement": true,
+    "fillGap": false,
+    "global": true,
+    "compare": true,
+    "splits": 2,
+    "leftMs": 1000,
+    "rightMs": 1000,
+    "minimumMs": 3000,
+    "separationMs": 1000,
+    "needTenths": 10,
+    "persistenceMs": 1000,
+    "start": null,
+    "end": null,
+    "cuts": [],
+    "protection": "local-envelope-v1",
+    "protected": []
+  },
+  "assessment_seconds": 5.777586833,
+  "peak_heap_bytes": 2675136,
+  "outcome": "No acceptable candidate in bounded region search",
+  "reason": "No acceptable candidate in this bounded search. Measured failures and limits remain visible; this does not establish that no solution exists.",
+  "private_passes": 3,
+  "proxy_count": 64,
+  "planning_bytes": 3908656,
+  "planning_seconds": 0.031128042,
+  "sidecar_seconds": 0.191360416,
+  "feature_high_water_bytes": 800992,
+  "attempts": [
+    {
+      "attempt": 1,
+      "family": "original boundaries",
+      "coverage": "Uncertain",
+      "plan_identity": "aa59354a77676608de2956ee2c8ae12d019b364b6f39d5745661b9e544c3c1de",
+      "affected_frames": 931200,
+      "pass": false,
+      "metrics": {
+        "il_lufs": -23.00012448342112,
+        "tp_dbtp": 2.999173260396632,
+        "lra_lu": 14.44940452760519,
+        "maximum_m_lufs": -12.63153413331661,
+        "maximum_s_lufs": -16.98752871770349,
+        "sample_peak_dbfs": 2.423546778080953,
+        "p10": -33.40315601943075,
+        "p95": -18.95375149182557,
+        "il_relative_gate": -34.03530024578679,
+        "lra_relative_gate": -44.01626320139549,
+        "il_included": 1177,
+        "lra_included": 1496,
+        "sample_peaks_linear": [
+          1.321835279464722,
+          1.321835279464722
+        ],
+        "sample_peak_frames": [
+          5776914,
+          5776914
+        ],
+        "true_peaks_linear": [
+          1.412403102993508,
+          1.412403102993508
+        ],
+        "true_peak_eighth_frames": [
+          46215453,
+          46215453
+        ]
+      },
+      "plan": {
+        "identity": "35a6c767ac492811bf1cae875058be3332671a2ca85b4e25d1acafab871425eb",
+        "global_db": 3.034880747680685,
+        "gain_audio_key": "section-gain-v1;after-composition;before-static-gain-v1;float32-stage-rounding;1;48000;7248001;eaf88aead2e6a0d81d27b061055e74b00882cd4bd923bf2d67a6d2ac94fd937b;0:2330400:0x0p+0;2330400:2757600:-0x1.8p+1;2757600:3036000:0x0p+0;3036000:3338400:-0x1.8p+1;3338400:5882400:0x0p+0;5882400:6069600:-0x1.8f368adcc4a68p+0;6069600:7248001:0x0p+0;",
+        "intervals": [
+          {
+            "begin_frame": 0,
+            "end_frame_exclusive": 2330400,
+            "plateau_db": 0.0
+          },
+          {
+            "begin_frame": 2330400,
+            "end_frame_exclusive": 2757600,
+            "plateau_db": -3.0
+          },
+          {
+            "begin_frame": 2757600,
+            "end_frame_exclusive": 3036000,
+            "plateau_db": 0.0
+          },
+          {
+            "begin_frame": 3036000,
+            "end_frame_exclusive": 3338400,
+            "plateau_db": -3.0
+          },
+          {
+            "begin_frame": 3338400,
+            "end_frame_exclusive": 5882400,
+            "plateau_db": 0.0
+          },
+          {
+            "begin_frame": 5882400,
+            "end_frame_exclusive": 6069600,
+            "plateau_db": -1.559426001451948
+          },
+          {
+            "begin_frame": 6069600,
+            "end_frame_exclusive": 7248001,
+            "plateau_db": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "attempt": 2,
+      "family": "tighter/spared/other",
+      "coverage": "Uncertain",
+      "plan_identity": "c8cce0690e01eb45bc9f138578d167327752a483307e94f77a134cc3ba4804cb",
+      "affected_frames": 628800,
+      "pass": false,
+      "metrics": {
+        "il_lufs": -22.99957901722873,
+        "tp_dbtp": 2.774188690845624,
+        "lra_lu": 14.80461554123986,
+        "maximum_m_lufs": -12.85651896486108,
+        "maximum_s_lufs": -16.95936518641954,
+        "sample_peak_dbfs": 2.198562366588872,
+        "p10": -33.62814086333856,
+        "p95": -18.8235253220987,
+        "il_relative_gate": -34.05230373977415,
+        "lra_relative_gate": -44.03266827406521,
+        "il_included": 1172,
+        "lra_included": 1496,
+        "sample_peaks_linear": [
+          1.288036346435547,
+          1.288036346435547
+        ],
+        "sample_peak_frames": [
+          5776914,
+          5776914
+        ],
+        "true_peaks_linear": [
+          1.376288352740778,
+          1.376288352740778
+        ],
+        "true_peak_eighth_frames": [
+          46215453,
+          46215453
+        ]
+      },
+      "plan": {
+        "identity": "0dc2835fcf854fd2dc07319bdd7163efc71623f2db7285052bf571055c3c521c",
+        "global_db": 2.809895914226402,
+        "gain_audio_key": "section-gain-v1;after-composition;before-static-gain-v1;float32-stage-rounding;1;48000;7248001;eaf88aead2e6a0d81d27b061055e74b00882cd4bd923bf2d67a6d2ac94fd937b;0:2383200:0x0p+0;2383200:2704800:-0x1.8p+1;2704800:3036000:0x0p+0;3036000:3333600:-0x1.8p+1;3333600:7248001:0x0p+0;",
+        "intervals": [
+          {
+            "begin_frame": 0,
+            "end_frame_exclusive": 2383200,
+            "plateau_db": 0.0
+          },
+          {
+            "begin_frame": 2383200,
+            "end_frame_exclusive": 2704800,
+            "plateau_db": -3.0
+          },
+          {
+            "begin_frame": 2704800,
+            "end_frame_exclusive": 3036000,
+            "plateau_db": 0.0
+          },
+          {
+            "begin_frame": 3036000,
+            "end_frame_exclusive": 3333600,
+            "plateau_db": -3.0
+          },
+          {
+            "begin_frame": 3333600,
+            "end_frame_exclusive": 7248001,
+            "plateau_db": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "attempt": 3,
+      "family": "tighter/spared/other",
+      "coverage": "Uncertain",
+      "plan_identity": "349f23ba1843790c026c9e0bf6917d3548a5eedc8217163b8ac766ee16041bfd",
+      "affected_frames": 561600,
+      "pass": false,
+      "metrics": {
+        "il_lufs": -22.99770593832114,
+        "tp_dbtp": 2.627346827907502,
+        "lra_lu": 15.3575812438179,
+        "maximum_m_lufs": -12.00534159682998,
+        "maximum_s_lufs": -16.62936484082489,
+        "sample_peak_dbfs": 2.051720412637688,
+        "p10": -33.77498259655847,
+        "p95": -18.41740135274057,
+        "il_relative_gate": -34.08229326967078,
+        "lra_relative_gate": -44.06233398414278,
+        "il_included": 1163,
+        "lra_included": 1496,
+        "sample_peaks_linear": [
+          1.266444087028503,
+          1.266444087028503
+        ],
+        "sample_peak_frames": [
+          5776914,
+          5776914
+        ],
+        "true_peaks_linear": [
+          1.353216677046243,
+          1.353216677046243
+        ],
+        "true_peak_eighth_frames": [
+          46215453,
+          46215453
+        ]
+      },
+      "plan": {
+        "identity": "5c108d310d112ac5a24c021dbef24dda85906d501c2debf2d4fb9c1ab87badf2",
+        "global_db": 2.663054169006713,
+        "gain_audio_key": "section-gain-v1;after-composition;before-static-gain-v1;float32-stage-rounding;1;48000;7248001;eaf88aead2e6a0d81d27b061055e74b00882cd4bd923bf2d67a6d2ac94fd937b;0:2383200:0x0p+0;2383200:2632800:-0x1.8p+1;2632800:3036000:0x0p+0;3036000:3338400:-0x1.8p+1;3338400:7248001:0x0p+0;",
+        "intervals": [
+          {
+            "begin_frame": 0,
+            "end_frame_exclusive": 2383200,
+            "plateau_db": 0.0
+          },
+          {
+            "begin_frame": 2383200,
+            "end_frame_exclusive": 2632800,
+            "plateau_db": -3.0
+          },
+          {
+            "begin_frame": 2632800,
+            "end_frame_exclusive": 3036000,
+            "plateau_db": 0.0
+          },
+          {
+            "begin_frame": 3036000,
+            "end_frame_exclusive": 3338400,
+            "plateau_db": -3.0
+          },
+          {
+            "begin_frame": 3338400,
+            "end_frame_exclusive": 7248001,
+            "plateau_db": 0.0
+          }
+        ]
+      }
+    }
+  ],
+  "measured_passing_attempts": 0,
+  "cancel_seconds_after_request": 0.000714166,
+  "process_max_rss_bytes": 22036480,
+  "checks": [
+    {
+      "name": "one of the two predeclared files",
+      "passed": true
+    },
+    {
+      "name": "exact precommitted PCM, channels, length and rate",
+      "passed": true
+    },
+    {
+      "name": "adopt full source",
+      "passed": true
+    },
+    {
+      "name": "begin composition measurement",
+      "passed": true
+    },
+    {
+      "name": "composition measurement completes",
+      "passed": true
+    },
+    {
+      "name": "accept exact composition measurement",
+      "passed": true
+    },
+    {
+      "name": "unity Current uses identical Source",
+      "passed": true
+    },
+    {
+      "name": "install predeclared holdout target",
+      "passed": true
+    },
+    {
+      "name": "default preservation policy exact",
+      "passed": true
+    },
+    {
+      "name": "schema3 automatic and permitted 1s margins",
+      "passed": true
+    },
+    {
+      "name": "completed honest bounded search",
+      "passed": true
+    },
+    {
+      "name": "search preserves Current and baseline processing",
+      "passed": true
+    },
+    {
+      "name": "retained region review",
+      "passed": true
+    },
+    {
+      "name": "retain complete measured proposal and boundary explanations",
+      "passed": true
+    },
+    {
+      "name": "concurrent heap, planning storage and search counts within frozen caps",
+      "passed": true
+    },
+    {
+      "name": "retained actual attempt owns measurement provenance",
+      "passed": true
+    },
+    {
+      "name": "retained actual attempt owns measurement provenance",
+      "passed": true
+    },
+    {
+      "name": "retained actual attempt owns measurement provenance",
+      "passed": true
+    },
+    {
+      "name": "no measured pass grants Apply",
+      "passed": true
+    },
+    {
+      "name": "failed candidate cannot be selected",
+      "passed": true
+    },
+    {
+      "name": "failed candidate cannot be selected",
+      "passed": true
+    },
+    {
+      "name": "failed candidate cannot be selected",
+      "passed": true
+    },
+    {
+      "name": "save verified neutral baseline for review",
+      "passed": true
+    },
+    {
+      "name": "cancellation during auxiliary pass discards result",
+      "passed": true
+    },
+    {
+      "name": "auxiliary cancellation completes within one second",
+      "passed": true
+    },
+    {
+      "name": "cancel leaves processing and Current unchanged",
+      "passed": true
+    },
+    {
+      "name": "input unchanged after all offline checks",
+      "passed": true
+    }
+  ],
+  "passed": true
+}

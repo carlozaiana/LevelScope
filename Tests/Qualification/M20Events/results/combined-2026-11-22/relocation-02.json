@@ -1,0 +1,12 @@
+{
+  "original": "/Users/fuzz/Developer/LevelScope/build/m20-inner-2026-11-20/listening-01/sessions/inner-margin20-attempt-3.levelscope",
+  "original_sha256": "9a652152fb1bbbe7d299b80be8c937a4eff9e8028095767eec12e7111ab5845a",
+  "copy": "build/m20-combined-qualification-2026-11-22/remote-stage/inputs/development-02.levelscope",
+  "copy_sha256": "92cedd52c0286b1f61c772dd804d8cf9d575ff97f160eb41929aa927856c8178",
+  "old_locator": "/Users/fuzz/N15/Mixdown/MusicInBackAndForegroundSomeDialog.wav",
+  "new_locator": "/Users/fuzz/LevelScope-M20-integrated-qualification-2026-11-22/inputs/development.wav",
+  "changed_semantic_fields": [
+    "programme.files[0].locator"
+  ],
+  "measurement_and_history_bytes_unchanged": true
+}

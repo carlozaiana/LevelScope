@@ -1,0 +1,401 @@
+{
+  "path": "build/m20-competing-boundary-ui-2026-11-21/sequoia-01/inner-ui-files/native-applied.levelscope",
+  "sha256": "bc25076be970f6f73f88ebb46eb58c5d7ff20b6cf787fab0c3d902f7d2dd1365",
+  "document_schema": 11,
+  "programme_schema": 9,
+  "settings": {
+    "schema": 3,
+    "method": "region-gain-search-v3",
+    "constraints": "region-constraints-v2",
+    "formation": "region-formation-v3",
+    "proxy": "window-energy-proxy-v1",
+    "rank": "candidate-review-rank-v3",
+    "boundaryPreference": "prefer-complete-event",
+    "automaticMargins": true,
+    "eventFeatures": {
+      "version": "event-boundary-features-v2",
+      "filters": "continuous-first-order-hp-lp-v1",
+      "channels": "non-lfe-energy-mean-and-role-witness-v1",
+      "silence": "separate-floor-onset-and-return-v1",
+      "hopMs": 10,
+      "hpHz": 20,
+      "lowHz": 160,
+      "fastMs": 20,
+      "lowMs": 80,
+      "backgroundMs": 250,
+      "floorDb": -80,
+      "fastRiseDb": 6,
+      "lowRiseDb": 3,
+      "fastPersistMs": 20,
+      "lowPersistMs": 40,
+      "agreementMs": 80,
+      "groupMs": 1000,
+      "lastAttackMs": 100,
+      "decayDb": 6,
+      "decayPersistMs": 200,
+      "returnDb": 3,
+      "returnPersistMs": 300,
+      "contextMs": 3000,
+      "predecessors": 2,
+      "referenceStepDb": 6,
+      "momentaryStepLu": 3,
+      "neighbourhoodMs": 1000,
+      "comparableDb": 6,
+      "recentReferences": 3,
+      "attribution": "included-window-excess-weighted-bin-share-v1",
+      "pairing": "one-live-inner-directed-edges-v1",
+      "missing": "retain-outer-report-incomplete-v1",
+      "rolePath": "same-role-tentative-v1",
+      "eventLocations": 6,
+      "innerProxySlots": 8
+    },
+    "coverage": "event-treatment-coverage-v2",
+    "schedule": "event-assessment-schedule-v2",
+    "input": "b23987667c713873d3085c7d1e7c53c9cb911f8cf2f10b3ecf0671d56b2a1b26",
+    "mode": 0,
+    "section": "0",
+    "selection": {
+      "begin": "0",
+      "end": "0"
+    },
+    "splitting": true,
+    "refinement": true,
+    "fillGap": false,
+    "global": true,
+    "compare": true,
+    "splits": 2,
+    "leftMs": 1000,
+    "rightMs": 1000,
+    "minimumMs": 3000,
+    "separationMs": 1000,
+    "needTenths": 10,
+    "persistenceMs": 1000,
+    "start": null,
+    "end": null,
+    "cuts": [],
+    "protection": "local-envelope-v1",
+    "protected": []
+  },
+  "requirements": {
+    "format": "levelscope-job-requirements",
+    "schema": 1,
+    "id": "00000000000000000000000000000017",
+    "revision": 1,
+    "name": "Programme job requirements",
+    "base_id": "ebu-r128-2023-programme-linear-qc",
+    "base_version": "1.0.0",
+    "base_digest": "ef6f5cc071a8c9d5a347da0dd61fcc46e9f24da0aed787bc9f3ea48cb3db7e66",
+    "method": "EBU Tech 3342-2023 whole-programme LRA",
+    "applicability": "pre-produced-whole-programme-linear-audio",
+    "provenance_kind": "user-specified-job-requirement",
+    "provenance": "Predeclared development comparison, not delivery default",
+    "maximum_lra_tenths": 180,
+    "unavailable_reason": "",
+    "digest": "f9b91bc17050201a0e1a498913f917f9cc87d5ff7b4e0edf37855be15e4e723e"
+  },
+  "preferences": {
+    "version": "section-preferences-v2",
+    "accounting": "connected-envelope-support-v2",
+    "region_limit": null,
+    "duration_thousandths": 200,
+    "additional_tenths_db": 30,
+    "cumulative_tenths_db": 120,
+    "reserve_tenths_db": 5,
+    "unavailable": ""
+  },
+  "processing": {
+    "gain": "bfeee74b68949760",
+    "planSchema": 2,
+    "engine": "section-gain-v1",
+    "sectionGains": {
+      "schema": 1,
+      "rate": 48000,
+      "frames": "13228800",
+      "input": "b23987667c713873d3085c7d1e7c53c9cb911f8cf2f10b3ecf0671d56b2a1b26",
+      "intervals": [
+        [
+          "0",
+          "586080",
+          "0000000000000000"
+        ],
+        [
+          "586080",
+          "1468800",
+          "bff63c7c0dcb6b20"
+        ],
+        [
+          "1468800",
+          "2513280",
+          "0000000000000000"
+        ],
+        [
+          "2513280",
+          "2785440",
+          "c008000000000000"
+        ],
+        [
+          "2785440",
+          "3789600",
+          "0000000000000000"
+        ],
+        [
+          "3789600",
+          "4682400",
+          "bffe280bb8deb900"
+        ],
+        [
+          "4682400",
+          "9060000",
+          "0000000000000000"
+        ],
+        [
+          "9060000",
+          "9285600",
+          "bff471c3c3a79780"
+        ],
+        [
+          "9285600",
+          "13228800",
+          "0000000000000000"
+        ]
+      ]
+    },
+    "initialized": true,
+    "annotationProvenance": {
+      "schema": 1,
+      "input": "b23987667c713873d3085c7d1e7c53c9cb911f8cf2f10b3ecf0671d56b2a1b26",
+      "rate": 48000,
+      "frames": "13228800",
+      "revision": "1",
+      "nextId": "10",
+      "rows": [
+        [
+          "1",
+          "0",
+          "586080",
+          "Applied LRA processing interval"
+        ],
+        [
+          "2",
+          "586080",
+          "1468800",
+          "Applied LRA processing interval"
+        ],
+        [
+          "3",
+          "1468800",
+          "2513280",
+          "Applied LRA processing interval"
+        ],
+        [
+          "4",
+          "2513280",
+          "2785440",
+          "Applied LRA processing interval"
+        ],
+        [
+          "5",
+          "2785440",
+          "3789600",
+          "Applied LRA processing interval"
+        ],
+        [
+          "6",
+          "3789600",
+          "4682400",
+          "Applied LRA processing interval"
+        ],
+        [
+          "7",
+          "4682400",
+          "9060000",
+          "Applied LRA processing interval"
+        ],
+        [
+          "8",
+          "9060000",
+          "9285600",
+          "Applied LRA processing interval"
+        ],
+        [
+          "9",
+          "9285600",
+          "13228800",
+          "Applied LRA processing interval"
+        ]
+      ]
+    },
+    "componentPlans": [],
+    "wholeProgrammeGraph": ""
+  },
+  "layout": {
+    "count": 2,
+    "confirmed": true,
+    "manual": false,
+    "roles": [
+      1,
+      2
+    ]
+  },
+  "channels": [
+    {
+      "fileId": "audio-1",
+      "fileChannel": 0,
+      "role": 1
+    },
+    {
+      "fileId": "audio-1",
+      "fileChannel": 1,
+      "role": 2
+    }
+  ],
+  "caches": [
+    {
+      "domain": 0,
+      "platform": "Mac OSX 15.7.9;arm64;float32-samples;float64-analysis;no-fast-math;fp-contract-off",
+      "build": "aa2ef42883b323fbf6a2dc84dcc40d6fafdcc1ec5db8cc1ac1e74fdead997531",
+      "input_sha256": "7ba6404041c94c909df290a6829a0fe92ce594329a1d575490c2bb4a5b6cc8f0",
+      "identity": "40be54963ec22d62a075562675912e0ad74b5ce6a9ab8c1f0d4d51892b15b8fe",
+      "detail": {
+        "payload_sha256": "38623a4608b23c5d7f51275244a3ec4270068cac767d1553adc5760db2027baa",
+        "rate": 48000,
+        "frames": 13228800,
+        "il": {
+          "status": 0,
+          "value": -20.523327351946648
+        },
+        "lra": {
+          "status": 0,
+          "value": 19.0429288941828
+        },
+        "max_m": {
+          "status": 0,
+          "value": -5.886343711280075
+        },
+        "max_s": {
+          "status": 0,
+          "value": -10.003308172278516
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -0.6113336391728194
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -0.03570755833520098
+        },
+        "il_relative_gate": -31.959814136243875,
+        "lra_relative_gate": -41.9500535286554,
+        "p10": -35.83080938864134,
+        "p95": -16.78788049445854,
+        "il_included": 1957,
+        "lra_included": 2742,
+        "lra_stable": 1,
+        "momentary_windows": {
+          "count": 2753,
+          "exact_frame_energy_sha256": "968bb8bf25eb965b3614705588b9aa11c880dffdeb1882b5aad375363077c7b2"
+        },
+        "short_term_windows": {
+          "count": 2727,
+          "exact_frame_energy_sha256": "b12240f529982dda41c0fa277dc1f269d1bc39cedd5b7d4cd509f73030670b2a"
+        },
+        "lra_windows": {
+          "count": 2742,
+          "exact_frame_energy_sha256": "8940cd9ab795d90618befabc7c8e839f0297ef943df52cfb01b19443b89c5d98"
+        },
+        "sample_peaks_by_channel": [
+          0.932037353515625,
+          0.932037353515625
+        ],
+        "true_peaks_by_channel": [
+          0.9958974539530863,
+          0.9958974539530863
+        ],
+        "sample_peak_frames": [
+          11757714,
+          11757714
+        ],
+        "true_peak_eighth_frames": [
+          94061853,
+          94061853
+        ]
+      }
+    },
+    {
+      "domain": 1,
+      "platform": "Mac OSX 15.7.9;arm64;float32-samples;float64-analysis;no-fast-math;fp-contract-off",
+      "build": "aa2ef42883b323fbf6a2dc84dcc40d6fafdcc1ec5db8cc1ac1e74fdead997531",
+      "input_sha256": "7ba6404041c94c909df290a6829a0fe92ce594329a1d575490c2bb4a5b6cc8f0",
+      "identity": "2535fa51456191bf9bf298d68c20a8acef2a452137b78b603833603ce73f835f",
+      "detail": {
+        "payload_sha256": "bb62a871f46059548faa3df81edd217c5f3ce0a4bccc18aef4f0b179ecb7b834",
+        "rate": 48000,
+        "frames": 13228800,
+        "il": {
+          "status": 0,
+          "value": -22.999734559478846
+        },
+        "lra": {
+          "status": 0,
+          "value": 17.400407020751015
+        },
+        "max_m": {
+          "status": 0,
+          "value": -9.852077909977213
+        },
+        "max_s": {
+          "status": 0,
+          "value": -13.956925252543718
+        },
+        "sample_peak": {
+          "status": 0,
+          "value": -1.5770676852408467
+        },
+        "true_peak": {
+          "status": 0,
+          "value": -1.0014421499352588
+        },
+        "il_relative_gate": -34.24574006731258,
+        "lra_relative_gate": -44.23869217395102,
+        "p10": -36.796543593777436,
+        "p95": -19.39613657302642,
+        "il_included": 2045,
+        "lra_included": 2742,
+        "lra_stable": 1,
+        "momentary_windows": {
+          "count": 2753,
+          "exact_frame_energy_sha256": "6c9d426e74b00407afa1c2698861f0c11d581653b19dd874613345c6d4324427"
+        },
+        "short_term_windows": {
+          "count": 2727,
+          "exact_frame_energy_sha256": "d46cf6a2ad282516778b0c155e1b4e98b41aebce260f65384a5bc8551ccd4c56"
+        },
+        "lra_windows": {
+          "count": 2742,
+          "exact_frame_energy_sha256": "294ccb0e6c7e40ae796afa3e191f555f920697e0fd25847e847a94c056e17ec1"
+        },
+        "sample_peaks_by_channel": [
+          0.8339626789093018,
+          0.8339626789093018
+        ],
+        "true_peaks_by_channel": [
+          0.8911029727739248,
+          0.8911029727739248
+        ],
+        "sample_peak_frames": [
+          11757714,
+          11757714
+        ],
+        "true_peak_eighth_frames": [
+          94061853,
+          94061853
+        ]
+      }
+    }
+  ],
+  "history": {
+    "bytes": 101519,
+    "sha256": "fcad5aba79ef6b826b731ec8cbf2017f5773f8f3bb5dfdeb4d9debcf6ab19e51",
+    "schema": 4
+  }
+}

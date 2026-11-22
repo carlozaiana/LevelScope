@@ -1,0 +1,10 @@
+{
+  "candidate_identity": "8f1497d12d4d5a1c3a0e8cd4aa3e864cc70a540023a399041d5dbd808ac93e79",
+  "original_relinked": "4d4105285030339d69ced1d31a8d475c5d7afa90b0af9ba776b827c04f9139b8",
+  "diagnostic": "fc972424f1e31d978613c2639a891ebe0da26fcad7986c1f12b5b3d014692499",
+  "test_source": "7ac7c9b99031500d553c1ec7cf41538c01c17687b24a57b5753fcfa2ed2b9d4b",
+  "event_header": "4c37b90d74cf46d87fd2a0be9179231da4d4e09607e498b29f0253690b470575",
+  "builder": "b32c95d73db6bd4c59b59ff9bcc13c9cbf32a506fa3189dd203be491f10b194b",
+  "production_changes": false,
+  "thresholds_changed": false
+}

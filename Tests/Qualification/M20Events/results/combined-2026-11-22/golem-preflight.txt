@@ -1,0 +1,6 @@
+Python 3.8.10
+Golem.local
+ProductName:	Mac OS X
+ProductVersion:	10.13.6
+BuildVersion:	17G66
+x86_64

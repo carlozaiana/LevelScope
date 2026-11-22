@@ -1,0 +1,18 @@
+{
+  "date": "2026-11-22",
+  "candidate_implementation": "ce31c4679782c69d02c29ddc675fee086b89395c",
+  "numerical_reproduction": {
+    "source": "User pasted qualification request",
+    "reported_result": "Repeated reproduction in correct order: Current \u2013 Passed",
+    "classification": "Successful numerical-workflow reproduction"
+  },
+  "development_listening": {
+    "source": "User reply to requested uninterrupted listen and passage-comparison checklist",
+    "verbatim": "I did the listen and passage comparisons and the results are acceptable. The boundaries could and will be improved, but they are ok in this stage of development. Overall sound is very good as expected and without any distortion or clicks.",
+    "accepted_for_current_development_stage": true,
+    "boundary_improvement_remains_planned": true,
+    "distortion_or_clicks_reported": false,
+    "individual_timestamps_or_alternative_rankings_supplied": false
+  },
+  "independent_holdout_listening": "No observations yet for the two newly frozen independent-programme runs; do not infer them from the development result."
+}

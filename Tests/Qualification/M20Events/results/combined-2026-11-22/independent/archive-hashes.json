@@ -1,0 +1,16 @@
+{
+  "build.py": "5cbc893e7412cda44a1bd96657a49a73d4a8617e7aae639e2ee15207df4833b1",
+  "holdout-report.txt": "985a9ec123682229175637cafc8812b23d13082c44e9ee1c4fbae3db9aa40289",
+  "protocol.txt": "bb723fa6cd4eee849aee9673d655b034c4a08d7b256a6cbb2c171837c8dab853",
+  "preservation.json": "8d9dc7dfd607186fc0d6766d3bbc5007d4ed699d60f5fec05679992d9beebce1",
+  "binary-identity.json": "ab8110cc974b017689b9dc9a0222f380f4d6d8e6371f954d62f35f10f4e38584",
+  "qualified.cpp": "1a2e4f588dc6d4402c875c427935108d613d5c7e90fa3f250326419355249b2f",
+  "exchange-comparison.json": "188e165b1bc26278f1350d1a44b7604ba986dd75d9f0a0d71d3e9b670bda8ab8",
+  "exchange-local-01/result.json": "b487ec212948ed2d264dc819923026d4ba3c204568987b13e9880ee99628e582",
+  "DialogAmbiance-02/result.json": "dcc95c3dcb7df5ff0743104d22c74562945cbe6c34b917c07fe6e5edae5eb590",
+  "DialogAmbiance-02/proposal.txt": "7814d635e2d1f89cf1db88ad4e824c8d906d5ce9e7330d18f88e102395d6aa46",
+  "5.1_Busy-01/result.json": "678d896c8a179097c9e9c5051f5f94ccacb4c159b4b22c83895f58b6051b8b6f",
+  "5.1_Busy-01/proposal.txt": "87a22473b059c3716632386d4ab35474ed4fcd2270df471aa6a4d62699a4e851",
+  "DialogAmbiance-01/result.json": "61a99ad353d2366dd2d797dea8a2232dab15b4ad9b78cc1d4acbbb02a2c4607e",
+  "exchange-from-golem-01/result.json": "2ec143fde3be50767cc5963172a0eb3650791eb3d9977e8c228d244d91dc0631"
+}

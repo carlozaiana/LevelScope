@@ -1,0 +1,16 @@
+{
+  "checks": {
+    "settings": true,
+    "requirements": true,
+    "preferences": true,
+    "processing": true,
+    "layout": true,
+    "channels": true,
+    "numeric_payload_0": true,
+    "numeric_payload_1": true,
+    "new_build_identity": true
+  },
+  "passed": true,
+  "before_build": "aa2ef42883b323fbf6a2dc84dcc40d6fafdcc1ec5db8cc1ac1e74fdead997531",
+  "after_build": "5cf1b904db533a8ee8379325833a6e0bf8efd4f0e8f88956a654ce9fa4b026e7"
+}

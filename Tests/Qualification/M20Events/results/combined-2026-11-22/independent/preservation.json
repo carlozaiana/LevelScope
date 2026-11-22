@@ -1,0 +1,26 @@
+{
+  "local_tags_match_checkpoint": true,
+  "count_local_tags": 26,
+  "main": "22961f03de7919e1de631f8b13eb4b852108ac0b",
+  "main_matches": true,
+  "tracking_main_matches": true,
+  "manuals": {
+    "matched": 72,
+    "total": 72
+  },
+  "listening_files": {
+    "matched": 15,
+    "total": 15
+  },
+  "artifacts_sha256": {
+    "matched": 455,
+    "total": 455
+  },
+  "source_sha256": {
+    "matched": 437,
+    "total": 437
+  },
+  "listening_session_matches": true,
+  "preserved_passing_session_sha256": "85131864b8070eead7187e2bc2b69dc937c41971b2baa05da4f7a509a2b52522",
+  "baseline_refs_now": "e62d5750140f716db7eeee6adeeecd65e7f4867a7ee0ef41bff8dc360c450f4b"
+}

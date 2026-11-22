@@ -1,0 +1,14 @@
+START inner-stereo
+PASS inner-stereo
+START inner-surround
+PASS inner-surround
+START inner-population
+PASS inner-population
+START event-ui
+FAIL event-ui
+Traceback (most recent call last):
+  File "qualify_integrated_host.py", line 71, in <module>
+    main()
+  File "qualify_integrated_host.py", line 64, in main
+    if not passed: raise RuntimeError('Failed focused group: '+group)
+RuntimeError: Failed focused group: event-ui

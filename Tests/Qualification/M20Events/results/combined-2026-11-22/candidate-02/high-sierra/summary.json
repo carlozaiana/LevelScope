@@ -1,0 +1,32 @@
+{
+  "passed": false,
+  "os": "10.13.6",
+  "architecture": "x86_64",
+  "host": "Golem.local",
+  "candidate_identity_sha256": "486adef440a6237a466cf0384b87dc7b0ccc02b0ef9261101640a6514c6c6b1c",
+  "build": "3bbe08d9455fd88dd20c6c852a19183875a495fee030784a7a8f147f5e2615e1",
+  "source_commit": "85ec92b224c8c6010e5dd60f9529efa6d7e110ee",
+  "planned": [
+    "event-ui",
+    "inner-ui",
+    "ui"
+  ],
+  "groups": [
+    {
+      "name": "event-ui",
+      "command": [
+        "/Users/fuzz/LevelScope-M20-integrated-qualification-2026-11-22/candidate-02/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/LevelScope-M20-integrated-qualification-2026-11-22/replacement-high-sierra-01/event-ui-files",
+        "--event-ui"
+      ],
+      "seconds": 15.028102896,
+      "returncode": 1,
+      "passed": false,
+      "checks": 94,
+      "receipt": "event-ui-files/result.json",
+      "receipt_sha256": "7da557a908d47950665a396f2a38376958646331731b201552596a7608d9102e"
+    }
+  ],
+  "physical_devices_opened": false,
+  "video_or_endurance_run": false
+}

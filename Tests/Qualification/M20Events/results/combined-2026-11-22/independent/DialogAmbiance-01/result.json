@@ -1,0 +1,29 @@
+{
+  "mode": "holdout",
+  "measurement_build": "aa2ef42883b323fbf6a2dc84dcc40d6fafdcc1ec5db8cc1ac1e74fdead997531",
+  "error": "composition measurement completes",
+  "process_max_rss_bytes": 10567680,
+  "checks": [
+    {
+      "name": "one of the two predeclared files",
+      "passed": true
+    },
+    {
+      "name": "exact precommitted PCM, channels, length and rate",
+      "passed": true
+    },
+    {
+      "name": "adopt full source",
+      "passed": true
+    },
+    {
+      "name": "begin composition measurement",
+      "passed": true
+    },
+    {
+      "name": "composition measurement completes",
+      "passed": false
+    }
+  ],
+  "passed": false
+}
