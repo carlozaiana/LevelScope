@@ -1,0 +1,107 @@
+{
+  "sequoia_focused_checks_passed": true,
+  "combined_platform_qualification_complete": false,
+  "source_commit": "79b55eb177a01e56fdbe86f843e03140df356bcd",
+  "source_tree": "0a96e9ab0b47847d301c7b273577b945a4c1921a",
+  "measurement_build": "9b379f0479f69a6e2ded23dc778ad5c50c5e92a20e4076a5936e06b5a82698fd",
+  "source_manifest_sha256": "eb883cde76149331d7016dc8e3d6cc6dcc5aeb0f0bd4263e5014fafe482fd1e4",
+  "candidate_identity_sha256": "4eb921611c8cec84e98b79ef7cb94aa9fd09da6b27bfbbeed958e35706e68ce3",
+  "app": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/propose-verify-workflow-2026-11-22/candidate-01/LevelScope Standalone.app",
+  "branch": "codex/propose-verify-workflow-2026-11-22",
+  "main_unchanged": "1056ad4ace536abfd68904f083c7fc56a1a8999f",
+  "platform": {
+    "os": "15.7.9",
+    "architecture": "arm64",
+    "checks": 2957,
+    "groups": [
+      {
+        "name": "timeline",
+        "command": [
+          "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/propose-verify-workflow-2026-11-22/candidate-01/bin/LevelScopeTimelineProgressTests",
+          "--root",
+          "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/propose-verify-workflow-2026-11-22/sequoia-01/timeline-files",
+          "--output",
+          "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/propose-verify-workflow-2026-11-22/sequoia-01/timeline.json"
+        ],
+        "returncode": 0,
+        "seconds": 3.142268,
+        "passed": true,
+        "checks": 2580,
+        "receipt": "timeline.json",
+        "receipt_sha256": "d5b206f95cb11a05a698948db95b4b616ca903a6afb73008d0eaaaaa22d41a8b"
+      },
+      {
+        "name": "ui",
+        "command": [
+          "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/propose-verify-workflow-2026-11-22/candidate-01/bin/LevelScopeRegionUITests",
+          "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/propose-verify-workflow-2026-11-22/sequoia-01/ui-files"
+        ],
+        "returncode": 0,
+        "seconds": 18.491125625,
+        "passed": true,
+        "checks": 167,
+        "receipt": "ui-files/result.json",
+        "receipt_sha256": "9614ddab0f89c4f7d5c7b378028044ceb35c6cdb8938948420f205127dd8117a"
+      },
+      {
+        "name": "applied-ui",
+        "command": [
+          "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/propose-verify-workflow-2026-11-22/candidate-01/bin/LevelScopeRegionUITests",
+          "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/propose-verify-workflow-2026-11-22/sequoia-01/applied-ui-files",
+          "--applied-ui",
+          "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/applied-region-boundaries-2026-11-22/inputs/supplied.levelscope"
+        ],
+        "returncode": 0,
+        "seconds": 8.860062250000002,
+        "passed": true,
+        "checks": 24,
+        "receipt": "applied-ui-files/result.json",
+        "receipt_sha256": "171ca93d4f22cf6f6fbc1b5d751709895570e878e53e2b98144cfa5bec435e7b"
+      },
+      {
+        "name": "operation-ui",
+        "command": [
+          "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/propose-verify-workflow-2026-11-22/candidate-01/bin/LevelScopeRegionUITests",
+          "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/propose-verify-workflow-2026-11-22/sequoia-01/operation-ui-files",
+          "--operation-ui",
+          "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/applied-region-boundaries-2026-11-22/inputs/supplied.levelscope"
+        ],
+        "returncode": 0,
+        "seconds": 76.321434833,
+        "passed": true,
+        "checks": 186,
+        "receipt": "operation-ui-files/result.json",
+        "receipt_sha256": "f1c96815183850b59347a2975f3cafb629aabe9759d5884dd55cd1cd95707e88"
+      }
+    ],
+    "heartbeat": {
+      "native_heartbeat_p95_ms": 22.23108333349228,
+      "native_heartbeat_max_ms": 117.6185833332129,
+      "samples": 1111
+    }
+  },
+  "high_sierra": "Pending while Golem is disconnected. No SSH attempted. Universal Intel minimum macOS 10.13 confirmed for app and both test executables.",
+  "inherited_evidence": "Unchanged integrated M20 and applied-boundary evidence (ProjectIndex 89-91). Core maths, search strategy/defaults, processing and portable session codec unchanged.",
+  "preservation": {
+    "passed": true,
+    "protected_files_unchanged": 3054,
+    "existing_tags_unchanged": 27,
+    "main_unchanged": "1056ad4ace536abfd68904f083c7fc56a1a8999f",
+    "candidate_artifacts_unchanged": 462,
+    "prior_boundary_package_unchanged": true,
+    "manuals_and_original_media_unchanged": true,
+    "no_publication_or_tag_mutation": true
+  },
+  "physical_devices_opened": false,
+  "audible_tests_run": false,
+  "prior_boundary_user_acceptance": "Recorded separately in user-acceptance.json; does not claim listening acceptance of this new workflow.",
+  "deferrals": [
+    "Actual High Sierra affected checks while Golem is unavailable",
+    "Broad video",
+    "Full-film",
+    "Three-hour endurance, without automatic 90-minute substitute"
+  ],
+  "separate_limitation": "Inherited completion pause. Occasional dropped video frames do not waive audio interruption, accumulating drift or sustained freezes.",
+  "publication_authorized": false,
+  "runtime_only_alternatives": "Saved sessions retain complete applied history and normal verification caches, never live alternative-selection authority."
+}

@@ -1,0 +1,15 @@
+{
+  "date": "2026-11-22",
+  "kind": "human manual acceptance; separate from automated assertions",
+  "source_chat": "01a13c8f-90a9-7150-813f-cb057626ef7e",
+  "source_user_message": "01a2040b-a7cd-7353-b29a-4b31e46ea9a0",
+  "statement": "I tested and everything works fine.",
+  "prior_ui_feedback": [
+    "Dragging transitions works as expected",
+    "Undo/Redo works fine",
+    "Listening checks also good"
+  ],
+  "clarification": "Escape cancels only while holding the mouse button during a drag; release applies the edit and subsequent reversal uses Undo. Current audition uses released edits before remeasurement.",
+  "tested_implementation": "240da530302af8f539d0351b7332798e2373314a",
+  "not_a_new_automated_or_independent_programme_qualification": true
+}

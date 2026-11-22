@@ -1,0 +1,87 @@
+{
+  "passed": true,
+  "os": "15.7.9",
+  "architecture": "arm64",
+  "source_commit": "79b55eb177a01e56fdbe86f843e03140df356bcd",
+  "build": "9b379f0479f69a6e2ded23dc778ad5c50c5e92a20e4076a5936e06b5a82698fd",
+  "candidate_identity_sha256": "4eb921611c8cec84e98b79ef7cb94aa9fd09da6b27bfbbeed958e35706e68ce3",
+  "requested_cases": [
+    "timeline",
+    "ui",
+    "applied-ui",
+    "operation-ui"
+  ],
+  "physical_devices_opened": false,
+  "combined_qualification_complete": false,
+  "inputs": {
+    "applied-ui": {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/applied-region-boundaries-2026-11-22/inputs/supplied.levelscope",
+      "sha256": "30cda1f347937fcb6df0c17006f05b6d39775b68f9da091fe056e8c2cd425b25"
+    },
+    "operation-ui": {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/applied-region-boundaries-2026-11-22/inputs/supplied.levelscope",
+      "sha256": "30cda1f347937fcb6df0c17006f05b6d39775b68f9da091fe056e8c2cd425b25"
+    }
+  },
+  "groups": [
+    {
+      "name": "timeline",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/propose-verify-workflow-2026-11-22/candidate-01/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/propose-verify-workflow-2026-11-22/sequoia-01/timeline-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/propose-verify-workflow-2026-11-22/sequoia-01/timeline.json"
+      ],
+      "returncode": 0,
+      "seconds": 3.142268,
+      "passed": true,
+      "checks": 2580,
+      "receipt": "timeline.json",
+      "receipt_sha256": "d5b206f95cb11a05a698948db95b4b616ca903a6afb73008d0eaaaaa22d41a8b"
+    },
+    {
+      "name": "ui",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/propose-verify-workflow-2026-11-22/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/propose-verify-workflow-2026-11-22/sequoia-01/ui-files"
+      ],
+      "returncode": 0,
+      "seconds": 18.491125625,
+      "passed": true,
+      "checks": 167,
+      "receipt": "ui-files/result.json",
+      "receipt_sha256": "9614ddab0f89c4f7d5c7b378028044ceb35c6cdb8938948420f205127dd8117a"
+    },
+    {
+      "name": "applied-ui",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/propose-verify-workflow-2026-11-22/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/propose-verify-workflow-2026-11-22/sequoia-01/applied-ui-files",
+        "--applied-ui",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/applied-region-boundaries-2026-11-22/inputs/supplied.levelscope"
+      ],
+      "returncode": 0,
+      "seconds": 8.860062250000002,
+      "passed": true,
+      "checks": 24,
+      "receipt": "applied-ui-files/result.json",
+      "receipt_sha256": "171ca93d4f22cf6f6fbc1b5d751709895570e878e53e2b98144cfa5bec435e7b"
+    },
+    {
+      "name": "operation-ui",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/propose-verify-workflow-2026-11-22/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/propose-verify-workflow-2026-11-22/sequoia-01/operation-ui-files",
+        "--operation-ui",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/applied-region-boundaries-2026-11-22/inputs/supplied.levelscope"
+      ],
+      "returncode": 0,
+      "seconds": 76.321434833,
+      "passed": true,
+      "checks": 186,
+      "receipt": "operation-ui-files/result.json",
+      "receipt_sha256": "f1c96815183850b59347a2975f3cafb629aabe9759d5884dd55cd1cd95707e88"
+    }
+  ]
+}

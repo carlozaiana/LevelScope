@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "protected_files_unchanged": 3054,
+  "existing_tags_unchanged": 27,
+  "main_unchanged": "1056ad4ace536abfd68904f083c7fc56a1a8999f",
+  "candidate_artifacts_unchanged": 462,
+  "prior_boundary_package_unchanged": true,
+  "manuals_and_original_media_unchanged": true,
+  "no_publication_or_tag_mutation": true
+}
