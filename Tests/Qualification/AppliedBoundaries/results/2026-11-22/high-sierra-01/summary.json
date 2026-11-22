@@ -1,0 +1,67 @@
+{
+  "passed": true,
+  "os": "10.13.6",
+  "architecture": "x86_64",
+  "source_commit": "240da530302af8f539d0351b7332798e2373314a",
+  "build": "6a77c53eed0d1e216ecf78750bcc7433a6c5c34455dfd5996c85d6f8334ab819",
+  "candidate_identity_sha256": "64d5f870f5382f332f58564b945f0ebf61012218570dc1bb970bb06d65171942",
+  "requested_cases": [
+    "timeline",
+    "applied-ui",
+    "ui"
+  ],
+  "physical_devices_opened": false,
+  "combined_qualification_complete": false,
+  "inputs": {
+    "applied-ui": {
+      "path": "/Users/fuzz/LevelScope-applied-boundary-20261122/inputs/supplied.levelscope",
+      "sha256": "30cda1f347937fcb6df0c17006f05b6d39775b68f9da091fe056e8c2cd425b25"
+    }
+  },
+  "groups": [
+    {
+      "name": "timeline",
+      "command": [
+        "/Users/fuzz/LevelScope-applied-boundary-20261122/candidate-01/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/LevelScope-applied-boundary-20261122/high-sierra-01/timeline-files",
+        "--output",
+        "/Users/fuzz/LevelScope-applied-boundary-20261122/high-sierra-01/timeline.json"
+      ],
+      "returncode": 0,
+      "seconds": 4.96002497,
+      "passed": true,
+      "checks": 2580,
+      "receipt": "timeline.json",
+      "receipt_sha256": "2416ec2d7c990325f49ec125624fef7688cfad451a8593b916d29f521f56cb03"
+    },
+    {
+      "name": "applied-ui",
+      "command": [
+        "/Users/fuzz/LevelScope-applied-boundary-20261122/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/LevelScope-applied-boundary-20261122/high-sierra-01/applied-ui-files",
+        "--applied-ui",
+        "/Users/fuzz/LevelScope-applied-boundary-20261122/inputs/supplied.levelscope"
+      ],
+      "returncode": 0,
+      "seconds": 19.584317928,
+      "passed": true,
+      "checks": 24,
+      "receipt": "applied-ui-files/result.json",
+      "receipt_sha256": "dfe7c24c25c8760a0157fefcc3b16d73360ea2db612631a18e17e389434afd08"
+    },
+    {
+      "name": "ui",
+      "command": [
+        "/Users/fuzz/LevelScope-applied-boundary-20261122/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/LevelScope-applied-boundary-20261122/high-sierra-01/ui-files"
+      ],
+      "returncode": 0,
+      "seconds": 42.02815060100001,
+      "passed": true,
+      "checks": 167,
+      "receipt": "ui-files/result.json",
+      "receipt_sha256": "a9c983f64ce0c681fe6dcd8d5058f0935954b3c3300ace7332971f3a1b28de83"
+    }
+  ]
+}

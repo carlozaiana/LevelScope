@@ -1,0 +1,87 @@
+{
+  "passed": true,
+  "source_commit": "240da530302af8f539d0351b7332798e2373314a",
+  "measurement_build": "6a77c53eed0d1e216ecf78750bcc7433a6c5c34455dfd5996c85d6f8334ab819",
+  "candidate_identity_sha256": "64d5f870f5382f332f58564b945f0ebf61012218570dc1bb970bb06d65171942",
+  "source_manifest_sha256": "5dc388feeaab2d5bc97270b9ad6cc9503bc39140df0b123545efacd778b15c04",
+  "app": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/applied-region-boundaries-2026-11-22/candidate-01/LevelScope Standalone.app",
+  "branch": "codex/applied-region-boundaries-2026-11-22",
+  "main_unchanged": "1056ad4ace536abfd68904f083c7fc56a1a8999f",
+  "existing_tags_unchanged": 27,
+  "protected_files_unchanged": 2572,
+  "prior_packages_unchanged": 9,
+  "inputs_preserved": true,
+  "platforms": {
+    "sequoia-01": {
+      "os": "15.7.9",
+      "architecture": "arm64",
+      "checks": 2771,
+      "groups": [
+        {
+          "name": "timeline",
+          "checks": 2580,
+          "seconds": 3.234392417,
+          "passed": true
+        },
+        {
+          "name": "applied-ui",
+          "checks": 24,
+          "seconds": 10.353953542,
+          "passed": true
+        },
+        {
+          "name": "ui",
+          "checks": 167,
+          "seconds": 18.178588375000004,
+          "passed": true
+        }
+      ],
+      "summary_sha256": "829677bdf2395dc2bd23d8e94ec0bf77f4cbb323598f3fc354a6986c71035a0c"
+    },
+    "high-sierra-01": {
+      "os": "10.13.6",
+      "architecture": "x86_64",
+      "checks": 2771,
+      "groups": [
+        {
+          "name": "timeline",
+          "checks": 2580,
+          "seconds": 4.96002497,
+          "passed": true
+        },
+        {
+          "name": "applied-ui",
+          "checks": 24,
+          "seconds": 19.584317928,
+          "passed": true
+        },
+        {
+          "name": "ui",
+          "checks": 167,
+          "seconds": 42.02815060100001,
+          "passed": true
+        }
+      ],
+      "summary_sha256": "52f651ddbb8a724749ad26176a97980135ba94e279034b5e96828e9f3b148c9c"
+    }
+  },
+  "independent_native_edited_session_fields_identical": {
+    "current": true,
+    "regionPlanning": true,
+    "sections": true,
+    "jobRequirements": true,
+    "proposalPolicy": true
+  },
+  "core_processing_and_session_writer_unchanged": true,
+  "physical_devices_opened": false,
+  "audible_tests_run": false,
+  "source_manifest_entries": 444,
+  "qualification_scope": "Affected timeline, native applied boundary/history persistence and main UI checks; unchanged M20 evidence inherited from documents 89-90. No new correction/listening claim.",
+  "deferrals": [
+    "Broad video",
+    "Full-film",
+    "Three-hour endurance; no automatic 90-minute substitute",
+    "Inherited completion pause"
+  ],
+  "publication_authorized_for_this_slice": false
+}

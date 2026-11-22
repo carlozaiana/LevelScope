@@ -1,0 +1,67 @@
+{
+  "passed": true,
+  "os": "15.7.9",
+  "architecture": "arm64",
+  "source_commit": "240da530302af8f539d0351b7332798e2373314a",
+  "build": "6a77c53eed0d1e216ecf78750bcc7433a6c5c34455dfd5996c85d6f8334ab819",
+  "candidate_identity_sha256": "64d5f870f5382f332f58564b945f0ebf61012218570dc1bb970bb06d65171942",
+  "requested_cases": [
+    "timeline",
+    "applied-ui",
+    "ui"
+  ],
+  "physical_devices_opened": false,
+  "combined_qualification_complete": false,
+  "inputs": {
+    "applied-ui": {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/applied-region-boundaries-2026-11-22/inputs/supplied.levelscope",
+      "sha256": "30cda1f347937fcb6df0c17006f05b6d39775b68f9da091fe056e8c2cd425b25"
+    }
+  },
+  "groups": [
+    {
+      "name": "timeline",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/applied-region-boundaries-2026-11-22/candidate-01/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/applied-region-boundaries-2026-11-22/sequoia-01/timeline-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/applied-region-boundaries-2026-11-22/sequoia-01/timeline.json"
+      ],
+      "returncode": 0,
+      "seconds": 3.234392417,
+      "passed": true,
+      "checks": 2580,
+      "receipt": "timeline.json",
+      "receipt_sha256": "f8a64b6f21c14afc2ce2b3b44484fef066b0c26f937e6432de0f3e617a66271b"
+    },
+    {
+      "name": "applied-ui",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/applied-region-boundaries-2026-11-22/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/applied-region-boundaries-2026-11-22/sequoia-01/applied-ui-files",
+        "--applied-ui",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/applied-region-boundaries-2026-11-22/inputs/supplied.levelscope"
+      ],
+      "returncode": 0,
+      "seconds": 10.353953542,
+      "passed": true,
+      "checks": 24,
+      "receipt": "applied-ui-files/result.json",
+      "receipt_sha256": "dfe7c24c25c8760a0157fefcc3b16d73360ea2db612631a18e17e389434afd08"
+    },
+    {
+      "name": "ui",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/applied-region-boundaries-2026-11-22/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/applied-region-boundaries-2026-11-22/sequoia-01/ui-files"
+      ],
+      "returncode": 0,
+      "seconds": 18.178588375000004,
+      "passed": true,
+      "checks": 167,
+      "receipt": "ui-files/result.json",
+      "receipt_sha256": "e854388ce6ee6993fd860510dc123a9da9898c38f926dbe5902609486d84040c"
+    }
+  ]
+}
