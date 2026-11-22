@@ -1,0 +1,12 @@
+{
+  "publication_audit.py": "0da3351499df85c75c38816a29296f4c4ccb1cfde23ca8df645fa3cd8e3d24f3",
+  "preflight.json": "4bc5181513d2b8d71da46b791024341a2e3349fd2c72a8c4e84e776a4d0b928e",
+  "remote-before.txt": "502fd5665c33592129db407314cdeca96cd335f29107bdd479337467513d262e",
+  "local-tags-before.txt": "0da39db81d31a3de786c1b4f94f45243aca6cb6b7fa12467008085652dfcc59b",
+  "remote-prepush.txt": "502fd5665c33592129db407314cdeca96cd335f29107bdd479337467513d262e",
+  "tag-annotation.txt": "0d48d3f1455d40d58a6168c5b9897990f47c9348e9604c588d0c76ea98b67ab7",
+  "main-fast-forward.log": "69a98d7bec29f80f6a1e39c73a340f8dba9194b15e4b8ad040af9b345bb61d66",
+  "push-checkpoint.log": "08ee6582a487754b21db8f4ec74dbef3cc81f4e5db5c3d71fed224994f88da90",
+  "remote-checkpoint.txt": "83974c7dec894e88a03288155ef2597d442179cc3747804da6e8bcde37655c52",
+  "checkpoint-verification.json": "6b014b0db651c85d8237ee3a61c5c643c1ca20bb44e3d5f1213ab813ae7652bf"
+}

@@ -1,0 +1,15 @@
+Integrated M20 competing-boundary development checkpoint — 22 November 2026
+
+Qualified implementation: 2f90dab6eaa25f9d2ce9f033341c948b2994d9da
+Integrated qualification handover: 7dafaa8b0f7bde7dd42a6d95f6cec6dbbd3914da
+Production Source tree: c7bf6facc2bf6c6e11bee69d44f53a5277270105
+Candidate-03 package identity: f44c1fea69a41416c3c1dd0284a3a5b9cd52757bc484f9623cbb7fb13aa48dd3
+Measurement build: 5cf1b904db533a8ee8379325833a6e0bf8efd4f0e8f88956a654ce9fa4b026e7
+
+595 affected native assertions passed on each actual platform: Sequoia 15.7.9 arm64 and High Sierra 10.13.6 Intel. Unchanged evidence is reused as documented in ProjectIndex 89. Exact cross-platform numerics, gains, boundaries and peak positions and bidirectional schema-11 session exchange passed. User development-programme listening acceptance is recorded separately.
+
+Both independent programme searches found no passing correction and correctly blocked selection/Apply. They are not successful corrections; no independent-programme listening acceptance is inferred.
+
+Broad video, full-film and three-hour endurance remain deferred; no automatic 90-minute substitute. The inherited completion pause remains separate. Existing limited acceptance of occasional video frame drops does not waive audio interruption, accumulating drift or sustained freezes.
+
+Preserve tested applications, packages, manifests, receipts, original media/sessions, listening materials, manuals and all existing tags. No rebuild or installation for publication. Publication/main integration explicitly authorized; workflow simplification is the next design/implementation step, not part of this checkpoint publication.
