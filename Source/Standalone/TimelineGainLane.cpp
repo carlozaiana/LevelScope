@@ -63,7 +63,7 @@ TimelineGainLane::TimelineGainLane(StandaloneSessionModel& s):session(s)
     addAndMakeVisible(selectionKind);selectionKind.setName("Gain lane selection");
     selectionKind.addItem("Select sections",1);selectionKind.addItem("Select applied regions",2);selectionKind.addItem("Select proposed regions",3);
     selectionKind.setSelectedId(1,juce::dontSendNotification);
-    selectionKind.setTooltip("Sections are editable annotations. Processing regions inspect fixed gain intervals, including after reopening. Choose the item type here; clicks keep this selection mode.");
+    selectionKind.setTooltip("Sections are editable annotations. Applied regions have draggable shared-edge handles at the top of the gain plot, including after reopening. Choose the item type here; clicks keep this selection mode.");
     selectionKind.onChange=[this]{if(dirty&&!stageValue()){selectionKind.setSelectedId(1,juce::dontSendNotification);return;}deleteArmed=false;rebuildProposalRows();selectFrame(cursor,true);};
 }
 const std::vector<proposal::ProgrammeSection>& TimelineGainLane::rows() const
@@ -136,7 +136,7 @@ void TimelineGainLane::synchronize(const juce::String& key)
     const auto& map=session.sectionDocument.map();const auto& d=session.sectionTrimDraft;
     if(deletedAnnotation&&map.revision!=deletedRevision)deletedAnnotation.reset();
     const bool stale=session.sectionProposalStale();
-    if(replaced||boundarySerial!=session.boundaryEditSerial||automatic!=session.sectionProposal||automaticStale!=stale||audioRevision!=session.revision||mapRevision!=map.revision||initialized!=session.hasCurrentStateInitialized()
+    if(replaced||boundarySerial!=session.boundaryEditSerial||appliedBoundarySerial!=session.appliedBoundarySerial||automatic!=session.sectionProposal||automaticStale!=stale||audioRevision!=session.revision||mapRevision!=map.revision||initialized!=session.hasCurrentStateInitialized()
         ||hasDraft!=bool(d)||(d&&editSerial!=d->editSerial))
     {
         const bool newProposal=automatic!=session.sectionProposal;
@@ -150,7 +150,7 @@ void TimelineGainLane::synchronize(const juce::String& key)
         {const auto it=std::find_if(newReview->attempts.begin(),newReview->attempts.end(),[&](const auto& a){return a.attemptIdentity==inspectedId;});regionAttempt=size_t(it-newReview->attempts.begin());}
         if(const auto* attempt=inspectedAttempt()){proposed=ProcessingPlan{};proposed->staticGainDb=attempt->plan.globalDb;proposed->sectionGains=attempt->plan.envelope;}
         audioRevision=session.revision;mapRevision=map.revision;initialized=session.hasCurrentStateInitialized();
-        boundarySerial=session.boundaryEditSerial;
+        boundarySerial=session.boundaryEditSerial;appliedBoundarySerial=session.appliedBoundarySerial;
         usableMap=input.isNotEmpty()&&map.inputIdentity==input&&map.valid();
         hasDraft=bool(d);editSerial=d?d->editSerial:0;fresh=usableMap&&session.sectionDraftFresh();
         applied=usableMap&&initialized?session.currentStateDocument.sectionGains:std::nullopt;
@@ -163,7 +163,7 @@ void TimelineGainLane::synchronize(const juce::String& key)
         supportError=usableMap&&initialized?session.sectionDraftSupportError():juce::String{};
         draftError=fresh?d->plan.validationError():juce::String{};
         draft=fresh&&draftError.isEmpty()?std::optional<processing::SectionGainPlan>(d->plan.canonical()):std::nullopt;
-        if(session.boundaryBatch)draft=session.boundaryBatch->next.gains;
+        if(session.pendingBoundaryEdits())draft=session.displayedSectionGains();
         cursor=std::clamp<int64_t>(cursor,0,std::max<int64_t>(0,map.frames-1));row=intervalAt(rows(),cursor);
         selectedIds.erase(std::remove_if(selectedIds.begin(),selectedIds.end(),[&](auto id){return std::none_of(map.sections.begin(),map.sections.end(),[&](const auto& r){return r.id==id;});}),selectedIds.end());
         dirty=false;feedback.clear();showSelection();resized();repaint();
@@ -259,14 +259,14 @@ void TimelineGainLane::updateControls()
     else if(dirty)message="Editing local gain. Return or leaving the field applies it. Command-Z undoes it.";
     else if(draftError.isNotEmpty())message=draftError;
     else if(hasDraft)message=session.sectionTrimDraft->processingRegions?session.sectionTrimNotice:"Draft only. Apply gains changes Current; Discard keeps applied audio.";
-    else if(selectionKind.getSelectedId()!=1)message="Click an applied region, then Backspace to reset or merge its gain. Proposed regions remain read-only.";
+    else if(selectionKind.getSelectedId()!=1)message=selectionKind.getSelectedId()==2?appliedBoundaryHelp():"Proposed regions are read-only. Choose Select applied regions to edit Current.";
     else if(!geometryMatches)message="Sections and gain regions differ. New edits retain existing gains outside the selected passage.";
     else if(session.currentStateNeedsRemeasurement())message="Current needs re-measurement. Continue editing, or re-measure when ready.";
     else message="Click a gain readout to edit. Drag this lane to select whole sections. Backspace resets/merges; Command-Z undoes.";
 
     legend.setText(automatic?"CURRENT local gain (dB)   |   Green solid = applied   /   Cyan dotted = proposal":
         "CURRENT local gain (dB)   |   Shaded: transition   /   Command-Z: Undo",juce::dontSendNotification);
-    if(session.boundaryBatch){message=session.sectionTrimNotice;legend.setText("CURRENT local gain | Solid: applied / Amber dashed: pending boundaries",juce::dontSendNotification);}
+    if(session.pendingBoundaryEdits()){message=session.pendingBoundaryMessage();legend.setText("CURRENT local gain | Solid: applied / Amber dashed: pending boundaries",juce::dontSendNotification);}
     notice.setText(message,juce::dontSendNotification);notice.setTooltip(message);
 }
 bool TimelineGainLane::stageValue()
@@ -394,6 +394,26 @@ void TimelineGainLane::resized()
     }
     detail.setBounds(controls);
 }
+std::optional<size_t> TimelineGainLane::appliedBoundaryHandle(juce::Point<int> point) const
+{
+    const auto box=plotBounds();const auto& plan=session.displayedSectionGains();
+    if(selectionKind.getSelectedId()!=2||!plan||viewEnd<=viewBegin||box.getWidth()<2
+        ||point.y<box.getY()||point.y>box.getY()+12||point.x<box.getX()||point.x>box.getRight())return {};
+    std::optional<size_t> result;double distance=7;
+    for(size_t n=1;n<plan->intervals.size();++n)
+    {
+        const auto frame=plan->intervals[n].begin;if(frame<viewBegin||frame>viewEnd)continue;
+        const auto px=box.getX()+(frame-viewBegin)*(box.getWidth()-1)/(viewEnd-viewBegin);
+        const auto d=std::abs(point.x-px);if(d<distance){distance=d;result=n;}
+    }
+    return result;
+}
+juce::String TimelineGainLane::appliedBoundaryHelp() const
+{
+    if(session.pendingBoundaryEdits())return session.pendingBoundaryMessage();
+    if(!session.manualEditAllowed())return "Applied-region handles unavailable: stop playback, finish the job and discard any pending proposal or gain draft first.";
+    return "Drag a top-edge tab to move the shared applied boundary and its ramp. Both neighbouring gains stay fixed. Release applies; Esc cancels; Command-Z undoes. Programme ends are fixed.";
+}
 void TimelineGainLane::paint(juce::Graphics& g)
 {
     g.fillAll(palette::panel());
@@ -441,12 +461,25 @@ void TimelineGainLane::paint(juce::Graphics& g)
             }
         }
     };
-    if(applied)for(size_t n=1;n<applied->intervals.size();++n)
+    const auto& visible=session.displayedSectionGains();
+    if(visible)for(size_t n=1;n<visible->intervals.size();++n)
     {
-        const auto radius=applied->radius(n),frame=applied->intervals[n].begin;
+        const auto radius=visible->radius(n),frame=visible->intervals[n].begin;
         const auto a=x(frame-radius),b=x(frame+radius);g.setColour(juce::Colour(0xff81d5b4).withAlpha(.12f));g.fillRect(a,float(box.getY()),std::max(1.f,b-a),float(box.getHeight()));
     }
-    draw(applied?&*applied:nullptr,0);if(draft||session.boundaryBatch)draw(draft?&*draft:nullptr,1);if(proposed)draw(proposed->sectionGains?&*proposed->sectionGains:nullptr,2);
+    draw(applied?&*applied:nullptr,0);if(draft||session.pendingBoundaryEdits())draw(draft?&*draft:nullptr,1);if(proposed)draw(proposed->sectionGains?&*proposed->sectionGains:nullptr,2);
+    if(selectionKind.getSelectedId()==2&&visible)
+    {
+        // Tabs sit on nominal cuts; the translucent band is the processor's
+        // actual ramp support on either side. Programme endpoints stay fixed.
+        g.setColour(session.manualEditAllowed()||session.appliedBoundaryDrag?juce::Colour(0xff81d5b4):juce::Colours::grey);
+        for(size_t n=1;n<visible->intervals.size();++n)
+        {
+            const auto f=visible->intervals[n].begin;if(f<viewBegin||f>viewEnd)continue;
+            const auto px=x(f);g.drawLine(px,float(box.getY()+8),px,float(box.getBottom()),1.f);
+            g.fillRoundedRectangle(px-5,float(box.getY()),10.f,8.f,2.f);
+        }
+    }
 }
 void TimelineGainLane::paintReadouts(juce::Graphics& g)
 {

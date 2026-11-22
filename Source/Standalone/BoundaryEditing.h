@@ -9,6 +9,23 @@ struct BoundaryEditBatch
     juce::String runtime;
     uint64_t revision=0;
 };
+struct AppliedBoundaryDrag
+{
+    BoundaryEditBatch edit;
+    size_t right=0;
+    uint64_t token=0;
+};
+// Applied regions share a nominal cut. Move that cut only; retain both plateau
+// gains and let the existing processor determine the centred transition radius.
+inline std::optional<ManualEditState> moveAppliedBoundary(const ManualEditState& before,size_t right,int64_t frame)
+{
+    if(!before.gains||right==0||right>=before.gains->intervals.size())return {};
+    auto next=before;auto& p=*next.gains;auto& left=p.intervals[right-1];auto& r=p.intervals[right];
+    if(frame<left.begin+2||frame>r.end-2)return {};
+    left.end=frame;r.begin=frame;
+    if(p.validationError().isNotEmpty())return {};
+    return next;
+}
 // Rebuild once from original sections and final edges. Retained interiors keep
 // their gain changes at their original samples; extensions inherit edge plateaus.
 // No intermediate mouse position is written into the applied processing plan.

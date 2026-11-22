@@ -22,6 +22,8 @@ def main():
     parser.add_argument('destination', type=Path)
     parser.add_argument('--targets', nargs='+', required=True)
     parser.add_argument('--logic-handover', default='294f9b52abc1ae21754d5cf42c879b9de674244e')
+    parser.add_argument('--published-baseline', default='22961f03de7919e1de631f8b13eb4b852108ac0b')
+    parser.add_argument('--kind', default='M20 combined UI review candidate')
     args = parser.parse_args()
     repo = Path(__file__).resolve().parents[3]
     assert re.fullmatch(r'[a-f0-9]{40}', args.logic_handover), 'Exact Logic handover commit required'
@@ -62,8 +64,8 @@ def main():
         assert set(architectures) == {'arm64', 'x86_64'} and minimum and minimum[1] == '10.13'
         binary_checks[str(binary.relative_to(destination))] = {'architectures': architectures, 'intel_minimum': minimum[1]}
     sources = {str(p.relative_to(destination / 'source')): sha(p) for p in sorted((destination / 'source').rglob('*')) if p.is_file()}
-    result = {'kind': 'M20 combined UI review candidate', 'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=repo, text=True).strip(),
-              'published_baseline': '22961f03de7919e1de631f8b13eb4b852108ac0b', 'logic_handover': args.logic_handover,
+    result = {'kind': args.kind, 'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=repo, text=True).strip(),
+              'published_baseline': args.published_baseline, 'logic_handover': args.logic_handover,
               'measurement_build': identity, 'source_sha256': sources,
               'source_manifest_sha256': hashlib.sha256(json.dumps(sources, sort_keys=True, separators=(',', ':')).encode()).hexdigest(),
               'binary_checks': binary_checks, 'artifacts_sha256': {str(p.relative_to(destination)): sha(p) for p in sorted(destination.rglob('*')) if p.is_file()},

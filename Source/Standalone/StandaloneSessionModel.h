@@ -190,7 +190,7 @@ public:
     std::function<bool()> auditionBusy;
     MeasurementDomain auditionDomain = MeasurementDomain::source;
     bool persistenceLoading = false;
-    bool audioEditsBlocked() const { return persistenceLoading || (auditionBusy && auditionBusy()) || boundaryBatch.has_value(); }
+    bool audioEditsBlocked() const { return persistenceLoading || (auditionBusy && auditionBusy()) || pendingBoundaryEdits(); }
     bool selectAuditionDomain (MeasurementDomain domain)
     {
         if (domain != MeasurementDomain::source && domain != MeasurementDomain::currentState) return false;
@@ -324,7 +324,43 @@ public:
     }
     std::shared_ptr<ManualEditHistory> manualHistory;
     std::optional<BoundaryEditBatch> boundaryBatch;
-    uint64_t boundaryEditSerial=0;
+    std::optional<AppliedBoundaryDrag> appliedBoundaryDrag;
+    uint64_t boundaryEditSerial=0,appliedBoundarySerial=0;
+    bool pendingBoundaryEdits() const {return boundaryBatch.has_value()||appliedBoundaryDrag.has_value();}
+    juce::String pendingBoundaryMessage() const {return appliedBoundaryDrag?"Moving applied region: release to apply, Esc to cancel.":"Finish boundary edits with Enter, or cancel with Esc.";}
+    const std::optional<processing::SectionGainPlan>& displayedSectionGains() const
+    {return appliedBoundaryDrag?appliedBoundaryDrag->edit.next.gains:boundaryBatch?boundaryBatch->next.gains:currentStateDocument.sectionGains;}
+    bool appliedBoundaryFresh() const
+    {return appliedBoundaryDrag&&appliedBoundaryDrag->edit.runtime==sessionId&&appliedBoundaryDrag->edit.revision==revision&&appliedBoundaryDrag->edit.before==manualState();}
+    uint64_t beginAppliedBoundary(size_t right)
+    {
+        if(!manualEditAllowed()||!currentStateDocument.isInitialized)return 0;
+        auto before=manualState();if(!before.gains||right==0||right>=before.gains->intervals.size())return 0;
+        appliedBoundaryDrag=AppliedBoundaryDrag{{before,before,sessionId,revision},right,++appliedBoundarySerial};
+        return appliedBoundaryDrag->token;
+    }
+    void cancelAppliedBoundary(uint64_t token)
+    {if(appliedBoundaryDrag&&appliedBoundaryDrag->token==token){appliedBoundaryDrag.reset();++appliedBoundarySerial;sectionTrimNotice="Applied-region move cancelled. Processing and verification unchanged.";}}
+    bool previewAppliedBoundary(uint64_t token,int64_t frame)
+    {
+        if(!appliedBoundaryDrag||appliedBoundaryDrag->token!=token)return false;
+        if(!appliedBoundaryFresh()||!boundaryEditAllowed()){cancelAppliedBoundary(token);return false;}
+        const auto& old=appliedBoundaryDrag->edit.before;const auto right=appliedBoundaryDrag->right;
+        const auto& rows=old.gains->intervals;
+        auto next=moveAppliedBoundary(old,right,std::clamp(frame,rows[right-1].begin+2,rows[right].end-2));
+        if(!next)return false;
+        if(!(appliedBoundaryDrag->edit.next==*next)){appliedBoundaryDrag->edit.next=std::move(*next);++appliedBoundarySerial;}
+        return true;
+    }
+    bool commitAppliedBoundary(uint64_t token)
+    {
+        if(!appliedBoundaryDrag||appliedBoundaryDrag->token!=token)return false;
+        if(!appliedBoundaryFresh()||!boundaryEditAllowed()){cancelAppliedBoundary(token);return false;}
+        const bool unchanged=appliedBoundaryDrag->edit.next==appliedBoundaryDrag->edit.before;
+        auto next=appliedBoundaryDrag->edit.next;appliedBoundaryDrag.reset();++appliedBoundarySerial;
+        if(unchanged){sectionTrimNotice="Boundary unchanged. Processing and verification retained.";return true;}
+        return commitManualEdit(std::move(next),"Move applied region boundary");
+    }
     ManualEditState manualState() const {return {sectionDocument.map(),currentStateDocument.sectionGains,currentStateDocument.staticGainDb};}
     bool boundaryEditAllowed() const
     {
@@ -332,14 +368,14 @@ public:
             &&sourceDocument.hasSource&&sourceDocument.matchesFileStamps()&&sectionDocument.map().valid()
             &&(!sectionProposal||lastAppliedProposalBinding==sectionProposal->identity());
     }
-    bool manualEditAllowed() const {return !boundaryBatch&&boundaryEditAllowed();}
+    bool manualEditAllowed() const {return !pendingBoundaryEdits()&&boundaryEditAllowed();}
     bool boundaryBatchFresh() const {return boundaryBatch&&boundaryBatch->runtime==sessionId&&boundaryBatch->revision==revision&&boundaryBatch->before==manualState();}
     size_t pendingBoundaryCount() const
     {size_t n=0;if(boundaryBatch)for(size_t i=0;i<boundaryBatch->next.map.sections.size();++i)n+=boundaryBatch->before.map.sections[i].end!=boundaryBatch->next.map.sections[i].end;return n;}
     void cancelBoundaryBatch(){if(boundaryBatch){boundaryBatch.reset();++boundaryEditSerial;sectionTrimNotice="Boundary changes cancelled. Applied gains retained.";}}
     bool stageBoundary(size_t index,int64_t frame)
     {
-        if(!boundaryEditAllowed())return false;
+        if(appliedBoundaryDrag||!boundaryEditAllowed())return false;
         if(boundaryBatch&&!boundaryBatchFresh()){cancelBoundaryBatch();return false;}
         const auto before=boundaryBatch?boundaryBatch->before:manualState();auto map=boundaryBatch?boundaryBatch->next.map:before.map;
         if(index+1>=map.sections.size()||frame<=map.sections[index].begin||frame>=map.sections[index+1].end)return false;

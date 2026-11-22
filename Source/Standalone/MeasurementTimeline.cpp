@@ -167,7 +167,7 @@ std::vector<std::pair<int64_t,int64_t>> MeasurementTimeline::transitionSpans() c
 {
     std::vector<std::pair<int64_t,int64_t>> result;
     if(!currentInspection||!showTransitions)return result;
-    const auto* plan=sectionSession?(sectionSession->boundaryBatch?&sectionSession->boundaryBatch->next.gains:&sectionSession->currentStateDocument.sectionGains):&previewCurrent.sectionGains;
+    const auto* plan=sectionSession?&sectionSession->displayedSectionGains():&previewCurrent.sectionGains;
     if(!*plan)return result;
     const auto& p=**plan;const auto& rows=p.intervals;
     auto it=std::lower_bound(rows.begin(),rows.end(),viewBegin,[&](const auto& r,double f){return r.end+int64_t(p.sampleRate*.05)<f;});
@@ -184,6 +184,12 @@ bool MeasurementTimeline::keyPressed(const juce::KeyPress& key)
     if(juce::Component::getCurrentlyModalComponent())return false;
     for(auto* c=juce::Component::getCurrentlyFocusedComponent();c;c=c->getParentComponent())
         if(dynamic_cast<juce::TextEditor*>(c))return false;
+    if(sectionSession&&sectionSession->appliedBoundaryDrag)
+    {
+        if(key==juce::KeyPress::escapeKey)
+        {sectionSession->cancelAppliedBoundary(sectionSession->appliedBoundaryDrag->token);appliedDragToken=0;refreshAppliedDrag();if(sectionEdited)sectionEdited(0);return true;}
+        return true; // Playback, Undo and remeasurement wait for release or cancellation.
+    }
     if(sectionSession&&sectionSession->boundaryBatch)
     {
         if(key==juce::KeyPress::escapeKey){sectionSession->cancelBoundaryBatch();refreshSectionEditing();if(sectionEdited)sectionEdited(0);navigationMessage("Boundary changes cancelled.");return true;}
@@ -240,6 +246,7 @@ int64_t MeasurementTimeline::enteredFrame() const
 }
 void MeasurementTimeline::setViewRange (double begin, double end)
 {
+    cancelAppliedDrag();
     const auto frames=double(programmeFrames());
     if(frames<=0 || !std::isfinite(begin) || !std::isfinite(end) || end<=begin)return;
     const auto finest=waveformData?double(waveformData->binFrames):programmeRate()*.1;
@@ -463,11 +470,13 @@ void MeasurementTimeline::bindSectionEditing(StandaloneSessionModel& session,std
 void MeasurementTimeline::refreshSectionEditing()
 {
     if(!sectionSession)return;
+    if(appliedDragRuntime!=sectionSession->sessionId)appliedDragToken=0;
     auto& session=*sectionSession;
+    if(session.appliedBoundaryDrag&&!session.appliedBoundaryFresh())session.cancelAppliedBoundary(session.appliedBoundaryDrag->token);
     if(session.boundaryBatch&&!session.boundaryBatchFresh())session.cancelBoundaryBatch();
     const auto& map=session.boundaryBatch?session.boundaryBatch->next.map:session.sectionDocument.map();
     const bool editable=knownFrames>0 && map.frames==knownFrames && !map.sections.empty() && session.sourceDocument.layout.confirmed
-        && session.boundaryEditAllowed();
+        && !session.appliedBoundaryDrag && session.boundaryEditAllowed();
     if(sectionRuntime==session.sessionId && audioRevision==session.revision && sectionInput==map.inputIdentity
         && sectionRevision==map.revision && sectionEditable==editable&&boundarySerial==session.boundaryEditSerial)return;
     boundarySerial=session.boundaryEditSerial;
@@ -536,9 +545,39 @@ juce::String MeasurementTimeline::peakHoverText(juce::Point<float> pointer) cons
     }
     return {};
 }
+juce::String MeasurementTimeline::getTooltip()
+{
+    if(gainLane&&gainLane->appliedBoundaryHandle(getMouseXYRelative()-gainLane->getPosition()))return gainLane->appliedBoundaryHelp();
+    return peakHoverText(getMouseXYRelative().toFloat());
+}
+MeasurementTimeline::~MeasurementTimeline()
+{
+    // Session outlives its views. Closing a window never commits an unfinished gesture.
+    if(appliedDragToken&&sectionSession&&appliedDragRuntime==sectionSession->sessionId)sectionSession->cancelAppliedBoundary(appliedDragToken);
+}
+void MeasurementTimeline::focusLost(FocusChangeType){cancelAppliedDrag();}
+void MeasurementTimeline::visibilityChanged(){if(!isShowing())cancelAppliedDrag();}
+void MeasurementTimeline::cancelAppliedDrag()
+{
+    if(!appliedDragToken||!sectionSession)return;
+    if(appliedDragRuntime==sectionSession->sessionId)sectionSession->cancelAppliedBoundary(appliedDragToken);appliedDragToken=0;
+    refreshAppliedDrag();if(sectionEdited)sectionEdited(0);
+}
+void MeasurementTimeline::refreshAppliedDrag()
+{
+    if(gainLane)gainLane->refreshProcessing();
+    if(sectionSession&&sectionSession->appliedBoundaryDrag)
+    {
+        const auto& drag=*sectionSession->appliedBoundaryDrag;const auto& p=*drag.edit.next.gains;
+        const auto cut=p.intervals[drag.right].begin,radius=p.radius(drag.right);
+        navigationMessage("PREVIEW: applied shared boundary "+timecode(cut,programmeRate())+" | transition "+timecode(cut-radius,programmeRate())+" - "+timecode(cut+radius,programmeRate())+" | release to apply; Esc cancels. Gains unchanged.");
+    }
+    else if(sectionSession)navigationMessage(sectionSession->sectionTrimNotice);
+    repaint();
+}
 void MeasurementTimeline::mouseMove(const juce::MouseEvent& e)
 {
-    setMouseCursor(graph.contains(e.getPosition()) && boundaryHandle(e.position.x)
+    setMouseCursor((gainLane&&gainLane->appliedBoundaryHandle(e.getPosition()-gainLane->getPosition()))||(graph.contains(e.getPosition()) && boundaryHandle(e.position.x))
         ? juce::MouseCursor::LeftRightResizeCursor : juce::MouseCursor::NormalCursor);
 }
 void MeasurementTimeline::changeSectionEnd(uint64_t id,int64_t frame)
@@ -597,6 +636,18 @@ void MeasurementTimeline::mouseDown(const juce::MouseEvent& e)
 {
     if(gainLane&&!gainLane->commitPending())return;
     refreshSectionEditing();
+    if(appliedDragToken)cancelAppliedDrag();
+    if(gainLane&&sectionSession&&e.mods.isLeftButtonDown()&&!e.mods.isAltDown())
+        if(auto handle=gainLane->appliedBoundaryHandle(e.getPosition()-gainLane->getPosition()))
+        {
+            focusForTransport();gesture=false;sectionGesture=false;
+            appliedDragToken=sectionSession->beginAppliedBoundary(*handle);
+            if(appliedDragToken){appliedDragRuntime=sectionSession->sessionId;appliedDragStart=sectionSession->appliedBoundaryDrag->edit.before.gains->intervals[*handle].begin;appliedDragPointer=e.position.x;appliedDragScale=(viewEnd-viewBegin)/std::max(1,graph.getWidth()-1);}
+            if(appliedDragToken){refreshAppliedDrag();if(sectionEdited)sectionEdited(0);}
+            else navigationMessage(gainLane->appliedBoundaryHelp());
+            return;
+        }
+    if(sectionSession&&sectionSession->appliedBoundaryDrag)return;
     gestureGain=gainLane&&gainLane->inspectionBounds().contains(e.getPosition()-gainLane->getPosition());
     if(gainLane&&!gestureGain)gainLane->clearDeleteSelection();
     commandGesture=e.mods.isCommandDown();
@@ -611,6 +662,9 @@ void MeasurementTimeline::mouseDown(const juce::MouseEvent& e)
 }
 void MeasurementTimeline::mouseDrag(const juce::MouseEvent& e)
 {
+    if(sectionSession&&appliedDragRuntime!=sectionSession->sessionId)appliedDragToken=0;
+    if(appliedDragToken&&sectionSession)
+    {sectionSession->previewAppliedBoundary(appliedDragToken,appliedDragStart+int64_t(std::llround((e.position.x-appliedDragPointer)*appliedDragScale)));refreshAppliedDrag();return;}
     if(!gesture)return;
     if(selectGesture)
     {
@@ -638,6 +692,16 @@ void MeasurementTimeline::mouseDrag(const juce::MouseEvent& e)
 }
 void MeasurementTimeline::mouseUp(const juce::MouseEvent& e)
 {
+    if(sectionSession&&appliedDragRuntime!=sectionSession->sessionId)appliedDragToken=0;
+    if(appliedDragToken&&sectionSession)
+    {
+        const auto token=appliedDragToken;appliedDragToken=0;
+        // Commit the last preview rather than quantising a no-movement click.
+        const bool ok=sectionSession->commitAppliedBoundary(token);
+        refreshSectionEditing();refreshAppliedDrag();if(sectionEdited)sectionEdited(0);
+        if(!ok)navigationMessage("Applied boundary not changed: inputs changed or editing is unavailable.");
+        focusForTransport();return;
+    }
     if(!gesture)return;
     gesture=false;
     if(sectionGesture)
@@ -666,6 +730,7 @@ void MeasurementTimeline::mouseUp(const juce::MouseEvent& e)
 }
 void MeasurementTimeline::mouseWheelMove(const juce::MouseEvent& e,const juce::MouseWheelDetails& w)
 {
+    cancelAppliedDrag();
     follow.setToggleState(false,juce::dontSendNotification);
     if((e.mods.isCommandDown()||e.mods.isCtrlDown())&&!e.mods.isShiftDown())zoomAt(w.deltaY>0?.8:1.25,e.position.x);
     else {const auto shift=-(w.deltaX!=0?w.deltaX:w.deltaY)*(viewEnd-viewBegin);setViewRange(viewBegin+shift,viewEnd+shift);}
@@ -730,7 +795,7 @@ void MeasurementTimeline::paint (juce::Graphics& g)
     // Zero-width channel-peak markers are visible only at their actual position.
     if(currentInspection&&showTransitions)
     {
-        g.setColour(juce::Colour(sectionSession&&sectionSession->boundaryBatch?0xffffc171:0xff81d5b4).withAlpha(.12f));
+        g.setColour(juce::Colour(sectionSession&&sectionSession->pendingBoundaryEdits()?0xffffc171:0xff81d5b4).withAlpha(.12f));
         float lastRight=-1;
         for(const auto& span:transitionSpans())
         {

@@ -37,6 +37,7 @@ struct PreparationFeedbackTestAccess
     static void moveDivider(StandaloneMainComponent& c,int delta){c.waveformDivider.move(delta);}
     static juce::Viewport& inspector(StandaloneMainComponent& c){return c.inspectorViewport;}
     static int inspection(StandaloneMainComponent& c){return c.inspectDomain.getSelectedId();}
+    static StandaloneAudioPanel& setup(StandaloneMainComponent& c){return c.audioPanel;}
     static StandaloneAudition& audio(StandaloneMainComponent& c){return c.audition;}
     static void refreshTimeline(StandaloneMainComponent& c){c.refreshTimeline();}
     static juce::Label& warning(StandaloneMainComponent& c){return c.monitorWarning;}
@@ -157,6 +158,7 @@ void workflowChecks(StandaloneMainComponent& ui,const juce::File& root)
     const auto source=s.source.analysis->identity,baseline=s.currentState.analysis->identity;const auto revision=s.revision;
     Heartbeat heartbeat;heartbeat.begin();Access::propose(ui);expect(s.job.isActive(),"experimental Propose goes directly through asynchronous existing worker");waitJob(ui);
     expect(s.sectionProposal&&s.sectionProposal->regionReview()&&s.canApplySectionProposal(),"main completion presents measured region recommendation through existing Apply boundary");
+    expect(!s.beginAppliedBoundary(1),"pending measured proposal protects Current from competing boundary edits");
     auto result=s.sectionProposal;const auto review=result->regionReview();expect(review->retainedAttempt<review->attempts.size(),"retained measured attempt index is checked before UI inspection");
     expect(s.revision==revision&&s.currentState.analysis->identity==baseline&&s.source.analysis->identity==source,"proposal presentation never installs private candidate as Current");
     auto& lane=Access::lane(ui);expect(lane.preferredHeight()>TimelineGainLane::height,"M20 shows separate geometry bands above applied/proposed envelopes");
@@ -215,6 +217,10 @@ void workflowChecks(StandaloneMainComponent& ui,const juce::File& root)
     auto settings=*s.regionPlanning;settings.maximumSplits=1;expect(s.setRegionPlanning(settings,error)&&!s.canApplySectionProposal(),"settings edit stales measured proposal without changing baseline");Access::refresh(ui);expect(Access::proposal(ui).outcomeText().contains("Stale"),"main stale outcome is prominent");
     settings.maximumSplits=2;expect(s.setRegionPlanning(settings,error)&&s.canApplySectionProposal(),"exact original binding restores recommendation eligibility");Access::refresh(ui);click(Access::proposal(ui),"Apply proposal");
     expect(s.currentStateNeedsRemeasurement()&&!s.currentState.hasMeasurement&&s.lastAppliedExplanation,"explicit UI Apply leaves Current unverified and stores historical explanation");
+    const auto appliedPlan=s.manualState();const auto historyBytes=encodeAppliedExplanation(*s.lastAppliedExplanation);
+    const auto token=s.beginAppliedBoundary(1);expect(token&&s.previewAppliedBoundary(token,appliedPlan.gains->intervals[1].begin+20)&&s.commitAppliedBoundary(token),"boundary editing works immediately after explicit proposal Apply");
+    expect(!s.canApplySectionProposal()&&s.appliedExplanationStatus().contains("processing edited since application")&&encodeAppliedExplanation(*s.lastAppliedExplanation)==historyBytes,"editing an applied proposal retires its applicability and preserves its measured explanation");
+    expect(s.undoManual()&&s.manualState()==appliedPlan&&!s.canApplySectionProposal(),"Undo restores audio without resurrecting old proposal authority");
     expect(s.lastAppliedExplanation->narrative.contains("actual transition count"),"saved historical narrative includes added presentation accounting");
     auto current=measuredComposition(s,MeasurementDomain::currentState);expect(current.detail.lra.value==result->assessment()->detail.lra.value,"independent Current reproduces the exact privately measured plan");
     JobControl job;const auto path=root.getChildFile("ui-session.levelscope");expect(sf::save(sf::capture(s),path,job).succeeded(),"UI settings and applied history saved in schema9");auto document=sf::read(path,job);expect(document.succeeded(),"UI session read");auto reopened=sf::verify(*document.document,job);
@@ -508,13 +514,14 @@ void controlVariants(const juce::File& root)
 
 #include "EventUIIntegrationChecks.h"
 #include "InnerUIIntegrationChecks.h"
+#include "AppliedBoundaryUIChecks.h"
 }
 int main(int argc,char** argv)
 {
-    juce::ScopedJuceInitialiser_GUI gui;const bool inner=argc==4&&juce::String(argv[2])=="--inner-ui",events=argc==3&&juce::String(argv[2])=="--event-ui",variants=argc==3&&juce::String(argv[2])=="--variants",exchange=argc==4&&juce::String(argv[2])=="--exchange",holdouts=argc==4&&juce::String(argv[2])=="--holdouts",listening=argc==4&&juce::String(argv[2])=="--refresh-listening",recover=argc==5&&juce::String(argv[2])=="--recover-music";if(argc!=2&&!variants&&!exchange&&!holdouts&&!listening&&!recover&&!events&&!inner)return 2;const juce::File root(argv[1]);if(root.exists())return 2;root.createDirectory();bool passed=false;juce::String error;
+    juce::ScopedJuceInitialiser_GUI gui;const bool applied=argc==4&&juce::String(argv[2])=="--applied-ui",inner=argc==4&&juce::String(argv[2])=="--inner-ui",events=argc==3&&juce::String(argv[2])=="--event-ui",variants=argc==3&&juce::String(argv[2])=="--variants",exchange=argc==4&&juce::String(argv[2])=="--exchange",holdouts=argc==4&&juce::String(argv[2])=="--holdouts",listening=argc==4&&juce::String(argv[2])=="--refresh-listening",recover=argc==5&&juce::String(argv[2])=="--recover-music";if(argc!=2&&!variants&&!exchange&&!holdouts&&!listening&&!recover&&!events&&!inner&&!applied)return 2;const juce::File root(argv[1]);if(root.exists())return 2;root.createDirectory();bool passed=false;juce::String error;
     try
     {
-        if(inner)innerUIChecks(root,juce::File(argv[3]));else if(events)eventUIChecks(root);else if(recover)recoverMusic(juce::File(argv[3]),juce::File(argv[4]),root);else if(listening)refreshListening(juce::File(argv[3]),root);else if(holdouts)controlledHoldouts(juce::File(argv[3]),root);else if(exchange)exchangeChecks(juce::File(argv[3]),root);else if(variants)controlVariants(root);else
+        if(applied)appliedBoundaryUIChecks(root,juce::File(argv[3]));else if(inner)innerUIChecks(root,juce::File(argv[3]));else if(events)eventUIChecks(root);else if(recover)recoverMusic(juce::File(argv[3]),juce::File(argv[4]),root);else if(listening)refreshListening(juce::File(argv[3]),root);else if(holdouts)controlledHoldouts(juce::File(argv[3]),root);else if(exchange)exchangeChecks(juce::File(argv[3]),root);else if(variants)controlVariants(root);else
         {
         overloadBannerChecks(root);auto s=programme(root.getChildFile("fixture"),2);editorChecks(s,root);
         auto ui=std::make_unique<StandaloneMainComponent>(emptyOutputCatalog(),noOutputSettings());Access::stopTimer(*ui);ui->setSize(1320,1100);ui->setName("LevelScope - isolated M20 integration test");ui->addToDesktop(juce::ComponentPeer::windowHasTitleBar);ui->setVisible(true);

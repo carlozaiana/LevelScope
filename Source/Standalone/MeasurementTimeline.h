@@ -16,6 +16,9 @@ class MeasurementTimeline final : public juce::Component, public juce::TooltipCl
 {
 public:
     MeasurementTimeline();
+    ~MeasurementTimeline() override;
+    void focusLost(FocusChangeType) override;
+    void visibilityChanged() override;
     void attachGainLane(TimelineGainLane&);
     TimelineGainLane* attachedGainLane() const {return gainLane;}
     void bindSectionEditing(StandaloneSessionModel&,std::function<void(uint64_t)>);
@@ -23,7 +26,7 @@ public:
     void changeSectionEnd(uint64_t,int64_t);
     SectionEditPrompt* editPrompt(){return sectionEdit.get();}
     juce::String peakHoverText(juce::Point<float>) const;
-    juce::String getTooltip() override {return peakHoverText(getMouseXYRelative().toFloat());}
+    juce::String getTooltip() override;
     void mouseMove(const juce::MouseEvent&) override;
     void focusForTransport();
     bool keyPressed(const juce::KeyPress&) override;
@@ -82,6 +85,12 @@ private:
     uint64_t boundarySerial=0;
     std::optional<size_t> boundaryHandle(float x) const;
     std::optional<size_t> movingBoundary;
+    uint64_t appliedDragToken=0;
+    juce::String appliedDragRuntime;
+    int64_t appliedDragStart=0;
+    double appliedDragPointer=0,appliedDragScale=1;
+    void cancelAppliedDrag();
+    void refreshAppliedDrag();
     int64_t dragFrame=0;
     void finishSectionGesture(int64_t end);
     TimelineGainLane* gainLane=nullptr; // borrowed from the main shell

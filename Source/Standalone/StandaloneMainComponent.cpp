@@ -307,7 +307,7 @@ void StandaloneMainComponent::timerCallback()
 
 void StandaloneMainComponent::beginMeasurement (MeasurementDomain domain)
 {
-    if(session.boundaryBatch){jobLabel.setText("Finish boundary edits: Enter to review, Esc to cancel.",juce::dontSendNotification);return;}
+    if(session.pendingBoundaryEdits()){jobLabel.setText(session.pendingBoundaryMessage(),juce::dontSendNotification);return;}
     if (session.job.isActive() || session.sourceContentInvalid || session.persistenceLoading) return;
     if (domain == MeasurementDomain::currentState && ! session.hasCurrentStateInitialized()) return;
     auto context = session.measurementContext (domain);
@@ -579,10 +579,10 @@ void StandaloneMainComponent::refreshFromSession()
 
     targetProfileBox.setSelectedId (session.selectedTargetProfileIndex + 1, juce::dontSendNotification);
 
-    clearSourceButton.setEnabled (!session.boundaryBatch && !session.persistenceLoading && (session.sourceDocument.hasSource || session.job.isActive()));
+    clearSourceButton.setEnabled (!session.pendingBoundaryEdits() && !session.persistenceLoading && (session.sourceDocument.hasSource || session.job.isActive()));
     chooseProgrammeButton.setEnabled(canReplaceSession());
     chooseCompositionButton.setEnabled(canReplaceSession());
-    chooseSourceButton.setEnabled (!session.boundaryBatch && ! session.job.isActive() && !session.persistenceLoading);
+    chooseSourceButton.setEnabled (!session.pendingBoundaryEdits() && ! session.job.isActive() && !session.persistenceLoading);
     targetProfileBox.setEnabled (!session.audioEditsBlocked() && !session.job.isActive());
     jobRequirementsPanel.refresh();
     refreshJobFeedback();
@@ -590,9 +590,9 @@ void StandaloneMainComponent::refreshFromSession()
     initializeCurrentStateButton.setEnabled (! session.audioEditsBlocked() && ! session.job.isActive() && session.canInitializeCurrentStateFromSource());
     clearCurrentStateButton.setEnabled (! session.audioEditsBlocked() && ! session.job.isActive() && session.hasCurrentStateInitialized());
     const auto measurementError = OfflineAnalysisService::validateRequest (session.measurementContext (MeasurementDomain::source), MeasurementDomain::source);
-    measureSourceButton.setEnabled (!session.boundaryBatch && !session.persistenceLoading && ! session.job.isActive() && ! session.sourceContentInvalid && measurementError.isEmpty());
+    measureSourceButton.setEnabled (!session.pendingBoundaryEdits() && !session.persistenceLoading && ! session.job.isActive() && ! session.sourceContentInvalid && measurementError.isEmpty());
     measureSourceButton.setTooltip (measurementError);
-    remeasureCurrentStateButton.setEnabled (!session.boundaryBatch && !session.persistenceLoading && ! session.job.isActive() && ! session.sourceContentInvalid && session.hasCurrentStateInitialized() && measurementError.isEmpty());
+    remeasureCurrentStateButton.setEnabled (!session.pendingBoundaryEdits() && !session.persistenceLoading && ! session.job.isActive() && ! session.sourceContentInvalid && session.hasCurrentStateInitialized() && measurementError.isEmpty());
     currentGain.setEnabled (! session.audioEditsBlocked() && ! session.job.isActive() && session.hasCurrentStateInitialized() && !(session.sectionTrimDraft&&session.sectionTrimDraft->rollbackAnnotations));
     currentGain.setValue (session.currentStateDocument.staticGainDb, juce::dontSendNotification);
     draftTrimButton.setEnabled (!session.audioEditsBlocked() && session.getWorkflowReadiness().canDraftProposal());
@@ -975,7 +975,7 @@ void StandaloneMainComponent::showLraPassages(bool current)
 }
 void StandaloneMainComponent::proposeWithActiveMethod()
 {
-    if(session.boundaryBatch)return;
+    if(session.pendingBoundaryEdits())return;
     // One UI action; the existing shared dispatcher preserves each supported
     // no-LRA, global-only, mono and explicitly versioned region path.
     beginSectionProposal();
@@ -1014,7 +1014,7 @@ void StandaloneMainComponent::reviewProposal(bool historical)
         {
             if(!safe||safe->session.sessionId!=runtime||safe->session.sectionProposal!=*binding)return "Previous proposal/session snapshot. Reopen Review for the current result.";
             const auto& s=safe->session;
-            if(s.boundaryBatch||s.sectionTrimDraft)return "Finish or cancel pending manual edits before selecting an alternative.";
+            if(s.pendingBoundaryEdits()||s.sectionTrimDraft)return "Finish or cancel pending manual edits before selecting an alternative.";
             if(s.audioEditsBlocked()||s.job.isActive()||s.persistenceLoading)return "Stop playback and finish or cancel the current job before selecting.";
             if(s.sectionProposalStale()||s.sourceContentInvalid)return "Stale inputs, requirements or preferences. Generate a fresh proposal.";
             return {};
@@ -1058,7 +1058,7 @@ void StandaloneMainComponent::showSections()
 }
 void StandaloneMainComponent::playTimeline(MeasurementTimeline* origin)
 {
-    if(session.boundaryBatch){jobLabel.setText("Finish boundary edits: Enter to review, Esc to cancel.",juce::dontSendNotification);return;}
+    if(session.pendingBoundaryEdits()){jobLabel.setText(session.pendingBoundaryMessage(),juce::dontSendNotification);return;}
     if(session.job.isActive()||session.persistenceLoading)return;
     (origin?*origin:timeline).focusForTransport();
     if(!audition.connected()){showAudioSetup();return;}
@@ -1180,7 +1180,7 @@ void StandaloneMainComponent::refreshTimeline()
     timeline.setReferenceMeasurement(reference,domain==MeasurementDomain::currentState);
     auditionDomainBox.setSelectedId(session.auditionDomain==MeasurementDomain::source?1:2,juce::dontSendNotification);
     auditionDomainBox.setEnabled(!session.audioEditsBlocked()&&!session.job.isActive());
-    timelinePlay.setEnabled(!session.boundaryBatch&&!session.job.isActive()&&!session.persistenceLoading&&!audition.active()&&session.sourceDocument.hasSource);
+    timelinePlay.setEnabled(!session.pendingBoundaryEdits()&&!session.job.isActive()&&!session.persistenceLoading&&!audition.active()&&session.sourceDocument.hasSource);
     timelineStop.setEnabled(audition.active());
     jobRequirementsPanel.refreshAvailability();
     proposalPanel.refresh(importControl?importControl->progress.load():-1);
@@ -1239,6 +1239,7 @@ void StandaloneMainComponent::refreshJobFeedback()
     else if(!active && !session.sourceDocument.hasSource && session.job.state == JobState::idle)
         text = {"Ready to import", "Open Mix to begin. Output connection is optional for offline analysis.", -1};
     if(!active&&session.boundaryBatch)text={juce::String(session.pendingBoundaryCount())+(session.pendingBoundaryCount()==1?" boundary change pending":" boundary changes pending"), "Enter: review Move gain with sections / Cancel. Esc: cancel. Zoom and pan remain available; playback and measurement wait for this edit.", -1};
+    if(!active&&session.appliedBoundaryDrag)text={"Moving applied region boundary",session.pendingBoundaryMessage()+" The previous measurement describes the unchanged applied audio until release.",-1};
     jobLabel.setText(text.title, juce::dontSendNotification);jobLabel.setTooltip(text.title);
     jobDetail.setText(text.detail, juce::dontSendNotification);jobDetail.setTooltip(text.detail);
     jobFraction = text.fraction;jobProgress.setVisible(active);
