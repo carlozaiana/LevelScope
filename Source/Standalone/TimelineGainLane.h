@@ -32,6 +32,7 @@ public:
     SectionEditPrompt& editPrompt(){return sectionEdit;}
     void clearDeleteSelection(){deleteArmed=false;}
     void inspectRegionAttempt(size_t);
+    void inspectApplied(int64_t frame){selectionKind.setSelectedId(2,juce::sendNotificationSync);selectFrame(frame,true);}
     bool diagnosticRegionInspection() const;
     int preferredHeight() const {return height+(hasRegionLayers()?76:0);}
     juce::Rectangle<int> plotBounds() const {return {plotLeft,47+(hasRegionLayers()?76:0),plotWidth,48};}

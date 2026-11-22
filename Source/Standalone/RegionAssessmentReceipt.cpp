@@ -29,7 +29,7 @@ RegionAssessmentReceipt::RegionAssessmentReceipt(const AnalysisSnapshot& actual,
 }
 juce::String RegionAssessmentReceipt::validationError(const SectionProposalRequest& r,const ProcessingPlan& plan)const
 {
-    if(!r.regionSettings||!proposal::isEventMethod(r.regionSettings->methodVersion())||r.binding()!=binding||r.pendingManualDraft)return "Stale event assessment request or pending manual draft";
+    if(!r.regionSettings||!(proposal::isEventMethod(r.regionSettings->methodVersion())||(r.regionSettings->schema==1&&r.regionSettings->methodVersion()==proposal::regionSearchVersion))||r.binding()!=binding||r.pendingManualDraft)return "Stale region assessment request or pending manual draft";
     auto expected=r.currentContext;expected.processing=plan;
     if(proposalPlanIdentity(plan)!=planIdentity||r.currentContext.profile.digest()!=profileDigest||r.applicability!=applicability)return "Assessment belongs to another exact plan/requirement definition";
     if(!r.source||!r.current||!r.sourceContext.sourceFilesMatch()||!r.currentContext.sourceFilesMatch())return "Programme members changed after assessment";
@@ -49,7 +49,34 @@ size_t RegionAssessmentReceipt::storageBytes()const
     size_t n=sizeof(*this)+(detail.channelSamplePeaks.capacity()+detail.channelTruePeaks.capacity())*sizeof(double)
         +(detail.samplePeakFrames.capacity()+detail.truePeakEighthFrames.capacity())*sizeof(int64_t);
     for(const auto* s:{&snapshot,&id,&binding,&planIdentity,&profileDigest,&measurementMethod,&measuredContent})n+=s->getNumBytesAsUTF8()*4;
-    // Context/programme strings and shared input recipes are conservatively charged.
-    return n+16384;
+    const auto stringBytes=[](const juce::String& s){return 64+4*s.getNumBytesAsUTF8();};
+    const auto mediaBytes=[&](const MediaInfo& m)
+    {
+        size_t bytes=0;for(const auto* s:{&m.format,&m.sha256,&m.layoutProvenance,&m.measurementRestriction})bytes+=stringBytes(*s);
+        for(const auto& s:m.tags.getAllKeys())bytes+=sizeof(juce::String)*2+stringBytes(s);
+        for(const auto& s:m.tags.getAllValues())bytes+=sizeof(juce::String)*2+stringBytes(s);
+        return bytes;
+    };
+    const auto assemblyBytes=[&](const ProgrammeAssembly& a)
+    {
+        size_t bytes=a.members.capacity()*sizeof(ProgrammeMember)+stringBytes(a.alignmentConfirmation);
+        for(const auto& member:a.members)bytes+=stringBytes(member.id)+stringBytes(member.file.getFullPathName())+mediaBytes(member.media);
+        return bytes;
+    };
+    const auto& c=measuredContext;n+=mediaBytes(c.media);
+    for(const auto* s:{&c.sessionId,&c.profileVersion,&c.buildVersion,&c.platformAndFloatingPointMode,&c.processing.graphJson,&c.processing.engineVersion})n+=stringBytes(*s);
+    n+=stringBytes(c.sourceFile.getFullPathName())+stringBytes(proposalTargetText(c.profile));
+    if(c.processing.sectionGains)n+=c.processing.sectionGains->intervals.capacity()*sizeof(processing::GainInterval)+stringBytes(c.processing.sectionGains->inputIdentity);
+    if(c.assembly)n+=assemblyBytes(*c.assembly);
+    if(c.composition)
+    {
+        n+=stringBytes(c.composition->confirmation);
+        for(const auto* part:{&c.composition->me,&c.composition->dialogue})
+        {
+            for(const auto* s:{&part->id,&part->purpose,&part->language,&part->versionLabel})n+=stringBytes(*s);
+            n+=mediaBytes(part->media)+stringBytes(part->file.getFullPathName());if(part->assembly)n+=assemblyBytes(*part->assembly);
+        }
+    }
+    return n+16384; // fixed metric/provenance strings and allocator overhead
 }
 }

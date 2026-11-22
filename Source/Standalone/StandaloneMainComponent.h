@@ -12,6 +12,7 @@
 #include "TimelineLayout.h"
 #include "TimelineGainLane.h"
 #include "ProposalWorkflowPanel.h"
+#include "ProposalOperation.h"
 #include "LraPassagesPanel.h"
 #include "RegionPlanningPanel.h"
 #include "RegionProposalReviewPanel.h"
@@ -132,6 +133,11 @@ private:
     std::future<proposal::TrimProposal> proposalResult;
     JobTicket proposalTicket, sectionProposalTicket;
     std::future<SectionProposalOutcome> sectionProposalResult;
+    ProposalOperation proposalOperation;
+    juce::String analysisRuntime,sectionProposalRuntime;
+    uint64_t analysisOperationGeneration=0,sectionOperationGeneration=0;
+    std::shared_ptr<JobControl> analysisControl,sectionControl;
+    void advanceProposalOperation();
     MeasurementDomain analysisDomain = MeasurementDomain::source;
     JobTicket analysisTicket;
     JobTicket importTicket;
@@ -216,9 +222,9 @@ private:
     void initializeCurrentStateFromSource();
     void clearCurrentState();
     void beginImport (const juce::File&);
-    void beginMeasurement (MeasurementDomain);
+    void beginMeasurement (MeasurementDomain,bool workflow=false);
     void beginTrimProposal();
-    void beginSectionProposal();
+    void beginSectionProposal(bool workflow=false);
     void reviewProposal(bool historical);
     void timerCallback() override;
 

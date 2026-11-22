@@ -31,6 +31,7 @@ private:
     ServiceContext measuredContext;
     juce::String snapshot,id,binding,planIdentity,profileDigest,measurementMethod,measuredContent;
     proposal::Applicability applicability=proposal::Applicability::unconfirmed;
+    friend SectionProposalOutcome generateRegionProposal(const SectionProposalRequest&,JobControl&,const SnapshotStorage&);
     friend SectionProposalOutcome generateEventRegionProposal(const SectionProposalRequest&,JobControl&,const SnapshotStorage&);
 };
 struct RegionAttempt

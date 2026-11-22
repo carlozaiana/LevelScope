@@ -4,7 +4,7 @@
 namespace levelscope::standalone
 {
 bool StandaloneMainComponent::canReplaceSession() const
-{ return !session.pendingBoundaryEdits()&&!audition.active()&&!session.job.isActive()&&!session.persistenceLoading&&!documentResult.valid()&&!importResult.valid()&&!analysisResult.valid()&&!proposalResult.valid(); }
+{ return !session.proposalOperationBusy&&!session.pendingBoundaryEdits()&&!audition.active()&&!session.job.isActive()&&!session.persistenceLoading&&!documentResult.valid()&&!importResult.valid()&&!analysisResult.valid()&&!proposalResult.valid(); }
 void StandaloneMainComponent::configureSessionControls()
 {
     for(auto* c:std::initializer_list<juce::Component*>{&newSessionButton,&openSessionButton,&saveSessionButton,&saveAsSessionButton,&relinkAudioButton,&relinkVideoButton,&cancelSessionButton,&sessionStatus})addAndMakeVisible(*c);
@@ -31,7 +31,7 @@ void StandaloneMainComponent::configureSessionControls()
 void StandaloneMainComponent::refreshSessionControls()
 {
     const bool busy=documentResult.valid();const bool replace=canReplaceSession();
-    newSessionButton.setEnabled(replace);openSessionButton.setEnabled(replace);saveSessionButton.setEnabled(!session.pendingBoundaryEdits()&&!busy&&!session.persistenceLoading&&!audition.active());saveAsSessionButton.setEnabled(!session.pendingBoundaryEdits()&&!busy&&!session.persistenceLoading&&!audition.active());
+    newSessionButton.setEnabled(replace);openSessionButton.setEnabled(replace);saveSessionButton.setEnabled(!session.proposalOperationBusy&&!session.pendingBoundaryEdits()&&!busy&&!session.persistenceLoading&&!audition.active());saveAsSessionButton.setEnabled(!session.proposalOperationBusy&&!session.pendingBoundaryEdits()&&!busy&&!session.persistenceLoading&&!audition.active());
     relinkAudioButton.setEnabled(replace&&session.sourceDocument.hasSource);relinkVideoButton.setEnabled(replace&&session.referenceVideo.file!=juce::File());cancelSessionButton.setEnabled(busy);
     juce::String text=(session.documentFile==juce::File()?"Untitled":session.documentFile.getFileName())+(session.documentDirty()?" — UNSAVED":" — saved/unchanged");
     if(busy&&documentControl)text+=" | "+juce::String(fileOperation==FileOperation::save?"Saving snapshot":"Opening/verifying media")+" "+juce::String(juce::roundToInt(100*documentControl->progress.load()))+"%";
@@ -41,6 +41,7 @@ void StandaloneMainComponent::refreshSessionControls()
 }
 void StandaloneMainComponent::confirmDiscard(std::function<void()> action)
 {
+    if(session.proposalOperationBusy){documentNotice="Finish or cancel Propose before changing or saving the session.";refreshSessionControls();return;}
     if(session.pendingBoundaryEdits()){documentNotice=session.pendingBoundaryMessage();refreshSessionControls();return;}
     if(session.hasActionableSectionProposal())
     {
@@ -72,6 +73,7 @@ void StandaloneMainComponent::requestClose(std::function<void()> close)
 }
 void StandaloneMainComponent::beginSaveSession(bool saveAs,std::function<void()> continuation)
 {
+    if(session.proposalOperationBusy){documentNotice="Finish or cancel Propose before changing or saving the session.";refreshSessionControls();return;}
     if(session.pendingBoundaryEdits()){documentNotice=session.pendingBoundaryMessage();refreshSessionControls();return;}
     if(!jobRequirementsPanel.commitFields()){documentNotice="Correct the Target fields before saving the session.";refreshSessionControls();return;}
     if(documentResult.valid()||session.persistenceLoading||audition.active()){documentNotice="Stop audition and finish the file operation before saving";return;}

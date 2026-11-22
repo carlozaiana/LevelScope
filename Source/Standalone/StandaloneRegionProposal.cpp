@@ -157,7 +157,7 @@ SectionProposalOutcome generateRegionProposal(const SectionProposalRequest& r,Jo
 {
     using namespace proposal;
     auto out=std::shared_ptr<SectionProposalResult>(new SectionProposalResult);out->bound=r.binding();out->method=regionSearchVersion;out->proposed=r.currentContext.processing;out->annotations=r.annotations;out->seed.policy=r.policy;
-    auto review=std::make_shared<RegionProposalReview>();out->regions=review;
+    auto review=std::make_shared<RegionProposalReview>();review->resultIdentity=juce::Uuid().toString();out->regions=review;
     const auto finish=[&]()->SectionProposalOutcome
     {
         if(control.isCancelled())return {{},ErrorCode::cancelled,"Region assessment cancelled; Current unchanged"};
@@ -250,7 +250,7 @@ SectionProposalOutcome generateRegionProposal(const SectionProposalRequest& r,Jo
             if(plan.envelope.audioKey()==before.audioKey()&&plan.globalDb==r.currentContext.processing.staticGainDb)return {};
             size_t used=fixedPlanning+geometryBytes+2*planBytes(plan);
             for(const auto& p:pool)used+=sizeof(ProxyChoice)+planBytes(p.plan)+p.forecast.limitations.getNumBytesAsUTF8()*4;
-            for(const auto& attempt:review->attempts)used+=sizeof(RegionAttempt)+planBytes(attempt.plan);
+            for(const auto& attempt:review->attempts)used+=sizeof(RegionAttempt)+planBytes(attempt.plan)+(attempt.receipt?attempt.receipt->storageBytes():0);
             if(used>planningBudget)throw std::runtime_error("Region model/search 64 MiB allocation budget exceeded; no partial Apply authority");
             review->planningBytes=std::max(review->planningBytes,used);
             ProxyChoice choice;choice.plan=std::move(plan);
@@ -305,7 +305,7 @@ SectionProposalOutcome generateRegionProposal(const SectionProposalRequest& r,Jo
             endPlanning();
         }
         OfflineAnalysisService worker;std::vector<RegionReviewScore> measuredRanks;
-        std::vector<std::shared_ptr<const AnalysisSnapshot>> measuredSnapshots;
+
         for(int pass=0;pass<3;++pass)
         {
             beginPlanning();const size_t stageEnd=pass==0?32:pass==1?48:64;
@@ -313,9 +313,9 @@ SectionProposalOutcome generateRegionProposal(const SectionProposalRequest& r,Jo
             {
                 // Feedback can nominate an exact complete global alternative, but it
                 // consumes another proxy and another private assessment if selected.
-                if(pass&&out->candidate&&r.regionSettings->allowGlobal)
+                if(pass&&out->eventReceipt&&r.regionSettings->allowGlobal)
                 {
-                    const auto gain=lraFinalGlobalGain(*out->candidate,r.currentContext.profile);
+                    const auto gain=lraFinalGlobalGain(out->eventReceipt->measured(),out->eventReceipt->context().processing.staticGainDb,r.currentContext.profile);
                     if(gain){auto plan=review->attempts[review->retainedAttempt].plan;plan.globalDb=*gain;plan.error=validateRegionPlan(before,r.currentContext.processing.staticGainDb,review->constraints,r.policy,plan);add(std::move(plan));}
                 }
                 size_t rejectedBudget=0;
@@ -353,17 +353,26 @@ SectionProposalOutcome generateRegionProposal(const SectionProposalRequest& r,Jo
             std::array<std::optional<double>,5> predicted{chosen.forecast.integrated,chosen.forecast.lra,chosen.forecast.p10,chosen.forecast.p95,chosen.forecast.momentarySampled};
             std::array<std::optional<double>,5> values{d.integrated.value,d.lra.value,d.p10,d.p95,d.momentaryMax.value};
             for(size_t n=0;n<values.size();++n)if(values[n]&&predicted[n])attempt.signedPredictionError[n]=*values[n]-*predicted[n];
+            attempt.receipt=std::shared_ptr<const RegionAssessmentReceipt>(new RegionAssessmentReceipt(*actual.value,r));
+            const auto receiptKey=review->resultIdentity+";"+attempt.plan.identity+";"+attempt.receipt->identity();
+            attempt.attemptIdentity=juce::SHA256(receiptKey.toRawUTF8(),receiptKey.getNumBytesAsUTF8()).toHexString();
+            review->planningBytes+=sizeof(RegionAttempt)+planBytes(attempt.plan)+attempt.receipt->storageBytes();
+            if(review->planningBytes>planningBudget)return {{},ErrorCode::unavailable,"Region receipts exceed the 64 MiB planning budget; no candidate authorized"};
             measuredRanks.push_back(regionMeasuredScore(attempt.evaluation,attempt.plan.activity,attempt.plan.identity));review->attempts.push_back(std::move(attempt));
-            measuredSnapshots.push_back(std::make_shared<const AnalysisSnapshot>(*actual.value));
             const auto retained=selectRegionReview(measuredRanks);
-            if(retained){out->candidate=measuredSnapshots[*retained];review->retainedAttempt=*retained;}
+            if(retained)
+            {
+                if(*retained==review->attempts.size()-1)out->candidate=std::make_shared<const AnalysisSnapshot>(*actual.value);
+                else if(*retained!=review->retainedAttempt)out->candidate.reset();
+                review->retainedAttempt=*retained;out->eventReceipt=review->attempts[*retained].receipt;
+            }
             if(retained&&measuredRanks[*retained].allPass&&!r.regionSettings->compareAlternatives)break;
             if(globalFirst)break;
         }
         review->searchTruncated=cursor<choices.size()||review->constraints.omittedRoots||review->formation.omittedCuts||review->formation.omittedGeometries;
         const auto best=selectRegionReview(measuredRanks);
-        if(best&&measuredRanks[*best].allPass&&out->candidate)
-        {out->state=SectionProposalStatus::ready;out->problem=SectionProposalIssue::none;out->proposed=out->candidate->context.processing;out->explanation="Exact complete candidate passes every selected measured requirement. Apply explicitly while stopped, then independently remeasure Current. Predictions do not verify Current or an export.";}
+        if(best&&measuredRanks[*best].allPass&&out->eventReceipt)
+        {out->state=SectionProposalStatus::ready;out->problem=SectionProposalIssue::none;out->proposed=out->eventReceipt->context().processing;out->explanation="Exact complete candidate passes every selected measured requirement. Apply explicitly while stopped, then independently remeasure Current. Predictions do not verify Current or an export.";}
         else
         {out->state=SectionProposalStatus::noSolution;out->problem=SectionProposalIssue::candidateRejected;out->explanation="No acceptable complete candidate in this finite region search. All measured failures remain inspectable; Apply unavailable. Limits/uncertain forecasts/omitted alternatives do not prove no solution exists.";}
         return finish();

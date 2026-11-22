@@ -19,6 +19,7 @@
 #include "SectionGainEditing.h"
 #include "ManualEditHistory.h"
 #include "BoundaryEditing.h"
+#include "ProposalEditMetadata.h"
 #include "Core/Proposal/MarkerImport.h"
 #include "Core/Proposal/Model/JobRequirements.h"
 #include <functional>
@@ -190,7 +191,8 @@ public:
     std::function<bool()> auditionBusy;
     MeasurementDomain auditionDomain = MeasurementDomain::source;
     bool persistenceLoading = false;
-    bool audioEditsBlocked() const { return persistenceLoading || (auditionBusy && auditionBusy()) || pendingBoundaryEdits(); }
+    bool proposalOperationBusy = false; // runtime-only orchestration lock, never saved
+    bool audioEditsBlocked() const { return persistenceLoading || proposalOperationBusy || (auditionBusy && auditionBusy()) || pendingBoundaryEdits(); }
     bool selectAuditionDomain (MeasurementDomain domain)
     {
         if (domain != MeasurementDomain::source && domain != MeasurementDomain::currentState) return false;
@@ -364,7 +366,7 @@ public:
     ManualEditState manualState() const {return {sectionDocument.map(),currentStateDocument.sectionGains,currentStateDocument.staticGainDb};}
     bool boundaryEditAllowed() const
     {
-        return !(auditionBusy&&auditionBusy())&&!job.isActive()&&!persistenceLoading&&!sectionTrimDraft&&!sourceContentInvalid
+        return !proposalOperationBusy&&!(auditionBusy&&auditionBusy())&&!job.isActive()&&!persistenceLoading&&!sectionTrimDraft&&!sourceContentInvalid
             &&sourceDocument.hasSource&&sourceDocument.matchesFileStamps()&&sectionDocument.map().valid()
             &&(!sectionProposal||lastAppliedProposalBinding==sectionProposal->identity());
     }
@@ -443,8 +445,67 @@ public:
     bool undoManual(bool redo=false)
     {
         if(!canUndoManual(redo))return false;
-        auto e=manualHistory->peek(redo);if(!e||!installManualState(redo?e->after:e->before))return false;
+        auto e=manualHistory->peek(redo,true);if(!e)return false;
+        const auto& bytes=redo?e->afterMetadata:e->beforeMetadata;std::optional<ProposalEditMetadata> metadata;
+        if(bytes.getSize()){metadata=ProposalEditMetadata::read(bytes);if(!metadata)return false;}
+        if(!installManualState(redo?e->after:e->before))return false;
+        if(metadata)installProposalMetadata(*metadata);
         manualHistory->stepped(redo);return true;
+    }
+    ProposalEditMetadata proposalEditMetadata() const
+    {return {currentStateDocument.sectionGainAnnotations,lastAppliedExplanation,lastAppliedProposalPolicy,lastAppliedProposalBinding,lastAppliedProposalText};}
+    void installProposalMetadata(const ProposalEditMetadata& metadata)
+    {
+        currentStateDocument.sectionGainAnnotations=metadata.provenance;lastAppliedExplanation=metadata.explanation;
+        lastAppliedProposalPolicy=metadata.policy;lastAppliedProposalBinding=metadata.binding;lastAppliedProposalText=metadata.legacyText;
+    }
+    bool proposalOperationMatches(const SectionProposalRequest& baseline,const ManualEditState& expected,uint64_t expectedRevision,const juce::String& requirements) const
+    {
+        if(sessionId!=baseline.currentContext.sessionId||revision!=expectedRevision||!(manualState()==expected)
+            ||jobRequirements.digest()!=requirements||!sourceDocument.matchesFileStamps()||sourceContentInvalid||!currentStateDocument.isInitialized)return false;
+        auto normalized=sectionProposalRequest();normalized.current=baseline.current;normalized.source=baseline.source;
+        normalized.currentContext.processing=baseline.currentContext.processing;
+        normalized.currentContext.ticket=baseline.currentContext.ticket;normalized.sourceContext.ticket=baseline.sourceContext.ticket;
+        normalized.appliedAnnotations=baseline.appliedAnnotations;
+        return normalized.binding()==baseline.binding();
+    }
+    bool commitProposalProcessing(const ManualEditState& next,const ProposalEditMetadata& metadata,const juce::String& label)
+    {
+        if((auditionBusy&&auditionBusy())||job.isActive()||persistenceLoading||pendingBoundaryEdits()||sectionTrimDraft||sourceContentInvalid
+            ||!sourceDocument.matchesFileStamps()||!currentStateDocument.isInitialized||!next.map.valid()||next.map.inputIdentity!=sectionDocument.map().inputIdentity)return false;
+        auto context=measurementContext(MeasurementDomain::currentState);context.processing.staticGainDb=next.globalDb;context.processing.sectionGains=next.gains;
+        context.processing.schemaVersion=next.gains?2:1;context.processing.engineVersion=next.gains?processing::SectionGainPlan::version:"static-gain-v1";
+        if(OfflineAnalysisService::validateRequest(context,MeasurementDomain::currentState).isNotEmpty())return false;
+        try
+        {
+            const auto before=manualState();const auto oldMetadata=proposalEditMetadata().bytes(),newMetadata=metadata.bytes();
+            if(!manualHistory||manualHistory->runtime!=sessionId)manualHistory=std::make_shared<ManualEditHistory>(sessionId);
+            if(!manualHistory->push(before,next,label,oldMetadata,newMetadata)){sectionTrimNotice="Proposal not applied: could not write the recoverable Undo journal.";return false;}
+            discardSectionProposal();if(!installManualState(next))return false;installProposalMetadata(metadata);return true;
+        }
+        catch(const std::exception& e){sectionTrimNotice="Proposal not applied: "+juce::String(e.what());return false;}
+    }
+    bool applyWorkflowProposal(const SectionProposalRequest& baseline,const std::shared_ptr<const SectionProposalResult>& owner,const std::shared_ptr<const SectionProposalResult>& selected,
+        const ManualEditState& expected,uint64_t expectedRevision,const juce::String& requirements)
+    {
+        if(!selected||!owner||!selected->selectedFrom(owner))
+        {sectionTrimNotice="Selected plan belongs to another proposal operation.";return false;}
+        if(!proposalOperationMatches(baseline,expected,expectedRevision,requirements))
+        {sectionTrimNotice="Current processing or proposal inputs changed. Generate a fresh proposal.";return false;}
+        const auto eligibility=measuredProposalApplyError(baseline,*selected);
+        if(eligibility.isNotEmpty()){sectionTrimNotice=eligibility;return false;}
+        try
+        {
+            auto history=captureProposalExplanation(baseline,jobRequirements,programmeId,selected->global(),selected.get());
+            auto next=expected;next.gains=selected->plan().sectionGains;next.globalDb=selected->plan().staticGainDb;
+            ProposalEditMetadata metadata;
+            metadata.provenance=selected->preservesAppliedAnnotations()?baseline.appliedAnnotations:
+                selected->methodVersion()==proposal::sectionTrimMethodVersion?baseline.annotations:next.gains?section_edit::provenance(*next.gains,next.map):proposal::SectionMap{};
+            metadata.explanation=std::make_shared<const AppliedProposalExplanation>(std::move(history));
+            metadata.policy=baseline.policy;metadata.binding=selected->identity();
+            return commitProposalProcessing(next,metadata,"Apply measured proposal");
+        }
+        catch(const std::exception& e){sectionTrimNotice="Proposal not applied: "+juce::String(e.what());return false;}
     }
     bool beginSectionTrimDraft()
     {
@@ -648,7 +709,7 @@ public:
                 ||(accepted->eventAssessment()?accepted->eventAssessment()->evaluation(sectionProposalRequest(),c.processing):evaluateSnapshot(accepted->assessment().get(),c,MeasurementDomain::privateCandidate,
                     getSelectedTargetProfile(),programmeApplicability)).verdict!=proposal::Verdict::pass)return false;
             currentStateDocument.sectionGains=c.processing.sectionGains;
-            currentStateDocument.sectionGainAnnotations=sectionDocument.map();
+            currentStateDocument.sectionGainAnnotations=accepted->preservesAppliedAnnotations()?sectionProposalRequest().appliedAnnotations:sectionDocument.map();
             if((accepted->methodVersion()==proposal::lraTrimMethodVersion||accepted->methodVersion()==proposal::regionSearchVersion||proposal::isEventMethod(accepted->methodVersion()))&&c.processing.sectionGains)
             {
                 // Processing geometry is independent of editorial annotations.
@@ -789,7 +850,7 @@ private:
 
     void adoptInitialCurrent (const AnalysisSnapshot& measuredSource)
     {
-        if (audioEditsBlocked() || currentState.hasMeasurement) return;
+        if (persistenceLoading || pendingBoundaryEdits() || (auditionBusy&&auditionBusy()) || currentState.hasMeasurement) return;
         auto context = measurementContext (MeasurementDomain::currentState);
         // Validating the Current context as Source also requires a supported unity
         // plan. Comparing identities in the same domain checks range, ordered roles,
@@ -969,6 +1030,7 @@ public:
         return ! sourceContentInvalid && sourceDocument.hasSource && sourceDocument.layout.confirmed && sourceDocument.layout.isValid();
     }
 
+    bool awaitsInitialCurrent() const {return initialCurrentPending;}
     bool hasCurrentStateInitialized() const
     {
         return currentStateDocument.isInitialized;

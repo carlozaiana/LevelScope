@@ -31,6 +31,7 @@ std::optional<ProcessingPlan> SectionProposalResult::previewPlan() const
 {
     if(state==SectionProposalStatus::ready)return proposed;
     if(state==SectionProposalStatus::globalOnly&&scalarResult.totalGainDb){auto p=proposed;p.staticGainDb=*scalarResult.totalGainDb;return p;}
+    if(eventReceipt)return eventReceipt->context().processing;
     if(candidate)return candidate->context.processing;
     if(regions&&regions->eventMode&&regions->retainedAttempt<regions->attempts.size())return regions->attempts[regions->retainedAttempt].receipt->context().processing;
     if(!seed.plan.intervals.empty()&&seed.plan.validationError().isEmpty())
@@ -186,4 +187,72 @@ SectionProposalOutcome generateSectionProposal(const SectionProposalRequest& r,J
     }
     catch(const std::exception& e){return {{},ErrorCode::invalidRequest,"Proposal failed safely: "+juce::String(e.what())};}
 }
+juce::String measuredProposalApplyError(const SectionProposalRequest& r,const SectionProposalResult& result)
+{
+    if(result.identity()!=r.binding()||result.status()!=SectionProposalStatus::ready||r.pendingManualDraft)
+        return "A fresh, fully measured passing proposal is required.";
+    auto context=r.currentContext;context.processing=result.plan();
+    const auto error=OfflineAnalysisService::validateRequest(context,MeasurementDomain::privateCandidate);
+    if(error.isNotEmpty())return error;
+    const auto regionError=validateRegionProposalForApply(r,result);if(regionError.isNotEmpty())return regionError;
+    const auto verdict=result.eventAssessment()?result.eventAssessment()->evaluation(r,result.plan()):
+        evaluateSnapshot(result.assessment().get(),context,MeasurementDomain::privateCandidate,r.currentContext.profile,r.applicability);
+    return verdict.verdict==proposal::Verdict::pass?juce::String():"The exact measured candidate does not pass the bound requirements.";
+}
+SectionProposalOutcome measureGlobalProposal(const SectionProposalRequest& r,const std::shared_ptr<const SectionProposalResult>& source,JobControl& control,const SnapshotStorage& storage)
+{
+    if(!source||source->identity()!=r.binding()||source->status()!=SectionProposalStatus::globalOnly||!source->previewPlan()||r.pendingManualDraft)
+        return {{},ErrorCode::staleRevision,"Stale or missing global prediction"};
+    try
+    {
+        auto out=std::shared_ptr<SectionProposalResult>(new SectionProposalResult(*source));
+        auto context=r.currentContext;context.processing=*source->previewPlan();
+        JobControl prepare;prepare.parent=&control;prepare.parentProgress=&control.progress;prepare.progressScale=.1f;
+        auto verified=prepareVerifiedSource(context,prepare,storage);if(!verified.value)return {{},verified.error,verified.message};
+        JobControl measurement;measurement.parent=&control;measurement.parentProgress=&control.progress;measurement.progressBase=.1f;measurement.progressScale=.9f;
+        auto actual=OfflineAnalysisService().analyzeCandidate(context,**verified.value,measurement);
+        if(!actual.value)return {{},actual.error,actual.message};
+        if(control.isCancelled())return {{},ErrorCode::cancelled,"Global candidate assessment cancelled; Current unchanged"};
+        out->candidate=std::make_shared<const AnalysisSnapshot>(std::move(*actual.value));out->passCount=1;
+        out->proposed=context.processing;out->scalarMeasured=true;
+        const bool pass=evaluateSnapshot(out->candidate.get(),context,MeasurementDomain::privateCandidate,context.profile,r.applicability).verdict==proposal::Verdict::pass;
+        out->state=pass?SectionProposalStatus::ready:SectionProposalStatus::noSolution;
+        out->problem=pass?SectionProposalIssue::none:SectionProposalIssue::candidateRejected;
+        out->title=pass?"Measured global candidate passes":"Measured global candidate fails selected requirements";
+        out->reason="The unchanged global prediction received one complete private measurement. Current remains unchanged; independent Current verification follows application.";
+        out->narrative=out->title+"\n"+out->reason+"\n"+proposalMeasurementText(proposalMeasurementRecord(*out->candidate,context.profile,r.applicability),"Measured global candidate")+"\nOriginal prediction:\n"+source->narrativeText();
+        out->explanation=out->narrative+"\n"+r.policy.text();return {std::shared_ptr<const SectionProposalResult>(out),ErrorCode::none,out->title};
+    }
+    catch(const std::exception& e){return {{},ErrorCode::invalidRequest,"Global assessment failed safely: "+juce::String(e.what())};}
+}
+SectionProposalOutcome selectWorkflowProposal(const SectionProposalRequest& r,const std::shared_ptr<const SectionProposalResult>& source,
+    const juce::String& resultId,const juce::String& attemptId,bool byPropose)
+{
+    if(!source||source->identity()!=r.binding())return {{},ErrorCode::staleRevision,"Proposal inputs changed"};
+    std::shared_ptr<const SectionProposalResult> selected=source;
+    if(const auto& review=source->regionReview())
+    {
+        if(resultId!=review->resultIdentity||resultId.isEmpty())return {{},ErrorCode::staleRevision,"Alternative belongs to another proposal operation"};
+        if(review->eventMode)
+        {const auto result=selectMeasuredEventAlternative(r,source,resultId,attemptId);if(!result.value)return result;selected=*result.value;}
+        else
+        {
+            const auto i=std::find_if(review->attempts.begin(),review->attempts.end(),[&](const auto& a){return a.attemptIdentity==attemptId;});
+            if(i==review->attempts.end()||!i->receipt)return {{},ErrorCode::invalidRequest,"No owned measured alternative"};
+            auto out=std::shared_ptr<SectionProposalResult>(new SectionProposalResult(*source));auto next=std::make_shared<RegionProposalReview>(*review);
+            next->selectedAttempt=next->retainedAttempt=size_t(i-review->attempts.begin());out->regions=next;
+            out->proposed=i->receipt->context().processing;out->eventReceipt=i->receipt;out->candidate.reset();
+            out->state=SectionProposalStatus::ready;out->problem=SectionProposalIssue::none;out->userSelectedAlternative=true;selected=out;
+        }
+    }
+    else if(resultId.isNotEmpty()||attemptId.isNotEmpty())return {{},ErrorCode::invalidRequest,"This proposal has no alternatives"};
+    const auto error=measuredProposalApplyError(r,*selected);if(error.isNotEmpty())return {{},ErrorCode::invalidRequest,error};
+    auto out=std::shared_ptr<SectionProposalResult>(new SectionProposalResult(*selected));
+    out->selectionSource=source;
+    out->title=byPropose?"Measured passing plan selected by Propose":"Measured passing alternative selected by user";
+    out->reason=byPropose?"Selected using the existing deterministic proposal ordering. No acoustic-quality ranking is implied.":"Replaces the previous choice from the same captured processing baseline; corrections are not accumulated.";
+    out->narrative=out->title+"\n"+out->reason+"\n"+(out->regions?out->regions->text():selected->narrativeText());
+    out->explanation=out->narrative+"\n"+r.policy.text();return {std::shared_ptr<const SectionProposalResult>(out),ErrorCode::none,out->title};
+}
+
 }

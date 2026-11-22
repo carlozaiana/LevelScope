@@ -36,7 +36,7 @@ void eventUIChecks(const juce::File& root)
     settings.selection={48000*302/10,48000*36};settings.allowGlobal=true;
     expect(s.setRegionPlanning(settings,error),"explicit late-start selection for partial coverage");auto policy=s.proposalPolicy;policy.durationThousandths=600;expect(s.setProposalPolicy(policy,error),"explicit test-only 60 percent allowance");
     Access::refresh(ui);const auto baseline=s.currentState.analysis,source=s.source.analysis;const auto revision=s.revision;const auto domain=s.auditionDomain;
-    const auto processing=proposalPlanIdentity(s.currentStateDocument.processingPlan());Heartbeat heartbeat;heartbeat.begin();click(Access::proposal(ui),"Propose");
+    const auto processing=proposalPlanIdentity(s.currentStateDocument.processingPlan());Heartbeat heartbeat;heartbeat.begin();Access::propose(ui);
     expect(s.job.isActive(),"native Propose starts async event assessment after request capture");waitJob(ui);
     expect(s.sectionProposal&&s.sectionProposal->status()==SectionProposalStatus::reviewRequired,"partial-only native proposal prominently requires review");
     const auto unselected=s.sectionProposal;const auto review=unselected->regionReview();expect(review&&review->eventMode&&!review->selectedAttempt&&!review->recommendedAttempt,"review required has neither recommendation nor selected authority");

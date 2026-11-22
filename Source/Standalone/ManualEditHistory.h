@@ -41,22 +41,24 @@ public:
         directory(juce::File::getSpecialLocation(juce::File::tempDirectory).getChildFile("LevelScope-edits-"+juce::Uuid().toString())) {}
     ~ManualEditHistory(){directory.deleteRecursively();}
     const juce::String runtime;
-    struct Edit {ManualEditState before,after;juce::String label;};
-    bool push(const ManualEditState& before,const ManualEditState& after,const juce::String& label)
+    struct Edit {ManualEditState before,after;juce::String label;juce::MemoryBlock beforeMetadata,afterMetadata;};
+    bool push(const ManualEditState& before,const ManualEditState& after,const juce::String& label,const juce::MemoryBlock& beforeMetadata={},const juce::MemoryBlock& afterMetadata={})
     {
-        if(before==after)return true;
+        if(beforeMetadata.getSize()>20*1024*1024||afterMetadata.getSize()>20*1024*1024)return false;
+        if(before==after&&beforeMetadata==afterMetadata)return true;
         // A proposal/import outside this journal starts a new manual-edit chain.
         if(cursor){auto e=peek(false);if(!e||!(e->after==before)){cursor=0;count=0;}}
         if(directory.createDirectory().failed())return false;
         juce::FileOutputStream data(directory.getChildFile("edits")),index(directory.getChildFile("index"));
         if(!data.openedOk()||!index.openedOk())return false;
         const auto offset=data.getPosition();auto a=before.bytes(),b=after.bytes();
-        data.writeString(label);data.writeInt(int(a.getSize()));data.write(a.getData(),a.getSize());data.writeInt(int(b.getSize()));data.write(b.getData(),b.getSize());data.flush();
+        data.writeString(label);data.writeInt(int(a.getSize()));data.write(a.getData(),a.getSize());data.writeInt(int(b.getSize()));data.write(b.getData(),b.getSize());
+        for(const auto* extra:{&beforeMetadata,&afterMetadata}){data.writeInt(int(extra->getSize()));data.write(extra->getData(),extra->getSize());}data.flush();
         if(data.getStatus().failed()||!index.setPosition(int64_t(cursor)*8))return false;
         index.writeInt64(offset);index.flush();if(index.getStatus().failed())return false;
         count=++cursor;return true;
     }
-    std::optional<Edit> peek(bool redo) const
+    std::optional<Edit> peek(bool redo,bool withMetadata=false) const
     {
         if(redo?cursor>=count:cursor==0)return {};
         juce::FileInputStream index(directory.getChildFile("index")),data(directory.getChildFile("edits"));
@@ -64,7 +66,14 @@ public:
         const auto offset=index.readInt64();if(offset<0||!data.setPosition(offset))return {};
         Edit e;e.label=data.readString();
         const auto read=[&]()->std::optional<ManualEditState>{auto n=data.readInt();if(n<=0||n>8*1024*1024)return {};juce::MemoryBlock b;if(data.readIntoMemoryBlock(b,size_t(n))!=size_t(n))return {};return ManualEditState::read(b);};
-        auto a=read(),b=read();if(!a||!b)return {};e.before=std::move(*a);e.after=std::move(*b);return e;
+        auto a=read(),b=read();if(!a||!b)return {};e.before=std::move(*a);e.after=std::move(*b);
+        for(auto* extra:{&e.beforeMetadata,&e.afterMetadata})
+        {
+            const auto n=data.readInt();if(n<0||n>20*1024*1024)return {};
+            if(withMetadata){if(data.readIntoMemoryBlock(*extra,size_t(n))!=size_t(n))return {};}
+            else if(!data.setPosition(data.getPosition()+n))return {};
+        }
+        return e;
     }
     void stepped(bool redo){if(redo)++cursor;else --cursor;}
     uint64_t undoCount() const {return cursor;}

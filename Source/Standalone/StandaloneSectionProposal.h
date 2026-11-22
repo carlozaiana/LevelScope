@@ -48,6 +48,8 @@ public:
     const std::shared_ptr<const AnalysisSnapshot>& assessment() const { return candidate; }
     const std::shared_ptr<const RegionAssessmentReceipt>& eventAssessment()const {return eventReceipt;}
     const juce::String& selectedAuthority()const {return selectionAuthority;}
+    bool selectedFrom(const std::shared_ptr<const SectionProposalResult>& source) const {return selectionSource==source;}
+    bool preservesAppliedAnnotations()const {return scalarMeasured;}
     bool explicitlySelectedAlternative()const {return userSelectedAlternative;}
     const std::shared_ptr<const proposal::SectionPeakMap>& peaks() const { return attribution; }
     int passes() const { return passCount; }
@@ -66,7 +68,8 @@ private:
     std::shared_ptr<const AnalysisSnapshot> candidate;
     std::shared_ptr<const RegionAssessmentReceipt> eventReceipt;
     juce::String selectionAuthority;
-    bool userSelectedAlternative=false;
+    bool userSelectedAlternative=false,scalarMeasured=false;
+    std::shared_ptr<const SectionProposalResult> selectionSource;
     std::shared_ptr<const proposal::SectionPeakMap> attribution;
     int passCount=0;
     friend ServiceResult<std::shared_ptr<const SectionProposalResult>> generateSectionProposal(
@@ -77,10 +80,19 @@ private:
         const SectionProposalRequest&,JobControl&,const SnapshotStorage&);
     friend ServiceResult<std::shared_ptr<const SectionProposalResult>> generateEventRegionProposal(
         const SectionProposalRequest&,JobControl&,const SnapshotStorage&);
+    friend ServiceResult<std::shared_ptr<const SectionProposalResult>> measureGlobalProposal(
+        const SectionProposalRequest&,const std::shared_ptr<const SectionProposalResult>&,JobControl&,const SnapshotStorage&);
+    friend ServiceResult<std::shared_ptr<const SectionProposalResult>> selectWorkflowProposal(
+        const SectionProposalRequest&,const std::shared_ptr<const SectionProposalResult>&,const juce::String&,const juce::String&,bool);
     friend ServiceResult<std::shared_ptr<const SectionProposalResult>> selectMeasuredEventAlternative(
         const SectionProposalRequest&,const std::shared_ptr<const SectionProposalResult>&,const juce::String&,const juce::String&);
 };
 using SectionProposalOutcome=ServiceResult<std::shared_ptr<const SectionProposalResult>>;
+// Workflow plumbing: no new search, ranking or correction strategy.
+SectionProposalOutcome measureGlobalProposal(const SectionProposalRequest&,const std::shared_ptr<const SectionProposalResult>&,JobControl&,const SnapshotStorage& = {});
+SectionProposalOutcome selectWorkflowProposal(const SectionProposalRequest&,const std::shared_ptr<const SectionProposalResult>&,
+    const juce::String& resultId,const juce::String& attemptId,bool selectedByPropose);
+juce::String measuredProposalApplyError(const SectionProposalRequest&,const SectionProposalResult&);
 SectionProposalOutcome generateSectionProposal(const SectionProposalRequest&,JobControl&,const SnapshotStorage& = {});
 SectionProposalOutcome generateLraProposal(const SectionProposalRequest&,JobControl&,const SnapshotStorage& = {});
 }

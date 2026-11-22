@@ -67,7 +67,7 @@ void standardCapabilityChecks(StandaloneMainComponent& ui,const juce::File& root
         auto policy=s.proposalPolicy;policy.durationThousandths=1000;expect(s.setProposalPolicy(policy,error),"explicit global allowance for compatibility case");
         for(bool withLra:{false,true})
         {
-            auto requirements=s.jobRequirements;requirements.maximumLraTenths=withLra?std::optional<int>(200):std::nullopt;expect(s.setJobRequirements(requirements,error),"standard no-LRA / global-only target");Access::refresh(ui);click(Access::proposal(ui),"Propose");
+            auto requirements=s.jobRequirements;requirements.maximumLraTenths=withLra?std::optional<int>(200):std::nullopt;expect(s.setJobRequirements(requirements,error),"standard no-LRA / global-only target");Access::refresh(ui);Access::propose(ui);
             expect(s.job.isActive()||bool(s.sectionProposal),"single standard Propose uses existing immediate global or asynchronous path without interstitial");waitJob(ui);
             expect(!s.regionPlanning&&s.sectionProposal,"standard mono/stereo returns a proposal without experimental opt-in");
             if(channels==1&&withLra)
@@ -103,7 +103,7 @@ void innerUIChecks(const juce::File& root,const juce::File& supplied)
     expect(s.setRegionPlanning({},errorForInner),"temporarily use standard settings with schema3 history");Access::refresh(ui);Access::save(ui,true);const auto historyCopy=root.getChildFile("history-only.levelscope");finishSaveAs(ui,historyCopy);Access::open(ui,historyCopy);waitFile(ui);
     expect(!s.regionPlanning&&s.openedSessionSchema==11&&s.lastAppliedExplanation&&encodeAppliedExplanation(*s.lastAppliedExplanation)==historical,"native history-only Save As/reopen preserves full explanation and writer11");
     Access::open(ui,copied);waitFile(ui);auto neutral=s.manualState();neutral.gains.reset();neutral.globalDb=0;expect(s.commitManualEdit(neutral,"Neutral test baseline"),"owned copied programme reset for fresh reassessment");Access::refresh(ui);click(ui,"Re-measure Current State");waitJob(ui);
-    const auto baseline=s.currentState.analysis;const auto source=s.source.analysis;const auto revision=s.revision;Heartbeat heartbeat;heartbeat.begin();click(Access::proposal(ui),"Propose");waitJob(ui);
+    const auto baseline=s.currentState.analysis;const auto source=s.source.analysis;const auto revision=s.revision;Heartbeat heartbeat;heartbeat.begin();Access::propose(ui);waitJob(ui);
     expect(s.sectionProposal&&s.sectionProposal->methodVersion()==innerSearchVersion&&s.sectionProposal->status()==SectionProposalStatus::reviewRequired,"native competing reassessment of supplied baseline requires review");
     const auto result=s.sectionProposal;const auto review=result->regionReview();expect(review&&review->eventEvidence&&review->attempts.size()==3&&!review->selectedAttempt&&!review->recommendedAttempt,"bounded three exact attempts preserve unresolved/partial interpretation");
     expect(review->constraints.settings.digest()==s.regionPlanning->digest()&&review->constraints.settings.allowAutomaticMargins&&review->constraints.settings.leftMarginMs==1000&&review->constraints.settings.rightMarginMs==1000,"actual reassessment binds the full confirmed definition and both explicit margin permissions");

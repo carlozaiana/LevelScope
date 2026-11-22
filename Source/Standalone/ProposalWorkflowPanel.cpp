@@ -5,7 +5,11 @@ namespace levelscope::standalone
 {
 ProposalWorkflowPanel::ProposalWorkflowPanel(StandaloneSessionModel& s):session(s)
 {
-    for(auto* b:{&propose,&review,&apply,&discard,&history,&preferences,&regions})addAndMakeVisible(b);
+    for(auto* b:{&propose,&review,&apply,&discard,&history,&preferences,&regions,&recover,&boundaries})addAndMakeVisible(b);
+    addAndMakeVisible(alternatives);alternatives.setName("Measured passing alternatives");
+    alternatives.onChange=[this]{if(alternatives.isEnabled()&&onAlternative&&alternatives.getSelectedId()>0)onAlternative(size_t(alternatives.getSelectedId()-1));};
+    recover.onClick=[this]{if(recover.isEnabled()&&onRecover)onRecover();};
+    boundaries.onClick=[this]{if(boundaries.isEnabled()&&onBoundaries)onBoundaries();};
     addAndMakeVisible(method);method.setFont(13.f);method.setMinimumHorizontalScale(1.f);
     propose.setColour(juce::TextButton::buttonColourId,juce::Colour(0xff346967));
     headline.setFont(juce::Font(17.f,juce::Font::bold));headline.setColour(juce::Label::textColourId,juce::Colour(0xffb7e6db));
@@ -35,12 +39,13 @@ void ProposalWorkflowPanel::refresh(float progress)
     else if(!session.source.hasMeasurement)blocked="Measure Source first.";
     else if(!session.currentState.hasMeasurement||session.currentStateNeedsRemeasurement())blocked="Re-measure Current State first.";
     else if(session.sectionTrimDraft)blocked="Apply or discard the manual gain draft first.";
-    propose.setEnabled(blocked.isEmpty());review.setEnabled(bool(session.sectionProposal));
+    if(operation)blocked=ProposalOperation::blocked(session);
+    propose.setEnabled(blocked.isEmpty());review.setEnabled(bool(session.sectionProposal)||(operation&&bool(operation->result)));
     apply.setEnabled(session.canApplySectionProposal()&&!diagnosticInspection);discard.setEnabled(bool(session.sectionProposal)&&!busy);
     method.setText(session.regionPlanning?"Planning: "+proposalPlanningName(*session.regionPlanning)+" | "+juce::String(session.regionPlanning->mode==proposal::RegionMode::automatic?"automatic":session.regionPlanning->mode==proposal::RegionMode::selectedSection?"selected section":"temporary selection")
         +(session.regionPlanning->allowGlobal?" | whole-programme global trim permitted":" | global gain fixed"):"Planning: Standard proposals (default)",juce::dontSendNotification);
     method.setTooltip(method.getText()+". Settings remain private until confirmed."+(session.regionPlanning?"\n"+proposalDefinitionText(*session.regionPlanning):juce::String()));
-    history.setEnabled(bool(session.lastAppliedExplanation));preferences.setEnabled(!busy);
+    history.setEnabled(bool(session.lastAppliedExplanation));preferences.setEnabled(!busy);regions.setEnabled(!busy);
     juce::String title="Proposal workflow",detail=session.sectionProposalNotice;
     if(session.job.stage==JobStage::proposal&&session.job.isActive())
     {
@@ -73,17 +78,38 @@ void ProposalWorkflowPanel::refresh(float progress)
     }
     if(!review.isEnabled())actions+="  Review needs a completed proposal.";
     if(!discard.isEnabled())actions+=session.sectionProposal?"  Discard needs an idle transport/job.":"  No proposal to discard.";
-    headline.setText(title,juce::dontSendNotification);
+    const bool normal=operation&&operation->phase!=ProposalOperation::Phase::idle;
+    const bool legacy=bool(session.sectionProposal);
+    apply.setVisible(legacy);discard.setVisible(legacy);
+    recover.setVisible(!legacy);recover.setEnabled(operation&&operation->canRecover(session));
+    boundaries.setVisible(!legacy&&operation&&operation->advisory);boundaries.setEnabled(operation&&!operation->active()&&operation->ownedBy(session));
+    alternatives.setVisible(!legacy&&operation&&operation->choices.size()>1);
+    alternatives.setEnabled(operation&&operation->canChoose(session));
+    if(operation)
+    {
+        bool changed=alternatives.getNumItems()!=int(operation->choices.size());
+        for(size_t n=0;!changed&&n<operation->choices.size();++n)changed=alternatives.getItemText(int(n))!=operation->choices[n].label;
+        if(changed){alternatives.clear(juce::dontSendNotification);for(size_t n=0;n<operation->choices.size();++n)alternatives.addItem(operation->choices[n].label,int(n+1));}
+        alternatives.setSelectedId(operation->choices.empty()?0:int(operation->selectedChoice+1),juce::dontSendNotification);
+    }
+    if(normal){title=operation->title;detail=operation->detail;}
+    if(operation&&!legacy)actions=blocked.isEmpty()?"Propose assesses, applies an eligible measured pass, then independently verifies Current. Playback starts only with Play.":"Propose unavailable. "+blocked;
+    if(normal&&operation->choices.size()>1)actions+="  Alternatives use the same pre-Propose baseline. Order does not rank sound quality.";
+    headline.setText(title,juce::dontSendNotification);headline.setTooltip(title);
     if(reason.getText()!=detail){reason.setText(detail,false);reason.moveCaretToTop(false);}
-    availability.setText(actions,juce::dontSendNotification);availability.setTooltip(actions);
+    availability.setText(actions,juce::dontSendNotification);availability.setTooltip(actions);resized();
 }
 void ProposalWorkflowPanel::resized()
 {
     auto r=getLocalBounds();auto row=r.removeFromTop(32);
     propose.setBounds(row.removeFromLeft(112).reduced(2));review.setBounds(row.removeFromLeft(142).reduced(2));
     apply.setBounds(row.removeFromLeft(132).reduced(2));discard.setBounds(row.removeFromLeft(142).reduced(2));
+    recover.setBounds(apply.getX(),apply.getY(),206,apply.getHeight());
     preferences.setBounds(row.removeFromRight(146).reduced(2));history.setBounds(row.removeFromRight(204).reduced(2));
-    row=r.removeFromTop(34);regions.setBounds(row.removeFromLeft(228).reduced(2));method.setBounds(row);
+    row=r.removeFromTop(34);regions.setBounds(row.removeFromLeft(228).reduced(2));
+    if(alternatives.isVisible())alternatives.setBounds(row.removeFromRight(280).reduced(2));
+    if(boundaries.isVisible())boundaries.setBounds(row.removeFromRight(200).reduced(2));
+    method.setBounds(row);
     headline.setBounds(r.removeFromTop(26));availability.setBounds(r.removeFromBottom(34));reason.setBounds(r.reduced(0,2));
 }
 }

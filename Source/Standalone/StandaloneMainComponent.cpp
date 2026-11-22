@@ -143,6 +143,7 @@ StandaloneMainComponent::StandaloneMainComponent(std::shared_ptr<OutputDeviceCat
         else if(compositionPanel && compositionPanel->preparationControl()) compositionPanel->cancel();
         else
         {
+            if(proposalOperation.active())proposalOperation.cancelRequested=true;
             session.job.requestCancel();
             if (importControl) importControl->cancel.store (true);
         }
@@ -184,7 +185,7 @@ StandaloneMainComponent::~StandaloneMainComponent()
 
 void StandaloneMainComponent::beginImport (const juce::File& file)
 {
-    if (session.job.isActive() || session.persistenceLoading) return;
+    if (session.proposalOperationBusy || session.job.isActive() || session.persistenceLoading) return;
     audition.stop();
     // Replacement keeps the previous validated source until success.
     if (! session.job.begin (JobStage::ingest, session.revision)) return;
@@ -213,16 +214,33 @@ void StandaloneMainComponent::timerCallback()
     audition.poll (videoPanel.prerollReady());
     audioPanel.refresh();
     if (audition.getState() != audioStateBeforePoll) refreshFromSession();
+    proposalOperation.observe(session);
+    advanceProposalOperation();
     if(sectionProposalResult.valid()&&sectionProposalResult.wait_for(std::chrono::seconds(0))==std::future_status::ready)
     {
         const auto result=sectionProposalResult.get();
-        if(session.job.finish(sectionProposalTicket,session.revision,result.error,result.message))
+        const bool workflow=sectionOperationGeneration!=0;
+        const bool live=sectionProposalRuntime==session.sessionId&&(!workflow||
+            (proposalOperation.generation==sectionOperationGeneration&&proposalOperation.phase==ProposalOperation::Phase::search&&proposalOperation.ownedBy(session)));
+        bool finished=false;
+        if(live)finished=session.job.finish(sectionProposalTicket,session.revision,result.error,result.message);
+        else if(sectionProposalRuntime==session.sessionId&&session.job.ticket.id==sectionProposalTicket.id&&session.job.stage==JobStage::proposal)
+            session.job.finish(sectionProposalTicket,session.revision,ErrorCode::staleRevision,"Proposal operation changed; old completion discarded");
+        if(importControl==sectionControl)importControl.reset();sectionControl.reset();
+        if(live&&workflow)
         {
-            if(!result.value||!session.acceptSectionProposal(*result.value))
-            {session.job.state=JobState::failed;session.job.error=ErrorCode::staleRevision;session.sectionProposalError=ErrorCode::staleRevision;session.sectionProposalNotice=session.job.message="Proposal inputs changed; private candidate discarded";}
+            session.discardSectionProposal();
+            if(finished)proposalOperation.candidateComplete(session,result);
+            else proposalOperation.finish(session,proposalOperation.cancelRequested?ProposalOperation::Phase::cancelled:ProposalOperation::Phase::failed,
+                proposalOperation.cancelRequested?"Propose cancelled - processing unchanged":"Proposal did not complete",result.message+"\nCurrent processing was not changed.");
         }
-        else {session.sectionProposalError=session.job.error;session.sectionProposalNotice=result.message;}
-        importControl.reset();refreshFromSession();
+        else if(live)
+        {
+            if(finished&&(!result.value||!session.acceptSectionProposal(*result.value)))
+            {session.job.state=JobState::failed;session.job.error=ErrorCode::staleRevision;session.sectionProposalError=ErrorCode::staleRevision;session.sectionProposalNotice=session.job.message="Proposal inputs changed; private candidate discarded";}
+            else if(!finished){session.sectionProposalError=session.job.error;session.sectionProposalNotice=result.message;}
+        }
+        refreshFromSession();
     }
     if (proposalResult.valid() && proposalResult.wait_for (std::chrono::seconds (0)) == std::future_status::ready)
     {
@@ -243,18 +261,23 @@ void StandaloneMainComponent::timerCallback()
     {
         auto result = analysisResult.get();
         bool accepted=false;
-        if (session.job.finish (analysisTicket, session.revision, result.error, result.message))
+        const bool workflow=analysisOperationGeneration!=0;
+        const bool expectedPhase=proposalOperation.phase==ProposalOperation::Phase::source||proposalOperation.phase==ProposalOperation::Phase::current||proposalOperation.phase==ProposalOperation::Phase::verify;
+        const bool live=analysisRuntime==session.sessionId&&(!workflow||
+            (proposalOperation.generation==analysisOperationGeneration&&expectedPhase&&proposalOperation.ownedBy(session)));
+        if (live&&session.job.finish (analysisTicket, session.revision, result.error, result.message))
         {
-            if (! result.value || ! session.acceptMeasurement (std::move (*result.value)))
+            if (!result.value || !session.acceptMeasurement(std::move(*result.value)))
             {
-                session.job.state = JobState::failed;
-                session.job.error = ErrorCode::staleRevision;
-                session.job.message = "Measurement identity no longer matches; result discarded";
-                session.measurementUnsuccessful (analysisDomain, ErrorCode::staleRevision);
+                session.job.state=JobState::failed;session.job.error=ErrorCode::staleRevision;
+                session.job.message="Measurement identity no longer matches; result discarded";
+                session.measurementUnsuccessful(analysisDomain,ErrorCode::staleRevision);
             }
             else accepted=true;
         }
-        else session.measurementUnsuccessful (analysisDomain, session.job.error);
+        else if(live)session.measurementUnsuccessful(analysisDomain,session.job.error);
+        else if(analysisRuntime==session.sessionId&&session.job.ticket.id==analysisTicket.id&&session.job.stage==JobStage::analysis)
+            session.job.finish(analysisTicket,session.revision,ErrorCode::staleRevision,"Measurement operation changed; old completion discarded");
         if(accepted && waveformCache.accept(analysisWaveformBinding,WaveformBinding::from(session.measurementContext(analysisDomain),analysisDomain)))
         {
             if(analysisDomain==MeasurementDomain::source && session.source.analysis && session.currentState.analysis)
@@ -262,7 +285,16 @@ void StandaloneMainComponent::timerCallback()
         }
         else waveformCache.reject(analysisWaveformBinding);
         if(loudnessProgress){loudnessProgress->abandon();loudnessProgress.reset();}
-        importControl.reset();
+        if(importControl==analysisControl)importControl.reset();analysisControl.reset();
+        if(live&&workflow)proposalOperation.measurementComplete(session,accepted,session.job.message);
+        else if(accepted&&analysisDomain==MeasurementDomain::currentState&&proposalOperation.applied
+            &&!proposalOperation.active()&&proposalOperation.phase!=ProposalOperation::Phase::stale&&proposalOperation.ownedBy(session))
+        {
+            // An explicit retry after cancelled/failed verification is still an
+            // independent Current measurement of this exact applied choice.
+            proposalOperation.phase=ProposalOperation::Phase::verify;proposalOperation.cancelRequested=false;
+            proposalOperation.measurementComplete(session,true,session.job.message);
+        }
         refreshFromSession();
     }
     if(waveformResult.valid() && waveformResult.wait_for(std::chrono::seconds(0))==std::future_status::ready)
@@ -302,13 +334,13 @@ void StandaloneMainComponent::timerCallback()
     refreshJobFeedback();
     refreshSessionControls();
     refreshTimeline();
-    if(!audition.active() && automaticSource.eligible(session))beginMeasurement(MeasurementDomain::source);
+    if(!session.proposalOperationBusy && !audition.active() && automaticSource.eligible(session))beginMeasurement(MeasurementDomain::source);
 }
 
-void StandaloneMainComponent::beginMeasurement (MeasurementDomain domain)
+void StandaloneMainComponent::beginMeasurement (MeasurementDomain domain,bool workflow)
 {
     if(session.pendingBoundaryEdits()){jobLabel.setText(session.pendingBoundaryMessage(),juce::dontSendNotification);return;}
-    if (session.job.isActive() || session.sourceContentInvalid || session.persistenceLoading) return;
+    if ((!workflow&&session.proposalOperationBusy) || session.job.isActive() || session.sourceContentInvalid || session.persistenceLoading) return;
     if (domain == MeasurementDomain::currentState && ! session.hasCurrentStateInitialized()) return;
     auto context = session.measurementContext (domain);
     if (OfflineAnalysisService::validateRequest (context, domain).isNotEmpty()) return;
@@ -322,12 +354,13 @@ void StandaloneMainComponent::beginMeasurement (MeasurementDomain domain)
         if(auto* view=dynamic_cast<MeasurementTimeline*>(c)){focusView=view;break;}
     focusView->focusForTransport();
     if (! session.job.begin (JobStage::analysis, session.revision)) return;
-    analysisTicket = session.job.ticket;
+    analysisTicket = session.job.ticket;analysisRuntime=session.sessionId;analysisOperationGeneration=workflow?proposalOperation.generation:0;
     analysisDomain = domain;
     context.ticket = analysisTicket;
     session.job.message = "Verifying source snapshot and measuring";
     importControl = std::make_shared<JobControl>();
     importControl->feedback = std::make_shared<JobFeedback>();
+    analysisControl=importControl;
     timeline.setWaveform({},false,{});
     analysisWaveformBinding=WaveformBinding::from(context,domain);
     auto preview=waveformCache.begin(analysisWaveformBinding);
@@ -371,23 +404,30 @@ void StandaloneMainComponent::beginTrimProposal()
     session.selectedPage = WorkflowPage::currentState;
     refreshFromSession();
 }
-void StandaloneMainComponent::beginSectionProposal()
+void StandaloneMainComponent::beginSectionProposal(bool workflow)
 {
-    if(session.persistenceLoading||session.audioEditsBlocked()||session.job.isActive())return;
-    session.synchronizeSections();const auto request=session.sectionProposalRequest();
+    if(session.persistenceLoading||(!workflow&&session.audioEditsBlocked())||session.job.isActive()||audition.active())return;
+    session.synchronizeSections();const auto request=workflow?proposalOperation.baseline:session.sectionProposalRequest();
     const auto first=proposal::draftGlobalTrim(request.scalar());
     session.discardSectionProposal();session.selectedPage=WorkflowPage::currentState;
     // No attribution, copy or measurement for existing global-only/no-change outcomes.
-    if(!request.regionSettings&&(first.status==proposal::TrimStatus::noChange||(!request.currentContext.profile.limits.hasMaxLoudnessRange&&first.status!=proposal::TrimStatus::noSolution)))
+    if(!workflow&&!request.regionSettings&&(first.status==proposal::TrimStatus::noChange||(!request.currentContext.profile.limits.hasMaxLoudnessRange&&first.status!=proposal::TrimStatus::noSolution)))
     {
         JobControl control;const auto result=generateSectionProposal(request,control);
         if(result.value)session.acceptSectionProposal(*result.value);else {session.sectionProposalError=result.error;session.sectionProposalNotice=result.message;}
         refreshFromSession();return;
     }
     if(!session.job.begin(JobStage::proposal,session.revision))return;
-    sectionProposalTicket=session.job.ticket;session.job.message=request.regionSettings?"Assessing experimental regions; forecasts are not measurements; Current unchanged":request.currentContext.profile.limits.hasMaxLoudnessRange?"Assessing bounded LRA candidates; Current unchanged":"Assessing one section envelope; Current State unchanged";
+    sectionProposalTicket=session.job.ticket;sectionProposalRuntime=session.sessionId;sectionOperationGeneration=workflow?proposalOperation.generation:0;session.job.message=request.regionSettings?"Assessing experimental regions; forecasts are not measurements; Current unchanged":request.currentContext.profile.limits.hasMaxLoudnessRange?"Assessing bounded LRA candidates; Current unchanged":"Assessing one section envelope; Current State unchanged";
     importControl=std::make_shared<JobControl>();
-    sectionProposalResult=std::async(std::launch::async,[request,control=importControl]{return generateSectionProposal(request,*control);});
+    sectionControl=importControl;
+    sectionProposalResult=std::async(std::launch::async,[request,control=importControl,workflow]
+    {
+        auto result=generateSectionProposal(request,*control);
+        if(workflow&&result.value&&(*result.value)->status()==SectionProposalStatus::globalOnly)
+            result=measureGlobalProposal(request,*result.value,*control);
+        return result;
+    });
     refreshFromSession();
 }
 // [END LS-STANDALONE-IMPORT-LIFECYCLE]
@@ -570,6 +610,7 @@ void StandaloneMainComponent::setPage (WorkflowPage page)
 
 void StandaloneMainComponent::refreshFromSession()
 {
+    proposalOperation.observe(session);
     refreshSessionControls();
     refreshExportControls();
     proposalPanel.refresh(importControl?importControl->progress.load():-1);
@@ -579,10 +620,10 @@ void StandaloneMainComponent::refreshFromSession()
 
     targetProfileBox.setSelectedId (session.selectedTargetProfileIndex + 1, juce::dontSendNotification);
 
-    clearSourceButton.setEnabled (!session.pendingBoundaryEdits() && !session.persistenceLoading && (session.sourceDocument.hasSource || session.job.isActive()));
+    clearSourceButton.setEnabled (!session.proposalOperationBusy && !session.pendingBoundaryEdits() && !session.persistenceLoading && (session.sourceDocument.hasSource || session.job.isActive()));
     chooseProgrammeButton.setEnabled(canReplaceSession());
     chooseCompositionButton.setEnabled(canReplaceSession());
-    chooseSourceButton.setEnabled (!session.pendingBoundaryEdits() && ! session.job.isActive() && !session.persistenceLoading);
+    chooseSourceButton.setEnabled (!session.proposalOperationBusy && !session.pendingBoundaryEdits() && ! session.job.isActive() && !session.persistenceLoading);
     targetProfileBox.setEnabled (!session.audioEditsBlocked() && !session.job.isActive());
     jobRequirementsPanel.refresh();
     refreshJobFeedback();
@@ -590,9 +631,9 @@ void StandaloneMainComponent::refreshFromSession()
     initializeCurrentStateButton.setEnabled (! session.audioEditsBlocked() && ! session.job.isActive() && session.canInitializeCurrentStateFromSource());
     clearCurrentStateButton.setEnabled (! session.audioEditsBlocked() && ! session.job.isActive() && session.hasCurrentStateInitialized());
     const auto measurementError = OfflineAnalysisService::validateRequest (session.measurementContext (MeasurementDomain::source), MeasurementDomain::source);
-    measureSourceButton.setEnabled (!session.pendingBoundaryEdits() && !session.persistenceLoading && ! session.job.isActive() && ! session.sourceContentInvalid && measurementError.isEmpty());
+    measureSourceButton.setEnabled (!session.proposalOperationBusy && !session.pendingBoundaryEdits() && !session.persistenceLoading && ! session.job.isActive() && ! session.sourceContentInvalid && measurementError.isEmpty());
     measureSourceButton.setTooltip (measurementError);
-    remeasureCurrentStateButton.setEnabled (!session.pendingBoundaryEdits() && !session.persistenceLoading && ! session.job.isActive() && ! session.sourceContentInvalid && session.hasCurrentStateInitialized() && measurementError.isEmpty());
+    remeasureCurrentStateButton.setEnabled (!session.proposalOperationBusy && !session.pendingBoundaryEdits() && !session.persistenceLoading && ! session.job.isActive() && ! session.sourceContentInvalid && session.hasCurrentStateInitialized() && measurementError.isEmpty());
     currentGain.setEnabled (! session.audioEditsBlocked() && ! session.job.isActive() && session.hasCurrentStateInitialized() && !(session.sectionTrimDraft&&session.sectionTrimDraft->rollbackAnnotations));
     currentGain.setValue (session.currentStateDocument.staticGainDb, juce::dontSendNotification);
     draftTrimButton.setEnabled (!session.audioEditsBlocked() && session.getWorkflowReadiness().canDraftProposal());
@@ -901,6 +942,19 @@ void StandaloneMainComponent::configureTimelineShell()
     timeline.onTogglePlayback=[this]{if(audition.active()){audition.stop();refreshTimeline();}else playTimeline();};
     timeline.onToggleInspectionAudition=[this]{toggleInspectionAudition();};
     gainLane.onChanged=[this]{refreshFromSession();refreshTimeline();};
+    proposalPanel.setOperation(&proposalOperation);
+    proposalPanel.onRecover=[this]{proposalOperation.recover(session);timeline.focusForTransport();refreshFromSession();refreshTimeline();};
+    proposalPanel.onAlternative=[this](size_t index)
+    {if(index!=proposalOperation.selectedChoice&&proposalOperation.select(session,index,false)){timeline.focusForTransport();refreshFromSession();}};
+    proposalPanel.onBoundaries=[this]
+    {
+        if(!proposalOperation.ownedBy(session))return;
+        inspectDomain.setSelectedId(2,juce::dontSendNotification);refreshTimeline();
+        int64_t frame=0;
+        if(const auto& plan=session.currentStateDocument.sectionGains;plan&&plan->intervals.size()>1)frame=plan->intervals[1].begin;
+        gainLane.inspectApplied(frame);timeline.highlight(double(std::max<int64_t>(0,frame-48000)),double(std::min<int64_t>(session.sourceDocument.media.frames,frame+48000)));
+        pageDetailBox.setText(proposalOperation.boundaryAdvice(),false);
+    };
     proposalPanel.onPropose=[this]{proposeWithActiveMethod();refreshTimeline();};
     proposalPanel.onRegions=[this]{showRegionPlanning();};
     lraPassagesButton.onClick=[this]{showLraPassages();};
@@ -967,7 +1021,7 @@ void StandaloneMainComponent::showAudioSetup()
 void StandaloneMainComponent::showLraPassages(bool current)
 {
     auto panel=std::make_unique<LraPassagesPanel>(session,current||inspectDomain.getSelectedId()==2?MeasurementDomain::currentState:MeasurementDomain::source);
-    panel->onAssess=[this]{if(lraPassagesWindow)lraPassagesWindow->setVisible(false);beginSectionProposal();refreshTimeline();};
+    panel->onAssess=[this]{if(lraPassagesWindow)lraPassagesWindow->setVisible(false);proposeWithActiveMethod();refreshTimeline();};
     panel->onInspect=[this](MeasurementDomain d,int64_t begin,int64_t end)
     {inspectDomain.setSelectedId(d==MeasurementDomain::source?1:2,juce::dontSendNotification);refreshTimeline();timeline.highlight(double(begin),double(end));};
     lraPassagesWindow=std::make_unique<ProposalWindow>("LRA passages — inspection and candidate estimates",std::move(panel),this);
@@ -975,19 +1029,55 @@ void StandaloneMainComponent::showLraPassages(bool current)
 }
 void StandaloneMainComponent::proposeWithActiveMethod()
 {
-    if(session.pendingBoundaryEdits())return;
-    // One UI action; the existing shared dispatcher preserves each supported
-    // no-LRA, global-only, mono and explicitly versioned region path.
-    beginSectionProposal();
+    if(!jobRequirementsPanel.commitFields()||!gainLane.commitPending())return;
+    if(proposalOperation.begin(session)){timeline.focusForTransport();advanceProposalOperation();refreshFromSession();}
+}
+void StandaloneMainComponent::advanceProposalOperation()
+{
+    proposalOperation.observe(session);
+    if(!proposalOperation.active()||session.job.isActive()||analysisResult.valid()||sectionProposalResult.valid())return;
+    using Phase=ProposalOperation::Phase;
+    if(proposalOperation.cancelRequested)
+    {
+        proposalOperation.finish(session,Phase::cancelled,proposalOperation.applied?"Alternative switch cancelled - previous Current retained":"Propose cancelled - processing unchanged",
+            proposalOperation.applied?"The previous applied choice and its independent measurement are unchanged. Choose another alternative or Restore before Propose.":"No proposal was applied.");return;
+    }
+    if(proposalOperation.phase==Phase::apply)
+    {if(!proposalOperation.apply(session))return;}
+    if(proposalOperation.phase==Phase::source)beginMeasurement(MeasurementDomain::source,true);
+    else if(proposalOperation.phase==Phase::current||proposalOperation.phase==Phase::verify)beginMeasurement(MeasurementDomain::currentState,true);
+    else if(proposalOperation.phase==Phase::search)beginSectionProposal(true);
+    if(!session.job.isActive())proposalOperation.finish(session,Phase::failed,proposalOperation.applied?"Proposal applied - Current unverified":"Propose could not start",
+        "The next stage could not start. Review programme roles and requirements, then retry or restore before Propose.");
 }
 void StandaloneMainComponent::showRegionPlanning()
 {
     session.synchronizeSections();
     RegionPlanningPanel::showWindow(regionPlanningWindow,session,this,[this]{refreshFromSession();refreshTimeline();},
-        [this]{beginSectionProposal();refreshTimeline();});
+        [this]{proposeWithActiveMethod();refreshTimeline();});
 }
 void StandaloneMainComponent::reviewProposal(bool historical)
 {
+    if(!historical&&!session.sectionProposal&&proposalOperation.result)
+    {
+        const auto result=proposalOperation.selected?proposalOperation.selected:proposalOperation.result;const auto runtime=session.sessionId;const auto generation=proposalOperation.generation;
+        auto status=[safe=juce::Component::SafePointer<StandaloneMainComponent>(this),runtime,generation]() -> juce::String
+        {
+            if(!safe||safe->session.sessionId!=runtime||safe->proposalOperation.generation!=generation)return "Historical inspection from an earlier operation; no Apply authority.";
+            return safe->proposalOperation.title+". Browsing does not select or apply a plan. Choose an eligible alternative in the main window.";
+        };
+        std::unique_ptr<juce::Component> view;
+        if(result->regionReview())
+        {
+            auto panel=std::make_unique<RegionProposalReviewPanel>(result,status);
+            panel->onInspect=[this,runtime,generation](size_t,int64_t begin,int64_t end)
+            {if(session.sessionId==runtime&&proposalOperation.generation==generation)timeline.highlight(double(begin),double(end));};
+            view=std::move(panel);
+        }
+        else view=std::make_unique<ProposalInspectionPanel>(result->text(),status);
+        proposalInspectionWindow=std::make_unique<ProposalWindow>("Proposal search - inspect all attempts",std::move(view),this);proposalInspectionWindow->present();return;
+    }
+
     if(historical?!session.lastAppliedExplanation:!session.sectionProposal)return;
     const auto runtime=session.sessionId;const auto proposal=session.sectionProposal;const auto history=session.lastAppliedExplanation;
     auto binding=std::make_shared<std::shared_ptr<const SectionProposalResult>>(proposal);
@@ -1058,6 +1148,7 @@ void StandaloneMainComponent::showSections()
 }
 void StandaloneMainComponent::playTimeline(MeasurementTimeline* origin)
 {
+    if(session.proposalOperationBusy)return;
     if(session.pendingBoundaryEdits()){jobLabel.setText(session.pendingBoundaryMessage(),juce::dontSendNotification);return;}
     if(session.job.isActive()||session.persistenceLoading)return;
     (origin?*origin:timeline).focusForTransport();
@@ -1180,7 +1271,7 @@ void StandaloneMainComponent::refreshTimeline()
     timeline.setReferenceMeasurement(reference,domain==MeasurementDomain::currentState);
     auditionDomainBox.setSelectedId(session.auditionDomain==MeasurementDomain::source?1:2,juce::dontSendNotification);
     auditionDomainBox.setEnabled(!session.audioEditsBlocked()&&!session.job.isActive());
-    timelinePlay.setEnabled(!session.pendingBoundaryEdits()&&!session.job.isActive()&&!session.persistenceLoading&&!audition.active()&&session.sourceDocument.hasSource);
+    timelinePlay.setEnabled(!session.proposalOperationBusy&&!session.pendingBoundaryEdits()&&!session.job.isActive()&&!session.persistenceLoading&&!audition.active()&&session.sourceDocument.hasSource);
     timelineStop.setEnabled(audition.active());
     jobRequirementsPanel.refreshAvailability();
     proposalPanel.refresh(importControl?importControl->progress.load():-1);
@@ -1222,8 +1313,8 @@ void StandaloneMainComponent::refreshJobFeedback()
     bool nestedImport = false;
     if(programmePanel && programmePanel->preparationControl()) { control = programmePanel->preparationControl(); nestedImport = true; }
     else if(compositionPanel && compositionPanel->preparationControl()) { control = compositionPanel->preparationControl(); nestedImport = true; }
-    const bool cancelling = (control && control->isCancelled()) || (!nestedImport && session.job.state == JobState::cancelling);
-    const bool active = nestedImport || session.job.isActive();
+    const bool cancelling = (proposalOperation.cancelRequested&&proposalOperation.active()) || (control && control->isCancelled()) || (!nestedImport && session.job.state == JobState::cancelling);
+    const bool active = nestedImport || session.job.isActive() || proposalOperation.active();
     const bool phased = control && control->feedback;
     auto text = phased ? describeJobFeedback(control->feedback->snapshot(), !nestedImport && session.job.stage == JobStage::analysis,
                                             analysisDomain == MeasurementDomain::currentState, cancelling)
@@ -1240,6 +1331,12 @@ void StandaloneMainComponent::refreshJobFeedback()
         text = {"Ready to import", "Open Mix to begin. Output connection is optional for offline analysis.", -1};
     if(!active&&session.boundaryBatch)text={juce::String(session.pendingBoundaryCount())+(session.pendingBoundaryCount()==1?" boundary change pending":" boundary changes pending"), "Enter: review Move gain with sections / Cancel. Esc: cancel. Zoom and pan remain available; playback and measurement wait for this edit.", -1};
     if(!active&&session.appliedBoundaryDrag)text={"Moving applied region boundary",session.pendingBoundaryMessage()+" The previous measurement describes the unchanged applied audio until release.",-1};
+    if(proposalOperation.phase!=ProposalOperation::Phase::idle&&proposalOperation.phase!=ProposalOperation::Phase::stale)
+    {
+        if(proposalOperation.active())text.detail=text.title+". "+text.detail;
+        else text.detail=proposalOperation.detail.replace("\n","  ");
+        text.title=proposalOperation.title;
+    }
     jobLabel.setText(text.title, juce::dontSendNotification);jobLabel.setTooltip(text.title);
     jobDetail.setText(text.detail, juce::dontSendNotification);jobDetail.setTooltip(text.detail);
     jobFraction = text.fraction;jobProgress.setVisible(active);
