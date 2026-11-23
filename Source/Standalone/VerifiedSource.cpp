@@ -67,6 +67,20 @@ SessionVerifiedAssets::Counts SessionVerifiedAssets::counts() const
     std::lock_guard<std::mutex> lock(mutex);
     return totals;
 }
+bool SessionVerifiedAssets::owns(const VerifiedSource& source, const std::vector<ProgrammeMember>& members) const
+{
+    const auto files = source.files();
+    if (files.size() != members.size()) return false;
+    std::lock_guard<std::mutex> lock(mutex);
+    for (size_t i = 0; i < members.size(); ++i)
+    {
+        const auto& member = members[i];
+        const auto found = assets.find(assetKey(member.file, member.media));
+        if (found == assets.end() || found->second->preparing || !found->second->result.value
+            || (*found->second->result.value)->file() != files[i]) return false;
+    }
+    return true;
+}
 uint64_t SessionVerifiedAssets::missingBytes(const std::vector<ProgrammeMember>& members) const
 {
     std::lock_guard<std::mutex> lock(mutex);

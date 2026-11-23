@@ -277,6 +277,9 @@ ServiceResult<std::shared_ptr<Candidate>> render (const Request& r, const juce::
                &&::stat(storage.directory.getFullPathName().toRawUTF8(),&temporaryStat)==0,
                ErrorCode::invalidRequest,"Destination and temporary folders must be available");
         const auto owner = r.current.verifiedAssets ? r.current.verifiedAssets->lock() : nullptr;
+        demand(!r.current.verifiedAssets || owner, ErrorCode::staleRevision, "Source session closed");
+        if (owner && reusableSource && !owner->owns(*reusableSource, r.current.sourceMembers()))
+            reusableSource.reset();
         const uint64_t copyBytes = reusableSource ? 0 : owner && !storage.availableBytes
             ? owner->missingBytes(r.current.sourceMembers()) : uint64_t(r.current.media.bytes);
         const bool sharedVolume=destinationStat.st_dev==temporaryStat.st_dev;

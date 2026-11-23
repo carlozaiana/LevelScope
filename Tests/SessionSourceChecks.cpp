@@ -60,9 +60,34 @@ void concurrent(const AuditionRequest& request, Cancellation cancel)
     auto next = acquire(context);
     expect(next == *(producer.value ? producer.value : waiter.value), "subsequent consumer shares completed file");
 }
+void newDuringPreparation(const AuditionRequest& request)
+{
+    StandaloneSessionModel model;
+    expect(model.setValidatedSource(request.context.sourceFile, request.context.media), "adopt source before background job");
+    model.sourceDocument.layout = layoutFor(2);
+    expect(model.job.begin(JobStage::analysis, model.revision), "start measured worker on original opening");
+    const auto oldRequest = model.measurementContext(MeasurementDomain::source);
+    JobControl worker;
+    auto pause = std::make_shared<PauseCopy>();
+    worker.feedback = pause;
+    auto started = pause->entered.get_future();
+    auto future = std::async(std::launch::async, [&] { return OfflineAnalysisService().analyze(oldRequest, MeasurementDomain::source, worker); });
+    const bool began = started.wait_for(std::chrono::seconds(8)) == std::future_status::ready;
+    model = StandaloneSessionModel();
+    const bool adopted = model.setValidatedSource(request.context.sourceFile, request.context.media);
+    model.sourceDocument.layout = layoutFor(2);
+    pause->release.set_value();
+    auto completed = future.get();
+    expect(began && adopted && completed.value, "old worker safely finishes reading its leased source after New");
+    expect(!model.acceptMeasurement(*completed.value) && model.verifiedAssets->counts().copies == 0 && !model.source.hasMeasurement,
+           "old verified storage and measured result cannot attach to the new opening");
+    auto fresh = acquire(model.measurementContext(MeasurementDomain::source));
+    expect(fresh && model.verifiedAssets->counts().copies == 1, "same original in new session establishes its own trust");
+}
 void lifecycle(const juce::File& root)
 {
     const auto request = fixture(root.getChildFile("source.wav"), 48000, 2, 192003);
+    newDuringPreparation(request);
     concurrent(request, Cancellation::none);
     concurrent(request, Cancellation::waiter);
     concurrent(request, Cancellation::producer);
@@ -133,6 +158,21 @@ void assembled(const juce::File& root)
     expect(artifact.value && artifact.value->domain == MeasurementDomain::renderedOutput && artifact.value->measuredContentHash != c.media.sha256,
            "fresh rendered bytes independently verified");
     expect(s.verifiedAssets->counts().copies == 4 && s.verifiedAssets->counts().cacheHits >= 16, "waveform, measured domains and render reuse four physical files");
+    // Exercise the same staged encoder, artifact measurement and final hash
+    // checks used by the app, at a measured normalizing trim for this fixture.
+    expect(s.setCurrentGainDb(-23.0 - *s.source.integratedLufs), "normalize known composition for delivery fixture");
+    measuredComposition(s, MeasurementDomain::currentState);
+    const auto exportRequest = ex::capture(s);
+    auto encoded = ex::render(exportRequest, root, job);
+    expect(bool(encoded.value), "export renderer uses session assets and measures the new encoded artifact");
+    auto candidate = *encoded.value;
+    const auto approval = ex::approvalIdentity(*candidate, exportRequest);
+    expect(approval.isNotEmpty(), "independent artifact and Current pass delivery fixture");
+    const auto destination = root.getChildFile("verified-export");
+    auto delivered = ex::publish(*candidate, exportRequest, destination, approval, job);
+    expect(delivered.value && juce::SHA256(destination.getChildFile("programme.wav")).toHexString() == candidate->hash(),
+           "final exported PCM exactly matches the independently verified artifact");
+    expect(s.verifiedAssets->counts().copies == 4, "normal export and finalization incur zero further source copies");
     auto saved = root.getChildFile("reopen.levelscope");
     expect(sf::save(sf::capture(s), saved, job).succeeded(), "save composition session without owned-file locators");
     auto document = sf::read(saved, job);
@@ -142,6 +182,10 @@ void assembled(const juce::File& root)
     auto reopened = acquire(verified.prepared->model.measurementContext(MeasurementDomain::source));
     expect(verified.prepared->model.verifiedAssets->counts().copies == 4 && reopened->files()[0] != assets->files()[0],
            "reopened session establishes fresh trust and private storage");
+    auto rerender = ex::render(ex::capture(verified.prepared->model), root, job, {}, nullptr, candidate->verifiedSource());
+    expect(rerender.value && (*rerender.value)->verifiedSource()->files() == reopened->files()
+           && (*rerender.value)->hash() == candidate->hash(), "explicit export hint from an old opening uses the receiving session files and produces identical PCM");
+
     auto group = *f.recipe.me.assembly;
     std::swap(group.members[0].file, group.members[1].file);
     std::swap(group.members[0].media, group.members[1].media);

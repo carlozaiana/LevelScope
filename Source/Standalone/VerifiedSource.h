@@ -54,6 +54,7 @@ class SessionVerifiedAssets
 public:
     struct Counts { uint64_t copies = 0, copiedBytes = 0, cacheHits = 0, waits = 0; };
     Counts counts() const;
+    bool owns(const VerifiedSource&, const std::vector<ProgrammeMember>&) const;
     uint64_t missingBytes(const std::vector<ProgrammeMember>&) const;
     std::shared_ptr<SessionVerifiedAssets> retaining(const std::vector<ProgrammeMember>&) const;
     VerifiedSourceResult acquire(const ServiceContext&, JobControl&);
