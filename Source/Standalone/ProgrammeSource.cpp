@@ -72,7 +72,7 @@ bool ProgrammeAssembly::matchesFileStamps() const
 {
     for (size_t i = 0; i < members.size(); ++i)
     {
-        if (!members[i].media.matchesFileStamp(members[i].file)) return false;
+        if (!members[i].media.matchesValidatedFile(members[i].file)) return false;
         for (size_t j = 0; j < i; ++j) if (samePhysicalFile(members[i].file, members[j].file)) return false;
     }
     return !members.empty();

@@ -2,6 +2,7 @@
 
 #include "StandaloneChannelLayout.h"
 #include "StandaloneJob.h"
+#include "SourceFileVersion.h"
 #include <juce_audio_formats/juce_audio_formats.h>
 
 namespace levelscope::standalone
@@ -20,6 +21,11 @@ struct MediaInfo
     ChannelLayout suggestedLayout;
     bool hasFileRoleLabels=false; // fresh import only; saved projects own their layout
 
+    SourceFileVersion validatedVersion; // runtime only, never written to a session
+    bool matchesValidatedFile(const juce::File& file) const
+    {
+        return matchesFileStamp(file) && (!validatedVersion.valid || validatedVersion == SourceFileVersion::read(file));
+    }
     double durationSeconds() const { return sampleRate > 0 ? static_cast<double> (frames) / sampleRate : 0.0; }
     bool matchesFileStamp (const juce::File& file) const
     {

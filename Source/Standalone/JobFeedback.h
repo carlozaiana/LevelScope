@@ -8,7 +8,7 @@ namespace levelscope::standalone
 {
 // Worker metadata only: never used by measurement decisions or audio callbacks.
 // A coherent, bounded snapshot; no retained event history or per-block allocation.
-enum class JobPhase : uint32_t { starting, metadata, samples, checksum, sourceHash, copy, copyHash, measuring, finalising };
+enum class JobPhase : uint32_t { starting, metadata, samples, checksum, sourceHash, copy, measuring, finalising };
 struct JobPhaseSnapshot { JobPhase phase = JobPhase::starting; double fraction = -1; };
 class JobFeedback
 {
@@ -45,7 +45,6 @@ inline JobFeedbackText describeJobFeedback(JobPhaseSnapshot stage, bool analysis
         case JobPhase::checksum: text.detail = "Verifying FLAC audio checksum"; break;
         case JobPhase::sourceHash: text.detail = "Verifying file content identity"; break;
         case JobPhase::copy: text.detail = "Creating protected source copy"; break;
-        case JobPhase::copyHash: text.detail = "Verifying source copy identity"; break;
         case JobPhase::measuring: text.detail = "Measuring programme; waveform and loudness previews are incomplete"; break;
         case JobPhase::finalising: text.detail = "Finalising measurement; waiting for completed results"; break;
     }

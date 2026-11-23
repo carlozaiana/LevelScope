@@ -222,6 +222,7 @@ SectionProposalOutcome generateRegionProposal(const SectionProposalRequest& r,Jo
                 if(!processor.process(audio.getArrayOfWritePointers(),audio.getNumChannels(),count,frame))return {{},ErrorCode::nonFiniteAudio,"Auxiliary analysis non-finite audio"};
                 collector.push(audio.getArrayOfReadPointers(),count);frame+=count;control.setProgress(.1f+.15f*float(double(frame)/before.frames));
             }
+            if (!reader->sourceIntact() || !context.sourceFilesMatch()) return {{}, ErrorCode::sourceChanged, "Source changed during auxiliary analysis"};
             sidecar=collector.finish();review->sidecarSeconds=seconds(start);review->sidecarBytes=sidecar->storageBytes();
         }
         std::vector<ProxyChoice> pool;std::set<juce::String> seen;std::vector<Alternative> choices;size_t cursor=0;

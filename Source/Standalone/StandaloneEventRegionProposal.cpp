@@ -193,6 +193,7 @@ SectionProposalOutcome generateEventRegionProposal(const SectionProposalRequest&
                 features.push(dry.getArrayOfReadPointers(),audio.getArrayOfReadPointers(),count,cancelled);
                 collector.push(audio.getArrayOfReadPointers(),count);frame+=count;control.setProgress(.1f+.15f*float(double(frame)/before.frames));
             }
+            if (!reader->sourceIntact() || !context.sourceFilesMatch()) return {{}, ErrorCode::sourceChanged, "Source changed during auxiliary analysis"};
             sidecar=collector.finish();events=features.finish(sidecar.get(),cancelled);review->eventEvidence=events;review->featureBytes=events->storageBytes();review->featureHighWaterBytes=events->highWaterBytes;
             fixedPlanning+=events->highWaterBytes;
             review->sidecarSeconds=seconds(start);review->sidecarBytes=sidecar->storageBytes();

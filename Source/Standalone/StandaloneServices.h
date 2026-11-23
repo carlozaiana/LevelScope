@@ -25,6 +25,7 @@ struct ProcessingPlan
     std::optional<processing::SectionGainPlan> sectionGains;
 };
 
+class SessionVerifiedAssets;
 struct ServiceContext
 {
     JobTicket ticket;
@@ -39,8 +40,12 @@ struct ServiceContext
     TargetProfile profile;
     juce::String profileVersion, buildVersion, platformAndFloatingPointMode;
 
+    // Snapshots/history never own session storage. Active acquisitions and readers
+    // retain their own leases. Unbound service clients use private per-call storage.
+    std::optional<std::weak_ptr<SessionVerifiedAssets>> verifiedAssets;
+
     bool isFullProgram() const { return range.begin == 0 && range.end == media.frames; }
-    bool sourceFilesMatch() const { return composition ? composition->matchesFileStamps() : assembly ? assembly->matchesFileStamps() : media.matchesFileStamp(sourceFile); }
+    bool sourceFilesMatch() const { return composition ? composition->matchesFileStamps() : assembly ? assembly->matchesFileStamps() : media.matchesValidatedFile(sourceFile); }
     std::vector<ProgrammeMember> sourceMembers() const
     {
         if(composition)return composition->files();

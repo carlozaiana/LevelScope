@@ -336,6 +336,7 @@ MediaValidationResult validateMedia (const juce::File& file, JobControl& control
     if (control.isCancelled()) return fail (ErrorCode::cancelled, "Import cancelled");
     if (! file.existsAsFile()) return fail (ErrorCode::missingFile, "Source file is missing");
     auto& media = result.media;
+    media.validatedVersion = SourceFileVersion::read(file);
     media.bytes = file.getSize();
     media.modified = file.getLastModificationTime();
 
@@ -447,7 +448,7 @@ MediaValidationResult validateMedia (const juce::File& file, JobControl& control
     if (control.isCancelled()) return fail (ErrorCode::cancelled, "Import cancelled");
     if (input->getStatus().failed() || stream.getPosition() != media.bytes)
         return fail (ErrorCode::decodeFailed, "Cannot read the complete source for hashing");
-    if (! media.matchesFileStamp (file)) return fail (ErrorCode::sourceChanged, "Source changed during validation; import again");
+    if (! media.validatedVersion.valid || ! media.matchesValidatedFile (file)) return fail (ErrorCode::sourceChanged, "Source changed during validation; import again");
     result.message = "Source validation succeeded";
     control.setProgress (1.0f);
     return result;

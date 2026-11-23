@@ -77,7 +77,7 @@ void stagesAndCancellation(const juce::File& root,int channels)
     expect(importFeedback->phases==std::vector<JobPhase>{JobPhase::metadata,JobPhase::samples,JobPhase::sourceHash}&&importFeedback->ordered,"import reports real metadata, decoded-sample and identity stages with per-stage progress");
     auto storageDirectory=root.getChildFile("copies");storageDirectory.createDirectory();SnapshotStorage storage;storage.directory=storageDirectory;
     const auto original=juce::SHA256(request.context.sourceFile).toHexString();
-    for(auto phase:{JobPhase::copy,JobPhase::copyHash,JobPhase::samples,JobPhase::sourceHash})
+    for(auto phase:{JobPhase::copy,JobPhase::samples,JobPhase::sourceHash})
     {
         JobControl c;auto f=std::make_shared<RecordingFeedback>();c.feedback=f;f->cancelControl=&c;f->cancelAt=phase;f->cancelAfter=.25;
         const auto result=prepareVerifiedSource(request.context,c,storage);
@@ -96,7 +96,7 @@ void stagesAndCancellation(const juce::File& root,int channels)
     };
     const auto result=OfflineAnalysisService(nullptr,wave.get(),&loudness).analyze(request.context,MeasurementDomain::source,measured);
     expect(result.value&&f->ordered,"feedback-enabled measurement completes with ordered progress within each stage");
-    expect(f->phases==std::vector<JobPhase>{JobPhase::copy,JobPhase::copyHash,JobPhase::metadata,JobPhase::samples,JobPhase::sourceHash,JobPhase::measuring,JobPhase::finalising},"preparation precedes measurement and finalisation without skipping verification");
+    expect(f->phases==std::vector<JobPhase>{JobPhase::copy,JobPhase::metadata,JobPhase::samples,JobPhase::sourceHash,JobPhase::measuring,JobPhase::finalising},"preparation precedes measurement and finalisation without skipping verification");
     expect(partial&&pending,"progressive waveform and measured M/S remain visible but unaccepted during measurement");exact(*baseline.value,*result.value);
     expect(wave->overview()->complete()&&!cache.view(binding).accepted&&cache.accept(binding,binding),"EOF preview requires separate completed-job acceptance");
     for(auto phase:{JobPhase::measuring,JobPhase::finalising})

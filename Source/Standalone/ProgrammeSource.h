@@ -41,6 +41,7 @@ std::vector<ChannelRole> assemblyRoles (int channels);
 
 // Worker-only adapter. All reads stay inside the declared programme; a failed
 // member read fails the entire block. Only compose() permits the explicit M11 sum.
+class VerifiedSource;
 class ProgrammeReader
 {
 public:
@@ -52,7 +53,10 @@ public:
     juce::int64 lengthInSamples = 0;
     unsigned int numChannels = 0;
     bool hasFlac = false;
+    bool sourceIntact() const;
 private:
+    friend class VerifiedSource;
+    std::shared_ptr<const VerifiedSource> sourceLease;
     std::vector<std::unique_ptr<juce::AudioFormatReader>> readers;
     std::unique_ptr<ProgrammeReader> meReader, dialogueReader;
     std::vector<int> meMapping, dialogueMapping;

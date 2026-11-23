@@ -276,7 +276,9 @@ ServiceResult<std::shared_ptr<Candidate>> render (const Request& r, const juce::
         demand(::stat(parent.getFullPathName().toRawUTF8(),&destinationStat)==0
                &&::stat(storage.directory.getFullPathName().toRawUTF8(),&temporaryStat)==0,
                ErrorCode::invalidRequest,"Destination and temporary folders must be available");
-        const uint64_t copyBytes=reusableSource?0:static_cast<uint64_t>(r.current.media.bytes);
+        const auto owner = r.current.verifiedAssets ? r.current.verifiedAssets->lock() : nullptr;
+        const uint64_t copyBytes = reusableSource ? 0 : owner && !storage.availableBytes
+            ? owner->missingBytes(r.current.sourceMembers()) : uint64_t(r.current.media.bytes);
         const bool sharedVolume=destinationStat.st_dev==temporaryStat.st_dev;
         space(parent,spec.format.fileBytes+(sharedVolume?copyBytes:0),hooks);
         if(copyBytes&&!sharedVolume)space(storage.directory,copyBytes,hooks);
@@ -286,9 +288,7 @@ ServiceResult<std::shared_ptr<Candidate>> render (const Request& r, const juce::
         if(reusableSource)
         {
             demand(reusableSource->matches(r.current.media),ErrorCode::sourceChanged,"Verified copy is incompatible with this programme");
-            const auto copies=reusableSource->files();const auto members=originals(r);
-            demand(copies.size()==members.size(),ErrorCode::sourceChanged,"Incomplete reusable programme copy");
-            for(size_t i=0;i<copies.size();++i)demand(pcm24::hashFile(copies[i],control)==members[i].second,ErrorCode::sourceChanged,"Reusable verified copy changed");
+            demand(r.current.sourceFilesMatch(), ErrorCode::sourceChanged, "Original programme changed");
             prepared.value=reusableSource;preparation.setProgress(1);
         }
         else prepared=prepareVerifiedSource(r.current,preparation,storage);
@@ -309,10 +309,11 @@ ServiceResult<std::shared_ptr<Candidate>> render (const Request& r, const juce::
             writer.write(audio.getArrayOfReadPointers(),spec.outputToInput,count,spec.seed,control); first+=count;
             control.setProgress(.2f+.35f*static_cast<float>(double(first)/spec.format.frames));
         }
+        demand(reader->sourceIntact() && r.current.sourceFilesMatch(), ErrorCode::sourceChanged, "Source changed during export render");
         writer.finish(control); pcm24::checkpoint(hooks,"verify",control);
         JobControl validationControl;validationControl.parent=&control;validationControl.parentProgress=&control.progress;validationControl.progressBase=.55f;validationControl.progressScale=.1f;
         const auto validation=validateMedia(c->file(),validationControl); demand(validation.succeeded(),validation.error,validation.message);
-        ServiceContext artifact=r.current;artifact.assembly.reset();artifact.composition.reset();artifact.sourceFile=c->file();artifact.media=validation.media;
+        ServiceContext artifact=r.current;artifact.verifiedAssets.reset();artifact.assembly.reset();artifact.composition.reset();artifact.sourceFile=c->file();artifact.media=validation.media;
         artifact.fileLayout=spec.layout;artifact.processing={};artifact.range={0,spec.format.frames};
         JobControl measurementControl;measurementControl.parent=&control;measurementControl.parentProgress=&control.progress;measurementControl.progressBase=.65f;measurementControl.progressScale=.35f;
         auto measured=OfflineAnalysisService().verifyEncodedArtifact(artifact,measurementControl);

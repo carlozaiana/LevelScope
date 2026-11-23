@@ -62,7 +62,7 @@ struct SourceDocument
     OutputRouting routing;
 
     juce::String importStatus = "No source imported";
-    bool matchesFileStamps() const { return composition ? composition->matchesFileStamps() : assembly ? assembly->matchesFileStamps() : media.matchesFileStamp(file); }
+    bool matchesFileStamps() const { return composition ? composition->matchesFileStamps() : assembly ? assembly->matchesFileStamps() : media.matchesValidatedFile(file); }
     juce::String channelName (int channel) const
     {
         if(composition)return "Channel "+juce::String(channel+1)+" (M&E + dialogue composition)";
@@ -228,6 +228,7 @@ public:
     int selectedTargetProfileIndex = 0;
     proposal::Applicability programmeApplicability = proposal::Applicability::preProducedLinearProgramme;
     uint64_t revision = 0;
+    std::shared_ptr<SessionVerifiedAssets> verifiedAssets = std::make_shared<SessionVerifiedAssets>();
     juce::String sessionId = juce::Uuid().toString(); // unique runtime opening, never loaded from disk
     juce::String documentId = juce::Uuid().toString(), programmeId = juce::Uuid().toString();
     uint64_t documentRevision = 0, savedDocumentRevision = 0;
@@ -793,6 +794,7 @@ public:
                 unresolvedSourceCache = source.analysis;
                 unresolvedCurrentCache = currentState.analysis;
             }
+            verifiedAssets = std::make_shared<SessionVerifiedAssets>();
             ++revision; documentChanged(); sourceContentInvalid = true; source = MeasurementSummary();
             currentState = MeasurementSummary(); discardTrim();
             sourceDocument.importStatus = "Content changed; import the source again";
@@ -811,6 +813,7 @@ public:
     ServiceContext measurementContext (MeasurementDomain domain) const
     {
         ServiceContext c;
+        c.verifiedAssets = verifiedAssets;
         c.ticket = job.ticket; c.ticket.sessionRevision = revision; c.sessionId = sessionId;
         c.sourceFile = sourceDocument.file; c.media = sourceDocument.media; c.assembly = sourceDocument.assembly;
         c.composition = sourceDocument.composition;
@@ -923,9 +926,10 @@ public:
 
     bool setValidatedSource (const juce::File& file, const MediaInfo& media)
     {
-        if (audioEditsBlocked() || ! media.matchesFileStamp (file)) return false;
+        if (audioEditsBlocked() || ! media.matchesValidatedFile (file)) return false;
         ++revision; documentChanged(); programmeId = juce::Uuid().toString();
         discardTrim(); clearProposalApplicationProvenance(); sourceContentInvalid = false; unresolvedSourceCache.reset(); unresolvedCurrentCache.reset();
+        verifiedAssets = std::make_shared<SessionVerifiedAssets>();
         sourceDocument.setValidatedFile (file, media);
         initialCurrentPending = sourceDocument.hasSource;
 
@@ -947,6 +951,7 @@ public:
         if (audioEditsBlocked() || group.validate().isNotEmpty() || !group.matchesFileStamps()) return false;
         ++revision; documentChanged(); programmeId = juce::Uuid().toString();
         discardTrim(); clearProposalApplicationProvenance(); sourceContentInvalid = false; unresolvedSourceCache.reset(); unresolvedCurrentCache.reset(); sourceDocument.setValidatedProgramme(group);
+        verifiedAssets = verifiedAssets->retaining(group.members);
         source = MeasurementSummary(); currentState = MeasurementSummary(); currentStateDocument.clear();
         programmeApplicability = proposal::Applicability::preProducedLinearProgramme;
         initialCurrentPending = true;
@@ -958,6 +963,7 @@ public:
     bool setValidatedComposition (const ProgrammeComposition& recipe)
     {
         if(audioEditsBlocked()||job.isActive()||recipe.validate().isNotEmpty()||!recipe.matchesFileStamps())return false;
+        verifiedAssets = verifiedAssets->retaining(recipe.files());
         const bool editing=sourceDocument.composition.has_value();
         if(editing&&!sourceContentInvalid&&sourceDocument.composition->definitionIdentity()==recipe.definitionIdentity())
         {
@@ -986,6 +992,7 @@ public:
         initialCurrentPending = false;
         ++revision; documentChanged(); programmeId = juce::Uuid().toString();
         discardTrim(); clearProposalApplicationProvenance(); sourceContentInvalid = false; unresolvedSourceCache.reset(); unresolvedCurrentCache.reset();
+        verifiedAssets = std::make_shared<SessionVerifiedAssets>();
         sourceDocument.clear();
         currentStateDocument.clear();
         programmeApplicability = proposal::Applicability::preProducedLinearProgramme;

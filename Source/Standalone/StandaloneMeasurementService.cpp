@@ -70,7 +70,7 @@ AnalysisSnapshot measure (const ServiceContext& context, MeasurementDomain domai
     result.identity = OfflineAnalysisService::identityFor (context, domain, hash);
     control.reportPhase(JobPhase::finalising);
     result.detail = engine.finish();
-    if ((context.assembly || context.composition) && !context.sourceFilesMatch())
+    if (!reader->sourceIntact() || !context.sourceFilesMatch())
         throw Failure { ErrorCode::sourceChanged, "A programme member changed during measurement; result discarded" };
     checkCancel (control);
     result.measured = { result.detail.integrated.value, result.detail.lra.value,
@@ -207,7 +207,7 @@ ServiceResult<std::shared_ptr<const waveform::Overview>> OfflineAnalysisService:
             if(!data->append(audio.getArrayOfReadPointers(),audio.getNumChannels(),count,frame))throw Failure{ErrorCode::invalidRequest,"Waveform coverage mismatch"};
             frame+=count;control.setProgress(.5f+.49f*float(double(frame)/reader->lengthInSamples));
         }
-        checkCancel(control);if(!context.sourceFilesMatch())throw Failure{ErrorCode::sourceChanged,"Programme changed; waveform discarded"};
+        checkCancel(control);if(!reader->sourceIntact() || !context.sourceFilesMatch())throw Failure{ErrorCode::sourceChanged,"Programme changed; waveform discarded"};
         waveformProgress->finish(data);if(!data->complete())throw Failure{ErrorCode::invalidRequest,"Incomplete waveform"};
         control.setProgress(1);return {std::shared_ptr<const waveform::Overview>(std::move(data)),ErrorCode::none,"Waveform ready; existing measurements preserved"};
     }
@@ -290,6 +290,8 @@ ServiceResult<AnalysisSnapshot> OfflineAnalysisService::verifyTemporaryRender (c
             frame += count;
         }
         writer.reset();
+        if (!reader->sourceIntact() || !context.sourceFilesMatch())
+            throw Failure { ErrorCode::sourceChanged, "Source changed during temporary render" };
         JobControl verificationControl; verificationControl.parentCancel = &control.cancel;
         const auto validation = validateMedia (output.file, verificationControl);
         checkCancel (control);

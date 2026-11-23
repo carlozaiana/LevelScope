@@ -71,7 +71,7 @@ juce::String ProgrammeComponent::audioIdentity() const
     return hash(s.str());
 }
 bool ProgrammeComponent::matchesFileStamps() const
-{ return assembly ? assembly->matchesFileStamps() : media.matchesFileStamp(file); }
+{ return assembly ? assembly->matchesFileStamps() : media.matchesValidatedFile(file); }
 ChannelLayout ProgrammeComposition::layout() const
 {
     ChannelLayout result; const auto roles = assemblyRoles(preset == CompositionPreset::stereoStereo ? 2 : 6);
