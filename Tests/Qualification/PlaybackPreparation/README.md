@@ -151,3 +151,48 @@ interruptions, accumulating drift or sustained freezes.
 4. Open another session or choose New during background preparation. The old
    programme must not begin playing or restore its former position. Remembered
    connection preference and explicit Disconnect behavior remain in force.
+
+
+## Candidate 02 correction: latest live seek — 23 November 2026
+
+The combined owner's preserved candidate 01 passed ten other affected groups,
+but the extra no-movie `LevelScopeVideoTests` stopped at its former synchronous
+"playing seek enters preroll" assumption. Investigation also found a real
+regression: further live seeks were rejected while the first asynchronous prefix
+was being prepared. Candidate 01 and its failed receipt remain preserved.
+
+The transport now keeps one worker and one replaceable pending destination.
+Every accepted live seek flushes the old callback/decoder and advances the
+transport generation. It inherits only the existing explicit Play request.
+After the cancelled worker drains, the latest request is revalidated against
+session/source ownership, generation, routing and output configuration before
+preparing the new prefix. It cannot publish old samples. Stop, Disconnect,
+source/request/routing changes revoke the replacement. Seeking to EOF preserves
+finished status through late worker cleanup. Rapid stopped seeks only update
+the final cursor and never acquire Play authority.
+
+The old immediate `buffering` expectation is replaced by a stronger observable
+check: poll with picture readiness false until preparation finishes, require
+buffering at the exact requested frame with callback still stopped, then release
+the gate. Original exact sample and clock assertions remain for both Source and
+Current. Added cases cover repeated live seeks, the clock after the final
+position, Stop before resume, EOF during replacement, stale session binding,
+routing changes, Disconnect, device loss and source replacement. A separate
+stopped case begins device-free background warmup, performs four seeks while it
+is cancelling and requires the final frame without opening output or playing.
+
+Only the no-argument video test is used: rational/clock arithmetic and synthetic
+9,000-frame audio through injected outputs. Its large assertion count is not
+movie, full-film or endurance evidence. The existing qualification deferrals and
+completion-pause limitation remain unchanged. Focused development receipts are
+under `results/live-seek-sequoia-2026-11-23`; the combined owner freezes candidate
+02 and records its actual-platform rerun separately. No publication or merge.
+
+Final follow-up development passed **218,104 no-movie transport/timing checks**,
+**668 native playback checks** and **4,069 audition checks** on Sequoia arm64
+(222,841 assertions total). Measurement build:
+`3fc9ebd577afa62dc62fc04e12ef52d1abc03042379852d0ebe6d17120e25e86`.
+No earlier sample/clock assertion was removed or tolerance relaxed. The preserved
+intermediate 218,092-check run predates only the additional stopped-seek test;
+its engine source is identical to the final run. The remaining unaffected
+candidate-01 results are reused as documented by the combined owner.

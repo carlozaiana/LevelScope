@@ -148,6 +148,10 @@ private:
     ErrorCode fault = ErrorCode::none, workerFailure = ErrorCode::none;
     uint64_t preparationGeneration = 0;
     bool playAfterPreparation = false;
+    // One replaceable live-seek request waits for the cancelled worker to drain.
+    // It inherits explicit Play intent; Stop revokes it before any late result.
+    bool resumeLatestSeek = false;
+    uint64_t latestSeekGeneration = 0;
     ProcessedAudioObserver* capture = nullptr;
     juce::String startPreparation (const AuditionRequest&);
     void startDecoder (const AuditionRequest&, const OutputRouting&);

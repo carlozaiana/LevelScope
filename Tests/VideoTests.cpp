@@ -153,6 +153,13 @@ void transportChecks(bool current = false)
     { audio->synchronize(request,routing); return audio->seek(frame,request,routing); };
 
     expect (!audio->connected(), "source replacement does not open device");
+    audio->synchronize(request,routing);
+    expect(audio->prepare(request).isEmpty()&&audio->backgroundPreparing(),"device-free stopped warmup starts without Play authority");
+    for(int frame:{2000,7000,200,4000})
+        expect(seek(frame).isEmpty()&&audio->positionFrames()==frame&&!audio->active()&&!fake->isPlaying(),"rapid stopped seeks replace cursor position without creating Play authority");
+    for(int i=0;i<5000&&audio->preparing();++i)
+    {audio->poll(true);std::this_thread::sleep_for(std::chrono::milliseconds(1));}
+    expect(!audio->preparing()&&!audio->connected()&&!audio->active()&&audio->positionFrames()==4000,"cancelled background warmup cannot overwrite final stopped seek or open output");
     expect (seek (4000).isEmpty() && audio->positionFrames() == 4000 && !audio->active(), "seek while device closed retains stopped position");
     expect (audio->connect (48000).isEmpty(), "injected output open");
     expect (play (routing).isEmpty(), "resume at stopped seek");
@@ -165,6 +172,21 @@ void transportChecks(bool current = false)
         { audio->poll(); std::this_thread::sleep_for (std::chrono::milliseconds (1)); }
         expect (fake->isPlaying(), "preroll starts callback");
     };
+    auto seekGate = [&](int64_t frame)
+    {
+        expect (!fake->isPlaying() && audio->active(), "live seek revokes old callback but retains explicit Play authority");
+        for (int i = 0; i < 5000 && audio->preparing(); ++i)
+        { audio->poll(false); std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
+        audio->poll(false);
+        expect (!fake->isPlaying() && audio->getState()==AuditionState::buffering
+            && audio->positionFrames()==frame, "latest live seek is buffered at exact frame with picture gate closed");
+    };
+    auto settleStopped = [&]
+    {
+        for (int i = 0; i < 5000 && audio->preparing(); ++i)
+        { audio->poll(true); std::this_thread::sleep_for(std::chrono::milliseconds(1)); }
+        expect (!audio->preparing() && !fake->isPlaying() && !audio->active(), "late seek preparation cannot revive stopped transport");
+    };
     start(); juce::AudioBuffer<float> block (2, 256); fake->tick (block);
     const auto scale = juce::Decibels::decibelsToGain (-30.0f) * 0.002f * (current ? 0.5f : 1.0f);
     expect (std::abs (block.getSample (0, 0) - 0.4f * scale) < 1e-8f, "seek decodes selected source frame");
@@ -175,12 +197,27 @@ void transportChecks(bool current = false)
     expect (audio->positionFrames() == 4256 && !fake->isPlaying() && audio->transportGeneration() > generation, "stop retains presented position and flushes generation");
     play (routing); start(); fake->tick (block);
     expect (std::abs (block.getSample (0, 0) - 0.4256f * scale) < 1e-8f, "resume starts at retained frame");
-    expect (seek (1000).isEmpty() && audio->getState() == AuditionState::buffering, "playing seek enters preroll");
+    expect (seek (1000).isEmpty(), "playing seek accepts asynchronous preroll");
+    seekGate(1000);
     start(); fake->tick (block);
     expect (std::abs (block.getSample (0, 0) - 0.1f * scale) < 1e-8f, "playing seek flushes old audio samples");
-    for (int frame : { 2000, 7000, 200, 5000 }) seek (frame);
+    const auto seekGeneration=audio->transportGeneration();
+    for (int frame : { 2000, 7000, 200, 5000 })
+        expect(seek(frame).isEmpty()&&!fake->isPlaying()&&audio->positionFrames()==frame,"every repeated live seek accepts the latest frame without releasing old output");
+    expect(audio->transportGeneration()>seekGeneration,"repeated seeks invalidate the former transport generation");
+    seekGate(5000);
     start(); fake->tick (block);
     expect (std::abs (block.getSample (0, 0) - 0.5f * scale) < 1e-8f, "repeated seek publishes only final request");
+    std::this_thread::sleep_for(std::chrono::milliseconds(25));
+    expect(audio->positionFrames()==5256,"latest-seek clock advances only through its submitted samples");
+    expect(seek(2000).isEmpty()&&seek(3000).isEmpty(),"queue a replacement before explicit Stop");
+    audio->stop();settleStopped();
+    expect(audio->positionFrames()==3000,"Stop retains latest requested position and revokes delayed resume");
+    expect(play(routing).isEmpty(),"explicit Play may resume after cancelling queued seek");start();fake->tick(block);
+    expect(std::abs(block.getSample(0,0)-0.3f*scale)<1e-8f,"explicit retry starts exactly at stopped latest position");
+    expect(seek(2000).isEmpty()&&seek(7000).isEmpty()&&seek(9000).isEmpty(),"EOF supersedes queued live seeks");
+    settleStopped();
+    expect(audio->getState()==AuditionState::finished&&audio->positionFrames()==9000,"late cancelled seek completion preserves EOF");
     play (routing, true); start(); fake->tick (block);
     expect (block.getSample (0, 0) == 0, "restart seeks zero");
     seek (9000);
@@ -195,8 +232,24 @@ void transportChecks(bool current = false)
     expect (play (muted, true, true).isEmpty(), "explicit silent timing run accepts all-muted routes");
     start(); fake->tick (block);
     expect (block.getMagnitude (0, 256) == 0, "silent timing run delivers only zero output");
+    audio->stop();expect(play(routing,true).isEmpty(),"restore explicit routed transport for pending-seek guards");start();fake->tick(block);
+    expect(seek(1000).isEmpty()&&seek(4000).isEmpty(),"queue replacement before route change");
+    audio->synchronize(request,muted);settleStopped();
+    expect(audio->positionFrames()==4000,"routing change revokes queued seek without losing stopped position");
+    expect(play(routing).isEmpty(),"explicit Play after route guard");start();fake->tick(block);
+    expect(seek(1000).isEmpty()&&seek(4000).isEmpty(),"queue replacement before request revision change");
+    auto changed=request;changed.context.sessionId="replaced-transport-session";audio->synchronize(changed,routing);settleStopped();
+    expect(play(routing).isEmpty(),"explicit Play restores original request after stale-binding guard");start();fake->tick(block);
+    expect(seek(1000).isEmpty()&&seek(4000).isEmpty(),"queue replacement before Disconnect");
+    audio->disconnect();settleStopped();expect(!audio->connected(),"Disconnect cannot be undone by queued seek completion");
+    expect(audio->connect(48000).isEmpty()&&play(routing).isEmpty(),"explicit reconnect and Play after disconnect");start();fake->tick(block);
+    expect(seek(1000).isEmpty()&&seek(4000).isEmpty(),"queue replacement before device loss");
+    fake->close();settleStopped();expect(audio->getState()==AuditionState::failed,"device loss rejects queued seek and remains visibly failed");
+    expect(audio->connect(48000).isEmpty()&&play(routing).isEmpty(),"explicit recovery after device loss");start();fake->tick(block);
+    expect(seek(1000).isEmpty()&&seek(4000).isEmpty(),"queue replacement before source replacement");
     const auto beforeReplace = audio->transportGeneration(); audio->sourceChanged (media.media);
     expect (!fake->isPlaying() && audio->positionFrames() == 0 && audio->transportGeneration() > beforeReplace, "source replacement stops and resets the transport");
+    settleStopped();expect(audio->positionFrames()==0,"late queued seek cannot restore source position after replacement");
     play (routing); fake->close(); audio->poll();
     for (int i = 0; i < 5000 && audio->preparing(); ++i)
     { audio->poll(); std::this_thread::sleep_for (std::chrono::milliseconds (1)); }

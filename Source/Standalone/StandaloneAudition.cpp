@@ -254,6 +254,7 @@ void StandaloneAudition::stop()
     heldFrame = positionFrames();
     if (preparationControl) preparationControl->cancel.store (true);
     playAfterPreparation = false;
+    resumeLatestSeek = false;
     readyResources.reset();
     stopWorker();
     ++generation;
@@ -481,13 +482,27 @@ juce::String StandaloneAudition::seek (int64_t frame, const AuditionRequest& req
         || !sameVerifiedAssetOwner(request.context.verifiedAssets,expectedAssets)) return "Invalid or stale audition request";
     const auto& media = request.context.media;
     if (frame < 0 || frame > media.frames) return "Seek is outside the selected audio";
-    if (preparation.valid() && !backgroundPreparing()) return "Wait for preparation or cancel it before seeking";
     const bool resume = active();
+    const auto outputsBeforeSeek = pendingOutputs;
     stop();
     sourceRate = static_cast<int64_t> (media.sampleRate); sourceFrames = media.frames; sourceHash = media.sha256;
     heldFrame = startFrame = frame;
     if (frame == media.frames) { state = AuditionState::finished; message = "Audio EOF"; return {}; }
-    return resume ? play (request, routing) : juce::String();
+    if (!resume) return {};
+    if (!connected() || outputsBeforeSeek!=outputNames() || std::abs(media.sampleRate-device->getCurrentSampleRate())>0.01
+        || routing.validate(media.channels,outputNames().size()).isNotEmpty())
+    {state=AuditionState::failed;message="Output configuration changed during seek; stopped";if(preparation.valid())preparationFailure=message;return message;}
+    if (preparation.valid())
+    {
+        // Repeated live seeks replace this request; never overlap readers or
+        // wait for a decoder on the message thread. The cancelled result cannot
+        // publish its old prefix because Stop advanced the generation.
+        pendingRequest=request;pendingRouting=routing;pendingOutputs=outputsBeforeSeek;
+        resumeLatestSeek=true;latestSeekGeneration=generation;playAfterPreparation=true;
+        state=AuditionState::preparing;message="Seeking - preparing latest position; Stop or Cancel prevents playback";
+        return {};
+    }
+    return play(request,routing);
 }
 
 void StandaloneAudition::poll (bool picturePrerolled)
@@ -501,13 +516,28 @@ void StandaloneAudition::poll (bool picturePrerolled)
         }
         if (preparation.wait_for (std::chrono::seconds (0)) != std::future_status::ready) return;
         auto result = preparation.get();
+        if (resumeLatestSeek)
+        {
+            resumeLatestSeek=false;playAfterPreparation=false;
+            state=connected()?AuditionState::ready:AuditionState::disconnected;
+            if(latestSeekGeneration!=generation || pendingRequest.identity()!=expectedIdentity
+                || !sameVerifiedAssetOwner(pendingRequest.context.verifiedAssets,expectedAssets)
+                || pendingRequest.validationError().isNotEmpty() || !pendingRequest.context.sourceFilesMatch()
+                || !connected() || pendingOutputs!=outputNames()
+                || std::abs(pendingRequest.context.media.sampleRate-device->getCurrentSampleRate())>0.01)
+            {state=AuditionState::failed;message="Seek request or output changed; stopped. Press Play to retry.";return;}
+            const auto error=play(pendingRequest,pendingRouting);
+            if(error.isNotEmpty()){state=AuditionState::failed;message=error+"; stopped";}
+            return; // The latest prefix and picture must both preroll first.
+        }
         const bool accepted = preparationGeneration == generation && ! preparationControl->isCancelled()
             && pendingRequest.identity() == expectedIdentity;
-        state = connected() ? AuditionState::ready : AuditionState::disconnected;
+        const bool atEnd=state==AuditionState::finished;
+        state = atEnd ? AuditionState::finished : connected() ? AuditionState::ready : AuditionState::disconnected;
         if (! accepted)
         {
             playAfterPreparation = false;
-            message = preparationFailure.isEmpty() ? "Source preparation cancelled; stopped" : preparationFailure;
+            message = preparationFailure.isEmpty() ? (atEnd?"Audio EOF":"Source preparation cancelled; stopped") : preparationFailure;
             if (preparationFailure.isNotEmpty()) state = AuditionState::failed;
             return;
         }

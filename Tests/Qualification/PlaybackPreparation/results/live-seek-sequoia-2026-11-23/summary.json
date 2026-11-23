@@ -1,0 +1,45 @@
+{
+  "passed": true,
+  "scope": "UI development follow-up for candidate02; combined frozen actual-platform rerun owned by Logic",
+  "parent_handover": "d70403d1a9f02e38048a17df79bd461e69498751",
+  "measurement_build": "3fc9ebd577afa62dc62fc04e12ef52d1abc03042379852d0ebe6d17120e25e86",
+  "os": "15.7.9",
+  "architecture": "arm64",
+  "groups": {
+    "audition": 4069,
+    "playback-ui": 668,
+    "no-argument-video": 218104
+  },
+  "total": 222841,
+  "executables": {
+    "LevelScopeVideoTests": {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/background-playback-preparation-2026-11-23/compile/LevelScopeVideoTests_artefacts/Release/LevelScopeVideoTests",
+      "sha256": "79b305961414d5357971f011edd5a1d29bd2cf576bb956575b76a14df6291cb4"
+    },
+    "LevelScopeRegionUITests": {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/background-playback-preparation-2026-11-23/compile/LevelScopeRegionUITests_artefacts/Release/LevelScopeRegionUITests",
+      "sha256": "592c2039aa371dd3203a6ad8ef38688713f3c8c563f23aa2bb6584a1a3254694"
+    },
+    "LevelScopeAuditionTests": {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/background-playback-preparation-2026-11-23/compile/LevelScopeAuditionTests_artefacts/Release/LevelScopeAuditionTests",
+      "sha256": "67fc09340e0b795a9400b393fff79ea90208c13be0d838f73b52559852f5958e"
+    }
+  },
+  "changed_source_sha256": {
+    "Source/Standalone/StandaloneAudition.cpp": "bf050e58789ce7df6cf0fc7e8e58e1aca540dea4415ca89f4ee596ef3e473ee7",
+    "Source/Standalone/StandaloneAudition.h": "af99ce4107330bf1249aae53923f4bdf775ec827cef417c138963465a40a99ad",
+    "Tests/VideoTests.cpp": "316ae6bbe6cef5be0c82e689f10eb7e9fed8505d67ff46a95c4d8cfc805e23a6"
+  },
+  "receipts_sha256": {
+    "video-before-stopped-case.log": "84c5973c6a1261beb5049d3d7e777effd771cde30ebbe7d5208885a7ee2e4fe7",
+    "video.log": "236755a7d5d56bffe6fc72d9698559d46487d5d600c302d74eae19fe071f6075",
+    "playback-ui.json": "e6f12ab61bbaae6142f4a98b1742835da0492c418b74e9966839b6e69babb312",
+    "audition.json": "d195f8447ac05fe63e24afaa1b0628baf44a343a256ca18305c0cc7e74efeebc"
+  },
+  "video_scope": "No arguments, no movie. Rational/clock arithmetic and synthetic9000-frame audio; exact Source/Current samples and clock; injected output only. Assertion count is not endurance evidence.",
+  "physical_devices_opened": false,
+  "audible_tests_run": false,
+  "candidate01_modified": false,
+  "main_changed": false,
+  "high_sierra_run_here": false
+}
