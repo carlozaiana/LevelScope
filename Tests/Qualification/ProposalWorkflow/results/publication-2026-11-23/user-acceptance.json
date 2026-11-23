@@ -1,0 +1,11 @@
+{
+  "date": "2026-11-23",
+  "kind": "Human workflow acceptance, separate from automated qualification",
+  "source_chat": "01a13c8f-90a9-7150-813f-cb057626ef7e",
+  "reported_acceptance": "The user reports that the new workflow was tested and works as expected.",
+  "implementation": "79b55eb177a01e56fdbe86f843e03140df356bcd",
+  "qualification_handover": "d5f6e86801c675794bb0b37281afc44bd30aa961",
+  "additional_listening_or_individual_checklist_results_inferred": false,
+  "prior_boundary_acceptance": "Tests/Qualification/ProposalWorkflow/results/2026-11-22/user-acceptance.json",
+  "escape_clarification": "Escape cancels while the mouse is held during a drag; after release use Undo."
+}

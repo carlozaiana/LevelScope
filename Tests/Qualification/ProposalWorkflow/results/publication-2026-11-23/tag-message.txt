@@ -1,0 +1,24 @@
+Combined M20 applied-boundary editing and Propose/apply/verify checkpoint
+
+Qualified handover: d5f6e86801c675794bb0b37281afc44bd30aa961
+Workflow implementation: 79b55eb177a01e56fdbe86f843e03140df356bcd
+Boundary implementation: 240da530302af8f539d0351b7332798e2373314a
+Production Source tree: 0a96e9ab0b47847d301c7b273577b945a4c1921a
+
+2,957 affected assertions passed on each actual platform: Sequoia arm64
+and Intel High Sierra 10.13.6, using the unchanged preserved workflow
+candidate-01. Earlier unchanged qualification is inherited as documented.
+The user reports the new workflow was tested and works as expected;
+this acceptance is separate from automated checks and adds no inferred
+listening or individual checklist result. Earlier boundary editing,
+Undo/Redo and listening acceptance remains separately recorded.
+
+Broad video, full-film and three-hour endurance remain deferred, with no
+automatic 90-minute substitute. The known completion pause remains a
+separate limitation. Limited dropped-video-frame acceptance does not waive
+audio interruptions, accumulating drift or sustained freezes. No new
+independent-programme correction or physical-device qualification is claimed.
+
+Preserves all previous tags, frozen applications, evidence, original
+media/sessions, listening materials, manuals and unrelated work. No rebuild.
+Publication and main integration explicitly authorized by the user.

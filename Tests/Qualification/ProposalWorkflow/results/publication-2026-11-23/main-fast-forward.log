@@ -1,0 +1,323 @@
+Updating 1056ad4..d5f6e86
+Fast-forward
+ .../91_AppliedRegionBoundaryEditing.md             |  141 +
+ Docs/ProjectIndex/92_ProposeApplyVerifyWorkflow.md |  187 ++
+ Docs/ProjectIndex/README.md                        |    1 +
+ Source/Standalone/BoundaryEditing.h                |   17 +
+ Source/Standalone/ManualEditHistory.h              |   21 +-
+ Source/Standalone/MeasurementTimeline.cpp          |   73 +-
+ Source/Standalone/MeasurementTimeline.h            |   11 +-
+ Source/Standalone/ProposalEditMetadata.h           |   43 +
+ Source/Standalone/ProposalOperation.h              |  169 ++
+ Source/Standalone/ProposalWorkflowPanel.cpp        |   42 +-
+ Source/Standalone/ProposalWorkflowPanel.h          |    7 +
+ Source/Standalone/RegionAssessmentReceipt.cpp      |   33 +-
+ Source/Standalone/StandaloneAudioPanel.cpp         |   14 +-
+ Source/Standalone/StandaloneMainComponent.cpp      |  176 +-
+ Source/Standalone/StandaloneMainComponent.h        |   10 +-
+ Source/Standalone/StandaloneRegionProposal.cpp     |   27 +-
+ Source/Standalone/StandaloneRegionProposal.h       |    1 +
+ Source/Standalone/StandaloneSectionProposal.cpp    |   69 +
+ Source/Standalone/StandaloneSectionProposal.h      |   14 +-
+ Source/Standalone/StandaloneSessionModel.h         |  114 +-
+ Source/Standalone/StandaloneSessionUI.cpp          |   10 +-
+ Source/Standalone/TimelineGainLane.cpp             |   51 +-
+ Source/Standalone/TimelineGainLane.h               |    6 +-
+ Source/Standalone/TimelineTransport.h              |    3 +-
+ Tests/AppliedBoundaryChecks.h                      |   68 +
+ Tests/AppliedBoundaryUIChecks.h                    |   39 +
+ Tests/EventUIIntegrationChecks.h                   |    2 +-
+ Tests/InnerUIIntegrationChecks.h                   |    4 +-
+ Tests/ProposalOperationChecks.h                    |  142 +
+ .../results/2026-11-22/acceptance.json             |   87 +
+ .../results/2026-11-22/candidate-01/identity.json  |  940 ++++++
+ .../2026-11-22/candidate-01/identity.sha256        |    1 +
+ .../2026-11-22/development-timeline-01.json        |    1 +
+ .../2026-11-22/development-timeline-02.json        |    1 +
+ .../main-applied-boundary-committed.png            |  Bin 0 -> 255325 bytes
+ .../main-applied-boundary-preview.png              |  Bin 0 -> 264610 bytes
+ .../high-sierra-01/applied-ui-files/result.json    |    1 +
+ .../results/2026-11-22/high-sierra-01/summary.json |   67 +
+ .../2026-11-22/high-sierra-01/timeline.json        |    1 +
+ .../2026-11-22/high-sierra-01/ui-files/result.json |    1 +
+ .../results/2026-11-22/inputs/identity.json        |   10 +
+ .../results/2026-11-22/preservation-before.json    | 2625 +++++++++++++++++
+ .../results/2026-11-22/remote-final.txt            |    3 +
+ .../main-applied-boundary-committed.png            |  Bin 0 -> 263611 bytes
+ .../main-applied-boundary-preview.png              |  Bin 0 -> 271819 bytes
+ .../sequoia-01/applied-ui-files/result.json        |    1 +
+ .../results/2026-11-22/sequoia-01/summary.json     |   67 +
+ .../results/2026-11-22/sequoia-01/timeline.json    |    1 +
+ .../2026-11-22/sequoia-01/ui-files/result.json     |    1 +
+ Tests/Qualification/M20/package_ui.py              |    6 +-
+ Tests/Qualification/M20/run_ui.py                  |   14 +-
+ .../results/2026-11-22/acceptance.json             |  107 +
+ .../results/2026-11-22/candidate-01/identity.json  |  946 ++++++
+ .../2026-11-22/candidate-01/identity.sha256        |    1 +
+ .../results/2026-11-22/development-01.json         |    1 +
+ .../results/2026-11-22/development-02.json         |    1 +
+ .../results/2026-11-22/development-03.json         |    1 +
+ .../results/2026-11-22/development-record.json     |   15 +
+ .../results/2026-11-22/preservation-after.json     |   10 +
+ .../results/2026-11-22/preservation-before.json    | 3109 ++++++++++++++++++++
+ .../main-applied-boundary-committed.png            |  Bin 0 -> 262142 bytes
+ .../main-applied-boundary-preview.png              |  Bin 0 -> 266525 bytes
+ .../sequoia-01/applied-ui-files/result.json        |    1 +
+ .../results/2026-11-22/sequoia-01/applied-ui.log   |    1 +
+ .../sequoia-01/operation-ui-files/result.json      |    1 +
+ .../verified-boundary-advisory.png                 |  Bin 0 -> 337080 bytes
+ .../results/2026-11-22/sequoia-01/operation-ui.log |    1 +
+ .../results/2026-11-22/sequoia-01/summary.json     |   87 +
+ .../timeline-files/applied-boundary-preview.png    |  Bin 0 -> 104672 bytes
+ .../sequoia-01/timeline-files/blend-centre.png     |  Bin 0 -> 40982 bytes
+ .../timeline-files/boundary-batch-confirmation.png |  Bin 0 -> 21369 bytes
+ .../sequoia-01/timeline-files/compact.png          |  Bin 0 -> 24360 bytes
+ .../timeline-files/delete-neighbour-choices.png    |  Bin 0 -> 29957 bytes
+ .../sequoia-01/timeline-files/direct-gain-lane.png |  Bin 0 -> 59796 bytes
+ .../sequoia-01/timeline-files/drawn-section.png    |  Bin 0 -> 64318 bytes
+ .../timeline-files/gain-preview-awaiting-data.png  |  Bin 0 -> 40472 bytes
+ .../timeline-files/gain-preview-new-programme.png  |  Bin 0 -> 40069 bytes
+ .../timeline-files/gain-preview-retired.png        |  Bin 0 -> 40069 bytes
+ .../sequoia-01/timeline-files/gain-preview.png     |  Bin 0 -> 42819 bytes
+ .../timeline-files/gain-short-transition.png       |  Bin 0 -> 85557 bytes
+ .../sequoia-01/timeline-files/loudness-only.png    |  Bin 0 -> 44888 bytes
+ .../timeline-files/move-boundary-choices.png       |  Bin 0 -> 25081 bytes
+ .../sequoia-01/timeline-files/multi-selection.png  |  Bin 0 -> 69828 bytes
+ .../sequoia-01/timeline-files/navigation.png       |  Bin 0 -> 64628 bytes
+ .../timeline-files/over-target-peaks.png           |  Bin 0 -> 42376 bytes
+ .../sequoia-01/timeline-files/partial.png          |  Bin 0 -> 62560 bytes
+ .../sequoia-01/timeline-files/peak-hover.png       |  Bin 0 -> 16217 bytes
+ .../timeline-files/pending-boundaries.png          |  Bin 0 -> 99605 bytes
+ .../timeline-files/relative-membership.png         |  Bin 0 -> 46993 bytes
+ .../sequoia-01/timeline-files/role-conflict.png    |  Bin 0 -> 79181 bytes
+ .../sequoia-01/timeline-files/roles/5.1.json       |    8 +
+ .../sequoia-01/timeline-files/roles/stereo.json    |    4 +
+ .../timeline-files/separate-role-review.png        |  Bin 0 -> 46448 bytes
+ .../timeline-files/separate-selection.png          |  Bin 0 -> 95378 bytes
+ .../sequoia-01/timeline-files/surround-blend.png   |  Bin 0 -> 46556 bytes
+ .../timeline-files/true-peak-only-warning.png      |  Bin 0 -> 65210 bytes
+ .../sequoia-01/timeline-files/waveform-only.png    |  Bin 0 -> 35085 bytes
+ .../results/2026-11-22/sequoia-01/timeline.json    |    1 +
+ .../results/2026-11-22/sequoia-01/timeline.log     |    1 +
+ .../sequoia-01/ui-files/direct-current-status.png  |  Bin 0 -> 225478 bytes
+ .../sequoia-01/ui-files/inspection-convenience.png |  Bin 0 -> 198138 bytes
+ .../sequoia-01/ui-files/main-boundary-pending.png  |  Bin 0 -> 223901 bytes
+ .../sequoia-01/ui-files/main-regions.png           |  Bin 0 -> 230584 bytes
+ .../sequoia-01/ui-files/monitor-overload.png       |  Bin 0 -> 201746 bytes
+ .../sequoia-01/ui-files/region-failure.png         |  Bin 0 -> 183150 bytes
+ .../sequoia-01/ui-files/region-review.png          |  Bin 0 -> 170067 bytes
+ .../sequoia-01/ui-files/region-settings-frames.png |  Bin 0 -> 142216 bytes
+ .../sequoia-01/ui-files/region-settings.png        |  Bin 0 -> 174043 bytes
+ .../ui-files/remeasure-after-global-gain.png       |  Bin 0 -> 218427 bytes
+ .../ui-files/remeasure-cancel-after-gain.png       |  Bin 0 -> 217211 bytes
+ .../2026-11-22/sequoia-01/ui-files/result.json     |    1 +
+ .../results/2026-11-22/sequoia-01/ui.log           |    1 +
+ .../results/2026-11-22/user-acceptance.json        |   15 +
+ .../results/2026-11-23/acceptance.json             |  107 +
+ .../results/2026-11-23/high-sierra-01.log          |    4 +
+ .../main-applied-boundary-committed.png            |  Bin 0 -> 254080 bytes
+ .../main-applied-boundary-preview.png              |  Bin 0 -> 259755 bytes
+ .../high-sierra-01/applied-ui-files/result.json    |    1 +
+ .../2026-11-23/high-sierra-01/applied-ui.log       |    1 +
+ .../high-sierra-01/operation-ui-files/result.json  |    1 +
+ .../verified-boundary-advisory.png                 |  Bin 0 -> 327021 bytes
+ .../2026-11-23/high-sierra-01/operation-ui.log     |    1 +
+ .../results/2026-11-23/high-sierra-01/summary.json |   87 +
+ .../timeline-files/applied-boundary-preview.png    |  Bin 0 -> 100751 bytes
+ .../high-sierra-01/timeline-files/blend-centre.png |  Bin 0 -> 39357 bytes
+ .../timeline-files/boundary-batch-confirmation.png |  Bin 0 -> 20899 bytes
+ .../high-sierra-01/timeline-files/compact.png      |  Bin 0 -> 24310 bytes
+ .../timeline-files/delete-neighbour-choices.png    |  Bin 0 -> 29199 bytes
+ .../timeline-files/direct-gain-lane.png            |  Bin 0 -> 57639 bytes
+ .../timeline-files/drawn-section.png               |  Bin 0 -> 62543 bytes
+ .../timeline-files/gain-preview-awaiting-data.png  |  Bin 0 -> 38779 bytes
+ .../timeline-files/gain-preview-new-programme.png  |  Bin 0 -> 38373 bytes
+ .../timeline-files/gain-preview-retired.png        |  Bin 0 -> 38373 bytes
+ .../high-sierra-01/timeline-files/gain-preview.png |  Bin 0 -> 41256 bytes
+ .../timeline-files/gain-short-transition.png       |  Bin 0 -> 82883 bytes
+ .../timeline-files/loudness-only.png               |  Bin 0 -> 43177 bytes
+ .../timeline-files/move-boundary-choices.png       |  Bin 0 -> 24223 bytes
+ .../timeline-files/multi-selection.png             |  Bin 0 -> 67140 bytes
+ .../high-sierra-01/timeline-files/navigation.png   |  Bin 0 -> 62153 bytes
+ .../timeline-files/over-target-peaks.png           |  Bin 0 -> 40787 bytes
+ .../high-sierra-01/timeline-files/partial.png      |  Bin 0 -> 60588 bytes
+ .../high-sierra-01/timeline-files/peak-hover.png   |  Bin 0 -> 14998 bytes
+ .../timeline-files/pending-boundaries.png          |  Bin 0 -> 96484 bytes
+ .../timeline-files/relative-membership.png         |  Bin 0 -> 45409 bytes
+ .../timeline-files/role-conflict.png               |  Bin 0 -> 77667 bytes
+ .../high-sierra-01/timeline-files/roles/5.1.json   |    8 +
+ .../timeline-files/roles/stereo.json               |    4 +
+ .../timeline-files/separate-role-review.png        |  Bin 0 -> 47235 bytes
+ .../timeline-files/separate-selection.png          |  Bin 0 -> 92460 bytes
+ .../timeline-files/surround-blend.png              |  Bin 0 -> 44702 bytes
+ .../timeline-files/true-peak-only-warning.png      |  Bin 0 -> 63619 bytes
+ .../timeline-files/waveform-only.png               |  Bin 0 -> 33942 bytes
+ .../2026-11-23/high-sierra-01/timeline.json        |    1 +
+ .../results/2026-11-23/high-sierra-01/timeline.log |    1 +
+ .../ui-files/direct-current-status.png             |  Bin 0 -> 217290 bytes
+ .../ui-files/inspection-convenience.png            |  Bin 0 -> 191806 bytes
+ .../ui-files/main-boundary-pending.png             |  Bin 0 -> 217774 bytes
+ .../high-sierra-01/ui-files/main-regions.png       |  Bin 0 -> 221092 bytes
+ .../high-sierra-01/ui-files/monitor-overload.png   |  Bin 0 -> 195694 bytes
+ .../high-sierra-01/ui-files/region-failure.png     |  Bin 0 -> 173100 bytes
+ .../high-sierra-01/ui-files/region-review.png      |  Bin 0 -> 160058 bytes
+ .../ui-files/region-settings-frames.png            |  Bin 0 -> 135230 bytes
+ .../high-sierra-01/ui-files/region-settings.png    |  Bin 0 -> 165071 bytes
+ .../ui-files/remeasure-after-global-gain.png       |  Bin 0 -> 211153 bytes
+ .../ui-files/remeasure-cancel-after-gain.png       |  Bin 0 -> 210192 bytes
+ .../2026-11-23/high-sierra-01/ui-files/result.json |    1 +
+ .../results/2026-11-23/high-sierra-01/ui.log       |    1 +
+ .../results/2026-11-23/post-run-integrity.json     |   73 +
+ .../results/2026-11-23/preparation.json            |   14 +
+ .../results/2026-11-23/return.json                 |    6 +
+ .../results/2026-11-23/transfer.json               |   10 +
+ Tests/RegionUIIntegrationTests.cpp                 |   18 +-
+ Tests/TimelineProgressTests.cpp                    |    3 +-
+ 173 files changed, 9859 insertions(+), 119 deletions(-)
+ create mode 100644 Docs/ProjectIndex/91_AppliedRegionBoundaryEditing.md
+ create mode 100644 Docs/ProjectIndex/92_ProposeApplyVerifyWorkflow.md
+ create mode 100644 Source/Standalone/ProposalEditMetadata.h
+ create mode 100644 Source/Standalone/ProposalOperation.h
+ create mode 100644 Tests/AppliedBoundaryChecks.h
+ create mode 100644 Tests/AppliedBoundaryUIChecks.h
+ create mode 100644 Tests/ProposalOperationChecks.h
+ create mode 100644 Tests/Qualification/AppliedBoundaries/results/2026-11-22/acceptance.json
+ create mode 100644 Tests/Qualification/AppliedBoundaries/results/2026-11-22/candidate-01/identity.json
+ create mode 100644 Tests/Qualification/AppliedBoundaries/results/2026-11-22/candidate-01/identity.sha256
+ create mode 100644 Tests/Qualification/AppliedBoundaries/results/2026-11-22/development-timeline-01.json
+ create mode 100644 Tests/Qualification/AppliedBoundaries/results/2026-11-22/development-timeline-02.json
+ create mode 100644 Tests/Qualification/AppliedBoundaries/results/2026-11-22/high-sierra-01/applied-ui-files/main-applied-boundary-committed.png
+ create mode 100644 Tests/Qualification/AppliedBoundaries/results/2026-11-22/high-sierra-01/applied-ui-files/main-applied-boundary-preview.png
+ create mode 100644 Tests/Qualification/AppliedBoundaries/results/2026-11-22/high-sierra-01/applied-ui-files/result.json
+ create mode 100644 Tests/Qualification/AppliedBoundaries/results/2026-11-22/high-sierra-01/summary.json
+ create mode 100644 Tests/Qualification/AppliedBoundaries/results/2026-11-22/high-sierra-01/timeline.json
+ create mode 100644 Tests/Qualification/AppliedBoundaries/results/2026-11-22/high-sierra-01/ui-files/result.json
+ create mode 100644 Tests/Qualification/AppliedBoundaries/results/2026-11-22/inputs/identity.json
+ create mode 100644 Tests/Qualification/AppliedBoundaries/results/2026-11-22/preservation-before.json
+ create mode 100644 Tests/Qualification/AppliedBoundaries/results/2026-11-22/remote-final.txt
+ create mode 100644 Tests/Qualification/AppliedBoundaries/results/2026-11-22/sequoia-01/applied-ui-files/main-applied-boundary-committed.png
+ create mode 100644 Tests/Qualification/AppliedBoundaries/results/2026-11-22/sequoia-01/applied-ui-files/main-applied-boundary-preview.png
+ create mode 100644 Tests/Qualification/AppliedBoundaries/results/2026-11-22/sequoia-01/applied-ui-files/result.json
+ create mode 100644 Tests/Qualification/AppliedBoundaries/results/2026-11-22/sequoia-01/summary.json
+ create mode 100644 Tests/Qualification/AppliedBoundaries/results/2026-11-22/sequoia-01/timeline.json
+ create mode 100644 Tests/Qualification/AppliedBoundaries/results/2026-11-22/sequoia-01/ui-files/result.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/acceptance.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/candidate-01/identity.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/candidate-01/identity.sha256
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/development-01.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/development-02.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/development-03.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/development-record.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/preservation-after.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/preservation-before.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/applied-ui-files/main-applied-boundary-committed.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/applied-ui-files/main-applied-boundary-preview.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/applied-ui-files/result.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/applied-ui.log
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/operation-ui-files/result.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/operation-ui-files/verified-boundary-advisory.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/operation-ui.log
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/summary.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/applied-boundary-preview.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/blend-centre.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/boundary-batch-confirmation.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/compact.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/delete-neighbour-choices.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/direct-gain-lane.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/drawn-section.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/gain-preview-awaiting-data.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/gain-preview-new-programme.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/gain-preview-retired.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/gain-preview.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/gain-short-transition.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/loudness-only.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/move-boundary-choices.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/multi-selection.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/navigation.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/over-target-peaks.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/partial.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/peak-hover.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/pending-boundaries.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/relative-membership.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/role-conflict.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/roles/5.1.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/roles/stereo.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/separate-role-review.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/separate-selection.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/surround-blend.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/true-peak-only-warning.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline-files/waveform-only.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/timeline.log
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/ui-files/direct-current-status.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/ui-files/inspection-convenience.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/ui-files/main-boundary-pending.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/ui-files/main-regions.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/ui-files/monitor-overload.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/ui-files/region-failure.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/ui-files/region-review.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/ui-files/region-settings-frames.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/ui-files/region-settings.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/ui-files/remeasure-after-global-gain.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/ui-files/remeasure-cancel-after-gain.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/ui-files/result.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/sequoia-01/ui.log
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-22/user-acceptance.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/acceptance.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01.log
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/applied-ui-files/main-applied-boundary-committed.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/applied-ui-files/main-applied-boundary-preview.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/applied-ui-files/result.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/applied-ui.log
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/operation-ui-files/result.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/operation-ui-files/verified-boundary-advisory.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/operation-ui.log
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/summary.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/applied-boundary-preview.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/blend-centre.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/boundary-batch-confirmation.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/compact.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/delete-neighbour-choices.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/direct-gain-lane.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/drawn-section.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/gain-preview-awaiting-data.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/gain-preview-new-programme.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/gain-preview-retired.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/gain-preview.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/gain-short-transition.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/loudness-only.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/move-boundary-choices.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/multi-selection.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/navigation.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/over-target-peaks.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/partial.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/peak-hover.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/pending-boundaries.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/relative-membership.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/role-conflict.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/roles/5.1.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/roles/stereo.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/separate-role-review.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/separate-selection.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/surround-blend.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/true-peak-only-warning.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline-files/waveform-only.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/timeline.log
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/ui-files/direct-current-status.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/ui-files/inspection-convenience.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/ui-files/main-boundary-pending.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/ui-files/main-regions.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/ui-files/monitor-overload.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/ui-files/region-failure.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/ui-files/region-review.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/ui-files/region-settings-frames.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/ui-files/region-settings.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/ui-files/remeasure-after-global-gain.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/ui-files/remeasure-cancel-after-gain.png
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/ui-files/result.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/high-sierra-01/ui.log
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/post-run-integrity.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/preparation.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/return.json
+ create mode 100644 Tests/Qualification/ProposalWorkflow/results/2026-11-23/transfer.json
