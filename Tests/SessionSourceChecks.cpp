@@ -27,7 +27,8 @@ struct PauseCopy : JobFeedback
         }
     }
 };
-void concurrent(const AuditionRequest& request, bool cancelProducer)
+enum class Cancellation { none, producer, waiter };
+void concurrent(const AuditionRequest& request, Cancellation cancel)
 {
     StandaloneSessionModel model;
     expect(model.setValidatedSource(request.context.sourceFile, request.context.media), "adopt concurrency fixture");
@@ -43,23 +44,28 @@ void concurrent(const AuditionRequest& request, bool cancelProducer)
     while (!model.verifiedAssets->counts().waits && std::chrono::steady_clock::now() < deadline)
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     const bool joined = model.verifiedAssets->counts().waits > 0;
-    if (cancelProducer) first.cancel = true;
-    else second.cancel = true;
-    const bool waiterLeft = cancelProducer || b.wait_for(std::chrono::seconds(2)) == std::future_status::ready;
+    if (cancel == Cancellation::producer) first.cancel = true;
+    if (cancel == Cancellation::waiter) second.cancel = true;
+    const bool waiterLeft = cancel != Cancellation::waiter || b.wait_for(std::chrono::seconds(2)) == std::future_status::ready;
     pause->release.set_value();
     const auto producer = a.get(), waiter = b.get();
     expect(began && joined && waiterLeft, "concurrent acquisition waits without starting a second copy and waiter cancels promptly");
-    expect(cancelProducer ? producer.error == ErrorCode::cancelled && bool(waiter.value)
-                          : waiter.error == ErrorCode::cancelled && bool(producer.value), "one cancellation preserves the other consumer");
+    if (cancel == Cancellation::none)
+        expect(producer.value && waiter.value && *producer.value == *waiter.value, "two successful consumers coalesce one cold preparation");
+    else if (cancel == Cancellation::producer)
+        expect(producer.error == ErrorCode::cancelled && bool(waiter.value), "live waiter continues after producer cancellation");
+    else
+        expect(waiter.error == ErrorCode::cancelled && bool(producer.value), "producer continues after waiter cancellation");
     expect(model.verifiedAssets->counts().copies == 1, "one complete verification after competing requests");
     auto next = acquire(context);
-    expect(next == *(cancelProducer ? waiter.value : producer.value), "subsequent consumer shares completed file");
+    expect(next == *(producer.value ? producer.value : waiter.value), "subsequent consumer shares completed file");
 }
 void lifecycle(const juce::File& root)
 {
     const auto request = fixture(root.getChildFile("source.wav"), 48000, 2, 192003);
-    concurrent(request, false);
-    concurrent(request, true);
+    concurrent(request, Cancellation::none);
+    concurrent(request, Cancellation::waiter);
+    concurrent(request, Cancellation::producer);
     StandaloneSessionModel model;
     expect(model.setValidatedSource(request.context.sourceFile, request.context.media), "adopt verified source");
     model.sourceDocument.layout = layoutFor(2);
@@ -94,6 +100,12 @@ void lifecycle(const juce::File& root)
     expect(fresh->file().deleteFile() && !fresh->intact(), "missing private copy invalidated");
     auto recovered = acquire(context);
     expect(recovered->intact() && model.verifiedAssets->counts().copies == 3, "missing private copy rebuilt");
+    const auto path = recovered->file();
+    const auto displaced = root.getChildFile("displaced-private.wav");
+    expect(path.moveFileTo(displaced) && path.replaceWithText("unrelated replacement"), "replace the private pathname with an unrelated owned fixture");
+    recovered.reset();
+    auto replacement = acquire(context);
+    expect(replacement->file() != path && path.loadFileAsString() == "unrelated replacement", "cleanup leaves an unrelated replacement untouched");
     const auto oldStamp = context.media.modified;
     {auto output = context.sourceFile.createOutputStream(); expect(output && output->setPosition(80) && output->writeByte(44), "mutate owned original fixture");}
     expect(context.sourceFile.setLastModificationTime(oldStamp) && context.media.matchesFileStamp(context.sourceFile), "mutation preserves legacy size/mtime");
@@ -121,6 +133,15 @@ void assembled(const juce::File& root)
     expect(artifact.value && artifact.value->domain == MeasurementDomain::renderedOutput && artifact.value->measuredContentHash != c.media.sha256,
            "fresh rendered bytes independently verified");
     expect(s.verifiedAssets->counts().copies == 4 && s.verifiedAssets->counts().cacheHits >= 16, "waveform, measured domains and render reuse four physical files");
+    auto saved = root.getChildFile("reopen.levelscope");
+    expect(sf::save(sf::capture(s), saved, job).succeeded(), "save composition session without owned-file locators");
+    auto document = sf::read(saved, job);
+    expect(bool(document.document), "read saved session");
+    auto verified = sf::verify(*document.document, job);
+    expect(verified.prepared && verified.prepared->model.sessionId != s.sessionId, "opening verifies inputs in a distinct runtime");
+    auto reopened = acquire(verified.prepared->model.measurementContext(MeasurementDomain::source));
+    expect(verified.prepared->model.verifiedAssets->counts().copies == 4 && reopened->files()[0] != assets->files()[0],
+           "reopened session establishes fresh trust and private storage");
     auto group = *f.recipe.me.assembly;
     std::swap(group.members[0].file, group.members[1].file);
     std::swap(group.members[0].media, group.members[1].media);

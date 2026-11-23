@@ -20,6 +20,11 @@ struct SnapshotStorage
     juce::File directory = juce::File::getSpecialLocation (juce::File::tempDirectory);
     std::function<juce::int64 (const juce::File&)> availableBytes;
     std::function<std::unique_ptr<SnapshotWriter> (const juce::File&)> createWriter;
+
+    bool usesSessionStorage() const
+    {
+        return !availableBytes && !createWriter && directory == juce::File::getSpecialLocation(juce::File::tempDirectory);
+    }
 };
 class VerifiedSource : public std::enable_shared_from_this<VerifiedSource>
 {

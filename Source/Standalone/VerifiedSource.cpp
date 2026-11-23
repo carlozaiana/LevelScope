@@ -158,12 +158,18 @@ VerifiedSourceResult prepareVerifiedSource (const ServiceContext& context, JobCo
         checkCancel (control);
         if (context.media.bytes <= 0 || context.media.sha256.isEmpty())
             throw Failure { ErrorCode::invalidRequest, "Imported source identity required" };
-        if ((context.composition || context.assembly) && (!context.verifiedAssets || storage.availableBytes
-            || storage.createWriter || storage.directory != juce::File::getSpecialLocation(juce::File::tempDirectory)))
+        const bool bound = context.verifiedAssets.has_value() && storage.usesSessionStorage();
+        const auto owner = bound ? context.verifiedAssets->lock() : nullptr;
+        if (bound && !owner) return {{}, ErrorCode::staleRevision, "Source session closed"};
+        if (context.composition || context.assembly)
         {
-            const auto free = storage.availableBytes ? storage.availableBytes(storage.directory) : storage.directory.getBytesFreeOnVolume();
-            if (free >= 0 && (free < context.media.bytes || free - context.media.bytes < 65536))
-                throw Failure { ErrorCode::insufficientDiskSpace, "Insufficient temporary space for the programme" };
+            const auto missing = owner ? owner->missingBytes(context.sourceMembers()) : uint64_t(context.media.bytes);
+            if (missing)
+            {
+                const auto free = storage.availableBytes ? storage.availableBytes(storage.directory) : storage.directory.getBytesFreeOnVolume();
+                if (free >= 0 && (uint64_t(free) < missing || uint64_t(free) - missing < 65536))
+                    throw Failure { ErrorCode::insufficientDiskSpace, "Insufficient temporary space for the unprepared programme members" };
+            }
         }
         if(context.composition)
         {
@@ -209,13 +215,7 @@ VerifiedSourceResult prepareVerifiedSource (const ServiceContext& context, JobCo
             if (!context.sourceFilesMatch()) throw Failure { ErrorCode::sourceChanged, "A programme member changed during preparation" };
             return { std::shared_ptr<const VerifiedSource>(std::move(group)), ErrorCode::none, "Complete programme group verified" };
         }
-        if (context.verifiedAssets && !storage.availableBytes && !storage.createWriter
-            && storage.directory == juce::File::getSpecialLocation(juce::File::tempDirectory))
-        {
-            auto owner = context.verifiedAssets->lock();
-            if (!owner) return {{}, ErrorCode::staleRevision, "Source session closed"};
-            return owner->acquire(context, control);
-        }
+        if (owner) return owner->acquire(context, control);
         return VerifiedSource::copyAsset(context, control, storage);
     }
     catch (const Failure& e) { return { {}, e.code, e.message }; }

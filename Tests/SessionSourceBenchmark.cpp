@@ -1,6 +1,7 @@
 // Same worker driver links against the qualified baseline and new production objects.
 #include "CompositionTestFixtures.h"
 #include "Standalone/StandaloneRegionProposal.h"
+#include "Standalone/ProposalOperation.h"
 #include <juce_cryptography/juce_cryptography.h>
 
 namespace
@@ -66,9 +67,11 @@ void compareProgramme(const juce::File& file, juce::DynamicObject& record)
     juce::String error;
     expect(s.setJobRequirements(req, error), "set comparison requirements");
     auto settings = proposal::RegionPlanningSettings::innerDefaults(proposal::RegionMode::automatic, sectionInputIdentity(s.measurementContext(MeasurementDomain::source)));
+    settings.allowAutomaticMargins = true;
     settings.leftMarginMs = settings.rightMarginMs = 1000;
     expect(s.setRegionPlanning(settings, error), "select qualified competing-boundary method");
     juce::Array<juce::var> runs;
+    SectionProposalOutcome last;
     for (int n = 0; n < 2; ++n)
     {
         JobControl worker;
@@ -96,10 +99,17 @@ void compareProgramme(const juce::File& file, juce::DynamicObject& record)
             alternatives.add(v);
         }
         run->setProperty("attempts", alternatives); runs.add(row);
+        last = std::move(result);
     }
     record.setProperty("runs", runs);
-    expect(s.setCurrentGainDb(-1.0), "apply fixed comparison trim");
-    record.setProperty("processed_current_numeric_sha256", numericPayload(measuredComposition(s, MeasurementDomain::currentState).detail));
+    ProposalOperation op;
+    expect(op.begin(s) && op.candidateComplete(s, last) && op.apply(s), "apply selected measured alternative through the accepted workflow");
+    const auto measured = measuredComposition(s, MeasurementDomain::currentState);
+    op.measurementComplete(s, true, {});
+    expect(s.evaluation(MeasurementDomain::currentState).verdict == proposal::Verdict::pass, "independently measured applied Current passes");
+    record.setProperty("applied_plan", proposalPlanIdentity(s.currentStateDocument.processingPlan()));
+    record.setProperty("applied_choice", int(op.selectedChoice));
+    record.setProperty("processed_current_numeric_sha256", numericPayload(measured.detail));
     auto output = ex::render(ex::capture(s), juce::File::getSpecialLocation(juce::File::tempDirectory), job);
     expect(bool(output.value), "render PCM and independently measure encoded bytes");
     record.setProperty("rendered_pcm_sha256", (*output.value)->hash());
