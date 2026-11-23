@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "protected_files": 3638,
+  "packages": 11,
+  "tags_checked": 28,
+  "checks": 3668,
+  "failed": [],
+  "scope": "read-only audit of existing publication manifest; no remote/network actions; other chats remain active"
+}

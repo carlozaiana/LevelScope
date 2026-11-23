@@ -10,7 +10,7 @@ struct TimelineTransport
     static juce::String blockedReason(const StandaloneSessionModel& session,const StandaloneAudition& audio)
     {
         if(session.pendingBoundaryEdits())return session.pendingBoundaryMessage();
-        if(audio.active()||audio.preparing())return "Stop playback and wait for preparation/cancellation before seeking.";
+        if(audio.active() || (audio.preparing()&&!audio.backgroundPreparing()))return "Stop playback and wait for preparation/cancellation before seeking.";
         if(session.proposalOperationBusy||session.persistenceLoading||session.job.isActive())return "Finish or cancel the active job before seeking.";
         if(!session.sourceDocument.hasSource||session.sourceContentInvalid||!session.sourceDocument.matchesFileStamps())return "A current, confirmed programme is required for seeking.";
         return session.auditionRequest().validationError();

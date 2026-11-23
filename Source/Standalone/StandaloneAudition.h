@@ -78,15 +78,21 @@ public:
     bool connected() const { return device != nullptr && device->isOpen(); }
     double connectedRate() const { return connected() ? device->getCurrentSampleRate() : 0; }
     AuditionState getState() const { return state; }
-    bool active() const { return state == AuditionState::preparing || state == AuditionState::cancelling
+    // Stop revokes transport intent before an asynchronous preparation finishes
+    // cleaning up. Its future lifetime is guarded separately by preparing().
+    bool active() const { return (state == AuditionState::preparing && playAfterPreparation)
                              || state == AuditionState::buffering || state == AuditionState::playing; }
     bool preparing() const { return preparation.valid(); }
-    float preparationProgress() const { return preparationControl ? preparationControl->progress.load() * 2 : 0; }
+    bool backgroundPreparing() const { return preparing() && !playAfterPreparation && state == AuditionState::preparing; }
+    bool playbackReady() const;
+    juce::String preparationStage() const;
+    float preparationProgress() const { return decoderPreparation && decoderPreparation->load() ? 0.95f
+        : preparationControl ? juce::jlimit(0.0f,0.9f,preparationControl->progress.load()*1.8f) : 0; }
     const juce::String& boundIdentity() const { return expectedIdentity; }
     const VerifiedSource* preparedCopy() const { return preparedSource.get(); }
     std::shared_ptr<const VerifiedSource> sharedPreparedCopy() const { return preparedSource; }
     bool setCaptureObserver (ProcessedAudioObserver* sink) { if (active()) return false; capture = sink; return true; }
-    bool setSnapshotStorage (SnapshotStorage storage) { if (active()) return false; snapshotStorage = std::move (storage); return true; }
+    bool setSnapshotStorage (SnapshotStorage storage) { if (active() || preparing()) return false; snapshotStorage = std::move (storage); return true; }
     int64_t positionFrames() const;
     double positionSeconds() const { return sourceRate > 0 ? static_cast<double> (positionFrames()) / sourceRate : 0; }
     uint64_t transportGeneration() const { return generation; }
@@ -115,12 +121,29 @@ private:
     int latencyFrames = 0, hardwareLatencyFrames = -1;
     std::atomic<bool> hardwareClock { false };
     int expectedOutputs = 0;
+    // A single reader, processor and at most 4096 frames; never whole-programme
+    // PCM. Worker prepares these without touching the callback or any device.
+    struct PlaybackResources
+    {
+        std::shared_ptr<const VerifiedSource> source;
+        std::unique_ptr<ProgrammeReader> reader;
+        std::unique_ptr<ProgrammeGainProcessor> processing;
+        juce::AudioBuffer<float> prefix;
+        juce::String identity;
+        int64_t first = 0;
+    };
     std::shared_ptr<const VerifiedSource> preparedSource;
-    std::future<VerifiedSourceResult> preparation;
+    juce::String preparedRuntime;
+    std::optional<std::weak_ptr<SessionVerifiedAssets>> preparedAssets;
+    std::optional<std::weak_ptr<SessionVerifiedAssets>> expectedAssets;
+    std::unique_ptr<PlaybackResources> readyResources;
+    std::future<ServiceResult<std::unique_ptr<PlaybackResources>>> preparation;
     std::shared_ptr<JobControl> preparationControl;
+    std::shared_ptr<std::atomic<bool>> decoderPreparation;
     SnapshotStorage snapshotStorage;
     AuditionRequest pendingRequest, playingRequest;
     OutputRouting pendingRouting, playingRouting;
+    juce::StringArray pendingOutputs;
     juce::String expectedIdentity, workerError, preparationFailure;
     ErrorCode fault = ErrorCode::none, workerFailure = ErrorCode::none;
     uint64_t preparationGeneration = 0;

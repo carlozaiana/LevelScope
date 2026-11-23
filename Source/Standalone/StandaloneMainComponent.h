@@ -118,6 +118,9 @@ private:
     bool canReplaceSession() const;
 
     StandaloneAudition audition;
+    juce::String automaticPlaybackAttempt;
+    std::optional<std::weak_ptr<SessionVerifiedAssets>> automaticPlaybackAssets;
+    void preparePlaybackWhenIdle();
     StandaloneAudioPanel audioPanel;
     StandaloneVideoPanel videoPanel { session, audition };
     std::unique_ptr<juce::DocumentWindow> videoWindow;
@@ -194,7 +197,6 @@ private:
     JobTicket exportTicket;
     juce::File exportDestination;
     juce::String exportNotice = "No rendered artifact. Measurement-only reporting remains available without an export pass.";
-    std::shared_ptr<const VerifiedSource> exportSourceCopy;
     bool publishingExport = false, savingArtifactReport = false;
     void configureExportControls();
     void chooseExportDestination (bool reportOnly, bool artifactOnly = false);

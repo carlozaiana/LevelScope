@@ -195,12 +195,18 @@ void preparationGuard(const juce::File& root)
     root.createDirectory();auto request=fixture(root.getChildFile("prepare.wav"),48000,2,48000);
     auto catalog=std::make_shared<SettingsCatalog>();StandaloneAudition audio;OutputDeviceConnection c(audio,catalog,settings(root));
     c.select(catalog->devices[0].identity);c.programmeChanged(48000);c.disconnect();
-    audio.sourceChanged(request.context.media);audio.synchronize(request,routes(2));expect(audio.prepare(request).isEmpty()&&audio.active(),"injected preparation active for connection guard");
+    OutputRouting routing;routing.fileToDevice[0]=0;routing.fileToDevice[1]=1;
+    audio.sourceChanged(request.context.media);audio.synchronize(request,routing);
+    expect(audio.prepare(request).isEmpty()&&audio.backgroundPreparing()&&!audio.active(),"device-free background preparation does not claim transport intent");
+    const int beforeConnect=catalog->calls->opens;c.connect();waitPreparation(audio);
+    expect(audio.connected()&&catalog->calls->opens==beforeConnect+1&&!audio.active(),"explicit connection remains possible during background preparation and leaves playback stopped");
+    audio.prepare(request);expect(audio.play(request,routing).isEmpty()&&audio.active(),"explicit Play joins preparation for the active connection guard");
     const auto selected=c.selection();const int opened=catalog->calls->opens;
     c.connect();c.select(catalog->devices[1].identity);c.rescan();
     expect(c.selection()==selected&&catalog->calls->opens==opened&&audio.active(),"queued connection/selection/scan cannot interrupt active preparation");
     audio.stop();waitPreparation(audio);c.programmeChanged(48000);
-    expect(!audio.connected()&&catalog->calls->opens==opened,"rejected preparation-time Connect creates no later pending open");
+    expect(audio.connected()&&catalog->calls->opens==opened,"rejected pending-Play Connect creates no later additional open");
+    c.disconnect();expect(!audio.connected(),"explicit Disconnect remains available after cancelling Play");
     stopped(audio,*catalog);
 }
 }

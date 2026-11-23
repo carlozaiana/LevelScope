@@ -1,0 +1,82 @@
+{
+  "validation_s": 0.463906875,
+  "file": "/Users/fuzz/N15/Mixdown/MusicInBackAndForegroundSomeDialog.wav",
+  "sha256": "7ba6404041c94c909df290a6829a0fe92ce594329a1d575490c2bb4a5b6cc8f0",
+  "channels": 2,
+  "frames": 13228800,
+  "source_analysis_s": 3.892176791,
+  "automatic_preparation_s": 0.0,
+  "first_play_to_nonzero_output_s": 0.9124468333333333,
+  "subsequent_play_to_nonzero_output_s": 0.002609916333333333,
+  "audition_copy_count": 1,
+  "audition_copied_bytes": 79375076,
+  "physical_device_opened": false,
+  "measurement_build": "9b379f0479f69a6e2ded23dc778ad5c50c5e92a20e4076a5936e06b5a82698fd",
+  "passed": true,
+  "checks": [
+    {
+      "name": "timing receipt is new",
+      "passed": true
+    },
+    {
+      "name": "existing programme validated",
+      "passed": true
+    },
+    {
+      "name": "timing programme is stereo or 5.1",
+      "passed": true
+    },
+    {
+      "name": "timing session imports confirmed input",
+      "passed": true
+    },
+    {
+      "name": "initial analysis job begins",
+      "passed": true
+    },
+    {
+      "name": "initial Source analysis completes",
+      "passed": true
+    },
+    {
+      "name": "initial analysis job completes",
+      "passed": true
+    },
+    {
+      "name": "initial measured Source accepted",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected output connection",
+      "passed": true
+    },
+    {
+      "name": "explicit timed Play accepted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "non-zero sample delivered to injected output",
+      "passed": true
+    },
+    {
+      "name": "explicit timed Play accepted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "non-zero sample delivered to injected output",
+      "passed": true
+    }
+  ]
+}

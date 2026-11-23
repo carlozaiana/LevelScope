@@ -141,6 +141,8 @@ StandaloneMainComponent::StandaloneMainComponent(std::shared_ptr<OutputDeviceCat
     {
         if(programmePanel && programmePanel->preparationControl()) programmePanel->cancel();
         else if(compositionPanel && compositionPanel->preparationControl()) compositionPanel->cancel();
+        else if(!session.job.isActive() && !proposalOperation.active()
+            && (audition.preparing() || audition.getState()==AuditionState::buffering)) audition.stop();
         else
         {
             if(proposalOperation.active())proposalOperation.cancelRequested=true;
@@ -335,6 +337,27 @@ void StandaloneMainComponent::timerCallback()
     refreshSessionControls();
     refreshTimeline();
     if(!session.proposalOperationBusy && !audition.active() && automaticSource.eligible(session))beginMeasurement(MeasurementDomain::source);
+    preparePlaybackWhenIdle();
+}
+
+void StandaloneMainComponent::preparePlaybackWhenIdle()
+{
+    // One attempt for this runtime/request/position. Cancellation or a failure
+    // does not start an endless retry loop; explicit Play remains the retry.
+    if(session.job.isActive() || session.persistenceLoading || session.audioEditsBlocked()
+        || audition.active() || audition.preparing() || audition.playbackReady()
+        || !session.source.hasMeasurement || session.sourceContentInvalid
+        || programmePanel || compositionPanel)return;
+    const auto request=session.auditionRequest();
+    if(request.validationError().isNotEmpty() || !request.context.sourceFilesMatch()
+        || audition.positionFrames()>=request.context.media.frames)return;
+    const auto source=waveformCache.view(WaveformBinding::from(session.measurementContext(MeasurementDomain::source),MeasurementDomain::source));
+    if(source.state==WaveformProgress::State::collecting)return;
+    const auto key=request.identity()+":"+juce::String(audition.positionFrames());
+    if(key==automaticPlaybackAttempt && sameVerifiedAssetOwner(request.context.verifiedAssets,automaticPlaybackAssets))return;
+    automaticPlaybackAttempt=key;automaticPlaybackAssets=request.context.verifiedAssets;
+    audition.prepare(request);
+    refreshJobFeedback();refreshTimeline();
 }
 
 void StandaloneMainComponent::beginMeasurement (MeasurementDomain domain,bool workflow)
@@ -346,7 +369,7 @@ void StandaloneMainComponent::beginMeasurement (MeasurementDomain domain,bool wo
     if (OfflineAnalysisService::validateRequest (context, domain).isNotEmpty()) return;
     if(domain==MeasurementDomain::source)
         automaticSource.attemptedSource(session);
-    audition.stop();
+    audition.stop();automaticPlaybackAttempt.clear();
     // Keep command focus on a stable surface before the initiating measurement
     // button is disabled. JUCE must not transfer it to a neighbouring text field.
     auto* focusView=&timeline;
@@ -1299,8 +1322,8 @@ void StandaloneMainComponent::refreshTimeline()
         editor.setTransport(audition.positionFrames(),seekReason.isEmpty(),seekReason,audition.boundIdentity());
         sectionsPanel->setPlaybackState(timelinePlay.isEnabled(),timelineStop.isEnabled(),session.auditionDomain==MeasurementDomain::source?"Original":"Current");
     }
-    positionLabel.setText(juce::String(audition.positionSeconds(),3)+" s  ·  "+(audition.connected()?"Device open":"Device closed"),juce::dontSendNotification);
-    positionLabel.setTooltip(audition.status());
+    positionLabel.setText(juce::String(audition.positionSeconds(),3)+" s | "+(audition.playbackReady()?"Playback ready":audition.preparing()?"Preparing playback":audition.connected()?"Device open":"Device closed"),juce::dontSendNotification);
+    positionLabel.setTooltip(audition.status()+"\n"+(audition.connected()?"Output connected; Play is explicit.":"Output disconnected; offline work remains available."));
     const auto warning=audition.monitorOverloadWarning();
     const bool warningVisible=warning.isNotEmpty(),visibilityChanged=monitorWarning.isVisible()!=warningVisible;
     monitorWarning.setText(warning,juce::dontSendNotification);monitorWarning.setTooltip(warning);
@@ -1337,11 +1360,18 @@ void StandaloneMainComponent::refreshJobFeedback()
         else text.detail=proposalOperation.detail.replace("\n","  ");
         text.title=proposalOperation.title;
     }
+    const bool playbackPreparation=!active && (audition.preparing() || audition.getState()==AuditionState::buffering);
+    const bool playbackCancelling=playbackPreparation && audition.getState()==AuditionState::cancelling;
+    if(playbackPreparation)
+        text={audition.getState()==AuditionState::buffering?"Preparing playback output":audition.preparationStage(),
+            audition.backgroundPreparing()?"Playback remains stopped. Play will use this preparation; Cancel leaves offline analysis available.":audition.status(),
+            audition.preparing()?double(audition.preparationProgress()):-1};
     jobLabel.setText(text.title, juce::dontSendNotification);jobLabel.setTooltip(text.title);
     jobDetail.setText(text.detail, juce::dontSendNotification);jobDetail.setTooltip(text.detail);
-    jobFraction = text.fraction;jobProgress.setVisible(active);
+    jobFraction = text.fraction;jobProgress.setVisible(active || playbackPreparation);
     jobProgress.setTextToDisplay(jobFraction < 0 ? "Working..." : juce::String(juce::roundToInt(jobFraction * 100)) + (phased ? "% this pass" : "%"));
-    cancelJobButton.setEnabled(active && !cancelling);cancelJobButton.setButtonText(cancelling ? "Cancelling..." : "Cancel job");
+    cancelJobButton.setEnabled((active && !cancelling) || (playbackPreparation && !playbackCancelling));
+    cancelJobButton.setButtonText(cancelling || playbackCancelling ? "Cancelling..." : playbackPreparation ? "Cancel playback" : "Cancel job");
 }
 void StandaloneMainComponent::resized()
 {

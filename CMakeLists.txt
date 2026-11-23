@@ -576,6 +576,13 @@ option(LEVELSCOPE_BUILD_JOB_REQUIREMENTS_TESTS "Build M17 job requirements/prese
 option(LEVELSCOPE_BUILD_LRA_PROPOSAL_TESTS "Build M19 bounded LRA proposal checks" OFF)
 option(LEVELSCOPE_BUILD_REGION_PLANNING_TESTS "Build focused M20 region planning checks" OFF)
 option(LEVELSCOPE_BUILD_REGION_UI_TESTS "Build focused M20 native UI integration checks" OFF)
+option(LEVELSCOPE_BUILD_PLAYBACK_TIMING_TESTS "Build device-free playback preparation comparison driver" OFF)
+if(LEVELSCOPE_BUILD_PLAYBACK_TIMING_TESTS)
+    juce_add_console_app(LevelScopePlaybackTiming PRODUCT_NAME "LevelScope Playback Timing")
+    target_sources(LevelScopePlaybackTiming PRIVATE Tests/PlaybackPreparationTiming.cpp Source/Standalone/StandaloneAudioPanel.cpp)
+    target_compile_definitions(LevelScopePlaybackTiming PRIVATE LS_BACKGROUND_TIMING=1)
+    target_link_libraries(LevelScopePlaybackTiming PRIVATE LevelScopeStandaloneSupport juce::juce_gui_basics)
+endif()
 if(LEVELSCOPE_BUILD_REGION_UI_TESTS)
     juce_add_console_app(LevelScopeRegionUITests PRODUCT_NAME "LevelScope Region UI Tests")
     target_sources(LevelScopeRegionUITests PRIVATE

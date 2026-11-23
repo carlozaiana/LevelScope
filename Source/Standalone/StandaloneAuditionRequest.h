@@ -4,6 +4,11 @@
 
 namespace levelscope::standalone
 {
+inline bool sameVerifiedAssetOwner(const std::optional<std::weak_ptr<SessionVerifiedAssets>>& a,
+                                  const std::optional<std::weak_ptr<SessionVerifiedAssets>>& b)
+{
+    return a.has_value()==b.has_value() && (!a || (!a->owner_before(*b) && !b->owner_before(*a)));
+}
 struct AuditionRequest
 {
     ServiceContext context;
@@ -12,6 +17,7 @@ struct AuditionRequest
 
     juce::String validationError() const
     {
+        if(context.verifiedAssets && context.verifiedAssets->expired())return "Programme session closed; reopen before preparing playback";
         if (! context.isValid() || ! context.isFullProgram() || context.sessionId.isEmpty()
             || ! std::isfinite (context.media.sampleRate) || context.media.sampleRate <= 0
             || context.media.sampleRate != std::floor (context.media.sampleRate))

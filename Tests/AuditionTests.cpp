@@ -133,7 +133,9 @@ void asynchronousPreparation(const juce::File& dir)
     for(int action=0;action<3;++action)
     {
         a->synchronize(r,routes(2));expect(a->prepare(r).isEmpty(),"start cancellable source preparation");
-        expect(a->connect(48000).isNotEmpty()&&d->opens==0,"pending preparation cannot unexpectedly open device");
+        const int opened=d->opens;
+        expect(!a->active()&&!d->opened,"background preparation leaves the output closed without transport intent");
+        expect(a->connect(48000).isEmpty()&&d->opens==opened+1&&!d->isPlaying(),"explicit Connect during background preparation remains stopped");
         const auto began=juce::Time::getMillisecondCounterHiRes();
         if(action==0)a->stop();
         else if(action==1){auto other=r;other.context.sessionId="replacement";a->synchronize(other,routes(2));}
@@ -141,6 +143,7 @@ void asynchronousPreparation(const juce::File& dir)
         waitPreparation(*a);
         expect(juce::Time::getMillisecondCounterHiRes()-began<=2000&&!a->preparedCopy()&&!a->active()
             &&copies.getNumberOfChildFiles(juce::File::findFiles)==0,"cancel replacement and clear discard preparation within two seconds and remove owned files");
+        a->disconnect();
     }
     a->synchronize(r,routes(2));a->prepare(r);a.reset();
     expect(copies.getNumberOfChildFiles(juce::File::findFiles)==0,"closing during preparation joins and cleans partial copy");
@@ -176,7 +179,7 @@ void storageFailures(const juce::File& dir)
     storage.createWriter={};juce::MemoryBlock bytes;expect(r.context.sourceFile.loadFileAsData(bytes),"mutation fixture read");
     static_cast<char*>(bytes.getData())[bytes.getSize()-3]^=0x20;r.context.sourceFile.replaceWithData(bytes.getData(),bytes.getSize());r.context.sourceFile.setLastModificationTime(r.context.media.modified);
     expect(r.context.media.matchesFileStamp(r.context.sourceFile),"same-size timestamp-restored mutation defeats stamp-only check");
-    JobControl changed;result=prepareVerifiedSource(r.context,changed,storage);expect(!result.value&&result.error==ErrorCode::sourceChanged,"content hash rejects same-stamp mutation");
+    JobControl changed;result=prepareVerifiedSource(r.context,changed,storage);expect(!result.value&&result.error==ErrorCode::sourceChanged,"validated source identity rejects same-mtime mutation");
     expect(copies.getNumberOfChildFiles(juce::File::findFiles)==0,"hash rejection cleans owned copy");
 }
 void lifecycle(const juce::File& dir)

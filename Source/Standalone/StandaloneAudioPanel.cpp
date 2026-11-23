@@ -328,9 +328,9 @@ void StandaloneAudioPanel::refresh()
     closeButton.setEnabled (audio.connected() || connection.selection().has_value());
     const auto routeError = source.routing.validate (source.layout.count, audio.outputNames().size());
     playButton.setEnabled (editable && audio.connected() && requestError.isEmpty() && routeError.isEmpty());
-    stopButton.setEnabled (playing);
+    stopButton.setEnabled (playing || audio.preparing());
     restartButton.setEnabled (!session.proposalOperationBusy && !session.pendingBoundaryEdits() && !session.persistenceLoading && !session.job.isActive() && ! audio.preparing() && audio.connected() && requestError.isEmpty() && routeError.isEmpty());
-    seekButton.setEnabled (!session.proposalOperationBusy && !session.pendingBoundaryEdits() && !session.persistenceLoading && !session.job.isActive() && ! audio.preparing() && requestError.isEmpty());
+    seekButton.setEnabled (!session.proposalOperationBusy && !session.pendingBoundaryEdits() && !session.persistenceLoading && !session.job.isActive() && (!audio.preparing() || audio.backgroundPreparing()) && requestError.isEmpty());
     seekPosition.setEnabled (seekButton.isEnabled());
     editOrder.setVisible(reviewing);
     editOrder.setEnabled(editable);
@@ -371,7 +371,7 @@ void StandaloneAudioPanel::refresh()
     juce::String status = actionError.isNotEmpty() ? actionError : audio.status();
     status << "\n" << connection.status();
     if(connection.settingsWarning().isNotEmpty())status << "\n" << connection.settingsWarning();
-    if (audio.preparing()) status << " | " << juce::String (juce::roundToInt (100 * audio.preparationProgress())) << "%";
+    if (audio.preparing()) status << " | " << audio.preparationStage() << " " << juce::String (juce::roundToInt (100 * audio.preparationProgress())) << "%";
     if (playing || audio.getState() == AuditionState::finished)
         status << "  |  " << juce::String (audio.positionSeconds(), 1) << " s  |  underruns " << juce::String (audio.underruns());
     status << "\n" << (source.layout.confirmed ? "Roles confirmed. " : "Review the proposed file-channel order and confirm. ");

@@ -1,0 +1,21 @@
+{
+  "scope": "Development checks before final export-ownership and cancellation/Clear corrections; final frozen qualification pending with Logic owner",
+  "platform": "Sequoia arm64",
+  "measurement_build": "40b75508b7e35e2f59f07f5a46e3be68a539c2d50b9c5baf8e89ece53399ea09",
+  "groups": {
+    "playback-ui": 657,
+    "audition": 4069,
+    "devices": 450,
+    "timeline": 2580
+  },
+  "passed_groups_total": 7756,
+  "diagnostics_retained": [
+    "diagnostic-original-connect-assertion.json",
+    "diagnostic-original-stopped-helper.json"
+  ],
+  "physical_devices_opened": false,
+  "audible_tests_run": false,
+  "main_changed": false,
+  "preservation_receipt": "preservation.json",
+  "final_validation_pending": true
+}

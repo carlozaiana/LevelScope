@@ -74,7 +74,7 @@ void StandaloneAudition::sourceChanged (const MediaInfo& media)
 {
     stop();
     overloadWarning.clear();
-    preparedSource.reset(); expectedIdentity.clear();
+    preparedSource.reset(); preparedRuntime.clear(); preparedAssets.reset(); expectedAssets.reset(); expectedIdentity.clear();
     fault = ErrorCode::none;
     sourceRate = static_cast<int64_t> (media.sampleRate);
     sourceFrames = media.frames; sourceHash = media.sha256;
@@ -210,8 +210,9 @@ void StandaloneAudition::selectOutputDevice(std::unique_ptr<juce::AudioIODevice>
 
 juce::String StandaloneAudition::connect (double sourceRate)
 {
-    if (preparation.valid()) return "Wait for source preparation or cancellation before opening a device";
-    stop();
+    if (preparation.valid() && playAfterPreparation) return "Cancel the pending Play before opening a device";
+    // An explicit device connection is independent of device-free warmup.
+    if (!preparation.valid() && !readyResources) stop();
     if (! device || ! std::isfinite (sourceRate) || sourceRate <= 0) return "Select a device and validated source";
     device->close();
     juce::BigInteger outputs;
@@ -235,7 +236,7 @@ juce::String StandaloneAudition::connect (double sourceRate)
 #endif
     (void) hostTimeNs(); // initialize timebase on the message thread, never first-use in RT
     expectedOutputs = outputs.countNumberOfSetBits();
-    state = AuditionState::ready;
+    state = preparation.valid() ? (preparationControl->isCancelled() ? AuditionState::cancelling : AuditionState::preparing) : AuditionState::ready;
     message = "Device open at " + juce::String (rate, 0) + " Hz; stopped";
     return {};
 }
@@ -253,6 +254,7 @@ void StandaloneAudition::stop()
     heldFrame = positionFrames();
     if (preparationControl) preparationControl->cancel.store (true);
     playAfterPreparation = false;
+    readyResources.reset();
     stopWorker();
     ++generation;
     presentationClock.reset();
@@ -269,48 +271,123 @@ void StandaloneAudition::disconnect()
     message = preparation.valid() ? "Cancelling preparation; device closed" : "Device closed";
 }
 
+bool StandaloneAudition::playbackReady() const
+{
+    return readyResources && readyResources->identity == expectedIdentity
+        && readyResources->first == heldFrame && readyResources->source->matches(pendingRequest.context.media)
+        && pendingRequest.validationError().isEmpty() && pendingRequest.context.sourceFilesMatch();
+}
+
+juce::String StandaloneAudition::preparationStage() const
+{
+    if(state == AuditionState::cancelling) return "Cancelling playback preparation";
+    return decoderPreparation && decoderPreparation->load() ? "Preparing playback decoder and buffer" : "Preparing verified audio for playback";
+}
+
 void StandaloneAudition::synchronize (const AuditionRequest& request, const OutputRouting& routing)
 {
     const auto key = request.identity();
-    if(key!=expectedIdentity)overloadWarning.clear();
-    if (active() && (key != expectedIdentity
-        || ((state == AuditionState::playing || state == AuditionState::buffering) && routing.fileToDevice != playingRouting.fileToDevice)
-        || (state == AuditionState::preparing && playAfterPreparation && routing.fileToDevice != pendingRouting.fileToDevice)))
+    const bool changed = key != expectedIdentity || !sameVerifiedAssetOwner(request.context.verifiedAssets,expectedAssets);
+    const bool invalidSource = key.isNotEmpty() && !request.context.sourceFilesMatch();
+    if(changed)overloadWarning.clear();
+    if (((active() || preparing() || readyResources) && (changed || invalidSource))
+        || (active() && (((state == AuditionState::playing || state == AuditionState::buffering) && routing.fileToDevice != playingRouting.fileToDevice)
+            || (state == AuditionState::preparing && playAfterPreparation && routing.fileToDevice != pendingRouting.fileToDevice))))
     {
         stop(); message = "Audition stopped: source, roles, processing or routing changed";
     }
     expectedIdentity = key;
-    if (preparedSource && ! preparedSource->matches (request.context.media)) preparedSource.reset();
+    expectedAssets = request.context.verifiedAssets;
+    if (preparedSource && (preparedRuntime != request.context.sessionId || !preparedSource->matches(request.context.media)
+        || !sameVerifiedAssetOwner(preparedAssets,request.context.verifiedAssets)
+        || (request.context.verifiedAssets && request.context.verifiedAssets->expired())))
+    { readyResources.reset(); preparedSource.reset(); preparedRuntime.clear(); preparedAssets.reset(); }
+    if(invalidSource) { fault=ErrorCode::sourceChanged;message="Source changed; import again. Playback stopped."; }
 }
 
 juce::String StandaloneAudition::startPreparation (const AuditionRequest& request)
 {
     const auto error = request.validationError();
     if (error.isNotEmpty()) return error;
-    if (request.identity() != expectedIdentity) return "Stale audition request; select the current state again";
-    if (preparation.valid()) return "Wait for source preparation cancellation";
+    if (request.identity() != expectedIdentity || !sameVerifiedAssetOwner(request.context.verifiedAssets,expectedAssets))
+        return "Stale audition request; select the current state again";
     if (! request.context.sourceFilesMatch())
     { fault = ErrorCode::sourceChanged; return "Source changed; import again"; }
+    if (preparation.valid())
+        return state==AuditionState::preparing && !preparationControl->isCancelled()
+            && pendingRequest.identity()==request.identity() ? juce::String() : "Wait for playback preparation cancellation";
     fault = ErrorCode::none;
     pendingRequest = request;
-    if (preparedSource && preparedSource->matches (request.context.media)) return {};
+    if (playbackReady()) return {};
+    readyResources.reset();
+    const auto& media=request.context.media;
+    if(sourceHash != media.sha256)heldFrame=0;
+    sourceHash=media.sha256;sourceRate=static_cast<int64_t>(media.sampleRate);sourceFrames=media.frames;
+    startFrame=heldFrame;
     preparationControl = std::make_shared<JobControl>();
+    preparationControl->feedback = std::make_shared<JobFeedback>();
+    decoderPreparation = std::make_shared<std::atomic<bool>>(false);
     preparationFailure.clear();
     preparationGeneration = generation;
-    preparation = std::async (std::launch::async, [request, storage = snapshotStorage, control = preparationControl]
-    { return prepareVerifiedSource (request.context, *control, storage); });
+    auto retained=preparedRuntime==request.context.sessionId && sameVerifiedAssetOwner(preparedAssets,request.context.verifiedAssets)
+        && preparedSource && preparedSource->matches(media) ? preparedSource : nullptr;
+    preparation = std::async (std::launch::async, [request, begin=heldFrame, retained, storage=snapshotStorage, control=preparationControl, warming=decoderPreparation]
+        () -> ServiceResult<std::unique_ptr<PlaybackResources>>
+    {
+        try
+        {
+            if(control->isCancelled())return {{},ErrorCode::cancelled,"Playback preparation cancelled"};
+            auto verified=retained ? VerifiedSourceResult{retained,ErrorCode::none,{}} : prepareVerifiedSource(request.context,*control,storage);
+            if(!verified.value)return {{},verified.error,verified.message};
+            if(control->isCancelled())return {{},ErrorCode::cancelled,"Playback preparation cancelled"};
+            warming->store(true);
+            auto ready=std::make_unique<PlaybackResources>();ready->source=*verified.value;
+            ready->identity=request.identity();ready->first=begin;ready->reader=ready->source->createReader();
+            const auto& media=request.context.media;
+            if(!ready->reader || ready->reader->sampleRate!=media.sampleRate || ready->reader->lengthInSamples!=media.frames
+                || static_cast<int>(ready->reader->numChannels)!=media.channels)
+                return {{},ErrorCode::decodeFailed,"Verified source cannot be reopened consistently"};
+            ready->processing=std::make_unique<ProgrammeGainProcessor>(request.context.processing);
+            constexpr int blockSize=2048;
+            juce::AudioBuffer<float> block(media.channels,blockSize);
+            // Bound FLAC tail seek pre-roll; discarded frames never enter the
+            // processor, FIFO, observers or presentation clock.
+            if(ready->reader->hasFlac && begin>0)
+                for(int64_t first=std::max<int64_t>(0,begin-65536);first<begin;)
+                {
+                    if(control->isCancelled())return {{},ErrorCode::cancelled,"Playback preparation cancelled"};
+                    const int count=int(std::min<int64_t>(blockSize,begin-first));
+                    if(!ready->reader->read(block.getArrayOfWritePointers(),media.channels,first,count))
+                        return {{},ErrorCode::decodeFailed,"Verified source seek pre-roll failed"};
+                    first+=count;
+                }
+            const int frames=int(std::min<int64_t>(4096,std::max<int64_t>(0,media.frames-begin)));
+            ready->prefix.setSize(media.channels,frames);
+            for(int first=0;first<frames;first+=blockSize)
+            {
+                if(control->isCancelled())return {{},ErrorCode::cancelled,"Playback preparation cancelled"};
+                const int count=std::min(blockSize,frames-first);
+                if(!ready->reader->read(block.getArrayOfWritePointers(),media.channels,begin+first,count)
+                    || !ready->processing->process(block.getArrayOfWritePointers(),media.channels,count,begin+first))
+                    return {{},ErrorCode::decodeFailed,"Playback prefix could not be decoded and processed"};
+                for(int c=0;c<media.channels;++c)ready->prefix.copyFrom(c,first,block,c,0,count);
+            }
+            if(control->isCancelled())return {{},ErrorCode::cancelled,"Playback preparation cancelled"};
+            if(!request.context.sourceFilesMatch() || !ready->source->matches(media))
+                return {{},ErrorCode::sourceChanged,"Source changed during playback preparation; import again"};
+            return {std::move(ready),ErrorCode::none,"Playback prepared; stopped"};
+        }
+        catch(const std::exception& e){return {{},ErrorCode::decodeFailed,e.what()};}
+    });
     state = AuditionState::preparing;
-    message = "Verifying audio for playback...";
+    message = "Preparing playback in background; stopped";
     return {};
 }
 
 juce::String StandaloneAudition::prepare (const AuditionRequest& request)
 {
     if (active()) return "Stop before preparing a different audition";
-    stop();
-    const auto error = startPreparation (request);
-    if (error.isEmpty() && ! preparation.valid()) message = "Verified source ready; device and playback unchanged";
-    return error;
+    return startPreparation(request);
 }
 
 juce::String StandaloneAudition::play (const juce::File& file, const MediaInfo& media,
@@ -325,72 +402,59 @@ juce::String StandaloneAudition::play (const AuditionRequest& request, const Out
 {
     const auto error = request.validationError();
     if (error.isNotEmpty()) return error;
-    if (request.identity() != expectedIdentity) return "Stale audition request";
-    if (preparation.valid()) return "Wait for preparation or cancel it";
-    const bool atEnd = state == AuditionState::finished;
-    stop();
+    if (request.identity() != expectedIdentity || !sameVerifiedAssetOwner(request.context.verifiedAssets,expectedAssets))return "Stale audition request";
     if (! connected()) return "Open the selected device first";
     const auto& media = request.context.media;
     if (std::abs (media.sampleRate - device->getCurrentSampleRate()) > 0.01)
         return "Device and source sample rates must match";
     const auto routingError = routing.validate (media.channels, outputNames().size(), allowAllMuted);
     if (routingError.isNotEmpty()) return routingError;
-    if (sourceHash != media.sha256) { heldFrame = startFrame = 0; if (preparedSource && ! preparedSource->matches (media)) preparedSource.reset(); }
-    sourceHash = media.sha256; sourceRate = static_cast<int64_t> (media.sampleRate); sourceFrames = media.frames;
-    if (restart || atEnd || heldFrame >= sourceFrames) heldFrame = 0;
-    startFrame = heldFrame;
+    if(state==AuditionState::playing || state==AuditionState::buffering)stop();
+    const int64_t wanted=restart || state==AuditionState::finished || heldFrame>=media.frames ? 0 : heldFrame;
+    if(preparing() && (state!=AuditionState::preparing || preparationControl->isCancelled()
+        || pendingRequest.identity()!=request.identity() || wanted!=startFrame))
+        return "Wait for playback preparation cancellation, then press Play again";
+    heldFrame=startFrame=wanted;
     pendingRouting = routing;
+    pendingOutputs = outputNames();
     const auto preparationError = startPreparation (request);
     if (preparationError.isNotEmpty()) return preparationError;
-    if (preparation.valid()) playAfterPreparation = true;
+    if (preparation.valid())
+    { playAfterPreparation = true; message="Play requested - preparing playback; Stop or Cancel prevents playback"; }
     else startDecoder (request, routing);
     return {};
 }
 
 void StandaloneAudition::startDecoder (const AuditionRequest& request, const OutputRouting& routing)
 {
+    if(!playbackReady())
+    {state=AuditionState::failed;message="Playback preparation changed; press Play to prepare again";return;}
     overloadWarning.clear();
+    ++generation;presentationClock.reset();
     playingRequest = request; playingRouting = routing;
     const auto media = request.context.media;
+    startFrame=heldFrame;
     fifo.reset (media.channels, routing);
     fifo.setObserver (capture, startFrame);
+    fifo.push(readyResources->prefix.getArrayOfReadPointers(),readyResources->prefix.getNumSamples());
     cancel.store (false); decodeFailed.store (false); deviceStopped.store (false); workerError.clear(); workerFailure = ErrorCode::decodeFailed;
-    decoder = std::thread ([this, request, copy = preparedSource, media, begin = startFrame] ()
+    decoder = std::thread ([this, request, resources=std::move(readyResources), media] ()
     {
         try
         {
-            auto source = copy->createReader();
-            if (! source || source->sampleRate != media.sampleRate || source->lengthInSamples != media.frames
-                || static_cast<int> (source->numChannels) != media.channels)
-                throw std::runtime_error ("Verified source cannot be reopened consistently");
             constexpr int blockSize = 2048;
             juce::AudioBuffer<float> block (media.channels, blockSize);
-            // JUCE 7's FLAC reader can scan for tens of seconds when a fresh
-            // reader seeks into the final partial block. Seek before that block
-            // and decode a bounded prefix instead. Discarded PCM never reaches
-            // processing, the FIFO, capture observers or the presentation clock.
-            // 65536 exceeds FLAC's maximum block size; cancellation stays checked
-            // between normal 2048-frame reads. Other formats retain their path.
-            if (source->hasFlac && begin > 0)
-                for (juce::int64 prefix = std::max<juce::int64> (0, begin - 65536);
-                     prefix < begin && ! cancel.load();)
-                {
-                    const int count = static_cast<int> (std::min<juce::int64> (blockSize, begin - prefix));
-                    if (! source->read (block.getArrayOfWritePointers(), media.channels, prefix, count))
-                        throw std::runtime_error ("Verified source seek pre-roll failed");
-                    prefix += count;
-                }
-            const ProgrammeGainProcessor processing (request.context.processing);
-            juce::int64 position = begin;
+            juce::int64 position = resources->first+resources->prefix.getNumSamples();
+            resources->prefix.setSize(0,0);
             while (position < media.frames && ! cancel.load())
             {
                 const auto count = static_cast<int> (juce::jmin<juce::int64> (blockSize, media.frames - position));
                 if (fifo.writable() < count) { std::this_thread::sleep_for (std::chrono::milliseconds (2)); continue; }
-                if (! request.context.sourceFilesMatch())
+                if (! request.context.sourceFilesMatch() || !resources->source->matches(media))
                 { workerFailure = ErrorCode::sourceChanged; throw std::runtime_error ("Source changed; import again"); }
-                if (! source->read (block.getArrayOfWritePointers(), media.channels, position, count))
+                if (! resources->reader->read (block.getArrayOfWritePointers(), media.channels, position, count))
                     throw std::runtime_error ("Verified source decode failed");
-                if (! processing.process (block.getArrayOfWritePointers(), media.channels, count, position))
+                if (! resources->processing->process (block.getArrayOfWritePointers(), media.channels, count, position))
                     throw std::runtime_error ("Non-finite processed audition sample");
                 fifo.push (block.getArrayOfReadPointers(), count);
                 position += count;
@@ -413,10 +477,11 @@ juce::String StandaloneAudition::seek (int64_t frame, const juce::File& file, co
 
 juce::String StandaloneAudition::seek (int64_t frame, const AuditionRequest& request, const OutputRouting& routing)
 {
-    if (request.identity().isEmpty() || request.identity() != expectedIdentity) return "Invalid or stale audition request";
+    if (request.identity().isEmpty() || request.identity() != expectedIdentity
+        || !sameVerifiedAssetOwner(request.context.verifiedAssets,expectedAssets)) return "Invalid or stale audition request";
     const auto& media = request.context.media;
     if (frame < 0 || frame > media.frames) return "Seek is outside the selected audio";
-    if (preparation.valid()) return "Wait for preparation or cancel it before seeking";
+    if (preparation.valid() && !backgroundPreparing()) return "Wait for preparation or cancel it before seeking";
     const bool resume = active();
     stop();
     sourceRate = static_cast<int64_t> (media.sampleRate); sourceFrames = media.frames; sourceHash = media.sha256;
@@ -447,13 +512,25 @@ void StandaloneAudition::poll (bool picturePrerolled)
             return;
         }
         if (! result.value) { playAfterPreparation = false; fault = result.error; state = AuditionState::failed; message = result.message + "; stopped; session retained"; return; }
-        preparedSource = *result.value;
-        if (! playAfterPreparation) { message = "Verified source ready; playback stopped"; return; }
+        readyResources = std::move(*result.value);
+        preparedSource = readyResources->source; preparedRuntime = pendingRequest.context.sessionId; preparedAssets=pendingRequest.context.verifiedAssets;
+        if (!playbackReady()) { playAfterPreparation=false;readyResources.reset();fault=ErrorCode::sourceChanged;state=AuditionState::failed;message="Source changed before playback preparation completed; stopped";return; }
+        if (! playAfterPreparation) { message = "Playback ready; stopped. Press Play to listen."; return; }
         playAfterPreparation = false;
-        if (! connected()) { state = AuditionState::failed; message = "Device closed during preparation; stopped"; return; }
+        if (!connected() || pendingOutputs!=outputNames() || std::abs(pendingRequest.context.media.sampleRate-device->getCurrentSampleRate())>0.01
+            || pendingRouting.validate(pendingRequest.context.media.channels,outputNames().size(),true).isNotEmpty())
+        { state=AuditionState::failed;message="Output configuration changed during preparation; stopped";return; }
         startDecoder (pendingRequest, pendingRouting);
+        return; // The next UI tick observes the new transport generation before picture preroll authorizes output.
     }
     if (! active()) return;
+    if((state==AuditionState::buffering || state==AuditionState::playing)
+        && (playingRequest.validationError().isNotEmpty() || !playingRequest.context.sourceFilesMatch()
+            || !preparedSource || !preparedSource->matches(playingRequest.context.media)))
+    {
+        stop();fault=ErrorCode::sourceChanged;state=AuditionState::failed;
+        message="Source or session changed before playback; stopped. Import or reopen again.";return;
+    }
     if (state == AuditionState::buffering && picturePrerolled && ! decodeFailed.load() && connected()
         && (fifo.writable() <= AuditionBuffer::capacity - 4096 || fifo.endOfFile.load()))
     {

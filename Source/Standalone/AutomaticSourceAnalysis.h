@@ -14,12 +14,13 @@ public:
             || session.job.isActive() || session.audioEditsBlocked())return false;
         const auto context=session.measurementContext(MeasurementDomain::source);
         return OfflineAnalysisService::validateRequest(context,MeasurementDomain::source).isEmpty()
-            && attempted!=key(session,context);
+            && (attempted!=key(session,context) || !sameVerifiedAssetOwner(attemptedAssets,context.verifiedAssets));
     }
     void attemptedSource(const StandaloneSessionModel& session)
-    {attempted=key(session,session.measurementContext(MeasurementDomain::source));}
+    {const auto context=session.measurementContext(MeasurementDomain::source);attempted=key(session,context);attemptedAssets=context.verifiedAssets;}
 private:
     juce::String attempted;
+    std::optional<std::weak_ptr<SessionVerifiedAssets>> attemptedAssets;
     static juce::String key(const StandaloneSessionModel& s,const ServiceContext& c)
     {return s.sessionId+OfflineAnalysisService::identityFor(c,MeasurementDomain::source,c.media.sha256);}
 };

@@ -1,0 +1,82 @@
+{
+  "validation_s": 0.945338125,
+  "file": "/Users/fuzz/N15/Mixdown/5.1_Busy.wav",
+  "sha256": "4fa30bfd9a8fbb64e68fc00eaf11f8adf81ead8502d05ce639b22cc07645d7b6",
+  "channels": 6,
+  "frames": 8923042,
+  "source_analysis_s": 4.132375208,
+  "automatic_preparation_s": 0.0,
+  "first_play_to_nonzero_output_s": 1.844278667333333,
+  "subsequent_play_to_nonzero_output_s": 0.002630458333333333,
+  "audition_copy_count": 1,
+  "audition_copied_bytes": 160617696,
+  "physical_device_opened": false,
+  "measurement_build": "9b379f0479f69a6e2ded23dc778ad5c50c5e92a20e4076a5936e06b5a82698fd",
+  "passed": true,
+  "checks": [
+    {
+      "name": "timing receipt is new",
+      "passed": true
+    },
+    {
+      "name": "existing programme validated",
+      "passed": true
+    },
+    {
+      "name": "timing programme is stereo or 5.1",
+      "passed": true
+    },
+    {
+      "name": "timing session imports confirmed input",
+      "passed": true
+    },
+    {
+      "name": "initial analysis job begins",
+      "passed": true
+    },
+    {
+      "name": "initial Source analysis completes",
+      "passed": true
+    },
+    {
+      "name": "initial analysis job completes",
+      "passed": true
+    },
+    {
+      "name": "initial measured Source accepted",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected output connection",
+      "passed": true
+    },
+    {
+      "name": "explicit timed Play accepted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "non-zero sample delivered to injected output",
+      "passed": true
+    },
+    {
+      "name": "explicit timed Play accepted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "non-zero sample delivered to injected output",
+      "passed": true
+    }
+  ]
+}

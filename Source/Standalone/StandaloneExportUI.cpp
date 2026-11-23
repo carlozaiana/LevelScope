@@ -29,7 +29,6 @@ void StandaloneMainComponent::refreshExportControls()
 {
     const bool idle=canReplaceSession()&&!audition.connected();
     const auto request=exporting::capture(session);
-    if(exportSourceCopy&&!exportSourceCopy->matches(request.current.media))exportSourceCopy.reset();
     if(exportCandidate&&!session.job.isActive()&&!exportCandidate->matchesAudio(request))
     {exportCandidate.reset();exportNotice="Previous rendered artifact is no longer current; no export approval retained.";}
     const bool ready=idle&&exportUiReady(session,request);
@@ -69,9 +68,8 @@ void StandaloneMainComponent::chooseExportDestination(bool reportOnly,bool artif
             else
             {
                 safe->exportCandidate.reset();safe->exportDestination=dest;
-                if(!safe->exportSourceCopy){const auto auditionCopy=safe->audition.sharedPreparedCopy();if(auditionCopy&&auditionCopy->matches(safe->exportRequest->current.media))safe->exportSourceCopy=auditionCopy;}
                 safe->session.job.message="Rendering PCM24 and verifying the finalized output; nothing published";
-                safe->renderResult=std::async(std::launch::async,[r=*safe->exportRequest,parent=dest.getParentDirectory(),c=safe->importControl,copy=safe->exportSourceCopy]{return exporting::render(r,parent,*c,{},nullptr,copy);});
+                safe->renderResult=std::async(std::launch::async,[r=*safe->exportRequest,parent=dest.getParentDirectory(),c=safe->importControl]{return exporting::render(r,parent,*c);});
             }
             safe->refreshFromSession();
         });
@@ -96,7 +94,7 @@ void StandaloneMainComponent::pollExport()
             &&exportRequest->documentRevision==session.documentRevision;
         if(session.job.finish(exportTicket,session.revision,current?result.error:ErrorCode::staleRevision,result.message)&&result.value)
         {
-            exportCandidate=*result.value;exportSourceCopy=exportCandidate->verifiedSource();
+            exportCandidate=*result.value;
             exportNotice="NOT PUBLISHED.\nSHA-256: "+exportCandidate->hash()
                 +"\nDestination: "+exportDestination.getFullPathName();
             session.job.message="Rendered artifact measured. Review actual results and explicitly Publish if eligible.";
