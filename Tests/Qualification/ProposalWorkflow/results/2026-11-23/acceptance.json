@@ -1,0 +1,107 @@
+{
+  "focused_actual_platform_qualification_passed": true,
+  "source_commit": "79b55eb177a01e56fdbe86f843e03140df356bcd",
+  "source_tree": "0a96e9ab0b47847d301c7b273577b945a4c1921a",
+  "measurement_build": "9b379f0479f69a6e2ded23dc778ad5c50c5e92a20e4076a5936e06b5a82698fd",
+  "candidate_identity_sha256": "4eb921611c8cec84e98b79ef7cb94aa9fd09da6b27bfbbeed958e35706e68ce3",
+  "source_manifest_sha256": "eb883cde76149331d7016dc8e3d6cc6dcc5aeb0f0bd4263e5014fafe482fd1e4",
+  "development_app": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/propose-verify-workflow-2026-11-22/candidate-01/LevelScope Standalone.app",
+  "golem_app": "/Users/fuzz/LevelScope-propose-workflow-20261123/candidate-01/LevelScope Standalone.app",
+  "platforms": {
+    "sequoia": {
+      "os": "15.7.9",
+      "architecture": "arm64",
+      "checks": 2957,
+      "groups": [
+        {
+          "name": "timeline",
+          "checks": 2580,
+          "seconds": 3.142268,
+          "passed": true
+        },
+        {
+          "name": "ui",
+          "checks": 167,
+          "seconds": 18.491125625,
+          "passed": true
+        },
+        {
+          "name": "applied-ui",
+          "checks": 24,
+          "seconds": 8.860062250000002,
+          "passed": true
+        },
+        {
+          "name": "operation-ui",
+          "checks": 186,
+          "seconds": 76.321434833,
+          "passed": true
+        }
+      ],
+      "heartbeat": {
+        "native_heartbeat_p95_ms": 22.23108333349228,
+        "native_heartbeat_max_ms": 117.6185833332129,
+        "samples": 1111
+      },
+      "summary_sha256": "dad46e877962dd92ea3da6a7468bbfa893008482db4a2d362f936b19813cfbec"
+    },
+    "high_sierra": {
+      "os": "10.13.6",
+      "architecture": "x86_64",
+      "checks": 2957,
+      "groups": [
+        {
+          "name": "timeline",
+          "checks": 2580,
+          "seconds": 4.979909696,
+          "passed": true
+        },
+        {
+          "name": "ui",
+          "checks": 167,
+          "seconds": 42.102203180000004,
+          "passed": true
+        },
+        {
+          "name": "applied-ui",
+          "checks": 24,
+          "seconds": 19.202231325999996,
+          "passed": true
+        },
+        {
+          "name": "operation-ui",
+          "checks": 186,
+          "seconds": 166.413677608,
+          "passed": true
+        }
+      ],
+      "heartbeat": {
+        "native_heartbeat_p95_ms": 23.2289419999579,
+        "native_heartbeat_max_ms": 485.5729920000304,
+        "samples": 2018
+      },
+      "summary_sha256": "65376f2f3aa6909f3ad6ea8d88c3cd9bef678947748f12bf61ae99f2826d0be7"
+    }
+  },
+  "main_unchanged": "1056ad4ace536abfd68904f083c7fc56a1a8999f",
+  "existing_tags_unchanged": 27,
+  "frozen_artifacts_verified_on_both_macs": 462,
+  "original_and_owned_inputs_preserved": true,
+  "source_changes": false,
+  "rebuild_performed": false,
+  "physical_devices_opened": false,
+  "audible_tests_run": false,
+  "native_screenshots_inspected": [
+    "verified-boundary-advisory.png",
+    "main-applied-boundary-committed.png"
+  ],
+  "inherited_evidence": "Unchanged M20 Core, processing, portable session interchange and prior qualification: ProjectIndex 89-91. This run adds no new independent-programme correction or listening acceptance.",
+  "deferrals": [
+    "Broad video",
+    "Full-film",
+    "Three-hour endurance; no automatic 90-minute substitute"
+  ],
+  "separate_limitation": "Inherited completion pause. Dropped-video-frame acceptance does not waive audio interruption, accumulating drift or sustained freezes.",
+  "publication_authorized": false,
+  "main_merge_authorized": false
+}

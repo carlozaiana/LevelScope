@@ -1,0 +1,87 @@
+{
+  "passed": true,
+  "os": "10.13.6",
+  "architecture": "x86_64",
+  "source_commit": "79b55eb177a01e56fdbe86f843e03140df356bcd",
+  "build": "9b379f0479f69a6e2ded23dc778ad5c50c5e92a20e4076a5936e06b5a82698fd",
+  "candidate_identity_sha256": "4eb921611c8cec84e98b79ef7cb94aa9fd09da6b27bfbbeed958e35706e68ce3",
+  "requested_cases": [
+    "timeline",
+    "ui",
+    "applied-ui",
+    "operation-ui"
+  ],
+  "physical_devices_opened": false,
+  "combined_qualification_complete": false,
+  "inputs": {
+    "applied-ui": {
+      "path": "/Users/fuzz/LevelScope-propose-workflow-20261123/inputs/supplied.levelscope",
+      "sha256": "30cda1f347937fcb6df0c17006f05b6d39775b68f9da091fe056e8c2cd425b25"
+    },
+    "operation-ui": {
+      "path": "/Users/fuzz/LevelScope-propose-workflow-20261123/inputs/supplied.levelscope",
+      "sha256": "30cda1f347937fcb6df0c17006f05b6d39775b68f9da091fe056e8c2cd425b25"
+    }
+  },
+  "groups": [
+    {
+      "name": "timeline",
+      "command": [
+        "/Users/fuzz/LevelScope-propose-workflow-20261123/candidate-01/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/LevelScope-propose-workflow-20261123/high-sierra-01/timeline-files",
+        "--output",
+        "/Users/fuzz/LevelScope-propose-workflow-20261123/high-sierra-01/timeline.json"
+      ],
+      "returncode": 0,
+      "seconds": 4.979909696,
+      "passed": true,
+      "checks": 2580,
+      "receipt": "timeline.json",
+      "receipt_sha256": "af2aa18217baff84dc76e75c02e9009cec7f67fdabfae167998e75faa4c677b5"
+    },
+    {
+      "name": "ui",
+      "command": [
+        "/Users/fuzz/LevelScope-propose-workflow-20261123/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/LevelScope-propose-workflow-20261123/high-sierra-01/ui-files"
+      ],
+      "returncode": 0,
+      "seconds": 42.102203180000004,
+      "passed": true,
+      "checks": 167,
+      "receipt": "ui-files/result.json",
+      "receipt_sha256": "6407ea27f2ba055c5ecfa833c05e6c7bdc4ada442daadd74dd1a5c3e988e17c3"
+    },
+    {
+      "name": "applied-ui",
+      "command": [
+        "/Users/fuzz/LevelScope-propose-workflow-20261123/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/LevelScope-propose-workflow-20261123/high-sierra-01/applied-ui-files",
+        "--applied-ui",
+        "/Users/fuzz/LevelScope-propose-workflow-20261123/inputs/supplied.levelscope"
+      ],
+      "returncode": 0,
+      "seconds": 19.202231325999996,
+      "passed": true,
+      "checks": 24,
+      "receipt": "applied-ui-files/result.json",
+      "receipt_sha256": "171ca93d4f22cf6f6fbc1b5d751709895570e878e53e2b98144cfa5bec435e7b"
+    },
+    {
+      "name": "operation-ui",
+      "command": [
+        "/Users/fuzz/LevelScope-propose-workflow-20261123/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/LevelScope-propose-workflow-20261123/high-sierra-01/operation-ui-files",
+        "--operation-ui",
+        "/Users/fuzz/LevelScope-propose-workflow-20261123/inputs/supplied.levelscope"
+      ],
+      "returncode": 0,
+      "seconds": 166.413677608,
+      "passed": true,
+      "checks": 186,
+      "receipt": "operation-ui-files/result.json",
+      "receipt_sha256": "2bb4ea10875a98d2d872bb388895e0697567a254f2e4ce835fd4b32cf860031b"
+    }
+  ]
+}

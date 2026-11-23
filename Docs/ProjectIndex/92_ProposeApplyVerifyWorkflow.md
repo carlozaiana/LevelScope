@@ -94,14 +94,17 @@ remain in use.
 
 ## Qualification and remaining scope
 
-Candidate 01 passed **2,957 affected assertions on actual Sequoia 15.7.9 arm64**:
+Candidate 01 passed **2,957 affected assertions on each actual platform**: Sequoia
+15.7.9 arm64 on 22 November, and High Sierra 10.13.6 (17G66) x86_64 on
+23 November 2026. The High Sierra run used the identical frozen candidate; no
+source changes, rebuild, relaxed checks or additional correction method was needed.
 
-| Focused group | Assertions |
-| --- | ---: |
-| Timeline/manual editing, Undo, navigation and existing section behavior | 2,580 |
-| Existing explicit proposal/UI workflow and independent verification | 167 |
-| Applied-boundary native interaction, history and save/reopen | 24 |
-| New asynchronous Propose/apply/verify workflow | 186 |
+| Focused group | Sequoia | High Sierra |
+| --- | ---: | ---: |
+| Timeline/manual editing, Undo, navigation and existing section behavior | 2,580 | 2,580 |
+| Existing explicit proposal/UI workflow and independent verification | 167 | 167 |
+| Applied-boundary native interaction, history and save/reopen | 24 | 24 |
+| New asynchronous Propose/apply/verify workflow | 186 | 186 |
 
 The new group exercises stereo, mono and 5.1 Standard paths; unchanged unsupported
 mono LRA behavior; preparation from actual manual Current; first-import identical
@@ -116,10 +119,14 @@ Apply route is exercised deliberately through its retained entry point, while
 the new main-window button has separate native coverage.
 
 The final copied-programme run's 20 ms heartbeat measured **22.23 ms p95** and
-**117.62 ms maximum** over 1,111 samples. This is a focused native responsiveness
-check, not a general performance or full-duration qualification. The final
-screenshot was inspected: the persistent advisory, independently verified
-Current, curves, applied handles and main recovery control are visible. New
+**117.62 ms maximum** over 1,111 samples on Sequoia; **23.23 ms p95** and
+**485.57 ms maximum** over 2,018 samples on High Sierra. Both passed the existing
+100 ms p95 criterion. This is a focused native responsiveness check, not a general
+performance or full-duration qualification, and does not eliminate the separately
+recorded completion pause. Native screenshots from both platforms were inspected:
+the persistent advisory, independently verified Current, curves, applied handles
+and recovery control are visible. The edited-boundary screenshot on High Sierra
+also shows Current needing remeasurement. New
 status punctuation uses ASCII after visual QA found a rendering issue in a
 pre-freeze development build.
 
@@ -129,9 +136,10 @@ audible test ran. Earlier development receipts and corrected test assumptions
 are retained alongside the final evidence; they are not substituted for the
 final candidate's results.
 
-Golem is disconnected by the user's latest report. New actual High Sierra checks
-remain pending; universal Intel builds retain the macOS 10.13 deployment target.
-Accepted integrated M20 and boundary-editing evidence is inherited only for
+Golem's restored SSH connection and active desktop were verified on 23 November.
+The pending affected High Sierra checks are now complete. Universal Intel builds
+retain the macOS 10.13 deployment target. Accepted integrated M20 and
+boundary-editing evidence is inherited only for
 unchanged behavior. This slice adds no independent-programme correction or
 listening-acceptance claim. Broad video, full-film and three-hour endurance checks
 remain deferred, with no automatic 90-minute substitute. The inherited
@@ -156,7 +164,7 @@ check; the app never starts it automatically.
 - Source manifest SHA-256: `eb883cde76149331d7016dc8e3d6cc6dcc5aeb0f0bd4263e5014fafe482fd1e4`.
 - Candidate identity SHA-256: `4eb921611c8cec84e98b79ef7cb94aa9fd09da6b27bfbbeed958e35706e68ce3`.
 - App: `/Users/fuzz/.codex/worktrees/a411/LevelScope/build/propose-verify-workflow-2026-11-22/candidate-01/LevelScope Standalone.app`.
-- [Focused acceptance receipt](../../Tests/Qualification/ProposalWorkflow/results/2026-11-22/acceptance.json), with per-group commands/results and candidate identities beside it.
+- [Both-platform focused acceptance receipt](../../Tests/Qualification/ProposalWorkflow/results/2026-11-23/acceptance.json), with High Sierra commands/results, transfer hashes and post-run integrity evidence beside it. The [original Sequoia receipt](../../Tests/Qualification/ProposalWorkflow/results/2026-11-22/acceptance.json) remains unchanged.
 - [Prior boundary-editing user acceptance](../../Tests/Qualification/ProposalWorkflow/results/2026-11-22/user-acceptance.json), separate from new workflow checks.
 
 The post-test audit verified all 3,054 protected files and 27 existing tags,
@@ -166,10 +174,14 @@ artifacts in this new package also match its frozen identity. Main remains
 `1056ad4ace536abfd68904f083c7fc56a1a8999f`. The development branch is local;
 publication and main integration remain for separate review/authorization.
 
-Actual High Sierra execution is the remaining affected-platform qualification.
-The same preserved app/tests are universal with Intel minimum 10.13; that is
-build evidence, not a substitute for running them on Golem. User listening and
-interaction review of the new workflow remain separate from numerical PASS.
-The next qualification step is to run the focused candidate groups on actual
-High Sierra when the user makes Golem available, reusing unchanged evidence.
-Do not expand to the deferred video/full-film/endurance work automatically.
+Actual High Sierra execution of the four affected groups is complete. All 462
+candidate artifacts were verified before and after the run on Golem and again
+locally; original and owned test inputs, main and all 27 tags remain unchanged.
+The High Sierra app is preserved at
+`/Users/fuzz/LevelScope-propose-workflow-20261123/candidate-01/LevelScope Standalone.app`.
+
+User listening and interaction acceptance of the new workflow remain separate
+from numerical PASS. Publication and main integration still require their separate
+review/authorization. Do not expand to deferred video/full-film/endurance work
+automatically. The qualified source remains implementation `79b55eb`; this
+qualification update changes only documentation and evidence.

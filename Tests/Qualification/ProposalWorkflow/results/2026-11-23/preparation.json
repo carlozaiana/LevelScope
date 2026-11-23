@@ -1,0 +1,14 @@
+{
+  "host": "Golem.local",
+  "os": "10.13.6",
+  "architecture": "x86_64",
+  "python": "3.8.10 (v3.8.10:3d8993a744, May  3 2021, 08:55:58) \n[Clang 6.0 (clang-600.0.57)]",
+  "console_user": "fuzz",
+  "candidate_identity_sha256": "4eb921611c8cec84e98b79ef7cb94aa9fd09da6b27bfbbeed958e35706e68ce3",
+  "verified_artifacts": 462,
+  "inputs": {
+    "supplied.levelscope": "30cda1f347937fcb6df0c17006f05b6d39775b68f9da091fe056e8c2cd425b25",
+    "supplied-audio.wav": "7ba6404041c94c909df290a6829a0fe92ce594329a1d575490c2bb4a5b6cc8f0"
+  },
+  "physical_devices_opened": false
+}
