@@ -105,18 +105,30 @@ Final integrated comparison belongs to the combined package/timing slot.
 
 Receipts in `results/development-sequoia-2026-11-23` identify the exact development
 measurement build and affected results. Earlier native development passed 629
-checks; the expanded current run passed 657. The first ordinary audition rerun
+checks; the intermediate expanded run passed 657. Final-source development passed
+**7,934 assertions** on Sequoia arm64: 668 playback/native, 4,069 audition, 450
+device settings, 2,580 timeline, and 167 existing native proposal/UI. Implementation
+`b618ce9dfa77a89b56ba50fd209e70e6eca0305b`, Source tree
+`6a099bb9325326cf4b6136f3854e54dbc258ce77`, measurement build
+`67009a8ea02c5cb442e2fd9a209de9c868fc932c1e63488dbb17fcf1ba46b5b2`.
+See `final-summary.json` for executable hashes and exact receipts. The original
+stopped/repaint assertion passes with the Clear fix. Final native screenshots
+were visually checked for both readiness and preparation. An early portion of
+the existing UI run may overlap Logic compilation; all unchanged timing gates
+passed. The timeline run started after Logic released the Mac. The first ordinary audition rerun
 stopped at the old assertion forbidding even explicit Connect during background
 preparation. That expectation was updated to the approved contract: no implicit
 open; explicit Connect stays stopped; pending explicit Play still blocks device
 replacement. The failed receipt is retained. No production fix was made to
 satisfy that obsolete assertion. The ordinary native UI receipt also retained its
 first failure: its test helper classified disconnected cancellation of a
-background worker as active transport. Review then found a real Clear Source conflict: that same cancelling state could
+background worker as active transport. Review then found a real Clear Source
+conflict: that same cancelling state could
 make the model reject the requested clear. Transport activity now ends when
 Stop quiesces callbacks and revokes Play; preparation lifetime remains a separate
 guard. The original stopped helper and immediate-repaint assertions are retained,
-and the new native test explicitly clears a programme during background work. A source-identity test label now correctly
+and the new native test explicitly clears a programme during background work.
+A source-identity test label now correctly
 names the inode/ctime protection rather than claiming hashing was necessary.
 
 Final universal package and actual High Sierra execution remain the combined

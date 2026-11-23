@@ -1,0 +1,56 @@
+{
+  "passed": true,
+  "scope": "Final-source UI development checks; combined universal frozen-package qualification remains with Logic owner",
+  "platform": {
+    "os": "15.7.9",
+    "architecture": "arm64"
+  },
+  "implementation": "b618ce9dfa77a89b56ba50fd209e70e6eca0305b",
+  "source_tree": "6a099bb9325326cf4b6136f3854e54dbc258ce77",
+  "measurement_build": "67009a8ea02c5cb442e2fd9a209de9c868fc932c1e63488dbb17fcf1ba46b5b2",
+  "groups": {
+    "playback-ui": 668,
+    "audition": 4069,
+    "devices": 450,
+    "timeline": 2580,
+    "ui": 167
+  },
+  "total": 7934,
+  "receipts_sha256": {
+    "playback-ready-surround.png": "d513655dff33ff0a8c5f9f81742a12da756600e169660c4faaa7a63cc0d771ba",
+    "playback-ui.json": "92077443c8ccd48663d9f8dd865120291bc1a7cfc8bf5a2cacc35fc670996eef",
+    "ui.json": "d23af5f716292faadf1b599623d8c9188e0ea19a0bfc7ae3b5fd1e0a1eb57794",
+    "audition.json": "ef6cd712affc4d7e58fdfa5139d6514085d4815f2e9b79ca74d450a98e301e15",
+    "playback-preparing-stereo.png": "b2f1f06d4e124a3bbad423b555244cedb791257c35834d81098978a58bd78e64",
+    "timeline.json": "64e39840c23071941c128a9333fc0e7c20dbcc5a4e9ade3e5086367a5add22c1",
+    "devices.json": "6ebc61ab962970d905185e8ef32f29b1a306a13713b32f735255ea824ab100be"
+  },
+  "executables": {
+    "LevelScopeRegionUITests": {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/background-playback-preparation-2026-11-23/compile/LevelScopeRegionUITests_artefacts/Release/LevelScopeRegionUITests",
+      "sha256": "8b7aaf338a930dab44603141ce2a2c416cdcd3a8eef7e5058db766dd65c6b8e3"
+    },
+    "LevelScopeAuditionTests": {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/background-playback-preparation-2026-11-23/compile/LevelScopeAuditionTests_artefacts/Release/LevelScopeAuditionTests",
+      "sha256": "ad013b3e3cc75b295c65c5df301d8e4967af5ba40d95c6406db9abb526d7bd74"
+    },
+    "LevelScopeDeviceSettingsTests": {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/background-playback-preparation-2026-11-23/compile/LevelScopeDeviceSettingsTests_artefacts/Release/LevelScopeDeviceSettingsTests",
+      "sha256": "f52238127bea6e23bfacc2437189d35bad15993ce2617f60eabab1e77d8a40d1"
+    },
+    "LevelScopeTimelineProgressTests": {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/background-playback-preparation-2026-11-23/compile/LevelScopeTimelineProgressTests_artefacts/Release/LevelScopeTimelineProgressTests",
+      "sha256": "b88db8659bda1c98d3a85c16cbb5fa6291d11688c41515cac62aec4094950957"
+    },
+    "LevelScopePlaybackTiming": {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/background-playback-preparation-2026-11-23/compile/LevelScopePlaybackTiming_artefacts/Release/LevelScopePlaybackTiming",
+      "sha256": "a07ba6a2a0d0041846c14fe5b54a50401abe94397d00bdb5ddf7584dbc5fc2a6"
+    }
+  },
+  "ui_timing_note": "Early part of existing native UI may overlap Logic compile; all unchanged timing gates passed. Timeline started after Logic released the Mac. No integrated first-Play timings run in this development pass.",
+  "physical_devices_opened": false,
+  "audible_tests_run": false,
+  "high_sierra_run_here": false,
+  "main_changed": false,
+  "prior_runs_preserved": true
+}
