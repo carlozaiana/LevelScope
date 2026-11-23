@@ -1,0 +1,38 @@
+{
+  "passed": true,
+  "qualified_measurement_build": "9b379f0479f69a6e2ded23dc778ad5c50c5e92a20e4076a5936e06b5a82698fd",
+  "candidate_measurement_build": "3fc9ebd577afa62dc62fc04e12ef52d1abc03042379852d0ebe6d17120e25e86",
+  "input_content_sha256": "7ba6404041c94c909df290a6829a0fe92ce594329a1d575490c2bb4a5b6cc8f0",
+  "exact_payloads_and_selection": {
+    "media_sha256": true,
+    "source_numeric_sha256": true,
+    "applied_plan": true,
+    "applied_choice": true,
+    "processed_current_numeric_sha256": true,
+    "rendered_numeric_sha256": true,
+    "rendered_pcm_sha256": true
+  },
+  "exported_pcm_sha256": "a06057a7bbec3a36889f814763a19f5d33d52963716de4ba4e27186687cbbb11",
+  "runs": [
+    {
+      "baseline_ms": 10790.13883333281,
+      "candidate_ms": 9748.823708333075,
+      "baseline_preparation_ms": 918.4172080000001,
+      "candidate_preparation_ms": 0.051666,
+      "baseline_copy_passes": 1,
+      "candidate_copy_passes": 0,
+      "private_candidates": 3,
+      "retained_attempt": 2
+    },
+    {
+      "baseline_ms": 10882.05404166505,
+      "candidate_ms": 9855.203916668892,
+      "baseline_preparation_ms": 909.1832079999999,
+      "candidate_preparation_ms": 0.056958,
+      "baseline_copy_passes": 1,
+      "candidate_copy_passes": 0,
+      "private_candidates": 3,
+      "retained_attempt": 2
+    }
+  ]
+}

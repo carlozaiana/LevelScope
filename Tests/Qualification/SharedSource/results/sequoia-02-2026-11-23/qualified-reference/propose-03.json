@@ -1,0 +1,142 @@
+{
+  "media_sha256": "7ba6404041c94c909df290a6829a0fe92ce594329a1d575490c2bb4a5b6cc8f0",
+  "source_numeric_sha256": "bbfea70d3428c40cd4279fe03fc6083c81e5860cc4b0af09accbc5fabd871ebf",
+  "runs": [
+    {
+      "elapsed_ms": 10790.13883333281,
+      "preparation_ms": 918.4172080000001,
+      "copy_passes": 1,
+      "validation_passes": 1,
+      "validation_hash_passes": 1,
+      "retained_attempt": 2,
+      "outcome": "Review required - passing alternatives, complete treatment not established",
+      "attempts": [
+        {
+          "plan": "section-gain-v1;after-composition;before-static-gain-v1;float32-stage-rounding;1;48000;13228800;b23987667c713873d3085c7d1e7c53c9cb911f8cf2f10b3ecf0671d56b2a1b26;0:616800:0x0p+0;616800:1442400:-0x1.63c7c0dcb6b2p+0;1442400:2397600:0x0p+0;2397600:2887200:-0x1.8p+1;2887200:3789600:0x0p+0;3789600:4682400:-0x1.e280bb8deb9p+0;4682400:9060000:0x0p+0;9060000:9285600:-0x1.471c3c3a7978p+0;9285600:13228800:0x0p+0;",
+          "global_db": "-0.76036568585522701",
+          "verdict": 2,
+          "candidate_numeric_sha256": "3c86f03f3864e8a0e2a521f514e400720143fd20219e3e4ce17c51b71c7ff7a4"
+        },
+        {
+          "plan": "section-gain-v1;after-composition;before-static-gain-v1;float32-stage-rounding;1;48000;13228800;b23987667c713873d3085c7d1e7c53c9cb911f8cf2f10b3ecf0671d56b2a1b26;0:586080:0x0p+0;586080:1468800:-0x1.63c7c0dcb6b2p+0;1468800:2513280:0x0p+0;2513280:2785440:-0x1.8p+1;2785440:3789600:0x0p+0;3789600:4682400:-0x1.e280bb8deb9p+0;4682400:9060000:0x0p+0;9060000:9285600:-0x1.471c3c3a7978p+0;9285600:13228800:0x0p+0;",
+          "global_db": "-0.76573419977060553",
+          "verdict": 2,
+          "candidate_numeric_sha256": "747e56fd4cafe687cec822868977973d5379b8e8c24d7eb21425216b0fec1166"
+        },
+        {
+          "plan": "section-gain-v1;after-composition;before-static-gain-v1;float32-stage-rounding;1;48000;13228800;b23987667c713873d3085c7d1e7c53c9cb911f8cf2f10b3ecf0671d56b2a1b26;0:586080:0x0p+0;586080:1468800:-0x1.63c7c0dcb6b2p+0;1468800:2513280:0x0p+0;2513280:2785440:-0x1.8p+1;2785440:3789600:0x0p+0;3789600:4682400:-0x1.e280bb8deb9p+0;4682400:9060000:0x0p+0;9060000:9285600:-0x1.471c3c3a7978p+0;9285600:13228800:0x0p+0;",
+          "global_db": "-0.96573419977060482",
+          "verdict": 1,
+          "candidate_numeric_sha256": "36e4a65ebd326985b9d95b9cf4ff7c7ec90ef54ffd25d84eb6b3efcbbfc995b8"
+        }
+      ]
+    },
+    {
+      "elapsed_ms": 10882.05404166505,
+      "preparation_ms": 909.1832079999999,
+      "copy_passes": 1,
+      "validation_passes": 1,
+      "validation_hash_passes": 1,
+      "retained_attempt": 2,
+      "outcome": "Review required - passing alternatives, complete treatment not established",
+      "attempts": [
+        {
+          "plan": "section-gain-v1;after-composition;before-static-gain-v1;float32-stage-rounding;1;48000;13228800;b23987667c713873d3085c7d1e7c53c9cb911f8cf2f10b3ecf0671d56b2a1b26;0:616800:0x0p+0;616800:1442400:-0x1.63c7c0dcb6b2p+0;1442400:2397600:0x0p+0;2397600:2887200:-0x1.8p+1;2887200:3789600:0x0p+0;3789600:4682400:-0x1.e280bb8deb9p+0;4682400:9060000:0x0p+0;9060000:9285600:-0x1.471c3c3a7978p+0;9285600:13228800:0x0p+0;",
+          "global_db": "-0.76036568585522701",
+          "verdict": 2,
+          "candidate_numeric_sha256": "3c86f03f3864e8a0e2a521f514e400720143fd20219e3e4ce17c51b71c7ff7a4"
+        },
+        {
+          "plan": "section-gain-v1;after-composition;before-static-gain-v1;float32-stage-rounding;1;48000;13228800;b23987667c713873d3085c7d1e7c53c9cb911f8cf2f10b3ecf0671d56b2a1b26;0:586080:0x0p+0;586080:1468800:-0x1.63c7c0dcb6b2p+0;1468800:2513280:0x0p+0;2513280:2785440:-0x1.8p+1;2785440:3789600:0x0p+0;3789600:4682400:-0x1.e280bb8deb9p+0;4682400:9060000:0x0p+0;9060000:9285600:-0x1.471c3c3a7978p+0;9285600:13228800:0x0p+0;",
+          "global_db": "-0.76573419977060553",
+          "verdict": 2,
+          "candidate_numeric_sha256": "747e56fd4cafe687cec822868977973d5379b8e8c24d7eb21425216b0fec1166"
+        },
+        {
+          "plan": "section-gain-v1;after-composition;before-static-gain-v1;float32-stage-rounding;1;48000;13228800;b23987667c713873d3085c7d1e7c53c9cb911f8cf2f10b3ecf0671d56b2a1b26;0:586080:0x0p+0;586080:1468800:-0x1.63c7c0dcb6b2p+0;1468800:2513280:0x0p+0;2513280:2785440:-0x1.8p+1;2785440:3789600:0x0p+0;3789600:4682400:-0x1.e280bb8deb9p+0;4682400:9060000:0x0p+0;9060000:9285600:-0x1.471c3c3a7978p+0;9285600:13228800:0x0p+0;",
+          "global_db": "-0.96573419977060482",
+          "verdict": 1,
+          "candidate_numeric_sha256": "36e4a65ebd326985b9d95b9cf4ff7c7ec90ef54ffd25d84eb6b3efcbbfc995b8"
+        }
+      ]
+    }
+  ],
+  "applied_plan": "338695d33c3f3abdaad61a44559f8fadba54d090844d2e68c2dac497b6cd8470",
+  "applied_choice": 0,
+  "processed_current_numeric_sha256": "9b0952569876cb01f71c1be63476e956e28df908f9ea68da51c3312a923bc4ae",
+  "rendered_pcm_sha256": "a06057a7bbec3a36889f814763a19f5d33d52963716de4ba4e27186687cbbb11",
+  "rendered_numeric_sha256": "a6cd0202128971f1e0c2a947f719535d05c8195e5ff574c382335f885b8080dc",
+  "build": "9b379f0479f69a6e2ded23dc778ad5c50c5e92a20e4076a5936e06b5a82698fd",
+  "failure": "",
+  "passed": true,
+  "checks": [
+    {
+      "name": "agreed stereo development input",
+      "passed": true
+    },
+    {
+      "name": "adopt supplied input",
+      "passed": true
+    },
+    {
+      "name": "begin composition measurement",
+      "passed": true
+    },
+    {
+      "name": "composition measurement completes",
+      "passed": true
+    },
+    {
+      "name": "accept exact composition measurement",
+      "passed": true
+    },
+    {
+      "name": "set comparison requirements",
+      "passed": true
+    },
+    {
+      "name": "select qualified competing-boundary method",
+      "passed": true
+    },
+    {
+      "name": "proposal completes on unchanged baseline",
+      "passed": true
+    },
+    {
+      "name": "comparison includes a measured candidate",
+      "passed": true
+    },
+    {
+      "name": "proposal completes on unchanged baseline",
+      "passed": true
+    },
+    {
+      "name": "comparison includes a measured candidate",
+      "passed": true
+    },
+    {
+      "name": "apply selected measured alternative through the accepted workflow",
+      "passed": true
+    },
+    {
+      "name": "begin composition measurement",
+      "passed": true
+    },
+    {
+      "name": "composition measurement completes",
+      "passed": true
+    },
+    {
+      "name": "accept exact composition measurement",
+      "passed": true
+    },
+    {
+      "name": "independently measured applied Current passes",
+      "passed": true
+    },
+    {
+      "name": "render PCM and independently measure encoded bytes",
+      "passed": true
+    }
+  ]
+}

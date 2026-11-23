@@ -1,0 +1,20 @@
+{
+  "source": "27d0b88743d0f4b118604a2c2cf03295cfb5f7a3809f24c87e367d6ac372a4ad",
+  "binary": "870ba1bc2c14c814ffb3862daad16c851bc9a55f4765c23ed52fc5e30b0050be",
+  "qualified_source_commit": "79b55eb177a01e56fdbe86f843e03140df356bcd",
+  "measurement_build": "9b379f0479f69a6e2ded23dc778ad5c50c5e92a20e4076a5936e06b5a82698fd",
+  "inputs": {
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/compile/CMakeFiles/LevelScopeAuditionTests.dir/Source/Standalone/StandaloneAudioPanel.cpp.o": "354c2ddffd9efc8a2fdb0c2dc6b537e382e8230dd976e3ea130021facb845000",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/compile/CMakeFiles/LevelScopeAuditionTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_formats/juce_audio_formats.mm.o": "e69f039b2b9051db001d8dfcab7e3afa939caac8154b6c82c1a288fdf68ae1f8",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/compile/CMakeFiles/LevelScopeAuditionTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_basics/juce_audio_basics.mm.o": "bd7dfca65dca603b560f6809c535d503bd090678aea4ae54cb3c1318d29017df",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/compile/CMakeFiles/LevelScopeAuditionTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_core/juce_core.mm.o": "0ec32d1ad4a98e1f4993060fcfe9e9b5b2c97dcf534ad2795e78d31c1a16b774",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/compile/CMakeFiles/LevelScopeAuditionTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_audio_devices/juce_audio_devices.mm.o": "50d78308b04391d17caee36e8488fc654869442e75cdc2ad670afa3ad0c18153",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/compile/CMakeFiles/LevelScopeAuditionTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_events/juce_events.mm.o": "17c99a62ae8d2f7d00cf79273ed8ca09f3fbb39bef83075dc257ebe5d49b6342",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/compile/CMakeFiles/LevelScopeAuditionTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_cryptography/juce_cryptography.mm.o": "30f3169fa714d0aad77c1578a8f1dba21107f6351877c810f6a46e318333a197",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/compile/CMakeFiles/LevelScopeAuditionTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_graphics/juce_graphics.mm.o": "0ee6730ee00813410754f4600c3525d738bbee094fa931cc17ed0802a7b13633",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/compile/CMakeFiles/LevelScopeAuditionTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_gui_basics/juce_gui_basics.mm.o": "0e86d72195fc69dad9ec327b0a36cc249d9d1422bbaf6eda00e21ac9f80afa65",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/compile/CMakeFiles/LevelScopeAuditionTests.dir/Users/fuzz/Developer/LevelScope-dependencies/JUCE-7.0.12/modules/juce_data_structures/juce_data_structures.mm.o": "46da7540e007a892795973a71d0f288cb1c351eeae64207d06e59eec94fe1959",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/compile/libLevelScopeStandaloneSupport.a": "2bfd80d3389ceaa9d7bc9f4a296c2860ef25eafd3b510c591e0c6ba32becf7fb",
+    "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m20-ui-integration/compile/libLevelScopeMeasurementCore.a": "0bd941c5d0f273b91dcda7df7657f1ef165974b19f24d127a8533ab29b3bd58c"
+  }
+}

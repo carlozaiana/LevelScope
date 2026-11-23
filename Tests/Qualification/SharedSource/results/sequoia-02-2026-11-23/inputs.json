@@ -1,0 +1,7 @@
+{
+  "inputs/stereo.wav": "7ba6404041c94c909df290a6829a0fe92ce594329a1d575490c2bb4a5b6cc8f0",
+  "inputs/surround.wav": "4fa30bfd9a8fbb64e68fc00eaf11f8adf81ead8502d05ce639b22cc07645d7b6",
+  "reference/SessionSourceBenchmark": "870ba1bc2c14c814ffb3862daad16c851bc9a55f4765c23ed52fc5e30b0050be",
+  "reference/PlaybackTimingBaseline": "0df80beac2230332d5b80b645336aac9a7e904fbb6508ece238232d49eeebc7c",
+  "qualify_host.py": "8984ade8f0522fe8210525327f8b1011d9a7e39a05635c408bdd95ee71f4e85d"
+}

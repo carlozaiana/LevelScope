@@ -1,0 +1,31 @@
+{
+  "passed": true,
+  "measurement_build": "3fc9ebd577afa62dc62fc04e12ef52d1abc03042379852d0ebe6d17120e25e86",
+  "scope": "Explicit Play to first nonzero sample at injected output. Same Sequoia Mac, source files and 1 ms control polling. No physical-output latency measurement.",
+  "playback": [
+    {
+      "layout": "stereo",
+      "input_sha256": "7ba6404041c94c909df290a6829a0fe92ce594329a1d575490c2bb4a5b6cc8f0",
+      "bytes": 79375076,
+      "baseline_first_ms": 912.4468333333333,
+      "candidate_first_ms": 1.352416333333333,
+      "baseline_subsequent_ms": 2.609916333333333,
+      "candidate_subsequent_ms": 3.730125333333333,
+      "background_ms": 2.5826249999999997,
+      "initial_session_copies": 1,
+      "first_and_subsequent_additional_copies": 0
+    },
+    {
+      "layout": "surround",
+      "input_sha256": "4fa30bfd9a8fbb64e68fc00eaf11f8adf81ead8502d05ce639b22cc07645d7b6",
+      "bytes": 160617696,
+      "baseline_first_ms": 1844.2786673333328,
+      "candidate_first_ms": 1.370500333333333,
+      "baseline_subsequent_ms": 2.6304583333333333,
+      "candidate_subsequent_ms": 3.708000333333333,
+      "background_ms": 2.580917,
+      "initial_session_copies": 1,
+      "first_and_subsequent_additional_copies": 0
+    }
+  ]
+}

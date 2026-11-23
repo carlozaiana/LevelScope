@@ -1,0 +1,15 @@
+{
+  "qualified_baseline": "18adeb520006b7fe7e0a22300cc26abd28eec51c",
+  "qualified_production_implementation": "79b55eb177a01e56fdbe86f843e03140df356bcd",
+  "qualified_tag_object": "7275a2554f96a33867573ccc370078b31569d0e9",
+  "service_implementation": "c9b624e688b982526e60d661b8917b312871e83a",
+  "early_checks": "development/service-04.json, development/feedback-01/result.json, development/comparison-01.json",
+  "development_attempts": {
+    "build-service-01.log": "Concurrent initial CMake generation had not registered the new target. Reconfigured sequentially.",
+    "development/service-01.json": "Native sandbox denied creating the JUCE per-user temporary-directory fixture. Normal host temp access used for the ensuing 258/269/282-assertion runs.",
+    "comparison/qualified/propose-01.json": "Fixture set nonzero automatic margins without explicit automatic-margin permission. Enabled the existing setting.",
+    "comparison/qualified/propose-02.json": "The source comparison succeeded but a fixed trim did not pass the export rules. Kept export gating and corrected the driver to Apply the real measured passing alternative.",
+    "comparison/qualified/propose-03.json": "Reference driver passed actual proposal, independent Current and verified export.",
+    "baseline_playback_driver": "The UI owner's first timing driver omitted SessionJob begin/finish. The corrected baseline uses actual accepted analysis."
+  }
+}
