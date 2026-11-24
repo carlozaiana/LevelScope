@@ -72,7 +72,8 @@ void proposalOperationChecks(const juce::File& root,const juce::File& supplied)
     // First import still adopts identical Source into untouched Current.
     installWorkflowFixture(ui,StandaloneSessionModel());expect(s.setValidatedSource(juce::File(stereo.sourceDocument.fullPath),stereo.sourceDocument.media),"fresh import model");
     s.sourceDocument.layout=stereo.sourceDocument.layout;s.setSelectedTargetProfileIndex(1);setScalar();Access::refresh(ui);Access::workflow(ui);
-    expect(op.phase==Phase::source,"initial Propose begins visible Source preparation");completeOperation(ui);
+    expect(op.phase==Phase::initialize&&s.hasCurrentStateInitialized(),"first Propose exposes Current initialization before unmeasured Source preparation");
+    Access::tick(ui);expect(op.phase==Phase::source,"initial Propose continues visible Source preparation");completeOperation(ui);
     expect(s.source.hasMeasurement&&op.baseline.current&&op.baseline.current->identicalSourceMeasurementIdentity==s.source.analysis->identity,"first Source measurement initialises identical Current inside operation");
 
     // Both success and cancelled/error callbacks must reject an old runtime.
