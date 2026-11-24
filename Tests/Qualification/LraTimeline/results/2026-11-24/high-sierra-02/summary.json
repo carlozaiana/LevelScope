@@ -1,0 +1,112 @@
+{
+  "passed": true,
+  "os": "10.13.6",
+  "architecture": "x86_64",
+  "source_commit": "61c93ae86d49e4d35bfec798f6568344f5cb8fc5",
+  "build": "86753c73c79a7096f240a0beda16d792517bfe8edcda7861d6f6b155b8e8cd9a",
+  "candidate_identity_sha256": "843f513b6f0afed08b13eda0ca13692721b2506aa65df5dfaddd500a54b5cab6",
+  "requested_cases": [
+    "lra-timeline",
+    "lra-timeline-ui",
+    "gain-input-ui",
+    "gain-entry",
+    "graph-boundaries",
+    "current-sections-ui"
+  ],
+  "physical_devices_opened": false,
+  "combined_qualification_complete": false,
+  "inputs": {},
+  "groups": [
+    {
+      "name": "lra-timeline",
+      "command": [
+        "/Users/fuzz/LevelScope-LRA-Lanes-20261124/candidate-02/bin/LevelScopeDiagnosticsTests",
+        "--lra-timeline",
+        "--report",
+        "/Users/fuzz/LevelScope-LRA-Lanes-20261124/high-sierra-02/lra-timeline.json"
+      ],
+      "returncode": 0,
+      "seconds": 2.545198182,
+      "passed": true,
+      "checks": 62,
+      "receipt": "lra-timeline.json",
+      "receipt_sha256": "927e4b1a0edfe55dfcaed3cecc1d1728f5a1ec3b9b2864785a9438f0c895e2fd"
+    },
+    {
+      "name": "lra-timeline-ui",
+      "command": [
+        "/Users/fuzz/LevelScope-LRA-Lanes-20261124/candidate-02/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/LevelScope-LRA-Lanes-20261124/high-sierra-02/lra-timeline-ui-files",
+        "--lra-timeline-ui"
+      ],
+      "returncode": 0,
+      "seconds": 15.228495427,
+      "passed": true,
+      "checks": 225,
+      "receipt": "lra-timeline-ui-files/result.json",
+      "receipt_sha256": "47334e084fe55bc4a6717e35856e3b014771332919164dc064e92da787f245e5"
+    },
+    {
+      "name": "gain-input-ui",
+      "command": [
+        "/Users/fuzz/LevelScope-LRA-Lanes-20261124/candidate-02/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/LevelScope-LRA-Lanes-20261124/high-sierra-02/gain-input-ui-files",
+        "--gain-input-ui"
+      ],
+      "returncode": 0,
+      "seconds": 25.237562429999997,
+      "passed": true,
+      "checks": 221,
+      "receipt": "gain-input-ui-files/result.json",
+      "receipt_sha256": "0a82cf17d4bf904874ccf7f4a9a052115bdd7dc71b98d78e21384fd5f5c4d9f9"
+    },
+    {
+      "name": "gain-entry",
+      "command": [
+        "/Users/fuzz/LevelScope-LRA-Lanes-20261124/candidate-02/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/LevelScope-LRA-Lanes-20261124/high-sierra-02/gain-entry-files",
+        "--output",
+        "/Users/fuzz/LevelScope-LRA-Lanes-20261124/high-sierra-02/gain-entry.json",
+        "--gain-entry"
+      ],
+      "returncode": 0,
+      "seconds": 1.0814638439999982,
+      "passed": true,
+      "checks": 1079,
+      "receipt": "gain-entry.json",
+      "receipt_sha256": "17e813ec6f012f78b8fe1d5778899eaff4a65317df6332dcceaa6cb9e01a3447"
+    },
+    {
+      "name": "graph-boundaries",
+      "command": [
+        "/Users/fuzz/LevelScope-LRA-Lanes-20261124/candidate-02/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/LevelScope-LRA-Lanes-20261124/high-sierra-02/graph-boundaries-files",
+        "--output",
+        "/Users/fuzz/LevelScope-LRA-Lanes-20261124/high-sierra-02/graph-boundaries.json",
+        "--graph-boundaries"
+      ],
+      "returncode": 0,
+      "seconds": 2.0977451759999965,
+      "passed": true,
+      "checks": 943,
+      "receipt": "graph-boundaries.json",
+      "receipt_sha256": "bf92e1831585ce705eab2a30787abdf6e62054da6faab9db11a89584b038e7b4"
+    },
+    {
+      "name": "current-sections-ui",
+      "command": [
+        "/Users/fuzz/LevelScope-LRA-Lanes-20261124/candidate-02/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/LevelScope-LRA-Lanes-20261124/high-sierra-02/current-sections-ui-files",
+        "--current-sections-ui"
+      ],
+      "returncode": 0,
+      "seconds": 67.451395625,
+      "passed": true,
+      "checks": 232,
+      "receipt": "current-sections-ui-files/result.json",
+      "receipt_sha256": "24e7fd49e65a1285851356c6e8cf858b4ff5f41be5947bd7ca3192496bcbc9a5"
+    }
+  ]
+}

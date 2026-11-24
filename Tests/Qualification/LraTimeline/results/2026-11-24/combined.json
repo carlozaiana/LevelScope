@@ -1,0 +1,59 @@
+{
+  "passed": true,
+  "scope": "Measured LRA timeline and independent graph/lane heights; focused device-free qualification only",
+  "implementation": "fbd650cf78e8dc8b36bfaee6d8626a9aec816e1f",
+  "checkpoint": "61c93ae86d49e4d35bfec798f6568344f5cb8fc5",
+  "logic_handover": "68a2cd1f50ed8d651957e484636421dcea301f4e",
+  "source_tree": "97492cc70c3ef845dbfcbe65e946413380e7f4f6",
+  "measurement_build": "86753c73c79a7096f240a0beda16d792517bfe8edcda7861d6f6b155b8e8cd9a",
+  "candidate_identity_sha256": "843f513b6f0afed08b13eda0ca13692721b2506aa65df5dfaddd500a54b5cab6",
+  "app": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/lra-lanes-resizing-2026-11-24/candidate-02/LevelScope Standalone.app",
+  "per_host_assertions": 2762,
+  "platforms": [
+    {
+      "os": "15.7.9",
+      "architecture": "arm64",
+      "source_commit": "61c93ae86d49e4d35bfec798f6568344f5cb8fc5",
+      "build": "86753c73c79a7096f240a0beda16d792517bfe8edcda7861d6f6b155b8e8cd9a",
+      "candidate_identity_sha256": "843f513b6f0afed08b13eda0ca13692721b2506aa65df5dfaddd500a54b5cab6",
+      "requested_cases": [
+        "lra-timeline",
+        "lra-timeline-ui",
+        "gain-input-ui",
+        "gain-entry",
+        "graph-boundaries",
+        "current-sections-ui"
+      ]
+    },
+    {
+      "os": "10.13.6",
+      "architecture": "x86_64",
+      "source_commit": "61c93ae86d49e4d35bfec798f6568344f5cb8fc5",
+      "build": "86753c73c79a7096f240a0beda16d792517bfe8edcda7861d6f6b155b8e8cd9a",
+      "candidate_identity_sha256": "843f513b6f0afed08b13eda0ca13692721b2506aa65df5dfaddd500a54b5cab6",
+      "requested_cases": [
+        "lra-timeline",
+        "lra-timeline-ui",
+        "gain-input-ui",
+        "gain-entry",
+        "graph-boundaries",
+        "current-sections-ui"
+      ]
+    }
+  ],
+  "main": "b5ff52b9c87422b28f27a089c66b746fd2447a05",
+  "main_remote_readback": "b5ff52b9c87422b28f27a089c66b746fd2447a05",
+  "candidate_01_preserved": true,
+  "candidate_02_integrity_verified": true,
+  "physical_devices_opened": false,
+  "new_user_acceptance": "pending",
+  "previous_navigation_user_acceptance": "tested and works as expected",
+  "publication_authorized": false,
+  "deferred": [
+    "broad video",
+    "full-film",
+    "three-hour endurance; no automatic 90-minute substitute"
+  ],
+  "separate_limitation": "inherited completion pause",
+  "inherited": "unchanged source integrity/HFS+, measurement mathematics, proposal/processing strategy, export, playback qualification"
+}

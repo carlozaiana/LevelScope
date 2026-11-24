@@ -24,4 +24,45 @@ Heights are remembered separately for main and Sections in the application’s l
 
 Focused development runs are preserved, including a renderer test sampling the playhead overlay instead of its intended gate strip, a test-only null Undo-journal dereference before the first edit, and report-retention failures. Those fixtures and product report handling were corrected before candidate qualification; original receipts/crash report remain available. No live user session was used.
 
-Frozen identities, final two-host results and manual checklist: pending qualification.
+## Preserved implementation and build
+
+- UI implementation: `fbd650cf78e8dc8b36bfaee6d8626a9aec816e1f`.
+- Candidate-02 checkpoint, including the coordinate-fixture correction: `61c93ae86d49e4d35bfec798f6568344f5cb8fc5`.
+- Production Source tree: `97492cc70c3ef845dbfcbe65e946413380e7f4f6`.
+- Measurement build: `86753c73c79a7096f240a0beda16d792517bfe8edcda7861d6f6b155b8e8cd9a`.
+- Candidate-02 identity SHA-256: `843f513b6f0afed08b13eda0ca13692721b2506aa65df5dfaddd500a54b5cab6`.
+- App executable SHA-256: `e4856a517a4e4d93655d544600005764794906b08b5ff794e4dc37b1781bd368`.
+- Source manifest SHA-256: `3c63053f40e16f67f5188f3fed8309e2a52ea93931097a1e1c15f11a4be8f534`.
+- Preserved app: `/Users/fuzz/.codex/worktrees/a411/LevelScope/build/lra-lanes-resizing-2026-11-24/candidate-02/LevelScope Standalone.app`.
+
+The app and all three test executables contain arm64 and x86_64; the Intel minimum is macOS 10.13. Candidate 01 is preserved. Candidate 02 has identical production Source, measurement identity and app bytes; only `LevelScopeTimelineProgressTests` changed. Its section gesture fixture previously reused main-window pixel coordinates after the Sections parent established a different plot width. The corrected fixture maps the same exact source samples through each actual width, retaining all original boundary/audio assertions. Candidate 01’s failed receipt and the passing corrected development run are retained.
+
+## Focused qualification
+
+All six candidate-02 groups pass on **each actual platform**: Sequoia 15.7.9 arm64 and High Sierra 10.13.6 x86_64, **2,762 assertions per host**, with identical preserved package identity. The runner verifies every packaged artifact before and after execution.
+
+| Group | Assertions per host |
+| --- | ---: |
+| Measured LRA data contract (`--lra-timeline`) | 62 |
+| LRA native lanes/layout/validity (`--lra-timeline-ui`) | 225 |
+| Gain-entry/navigation and popup viewport | 221 |
+| Gain entry, selection and manual editing | 1,079 |
+| Graph/applied/section boundary interactions | 943 |
+| Current initialization and sections-from-regions native workflow | 232 |
+| Total | 2,762 |
+
+The new native checks include all ten independent height controls, separate local main/Sections preferences, Reset layout, vertical overflow, exact horizontal range, category strips, cached painting, exact shared click mapping including exclusive EOF, copied-report retention/invalidation, Original versus edited Current, unavailable/in-progress states, save/reopen and independent remeasurement. View changes preserve processing, measurement objects, Undo count, source range and stopped/disconnected transport. Existing gain-entry/popup/graph checks retain the accepted interaction semantics.
+
+Only device-free/injected-output tests ran. The source-integrity/HFS+, proposal algorithm and numeric, export and unchanged playback qualification are inherited, not rerun or extended by this UI evidence. No physical-output, latency, independent-programme correction, listening or endurance claim is added. The new lane build awaits user acceptance. The previously accepted navigation fixes remain recorded separately.
+
+Evidence is under `Tests/Qualification/LraTimeline/results/2026-11-24`, with frozen manifests, raw receipts, screenshots, development failures and preservation audit. Local and remote main remain `b5ff52b9c87422b28f27a089c66b746fd2447a05`; all 31 existing tags and 7,864 protected files across the prior packages/media/manuals/evidence match the preflight. This branch and candidate remain unpublished.
+
+## Short manual check
+
+1. Open a measured programme, set an LRA ceiling and inspect the three lanes below the gain lane. Scroll vertically if needed. Compare Original and Current; click a coloured passage to read its measured windows.
+2. Drag the divider directly beneath the waveform/curves, then the gain lane, each visible context band and each LRA lane. Other chosen heights and horizontal zoom/scroll should stay fixed. Repeat in Sections / gain.
+3. Change the target after inspecting a lane: the old report expires and the guidance updates. Change a Current gain deliberately with Enter: Current diagnostics disappear until independent remeasurement; Original stays available.
+4. Check ruler seeking, section/applied-boundary dragging and Undo/Redo. An unconfirmed gain is cancelled by clicking elsewhere, and that click performs its normal action.
+5. Reopen the app to check remembered heights. Double-click a divider to reset that height, or use Session / tools → Reset layout for all heights.
+
+Broad video/full-film/three-hour endurance remain deferred without a 90-minute substitute. The completion pause is still a separate limitation. No publication/main integration is included in this slice.
