@@ -135,7 +135,7 @@ void MeasurementTimeline::setTransport(int64_t frame,bool allowed,const juce::St
 {
     const bool enabled=bool(onRequestSeek);
     if(identity!=transportIdentity||allowed!=canSeek||reason!=seekReason)
-    {++navigationEpoch;navigationMessage(allowed?(sectionSession?"Waveform: drag section or boundary | Alt-drag to pan":"Ruler: stopped seek | Graph: inspect"):reason);}
+    {++navigationEpoch;navigationMessage(allowed?graphGestureHelp():reason);}
     transportIdentity=identity;canSeek=allowed;seekReason=reason;
     seek.setVisible(enabled);follow.setVisible(enabled);seek.setEnabled(enabled&&canSeek&&programmeFrames()>0);seek.setTooltip(reason.isEmpty()?"Move audition to these seconds while stopped; no playback.":reason);
     if(playhead==frame)return;playhead=frame;
@@ -166,7 +166,7 @@ void MeasurementTimeline::focusForTransport()
 std::vector<std::pair<int64_t,int64_t>> MeasurementTimeline::transitionSpans() const
 {
     std::vector<std::pair<int64_t,int64_t>> result;
-    if(!currentInspection||!showTransitions)return result;
+    if(!currentInspection||(!showTransitions&&!(sectionSession&&sectionSession->appliedBoundaryDrag)))return result;
     const auto* plan=sectionSession?&sectionSession->displayedSectionGains():&previewCurrent.sectionGains;
     if(!*plan)return result;
     const auto& p=**plan;const auto& rows=p.intervals;
@@ -224,6 +224,8 @@ void MeasurementTimeline::attachGainLane(TimelineGainLane& lane)
     gainLane=&lane;addAndMakeVisible(lane);
     lane.onSelection=[this](int64_t begin,int64_t end,int64_t frame)
     {
+        if(appliedDragToken&&!gainLane->selectsAppliedRegions())cancelAppliedDrag();
+        navigationMessage(graphGestureHelp());
         gainSelection=true;
         inspectedFrame=frame;inspectedEntry=juce::String(double(frame)/programmeRate(),9);seconds.setText(inspectedEntry,false);
         highlight(double(begin),double(end),false);
@@ -270,10 +272,11 @@ void MeasurementTimeline::zoomAt(double factor,float px)
 void MeasurementTimeline::setReferenceMeasurement(std::shared_ptr<const measurement::Result> value,bool current)
 {
     if(value==originalMeasurement&&current==currentInspection)return;
+    if(current!=currentInspection&&appliedDragFromGraph)cancelAppliedDrag();
     if(value!=originalMeasurement)
         originalIntegratedGateEnergy=value&&value->integratedRelativeGate
             ?measurement::relativeGateEnergy(value->momentary,false):std::nullopt;
-    originalMeasurement=std::move(value);currentInspection=current;rebuild();
+    originalMeasurement=std::move(value);currentInspection=current;hoveredAppliedBoundary.reset();navigationMessage(graphGestureHelp());rebuild();
 }
 juce::String MeasurementTimeline::rangePeakText(int64_t begin,int64_t end) const
 {
@@ -457,7 +460,7 @@ void MeasurementTimeline::resized()
     if(gainLane)gainLane->setBounds(b.removeFromBottom(gainLane->preferredHeight()));
     b.removeFromTop (44); ruler=b.removeFromTop(waveformEnabled?24:0).withTrimmedLeft(waveformEnabled?85:55).withTrimmedRight(waveformEnabled?60:12); b.removeFromBottom (25); graph = b.withTrimmedLeft(waveformEnabled?85:55).withTrimmedRight(waveformEnabled?60:12);
     blend.setBounds(2,graph.getY(),18,std::max(0,graph.getHeight()));
-    if(graph!=previousGraph)++navigationEpoch;
+    if(graph!=previousGraph){++navigationEpoch;cancelAppliedDrag();}
     rebuild();
 }
 void MeasurementTimeline::bindSectionEditing(StandaloneSessionModel& session,std::function<void(uint64_t)> changed)
@@ -491,7 +494,7 @@ void MeasurementTimeline::refreshSectionEditing()
 }
 std::optional<size_t> MeasurementTimeline::boundaryHandle(float px) const
 {
-    if(!sectionEditable || sectionBoundaries.size()<2 || graph.getWidth()<2)return {};
+    if(!sectionEditable || (gainLane&&!gainLane->selectsSections()) || sectionBoundaries.size()<2 || graph.getWidth()<2)return {};
     const auto last=sectionBoundaries.end()-1; // Programme start and end are fixed.
     const auto near=std::lower_bound(sectionBoundaries.begin(),last,frameAt(px));
     std::optional<size_t> best;
@@ -547,8 +550,21 @@ juce::String MeasurementTimeline::peakHoverText(juce::Point<float> pointer) cons
 }
 juce::String MeasurementTimeline::getTooltip()
 {
+    if(appliedGraphBoundaryHandle(getMouseXYRelative().toFloat()))return gainLane->appliedBoundaryHelp();
     if(gainLane&&gainLane->appliedBoundaryHandle(getMouseXYRelative()-gainLane->getPosition()))return gainLane->appliedBoundaryHelp();
     return peakHoverText(getMouseXYRelative().toFloat());
+}
+juce::String MeasurementTimeline::graphGestureHelp() const
+{
+    if(gainLane&&!gainLane->selectsSections())
+        return gainLane->selectsAppliedRegions()?(currentInspection?"Current: drag applied boundary | Alt-drag to pan":"Original: Inspect Current to edit regions")
+            :"Proposal inspection: read-only | Alt-drag to pan";
+    return sectionSession?"Sections: drag section or boundary | Alt-drag to pan":"Ruler: stopped seek | Graph: inspect";
+}
+std::optional<size_t> MeasurementTimeline::appliedGraphBoundaryHandle(juce::Point<float> point) const
+{
+    if(!currentInspection||!sectionSession||!gainLane||!graph.toFloat().contains(point))return {};
+    return gainLane->appliedBoundaryAt(point.x-gainLane->getX());
 }
 MeasurementTimeline::~MeasurementTimeline()
 {
@@ -577,9 +593,13 @@ void MeasurementTimeline::refreshAppliedDrag()
 }
 void MeasurementTimeline::mouseMove(const juce::MouseEvent& e)
 {
-    setMouseCursor((gainLane&&gainLane->appliedBoundaryHandle(e.getPosition()-gainLane->getPosition()))||(graph.contains(e.getPosition()) && boundaryHandle(e.position.x))
+    const auto handle=!e.mods.isAltDown()&&!e.mods.isCommandDown()?appliedGraphBoundaryHandle(e.position):std::nullopt;
+    if(handle!=hoveredAppliedBoundary){hoveredAppliedBoundary=handle;repaint();}
+    setMouseCursor((handle&&sectionSession&&sectionSession->manualEditAllowed())||(gainLane&&gainLane->appliedBoundaryHandle(e.getPosition()-gainLane->getPosition()))||(graph.contains(e.getPosition()) && boundaryHandle(e.position.x))
         ? juce::MouseCursor::LeftRightResizeCursor : juce::MouseCursor::NormalCursor);
 }
+void MeasurementTimeline::mouseExit(const juce::MouseEvent&)
+{hoveredAppliedBoundary.reset();setMouseCursor(juce::MouseCursor::NormalCursor);repaint();}
 void MeasurementTimeline::changeSectionEnd(uint64_t id,int64_t frame)
 {
     if(!sectionSession||!sectionEdit)return;
@@ -638,15 +658,18 @@ void MeasurementTimeline::mouseDown(const juce::MouseEvent& e)
     refreshSectionEditing();
     if(appliedDragToken)cancelAppliedDrag();
     if(gainLane&&sectionSession&&e.mods.isLeftButtonDown()&&!e.mods.isAltDown())
-        if(auto handle=gainLane->appliedBoundaryHandle(e.getPosition()-gainLane->getPosition()))
+    {
+        const auto graphHandle=!e.mods.isCommandDown()?appliedGraphBoundaryHandle(e.position):std::nullopt;
+        if(auto handle=graphHandle?graphHandle:gainLane->appliedBoundaryHandle(e.getPosition()-gainLane->getPosition()))
         {
             focusForTransport();gesture=false;sectionGesture=false;
             appliedDragToken=sectionSession->beginAppliedBoundary(*handle);
-            if(appliedDragToken){appliedDragRuntime=sectionSession->sessionId;appliedDragStart=sectionSession->appliedBoundaryDrag->edit.before.gains->intervals[*handle].begin;appliedDragPointer=e.position.x;appliedDragScale=(viewEnd-viewBegin)/std::max(1,graph.getWidth()-1);}
+            if(appliedDragToken){appliedDragFromGraph=graphHandle.has_value();appliedDragRuntime=sectionSession->sessionId;appliedDragStart=sectionSession->appliedBoundaryDrag->edit.before.gains->intervals[*handle].begin;appliedDragPointer=e.position.x;appliedDragScale=(viewEnd-viewBegin)/std::max(1,graph.getWidth()-1);}
             if(appliedDragToken){refreshAppliedDrag();if(sectionEdited)sectionEdited(0);}
             else navigationMessage(gainLane->appliedBoundaryHelp());
             return;
         }
+    }
     if(sectionSession&&sectionSession->appliedBoundaryDrag)return;
     gestureGain=gainLane&&gainLane->inspectionBounds().contains(e.getPosition()-gainLane->getPosition());
     if(gainLane&&!gestureGain)gainLane->clearDeleteSelection();
@@ -655,7 +678,7 @@ void MeasurementTimeline::mouseDown(const juce::MouseEvent& e)
     batchBoundaryGesture=commandGesture&&handle.has_value();
     selectGesture=gestureGain||(e.mods.isRightButtonDown()&&graph.contains(e.getPosition()))||(commandGesture&&!handle&&graph.contains(e.getPosition()));
     gesture=(e.mods.isLeftButtonDown()||selectGesture)&&programmeFrames()>0&&(graph.contains(e.getPosition())||ruler.contains(e.getPosition())||gestureGain);
-    sectionGesture=gesture && !selectGesture && sectionEditable && graph.contains(e.getPosition()) && !e.mods.isAltDown();
+    sectionGesture=gesture && !selectGesture && sectionEditable && (!gainLane||gainLane->selectsSections()) && graph.contains(e.getPosition()) && !e.mods.isAltDown();
     movingBoundary=sectionGesture?boundaryHandle(e.position.x):std::nullopt;
     dragFrame=frameAt(e.position.x);
     dragging=false;gestureRuler=ruler.contains(e.getPosition());downPoint=e.position;dragBegin=viewBegin;dragEnd=viewEnd;gestureEpoch=navigationEpoch;gestureIdentity=transportIdentity;
@@ -793,7 +816,7 @@ void MeasurementTimeline::paint (juce::Graphics& g)
     g.endTransparencyLayer();g.saveState(); g.reduceClipRegion (graph);
     // Intervals outside the viewport must not become fabricated edge markers.
     // Zero-width channel-peak markers are visible only at their actual position.
-    if(currentInspection&&showTransitions)
+    if(currentInspection&&(showTransitions||(sectionSession&&sectionSession->appliedBoundaryDrag)))
     {
         g.setColour(juce::Colour(sectionSession&&sectionSession->pendingBoundaryEdits()?0xffffc171:0xff81d5b4).withAlpha(.12f));
         float lastRight=-1;
@@ -871,7 +894,7 @@ void MeasurementTimeline::paint (juce::Graphics& g)
     g.endTransparencyLayer();
     // Source-frame annotations are independent of video offset and plot reduction.
     // Do not clamp offscreen boundaries into fabricated edge markers.
-    g.setColour (juce::Colours::violet.withAlpha (.7f));
+    g.setColour (juce::Colours::violet.withAlpha (gainLane&&!gainLane->selectsSections()?.22f:.7f));
     if(sectionSession&&sectionSession->boundaryBatch)g.setColour(juce::Colour(0xffffc171));
     int previousBoundaryPixel=graph.getX()-1;
     for(auto it=std::lower_bound(sectionBoundaries.begin(),sectionBoundaries.end(),viewBegin);
@@ -885,6 +908,20 @@ void MeasurementTimeline::paint (juce::Graphics& g)
         else g.drawVerticalLine(pixel,float(graph.getY()),float(graph.getBottom()));
         previousBoundaryPixel=pixel;
     }
+    if(currentInspection&&gainLane&&gainLane->selectsAppliedRegions()&&sectionSession)
+        if(const auto& plan=sectionSession->displayedSectionGains())
+        {
+            const bool editable=sectionSession->manualEditAllowed()||sectionSession->appliedBoundaryDrag.has_value();
+            for(size_t n=1;n<plan->intervals.size();++n)
+            {
+                const auto cut=plan->intervals[n].begin;if(cut<viewBegin||cut>viewEnd)continue;
+                const bool moving=sectionSession->appliedBoundaryDrag&&sectionSession->appliedBoundaryDrag->right==n;
+                const auto colour=moving?juce::Colour(0xffffc171):editable?juce::Colour(0xff81d5b4):juce::Colours::grey;
+                const auto px=x(double(cut));const bool bright=moving||hoveredAppliedBoundary==n;
+                g.setColour(colour.withAlpha(bright?1.f:.6f));g.drawLine(px,float(graph.getY()+8),px,float(graph.getBottom()),bright?2.f:1.f);
+                g.fillRoundedRectangle(px-5,float(graph.getY()),10.f,8.f,2.f);
+            }
+        }
     if(gesture && sectionGesture && dragging && gestureEpoch==navigationEpoch)
     {
         const auto left=x(double(movingBoundary?dragFrame:frameAt(downPoint.x))),right=x(double(dragFrame));

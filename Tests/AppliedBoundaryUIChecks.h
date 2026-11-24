@@ -1,4 +1,4 @@
-void appliedBoundaryUIChecks(const juce::File& root,const juce::File& supplied)
+void appliedBoundaryUIChecks(const juce::File& root,const juce::File& supplied,bool graph=false)
 {
     const auto originalHash=juce::SHA256(supplied).toHexString();JobControl job;
     auto read=sf::read(supplied,job);expect(read.document&&read.document->regionPlanning&&read.document->regionPlanning->schema==3,"applied-boundary native check uses the supplied schema-3 session");
@@ -14,9 +14,10 @@ void appliedBoundaryUIChecks(const juce::File& root,const juce::File& supplied)
     expect(s.lastAppliedExplanation&&s.currentStateDocument.sectionGains&&s.currentStateDocument.sectionGains->intervals.size()>1,"reopened applied regions and complete measured explanation available");
     const auto history=encodeAppliedExplanation(*s.lastAppliedExplanation);const auto settings=s.regionPlanning->digest();const auto before=s.manualState();
     const auto cut=before.gains->intervals[1].begin;
+    if(graph){Access::inspectCurrent(ui);waitPreparation(Access::audio(ui));}
     choose(lane,"Gain lane selection",2);timeline.setViewRange(std::max<int64_t>(0,cut-48000),std::min<int64_t>(before.gains->frames,cut+48000));timeline.focusForTransport();
     const auto range=timeline.viewRange();const auto px=float(timeline.graphBounds().getX()+(cut-range.first)*(timeline.graphBounds().getWidth()-1)/(range.second-range.first));
-    const juce::Point<float> start{px,float(lane.getY()+lane.plotBounds().getY()+4)},end{px+32,start.y};
+    const juce::Point<float> start{px,float(graph?timeline.graphBounds().getCentreY():lane.getY()+lane.plotBounds().getY()+4)},end{px+32,start.y};
     const auto event=[&](juce::Point<float> p,bool down){const auto t=juce::Time::getCurrentTime();return juce::MouseEvent{juce::Desktop::getInstance().getMainMouseSource(),p,juce::ModifierKeys(down?juce::ModifierKeys::leftButtonModifier:0),0,0,0,0,0,&timeline,&timeline,t,p,t,1,false};};
     timeline.mouseDown(event(start,true));timeline.mouseDrag(event(end,true));Access::refresh(ui);
     expect(s.appliedBoundaryDrag&&s.manualState()==before,"main-window refresh retains a transient applied-envelope preview");

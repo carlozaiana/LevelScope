@@ -63,7 +63,7 @@ TimelineGainLane::TimelineGainLane(StandaloneSessionModel& s):session(s)
     addAndMakeVisible(selectionKind);selectionKind.setName("Gain lane selection");
     selectionKind.addItem("Select sections",1);selectionKind.addItem("Select applied regions",2);selectionKind.addItem("Select proposed regions",3);
     selectionKind.setSelectedId(1,juce::dontSendNotification);
-    selectionKind.setTooltip("Sections are editable annotations. Applied regions have draggable shared-edge handles at the top of the gain plot, including after reopening. Choose the item type here; clicks keep this selection mode.");
+    selectionKind.setTooltip("Sections are editable annotations. Applied regions have draggable shared-edge handles in the Current graph and at the top of the gain plot, including after reopening. Choose the item type here; clicks keep this selection mode.");
     selectionKind.onChange=[this]{if(dirty&&!stageValue()){selectionKind.setSelectedId(1,juce::dontSendNotification);return;}deleteArmed=false;rebuildProposalRows();selectFrame(cursor,true);};
 }
 const std::vector<proposal::ProgrammeSection>& TimelineGainLane::rows() const
@@ -396,15 +396,20 @@ void TimelineGainLane::resized()
 }
 std::optional<size_t> TimelineGainLane::appliedBoundaryHandle(juce::Point<int> point) const
 {
+    const auto box=plotBounds();
+    return point.y>=box.getY()&&point.y<=box.getY()+12?appliedBoundaryAt(float(point.x)):std::nullopt;
+}
+std::optional<size_t> TimelineGainLane::appliedBoundaryAt(float pointerX) const
+{
     const auto box=plotBounds();const auto& plan=session.displayedSectionGains();
     if(selectionKind.getSelectedId()!=2||!plan||viewEnd<=viewBegin||box.getWidth()<2
-        ||point.y<box.getY()||point.y>box.getY()+12||point.x<box.getX()||point.x>box.getRight())return {};
+        ||pointerX<box.getX()||pointerX>box.getRight())return {};
     std::optional<size_t> result;double distance=7;
     for(size_t n=1;n<plan->intervals.size();++n)
     {
         const auto frame=plan->intervals[n].begin;if(frame<viewBegin||frame>viewEnd)continue;
         const auto px=box.getX()+(frame-viewBegin)*(box.getWidth()-1)/(viewEnd-viewBegin);
-        const auto d=std::abs(point.x-px);if(d<distance){distance=d;result=n;}
+        const auto d=std::abs(pointerX-px);if(d<distance){distance=d;result=n;}
     }
     return result;
 }
@@ -412,7 +417,7 @@ juce::String TimelineGainLane::appliedBoundaryHelp() const
 {
     if(session.pendingBoundaryEdits())return session.pendingBoundaryMessage();
     if(!session.manualEditAllowed())return "Applied-region handles unavailable: stop playback, finish the job and discard any pending proposal or gain draft first.";
-    return "Drag a top-edge tab to move the shared applied boundary and its ramp. Both neighbouring gains stay fixed. Release applies; Esc cancels; Command-Z undoes. Programme ends are fixed.";
+    return "Edit Current: drag a boundary in the Current graph or a top-edge gain tab to move the shared cut and its ramp. Both neighbouring gains stay fixed. Release applies; Esc cancels; Command-Z undoes. Programme ends are fixed.";
 }
 void TimelineGainLane::paint(juce::Graphics& g)
 {

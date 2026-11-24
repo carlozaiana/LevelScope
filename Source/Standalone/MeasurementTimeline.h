@@ -28,6 +28,8 @@ public:
     juce::String peakHoverText(juce::Point<float>) const;
     juce::String getTooltip() override;
     void mouseMove(const juce::MouseEvent&) override;
+    void mouseExit(const juce::MouseEvent&) override;
+    std::optional<size_t> appliedGraphBoundaryHandle(juce::Point<float>) const;
     void focusForTransport();
     bool keyPressed(const juce::KeyPress&) override;
     std::function<void()> onTogglePlayback;
@@ -86,6 +88,9 @@ private:
     std::optional<size_t> boundaryHandle(float x) const;
     std::optional<size_t> movingBoundary;
     uint64_t appliedDragToken=0;
+    bool appliedDragFromGraph=false;
+    std::optional<size_t> hoveredAppliedBoundary;
+    juce::String graphGestureHelp() const;
     juce::String appliedDragRuntime;
     int64_t appliedDragStart=0;
     double appliedDragPointer=0,appliedDragScale=1;

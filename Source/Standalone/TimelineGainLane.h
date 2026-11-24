@@ -26,8 +26,10 @@ public:
     void editReadout(int64_t frame);
     size_t selectedCount() const {return selectedIds.size();}
     std::optional<size_t> appliedBoundaryHandle(juce::Point<int>) const;
+    std::optional<size_t> appliedBoundaryAt(float x) const;
     juce::String appliedBoundaryHelp() const;
     bool selectsSections() const {return selectionKind.getSelectedId()==1;}
+    bool selectsAppliedRegions() const {return selectionKind.getSelectedId()==2;}
     bool commitPending(){return stageValue();}
     SectionEditPrompt& editPrompt(){return sectionEdit;}
     void clearDeleteSelection(){deleteArmed=false;}
