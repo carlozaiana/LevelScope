@@ -215,6 +215,7 @@ add_library(LevelScopeStandaloneSupport STATIC
     Source/Core/Proposal/SectionAnalysis.cpp
     Source/Standalone/StandaloneSections.cpp
     Source/Core/Proposal/AnalysisEngine.cpp
+    Source/Core/Proposal/LraTimelineDiagnostics.cpp
     Source/Core/Proposal/AttributionEngine.cpp
     Source/Standalone/StandaloneDiagnostics.cpp
     Source/Core/Proposal/Methods/RuleBasedMethod.cpp

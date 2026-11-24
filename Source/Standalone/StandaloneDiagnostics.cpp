@@ -1,8 +1,31 @@
 #include "StandaloneDiagnostics.h"
+#include "StandaloneSessionModel.h"
 #include <juce_cryptography/juce_cryptography.h>
 
 namespace levelscope::standalone
 {
+TimelineMeasurement timelineMeasurement(const StandaloneSessionModel& session, MeasurementDomain domain, bool measuringThisDomain)
+{
+    using State = TimelineMeasurementState;
+    const auto& doc = session.sourceDocument;
+    const bool current = domain == MeasurementDomain::currentState;
+    if ((!current && domain != MeasurementDomain::source) || session.persistenceLoading || !doc.hasSource ||
+        session.sourceContentInvalid || !doc.layout.confirmed || !doc.layout.isValid() || !doc.matchesFileStamps())
+        return {State::unavailable, {}};
+    const auto& summary = current ? session.currentState : session.source;
+    if ((!current || (session.hasCurrentStateInitialized() && !session.currentStateNeedsRemeasurement())) &&
+        summary.hasMeasurement && summary.analysis)
+    {
+        const auto& snapshot = *summary.analysis;
+        if (snapshot.context.sessionId != session.sessionId || snapshot.domain != domain)
+            return {State::unverified, {}};
+        return {State::measured, summary.analysis}; // Controller validates the complete binding on its worker.
+    }
+    if (measuringThisDomain) return {State::measuring, {}};
+    if (current && session.hasCurrentStateInitialized()) return {State::unverified, {}};
+    return {State::unmeasured, {}};
+}
+
 DiagnosticAnnotations annotateDiagnostics (const MeasuredDiagnostics& d, const TargetProfile& profile, proposal::Applicability applicability)
 {
     auto input = d.measuredBinding; input.applicability = applicability;
@@ -29,7 +52,7 @@ DiagnosticsController::~DiagnosticsController()
 void DiagnosticsController::select (std::shared_ptr<const AnalysisSnapshot> next, const ServiceContext& context, MeasurementDomain which)
 {
     const auto identity = next ? OfflineAnalysisService::identityFor (context, which, context.media.sha256) : juce::String();
-    if (next == selected && identity == expectedIdentity && which == domain) return;
+    if (next == selected && identity == expectedIdentity && which == domain && expected.sessionId == context.sessionId) return;
     cancel(); ++generation; selected = std::move (next); expected = context; domain = which;
     expectedIdentity = identity; accepted.reset(); attempted = false;
     status = selected ? "Preparing measured diagnostics..." : "No valid measured snapshot selected; measure this state first.";
@@ -56,7 +79,7 @@ void DiagnosticsController::poll()
     if (future.valid() || ! selected || attempted) return;
     attempted = true; ++buildsStarted; running = selected; runningGeneration = generation;
     control = std::make_shared<JobControl>(); status = "Building measured diagnostics...";
-    future = std::async (std::launch::async, [snapshot = selected, context = expected, which = domain, token = control]
+    future = std::async (std::launch::async, [snapshot = selected, context = expected, which = domain, token = control, withLra = buildLraTimeline]
     {
         ServiceResult<MeasuredDiagnostics> result;
         try
@@ -69,7 +92,9 @@ void DiagnosticsController::poll()
                 throw std::invalid_argument ("Diagnostic snapshot is stale or unsupported; re-measure");
             auto analysis = proposal::analyzeProgramme (snapshot->detail, binding.snapshotIdentity, [token] { return token->isCancelled(); });
             if (! analysis) { result.error = ErrorCode::cancelled; result.message = "Diagnostics cancelled"; return result; }
-            result.value = MeasuredDiagnostics { snapshot, analysis, binding }; result.error = ErrorCode::none;
+            auto index = withLra ? proposal::lra_timeline::Index::build(analysis,[token]{ return token->isCancelled(); }) : nullptr;
+            if (token->isCancelled()) { result.error = ErrorCode::cancelled; result.message = "Diagnostics cancelled"; return result; }
+            result.value = MeasuredDiagnostics { snapshot, analysis, binding, std::move(index) }; result.error = ErrorCode::none;
         }
         catch (const std::exception& e) { result.error = ErrorCode::invalidRequest; result.message = e.what(); }
         return result;

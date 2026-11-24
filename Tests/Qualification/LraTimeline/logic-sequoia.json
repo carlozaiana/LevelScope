@@ -1,0 +1,268 @@
+{
+  "suite": "Measured LRA timeline",
+  "passed": true,
+  "checks": [
+    {
+      "name": "target points to P10 plus the selected ceiling only when stable measured LRA exceeds that ceiling",
+      "passed": true
+    },
+    {
+      "name": "upper rank count excludes the P95 rank and uses the qualified nearest-rank convention",
+      "passed": true
+    },
+    {
+      "name": "every full-precision level, support interval, percentile rank and gate matches the independent sorted fixture",
+      "passed": true
+    },
+    {
+      "name": "equal P95 observations across the cut are identified; some upper ranks are equally loud",
+      "passed": true
+    },
+    {
+      "name": "fixture distinguishes silence, both gates, strict low, boundary ties, padded windows and target-relative passages",
+      "passed": true
+    },
+    {
+      "name": "a programme exactly at the ceiling emits no excessive-LRA passage",
+      "passed": true
+    },
+    {
+      "name": "no selected LRA ceiling has no target-relative assertion",
+      "passed": true
+    },
+    {
+      "name": "target changes preserve all gate and percentile evidence",
+      "passed": true
+    },
+    {
+      "name": "invalid and inapplicable requirements cannot publish a target-relative lane",
+      "passed": true
+    },
+    {
+      "name": "a foreign target interpretation cannot mark this measurement",
+      "passed": true
+    },
+    {
+      "name": "cancelled construction cannot publish an index",
+      "passed": true
+    },
+    {
+      "name": "half-open support enters and leaves on exact source frames across 30 overlapping windows",
+      "passed": true
+    },
+    {
+      "name": "inspection never extends into synthetic drain time",
+      "passed": true
+    },
+    {
+      "name": "non-hop-aligned EOF clips display spans and preserves measured padded end",
+      "passed": true
+    },
+    {
+      "name": "bounded viewport index equals a full-resolution overlap union, including mixed categories and extrema",
+      "passed": true
+    },
+    {
+      "name": "viewport limits, clipping and empty spans are explicit",
+      "passed": true
+    },
+    {
+      "name": "subframe-scale pixels preserve the single source frame's evidence",
+      "passed": true
+    },
+    {
+      "name": "exact relative gate included, one ULP below rejected without LUFS rounding",
+      "passed": true
+    },
+    {
+      "name": "exact absolute gate included and one ULP below rejected",
+      "passed": true
+    },
+    {
+      "name": "constant levels have upper ranks but no distinctly louder, quieter or excessive passage",
+      "passed": true
+    },
+    {
+      "name": "non-finite measured input is rejected before lane construction",
+      "passed": true
+    },
+    {
+      "name": "inconsistent saved stability cannot enable or suppress a target verdict",
+      "passed": true
+    },
+    {
+      "name": "measured mono/stereo/5.1 retains its exact short-programme percentiles without a target assertion",
+      "passed": true
+    },
+    {
+      "name": "completed unstable measurement still supplies descriptive gate/percentile information",
+      "passed": true
+    },
+    {
+      "name": "measured mono/stereo/5.1 retains its exact short-programme percentiles without a target assertion",
+      "passed": true
+    },
+    {
+      "name": "completed unstable measurement still supplies descriptive gate/percentile information",
+      "passed": true
+    },
+    {
+      "name": "measured mono/stereo/5.1 retains its exact short-programme percentiles without a target assertion",
+      "passed": true
+    },
+    {
+      "name": "completed unstable measurement still supplies descriptive gate/percentile information",
+      "passed": true
+    },
+    {
+      "name": "silence/below-gate programmes have no percentile population",
+      "passed": true
+    },
+    {
+      "name": "zero energy has no fabricated finite level; finite below-gate loudness is retained",
+      "passed": true
+    },
+    {
+      "name": "silence/below-gate programmes have no percentile population",
+      "passed": true
+    },
+    {
+      "name": "zero energy has no fabricated finite level; finite below-gate loudness is retained",
+      "passed": true
+    },
+    {
+      "name": "short material and drain-only windows never acquire gate or percentile verdicts through padding",
+      "passed": true
+    },
+    {
+      "name": "short material and drain-only windows never acquire gate or percentile verdicts through padding",
+      "passed": true
+    },
+    {
+      "name": "actual worker fixture created",
+      "passed": true
+    },
+    {
+      "name": "actual worker fixture written",
+      "passed": true
+    },
+    {
+      "name": "empty session has no measured lanes",
+      "passed": true
+    },
+    {
+      "name": "import a short real stereo fixture for lane identity checks",
+      "passed": true
+    },
+    {
+      "name": "confirm source roles for diagnostic input",
+      "passed": true
+    },
+    {
+      "name": "provisional analysis is distinguishable and publishes no completed lane",
+      "passed": true
+    },
+    {
+      "name": "measurement job begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker measured actual fixture",
+      "passed": true
+    },
+    {
+      "name": "actual measured snapshot accepted",
+      "passed": true
+    },
+    {
+      "name": "measurement job begins",
+      "passed": true
+    },
+    {
+      "name": "qualified worker measured actual fixture",
+      "passed": true
+    },
+    {
+      "name": "actual measured snapshot accepted",
+      "passed": true
+    },
+    {
+      "name": "diagnostic worker terminates within deadline",
+      "passed": true
+    },
+    {
+      "name": "accepted Current owns its validated, measurement-specific index",
+      "passed": true
+    },
+    {
+      "name": "change only the selected LRA requirement",
+      "passed": true
+    },
+    {
+      "name": "changing the ceiling reinterprets the same index without a new analysis",
+      "passed": true
+    },
+    {
+      "name": "lane queries preserve both measurements, peak positions and verified source copy count",
+      "passed": true
+    },
+    {
+      "name": "deliberately edit Current processing",
+      "passed": true
+    },
+    {
+      "name": "an edit immediately invalidates the Current lane and keeps the Original",
+      "passed": true
+    },
+    {
+      "name": "diagnostic worker terminates within deadline",
+      "passed": true
+    },
+    {
+      "name": "late old Current cannot publish after processing changes",
+      "passed": true
+    },
+    {
+      "name": "diagnostic worker terminates within deadline",
+      "passed": true
+    },
+    {
+      "name": "domain switching uses independently identified measurements",
+      "passed": true
+    },
+    {
+      "name": "the same immutable pointer cannot retain acceptance in a different runtime",
+      "passed": true
+    },
+    {
+      "name": "diagnostic worker terminates within deadline",
+      "passed": true
+    },
+    {
+      "name": "foreign runtime completion cannot publish",
+      "passed": true
+    },
+    {
+      "name": "a changed source immediately removes the previous measured layer",
+      "passed": true
+    },
+    {
+      "name": "a privately measured candidate cannot be a timeline domain",
+      "passed": true
+    }
+  ],
+  "performance": {
+    "eligible_windows": 539,
+    "upper_ranks": 27,
+    "strictly_above_p95": 11,
+    "upper_rank_ties_at_p95": 16,
+    "p10_lufs": -30.0,
+    "p95_lufs": -14.0,
+    "index_bytes_excluding_existing_measurement": 4848
+  },
+  "method": "measured-lra-timeline-v1",
+  "build": "a320d14e0379154124c6da55185f650994d03475675372d828097613f21c0627",
+  "engine": "bs1770-5-ebu2023-m7.1",
+  "os": "Mac OSX 15.7.9",
+  "architecture": "arm64"
+}

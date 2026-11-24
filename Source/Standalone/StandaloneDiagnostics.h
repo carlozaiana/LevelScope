@@ -2,15 +2,26 @@
 #include "StandaloneCompliance.h"
 #include "StandaloneMeasurementService.h"
 #include "Core/Proposal/AnalysisEngine.h"
+#include "Core/Proposal/LraTimelineDiagnostics.h"
 #include <future>
 
 namespace levelscope::standalone
 {
+class StandaloneSessionModel;
+enum class TimelineMeasurementState { unavailable, unmeasured, unverified, measuring, measured };
+struct TimelineMeasurement
+{
+    TimelineMeasurementState state;
+    std::shared_ptr<const AnalysisSnapshot> snapshot;
+};
+TimelineMeasurement timelineMeasurement(const StandaloneSessionModel&, MeasurementDomain, bool measuringThisDomain = false);
+
 struct MeasuredDiagnostics
 {
     std::shared_ptr<const AnalysisSnapshot> snapshot;
     std::shared_ptr<const proposal::ProgramAnalysis> analysis;
     proposal::MeasuredProgramme measuredBinding;
+    std::shared_ptr<const proposal::lra_timeline::Index> lraTimeline;
 };
 struct DiagnosticAnnotations
 {
@@ -25,6 +36,7 @@ DiagnosticAnnotations annotateDiagnostics (const MeasuredDiagnostics&, const Tar
 class DiagnosticsController
 {
 public:
+    explicit DiagnosticsController(bool includeLraTimeline = false) : buildLraTimeline(includeLraTimeline) {}
     ~DiagnosticsController();
     void select (std::shared_ptr<const AnalysisSnapshot>, const ServiceContext&, MeasurementDomain);
     void poll();
@@ -35,6 +47,7 @@ public:
     juce::String status = "No valid measured snapshot selected.";
     uint64_t buildsStarted = 0;
 private:
+    const bool buildLraTimeline;
     std::shared_ptr<const AnalysisSnapshot> selected, running;
     ServiceContext expected;
     MeasurementDomain domain = MeasurementDomain::source;

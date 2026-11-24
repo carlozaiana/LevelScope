@@ -217,14 +217,22 @@ void lifecycle(){
     c.select(original,original->context,MeasurementDomain::renderedOutput);awaitDiagnostics(c);expect(!c.result(),"unsupported domain cannot masquerade as measured Source or Current State");
     {DiagnosticsController closing;closing.select(original,original->context,MeasurementDomain::currentState);closing.poll();}expect(true,"controller close cancels and joins without session mutation");
 }
+#include "LraTimelineChecks.h"
 }
-int main(int argc,char**argv){juce::ScopedJuceInitialiser_GUI gui;bool passed=false;try{boundaries();longProgramme();populations();lifecycle();passed=true;}catch(const std::exception&e){std::cerr<<"FAIL: "<<e.what()<<'\n';}
-    auto* r=new juce::DynamicObject();r->setProperty("suite","M4 measured diagnostics");r->setProperty("passed",passed);r->setProperty("checks",checks);r->setProperty("performance",juce::var(performance.get()));r->setProperty("method",diagnosticsVersion);r->setProperty("build",LEVELSCOPE_MEASUREMENT_BUILD);r->setProperty("engine",measurement::version);r->setProperty("os",juce::SystemStats::getOperatingSystemName());
+int main(int argc,char**argv){juce::ScopedJuceInitialiser_GUI gui;bool passed=false;
+    const bool lanes=argc>1 && juce::String(argv[1])=="--lra-timeline";
+    try{
+        if(lanes){measuredLaneDefinitions();measuredLaneAvailability();measuredLaneLifecycle();}
+        else {boundaries();longProgramme();populations();lifecycle();}
+        passed=true;
+    }catch(const std::exception&e){std::cerr<<"FAIL: "<<e.what()<<'\n';}
+    auto* r=new juce::DynamicObject();r->setProperty("suite",lanes?"Measured LRA timeline":"M4 measured diagnostics");r->setProperty("passed",passed);r->setProperty("checks",checks);r->setProperty("performance",juce::var(performance.get()));r->setProperty("method",lanes?lt::version:diagnosticsVersion);r->setProperty("build",LEVELSCOPE_MEASUREMENT_BUILD);r->setProperty("engine",measurement::version);r->setProperty("os",juce::SystemStats::getOperatingSystemName());
 #if defined(__aarch64__) || defined(__arm64__)
     r->setProperty("architecture","arm64");
 #else
     r->setProperty("architecture","x86_64");
 #endif
-    if(argc==3&&juce::String(argv[1])=="--report")if(!juce::File(juce::String(argv[2])).replaceWithText(juce::JSON::toString(juce::var(r))))return 2;
-    std::cout<<(passed?"PASS: ":"FAIL: ")<<checks.size()<<" M4 checks; no audio device opened\n";return passed?0:1;
+    const int option=lanes?2:1;
+    if(argc==option+2&&juce::String(argv[option])=="--report")if(!juce::File(juce::String(argv[option+1])).replaceWithText(juce::JSON::toString(juce::var(r))))return 2;
+    std::cout<<(passed?"PASS: ":"FAIL: ")<<checks.size()<<(lanes?" LRA timeline":" M4")<<" checks; no audio device opened\n";return passed?0:1;
 }
