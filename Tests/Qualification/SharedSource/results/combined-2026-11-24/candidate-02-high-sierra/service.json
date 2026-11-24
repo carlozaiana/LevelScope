@@ -1,0 +1,895 @@
+{
+  "passed": false,
+  "failure": "altered private bytes cannot open a reader",
+  "build": "3fc9ebd577afa62dc62fc04e12ef52d1abc03042379852d0ebe6d17120e25e86",
+  "checks": [
+    {
+      "name": "create owned fixture directory",
+      "passed": true
+    },
+    {
+      "name": "fixture stream",
+      "passed": true
+    },
+    {
+      "name": "fixture writer",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture payload",
+      "passed": true
+    },
+    {
+      "name": "fixture validated",
+      "passed": true
+    },
+    {
+      "name": "adopt source before background job",
+      "passed": true
+    },
+    {
+      "name": "start measured worker on original opening",
+      "passed": true
+    },
+    {
+      "name": "old worker safely finishes reading its leased source after New",
+      "passed": true
+    },
+    {
+      "name": "old verified storage and measured result cannot attach to the new opening",
+      "passed": true
+    },
+    {
+      "name": "same original in new session establishes its own trust",
+      "passed": true
+    },
+    {
+      "name": "adopt concurrency fixture",
+      "passed": true
+    },
+    {
+      "name": "concurrent acquisition waits without starting a second copy and waiter cancels promptly",
+      "passed": true
+    },
+    {
+      "name": "two successful consumers coalesce one cold preparation",
+      "passed": true
+    },
+    {
+      "name": "one complete verification after competing requests",
+      "passed": true
+    },
+    {
+      "name": "subsequent consumer shares completed file",
+      "passed": true
+    },
+    {
+      "name": "adopt concurrency fixture",
+      "passed": true
+    },
+    {
+      "name": "concurrent acquisition waits without starting a second copy and waiter cancels promptly",
+      "passed": true
+    },
+    {
+      "name": "producer continues after waiter cancellation",
+      "passed": true
+    },
+    {
+      "name": "one complete verification after competing requests",
+      "passed": true
+    },
+    {
+      "name": "subsequent consumer shares completed file",
+      "passed": true
+    },
+    {
+      "name": "adopt concurrency fixture",
+      "passed": true
+    },
+    {
+      "name": "concurrent acquisition waits without starting a second copy and waiter cancels promptly",
+      "passed": true
+    },
+    {
+      "name": "live waiter continues after producer cancellation",
+      "passed": true
+    },
+    {
+      "name": "one complete verification after competing requests",
+      "passed": true
+    },
+    {
+      "name": "subsequent consumer shares completed file",
+      "passed": true
+    },
+    {
+      "name": "adopt verified source",
+      "passed": true
+    },
+    {
+      "name": "reader leases a private file",
+      "passed": true
+    },
+    {
+      "name": "revision and gain share source storage",
+      "passed": true
+    },
+    {
+      "name": "closed source generation cannot acquire from replacement",
+      "passed": true
+    },
+    {
+      "name": "active reader retains file after clearing source",
+      "passed": true
+    },
+    {
+      "name": "last reader releases the old private file",
+      "passed": true
+    },
+    {
+      "name": "new generation accepts original",
+      "passed": true
+    },
+    {
+      "name": "owned fixture made writable for fault injection",
+      "passed": true
+    },
+    {
+      "name": "alter private copy in place",
+      "passed": true
+    },
+    {
+      "name": "altered private bytes cannot open a reader",
+      "passed": false
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "same_host_exact_against_qualified": {
+    "sequoia": {
+      "media_sha256": true,
+      "source_numeric_sha256": true,
+      "applied_plan": true,
+      "applied_choice": true,
+      "processed_current_numeric_sha256": true,
+      "rendered_numeric_sha256": true,
+      "rendered_pcm_sha256": true
+    },
+    "high_sierra": {
+      "media_sha256": true,
+      "source_numeric_sha256": true,
+      "applied_plan": true,
+      "applied_choice": true,
+      "processed_current_numeric_sha256": true,
+      "rendered_numeric_sha256": true,
+      "rendered_pcm_sha256": true
+    }
+  },
+  "cross_host_exact": {
+    "media_sha256": true,
+    "source_numeric_sha256": true,
+    "applied_plan": true,
+    "applied_choice": true,
+    "processed_current_numeric_sha256": true,
+    "rendered_numeric_sha256": false,
+    "rendered_pcm_sha256": true
+  },
+  "outcomes_order_and_all_attempt_receipts_equal": true,
+  "same_host_reference_also_differs_on_render_measurement": true,
+  "fields_compared": 16480,
+  "fields_differing": 1,
+  "rendered_measurement_difference": {
+    "channelTruePeaks": {
+      "count": 1,
+      "max_abs_delta": 1.1102230246251565e-16,
+      "field": "channelTruePeaks[1]",
+      "sequoia": 0.8911029454659865,
+      "high_sierra": 0.8911029454659866,
+      "sequoia_exact": "0x1.c83ea5304a970p-1",
+      "high_sierra_exact": "0x1.c83ea5304a971p-1"
+    }
+  },
+  "exported_file_sha256": "a06057a7bbec3a36889f814763a19f5d33d52963716de4ba4e27186687cbbb11"
+}

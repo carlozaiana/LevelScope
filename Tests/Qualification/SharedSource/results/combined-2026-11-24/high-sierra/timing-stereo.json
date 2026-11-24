@@ -1,0 +1,105 @@
+{
+  "validation_s": 0.72705341,
+  "file": "/Users/fuzz/LevelScope-shared-source-20261123/inputs/stereo.wav",
+  "sha256": "7ba6404041c94c909df290a6829a0fe92ce594329a1d575490c2bb4a5b6cc8f0",
+  "channels": 2,
+  "frames": 13228800,
+  "source_analysis_s": 6.550015831,
+  "session_copies_after_analysis": 1,
+  "session_copied_bytes_after_analysis": 79375076,
+  "automatic_preparation_s": 0.003215797,
+  "warmup_copy_count": 0,
+  "warmup_copied_bytes": 0,
+  "session_copies_after_warmup": 1,
+  "session_copied_bytes_after_warmup": 79375076,
+  "first_play_to_nonzero_output_s": 0.001758075333333333,
+  "subsequent_play_to_nonzero_output_s": 0.004853902,
+  "audition_copy_count": 0,
+  "audition_copied_bytes": 0,
+  "session_total_copies": 1,
+  "session_total_copied_bytes": 79375076,
+  "playback_cache_hits": 1,
+  "playback_coalesced_waits": 0,
+  "timing_scope": "Device-free engine with 1 ms polling; first non-zero sample at injected app output, not physical or native 10 Hz UI latency",
+  "physical_device_opened": false,
+  "measurement_build": "a4ff98da4b6d20c2ad8e52492db006b7bb7c529b224515f9b48f5ebc220ac20a",
+  "passed": true,
+  "checks": [
+    {
+      "name": "timing receipt is new",
+      "passed": true
+    },
+    {
+      "name": "existing programme validated",
+      "passed": true
+    },
+    {
+      "name": "timing programme is stereo or 5.1",
+      "passed": true
+    },
+    {
+      "name": "timing session imports confirmed input",
+      "passed": true
+    },
+    {
+      "name": "initial analysis job begins",
+      "passed": true
+    },
+    {
+      "name": "initial Source analysis completes",
+      "passed": true
+    },
+    {
+      "name": "initial analysis job completes",
+      "passed": true
+    },
+    {
+      "name": "initial measured Source accepted",
+      "passed": true
+    },
+    {
+      "name": "automatic preparation accepts stopped request",
+      "passed": true
+    },
+    {
+      "name": "preparation/cancellation completes",
+      "passed": true
+    },
+    {
+      "name": "automatic preparation is ready without opening output",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected output connection",
+      "passed": true
+    },
+    {
+      "name": "explicit timed Play accepted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "non-zero sample delivered to injected output",
+      "passed": true
+    },
+    {
+      "name": "explicit timed Play accepted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "non-zero sample delivered to injected output",
+      "passed": true
+    }
+  ]
+}

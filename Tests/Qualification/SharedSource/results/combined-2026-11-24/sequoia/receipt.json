@@ -1,0 +1,112 @@
+{
+  "os": "15.7.9",
+  "build": "24G830",
+  "architecture": "arm64",
+  "candidate": "94c42f1eca24de3adc671723b4b01cd4bcc986fe602b4c6c6d25484379079843",
+  "implementation": "614377f4e573bdd0fc34726584418b9333d092c2",
+  "measurement_build": "a4ff98da4b6d20c2ad8e52492db006b7bb7c529b224515f9b48f5ebc220ac20a",
+  "verified_package_files_before": 477,
+  "verified_package_files_after": 477,
+  "groups": [
+    {
+      "group": "service",
+      "binary": "LevelScopeSharedSourceTests",
+      "exit": 0,
+      "seconds": 1.168536708,
+      "assertions": 289,
+      "result": true,
+      "receipt": "service.json"
+    },
+    {
+      "group": "feedback",
+      "binary": "LevelScopePreparationFeedbackTests",
+      "exit": 0,
+      "seconds": 2.195083625,
+      "assertions": 940,
+      "result": true,
+      "receipt": "result.json"
+    },
+    {
+      "group": "audition",
+      "binary": "LevelScopeAuditionTests",
+      "exit": 0,
+      "seconds": 29.780846667,
+      "assertions": 4069,
+      "result": true,
+      "receipt": "audition.json"
+    },
+    {
+      "group": "devices",
+      "binary": "LevelScopeDeviceSettingsTests",
+      "exit": 0,
+      "seconds": 1.3050760420000032,
+      "assertions": 450,
+      "result": true,
+      "receipt": "result.json"
+    },
+    {
+      "group": "timeline",
+      "binary": "LevelScopeTimelineProgressTests",
+      "exit": 0,
+      "seconds": 2.9222105839999983,
+      "assertions": 2580,
+      "result": true,
+      "receipt": "timeline.json"
+    },
+    {
+      "group": "clock",
+      "binary": "LevelScopeVideoTests",
+      "exit": 0,
+      "seconds": 0.8130742079999962,
+      "assertions": 218104,
+      "result": true
+    },
+    {
+      "group": "ordinary-ui",
+      "binary": "LevelScopeRegionUITests",
+      "exit": 0,
+      "seconds": 17.298560792000004,
+      "assertions": 167,
+      "result": true,
+      "receipt": "result.json"
+    },
+    {
+      "group": "playback-ui",
+      "binary": "LevelScopeRegionUITests",
+      "exit": 0,
+      "seconds": 2.210215875000003,
+      "assertions": 668,
+      "result": true,
+      "receipt": "result.json"
+    },
+    {
+      "group": "propose",
+      "binary": "LevelScopeSharedSourceTests",
+      "exit": 0,
+      "seconds": 31.516299958000005,
+      "assertions": 17,
+      "result": true,
+      "receipt": "propose.json"
+    },
+    {
+      "group": "timing-stereo",
+      "binary": "LevelScopePlaybackTiming",
+      "exit": 0,
+      "seconds": 4.361014833999988,
+      "assertions": 19,
+      "result": true,
+      "receipt": "timing-stereo.json"
+    },
+    {
+      "group": "timing-surround",
+      "binary": "LevelScopePlaybackTiming",
+      "exit": 0,
+      "seconds": 4.328176583000001,
+      "assertions": 19,
+      "result": true,
+      "receipt": "timing-surround.json"
+    }
+  ],
+  "passed": true,
+  "physical_outputs_opened": false
+}

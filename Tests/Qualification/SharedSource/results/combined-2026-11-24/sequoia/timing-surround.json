@@ -1,0 +1,105 @@
+{
+  "validation_s": 0.946164834,
+  "file": "/Users/fuzz/N15/Mixdown/5.1_Busy.wav",
+  "sha256": "4fa30bfd9a8fbb64e68fc00eaf11f8adf81ead8502d05ce639b22cc07645d7b6",
+  "channels": 6,
+  "frames": 8923042,
+  "source_analysis_s": 3.3515085,
+  "session_copies_after_analysis": 1,
+  "session_copied_bytes_after_analysis": 160617696,
+  "automatic_preparation_s": 0.002652583,
+  "warmup_copy_count": 0,
+  "warmup_copied_bytes": 0,
+  "session_copies_after_warmup": 1,
+  "session_copied_bytes_after_warmup": 160617696,
+  "first_play_to_nonzero_output_s": 0.001507333333333333,
+  "subsequent_play_to_nonzero_output_s": 0.003999917333333334,
+  "audition_copy_count": 0,
+  "audition_copied_bytes": 0,
+  "session_total_copies": 1,
+  "session_total_copied_bytes": 160617696,
+  "playback_cache_hits": 1,
+  "playback_coalesced_waits": 0,
+  "timing_scope": "Device-free engine with 1 ms polling; first non-zero sample at injected app output, not physical or native 10 Hz UI latency",
+  "physical_device_opened": false,
+  "measurement_build": "a4ff98da4b6d20c2ad8e52492db006b7bb7c529b224515f9b48f5ebc220ac20a",
+  "passed": true,
+  "checks": [
+    {
+      "name": "timing receipt is new",
+      "passed": true
+    },
+    {
+      "name": "existing programme validated",
+      "passed": true
+    },
+    {
+      "name": "timing programme is stereo or 5.1",
+      "passed": true
+    },
+    {
+      "name": "timing session imports confirmed input",
+      "passed": true
+    },
+    {
+      "name": "initial analysis job begins",
+      "passed": true
+    },
+    {
+      "name": "initial Source analysis completes",
+      "passed": true
+    },
+    {
+      "name": "initial analysis job completes",
+      "passed": true
+    },
+    {
+      "name": "initial measured Source accepted",
+      "passed": true
+    },
+    {
+      "name": "automatic preparation accepts stopped request",
+      "passed": true
+    },
+    {
+      "name": "preparation/cancellation completes",
+      "passed": true
+    },
+    {
+      "name": "automatic preparation is ready without opening output",
+      "passed": true
+    },
+    {
+      "name": "no input device opened",
+      "passed": true
+    },
+    {
+      "name": "explicit injected output connection",
+      "passed": true
+    },
+    {
+      "name": "explicit timed Play accepted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "non-zero sample delivered to injected output",
+      "passed": true
+    },
+    {
+      "name": "explicit timed Play accepted",
+      "passed": true
+    },
+    {
+      "name": "verified preparation and prefill start injected callback",
+      "passed": true
+    },
+    {
+      "name": "non-zero sample delivered to injected output",
+      "passed": true
+    }
+  ]
+}

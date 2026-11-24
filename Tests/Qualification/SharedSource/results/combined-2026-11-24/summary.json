@@ -1,0 +1,114 @@
+{
+  "package": "94c42f1eca24de3adc671723b4b01cd4bcc986fe602b4c6c6d25484379079843",
+  "implementation": "614377f4e573bdd0fc34726584418b9333d092c2",
+  "measurement_build": "a4ff98da4b6d20c2ad8e52492db006b7bb7c529b224515f9b48f5ebc220ac20a",
+  "host_results": {
+    "sequoia": {
+      "os": "15.7.9",
+      "build": "24G830",
+      "architecture": "arm64",
+      "assertions": 227322,
+      "groups": 11
+    },
+    "high-sierra": {
+      "os": "10.13.6",
+      "build": "17G66",
+      "architecture": "x86_64",
+      "assertions": 227322,
+      "groups": 11
+    }
+  },
+  "playback": {
+    "sequoia-stereo": {
+      "input_sha256": "7ba6404041c94c909df290a6829a0fe92ce594329a1d575490c2bb4a5b6cc8f0",
+      "bytes": 79375076,
+      "before_first_ms": 912.4468333333333,
+      "first_ms": 1.3127083333333331,
+      "before_subsequent_ms": 2.609916333333333,
+      "subsequent_ms": 3.491791333333333,
+      "background_ms": 2.616416,
+      "extra_play_bytes": 0,
+      "initial_copies": 1
+    },
+    "sequoia-surround": {
+      "input_sha256": "4fa30bfd9a8fbb64e68fc00eaf11f8adf81ead8502d05ce639b22cc07645d7b6",
+      "bytes": 160617696,
+      "before_first_ms": 1844.2786673333328,
+      "first_ms": 1.507333333333333,
+      "before_subsequent_ms": 2.6304583333333333,
+      "subsequent_ms": 3.999917333333334,
+      "background_ms": 2.652583,
+      "extra_play_bytes": 0,
+      "initial_copies": 1
+    },
+    "high-sierra-stereo": {
+      "input_sha256": "7ba6404041c94c909df290a6829a0fe92ce594329a1d575490c2bb4a5b6cc8f0",
+      "bytes": 79375076,
+      "before_first_ms": 1613.218796333333,
+      "first_ms": 1.758075333333333,
+      "before_subsequent_ms": 3.151358333333333,
+      "subsequent_ms": 4.853902000000001,
+      "background_ms": 3.215797,
+      "extra_play_bytes": 0,
+      "initial_copies": 1
+    },
+    "high-sierra-surround": {
+      "input_sha256": "4fa30bfd9a8fbb64e68fc00eaf11f8adf81ead8502d05ce639b22cc07645d7b6",
+      "bytes": 160617696,
+      "before_first_ms": 3118.7639133333328,
+      "first_ms": 1.800851333333333,
+      "before_subsequent_ms": 3.13813,
+      "subsequent_ms": 4.86798,
+      "background_ms": 3.218487,
+      "extra_play_bytes": 0,
+      "initial_copies": 1
+    }
+  },
+  "proposal": {
+    "sequoia": [
+      {
+        "baseline_ms": 10790.13883333281,
+        "candidate_ms": 9995.099791666493,
+        "baseline_preparation_ms": 918.4172080000001,
+        "candidate_preparation_ms": 0.064917,
+        "baseline_copy_passes": 1,
+        "candidate_copy_passes": 0,
+        "private_candidates": 3,
+        "retained_attempt": 2
+      },
+      {
+        "baseline_ms": 10882.05404166505,
+        "candidate_ms": 9708.439000000013,
+        "baseline_preparation_ms": 909.1832079999999,
+        "candidate_preparation_ms": 0.061542,
+        "baseline_copy_passes": 1,
+        "candidate_copy_passes": 0,
+        "private_candidates": 3,
+        "retained_attempt": 2
+      }
+    ],
+    "high-sierra": [
+      {
+        "baseline_ms": 20300.91875499999,
+        "candidate_ms": 17932.74611200008,
+        "baseline_preparation_ms": 2310.110324,
+        "candidate_preparation_ms": 0.07938100000000001,
+        "baseline_copy_passes": 1,
+        "candidate_copy_passes": 0,
+        "private_candidates": 3,
+        "retained_attempt": 2
+      },
+      {
+        "baseline_ms": 19501.88393200003,
+        "candidate_ms": 17942.79160500003,
+        "baseline_preparation_ms": 1560.906865,
+        "candidate_preparation_ms": 0.078872,
+        "baseline_copy_passes": 1,
+        "candidate_copy_passes": 0,
+        "private_candidates": 3,
+        "retained_attempt": 2
+      }
+    ]
+  },
+  "scope": "Injected output; engine timing with 1 ms polling; no physical audio output or movie."
+}
