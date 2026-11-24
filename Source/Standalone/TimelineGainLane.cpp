@@ -29,7 +29,7 @@ TimelineGainLane::TimelineGainLane(StandaloneSessionModel& s):session(s)
     legend.setText("CURRENT section gain (dB)   |   Solid: applied   /   Dashed: draft",juce::dontSendNotification);
     legend.setTooltip("All programme channels, before global trim. This lane always describes Current processing.");
     dbLabel.setText("Local dB",juce::dontSendNotification);gain.setName("Timeline section gain dB");
-    gain.setTooltip("Enter -12 to +12 dB. Return or leaving the field applies it immediately. Command-Z undoes the edit.");
+    gain.setTooltip("Absolute local gain before global trim: -12 to +12 dB. This replaces the section setting; it is not added to an existing region gain. Return or leaving the field applies it. Command-Z undoes the edit.");
     gain.setInputRestrictions(36);gain.setSelectAllWhenFocused(true);gain.setJustification(juce::Justification::centred);
     gain.onTextChange=[this]{dirty=true;feedback.clear();updateControls();};
     gain.onReturnKey=[this]{if(stageValue())if(auto* parent=getParentComponent();parent&&parent->isShowing()&&parent->getPeer()){parent->setWantsKeyboardFocus(true);parent->grabKeyboardFocus();}};
@@ -60,6 +60,25 @@ TimelineGainLane::TimelineGainLane(StandaloneSessionModel& s):session(s)
     previous.setTooltip("Inspect previous section");next.setTooltip("Inspect next section");
     previous.onClick=[this]{adjacent(-1);};
     next.onClick=[this]{adjacent(1);};
+    addAndMakeVisible(createSections);createSections.setName("Create sections from applied regions");
+    createSections.setMouseClickGrabsKeyboardFocus(false);
+    createSections.onClick=[this]
+    {
+        const auto blocked=session.appliedRegionSectionsBlocked();
+        if(dirty||!bindingMatches()||blocked.isNotEmpty())
+        {feedback=dirty?"Finish or cancel the local gain entry first.":blocked.isNotEmpty()?blocked:"Timeline changed; review the current sections and retry.";updateControls();return;}
+        const auto previousRevision=session.sectionDocument.map().revision;
+        std::unordered_set<uint64_t> previousIds;for(const auto& s:session.sectionDocument.map().sections)previousIds.insert(s.id);
+        juce::String message;
+        if(!session.createSectionsFromAppliedRegions(message)){feedback=message;updateControls();return;}
+        if(session.sectionDocument.map().revision==previousRevision)
+        {feedback=message;updateControls();return;}
+        int64_t selectedFrame=cursor;
+        for(const auto& s:session.sectionDocument.map().sections)if(!previousIds.count(s.id)){selectedFrame=s.begin;break;}
+        synchronize(programme);selectionKind.setSelectedId(1,juce::dontSendNotification);rebuildProposalRows();selectFrame(selectedFrame,true);
+        feedback=message;updateControls();repaint();
+        if(onChanged)onChanged();
+    };
     addAndMakeVisible(selectionKind);selectionKind.setName("Gain lane selection");
     selectionKind.addItem("Select sections",1);selectionKind.addItem("Select applied regions",2);selectionKind.addItem("Select proposed regions",3);
     selectionKind.setSelectedId(1,juce::dontSendNotification);
@@ -228,6 +247,10 @@ void TimelineGainLane::updateControls()
 {
     if(measured!=session.currentState.hasMeasurement){measured=session.currentState.hasMeasurement;feedback.clear();}
     const bool idle=!session.audioEditsBlocked()&&!session.job.isActive();
+    const auto creationBlock=session.appliedRegionSectionsBlocked();
+    createSections.setEnabled(!dirty&&bindingMatches()&&creationBlock.isEmpty());
+    createSections.setTooltip(dirty?"Finish or cancel the local gain entry first.":creationBlock.isNotEmpty()?creationBlock:
+        "Copy actual applied nominal cuts into sections once. Existing names and cuts, gains, sound and measured Current stay unchanged. Sections are not linked to later region moves. Undo: Command-Z.");
     const bool editable=(!rangeSelection||!selectedIds.empty())&&selectionKind.getSelectedId()==1&&selected()&&initialized&&supportError.isEmpty()&&idle&&session.manualEditAllowed();
     previous.setEnabled(selected()&&row>0);next.setEnabled(selected()&&row+1<rows().size());
     if(selectionKind.getSelectedId()==1&&automatic&&!automatic->selection().corrections.empty())
@@ -379,7 +402,7 @@ void TimelineGainLane::setViewport(double begin,double end,int left,int width)
 }
 void TimelineGainLane::resized()
 {
-    auto b=getLocalBounds();auto top=b.removeFromTop(22);selectionKind.setBounds(top.removeFromRight(195));legend.setBounds(top);notice.setBounds(b.removeFromTop(24));
+    auto b=getLocalBounds();auto top=b.removeFromTop(22);selectionKind.setBounds(top.removeFromRight(195));top.removeFromRight(6);createSections.setBounds(top.removeFromRight(264));top.removeFromRight(6);legend.setBounds(top);notice.setBounds(b.removeFromTop(24));
     auto controls=b.removeFromBottom(28).reduced(2,1);
     previous.setBounds(controls.removeFromLeft(27));next.setBounds(controls.removeFromLeft(27));
     if(!automatic||session.lastAppliedProposalBinding==automatic->identity())

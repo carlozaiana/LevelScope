@@ -18,7 +18,7 @@ def sha(path):
 
 def main():
     region_groups = ('core', 'stereo', 'surround', 'heterogeneous', 'failures', 'population', 'audio', 'gating', 'cinema')
-    other_groups = ('monitor', 'control-variants', 'ui', 'event-ui', 'inner-ui', 'applied-ui', 'operation-ui', 'playback-ui', 'graph-ui', 'graph-boundaries', 'devices', 'preparation', 'timeline', 'requirements', 'section-smoke', 'legacy-core', 'legacy-stereo', 'legacy-failures', 'legacy-gating')
+    other_groups = ('monitor', 'control-variants', 'ui', 'event-ui', 'inner-ui', 'applied-ui', 'operation-ui', 'playback-ui', 'graph-ui', 'current-sections-ui', 'applied-sections', 'processing-smoke', 'graph-boundaries', 'devices', 'preparation', 'timeline', 'requirements', 'section-smoke', 'legacy-core', 'legacy-stereo', 'legacy-failures', 'legacy-gating')
     event_groups = ('event-stereo', 'event-surround', 'event-fallback', 'inner-stereo', 'inner-surround')
     parser = argparse.ArgumentParser()
     parser.add_argument('candidate', type=Path)
@@ -68,16 +68,19 @@ def main():
             elif case.startswith('legacy-'):
                 target = 'LevelScopeLraProposalTests'
                 arguments = ['--group', case[7:], '--root', str(root), '--output', str(output)]
-            elif case in ('ui', 'event-ui', 'inner-ui', 'applied-ui', 'operation-ui', 'playback-ui', 'graph-ui', 'control-variants', 'devices', 'preparation'):
-                target = {'graph-ui': 'LevelScopeRegionUITests', 'playback-ui': 'LevelScopeRegionUITests', 'operation-ui': 'LevelScopeRegionUITests', 'applied-ui': 'LevelScopeRegionUITests', 'inner-ui': 'LevelScopeRegionUITests', 'event-ui': 'LevelScopeRegionUITests', 'control-variants': 'LevelScopeRegionUITests', 'ui': 'LevelScopeRegionUITests', 'devices': 'LevelScopeDeviceSettingsTests',
+            elif case in ('current-sections-ui', 'ui', 'event-ui', 'inner-ui', 'applied-ui', 'operation-ui', 'playback-ui', 'graph-ui', 'control-variants', 'devices', 'preparation'):
+                target = {'current-sections-ui': 'LevelScopeRegionUITests', 'graph-ui': 'LevelScopeRegionUITests', 'playback-ui': 'LevelScopeRegionUITests', 'operation-ui': 'LevelScopeRegionUITests', 'applied-ui': 'LevelScopeRegionUITests', 'inner-ui': 'LevelScopeRegionUITests', 'event-ui': 'LevelScopeRegionUITests', 'control-variants': 'LevelScopeRegionUITests', 'ui': 'LevelScopeRegionUITests', 'devices': 'LevelScopeDeviceSettingsTests',
                           'preparation': 'LevelScopePreparationFeedbackTests'}[case]
                 arguments, output = [str(root)], root / 'result.json'
                 if case == 'control-variants':
                     arguments += ['--variants']
-                elif case in ('event-ui', 'playback-ui'):
+                elif case in ('event-ui', 'playback-ui', 'current-sections-ui'):
                     arguments += ['--'+case]
                 elif case in ('inner-ui', 'applied-ui', 'operation-ui', 'graph-ui'):
                     arguments += ['--' + case, str(args.inner_session.resolve())]
+            elif case in ('applied-sections', 'processing-smoke'):
+                target = 'LevelScopeSectionProcessingTests'
+                arguments = ['--applied-sections' if case == 'applied-sections' else '--smoke', '--root', str(root), '--output', str(output)]
             else:
                 target = {'graph-boundaries': 'LevelScopeTimelineProgressTests', 'timeline': 'LevelScopeTimelineProgressTests', 'requirements': 'LevelScopeJobRequirementsTests',
                           'section-smoke': 'LevelScopeSectionProposalTests'}[case]

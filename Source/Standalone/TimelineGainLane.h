@@ -49,7 +49,7 @@ private:
     SectionEditPrompt sectionEdit{session};
     juce::Label legend,notice,detail,dbLabel;
     juce::TextButton previous{"<"},next{">"},apply{"Apply gains"},discard{"Discard gains"};
-    juce::TextButton undoDelete{"Undo delete"};
+    juce::TextButton undoDelete{"Undo delete"},createSections{"Create sections from applied regions"};
     std::optional<proposal::SectionMap> deletedAnnotation;
     uint64_t deletedRevision=0;
     bool deleteArmed=false,rangeSelection=false;

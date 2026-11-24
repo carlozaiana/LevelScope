@@ -10,6 +10,7 @@ ProposalWorkflowPanel::ProposalWorkflowPanel(StandaloneSessionModel& s):session(
     alternatives.onChange=[this]{if(alternatives.isEnabled()&&onAlternative&&alternatives.getSelectedId()>0)onAlternative(size_t(alternatives.getSelectedId()-1));};
     recover.onClick=[this]{if(recover.isEnabled()&&onRecover)onRecover();};
     boundaries.onClick=[this]{if(boundaries.isEnabled()&&onBoundaries)onBoundaries();};
+    addAndMakeVisible(startHint);startHint.setName("Propose readiness");startHint.setFont(13.f);startHint.setMinimumHorizontalScale(1.f);
     addAndMakeVisible(method);method.setFont(13.f);method.setMinimumHorizontalScale(1.f);
     propose.setColour(juce::TextButton::buttonColourId,juce::Colour(0xff346967));
     headline.setFont(juce::Font(17.f,juce::Font::bold));headline.setColour(juce::Label::textColourId,juce::Colour(0xffb7e6db));
@@ -40,6 +41,10 @@ void ProposalWorkflowPanel::refresh(float progress)
     else if(!session.currentState.hasMeasurement||session.currentStateNeedsRemeasurement())blocked="Re-measure Current State first.";
     else if(session.sectionTrimDraft)blocked="Apply or discard the manual gain draft first.";
     if(operation)blocked=ProposalOperation::blocked(session);
+    const auto hint=blocked.isNotEmpty()?blocked:!session.hasCurrentStateInitialized()?"Propose will create Current from Original.":juce::String();
+    startHint.setText(hint,juce::dontSendNotification);startHint.setTooltip(hint);
+    startHint.setColour(juce::Label::textColourId,blocked.isEmpty()?juce::Colour(0xffb7e6db):juce::Colour(0xffffc171));
+    propose.setTooltip(hint.isEmpty()?"Assess the actual Current, apply an eligible measured pass and independently verify it.":hint);
     propose.setEnabled(blocked.isEmpty());review.setEnabled(bool(session.sectionProposal)||(operation&&bool(operation->result)));
     apply.setEnabled(session.canApplySectionProposal()&&!diagnosticInspection);discard.setEnabled(bool(session.sectionProposal)&&!busy);
     method.setText(session.regionPlanning?"Planning: "+proposalPlanningName(*session.regionPlanning)+" | "+juce::String(session.regionPlanning->mode==proposal::RegionMode::automatic?"automatic":session.regionPlanning->mode==proposal::RegionMode::selectedSection?"selected section":"temporary selection")
@@ -106,6 +111,7 @@ void ProposalWorkflowPanel::resized()
     apply.setBounds(row.removeFromLeft(132).reduced(2));discard.setBounds(row.removeFromLeft(142).reduced(2));
     recover.setBounds(apply.getX(),apply.getY(),206,apply.getHeight());
     preferences.setBounds(row.removeFromRight(146).reduced(2));history.setBounds(row.removeFromRight(204).reduced(2));
+    startHint.setBounds(row.reduced(3,0));
     row=r.removeFromTop(34);regions.setBounds(row.removeFromLeft(228).reduced(2));
     if(alternatives.isVisible())alternatives.setBounds(row.removeFromRight(280).reduced(2));
     if(boundaries.isVisible())boundaries.setBounds(row.removeFromRight(200).reduced(2));

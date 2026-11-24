@@ -8,12 +8,12 @@ namespace levelscope::standalone
 class ProposalOperation
 {
 public:
-    enum class Phase { idle,source,current,search,apply,verify,verified,noChange,noPass,cancelled,failed,stale };
+    enum class Phase { idle,initialize,source,current,search,apply,verify,verified,noChange,noPass,cancelled,failed,stale };
     struct Choice {size_t attempt=0;juce::String resultId,attemptId,label;};
     Phase phase=Phase::idle;
     uint64_t generation=0,ownedRevision=0;
     juce::String runtime,configuration,requirements,title,detail;
-    bool applied=false,cancelRequested=false,advisory=false;
+    bool applied=false,cancelRequested=false,advisory=false,initializedCurrent=false;
     ManualEditState original,owned;
     ProposalEditMetadata originalMetadata;
     SectionProposalRequest baseline;
@@ -22,12 +22,12 @@ public:
     std::vector<Choice> choices;
     size_t selectedChoice=0;
 
-    bool active() const {return phase==Phase::source||phase==Phase::current||phase==Phase::search||phase==Phase::apply||phase==Phase::verify;}
+    bool active() const {return phase==Phase::initialize||phase==Phase::source||phase==Phase::current||phase==Phase::search||phase==Phase::apply||phase==Phase::verify;}
     static juce::String configurationKey(const StandaloneSessionModel& s)
     {
         const auto source=s.measurementContext(MeasurementDomain::source),current=s.measurementContext(MeasurementDomain::currentState);
         const auto text=s.programmeId+";"+sectionInputIdentity(source)+";"+sectionInputIdentity(current)+";"+source.sourceFile.getFullPathName()
-            +";"+source.profile.digest()+";"+s.jobRequirements.digest()+";"+s.proposalPolicy.digest()+";"+juce::String(int(s.programmeApplicability))
+            +";"+juce::String(s.sectionPlanningGeneration)+";"+source.profile.digest()+";"+s.jobRequirements.digest()+";"+s.proposalPolicy.digest()+";"+juce::String(int(s.programmeApplicability))
             +";"+(s.regionPlanning?s.regionPlanning->digest():juce::String())+";"+source.buildVersion+";"+source.platformAndFloatingPointMode;
         return juce::SHA256(text.toRawUTF8(),text.getNumBytesAsUTF8()).toHexString();
     }
@@ -38,10 +38,12 @@ public:
         if(s.pendingBoundaryEdits())return s.pendingBoundaryMessage();
         if(s.auditionBusy&&s.auditionBusy())return "Stop playback before proposing.";
         if(s.sectionTrimDraft)return "Apply or discard the pending manual gain draft.";
+        if(!s.sourceDocument.hasSource)return "Open a mix before proposing.";
+        if(!s.sourceDocument.layout.confirmed)return "Confirm channel roles in Audio setup.";
+        if(!s.sourceDocument.layout.isValid())return "Review channel roles in Audio setup.";
         if(s.sourceContentInvalid||!s.sourceDocument.matchesFileStamps())return "Resolve the programme audio before proposing.";
         const auto input=OfflineAnalysisService::validateRequest(s.measurementContext(MeasurementDomain::source),MeasurementDomain::source);
         if(input.isNotEmpty())return input;
-        if(!s.currentStateDocument.isInitialized&&!s.awaitsInitialCurrent())return "Initialise Current before proposing.";
         return {};
     }
     bool ownedBy(const StandaloneSessionModel& s) const
@@ -54,15 +56,24 @@ public:
     {
         if(runtime==s.sessionId)s.proposalOperationBusy=false;
         pending.reset();phase=next;title=heading;detail=message;
+        if(initializedCurrent&&!applied&&(next==Phase::cancelled||next==Phase::failed||next==Phase::noPass))
+        {
+            title=title.replace("processing unchanged","initialized Current retained");
+            detail+="\nCurrent initialized from Original is retained at unity. No proposed correction was applied.";
+        }
         if(next==Phase::stale)choices.clear();
     }
     bool begin(StandaloneSessionModel& s)
     {
-        const auto error=blocked(s);if(error.isNotEmpty())return false;
+        auto error=blocked(s);if(error.isNotEmpty())return false;
+        const bool absent=!s.currentStateDocument.isInitialized;
+        if(!s.ensureCurrentForPropose(error)){title="Propose could not initialize Current";detail=error;return false;}
         const auto nextGeneration=generation+1;*this=ProposalOperation();generation=nextGeneration;
         s.synchronizeSections();runtime=s.sessionId;configuration=configurationKey(s);requirements=s.jobRequirements.digest();
         original=owned=s.manualState();ownedRevision=s.revision;originalMetadata=s.proposalEditMetadata();
-        s.discardSectionProposal();s.proposalOperationBusy=true;prepare(s);return true;
+        s.discardSectionProposal();s.proposalOperationBusy=true;initializedCurrent=absent;
+        if(absent){phase=Phase::initialize;title="Preparing Propose - Current initialized from Original";detail="Current started from the confirmed Original. Preparing its measurement and the selected proposal method; playback remains stopped.";}
+        else prepare(s);return true;
     }
     void prepare(StandaloneSessionModel& s)
     {
@@ -73,13 +84,14 @@ public:
         {phase=Phase::current;title="Preparing Propose - remeasuring Current";detail="Measuring your actual applied gains and transitions before proposing. Manual edits are retained.";}
         else
         {baseline=s.sectionProposalRequest();phase=Phase::search;title="Finding a proposal";detail="Using the current processing and selected method/preferences. Current remains unchanged during the bounded search.";}
+        if(initializedCurrent)detail="Current was initialized from Original for this Propose action. "+detail;
     }
     void observe(StandaloneSessionModel& s)
     {
         if(phase==Phase::idle||phase==Phase::stale)return;
         if(runtime!=s.sessionId){const auto next=generation+1;*this=ProposalOperation();generation=next;return;}
         if(s.pendingBoundaryEdits())return; // Escape can still restore the unchanged plan.
-        if(!ownedBy(s))finish(s,Phase::stale,"Current or proposal inputs changed", "Previous alternatives are historical and cannot replace your edits. Re-measure or choose Propose again when ready.");
+        if(!ownedBy(s))finish(s,Phase::stale,"Current or proposal inputs changed", "Previous alternatives are historical and cannot replace your edits. Choose Propose again when ready; Current measurement status is shown separately.");
     }
     void measurementComplete(StandaloneSessionModel& s,bool accepted,const juce::String& message)
     {

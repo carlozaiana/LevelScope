@@ -55,8 +55,7 @@ void proposalOperationChecks(const juce::File& root,const juce::File& supplied)
         Access::workflow(ui);completeOperation(ui);expect(op.phase==Phase::noChange&&s.currentState.hasMeasurement,"already passing applied audio is prepared and finishes without redundant correction");
         auto lra=s.jobRequirements;lra.maximumLraTenths=200;expect(s.setJobRequirements(lra,error),"Standard legacy LRA requirement retained for capability check");
         expect(s.setCurrentGainDb(s.currentStateDocument.staticGainDb-1),"prepare unchanged-method scalar correction under LRA ceiling");Access::refresh(ui);Access::workflow(ui);completeOperation(ui);
-        if(channels==1)expect(op.phase==Phase::noPass&&!op.applied&&op.detail.contains("stereo and conventional 5.1 only"),"unsupported mono LRA retains existing capability explanation without applying");
-        else expect(op.phase==Phase::verified&&op.selected->methodVersion()==lraTrimMethodVersion&&s.evaluation(MeasurementDomain::currentState).verdict==Verdict::pass,"Standard LRA/global supported path uses one-click workflow without dispatch changes");
+        expect(op.phase==Phase::verified&&op.selected->methodVersion()==lraTrimMethodVersion&&s.evaluation(MeasurementDomain::currentState).verdict==Verdict::pass,"Standard LRA/global supported path uses one-click workflow without dispatch changes");
     }
     installWorkflowFixture(ui,stereo);setScalar();const auto original=s.manualState();
     Access::workflow(ui);Access::cancel(ui);completeOperation(ui);

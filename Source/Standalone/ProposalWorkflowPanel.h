@@ -25,7 +25,7 @@ private:
     juce::TextButton recover{"Restore before Propose"},boundaries{"Inspect region boundaries"};
     juce::ComboBox alternatives;
     const ProposalOperation* operation=nullptr;
-    juce::Label method,headline,availability;
+    juce::Label method,headline,availability,startHint;
     bool diagnosticInspection=false;
     juce::TextEditor reason;
 };

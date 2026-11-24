@@ -1053,7 +1053,8 @@ void StandaloneMainComponent::showLraPassages(bool current)
 void StandaloneMainComponent::proposeWithActiveMethod()
 {
     if(!jobRequirementsPanel.commitFields()||!gainLane.commitPending())return;
-    if(proposalOperation.begin(session)){timeline.focusForTransport();advanceProposalOperation();refreshFromSession();}
+    if(proposalOperation.begin(session)){timeline.focusForTransport();if(proposalOperation.phase!=ProposalOperation::Phase::initialize)advanceProposalOperation();refreshFromSession();}
+    else {refreshFromSession();refreshTimeline();}
 }
 void StandaloneMainComponent::advanceProposalOperation()
 {
@@ -1065,6 +1066,7 @@ void StandaloneMainComponent::advanceProposalOperation()
         proposalOperation.finish(session,Phase::cancelled,proposalOperation.applied?"Alternative switch cancelled - previous Current retained":"Propose cancelled - processing unchanged",
             proposalOperation.applied?"The previous applied choice and its independent measurement are unchanged. Choose another alternative or Restore before Propose.":"No proposal was applied.");return;
     }
+    if(proposalOperation.phase==Phase::initialize){proposalOperation.prepare(session);return;}
     if(proposalOperation.phase==Phase::apply)
     {if(!proposalOperation.apply(session))return;}
     if(proposalOperation.phase==Phase::source)beginMeasurement(MeasurementDomain::source,true);
