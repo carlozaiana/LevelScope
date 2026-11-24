@@ -40,7 +40,13 @@ struct PreparationFeedbackTestAccess
     static bool stopped(StandaloneMainComponent& c){return !c.audition.active()&&!c.audition.connected();}
     static MeasurementTimeline& timeline(StandaloneMainComponent& c){return c.timeline;}
     static void moveDivider(StandaloneMainComponent& c,int delta){c.waveformDivider.move(delta);}
+    static juce::Viewport& timelineViewport(StandaloneMainComponent& c){return c.timelineViewport;}
+    static void resetLayout(StandaloneMainComponent& c){c.resetTimelineLayout();}
+    static StandaloneSectionsPanel& sections(StandaloneMainComponent& c){c.showSections();return *c.sectionsPanel;}
+    static juce::TextEditor& inspectionDetail(StandaloneMainComponent& c){return c.pageDetailBox;}
+    static void hideSections(StandaloneMainComponent& c){c.sectionsPanel->suspend();c.sectionsWindow->setVisible(false);}
     static juce::Viewport& inspector(StandaloneMainComponent& c){return c.inspectorViewport;}
+    static void inspectOriginal(StandaloneMainComponent& c){c.inspectDomain.setSelectedId(1,juce::sendNotificationSync);}
     static void inspectCurrent(StandaloneMainComponent& c){c.inspectDomain.setSelectedId(2,juce::sendNotificationSync);}
     static int inspection(StandaloneMainComponent& c){return c.inspectDomain.getSelectedId();}
     static StandaloneAudioPanel& setup(StandaloneMainComponent& c){return c.audioPanel;}
@@ -536,13 +542,14 @@ void controlVariants(const juce::File& root)
 #include "GraphBoundaryUIChecks.h"
 #include "CurrentAndSectionsUIChecks.h"
 #include "GainInputNavigationChecks.h"
+#include "LraTimelineUIChecks.h"
 }
 int main(int argc,char** argv)
 {
-    juce::ScopedJuceInitialiser_GUI gui;const bool gainInput=argc==3&&juce::String(argv[2])=="--gain-input-ui",currentSections=argc==3&&juce::String(argv[2])=="--current-sections-ui",monoLra=argc==3&&juce::String(argv[2])=="--mono-lra",graph=argc==4&&juce::String(argv[2])=="--graph-ui",playback=argc==3&&juce::String(argv[2])=="--playback-ui",operation=argc==4&&juce::String(argv[2])=="--operation-ui",applied=argc==4&&juce::String(argv[2])=="--applied-ui",inner=argc==4&&juce::String(argv[2])=="--inner-ui",events=argc==3&&juce::String(argv[2])=="--event-ui",variants=argc==3&&juce::String(argv[2])=="--variants",exchange=argc==4&&juce::String(argv[2])=="--exchange",holdouts=argc==4&&juce::String(argv[2])=="--holdouts",listening=argc==4&&juce::String(argv[2])=="--refresh-listening",recover=argc==5&&juce::String(argv[2])=="--recover-music";if(argc!=2&&!variants&&!exchange&&!holdouts&&!listening&&!recover&&!events&&!inner&&!applied&&!operation&&!playback&&!graph&&!monoLra&&!currentSections&&!gainInput)return 2;const juce::File root(argv[1]);if(root.exists())return 2;root.createDirectory();bool passed=false;juce::String error;
+    juce::ScopedJuceInitialiser_GUI gui;const bool lraTimeline=argc==3&&juce::String(argv[2])=="--lra-timeline-ui",gainInput=argc==3&&juce::String(argv[2])=="--gain-input-ui",currentSections=argc==3&&juce::String(argv[2])=="--current-sections-ui",monoLra=argc==3&&juce::String(argv[2])=="--mono-lra",graph=argc==4&&juce::String(argv[2])=="--graph-ui",playback=argc==3&&juce::String(argv[2])=="--playback-ui",operation=argc==4&&juce::String(argv[2])=="--operation-ui",applied=argc==4&&juce::String(argv[2])=="--applied-ui",inner=argc==4&&juce::String(argv[2])=="--inner-ui",events=argc==3&&juce::String(argv[2])=="--event-ui",variants=argc==3&&juce::String(argv[2])=="--variants",exchange=argc==4&&juce::String(argv[2])=="--exchange",holdouts=argc==4&&juce::String(argv[2])=="--holdouts",listening=argc==4&&juce::String(argv[2])=="--refresh-listening",recover=argc==5&&juce::String(argv[2])=="--recover-music";if(argc!=2&&!variants&&!exchange&&!holdouts&&!listening&&!recover&&!events&&!inner&&!applied&&!operation&&!playback&&!graph&&!monoLra&&!currentSections&&!gainInput&&!lraTimeline)return 2;const juce::File root(argv[1]);if(root.exists())return 2;root.createDirectory();bool passed=false;juce::String error;
     try
     {
-        if(gainInput)gainInputNavigationChecks(root);else if(currentSections)currentAndSectionsUIChecks(root);else if(monoLra)monoLraWorkflowChecks(root);else if(graph){appliedBoundaryUIChecks(root,juce::File(argv[3]),true);for(int channels:{2,6})graphBoundaryPlayback(root,channels);}else if(playback)playbackPreparationChecks(root);else if(operation)proposalOperationChecks(root,juce::File(argv[3]));else if(applied)appliedBoundaryUIChecks(root,juce::File(argv[3]));else if(inner)innerUIChecks(root,juce::File(argv[3]));else if(events)eventUIChecks(root);else if(recover)recoverMusic(juce::File(argv[3]),juce::File(argv[4]),root);else if(listening)refreshListening(juce::File(argv[3]),root);else if(holdouts)controlledHoldouts(juce::File(argv[3]),root);else if(exchange)exchangeChecks(juce::File(argv[3]),root);else if(variants)controlVariants(root);else
+        if(lraTimeline)lraTimelineUIChecks(root);else if(gainInput)gainInputNavigationChecks(root);else if(currentSections)currentAndSectionsUIChecks(root);else if(monoLra)monoLraWorkflowChecks(root);else if(graph){appliedBoundaryUIChecks(root,juce::File(argv[3]),true);for(int channels:{2,6})graphBoundaryPlayback(root,channels);}else if(playback)playbackPreparationChecks(root);else if(operation)proposalOperationChecks(root,juce::File(argv[3]));else if(applied)appliedBoundaryUIChecks(root,juce::File(argv[3]));else if(inner)innerUIChecks(root,juce::File(argv[3]));else if(events)eventUIChecks(root);else if(recover)recoverMusic(juce::File(argv[3]),juce::File(argv[4]),root);else if(listening)refreshListening(juce::File(argv[3]),root);else if(holdouts)controlledHoldouts(juce::File(argv[3]),root);else if(exchange)exchangeChecks(juce::File(argv[3]),root);else if(variants)controlVariants(root);else
         {
         overloadBannerChecks(root);auto s=programme(root.getChildFile("fixture"),2);editorChecks(s,root);
         auto ui=std::make_unique<StandaloneMainComponent>(emptyOutputCatalog(),noOutputSettings());Access::stopTimer(*ui);ui->setSize(1320,1100);ui->setName("LevelScope - isolated M20 integration test");ui->addToDesktop(juce::ComponentPeer::windowHasTitleBar);ui->setVisible(true);

@@ -13,24 +13,28 @@ public:
     explicit StandaloneSectionsPanel (StandaloneSessionModel&);
     ~StandaloneSectionsPanel() override;
     void synchronize() { timerCallback(); }
+    void setMeasurementRunning(bool running){measurementRunning=running;}
     void cancelPendingGain(){cancelGain();manualLane.cancelPending();}
     void suspend();
     void resume();
     MeasurementTimeline& timelineView() {return timeline;}
-    void refreshMeasuredView() {timeline.setAnalysis(measured?measured->analysis:nullptr);}
+    void refreshMeasuredView() {synchronize();timeline.setAnalysis(measured?measured->analysis:nullptr);}
     MeasurementDomain inspectionDomain() const {return domainBox.getSelectedId()==2?MeasurementDomain::currentState:MeasurementDomain::source;}
     void selectInspectionDomain(MeasurementDomain domain){domainBox.setSelectedId(domain==MeasurementDomain::source?1:2,juce::dontSendNotification);synchronize();}
     void setPlaybackState(bool canPlay,bool canStop,const juce::String& domain);
     bool keyPressed(const juce::KeyPress& key) override {return timeline.keyPressed(key);}
     std::function<void()> onPlay,onStop;
     void paint (juce::Graphics&) override;
+    int preferredHeight() const {return 720+timeline.preferredHeight();}
+    std::function<void()> onLayoutChanged;
     void resized() override;
     std::function<void()> onChanged;
     std::function<bool()> canImportMarkers;
 private:
     StandaloneSessionModel& session;
     proposal::SectionDocument& document;
-    DiagnosticsController diagnostics;
+    DiagnosticsController diagnostics{true};
+    bool measurementRunning=false;
     SectionsController sections;
     std::shared_ptr<const MeasuredDiagnostics> measured;
     std::shared_ptr<const proposal::SectionAnalysis> displayed;

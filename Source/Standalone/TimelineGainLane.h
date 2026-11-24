@@ -3,6 +3,8 @@
 #include "StandaloneRegionProposal.h"
 #include "SectionEditPrompt.h"
 #include "GainValueEditor.h"
+#include "TimelineLayout.h"
+#include "TimelineViewPreferences.h"
 #include <limits>
 #include <juce_gui_basics/juce_gui_basics.h>
 
@@ -38,8 +40,12 @@ public:
     void inspectRegionAttempt(size_t);
     void inspectApplied(int64_t frame){selectionKind.setSelectedId(2,juce::sendNotificationSync);selectFrame(frame,true);}
     bool diagnosticRegionInspection() const;
-    int preferredHeight() const {return height+(hasRegionLayers()?76:0);}
-    juce::Rectangle<int> plotBounds() const {return {plotLeft,47+(hasRegionLayers()?76:0),plotWidth,48};}
+    void setResizableHeights(TimelineHeights* h,std::function<void()> changed,std::function<void()> saved);
+    int preferredHeight() const {return height+(heights?heights->gain-48:0)+contextHeight();}
+    int contextHeight()const {if(!hasRegionLayers())return 0;if(!heights)return 76;int n=0;for(auto h:heights->context)n+=h+TimelineLayout::dividerHeight;return n;}
+    juce::Rectangle<int> contextBounds(size_t row)const;
+    TimelineDivider* contextDivider(size_t row)const{return row<contextDividers.size()?contextDividers[row].get():nullptr;}
+    juce::Rectangle<int> plotBounds() const {return {plotLeft,47+contextHeight(),plotWidth,heights?heights->gain:48};}
     juce::Rectangle<int> inspectionBounds() const {return {plotLeft,47,plotWidth,plotBounds().getBottom()+42-47};}
     juce::String inspectionText() {return detail.getTooltip();}
     std::function<void(int64_t,int64_t,int64_t)> onSelection;
@@ -47,6 +53,8 @@ public:
     void resized() override;
     void paint(juce::Graphics&) override;
 private:
+    TimelineHeights* heights=nullptr;
+    std::array<std::unique_ptr<TimelineDivider>,5> contextDividers;
     StandaloneSessionModel& session;
     SectionEditPrompt sectionEdit{session};
     juce::Label legend,notice,detail,dbLabel;

@@ -65,6 +65,32 @@ MeasurementTimeline::MeasurementTimeline()
     };
     seconds.onReturnKey = [this] { inspect.onClick(); };
 }
+void MeasurementTimeline::enableLaneResizing(TimelineHeights value)
+{
+    resizableLanes=true;heights=value;heights.clamp();
+    addAndMakeVisible(graphDivider);addAndMakeVisible(gainDivider);addAndMakeVisible(lraLanes);lraLanes.setHeights(&heights);
+    lraLanes.onHeightChanged=[this]{laneHeightChanged();};lraLanes.onSaved=[this]{if(onHeightsSaved)onHeightsSaved();};
+    lraLanes.onInvalidated=[this]
+    {
+        const juce::String text="LRA inspection expired: measurement, target or inspected state changed. Click a measured lane again.";
+        if(inspection.startsWith("LRA "))inspection=text;
+        if(onLraInspectionExpired)onLraInspectionExpired(text);
+    };
+    lraLanes.onInspect=[this](const juce::String& text){focusForTransport();inspection=text;if(onInspect)onInspect(text);};
+    lraLanes.onWheel=[this](const juce::MouseEvent& e,const juce::MouseWheelDetails& w){mouseWheelMove(e.getEventRelativeTo(this),w);};
+    graphDivider.move=[this](int delta){heights.graph+=delta;laneHeightChanged();};
+    gainDivider.move=[this](int delta){heights.gain+=delta;laneHeightChanged();};
+    graphDivider.reset=[this]{heights.graph=TimelineHeights{}.graph;laneHeightChanged();};
+    gainDivider.reset=[this]{heights.gain=TimelineHeights{}.gain;laneHeightChanged();};
+    graphDivider.finished=gainDivider.finished=[this]{if(onHeightsSaved)onHeightsSaved();};
+    if(gainLane)gainLane->setResizableHeights(&heights,[this]{laneHeightChanged();},[this]{if(onHeightsSaved)onHeightsSaved();});
+    laneHeightChanged();
+}
+void MeasurementTimeline::resetLaneHeights(){heights={};laneHeightChanged();if(onHeightsSaved)onHeightsSaved();}
+void MeasurementTimeline::laneHeightChanged()
+{heights.clamp();if(gainLane)gainLane->cancelPending();resized();if(onHeightChanged)onHeightChanged();repaint();}
+int MeasurementTimeline::preferredHeight()const
+{return 28+44+(waveformEnabled?24:0)+heights.graph+25+TimelineLayout::dividerHeight+(gainLane?gainLane->preferredHeight()+TimelineLayout::dividerHeight:0)+lraLanes.preferredHeight()+16;}
 void MeasurementTimeline::setAnalysis (std::shared_ptr<const proposal::ProgramAnalysis> value)
 {
     if(value==analysis)return;
@@ -92,7 +118,7 @@ void MeasurementTimeline::setProgramme(int64_t frames,int rate,const juce::Strin
     if(identity==programmeIdentity&&frames==knownFrames&&rate==knownRate)return;
     programmeIdentity=identity;knownFrames=std::max<int64_t>(0,frames);knownRate=std::max(1,rate);
     analysis.reset();preview.reset();waveformData.reset();originalMeasurement.reset();selection.reset();inspectedRange.reset();inspectedFrame.reset();inspection.clear();seconds.setText("0",false);
-    clearGainPreview();gainSelection=false;waveformAccepted=false;waveformPublication=0;
+    clearGainPreview();gainSelection=false;waveformAccepted=false;waveformPublication=0;lraLanes.unavailable(currentInspection?"Current":"Original","No completed measurement.");
     viewBegin=0;viewEnd=std::max<double>(1,knownFrames);++navigationEpoch;rebuild();
 }
 void MeasurementTimeline::setWaveform(std::shared_ptr<const waveform::Overview> data,bool accepted,const juce::StringArray& channels)
@@ -108,7 +134,7 @@ void MeasurementTimeline::setWaveform(std::shared_ptr<const waveform::Overview> 
     if(programmeFrames()!=previousFrames || programmeRate()!=previousRate || viewEnd<=1)
     {viewBegin=0;viewEnd=std::max<double>(1,programmeFrames());selection.reset();}
     inspectedChannel=waveformData?juce::jlimit(0,waveformData->spec.channels-1,inspectedChannel):0;
-    resized();
+    resized();if(resizableLanes&&onHeightChanged)onHeightChanged();
 }
 void MeasurementTimeline::setGainPreview(std::optional<ProcessingPlan> base,const ProcessingPlan& current)
 {
@@ -138,7 +164,7 @@ void MeasurementTimeline::setTransport(int64_t frame,bool allowed,const juce::St
     {++navigationEpoch;navigationMessage(allowed?graphGestureHelp():reason);}
     transportIdentity=identity;canSeek=allowed;seekReason=reason;
     seek.setVisible(enabled);follow.setVisible(enabled);seek.setEnabled(enabled&&canSeek&&programmeFrames()>0);seek.setTooltip(reason.isEmpty()?"Move audition to these seconds while stopped; no playback.":reason);
-    if(playhead==frame)return;playhead=frame;
+    if(playhead==frame)return;playhead=frame;lraLanes.markers(playhead,selection);
     if(follow.getToggleState()&&programmeFrames()>0&&(frame<viewBegin||frame>viewEnd))
         setViewRange(double(frame)-(viewEnd-viewBegin)*.2,double(frame)+(viewEnd-viewBegin)*.8);
     repaint();
@@ -237,8 +263,7 @@ void MeasurementTimeline::attachGainLane(TimelineGainLane& lane)
 }
 int64_t MeasurementTimeline::frameAt(float x) const
 {
-    if(graph.getWidth()<=0)return 0;
-    return std::clamp<int64_t>(int64_t(std::floor(viewBegin+std::clamp((double(x)-graph.getX())/std::max(1,graph.getWidth()-1),0.,1.)*(viewEnd-viewBegin))),0,programmeFrames());
+    return timelineFrameAt(x,graph.getX(),graph.getWidth(),viewBegin,viewEnd,programmeFrames());
 }
 int64_t MeasurementTimeline::enteredFrame() const
 {
@@ -317,7 +342,7 @@ juce::String MeasurementTimeline::rangePeakText(int64_t begin,int64_t end) const
 void MeasurementTimeline::highlight (double begin, double end, bool reveal)
 {
     if (programmeFrames()<=0) return;
-    selection = std::make_pair (begin, end);
+    selection = std::make_pair (begin, end);lraLanes.markers(playhead,selection);
     inspectedRange=std::make_pair(begin,std::max(begin+1,end));fitSelection.setEnabled(true);
     const auto duration = static_cast<double> (programmeFrames());
     if (reveal && (begin < viewBegin || end > viewEnd))
@@ -357,7 +382,7 @@ bool MeasurementTimeline::inspectFrame(double frame)
             else inspection<<"Pending coverage\n";
             if(!waveformAccepted)inspection<<"ANALYSING - incomplete waveform overview\n";
         }
-        selection=std::make_pair(frame,frame);repaint();
+        selection=std::make_pair(frame,frame);lraLanes.markers(playhead,selection);repaint();
     }
     if(preview)
     {
@@ -394,6 +419,7 @@ void MeasurementTimeline::scrollBarMoved (juce::ScrollBar*, double start)
 void MeasurementTimeline::rebuild()
 {
     if(gainLane)gainLane->setViewport(viewBegin,viewEnd,graph.getX(),graph.getWidth());
+    if(resizableLanes){lraLanes.viewport(viewBegin,viewEnd,graph.getX(),graph.getWidth());lraLanes.markers(playhead,selection);}
     plot = {};
     if(preview){previewCoverage=preview->coverage();plot=preview->reduce(viewBegin,viewEnd,std::max(1,graph.getWidth()),previewCoverage);}
     else if (analysis) plot = proposal::prepareTimeline (*analysis, viewBegin, viewEnd, std::max (1, graph.getWidth()));
@@ -458,8 +484,16 @@ void MeasurementTimeline::resized()
     navigationFeedback.setBounds(row);
     overTargetPeaks.setBounds(std::max(10,getWidth()-185),30,180,20);
     scroll.setBounds (b.removeFromBottom (16).withTrimmedLeft (55));
-    if(gainLane)gainLane->setBounds(b.removeFromBottom(gainLane->preferredHeight()));
-    b.removeFromTop (44); ruler=b.removeFromTop(waveformEnabled?24:0).withTrimmedLeft(waveformEnabled?85:55).withTrimmedRight(waveformEnabled?60:12); b.removeFromBottom (25); graph = b.withTrimmedLeft(waveformEnabled?85:55).withTrimmedRight(waveformEnabled?60:12);
+    b.removeFromTop(44);ruler=b.removeFromTop(waveformEnabled?24:0).withTrimmedLeft(waveformEnabled?85:55).withTrimmedRight(waveformEnabled?60:12);
+    if(resizableLanes)
+    {
+        graph=b.removeFromTop(heights.graph).withTrimmedLeft(waveformEnabled?85:55).withTrimmedRight(waveformEnabled?60:12);b.removeFromTop(25);
+        graphDivider.setBounds(b.removeFromTop(TimelineLayout::dividerHeight));
+        if(gainLane){gainLane->setBounds(b.removeFromTop(gainLane->preferredHeight()));gainDivider.setBounds(b.removeFromTop(TimelineLayout::dividerHeight));}
+        gainDivider.setVisible(gainLane!=nullptr);lraLanes.setBounds(b.removeFromTop(lraLanes.preferredHeight()));
+    }
+    else
+    {if(gainLane)gainLane->setBounds(b.removeFromBottom(gainLane->preferredHeight()));b.removeFromBottom(25);graph=b.withTrimmedLeft(waveformEnabled?85:55).withTrimmedRight(waveformEnabled?60:12);}
     blend.setBounds(2,graph.getY(),18,std::max(0,graph.getHeight()));
     if(graph!=previousGraph){++navigationEpoch;cancelAppliedDrag();}
     rebuild();

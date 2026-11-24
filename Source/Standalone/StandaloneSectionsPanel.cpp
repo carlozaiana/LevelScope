@@ -1,3 +1,4 @@
+#include "LraTimelinePresentation.h"
 #include "StandaloneSectionsPanel.h"
 #include <charconv>
 #include <sstream>
@@ -54,7 +55,7 @@ StandaloneSectionsPanel::StandaloneSectionsPanel (StandaloneSessionModel& s) : s
     importMarkers.onClick=[this]{markerWindow=std::make_unique<MarkerImportWindow>(session,false,canImportMarkers,[this]{synchronize();if(onChanged)onChanged();});};
     pasteMarkers.onClick=[this]{markerWindow=std::make_unique<MarkerImportWindow>(session,true,canImportMarkers,[this]{synchronize();if(onChanged)onChanged();});};
     addAndMakeVisible(importMarkers);addAndMakeVisible(pasteMarkers);
-    timeline.attachGainLane(manualLane);manualLane.onChanged=[this]{synchronize();if(onChanged)onChanged();};
+    timeline.attachGainLane(manualLane);timeline.enableLaneResizing();timeline.onHeightChanged=[this]{resized();if(onLayoutChanged)onLayoutChanged();};manualLane.onChanged=[this]{synchronize();if(onChanged)onChanged();};
     timeline.bindSectionEditing(session,[this](uint64_t id)
     {
         if(id)selectedId=id;
@@ -68,6 +69,7 @@ StandaloneSectionsPanel::StandaloneSectionsPanel (StandaloneSessionModel& s) : s
     play.onClick=[this]{timeline.focusForTransport();if(onPlay)onPlay();};
     stop.onClick=[this]{timeline.focusForTransport();if(onStop)onStop();};
     timeline.onInspect = [this] (const juce::String& text) { inspection.setText (text, false); };
+    timeline.onLraInspectionExpired=[this](const juce::String& text){if(inspection.getText().startsWith("LRA "))inspection.setText(text,false);};
     for (auto* c : std::array<juce::Component*, 20> { &domainBox, &windowKind, &windowScope, &splitButton, &moveButton, &mergeButton, &renameButton,
          &rebuildButton, &cancelButton, &boundary, &name, &summary, &inspection, &boundaryLabel, &nameLabel, &status, &timeline, &sectionList, &windowList, nullptr })
         if (c) addAndMakeVisible (*c);
@@ -83,6 +85,7 @@ void StandaloneSectionsPanel::timerCallback()
     if (! session.sourceContentInvalid && document.bind (input, input.isNotEmpty() ? static_cast<int> (context.media.sampleRate) : 0, input.isNotEmpty() ? context.media.frames : 0))
     { selectedId = 0; editNotice.clear(); session.markerImport.reset(); }
     manualLane.synchronize(input.isNotEmpty()?session.sessionId+input:juce::String());
+    if(manualLane.getHeight()!=manualLane.preferredHeight()){resized();if(onLayoutChanged)onLayoutChanged();}
     const auto key = document.map().valid() ? document.map().digest() : juce::String();
     const bool mapChanged = key != mapKey;
     if (mapChanged)
@@ -96,10 +99,11 @@ void StandaloneSectionsPanel::timerCallback()
         timeline.setSectionBoundaries (std::move (boundaries));
     }
     const auto domain = domainBox.getSelectedId() == 2 ? MeasurementDomain::currentState : MeasurementDomain::source;
-    const auto& m = domain == MeasurementDomain::source ? session.source : session.currentState;
-    auto snapshot = input.isNotEmpty() && m.hasMeasurement && (domain != MeasurementDomain::currentState || ! session.currentStateNeedsRemeasurement()) ? m.analysis : nullptr;
+    const auto diagnosticBinding=timelineMeasurement(session,domain,measurementRunning);
+    auto snapshot=diagnosticBinding.snapshot;
     if (! suspended) diagnostics.select (snapshot, session.measurementContext (domain), domain);
-    diagnostics.poll(); const auto nextMeasured = diagnostics.result();
+    diagnostics.poll();const auto result=diagnostics.result();const auto nextMeasured=result&&result->snapshot==snapshot?result:nullptr;
+    presentLraTimeline(timeline.lraDiagnostics(),diagnosticBinding,nextMeasured,session.getSelectedTargetProfile(),session.programmeApplicability,domain,diagnostics.status);
     const bool measuredChanged = nextMeasured != measured;
     if (measuredChanged) { measured = nextMeasured; timeline.setAnalysis (measured ? measured->analysis : nullptr); annotationKey.clear(); }
     if (! suspended) sections.select (measured, document.map());
@@ -196,7 +200,8 @@ void StandaloneSectionsPanel::performEdit (int operation)
 }
 void StandaloneSectionsPanel::refreshDetails()
 {
-    windowList.deselectAllRows(); windowList.updateContent(); windowList.repaint(); inspection.clear();
+    windowList.deselectAllRows(); windowList.updateContent(); windowList.repaint();
+    if(!inspection.getText().startsWith("LRA "))inspection.clear();
     const auto* row = selectedSection();
     for (auto* b : { &splitButton, &moveButton, &mergeButton, &renameButton }) b->setEnabled (row != nullptr);
     boundary.setEnabled (row != nullptr); name.setEnabled (row != nullptr);
@@ -266,7 +271,7 @@ void StandaloneSectionsPanel::selectedRowsChanged (int row)
 {
     if (refreshing || row < 0 || row >= getNumRows()) return;
     cancelPendingGain();
-    selectedId = document.map().sections[static_cast<size_t> (row)].id; refreshDetails();
+    inspection.clear();selectedId = document.map().sections[static_cast<size_t> (row)].id; refreshDetails();
     if (const auto* s = selectedSection()) timeline.highlight (static_cast<double> (s->begin), static_cast<double> (s->end));
 }
 int StandaloneSectionsPanel::Windows::getNumRows() { const auto* s = panel.subset(); return s ? static_cast<int> (s->size()) : 0; }
@@ -306,7 +311,7 @@ void StandaloneSectionsPanel::resized()
     auto transport=b.removeFromTop(28);
     play.setBounds(transport.removeFromLeft(70));stop.setBounds(transport.removeFromLeft(70));
     auditionDomain.setBounds(transport);
-    timeline.setBounds (b.removeFromTop (400)); b.removeFromTop (6);
+    timeline.setBounds (b.removeFromTop (timeline.preferredHeight())); b.removeFromTop (6);
     summary.setBounds (b.removeFromTop (std::max (160, b.getHeight() * 54 / 100))); b.removeFromTop (6);
     auto choose = b.removeFromTop (28); windowKind.setBounds (choose.removeFromLeft (240)); windowScope.setBounds (choose.removeFromLeft (200));
     inspection.setBounds (b.removeFromBottom (55)); b.removeFromBottom (4); windowList.setBounds (b);

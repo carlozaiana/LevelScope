@@ -35,7 +35,7 @@ namespace levelscope::standalone
 class StandaloneMainComponent final : public juce::Component, public juce::MenuBarModel, private juce::Timer
 {
 public:
-    explicit StandaloneMainComponent(std::shared_ptr<OutputDeviceCatalog> = {}, OutputDeviceSettings = OutputDeviceSettings(),std::unique_ptr<juce::AudioIODevice> = {});
+    explicit StandaloneMainComponent(std::shared_ptr<OutputDeviceCatalog> = {}, OutputDeviceSettings = OutputDeviceSettings(),std::unique_ptr<juce::AudioIODevice> = {},juce::File viewPreferencesFile = {});
     ~StandaloneMainComponent() override;
     void requestClose (std::function<void()>);
     enum Command {newDocument=2001,openDocument,openAudio,saveDocument,saveDocumentAs,undoEdit,redoEdit,peakWarnings,sectionsView,playStop,measureOriginal,measureCurrent,preferences,proposalPreferences,removeBoundaries,transitionBands};
@@ -52,8 +52,15 @@ public:
 private:
     friend struct PreparationFeedbackTestAccess;
     StandaloneSessionModel session;
-    TimelineDivider comparisonDivider{"Comparison row height"},waveformDivider{"Waveform and inspector heights"};
+    TimelineDivider comparisonDivider{"Comparison row height"},waveformDivider{"Timeline viewport and inspector heights"};
     TimelineLayout timelineLayout;
+    TimelineViewPreferences viewPreferences;
+    juce::Viewport timelineViewport;
+    void layoutTimelineContent();
+    void resetTimelineLayout();
+    bool lraInspectionOwned=false;
+    juce::String lraInspectionRuntime;
+    void showInspectionText(const juce::String&,bool lra=false);
     int timelineAvailableHeight=0;
     std::shared_ptr<LoudnessProgress> loudnessProgress;
     juce::TextButton openMixButton{"Open Mix..."},toolsButton{"Session / tools..."},audioSetupButton{"Audio setup..."},
@@ -73,7 +80,7 @@ private:
     juce::TextButton lraPassagesButton{"LRA passages..."};
     void showLraPassages(bool current=false);
     MeasurementTimeline timeline;
-    DiagnosticsController timelineDiagnostics;
+    DiagnosticsController timelineDiagnostics{true};
     WaveformCache waveformCache;
     WaveformBinding analysisWaveformBinding,waveformBinding;
     std::future<ServiceResult<std::shared_ptr<const waveform::Overview>>> waveformResult;

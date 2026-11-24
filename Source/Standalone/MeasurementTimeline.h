@@ -3,6 +3,9 @@
 #include "Core/Waveform/WaveformOverview.h"
 #include "StandaloneLoudnessPreview.h"
 #include "TimelineAppearance.h"
+#include "TimelineLayout.h"
+#include "TimelineViewPreferences.h"
+#include "LraTimelineLanes.h"
 #include "SectionEditPrompt.h"
 #include <juce_gui_basics/juce_gui_basics.h>
 
@@ -20,6 +23,14 @@ public:
     void focusLost(FocusChangeType) override;
     void visibilityChanged() override;
     void attachGainLane(TimelineGainLane&);
+    void enableLaneResizing(TimelineHeights={});
+    void resetLaneHeights();
+    const TimelineHeights& laneHeights() const {return heights;}
+    int preferredHeight() const;
+    std::function<void()> onHeightChanged,onHeightsSaved;
+    TimelineDivider& graphHeightDivider(){return graphDivider;}
+    TimelineDivider& gainHeightDivider(){return gainDivider;}
+    LraTimelineLanes& lraDiagnostics(){return lraLanes;}
     TimelineGainLane* attachedGainLane() const {return gainLane;}
     void bindSectionEditing(StandaloneSessionModel&,std::function<void(uint64_t)>);
     void refreshSectionEditing();
@@ -62,7 +73,7 @@ public:
     const std::vector<waveform::Column>& displayedWaveform() const {return waveformColumns;}
     void setViewRange (double beginFrame, double endFrame);
     void highlight (double beginFrame, double endFrame, bool reveal = true);
-    void clearHighlight() { gainSelection=false;selection.reset();inspectedRange.reset();fitSelection.setEnabled(false);repaint(); }
+    void clearHighlight() { gainSelection=false;selection.reset();lraLanes.markers(playhead,selection);inspectedRange.reset();fitSelection.setEnabled(false);repaint(); }
     void setSectionBoundaries (std::vector<int64_t> frames) { sectionBoundaries = std::move (frames); repaint(); }
     bool inspectSeconds (double seconds);
     juce::String inspectionText() const { return inspection; }
@@ -74,7 +85,7 @@ public:
     void mouseDrag (const juce::MouseEvent&) override;
     void mouseUp (const juce::MouseEvent&) override;
     void mouseWheelMove (const juce::MouseEvent&, const juce::MouseWheelDetails&) override;
-    std::function<void(const juce::String&)> onInspect;
+    std::function<void(const juce::String&)> onInspect,onLraInspectionExpired;
 private:
     StandaloneSessionModel* sectionSession=nullptr;
     std::unique_ptr<SectionEditPrompt> sectionEdit;
@@ -100,6 +111,11 @@ private:
     void finishSectionGesture(int64_t end);
     void completeSectionEdit(uint64_t selected,const juce::String& runtime,const juce::String& input,std::pair<double,double> view);
     bool preserveSelectionView=false;
+    bool resizableLanes=false;
+    TimelineHeights heights;
+    LraTimelineLanes lraLanes;
+    TimelineDivider graphDivider{"Waveform and curves height"},gainDivider{"Gain lane height"};
+    void laneHeightChanged();
     TimelineGainLane* gainLane=nullptr; // borrowed from the main shell
     std::shared_ptr<const proposal::ProgramAnalysis> analysis;
     std::shared_ptr<const LoudnessPreview> preview;

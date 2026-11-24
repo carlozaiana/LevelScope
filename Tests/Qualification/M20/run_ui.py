@@ -18,7 +18,7 @@ def sha(path):
 
 def main():
     region_groups = ('core', 'stereo', 'surround', 'heterogeneous', 'failures', 'population', 'audio', 'gating', 'cinema')
-    other_groups = ('monitor', 'control-variants', 'ui', 'event-ui', 'inner-ui', 'applied-ui', 'operation-ui', 'playback-ui', 'graph-ui', 'gain-input-ui', 'current-sections-ui', 'applied-sections', 'processing-smoke', 'graph-boundaries', 'gain-entry', 'devices', 'preparation', 'timeline', 'requirements', 'section-smoke', 'legacy-core', 'legacy-stereo', 'legacy-failures', 'legacy-gating')
+    other_groups = ('monitor', 'control-variants', 'ui', 'event-ui', 'inner-ui', 'applied-ui', 'operation-ui', 'playback-ui', 'graph-ui', 'lra-timeline', 'lra-timeline-ui', 'gain-input-ui', 'current-sections-ui', 'applied-sections', 'processing-smoke', 'graph-boundaries', 'gain-entry', 'devices', 'preparation', 'timeline', 'requirements', 'section-smoke', 'legacy-core', 'legacy-stereo', 'legacy-failures', 'legacy-gating')
     event_groups = ('event-stereo', 'event-surround', 'event-fallback', 'inner-stereo', 'inner-surround')
     parser = argparse.ArgumentParser()
     parser.add_argument('candidate', type=Path)
@@ -62,19 +62,22 @@ def main():
                     supplied = args.gating_input if case == 'gating' else args.cinema_input
                     assert supplied and supplied.is_file(), 'Explicit bounded input required for ' + case
                     arguments += ['--input', str(supplied.resolve())]
+            elif case == 'lra-timeline':
+                target = 'LevelScopeDiagnosticsTests'
+                arguments = ['--lra-timeline', '--report', str(output)]
             elif case == 'monitor':
                 target = 'LevelScopeAuditionTests'
                 arguments = ['--monitor-only', '--report', str(output)]
             elif case.startswith('legacy-'):
                 target = 'LevelScopeLraProposalTests'
                 arguments = ['--group', case[7:], '--root', str(root), '--output', str(output)]
-            elif case in ('gain-input-ui', 'current-sections-ui', 'ui', 'event-ui', 'inner-ui', 'applied-ui', 'operation-ui', 'playback-ui', 'graph-ui', 'control-variants', 'devices', 'preparation'):
-                target = {'gain-input-ui': 'LevelScopeRegionUITests', 'current-sections-ui': 'LevelScopeRegionUITests', 'graph-ui': 'LevelScopeRegionUITests', 'playback-ui': 'LevelScopeRegionUITests', 'operation-ui': 'LevelScopeRegionUITests', 'applied-ui': 'LevelScopeRegionUITests', 'inner-ui': 'LevelScopeRegionUITests', 'event-ui': 'LevelScopeRegionUITests', 'control-variants': 'LevelScopeRegionUITests', 'ui': 'LevelScopeRegionUITests', 'devices': 'LevelScopeDeviceSettingsTests',
+            elif case in ('lra-timeline-ui', 'gain-input-ui', 'current-sections-ui', 'ui', 'event-ui', 'inner-ui', 'applied-ui', 'operation-ui', 'playback-ui', 'graph-ui', 'control-variants', 'devices', 'preparation'):
+                target = {'lra-timeline-ui': 'LevelScopeRegionUITests', 'gain-input-ui': 'LevelScopeRegionUITests', 'current-sections-ui': 'LevelScopeRegionUITests', 'graph-ui': 'LevelScopeRegionUITests', 'playback-ui': 'LevelScopeRegionUITests', 'operation-ui': 'LevelScopeRegionUITests', 'applied-ui': 'LevelScopeRegionUITests', 'inner-ui': 'LevelScopeRegionUITests', 'event-ui': 'LevelScopeRegionUITests', 'control-variants': 'LevelScopeRegionUITests', 'ui': 'LevelScopeRegionUITests', 'devices': 'LevelScopeDeviceSettingsTests',
                           'preparation': 'LevelScopePreparationFeedbackTests'}[case]
                 arguments, output = [str(root)], root / 'result.json'
                 if case == 'control-variants':
                     arguments += ['--variants']
-                elif case in ('event-ui', 'playback-ui', 'gain-input-ui', 'current-sections-ui'):
+                elif case in ('event-ui', 'playback-ui', 'lra-timeline-ui', 'gain-input-ui', 'current-sections-ui'):
                     arguments += ['--'+case]
                 elif case in ('inner-ui', 'applied-ui', 'operation-ui', 'graph-ui'):
                     arguments += ['--' + case, str(args.inner_session.resolve())]

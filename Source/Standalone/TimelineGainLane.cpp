@@ -403,6 +403,24 @@ bool TimelineGainLane::removeSelectedBoundaries()
     const auto accepted=session.commitManualEdit(std::move(next),"Remove section boundaries only");
     if(accepted){selectedIds.clear();afterAction();}return accepted;
 }
+void TimelineGainLane::setResizableHeights(TimelineHeights* h,std::function<void()> changed,std::function<void()> saved)
+{
+    heights=h;
+    const juce::StringArray names{"Annotation lane height","Root lane height","Allowed-area lane height","Protected lane height","Changed-support lane height"};
+    for(size_t n=0;n<contextDividers.size();++n)
+    {
+        auto& d=contextDividers[n];if(!d){d=std::make_unique<TimelineDivider>(names[int(n)]);addAndMakeVisible(*d);}
+        d->move=[this,n,changed](int delta){if(!heights)return;heights->context[n]+=delta;heights->clamp();if(changed)changed();};
+        d->reset=[this,n,changed]{if(!heights)return;heights->context[n]=TimelineHeights{}.context[n];if(changed)changed();};
+        d->finished=saved;
+    }
+    resized();
+}
+juce::Rectangle<int> TimelineGainLane::contextBounds(size_t row)const
+{
+    int top=47;for(size_t n=0;n<row;++n)top+=heights?heights->context[n]+TimelineLayout::dividerHeight:15;
+    return {plotLeft,top,plotWidth,heights?heights->context[row]:14};
+}
 void TimelineGainLane::setViewport(double begin,double end,int left,int width)
 {
     if(begin==viewBegin&&end==viewEnd&&left==plotLeft&&width==plotWidth)return;
@@ -410,6 +428,8 @@ void TimelineGainLane::setViewport(double begin,double end,int left,int width)
 }
 void TimelineGainLane::resized()
 {
+    for(size_t n=0;n<contextDividers.size();++n)if(auto& d=contextDividers[n])
+    {d->setVisible(heights&&hasRegionLayers());const auto r=contextBounds(n);d->setBounds(0,r.getBottom(),getWidth(),TimelineLayout::dividerHeight);}
     auto b=getLocalBounds();auto top=b.removeFromTop(22);selectionKind.setBounds(top.removeFromRight(195));top.removeFromRight(6);createSections.setBounds(top.removeFromRight(264));top.removeFromRight(6);legend.setBounds(top);notice.setBounds(b.removeFromTop(24));
     auto controls=b.removeFromBottom(28).reduced(2,1);
     previous.setBounds(controls.removeFromLeft(27));next.setBounds(controls.removeFromLeft(27));
@@ -557,9 +577,9 @@ void TimelineGainLane::paintRegionLayers(juce::Graphics& g)
     const auto x=[&](int64_t f){return float(plotLeft+(std::clamp(double(f),viewBegin,viewEnd)-viewBegin)*(plotWidth-1)/(viewEnd-viewBegin));};
     const auto band=[&](int row,const char* label,juce::Colour colour,const std::vector<proposal::RegionSpan>& spans)
     {
-        const float y=float(47+row*15);g.setFont(10.f);g.setColour(colour);g.drawText(label,0,int(y),plotLeft-4,14,juce::Justification::centredRight);
-        juce::Graphics::ScopedSaveState save(g);g.reduceClipRegion({plotLeft,int(y),plotWidth,14});g.setColour(juce::Colour(0xff111a23));g.fillRect(plotLeft,int(y),plotWidth,14);
-        for(auto s:spans)if(s.end>viewBegin&&s.begin<viewEnd){g.setColour(colour.withAlpha(.3f));g.fillRect(x(s.begin),y+1,std::max(1.f,x(s.end)-x(s.begin)),12.f);g.setColour(colour);g.drawVerticalLine(int(x(s.begin)),y+1,y+13);g.drawVerticalLine(int(x(s.end)),y+1,y+13);}
+        const auto box=contextBounds(size_t(row));const float y=float(box.getY()),bottom=float(box.getBottom());g.setFont(10.f);g.setColour(colour);g.drawText(label,0,int(y),plotLeft-4,box.getHeight(),juce::Justification::centredRight);
+        juce::Graphics::ScopedSaveState save(g);g.reduceClipRegion(box);g.setColour(juce::Colour(0xff111a23));g.fillRect(box);
+        for(auto s:spans)if(s.end>viewBegin&&s.begin<viewEnd){g.setColour(colour.withAlpha(.3f));g.fillRect(x(s.begin),y+1,std::max(1.f,x(s.end)-x(s.begin)),bottom-y-2);g.setColour(colour);g.drawVerticalLine(int(x(s.begin)),y+1,bottom-1);g.drawVerticalLine(int(x(s.end)),y+1,bottom-1);}
     };
     std::vector<proposal::RegionSpan> annotation,roots,allowed,protectedAreas,support;
     for(const auto& row:session.sectionDocument.map().sections)annotation.push_back({row.begin,row.end});

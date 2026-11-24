@@ -1,5 +1,6 @@
 #include "TimelineTransport.h"
 #include "StandaloneMainComponent.h"
+#include "LraTimelinePresentation.h"
 
 namespace levelscope::standalone
 {
@@ -52,11 +53,12 @@ public:
         : DocumentWindow ("LevelScope - Programme sections", palette::panel(), DocumentWindow::allButtons), panel (p)
     {
         setUsingNativeTitleBar (true); setResizable (true, false); setResizeLimits (1000, 700, 2400, 1800);
-        viewport.setViewedComponent(&panel,false);setContentNonOwned (&viewport, false);
+        viewport.setViewedComponent(&panel,false);viewport.setScrollOnDragMode(juce::Viewport::ScrollOnDragMode::never);setContentNonOwned (&viewport, false);panel.onLayoutChanged=[this]{resized();};
         centreWithSize (1120, 900); setVisible (true);
     }
     void resized() override
-    { DocumentWindow::resized();panel.setSize(juce::jmax(1000,viewport.getWidth()-16),1120); }
+    { DocumentWindow::resized();panel.setSize(juce::jmax(1000,viewport.getWidth()-16),std::max(viewport.getHeight(),panel.preferredHeight())); }
+    ~SectionsWindow() override {panel.onLayoutChanged={};}
     void closeButtonPressed() override { panel.suspend(); setVisible (false); }
 private:
     StandaloneSectionsPanel& panel;
@@ -94,8 +96,8 @@ juce::String measurementsText (const MeasurementSummary& summary)
 }
 // [BEGIN LS-STANDALONE-WORKFLOW-SHELL]
 
-StandaloneMainComponent::StandaloneMainComponent(std::shared_ptr<OutputDeviceCatalog> catalog, OutputDeviceSettings settings,std::unique_ptr<juce::AudioIODevice> output)
-    : audition(std::move(output)),audioPanel(session, audition, [this] { refreshFromSession(); }, {}, std::move(catalog), std::move(settings))
+StandaloneMainComponent::StandaloneMainComponent(std::shared_ptr<OutputDeviceCatalog> catalog, OutputDeviceSettings settings,std::unique_ptr<juce::AudioIODevice> output,juce::File viewPreferencesFile)
+    : viewPreferences(std::move(viewPreferencesFile)),audition(std::move(output)),audioPanel(session, audition, [this] { refreshFromSession(); }, {}, std::move(catalog), std::move(settings))
 {
     configureSessionControls();
     configureLabels();
@@ -671,7 +673,8 @@ void StandaloneMainComponent::refreshFromSession()
     sourceStateBox.setText (buildSourceStateText(), false);
     targetStateBox.setText (buildTargetStateText(), false);
     currentStateBox.setText (buildCurrentStateText(), false);
-    pageDetailBox.setText (buildPageDetailText(), false);
+    if(lraInspectionRuntime!=session.sessionId)lraInspectionOwned=false;
+    if(!lraInspectionOwned)pageDetailBox.setText(buildPageDetailText(),false);
     if (diagnosticsPanel) diagnosticsPanel->synchronize();
     if (sectionsPanel) sectionsPanel->synchronize();
     audioPanel.refresh();
@@ -976,7 +979,7 @@ void StandaloneMainComponent::configureTimelineShell()
         int64_t frame=0;
         if(const auto& plan=session.currentStateDocument.sectionGains;plan&&plan->intervals.size()>1)frame=plan->intervals[1].begin;
         gainLane.inspectApplied(frame);timeline.highlight(double(std::max<int64_t>(0,frame-48000)),double(std::min<int64_t>(session.sourceDocument.media.frames,frame+48000)));
-        pageDetailBox.setText(proposalOperation.boundaryAdvice(),false);
+        showInspectionText(proposalOperation.boundaryAdvice());
     };
     proposalPanel.onPropose=[this]{proposeWithActiveMethod();refreshTimeline();};
     proposalPanel.onRegions=[this]{showRegionPlanning();};
@@ -996,17 +999,23 @@ void StandaloneMainComponent::configureTimelineShell()
     openMixButton.onClick=[this]{chooseMix();};toolsButton.onClick=[this]{showTools();};audioSetupButton.onClick=[this]{showAudioSetup();};
     timelinePlay.onClick=[this]{playTimeline();};timelineStop.onClick=[this]{timeline.focusForTransport();audition.stop();refreshTimeline();};
     inspectDomain.addItem("Inspect Original",1);inspectDomain.addItem("Inspect Current",2);inspectDomain.setSelectedId(1,juce::dontSendNotification);
-    inspectDomain.onChange=[this]{timeline.clearHighlight();refreshTimeline();pageDetailBox.setText(inspectDomain.getText()+": select a passage or inspect the entered time.",false);};
+    inspectDomain.onChange=[this]{timeline.clearHighlight();refreshTimeline();showInspectionText(inspectDomain.getText()+": select a passage or inspect the entered time.");};
     auditionDomainBox.addItem("Audition Original",1);auditionDomainBox.addItem("Audition Current",2);auditionDomainBox.setSelectedId(1,juce::dontSendNotification);
     auditionDomainBox.onChange=[this]{session.selectAuditionDomain(auditionDomainBox.getSelectedId()==2?MeasurementDomain::currentState:MeasurementDomain::source);audioPanel.synchronize();refreshTimeline();};
     addAndMakeVisible(jobRequirementsPanel.informationLine());
     comparisonDivider.move=[this](int delta){timelineLayout.moveComparison(delta);resized();};
-    waveformDivider.move=[this](int delta){timelineLayout.moveTimeline(delta,timelineAvailableHeight,session.sourceDocument.layout.count,gainLane.preferredHeight());resized();};
+    waveformDivider.move=[this](int delta){timelineLayout.moveTimeline(delta,timelineAvailableHeight);resized();};
+    addAndMakeVisible(timelineViewport);timelineViewport.setViewedComponent(&timeline,false);timelineViewport.setScrollBarsShown(true,false);
+    timelineViewport.setScrollOnDragMode(juce::Viewport::ScrollOnDragMode::never);
+    timeline.enableLaneResizing(viewPreferences.main);
+    timeline.onHeightChanged=[this]{layoutTimelineContent();};
+    timeline.onHeightsSaved=[this]{viewPreferences.main=timeline.laneHeights();viewPreferences.save();};
     timeline.onRequestSeek=[this](int64_t frame,const juce::String& identity)
     {const auto error=TimelineTransport::seek(frame,identity,session,audition);refreshTimeline();return error;};
     sectionsButton.onClick=[this]{showSections();};
     buildWaveformButton.onClick=[this]{beginWaveform();};
-    timeline.onInspect=[this](const juce::String& text){pageDetailBox.setText(inspectDomain.getText()+" | "+text,false);};
+    timeline.onInspect=[this](const juce::String& text){showInspectionText(inspectDomain.getText()+" | "+text,text.startsWith("LRA "));};
+    timeline.onLraInspectionExpired=[this](const juce::String& text){if(lraInspectionOwned)pageDetailBox.setText(text,false);};
     setWantsKeyboardFocus(true);
     addAndMakeVisible(sourceFilename);sourceFilename.setName("Programme filename");sourceFilename.setFont(14.f);
     sourceFilename.setMinimumHorizontalScale(1.f);sessionStatus.setFont(11.f);
@@ -1030,7 +1039,7 @@ void StandaloneMainComponent::showTools()
     juce::PopupMenu menu;int id=1;for(auto* button:actions)menu.addItem(id++,button->getButtonText(),button->isEnabled());
     menu.addSeparator();menu.addItem(100,"Reset layout");
     menu.showMenuAsync(juce::PopupMenu::Options().withTargetComponent(&toolsButton),[safe=juce::Component::SafePointer<StandaloneMainComponent>(this),actions](int n)
-    {if(!safe)return;if(n==100){safe->timelineLayout.reset();safe->resized();}else if(n>0&&n<=int(actions.size())&&actions[size_t(n-1)]->isEnabled())actions[size_t(n-1)]->onClick();});
+    {if(!safe)return;if(n==100){safe->resetTimelineLayout();}else if(n>0&&n<=int(actions.size())&&actions[size_t(n-1)]->isEnabled())actions[size_t(n-1)]->onClick();});
 }
 void StandaloneMainComponent::showAudioSetup()
 {
@@ -1124,7 +1133,7 @@ void StandaloneMainComponent::reviewProposal(bool historical)
         {
             if(session.sessionId!=runtime||session.sectionProposal!=*binding)return;
             gainLane.inspectRegionAttempt(attempt);timeline.highlight(double(begin),double(end));
-            gainLane.selectFrame(begin,false);pageDetailBox.setText(gainLane.inspectionText(),false);refreshTimeline();
+            gainLane.selectFrame(begin,false);showInspectionText(gainLane.inspectionText());refreshTimeline();
         };
         auto blocked=[safe=juce::Component::SafePointer<StandaloneMainComponent>(this),runtime,binding]() -> juce::String
         {
@@ -1153,6 +1162,8 @@ void StandaloneMainComponent::showSections()
     if(!sectionsPanel)
     {
         sectionsPanel=std::make_unique<StandaloneSectionsPanel>(session);
+        sectionsPanel->timelineView().enableLaneResizing(viewPreferences.sections);
+        sectionsPanel->timelineView().onHeightsSaved=[this]{viewPreferences.sections=sectionsPanel->timelineView().laneHeights();viewPreferences.save();};
         sectionsPanel->onChanged=[this]{refreshFromSession();refreshTimeline();};
         sectionsPanel->canImportMarkers=[this]{return canReplaceSession();};
         sectionsPanel->onPlay=[this]{playTimeline(&sectionsPanel->timelineView());};
@@ -1250,13 +1261,13 @@ bool StandaloneMainComponent::keyPressed(const juce::KeyPress& key)
 void StandaloneMainComponent::toggleInspectionAudition()
 {
     if(session.audioEditsBlocked()||session.job.isActive()||session.persistenceLoading)
-    {pageDetailBox.setText("Stop playback/preparation or finish the job before switching inspection and audition (A).",false);return;}
+    {showInspectionText("Stop playback/preparation or finish the job before switching inspection and audition (A).");return;}
     if(!session.sourceDocument.hasSource||!session.hasCurrentStateInitialized())return;
     const auto next=session.auditionDomain==MeasurementDomain::source?MeasurementDomain::currentState:MeasurementDomain::source;
     session.selectAuditionDomain(next);inspectDomain.setSelectedId(next==MeasurementDomain::source?1:2,juce::dontSendNotification);
     if(sectionsPanel)sectionsPanel->selectInspectionDomain(next);
     audioPanel.synchronize();timeline.clearHighlight();refreshTimeline();
-    pageDetailBox.setText(inspectDomain.getText()+" + "+auditionDomainBox.getText()+". Stopped; press Play to listen.",false);
+    showInspectionText(inspectDomain.getText()+" + "+auditionDomainBox.getText()+". Stopped; press Play to listen.");
 }
 void StandaloneMainComponent::refreshTimeline()
 {
@@ -1289,8 +1300,10 @@ void StandaloneMainComponent::refreshTimeline()
     const auto peakLimit=limits.hasTruePeakCeiling?std::optional<double>(limits.truePeakCeilingDbtp):std::nullopt;
     timeline.setPeakTarget(peakLimit,valid&&measured.hasMeasurement&&(domain==MeasurementDomain::source||!session.currentStateNeedsRemeasurement()));
     buildWaveformButton.setEnabled(valid && measured.hasMeasurement && !view.data && !session.job.isActive() && !session.audioEditsBlocked());
-    timelineDiagnostics.select(measured.analysis,session.measurementContext(domain),domain);timelineDiagnostics.poll();
-    const auto result=timelineDiagnostics.result();auto analysis=result?result->analysis:nullptr;
+    const auto diagnosticBinding=timelineMeasurement(session,domain,analysisResult.valid()&&analysisDomain==domain);
+    timelineDiagnostics.select(diagnosticBinding.snapshot,session.measurementContext(domain),domain);timelineDiagnostics.poll();
+    const auto result=timelineDiagnostics.result();auto analysis=result&&result->snapshot==diagnosticBinding.snapshot?result->analysis:nullptr;
+    presentLraTimeline(timeline.lraDiagnostics(),diagnosticBinding,result,session.getSelectedTargetProfile(),session.programmeApplicability,domain,timelineDiagnostics.status);
     timeline.setAnalysis(analysis);
     const auto original=session.source.hasMeasurement&&!session.sourceContentInvalid?session.source.analysis:nullptr;
     const auto reference=original?std::shared_ptr<const measurement::Result>(original,&original->detail):nullptr;
@@ -1315,6 +1328,7 @@ void StandaloneMainComponent::refreshTimeline()
         editor.setProgramme(valid?session.sourceDocument.media.frames:0,valid?int(session.sourceDocument.media.sampleRate):1,
                             valid?sourceBinding.runtime+sourceBinding.identity:juce::String());
         editor.setGainPreview(sectionWave.previewBase,currentPlan);
+        sectionsPanel->setMeasurementRunning(analysisResult.valid()&&analysisDomain==sectionsPanel->inspectionDomain());
         sectionsPanel->refreshMeasuredView();
         if(sectionsPanel->inspectionDomain()==MeasurementDomain::currentState&&session.currentStateNeedsRemeasurement())editor.setAnalysis(nullptr);
         editor.setWaveform(sectionWave.data,sectionWave.accepted,channels);
@@ -1399,7 +1413,7 @@ void StandaloneMainComponent::resized()
         auto warning=bounds.removeFromTop(64).reduced(0,2);
         monitorSetup.setBounds(warning.removeFromRight(145).reduced(4,16));monitorWarning.setBounds(warning);
     }
-    timelineAvailableHeight=bounds.getHeight();timelineLayout.moveTimeline(0,timelineAvailableHeight,session.sourceDocument.layout.count,gainLane.preferredHeight());
+    timelineAvailableHeight=bounds.getHeight();timelineLayout.moveTimeline(0,timelineAvailableHeight);
     auto bottom=bounds.removeFromBottom(timelineLayout.inspector);
     waveformDivider.setBounds(bounds.removeFromBottom(TimelineLayout::dividerHeight));
     inspectorViewport.setBounds(bottom);inspectorContent.setSize(std::max(1,bottom.getWidth()-inspectorViewport.getScrollBarThickness()),std::max(TimelineLayout::defaultInspector,bottom.getHeight()));
@@ -1409,8 +1423,19 @@ void StandaloneMainComponent::resized()
     measureSourceButton.setBounds(processing.removeFromLeft(150).reduced(2));remeasureCurrentStateButton.setBounds(processing.removeFromLeft(190).reduced(2));
     currentGain.setBounds(processing.removeFromLeft(300).reduced(2));
     auto applicability=bottom.removeFromTop(26);buildWaveformButton.setBounds(applicability.removeFromRight(150));qcScope.setBounds(applicability);
-    pageDetailBox.setBounds(bottom.reduced(0,3));timeline.setBounds(bounds.reduced(0,4));
+    pageDetailBox.setBounds(bottom.reduced(0,3));timelineViewport.setBounds(bounds.reduced(0,4));layoutTimelineContent();
 }
 
+void StandaloneMainComponent::showInspectionText(const juce::String& text,bool lra)
+{lraInspectionOwned=lra;lraInspectionRuntime=session.sessionId;pageDetailBox.setText(text,false);}
+void StandaloneMainComponent::resetTimelineLayout()
+{
+    timelineLayout.reset();timeline.resetLaneHeights();viewPreferences.sections={};
+    if(sectionsPanel)sectionsPanel->timelineView().resetLaneHeights();viewPreferences.save();resized();
+}
+void StandaloneMainComponent::layoutTimelineContent()
+{
+    timeline.setSize(std::max(1,timelineViewport.getWidth()-timelineViewport.getScrollBarThickness()),timeline.preferredHeight());
+}
 // [END LS-STANDALONE-WORKFLOW-SHELL]
 }

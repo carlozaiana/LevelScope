@@ -15,6 +15,8 @@ This folder is the persistent orientation layer for future development chats. Re
 
 ## Task-based quick start
 
+- [101 — Measured LRA lanes and independent timeline heights](101_MeasuredLRALanesAndIndependentHeights.md) records the measured diagnostic contract, independent graph/lane dividers, local view preferences and focused integration checks. Development only; the accepted navigation fix remains part of the baseline despite its publication gap.
+
 - [100 — Gain entry and section-boundary navigation](100_GainEntryAndBoundaryNavigation.md) records Enter-only gain confirmation, first-click cancellation/navigation, stable boundary-popup selection/view, 2,475 focused checks on each actual Mac, and the two deferred workflow preferences. Separate preserved test build; no publication.
 
 - [99 — Current initialization and sections from applied regions](99_CurrentInitializationAndRegionSections.md) covers the new Propose preparation and one-time section command, with 1,773 affected checks on each actual Mac; preserved test build, no publication or main merge.
