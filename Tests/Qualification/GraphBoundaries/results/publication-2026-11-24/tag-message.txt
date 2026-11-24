@@ -1,0 +1,13 @@
+Qualified shared verified source, background playback preparation and main-graph applied-region boundaries.
+
+Graph implementation f801ac06307f25f423a953a7e35b59c28013ccc7; both-platform handover 2590d3fbdaaf437e313f8646021039d3467c4ef2.
+Production Source tree 31be38bd890fee3667a6a976fbc3524a2b26e609.
+Includes accepted shared-source handover f9eeae554421b4ef4f8b48d53a69785aa3f6af46 and candidate03 implementation 614377f4e573bdd0fc34726584418b9333d092c2 with HFS+ integrity correction.
+
+Identical graph candidate01: 1506 focused assertions on each actual platform, Sequoia arm64 and High Sierra Intel. Unchanged shared-source paths inherit candidate03 qualification; no new runtime testing during publication.
+Graph package SHA-256 cecac62f3f98a5c92e1b87d938ab94f813b32f7cd2984cf8e7156a7bf7af43cf.
+Shared-source candidate03 package SHA-256 94c42f1eca24de3adc671723b4b01cd4bcc986fe602b4c6c6d25484379079843.
+
+User accepted: "Works as expected, please merge into main." Acceptance is separate from automated results, without inferred listening/checklist details.
+Broad video, full-film and three-hour endurance remain deferred; no automatic 90-minute substitute. Completion pause remains separately documented. No physical-output latency/endurance claim from 93-minute-file interaction feedback.
+Preserve existing tags, frozen builds, evidence, manuals and original media/sessions.
