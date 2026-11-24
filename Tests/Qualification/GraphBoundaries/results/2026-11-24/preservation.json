@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "previous_packages": 11,
+  "previous_protected_files": 3638,
+  "shared_source_candidate03_artifacts": 477,
+  "checks": 4118,
+  "failed": [],
+  "main": "18adeb520006b7fe7e0a22300cc26abd28eec51c",
+  "tags": 28,
+  "scope": "Read-only; no remote actions. Current graph work only; original packages, evidence, media, sessions and manuals preserved."
+}

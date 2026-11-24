@@ -1,0 +1,54 @@
+{
+  "passed": true,
+  "os": "15.7.9",
+  "architecture": "arm64",
+  "source_commit": "f801ac06307f25f423a953a7e35b59c28013ccc7",
+  "build": "fcb60b72c950d8b21e3c8ae4be8ce57bf95f6991c27aee84073d4d092bd78ea7",
+  "candidate_identity_sha256": "cecac62f3f98a5c92e1b87d938ab94f813b32f7cd2984cf8e7156a7bf7af43cf",
+  "requested_cases": [
+    "graph-boundaries",
+    "graph-ui"
+  ],
+  "physical_devices_opened": false,
+  "combined_qualification_complete": false,
+  "inputs": {
+    "graph-ui": {
+      "path": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/applied-region-boundaries-2026-11-22/inputs/supplied.levelscope",
+      "sha256": "30cda1f347937fcb6df0c17006f05b6d39775b68f9da091fe056e8c2cd425b25"
+    }
+  },
+  "groups": [
+    {
+      "name": "graph-boundaries",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/graph-region-boundaries-2026-11-24/candidate-01/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/graph-region-boundaries-2026-11-24/sequoia-01/graph-boundaries-files",
+        "--output",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/graph-region-boundaries-2026-11-24/sequoia-01/graph-boundaries.json",
+        "--graph-boundaries"
+      ],
+      "returncode": 0,
+      "seconds": 1.5895277079999999,
+      "passed": true,
+      "checks": 943,
+      "receipt": "graph-boundaries.json",
+      "receipt_sha256": "47754d2eb5ee08849a6dce0c779635a308f476fd118c494a49af7f4cf445eb14"
+    },
+    {
+      "name": "graph-ui",
+      "command": [
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/graph-region-boundaries-2026-11-24/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/graph-region-boundaries-2026-11-24/sequoia-01/graph-ui-files",
+        "--graph-ui",
+        "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/applied-region-boundaries-2026-11-22/inputs/supplied.levelscope"
+      ],
+      "returncode": 0,
+      "seconds": 11.151114833000001,
+      "passed": true,
+      "checks": 563,
+      "receipt": "graph-ui-files/result.json",
+      "receipt_sha256": "37735c856b93031912ce03be9f9f0b8bac542fc51b3caaf181e06bc005ec4461"
+    }
+  ]
+}

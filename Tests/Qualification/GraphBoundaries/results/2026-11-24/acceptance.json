@@ -1,0 +1,88 @@
+{
+  "scope": "Applied processing boundaries draggable directly in Current graph using the existing gain-lane transaction",
+  "implementation": "f801ac06307f25f423a953a7e35b59c28013ccc7",
+  "source_tree": "31be38bd890fee3667a6a976fbc3524a2b26e609",
+  "baseline_handover": "f9eeae554421b4ef4f8b48d53a69785aa3f6af46",
+  "baseline_tested": "614377f4e573bdd0fc34726584418b9333d092c2",
+  "branch": "codex/graph-region-boundaries-2026-11-24",
+  "measurement_build": "fcb60b72c950d8b21e3c8ae4be8ce57bf95f6991c27aee84073d4d092bd78ea7",
+  "package_identity_sha256": "cecac62f3f98a5c92e1b87d938ab94f813b32f7cd2984cf8e7156a7bf7af43cf",
+  "app": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/graph-region-boundaries-2026-11-24/candidate-01/LevelScope Standalone.app",
+  "actual_platforms": [
+    {
+      "os": "15.7.9",
+      "architecture": "arm64",
+      "passed": true,
+      "groups": 2,
+      "assertions": 1506
+    }
+  ],
+  "sequoia_focused_passed": true,
+  "high_sierra_new_graph_check": "Pending; user requested reconnection later. No new actual High Sierra run claimed.",
+  "combined_qualification_complete": false,
+  "universal_and_intel_minimum_verified": {
+    "LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone": {
+      "sha256": "7e276e193f2f553f87f0f9ae191866f86d10699caf7612282b408afba0776ba5",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    },
+    "bin/LevelScopeRegionUITests": {
+      "sha256": "464a9a896d4eab8b96f1dd569cca10cbc18e272a08b7c0c5185d6af430a382a7",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    },
+    "bin/LevelScopeTimelineProgressTests": {
+      "sha256": "0e1e6c8dd68834e0c7a7cbfa82eac19945dbc01fd1407260fa473890814836ee",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    }
+  },
+  "inherited": "Document 94 candidate 03 unchanged source integrity, numerical, proposal and transport qualification on both actual Macs; documents 91\u201392 model editing/Undo/persistence and workflow authority. Not a substitute for new graph native High Sierra evidence.",
+  "physical_devices_opened": false,
+  "audible_tests_run": false,
+  "benchmarks_run": false,
+  "new_graph_user_acceptance": null,
+  "prior_shared_source_user_feedback": {
+    "reported": "No playback delay after import/drawing; immediate Play and seek/replay on a 93-minute 5.1 programme.",
+    "classification": "User interaction feedback only; not endurance or measured physical-output latency."
+  },
+  "deferrals": [
+    "actual High Sierra new graph interactions pending connection",
+    "broad video",
+    "full-film",
+    "three-hour endurance; no automatic 90-minute substitute"
+  ],
+  "separate_known_limitation": "Inherited completion pause",
+  "video_limit": "Occasional dropped-frame acceptance does not waive audio interruptions, accumulating drift or sustained freezes.",
+  "main_unchanged": "18adeb520006b7fe7e0a22300cc26abd28eec51c",
+  "published": false,
+  "development_observation": "First native fixture failed its existing no-worker assertion because accepted background preparation after Open was still pending. Graph fixture now waits for that preparation before testing disabled direct transport callbacks during drag; no product logic or guard criteria changed. Failed receipt preserved.",
+  "evidence_sha256": {
+    "candidate-01-identity.json": "cecac62f3f98a5c92e1b87d938ab94f813b32f7cd2984cf8e7156a7bf7af43cf",
+    "candidate-01-identity.sha256": "2c970e9f7987ba2e288bb348278df7486965ae7f01fa263e8d57b77548adf421",
+    "development/native-01-failed.json": "e4fb54aa058b4aae64b990d4b30a44ec63fd89a37f1ead7f855a2d252a6d1589",
+    "development/native-02.json": "37735c856b93031912ce03be9f9f0b8bac542fc51b3caaf181e06bc005ec4461",
+    "development/timeline-01.json": "47754d2eb5ee08849a6dce0c779635a308f476fd118c494a49af7f4cf445eb14",
+    "freeze.py": "2d457f85348f2dfb2265ac6bbee03fd3b82cd5c290186e7ced2d9d47edcc9c10",
+    "preservation.json": "36165358e9c2343ba675474adf43ec34cfdac580af13776049f31b5cef9e67ee",
+    "sequoia-01/graph-boundaries-files/graph-boundary-handles.png": "c405be05b8f12bf7c641baeebc51b951cc678acff95c640ba10ddbed66692aab",
+    "sequoia-01/graph-boundaries.json": "47754d2eb5ee08849a6dce0c779635a308f476fd118c494a49af7f4cf445eb14",
+    "sequoia-01/graph-boundaries.log": "2ec8f8292aec7f0e0c11fba3c2a54fb9ff6f8184d6615d38f99a131ad95d263f",
+    "sequoia-01/graph-ui-files/graph-current-6.png": "5be68cd53009a84f93720c1640e85ad1c0ef44dbb7cf6cad771923f0df33ace1",
+    "sequoia-01/graph-ui-files/main-applied-boundary-preview.png": "6d228e70b285eff5559e42abf5f300bce46ea56dfe1eea8d4ba159d96901523d",
+    "sequoia-01/graph-ui-files/result.json": "37735c856b93031912ce03be9f9f0b8bac542fc51b3caaf181e06bc005ec4461",
+    "sequoia-01/graph-ui.log": "ab53d58c6a1bbdb35dc71898a09a61d78e1fc2c75a9cb8543ba764ece3410f6b",
+    "sequoia-01/summary.json": "dd39a69cc360333551928d485c16fc11c3f0c68e21a5c88cd9b44b96cd2ec2e2",
+    "verify_preservation.py": "20866130be9a668b07ce09d3dbfae32b604f3065ed8743e18ef979fa5c0a269f",
+    "README.md": "08a2aff22895d4755dc22b3584b195451e01354c2778d5d566110bc5f8aa1aca"
+  }
+}
