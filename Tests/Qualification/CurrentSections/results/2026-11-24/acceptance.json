@@ -1,0 +1,179 @@
+{
+  "scope": "Propose initializes absent Current; one-time sections from actual applied region cuts",
+  "branch": "codex/current-and-region-sections-2026-11-24",
+  "baseline": "c29b19940253d615ba4c3d3909eafa9b32bcc2f2",
+  "logic_handover": "389e5154b0e294d1b9ab65ffd33d921533f9cbf7",
+  "ui_implementation": "b766aaedb7694a5e23deb058fbe886af3e5c870f",
+  "tested_checkpoint": "0fdb7d54d88d82dcab67bd3b90d46d3aa81ca891",
+  "source_tree": "9bde2e81e439c6a85f035320d0a26c5b33e20629",
+  "measurement_build": "aff7de74907a71958e3a8d11383a6e0a03908dd96c2839322741ef373bff4c5a",
+  "package_identity_sha256": "8203a98b4ef7481ae67557a77ccd851a0047b66f07edf3bd5a5b9cbe60303c12",
+  "app": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/current-and-region-sections-2026-11-24/candidate-02/LevelScope Standalone.app",
+  "artifacts_verified_each_host": 473,
+  "actual_platforms": [
+    {
+      "os": "15.7.9",
+      "architecture": "arm64",
+      "passed": true,
+      "groups": [
+        {
+          "name": "applied-sections",
+          "checks": 77,
+          "passed": true,
+          "seconds": 1.348861667
+        },
+        {
+          "name": "processing-smoke",
+          "checks": 334,
+          "passed": true,
+          "seconds": 10.867726958999999
+        },
+        {
+          "name": "current-sections-ui",
+          "checks": 232,
+          "passed": true,
+          "seconds": 26.43629975
+        },
+        {
+          "name": "graph-boundaries",
+          "checks": 943,
+          "passed": true,
+          "seconds": 1.4499152080000002
+        },
+        {
+          "name": "operation-ui",
+          "checks": 187,
+          "passed": true,
+          "seconds": 66.18845845800001
+        }
+      ],
+      "assertions": 1773
+    },
+    {
+      "os": "10.13.6",
+      "architecture": "x86_64",
+      "passed": true,
+      "groups": [
+        {
+          "name": "applied-sections",
+          "checks": 77,
+          "passed": true,
+          "seconds": 0.8613755040000002
+        },
+        {
+          "name": "processing-smoke",
+          "checks": 334,
+          "passed": true,
+          "seconds": 12.502351172000001
+        },
+        {
+          "name": "current-sections-ui",
+          "checks": 232,
+          "passed": true,
+          "seconds": 67.63141684200001
+        },
+        {
+          "name": "graph-boundaries",
+          "checks": 943,
+          "passed": true,
+          "seconds": 2.134906792999999
+        },
+        {
+          "name": "operation-ui",
+          "checks": 187,
+          "passed": true,
+          "seconds": 144.078042668
+        }
+      ],
+      "assertions": 1773
+    }
+  ],
+  "affected_qualification_passed": true,
+  "main_unchanged": "c29b19940253d615ba4c3d3909eafa9b32bcc2f2",
+  "physical_devices_opened": false,
+  "audible_tests_run": false,
+  "user_acceptance": null,
+  "published": false,
+  "deferrals": [
+    "broad video",
+    "full-film",
+    "three-hour endurance; no automatic 90-minute substitute"
+  ],
+  "separate_known_limitation": "Inherited completion pause",
+  "video_limit": "Occasional dropped-frame acceptance does not waive audio interruptions, accumulating drift or sustained freezes.",
+  "inherited": "Unaffected proposal, mono, DSP, source-integrity/HFS+, transport and export qualification in documents 91-98. No new independent-programme correction, listening, physical-output timing or endurance claim.",
+  "development_observations": [
+    "Native fixture initially asserted an editor change before its queued callback; delivering the callback synchronously corrected the fixture. Product Source unchanged.",
+    "Candidate 01 operation regression expected immediate Source preparation. It now asserts the new initialize phase first, then Source preparation. Final app and production Source are byte-identical to candidate 01; only the test driver changed. Both original failure receipts retained."
+  ],
+  "evidence_sha256": {
+    "README.md": "a351f0cd8c52fc886428b12348a0c4b5b6adce68f29e3292aabdb98e8395092d",
+    "candidate-02-identity.json": "8203a98b4ef7481ae67557a77ccd851a0047b66f07edf3bd5a5b9cbe60303c12",
+    "candidate-02-identity.sha256": "50abd67d80298089e00894179fd26e7146d31e5a88397ee319768745a929f633",
+    "development/candidate-01-identity.json": "28f792af9ec0760bbc305ade1ea56b53c8a39727792236c32833b153a42c81ae",
+    "development/candidate-01-identity.sha256": "87a0db479b0da2b4db1d266b2e41c39231b56e453a331b302e5a998b0b9c5316",
+    "development/candidate-01-operation-fixture-failure.json": "18067e88d05add8199436253b03d12a9c14e673cd29b0214ffcacad7f8157e47",
+    "development/candidate-01-summary.json": "c8f969e5242f3bdfe68bbe1f9867ab6fd1f7ebd62d2a4549ee593e54b865f21b",
+    "development/native-01-fixture-failure.json": "5059c24c4a1ec45125f5b7899dabe6651ab0c05ecdb5a65a3b9918f2c5f3d84a",
+    "development/native-02.json": "8b89ff683287d71dae0fb34e8085114a5262b4ebb7959a154098230d96955612",
+    "development/operation-02.json": "faef325c7270c405d632c3406f88fc43fd17f70b9215d37e01e0e67befb38f1b",
+    "freeze.py": "dedc8c31e8dc86199520fa8f39e3492bd907bc9bdcaafb67300d1c7876b09408",
+    "high-sierra-01/applied-sections.json": "5c0bb3d32643c0d08240d18ebbfec3163a2fa164b470a4e9f3980cd43f0f178f",
+    "high-sierra-01/applied-sections.log": "0ff2f11b277bde84f5924c27fd019b4ada158824fc18385031ce9633e6e25a4d",
+    "high-sierra-01/current-sections-ui-files/channels-1/propose-from-empty.png": "ed69f7b5b91028987d4d713fb981313ae0ac0d40ffa8bf2953491b0bb6b9eb7d",
+    "high-sierra-01/current-sections-ui-files/channels-1/sections-and-gain.png": "cb611a6953defed6152641c4e27e28773371caafcd92c7cd44e1f143e58cb728",
+    "high-sierra-01/current-sections-ui-files/channels-2/propose-from-empty.png": "09b4829294b40b6ae7a91caa04ecebcd93e30fb9641373e656cbedbd03d35a4b",
+    "high-sierra-01/current-sections-ui-files/channels-2/sections-and-gain.png": "7ff7040031503bf970ac40b6fc3ed60f25f5b4b81266122396157c15aa375447",
+    "high-sierra-01/current-sections-ui-files/channels-6/propose-from-empty.png": "3688b56f7b57d7b60ae2a0d6366ac94e21fccfc9c71c71ac4d68107be3a9655d",
+    "high-sierra-01/current-sections-ui-files/channels-6/sections-and-gain.png": "7086ceb084efd951e7ef68fb403f89176c9965e9d407b03a94bdc420c71b37f3",
+    "high-sierra-01/current-sections-ui-files/result.json": "8b89ff683287d71dae0fb34e8085114a5262b4ebb7959a154098230d96955612",
+    "high-sierra-01/current-sections-ui.log": "f122d1461382701024db794b33369f83b0e1e1d99c4c35ecfb773379c26c64f1",
+    "high-sierra-01/graph-boundaries-files/applied-boundary-preview.png": "729049d024c84163dbf89d764eaaceff7f6083c1434154eb51ec4b6e632c41b1",
+    "high-sierra-01/graph-boundaries-files/boundary-batch-confirmation.png": "186c28e5a9dc0534d614b37ea07fd3d0bf70aa5e75e889e531c4f536251afef5",
+    "high-sierra-01/graph-boundaries-files/drawn-section.png": "09e881daf1c5a443440555e69a9e30d63f8f258bcc084fd55fc202b49c1091a9",
+    "high-sierra-01/graph-boundaries-files/graph-boundary-handles.png": "6b69aba447fd307e2eea0f842404d8d2256b88cdee61d2e4dc19f3d5e55f30e0",
+    "high-sierra-01/graph-boundaries-files/graph-boundary-preview.png": "777a279efcd36d210d4cc0cb8f5aaa8e2e89ed73a5b68a8ddf1b0e04605894af",
+    "high-sierra-01/graph-boundaries-files/pending-boundaries.png": "7a9e34f822cd6cd5e0d7b0309cd9b8f9aa812d6e9cc4a3a15051697bab44ee5e",
+    "high-sierra-01/graph-boundaries-files/separate-selection.png": "92a7b2771e041cc83154527f9c258e6425bc70f9ee2f76fc206b05bb3f1be227",
+    "high-sierra-01/graph-boundaries.json": "53044791f498c26a6aaf3b59299a2e1a4202987a3c8359f69d66ce963b0e806c",
+    "high-sierra-01/graph-boundaries.log": "2ec8f8292aec7f0e0c11fba3c2a54fb9ff6f8184d6615d38f99a131ad95d263f",
+    "high-sierra-01/operation-ui-files/result.json": "9aec1de76c6d4dd678eab6561d845f6caa299a0b0fd14abb94037cab74ff3dcc",
+    "high-sierra-01/operation-ui-files/verified-boundary-advisory.png": "febffcaf763726b815ff03ed6f03b2e4c789672d9283add874de5fca996f1edb",
+    "high-sierra-01/operation-ui.log": "c9c13cdde11f5ddd984fc0f628a2ca16bf858c74913811c25f71e75857428ea3",
+    "high-sierra-01/processing-smoke-files/smoke/export/manifest.json": "4e62698aa4d61831b50e914b4688b0cc7770a6eb87acae7dee35113077a9f717",
+    "high-sierra-01/processing-smoke-files/smoke/export/report.json": "f5dfecc5d62ce836860513c3e01941e62a81873174d4e88b8fb8d060305c9cc5",
+    "high-sierra-01/processing-smoke.json": "545f599ada0416f5939410c4d640202a77252698e3853fdcacb0aa91e5c77b2c",
+    "high-sierra-01/processing-smoke.log": "cc4b4b8c46c25a31b9a1048e3af3eea36c9c3240a092eb7412f1b5b45a4e5cec",
+    "high-sierra-01/summary.json": "5a071df1cceae3eebe37a52bf57d2f78e92fe396c78b8f682eedd2228b7c5264",
+    "preservation-final.json": "dfc59834fb0417841a8f8244f619ff5ebd4b837085af13237e904059976ec8ca",
+    "preserve.py": "2702ad64860e70749a5425bcd00323e9fd13d9a6836db3eb12ef81eab8dfc1ea",
+    "protocol.txt": "1fce442b7a87a4e3f4cdae5cbf9559c6ee9978ddf3acdb41bbbbe44d5eeccabd",
+    "sequoia-02/applied-sections.json": "9b9be6d818851dc34755eead407117bc8f2fbafca31b315598cafbbb97038edc",
+    "sequoia-02/applied-sections.log": "0ff2f11b277bde84f5924c27fd019b4ada158824fc18385031ce9633e6e25a4d",
+    "sequoia-02/current-sections-ui-files/channels-1/propose-from-empty.png": "b7cb489e3561fee3a0f423403a00a32e03aba1cfebb69ab78fc34dcfd6bc422e",
+    "sequoia-02/current-sections-ui-files/channels-1/sections-and-gain.png": "eeecb7e797b2ff38b5af4505c3bdc861d105bbb59ed0ab668421551e8547153b",
+    "sequoia-02/current-sections-ui-files/channels-2/propose-from-empty.png": "c7155a05befb20e7a62d3e75034d93cef94a31b16c5416c64f0fd4f8a637e925",
+    "sequoia-02/current-sections-ui-files/channels-2/sections-and-gain.png": "bf413595dbc5bd3516318bcb0fc415bc5bb02275e6812fd13056d3f491643490",
+    "sequoia-02/current-sections-ui-files/channels-6/propose-from-empty.png": "a1d8330c113b1e593e9b413e289c012bcfd6e607665b2df0d51fdd4fb2b9823c",
+    "sequoia-02/current-sections-ui-files/channels-6/sections-and-gain.png": "0f37e74f56723285de68b33176ee81db517937caa64c93df51eee2af2abe51c7",
+    "sequoia-02/current-sections-ui-files/result.json": "8b89ff683287d71dae0fb34e8085114a5262b4ebb7959a154098230d96955612",
+    "sequoia-02/current-sections-ui.log": "f122d1461382701024db794b33369f83b0e1e1d99c4c35ecfb773379c26c64f1",
+    "sequoia-02/graph-boundaries-files/applied-boundary-preview.png": "356cc46574b80666a9184f1b8c7556d40d2516f645227ac5ab8a18d7b81d817e",
+    "sequoia-02/graph-boundaries-files/boundary-batch-confirmation.png": "d85fec978f048586e896084d8a5c83ac32f54ac8a8cea049694ccae49bc2c6ea",
+    "sequoia-02/graph-boundaries-files/drawn-section.png": "b71e9a9a8c8cb40d79ddcd27f994747b85fdca203c8e6d393f234d6c9141b607",
+    "sequoia-02/graph-boundaries-files/graph-boundary-handles.png": "1f3ac315bd6885cbfe3155bdb9a4b11f286dda2505bbbada0a82737214dbcbc5",
+    "sequoia-02/graph-boundaries-files/graph-boundary-preview.png": "823f8e3b614e616ff44a0f2a04d2a39366d985ec7a908bd6768ee87eb5150299",
+    "sequoia-02/graph-boundaries-files/pending-boundaries.png": "8ae80fd7b8a0fe009869dae4c59e198f917ba069f4789500e5739f5d8af174d9",
+    "sequoia-02/graph-boundaries-files/separate-selection.png": "7ff1bbede6efc89ea0dd95885f549cb48c40f57cf197816cdfcd99fc3ec5181c",
+    "sequoia-02/graph-boundaries.json": "53044791f498c26a6aaf3b59299a2e1a4202987a3c8359f69d66ce963b0e806c",
+    "sequoia-02/graph-boundaries.log": "2ec8f8292aec7f0e0c11fba3c2a54fb9ff6f8184d6615d38f99a131ad95d263f",
+    "sequoia-02/operation-ui-files/result.json": "d01122455cc42bdb1d43d08d006d59d35a5ecec3a0724d0c090dab3e564895ef",
+    "sequoia-02/operation-ui-files/verified-boundary-advisory.png": "1c9e7fc6b2e5b0fa309e564247f35037f194b0d04c22462216e144b937080001",
+    "sequoia-02/operation-ui.log": "c9c13cdde11f5ddd984fc0f628a2ca16bf858c74913811c25f71e75857428ea3",
+    "sequoia-02/processing-smoke-files/smoke/export/manifest.json": "ed1439ad7ddce073e24d6230dec05319f452dad46f3e563a09a160377988596e",
+    "sequoia-02/processing-smoke-files/smoke/export/report.json": "e75f1fe5c399127652eade92c5b613f56702665375c79bf262de8aa838b41f5a",
+    "sequoia-02/processing-smoke.json": "8407fd59b2a03cad233c09bbdb7c4c5eabec895e16719f318124d170e06403f7",
+    "sequoia-02/processing-smoke.log": "cc4b4b8c46c25a31b9a1048e3af3eea36c9c3240a092eb7412f1b5b45a4e5cec",
+    "sequoia-02/summary.json": "c3bdca005e52aa35e809c83d433c29d7970de6871e79a9ff360118cf533a09ef"
+  }
+}

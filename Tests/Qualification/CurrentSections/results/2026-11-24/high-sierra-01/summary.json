@@ -1,0 +1,105 @@
+{
+  "passed": true,
+  "os": "10.13.6",
+  "architecture": "x86_64",
+  "source_commit": "0fdb7d54d88d82dcab67bd3b90d46d3aa81ca891",
+  "build": "aff7de74907a71958e3a8d11383a6e0a03908dd96c2839322741ef373bff4c5a",
+  "candidate_identity_sha256": "8203a98b4ef7481ae67557a77ccd851a0047b66f07edf3bd5a5b9cbe60303c12",
+  "requested_cases": [
+    "applied-sections",
+    "processing-smoke",
+    "current-sections-ui",
+    "graph-boundaries",
+    "operation-ui"
+  ],
+  "physical_devices_opened": false,
+  "combined_qualification_complete": false,
+  "inputs": {
+    "operation-ui": {
+      "path": "/Users/fuzz/LevelScope-Current-Sections-20261124/inputs/supplied.levelscope",
+      "sha256": "30cda1f347937fcb6df0c17006f05b6d39775b68f9da091fe056e8c2cd425b25"
+    }
+  },
+  "groups": [
+    {
+      "name": "applied-sections",
+      "command": [
+        "/Users/fuzz/LevelScope-Current-Sections-20261124/candidate-02/bin/LevelScopeSectionProcessingTests",
+        "--applied-sections",
+        "--root",
+        "/Users/fuzz/LevelScope-Current-Sections-20261124/high-sierra-01/applied-sections-files",
+        "--output",
+        "/Users/fuzz/LevelScope-Current-Sections-20261124/high-sierra-01/applied-sections.json"
+      ],
+      "returncode": 0,
+      "seconds": 0.8613755040000002,
+      "passed": true,
+      "checks": 77,
+      "receipt": "applied-sections.json",
+      "receipt_sha256": "5c0bb3d32643c0d08240d18ebbfec3163a2fa164b470a4e9f3980cd43f0f178f"
+    },
+    {
+      "name": "processing-smoke",
+      "command": [
+        "/Users/fuzz/LevelScope-Current-Sections-20261124/candidate-02/bin/LevelScopeSectionProcessingTests",
+        "--smoke",
+        "--root",
+        "/Users/fuzz/LevelScope-Current-Sections-20261124/high-sierra-01/processing-smoke-files",
+        "--output",
+        "/Users/fuzz/LevelScope-Current-Sections-20261124/high-sierra-01/processing-smoke.json"
+      ],
+      "returncode": 0,
+      "seconds": 12.502351172000001,
+      "passed": true,
+      "checks": 334,
+      "receipt": "processing-smoke.json",
+      "receipt_sha256": "545f599ada0416f5939410c4d640202a77252698e3853fdcacb0aa91e5c77b2c"
+    },
+    {
+      "name": "current-sections-ui",
+      "command": [
+        "/Users/fuzz/LevelScope-Current-Sections-20261124/candidate-02/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/LevelScope-Current-Sections-20261124/high-sierra-01/current-sections-ui-files",
+        "--current-sections-ui"
+      ],
+      "returncode": 0,
+      "seconds": 67.63141684200001,
+      "passed": true,
+      "checks": 232,
+      "receipt": "current-sections-ui-files/result.json",
+      "receipt_sha256": "8b89ff683287d71dae0fb34e8085114a5262b4ebb7959a154098230d96955612"
+    },
+    {
+      "name": "graph-boundaries",
+      "command": [
+        "/Users/fuzz/LevelScope-Current-Sections-20261124/candidate-02/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/LevelScope-Current-Sections-20261124/high-sierra-01/graph-boundaries-files",
+        "--output",
+        "/Users/fuzz/LevelScope-Current-Sections-20261124/high-sierra-01/graph-boundaries.json",
+        "--graph-boundaries"
+      ],
+      "returncode": 0,
+      "seconds": 2.134906792999999,
+      "passed": true,
+      "checks": 943,
+      "receipt": "graph-boundaries.json",
+      "receipt_sha256": "53044791f498c26a6aaf3b59299a2e1a4202987a3c8359f69d66ce963b0e806c"
+    },
+    {
+      "name": "operation-ui",
+      "command": [
+        "/Users/fuzz/LevelScope-Current-Sections-20261124/candidate-02/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/LevelScope-Current-Sections-20261124/high-sierra-01/operation-ui-files",
+        "--operation-ui",
+        "/Users/fuzz/LevelScope-Current-Sections-20261124/inputs/supplied.levelscope"
+      ],
+      "returncode": 0,
+      "seconds": 144.078042668,
+      "passed": true,
+      "checks": 187,
+      "receipt": "operation-ui-files/result.json",
+      "receipt_sha256": "9aec1de76c6d4dd678eab6561d845f6caa299a0b0fd14abb94037cab74ff3dcc"
+    }
+  ]
+}

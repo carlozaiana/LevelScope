@@ -15,6 +15,8 @@ This folder is the persistent orientation layer for future development chats. Re
 
 ## Task-based quick start
 
+- [99 — Current initialization and sections from applied regions](99_CurrentInitializationAndRegionSections.md) covers the new Propose preparation and one-time section command, with 1,773 affected checks on each actual Mac; preserved test build, no publication or main merge.
+
 - [98 — Mono LRA checkpoint published and integrated](98_MonoLRAProposalPublication.md) records the GitHub identities, preserved universal app, two-platform qualification and agreed follow-on order.
 
 - [97 — Confirmed mono in LRA proposals](97_MonoLRAProposals.md) covers all four selectable methods, independently verified one-channel delivery and the two-platform test build.

@@ -1,0 +1,15 @@
+Focused UI step 1, 2026-11-24
+Baseline: c29b19940253d615ba4c3d3909eafa9b32bcc2f2.
+Model handover: 389e5154b0e294d1b9ab65ffd33d921533f9cbf7 retained as ancestor.
+Build universal arm64/x86_64, Release, Intel macOS 10.13 minimum.
+Freeze one exact package after development checks; repeat affected cases on actual Sequoia and High Sierra from that package.
+Cases:
+- applied-sections: model initialization and one-time annotation transaction, 77 model checks.
+- processing-smoke: existing 334 section/gain/editing smoke checks.
+- current-sections-ui: new native clear/edited Current Propose and copy/edit/save/reopen path, mono/stereo/5.1.
+- graph-boundaries: shared timeline gestures, cancellation, Undo and navigation regression.
+- operation-ui: existing asynchronous orchestration, receipts, alternatives, stale/cancel/retry/Undo, adjusted mono capability assertion to qualified baseline.
+No output interfaces or audible tests. Run native suites sequentially without overlapping compiles.
+Prior mathematics, source-integrity/HFS+, export and transport evidence inherited from documents 91-98; no new numerical strategy or routing.
+Broad video, full-film and three-hour endurance remain deferred, with no automatic 90-minute substitute. Inherited completion pause remains a separate known limitation.
+Do not publish or merge. Preserve all previous tags, packages, receipts, media, sessions and manuals.
