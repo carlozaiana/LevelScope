@@ -1,0 +1,174 @@
+{
+  "scope": "Enter confirms local gain; Escape/outside click cancels; section-boundary dialogs preserve selection and exact viewport",
+  "branch": "codex/timeline-input-boundary-fixes-2026-11-24",
+  "baseline_handover": "b5ff52b9c87422b28f27a089c66b746fd2447a05",
+  "implementation": "5537a28bff061b90e83c675d15e4c6cfc080fe76",
+  "source_tree": "9cc787a660e0f26b87a4ae2dd82365ab2b491ce7",
+  "measurement_build": "182b0c4836d677c328d2e6457bbe95dc42a9f3977852e115976478e83c3429eb",
+  "package_identity_sha256": "37a12292261e3c5dba77438ac649403cef9f876d829b4f4b20c7746df4a1d42e",
+  "app": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/timeline-input-boundary-fixes-2026-11-24/candidate-01/LevelScope Standalone.app",
+  "artifacts_verified_each_host": 473,
+  "actual_platforms": [
+    {
+      "os": "15.7.9",
+      "architecture": "arm64",
+      "passed": true,
+      "groups": [
+        {
+          "name": "gain-input-ui",
+          "checks": 221,
+          "passed": true,
+          "seconds": 13.572475707999999
+        },
+        {
+          "name": "gain-entry",
+          "checks": 1079,
+          "passed": true,
+          "seconds": 0.9271207080000003
+        },
+        {
+          "name": "graph-boundaries",
+          "checks": 943,
+          "passed": true,
+          "seconds": 1.1312293750000002
+        },
+        {
+          "name": "current-sections-ui",
+          "checks": 232,
+          "passed": true,
+          "seconds": 26.225321625000003
+        }
+      ],
+      "assertions": 2475
+    },
+    {
+      "os": "10.13.6",
+      "architecture": "x86_64",
+      "passed": true,
+      "groups": [
+        {
+          "name": "gain-input-ui",
+          "checks": 221,
+          "passed": true,
+          "seconds": 25.294449992
+        },
+        {
+          "name": "gain-entry",
+          "checks": 1079,
+          "passed": true,
+          "seconds": 1.0949257399999972
+        },
+        {
+          "name": "graph-boundaries",
+          "checks": 943,
+          "passed": true,
+          "seconds": 2.1226934390000025
+        },
+        {
+          "name": "current-sections-ui",
+          "checks": 232,
+          "passed": true,
+          "seconds": 67.019471724
+        }
+      ],
+      "assertions": 2475
+    }
+  ],
+  "affected_qualification_passed": true,
+  "main_unchanged": "c29b19940253d615ba4c3d3909eafa9b32bcc2f2",
+  "physical_devices_opened": false,
+  "audible_tests_run": false,
+  "running_unsaved_user_session_touched": false,
+  "user_acceptance": null,
+  "published": false,
+  "deferrals": [
+    "broad video",
+    "full-film",
+    "three-hour endurance; no automatic 90-minute substitute"
+  ],
+  "separate_known_limitation": "Inherited completion pause",
+  "video_limit": "Occasional dropped-frame acceptance does not waive audio interruptions, accumulating drift or sustained freezes.",
+  "inherited": "Unaffected model, proposal, measurement, mono, source integrity including HFS+, transport and export qualification from documents 91-99. No new independent correction, listening, physical-output timing or endurance claim.",
+  "plan_only": [
+    "General settings-menu boundary behaviour preference and Always use this behaviour in popup",
+    "Automatic applied-region mode after actual proposal Apply; section mode after copy, including future no-op semantics. Existing actual insertion already switches to sections."
+  ],
+  "development_observations": [
+    "Native 01 incorrectly required nonempty gain text after Keep gain; a section straddling differing gains correctly displays Mixed. The assertion now checks that Space leaves the exact prior text unchanged.",
+    "Native 02/03 injected mouse events at an obscured owned native window, so macOS hit testing dispatched neither zoom nor the outside-click listener. Positioning the owned fixture visibly and always-on-top fixed the harness; native 04 and frozen runs exercise the genuine peer mouse dispatch.",
+    "All three original development failure receipts and the passing rerun are retained. No failure occurred in the frozen candidate-01 qualification."
+  ],
+  "evidence_sha256": {
+    "README.md": "fe2fe53cd20ac24a8f432845de4477fba4aa09f5302237607ba27e2c9f57e90c",
+    "candidate-01-identity.json": "37a12292261e3c5dba77438ac649403cef9f876d829b4f4b20c7746df4a1d42e",
+    "candidate-01-identity.sha256": "d169a66ee9459b795c01b0ebd3d11886e5f1442e99086287f4f879c39122bc2b",
+    "development/native-01.json": "6b2fa4fba0af6321199c284ed845f5207392d3b471c62fa283fc322bb5418afd",
+    "development/native-01.log": "c8bdb94819f4e5e563a0bab64b459f763176961695ae8afe9b2a1749bdfd7e4f",
+    "development/native-02.json": "3c6c543d652e45afe57beff2e71a4ce1d7d2e524f550bd4fc811995e438f8b7b",
+    "development/native-02.log": "63f120f815dfc5440d1042936cb36c68a8a30b79631a5e7b68fa8a04bfce928c",
+    "development/native-03.json": "3c6c543d652e45afe57beff2e71a4ce1d7d2e524f550bd4fc811995e438f8b7b",
+    "development/native-03.log": "f030904180154ae86d918106e7715ca0ac46787ecd0301d01314fbbf22924a76",
+    "development/native-04.json": "7e8b0ae5d1b978b47c5052cdb4afb3219671b75d24bae7119d293a036038241b",
+    "development/native-04.log": "d2ecd6048edc241eacbb8a217651e23387bae523ceb12ebea220df8f7a4f3ae5",
+    "freeze.py": "3e4e13043dbab710211b3c0693433b6f2fb7fd68dbdae0bc4f8ff06943a0fcd5",
+    "gain-entry-dev.json": "8046bbe100f29b64a4827f0d9fbbcdba4659084cf4de7c9563ca2adc5f12f79d",
+    "gain-entry-dev.log": "ee6283dd6ffeffd3210222e20c904346f1aee68042054a97e2dfe440721d1928",
+    "high-sierra-01/current-sections-ui-files/channels-1/propose-from-empty.png": "ed69f7b5b91028987d4d713fb981313ae0ac0d40ffa8bf2953491b0bb6b9eb7d",
+    "high-sierra-01/current-sections-ui-files/channels-1/sections-and-gain.png": "cb611a6953defed6152641c4e27e28773371caafcd92c7cd44e1f143e58cb728",
+    "high-sierra-01/current-sections-ui-files/channels-2/propose-from-empty.png": "09b4829294b40b6ae7a91caa04ecebcd93e30fb9641373e656cbedbd03d35a4b",
+    "high-sierra-01/current-sections-ui-files/channels-2/sections-and-gain.png": "7ff7040031503bf970ac40b6fc3ed60f25f5b4b81266122396157c15aa375447",
+    "high-sierra-01/current-sections-ui-files/channels-6/propose-from-empty.png": "3688b56f7b57d7b60ae2a0d6366ac94e21fccfc9c71c71ac4d68107be3a9655d",
+    "high-sierra-01/current-sections-ui-files/channels-6/sections-and-gain.png": "30cf7dc4db990fc824e612c93bca33ea2ce2b5d05af84509aadad35893db630c",
+    "high-sierra-01/current-sections-ui-files/result.json": "9bdcd387254a62b65efe6f1490faec042ea0f19900b9997a393e1bccbc9356f7",
+    "high-sierra-01/current-sections-ui.log": "f122d1461382701024db794b33369f83b0e1e1d99c4c35ecfb773379c26c64f1",
+    "high-sierra-01/gain-entry-files/direct-gain-lane.png": "18b91b149553bae350c282ac781368f9e7c1503fea79910b5ab2288bd50a8522",
+    "high-sierra-01/gain-entry-files/move-boundary-choices.png": "de67ddb4a2de579db584e3488bf55028062a9e05331b2fc3d25b666c9e90159e",
+    "high-sierra-01/gain-entry-files/multi-selection.png": "c795145fcbf55c113550c5765bdd701cf4db0be537042a827191d27733351f36",
+    "high-sierra-01/gain-entry.json": "8046bbe100f29b64a4827f0d9fbbcdba4659084cf4de7c9563ca2adc5f12f79d",
+    "high-sierra-01/gain-entry.log": "ee6283dd6ffeffd3210222e20c904346f1aee68042054a97e2dfe440721d1928",
+    "high-sierra-01/gain-input-ui-files/main-stable.png": "ab93123398682ddd7395a4a1edff2d37fb0e592c61152d0ac451fc637a63679e",
+    "high-sierra-01/gain-input-ui-files/result.json": "7e8b0ae5d1b978b47c5052cdb4afb3219671b75d24bae7119d293a036038241b",
+    "high-sierra-01/gain-input-ui-files/sections-stable.png": "db83df88902e8d1175b932f24c11178d8a3a2cec4188771781cdcb22c6823b04",
+    "high-sierra-01/gain-input-ui.log": "d18292ed23a958ca99a16c3de2a47c5e45e78689986ce0cfcb1c67e507593a4e",
+    "high-sierra-01/graph-boundaries-files/applied-boundary-preview.png": "729049d024c84163dbf89d764eaaceff7f6083c1434154eb51ec4b6e632c41b1",
+    "high-sierra-01/graph-boundaries-files/boundary-batch-confirmation.png": "186c28e5a9dc0534d614b37ea07fd3d0bf70aa5e75e889e531c4f536251afef5",
+    "high-sierra-01/graph-boundaries-files/drawn-section.png": "09e881daf1c5a443440555e69a9e30d63f8f258bcc084fd55fc202b49c1091a9",
+    "high-sierra-01/graph-boundaries-files/graph-boundary-handles.png": "6b69aba447fd307e2eea0f842404d8d2256b88cdee61d2e4dc19f3d5e55f30e0",
+    "high-sierra-01/graph-boundaries-files/graph-boundary-preview.png": "777a279efcd36d210d4cc0cb8f5aaa8e2e89ed73a5b68a8ddf1b0e04605894af",
+    "high-sierra-01/graph-boundaries-files/pending-boundaries.png": "7a9e34f822cd6cd5e0d7b0309cd9b8f9aa812d6e9cc4a3a15051697bab44ee5e",
+    "high-sierra-01/graph-boundaries-files/separate-selection.png": "92a7b2771e041cc83154527f9c258e6425bc70f9ee2f76fc206b05bb3f1be227",
+    "high-sierra-01/graph-boundaries.json": "405e399ecb258b9abea83faac9af02a364bc681ff1e0aa9fa884320ede3970bb",
+    "high-sierra-01/graph-boundaries.log": "2ec8f8292aec7f0e0c11fba3c2a54fb9ff6f8184d6615d38f99a131ad95d263f",
+    "high-sierra-01/summary.json": "e9e51877760782553598733c5e35ffd5aaf74eacbc511ffe9fdd29fc7590f88e",
+    "preservation-final.json": "26caa7a1a6edbdfdbe20a95624268cb333c7ca5220ed6dd6e26d71c1f82fb62b",
+    "preserve.py": "2702ad64860e70749a5425bcd00323e9fd13d9a6836db3eb12ef81eab8dfc1ea",
+    "protocol.txt": "2012df84f3bc5eec3c46c65268824ba64ff022f5140833f0bd3fe5a55291fe91",
+    "sequoia-01/current-sections-ui-files/channels-1/propose-from-empty.png": "b567c5bbe294b18e1fe39381c53fb06f1303b375e1f46b9e8f3b1ef30cda197d",
+    "sequoia-01/current-sections-ui-files/channels-1/sections-and-gain.png": "eeecb7e797b2ff38b5af4505c3bdc861d105bbb59ed0ab668421551e8547153b",
+    "sequoia-01/current-sections-ui-files/channels-2/propose-from-empty.png": "4bdc4143e0566fbb0a324d20f522b66ade04e0f2ad73bb8dc38557618b4bcd0d",
+    "sequoia-01/current-sections-ui-files/channels-2/sections-and-gain.png": "0b6a09312f21033140ca4e7bb707fa4a8288f3831390b8e6a38cc97a4892727a",
+    "sequoia-01/current-sections-ui-files/channels-6/propose-from-empty.png": "a1d8330c113b1e593e9b413e289c012bcfd6e607665b2df0d51fdd4fb2b9823c",
+    "sequoia-01/current-sections-ui-files/channels-6/sections-and-gain.png": "0f37e74f56723285de68b33176ee81db517937caa64c93df51eee2af2abe51c7",
+    "sequoia-01/current-sections-ui-files/result.json": "9bdcd387254a62b65efe6f1490faec042ea0f19900b9997a393e1bccbc9356f7",
+    "sequoia-01/current-sections-ui.log": "f122d1461382701024db794b33369f83b0e1e1d99c4c35ecfb773379c26c64f1",
+    "sequoia-01/gain-entry-files/direct-gain-lane.png": "917a64e0883ff9942ba5d942afe42d2db318e8963d8ab02fbcd71733913837b2",
+    "sequoia-01/gain-entry-files/move-boundary-choices.png": "100146a6d7cccb9e1d9b157bf3a73d488a7e70af730ca045aa5bddc51bc8e61d",
+    "sequoia-01/gain-entry-files/multi-selection.png": "17bc463e411ce12dd89ac46272d79b517c325a189923a61cdbce030264dbd631",
+    "sequoia-01/gain-entry.json": "8046bbe100f29b64a4827f0d9fbbcdba4659084cf4de7c9563ca2adc5f12f79d",
+    "sequoia-01/gain-entry.log": "ee6283dd6ffeffd3210222e20c904346f1aee68042054a97e2dfe440721d1928",
+    "sequoia-01/gain-input-ui-files/main-stable.png": "c9b4dc31df158fb39dfa851e2e1deeb85ce775a33486d506161787ca9d97cadf",
+    "sequoia-01/gain-input-ui-files/result.json": "7e8b0ae5d1b978b47c5052cdb4afb3219671b75d24bae7119d293a036038241b",
+    "sequoia-01/gain-input-ui-files/sections-stable.png": "62e172f58715de17975b4d750c6f3abe830629225831ad5ffde52458b0e22f7b",
+    "sequoia-01/gain-input-ui.log": "d18292ed23a958ca99a16c3de2a47c5e45e78689986ce0cfcb1c67e507593a4e",
+    "sequoia-01/graph-boundaries-files/applied-boundary-preview.png": "356cc46574b80666a9184f1b8c7556d40d2516f645227ac5ab8a18d7b81d817e",
+    "sequoia-01/graph-boundaries-files/boundary-batch-confirmation.png": "d85fec978f048586e896084d8a5c83ac32f54ac8a8cea049694ccae49bc2c6ea",
+    "sequoia-01/graph-boundaries-files/drawn-section.png": "b71e9a9a8c8cb40d79ddcd27f994747b85fdca203c8e6d393f234d6c9141b607",
+    "sequoia-01/graph-boundaries-files/graph-boundary-handles.png": "1f3ac315bd6885cbfe3155bdb9a4b11f286dda2505bbbada0a82737214dbcbc5",
+    "sequoia-01/graph-boundaries-files/graph-boundary-preview.png": "823f8e3b614e616ff44a0f2a04d2a39366d985ec7a908bd6768ee87eb5150299",
+    "sequoia-01/graph-boundaries-files/pending-boundaries.png": "8ae80fd7b8a0fe009869dae4c59e198f917ba069f4789500e5739f5d8af174d9",
+    "sequoia-01/graph-boundaries-files/separate-selection.png": "7ff1bbede6efc89ea0dd95885f549cb48c40f57cf197816cdfcd99fc3ec5181c",
+    "sequoia-01/graph-boundaries.json": "405e399ecb258b9abea83faac9af02a364bc681ff1e0aa9fa884320ede3970bb",
+    "sequoia-01/graph-boundaries.log": "2ec8f8292aec7f0e0c11fba3c2a54fb9ff6f8184d6615d38f99a131ad95d263f",
+    "sequoia-01/summary.json": "cb50203bb4d7216f92a066e1dc632218f8103d9fad99c660db913b66156c2c83"
+  }
+}

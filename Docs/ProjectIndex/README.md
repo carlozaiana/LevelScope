@@ -15,6 +15,8 @@ This folder is the persistent orientation layer for future development chats. Re
 
 ## Task-based quick start
 
+- [100 — Gain entry and section-boundary navigation](100_GainEntryAndBoundaryNavigation.md) records Enter-only gain confirmation, first-click cancellation/navigation, stable boundary-popup selection/view, 2,475 focused checks on each actual Mac, and the two deferred workflow preferences. Separate preserved test build; no publication.
+
 - [99 — Current initialization and sections from applied regions](99_CurrentInitializationAndRegionSections.md) covers the new Propose preparation and one-time section command, with 1,773 affected checks on each actual Mac; preserved test build, no publication or main merge.
 
 - [98 — Mono LRA checkpoint published and integrated](98_MonoLRAProposalPublication.md) records the GitHub identities, preserved universal app, two-platform qualification and agreed follow-on order.

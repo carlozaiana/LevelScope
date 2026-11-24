@@ -1,0 +1,2 @@
+peer click: 56,359 field=-7 view=400000,1.1e+06 prior=400000,1.1e+06 model=1 showing=1
+FAIL 30 outside click cancels even when the clicked control retains editor focus, then performs zoom

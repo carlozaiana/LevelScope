@@ -1,0 +1,8 @@
+UI-only follow-up from b5ff52b9c87422b28f27a089c66b746fd2447a05.
+User clarified Enter confirms gain; Escape/outside click cancels valid or invalid text and continues the action. Mixed restores individual settings. No generic navigation commit.
+Keep exact viewport and selected section for both boundaries and every popup choice, retaining existing transactions.
+Own fixtures only: do not inspect, close, save, reload, replace or start audio in the open unsaved Tutti session.
+Affected cases: gain-input-ui, gain-entry, graph-boundaries, current-sections-ui. Existing proposal math, measured decision/verification and source integrity inherited from doc 99; no new full historical suites.
+Universal Release, x86_64 minimum 10.13. Same frozen app/test package on actual Sequoia and connected Golem, injected output only.
+Deferred only: settings-menu Ask/Always move/Keep preference with Always use this behaviour; future applied/section mode automation including no-op semantics. No implementation now.
+Broad video/full-film/three-hour endurance deferred, no90-minute substitute; completion pause remains separate. Main/tags/manuals and old packages preserved. No publication.

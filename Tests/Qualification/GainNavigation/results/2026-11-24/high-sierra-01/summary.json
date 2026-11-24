@@ -1,0 +1,81 @@
+{
+  "passed": true,
+  "os": "10.13.6",
+  "architecture": "x86_64",
+  "source_commit": "5537a28bff061b90e83c675d15e4c6cfc080fe76",
+  "build": "182b0c4836d677c328d2e6457bbe95dc42a9f3977852e115976478e83c3429eb",
+  "candidate_identity_sha256": "37a12292261e3c5dba77438ac649403cef9f876d829b4f4b20c7746df4a1d42e",
+  "requested_cases": [
+    "gain-input-ui",
+    "gain-entry",
+    "graph-boundaries",
+    "current-sections-ui"
+  ],
+  "physical_devices_opened": false,
+  "combined_qualification_complete": false,
+  "inputs": {},
+  "groups": [
+    {
+      "name": "gain-input-ui",
+      "command": [
+        "/Users/fuzz/LevelScope-Timeline-Input-20261124/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/LevelScope-Timeline-Input-20261124/high-sierra-01/gain-input-ui-files",
+        "--gain-input-ui"
+      ],
+      "returncode": 0,
+      "seconds": 25.294449992,
+      "passed": true,
+      "checks": 221,
+      "receipt": "gain-input-ui-files/result.json",
+      "receipt_sha256": "7e8b0ae5d1b978b47c5052cdb4afb3219671b75d24bae7119d293a036038241b"
+    },
+    {
+      "name": "gain-entry",
+      "command": [
+        "/Users/fuzz/LevelScope-Timeline-Input-20261124/candidate-01/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/LevelScope-Timeline-Input-20261124/high-sierra-01/gain-entry-files",
+        "--output",
+        "/Users/fuzz/LevelScope-Timeline-Input-20261124/high-sierra-01/gain-entry.json",
+        "--gain-entry"
+      ],
+      "returncode": 0,
+      "seconds": 1.0949257399999972,
+      "passed": true,
+      "checks": 1079,
+      "receipt": "gain-entry.json",
+      "receipt_sha256": "8046bbe100f29b64a4827f0d9fbbcdba4659084cf4de7c9563ca2adc5f12f79d"
+    },
+    {
+      "name": "graph-boundaries",
+      "command": [
+        "/Users/fuzz/LevelScope-Timeline-Input-20261124/candidate-01/bin/LevelScopeTimelineProgressTests",
+        "--root",
+        "/Users/fuzz/LevelScope-Timeline-Input-20261124/high-sierra-01/graph-boundaries-files",
+        "--output",
+        "/Users/fuzz/LevelScope-Timeline-Input-20261124/high-sierra-01/graph-boundaries.json",
+        "--graph-boundaries"
+      ],
+      "returncode": 0,
+      "seconds": 2.1226934390000025,
+      "passed": true,
+      "checks": 943,
+      "receipt": "graph-boundaries.json",
+      "receipt_sha256": "405e399ecb258b9abea83faac9af02a364bc681ff1e0aa9fa884320ede3970bb"
+    },
+    {
+      "name": "current-sections-ui",
+      "command": [
+        "/Users/fuzz/LevelScope-Timeline-Input-20261124/candidate-01/bin/LevelScopeRegionUITests",
+        "/Users/fuzz/LevelScope-Timeline-Input-20261124/high-sierra-01/current-sections-ui-files",
+        "--current-sections-ui"
+      ],
+      "returncode": 0,
+      "seconds": 67.019471724,
+      "passed": true,
+      "checks": 232,
+      "receipt": "current-sections-ui-files/result.json",
+      "receipt_sha256": "9bdcd387254a62b65efe6f1490faec042ea0f19900b9997a393e1bccbc9356f7"
+    }
+  ]
+}

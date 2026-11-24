@@ -1,0 +1,1 @@
+FAIL 30 outside click cancels even when the clicked control retains editor focus, then performs zoom
