@@ -23,7 +23,7 @@ public:
     TimelineGainLane* attachedGainLane() const {return gainLane;}
     void bindSectionEditing(StandaloneSessionModel&,std::function<void(uint64_t)>);
     void refreshSectionEditing();
-    void changeSectionEnd(uint64_t,int64_t);
+    void changeSectionEnd(uint64_t,int64_t,uint64_t selected=0);
     SectionEditPrompt* editPrompt(){return sectionEdit.get();}
     juce::String peakHoverText(juce::Point<float>) const;
     juce::String getTooltip() override;
@@ -98,6 +98,8 @@ private:
     void refreshAppliedDrag();
     int64_t dragFrame=0;
     void finishSectionGesture(int64_t end);
+    void completeSectionEdit(uint64_t selected,const juce::String& runtime,const juce::String& input,std::pair<double,double> view);
+    bool preserveSelectionView=false;
     TimelineGainLane* gainLane=nullptr; // borrowed from the main shell
     std::shared_ptr<const proposal::ProgramAnalysis> analysis;
     std::shared_ptr<const LoudnessPreview> preview;

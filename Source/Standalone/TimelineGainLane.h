@@ -2,6 +2,7 @@
 #include "StandaloneSessionModel.h"
 #include "StandaloneRegionProposal.h"
 #include "SectionEditPrompt.h"
+#include "GainValueEditor.h"
 #include <limits>
 #include <juce_gui_basics/juce_gui_basics.h>
 
@@ -30,7 +31,8 @@ public:
     juce::String appliedBoundaryHelp() const;
     bool selectsSections() const {return selectionKind.getSelectedId()==1;}
     bool selectsAppliedRegions() const {return selectionKind.getSelectedId()==2;}
-    bool commitPending(){return stageValue();}
+    bool cancelPending();
+    uint64_t selectedSectionId() const {return selectsSections()&&selected()?selected()->id:0;}
     SectionEditPrompt& editPrompt(){return sectionEdit;}
     void clearDeleteSelection(){deleteArmed=false;}
     void inspectRegionAttempt(size_t);
@@ -41,7 +43,7 @@ public:
     juce::Rectangle<int> inspectionBounds() const {return {plotLeft,47,plotWidth,plotBounds().getBottom()+42-47};}
     juce::String inspectionText() {return detail.getTooltip();}
     std::function<void(int64_t,int64_t,int64_t)> onSelection;
-    std::function<void()> onChanged;
+    std::function<void()> onChanged,onReturnFocus;
     void resized() override;
     void paint(juce::Graphics&) override;
 private:
@@ -53,7 +55,8 @@ private:
     std::optional<proposal::SectionMap> deletedAnnotation;
     uint64_t deletedRevision=0;
     bool deleteArmed=false,rangeSelection=false;
-    juce::TextEditor gain;
+    GainValueEditor gain;
+    juce::String displayedGainText;
     juce::ComboBox selectionKind;
     juce::String programme,runtime,input,supportError,draftError,feedback;
     uint64_t audioRevision=0,mapRevision=0,editSerial=0,boundarySerial=0,appliedBoundarySerial=0;

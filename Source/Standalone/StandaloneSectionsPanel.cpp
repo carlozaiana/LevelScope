@@ -42,12 +42,12 @@ StandaloneSectionsPanel::StandaloneSectionsPanel (StandaloneSessionModel& s) : s
     rebuildButton.onClick = [this] { editNotice.clear(); diagnostics.retry(); sections.retry(); synchronize(); };
     cancelButton.onClick = [this] { editNotice.clear(); diagnostics.cancel(); sections.cancel(); synchronize(); };
     gainEditor.setName("Section gain dB");gainEditor.setText("0",false);
-    gainEditor.setTooltip("Enter -12 to +12 dB. Return or leaving the field applies the value. Command-Z undoes it; Mixed means existing gains differ within the section.");
+    gainEditor.setTooltip("Enter -12 to +12 dB. Enter confirms; Escape or clicking elsewhere restores the applied value. Command-Z undoes it; Mixed means existing gains differ within the section.");
     gainStatus.setName("Section draft and applied processing status");gainView.setName("Applied and draft section-gain curves");
     gainLabel.setText("Local gain (dB)",juce::dontSendNotification);
-    gainEditor.onTextChange=[this]{if(!gainDirty){gainOpening=session.sessionId;gainAudioRevision=session.revision;gainGeometry=session.sectionGeometry(document.map());}gainDirty=true;};
-    gainEditor.onReturnKey=[this]{if(commitGain())timeline.focusForTransport();};gainEditor.onFocusLost=[this]{if(gainDirty)commitGain();};
-    gainEditor.onEscapeKey=[this]{gainDirty=false;refreshDetails();};
+    gainEditor.onTextChange=[this]{if(gainEditor.getText()==gainDisplayedText){gainDirty=false;return;}if(!gainDirty){gainOpening=session.sessionId;gainAudioRevision=session.revision;gainGeometry=session.sectionGeometry(document.map());}gainDirty=true;};
+    gainEditor.onReturnKey=[this]{if(commitGain())timeline.focusForTransport();};gainEditor.onFocusLost=[this]{cancelGain();};gainEditor.onOutsideClick=[this]{cancelGain();};
+    gainEditor.onEscapeKey=[this]{cancelGain();timeline.focusForTransport();};
     applyGainButton.onClick=[this]{if(!commitGain())return;session.applySectionTrimDraft();synchronize();if(onChanged)onChanged();};
     discardGainButton.onClick=[this]{gainDirty=false;session.discardSectionTrimDraft();synchronize();refreshDetails();if(onChanged)onChanged();};
     for(auto* c:std::initializer_list<juce::Component*>{&gainLabel,&gainEditor,&gainStatus})addAndMakeVisible(*c);
@@ -57,7 +57,7 @@ StandaloneSectionsPanel::StandaloneSectionsPanel (StandaloneSessionModel& s) : s
     timeline.attachGainLane(manualLane);manualLane.onChanged=[this]{synchronize();if(onChanged)onChanged();};
     timeline.bindSectionEditing(session,[this](uint64_t id)
     {
-        selectedId=id;
+        if(id)selectedId=id;
         synchronize();
         if(const auto* r=selectedSection())manualLane.selectFrame(r->begin,false);
         if(onChanged)onChanged();
@@ -145,6 +145,11 @@ const proposal::DiagnosticWindow* StandaloneSectionsPanel::windowAt (int row) co
     const auto& a = *measured->analysis; const auto& windows = windowKind.getSelectedId() == 1 ? a.momentary : windowKind.getSelectedId() == 2 ? a.shortTerm : a.lraWindows;
     return *n < windows.size() ? &windows[*n] : nullptr;
 }
+void StandaloneSectionsPanel::cancelGain()
+{
+    if(!gainDirty&&gainEditor.getText()==gainDisplayedText)return;
+    gainDirty=false;session.sectionTrimNotice="Unconfirmed gain cancelled. Applied gains retained.";refreshDetails();
+}
 bool StandaloneSectionsPanel::commitGain()
 {
     if(!gainDirty)return true;
@@ -152,7 +157,7 @@ bool StandaloneSectionsPanel::commitGain()
     {session.sectionTrimNotice="Gain field is stale; Escape or Discard before editing again.";return false;}
     double db=0;std::istringstream in(gainEditor.getText().trim().toStdString());in.imbue(std::locale::classic());
     if(!(in>>db)||!(in>>std::ws).eof()||!std::isfinite(db)||db< -12||db>12)
-    {session.sectionTrimNotice="Enter one finite gain from -12 to +12 dB; nothing applied.";synchronize();return false;}
+    {session.sectionTrimNotice="Gain not applied. Enter -12 to +12 dB, or Escape/click elsewhere to revert.";synchronize();return false;}
     const auto& rows=document.map().sections;
     const auto it=std::find_if(rows.begin(),rows.end(),[&](const auto& r){return r.id==selectedId;});
     if(it==rows.end()||!session.setManualSectionGains({selectedId},db))return false;
@@ -160,7 +165,8 @@ bool StandaloneSectionsPanel::commitGain()
 }
 void StandaloneSectionsPanel::performEdit (int operation)
 {
-    if (session.persistenceLoading||session.audioEditsBlocked()||session.job.isActive()||!commitGain()||session.sectionTrimDraft) return;
+    cancelPendingGain();
+    if (session.persistenceLoading||session.audioEditsBlocked()||session.job.isActive()||session.sectionTrimDraft) return;
     const auto* row = selectedSection(); if (! row) return;
     int64_t frame = 0;
     if (operation < 2)
@@ -226,7 +232,7 @@ void StandaloneSectionsPanel::refreshDetails()
         const auto* plan=session.sectionDraftFresh()?&session.sectionTrimDraft->plan:session.currentStateDocument.sectionGains?&*session.currentStateDocument.sectionGains:nullptr;
         const auto value=section_edit::uniform(plan,row->begin,row->end);
         std::ostringstream exact;exact.imbue(std::locale::classic());if(value)exact<<std::setprecision(std::numeric_limits<double>::max_digits10)<<*value;
-        gainEditor.setText(exact.str(),false);gainEditor.setTextToShowWhenEmpty(value?juce::String():"Mixed",juce::Colours::lightgrey);
+        gainDisplayedText=exact.str();gainEditor.setText(gainDisplayedText,false);gainEditor.setTextToShowWhenEmpty(value?juce::String():"Mixed",juce::Colours::lightgrey);
     }
     text << "\nApplied gains (independent of current annotations): ";
     if(const auto& active=session.currentStateDocument.sectionGains)
@@ -259,7 +265,7 @@ void StandaloneSectionsPanel::paintListBoxItem (int n, juce::Graphics& g, int w,
 void StandaloneSectionsPanel::selectedRowsChanged (int row)
 {
     if (refreshing || row < 0 || row >= getNumRows()) return;
-    if(!commitGain())return;
+    cancelPendingGain();
     selectedId = document.map().sections[static_cast<size_t> (row)].id; refreshDetails();
     if (const auto* s = selectedSection()) timeline.highlight (static_cast<double> (s->begin), static_cast<double> (s->end));
 }

@@ -29,12 +29,12 @@ TimelineGainLane::TimelineGainLane(StandaloneSessionModel& s):session(s)
     legend.setText("CURRENT section gain (dB)   |   Solid: applied   /   Dashed: draft",juce::dontSendNotification);
     legend.setTooltip("All programme channels, before global trim. This lane always describes Current processing.");
     dbLabel.setText("Local dB",juce::dontSendNotification);gain.setName("Timeline section gain dB");
-    gain.setTooltip("Absolute local gain before global trim: -12 to +12 dB. This replaces the section setting; it is not added to an existing region gain. Return or leaving the field applies it. Command-Z undoes the edit.");
+    gain.setTooltip("Absolute local gain before global trim: -12 to +12 dB. This replaces the section setting; it is not added to an existing region gain. Enter confirms; Escape or clicking elsewhere restores the applied value. Command-Z undoes the edit.");
     gain.setInputRestrictions(36);gain.setSelectAllWhenFocused(true);gain.setJustification(juce::Justification::centred);
-    gain.onTextChange=[this]{dirty=true;feedback.clear();updateControls();};
-    gain.onReturnKey=[this]{if(stageValue())if(auto* parent=getParentComponent();parent&&parent->isShowing()&&parent->getPeer()){parent->setWantsKeyboardFocus(true);parent->grabKeyboardFocus();}};
-    gain.onEscapeKey=[this]{dirty=false;feedback.clear();showSelection();updateControls();};
-    gain.onFocusLost=[this]{if(dirty)stageValue();};
+    gain.onTextChange=[this]{dirty=gain.getText()!=displayedGainText;feedback.clear();updateControls();};
+    gain.onReturnKey=[this]{if(stageValue()&&onReturnFocus)onReturnFocus();};
+    gain.onEscapeKey=[this]{cancelPending();if(onReturnFocus)onReturnFocus();};
+    gain.onFocusLost=[this]{cancelPending();};gain.onOutsideClick=[this]{cancelPending();};
     undoDelete.onClick=[this]
     {
         if(!deletedAnnotation||!bindingMatches()||session.sectionDocument.map().revision!=deletedRevision
@@ -64,9 +64,10 @@ TimelineGainLane::TimelineGainLane(StandaloneSessionModel& s):session(s)
     createSections.setMouseClickGrabsKeyboardFocus(false);
     createSections.onClick=[this]
     {
+        cancelPending();
         const auto blocked=session.appliedRegionSectionsBlocked();
-        if(dirty||!bindingMatches()||blocked.isNotEmpty())
-        {feedback=dirty?"Finish or cancel the local gain entry first.":blocked.isNotEmpty()?blocked:"Timeline changed; review the current sections and retry.";updateControls();return;}
+        if(!bindingMatches()||blocked.isNotEmpty())
+        {feedback=blocked.isNotEmpty()?blocked:"Timeline changed; review the current sections and retry.";updateControls();return;}
         const auto previousRevision=session.sectionDocument.map().revision;
         std::unordered_set<uint64_t> previousIds;for(const auto& s:session.sectionDocument.map().sections)previousIds.insert(s.id);
         juce::String message;
@@ -83,7 +84,7 @@ TimelineGainLane::TimelineGainLane(StandaloneSessionModel& s):session(s)
     selectionKind.addItem("Select sections",1);selectionKind.addItem("Select applied regions",2);selectionKind.addItem("Select proposed regions",3);
     selectionKind.setSelectedId(1,juce::dontSendNotification);
     selectionKind.setTooltip("Sections are editable annotations. Applied regions have draggable shared-edge handles in the Current graph and at the top of the gain plot, including after reopening. Choose the item type here; clicks keep this selection mode.");
-    selectionKind.onChange=[this]{if(dirty&&!stageValue()){selectionKind.setSelectedId(1,juce::dontSendNotification);return;}deleteArmed=false;rebuildProposalRows();selectFrame(cursor,true);};
+    selectionKind.onChange=[this]{cancelPending();deleteArmed=false;rebuildProposalRows();selectFrame(cursor,true);};
 }
 const std::vector<proposal::ProgrammeSection>& TimelineGainLane::rows() const
 {return !lraRows.empty()?lraRows:session.sectionDocument.map().sections;}
@@ -192,12 +193,12 @@ void TimelineGainLane::synchronize(const juce::String& key)
 void TimelineGainLane::showSelection()
 {
     const auto* section=selected();
-    if(!section){detail.setText("No confirmed sections",juce::dontSendNotification);detail.setTooltip({});gain.setText({},false);return;}
+    if(!section){detail.setText("No confirmed sections",juce::dontSendNotification);detail.setTooltip({});displayedGainText.clear();gain.setText({},false);return;}
     const auto* displayed=fresh?&session.sectionTrimDraft->plan:applied?&*applied:nullptr;
     auto stored=section_edit::uniform(displayed,section->begin,section->end);
     if(selectedIds.size()>1)for(const auto& r:session.sectionDocument.map().sections)if(std::find(selectedIds.begin(),selectedIds.end(),r.id)!=selectedIds.end())
         if(section_edit::uniform(displayed,r.begin,r.end)!=stored)stored.reset();
-    gain.setText(stored?exact(*stored):juce::String(),false);
+    displayedGainText=stored?exact(*stored):juce::String();gain.setText(displayedGainText,false);
     gain.setTextToShowWhenEmpty(stored?juce::String():"Mixed",juce::Colours::lightgrey);
     int64_t selectedEnd=section->end;
     if(selectedIds.size()>1)for(const auto& r:session.sectionDocument.map().sections)if(std::find(selectedIds.begin(),selectedIds.end(),r.id)!=selectedIds.end())selectedEnd=std::max(selectedEnd,r.end);
@@ -248,8 +249,8 @@ void TimelineGainLane::updateControls()
     if(measured!=session.currentState.hasMeasurement){measured=session.currentState.hasMeasurement;feedback.clear();}
     const bool idle=!session.audioEditsBlocked()&&!session.job.isActive();
     const auto creationBlock=session.appliedRegionSectionsBlocked();
-    createSections.setEnabled(!dirty&&bindingMatches()&&creationBlock.isEmpty());
-    createSections.setTooltip(dirty?"Finish or cancel the local gain entry first.":creationBlock.isNotEmpty()?creationBlock:
+    createSections.setEnabled(bindingMatches()&&creationBlock.isEmpty());
+    createSections.setTooltip(creationBlock.isNotEmpty()?creationBlock:
         "Copy actual applied nominal cuts into sections once. Existing names and cuts, gains, sound and measured Current stay unchanged. Sections are not linked to later region moves. Undo: Command-Z.");
     const bool editable=(!rangeSelection||!selectedIds.empty())&&selectionKind.getSelectedId()==1&&selected()&&initialized&&supportError.isEmpty()&&idle&&session.manualEditAllowed();
     previous.setEnabled(selected()&&row>0);next.setEnabled(selected()&&row+1<rows().size());
@@ -279,7 +280,7 @@ void TimelineGainLane::updateControls()
         +(automatic->previewHasFinalGlobal()?juce::String():" Global shown is baseline only; no final combined solution.");
     else if(session.sectionProposal)message="This proposal has no gain preview. Review the outcome, or Discard to edit manually.";
     else if(feedback.isNotEmpty())message=feedback;
-    else if(dirty)message="Editing local gain. Return or leaving the field applies it. Command-Z undoes it.";
+    else if(dirty)message="Editing local gain. Enter confirms; Escape or clicking elsewhere restores the applied value. Command-Z undoes it.";
     else if(draftError.isNotEmpty())message=draftError;
     else if(hasDraft)message=session.sectionTrimDraft->processingRegions?session.sectionTrimNotice:"Draft only. Apply gains changes Current; Discard keeps applied audio.";
     else if(selectionKind.getSelectedId()!=1)message=selectionKind.getSelectedId()==2?appliedBoundaryHelp():"Proposed regions are read-only. Choose Select applied regions to edit Current.";
@@ -292,13 +293,18 @@ void TimelineGainLane::updateControls()
     if(session.pendingBoundaryEdits()){message=session.pendingBoundaryMessage();legend.setText("CURRENT local gain | Solid: applied / Amber dashed: pending boundaries",juce::dontSendNotification);}
     notice.setText(message,juce::dontSendNotification);notice.setTooltip(message);
 }
+bool TimelineGainLane::cancelPending()
+{
+    if(!dirty&&gain.getText()==displayedGainText)return false;
+    dirty=false;showSelection();feedback="Unconfirmed gain cancelled. Applied gains retained.";updateControls();repaint();return true;
+}
 bool TimelineGainLane::stageValue()
 {
     if(!dirty)return true;
     if(!bindingMatches()||!gain.isEnabled()||session.audioEditsBlocked()||session.job.isActive()||!session.manualEditAllowed())return false;
     std::istringstream in(gain.getText().trim().toStdString());in.imbue(std::locale::classic());double value=0;
     if(!(in>>value)||!(in>>std::ws).eof()||!std::isfinite(value)||value < -12||value > 12)
-    {feedback="Enter one finite value from -12 to +12 dB. Nothing applied.";updateControls();return false;}
+    {feedback="Gain not applied. Enter -12 to +12 dB, or Escape/click elsewhere to revert.";updateControls();return false;}
     auto ids=selectedIds;if(ids.empty()&&selected())ids.push_back(selected()->id);
     if(!session.setManualSectionGains(ids,value)){feedback=session.sectionTrimNotice;updateControls();return false;}
     afterAction();return true;
@@ -311,7 +317,7 @@ void TimelineGainLane::afterAction()
 }
 void TimelineGainLane::selectFrame(int64_t frame,bool notify)
 {
-    if(dirty&&!stageValue())return;
+    cancelPending();
     const auto& map=session.sectionDocument.map();if(!usableMap||map.sections.empty()||!bindingMatches())return;
     cursor=std::clamp<int64_t>(frame,0,map.frames-1);row=intervalAt(rows(),cursor);
     rangeSelection=false;selectedIds.clear();if(selectionKind.getSelectedId()==1&&selected())selectedIds.push_back(selected()->id);
@@ -324,7 +330,7 @@ void TimelineGainLane::selectAt(int64_t frame,int /*y*/)
 }
 void TimelineGainLane::selectRange(int64_t begin,int64_t end)
 {
-    if(dirty&&!stageValue())return;
+    cancelPending();
     if(!bindingMatches()||selectionKind.getSelectedId()!=1)return;
     if(end<begin)std::swap(begin,end);rangeSelection=true;selectedIds.clear();
     for(const auto& r:rows())if(r.begin>=begin&&r.end<=end)selectedIds.push_back(r.id);
@@ -349,7 +355,8 @@ std::vector<std::pair<int64_t,int64_t>> TimelineGainLane::selectedSpans() const
 }
 void TimelineGainLane::toggleSection(int64_t frame)
 {
-    if(!commitPending()||!bindingMatches()||selectionKind.getSelectedId()!=1||session.boundaryBatch)return;
+    cancelPending();
+    if(!bindingMatches()||selectionKind.getSelectedId()!=1||session.boundaryBatch)return;
     const auto& map=session.sectionDocument.map();auto i=intervalAt(map.sections,std::clamp<int64_t>(frame,0,map.frames-1));if(i>=map.sections.size())return;
     const auto id=map.sections[i].id;auto found=std::find(selectedIds.begin(),selectedIds.end(),id);
     if(found==selectedIds.end())selectedIds.push_back(id);else selectedIds.erase(found);
@@ -368,7 +375,7 @@ void TimelineGainLane::editReadout(int64_t frame)
 bool TimelineGainLane::deleteSelected()
 {
     if(!deleteArmed||!selected())return false;
-    if(dirty&&!stageValue())return true;
+    cancelPending();
     if(selectionKind.getSelectedId()==3){feedback="Apply or Discard the proposal before manual editing.";updateControls();return true;}
     if(!bindingMatches()||!session.manualEditAllowed())return true;
     const auto spans=selectedSpans();
@@ -385,7 +392,8 @@ bool TimelineGainLane::deleteSelected()
 }
 bool TimelineGainLane::removeSelectedBoundaries()
 {
-    if(selectionKind.getSelectedId()!=1||selectedIds.empty()||!bindingMatches()||!session.manualEditAllowed()||!stageValue())return false;
+    cancelPending();
+    if(selectionKind.getSelectedId()!=1||selectedIds.empty()||!bindingMatches()||!session.manualEditAllowed())return false;
     if(selectedSpans().size()>1){feedback="Remove boundaries only needs one contiguous passage. Separate selections can reset their gains with Delete.";updateControls();return false;}
     auto next=session.manualState();auto& rows=next.map.sections;size_t first=rows.size(),last=0;
     for(size_t n=0;n<rows.size();++n)if(std::find(selectedIds.begin(),selectedIds.end(),rows[n].id)!=selectedIds.end()){first=std::min(first,n);last=n;}

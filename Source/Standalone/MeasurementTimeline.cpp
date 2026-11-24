@@ -195,10 +195,11 @@ bool MeasurementTimeline::keyPressed(const juce::KeyPress& key)
         if(key==juce::KeyPress::escapeKey){sectionSession->cancelBoundaryBatch();refreshSectionEditing();if(sectionEdited)sectionEdited(0);navigationMessage("Boundary changes cancelled.");return true;}
         if(key==juce::KeyPress::returnKey)
         {
-            sectionEdit->requestBoundaryBatch(*this,[safe=juce::Component::SafePointer<MeasurementTimeline>(this)](bool accepted,bool)
-            {if(safe){safe->refreshSectionEditing();if(safe->sectionEdited)safe->sectionEdited(0);safe->focusForTransport();safe->navigationMessage(accepted?"Boundary changes applied. Command-Z undoes the whole edit.":safe->sectionSession->sectionTrimNotice);}});return true;
+            sectionEdit->requestBoundaryBatch(*this,[safe=juce::Component::SafePointer<MeasurementTimeline>(this),view=viewRange(),runtime=sectionSession->sessionId,input=sectionSession->sectionDocument.map().inputIdentity](bool accepted,bool)
+            {if(safe){safe->completeSectionEdit(0,runtime,input,view);safe->navigationMessage(accepted?"Boundary changes applied. Command-Z undoes the whole edit.":safe->sectionSession->sectionTrimNotice);}});return true;
         }
     }
+    if(key==juce::KeyPress::escapeKey&&gainLane&&gainLane->cancelPending()){focusForTransport();return true;}
     if((key==juce::KeyPress::backspaceKey||key==juce::KeyPress::deleteKey)&&!key.getModifiers().isAnyModifierKeyDown()&&gainLane
         &&juce::Component::getCurrentlyFocusedComponent()==this)
         return gainLane->deleteSelected();
@@ -221,7 +222,7 @@ bool MeasurementTimeline::keyPressed(const juce::KeyPress& key)
 }
 void MeasurementTimeline::attachGainLane(TimelineGainLane& lane)
 {
-    gainLane=&lane;addAndMakeVisible(lane);
+    gainLane=&lane;addAndMakeVisible(lane);lane.onReturnFocus=[this]{focusForTransport();};
     lane.onSelection=[this](int64_t begin,int64_t end,int64_t frame)
     {
         if(appliedDragToken&&!gainLane->selectsAppliedRegions())cancelAppliedDrag();
@@ -229,7 +230,7 @@ void MeasurementTimeline::attachGainLane(TimelineGainLane& lane)
         gainSelection=true;
         inspectedFrame=frame;inspectedEntry=juce::String(double(frame)/programmeRate(),9);seconds.setText(inspectedEntry,false);
         highlight(double(begin),double(end),false);
-        if(frame<viewBegin||frame>viewEnd){const auto width=viewEnd-viewBegin;setViewRange(frame-width*.2,frame+width*.8);}
+        if(!preserveSelectionView&&(frame<viewBegin||frame>viewEnd)){const auto width=viewEnd-viewBegin;setViewRange(frame-width*.2,frame+width*.8);}
         if(onInspect)onInspect("Current section gain settings  |  "+gainLane->inspectionText()+"\n"+(gainLane->selectedSpans().size()>1?"Separate selected passages; intervening audio is unselected.":"Inspected audio: "+rangePeakText(begin,end)));
     };
     resized();
@@ -600,18 +601,25 @@ void MeasurementTimeline::mouseMove(const juce::MouseEvent& e)
 }
 void MeasurementTimeline::mouseExit(const juce::MouseEvent&)
 {hoveredAppliedBoundary.reset();setMouseCursor(juce::MouseCursor::NormalCursor);repaint();}
-void MeasurementTimeline::changeSectionEnd(uint64_t id,int64_t frame)
+void MeasurementTimeline::completeSectionEdit(uint64_t selected,const juce::String& runtime,const juce::String& input,std::pair<double,double> view)
+{
+    if(!sectionSession||sectionSession->sessionId!=runtime||sectionSession->sectionDocument.map().inputIdentity!=input)return;
+    juce::ScopedValueSetter<bool> keep(preserveSelectionView,true);
+    refreshSectionEditing();if(sectionEdited)sectionEdited(selected);
+    setViewRange(view.first,view.second);focusForTransport();
+}
+void MeasurementTimeline::changeSectionEnd(uint64_t id,int64_t frame,uint64_t selected)
 {
     if(!sectionSession||!sectionEdit)return;
     const auto before=sectionSession->sectionDocument.map();auto edited=sectionSession->sectionDocument;
     const auto it=std::find_if(before.sections.begin(),before.sections.end(),[&](const auto& r){return r.id==id;});
     if(it==before.sections.end()||it->end==frame)return;
     juce::String error;if(!edited.moveEnd(id,frame,error)){navigationMessage(error);return;}
+    const auto view=viewRange();const auto runtime=sectionSession->sessionId;
     sectionEdit->request(*this,before,edited.map(),false,it->begin,it->end,it->end,frame,
-        [safe=juce::Component::SafePointer<MeasurementTimeline>(this),id](bool accepted,bool)
+        [safe=juce::Component::SafePointer<MeasurementTimeline>(this),chosen=selected?selected:id,view,runtime,input=before.inputIdentity](bool accepted,bool)
         {
-            if(!safe)return;auto& self=*safe;self.refreshSectionEditing();
-            if(self.sectionEdited)self.sectionEdited(id);
+            if(!safe)return;auto& self=*safe;self.completeSectionEdit(accepted?chosen:0,runtime,input,view);
             self.navigationMessage(accepted?("Section changed. Command-Z undoes it."):self.sectionSession->sectionTrimNotice);
         });
 }
@@ -634,7 +642,9 @@ void MeasurementTimeline::finishSectionGesture(int64_t end)
             sectionSession->stageBoundary(n,std::clamp(end,rows[n].begin+1,rows[n+1].end-1));
             refreshSectionEditing();if(sectionEdited)sectionEdited(0);focusForTransport();navigationMessage(sectionSession->sectionTrimNotice);return;
         }
-        changeSectionEnd(map.sections[n].id,std::clamp(end,map.sections[n].begin+1,map.sections[n+1].end-1));
+        const auto selected=gainLane?gainLane->selectedSectionId():0;
+        const auto chosen=selected==map.sections[n+1].id?selected:map.sections[n].id;
+        changeSectionEnd(map.sections[n].id,std::clamp(end,map.sections[n].begin+1,map.sections[n+1].end-1),chosen);
         return;
     }
     else
@@ -654,7 +664,7 @@ void MeasurementTimeline::finishSectionGesture(int64_t end)
 }
 void MeasurementTimeline::mouseDown(const juce::MouseEvent& e)
 {
-    if(gainLane&&!gainLane->commitPending())return;
+    if(gainLane)gainLane->cancelPending();
     refreshSectionEditing();
     if(appliedDragToken)cancelAppliedDrag();
     if(gainLane&&sectionSession&&e.mods.isLeftButtonDown()&&!e.mods.isAltDown())

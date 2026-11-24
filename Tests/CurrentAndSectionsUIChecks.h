@@ -103,8 +103,8 @@ void currentAndSectionsUIChecks(const juce::File& root)
         const auto global=s.currentStateDocument.staticGainDb;const auto beforeEntry=s.manualState();
         field.setText("-",false);field.onTextChange();
         auto& copyButton=control<juce::TextButton>(lane,"Create sections from applied regions");
-        expect(!copyButton.isEnabled(),"unfinished gain entry disables annotation copying");copyButton.onClick();
-        expect(s.manualState()==beforeEntry,"direct section-copy callback cannot apply an unfinished gain entry");field.onEscapeKey();
+        expect(copyButton.isEnabled(),"annotation action remains available while gain text is unconfirmed");copyButton.onClick();
+        expect(s.manualState()==beforeEntry,"section-copy callback cancels unfinished entry without applying it");field.onEscapeKey();
         field.setText("-1",false);field.onTextChange();field.onReturnKey();
         expect(section_edit::uniform(&*s.currentStateDocument.sectionGains,moved+5000,moved+6000)==-1&&s.currentStateDocument.staticGainDb==global,"deliberate section edit replaces -2 with -1 dB rather than adding twice");
         expect(!s.currentState.hasMeasurement&&s.currentStateNeedsRemeasurement(),"later gain edit invalidates PASS immediately");

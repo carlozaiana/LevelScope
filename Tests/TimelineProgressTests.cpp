@@ -176,12 +176,12 @@ namespace {
 }
 int main(int argc,char** argv)
 {
-    juce::ScopedJuceInitialiser_GUI gui;juce::String rootPath,output,error;bool passed=false,graphOnly=false;
-    for(int n=1;n<argc;++n){juce::String arg(argv[n]);if(arg=="--root"&&n+1<argc)rootPath=argv[++n];else if(arg=="--output"&&n+1<argc)output=argv[++n];else if(arg=="--graph-boundaries")graphOnly=true;else return 2;}
+    juce::ScopedJuceInitialiser_GUI gui;juce::String rootPath,output,error;bool passed=false,graphOnly=false,gainEntry=false;
+    for(int n=1;n<argc;++n){juce::String arg(argv[n]);if(arg=="--root"&&n+1<argc)rootPath=argv[++n];else if(arg=="--output"&&n+1<argc)output=argv[++n];else if(arg=="--graph-boundaries")graphOnly=true;else if(arg=="--gain-entry")gainEntry=true;else return 2;}
     try
     {
         expect(rootPath.isNotEmpty(),"explicit owned fixture root");juce::File root(rootPath);expect(!root.exists()&&root.createDirectory().wasOk(),"create fresh test directory");
-        if(graphOnly){graphBoundaryChecks(root);appliedBoundaryChecks(root);batchEditingChecks(root);drawSections(root);passed=true;}else
+        if(gainEntry){auto request=fixture(root.getChildFile("gain-entry.wav"),48000,2,240013);StandaloneSessionModel s;expect(s.setValidatedSource(request.context.sourceFile,request.context.media),"gain entry fixture imported");s.sourceDocument.layout=request.context.fileLayout;measure(s,Domain::source);gainLaneChecks(s,root);manualWorkflowChecks(root);passed=true;}else if(graphOnly){graphBoundaryChecks(root);appliedBoundaryChecks(root);batchEditingChecks(root);drawSections(root);passed=true;}else
         {
         reducedWindows();concurrentPublication();auto request=fixture(root.getChildFile("mix.wav"),48000,2,240013);StandaloneSessionModel s;expect(s.setValidatedSource(request.context.sourceFile,request.context.media),"verified interleaved source");s.sourceDocument.layout=request.context.fileLayout;
         partial(s,root);navigation(s,root);layout(s,root);appearanceChecks(root);manualWorkflowChecks(root);batchEditingChecks(root);appliedBoundaryChecks(root);gainPreviewChecks(root);deletionChecks(root);gainLaneChecks(s,root);transportFocusChecks(s);gainDenseChecks(root);presetDismissal(root);drawSections(root);rememberedOrders(root);passed=true;

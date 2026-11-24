@@ -32,7 +32,7 @@ public:
         dialog->addButton("Move gain with sections",1);dialog->addButton("Cancel",0,juce::KeyPress(juce::KeyPress::escapeKey));
         dialog->enterModalState(true,juce::ModalCallbackFunction::create([safe=juce::Component::SafePointer<SectionEditPrompt>(this),serial,completed](int answer)
         {
-            if(!safe)return;auto& self=*safe;auto closed=std::move(self.dialog);closed->setVisible(false);
+            if(!safe)return;auto& self=*safe;auto closed=std::move(self.dialog);closed->setVisible(false);closed.reset();
             bool accepted=false;
             if(answer==1&&self.session.boundaryEditSerial==serial)accepted=self.session.applyBoundaryBatch();else self.session.cancelBoundaryBatch();
             completed(accepted,accepted);
@@ -108,7 +108,7 @@ private:
         dialog->enterModalState(true,juce::ModalCallbackFunction::create(
             [safe=juce::Component::SafePointer<SectionEditPrompt>(this),opening,revision,before,choices=std::move(choices),completed](int answer)
             {
-                if(!safe)return;auto& self=*safe;auto closed=std::move(self.dialog);closed->setVisible(false);
+                if(!safe)return;auto& self=*safe;auto closed=std::move(self.dialog);closed->setVisible(false);closed.reset();
                 if(answer<=0||size_t(answer)>choices.size()){completed(false,false);return;}
                 if(opening!=self.session.sessionId||revision!=self.session.revision||self.session.sectionDocument.map().digest()!=before.digest())
                 {self.session.sectionTrimNotice="Section edit cancelled: the programme or sections changed while the question was open.";completed(false,false);return;}

@@ -47,11 +47,12 @@ void gainLaneChecks(StandaloneSessionModel& s,const juce::File& root)
     expect(s.undoManual()&&s.currentStateDocument.sectionGains->gainAt(100)==0&&s.currentStateDocument.sectionGains->gainAt(120000)==-3,"batch gain change is one Undo step");lane.synchronize("gain-source");
     lane.selectRange(10,20);lane.synchronize("gain-source");expect(lane.selectedCount()==0&&!laneEditor(lane)->isEnabled(),"empty marquee cannot edit the prior selection after a refresh");
     lane.selectAt(120000,lane.plotBounds().getBottom()+5);expect(laneEditor(lane)->isEnabled()&&lane.inspectionText().contains("Section"),"readout click retains section mode");
-    auto* field=laneEditor(lane);field->setText("-2.5",false);field->onTextChange();field->onFocusLost();expect(s.currentStateDocument.sectionGains->gainAt(120000)==-2.5,"focus loss applies gain immediately");
+    auto* field=laneEditor(lane);field->setText("-2.5",false);field->onTextChange();field->onFocusLost();expect(s.currentStateDocument.sectionGains->gainAt(120000)==-3,"focus loss cancels unconfirmed gain");
     StandaloneSectionsPanel other(s);other.suspend();juce::TextEditor* otherField=nullptr;
     for(auto* c:other.getChildren())if(c->getName()=="Section gain dB")otherField=dynamic_cast<juce::TextEditor*>(c);
     expect(otherField&&otherField->isEnabled()&&!button(other,"Apply section trims")&&!button(other,"Discard draft"),"Sections window also uses direct entry without manual Apply/Discard");
-    otherField->setText("1.25",false);otherField->onTextChange();otherField->onFocusLost();expect(s.currentStateDocument.sectionGains->gainAt(100)==1.25,"separate Sections editor commits on focus loss");
+    otherField->setText("1.25",false);otherField->onTextChange();otherField->onFocusLost();expect(s.currentStateDocument.sectionGains->gainAt(100)==0,"separate Sections editor cancels on focus loss");
+    otherField->setText("1.25",false);otherField->onTextChange();otherField->onReturnKey();expect(s.currentStateDocument.sectionGains->gainAt(100)==1.25,"separate Sections editor confirms on Enter");
     lane.synchronize("gain-source");lane.selectFrame(0,false);expect(laneEditor(lane)->getText()=="1.25","main lane observes the separate window's committed change");
     imageOf(ui,root.getChildFile("direct-gain-lane.png"));
     const auto prior=s.currentStateDocument.sectionGains->audioKey();s.sessionId=juce::Uuid().toString();stageGain(lane,"2");expect(s.currentStateDocument.sectionGains->audioKey()==prior&&!s.canUndoManual(),"stale runtime neither commits an old field nor exposes another session's undo");

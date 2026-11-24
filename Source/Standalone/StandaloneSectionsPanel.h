@@ -13,7 +13,7 @@ public:
     explicit StandaloneSectionsPanel (StandaloneSessionModel&);
     ~StandaloneSectionsPanel() override;
     void synchronize() { timerCallback(); }
-    bool commitPendingGain(){return commitGain()&&manualLane.commitPending();}
+    void cancelPendingGain(){cancelGain();manualLane.cancelPending();}
     void suspend();
     void resume();
     MeasurementTimeline& timelineView() {return timeline;}
@@ -45,12 +45,13 @@ private:
     juce::TextButton applyGainButton { "Apply section trims" }, discardGainButton { "Discard draft" };
     juce::TextButton importMarkers { "Import markers..." }, pasteMarkers { "Paste positions..." };
     std::unique_ptr<MarkerImportWindow> markerWindow;
-    juce::TextEditor gainEditor;
+    GainValueEditor gainEditor;
     juce::Label gainLabel;
     bool gainDirty=false;
-    juce::String gainOpening,gainGeometry;
+    juce::String gainOpening,gainGeometry,gainDisplayedText="0";
     uint64_t gainAudioRevision=0;
     bool commitGain();
+    void cancelGain();
     SectionEditPrompt sectionEdit{session};
     juce::Label gainStatus;
     struct GainView final : juce::Component

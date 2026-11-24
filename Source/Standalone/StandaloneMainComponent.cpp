@@ -1052,7 +1052,8 @@ void StandaloneMainComponent::showLraPassages(bool current)
 }
 void StandaloneMainComponent::proposeWithActiveMethod()
 {
-    if(!jobRequirementsPanel.commitFields()||!gainLane.commitPending())return;
+    gainLane.cancelPending();if(sectionsPanel)sectionsPanel->cancelPendingGain();
+    if(!jobRequirementsPanel.commitFields())return;
     if(proposalOperation.begin(session)){timeline.focusForTransport();if(proposalOperation.phase!=ProposalOperation::Phase::initialize)advanceProposalOperation();refreshFromSession();}
     else {refreshFromSession();refreshTimeline();}
 }
@@ -1196,18 +1197,18 @@ juce::PopupMenu StandaloneMainComponent::getMenuForIndex(int index,const juce::S
 bool StandaloneMainComponent::performCommand(int id)
 {
     if(juce::Component::getCurrentlyModalComponent())return false;
-    const auto commitEditors=[this]{return gainLane.commitPending()&&(!sectionsPanel||sectionsPanel->commitPendingGain());};
+    const auto cancelGainEntries=[this]{gainLane.cancelPending();if(sectionsPanel)sectionsPanel->cancelPendingGain();return true;};
     const auto click=[](juce::Button& button){if(!button.isEnabled()||!button.onClick)return false;button.onClick();return true;};
     switch(id)
     {
-        case newDocument:return commitEditors()&&click(newSessionButton);
-        case openDocument:return commitEditors()&&click(openSessionButton);
-        case openAudio:return commitEditors()&&click(openMixButton);
-        case saveDocument:return commitEditors()&&click(saveSessionButton);
-        case saveDocumentAs:return commitEditors()&&click(saveAsSessionButton);
+        case newDocument:return cancelGainEntries()&&click(newSessionButton);
+        case openDocument:return cancelGainEntries()&&click(openSessionButton);
+        case openAudio:return cancelGainEntries()&&click(openMixButton);
+        case saveDocument:return cancelGainEntries()&&click(saveSessionButton);
+        case saveDocumentAs:return cancelGainEntries()&&click(saveAsSessionButton);
         case undoEdit:case redoEdit:
             if(auto* text=dynamic_cast<juce::TextEditor*>(juce::Component::getCurrentlyFocusedComponent()))return id==undoEdit?text->undo():text->redo();
-            if(!commitEditors()||!session.undoManual(id==redoEdit))return false;
+            if(!cancelGainEntries()||!session.undoManual(id==redoEdit))return false;
             refreshFromSession();refreshTimeline();if(sectionsPanel)sectionsPanel->synchronize();return true;
         case transitionBands:
             timeline.setTransitionShading(!timeline.transitionShading());
@@ -1222,10 +1223,10 @@ bool StandaloneMainComponent::performCommand(int id)
                 if(auto* view=dynamic_cast<MeasurementTimeline*>(c);view&&view->attachedGainLane()){selected=view->attachedGainLane();break;}
             const auto changed=selected->removeSelectedBoundaries();if(changed){refreshFromSession();refreshTimeline();}return changed;
         }
-        case sectionsView:return commitEditors()&&click(sectionsButton);
-        case playStop:if(audition.active()){audition.stop();refreshTimeline();return true;}return commitEditors()&&click(timelinePlay);
-        case measureOriginal:return commitEditors()&&click(measureSourceButton);
-        case measureCurrent:if(!commitEditors())return false;return click(remeasureCurrentStateButton);
+        case sectionsView:return cancelGainEntries()&&click(sectionsButton);
+        case playStop:if(audition.active()){audition.stop();refreshTimeline();return true;}return cancelGainEntries()&&click(timelinePlay);
+        case measureOriginal:return cancelGainEntries()&&click(measureSourceButton);
+        case measureCurrent:if(!cancelGainEntries())return false;return click(remeasureCurrentStateButton);
         case preferences:showAudioSetup();return true;
         case proposalPreferences:return click(preferencesButton);
         default:return false;
