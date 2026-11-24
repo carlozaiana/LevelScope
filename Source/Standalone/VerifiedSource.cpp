@@ -29,7 +29,7 @@ bool VerifiedSource::intact() const
 {
     if (!members.empty())
         return std::all_of(members.begin(), members.end(), [](const auto& m) { return m->intact(); });
-    return sealedVersion == SourceFileVersion::read(ownedFile, false);
+    return sealedVersion.matches(ownedFile, false);
 }
 bool ProgrammeReader::sourceIntact() const { return !sourceLease || sourceLease->intact(); }
 std::vector<juce::File> VerifiedSource::files() const
@@ -282,7 +282,10 @@ VerifiedSourceResult VerifiedSource::copyAsset(const ServiceContext& context, Jo
         if (!owned->sealedVersion.sameFile(SourceFileVersion::read(owned->file(), false)))
             throw Failure { ErrorCode::sourceChanged, "Private source copy replaced during preparation" };
         if (! owned->file().setReadOnly (true)) throw Failure { ErrorCode::writeFailed, "Cannot protect private source copy" };
-        owned->sealedVersion = SourceFileVersion::read(owned->file(), false);
+        auto sealed = SourceFileVersion::capture(owned->file(), false);
+        if (!owned->sealedVersion.sameFile(sealed))
+            throw Failure { ErrorCode::writeFailed, "Cannot monitor the protected source copy" };
+        owned->sealedVersion = std::move(sealed);
         JobControl validation; validation.parent = &control;
         validation.parentProgress = &control.progress; validation.progressBase = 0.15f; validation.progressScale = 0.35f;
         const auto verified = validateMedia (owned->file(), validation);

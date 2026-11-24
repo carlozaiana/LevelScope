@@ -24,7 +24,7 @@ struct MediaInfo
     SourceFileVersion validatedVersion; // runtime only, never written to a session
     bool matchesValidatedFile(const juce::File& file) const
     {
-        return matchesFileStamp(file) && (!validatedVersion.valid || validatedVersion == SourceFileVersion::read(file));
+        return matchesFileStamp(file) && (!validatedVersion.valid || validatedVersion.matches(file));
     }
     double durationSeconds() const { return sampleRate > 0 ? static_cast<double> (frames) / sampleRate : 0.0; }
     bool matchesFileStamp (const juce::File& file) const

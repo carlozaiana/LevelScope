@@ -84,8 +84,34 @@ void newDuringPreparation(const AuditionRequest& request)
     auto fresh = acquire(model.measurementContext(MeasurementDomain::source));
     expect(fresh && model.verifiedAssets->counts().copies == 1, "same original in new session establishes its own trust");
 }
+#if JUCE_MAC
+void writeWithMatchingStamps(const juce::File& file)
+{
+    auto writer = file.createOutputStream();
+    expect(writer && writer->write("one", 3), "create same-size write fixture");
+    writer->flush();
+    auto captured = SourceFileVersion::capture(file);
+    expect(captured.matches(file), "clean monitored file matches before writing");
+    expect(writer->setPosition(0) && writer->write("two", 3), "overwrite three bytes through an already open file");
+    writer->flush();
+
+    // Isolate kernel change notification on both APFS and HFS+. Present all
+    // the current stat fields as equal, just as for two same-tick HFS+ writes.
+    const auto current = SourceFileVersion::read(file);
+    expect(captured.sameFile(current) && captured.size == current.size, "same file and length after overwrite");
+    captured.seconds = current.seconds;
+    captured.nanos = current.nanos;
+    auto secondConsumer = captured;
+    expect(!captured.matches(file) && !secondConsumer.matches(file),
+           "a same-size write with matching timestamps invalidates all consumers");
+    expect(SourceFileVersion::capture(file).matches(file), "a fresh monitor starts clean after the write");
+}
+#endif
 void lifecycle(const juce::File& root)
 {
+#if JUCE_MAC
+    writeWithMatchingStamps(root.getChildFile("already-open.bin"));
+#endif
     const auto request = fixture(root.getChildFile("source.wav"), 48000, 2, 192003);
     newDuringPreparation(request);
     concurrent(request, Cancellation::none);

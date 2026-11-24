@@ -240,6 +240,7 @@ add_library(LevelScopeStandaloneSupport STATIC
     Source/Core/Proposal/Model/JobRequirements.cpp
     Source/Core/Proposal/VerificationEngine.cpp
     Source/Standalone/StandaloneCompliance.cpp
+    Source/Standalone/SourceFileVersion.cpp
     Source/Standalone/StandaloneMedia.cpp
     Source/Standalone/StandaloneAudition.cpp
     Source/Standalone/OutputDeviceSettings.cpp

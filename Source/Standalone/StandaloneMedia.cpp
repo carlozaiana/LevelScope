@@ -336,7 +336,8 @@ MediaValidationResult validateMedia (const juce::File& file, JobControl& control
     if (control.isCancelled()) return fail (ErrorCode::cancelled, "Import cancelled");
     if (! file.existsAsFile()) return fail (ErrorCode::missingFile, "Source file is missing");
     auto& media = result.media;
-    media.validatedVersion = SourceFileVersion::read(file);
+    media.validatedVersion = SourceFileVersion::capture(file);
+    if (!media.validatedVersion.valid) return fail(ErrorCode::unavailable, "Cannot monitor the source during validation");
     media.bytes = file.getSize();
     media.modified = file.getLastModificationTime();
 

@@ -27,7 +27,7 @@ void optional(juce::MemoryOutputStream& bytes, std::optional<double> x)
     bytes.writeBool(bool(x));
     if (x) bytes.writeDouble(*x);
 }
-juce::String numericPayload(const measurement::Result& r)
+juce::String numericPayload(const measurement::Result& r, juce::String* encoded = nullptr)
 {
     juce::MemoryOutputStream b;
     b.writeInt(r.sampleRate); b.writeInt64(r.frames);
@@ -44,6 +44,7 @@ juce::String numericPayload(const measurement::Result& r)
     { b.writeInt64(values->size()); for (auto x : *values) b.writeDouble(x); }
     for (const auto* values : {&r.samplePeakFrames, &r.truePeakEighthFrames})
     { b.writeInt64(values->size()); for (auto x : *values) b.writeInt64(x); }
+    if (encoded) *encoded = juce::Base64::toBase64(b.getData(), b.getDataSize());
     return juce::SHA256(b.getData(), b.getDataSize()).toHexString();
 }
 void compareProgramme(const juce::File& file, juce::DynamicObject& record)
@@ -113,7 +114,9 @@ void compareProgramme(const juce::File& file, juce::DynamicObject& record)
     auto output = ex::render(ex::capture(s), juce::File::getSpecialLocation(juce::File::tempDirectory), job);
     expect(bool(output.value), "render PCM and independently measure encoded bytes");
     record.setProperty("rendered_pcm_sha256", (*output.value)->hash());
-    record.setProperty("rendered_numeric_sha256", numericPayload((*output.value)->analysis().detail));
+    juce::String encoded;
+    record.setProperty("rendered_numeric_sha256", numericPayload((*output.value)->analysis().detail, &encoded));
+    record.setProperty("rendered_numeric_base64", encoded);
 }
 }
 int sessionSourceBenchmark(int argc, char** argv)
