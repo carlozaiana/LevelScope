@@ -59,9 +59,13 @@ void drawSections(const juce::File& root)
     expect(map.sections[1].begin==200*48000/width && map.sections[1].end==500*48000/width,"selected range snaps to exact source frames");
     secondary.refreshSectionEditing();
     imageOf(main,root.getChildFile("drawn-section.png"));
-    draw(secondary,x+500,x+560);
+    // The resizable Sections timeline is sized by its parent, not by the
+    // standalone main fixture. Address the same exact source samples through
+    // each plot's own width; keep all boundary and audio assertions unchanged.
+    const auto secondaryX=[&](int pixel){return float(secondary.graphBounds().getX()+(double(pixel*48000/width)+.25)*(secondary.graphBounds().getWidth()-1)/48000.);};
+    draw(secondary,secondaryX(500),secondaryX(560));
     expect(map.sections[1].end==560*48000/width&&map.sections[2].begin==map.sections[1].end,"dragging the same boundary in Sections changes both neighbours");
-    draw(secondary,x+620,x+780);
+    draw(secondary,secondaryX(620),secondaryX(780));
     expect(map.sections.size()==5,"Sections waveform can define another section directly");
     main.refreshSectionEditing();const auto digest=map.digest();
     draw(main,x+100,x+650);
