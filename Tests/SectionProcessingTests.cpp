@@ -263,14 +263,16 @@ void editorPrecision(const juce::File& root)
 }
 // Audio-only sustained workflow; historical helpers are not runners.
 #include "SectionProcessingLongTests.h"
+#include "AppliedRegionSectionModelChecks.h"
 int main(int argc,char** argv)
 {
-    juce::ScopedJuceInitialiser_GUI gui;juce::String rootPath,output,longSession;bool smoke=false,passed=false;juce::String failure;
-    for(int n=1;n<argc;++n){const juce::String arg(argv[n]);if(arg=="--smoke")smoke=true;else if(arg=="--root"&&n+1<argc)rootPath=argv[++n];else if(arg=="--output"&&n+1<argc)output=argv[++n];else if(arg=="--long-session"&&n+1<argc)longSession=argv[++n];else return 2;}
+    juce::ScopedJuceInitialiser_GUI gui;juce::String rootPath,output,longSession;bool smoke=false,appliedSections=false,passed=false;juce::String failure;
+    for(int n=1;n<argc;++n){const juce::String arg(argv[n]);if(arg=="--applied-sections")appliedSections=true;else if(arg=="--smoke")smoke=true;else if(arg=="--root"&&n+1<argc)rootPath=argv[++n];else if(arg=="--output"&&n+1<argc)output=argv[++n];else if(arg=="--long-session"&&n+1<argc)longSession=argv[++n];else return 2;}
     try
     {
         expect(rootPath.isNotEmpty(),"explicit fresh evidence root required");const juce::File root(rootPath);expect(!root.exists()&&root.createDirectory().wasOk(),"fresh M12 owned fixtures");
-        if(longSession.isNotEmpty())longSections(root,juce::File(longSession));
+        if(appliedSections)appliedRegionSectionChecks(root);
+        else if(longSession.isNotEmpty())longSections(root,juce::File(longSession));
         else { envelopeCases();modelCases(root.getChildFile("model"));
         if(!smoke){formatCases(root.getChildFile("formats"));identityAndRecovery(root.getChildFile("recovery"));editorPrecision(root.getChildFile("editor"));}
         if(smoke)matrixCase(root.getChildFile("smoke"),48000,6,3,true);

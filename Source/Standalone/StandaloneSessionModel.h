@@ -326,6 +326,7 @@ public:
         return ProgrammeGainProcessor::validationError(c);
     }
     std::shared_ptr<ManualEditHistory> manualHistory;
+    uint64_t sectionPlanningGeneration = 0;
     std::optional<BoundaryEditBatch> boundaryBatch;
     std::optional<AppliedBoundaryDrag> appliedBoundaryDrag;
     uint64_t boundaryEditSerial=0,appliedBoundarySerial=0;
@@ -400,8 +401,15 @@ public:
         auto before=manualState();
         const bool changedAudio=before.globalDb!=next.globalDb
             ||(before.gains?before.gains->audioKey():juce::String())!=(next.gains?next.gains->audioKey():juce::String());
+        if (before.map.revision == std::numeric_limits<uint64_t>::max()) return false;
+        const auto sameCut = [](const auto& a, const auto& b) {
+            return a.id == b.id && a.begin == b.begin && a.end == b.end;
+        };
+        const bool geometryChanged = !std::equal(before.map.sections.begin(), before.map.sections.end(),
+                                                  next.map.sections.begin(), next.map.sections.end(), sameCut);
         next.map.revision=sectionDocument.map().revision+1;
         if(!sectionDocument.restore(next.map,before.map.inputIdentity))return false;
+        if (geometryChanged) ++sectionPlanningGeneration;
         if(sectionProposal&&lastAppliedProposalBinding==sectionProposal->identity())discardSectionProposal();
         currentStateDocument.sectionGains=next.gains;currentStateDocument.staticGainDb=next.globalDb;
         if(changedAudio)
@@ -416,9 +424,13 @@ public:
     bool commitManualEdit(ManualEditState next,const juce::String& label)
     {
         if(!manualEditAllowed()||!next.map.valid()||next.map.inputIdentity!=sectionDocument.map().inputIdentity)return false;
+        if (sectionDocument.map().revision == std::numeric_limits<uint64_t>::max()) return false;
+        const auto before=manualState();
         if(next.gains){*next.gains=next.gains->canonical();if(next.gains->validationError().isNotEmpty())return false;if(next.gains->isUnity())next.gains.reset();}
-        const auto before=manualState();if(before==next)return true;
+
         const bool changedAudio=before.globalDb!=next.globalDb||(before.gains?before.gains->audioKey():juce::String())!=(next.gains?next.gains->audioKey():juce::String());
+        if (!changedAudio) next.gains = before.gains;
+        if (before==next) return true;
         if(changedAudio)
         {
             if(!currentStateDocument.isInitialized)return false;
@@ -429,6 +441,87 @@ public:
         if(!manualHistory||manualHistory->runtime!=sessionId)manualHistory=std::make_shared<ManualEditHistory>(sessionId);
         if(!manualHistory->push(before,next,label)){sectionTrimNotice="Edit not applied: the Undo journal could not be written. Check available temporary storage.";return false;}
         return installManualState(std::move(next));
+    }
+private:
+    juce::String prepareAppliedRegionSections(proposal::SectionMap* output, size_t& added) const
+    {
+        added = 0;
+        if (persistenceLoading || job.isActive() || proposalOperationBusy) return "Finish the current operation first.";
+        if (auditionBusy && auditionBusy()) return "Stop playback before creating sections.";
+        if (pendingBoundaryEdits()) return pendingBoundaryMessage();
+        if (sectionTrimDraft || (sectionProposal && sectionProposal->identity() != lastAppliedProposalBinding))
+            return "Apply or discard the pending edit or proposal first.";
+        const auto& gain = currentStateDocument.sectionGains;
+        if (!currentStateDocument.isInitialized || !gain || gain->isUnity()) return "Current has no applied local gain regions.";
+        if (sourceContentInvalid || !sourceDocument.layout.confirmed || !sourceDocument.matchesFileStamps())
+            return "Confirm or resolve the programme source first.";
+        const auto& map = sectionDocument.map();
+        const auto sourceContext = measurementContext(MeasurementDomain::source);
+        if (!map.valid() || map.inputIdentity != sectionInputIdentity(sourceContext) || gain->inputIdentity != map.inputIdentity
+            || map.frames != sourceContext.media.frames || map.sampleRate != sourceContext.media.sampleRate
+            || gain->frames != map.frames || gain->sampleRate != map.sampleRate)
+            return "Applied regions and sections must belong to the current programme.";
+        const auto invalid = gain->validationError();
+        if (invalid.isNotEmpty()) return invalid;
+
+        if (output) { *output = map; output->sections.clear(); }
+        size_t cut = 1;
+        const auto& intervals = gain->intervals;
+        for (const auto& row : map.sections)
+        {
+            // The leftmost piece retains the original ID and name, as in SectionDocument::split.
+            auto part = row;
+            while (cut < intervals.size() && intervals[cut].begin < row.end)
+            {
+                const size_t index = cut++;
+                const auto frame = intervals[index].begin;
+                if (frame == row.begin || intervals[index].db == intervals[index-1].db) continue;
+                ++added;
+                if (added > proposal::SectionMap::maximumSections - map.sections.size())
+                    return "Creating these sections would exceed the 10,000-section limit.";
+                if (added > std::numeric_limits<uint64_t>::max() - map.nextId
+                    || map.revision == std::numeric_limits<uint64_t>::max())
+                    return "Section IDs or revision exhausted.";
+                if (output)
+                {
+                    part.end = frame;
+                    output->sections.push_back(part);
+                    const auto id = output->nextId++;
+                    part = {id,frame,row.end,"Section " + juce::String(id)};
+                }
+            }
+            if (output) output->sections.push_back(std::move(part));
+        }
+        return {};
+    }
+
+public:
+    juce::String appliedRegionSectionsBlocked() const
+    {
+        size_t added = 0;
+        return prepareAppliedRegionSections(nullptr, added);
+    }
+    bool createSectionsFromAppliedRegions(juce::String& message)
+    {
+        proposal::SectionMap map;
+        size_t added = 0;
+        message = prepareAppliedRegionSections(&map, added);
+        if (message.isNotEmpty()) return false;
+        if (added == 0)
+        {
+            message = "The sections already include all applied region boundaries.";
+            return true;
+        }
+        auto next = manualState();
+        next.map = std::move(map);
+        if (!commitManualEdit(std::move(next), "Create sections from applied regions"))
+        {
+            message = "Could not commit the section edit. Check the Undo journal and retry.";
+            return false;
+        }
+        message = "Created " + juce::String(added) + (added == 1 ? " section." : " sections.")
+                  + " Applied gains and measurement status retained.";
+        return true;
     }
     bool setManualSectionGains(const std::vector<uint64_t>& ids,double db)
     {
@@ -638,7 +731,7 @@ public:
     ErrorCode sectionProposalError=ErrorCode::none;
     SectionProposalRequest sectionProposalRequest() const
     {
-        SectionProposalRequest r;r.policy=proposalPolicy;
+        SectionProposalRequest r;r.policy=proposalPolicy;r.sectionPlanningGeneration=sectionPlanningGeneration;
         r.regionSettings=regionPlanning;
         r.sourceContext=measurementContext(MeasurementDomain::source);
         r.currentContext=measurementContext(MeasurementDomain::currentState);
@@ -1032,6 +1125,31 @@ public:
         currentState = MeasurementSummary();
     }
 
+    bool ensureCurrentForPropose(juce::String& error)
+    {
+        error.clear();
+        if (audioEditsBlocked() || job.isActive() || sectionTrimDraft)
+            error = "Finish the current operation or edit before proposing.";
+        else if (sourceContentInvalid || !sourceDocument.matchesFileStamps())
+            error = "Resolve the programme audio before proposing.";
+        else
+            error = OfflineAnalysisService::validateRequest(measurementContext(MeasurementDomain::source), MeasurementDomain::source);
+        if (error.isNotEmpty()) return false;
+        if (currentStateDocument.isInitialized) return true;
+
+        if (!initializeCurrentStateFromSource())
+        {
+            error = "Confirm a valid Source before initializing Current.";
+            return false;
+        }
+        // Only freshly accepted, complete Source measurements can supply initial unity
+        // provenance. A previously verified session cache remains a Source measurement.
+        initialCurrentPending = !source.hasMeasurement;
+        if (source.hasMeasurement && source.analysis && !source.analysis->restoredFromSession
+            && OfflineAnalysisService::hasCompleteCoverage(*source.analysis))
+            adoptInitialCurrent(*source.analysis);
+        return true;
+    }
     bool canInitializeCurrentStateFromSource() const
     {
         return ! sourceContentInvalid && sourceDocument.hasSource && sourceDocument.layout.confirmed && sourceDocument.layout.isValid();

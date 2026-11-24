@@ -17,7 +17,7 @@ void field (std::ostringstream& out, const juce::String& s) { const auto b = s.t
 bool SectionMap::valid() const
 {
     if (schemaVersion != 1 || inputIdentity.isEmpty() || (sampleRate != 44100 && sampleRate != 48000 && sampleRate != 96000 && sampleRate != 192000)
-        || frames <= 0 || frames > static_cast<int64_t> (sampleRate) * 86400 || sections.empty() || sections.size() > 10000) return false;
+        || frames <= 0 || frames > static_cast<int64_t> (sampleRate) * 86400 || sections.empty() || sections.size() > maximumSections) return false;
     int64_t end = 0; std::set<uint64_t> ids;
     for (const auto& s : sections)
     {

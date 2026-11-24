@@ -13,6 +13,7 @@ struct ProgrammeSection
 };
 struct SectionMap
 {
+    static constexpr size_t maximumSections = 10000;
     int schemaVersion = 1, sampleRate = 0;
     int64_t frames = 0;
     juce::String inputIdentity;

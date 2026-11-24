@@ -16,6 +16,7 @@ struct SectionProposalRequest
     std::shared_ptr<const AnalysisSnapshot> source, current;
     proposal::Applicability applicability=proposal::Applicability::unconfirmed;
     proposal::SectionMap annotations, appliedAnnotations;
+    uint64_t sectionPlanningGeneration=0; // Runtime-only authority for editorial geometry edits.
     bool pendingManualDraft=false;
     std::shared_ptr<const proposal::SectionPeakMap> attribution;
     std::optional<proposal::RegionPlanningSettings> regionSettings;

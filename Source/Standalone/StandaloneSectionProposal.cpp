@@ -11,6 +11,8 @@ proposal::TrimRequest SectionProposalRequest::scalar() const
 { auto r=trimRequest(source,current,sourceContext,currentContext,currentContext.profile,applicability);r.preferenceIdentity=policy.digest();r.preferencesAvailable=policy.validationError().isEmpty();return r; }
 juce::String SectionProposalRequest::binding() const
 {
+    const auto generation = sectionPlanningGeneration == 0 ? juce::String()
+        : ";section-edit:" + juce::String(sectionPlanningGeneration);
     if(regionSettings)
     {
         juce::String selected;
@@ -18,13 +20,13 @@ juce::String SectionProposalRequest::binding() const
             for(const auto& a:annotations.sections)if(a.id==regionSettings->sectionId)
                 selected=juce::String(a.id)+":"+juce::String(a.begin)+":"+juce::String(a.end);
         const auto key=proposal::draftGlobalTrim(scalar()).identity+";"+regionSettings->methodVersion()+";"+regionSettings->digest()+";"+selected
-            +";"+currentContext.sessionId+";"+juce::String(currentContext.ticket.sessionRevision)+";"+juce::String(int(pendingManualDraft))+";"+policy.digest();
+            +";"+currentContext.sessionId+";"+juce::String(currentContext.ticket.sessionRevision)+";"+juce::String(int(pendingManualDraft))+";"+policy.digest()+generation;
         return juce::SHA256(key.toRawUTF8(),key.getNumBytesAsUTF8()).toHexString();
     }
     const auto s=proposal::draftGlobalTrim(scalar()).identity+";"+(currentContext.profile.limits.hasMaxLoudnessRange?proposal::lraTrimMethodVersion:proposal::sectionTrimMethodVersion)
         +";"+proposal::sectionGeometryKey(annotations)+";"+proposal::sectionGeometryKey(appliedAnnotations)
         +";"+currentContext.sessionId+";"+juce::String(currentContext.ticket.sessionRevision)
-        +";"+juce::String(int(pendingManualDraft))+";"+policy.digest();
+        +";"+juce::String(int(pendingManualDraft))+";"+policy.digest()+generation;
     return juce::SHA256(s.toRawUTF8(),s.getNumBytesAsUTF8()).toHexString();
 }
 std::optional<ProcessingPlan> SectionProposalResult::previewPlan() const
