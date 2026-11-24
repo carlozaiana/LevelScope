@@ -1,0 +1,301 @@
+{
+  "passed": true,
+  "groups": [
+    {
+      "passed": true,
+      "groups": [
+        {
+          "group": "mono",
+          "exit": 0,
+          "assertions": 134,
+          "passed": true,
+          "report_sha256": "8e2d29f67225b52767a55d53fb432b6fea4f8d8f5bf76aba826ee9b30f2391b9",
+          "seconds": 7.970717208
+        },
+        {
+          "group": "mono-readiness",
+          "exit": 0,
+          "assertions": 77,
+          "passed": true,
+          "report_sha256": "5b31025f923fe840994e0954331b7595eecbb1b86398a4f1685a83e15d129be1",
+          "seconds": 19.911563
+        },
+        {
+          "group": "mono-ui",
+          "exit": 0,
+          "assertions": 153,
+          "passed": true,
+          "report_sha256": "9e492646cdd6f2cec7c039c8e920e9943c4e3cb06d88c4dbc1ad0c7470ea6ac5",
+          "seconds": 35.508934208
+        },
+        {
+          "group": "inner-stereo",
+          "exit": 0,
+          "assertions": 60,
+          "passed": true,
+          "report_sha256": "44d2bffe9ed0e9b58063f727d611b53ed97bfa13cd9016f928c3a5d1607900f0",
+          "seconds": 7.341592583999997
+        },
+        {
+          "group": "inner-surround",
+          "exit": 0,
+          "assertions": 57,
+          "passed": true,
+          "report_sha256": "c0173b4ce64017e7644cfbeaff7265e0d754f83d89977a2fc9f896e83b802172",
+          "seconds": 7.4383692079999975
+        }
+      ],
+      "os": "15.7.9",
+      "os_build": "24G830",
+      "architecture": "arm64",
+      "implementation": "81ea642b5b2870a934f3a5913c6736b0f6d41983",
+      "package": "d30dde12fd1b74befa017ad26c6cdaf2739fa3c03b0b337de9d01e57985d9087",
+      "verified_entries_before_and_after": 471,
+      "physical_outputs_opened": false
+    },
+    {
+      "passed": true,
+      "groups": [
+        {
+          "group": "mono",
+          "exit": 0,
+          "assertions": 134,
+          "passed": true,
+          "report_sha256": "da094cbd0d46e76cc0bebaa88aa2f380937ddd4e566106b77cfac0e0f7f6a4bc",
+          "seconds": 13.89367883
+        },
+        {
+          "group": "mono-readiness",
+          "exit": 0,
+          "assertions": 77,
+          "passed": true,
+          "report_sha256": "5b31025f923fe840994e0954331b7595eecbb1b86398a4f1685a83e15d129be1",
+          "seconds": 35.190400253
+        },
+        {
+          "group": "mono-ui",
+          "exit": 0,
+          "assertions": 153,
+          "passed": true,
+          "report_sha256": "9e492646cdd6f2cec7c039c8e920e9943c4e3cb06d88c4dbc1ad0c7470ea6ac5",
+          "seconds": 76.61764469100001
+        },
+        {
+          "group": "inner-stereo",
+          "exit": 0,
+          "assertions": 60,
+          "passed": true,
+          "report_sha256": "eebe7eaf89728cf7c8ec41efaf64f698e36b7cc5379e056308e74c32c21c7cb0",
+          "seconds": 12.725213486000001
+        },
+        {
+          "group": "inner-surround",
+          "exit": 0,
+          "assertions": 57,
+          "passed": true,
+          "report_sha256": "d9e5c7c94b12845e33f0bd27a984718db99a868482a261175c743157a5b3b42c",
+          "seconds": 16.037920919000015
+        }
+      ],
+      "os": "10.13.6",
+      "os_build": "17G66",
+      "architecture": "x86_64",
+      "implementation": "81ea642b5b2870a934f3a5913c6736b0f6d41983",
+      "package": "d30dde12fd1b74befa017ad26c6cdaf2739fa3c03b0b337de9d01e57985d9087",
+      "verified_entries_before_and_after": 471,
+      "physical_outputs_opened": false
+    }
+  ],
+  "methods": [
+    {
+      "schema": 0,
+      "session_schema": 10,
+      "channels": [
+        {
+          "fileId": "audio-1",
+          "fileChannel": 0,
+          "role": 3
+        }
+      ],
+      "ordered_roles": [
+        3
+      ],
+      "measured_source_lra": 5.910633784173651,
+      "verified_current_lra": 4.290033959137094,
+      "source_payload": "616a7c87ffa8c51752a836db7add9646567c8a190263c3ec7833f144ac435ca0",
+      "current_payload": "5dcad61a77421700ff23ece19c2b9b77799ef3b0ce1875a7a6bdd4709557763e",
+      "current_il": -23.000000000115477,
+      "current_true_peak": -16.21170479262188,
+      "true_peak_eighth_frames": [
+        11532999
+      ],
+      "final_wav_sha256": [
+        "1b32e3524d49c331581fb98189db15d760a76b042b223b84f6eb1e8042aa629a",
+        "1b32e3524d49c331581fb98189db15d760a76b042b223b84f6eb1e8042aa629a"
+      ]
+    },
+    {
+      "schema": 1,
+      "session_schema": 10,
+      "channels": [
+        {
+          "fileId": "audio-1",
+          "fileChannel": 0,
+          "role": 1
+        }
+      ],
+      "ordered_roles": [
+        1
+      ],
+      "measured_source_lra": 5.910633784173651,
+      "verified_current_lra": 4.399999998378156,
+      "source_payload": "616a7c87ffa8c51752a836db7add9646567c8a190263c3ec7833f144ac435ca0",
+      "current_payload": "a0f6b4f4f9d58d6bfc2591904949c49cf6c1f541906b31e66e2dd90de7820785",
+      "current_il": -22.99999999852319,
+      "current_true_peak": -14.690337543304487,
+      "true_peak_eighth_frames": [
+        13452999
+      ],
+      "final_wav_sha256": [
+        "4e1643d747ea3c9ac49222b9504bcf49f6a4300ed6f572c9721047643167d17d",
+        "4e1643d747ea3c9ac49222b9504bcf49f6a4300ed6f572c9721047643167d17d"
+      ]
+    },
+    {
+      "schema": 2,
+      "session_schema": 10,
+      "channels": [
+        {
+          "fileId": "audio-1",
+          "fileChannel": 0,
+          "role": 2
+        }
+      ],
+      "ordered_roles": [
+        2
+      ],
+      "measured_source_lra": 5.910633784173651,
+      "verified_current_lra": 4.290033962380598,
+      "source_payload": "616a7c87ffa8c51752a836db7add9646567c8a190263c3ec7833f144ac435ca0",
+      "current_payload": "10b367424e2c6da562ad5056ed9d1aac35d2d92849b4d68e81d6deb7cca56298",
+      "current_il": -23.199999982880822,
+      "current_true_peak": -16.43519195081979,
+      "true_peak_eighth_frames": [
+        11532999
+      ],
+      "final_wav_sha256": [
+        "9ab7aefbaca2084fc91fc78ef2014908ab2d3a9ad4daa1155e79f75e3cddda61",
+        "9ab7aefbaca2084fc91fc78ef2014908ab2d3a9ad4daa1155e79f75e3cddda61"
+      ]
+    },
+    {
+      "schema": 3,
+      "session_schema": 11,
+      "channels": [
+        {
+          "fileId": "audio-1",
+          "fileChannel": 0,
+          "role": 3
+        }
+      ],
+      "ordered_roles": [
+        3
+      ],
+      "measured_source_lra": 5.910633784173651,
+      "verified_current_lra": 4.290033962380598,
+      "source_payload": "616a7c87ffa8c51752a836db7add9646567c8a190263c3ec7833f144ac435ca0",
+      "current_payload": "10b367424e2c6da562ad5056ed9d1aac35d2d92849b4d68e81d6deb7cca56298",
+      "current_il": -23.199999982880822,
+      "current_true_peak": -16.43519195081979,
+      "true_peak_eighth_frames": [
+        11532999
+      ],
+      "final_wav_sha256": [
+        "b9e8662bf4c70bad46b635ab96c3057d2fb94414c62a298cedfe9224259c366e",
+        "b9e8662bf4c70bad46b635ab96c3057d2fb94414c62a298cedfe9224259c366e"
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "name": "method 0 settings, roles, requirements and exact applied processing",
+      "passed": true
+    },
+    {
+      "name": "method 0 checksum-verified Source/Current numerical payloads across hosts",
+      "passed": true
+    },
+    {
+      "name": "method 0 same finalized file bytes on both hosts",
+      "passed": true
+    },
+    {
+      "name": "method 1 settings, roles, requirements and exact applied processing",
+      "passed": true
+    },
+    {
+      "name": "method 1 checksum-verified Source/Current numerical payloads across hosts",
+      "passed": true
+    },
+    {
+      "name": "method 1 same finalized file bytes on both hosts",
+      "passed": true
+    },
+    {
+      "name": "method 2 settings, roles, requirements and exact applied processing",
+      "passed": true
+    },
+    {
+      "name": "method 2 checksum-verified Source/Current numerical payloads across hosts",
+      "passed": true
+    },
+    {
+      "name": "method 2 same finalized file bytes on both hosts",
+      "passed": true
+    },
+    {
+      "name": "method 3 settings, roles, requirements and exact applied processing",
+      "passed": true
+    },
+    {
+      "name": "method 3 checksum-verified Source/Current numerical payloads across hosts",
+      "passed": true
+    },
+    {
+      "name": "method 3 same finalized file bytes on both hosts",
+      "passed": true
+    },
+    {
+      "name": "sequoia-01 stereo matches previously qualified control settings, roles and exact applied plan",
+      "passed": true
+    },
+    {
+      "name": "sequoia-01 stereo matches previously qualified complete numerical payloads and input SHA",
+      "passed": true
+    },
+    {
+      "name": "sequoia-01 surround matches previously qualified control settings, roles and exact applied plan",
+      "passed": true
+    },
+    {
+      "name": "sequoia-01 surround matches previously qualified complete numerical payloads and input SHA",
+      "passed": true
+    },
+    {
+      "name": "high-sierra-01 stereo matches previously qualified control settings, roles and exact applied plan",
+      "passed": true
+    },
+    {
+      "name": "high-sierra-01 stereo matches previously qualified complete numerical payloads and input SHA",
+      "passed": true
+    },
+    {
+      "name": "high-sierra-01 surround matches previously qualified control settings, roles and exact applied plan",
+      "passed": true
+    },
+    {
+      "name": "high-sierra-01 surround matches previously qualified complete numerical payloads and input SHA",
+      "passed": true
+    }
+  ]
+}

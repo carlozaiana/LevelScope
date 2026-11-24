@@ -1,0 +1,52 @@
+{
+  "passed": true,
+  "groups": [
+    {
+      "group": "mono",
+      "exit": 0,
+      "assertions": 134,
+      "passed": true,
+      "report_sha256": "8e2d29f67225b52767a55d53fb432b6fea4f8d8f5bf76aba826ee9b30f2391b9",
+      "seconds": 7.970717208
+    },
+    {
+      "group": "mono-readiness",
+      "exit": 0,
+      "assertions": 77,
+      "passed": true,
+      "report_sha256": "5b31025f923fe840994e0954331b7595eecbb1b86398a4f1685a83e15d129be1",
+      "seconds": 19.911563
+    },
+    {
+      "group": "mono-ui",
+      "exit": 0,
+      "assertions": 153,
+      "passed": true,
+      "report_sha256": "9e492646cdd6f2cec7c039c8e920e9943c4e3cb06d88c4dbc1ad0c7470ea6ac5",
+      "seconds": 35.508934208
+    },
+    {
+      "group": "inner-stereo",
+      "exit": 0,
+      "assertions": 60,
+      "passed": true,
+      "report_sha256": "44d2bffe9ed0e9b58063f727d611b53ed97bfa13cd9016f928c3a5d1607900f0",
+      "seconds": 7.341592583999997
+    },
+    {
+      "group": "inner-surround",
+      "exit": 0,
+      "assertions": 57,
+      "passed": true,
+      "report_sha256": "c0173b4ce64017e7644cfbeaff7265e0d754f83d89977a2fc9f896e83b802172",
+      "seconds": 7.4383692079999975
+    }
+  ],
+  "os": "15.7.9",
+  "os_build": "24G830",
+  "architecture": "arm64",
+  "implementation": "81ea642b5b2870a934f3a5913c6736b0f6d41983",
+  "package": "d30dde12fd1b74befa017ad26c6cdaf2739fa3c03b0b337de9d01e57985d9087",
+  "verified_entries_before_and_after": 471,
+  "physical_outputs_opened": false
+}

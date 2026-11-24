@@ -1,0 +1,12 @@
+{
+  "editable_session_at_handover": "/Users/fuzz/Developer/LevelScope/build/mono-lra-2026-11-24/user-test/Mono competing boundaries.levelscope",
+  "saved_session_sha256": "7408b11c860a58bd9a761dba547f412ab29cbc594f955cdd83092657b822a98a",
+  "frozen_qualification_original": "/Users/fuzz/Developer/LevelScope/build/mono-lra-2026-11-24/sequoia-01/mono-ui/method-3/passing-mono.levelscope",
+  "source_file": "/Users/fuzz/Developer/LevelScope/build/mono-lra-2026-11-24/sequoia-01/mono-ui/source/programme.wav",
+  "source_file_sha256": "41cc9ecbdc716a34747d16632abb6037b6d241a7a8edb85222ffb7b896e2ddbc",
+  "application": "/Users/fuzz/Developer/LevelScope/build/mono-lra-2026-11-24/candidate-01/LevelScope Standalone.app",
+  "fixture_seconds": 65,
+  "method": "region-gain-search-v3",
+  "role": "Centre",
+  "lra_ceiling_lu": 4.9
+}

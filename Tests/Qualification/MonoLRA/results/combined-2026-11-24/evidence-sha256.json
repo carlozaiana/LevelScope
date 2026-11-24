@@ -1,0 +1,21 @@
+{
+  "candidate-01-identity.json": "d30dde12fd1b74befa017ad26c6cdaf2739fa3c03b0b337de9d01e57985d9087",
+  "comparison.json": "44868ef8240cf44c66ada14b11ed5aae47b95c911999b7672fbad1d6846fac33",
+  "development-fixture-first-attempt.json": "e4805fac2cb6510292000a350473076348af6ecdcd705b1ceb2f2c0d80ca9008",
+  "high-sierra-01/audio-hashes.json": "e7569c1fa61b370c38c8914785e4f2b531fe92e37d6a05d026ae7dd1344509f3",
+  "high-sierra-01/inner-stereo.json": "eebe7eaf89728cf7c8ec41efaf64f698e36b7cc5379e056308e74c32c21c7cb0",
+  "high-sierra-01/inner-surround.json": "d9e5c7c94b12845e33f0bd27a984718db99a868482a261175c743157a5b3b42c",
+  "high-sierra-01/mono-readiness.json": "5b31025f923fe840994e0954331b7595eecbb1b86398a4f1685a83e15d129be1",
+  "high-sierra-01/mono-ui/result.json": "9e492646cdd6f2cec7c039c8e920e9943c4e3cb06d88c4dbc1ad0c7470ea6ac5",
+  "high-sierra-01/mono.json": "da094cbd0d46e76cc0bebaa88aa2f380937ddd4e566106b77cfac0e0f7f6a4bc",
+  "high-sierra-01/receipt.json": "8da43bd377f4799a2d4b631ff542c5dcd54a1d1fff21796a6dfcdf822c3b2bf8",
+  "preservation.json": "3531f593818fb2b784f24b4b72902817dcea08703fcbd7fc1e778ffbfc1dd21e",
+  "sequoia-01/audio-hashes.json": "e7569c1fa61b370c38c8914785e4f2b531fe92e37d6a05d026ae7dd1344509f3",
+  "sequoia-01/inner-stereo.json": "44d2bffe9ed0e9b58063f727d611b53ed97bfa13cd9016f928c3a5d1607900f0",
+  "sequoia-01/inner-surround.json": "c0173b4ce64017e7644cfbeaff7265e0d754f83d89977a2fc9f896e83b802172",
+  "sequoia-01/mono-readiness.json": "5b31025f923fe840994e0954331b7595eecbb1b86398a4f1685a83e15d129be1",
+  "sequoia-01/mono-ui/result.json": "9e492646cdd6f2cec7c039c8e920e9943c4e3cb06d88c4dbc1ad0c7470ea6ac5",
+  "sequoia-01/mono.json": "8e2d29f67225b52767a55d53fb432b6fea4f8d8f5bf76aba826ee9b30f2391b9",
+  "sequoia-01/receipt.json": "eb11d588ef11b114c98369c3bb31170cfba5d9e192df49f79755e2f961162f24",
+  "user-test-session.json": "ec2a81c18291a14fb88c0dc553b9427f337572cb10e41f8c3553a77293d22fe3"
+}

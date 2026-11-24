@@ -15,6 +15,8 @@ This folder is the persistent orientation layer for future development chats. Re
 
 ## Task-based quick start
 
+- [97 — Confirmed mono in LRA proposals](97_MonoLRAProposals.md) covers all four selectable methods, independently verified one-channel delivery and the two-platform test build.
+
 - **Shared source and graph editing published:** [96 — checkpoint, main integration and preservation](96_SharedSourceAndGraphBoundaryPublication.md). The combined [checkpoint](https://github.com/carlozaiana/LevelScope/tree/m20-shared-source-graph-boundaries-2026-11-24) retains the accepted HFS+ source-integrity fix and graph candidate 01, with 1,506 graph assertions on each actual Mac and unchanged shared-source evidence inherited. User acceptance is recorded separately; original packages/tags and agreed deferrals remain preserved.
 
 - [95 — Applied-region boundaries in the main graph](95_GraphAppliedRegionBoundaries.md): same gain-lane transaction in Current inspection, preserved shared-source candidate-03 baseline; the identical preserved candidate passes 1,506 focused assertions on each actual Mac (Sequoia and High Sierra).

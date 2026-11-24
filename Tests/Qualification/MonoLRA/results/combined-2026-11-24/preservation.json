@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "main": "bb862cdc207f715853702601aa51defa5daa684a",
+  "tracking_main": "bb862cdc207f715853702601aa51defa5daa684a",
+  "tag_objects_and_targets": 29,
+  "packages": 15,
+  "prior_artifact_hashes_checked": 5666,
+  "reference_manifest": "Tests/Qualification/GraphBoundaries/results/publication-2026-11-24/preflight.json",
+  "reference_manifest_sha256": "400c88852af67f18fb6f6f21d5e4ad61079fc7d3b6b600d8c44f72855ac4cb1a",
+  "additional_checkpoint": "m20-shared-source-graph-boundaries-2026-11-24",
+  "implementation_changes": [
+    "Source/Core/Proposal/RegionPrediction.cpp",
+    "Source/Standalone/RegionPlanningPanel.cpp",
+    "Source/Standalone/StandaloneEventRegionProposal.cpp",
+    "Source/Standalone/StandaloneLraProposal.cpp",
+    "Source/Standalone/StandaloneProcessing.h",
+    "Source/Standalone/StandaloneRegionProposal.cpp",
+    "Tests/InnerUIIntegrationChecks.h",
+    "Tests/LraProposalTests.cpp",
+    "Tests/MonoLraWorkflowChecks.h",
+    "Tests/Qualification/MonoLRA/run_host.py",
+    "Tests/RegionUIIntegrationTests.cpp"
+  ]
+}
