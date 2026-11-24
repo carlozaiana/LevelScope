@@ -49,13 +49,14 @@ Current. Save/reopen retains the edited envelope and complete historical explana
 
 ## Focused results and limits
 
-The exact preserved candidate passed on actual Sequoia arm64:
+The exact preserved candidate passed on actual Sequoia 15.7.9 arm64 and
+High Sierra 10.13.6 (17G66) x86_64:
 
-| Group | Assertions |
-| --- | ---: |
-| Graph/gain-lane equivalence, exact samples, cancellation, Undo/Redo, section editing and navigation | 943 |
-| Native main-window graph, supplied schema-3 history/save/reopen, stereo and 5.1 edited playback | 563 |
-| Total | 1,506 |
+| Group | Sequoia | High Sierra |
+| --- | ---: | ---: |
+| Graph/gain-lane equivalence, exact samples, cancellation, Undo/Redo, section editing and navigation | 943 | 943 |
+| Native main-window graph, supplied schema-3 history/save/reopen, stereo and 5.1 edited playback | 563 | 563 |
+| Total | 1,506 | 1,506 |
 
 The playback checks explicitly Play unverified edited Current and compare every
 captured pre-monitor sample with the committed gain processor, including all
@@ -64,15 +65,17 @@ verification. A subsequent normal Current measurement succeeds. Outputs are
 injected: no physical audio device was opened, no sound or latency benchmark
 was run. Native preview and committed-state screenshots were visually inspected.
 Commands, identities and individual assertions are in the
-[acceptance receipt](../../Tests/Qualification/GraphBoundaries/results/2026-11-24/acceptance.json)
-and adjacent Sequoia receipts.
+[both-platform acceptance receipt](../../Tests/Qualification/GraphBoundaries/results/combined-2026-11-24/acceptance.json).
+The initial Sequoia-only receipt and all earlier evidence are preserved unchanged.
 
 The universal app and test binaries contain arm64 and x86_64, with Intel minimum
-macOS 10.13. **Actual High Sierra execution of the new graph interactions remains
-pending.** The user said Golem connection must wait until later. Candidate 03's
-227,322 checks per actual platform remain inherited evidence for unchanged source
-integrity, playback, processing and proposal paths, not proof of the new graph UI
-on High Sierra. No historical full-suite repeat was necessary for these four UI
+macOS 10.13. After the user restored Golem, both new graph groups passed there
+using the identical package, without rebuilding or changing any test. All package
+artifacts were verified before and after each platform run; input session and
+audio hashes remained unchanged. High Sierra native screenshots were inspected.
+Candidate 03's 227,322 checks per actual platform remain inherited evidence for
+unchanged source integrity, playback, processing and proposal paths. No
+historical full-suite repeat was necessary for these four UI
 production files. Measurement mathematics, planner/search/defaults, dispatch,
 session writer, source service, routing and transport implementations are unchanged.
 
@@ -108,7 +111,7 @@ that expected no preparation worker after Open. The accepted background source
 preparation was still finishing. The graph-mode fixture now waits for that
 existing preparation before testing direct disabled transport callbacks during
 a drag. Product logic and guard criteria were unchanged. That failed receipt,
-the successful development runs and both frozen-package groups are preserved.
+the successful development runs and both frozen-package groups on both Macs are preserved.
 
 ## User check
 
@@ -124,5 +127,5 @@ the successful development runs and both frozen-package groups are preserved.
    change and for clicks or unintended neighbouring changes. Save/reopen and
    independently remeasure when ready.
 
-Remaining: the same frozen candidate's focused Golem graph checks and user
-interaction/listening feedback. Publication/main integration remain separate.
+Remaining: separate user interaction/listening feedback. The focused Golem
+graph checks are complete. Publication/main integration remain separate.

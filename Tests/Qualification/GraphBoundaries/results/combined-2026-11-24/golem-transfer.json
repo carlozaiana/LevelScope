@@ -1,0 +1,10 @@
+{
+  "archive_sha256": "88832c7cf41a35979d90f351ff1750dd8b08ceddb59af41ec1274a6f48dffebd",
+  "candidate_identity_sha256": "cecac62f3f98a5c92e1b87d938ab94f813b32f7cd2984cf8e7156a7bf7af43cf",
+  "inputs": {
+    "supplied.levelscope": "30cda1f347937fcb6df0c17006f05b6d39775b68f9da091fe056e8c2cd425b25",
+    "supplied-audio.wav": "7ba6404041c94c909df290a6829a0fe92ce594329a1d575490c2bb4a5b6cc8f0"
+  },
+  "remote_root": "/Users/fuzz/LevelScope-graph-boundaries-20261124",
+  "control_socket": "/tmp/pro40-high-sierra-ssh"
+}

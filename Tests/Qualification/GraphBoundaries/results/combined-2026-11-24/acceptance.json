@@ -1,0 +1,134 @@
+{
+  "implementation": "f801ac06307f25f423a953a7e35b59c28013ccc7",
+  "source_tree": "31be38bd890fee3667a6a976fbc3524a2b26e609",
+  "baseline_handover": "f9eeae554421b4ef4f8b48d53a69785aa3f6af46",
+  "baseline_tested": "614377f4e573bdd0fc34726584418b9333d092c2",
+  "branch": "codex/graph-region-boundaries-2026-11-24",
+  "measurement_build": "fcb60b72c950d8b21e3c8ae4be8ce57bf95f6991c27aee84073d4d092bd78ea7",
+  "package_identity_sha256": "cecac62f3f98a5c92e1b87d938ab94f813b32f7cd2984cf8e7156a7bf7af43cf",
+  "app": "/Users/fuzz/.codex/worktrees/a411/LevelScope/build/graph-region-boundaries-2026-11-24/candidate-01/LevelScope Standalone.app",
+  "universal_and_intel_minimum_verified": {
+    "LevelScope Standalone.app/Contents/MacOS/LevelScope Standalone": {
+      "sha256": "7e276e193f2f553f87f0f9ae191866f86d10699caf7612282b408afba0776ba5",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    },
+    "bin/LevelScopeRegionUITests": {
+      "sha256": "464a9a896d4eab8b96f1dd569cca10cbc18e272a08b7c0c5185d6af430a382a7",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    },
+    "bin/LevelScopeTimelineProgressTests": {
+      "sha256": "0e1e6c8dd68834e0c7a7cbfa82eac19945dbc01fd1407260fa473890814836ee",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "intel_minimum": "10.13"
+    }
+  },
+  "prior_shared_source_user_feedback": {
+    "reported": "No playback delay after import/drawing; immediate Play and seek/replay on a 93-minute 5.1 programme.",
+    "classification": "User interaction feedback only; not endurance or measured physical-output latency."
+  },
+  "new_graph_user_acceptance": null,
+  "separate_known_limitation": "Inherited completion pause",
+  "video_limit": "Occasional dropped-frame acceptance does not waive audio interruptions, accumulating drift or sustained freezes.",
+  "main_unchanged": "18adeb520006b7fe7e0a22300cc26abd28eec51c",
+  "scope": "Focused graph boundary interactions on both actual platforms; unchanged numerical/source/transport evidence inherited from document94.",
+  "actual_platforms": [
+    {
+      "os": "15.7.9",
+      "architecture": "arm64",
+      "passed": true,
+      "assertions": 1506,
+      "groups": [
+        {
+          "name": "graph-boundaries",
+          "checks": 943,
+          "passed": true,
+          "receipt_sha256": "47754d2eb5ee08849a6dce0c779635a308f476fd118c494a49af7f4cf445eb14"
+        },
+        {
+          "name": "graph-ui",
+          "checks": 563,
+          "passed": true,
+          "receipt_sha256": "37735c856b93031912ce03be9f9f0b8bac542fc51b3caaf181e06bc005ec4461"
+        }
+      ]
+    },
+    {
+      "os": "10.13.6",
+      "architecture": "x86_64",
+      "passed": true,
+      "assertions": 1506,
+      "groups": [
+        {
+          "name": "graph-boundaries",
+          "checks": 943,
+          "passed": true,
+          "receipt_sha256": "47754d2eb5ee08849a6dce0c779635a308f476fd118c494a49af7f4cf445eb14"
+        },
+        {
+          "name": "graph-ui",
+          "checks": 563,
+          "passed": true,
+          "receipt_sha256": "37735c856b93031912ce03be9f9f0b8bac542fc51b3caaf181e06bc005ec4461"
+        }
+      ]
+    }
+  ],
+  "focused_both_platform_qualification_passed": true,
+  "initial_sequoia_receipt": {
+    "path": "Tests/Qualification/GraphBoundaries/results/2026-11-24/acceptance.json",
+    "sha256": "7890c99d5dc499d37aaf872872207763c581b8207f41497e43e9f26e7b16abe4",
+    "preserved_unchanged": true
+  },
+  "initial_handover": "bf123238945a5671a55bc317c8235505901cc493",
+  "high_sierra_build": "17G66",
+  "native_screenshots_inspected": true,
+  "identical_candidate_artifacts_verified_before_and_after_each_run": true,
+  "golem_receipts_archive_sha256": "14f235e54073aebb8047056ca6379053d7c6c7fae8423b7b1c4943aaa16a9e12",
+  "input_hashes_match_after_tests": true,
+  "physical_devices_opened": false,
+  "audible_tests_run": false,
+  "benchmarks_run": false,
+  "rebuilt": false,
+  "published": false,
+  "deferrals": [
+    "broad video",
+    "full-film",
+    "three-hour endurance; no automatic 90-minute substitute"
+  ],
+  "remaining": "Separate user interaction/listening feedback and publication/main-integration review; no new graph High Sierra check remains pending.",
+  "preservation": {
+    "passed": true,
+    "previous_packages": 11,
+    "previous_protected_files": 3638,
+    "shared_source_candidate03_artifacts": 477,
+    "checks": 4118,
+    "failed": [],
+    "main": "18adeb520006b7fe7e0a22300cc26abd28eec51c",
+    "tags": 28,
+    "scope": "Read-only; no remote actions. Current graph work only; original packages, evidence, media, sessions and manuals preserved."
+  },
+  "evidence_sha256": {
+    "golem-transfer.json": "eaeda79f5cf0863488ff78b21845b3d9ff45ab294e573b3323b8625a623d9847",
+    "high-sierra-01/graph-boundaries-files/graph-boundary-handles.png": "42850b49e6b00657325efff4158bd11a180fcfa56ad97cdf7462e325726ae3fe",
+    "high-sierra-01/graph-boundaries.json": "47754d2eb5ee08849a6dce0c779635a308f476fd118c494a49af7f4cf445eb14",
+    "high-sierra-01/graph-boundaries.log": "2ec8f8292aec7f0e0c11fba3c2a54fb9ff6f8184d6615d38f99a131ad95d263f",
+    "high-sierra-01/graph-ui-files/graph-current-6.png": "f14b7d258fddc4503fb73d290f3a482e8ffbd366f7f63320d3f55473997d9056",
+    "high-sierra-01/graph-ui-files/main-applied-boundary-preview.png": "b08757766f50f47e28ede98590f61e934f89577efab79631a7170044837d9a65",
+    "high-sierra-01/graph-ui-files/result.json": "37735c856b93031912ce03be9f9f0b8bac542fc51b3caaf181e06bc005ec4461",
+    "high-sierra-01/graph-ui.log": "ab53d58c6a1bbdb35dc71898a09a61d78e1fc2c75a9cb8543ba764ece3410f6b",
+    "high-sierra-01/summary.json": "19aecb60412b416e881334f0f16a4244c58a285bda909be7b6ef5d7752844d15",
+    "high-sierra-01-remote.log": "f07e38be96910d65fb1575240db6c2d4a270e4b495bf5447b9dcf352f2c7fa36",
+    "preservation-after.json": "36165358e9c2343ba675474adf43ec34cfdac580af13776049f31b5cef9e67ee"
+  }
+}
