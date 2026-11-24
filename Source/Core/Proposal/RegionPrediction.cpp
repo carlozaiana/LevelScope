@@ -53,7 +53,7 @@ double PredictionCollector::Filter::process(double x)
 {const double y=b0*x+z1;z1=b1*x-a1*y+z2;z2=b2*x-a2*y;return y;}
 PredictionCollector::PredictionCollector(int rate,std::vector<measurement::Role> roles,int64_t frames,juce::String binding,juce::String snapshot,juce::String plan)
 {
-    require(measurement::OfflineMeasurement::supports(rate,roles)&&(roles.size()==2||roles.size()==6)&&frames>0&&frames<=int64_t(rate)*10800,"Unsupported prediction format/duration");
+    require(measurement::OfflineMeasurement::supports(rate,roles)&&(roles.size()==1||roles.size()==2||roles.size()==6)&&frames>0&&frames<=int64_t(rate)*10800,"Unsupported prediction format/duration");
     data=std::make_shared<PredictionSidecar>();data->sampleRate=rate;data->channels=int(roles.size());data->roles=roles;data->frames=frames;data->binding=std::move(binding);data->baselineSnapshot=std::move(snapshot);data->baselinePlan=std::move(plan);
     data->bins.reserve(size_t((frames+rate/10-1)/(rate/10)+17));filters.resize(roles.size());
     // Deliberately independent auxiliary copy of the qualified m7.1 coefficient

@@ -38,6 +38,24 @@ juce::String sectionInputIdentity(const ServiceContext&);
 class ProgrammeGainProcessor
 {
 public:
+    static bool supportsSectionLayout(const ChannelLayout& layout)
+    {
+        using C = juce::AudioChannelSet;
+        if (!layout.confirmed || !layout.isValid()) return false;
+        if (layout.count == 1)
+            return layout.roles[0] == C::left || layout.roles[0] == C::right || layout.roles[0] == C::centre;
+        if (layout.count != 2 && layout.count != 6) return false;
+        C roles;
+        for (int n = 0; n < layout.count; ++n)
+        {
+            auto role = layout.roles[n];
+            if (role == C::leftSurroundSide) role = C::leftSurround;
+            if (role == C::rightSurroundSide) role = C::rightSurround;
+            roles.addChannel(role);
+        }
+        return roles == (layout.count == 2 ? C::stereo() : C::create5point1());
+    }
+
     static juce::String validationError(const ServiceContext& c)
     {
         const auto& p=c.processing;
@@ -47,20 +65,7 @@ public:
             return "Unsupported Current processing plan";
         const auto& plan=*p.sectionGains;
         const auto error=plan.validationError(); if(error.isNotEmpty()) return error;
-        // Product boundary, not a six-channel assumption in the sample evaluator.
-        juce::AudioChannelSet roles;
-        for(int n=0;n<c.fileLayout.count;++n)
-        {
-            auto role=c.fileLayout.roles[n];
-            if(role==juce::AudioChannelSet::leftSurroundSide) role=juce::AudioChannelSet::leftSurround;
-            if(role==juce::AudioChannelSet::rightSurroundSide) role=juce::AudioChannelSet::rightSurround;
-            roles.addChannel(role);
-        }
-        const bool mono=c.fileLayout.count==1 && (c.fileLayout.roles[0]==juce::AudioChannelSet::left
-            || c.fileLayout.roles[0]==juce::AudioChannelSet::right || c.fileLayout.roles[0]==juce::AudioChannelSet::centre);
-        if(!c.fileLayout.confirmed || !c.fileLayout.isValid() || (!mono
-            && ((c.fileLayout.count!=2 && c.fileLayout.count!=6)
-                || (roles!=juce::AudioChannelSet::stereo() && roles!=juce::AudioChannelSet::create5point1()))))
+        if (!supportsSectionLayout(c.fileLayout))
             return "Section processing supports confirmed mono (Left/Right/Centre), stereo and conventional 5.1 only";
         if(plan.inputIdentity!=sectionInputIdentity(c) || plan.frames!=c.media.frames || plan.sampleRate!=c.media.sampleRate)
             return "Section plan does not describe this exact programme input";

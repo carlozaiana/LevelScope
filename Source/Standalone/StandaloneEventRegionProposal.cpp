@@ -143,7 +143,7 @@ SectionProposalOutcome generateEventRegionProposal(const SectionProposalRequest&
         if(baseline.verdict!=Verdict::fail||!limits.hasMaxLoudnessRange||!limits.hasIntegratedLoudnessTarget||!limits.hasTruePeakCeiling||!r.current->detail.lraStable||!finite(r.current->detail.lra)||!finite(r.source->detail.integrated)||!finite(r.source->detail.truePeak))
         {out->problem=SectionProposalIssue::unsupportedRequirements;out->explanation="Region method needs available stable LRA, selected IL/TP/LRA and every additional selected metric. Unavailable automatic correction does not prove no solution.";return finish();}
         if(r.pendingManualDraft){out->explanation="Resolve the pending manual draft before region assessment";return finish();}
-        if(r.currentContext.fileLayout.count!=2&&r.currentContext.fileLayout.count!=6){out->explanation="Experimental region planning supports confirmed stereo/conventional 5.1 only";return finish();}
+        if(!ProgrammeGainProcessor::supportsSectionLayout(r.currentContext.fileLayout)){out->explanation="Region planning requires confirmed mono (Left, Right or Centre), stereo or conventional 5.1";return finish();}
         auto context=r.currentContext;const auto before=baselinePlan(context);
         auto probe=context;probe.processing.sectionGains=before;probe.processing.sectionGains->intervals={{0,before.frames,-1}};probe.processing.schemaVersion=2;probe.processing.engineVersion=processing::SectionGainPlan::version;
         const auto supported=OfflineAnalysisService::validateRequest(probe,MeasurementDomain::privateCandidate);if(supported.isNotEmpty()){out->explanation=supported;return finish();}

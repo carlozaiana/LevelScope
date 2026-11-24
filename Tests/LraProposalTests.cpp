@@ -1,5 +1,6 @@
 #include "CompositionTestFixtures.h"
 #include "Standalone/StandaloneLraProposal.h"
+#include "Standalone/StandaloneProcessing.h"
 #include "Standalone/LraPassagesPanel.h"
 #include "Standalone/AppliedProposalExplanation.h"
 #include "Core/Measurement/GatePopulation.h"
@@ -161,6 +162,9 @@ void workflow(const juce::File& root,int channels,int rate=48000)
 void failureCases(const juce::File& root)
 {
     auto s=lraFixture(root,2);requireLraReduction(s);const auto request=s.sectionProposalRequest();JobControl token;
+    auto strictModel=s;setLra(strictModel,0);auto strict=generateSectionProposal(strictModel.sectionProposalRequest(),token);
+    expect(strict.value&&(*strict.value)->status()==SectionProposalStatus::noSolution&&(*strict.value)->passes()<=3,"strict zero LRA produces honest bounded failure rather than unset or relaxed target");
+    if(strict.value)root.getChildFile("strict-zero.txt").replaceWithText((*strict.value)->text());
     auto limited=request;limited.policy.durationThousandths=0;auto blocked=generateSectionProposal(limited,token);
     expect(blocked.value&&(*blocked.value)->status()==SectionProposalStatus::noSolution&&(*blocked.value)->passes()==0&&(*blocked.value)->text().contains("Policy:"),"policy-limited attempt is explicit and does not measure or claim impossibility");
     limited=request;limited.policy.additionalTenths=0;limited.policy.reserveTenths=0;blocked=generateSectionProposal(limited,token);
@@ -183,16 +187,57 @@ void failureCases(const juce::File& root)
     const auto replaced=late.get();expect(!replaced.value&&(replaced.error==ErrorCode::sourceChanged
         ||(replaced.error==ErrorCode::invalidRequest&&replaced.message.contains("source identity changed"))),"source replacement during assessment rejects late private result");
     expect(request.currentContext.sourceFile.setLastModificationTime(originalTime),"restore owned test fixture timestamp");
-    setLra(s,0);auto strict=generateSectionProposal(s.sectionProposalRequest(),token);
-    expect(strict.value&&(*strict.value)->status()==SectionProposalStatus::noSolution&&(*strict.value)->passes()<=3,"strict zero LRA produces honest bounded failure rather than unset or relaxed target");
-    if(strict.value)root.getChildFile("strict-zero.txt").replaceWithText((*strict.value)->text());
-    for(int channels:{1,8})
+    for(int channels:{5,8})
     {
         auto unsupported=lraFixture(root.getChildFile("unsupported-"+juce::String(channels)),channels);requireLraReduction(unsupported);
-        auto out=generateSectionProposal(unsupported.sectionProposalRequest(),token);expect(out.value&&(*out.value)->status()==SectionProposalStatus::unavailable&&(*out.value)->passes()==0,"mono/7.1 changing LRA method explicitly unsupported; existing measurements preserved");
+        auto out=generateSectionProposal(unsupported.sectionProposalRequest(),token);expect(out.value&&(*out.value)->status()==SectionProposalStatus::unavailable&&(*out.value)->passes()==0,"5.0/7.1 changing LRA method explicitly unsupported; existing measurements preserved");
     }
     auto shortProgramme=lraFixture(root.getChildFile("short"),2,48000,6);setLra(shortProgramme,0);
     auto shortResult=generateSectionProposal(shortProgramme.sectionProposalRequest(),token);expect(shortResult.value&&(*shortResult.value)->status()==SectionProposalStatus::unavailable&&(*shortResult.value)->passes()==0,"short unstable LRA is available descriptively but cannot drive changing proposal");
+}
+void monoReadiness(const juce::File& root)
+{
+    JobControl job;
+    for (int seconds : {1, 6})
+    {
+        auto s = lraFixture(root.getChildFile("mono-" + juce::String(seconds)), 1, 48000, seconds);
+        setLra(s, 0);
+        const auto measured = s.currentState.analysis;
+        expect(!measured->detail.lraStable, "short mono LRA cannot authorize correction");
+        if (seconds == 1)
+            expect(!measured->detail.lra.value, "one-second mono programme has no usable LRA");
+        for (int schema = 0; schema <= 3; ++schema)
+        {
+            juce::String error;
+            if (schema)
+            {
+                const auto defaults = schema == 1 ? proposal::RegionPlanningSettings::defaults
+                    : schema == 2 ? proposal::RegionPlanningSettings::eventDefaults : proposal::RegionPlanningSettings::innerDefaults;
+                expect(s.setRegionPlanning(defaults(proposal::RegionMode::automatic, sectionInputIdentity(s.measurementContext(MeasurementDomain::source))),error),
+                       "select existing mono method for readiness check");
+            }
+            const auto result = generateSectionProposal(s.sectionProposalRequest(),job);
+            expect(result.value && (*result.value)->status() == SectionProposalStatus::unavailable && (*result.value)->passes() == 0 &&
+                   s.currentState.analysis == measured, "unavailable or unstable mono metric yields no measured candidate");
+        }
+    }
+    auto layout = layoutFor(1);
+    for (const auto role : {juce::AudioChannelSet::LFE, juce::AudioChannelSet::leftSurround})
+    {
+        layout.roles[0] = role;
+        expect(!ProgrammeGainProcessor::supportsSectionLayout(layout), "unqualified mono role excluded");
+    }
+    layout = layoutFor(1);
+    layout.confirmed = false;
+    expect(!ProgrammeGainProcessor::supportsSectionLayout(layout), "unconfirmed mono excluded");
+    for (int channels : {5,8})
+    {
+        auto s = lraFixture(root.getChildFile("other-" + juce::String(channels)), channels);
+        requireLraReduction(s);
+        const auto result = generateSectionProposal(s.sectionProposalRequest(),job);
+        expect(result.value && (*result.value)->status() == SectionProposalStatus::unavailable && (*result.value)->passes() == 0,
+               "measurable 5.0 and 7.1 remain ineligible for changing LRA proposals");
+    }
 }
 void stress()
 {
@@ -242,6 +287,8 @@ int main(int argc,char** argv)
     {
         juce::File root(rootPath);expect(rootPath.isNotEmpty()&&!root.exists()&&root.createDirectory().wasOk(),"fresh explicit M19 test directory");
         if(group=="core"){pureCases();stress();}
+        else if(group=="mono")workflow(root,1);
+        else if(group=="mono-readiness")monoReadiness(root);
         else if(group=="stereo")workflow(root,2);
         else if(group=="surround")workflow(root,6);
         else if(group=="rates")for(int rate:{44100,96000,192000})workflow(root.getChildFile(juce::String(rate)),2,rate);

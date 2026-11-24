@@ -209,7 +209,7 @@ void RegionPlanningPanel::updateEnabled()
     // JUCE does not refresh the displayed text in changeItemText. Keep both
     // text and ID aligned without issuing a mode-change permission reset.
     mode.setSelectedId(selectedMode,juce::dontSendNotification);
-    eventNote.setText(method.getSelectedId()==4?"Compares a continuing passage with a possible inner beginning and earlier/later returns. Unresolved evidence stays visible; a measured pass may still need explicit selection.":event?"Prefers supported-complete measured passes. Partial or uncertain coverage needs explicit selection; this is not phrase recognition.":"Standard proposals retain all supported jobs. Boundary approaches require measured IL/true peak/LRA and confirmed stereo or 5.1.",juce::dontSendNotification);
+    eventNote.setText(method.getSelectedId()==4?"Compares a continuing passage with a possible inner beginning and earlier/later returns. Unresolved evidence stays visible; a measured pass may still need explicit selection.":event?"Prefers supported-complete measured passes. Partial or uncertain coverage needs explicit selection; this is not phrase recognition.":"Standard proposals retain all supported jobs. Boundary approaches require measured IL/true peak/LRA and confirmed mono (Left, Right or Centre), stereo or conventional 5.1.",juce::dontSendNotification);
     mode.setEnabled(experimental);section.setEnabled(experimental&&mode.getSelectedId()==2);
     selectionBegin.setEnabled(experimental&&mode.getSelectedId()==3);selectionEnd.setEnabled(selectionBegin.isEnabled());
     for(size_t n=0;n<fields.size();++n)fields[n].setEnabled(experimental&&((n!=1&&n!=2)||selected||(event&&automaticMargins.getToggleState())));

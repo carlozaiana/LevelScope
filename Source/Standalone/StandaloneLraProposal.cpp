@@ -91,8 +91,8 @@ SectionProposalOutcome generateLraProposal(const SectionProposalRequest& r,JobCo
             ||!finite(r.source->detail.integrated)||!finite(r.source->detail.truePeak))
         {out->problem=SectionProposalIssue::unsupportedRequirements;out->explanation="Method unavailable: select IL, true peak and LRA requirements with stable, available measured metrics. Additional M/S limits must also be measurable. This does not assert that no solution exists.";return complete();}
         if(r.pendingManualDraft){out->explanation="Apply or discard the pending manual draft before a changing assessment.";return complete();}
-        if(r.currentContext.fileLayout.count!=2&&r.currentContext.fileLayout.count!=6)
-        {out->problem=SectionProposalIssue::unsupportedRequirements;out->explanation="This LRA method supports stereo and conventional 5.1 only; other existing workflows are preserved.";return complete();}
+        if(!ProgrammeGainProcessor::supportsSectionLayout(r.currentContext.fileLayout))
+        {out->problem=SectionProposalIssue::unsupportedRequirements;out->explanation="LRA correction requires confirmed mono (Left, Right or Centre), stereo or conventional 5.1.";return complete();}
         auto context=r.currentContext;
         processing::SectionGainPlan before;before.inputIdentity=sectionInputIdentity(context);before.sampleRate=int(context.media.sampleRate);before.frames=context.media.frames;
         before.intervals={{0,before.frames,0}};if(context.processing.sectionGains)before=context.processing.sectionGains->canonical();

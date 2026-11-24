@@ -70,9 +70,7 @@ void standardCapabilityChecks(StandaloneMainComponent& ui,const juce::File& root
             auto requirements=s.jobRequirements;requirements.maximumLraTenths=withLra?std::optional<int>(200):std::nullopt;expect(s.setJobRequirements(requirements,error),"standard no-LRA / global-only target");Access::refresh(ui);Access::propose(ui);
             expect(s.job.isActive()||bool(s.sectionProposal),"single standard Propose uses existing immediate global or asynchronous path without interstitial");waitJob(ui);
             expect(!s.regionPlanning&&s.sectionProposal,"standard mono/stereo returns a proposal without experimental opt-in");
-            if(channels==1&&withLra)
-            {JobControl control;const auto expected=generateSectionProposal(s.sectionProposalRequest(),control);expect(expected.value&&s.sectionProposal->status()==(*expected.value)->status()&&s.sectionProposal->text().contains("stereo and conventional 5.1 only"),"unsupported mono LRA retains existing service outcome and visible capability explanation");}
-            else expect(s.sectionProposal->status()==SectionProposalStatus::globalOnly||s.sectionProposal->status()==SectionProposalStatus::ready||s.sectionProposal->status()==SectionProposalStatus::noChange,"supported standard no-LRA/global-only stereo and mono jobs remain available");
+            expect(s.sectionProposal->status()==SectionProposalStatus::globalOnly||s.sectionProposal->status()==SectionProposalStatus::ready||s.sectionProposal->status()==SectionProposalStatus::noChange,"supported standard no-LRA/global-only stereo and mono jobs remain available");
             expect(s.sectionProposal->methodVersion()!=innerSearchVersion,"standard dispatch does not silently opt into competing method");
         }
     }
