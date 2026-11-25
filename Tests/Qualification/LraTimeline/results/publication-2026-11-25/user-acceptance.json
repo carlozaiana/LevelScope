@@ -1,0 +1,37 @@
+{
+  "date": "2026-11-25",
+  "timezone": "Europe/Rome",
+  "coordinating_chat": "01a13c8f-90a9-7150-813f-cb057626ef7e",
+  "user_acceptance": "Tested and works as expected",
+  "user_publication_authorization": "Ok please tell the UI chat to do the publication.",
+  "authorized_scope": "Publish and merge one combined checkpoint including accepted gain-entry/navigation fixes, measured LRA diagnostics, and integrated lanes/resizing.",
+  "navigation_handover": "583bb6114728483f28a11a62b5c77a669d0433c5",
+  "logic_handover": "68a2cd1f50ed8d651957e484636421dcea301f4e",
+  "implementation": "fbd650cf78e8dc8b36bfaee6d8626a9aec816e1f",
+  "frozen_checkpoint": "61c93ae86d49e4d35bfec798f6568344f5cb8fc5",
+  "qualification_handover": "670e987fc4bc84eaa4d5f222ea8b150d5cb9ed7b",
+  "source_tree": "97492cc70c3ef845dbfcbe65e946413380e7f4f6",
+  "candidate_identity_sha256": "843f513b6f0afed08b13eda0ca13692721b2506aa65df5dfaddd500a54b5cab6",
+  "automated_evidence": "2762 focused assertions per actual host, Sequoia 15.7.9 arm64 and High Sierra 10.13.6 x86_64, identical candidate02.",
+  "acceptance_is_separate_from_automated_results": true,
+  "no_additional_checklist_or_listening_results_inferred": true,
+  "runtime_tests_required_for_publication": false,
+  "deferrals": [
+    "broad video",
+    "full-film",
+    "three-hour endurance; no automatic 90-minute substitute"
+  ],
+  "separate_limitation": "inherited completion pause",
+  "no_new_claims": [
+    "physical-output qualification",
+    "listening",
+    "latency",
+    "endurance"
+  ],
+  "next_features_not_authorized_here": [
+    "boundary-behaviour preference",
+    "automatic mode switching",
+    "measured near-miss application",
+    "proposal-rule redesign"
+  ]
+}
