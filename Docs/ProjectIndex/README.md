@@ -15,6 +15,8 @@ This folder is the persistent orientation layer for future development chats. Re
 
 ## Task-based quick start
 
+- **Combined navigation and LRA timeline published:** [102 — checkpoint and main integration](102_NavigationLRALanesPublication.md) closes the publication gap for the accepted gain-entry/navigation fixes and integrates measured LRA lanes with independent graph/lane heights. The fixed annotated checkpoint preserves candidate 02, 2,762 focused assertions on each actual Mac, user acceptance and all existing tags/builds. Documents 100–101 retain their original pre-publication evidence.
+
 - [101 — Measured LRA lanes and independent timeline heights](101_MeasuredLRALanesAndIndependentHeights.md) records the measured diagnostic contract, independent graph/lane dividers, local view preferences and 2,762 focused checks on each actual Mac. Preserved universal candidate 02, development only; the accepted navigation fix remains part of the baseline despite its publication gap.
 
 - [100 — Gain entry and section-boundary navigation](100_GainEntryAndBoundaryNavigation.md) records Enter-only gain confirmation, first-click cancellation/navigation, stable boundary-popup selection/view, 2,475 focused checks on each actual Mac, and the two deferred workflow preferences. Separate preserved test build; no publication.

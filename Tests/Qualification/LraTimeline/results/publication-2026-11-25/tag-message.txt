@@ -1,0 +1,14 @@
+Accepted combined M20 navigation and measured LRA timeline checkpoint — 2026-11-25
+
+Includes the previously unpublished Enter-only gain-entry/outside-click cancellation and boundary-navigation fixes, measured LRA diagnostic data, native timeline lanes and independent graph/lane heights.
+
+User acceptance: Tested and works as expected. Publication and main integration explicitly authorized via coordinating chat 01a13c8f-90a9-7150-813f-cb057626ef7e.
+
+Exact tested Source tree: 97492cc70c3ef845dbfcbe65e946413380e7f4f6
+Frozen candidate02: 61c93ae86d49e4d35bfec798f6568344f5cb8fc5
+Qualification handover: 670e987fc4bc84eaa4d5f222ea8b150d5cb9ed7b
+Package identity SHA-256: 843f513b6f0afed08b13eda0ca13692721b2506aa65df5dfaddd500a54b5cab6
+
+2762 focused assertions passed on each actual Sequoia arm64 and High Sierra x86_64 host using the identical package. User acceptance remains separate from automated evidence. Prior unchanged qualification reused.
+
+Broad video/full-film/three-hour endurance deferred; no automatic 90-minute substitute. Inherited completion pause remains separate. No new physical-output/listening/latency/endurance claim. No rebuild or new feature in publication.

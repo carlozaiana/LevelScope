@@ -4,10 +4,12 @@ The user accepted the integrated candidate: **“Tested and works as expected.�
 
 This combined checkpoint includes the previously unpublished Enter-only gain-entry / outside-click cancellation and section-boundary navigation fixes, Logic’s measured LRA diagnostics, and the native lanes with independent graph/lane resizing. It closes the publication gap recorded in [100](100_GainEntryAndBoundaryNavigation.md) and [101](101_MeasuredLRALanesAndIndependentHeights.md). Those documents and their original qualification receipts remain unchanged as historical evidence; this publication record supersedes their publication/acceptance status.
 
-## Qualified source and planned publication
+## Published identities
 
-- Development branch: `codex/lra-lanes-resizing-2026-11-24`.
-- New annotated checkpoint: `m20-navigation-lra-lanes-resizing-2026-11-25`.
+- Published [development branch](https://github.com/carlozaiana/LevelScope/tree/codex/lra-lanes-resizing-2026-11-24) and [main](https://github.com/carlozaiana/LevelScope/tree/main).
+- Annotated [checkpoint `m20-navigation-lra-lanes-resizing-2026-11-25`](https://github.com/carlozaiana/LevelScope/tree/m20-navigation-lra-lanes-resizing-2026-11-25).
+- Checkpoint target: `d3fd6b3ab81bc51272f8003c3c969a9a09a4c31b`.
+- Annotated tag object: `2320cb775fa4ad81db8290e8b0b4000e04d588f4`.
 - Included navigation handover: `583bb6114728483f28a11a62b5c77a669d0433c5`.
 - Included Logic handover: `68a2cd1f50ed8d651957e484636421dcea301f4e`.
 - UI implementation: `fbd650cf78e8dc8b36bfaee6d8626a9aec816e1f`.
@@ -21,7 +23,17 @@ Preserved app:
 
 `/Users/fuzz/.codex/worktrees/a411/LevelScope/build/lra-lanes-resizing-2026-11-24/candidate-02/LevelScope Standalone.app`
 
-Publication changes documentation/evidence and Git references only. It does not rebuild or replace the tested app. Main was rechecked at `b5ff52b9c87422b28f27a089c66b746fd2447a05`, an ancestor of the qualified handover; a normal fast-forward is available. The existing dedicated integration checkout will be used without switching other chats’ worktrees. The final observed identities, remote readback and preservation results will be recorded after publication, without moving the new checkpoint tag.
+The combined checkpoint is published and integrated into main, closing the earlier navigation publication gap. Main was still `b5ff52b9c87422b28f27a089c66b746fd2447a05`, with no intervening work. The existing dedicated integration checkout at `/Users/fuzz/.codex/worktrees/a411/LevelScope/build/m18-publication-2026-11-03/integration` performed a normal fast-forward to `d3fd6b3ab81bc51272f8003c3c969a9a09a4c31b`. The branch and new tag were published atomically, read back, then main was pushed without force. No history was rewritten and no existing tag moved.
+
+This following documentation/evidence-only receipt commit advances main and the development branch; the annotated checkpoint stays fixed on `d3fd6b3`. Final remote readback and the exact final-main identity are retained externally in `build/lra-navigation-publication-2026-11-25/remote-final.txt` and `final-verification.json`, avoiding a self-referential commit or retagging. No tested app was rebuilt, replaced or repackaged.
+
+## Publication verification
+
+The [preflight](../../Tests/Qualification/LraTimeline/results/publication-2026-11-25/preflight.json) verified the frozen candidate’s **471 committed source-manifest entries**, exact production Source/CMake match, qualification receipts, ancestry and clean integration checkout. The [checkpoint readback](../../Tests/Qualification/LraTimeline/results/publication-2026-11-25/remote-checkpoint.txt) and [publication audit](../../Tests/Qualification/LraTimeline/results/publication-2026-11-25/checkpoint-verification.json) passed **18,331 identity/integration/preservation checks**. These are publication checks, separate from the runtime assertions below.
+
+All **31 previous tag objects/targets**, **35 local candidate packages** and **18,151 inventoried protected files** remain unchanged, including inherited external packages, manifests, qualification receipts, original media/sessions, listening materials and manuals. Other worktree heads, branches, existing edits and untracked files remain preserved. The user’s live session and installations were not operated on. The new tag is the only tag addition.
+
+[Publication receipt](../../Tests/Qualification/LraTimeline/results/publication-2026-11-25/publication-receipt.json) · [User acceptance and authorization](../../Tests/Qualification/LraTimeline/results/publication-2026-11-25/user-acceptance.json).
 
 ## Qualification and limits
 

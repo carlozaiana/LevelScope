@@ -1,0 +1,349 @@
+Updating b5ff52b..d3fd6b3
+Fast-forward
+ CMakeLists.txt                                     |   1 +
+ .../100_GainEntryAndBoundaryNavigation.md          |  61 +++
+ .../101_MeasuredLRALanesAndIndependentHeights.md   |  68 +++
+ .../102_NavigationLRALanesPublication.md           |  32 ++
+ Docs/ProjectIndex/README.md                        |   4 +
+ Source/Core/Proposal/LraTimelineDiagnostics.cpp    | 181 +++++++
+ Source/Core/Proposal/LraTimelineDiagnostics.h      |  63 +++
+ Source/Standalone/GainValueEditor.h                |  27 ++
+ Source/Standalone/LraTimelineLanes.h               | 159 +++++++
+ Source/Standalone/LraTimelinePresentation.h        |  22 +
+ Source/Standalone/MeasurementTimeline.cpp          |  82 +++-
+ Source/Standalone/MeasurementTimeline.h            |  24 +-
+ Source/Standalone/SectionEditPrompt.h              |   4 +-
+ Source/Standalone/StandaloneApp.cpp                |   2 +-
+ Source/Standalone/StandaloneDiagnostics.cpp        |  31 +-
+ Source/Standalone/StandaloneDiagnostics.h          |  13 +
+ Source/Standalone/StandaloneMainComponent.cpp      |  84 ++--
+ Source/Standalone/StandaloneMainComponent.h        |  13 +-
+ Source/Standalone/StandaloneSectionsPanel.cpp      |  43 +-
+ Source/Standalone/StandaloneSectionsPanel.h        |  15 +-
+ Source/Standalone/TimelineGainLane.cpp             |  72 ++-
+ Source/Standalone/TimelineGainLane.h               |  21 +-
+ Source/Standalone/TimelineLayout.h                 |  16 +-
+ Source/Standalone/TimelineViewPreferences.h        |  56 +++
+ Tests/CurrentAndSectionsUIChecks.h                 |   4 +-
+ Tests/DiagnosticsTests.cpp                         |  16 +-
+ Tests/GainInputNavigationChecks.h                  |  99 ++++
+ Tests/LraTimelineChecks.h                          | 244 ++++++++++
+ Tests/LraTimelineUIChecks.h                        | 114 +++++
+ .../GainNavigation/results/2026-11-24/README.md    |  20 +
+ .../results/2026-11-24/acceptance.json             | 174 +++++++
+ .../results/2026-11-24/candidate-01-identity.json  | 510 ++++++++++++++++++++
+ .../2026-11-24/candidate-01-identity.sha256        |   1 +
+ .../results/2026-11-24/development/native-01.json  |   1 +
+ .../results/2026-11-24/development/native-01.log   |   1 +
+ .../results/2026-11-24/development/native-02.json  |   1 +
+ .../results/2026-11-24/development/native-02.log   |   1 +
+ .../results/2026-11-24/development/native-03.json  |   1 +
+ .../results/2026-11-24/development/native-03.log   |   2 +
+ .../results/2026-11-24/development/native-04.json  |   1 +
+ .../results/2026-11-24/development/native-04.log   |   2 +
+ .../GainNavigation/results/2026-11-24/freeze.py    |  59 +++
+ .../results/2026-11-24/gain-entry-dev.json         |   1 +
+ .../results/2026-11-24/gain-entry-dev.log          |   1 +
+ .../channels-1/propose-from-empty.png              | Bin 0 -> 241414 bytes
+ .../channels-1/sections-and-gain.png               | Bin 0 -> 227486 bytes
+ .../channels-2/propose-from-empty.png              | Bin 0 -> 233619 bytes
+ .../channels-2/sections-and-gain.png               | Bin 0 -> 232192 bytes
+ .../channels-6/propose-from-empty.png              | Bin 0 -> 213550 bytes
+ .../channels-6/sections-and-gain.png               | Bin 0 -> 242635 bytes
+ .../current-sections-ui-files/result.json          |   1 +
+ .../high-sierra-01/current-sections-ui.log         |   1 +
+ .../gain-entry-files/direct-gain-lane.png          | Bin 0 -> 64645 bytes
+ .../gain-entry-files/move-boundary-choices.png     | Bin 0 -> 24223 bytes
+ .../gain-entry-files/multi-selection.png           | Bin 0 -> 71177 bytes
+ .../2026-11-24/high-sierra-01/gain-entry.json      |   1 +
+ .../2026-11-24/high-sierra-01/gain-entry.log       |   1 +
+ .../gain-input-ui-files/main-stable.png            | Bin 0 -> 212753 bytes
+ .../high-sierra-01/gain-input-ui-files/result.json |   1 +
+ .../gain-input-ui-files/sections-stable.png        | Bin 0 -> 173545 bytes
+ .../2026-11-24/high-sierra-01/gain-input-ui.log    |   1 +
+ .../applied-boundary-preview.png                   | Bin 0 -> 105890 bytes
+ .../boundary-batch-confirmation.png                | Bin 0 -> 20899 bytes
+ .../graph-boundaries-files/drawn-section.png       | Bin 0 -> 62543 bytes
+ .../graph-boundary-handles.png                     | Bin 0 -> 105670 bytes
+ .../graph-boundary-preview.png                     | Bin 0 -> 108468 bytes
+ .../graph-boundaries-files/pending-boundaries.png  | Bin 0 -> 100081 bytes
+ .../graph-boundaries-files/separate-selection.png  | Bin 0 -> 99078 bytes
+ .../high-sierra-01/graph-boundaries.json           |   1 +
+ .../2026-11-24/high-sierra-01/graph-boundaries.log |   1 +
+ .../results/2026-11-24/high-sierra-01/summary.json |  81 ++++
+ .../results/2026-11-24/preservation-final.json     |   7 +
+ .../GainNavigation/results/2026-11-24/preserve.py  |  24 +
+ .../GainNavigation/results/2026-11-24/protocol.txt |   8 +
+ .../channels-1/propose-from-empty.png              | Bin 0 -> 249753 bytes
+ .../channels-1/sections-and-gain.png               | Bin 0 -> 234639 bytes
+ .../channels-2/propose-from-empty.png              | Bin 0 -> 241236 bytes
+ .../channels-2/sections-and-gain.png               | Bin 0 -> 239680 bytes
+ .../channels-6/propose-from-empty.png              | Bin 0 -> 219551 bytes
+ .../channels-6/sections-and-gain.png               | Bin 0 -> 250622 bytes
+ .../current-sections-ui-files/result.json          |   1 +
+ .../2026-11-24/sequoia-01/current-sections-ui.log  |   1 +
+ .../gain-entry-files/direct-gain-lane.png          | Bin 0 -> 67377 bytes
+ .../gain-entry-files/move-boundary-choices.png     | Bin 0 -> 25081 bytes
+ .../gain-entry-files/multi-selection.png           | Bin 0 -> 73950 bytes
+ .../results/2026-11-24/sequoia-01/gain-entry.json  |   1 +
+ .../results/2026-11-24/sequoia-01/gain-entry.log   |   1 +
+ .../sequoia-01/gain-input-ui-files/main-stable.png | Bin 0 -> 219365 bytes
+ .../sequoia-01/gain-input-ui-files/result.json     |   1 +
+ .../gain-input-ui-files/sections-stable.png        | Bin 0 -> 182887 bytes
+ .../2026-11-24/sequoia-01/gain-input-ui.log        |   1 +
+ .../applied-boundary-preview.png                   | Bin 0 -> 109325 bytes
+ .../boundary-batch-confirmation.png                | Bin 0 -> 21369 bytes
+ .../graph-boundaries-files/drawn-section.png       | Bin 0 -> 64318 bytes
+ .../graph-boundary-handles.png                     | Bin 0 -> 110421 bytes
+ .../graph-boundary-preview.png                     | Bin 0 -> 112102 bytes
+ .../graph-boundaries-files/pending-boundaries.png  | Bin 0 -> 103143 bytes
+ .../graph-boundaries-files/separate-selection.png  | Bin 0 -> 102633 bytes
+ .../2026-11-24/sequoia-01/graph-boundaries.json    |   1 +
+ .../2026-11-24/sequoia-01/graph-boundaries.log     |   1 +
+ .../results/2026-11-24/sequoia-01/summary.json     |  81 ++++
+ Tests/Qualification/LraTimeline/LogicContract.md   |  36 ++
+ Tests/Qualification/LraTimeline/logic-sequoia.json | 268 +++++++++++
+ .../candidate-01-failure/graph-boundaries.json     |   1 +
+ .../2026-11-24/candidate-01-failure/summary.json   |  98 ++++
+ .../results/2026-11-24/candidate-01/identity.json  | 529 +++++++++++++++++++++
+ .../2026-11-24/candidate-01/identity.sha256        |   1 +
+ .../results/2026-11-24/candidate-02/identity.json  | 529 +++++++++++++++++++++
+ .../2026-11-24/candidate-02/identity.sha256        |   1 +
+ .../LraTimeline/results/2026-11-24/combined.json   |  59 +++
+ .../2026-11-24/development/graph-fixture-02.json   |   1 +
+ .../results/2026-11-24/development/native-01.json  |   1 +
+ .../2026-11-24/development/native-02-crash.ips     | 169 +++++++
+ .../results/2026-11-24/development/native-03.json  |   1 +
+ .../results/2026-11-24/development/native-04.json  |   1 +
+ .../results/2026-11-24/development/native-05.json  |   1 +
+ .../results/2026-11-24/development/native-06.json  |   1 +
+ .../LraTimeline/results/2026-11-24/freeze.py       |  59 +++
+ .../channels-1/propose-from-empty.png              | Bin 0 -> 235248 bytes
+ .../channels-1/sections-and-gain.png               | Bin 0 -> 220849 bytes
+ .../channels-2/propose-from-empty.png              | Bin 0 -> 228934 bytes
+ .../channels-2/sections-and-gain.png               | Bin 0 -> 224188 bytes
+ .../channels-6/propose-from-empty.png              | Bin 0 -> 213239 bytes
+ .../channels-6/sections-and-gain.png               | Bin 0 -> 232325 bytes
+ .../current-sections-ui-files/result.json          |   1 +
+ .../high-sierra-02/current-sections-ui.log         |   1 +
+ .../gain-entry-files/direct-gain-lane.png          | Bin 0 -> 64645 bytes
+ .../gain-entry-files/move-boundary-choices.png     | Bin 0 -> 24223 bytes
+ .../gain-entry-files/multi-selection.png           | Bin 0 -> 71177 bytes
+ .../2026-11-24/high-sierra-02/gain-entry.json      |   1 +
+ .../2026-11-24/high-sierra-02/gain-entry.log       |   1 +
+ .../gain-input-ui-files/main-stable.png            | Bin 0 -> 211389 bytes
+ .../high-sierra-02/gain-input-ui-files/result.json |   1 +
+ .../gain-input-ui-files/sections-stable.png        | Bin 0 -> 151696 bytes
+ .../2026-11-24/high-sierra-02/gain-input-ui.log    |   1 +
+ .../applied-boundary-preview.png                   | Bin 0 -> 105890 bytes
+ .../boundary-batch-confirmation.png                | Bin 0 -> 20899 bytes
+ .../graph-boundaries-files/drawn-section.png       | Bin 0 -> 62543 bytes
+ .../graph-boundary-handles.png                     | Bin 0 -> 105670 bytes
+ .../graph-boundary-preview.png                     | Bin 0 -> 108468 bytes
+ .../graph-boundaries-files/pending-boundaries.png  | Bin 0 -> 100081 bytes
+ .../graph-boundaries-files/separate-selection.png  | Bin 0 -> 99078 bytes
+ .../high-sierra-02/graph-boundaries.json           |   1 +
+ .../2026-11-24/high-sierra-02/graph-boundaries.log |   1 +
+ .../lra-timeline-ui-files/all-lanes.png            | Bin 0 -> 112295 bytes
+ .../lra-timeline-ui-files/gate-strip-renderer.png  | Bin 0 -> 30049 bytes
+ .../lra-timeline-ui-files/invalid-view.json        |   1 +
+ .../lra-timeline-ui-files/main-overflow.png        | Bin 0 -> 169666 bytes
+ .../lra-timeline-ui-files/owned-view-settings.json |  35 ++
+ .../lra-timeline-ui-files/result.json              |   1 +
+ .../lra-timeline-ui-files/sections-lanes.png       | Bin 0 -> 303542 bytes
+ .../2026-11-24/high-sierra-02/lra-timeline-ui.log  |   1 +
+ .../2026-11-24/high-sierra-02/lra-timeline.json    | 268 +++++++++++
+ .../2026-11-24/high-sierra-02/lra-timeline.log     |   1 +
+ .../results/2026-11-24/high-sierra-02/summary.json | 112 +++++
+ .../results/2026-11-24/preservation-final.json     |   7 +
+ .../2026-11-24/preservation-pre-freeze.json        |   7 +
+ .../LraTimeline/results/2026-11-24/preserve.py     |  24 +
+ .../LraTimeline/results/2026-11-24/protocol.txt    |   7 +
+ .../current-sections-ui-files/result.json          |   1 +
+ .../2026-11-24/sequoia-02/current-sections-ui.log  |   1 +
+ .../results/2026-11-24/sequoia-02/gain-entry.json  |   1 +
+ .../results/2026-11-24/sequoia-02/gain-entry.log   |   1 +
+ .../sequoia-02/gain-input-ui-files/main-stable.png | Bin 0 -> 218107 bytes
+ .../sequoia-02/gain-input-ui-files/result.json     |   1 +
+ .../gain-input-ui-files/sections-stable.png        | Bin 0 -> 156393 bytes
+ .../2026-11-24/sequoia-02/gain-input-ui.log        |   1 +
+ .../2026-11-24/sequoia-02/graph-boundaries.json    |   1 +
+ .../2026-11-24/sequoia-02/graph-boundaries.log     |   1 +
+ .../sequoia-02/lra-timeline-ui-files/all-lanes.png | Bin 0 -> 115542 bytes
+ .../lra-timeline-ui-files/gate-strip-renderer.png  | Bin 0 -> 30342 bytes
+ .../lra-timeline-ui-files/main-overflow.png        | Bin 0 -> 175557 bytes
+ .../sequoia-02/lra-timeline-ui-files/result.json   |   1 +
+ .../lra-timeline-ui-files/sections-lanes.png       | Bin 0 -> 319830 bytes
+ .../2026-11-24/sequoia-02/lra-timeline-ui.log      |   1 +
+ .../2026-11-24/sequoia-02/lra-timeline.json        | 268 +++++++++++
+ .../results/2026-11-24/sequoia-02/lra-timeline.log |   1 +
+ .../results/2026-11-24/sequoia-02/summary.json     | 112 +++++
+ .../publication-2026-11-25/user-acceptance.json    |  37 ++
+ Tests/Qualification/M20/run_ui.py                  |  17 +-
+ Tests/RegionUIIntegrationTests.cpp                 |  12 +-
+ Tests/TimelineGainLaneChecks.h                     |   5 +-
+ Tests/TimelineProgressTests.cpp                    |   6 +-
+ Tests/TimelineSectionImportChecks.h                |   8 +-
+ 184 files changed, 5134 insertions(+), 134 deletions(-)
+ create mode 100644 Docs/ProjectIndex/100_GainEntryAndBoundaryNavigation.md
+ create mode 100644 Docs/ProjectIndex/101_MeasuredLRALanesAndIndependentHeights.md
+ create mode 100644 Docs/ProjectIndex/102_NavigationLRALanesPublication.md
+ create mode 100644 Source/Core/Proposal/LraTimelineDiagnostics.cpp
+ create mode 100644 Source/Core/Proposal/LraTimelineDiagnostics.h
+ create mode 100644 Source/Standalone/GainValueEditor.h
+ create mode 100644 Source/Standalone/LraTimelineLanes.h
+ create mode 100644 Source/Standalone/LraTimelinePresentation.h
+ create mode 100644 Source/Standalone/TimelineViewPreferences.h
+ create mode 100644 Tests/GainInputNavigationChecks.h
+ create mode 100644 Tests/LraTimelineChecks.h
+ create mode 100644 Tests/LraTimelineUIChecks.h
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/README.md
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/acceptance.json
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/candidate-01-identity.json
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/candidate-01-identity.sha256
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/development/native-01.json
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/development/native-01.log
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/development/native-02.json
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/development/native-02.log
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/development/native-03.json
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/development/native-03.log
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/development/native-04.json
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/development/native-04.log
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/freeze.py
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/gain-entry-dev.json
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/gain-entry-dev.log
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/current-sections-ui-files/channels-1/propose-from-empty.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/current-sections-ui-files/channels-1/sections-and-gain.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/current-sections-ui-files/channels-2/propose-from-empty.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/current-sections-ui-files/channels-2/sections-and-gain.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/current-sections-ui-files/channels-6/propose-from-empty.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/current-sections-ui-files/channels-6/sections-and-gain.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/current-sections-ui-files/result.json
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/current-sections-ui.log
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/gain-entry-files/direct-gain-lane.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/gain-entry-files/move-boundary-choices.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/gain-entry-files/multi-selection.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/gain-entry.json
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/gain-entry.log
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/gain-input-ui-files/main-stable.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/gain-input-ui-files/result.json
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/gain-input-ui-files/sections-stable.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/gain-input-ui.log
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/graph-boundaries-files/applied-boundary-preview.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/graph-boundaries-files/boundary-batch-confirmation.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/graph-boundaries-files/drawn-section.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/graph-boundaries-files/graph-boundary-handles.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/graph-boundaries-files/graph-boundary-preview.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/graph-boundaries-files/pending-boundaries.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/graph-boundaries-files/separate-selection.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/graph-boundaries.json
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/graph-boundaries.log
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/high-sierra-01/summary.json
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/preservation-final.json
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/preserve.py
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/protocol.txt
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/current-sections-ui-files/channels-1/propose-from-empty.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/current-sections-ui-files/channels-1/sections-and-gain.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/current-sections-ui-files/channels-2/propose-from-empty.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/current-sections-ui-files/channels-2/sections-and-gain.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/current-sections-ui-files/channels-6/propose-from-empty.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/current-sections-ui-files/channels-6/sections-and-gain.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/current-sections-ui-files/result.json
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/current-sections-ui.log
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/gain-entry-files/direct-gain-lane.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/gain-entry-files/move-boundary-choices.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/gain-entry-files/multi-selection.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/gain-entry.json
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/gain-entry.log
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/gain-input-ui-files/main-stable.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/gain-input-ui-files/result.json
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/gain-input-ui-files/sections-stable.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/gain-input-ui.log
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/graph-boundaries-files/applied-boundary-preview.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/graph-boundaries-files/boundary-batch-confirmation.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/graph-boundaries-files/drawn-section.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/graph-boundaries-files/graph-boundary-handles.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/graph-boundaries-files/graph-boundary-preview.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/graph-boundaries-files/pending-boundaries.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/graph-boundaries-files/separate-selection.png
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/graph-boundaries.json
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/graph-boundaries.log
+ create mode 100644 Tests/Qualification/GainNavigation/results/2026-11-24/sequoia-01/summary.json
+ create mode 100644 Tests/Qualification/LraTimeline/LogicContract.md
+ create mode 100644 Tests/Qualification/LraTimeline/logic-sequoia.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/candidate-01-failure/graph-boundaries.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/candidate-01-failure/summary.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/candidate-01/identity.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/candidate-01/identity.sha256
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/candidate-02/identity.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/candidate-02/identity.sha256
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/combined.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/development/graph-fixture-02.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/development/native-01.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/development/native-02-crash.ips
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/development/native-03.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/development/native-04.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/development/native-05.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/development/native-06.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/freeze.py
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/current-sections-ui-files/channels-1/propose-from-empty.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/current-sections-ui-files/channels-1/sections-and-gain.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/current-sections-ui-files/channels-2/propose-from-empty.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/current-sections-ui-files/channels-2/sections-and-gain.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/current-sections-ui-files/channels-6/propose-from-empty.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/current-sections-ui-files/channels-6/sections-and-gain.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/current-sections-ui-files/result.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/current-sections-ui.log
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/gain-entry-files/direct-gain-lane.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/gain-entry-files/move-boundary-choices.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/gain-entry-files/multi-selection.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/gain-entry.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/gain-entry.log
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/gain-input-ui-files/main-stable.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/gain-input-ui-files/result.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/gain-input-ui-files/sections-stable.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/gain-input-ui.log
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/graph-boundaries-files/applied-boundary-preview.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/graph-boundaries-files/boundary-batch-confirmation.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/graph-boundaries-files/drawn-section.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/graph-boundaries-files/graph-boundary-handles.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/graph-boundaries-files/graph-boundary-preview.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/graph-boundaries-files/pending-boundaries.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/graph-boundaries-files/separate-selection.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/graph-boundaries.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/graph-boundaries.log
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/lra-timeline-ui-files/all-lanes.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/lra-timeline-ui-files/gate-strip-renderer.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/lra-timeline-ui-files/invalid-view.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/lra-timeline-ui-files/main-overflow.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/lra-timeline-ui-files/owned-view-settings.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/lra-timeline-ui-files/result.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/lra-timeline-ui-files/sections-lanes.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/lra-timeline-ui.log
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/lra-timeline.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/lra-timeline.log
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/high-sierra-02/summary.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/preservation-final.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/preservation-pre-freeze.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/preserve.py
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/protocol.txt
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/sequoia-02/current-sections-ui-files/result.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/sequoia-02/current-sections-ui.log
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/sequoia-02/gain-entry.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/sequoia-02/gain-entry.log
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/sequoia-02/gain-input-ui-files/main-stable.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/sequoia-02/gain-input-ui-files/result.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/sequoia-02/gain-input-ui-files/sections-stable.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/sequoia-02/gain-input-ui.log
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/sequoia-02/graph-boundaries.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/sequoia-02/graph-boundaries.log
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/sequoia-02/lra-timeline-ui-files/all-lanes.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/sequoia-02/lra-timeline-ui-files/gate-strip-renderer.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/sequoia-02/lra-timeline-ui-files/main-overflow.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/sequoia-02/lra-timeline-ui-files/result.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/sequoia-02/lra-timeline-ui-files/sections-lanes.png
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/sequoia-02/lra-timeline-ui.log
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/sequoia-02/lra-timeline.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/sequoia-02/lra-timeline.log
+ create mode 100644 Tests/Qualification/LraTimeline/results/2026-11-24/sequoia-02/summary.json
+ create mode 100644 Tests/Qualification/LraTimeline/results/publication-2026-11-25/user-acceptance.json
